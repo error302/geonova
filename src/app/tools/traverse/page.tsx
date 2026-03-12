@@ -1,0 +1,159 @@
+'use client';
+
+import { useState } from 'react';
+import { bowditchAdjustment, transitAdjustment } from '@/lib/engine/traverse';
+
+interface Leg {
+  id: number;
+  name: string;
+  n: string;
+  e: string;
+  dist: string;
+  bearing: string;
+}
+
+export default function TraverseCalculator() {
+  const [legs, setLegs] = useState<Leg[]>([
+    { id: 1, name: 'A', n: '5000', e: '3000', dist: '250.0', bearing: '45.5234' },
+    { id: 2, name: 'B', n: '', e: '', dist: '180.5', bearing: '120.1234' },
+    { id: 3, name: 'C', n: '', e: '', dist: '220.75', bearing: '200.3456' },
+    { id: 4, name: 'D', n: '', e: '', dist: '190.25', bearing: '290.5678' },
+  ]);
+  const [method, setMethod] = useState<'bowditch' | 'transit'>('bowditch');
+  const [result, setResult] = useState<any>(null);
+
+  const addLeg = () => {
+    const nextChar = String.fromCharCode(65 + legs.length);
+    setLegs([...legs, { id: Date.now(), name: nextChar, n: '', e: '', dist: '', bearing: '' }]);
+  };
+
+  const updateLeg = (id: number, field: keyof Leg, value: string) => {
+    setLegs(legs.map(l => l.id === id ? { ...l, [field]: value } : l));
+  };
+
+  const calculate = () => {
+    const points = legs
+      .filter(l => l.n && l.e)
+      .map(l => ({ name: l.name, northing: parseFloat(l.n), easting: parseFloat(l.e) }));
+    
+    const distances = legs.map(l => parseFloat(l.dist)).filter(d => !isNaN(d));
+    const bearings = legs.map(l => parseFloat(l.bearing)).filter(b => !isNaN(b));
+    
+    if (points.length >= 2 && distances.length >= 2 && bearings.length >= 2) {
+      const r = method === 'bowditch' 
+        ? bowditchAdjustment({ points, distances, bearings })
+        : transitAdjustment({ points, distances, bearings });
+      setResult(r);
+    }
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-2">Traverse Adjustment</h1>
+      <p className="text-sm text-[var(--text-muted)] mb-8">Based on N.N. Basak, Chapter 9</p>
+
+      <div className="flex gap-4 mb-6">
+        <button onClick={() => { setMethod('bowditch'); setResult(null); }} className={`btn ${method === 'bowditch' ? 'btn-primary' : 'btn-secondary'}`}>
+          Bowditch Rule
+        </button>
+        <button onClick={() => { setMethod('transit'); setResult(null); }} className={`btn ${method === 'transit' ? 'btn-primary' : 'btn-secondary'}`}>
+          Transit Rule
+        </button>
+      </div>
+
+      <div className="grid gap-6 mb-6">
+        <div className="card">
+          <div className="card-header">
+            <span className="label">Traverse Legs — Gale's Table</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Line</th>
+                  <th>Distance (m)</th>
+                  <th>Bearing (°)</th>
+                  <th>Northing (m)</th>
+                  <th>Easting (m)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {legs.map((l, i) => (
+                  <tr key={l.id}>
+                    <td className="text-left font-semibold">{l.name}</td>
+                    <td><input className="input" value={l.dist} onChange={e => updateLeg(l.id, 'dist', e.target.value)} /></td>
+                    <td><input className="input" value={l.bearing} onChange={e => updateLeg(l.id, 'bearing', e.target.value)} /></td>
+                    <td><input className="input" value={l.n} onChange={e => updateLeg(l.id, 'n', e.target.value)} /></td>
+                    <td><input className="input" value={l.e} onChange={e => updateLeg(l.id, 'e', e.target.value)} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="p-4">
+            <button onClick={addLeg} className="btn btn-secondary">+ Add Leg</button>
+          </div>
+        </div>
+
+        <button onClick={calculate} className="btn btn-primary">Calculate Adjustment</button>
+      </div>
+
+      {result && (
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="card">
+            <div className="card-header flex justify-between items-center">
+              <span className="label">Error Analysis</span>
+              <span className={`badge ${result.isClosed ? 'badge-success' : 'badge-warning'}`}>
+                {result.isClosed ? 'Closed' : 'Not Closed'}
+              </span>
+            </div>
+            <div className="card-body space-y-3">
+              <ResultRow label="Method" value={method === 'bowditch' ? 'Bowditch Rule' : 'Transit Rule'} />
+              <ResultRow label="Total Distance" value={`${result.totalDistance.toFixed(4)} m`} />
+              <ResultRow label="Closing Error (E)" value={`${result.closingErrorE.toFixed(6)} m`} />
+              <ResultRow label="Closing Error (N)" value={`${result.closingErrorN.toFixed(6)} m`} />
+              <ResultRow label="Linear Error" value={`${result.linearError.toFixed(6)} m`} />
+              <ResultRow label="Precision Ratio" value={`1 : ${Math.round(1/result.precisionRatio)}`} highlight />
+              <ResultRow label="Grade" value={result.precisionGrade} />
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header">
+              <span className="label">Adjusted Coordinates</span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Pt</th>
+                    <th>Northing (m)</th>
+                    <th>Easting (m)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.legs.map((l: any, i: number) => (
+                    <tr key={i}>
+                      <td className="text-left">{l.from}</td>
+                      <td>{l.adjNorthing.toFixed(4)}</td>
+                      <td>{l.adjEasting.toFixed(4)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ResultRow({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+  return (
+    <div className="flex justify-between items-center py-2 border-b border-[var(--border-color)]">
+      <span className="text-sm text-[var(--text-secondary)]">{label}</span>
+      <span className={`font-mono ${highlight ? 'result-accent font-bold' : ''}`}>{value}</span>
+    </div>
+  );
+}

@@ -1,0 +1,152 @@
+// GeoNova Engine - Area calculations
+// Based on N.N. Basak Surveying and Levelling
+
+import { Point2D, AreaResult } from './types';
+
+export function coordinateArea(points: Point2D[]): AreaResult {
+  if (points.length < 3) {
+    return {
+      areaSqm: 0,
+      areaHa: 0,
+      areaAcres: 0,
+      perimeter: 0,
+      centroid: { easting: 0, northing: 0 },
+      method: 'Coordinate Method (Shoelace)'
+    };
+  }
+  
+  // Close the polygon if not already closed
+  const closed = [...points];
+  if (closed[0].easting !== closed[closed.length - 1].easting ||
+      closed[0].northing !== closed[closed.length - 1].northing) {
+    closed.push(points[0]);
+  }
+  
+  // Shoelace formula
+  let doubleArea = 0;
+  for (let i = 0; i < closed.length - 1; i++) {
+    doubleArea += closed[i].easting * closed[i + 1].northing;
+    doubleArea -= closed[i + 1].easting * closed[i].northing;
+  }
+  
+  const areaSqm = Math.abs(doubleArea) / 2;
+  
+  // Calculate perimeter
+  let perimeter = 0;
+  for (let i = 0; i < closed.length - 1; i++) {
+    const dx = closed[i + 1].easting - closed[i].easting;
+    const dy = closed[i + 1].northing - closed[i].northing;
+    perimeter += Math.sqrt(dx * dx + dy * dy);
+  }
+  
+  // Calculate centroid
+  let centroidX = 0;
+  let centroidY = 0;
+  for (let i = 0; i < closed.length - 1; i++) {
+    const factor = (closed[i].easting * closed[i + 1].northing) -
+                   (closed[i + 1].easting * closed[i].northing);
+    centroidX += (closed[i].easting + closed[i + 1].easting) * factor;
+    centroidY += (closed[i].northing + closed[i + 1].northing) * factor;
+  }
+  const areaFactor = 1 / (6 * (areaSqm || 1));
+  centroidX = Math.abs(centroidX * areaFactor);
+  centroidY = Math.abs(centroidY * areaFactor);
+  
+  return {
+    areaSqm,
+    areaHa: areaSqm / 10000,
+    areaAcres: areaSqm * 0.000247105,
+    perimeter,
+    centroid: { easting: centroidX, northing: centroidY },
+    method: 'Coordinate Method (Shoelace)'
+  };
+}
+
+export function trapezoidalArea(ordinates: number[], interval: number): AreaResult {
+  // Trapezoidal Rule: A = d × [(O0 + On)/2 + O1 + O2 + ... + O(n-1)]
+  if (ordinates.length < 2) {
+    return { areaSqm: 0, areaHa: 0, areaAcres: 0, perimeter: 0, centroid: { easting: 0, northing: 0 }, method: 'Trapezoidal Rule' };
+  }
+  
+  let area = interval * ((ordinates[0] + ordinates[ordinates.length - 1]) / 2);
+  for (let i = 1; i < ordinates.length - 1; i++) {
+    area += interval * ordinates[i];
+  }
+  
+  return {
+    areaSqm: area,
+    areaHa: area / 10000,
+    areaAcres: area * 0.000247105,
+    perimeter: 0,
+    centroid: { easting: 0, northing: 0 },
+    method: 'Trapezoidal Rule'
+  };
+}
+
+export function simpsonsArea(ordinates: number[], interval: number): AreaResult {
+  // Simpson's Rule: A = (d/3) × [(O0 + On) + 4(O1 + O3 + ...) + 2(O2 + O4 + ...)]
+  // Requires odd number of intervals (even number of ordinates)
+  if (ordinates.length < 3 || ordinates.length % 2 === 0) {
+    // Fall back to trapezoidal for even number of ordinates
+    return trapezoidalArea(ordinates, interval);
+  }
+  
+  let area = ordinates[0] + ordinates[ordinates.length - 1];
+  
+  for (let i = 1; i < ordinates.length - 1; i++) {
+    if (i % 2 === 1) {
+      area += 4 * ordinates[i];
+    } else {
+      area += 2 * ordinates[i];
+    }
+  }
+  
+  area = (interval / 3) * area;
+  
+  return {
+    areaSqm: area,
+    areaHa: area / 10000,
+    areaAcres: area * 0.000247105,
+    perimeter: 0,
+    centroid: { easting: 0, northing: 0 },
+    method: "Simpson's Rule"
+  };
+}
+
+export function midOrdinateArea(ordinates: number[], interval: number): AreaResult {
+  // Mid-Ordinate Rule: A = d × (O1 + O2 + ... + On)
+  if (ordinates.length < 1) {
+    return { areaSqm: 0, areaHa: 0, areaAcres: 0, perimeter: 0, centroid: { easting: 0, northing: 0 }, method: 'Mid-Ordinate Rule' };
+  }
+  
+  const sum = ordinates.reduce((a, b) => a + b, 0);
+  const area = interval * sum;
+  
+  return {
+    areaSqm: area,
+    areaHa: area / 10000,
+    areaAcres: area * 0.000247105,
+    perimeter: 0,
+    centroid: { easting: 0, northing: 0 },
+    method: 'Mid-Ordinate Rule'
+  };
+}
+
+export function averageOrdinateArea(ordinates: number[], totalLength: number): AreaResult {
+  // Average-Ordinate Rule: A = L/(n+1) × (O0 + O1 + ... + On)
+  if (ordinates.length < 1) {
+    return { areaSqm: 0, areaHa: 0, areaAcres: 0, perimeter: 0, centroid: { easting: 0, northing: 0 }, method: 'Average-Ordinate Rule' };
+  }
+  
+  const sum = ordinates.reduce((a, b) => a + b, 0);
+  const area = (totalLength / (ordinates.length + 1)) * sum;
+  
+  return {
+    areaSqm: area,
+    areaHa: area / 10000,
+    areaAcres: area * 0.000247105,
+    perimeter: 0,
+    centroid: { easting: 0, northing: 0 },
+    method: 'Average-Ordinate Rule'
+  };
+}
