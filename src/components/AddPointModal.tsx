@@ -48,7 +48,7 @@ export default function AddPointModal({
     setError('')
     setLoading(true)
 
-    const { error } = await supabase.from('points').insert({
+    const { error } = await supabase.from('survey_points').insert({
       project_id: projectId,
       name,
       easting: parseFloat(easting),

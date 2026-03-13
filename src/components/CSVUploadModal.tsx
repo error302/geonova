@@ -79,7 +79,7 @@ export default function CSVUploadModal({
         is_control: false
       }))
 
-      const { error } = await supabase.from('points').insert(pointsToInsert)
+      const { error } = await supabase.from('survey_points').insert(pointsToInsert)
 
       if (error) {
         setError(error.message)

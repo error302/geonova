@@ -67,7 +67,7 @@ export default function ProjectPage({ params }: PageProps) {
     setProject(projectData)
 
     const { data: pointsData } = await supabase
-      .from('points')
+      .from('survey_points')
       .select('*')
       .eq('project_id', params.id)
       .order('created_at', { ascending: true })
