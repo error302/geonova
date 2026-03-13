@@ -132,12 +132,12 @@ export default function TraverseModal({
         openingPtName = openingName
       }
 
-      // Convert initial bearing to decimal
+      // Convert initial bearing to decimal (bearings are 0-360 from North)
       const initBearing = dmsToDecimal({
         degrees: parseInt(openingBearingDeg) || 0,
         minutes: parseInt(openingBearingMin) || 0,
         seconds: parseFloat(openingBearingSec) || 0,
-        direction: 'E'
+        direction: 'N'
       })
 
       // Build traverse points and calculate
@@ -158,7 +158,7 @@ export default function TraverseModal({
           degrees: parseInt(leg.bearingDeg) || 0,
           minutes: parseInt(leg.bearingMin) || 0,
           seconds: parseFloat(leg.bearingSec) || 0,
-          direction: 'E'
+          direction: 'N'
         })
         
         distances.push(dist)
