@@ -1,35 +1,108 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
+import { createClient } from '@/lib/supabase/client'
+import { geographicToUTM } from '@/lib/engine/coordinates'
 import Link from 'next/link'
+import AddPointModal from '@/components/AddPointModal'
+import CSVUploadModal from '@/components/CSVUploadModal'
+
+const ProjectMap = dynamic(() => import('@/components/ProjectMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[500px] bg-gray-900/30 rounded-lg flex items-center justify-center">
+      <p className="text-gray-500">Loading map...</p>
+    </div>
+  )
+})
 
 interface PageProps {
   params: { id: string }
 }
 
-export default async function ProjectPage({ params }: PageProps) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+interface Project {
+  id: string
+  name: string
+  location: string | null
+  utm_zone: number
+  hemisphere: 'N' | 'S'
+}
 
-  if (!user) {
-    redirect('/login')
+interface Point {
+  id: string
+  name: string
+  easting: number
+  northing: number
+  elevation: number | null
+  is_control: boolean
+}
+
+export default function ProjectPage({ params }: PageProps) {
+  const [project, setProject] = useState<Project | null>(null)
+  const [points, setPoints] = useState<Point[]>([])
+  const [loading, setLoading] = useState(true)
+  const [showAddPoint, setShowAddPoint] = useState(false)
+  const [showCSVUpload, setShowCSVUpload] = useState(false)
+  const [prefillCoords, setPrefillCoords] = useState<{ easting?: number; northing?: number }>({})
+
+  const supabase = createClient()
+
+  const fetchData = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const { data: projectData } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('id', params.id)
+      .eq('user_id', user.id)
+      .single()
+
+    if (!projectData) {
+      window.location.href = '/dashboard'
+      return
+    }
+
+    setProject(projectData)
+
+    const { data: pointsData } = await supabase
+      .from('points')
+      .select('*')
+      .eq('project_id', params.id)
+      .order('created_at', { ascending: true })
+
+    setPoints(pointsData || [])
+    setLoading(false)
   }
 
-  const { data: project } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('id', params.id)
-    .eq('user_id', user.id)
-    .single()
+  useEffect(() => {
+    fetchData()
+  }, [params.id])
 
-  if (!project) {
-    redirect('/dashboard')
+  const handleMapClick = (lat: number, lon: number) => {
+    if (!project) return
+    const utm = geographicToUTM(lat, lon, project.utm_zone)
+    setPrefillCoords({
+      easting: utm.easting,
+      northing: utm.northing
+    })
+    setShowAddPoint(true)
   }
 
-  const { data: points } = await supabase
-    .from('points')
-    .select('*')
-    .eq('project_id', params.id)
-    .order('created_at', { ascending: true })
+  const handlePointAdded = () => {
+    fetchData()
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-2 border-[#E8841A] border-t-transparent rounded-full"></div>
+      </div>
+    )
+  }
+
+  if (!project) return null
 
   return (
     <div className="min-h-screen bg-gray-950 flex">
@@ -40,20 +113,23 @@ export default async function ProjectPage({ params }: PageProps) {
         
         <div className="space-y-2">
           <button
-            disabled
-            className="w-full px-4 py-2 bg-gray-800 text-gray-400 rounded text-sm cursor-not-allowed"
+            onClick={() => {
+              setPrefillCoords({})
+              setShowAddPoint(true)
+            }}
+            className="w-full px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded text-sm transition-colors"
           >
             Add Point
           </button>
           <button
-            disabled
-            className="w-full px-4 py-2 bg-gray-800 text-gray-400 rounded text-sm cursor-not-allowed"
+            onClick={() => setShowCSVUpload(true)}
+            className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors"
           >
             Upload CSV
           </button>
           <button
             disabled
-            className="w-full px-4 py-2 bg-gray-800 text-gray-400 rounded text-sm cursor-not-allowed"
+            className="w-full px-4 py-2 bg-gray-800 text-gray-500 rounded text-sm cursor-not-allowed"
           >
             Run Traverse
           </button>
@@ -75,9 +151,19 @@ export default async function ProjectPage({ params }: PageProps) {
 
         <div className="flex-1 p-6">
           <div className="mb-6">
-            <div className="border border-gray-800 bg-gray-900/30 rounded-lg p-8 text-center">
-              <p className="text-gray-400">Map coming soon</p>
-            </div>
+            <ProjectMap
+              points={points.map(p => ({
+                id: p.id,
+                name: p.name,
+                easting: p.easting,
+                northing: p.northing,
+                elevation: p.elevation || undefined,
+                is_control: p.is_control
+              }))}
+              utmZone={project.utm_zone}
+              hemisphere={project.hemisphere}
+              onMapClick={handleMapClick}
+            />
           </div>
 
           <div>
@@ -93,19 +179,24 @@ export default async function ProjectPage({ params }: PageProps) {
                   </tr>
                 </thead>
                 <tbody>
-                  {points && points.length > 0 ? (
+                  {points.length > 0 ? (
                     points.map((point) => (
                       <tr key={point.id} className="border-b border-gray-800/50">
-                        <td className="px-4 py-3 font-mono text-gray-100">{point.name}</td>
-                        <td className="px-4 py-3 font-mono text-gray-300">{point.easting?.toFixed(4)}</td>
-                        <td className="px-4 py-3 font-mono text-gray-300">{point.northing?.toFixed(4)}</td>
-                        <td className="px-4 py-3 font-mono text-gray-300">{point.elevation?.toFixed(4) ?? '—'}</td>
+                        <td className="px-4 py-3 font-mono text-gray-100">
+                          {point.name}
+                          {point.is_control && (
+                            <span className="ml-2 text-xs text-red-400">(CP)</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 font-mono text-gray-300">{point.easting.toFixed(4)}</td>
+                        <td className="px-4 py-3 font-mono text-gray-300">{point.northing.toFixed(4)}</td>
+                        <td className="px-4 py-3 font-mono text-gray-300">{point.elevation?.toFixed(3) ?? '—'}</td>
                       </tr>
                     ))
                   ) : (
                     <tr>
                       <td colSpan={4} className="px-4 py-8 text-center text-gray-500">
-                        No points yet. Use "Add Point" to get started.
+                        No points yet. Use "Add Point" or "Upload CSV" to get started.
                       </td>
                     </tr>
                   )}
@@ -115,6 +206,27 @@ export default async function ProjectPage({ params }: PageProps) {
           </div>
         </div>
       </main>
+
+      <AddPointModal
+        isOpen={showAddPoint}
+        onClose={() => {
+          setShowAddPoint(false)
+          setPrefillCoords({})
+        }}
+        projectId={params.id}
+        utmZone={project.utm_zone}
+        hemisphere={project.hemisphere}
+        prefillEasting={prefillCoords.easting}
+        prefillNorthing={prefillCoords.northing}
+        onPointAdded={handlePointAdded}
+      />
+
+      <CSVUploadModal
+        isOpen={showCSVUpload}
+        onClose={() => setShowCSVUpload(false)}
+        projectId={params.id}
+        onUploadComplete={handlePointAdded}
+      />
     </div>
   )
 }
