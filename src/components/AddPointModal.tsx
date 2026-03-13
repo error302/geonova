@@ -89,8 +89,8 @@ export default function AddPointModal({
       }
     }
 
+    let error
     try {
-      let error
       if (isEditMode) {
         ({ error } = await supabase.from('survey_points').update({
           name,
@@ -109,22 +109,23 @@ export default function AddPointModal({
           is_control: isControl
         }))
       }
-
-      if (error) {
-        setError(error.message)
-        setLoading(false)
-      } else {
-        setName('')
-        setEasting('')
-        setNorthing('')
-        setElevation('0')
-        setIsControl(false)
-        onPointAdded()
-        onClose()
-      }
     } catch (err) {
       setError('Failed to save point. Please try again.')
       setLoading(false)
+      return
+    }
+
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+    } else {
+      setName('')
+      setEasting('')
+      setNorthing('')
+      setElevation('0')
+      setIsControl(false)
+      onPointAdded()
+      onClose()
     }
   }
 

@@ -98,19 +98,18 @@ function RecenterMap({ center }: { center: [number, number] }) {
 function FlyToPoints({ points, utmZone, hemisphere }: { points: SurveyPoint[]; utmZone: number; hemisphere: 'N' | 'S' }) {
   const map = useMap()
   const prevPointsLength = useRef(0)
-  const normHemisphere = hemisphere.toUpperCase() as 'N' | 'S'
   
   useEffect(() => {
     if (points.length === 0) return
     
     if (points.length > prevPointsLength.current && points.length > 0) {
       const lastPoint = points[points.length - 1]
-      const converted = utmToGeographic(lastPoint.easting, lastPoint.northing, utmZone, normHemisphere)
+      const converted = utmToGeographic(lastPoint.easting, lastPoint.northing, utmZone, hemisphere)
       map.flyTo([converted.lat, converted.lon], 16, { duration: 1 })
     } else if (points.length > 1 && prevPointsLength.current === 0) {
       const bounds = L.latLngBounds(
         points.map(p => {
-          const converted = utmToGeographic(p.easting, p.northing, utmZone, normHemisphere)
+          const converted = utmToGeographic(p.easting, p.northing, utmZone, hemisphere)
           return [converted.lat, converted.lon] as [number, number]
         })
       )
@@ -146,9 +145,6 @@ export default function ProjectMap({
   const [distancePoints, setDistancePoints] = useState<SurveyPoint[]>([])
   const [localAreaPoints, setLocalAreaPoints] = useState<SurveyPoint[]>(areaPoints)
 
-  // Ensure hemisphere is always uppercase
-  const normalizedHemisphere = hemisphere.toUpperCase() as 'N' | 'S'
-
   // Sync area points from props
   useEffect(() => {
     setLocalAreaPoints(areaPoints)
@@ -176,7 +172,7 @@ export default function ProjectMap({
     let lon = point.lon
     
     if (!lat || !lon) {
-      const converted = utmToGeographic(point.easting, point.northing, utmZone, normalizedHemisphere)
+      const converted = utmToGeographic(point.easting, point.northing, utmZone, hemisphere)
       lat = converted.lat
       lon = converted.lon
     }
