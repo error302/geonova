@@ -13,6 +13,12 @@ interface AddPointModalProps {
   prefillEasting?: number
   prefillNorthing?: number
   onPointAdded: () => void
+  editPointId?: string
+  editPointName?: string
+  editPointEasting?: number
+  editPointNorthing?: number
+  editPointElevation?: number
+  editPointIsControl?: boolean
 }
 
 export default function AddPointModal({
@@ -23,7 +29,13 @@ export default function AddPointModal({
   hemisphere,
   prefillEasting,
   prefillNorthing,
-  onPointAdded
+  onPointAdded,
+  editPointId,
+  editPointName,
+  editPointEasting,
+  editPointNorthing,
+  editPointElevation,
+  editPointIsControl
 }: AddPointModalProps) {
   const [name, setName] = useState('')
   const [easting, setEasting] = useState('')
@@ -34,42 +46,68 @@ export default function AddPointModal({
   const [error, setError] = useState('')
   const supabase = createClient()
 
+  const isEditMode = !!editPointId
+
   useEffect(() => {
-    if (prefillEasting !== undefined) {
+    if (isEditMode && editPointName) {
+      setName(editPointName)
+      setEasting(editPointEasting?.toFixed(4) || '')
+      setNorthing(editPointNorthing?.toFixed(4) || '')
+      setElevation(editPointElevation?.toString() || '0')
+      setIsControl(editPointIsControl || false)
+    } else if (prefillEasting !== undefined) {
       setEasting(prefillEasting.toFixed(4))
     }
     if (prefillNorthing !== undefined) {
       setNorthing(prefillNorthing.toFixed(4))
     }
-  }, [prefillEasting, prefillNorthing])
+    if (!isEditMode) {
+      setName('')
+      setElevation('0')
+      setIsControl(false)
+    }
+  }, [prefillEasting, prefillNorthing, isEditMode, editPointName, editPointEasting, editPointNorthing, editPointElevation, editPointIsControl])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setLoading(true)
 
-    // Check for duplicate point name
-    const { data: existing } = await supabase
-      .from('survey_points')
-      .select('name')
-      .eq('project_id', projectId)
-      .eq('name', name)
-      .single()
+    // Check for duplicate point name (only for new points)
+    if (!isEditMode) {
+      const { data: existing } = await supabase
+        .from('survey_points')
+        .select('name')
+        .eq('project_id', projectId)
+        .eq('name', name)
+        .single()
 
-    if (existing) {
-      setError('Point name already exists in this project.')
-      setLoading(false)
-      return
+      if (existing) {
+        setError('Point name already exists in this project.')
+        setLoading(false)
+        return
+      }
     }
 
-    const { error } = await supabase.from('survey_points').insert({
-      project_id: projectId,
-      name,
-      easting: parseFloat(easting),
-      northing: parseFloat(northing),
-      elevation: parseFloat(elevation) || 0,
-      is_control: isControl
-    })
+    let error
+    if (isEditMode) {
+      ({ error } = await supabase.from('survey_points').update({
+        name,
+        easting: parseFloat(easting),
+        northing: parseFloat(northing),
+        elevation: parseFloat(elevation) || 0,
+        is_control: isControl
+      }).eq('id', editPointId))
+    } else {
+      ({ error } = await supabase.from('survey_points').insert({
+        project_id: projectId,
+        name,
+        easting: parseFloat(easting),
+        northing: parseFloat(northing),
+        elevation: parseFloat(elevation) || 0,
+        is_control: isControl
+      }))
+    }
 
     if (error) {
       setError(error.message)
@@ -91,7 +129,9 @@ export default function AddPointModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70" onClick={onClose}></div>
       <div className="relative bg-gray-900 border border-gray-700 rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-bold text-gray-100 mb-4">Add Survey Point</h2>
+        <h2 className="text-xl font-bold text-gray-100 mb-4">
+          {isEditMode ? 'Edit Survey Point' : 'Add Survey Point'}
+        </h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
@@ -174,7 +214,7 @@ export default function AddPointModal({
               disabled={loading}
               className="flex-1 px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded transition-colors disabled:opacity-50"
             >
-              {loading ? 'Adding...' : 'Add Point'}
+              {loading ? (isEditMode ? 'Saving...' : 'Adding...') : (isEditMode ? 'Save Changes' : 'Add Point')}
             </button>
           </div>
         </form>

@@ -52,6 +52,14 @@ export default function ProjectPage({ params }: PageProps) {
   const [areaPoints, setAreaPoints] = useState<any[]>([])
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [prefillCoords, setPrefillCoords] = useState<{ easting?: number; northing?: number }>({})
+  const [editPoint, setEditPoint] = useState<{
+    id: string
+    name: string
+    easting: number
+    northing: number
+    elevation: number
+    is_control: boolean
+  } | null>(null)
 
   const supabase = createClient()
 
@@ -99,6 +107,23 @@ export default function ProjectPage({ params }: PageProps) {
 
   const handlePointAdded = () => {
     fetchData()
+  }
+
+  const handleDeletePoint = async (pointId: string) => {
+    await supabase.from('survey_points').delete().eq('id', pointId)
+    fetchData()
+  }
+
+  const handleEditPoint = (point: any) => {
+    setEditPoint({
+      id: point.id,
+      name: point.name,
+      easting: point.easting,
+      northing: point.northing,
+      elevation: point.elevation || 0,
+      is_control: point.is_control || false
+    })
+    setShowAddPoint(true)
   }
 
   const handleCopyCoords = async (point: Point) => {
@@ -215,6 +240,8 @@ export default function ProjectPage({ params }: PageProps) {
               onModeChange={setMapMode}
               areaPoints={areaPoints}
               onAreaPointsUpdate={setAreaPoints}
+              onDeletePoint={handleDeletePoint}
+              onEditPoint={handleEditPoint}
             />
           </div>
 
@@ -273,13 +300,23 @@ export default function ProjectPage({ params }: PageProps) {
         onClose={() => {
           setShowAddPoint(false)
           setPrefillCoords({})
+          setEditPoint(null)
         }}
         projectId={params.id}
         utmZone={project.utm_zone}
         hemisphere={project.hemisphere}
         prefillEasting={prefillCoords.easting}
         prefillNorthing={prefillCoords.northing}
-        onPointAdded={handlePointAdded}
+        onPointAdded={() => {
+          handlePointAdded()
+          setEditPoint(null)
+        }}
+        editPointId={editPoint?.id}
+        editPointName={editPoint?.name}
+        editPointEasting={editPoint?.easting}
+        editPointNorthing={editPoint?.northing}
+        editPointElevation={editPoint?.elevation}
+        editPointIsControl={editPoint?.is_control}
       />
 
       <CSVUploadModal

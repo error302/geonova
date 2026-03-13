@@ -6,7 +6,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { distanceBearing } from '@/lib/engine/distance'
 import { bearingToString } from '@/lib/engine/angles'
-import { utmToGeographic } from '@/lib/engine/coordinates'
+import { utmToGeographic, geographicToUTM } from '@/lib/engine/coordinates'
 
 // Fix Leaflet default marker icons
 delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -38,6 +38,8 @@ interface ProjectMapProps {
   onModeChange?: (mode: MapMode) => void
   onAreaPointsUpdate?: (points: SurveyPoint[]) => void
   areaPoints?: SurveyPoint[]
+  onDeletePoint?: (pointId: string) => void
+  onEditPoint?: (point: SurveyPoint) => void
 }
 
 const amberIcon = new L.Icon({
@@ -128,7 +130,9 @@ export default function ProjectMap({
   mode = 'idle',
   onModeChange,
   onAreaPointsUpdate,
-  areaPoints = []
+  areaPoints = [],
+  onDeletePoint,
+  onEditPoint
 }: ProjectMapProps) {
   const getDefaultCenter = (): [number, number] => {
     if (utmZone === 37 && hemisphere === 'S') {
@@ -182,9 +186,12 @@ export default function ProjectMap({
 
   const handleMapClick = (lat: number, lon: number) => {
     if (mode === 'idle' && onMapClick) {
+      // Pass lat/lon directly - parent will convert to UTM if needed
       onMapClick(lat, lon)
     }
   }
+
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; point: SurveyPoint } | null>(null)
 
   const handleMarkerClick = (point: SurveyPoint) => {
     if (mode === 'distance') {
@@ -306,7 +313,15 @@ export default function ProjectMap({
               position={[point.lat!, point.lon!]}
               icon={icon}
               eventHandlers={{
-                click: () => handleMarkerClick(point)
+                click: () => handleMarkerClick(point),
+                contextmenu: (e) => {
+                  e.originalEvent.preventDefault()
+                  setContextMenu({
+                    x: e.originalEvent.clientX,
+                    y: e.originalEvent.clientY,
+                    point
+                  })
+                }
               }}
             >
               <Tooltip permanent direction="top" offset={[0, -10]} className="font-mono text-xs">
@@ -397,6 +412,41 @@ export default function ProjectMap({
             ))}
           </div>
         </div>
+      )}
+
+      {/* Context menu for right-click */}
+      {contextMenu && (
+        <>
+          <div 
+            className="fixed inset-0 z-[1100]"
+            onClick={() => setContextMenu(null)}
+          />
+          <div 
+            className="fixed z-[1200] bg-gray-800 border border-gray-600 rounded-lg shadow-xl py-1 min-w-[150px]"
+            style={{ left: contextMenu.x, top: contextMenu.y }}
+          >
+            <button
+              onClick={() => {
+                onEditPoint?.(contextMenu.point)
+                setContextMenu(null)
+              }}
+              className="w-full px-4 py-2 text-left text-sm text-gray-100 hover:bg-gray-700"
+            >
+              Edit Point
+            </button>
+            <button
+              onClick={() => {
+                if (confirm(`Delete point "${contextMenu.point.name}"?`)) {
+                  onDeletePoint?.(contextMenu.point.id!)
+                }
+                setContextMenu(null)
+              }}
+              className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-gray-700"
+            >
+              Delete Point
+            </button>
+          </div>
+        </>
       )}
     </div>
   )
