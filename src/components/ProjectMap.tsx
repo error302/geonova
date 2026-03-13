@@ -98,18 +98,19 @@ function RecenterMap({ center }: { center: [number, number] }) {
 function FlyToPoints({ points, utmZone, hemisphere }: { points: SurveyPoint[]; utmZone: number; hemisphere: 'N' | 'S' }) {
   const map = useMap()
   const prevPointsLength = useRef(0)
+  const normHemisphere = hemisphere.toUpperCase() as 'N' | 'S'
   
   useEffect(() => {
     if (points.length === 0) return
     
     if (points.length > prevPointsLength.current && points.length > 0) {
       const lastPoint = points[points.length - 1]
-      const converted = utmToGeographic(lastPoint.easting, lastPoint.northing, utmZone, hemisphere)
+      const converted = utmToGeographic(lastPoint.easting, lastPoint.northing, utmZone, normHemisphere)
       map.flyTo([converted.lat, converted.lon], 16, { duration: 1 })
     } else if (points.length > 1 && prevPointsLength.current === 0) {
       const bounds = L.latLngBounds(
         points.map(p => {
-          const converted = utmToGeographic(p.easting, p.northing, utmZone, hemisphere)
+          const converted = utmToGeographic(p.easting, p.northing, utmZone, normHemisphere)
           return [converted.lat, converted.lon] as [number, number]
         })
       )
@@ -145,6 +146,9 @@ export default function ProjectMap({
   const [distancePoints, setDistancePoints] = useState<SurveyPoint[]>([])
   const [localAreaPoints, setLocalAreaPoints] = useState<SurveyPoint[]>(areaPoints)
 
+  // Ensure hemisphere is always uppercase
+  const normalizedHemisphere = hemisphere.toUpperCase() as 'N' | 'S'
+
   // Sync area points from props
   useEffect(() => {
     setLocalAreaPoints(areaPoints)
@@ -172,7 +176,7 @@ export default function ProjectMap({
     let lon = point.lon
     
     if (!lat || !lon) {
-      const converted = utmToGeographic(point.easting, point.northing, utmZone, hemisphere)
+      const converted = utmToGeographic(point.easting, point.northing, utmZone, normalizedHemisphere)
       lat = converted.lat
       lon = converted.lon
     }
@@ -282,7 +286,7 @@ export default function ProjectMap({
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CartoDB</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
         <MapClickHandler onClick={handleMapClick} />
         <RecenterMap center={center} />

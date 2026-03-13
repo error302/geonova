@@ -89,37 +89,42 @@ export default function AddPointModal({
       }
     }
 
-    let error
-    if (isEditMode) {
-      ({ error } = await supabase.from('survey_points').update({
-        name,
-        easting: parseFloat(easting),
-        northing: parseFloat(northing),
-        elevation: parseFloat(elevation) || 0,
-        is_control: isControl
-      }).eq('id', editPointId))
-    } else {
-      ({ error } = await supabase.from('survey_points').insert({
-        project_id: projectId,
-        name,
-        easting: parseFloat(easting),
-        northing: parseFloat(northing),
-        elevation: parseFloat(elevation) || 0,
-        is_control: isControl
-      }))
-    }
+    try {
+      let error
+      if (isEditMode) {
+        ({ error } = await supabase.from('survey_points').update({
+          name,
+          easting: parseFloat(easting),
+          northing: parseFloat(northing),
+          elevation: parseFloat(elevation) || 0,
+          is_control: isControl
+        }).eq('id', editPointId))
+      } else {
+        ({ error } = await supabase.from('survey_points').insert({
+          project_id: projectId,
+          name,
+          easting: parseFloat(easting),
+          northing: parseFloat(northing),
+          elevation: parseFloat(elevation) || 0,
+          is_control: isControl
+        }))
+      }
 
-    if (error) {
-      setError(error.message)
+      if (error) {
+        setError(error.message)
+        setLoading(false)
+      } else {
+        setName('')
+        setEasting('')
+        setNorthing('')
+        setElevation('0')
+        setIsControl(false)
+        onPointAdded()
+        onClose()
+      }
+    } catch (err) {
+      setError('Failed to save point. Please try again.')
       setLoading(false)
-    } else {
-      setName('')
-      setEasting('')
-      setNorthing('')
-      setElevation('0')
-      setIsControl(false)
-      onPointAdded()
-      onClose()
     }
   }
 
