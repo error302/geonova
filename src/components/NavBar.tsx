@@ -8,6 +8,8 @@ import { SupabaseClient } from '@supabase/supabase-js'
 export default function NavBar() {
   const [user, setUser] = useState<{ email: string } | null>(null)
   const [loading, setLoading] = useState(true)
+  const [installPrompt, setInstallPrompt] = useState<any>(null)
+  const [showInstall, setShowInstall] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -27,6 +29,23 @@ export default function NavBar() {
 
     return () => subscription.unsubscribe()
   }, [])
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault()
+      setInstallPrompt(e)
+      setShowInstall(true)
+    }
+    window.addEventListener('beforeinstallprompt', handler)
+    return () => window.removeEventListener('beforeinstallprompt', handler)
+  }, [])
+
+  const handleInstall = async () => {
+    if (!installPrompt) return
+    installPrompt.prompt()
+    const { outcome } = await installPrompt.userChoice
+    if (outcome === 'accepted') setShowInstall(false)
+  }
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -50,6 +69,14 @@ export default function NavBar() {
             <NavLink href="/tools/leveling">Leveling</NavLink>
             <NavLink href="/tools/coordinates">Coordinates</NavLink>
             <NavLink href="/tools/curves">Curves</NavLink>
+            {showInstall && (
+              <button
+                onClick={handleInstall}
+                className="text-sm border border-[#E8841A] text-[#E8841A] px-3 py-1 rounded hover:bg-[#E8841A] hover:text-black transition"
+              >
+                📲 Install
+              </button>
+            )}
           </div>
         </div>
         {loading ? (
