@@ -44,6 +44,7 @@ export default function AddPointModal({
   const [isControl, setIsControl] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [successMsg, setSuccessMsg] = useState<string | null>(null)
   let supabase: ReturnType<typeof createClient> | null = null
 
   const isEditMode = !!editPointId
@@ -75,11 +76,13 @@ export default function AddPointModal({
       setIsControl(false)
     }
     setError(null)
+    setSuccessMsg(null)
   }, [isOpen, prefillEasting, prefillNorthing, isEditMode, editPointName, editPointEasting, editPointNorthing, editPointElevation, editPointIsControl])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setSuccessMsg(null)
     setLoading(true)
 
     try {
@@ -129,6 +132,55 @@ export default function AddPointModal({
       setLoading(false)
       onPointAdded()
       onClose()
+
+    } catch (err) {
+      setError('Unexpected error. Please try again.')
+      setLoading(false)
+    }
+  }
+
+  const handleSaveAndAddAnother = async () => {
+    if (isEditMode) return // Only for new points
+    
+    setError(null)
+    setSuccessMsg(null)
+    setLoading(true)
+
+    try {
+      const client = getClient()
+
+      const { error: insertError } = await client
+        .from('survey_points')
+        .insert({
+          project_id: projectId,
+          name: name.trim(),
+          easting: Number(parseFloat(easting).toFixed(4)),
+          northing: Number(parseFloat(northing).toFixed(4)),
+          elevation: Number(parseFloat(elevation || '0').toFixed(4)),
+          is_control: Boolean(isControl)
+        })
+
+      if (insertError) {
+        if (insertError.code === '23505') {
+          setError(`Point "${name}" already exists in this project.`)
+        } else {
+          setError(`Failed to add point: ${insertError.message}`)
+        }
+        setLoading(false)
+        return
+      }
+
+      // Success - clear fields but keep checkbox state
+      setLoading(false)
+      setSuccessMsg(`✓ ${name} saved`)
+      setName('')
+      setEasting('')
+      setNorthing('')
+      setElevation('0')
+      onPointAdded()
+      
+      // Clear success message after 2 seconds
+      setTimeout(() => setSuccessMsg(null), 2000)
 
     } catch (err) {
       setError('Unexpected error. Please try again.')
@@ -214,14 +266,30 @@ export default function AddPointModal({
             </label>
           </div>
 
+          {successMsg && (
+            <div className="text-green-400 text-sm p-2 bg-green-900/20 rounded border border-green-800">
+              {successMsg}
+            </div>
+          )}
+
           <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded transition-colors"
+              className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded transition-colors"
             >
               Cancel
             </button>
+            {!isEditMode && (
+              <button
+                type="button"
+                onClick={handleSaveAndAddAnother}
+                disabled={loading || !name || !easting || !northing}
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded transition-colors disabled:opacity-50"
+              >
+                Save & Add Another
+              </button>
+            )}
             <button
               type="submit"
               disabled={loading}
