@@ -16,37 +16,8 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
-  const handleSignOut = async () => {
-    'use server'
-    const supabase = await createClient()
-    await supabase.auth.signOut()
-    redirect('/login')
-  }
-
   return (
     <div className="min-h-screen bg-gray-950">
-      <header className="border-b border-gray-800 bg-gray-900/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="text-2xl font-bold" style={{ color: '#E8841A' }}>
-              GEONOVA
-            </Link>
-            <span className="text-gray-400">Dashboard</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-gray-400 text-sm">{user.email}</span>
-            <form action={handleSignOut}>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors"
-              >
-                Sign Out
-              </button>
-            </form>
-          </div>
-        </div>
-      </header>
-
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold text-gray-100">Your Projects</h1>
