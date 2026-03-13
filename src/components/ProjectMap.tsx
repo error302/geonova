@@ -6,7 +6,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { distanceBearing } from '@/lib/engine/distance'
 import { bearingToString } from '@/lib/engine/angles'
-import { utmToGeographic, geographicToUTM } from '@/lib/engine/coordinates'
+import { utmToGeographic } from '@/lib/engine/coordinates'
 
 // Fix Leaflet default marker icons
 delete (L.Icon.Default.prototype as any)._getIconUrl
