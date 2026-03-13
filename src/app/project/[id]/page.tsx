@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { createClient } from '@/lib/supabase/client'
 import { geographicToUTM } from '@/lib/engine/coordinates'
+import { generateSurveyReport } from '@/lib/reports/generateReport'
 import AddPointModal from '@/components/AddPointModal'
 import CSVUploadModal from '@/components/CSVUploadModal'
 import TraverseModal from '@/components/TraverseModal'
@@ -28,6 +29,7 @@ interface Project {
   location: string | null
   utm_zone: number
   hemisphere: 'N' | 'S'
+  created_at: string
 }
 
 interface Point {
@@ -60,6 +62,8 @@ export default function ProjectPage({ params }: PageProps) {
     elevation: number
     is_control: boolean
   } | null>(null)
+  const [traverseResult, setTraverseResult] = useState<any>(null)
+  const [areaResult, setAreaResult] = useState<any>(null)
 
   const supabase = createClient()
 
@@ -136,10 +140,33 @@ export default function ProjectPage({ params }: PageProps) {
   }
 
   const handleCopyCoords = async (point: Point) => {
-    const text = `${point.name}, ${point.easting}, ${point.northing}, ${point.elevation || 0}`
+    const text = point.name + ', ' + point.easting + ', ' + point.northing + ', ' + (point.elevation || 0)
     await navigator.clipboard.writeText(text)
     setCopiedId(point.id)
     setTimeout(() => setCopiedId(null), 1500)
+  }
+
+  const handleGenerateReport = () => {
+    if (!project) return
+    
+    generateSurveyReport({
+      project: {
+        name: project.name,
+        location: project.location || 'Not specified',
+        utm_zone: project.utm_zone,
+        hemisphere: project.hemisphere,
+        created_at: project.created_at
+      },
+      points: points.map(p => ({
+        name: p.name,
+        easting: p.easting,
+        northing: p.northing,
+        elevation: p.elevation || 0,
+        is_control: p.is_control
+      })),
+      traverse: traverseResult || undefined,
+      area: areaResult || undefined
+    })
   }
 
   const handleAreaPointSelect = (point: any) => {
@@ -214,6 +241,12 @@ export default function ProjectPage({ params }: PageProps) {
             title="Press A to activate"
           >
             {mapMode === 'area' ? 'Area Active' : 'Compute Area'}
+          </button>
+          <button
+            onClick={handleGenerateReport}
+            className="w-full px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded text-sm transition-colors"
+          >
+            📄 Generate Report
           </button>
         </div>
       </aside>
@@ -340,6 +373,7 @@ export default function ProjectPage({ params }: PageProps) {
         onClose={() => setShowTraverse(false)}
         projectId={params.id}
         onTraverseComplete={handlePointAdded}
+        onTraverseResult={setTraverseResult}
       />
 
       <ParcelAreaModal
@@ -356,6 +390,7 @@ export default function ProjectPage({ params }: PageProps) {
           elevation: p.elevation || undefined,
           is_control: p.is_control
         }))}
+        onAreaResult={setAreaResult}
       />
     </div>
   )

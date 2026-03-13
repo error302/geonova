@@ -11,6 +11,7 @@ interface TraverseModalProps {
   onClose: () => void
   projectId: string
   onTraverseComplete: () => void
+  onTraverseResult?: (result: any) => void
 }
 
 interface ControlPoint {
@@ -33,7 +34,8 @@ export default function TraverseModal({
   isOpen,
   onClose,
   projectId,
-  onTraverseComplete
+  onTraverseComplete,
+  onTraverseResult
 }: TraverseModalProps) {
   const [controlPoints, setControlPoints] = useState<ControlPoint[]>([])
   const [loading, setLoading] = useState(false)
@@ -196,6 +198,9 @@ export default function TraverseModal({
 
       const traverseResult = bowditchAdjustment(traverseInput)
       setResults(traverseResult)
+      if (onTraverseResult) {
+        onTraverseResult(traverseResult)
+      }
 
       setStep('results')
     } catch (err: any) {

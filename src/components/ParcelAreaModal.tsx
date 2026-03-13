@@ -9,9 +9,10 @@ interface ParcelAreaModalProps {
   isOpen: boolean
   onClose: () => void
   points: SurveyPoint[]
+  onAreaResult?: (result: { squareMeters: number; hectares: number; acres: number; perimeter: number }) => void
 }
 
-export default function ParcelAreaModal({ isOpen, onClose, points }: ParcelAreaModalProps) {
+export default function ParcelAreaModal({ isOpen, onClose, points, onAreaResult }: ParcelAreaModalProps) {
   const [selectedPoints, setSelectedPoints] = useState<SurveyPoint[]>([])
   const [result, setResult] = useState<{
     areaSqm: number
@@ -43,6 +44,14 @@ export default function ParcelAreaModal({ isOpen, onClose, points }: ParcelAreaM
 
     const areaResult = coordinateArea(coords)
     setResult(areaResult)
+    if (onAreaResult) {
+      onAreaResult({
+        squareMeters: areaResult.areaSqm,
+        hectares: areaResult.areaHa,
+        acres: areaResult.areaAcres,
+        perimeter: areaResult.perimeter
+      })
+    }
   }
 
   const clearSelection = () => {
