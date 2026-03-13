@@ -157,6 +157,14 @@ export default function TraverseModal({
         distances.push(dist)
         bearings.push(bearing)
         
+        // DEBUG: Verify bearing calculation
+        console.log('Leg test:', {
+          bearing: bearing,
+          distance: dist,
+          deltaE: dist * Math.sin(bearing * Math.PI / 180),
+          deltaN: dist * Math.cos(bearing * Math.PI / 180)
+        })
+        
         // Calculate next point position using this leg's bearing
         const rad = bearing * Math.PI / 180
         currentE = currentE + dist * Math.sin(rad)
