@@ -176,21 +176,21 @@ export default function ProjectMap({
     console.log('Processing point:', point.name, 'lat:', lat, 'lon:', lon)
     
     if (!lat || !lon) {
-    console.log('Converting point:', point.name, {
-        easting: point.easting,
-        northing: point.northing,
-        zone: utmZone,
-        hemisphere
-      })
-      const converted = utmToGeographic(
+      const result = utmToGeographic(
         Number(point.easting),
         Number(point.northing),
         Number(utmZone),
         hemisphere as 'N' | 'S'
       )
-      console.log('Result lat:', converted.lat, 'lon:', converted.lon)
-      lat = converted.lat
-      lon = converted.lon
+
+      console.log(
+        point.name,
+        'lat:', result.lat,
+        'lon:', result.lon
+      )
+
+      lat = result.lat
+      lon = result.lon
       console.log('Using for marker:', point.name, '=', lat, lon)
     }
     
