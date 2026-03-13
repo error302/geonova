@@ -42,7 +42,7 @@ interface ReportOptions {
   }
 }
 
-export function generateSurveyReport(options: ReportOptions): void {
+export function generateSurveyReport(options: ReportOptions, onBlob?: (blob: Blob, filename: string) => void): void {
   const { project, points, traverse, area } = options
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
   
@@ -228,5 +228,11 @@ export function generateSurveyReport(options: ReportOptions): void {
 
   const date = new Date().toISOString().slice(0, 10)
   const filename = `${project.name.replace(/\s+/g, '_')}_${date}_Survey_Report.pdf`
+  
+  if (onBlob) {
+    const blob = doc.output('blob')
+    onBlob(blob, filename)
+  }
+  
   doc.save(filename)
 }

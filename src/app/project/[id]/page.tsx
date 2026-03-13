@@ -68,6 +68,8 @@ export default function ProjectPage({ params }: PageProps) {
   } | null>(null)
   const [traverseResult, setTraverseResult] = useState<any>(null)
   const [areaResult, setAreaResult] = useState<any>(null)
+  const [shareUrl, setShareUrl] = useState<string | null>(null)
+  const [reportLoading, setReportLoading] = useState(false)
 
   const supabase = createClient()
 
@@ -160,8 +162,39 @@ export default function ProjectPage({ params }: PageProps) {
     setTimeout(() => setCopiedId(null), 1500)
   }
 
-  const handleGenerateReport = () => {
+  const handleGenerateReport = async () => {
     if (!project) return
+    
+    setReportLoading(true)
+    setShareUrl(null)
+    
+    const uploadToStorage = async (blob: Blob, filename: string) => {
+      try {
+        const fileExt = filename.split('.').pop()
+        const fileName = `${params.id}/${Date.now()}.${fileExt}`
+        
+        const { error: uploadError } = await supabase.storage
+          .from('reports')
+          .upload(fileName, blob, { contentType: 'application/pdf', upsert: true })
+        
+        if (uploadError) {
+          console.error('Upload error:', uploadError)
+          setReportLoading(false)
+          return
+        }
+        
+        const { data: urlData } = supabase.storage
+          .from('reports')
+          .getPublicUrl(fileName)
+        
+        if (urlData) {
+          setShareUrl(urlData.publicUrl)
+        }
+      } catch (err) {
+        console.error('Error uploading report:', err)
+      }
+      setReportLoading(false)
+    }
     
     generateSurveyReport({
       project: {
@@ -180,7 +213,7 @@ export default function ProjectPage({ params }: PageProps) {
       })),
       traverse: traverseResult || undefined,
       area: areaResult || undefined
-    })
+    }, uploadToStorage)
   }
 
   const handleAreaPointSelect = (point: any) => {
@@ -258,10 +291,34 @@ export default function ProjectPage({ params }: PageProps) {
           </button>
           <button
             onClick={handleGenerateReport}
-            className="w-full px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded text-sm transition-colors"
+            disabled={reportLoading}
+            className="w-full px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded text-sm transition-colors disabled:opacity-50"
           >
-            📄 Generate Report
+            {reportLoading ? 'Generating...' : '📄 Generate Report'}
           </button>
+          {shareUrl && (
+            <div className="mt-2 p-2 bg-green-900/30 border border-green-700 rounded">
+              <div className="text-xs text-green-400 mb-1">✓ Report uploaded</div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={shareUrl}
+                  className="flex-1 px-2 py-1 text-xs bg-gray-800 border border-gray-600 rounded text-gray-300 font-mono"
+                />
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(shareUrl)
+                    alert('Link copied!')
+                  }}
+                  className="px-2 py-1 text-xs bg-gray-700 hover:bg-gray-600 text-white rounded"
+                >
+                  Copy
+                </button>
+              </div>
+              <div className="text-xs text-gray-500 mt-1">Link expires in 7 days</div>
+            </div>
+          )}
         </div>
       </aside>
 
