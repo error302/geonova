@@ -39,6 +39,8 @@ interface Point {
   is_control: boolean
 }
 
+type MapMode = 'idle' | 'distance' | 'area' | 'traverse'
+
 export default function ProjectPage({ params }: PageProps) {
   const [project, setProject] = useState<Project | null>(null)
   const [points, setPoints] = useState<Point[]>([])
@@ -46,10 +48,8 @@ export default function ProjectPage({ params }: PageProps) {
   const [showAddPoint, setShowAddPoint] = useState(false)
   const [showCSVUpload, setShowCSVUpload] = useState(false)
   const [showTraverse, setShowTraverse] = useState(false)
-  const [drawMode, setDrawMode] = useState(false)
-  const [areaMode, setAreaMode] = useState(false)
+  const [mapMode, setMapMode] = useState<MapMode>('idle')
   const [areaPoints, setAreaPoints] = useState<any[]>([])
-  const [drawPoints, setDrawPoints] = useState<any[]>([])
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [prefillCoords, setPrefillCoords] = useState<{ easting?: number; northing?: number }>({})
 
@@ -155,31 +155,31 @@ export default function ProjectPage({ params }: PageProps) {
           </button>
           <button
             onClick={() => {
-              setDrawMode(!drawMode)
-              setDrawPoints([])
-              setAreaMode(false)
-            }}
-            className={`w-full px-4 py-2 rounded text-sm transition-colors ${
-              drawMode 
-                ? 'bg-green-600 hover:bg-green-500 text-white font-semibold' 
-                : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
-            }`}
-          >
-            {drawMode ? 'Drawing Active' : 'Draw Line'}
-          </button>
-          <button
-            onClick={() => {
-              setAreaMode(!areaMode)
-              setDrawMode(false)
+              setMapMode(mapMode === 'distance' ? 'idle' : 'distance')
               setAreaPoints([])
             }}
             className={`w-full px-4 py-2 rounded text-sm transition-colors ${
-              areaMode 
-                ? 'bg-purple-600 hover:bg-purple-500 text-white font-semibold' 
+              mapMode === 'distance' 
+                ? 'bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold' 
                 : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
             }`}
+            title="Press D to activate"
           >
-            {areaMode ? 'Select Area' : 'Compute Area'}
+            {mapMode === 'distance' ? 'Distance Active' : 'Distance Tool'}
+          </button>
+          <button
+            onClick={() => {
+              setMapMode(mapMode === 'area' ? 'idle' : 'area')
+              setAreaPoints([])
+            }}
+            className={`w-full px-4 py-2 rounded text-sm transition-colors ${
+              mapMode === 'area' 
+                ? 'bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold' 
+                : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
+            }`}
+            title="Press A to activate"
+          >
+            {mapMode === 'area' ? 'Area Active' : 'Compute Area'}
           </button>
         </div>
       </aside>
@@ -211,8 +211,10 @@ export default function ProjectPage({ params }: PageProps) {
               utmZone={project.utm_zone}
               hemisphere={project.hemisphere}
               onMapClick={handleMapClick}
-              drawMode={drawMode}
-              onDrawUpdate={setDrawPoints}
+              mode={mapMode}
+              onModeChange={setMapMode}
+              areaPoints={areaPoints}
+              onAreaPointsUpdate={setAreaPoints}
             />
           </div>
 
@@ -295,9 +297,9 @@ export default function ProjectPage({ params }: PageProps) {
       />
 
       <ParcelAreaModal
-        isOpen={areaMode}
+        isOpen={mapMode === 'area' && areaPoints.length >= 3}
         onClose={() => {
-          setAreaMode(false)
+          setMapMode('idle')
           setAreaPoints([])
         }}
         points={points.map(p => ({

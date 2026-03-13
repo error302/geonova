@@ -26,13 +26,17 @@ export interface SurveyPoint {
   lon?: number
 }
 
+type MapMode = 'idle' | 'distance' | 'area' | 'traverse'
+
 interface ProjectMapProps {
   points: SurveyPoint[]
   utmZone: number
   hemisphere: 'N' | 'S'
   onMapClick?: (lat: number, lon: number) => void
-  drawMode?: boolean
-  onDrawUpdate?: (points: SurveyPoint[]) => void
+  mode?: MapMode
+  onModeChange?: (mode: MapMode) => void
+  onAreaPointsUpdate?: (points: SurveyPoint[]) => void
+  areaPoints?: SurveyPoint[]
 }
 
 const amberIcon = new L.Icon({
@@ -55,6 +59,15 @@ const redIcon = new L.Icon({
 
 const selectedIcon = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+})
+
+const areaIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -147,7 +160,16 @@ function FlyToPoints({ points, utmZone, hemisphere }: { points: SurveyPoint[]; u
   return null
 }
 
-export default function ProjectMap({ points, utmZone, hemisphere, onMapClick, drawMode = false, onDrawUpdate }: ProjectMapProps) {
+export default function ProjectMap({ 
+  points, 
+  utmZone, 
+  hemisphere, 
+  onMapClick, 
+  mode = 'idle',
+  onModeChange,
+  onAreaPointsUpdate,
+  areaPoints = []
+}: ProjectMapProps) {
   const getDefaultCenter = (): [number, number] => {
     if (utmZone === 37 && hemisphere === 'S') {
       return [-1.2921, 36.8219]
@@ -156,8 +178,30 @@ export default function ProjectMap({ points, utmZone, hemisphere, onMapClick, dr
   }
 
   const [center, setCenter] = useState<[number, number]>(getDefaultCenter())
-  const [selectedPoints, setSelectedPoints] = useState<SurveyPoint[]>([])
-  const [drawSequence, setDrawSequence] = useState<SurveyPoint[]>([])
+  const [distancePoints, setDistancePoints] = useState<SurveyPoint[]>([])
+  const [localAreaPoints, setLocalAreaPoints] = useState<SurveyPoint[]>(areaPoints)
+
+  // Sync area points from props
+  useEffect(() => {
+    setLocalAreaPoints(areaPoints)
+  }, [areaPoints])
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onModeChange?.('idle')
+      }
+      if (e.key === 'd' || e.key === 'D') {
+        onModeChange?.('distance')
+      }
+      if (e.key === 'a' || e.key === 'A') {
+        onModeChange?.('area')
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [onModeChange])
 
   const markers = points.map(point => {
     let lat = point.lat
@@ -177,78 +221,89 @@ export default function ProjectMap({ points, utmZone, hemisphere, onMapClick, dr
   }).filter(p => p.lat !== undefined && p.lon !== undefined)
 
   const handleMapClick = (lat: number, lon: number) => {
-    if (onMapClick) {
+    if (mode === 'idle' && onMapClick) {
       onMapClick(lat, lon)
     }
   }
 
   const handleMarkerClick = (point: SurveyPoint) => {
-    if (drawMode) {
-      setDrawSequence(prev => {
-        const newSeq = [...prev, point]
-        if (onDrawUpdate) {
-          onDrawUpdate(newSeq)
-        }
-        return newSeq
-      })
-    } else {
-      setSelectedPoints(prev => {
+    if (mode === 'distance') {
+      // Prevent selecting same point twice
+      if (distancePoints.length > 0 && distancePoints[0].id === point.id) {
+        return
+      }
+      setDistancePoints(prev => {
         if (prev.length >= 2) {
           return [prev[1], point]
         }
         return [...prev, point]
       })
+    } else if (mode === 'area') {
+      // Check if clicking first point to close polygon
+      if (localAreaPoints.length >= 3 && localAreaPoints[0].id === point.id) {
+        // Polygon closed - don't add, let parent handle calculation
+        return
+      }
+      // Prevent clicking same point twice in a row
+      if (localAreaPoints.length > 0 && localAreaPoints[localAreaPoints.length - 1].id === point.id) {
+        return
+      }
+      // Prevent adding duplicate points
+      if (localAreaPoints.some(p => p.id === point.id)) {
+        return
+      }
+      const newPoints = [...localAreaPoints, point]
+      setLocalAreaPoints(newPoints)
+      onAreaPointsUpdate?.(newPoints)
     }
   }
 
-  const clearSelection = () => {
-    setSelectedPoints([])
+  const clearDistanceSelection = () => {
+    setDistancePoints([])
   }
 
-  const clearDraw = () => {
-    setDrawSequence([])
-    if (onDrawUpdate) {
-      onDrawUpdate([])
-    }
+  const clearAreaSelection = () => {
+    setLocalAreaPoints([])
+    onAreaPointsUpdate?.([])
   }
 
   // Calculate distance/bearing between selected points
-  let distanceInfo: { distance: number; bearing: string; deltaE: number; deltaN: number } | null = null
-  if (selectedPoints.length === 2) {
+  let distanceInfo: { distance: number; bearing: string; backBearing: string; deltaE: number; deltaN: number } | null = null
+  if (distancePoints.length === 2) {
     const result = distanceBearing(
-      { easting: selectedPoints[0].easting, northing: selectedPoints[0].northing },
-      { easting: selectedPoints[1].easting, northing: selectedPoints[1].northing }
+      { easting: distancePoints[0].easting, northing: distancePoints[0].northing },
+      { easting: distancePoints[1].easting, northing: distancePoints[1].northing }
     )
+    const backBearing = (result.bearing + 180) % 360
     distanceInfo = {
       distance: result.distance,
       bearing: bearingToString(result.bearing),
+      backBearing: bearingToString(backBearing),
       deltaE: result.deltaE,
       deltaN: result.deltaN
     }
   }
 
-  // Calculate draw sequence distances
-  let drawDistances: number[] = []
-  let totalDrawDistance = 0
-  if (drawSequence.length > 1) {
-    for (let i = 0; i < drawSequence.length - 1; i++) {
-      const result = distanceBearing(
-        { easting: drawSequence[i].easting, northing: drawSequence[i].northing },
-        { easting: drawSequence[i + 1].easting, northing: drawSequence[i + 1].northing }
-      )
-      drawDistances.push(result.distance)
-      totalDrawDistance += result.distance
-    }
-  }
-
-  // Build polyline positions
-  const selectedLinePositions: [number, number][] = selectedPoints.length === 2
-    ? [[selectedPoints[0].lat!, selectedPoints[0].lon!], [selectedPoints[1].lat!, selectedPoints[1].lon!]]
-    : []
-
-  const drawLinePositions: [number, number][] = drawSequence
+  // Calculate area polygon positions
+  const areaLinePositions: [number, number][] = localAreaPoints
     .filter(p => p.lat !== undefined && p.lon !== undefined)
     .map(p => [p.lat!, p.lon!] as [number, number])
+
+  // Build polyline for distance
+  const distanceLinePositions: [number, number][] = distancePoints.length === 2
+    ? [[distancePoints[0].lat!, distancePoints[0].lon!], [distancePoints[1].lat!, distancePoints[1].lon!]]
+    : []
+
+  const getModeLabel = () => {
+    if (mode === 'distance') return 'Distance Mode — click two points'
+    if (mode === 'area') {
+      if (localAreaPoints.length < 3) {
+        return `${localAreaPoints.length} point${localAreaPoints.length !== 1 ? 's' : ''} selected — need ${3 - localAreaPoints.length} more`
+      }
+      return `${localAreaPoints.length} points — click first point to close`
+    }
+    return ''
+  }
 
   return (
     <div className="relative">
@@ -266,25 +321,30 @@ export default function ProjectMap({ points, utmZone, hemisphere, onMapClick, dr
         <RecenterMap center={center} />
         <FlyToPoints points={markers} utmZone={utmZone} hemisphere={hemisphere} />
         
-        {/* Selection polyline */}
-        {selectedLinePositions.length === 2 && (
-          <Polyline positions={selectedLinePositions} color="#E8841A" weight={3} dashArray="5, 10" />
+        {/* Distance polyline */}
+        {distanceLinePositions.length === 2 && (
+          <Polyline positions={distanceLinePositions} color="#E8841A" weight={3} dashArray="5, 10" />
         )}
         
-        {/* Draw sequence polyline */}
-        {drawLinePositions.length > 1 && (
-          <Polyline positions={drawLinePositions} color="#10B981" weight={3} />
+        {/* Area polyline */}
+        {areaLinePositions.length > 1 && (
+          <Polyline positions={areaLinePositions} color="#8B5CF6" weight={3} />
         )}
         
         {markers.map((point, idx) => {
-          const isSelected = selectedPoints.some(s => s.id === point.id)
-          const isInDraw = drawSequence.some(d => d.id === point.id)
+          const isDistanceSelected = distancePoints.some(s => s.id === point.id)
+          const isAreaSelected = localAreaPoints.some(d => d.id === point.id)
+          const isAreaFirst = localAreaPoints.length > 0 && localAreaPoints[0].id === point.id
+          
+          let icon = point.is_control ? redIcon : amberIcon
+          if (isDistanceSelected) icon = selectedIcon
+          if (isAreaSelected || isAreaFirst) icon = areaIcon
           
           return (
             <Marker
               key={point.id || idx}
               position={[point.lat!, point.lon!]}
-              icon={isSelected ? selectedIcon : (point.is_control ? redIcon : amberIcon)}
+              icon={icon}
               eventHandlers={{
                 click: () => handleMarkerClick(point)
               }}
@@ -315,14 +375,22 @@ export default function ProjectMap({ points, utmZone, hemisphere, onMapClick, dr
         })}
       </MapContainer>
 
-      {/* Distance/bearing info panel */}
+      {/* Mode indicator */}
+      {mode !== 'idle' && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] bg-gray-900/95 border border-[#E8841A] rounded-lg px-4 py-2">
+          <span className="text-sm text-[#E8841A] font-semibold">{getModeLabel()}</span>
+          <span className="text-xs text-gray-500 ml-2">(Esc to cancel)</span>
+        </div>
+      )}
+
+      {/* Distance info panel */}
       {distanceInfo && (
-        <div className="absolute top-4 right-4 z-[1000] bg-gray-900/95 border border-gray-700 rounded-lg p-3 shadow-lg min-w-[200px]">
+        <div className="absolute top-4 right-4 z-[1000] bg-gray-900/95 border border-gray-700 rounded-lg p-3 shadow-lg min-w-[220px]">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-semibold text-gray-100">
-              {selectedPoints[0]?.name} → {selectedPoints[1]?.name}
+              {distancePoints[0]?.name} → {distancePoints[1]?.name}
             </span>
-            <button onClick={clearSelection} className="text-gray-400 hover:text-white text-lg">×</button>
+            <button onClick={clearDistanceSelection} className="text-gray-400 hover:text-white text-lg">×</button>
           </div>
           <div className="space-y-1 text-xs font-mono">
             <div className="flex justify-between">
@@ -332,6 +400,10 @@ export default function ProjectMap({ points, utmZone, hemisphere, onMapClick, dr
             <div className="flex justify-between">
               <span className="text-gray-400">Bearing:</span>
               <span className="text-gray-100">{distanceInfo.bearing}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Back Bearing:</span>
+              <span className="text-gray-300">{distanceInfo.backBearing}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">ΔE:</span>
@@ -349,29 +421,20 @@ export default function ProjectMap({ points, utmZone, hemisphere, onMapClick, dr
         </div>
       )}
 
-      {/* Draw sequence info panel */}
-      {drawMode && drawSequence.length > 0 && (
-        <div className="absolute top-4 left-4 z-[1000] bg-gray-900/95 border border-green-600 rounded-lg p-3 shadow-lg min-w-[200px]">
+      {/* Area info panel */}
+      {mode === 'area' && localAreaPoints.length > 0 && (
+        <div className="absolute top-4 left-4 z-[1000] bg-gray-900/95 border border-purple-500 rounded-lg p-3 shadow-lg min-w-[200px]">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-semibold text-green-400">Draw Sequence</span>
-            <button onClick={clearDraw} className="text-gray-400 hover:text-white text-lg">×</button>
+            <span className="text-sm font-semibold text-purple-400">Area Selection</span>
+            <button onClick={clearAreaSelection} className="text-gray-400 hover:text-white text-lg">×</button>
           </div>
           <div className="space-y-1 text-xs">
-            {drawSequence.map((p, i) => (
+            {localAreaPoints.map((p, i) => (
               <div key={i} className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-green-600 text-black text-xs flex items-center justify-center font-bold">{i + 1}</span>
+                <span className="w-5 h-5 rounded-full bg-purple-600 text-black text-xs flex items-center justify-center font-bold">{i + 1}</span>
                 <span className="font-mono text-gray-100">{p.name}</span>
-                {i > 0 && (
-                  <span className="text-gray-500 text-xs">({drawDistances[i - 1]?.toFixed(2)}m)</span>
-                )}
               </div>
             ))}
-            {drawSequence.length > 1 && (
-              <div className="border-t border-gray-700 mt-2 pt-2 flex justify-between">
-                <span className="text-gray-400">Total:</span>
-                <span className="text-green-400 font-mono font-bold">{totalDrawDistance.toFixed(4)} m</span>
-              </div>
-            )}
           </div>
         </div>
       )}
