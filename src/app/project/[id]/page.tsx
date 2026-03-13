@@ -92,6 +92,15 @@ export default function ProjectPage({ params }: PageProps) {
   }
 
   useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        window.location.href = '/login'
+      }
+    })
+  }, [])
+
+  useEffect(() => {
     fetchData()
   }, [params.id])
 

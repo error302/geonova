@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css'
 import { distanceBearing } from '@/lib/engine/distance'
 import { bearingToString } from '@/lib/engine/angles'
 import { utmToGeographic } from '@/lib/engine/coordinates'
+import { testConnection } from '@/lib/supabase/client'
 
 // Fix Leaflet default marker icons
 delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -144,6 +145,11 @@ export default function ProjectMap({
   const [center, setCenter] = useState<[number, number]>(getDefaultCenter())
   const [distancePoints, setDistancePoints] = useState<SurveyPoint[]>([])
   const [localAreaPoints, setLocalAreaPoints] = useState<SurveyPoint[]>(areaPoints)
+
+  // Test Supabase connection on mount
+  useEffect(() => {
+    testConnection()
+  }, [])
 
   // Sync area points from props
   useEffect(() => {

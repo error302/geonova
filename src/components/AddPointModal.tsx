@@ -45,16 +45,8 @@ export default function AddPointModal({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
-  let supabase: ReturnType<typeof createClient> | null = null
 
   const isEditMode = !!editPointId
-
-  const getClient = () => {
-    if (!supabase) {
-      supabase = createClient()
-    }
-    return supabase
-  }
 
   useEffect(() => {
     // Reset form when modal opens/closes or edit point changes
@@ -86,7 +78,7 @@ export default function AddPointModal({
     setLoading(true)
 
     try {
-      const client = getClient()
+      const client = createClient()
 
       if (isEditMode) {
         const { error: updateError } = await client
@@ -147,7 +139,7 @@ export default function AddPointModal({
     setLoading(true)
 
     try {
-      const client = getClient()
+      const client = createClient()
 
       const { error: insertError } = await client
         .from('survey_points')
