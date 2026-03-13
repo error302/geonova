@@ -13,6 +13,12 @@ export default function ToolsPage() {
         <ToolLink href="/tools/coordinates" title="Coordinates" />
         <ToolLink href="/tools/curves" title="Curves" />
         <ToolLink href="/tools/cogo" title="COGO" />
+        <ToolLink href="/tools/setting-out" title="Setting Out" />
+        <ToolLink href="/tools/tacheometry" title="Tacheometry" />
+        <ToolLink href="/tools/missing-line" title="Missing Line" />
+        <ToolLink href="/tools/height-of-object" title="Height of Object" />
+        <ToolLink href="/tools/grade" title="Grade" />
+        <ToolLink href="/tools/two-peg-test" title="Two Peg Test" />
       </div>
     </div>
   );

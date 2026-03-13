@@ -69,6 +69,8 @@ export default function NavBar() {
             <NavLink href="/tools/leveling">Leveling</NavLink>
             <NavLink href="/tools/coordinates">Coordinates</NavLink>
             <NavLink href="/tools/curves">Curves</NavLink>
+            <NavLink href="/tools/setting-out">Stakeout</NavLink>
+            <NavLink href="/tools/tacheometry">Tachymetry</NavLink>
             {showInstall && (
               <button
                 onClick={handleInstall}
