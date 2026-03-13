@@ -190,7 +190,7 @@ export default function ProjectPage({ params }: PageProps) {
             <div>
               <h1 className="text-xl font-bold text-gray-100">{project.name}</h1>
               <p className="text-sm text-gray-400">
-                UTM Zone {project.utm_zone}{project.hemisphere}
+                UTM Zone {project.utm_zone} {project.hemisphere}
                 {project.location && ` — ${project.location}`}
               </p>
             </div>

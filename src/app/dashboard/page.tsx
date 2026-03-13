@@ -54,7 +54,7 @@ export default async function DashboardPage() {
                 </p>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-500">
-                    UTM Zone {project.utm_zone}{project.hemisphere}
+                    UTM Zone {project.utm_zone} {project.hemisphere}
                   </span>
                   <span className="text-gray-500">
                     {new Date(project.created_at).toLocaleDateString()}
