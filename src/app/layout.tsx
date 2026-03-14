@@ -4,8 +4,56 @@ import NavBar from '@/components/NavBar';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 
 export const metadata: Metadata = {
-  title: 'GeoNova — Professional Surveying Calculations',
-  description: 'Professional land surveying calculation platform',
+  metadataBase: new URL('https://geonova-henna.vercel.app'),
+  title: 'GeoNova — Professional Surveying Platform',
+  description: 'Complete surveying calculation platform for professional land surveyors. Traverse adjustment, leveling, COGO, curves, PDF reports. Free to use. Built for Africa.',
+  keywords: [
+    'surveying software', 'traverse calculation', 'leveling calculator',
+    'COGO tools', 'survey platform', 'land surveying',
+    'surveying software Kenya', 'topographie Afrique',
+    'برنامج مساحة', 'software topografia Angola',
+    'survey traverse online', 'bowditch adjustment',
+    'horizontal curves calculator', 'UTM coordinates'
+  ],
+  authors: [{ name: 'GeoNova' }],
+  creator: 'GeoNova',
+  publisher: 'GeoNova',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://geonova-henna.vercel.app',
+    siteName: 'GeoNova',
+    title: 'GeoNova — Professional Surveying Platform',
+    description: 'Complete surveying platform for professional land surveyors across Africa and beyond.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'GeoNova Surveying Platform'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GeoNova — Professional Surveying Platform',
+    description: 'Complete surveying platform for professional land surveyors.',
+    images: ['/og-image.png']
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1
+    }
+  },
+  verification: {
+    google: 'add-google-verification-code-here'
+  }
 };
 
 export default function RootLayout({

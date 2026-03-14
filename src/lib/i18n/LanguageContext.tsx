@@ -54,5 +54,10 @@ export const languages = [
   { code: 'sw' as Language, flag: '🇰🇪', name: 'Kiswahili' },
   { code: 'fr' as Language, flag: '🇫🇷', name: 'Français' },
   { code: 'ar' as Language, flag: '🇸🇦', name: 'العربية' },
-  { code: 'pt' as Language, flag: '🇦🇴', name: 'Português' }
+  { code: 'pt' as Language, flag: '🇦🇴', name: 'Português' },
+  { code: 'es' as Language, flag: '🇪🇸', name: 'Español' },
+  { code: 'hi' as Language, flag: '🇮🇳', name: 'हिन्दी' },
+  { code: 'id' as Language, flag: '🇮🇩', name: 'Bahasa Indonesia' },
+  { code: 'am' as Language, flag: '🇪🇹', name: 'አማርኛ' },
+  { code: 'ha' as Language, flag: '🇳🇬', name: 'Hausa' }
 ]
