@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "i18n:sync": "node scripts/i18n-sync.mjs",
+    "verify:engine": "npx tsc -p scripts/engine-verify.tsconfig.json && node scripts/.out/scripts/engine-verify.js"
   },
   "dependencies": {
     "@capacitor/android": "^8.2.0",

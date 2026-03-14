@@ -18,39 +18,37 @@ export function bearingIntersection(
   stationB: Point2D,
   bearingB: number
 ): COGOIntersection | null {
-  // Solve for intersection of two bearings
+  // Intersection of two rays defined by station + bearing (WCB from North)
+  // A + t*vA = B + u*vB
   const radA = toRadians(bearingA);
   const radB = toRadians(bearingB);
-  
-  // Calculate using law of sines
+
+  const vAx = Math.sin(radA);
+  const vAy = Math.cos(radA);
+  const vBx = Math.sin(radB);
+  const vBy = Math.cos(radB);
+
   const dx = stationB.easting - stationA.easting;
   const dy = stationB.northing - stationA.northing;
-  
-  const theta = toDegrees(Math.atan2(dx, dy));
-  const angleB = bearingB - theta;
-  const angleA = bearingA - theta + 180;
-  
-  const radB_rad = toRadians(angleB);
-  const radA_rad = toRadians(angleA);
-  
-  const distAB = Math.sqrt(dx * dx + dy * dy);
-  
-  if (Math.abs(Math.sin(radA_rad - radB_rad)) < 0.0001) {
-    return null; // Lines are parallel
-  }
-  
-  const distAP = (distAB * Math.sin(radB_rad)) / Math.sin(radA_rad - radB_rad);
-  const distBP = (distAB * Math.sin(radA_rad)) / Math.sin(radA_rad - radB_rad);
-  
+
+  const det = vAx * (-vBy) - vAy * (-vBx); // = vAy*vBx - vAx*vBy
+  if (Math.abs(det) < 1e-12) return null; // parallel / nearly parallel
+
+  // Solve:
+  // t*vAx - u*vBx = dx
+  // t*vAy - u*vBy = dy
+  const t = (dx * (-vBy) - dy * (-vBx)) / det;
+  const u = (vAx * dy - vAy * dx) / det;
+
   const point: Point2D = {
-    easting: stationA.easting + distAP * Math.sin(toRadians(bearingA)),
-    northing: stationA.northing + distAP * Math.cos(toRadians(bearingA))
+    easting: stationA.easting + t * vAx,
+    northing: stationA.northing + t * vAy,
   };
   
   return {
     point,
-    distanceFromA: Math.round(distAP * 1000) / 1000,
-    distanceFromB: Math.round(distBP * 1000) / 1000
+    distanceFromA: t,
+    distanceFromB: u
   };
 }
 
@@ -93,44 +91,56 @@ export function tienstraResection(
   p1: Point2D,
   p2: Point2D,
   p3: Point2D,
-  angle1: number,  // Angle at P1 (between lines to P2 and unknown point)
-  angle2: number   // Angle at P2 (between lines to P3 and unknown point)
+  angle12: number,  // Angle at unknown station between rays to P1 and P2 (degrees)
+  angle23: number   // Angle at unknown station between rays to P2 and P3 (degrees)
 ): COOResection | null {
-  // Tienstra's method for three-point resection
-  
-  const d12 = distanceBearing(p1, p2).distance;
-  const d23 = distanceBearing(p2, p3).distance;
-  const d31 = distanceBearing(p3, p1).distance;
-  
-  const theta1 = toRadians(angle1);
-  const theta2 = toRadians(angle2);
-  
-  const cot1 = 1 / Math.tan(theta1);
-  const cot2 = 1 / Math.tan(theta2);
-  
-  // Calculate weights
-  const w1 = 1 / (d12 * d12);
-  const w2 = 1 / (d23 * d23);
-  const w3 = 1 / (d31 * d31);
-  
-  // Calculate coordinates
-  const totalW = w1 + w2 + w3;
-  
-  const easting = (w1 * p1.easting + w2 * p2.easting + w3 * p3.easting) / totalW;
-  const northing = (w1 * p1.northing + w2 * p2.northing + w3 * p3.northing) / totalW;
-  
-  const point: Point2D = { easting, northing };
-  
-  const d1 = distanceBearing(p1, point).distance;
-  const d2 = distanceBearing(p2, point).distance;
-  const d3 = distanceBearing(p3, point).distance;
-  
-  return {
-    point,
-    distanceToP1: Math.round(d1 * 1000) / 1000,
-    distanceToP2: Math.round(d2 * 1000) / 1000,
-    distanceToP3: Math.round(d3 * 1000) / 1000
-  };
+  // Tienstra's method for three-point resection (planimetric)
+  // Assumption for inputs:
+  // - angle12 = angle between lines P->P1 and P->P2
+  // - angle23 = angle between lines P->P2 and P->P3
+  // Then angle31 = 360° - (angle12 + angle23)
+
+  const angle31 = 360 - (angle12 + angle23)
+  if (angle12 <= 0 || angle23 <= 0 || angle31 <= 0) return null
+
+  // Triangle angles at control points A=p1, B=p2, C=p3
+  const a = distanceBearing(p2, p3).distance // side a opposite p1
+  const b = distanceBearing(p3, p1).distance // side b opposite p2
+  const c = distanceBearing(p1, p2).distance // side c opposite p3
+
+  const clamp = (x: number) => Math.max(-1, Math.min(1, x))
+
+  const A = Math.acos(clamp((b * b + c * c - a * a) / (2 * b * c))) // at p1
+  const B = Math.acos(clamp((a * a + c * c - b * b) / (2 * a * c))) // at p2
+  const C = Math.acos(clamp((a * a + b * b - c * c) / (2 * a * b))) // at p3
+
+  // Map observed angles at unknown station P to α, β, γ:
+  // α = ∠(P2 P P3) = angle23 (opposite p1)
+  // γ = ∠(P1 P P2) = angle12 (opposite p3)
+  // β = ∠(P3 P P1) = angle31 (opposite p2)
+  const alpha = toRadians(angle23)
+  const beta = toRadians(angle31)
+  const gamma = toRadians(angle12)
+
+  const cot = (r: number) => 1 / Math.tan(r)
+
+  const aW = 1 / (cot(alpha) - cot(A))
+  const bW = 1 / (cot(beta) - cot(B))
+  const cW = 1 / (cot(gamma) - cot(C))
+
+  const sum = aW + bW + cW
+  if (!isFinite(sum) || Math.abs(sum) < 1e-12) return null
+
+  const point: Point2D = {
+    easting: (aW * p1.easting + bW * p2.easting + cW * p3.easting) / sum,
+    northing: (aW * p1.northing + bW * p2.northing + cW * p3.northing) / sum,
+  }
+
+  const d1 = distanceBearing(point, p1).distance
+  const d2 = distanceBearing(point, p2).distance
+  const d3 = distanceBearing(point, p3).distance
+
+  return { point, distanceToP1: d1, distanceToP2: d2, distanceToP3: d3 }
 }
 
 export function radiation(

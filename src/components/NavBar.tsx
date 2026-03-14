@@ -7,91 +7,91 @@ import { useLanguage, languages } from '@/lib/i18n/LanguageContext'
 
 const toolGroups = [
   {
-    title: 'CALCULATIONS',
+    titleKey: 'tools.calculations',
     items: [
-      { href: '/tools/distance', label: 'Distance & Bearing' },
-      { href: '/tools/bearing', label: 'Bearing' },
-      { href: '/tools/area', label: 'Area' },
-      { href: '/tools/grade', label: 'Grade' },
+      { href: '/tools/distance', labelKey: 'tools.distance' },
+      { href: '/tools/bearing', labelKey: 'tools.bearingCalc' },
+      { href: '/tools/area', labelKey: 'tools.area' },
+      { href: '/tools/grade', labelKey: 'tools.grade' },
     ]
   },
   {
-    title: 'TRAVERSE',
+    titleKey: 'tools.traverseAdjust',
     items: [
-      { href: '/tools/traverse', label: 'Traverse' },
-      { href: '/tools/coordinates', label: 'Coordinates' },
-      { href: '/tools/cogo', label: 'COGO' },
+      { href: '/tools/traverse', labelKey: 'traverse.title' },
+      { href: '/tools/coordinates', labelKey: 'tools.coordinates' },
+      { href: '/tools/cogo', labelKey: 'tools.cogo' },
     ]
   },
   {
-    title: 'LEVELING',
+    titleKey: 'tools.leveling',
     items: [
-      { href: '/tools/leveling', label: 'Leveling' },
-      { href: '/tools/two-peg-test', label: 'Two Peg Test' },
+      { href: '/tools/leveling', labelKey: 'leveling.title' },
+      { href: '/tools/two-peg-test', labelKey: 'tools.twoPegTest' },
     ]
   },
   {
-    title: 'CURVES',
+    titleKey: 'tools.curves',
     items: [
-      { href: '/tools/curves', label: 'Horizontal Curves' },
-      { href: '/tools/tacheometry', label: 'Tacheometry' },
-      { href: '/tools/chainage', label: 'Chainage' },
+      { href: '/tools/curves', labelKey: 'tools.curves' },
+      { href: '/tools/tacheometry', labelKey: 'tools.tacheometry' },
+      { href: '/tools/chainage', labelKey: 'tools.chainage' },
     ]
   },
   {
-    title: 'SPECIALIZED',
+    titleKey: 'tools.specialized',
     items: [
-      { href: '/tools/mining', label: '⛏ Mining' },
-      { href: '/tools/hydrographic', label: '🌊 Hydro' },
-      { href: '/tools/drone', label: '🚁 Drone' },
+      { href: '/tools/mining', icon: '⛏', labelKey: 'tools.mining' },
+      { href: '/tools/hydrographic', icon: '🌊', labelKey: 'tools.hydrographic' },
+      { href: '/tools/drone', icon: '🚁', labelKey: 'tools.drone' },
     ]
   },
 ]
 
 const fieldGroups = [
   {
-    title: 'FIELD WORK',
+    titleKey: 'nav.field',
     items: [
-      { href: '/field', label: 'Field Mode' },
-      { href: '/tools/setting-out', label: 'Setting Out' },
+      { href: '/field', labelKey: 'field.fieldMode' },
+      { href: '/tools/setting-out', labelKey: 'tools.settingOut' },
     ]
   },
   {
-    title: 'DATA',
+    titleKey: 'nav.field',
     items: [
-      { href: '/fieldbook', label: 'Field Book' },
-      { href: '/process', label: 'Process Notes' },
+      { href: '/fieldbook', labelKey: 'field.fieldBook' },
+      { href: '/process', labelKey: 'field.processNotes' },
     ]
   },
 ]
 
 const importGroups = [
   {
-    title: 'IMPORT',
+    titleKey: 'nav.import',
     items: [
-      { href: '/import', label: 'Total Station' },
-      { href: '/process', label: 'CSV Upload' },
-      { href: '/instruments', label: 'Instruments' },
+      { href: '/import', labelKey: 'import.totalStation' },
+      { href: '/process', labelKey: 'import.csvUpload' },
+      { href: '/instruments', labelKey: 'import.instruments' },
     ]
   },
 ]
 
 const aiGroups = [
   {
-    title: 'AI ASSISTANT',
+    titleKey: 'nav.ai',
     items: [
-      { href: '/guide', label: 'Field Guides' },
-      { href: '/fieldbook', label: 'Field Book AI' },
+      { href: '/guide', labelKey: 'guides.title' },
+      { href: '/fieldbook', labelKey: 'field.fieldBook' },
     ]
   },
 ]
 
 const communityGroups = [
   {
-    title: 'COMMUNITY',
+    titleKey: 'nav.community',
     items: [
-      { href: '/community', label: 'Survey Community' },
-      { href: '/beacons', label: 'Control Points' },
+      { href: '/community', labelKey: 'community.surveyCommunity' },
+      { href: '/beacons', labelKey: 'community.controlPoints' },
     ]
   },
 ]
@@ -126,11 +126,15 @@ function Dropdown({ label, children, isOpen, onToggle }: DropdownProps) {
   )
 }
 
-function DropdownGroup({ title, items }: { title: string, items: { href: string, label: string }[] }) {
+type Translator = (key: string, values?: Record<string, string | number>) => string
+type MenuItem = { href: string; labelKey: string; icon?: string }
+type MenuGroup = { titleKey: string; items: MenuItem[] }
+
+function DropdownGroup({ titleKey, items, t }: { titleKey: string, items: MenuItem[], t: Translator }) {
   return (
     <div className="px-4 py-2">
       <div className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">
-        {title}
+        {t(titleKey)}
       </div>
       {items.map(item => (
         <Link
@@ -138,24 +142,27 @@ function DropdownGroup({ title, items }: { title: string, items: { href: string,
           href={item.href}
           className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded"
         >
-          {item.label}
+          <span className="inline-flex items-center gap-2">
+            {item.icon ? <span aria-hidden>{item.icon}</span> : null}
+            <span>{t(item.labelKey)}</span>
+          </span>
         </Link>
       ))}
     </div>
   )
 }
 
-function MegaMenu({ groups }: { groups: typeof toolGroups }) {
+function MegaMenu({ groups, t }: { groups: MenuGroup[], t: Translator }) {
   return (
     <div className="flex gap-6 px-4 py-3">
       {groups.map((group, idx) => (
-        <DropdownGroup key={idx} title={group.title} items={group.items} />
+        <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} />
       ))}
     </div>
   )
 }
 
-function GlobalSearch() {
+function GlobalSearch({ t }: { t: Translator }) {
   const [isOpen, setIsOpen] = useState(false)
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -198,7 +205,7 @@ function GlobalSearch() {
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
-        <span className="hidden sm:inline">Search...</span>
+        <span className="hidden sm:inline">{t('nav.search')}</span>
         <kbd className="hidden sm:inline px-1.5 py-0.5 text-xs bg-gray-700 rounded">⌘K</kbd>
       </button>
 
@@ -220,7 +227,7 @@ function GlobalSearch() {
                 type="text"
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                placeholder="Search tools, projects, guides..."
+                placeholder={t('nav.search')}
                 className="flex-1 bg-transparent text-white placeholder-gray-500 outline-none"
               />
               <kbd className="px-2 py-1 text-xs bg-gray-800 text-gray-400 rounded">ESC</kbd>
@@ -259,7 +266,7 @@ export default function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
 
-  const { language, setLanguage } = useLanguage()
+  const { language, setLanguage, t } = useLanguage()
 
   useEffect(() => {
     const supabase = createClient()
@@ -325,11 +332,11 @@ export default function NavBar() {
             {/* Tools Dropdown */}
             <div className="relative group">
               <button className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
-                Tools ▾
+                {t('nav.tools')} ▾
               </button>
               <div className="absolute top-full left-0 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                 <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl min-w-[600px] py-2">
-                  <MegaMenu groups={toolGroups} />
+                  <MegaMenu groups={toolGroups} t={t} />
                 </div>
               </div>
             </div>
@@ -339,18 +346,18 @@ export default function NavBar() {
               href="/dashboard" 
               className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
             >
-              Projects
+              {t('nav.projects')}
             </Link>
 
             {/* Field Dropdown */}
             <div className="relative group">
               <button className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
-                Field ▾
+                {t('nav.field')} ▾
               </button>
               <div className="absolute top-full left-0 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                 <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl min-w-[180px] py-2">
                   {fieldGroups.map((group, idx) => (
-                    <DropdownGroup key={idx} title={group.title} items={group.items} />
+                    <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} />
                   ))}
                 </div>
               </div>
@@ -359,12 +366,12 @@ export default function NavBar() {
             {/* Import Dropdown */}
             <div className="relative group">
               <button className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
-                Import ▾
+                {t('nav.import')} ▾
               </button>
               <div className="absolute top-full left-0 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                 <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl min-w-[180px] py-2">
                   {importGroups.map((group, idx) => (
-                    <DropdownGroup key={idx} title={group.title} items={group.items} />
+                    <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} />
                   ))}
                 </div>
               </div>
@@ -373,12 +380,12 @@ export default function NavBar() {
             {/* AI Dropdown */}
             <div className="relative group">
               <button className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
-                AI ▾
+                {t('nav.ai')} ▾
               </button>
               <div className="absolute top-full left-0 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                 <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl min-w-[180px] py-2">
                   {aiGroups.map((group, idx) => (
-                    <DropdownGroup key={idx} title={group.title} items={group.items} />
+                    <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} />
                   ))}
                 </div>
               </div>
@@ -387,12 +394,12 @@ export default function NavBar() {
             {/* Community Link */}
             <div className="relative group">
               <button className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
-                Community ▾
+                {t('nav.community')} ▾
               </button>
               <div className="absolute top-full left-0 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                 <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl min-w-[180px] py-2">
                   {communityGroups.map((group, idx) => (
-                    <DropdownGroup key={idx} title={group.title} items={group.items} />
+                    <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} />
                   ))}
                 </div>
               </div>
@@ -403,14 +410,14 @@ export default function NavBar() {
               href="/docs" 
               className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
             >
-              Docs
+              {t('nav.docs')}
             </Link>
           </div>
 
           {/* Right Side */}
           <div className="flex items-center gap-3">
             {/* Global Search */}
-            <GlobalSearch />
+            <GlobalSearch t={t} />
 
             {/* Language Selector */}
             <div className="relative group">
@@ -445,25 +452,25 @@ export default function NavBar() {
                   href="/pricing" 
                   className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
                 >
-                  Pricing
+                  {t('nav.pricing')}
                 </Link>
                 <Link href="/dashboard" className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Link>
                 <button
                   onClick={handleSignOut}
                   className="px-3 py-1.5 text-sm border border-gray-600 text-gray-300 rounded hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors"
                 >
-                  Sign Out
+                  {t('nav.signOut')}
                 </button>
               </div>
             ) : (
               <div className="hidden md:flex items-center gap-2">
                 <Link href="/login" className="px-4 py-2 text-sm border border-[#E8841A] text-[#E8841A] rounded hover:bg-[#E8841A]/10 transition-colors">
-                  Log In
+                  {t('nav.login')}
                 </Link>
                 <Link href="/register" className="px-4 py-2 text-sm bg-[#E8841A] text-black font-semibold rounded hover:bg-[#d67715] transition-colors">
-                  Get Started
+                  {t('nav.register')}
                 </Link>
               </div>
             )}
@@ -490,35 +497,35 @@ export default function NavBar() {
             <div className="py-2">
               {/* Quick Links */}
               <Link href="/dashboard" className="block px-4 py-2 text-gray-300 hover:text-[var(--accent)]">
-                Projects
+                {t('nav.projects')}
               </Link>
               <Link href="/tools" className="block px-4 py-2 text-gray-300 hover:text-[var(--accent)]">
-                All Tools
+                {t('nav.tools')}
               </Link>
               <Link href="/field" className="block px-4 py-2 text-gray-300 hover:text-[var(--accent)]">
-                Field Mode
+                {t('field.fieldMode')}
               </Link>
               <Link href="/guide" className="block px-4 py-2 text-gray-300 hover:text-[var(--accent)]">
-                AI Guides
+                {t('guides.title')}
               </Link>
               <Link href="/community" className="block px-4 py-2 text-gray-300 hover:text-[var(--accent)]">
-                Community
+                {t('nav.community')}
               </Link>
               <Link href="/docs" className="block px-4 py-2 text-gray-300 hover:text-[var(--accent)]">
-                Docs
+                {t('nav.docs')}
               </Link>
               
               {user && (
                 <>
                   <div className="border-t border-gray-800 my-2"></div>
                   <Link href="/profile" className="block px-4 py-2 text-gray-300 hover:text-[var(--accent)]">
-                    Profile
+                    {t('nav.profile')}
                   </Link>
                   <Link href="/account" className="block px-4 py-2 text-gray-300 hover:text-[var(--accent)]">
-                    Account
+                    {t('nav.account')}
                   </Link>
                   <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-gray-300 hover:text-[var(--accent)]">
-                    Sign Out
+                    {t('nav.signOut')}
                   </button>
                 </>
               )}
@@ -527,10 +534,10 @@ export default function NavBar() {
                 <>
                   <div className="border-t border-gray-800 my-2"></div>
                   <Link href="/login" className="block px-4 py-2 text-[#E8841A]">
-                    Log In
+                    {t('nav.login')}
                   </Link>
                   <Link href="/register" className="block px-4 py-2 text-[#E8841A] font-semibold">
-                    Get Started
+                    {t('nav.register')}
                   </Link>
                 </>
               )}

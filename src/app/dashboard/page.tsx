@@ -3,8 +3,10 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import SubscriptionStatus from '@/components/SubscriptionStatus'
 import UpgradePrompt from '@/components/UpgradePrompt'
+import { getServerTranslator } from '@/lib/i18n/server'
 
 export default async function DashboardPage() {
+  const t = getServerTranslator()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -37,8 +39,10 @@ export default async function DashboardPage() {
         {subscription?.status === 'trial' && (
           <div className="mb-6 p-4 bg-green-900/20 border border-green-500/50 rounded-lg">
             <p className="text-green-400">
-              🎉 Welcome to GeoNova! Your 14-day Pro trial is active. 
-              Enjoy all Pro features until {new Date(subscription.trial_ends_at).toLocaleDateString()}.
+              {t('dashboard.welcomeTrial', {
+                days: 14,
+                date: new Date(subscription.trial_ends_at).toLocaleDateString(),
+              })}
             </p>
           </div>
         )}
@@ -47,35 +51,35 @@ export default async function DashboardPage() {
         <div className="mb-8 p-6 bg-gradient-to-r from-[#E8841A]/20 to-transparent border border-[#E8841A]/30 rounded-xl">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold text-gray-100 mb-1">📋 Process Field Notes</h2>
+              <h2 className="text-xl font-bold text-gray-100 mb-1">📋 {t('dashboard.processFieldNotesTitle')}</h2>
               <p className="text-gray-400 text-sm">
-                Drop your CSV and let GeoNova do the rest. Supports: Traverse, Leveling, Radiation
+                {t('dashboard.processFieldNotesSubtitle')}
               </p>
             </div>
             <Link
               href="/process"
               className="px-6 py-3 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded-lg transition-colors"
             >
-              Start Processing
+              {t('dashboard.startProcessing')}
             </Link>
           </div>
         </div>
 
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold text-gray-100">Your Projects</h1>
+          <h1 className="text-2xl font-bold text-gray-100">{t('dashboard.title')}</h1>
           {canCreateProject ? (
             <Link
               href="/project/new"
               className="px-6 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded transition-colors"
             >
-              New Project
+              {t('dashboard.newProject')}
             </Link>
           ) : (
             <Link
               href="/pricing"
               className="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-black font-semibold rounded transition-colors"
             >
-              Upgrade to Create More
+              {t('dashboard.upgradeToCreateMore')}
             </Link>
           )}
         </div>
@@ -87,20 +91,20 @@ export default async function DashboardPage() {
 
         {!projects || projects.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-gray-400 mb-4">No projects yet</p>
+            <p className="text-gray-400 mb-4">{t('dashboard.noProjects')}</p>
             {canCreateProject ? (
               <Link
                 href="/project/new"
                 className="inline-block px-6 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded transition-colors"
               >
-                Create Your First Project
+                {t('dashboard.createFirst')}
               </Link>
             ) : (
               <Link
                 href="/pricing"
                 className="inline-block px-6 py-2 bg-amber-500 hover:bg-amber-600 text-black font-semibold rounded transition-colors"
               >
-                Upgrade to Pro
+                {t('dashboard.upgradeToPro')}
               </Link>
             )}
           </div>
@@ -115,7 +119,7 @@ export default async function DashboardPage() {
                   {project.name}
                 </h3>
                 <p className="text-gray-400 text-sm mb-4">
-                  {project.location || 'No location'}
+                  {project.location || t('project.noLocation')}
                 </p>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-500">
@@ -129,7 +133,7 @@ export default async function DashboardPage() {
                   href={`/project/${project.id}`}
                   className="mt-4 block w-full text-center py-2 bg-gray-800 hover:bg-gray-700 text-[#E8841A] rounded transition-colors"
                 >
-                  Open
+                  {t('project.open')}
                 </Link>
               </div>
             ))}

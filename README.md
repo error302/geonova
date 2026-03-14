@@ -12,12 +12,14 @@ Professional surveying calculation platform for land surveyors.
 - **Coordinate Conversion** - WGS84 / UTM conversions
 - **Horizontal Curves** - Circular curve elements and stakeout calculations
 - **COGO Tools** - Radiation, bearing intersection, and resection
+- **Digital Field Book** - Table-based field notes with live calculations, offline save + sync, PDF/CSV/JSON exports
 
 ## Tech Stack
 
 - Next.js 14
 - TypeScript
 - Tailwind CSS
+- Supabase (Auth + Postgres)
 
 ## Getting Started
 

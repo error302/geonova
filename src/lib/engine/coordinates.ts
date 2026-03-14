@@ -10,90 +10,181 @@
 
 import { LatLon, UTMCoord, DMS } from './types';
 import { decimalToDMS } from './angles';
+import { getUTMZoneFromLatLng } from './utmZones';
 
 // WGS84 ellipsoid
 const WGS84_A = 6378137.0;
 const WGS84_F = 1 / 298.257223563;
 const WGS84_E2 = 2 * WGS84_F - WGS84_F * WGS84_F;
+const WGS84_EP2 = WGS84_E2 / (1 - WGS84_E2); // e'^2
+
+function normalizeLongitudeDeg(lon: number) {
+  let x = lon
+  while (x < -180) x += 360
+  while (x >= 180) x -= 360
+  return x
+}
 
 export function geographicToUTM(lat: number, lon: number, zone?: number): UTMCoord {
-  const latRad = lat * Math.PI / 180;
-  const lonRad = lon * Math.PI / 180;
-  
-  // Calculate zone if not provided
-  const calculatedZone = zone || Math.floor((lon + 180) / 6) + 1;
-  const lonOrigin = (calculatedZone - 1) * 6 - 180 + 3;
-  const lonOriginRad = lonOrigin * Math.PI / 180;
-  
+  const normalizedLon = normalizeLongitudeDeg(lon)
+
+  const latRad = (lat * Math.PI) / 180;
+  const lonRad = (normalizedLon * Math.PI) / 180;
+
+  const computedZone = zone ?? getUTMZoneFromLatLng(lat, normalizedLon).zone
+  const lonOrigin = (computedZone - 1) * 6 - 180 + 3;
+  const lonOriginRad = (lonOrigin * Math.PI) / 180;
+
   const k0 = 0.9996;
-  
-  // Arc length
-  const N = WGS84_A / Math.sqrt(1 - WGS84_E2 * Math.sin(latRad) * Math.sin(latRad));
-  const T = Math.tan(latRad) * Math.tan(latRad);
-  const C = (WGS84_E2 / (1 - WGS84_E2)) * Math.cos(latRad) * Math.cos(latRad);
-  const A = Math.cos(latRad) * (lonRad - lonOriginRad);
-  
-  const M = WGS84_A * ((1 - WGS84_E2 / 4 - 3 * WGS84_E2 * WGS84_E2 / 64) * latRad 
-               - (3 * WGS84_E2 / 8 + 3 * WGS84_E2 * WGS84_E2 / 32) * Math.sin(2 * latRad)
-               + (15 * WGS84_E2 * WGS84_E2 / 256) * Math.sin(4 * latRad));
-  
-  let easting = k0 * N * (A + (1 - T + C) * A * A * A / 6
-               + (5 - 18 * T + T * T) * A * A * A * A * A / 120) + 500000;
-  
-  let northing = k0 * (M + N * Math.tan(latRad) * (A * A / 2
-               + (5 - T + 9 * C + 4 * C * C) * A * A * A * A / 24
-               + (61 - 58 * T + T * T + 600 * C - 330 * C * C / (1 - WGS84_E2)) * A * A * A * A * A * A / 720));
-  
-  // Southern hemisphere
+
+  const sinLat = Math.sin(latRad)
+  const cosLat = Math.cos(latRad)
+  const tanLat = Math.tan(latRad)
+
+  const N = WGS84_A / Math.sqrt(1 - WGS84_E2 * sinLat * sinLat);
+  const T = tanLat * tanLat;
+  const C = WGS84_EP2 * cosLat * cosLat;
+  const A = cosLat * (lonRad - lonOriginRad);
+
+  const e4 = WGS84_E2 * WGS84_E2
+  const e6 = e4 * WGS84_E2
+
+  const M =
+    WGS84_A *
+    ((1 - WGS84_E2 / 4 - (3 * e4) / 64 - (5 * e6) / 256) * latRad -
+      ((3 * WGS84_E2) / 8 + (3 * e4) / 32 + (45 * e6) / 1024) * Math.sin(2 * latRad) +
+      ((15 * e4) / 256 + (45 * e6) / 1024) * Math.sin(4 * latRad) -
+      ((35 * e6) / 3072) * Math.sin(6 * latRad));
+
+  let easting =
+    k0 *
+      N *
+      (A +
+        ((1 - T + C) * Math.pow(A, 3)) / 6 +
+        ((5 - 18 * T + T * T + 72 * C - 58 * WGS84_EP2) * Math.pow(A, 5)) / 120) +
+    500000;
+
+  let northing =
+    k0 *
+    (M +
+      N *
+        tanLat *
+        ((A * A) / 2 +
+          ((5 - T + 9 * C + 4 * C * C) * Math.pow(A, 4)) / 24 +
+          ((61 - 58 * T + T * T + 600 * C - 330 * WGS84_EP2) * Math.pow(A, 6)) / 720));
+
   const hemisphere: 'N' | 'S' = lat >= 0 ? 'N' : 'S';
-  if (lat < 0) {
-    northing += 10000000;
-  }
-  
-  return {
-    easting: Math.round(easting * 1000) / 1000,
-    northing: Math.round(northing * 1000) / 1000,
-    zone: calculatedZone,
-    hemisphere
-  };
+  if (hemisphere === 'S') northing += 10000000;
+
+  return { easting, northing, zone: computedZone, hemisphere };
+}
+
+function utmToGeographicApprox(easting: number, northing: number, zone: number, hemisphere: 'N' | 'S'): LatLon {
+  const k0 = 0.9996;
+  const e1 = (1 - Math.sqrt(1 - WGS84_E2)) / (1 + Math.sqrt(1 - WGS84_E2));
+
+  let y = northing;
+  if (hemisphere === 'S') y -= 10000000;
+
+  const x = easting - 500000;
+
+  const lonOrigin = (zone - 1) * 6 - 180 + 3;
+  const lonOriginRad = (lonOrigin * Math.PI) / 180;
+
+  const e4 = WGS84_E2 * WGS84_E2
+  const e6 = e4 * WGS84_E2
+
+  const M = y / k0;
+  const mu = M / (WGS84_A * (1 - WGS84_E2 / 4 - (3 * e4) / 64 - (5 * e6) / 256));
+
+  const phi1 =
+    mu +
+    (3 * e1 / 2 - 27 * Math.pow(e1, 3) / 32) * Math.sin(2 * mu) +
+    (21 * e1 * e1 / 16 - 55 * Math.pow(e1, 4) / 32) * Math.sin(4 * mu) +
+    (151 * Math.pow(e1, 3) / 96) * Math.sin(6 * mu) +
+    (1097 * Math.pow(e1, 4) / 512) * Math.sin(8 * mu);
+
+  const sin1 = Math.sin(phi1)
+  const cos1 = Math.cos(phi1)
+  const tan1 = Math.tan(phi1)
+
+  const N1 = WGS84_A / Math.sqrt(1 - WGS84_E2 * sin1 * sin1);
+  const T1 = tan1 * tan1;
+  const C1 = WGS84_EP2 * cos1 * cos1;
+  const R1 = (WGS84_A * (1 - WGS84_E2)) / Math.pow(1 - WGS84_E2 * sin1 * sin1, 1.5);
+  const D = x / (N1 * k0);
+
+  const lat =
+    phi1 -
+    (N1 * tan1 / R1) *
+      (D * D / 2 -
+        (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * WGS84_EP2) * Math.pow(D, 4) / 24 +
+        (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * WGS84_EP2 - 3 * C1 * C1) * Math.pow(D, 6) / 720);
+
+  const lon =
+    lonOriginRad +
+    (D -
+      (1 + 2 * T1 + C1) * Math.pow(D, 3) / 6 +
+      (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * WGS84_EP2 + 24 * T1 * T1) * Math.pow(D, 5) / 120) /
+      cos1;
+
+  return { lat: (lat * 180) / Math.PI, lon: (lon * 180) / Math.PI };
 }
 
 export function utmToGeographic(easting: number, northing: number, zone: number, hemisphere: 'N' | 'S'): LatLon {
-  const k0 = 0.9996;
-  const e1 = (1 - Math.sqrt(1 - WGS84_E2)) / (1 + Math.sqrt(1 - WGS84_E2));
-  
-  let y = northing;
-  if (hemisphere === 'S') {
-    y -= 10000000;
+  const initial = utmToGeographicApprox(easting, northing, zone, hemisphere)
+
+  // Refine with Newton iterations to improve round-trip (UTM -> lat/lon -> UTM) accuracy.
+  // This targets the Basak requirement: round-trip < 1 mm across the valid UTM latitude band.
+  let lat = initial.lat
+  let lon = initial.lon
+
+  const maxIterations = 8
+  const targetMeters = 0.0005 // 0.5 mm
+
+  for (let iteration = 0; iteration < maxIterations; iteration++) {
+    const predicted = geographicToUTM(lat, lon, zone)
+    const dE = easting - predicted.easting
+    const dN = northing - predicted.northing
+
+    if (Math.hypot(dE, dN) <= targetMeters) break
+
+    // Numerical Jacobian (meters per degree)
+    const deltaDeg = 1e-8
+
+    const predictedLatPlus = geographicToUTM(lat + deltaDeg, lon, zone)
+    const predictedLatMinus = geographicToUTM(lat - deltaDeg, lon, zone)
+
+    const predictedLonPlus = geographicToUTM(lat, lon + deltaDeg, zone)
+    const predictedLonMinus = geographicToUTM(lat, lon - deltaDeg, zone)
+
+    const dEdLat = (predictedLatPlus.easting - predictedLatMinus.easting) / (2 * deltaDeg)
+    const dNdLat = (predictedLatPlus.northing - predictedLatMinus.northing) / (2 * deltaDeg)
+
+    const dEdLon = (predictedLonPlus.easting - predictedLonMinus.easting) / (2 * deltaDeg)
+    const dNdLon = (predictedLonPlus.northing - predictedLonMinus.northing) / (2 * deltaDeg)
+
+    const det = dEdLat * dNdLon - dEdLon * dNdLat
+
+    if (!Number.isFinite(det) || Math.abs(det) < 1e-12) {
+      // Fallback: if Jacobian is singular (should be rare), return the approximation.
+      return initial
+    }
+
+    // Solve J * [dLat, dLon] = [dE, dN]
+    const dLat = (dE * dNdLon - dEdLon * dN) / det
+    const dLon = (dEdLat * dN - dE * dNdLat) / det
+
+    lat += dLat
+    lon += dLon
+
+    if (hemisphere === 'S' && lat > 0) lat = -Math.abs(lat)
+    if (hemisphere === 'N' && lat < 0) lat = Math.abs(lat)
+
+    lon = normalizeLongitudeDeg(lon)
   }
-  
-  const lonOrigin = (zone - 1) * 6 - 180 + 3;
-  const lonOriginRad = lonOrigin * Math.PI / 180;
-  
-  const M = y / k0;
-  const mu = M / (WGS84_A * (1 - WGS84_E2 / 4 - 3 * WGS84_E2 * WGS84_E2 / 64));
-  
-  const phi1 = mu + (3 * e1 / 2 - 27 * e1 * e1 * e1 / 32) * Math.sin(2 * mu)
-             + (21 * e1 * e1 / 16 - 55 * e1 * e1 * e1 * e1 / 32) * Math.sin(4 * mu)
-             + (151 * e1 * e1 * e1 / 96) * Math.sin(6 * mu);
-  
-  const N1 = WGS84_A / Math.sqrt(1 - WGS84_E2 * Math.sin(phi1) * Math.sin(phi1));
-  const T1 = Math.tan(phi1) * Math.tan(phi1);
-  const C1 = (WGS84_E2 / (1 - WGS84_E2)) * Math.cos(phi1) * Math.cos(phi1);
-  const R1 = WGS84_A * (1 - WGS84_E2) / Math.pow(1 - WGS84_E2 * Math.sin(phi1) * Math.sin(phi1), 1.5);
-  const D = (easting - 500000) / (N1 * k0);
-  
-  let lat = phi1 - (N1 * Math.tan(phi1) / R1) * (D * D / 2
-             - (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * WGS84_E2 / (1 - WGS84_E2)) * D * D * D * D / 24
-             + (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * WGS84_E2 / (1 - WGS84_E2) - 3 * C1 * C1) * D * D * D * D * D * D / 720);
-  
-  let lon = (lonOriginRad) + (D - (1 + 2 * T1 + C1) * D * D * D / 6
-             + (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * WGS84_E2 / (1 - WGS84_E2) + 24 * T1 * T1) * D * D * D * D * D / 120) / Math.cos(phi1);
-  
-  return {
-    lat: Math.round(lat * 180 / Math.PI * 10000000) / 10000000,
-    lon: Math.round(lon * 180 / Math.PI * 10000000) / 10000000
-  };
+
+  return { lat, lon }
 }
 
 export function latLonToString(lat: number, lon: number): string {

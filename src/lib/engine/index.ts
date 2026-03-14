@@ -10,3 +10,5 @@ export * from './cogo';
 export * from './curves';
 export * from './geometry';
 export * from './parser';
+export * from './polar';
+export * from './hydrographic';

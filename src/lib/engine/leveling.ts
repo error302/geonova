@@ -25,89 +25,119 @@ export interface LevelingInput {
 
 export function riseAndFall(input: LevelingInput): LevelingResult {
   const { readings, openingRL, closingRL, distanceKm = 1 } = input;
-  
-  const results: LevelingReading[] = [];
-  
-  // Starting point
+
+  const results: LevelingReading[] = [{ station: 'BM', reducedLevel: openingRL }];
+
+  let hi: number | null = null;
   let currentRL = openingRL;
-  results.push({
-    station: 'BM',
-    reducedLevel: currentRL
-  });
-  
-  // Process each reading
+  let previousComputedRL = openingRL;
+  let lastComputedRL = openingRL;
+
+  const stationRL = new Map<string, number>();
+  stationRL.set('BM', openingRL);
+
   let sumBS = 0;
   let sumFS = 0;
   let sumRise = 0;
   let sumFall = 0;
-  
+
   for (const reading of readings) {
-    const result: LevelingReading = {
-      station: reading.station
-    };
-    
+    const row: LevelingReading = { station: reading.station };
+
     if (reading.bs !== undefined && reading.bs !== null) {
-      result.bs = reading.bs;
+      const backsightRL = stationRL.get(reading.station) ?? currentRL;
+      row.bs = reading.bs;
+      row.reducedLevel = backsightRL;
       sumBS += reading.bs;
+      hi = backsightRL + reading.bs;
     }
-    
+
     if (reading.is !== undefined && reading.is !== null) {
-      result.is = reading.is;
-      // IS doesn't change the chain, just computes RL
-      result.reducedLevel = currentRL - reading.is;
-    }
-    
-    if (reading.fs !== undefined && reading.fs !== null) {
-      result.fs = reading.fs;
-      sumFS += reading.fs;
-      
-      // Calculate rise/fall from previous RL
-      const rise = currentRL - reading.fs;
-      
-      if (rise >= 0) {
-        result.rise = rise;
-        result.fall = 0;
-        sumRise += rise;
-      } else {
-        result.rise = 0;
-        result.fall = Math.abs(rise);
-        sumFall += Math.abs(rise);
+      if (hi === null) {
+        results.push(row);
+        continue;
       }
-      
-      currentRL = reading.fs;
-      result.reducedLevel = currentRL;
+      row.is = reading.is;
+      const rl = hi - reading.is;
+      row.reducedLevel = rl;
+      stationRL.set(reading.station, rl);
+
+      const diff = rl - previousComputedRL;
+      if (diff >= 0) {
+        row.rise = diff;
+        row.fall = 0;
+        sumRise += diff;
+      } else {
+        row.rise = 0;
+        row.fall = Math.abs(diff);
+        sumFall += Math.abs(diff);
+      }
+
+      previousComputedRL = rl;
+      currentRL = rl;
+      lastComputedRL = rl;
     }
-    
-    results.push(result);
+
+    if (reading.fs !== undefined && reading.fs !== null) {
+      if (hi === null) {
+        results.push(row);
+        continue;
+      }
+      row.fs = reading.fs;
+      sumFS += reading.fs;
+
+      const rl = hi - reading.fs;
+      row.reducedLevel = rl;
+      stationRL.set(reading.station, rl);
+
+      const diff = rl - previousComputedRL;
+      if (diff >= 0) {
+        row.rise = diff;
+        row.fall = 0;
+        sumRise += diff;
+      } else {
+        row.rise = 0;
+        row.fall = Math.abs(diff);
+        sumFall += Math.abs(diff);
+      }
+
+      previousComputedRL = rl;
+      currentRL = rl;
+      lastComputedRL = rl;
+    }
+
+    results.push(row);
   }
-  
-  // Calculate misclosure
-  let misclosure = 0;
-  let arithmeticCheck = false;
-  
-  if (closingRL !== undefined) {
-    misclosure = currentRL - closingRL;
-    arithmeticCheck = Math.abs(sumBS - sumFS - (sumRise - sumFall)) < 0.001;
-  } else {
-    arithmeticCheck = Math.abs(sumBS - sumFS) < 0.001;
-  }
-  
-  // Calculate allowable misclosure (ordinary leveling: ±12√K mm)
+
+  const bsFsDiff = (sumBS - sumFS) - (lastComputedRL - openingRL);
+  const riseFallDiff = (sumRise - sumFall) - (lastComputedRL - openingRL);
+  const arithmeticCheck = Math.abs(bsFsDiff) < 0.001 && Math.abs(riseFallDiff) < 0.001;
+
+  const misclosure = closingRL !== undefined ? (lastComputedRL - closingRL) : 0;
+
   const allowableMisclosure = 12 * Math.sqrt(distanceKm) / 1000;
-  const isAcceptable = Math.abs(misclosure) <= allowableMisclosure;
-  
-  // Adjust RLs if within tolerance
-  if (isAcceptable && misclosure !== 0) {
-    const numReadings = results.length;
+  const isAcceptable = closingRL === undefined ? true : Math.abs(misclosure) <= allowableMisclosure;
+
+  if (closingRL !== undefined && isAcceptable && misclosure !== 0) {
+    const adjustableIndexes: number[] = [];
     for (let i = 1; i < results.length; i++) {
-      const adjustment = (i / (numReadings - 1)) * misclosure;
-      const rl = results[i].reducedLevel;
-      if (rl !== undefined) {
+      if (results[i].reducedLevel !== undefined && (results[i].is !== undefined || results[i].fs !== undefined)) {
+        adjustableIndexes.push(i);
+      }
+    }
+
+    const count = adjustableIndexes.length;
+    if (count > 0) {
+      for (let j = 0; j < adjustableIndexes.length; j++) {
+        const i = adjustableIndexes[j];
+        const fraction = (j + 1) / count;
+        const adjustment = fraction * misclosure;
+        const rl = results[i].reducedLevel as number;
         results[i].adjustedRL = rl - adjustment;
       }
     }
   }
-  
+
   return {
     readings: results,
     misclosure,
@@ -119,71 +149,74 @@ export function riseAndFall(input: LevelingInput): LevelingResult {
 }
 
 export function heightOfCollimation(input: LevelingInput): LevelingResult {
-  const { readings, openingRL, distanceKm = 1 } = input;
-  
-  const results: LevelingReading[] = [];
-  
-  // First reading must be a BS to establish HI
-  if (!readings[0]?.bs) {
-    return {
-      readings: [],
-      misclosure: 0,
-      arithmeticCheck: false,
-      allowableMisclosure: 0,
-      isAcceptable: false,
-      method: 'height_of_collimation'
-    };
-  }
-  
-  // Calculate HI from first BS
-  let hi = openingRL + readings[0].bs;
-  
-  const firstResult: LevelingReading = {
-    station: readings[0].station,
-    bs: readings[0].bs,
-    reducedLevel: openingRL
-  };
-  results.push(firstResult);
-  
-  let sumBS = readings[0].bs;
+  const { readings, openingRL, closingRL, distanceKm = 1 } = input;
+
+  const results: LevelingReading[] = [{ station: 'BM', reducedLevel: openingRL }];
+
+  let hi: number | null = null;
+  let currentRL = openingRL;
+  let lastComputedRL = openingRL;
+
+  const stationRL = new Map<string, number>();
+  stationRL.set('BM', openingRL);
+
+  let sumBS = 0;
   let sumFS = 0;
-  
-  for (let i = 1; i < readings.length; i++) {
-    const reading = readings[i];
-    const result: LevelingReading = {
-      station: reading.station
-    };
-    
+
+  for (const reading of readings) {
+    const row: LevelingReading = { station: reading.station };
+
     if (reading.bs !== undefined && reading.bs !== null) {
-      result.bs = reading.bs;
-      hi = hi + reading.bs;
+      const backsightRL = stationRL.get(reading.station) ?? currentRL;
+      row.bs = reading.bs;
+      row.reducedLevel = backsightRL;
       sumBS += reading.bs;
-      result.reducedLevel = hi - reading.bs;
+      hi = backsightRL + reading.bs;
     }
-    
-    if (reading.fs !== undefined && reading.fs !== null) {
-      result.fs = reading.fs;
-      sumFS += reading.fs;
-      result.reducedLevel = hi - reading.fs;
-    }
-    
+
     if (reading.is !== undefined && reading.is !== null) {
-      result.is = reading.is;
-      result.reducedLevel = hi - reading.is;
+      if (hi === null) {
+        results.push(row);
+        continue;
+      }
+      row.is = reading.is;
+      const rl = hi - reading.is;
+      row.reducedLevel = rl;
+      stationRL.set(reading.station, rl);
+      currentRL = rl;
+      lastComputedRL = rl;
     }
-    
-    results.push(result);
+
+    if (reading.fs !== undefined && reading.fs !== null) {
+      if (hi === null) {
+        results.push(row);
+        continue;
+      }
+      row.fs = reading.fs;
+      sumFS += reading.fs;
+      const rl = hi - reading.fs;
+      row.reducedLevel = rl;
+      stationRL.set(reading.station, rl);
+      currentRL = rl;
+      lastComputedRL = rl;
+    }
+
+    results.push(row);
   }
-  
-  // Arithmetic check
-  const arithmeticCheck = Math.abs(sumBS - sumFS) < 0.001;
-  
+
+  const arithmeticDiff = (sumBS - sumFS) - (lastComputedRL - openingRL);
+  const arithmeticCheck = Math.abs(arithmeticDiff) < 0.001;
+
+  const misclosure = closingRL !== undefined ? (lastComputedRL - closingRL) : 0;
+  const allowableMisclosure = 12 * Math.sqrt(distanceKm) / 1000;
+  const isAcceptable = closingRL === undefined ? true : Math.abs(misclosure) <= allowableMisclosure;
+
   return {
     readings: results,
-    misclosure: 0,
+    misclosure,
     arithmeticCheck,
-    allowableMisclosure: 0,
-    isAcceptable: true,
+    allowableMisclosure,
+    isAcceptable,
     method: 'height_of_collimation'
   };
 }

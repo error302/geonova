@@ -1,7 +1,7 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb'
 
 const DB_NAME = 'geonova-offline'
-const DB_VERSION = 1
+const DB_VERSION = 2
 
 interface GeoNovaDB extends DBSchema {
   sync_queue: {
@@ -24,6 +24,10 @@ interface GeoNovaDB extends DBSchema {
     key: string
     value: any
   }
+  fieldbooks: {
+    key: string
+    value: any
+  }
 }
 
 let dbPromise: Promise<IDBPDatabase<GeoNovaDB>> | null = null
@@ -43,6 +47,9 @@ export async function getDB(): Promise<IDBPDatabase<GeoNovaDB>> {
         }
         if (!db.objectStoreNames.contains('survey_points')) {
           db.createObjectStore('survey_points', { keyPath: 'id' })
+        }
+        if (!db.objectStoreNames.contains('fieldbooks')) {
+          db.createObjectStore('fieldbooks', { keyPath: 'id' })
         }
       }
     })

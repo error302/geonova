@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { bearingToString } from '../engine/angles'
 
 interface ReportOptions {
   project: {
@@ -156,13 +157,10 @@ export function generateSurveyReport(options: ReportOptions, onBlob?: (blob: Blo
       startY: yPos,
       head: [['Line', 'Dist (m)', 'Bearing', 'ΔN Raw', 'ΔE Raw', 'Corr N', 'Corr E', 'Adj ΔN', 'Adj ΔE']],
       body: traverse.legs.map(l => {
-        const deg = Math.floor(l.rawBearing)
-        const min = Math.floor((l.rawBearing - deg) * 60)
-        const sec = (((l.rawBearing - deg) * 60) - min) * 60
         return [
           `${l.fromName}→${l.toName}`,
-          l.distance.toFixed(3),
-          `${deg}°${min}'${sec.toFixed(1)}"`,
+          l.distance.toFixed(2),
+          bearingToString(l.rawBearing),
           l.rawDeltaN.toFixed(4),
           l.rawDeltaE.toFixed(4),
           (l.adjustedDeltaN - l.rawDeltaN).toFixed(4),
@@ -192,7 +190,7 @@ export function generateSurveyReport(options: ReportOptions, onBlob?: (blob: Blo
     doc.setFontSize(8)
     doc.setFont('helvetica', 'normal')
     doc.setTextColor(30, 30, 30)
-    doc.text(`Total Distance: ${traverse.totalDistance.toFixed(3)} m`, 20, yPos + 7)
+    doc.text(`Total Distance: ${traverse.totalDistance.toFixed(2)} m`, 20, yPos + 7)
     doc.text(`Closing Error E: ${traverse.closingErrorE.toFixed(4)} m`, 20, yPos + 13)
     doc.text(`Closing Error N: ${traverse.closingErrorN.toFixed(4)} m`, 20, yPos + 19)
     doc.text(`Linear Misclosure: ${traverse.linearError.toFixed(4)} m`, 20, yPos + 25)
@@ -296,18 +294,33 @@ export function generateSurveyPlan(options: SurveyPlanOptions, onBlob?: (blob: B
   const gray = [120, 120, 120] as [number, number, number]
   const lightGray = [230, 230, 230] as [number, number, number]
 
-  const scale = calculateScale(points, 180, 110)
   const bounds = getBounds(points)
-  const offset = { x: 45, y: 25 }
 
+  // Layout (A4 landscape: 297×210mm)
+  const margin = 10
+  const titleBlockW = 70
+  const titleBlockX = 297 - margin - titleBlockW
+  const titleBlockY = margin
+  const titleBlockH = 210 - margin * 2
+
+  const frameGap = 6
+  const drawingX = margin
+  const drawingY = 28
+  const drawingW = titleBlockX - drawingX - frameGap
+  const drawingH = 115
+
+  const frame = { x: drawingX, y: drawingY, w: drawingW, h: drawingH, padding: 10 }
+  const transform = createPlanTransform(bounds, frame)
+
+  // Header band
   doc.setFillColor(...dark)
   doc.rect(0, 0, 297, 20, 'F')
-  
+
   doc.setTextColor(...amber)
   doc.setFontSize(16)
   doc.setFont('helvetica', 'bold')
   doc.text('GEONOVA', 10, 14)
-  
+
   doc.setTextColor(...white)
   doc.setFontSize(10)
   doc.setFont('helvetica', 'normal')
@@ -325,37 +338,70 @@ export function generateSurveyPlan(options: SurveyPlanOptions, onBlob?: (blob: B
   doc.text(`UTM Zone: ${project.utm_zone}${project.hemisphere}`, 10, 43)
   doc.text(`Datum: WGS84`, 80, 38)
   doc.text(`Date: ${new Date().toLocaleDateString('en-GB')}`, 80, 43)
-  doc.text(`Scale: 1:${scale.toLocaleString()}`, 160, 38)
+  doc.text(`Scale: 1:${transform.ratio.toLocaleString()}`, 160, 38)
 
   doc.setDrawColor(...amber)
   doc.setLineWidth(0.5)
   doc.line(10, 47, 287, 47)
 
-  drawGrid(doc, bounds, scale, offset, gray, lightGray)
-  drawNorthArrow(doc, 265, 35)
-  drawScaleBar(doc, 220, 115, scale)
+  // Title block
+  drawTitleBlock(doc, {
+    x: titleBlockX,
+    y: titleBlockY,
+    w: titleBlockW,
+    h: titleBlockH,
+    amber,
+    dark,
+    white,
+    project: {
+      name: project.name,
+      location: project.location || 'N/A',
+      utm: `${project.utm_zone}${project.hemisphere}`,
+      datum: 'WGS84',
+      date: new Date().toLocaleDateString('en-GB'),
+      scale: `1:${transform.ratio.toLocaleString()}`,
+      drawingNo: `GN-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${String(Date.now()).slice(-4)}`,
+    }
+  })
+
+  // Drawing frame + grid + plan content
+  drawFrame(doc, frame, amber)
+  drawGrid(doc, frame, transform, gray, lightGray)
+  drawNorthArrow(doc, frame.x + frame.w - 20, frame.y + 18, amber)
+  drawScaleBar(doc, frame.x + 8, frame.y + frame.h - 10, transform, dark, white)
 
   const pointMap = new Map(points.map(p => [p.name, p]))
   
   if (parcel?.boundary_points) {
-    drawParcelBoundary(doc, parcel.boundary_points, bounds, scale, offset, amber)
-    drawParcelLabels(doc, parcel.boundary_points, bounds, scale, offset)
+    drawParcelBoundary(doc, parcel.boundary_points, transform, amber)
+    drawParcelLabels(doc, parcel.boundary_points, transform, gray)
   } else if (traverse?.legs) {
-    drawTraverseLines(doc, traverse.legs, pointMap, bounds, scale, offset, amber)
+    drawTraverseLines(doc, traverse.legs, pointMap, transform, amber)
   }
 
-  drawPoints(doc, points, bounds, scale, offset, amber, dark)
+  drawPoints(doc, points, frame, transform, amber, dark)
 
-  const tableStartY = 125
+  // Page 2: schedules (coordinates + parcel computations) for a clean, client-ready plan sheet.
+  doc.addPage()
+  let yPos = 18
+
   doc.setFillColor(...dark)
-  doc.rect(10, tableStartY, 277, 8, 'F')
+  doc.rect(0, 0, 297, 16, 'F')
+  doc.setTextColor(...amber)
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
+  doc.text('SCHEDULES', 10, 11)
+
+  yPos = 24
+  doc.setFillColor(...dark)
+  doc.rect(10, yPos, 277, 8, 'F')
   doc.setTextColor(...amber)
   doc.setFontSize(9)
   doc.setFont('helvetica', 'bold')
-  doc.text('COORDINATE LIST', 12, tableStartY + 5.5)
+  doc.text('COORDINATE LIST', 12, yPos + 5.5)
 
   autoTable(doc, {
-    startY: tableStartY + 10,
+    startY: yPos + 10,
     head: [['Point', 'Easting (m)', 'Northing (m)', 'Elevation (m)', 'Type']],
     body: points.map(p => [
       p.name,
@@ -384,7 +430,7 @@ export function generateSurveyPlan(options: SurveyPlanOptions, onBlob?: (blob: B
   })
 
   if (parcel && parcel.boundary_points.length > 0) {
-    let yPos = (doc as any).lastAutoTable.finalY + 10
+    yPos = (doc as any).lastAutoTable.finalY + 10
     
     if (yPos > 160) {
       doc.addPage()
@@ -406,7 +452,7 @@ export function generateSurveyPlan(options: SurveyPlanOptions, onBlob?: (blob: B
       lines.push([
         `${from.name} → ${to.name}`,
         db.bearing,
-        `${db.distance.toFixed(3)} m`
+        `${db.distance.toFixed(2)} m`
       ])
     }
 
@@ -442,7 +488,7 @@ export function generateSurveyPlan(options: SurveyPlanOptions, onBlob?: (blob: B
     doc.text(`Area: ${parcel.area_sqm.toFixed(4)} m²`, 15, yPos + 8)
     doc.text(`${parcel.area_ha.toFixed(6)} ha`, 100, yPos + 8)
     doc.text(`${parcel.area_acres.toFixed(4)} acres`, 160, yPos + 8)
-    doc.text(`Perimeter: ${parcel.perimeter_m.toFixed(3)} m`, 15, yPos + 16)
+    doc.text(`Perimeter: ${parcel.perimeter_m.toFixed(2)} m`, 15, yPos + 16)
   }
 
   const pageCount = doc.getNumberOfPages()
@@ -467,33 +513,21 @@ export function generateSurveyPlan(options: SurveyPlanOptions, onBlob?: (blob: B
   doc.save(filename)
 }
 
-function calculateScale(points: { easting: number; northing: number }[], drawingWidth: number, drawingHeight: number): number {
-  if (points.length === 0) return 1000
-  
-  const bounds = getBounds(points)
-  const rangeE = bounds.maxE - bounds.minE
-  const rangeN = bounds.maxN - bounds.minN
-  
-  if (rangeE === 0 && rangeN === 0) return 1000
-  
-  const scaleX = rangeE / drawingWidth
-  const scaleY = rangeN / drawingHeight
-  const rawScale = Math.max(scaleX, scaleY) * 1.2
-  
-  const magnitude = Math.pow(10, Math.floor(Math.log10(rawScale)))
-  const normalized = rawScale / magnitude
-  
-  let rounded: number
-  if (normalized <= 1) rounded = 1
-  else if (normalized <= 2) rounded = 2
-  else if (normalized <= 2.5) rounded = 2.5
-  else if (normalized <= 5) rounded = 5
-  else rounded = 10
-  
-  return rounded * magnitude
+type Bounds = { minE: number; maxE: number; minN: number; maxN: number }
+type PlanFrame = { x: number; y: number; w: number; h: number; padding: number }
+type PlanTransform = {
+  bounds: Bounds
+  ratio: number
+  mmPerM: number
+  originX: number
+  originY: number
+  contentW: number
+  contentH: number
+  toX: (easting: number) => number
+  toY: (northing: number) => number
 }
 
-function getBounds(points: { easting: number; northing: number }[]) {
+function getBounds(points: { easting: number; northing: number }[]): Bounds {
   let minE = Infinity, maxE = -Infinity, minN = Infinity, maxN = -Infinity
   for (const p of points) {
     minE = Math.min(minE, p.easting)
@@ -504,143 +538,360 @@ function getBounds(points: { easting: number; northing: number }[]) {
   return { minE, maxE, minN, maxN }
 }
 
-function drawGrid(doc: any, bounds: { minE: number; maxE: number; minN: number; maxN: number }, scale: number, offset: { x: number; y: number }, gray: [number, number, number], lightGray: [number, number, number]) {
-  doc.setDrawColor(...lightGray)
-  doc.setLineWidth(0.1)
-  
-  const rangeE = bounds.maxE - bounds.minE || 100
-  const rangeN = bounds.maxN - bounds.minN || 100
-  const gridStepE = Math.pow(10, Math.floor(Math.log10(rangeE / 5)))
-  const gridStepN = Math.pow(10, Math.floor(Math.log10(rangeN / 5)))
-  
-  const startE = Math.floor(bounds.minE / gridStepE) * gridStepE
-  const startN = Math.floor(bounds.minN / gridStepN) * gridStepN
-  
-  for (let e = startE; e <= bounds.maxE; e += gridStepE) {
-    const x = offset.x + ((e - bounds.minE) / rangeE) * 180
-    doc.line(x, offset.y, x, offset.y + 110)
-  }
-  
-  for (let n = startN; n <= bounds.maxN; n += gridStepN) {
-    const y = offset.y + 110 - ((n - bounds.minN) / rangeN) * 110
-    doc.line(offset.x, y, offset.x + 180, y)
-  }
+function pickNiceScaleRatio(raw: number) {
+  const candidates = [50, 100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000, 20000, 25000, 50000, 100000]
+  for (const c of candidates) if (c >= raw) return c
+  return candidates[candidates.length - 1]
 }
 
-function drawNorthArrow(doc: any, x: number, y: number) {
-  doc.setFillColor(232, 132, 26)
-  doc.setTextColor(232, 132, 26)
-  doc.setFontSize(20)
-  doc.text('N', x, y)
-  
-  doc.setDrawColor(232, 132, 26)
-  doc.setLineWidth(0.8)
-  doc.line(x + 3, y - 8, x + 3, y + 10)
-  doc.line(x + 3, y - 8, x, y - 2)
-  doc.line(x + 3, y - 8, x + 6, y - 2)
-}
+function createPlanTransform(bounds: Bounds, frame: PlanFrame): PlanTransform {
+  const rangeE = Math.max(0, bounds.maxE - bounds.minE)
+  const rangeN = Math.max(0, bounds.maxN - bounds.minN)
 
-function drawScaleBar(doc: any, x: number, y: number, scale: number) {
-  const barLength = 50
-  const realLength = barLength * scale
-  
-  doc.setDrawColor(50, 50, 50)
-  doc.setLineWidth(0.5)
-  doc.line(x, y, x + barLength, y)
-  doc.line(x, y - 2, x, y + 2)
-  doc.line(x + barLength, y - 2, x + barLength, y + 2)
-  
-  doc.setFontSize(7)
-  doc.setTextColor(50, 50, 50)
-  doc.text(`${formatScaleDistance(realLength)}`, x + barLength / 2, y - 3, { align: 'center' })
-  doc.text(`1:${scale.toLocaleString()}`, x + barLength / 2, y + 7, { align: 'center' })
-}
+  const innerW = Math.max(1, frame.w - frame.padding * 2)
+  const innerH = Math.max(1, frame.h - frame.padding * 2)
 
-function formatScaleDistance(meters: number): string {
-  if (meters >= 1000) return `${(meters / 1000).toFixed(1)} km`
-  return `${meters.toFixed(0)} m`
-}
+  // raw 1:N required to fit extents inside the frame (units: mm on paper vs mm on ground)
+  // N = (range(m) * 1000 mm/m) / paper(mm)
+  const rawRatio = Math.max((rangeE * 1000) / innerW, (rangeN * 1000) / innerH, 1)
+  const ratio = pickNiceScaleRatio(rawRatio)
+  const mmPerM = 1000 / ratio
 
-function drawPoints(doc: any, points: { name: string; easting: number; northing: number; is_control: boolean }[], bounds: { minE: number; maxE: number; minN: number; maxN: number }, scale: number, offset: { x: number; y: number }, amber: [number, number, number], dark: [number, number, number]) {
-  const rangeE = bounds.maxE - bounds.minE || 1
-  const rangeN = bounds.maxN - bounds.minN || 1
-  
-  for (const p of points) {
-    const x = offset.x + ((p.easting - bounds.minE) / rangeE) * 180
-    const y = offset.y + 110 - ((p.northing - bounds.minN) / rangeN) * 110
-    
-    if (x < offset.x || x > offset.x + 180 || y < offset.y || y > offset.y + 110) continue
-    
-    doc.setFillColor(...(p.is_control ? amber : [100, 100, 100]))
-    doc.circle(x, y, p.is_control ? 2.5 : 1.5, 'F')
-    
-    doc.setFontSize(6)
-    doc.setTextColor(30, 30, 30)
-    doc.text(p.name, x + 3, y - 3)
+  const contentW = rangeE * mmPerM
+  const contentH = rangeN * mmPerM
+
+  const originX = frame.x + (frame.w - contentW) / 2
+  const originY = frame.y + frame.h - (frame.h - contentH) / 2
+
+  return {
+    bounds,
+    ratio,
+    mmPerM,
+    originX,
+    originY,
+    contentW,
+    contentH,
+    toX: (e) => originX + (e - bounds.minE) * mmPerM,
+    toY: (n) => originY - (n - bounds.minN) * mmPerM,
   }
 }
 
-function drawParcelBoundary(doc: any, boundaryPoints: { name: string; easting: number; northing: number }[], bounds: { minE: number; maxE: number; minN: number; maxN: number }, scale: number, offset: { x: number; y: number }, amber: [number, number, number]) {
-  const rangeE = bounds.maxE - bounds.minE || 1
-  const rangeN = bounds.maxN - bounds.minN || 1
-  
+function drawFrame(doc: any, frame: PlanFrame, amber: [number, number, number]) {
   doc.setDrawColor(...amber)
-  doc.setLineWidth(0.8)
-  
-  const coords = boundaryPoints.map(p => ({
-    x: offset.x + ((p.easting - bounds.minE) / rangeE) * 180,
-    y: offset.y + 110 - ((p.northing - bounds.minN) / rangeN) * 110
-  }))
-  
-  for (let i = 0; i < coords.length; i++) {
-    const next = coords[(i + 1) % coords.length]
-    doc.line(coords[i].x, coords[i].y, next.x, next.y)
+  doc.setLineWidth(0.6)
+  doc.rect(frame.x, frame.y, frame.w, frame.h, 'S')
+
+  doc.setDrawColor(180, 180, 180)
+  doc.setLineWidth(0.2)
+  doc.rect(frame.x + 1, frame.y + 1, frame.w - 2, frame.h - 2, 'S')
+}
+
+function pickGridSpacingM(mmPerM: number) {
+  const candidates = [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
+  // Aim for ~15–30 mm between grid lines on paper
+  for (const c of candidates) {
+    const mm = c * mmPerM
+    if (mm >= 12 && mm <= 30) return c
+  }
+  return candidates[candidates.length - 1]
+}
+
+function drawGrid(
+  doc: any,
+  frame: PlanFrame,
+  transform: PlanTransform,
+  gray: [number, number, number],
+  lightGray: [number, number, number]
+) {
+  const spacingM = pickGridSpacingM(transform.mmPerM)
+  const { bounds } = transform
+
+  const startE = Math.floor(bounds.minE / spacingM) * spacingM
+  const endE = Math.ceil(bounds.maxE / spacingM) * spacingM
+  const startN = Math.floor(bounds.minN / spacingM) * spacingM
+  const endN = Math.ceil(bounds.maxN / spacingM) * spacingM
+
+  doc.setDrawColor(...lightGray)
+  doc.setLineWidth(0.12)
+
+  for (let e = startE; e <= endE; e += spacingM) {
+    const x = transform.toX(e)
+    if (x < frame.x || x > frame.x + frame.w) continue
+    doc.line(x, frame.y, x, frame.y + frame.h)
+  }
+
+  for (let n = startN; n <= endN; n += spacingM) {
+    const y = transform.toY(n)
+    if (y < frame.y || y > frame.y + frame.h) continue
+    doc.line(frame.x, y, frame.x + frame.w, y)
+  }
+
+  // Labels (lightweight, avoids clutter)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(5.5)
+  doc.setTextColor(...gray)
+
+  for (let e = startE; e <= endE; e += spacingM) {
+    const x = transform.toX(e)
+    if (x < frame.x || x > frame.x + frame.w) continue
+    doc.text(String(Math.round(e)), x, frame.y + frame.h + 4, { align: 'center' })
+  }
+
+  for (let n = startN; n <= endN; n += spacingM) {
+    const y = transform.toY(n)
+    if (y < frame.y || y > frame.y + frame.h) continue
+    doc.text(String(Math.round(n)), frame.x - 1.5, y + 1.5, { align: 'right' })
   }
 }
 
-function drawParcelLabels(doc: any, boundaryPoints: { name: string; easting: number; northing: number }[], bounds: { minE: number; maxE: number; minN: number; maxN: number }, scale: number, offset: { x: number; y: number }) {
-  const rangeE = bounds.maxE - bounds.minE || 1
-  const rangeN = bounds.maxN - bounds.minN || 1
-  
+function drawNorthArrow(doc: any, x: number, y: number, amber: [number, number, number]) {
+  doc.setDrawColor(...amber)
+  doc.setFillColor(...amber)
+  doc.setTextColor(...amber)
+  doc.setLineWidth(0.6)
+
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(10)
+  doc.text('N', x + 3, y - 6, { align: 'center' })
+
+  doc.line(x + 3, y + 10, x + 3, y - 2)
+  doc.triangle(x + 3, y - 5, x + 1.5, y - 1.5, x + 4.5, y - 1.5, 'F')
+}
+
+function pickScaleBarLengthM(mmPerM: number) {
+  const candidates = [5, 10, 20, 25, 50, 100, 200, 250, 500, 1000]
+  for (const c of candidates) {
+    const mm = c * mmPerM
+    if (mm >= 30 && mm <= 60) return c
+  }
+  return candidates[candidates.length - 1]
+}
+
+function drawScaleBar(
+  doc: any,
+  x: number,
+  y: number,
+  transform: PlanTransform,
+  dark: [number, number, number],
+  white: [number, number, number]
+) {
+  const lengthM = pickScaleBarLengthM(transform.mmPerM)
+  const lengthMm = lengthM * transform.mmPerM
+  const height = 3
+  const half = lengthMm / 2
+
+  doc.setDrawColor(...dark)
+  doc.setLineWidth(0.3)
+
+  doc.setFillColor(...dark)
+  doc.rect(x, y, half, height, 'F')
+  doc.setFillColor(...white)
+  doc.rect(x + half, y, half, height, 'F')
+  doc.rect(x, y, lengthMm, height, 'S')
+
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(5.5)
+  doc.setTextColor(...dark)
+
+  doc.text('0', x, y + 7)
+  doc.text(String(Math.round(lengthM / 2)), x + half, y + 7, { align: 'center' })
+  doc.text(`${lengthM} m`, x + lengthMm, y + 7, { align: 'right' })
+  doc.text(`Scale 1:${transform.ratio.toLocaleString()}`, x, y + 12)
+}
+
+function drawTitleBlock(
+  doc: any,
+  args: {
+    x: number
+    y: number
+    w: number
+    h: number
+    amber: [number, number, number]
+    dark: [number, number, number]
+    white: [number, number, number]
+    project: { name: string; location: string; utm: string; datum: string; date: string; scale: string; drawingNo: string }
+  }
+) {
+  const { x, y, w, h, amber, dark, white, project } = args
+
+  doc.setFillColor(...dark)
+  doc.rect(x, y, w, h, 'F')
+
+  doc.setDrawColor(...amber)
+  doc.setLineWidth(0.6)
+  doc.rect(x, y, w, h, 'S')
+
+  doc.setTextColor(...amber)
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(12)
+  doc.text('GEONOVA', x + w / 2, y + 10, { align: 'center' })
+
+  doc.setTextColor(...white)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(6.5)
+  doc.text('Professional Surveying Platform', x + w / 2, y + 15, { align: 'center' })
+
+  doc.setDrawColor(...amber)
+  doc.setLineWidth(0.2)
+  doc.line(x + 3, y + 18, x + w - 3, y + 18)
+
+  const rows: Array<[string, string]> = [
+    ['PROJECT', project.name],
+    ['LOCATION', project.location],
+    ['DATE', project.date],
+    ['UTM', project.utm],
+    ['DATUM', project.datum],
+    ['SCALE', project.scale],
+    ['DRAWING NO.', project.drawingNo],
+  ]
+
+  let cy = y + 26
+  for (const [label, value] of rows) {
+    doc.setTextColor(190, 190, 190)
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(6)
+    doc.text(label, x + 4, cy)
+
+    doc.setTextColor(...white)
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(6.5)
+    const v = value.length > 26 ? value.slice(0, 26) + '…' : value
+    doc.text(v, x + 4, cy + 4)
+    cy += 10
+  }
+
+  // Legend
+  cy += 4
+  doc.setDrawColor(...amber)
+  doc.setLineWidth(0.2)
+  doc.line(x + 3, cy, x + w - 3, cy)
+  cy += 8
+
+  doc.setTextColor(...amber)
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(7)
+  doc.text('LEGEND', x + 4, cy)
+  cy += 6
+
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(6.5)
+  doc.setTextColor(...white)
+
+  // Control point symbol (triangle)
+  doc.setFillColor(239, 68, 68)
+  doc.triangle(x + 6, cy - 3, x + 4, cy + 1, x + 8, cy + 1, 'F')
+  doc.text('Control Point', x + 12, cy)
+  cy += 6
+
+  // Survey point symbol (circle)
+  doc.setFillColor(...amber)
+  doc.circle(x + 6, cy - 1, 1.4, 'F')
+  doc.text('Survey Point', x + 12, cy)
+
+  // Sign-off box
+  const signY = y + h - 36
+  doc.setDrawColor(...amber)
+  doc.setLineWidth(0.4)
+  doc.rect(x + 3, signY, w - 6, 33, 'S')
+
+  doc.setTextColor(...white)
+  doc.setFontSize(6.5)
+  doc.text('Surveyor:', x + 5, signY + 9)
+  doc.text('Signature:', x + 5, signY + 18)
+  doc.text('Date:', x + 5, signY + 27)
+
+  doc.setDrawColor(120, 120, 120)
+  doc.setLineWidth(0.2)
+  doc.line(x + 22, signY + 9, x + w - 5, signY + 9)
+  doc.line(x + 22, signY + 18, x + w - 5, signY + 18)
+  doc.line(x + 22, signY + 27, x + w - 5, signY + 27)
+}
+
+function drawPoints(
+  doc: any,
+  points: { name: string; easting: number; northing: number; is_control: boolean }[],
+  frame: PlanFrame,
+  transform: PlanTransform,
+  amber: [number, number, number],
+  dark: [number, number, number]
+) {
+  for (const p of points) {
+    const x = transform.toX(p.easting)
+    const y = transform.toY(p.northing)
+
+    if (x < frame.x || x > frame.x + frame.w || y < frame.y || y > frame.y + frame.h) continue
+
+    if (p.is_control) {
+      doc.setFillColor(239, 68, 68)
+      doc.triangle(x, y - 3.2, x - 2.4, y + 2, x + 2.4, y + 2, 'F')
+    } else {
+      doc.setFillColor(...amber)
+      doc.circle(x, y, 1.4, 'F')
+    }
+
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(6)
+    doc.setTextColor(...dark)
+    doc.text(p.name, x + 2.2, y - 1.6)
+  }
+}
+
+function drawParcelBoundary(doc: any, boundaryPoints: { name: string; easting: number; northing: number }[], transform: PlanTransform, amber: [number, number, number]) {
+  doc.setDrawColor(...amber)
+  doc.setLineWidth(0.7)
+
   for (let i = 0; i < boundaryPoints.length; i++) {
     const from = boundaryPoints[i]
     const to = boundaryPoints[(i + 1) % boundaryPoints.length]
-    
-    const x1 = offset.x + ((from.easting - bounds.minE) / rangeE) * 180
-    const y1 = offset.y + 110 - ((from.northing - bounds.minN) / rangeN) * 110
-    const x2 = offset.x + ((to.easting - bounds.minE) / rangeE) * 180
-    const y2 = offset.y + 110 - ((to.northing - bounds.minN) / rangeN) * 110
-    
-    const midX = (x1 + x2) / 2
-    const midY = (y1 + y2) / 2
-    
-    const db = distanceBearingSimple(from, to)
-    
-    doc.setFontSize(5)
-    doc.setTextColor(80, 80, 80)
-    doc.text(`${db.bearing} / ${db.distance.toFixed(2)}m`, midX, midY - 3, { align: 'center' })
+    doc.line(transform.toX(from.easting), transform.toY(from.northing), transform.toX(to.easting), transform.toY(to.northing))
   }
 }
 
-function drawTraverseLines(doc: any, legs: { fromName: string; toName: string; distance: number; bearing: number }[], pointMap: Map<string, { easting: number; northing: number }>, bounds: { minE: number; maxE: number; minN: number; maxN: number }, scale: number, offset: { x: number; y: number }, amber: [number, number, number]) {
-  const rangeE = bounds.maxE - bounds.minE || 1
-  const rangeN = bounds.maxN - bounds.minN || 1
-  
+function drawParcelLabels(
+  doc: any,
+  boundaryPoints: { name: string; easting: number; northing: number }[],
+  transform: PlanTransform,
+  gray: [number, number, number]
+) {
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(5.5)
+  doc.setTextColor(...gray)
+
+  for (let i = 0; i < boundaryPoints.length; i++) {
+    const from = boundaryPoints[i]
+    const to = boundaryPoints[(i + 1) % boundaryPoints.length]
+
+    const x1 = transform.toX(from.easting)
+    const y1 = transform.toY(from.northing)
+    const x2 = transform.toX(to.easting)
+    const y2 = transform.toY(to.northing)
+
+    const segMm = Math.hypot(x2 - x1, y2 - y1)
+    if (segMm < 22) continue
+
+    const midX = (x1 + x2) / 2
+    const midY = (y1 + y2) / 2
+
+    const db = distanceBearingSimple(from, to)
+    doc.text(`${db.bearing} / ${db.distance.toFixed(2)} m`, midX, midY - 2, { align: 'center' })
+  }
+}
+
+function drawTraverseLines(
+  doc: any,
+  legs: { fromName: string; toName: string; distance: number; bearing: number }[],
+  pointMap: Map<string, { easting: number; northing: number }>,
+  transform: PlanTransform,
+  amber: [number, number, number]
+) {
   doc.setDrawColor(...amber)
-  doc.setLineWidth(0.6)
-  
+  doc.setLineWidth(0.5)
+
   for (const leg of legs) {
     const from = pointMap.get(leg.fromName)
     const to = pointMap.get(leg.toName)
-    
     if (!from || !to) continue
-    
-    const x1 = offset.x + ((from.easting - bounds.minE) / rangeE) * 180
-    const y1 = offset.y + 110 - ((from.northing - bounds.minN) / rangeN) * 110
-    const x2 = offset.x + ((to.easting - bounds.minE) / rangeE) * 180
-    const y2 = offset.y + 110 - ((to.northing - bounds.minN) / rangeN) * 110
-    
-    doc.line(x1, y1, x2, y2)
+    doc.line(transform.toX(from.easting), transform.toY(from.northing), transform.toX(to.easting), transform.toY(to.northing))
   }
 }
 
@@ -651,13 +902,9 @@ function distanceBearingSimple(p1: { easting: number; northing: number }, p2: { 
   
   let bearing = Math.atan2(deltaE, deltaN) * 180 / Math.PI
   if (bearing < 0) bearing += 360
-  
-  const deg = Math.floor(bearing)
-  const min = Math.floor((bearing - deg) * 60)
-  const sec = ((bearing - deg) * 60 - min) * 60
-  
+
   return {
     distance,
-    bearing: `${deg}°${min}'${sec.toFixed(1)}"`
+    bearing: bearingToString(bearing)
   }
 }

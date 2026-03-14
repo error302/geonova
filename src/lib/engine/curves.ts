@@ -40,12 +40,12 @@ export function curveElements(
   return {
     radius,
     deflectionAngle,
-    tangentLength: Math.round(T * 1000) / 1000,
-    arcLength: Math.round(L * 1000) / 1000,
-    longChord: Math.round(C * 1000) / 1000,
-    externalDistance: Math.round(E * 1000) / 1000,
-    midOrdinate: Math.round(M * 1000) / 1000,
-    degreeOfCurve: Math.round(D * 1000) / 1000
+    tangentLength: T,
+    arcLength: L,
+    longChord: C,
+    externalDistance: E,
+    midOrdinate: M,
+    degreeOfCurve: D
   };
 }
 
@@ -80,19 +80,19 @@ export function curveStakeout(
     const chordLength = 2 * radius * Math.sin(toRadians(deflectionToPoint / 2));
     
     points.push({
-      chainage: Math.round(chainage * 1000) / 1000,
-      deflectionAngle: `${deflectionToPoint.toFixed(3)}°`,
-      totalDeflection: `${totalDeflection.toFixed(3)}°`,
-      chordLength: Math.round(chordLength * 1000) / 1000
+      chainage,
+      deflectionAngle: bearingToString(deflectionToPoint),
+      totalDeflection: bearingToString(totalDeflection),
+      chordLength
     });
   }
   
   return {
     elements,
     points,
-    pcChainage: Math.round(pcChainage * 1000) / 1000,
-    piChainage: Math.round(piChainage * 1000) / 1000,
-    ptChainage: Math.round(ptChainage * 1000) / 1000
+    pcChainage,
+    piChainage,
+    ptChainage
   };
 }
 
@@ -122,8 +122,8 @@ export function verticalCurve(
     const rl = startRL + (incomingGrade * x / 100) + y;
     
     results.push({
-      chainage: Math.round(chainage * 1000) / 1000,
-      rl: Math.round(rl * 1000) / 1000,
+      chainage,
+      rl,
       cutFill: y
     });
   }
@@ -136,8 +136,8 @@ export function verticalCurve(
       const apexY = (gradeDiff * apexDistance * apexDistance) / (2 * curveLength);
       const apexRL = startRL + (incomingGrade * apexDistance / 100) + apexY;
       results.push({
-        chainage: Math.round(apexDistance * 1000) / 1000,
-        rl: Math.round(apexRL * 1000) / 1000,
+        chainage: apexDistance,
+        rl: apexRL,
         cutFill: apexY
       });
     }

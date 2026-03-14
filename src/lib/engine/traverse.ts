@@ -10,12 +10,35 @@
 
 import { NamedPoint2D, TraverseResult, TraverseLeg } from './types';
 import { toRadians, bearingToString } from './angles';
-import { distanceBearing } from './distance';
 
 export interface TraverseInput {
   points: NamedPoint2D[];
   distances: number[];
   bearings: number[];
+  closingPoint?: { easting: number; northing: number };
+}
+
+export interface ForwardTraverseInput {
+  start: NamedPoint2D;
+  stations: string[]; // next stations (length = legs)
+  distances: number[];
+  bearings: number[]; // WCB degrees (length = legs)
+}
+
+export interface ForwardTraverseResult {
+  legs: Array<{
+    from: string;
+    to: string;
+    distance: number;
+    bearing: number;
+    bearingDMS: string;
+    deltaE: number;
+    deltaN: number;
+    easting: number;
+    northing: number;
+  }>;
+  totalDistance: number;
+  end: NamedPoint2D;
 }
 
 function calculatePrecisionGrade(ratio: number): 'excellent' | 'good' | 'acceptable' | 'poor' {
@@ -25,8 +48,55 @@ function calculatePrecisionGrade(ratio: number): 'excellent' | 'good' | 'accepta
   return 'poor';
 }
 
+/**
+ * Forward (unadjusted) traverse coordinate propagation.
+ * Derived from standard traverse computation:
+ *  ΔN = D·cos(WCB), ΔE = D·sin(WCB)
+ */
+export function forwardTraverse(input: ForwardTraverseInput): ForwardTraverseResult {
+  const { start, stations, distances, bearings } = input
+  const legs: ForwardTraverseResult['legs'] = []
+
+  let totalDistance = 0
+  let currentE = start.easting
+  let currentN = start.northing
+
+  const startName = start.name || 'START'
+
+  for (let i = 0; i < bearings.length; i++) {
+    const bearing = bearings[i]
+    const distance = distances[i]
+    const rad = toRadians(bearing)
+
+    const deltaN = distance * Math.cos(rad)
+    const deltaE = distance * Math.sin(rad)
+
+    currentN += deltaN
+    currentE += deltaE
+    totalDistance += distance
+
+    legs.push({
+      from: i === 0 ? startName : stations[i - 1] || `P${i + 1}`,
+      to: stations[i] || `P${i + 2}`,
+      distance,
+      bearing,
+      bearingDMS: bearingToString(bearing),
+      deltaE,
+      deltaN,
+      easting: currentE,
+      northing: currentN,
+    })
+  }
+
+  return {
+    legs,
+    totalDistance,
+    end: { name: stations[stations.length - 1] || 'END', easting: currentE, northing: currentN },
+  }
+}
+
 export function bowditchAdjustment(input: TraverseInput): TraverseResult {
-  const { points, distances, bearings } = input;
+  const { points, distances, bearings, closingPoint } = input;
   
   // Calculate raw latitude and departure
   let sumLat = 0;
@@ -48,22 +118,11 @@ export function bowditchAdjustment(input: TraverseInput): TraverseResult {
     totalDistance += distance;
     
     // Raw deltas
-    let rawDeltaN = deltaN;
-    let rawDeltaE = deltaE;
-    
-    // For closed traverse, use closing point
-    if (points.length > bearings.length && i === bearings.length - 1) {
-      const lastPoint = points[points.length - 1];
-      const firstPoint = points[0];
-      const closeResult = distanceBearing(lastPoint, firstPoint);
-      rawDeltaN = closeResult.deltaN;
-      rawDeltaE = closeResult.deltaE;
-      sumLat += rawDeltaN;
-      sumDep += rawDeltaE;
-    }
+    const rawDeltaN = deltaN;
+    const rawDeltaE = deltaE;
     
     legs.push({
-      from: points[i].name,
+      from: points[i]?.name || (i === 0 ? points[0]?.name || 'P1' : `P${i + 1}`),
       to: points[i + 1]?.name || `P${i + 2}`,
       distance,
       bearing,
@@ -80,8 +139,16 @@ export function bowditchAdjustment(input: TraverseInput): TraverseResult {
   }
   
   // Calculate closing error
-  const closingErrorN = -sumLat;
-  const closingErrorE = -sumDep;
+  const start = points[0]
+  const computedEndNorthing = start.northing + sumLat
+  const computedEndEasting = start.easting + sumDep
+
+  const closingErrorN = closingPoint
+    ? (closingPoint.northing - computedEndNorthing)
+    : -sumLat
+  const closingErrorE = closingPoint
+    ? (closingPoint.easting - computedEndEasting)
+    : -sumDep
   const linearError = Math.sqrt(closingErrorN * closingErrorN + closingErrorE * closingErrorE);
   const precisionRatio = totalDistance > 0 ? linearError / totalDistance : 1;
   
@@ -146,7 +213,7 @@ export function transitAdjustment(input: TraverseInput): TraverseResult {
     totalDistance += distance;
     
     legs.push({
-      from: points[i].name,
+      from: points[i]?.name || (i === 0 ? points[0]?.name || 'P1' : `P${i + 1}`),
       to: points[i + 1]?.name || `P${i + 2}`,
       distance,
       bearing,

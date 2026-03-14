@@ -29,14 +29,15 @@ export function coordinateArea(points: Point2D[]): AreaResult {
     closed.push(points[0]);
   }
   
-  // Shoelace formula
+  // Shoelace formula (signed double area)
   let doubleArea = 0;
   for (let i = 0; i < closed.length - 1; i++) {
     doubleArea += closed[i].easting * closed[i + 1].northing;
     doubleArea -= closed[i + 1].easting * closed[i].northing;
   }
   
-  const areaSqm = Math.abs(doubleArea) / 2;
+  const signedArea = doubleArea / 2;
+  const areaSqm = Math.abs(signedArea);
   
   // Calculate perimeter
   let perimeter = 0;
@@ -46,18 +47,25 @@ export function coordinateArea(points: Point2D[]): AreaResult {
     perimeter += Math.sqrt(dx * dx + dy * dy);
   }
   
-  // Calculate centroid
+  // Calculate centroid (uses signed area)
   let centroidX = 0;
   let centroidY = 0;
   for (let i = 0; i < closed.length - 1; i++) {
-    const factor = (closed[i].easting * closed[i + 1].northing) -
-                   (closed[i + 1].easting * closed[i].northing);
-    centroidX += (closed[i].easting + closed[i + 1].easting) * factor;
-    centroidY += (closed[i].northing + closed[i + 1].northing) * factor;
+    const cross = (closed[i].easting * closed[i + 1].northing) -
+                  (closed[i + 1].easting * closed[i].northing);
+    centroidX += (closed[i].easting + closed[i + 1].easting) * cross;
+    centroidY += (closed[i].northing + closed[i + 1].northing) * cross;
   }
-  const areaFactor = 1 / (6 * (areaSqm || 1));
-  centroidX = Math.abs(centroidX * areaFactor);
-  centroidY = Math.abs(centroidY * areaFactor);
+
+  if (doubleArea !== 0) {
+    centroidX = centroidX / (3 * doubleArea);
+    centroidY = centroidY / (3 * doubleArea);
+  } else {
+    // Degenerate polygon: fall back to average of vertices
+    const unique = closed.slice(0, -1);
+    centroidX = unique.reduce((sum, p) => sum + p.easting, 0) / unique.length;
+    centroidY = unique.reduce((sum, p) => sum + p.northing, 0) / unique.length;
+  }
   
   return {
     areaSqm,

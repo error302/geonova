@@ -3,8 +3,10 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 export default function RegisterPage() {
+  const { t } = useLanguage()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -56,14 +58,14 @@ export default function RegisterPage() {
           <h1 className="text-4xl font-bold mb-2" style={{ color: '#E8841A' }}>
             GEONOVA
           </h1>
-          <p className="text-gray-400">Create your account</p>
+          <p className="text-gray-400">{t('auth.registerSubtitle')}</p>
         </div>
 
           {success ? (
           <div className="p-4 bg-green-900/30 border border-green-600 rounded text-green-400 text-center">
-            <p className="mb-4">Check your email to confirm your account.</p>
+            <p className="mb-4">{t('auth.checkEmailConfirm')}</p>
             <a href="/login" className="text-[#E8841A] hover:text-[#d67715]">
-              Back to Sign In
+              {t('auth.backToSignIn')}
             </a>
           </div>
         ) : (
@@ -75,7 +77,7 @@ export default function RegisterPage() {
             )}
 
             <div>
-              <label className="block text-sm text-gray-300 mb-2">Full Name</label>
+              <label className="block text-sm text-gray-300 mb-2">{t('auth.fullName')}</label>
               <input
                 type="text"
                 value={fullName}
@@ -86,7 +88,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm text-gray-300 mb-2">Email</label>
+              <label className="block text-sm text-gray-300 mb-2">{t('auth.email')}</label>
               <input
                 type="email"
                 value={email}
@@ -97,7 +99,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm text-gray-300 mb-2">Password</label>
+              <label className="block text-sm text-gray-300 mb-2">{t('auth.password')}</label>
               <input
                 type="password"
                 value={password}
@@ -113,15 +115,15 @@ export default function RegisterPage() {
               disabled={loading}
               className="w-full py-3 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded transition-colors disabled:opacity-50"
             >
-              {loading ? 'Creating account...' : 'Create Account'}
+              {loading ? t('auth.creatingAccount') : t('auth.registerButton')}
             </button>
           </form>
         )}
 
         <p className="text-center mt-6 text-gray-400">
-          Already have an account?{' '}
+          {t('auth.hasAccount')}{' '}
           <a href="/login" className="text-[#E8841A] hover:text-[#d67715]">
-            Sign In
+            {t('auth.loginButton')}
           </a>
         </p>
       </div>

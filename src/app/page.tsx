@@ -1,8 +1,10 @@
 'use client'
 import { useState } from 'react'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('traverse')
+  const { t, language } = useLanguage()
 
   return (
     <div className="min-h-screen">
@@ -21,28 +23,34 @@ export default function Home() {
         
         <div className="max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-12 items-center relative z-10">
           <div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-4">
-              <span className="text-white">Professional </span>
-              <span className="text-[#E8841A]">Surveying</span>
-            </h1>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">Made Simple</h1>
+            {language === 'en' ? (
+              <>
+                <h1 className="text-5xl md:text-7xl font-bold mb-4">
+                  <span className="text-white">Professional </span>
+                  <span className="text-[#E8841A]">Surveying</span>
+                </h1>
+                <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">Made Simple</h1>
+              </>
+            ) : (
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">
+                {t('landing.hero')}
+              </h1>
+            )}
             <p className="text-xl text-gray-400 mb-8 max-w-xl">
-              Built in Africa. Used by surveyors worldwide.
-              The complete platform for professional land surveying.
-              Supports all 60 UTM zones globally.
+              {t('landing.subtitle')}
             </p>
             <div className="flex flex-wrap gap-4">
               <a
                 href="/register"
                 className="px-8 py-4 bg-[#E8841A] text-black font-semibold rounded-lg hover:bg-[#d47619] transition-colors"
               >
-                Get Started Free
+                {t('landing.getStarted')}
               </a>
               <a
                 href="/tools"
                 className="px-8 py-4 border-2 border-[#E8841A] text-[#E8841A] font-semibold rounded-lg hover:bg-[#E8841A] hover:text-black transition-colors"
               >
-                View Quick Tools
+                {t('tools.quickTools')}
               </a>
             </div>
             <p className="mt-8 text-sm text-gray-500">

@@ -1,32 +1,46 @@
 'use client'
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { translations, Language, TranslationKey } from './translations'
+import { createTranslator, defaultLanguage, isLanguage } from './shared'
+import type { Language } from './messages'
 
 interface LanguageContextType {
   language: Language
-  t: (key: TranslationKey) => string
+  t: (key: string, values?: Record<string, string | number>) => string
   setLanguage: (lang: Language) => void
   isRTL: boolean
 }
 
 const LanguageContext = createContext<LanguageContextType>({
-  language: 'en',
-  t: (key) => translations.en[key] || key,
+  language: defaultLanguage,
+  t: (key) => key,
   setLanguage: () => {},
   isRTL: false
 })
 
+function setLanguageCookie(lang: Language) {
+  const maxAgeSeconds = 60 * 60 * 24 * 365
+  document.cookie = `geonova_language=${encodeURIComponent(lang)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax`
+}
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('en')
+  const [language, setLanguageState] = useState<Language>(defaultLanguage)
   const [isRTL, setIsRTL] = useState(false)
 
   useEffect(() => {
-    const saved = localStorage.getItem('geonova_language') as Language
-    if (saved && translations[saved]) {
-      setLanguageState(saved)
-      setIsRTL(saved === 'ar')
-      document.documentElement.dir = saved === 'ar' ? 'rtl' : 'ltr'
-    }
+    const savedRaw = localStorage.getItem('geonova_language')
+    const saved = isLanguage(savedRaw) ? savedRaw : null
+
+    const browser = navigator.language?.split('-')[0]?.toLowerCase()
+    const detected = isLanguage(browser) ? browser : null
+
+    const initial = (saved ?? detected ?? defaultLanguage) as Language
+
+    setLanguageState(initial)
+    setIsRTL(initial === 'ar')
+    document.documentElement.dir = initial === 'ar' ? 'rtl' : 'ltr'
+    document.documentElement.lang = initial
+    localStorage.setItem('geonova_language', initial)
+    setLanguageCookie(initial)
   }, [])
 
   const setLanguage = (lang: Language) => {
@@ -34,11 +48,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setIsRTL(lang === 'ar')
     localStorage.setItem('geonova_language', lang)
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
+    document.documentElement.lang = lang
+    setLanguageCookie(lang)
   }
 
-  const t = (key: TranslationKey): string => {
-    return translations[language]?.[key] || translations.en[key] || key
-  }
+  const t = createTranslator(language)
 
   return (
     <LanguageContext.Provider value={{ language, t, setLanguage, isRTL }}>
@@ -63,4 +77,5 @@ export const languages = [
   { code: 'id' as Language, flag: '🇮🇩', name: 'Bahasa Indonesia' },
   { code: 'am' as Language, flag: '🇪🇹', name: 'አማርኛ' },
   { code: 'ha' as Language, flag: '🇳🇬', name: 'Hausa' },
+  { code: 'de' as Language, flag: '🇩🇪', name: 'Deutsch' },
 ]

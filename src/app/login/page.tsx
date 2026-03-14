@@ -1,12 +1,12 @@
 'use client'
 
-export const dynamic = 'force-dynamic'
-
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 export default function LoginPage() {
+  const { t } = useLanguage()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -39,7 +39,7 @@ export default function LoginPage() {
           <h1 className="text-4xl font-bold mb-2" style={{ color: '#E8841A' }}>
             GEONOVA
           </h1>
-          <p className="text-gray-400">Sign in to your account</p>
+          <p className="text-gray-400">{t('auth.loginSubtitle')}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -50,7 +50,7 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label className="block text-sm text-gray-300 mb-2">Email</label>
+            <label className="block text-sm text-gray-300 mb-2">{t('auth.email')}</label>
             <input
               type="email"
               value={email}
@@ -61,7 +61,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-300 mb-2">Password</label>
+            <label className="block text-sm text-gray-300 mb-2">{t('auth.password')}</label>
             <input
               type="password"
               value={password}
@@ -76,14 +76,14 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full py-3 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded transition-colors disabled:opacity-50"
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? t('common.loading') : t('auth.loginButton')}
           </button>
         </form>
 
         <p className="text-center mt-6 text-gray-400">
-          Don't have an account?{' '}
+          {t('auth.noAccount')}{' '}
           <a href="/register" className="text-[#E8841A] hover:text-[#d67715]">
-            Register
+            {t('nav.register')}
           </a>
         </p>
       </div>

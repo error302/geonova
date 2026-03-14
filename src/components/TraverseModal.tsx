@@ -478,6 +478,8 @@ export default function TraverseModal({
         })
       }
 
+      let closingPoint: { easting: number; northing: number } | undefined
+
       // Add closing control if provided
       if (hasClosingControl) {
         let closingE: number, closingN: number
@@ -495,14 +497,17 @@ export default function TraverseModal({
           closingN = parseFloat(closingNorthing)
         }
         
-        points.push({ name: closingName || 'Closing', easting: closingE, northing: closingN })
+        // Use known closing control as a constraint (do not append as an extra computed station)
+        // Bowditch will distribute the misclosure across the measured legs.
+        closingPoint = { easting: closingE, northing: closingN }
       }
 
       // Run Bowditch adjustment
       const traverseInput = {
         points,
         distances,
-        bearings: bearings.slice(0, -1) // Last bearing is to closing point
+        bearings,
+        closingPoint,
       }
 
       const traverseResult = bowditchAdjustment(traverseInput)
