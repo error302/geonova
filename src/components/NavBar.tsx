@@ -46,6 +46,14 @@ const toolGroups = [
       { href: '/tools/tacheometry', label: 'Tacheometry' },
     ]
   },
+  {
+    title: 'IMPORT',
+    items: [
+      { href: '/import', label: 'From Total Station' },
+      { href: '/process', label: 'From CSV' },
+      { href: '/instruments', label: 'Instrument Guide' },
+    ]
+  },
 ]
 
 export default function NavBar() {
