@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import { useLanguage, languages } from '@/lib/i18n/LanguageContext'
 
 const toolGroups = [
   {
@@ -195,6 +196,7 @@ export default function NavBar() {
 
         {/* Right side */}
         <div className="flex items-center gap-4">
+          <LanguageDropdown />
           {loading ? (
             <div className="w-24 h-8 bg-gray-800 animate-pulse rounded"></div>
           ) : user ? (
@@ -311,5 +313,44 @@ export default function NavBar() {
         </div>
       )}
     </nav>
+  )
+}
+
+function LanguageDropdown() {
+  const { language, setLanguage } = useLanguage()
+  const [open, setOpen] = useState(false)
+  const currentLang = languages.find(l => l.code === language) || languages[0]
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-700 rounded hover:border-[#E8841A] text-gray-300 hover:text-white transition"
+      >
+        <span>🌐</span>
+        <span className="hidden sm:inline">{currentLang.flag}</span>
+        <span className="hidden md:inline">{currentLang.code.toUpperCase()}</span>
+        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      
+      {open && (
+        <div className="absolute right-0 mt-1 w-40 bg-gray-900 border border-gray-700 rounded-lg shadow-lg overflow-hidden z-50">
+          {languages.map(lang => (
+            <button
+              key={lang.code}
+              onClick={() => { setLanguage(lang.code); setOpen(false); }}
+              className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-800 transition ${
+                language === lang.code ? 'bg-[#E8841A]/20 text-[#E8841A]' : 'text-gray-300'
+              }`}
+            >
+              <span className="mr-2">{lang.flag}</span>
+              {lang.name}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }

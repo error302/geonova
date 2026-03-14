@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import NavBar from '@/components/NavBar';
+import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 
 export const metadata: Metadata = {
   title: 'GeoNova — Professional Surveying Calculations',
@@ -27,15 +28,17 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
       <body className="antialiased">
-        <NavBar />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <footer className="border-t border-[var(--border-color)] py-6 mt-16">
-          <div className="max-w-7xl mx-auto px-4 text-center text-xs text-[var(--text-muted)]">
-            GeoNova v1.0 — Professional Surveying Calculations
-          </div>
-        </footer>
+        <LanguageProvider>
+          <NavBar />
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <footer className="border-t border-[var(--border-color)] py-6 mt-16">
+            <div className="max-w-7xl mx-auto px-4 text-center text-xs text-[var(--text-muted)]">
+              GeoNova v1.0 — Professional Surveying Calculations
+            </div>
+          </footer>
+        </LanguageProvider>
       </body>
     </html>
   );
