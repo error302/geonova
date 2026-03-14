@@ -1,3 +1,11 @@
+/**
+ * Calculation standard: N.N. Basak — Surveying and Levelling
+ * - No intermediate rounding
+ * - Full floating point precision throughout
+ * - Round only at final display layer
+ * - Bearings: WCB 0-360° clockwise from North
+ */
+
 // GeoNova Engine - Distance and Bearing calculations
 
 import { Point2D, DistanceBearingResult } from './types';

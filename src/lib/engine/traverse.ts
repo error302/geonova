@@ -1,3 +1,11 @@
+/**
+ * Calculation standard: N.N. Basak — Surveying and Levelling
+ * - No intermediate rounding
+ * - Full floating point precision throughout
+ * - Round only at final display layer
+ * - Bearings: WCB 0-360° clockwise from North
+ */
+
 // GeoNova Engine - Traverse calculations
 
 import { NamedPoint2D, TraverseResult, TraverseLeg } from './types';

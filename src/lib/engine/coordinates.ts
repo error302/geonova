@@ -1,3 +1,11 @@
+/**
+ * Calculation standard: N.N. Basak — Surveying and Levelling
+ * - No intermediate rounding
+ * - Full floating point precision throughout
+ * - Round only at final display layer
+ * - Bearings: WCB 0-360° clockwise from North
+ */
+
 // GeoNova Engine - Coordinate conversions
 
 import { LatLon, UTMCoord, DMS } from './types';
