@@ -28,7 +28,10 @@ export default function LoginPage() {
       setError(error.message)
       setLoading(false)
     } else {
-      router.push('/dashboard')
+      // Redirect to the page the user was trying to access, or dashboard by default
+      const redirectTo = typeof window !== 'undefined' ? localStorage.getItem('auth:redirect') : null
+      localStorage.removeItem('auth:redirect')
+      router.push(redirectTo || '/dashboard')
     }
   }
 
