@@ -140,6 +140,14 @@ export default function NavBar() {
             Process Field Notes
           </Link>
           
+          {/* Field Mode */}
+          <Link 
+            href="/field" 
+            className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
+          >
+            Field Mode
+          </Link>
+          
           {user && (
             <Link href="/dashboard" className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
               Projects

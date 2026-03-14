@@ -9,6 +9,7 @@ import AddPointModal from '@/components/AddPointModal'
 import CSVUploadModal from '@/components/CSVUploadModal'
 import TraverseModal from '@/components/TraverseModal'
 import ParcelAreaModal from '@/components/ParcelAreaModal'
+import StakeoutMode from '@/components/StakeoutMode'
 
 const ProjectMap = dynamic(() => import('@/components/ProjectMap'), {
   ssr: false,
@@ -70,6 +71,7 @@ export default function ProjectPage({ params }: PageProps) {
   const [areaResult, setAreaResult] = useState<any>(null)
   const [shareUrl, setShareUrl] = useState<string | null>(null)
   const [reportLoading, setReportLoading] = useState(false)
+  const [showStakeout, setShowStakeout] = useState(false)
 
   const supabase = createClient()
 
@@ -218,7 +220,6 @@ export default function ProjectPage({ params }: PageProps) {
 
   const handleAreaPointSelect = (point: any) => {
     if (areaPoints.length >= 3 && areaPoints[0].id === point.id) {
-      // Closed polygon - calculate area
       return
     }
     if (!areaPoints.some(p => p.id === point.id)) {
@@ -295,6 +296,13 @@ export default function ProjectPage({ params }: PageProps) {
             className="w-full px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded text-sm transition-colors disabled:opacity-50"
           >
             {reportLoading ? 'Generating...' : '📄 Generate Report'}
+          </button>
+          <button
+            onClick={() => setShowStakeout(true)}
+            disabled={points.length === 0}
+            className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors disabled:opacity-50"
+          >
+            🎯 Stakeout All Points
           </button>
           {shareUrl && (
             <div className="mt-2 p-2 bg-green-900/30 border border-green-700 rounded">
@@ -475,6 +483,29 @@ export default function ProjectPage({ params }: PageProps) {
         }))}
         onAreaResult={setAreaResult}
       />
+
+      {showStakeout && (
+        <div className="fixed inset-0 z-50 bg-gray-950">
+          <div className="absolute top-4 right-4 z-50">
+            <button
+              onClick={() => setShowStakeout(false)}
+              className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg"
+            >
+              ✕ Close
+            </button>
+          </div>
+          <StakeoutMode
+            points={points.map(p => ({
+              id: p.id,
+              name: p.name,
+              easting: p.easting,
+              northing: p.northing,
+              elevation: p.elevation || undefined
+            }))}
+            onComplete={() => {}}
+          />
+        </div>
+      )}
     </div>
   )
 }

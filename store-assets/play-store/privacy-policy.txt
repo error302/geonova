@@ -1,0 +1,18 @@
+GeoNova Privacy Policy
+
+Data collected:
+- Email address (for account creation)
+- Survey project data (stored securely in Supabase)
+- Device location (only when using GPS stakeout, never stored)
+
+Data not collected:
+- Payment information
+- Personal identification beyond email
+- Location history
+
+Data storage:
+- All project data stored in Supabase (PostgreSQL)
+- Row Level Security — users only access their own data
+- No data sold to third parties
+
+Contact: support@geonova.app

@@ -1,0 +1,41 @@
+GeoNova — Professional Surveying Platform
+
+Built by a licensed land surveyor for surveyors.
+
+GeoNova removes the computational burden from 
+field surveyors so they can focus on what matters:
+collecting accurate observations.
+
+FEATURES:
+• Complete survey calculation suite
+• Traverse adjustment (Bowditch & Transit rule)
+• Leveling — Rise & Fall / Height of Collimation
+• Horizontal curves — elements and stakeout table
+• COGO — radiation, intersection, Tienstra resection
+• Missing line, setting out, tacheometry, grade
+• Project management with interactive map
+• CSV bulk import with preview
+• Professional PDF report generation
+• DXF export for AutoCAD
+• GPS stakeout with audio guidance
+• Process field notes — auto-detect survey type
+• Offline capable — all calculations work without internet
+• UTM coordinate conversion — millimeter accuracy
+• Field mode — digital field book on your phone
+
+BUILT ON BASAK STANDARDS:
+Every calculation follows N.N. Basak 
+Surveying and Levelling standards.
+Full working shown: formula → substitution → result.
+
+DESIGNED FOR:
+• Licensed land surveyors
+• Survey technicians  
+• Engineering surveyors
+• Students learning surveying
+
+MARKET:
+East Africa first — Kenya, Uganda, Tanzania
+Global reach through web and Android app
+
+Free to use. Professional grade.
