@@ -27,8 +27,9 @@ export default function Home() {
             </h1>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">Made Simple</h1>
             <p className="text-xl text-gray-400 mb-8 max-w-xl">
-              The complete surveying platform for field surveyors across Africa and beyond.
-              Calculations, projects, reports — all in one place.
+              Built in Africa. Used by surveyors worldwide.
+              The complete platform for professional land surveying.
+              Supports all 60 UTM zones globally.
             </p>
             <div className="flex flex-wrap gap-4">
               <a
@@ -45,7 +46,7 @@ export default function Home() {
               </a>
             </div>
             <p className="mt-8 text-sm text-gray-500">
-              Trusted by surveyors in Kenya, Uganda, Tanzania and growing
+              Built in Africa. Used worldwide.
             </p>
             <div className="flex gap-3 mt-4">
               <span className="text-2xl">🇰🇪</span>
@@ -53,6 +54,12 @@ export default function Home() {
               <span className="text-2xl">🇹🇿</span>
               <span className="text-2xl">🇳🇬</span>
               <span className="text-2xl">🇿🇦</span>
+              <span className="text-2xl">🇮🇳</span>
+              <span className="text-2xl">🇮🇩</span>
+              <span className="text-2xl">🇧🇷</span>
+              <span className="text-2xl">🇦🇺</span>
+              <span className="text-2xl">🇬🇧</span>
+              <span className="text-2xl">🇺🇸</span>
             </div>
           </div>
           

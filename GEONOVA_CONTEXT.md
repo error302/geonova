@@ -123,6 +123,23 @@ WRONG:
 - Special zones: Norway (32V), Svalbard (31-37X) handled
 - Auto-detection: from GPS coordinates
 - Zone descriptions shown for common regions
+- GeoNova serves surveyors globally — not just Africa
+
+## TARGET MARKETS (in order)
+1. East Africa: Kenya, Uganda, Tanzania
+2. West Africa: Nigeria, Ghana
+3. Southern Africa: South Africa, Mozambique
+4. North Africa: Egypt, Morocco
+5. South Asia: India, Bangladesh
+6. Southeast Asia: Indonesia, Malaysia
+7. South America: Brazil, Colombia
+8. Oceania: Australia, New Zealand
+9. Europe: UK, France, Germany
+10. Global: everywhere else
+
+## PRICING CURRENCIES
+KES, UGX, TZS, NGN, GHS, ZAR, INR, IDR, BRL, AUD, GBP, EUR, USD
+Auto-detected from user location.
 
 ## ONLINE FEATURES ROADMAP
 

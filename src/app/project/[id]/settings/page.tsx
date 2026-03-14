@@ -1,0 +1,214 @@
+'use client'
+import { useState, useEffect, use } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
+import UTMZonePicker from '@/components/ui/UTMZonePicker'
+
+export default function ProjectSettingsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: projectId } = use(params)
+  const router = useRouter()
+  const supabase = createClient()
+  
+  const [project, setProject] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState('')
+  
+  const [name, setName] = useState('')
+  const [location, setLocation] = useState('')
+  const [utmZone, setUtmZone] = useState(37)
+  const [hemisphere, setHemisphere] = useState<'N' | 'S'>('S')
+  const [surveyType, setSurveyType] = useState('')
+  const [clientName, setClientName] = useState('')
+  const [surveyorName, setSurveyorName] = useState('')
+
+  useEffect(() => {
+    async function loadProject() {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('id', projectId)
+        .single()
+
+      if (error || !data) {
+        router.push('/dashboard')
+        return
+      }
+
+      setProject(data)
+      setName(data.name || '')
+      setLocation(data.location || '')
+      setUtmZone(data.utm_zone || 37)
+      setHemisphere(data.hemisphere || 'S')
+      setSurveyType(data.survey_type || 'topographic')
+      setClientName(data.client_name || '')
+      setSurveyorName(data.surveyor_name || '')
+      setLoading(false)
+    }
+
+    loadProject()
+  }, [projectId, supabase, router])
+
+  const handleSave = async () => {
+    setSaving(true)
+    setMessage('')
+
+    const { error } = await supabase
+      .from('projects')
+      .update({
+        name,
+        location,
+        utm_zone: utmZone,
+        hemisphere,
+        survey_type: surveyType,
+        client_name: clientName || null,
+        surveyor_name: surveyorName || null,
+      })
+      .eq('id', projectId)
+
+    if (error) {
+      setMessage('Error: ' + error.message)
+    } else {
+      setMessage('✓ Project settings saved')
+      setTimeout(() => setMessage(''), 3000)
+    }
+
+    setSaving(false)
+  }
+
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to delete this project? This cannot be undone.')) {
+      return
+    }
+
+    const { error } = await supabase
+      .from('projects')
+      .delete()
+      .eq('id', projectId)
+
+    if (error) {
+      setMessage('Error: ' + error.message)
+    } else {
+      router.push('/dashboard')
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-amber-500">Loading...</div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-950 py-12">
+      <div className="max-w-2xl mx-auto px-6">
+        <div className="flex items-center gap-4 mb-8">
+          <a href={`/project/${projectId}`} className="text-gray-400 hover:text-white">
+            ← Back to Project
+          </a>
+        </div>
+
+        <h1 className="text-2xl font-bold text-white mb-8">Project Settings</h1>
+
+        {message && (
+          <div className={`p-3 rounded mb-6 ${
+            message.startsWith('✓') 
+              ? 'bg-green-900/30 text-green-400'
+              : 'bg-red-900/30 text-red-400'
+          }`}>
+            {message}
+          </div>
+        )}
+
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm text-gray-300 mb-2">Project Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-300 mb-2">Location</label>
+            <textarea
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded text-white h-24"
+            />
+          </div>
+
+          <div className="bg-gray-900 p-4 rounded border border-gray-700">
+            <label className="block text-sm text-gray-300 mb-3">UTM Zone</label>
+            <UTMZonePicker
+              value={utmZone}
+              hemisphere={hemisphere}
+              onChange={(zone, hem) => {
+                setUtmZone(zone)
+                setHemisphere(hem)
+              }}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-300 mb-2">Survey Type</label>
+            <select
+              value={surveyType}
+              onChange={(e) => setSurveyType(e.target.value)}
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded text-white"
+            >
+              <option value="boundary">Boundary Survey</option>
+              <option value="topographic">Topographic Survey</option>
+              <option value="road">Road Survey</option>
+              <option value="construction">Construction Survey</option>
+              <option value="control">Control Network</option>
+              <option value="leveling">Leveling Survey</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm text-gray-300 mb-2">Client Name</label>
+              <input
+                type="text"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded text-white"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-300 mb-2">Surveyor Name</label>
+              <input
+                type="text"
+                value={surveyorName}
+                onChange={(e) => setSurveyorName(e.target.value)}
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded text-white"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-4 pt-4">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-6 py-3 bg-amber-500 text-black font-bold rounded hover:bg-amber-400 disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+            <button
+              onClick={handleDelete}
+              className="px-6 py-3 border border-red-500 text-red-500 font-bold rounded hover:bg-red-500/10"
+            >
+              Delete Project
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

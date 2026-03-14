@@ -1,14 +1,22 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
-type Currency = 'KES' | 'UGX' | 'TZS' | 'NGN' | 'USD'
+type Currency = 'KES' | 'UGX' | 'TZS' | 'NGN' | 'USD' | 'GHS' | 'ZAR' | 'INR' | 'IDR' | 'BRL' | 'AUD' | 'GBP' | 'EUR'
+
+const currencyMap: Record<string, Currency> = {
+  'KE': 'KES', 'UG': 'UGX', 'TZ': 'TZS', 'NG': 'NGN',
+  'GH': 'GHS', 'ZA': 'ZAR', 'IN': 'INR', 'ID': 'IDR',
+  'BR': 'BRL', 'AU': 'AUD', 'GB': 'GBP', 'FR': 'EUR',
+  'DE': 'EUR', 'US': 'USD', 'ET': 'KES', 'RW': 'KES',
+  'SD': 'KES', 'MA': 'EUR', 'EG': 'USD'
+}
 
 const plans = [
   {
     id: 'free',
     name: 'Free',
-    prices: { KES: 0, UGX: 0, TZS: 0, NGN: 0, USD: 0 },
+    prices: { KES: 0, UGX: 0, TZS: 0, NGN: 0, USD: 0, GHS: 0, ZAR: 0, INR: 0, IDR: 0, BRL: 0, AUD: 0, GBP: 0, EUR: 0 },
     features: [
       { text: 'All 15 quick calculation tools', included: true },
       { text: '1 survey project', included: true },
@@ -26,7 +34,7 @@ const plans = [
   {
     id: 'pro',
     name: 'Pro',
-    prices: { KES: 500, UGX: 15000, TZS: 10000, NGN: 2000, USD: 4 },
+    prices: { KES: 500, UGX: 15000, TZS: 10000, NGN: 2000, USD: 4, GHS: 50, ZAR: 75, INR: 350, IDR: 65000, BRL: 20, AUD: 6, GBP: 3, EUR: 4 },
     features: [
       { text: 'Everything in Free', included: true },
       { text: 'Unlimited projects', included: true },
@@ -46,7 +54,7 @@ const plans = [
   {
     id: 'team',
     name: 'Team',
-    prices: { KES: 2000, UGX: 60000, TZS: 40000, NGN: 8000, USD: 15 },
+    prices: { KES: 2000, UGX: 60000, TZS: 40000, NGN: 8000, USD: 15, GHS: 200, ZAR: 280, INR: 1300, IDR: 230000, BRL: 75, AUD: 22, GBP: 12, EUR: 14 },
     features: [
       { text: 'Everything in Pro', included: true },
       { text: '5 team members', included: true },
@@ -86,14 +94,26 @@ export default function PricingPage() {
 
   const formatPrice = (price: number) => {
     const symbols: Record<Currency, string> = {
-      KES: 'KSh ',
-      UGX: 'USh ',
-      TZS: 'TSh ',
-      NGN: '₦ ',
-      USD: '$ ',
+      KES: 'KSh ', UGX: 'USh ', TZS: 'TSh ', NGN: '₦ ', USD: '$ ',
+      GHS: '₵ ', ZAR: 'R ', INR: '₹ ', IDR: 'Rp ', BRL: 'R$ ', AUD: 'A$ ', GBP: '£ ', EUR: '€ '
     }
     return `${symbols[currency]}${price.toLocaleString()}`
   }
+
+  useEffect(() => {
+    async function detectCurrency() {
+      try {
+        const res = await fetch('https://ipapi.co/json/')
+        const data = await res.json()
+        if (data.country_code && currencyMap[data.country_code]) {
+          setCurrency(currencyMap[data.country_code])
+        }
+      } catch {
+        // Use default
+      }
+    }
+    detectCurrency()
+  }, [])
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] py-16">
@@ -108,12 +128,12 @@ export default function PricingPage() {
         </div>
 
         <div className="flex justify-center mb-12">
-          <div className="bg-[#111] p-1 rounded-lg flex">
-            {(['KES', 'UGX', 'TZS', 'NGN', 'USD'] as Currency[]).map((curr) => (
+          <div className="bg-[#111] p-1 rounded-lg flex flex-wrap justify-center gap-1">
+            {(['KES', 'UGX', 'TZS', 'NGN', 'GHS', 'ZAR', 'USD', 'EUR', 'GBP', 'INR', 'IDR', 'BRL', 'AUD'] as Currency[]).map((curr) => (
               <button
                 key={curr}
                 onClick={() => setCurrency(curr)}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-md text-xs font-medium transition-colors ${
                   currency === curr
                     ? 'bg-[#E8841A] text-black'
                     : 'text-gray-400 hover:text-white'

@@ -8,14 +8,15 @@ import FeedbackWidget from '@/components/FeedbackWidget';
 export const metadata: Metadata = {
   metadataBase: new URL('https://geonova-henna.vercel.app'),
   title: 'GeoNova — Professional Surveying Platform',
-  description: 'Complete surveying calculation platform for professional land surveyors. Traverse adjustment, leveling, COGO, curves, PDF reports. Free to use. Built for Africa.',
+  description: 'Professional surveying platform for land surveyors worldwide. Traverse adjustment, leveling, COGO, GPS stakeout, PDF reports. Supports all 60 UTM zones. Built in Africa, used globally.',
   keywords: [
     'surveying software', 'traverse calculation', 'leveling calculator',
     'COGO tools', 'survey platform', 'land surveying',
-    'surveying software Kenya', 'topographie Afrique',
-    'برنامج مساحة', 'software topografia Angola',
+    'surveying software Kenya', 'topographie Afrique', 'software topografia',
+    'software agrimensura', 'programa topografia',
     'survey traverse online', 'bowditch adjustment',
-    'horizontal curves calculator', 'UTM coordinates'
+    'horizontal curves calculator', 'UTM coordinates',
+    'surveying app', 'cadastral survey', 'GPS stakeout'
   ],
   authors: [{ name: 'GeoNova' }],
   creator: 'GeoNova',
