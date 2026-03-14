@@ -300,3 +300,60 @@ h1, h2, h3, h4 {
 .fade-in {
   animation: fadeIn 0.3s ease-out;
 }
+
+/* Print Styles */
+@media print {
+  nav, 
+  .sidebar, 
+  button,
+  .feedback-widget,
+  .mobile-nav,
+  .aside,
+  header nav,
+  .no-print {
+    display: none !important;
+  }
+  
+  .results-panel,
+  .calculation-output,
+  .card,
+  main {
+    width: 100% !important;
+    border: none !important;
+    background: white !important;
+    color: black !important;
+    page-break-inside: avoid;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+  }
+  
+  .print-header {
+    display: block !important;
+  }
+  
+  a {
+    color: black !important;
+    text-decoration: underline !important;
+  }
+  
+  table {
+    border-collapse: collapse !important;
+  }
+  
+  th, td {
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
+  }
+  
+  th {
+    background: #f0f0f0 !important;
+  }
+}
+
+.print-header {
+  display: none;
+}

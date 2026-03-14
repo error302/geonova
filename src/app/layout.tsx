@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import NavBar from '@/components/NavBar';
+import MobileNav from '@/components/MobileNav';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { SubscriptionProvider } from '@/lib/subscription/subscriptionContext';
 import FeedbackWidget from '@/components/FeedbackWidget';
+import KeyboardShortcuts from '@/components/KeyboardShortcuts';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://geonova-henna.vercel.app'),
@@ -91,6 +93,8 @@ export default function RootLayout({
               </div>
             </footer>
             <FeedbackWidget />
+            <KeyboardShortcuts />
+            <MobileNav />
           </SubscriptionProvider>
         </LanguageProvider>
       </body>

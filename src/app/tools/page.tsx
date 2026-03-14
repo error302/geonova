@@ -53,6 +53,16 @@ export default function ToolsPage() {
             <ToolLink href="/tools/tacheometry" title="Tacheometry" />
           </div>
         </section>
+
+        {/* SPECIALIZED SURVEYS */}
+        <section>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Specialized Surveys</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <ToolLink href="/tools/mining" title="⛏ Mining Survey" />
+            <ToolLink href="/tools/hydrographic" title="🌊 Hydrographic" />
+            <ToolLink href="/tools/drone" title="🚁 Drone/UAV" />
+          </div>
+        </section>
       </div>
     </div>
   );

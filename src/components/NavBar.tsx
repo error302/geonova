@@ -54,6 +54,14 @@ const toolGroups = [
       { href: '/instruments', label: 'Instrument Guide' },
     ]
   },
+  {
+    title: 'SPECIALIZED',
+    items: [
+      { href: '/tools/mining', label: 'Mining Survey' },
+      { href: '/tools/hydrographic', label: 'Hydrographic' },
+      { href: '/tools/drone', label: 'Drone/UAV' },
+    ]
+  },
 ]
 
 export default function NavBar() {
@@ -210,6 +218,9 @@ export default function NavBar() {
             <>
               <Link href="/dashboard" className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
                 Projects
+              </Link>
+              <Link href="/profile" className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
+                Profile
               </Link>
               <Link href="/account" className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
                 Account

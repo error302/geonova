@@ -651,6 +651,311 @@ Report should include:
         seniorContent: `5. Mark as control in GeoNova, generate report`
       }
     ]
+  },
+  'mining': {
+    title: 'Mining Survey',
+    icon: '⛏',
+    steps: [
+      {
+        id: 1,
+        title: 'Underground Control',
+        juniorContent: `STEP 1 — ESTABLISH UNDERGROUND CONTROL
+Set up control points in the mine.
+
+Why we do this:
+Underground surveys need their own control
+network. Surface control isn't visible underground.
+
+What you need:
+• At least 2 control points per section
+• Points in stable rock, not ore
+• Permanent markers (pins, bolts)
+
+In GeoNova:
+→ Create new project
+→ Set survey type: Mining
+→ Add control points as Primary`,
+        seniorContent: `1. Establish underground control network with stable monuments`
+      },
+      {
+        id: 2,
+        title: 'Instrument Setup',
+        juniorContent: `STEP 2 — SET UP IN TUNNEL
+Position total station for inclined measurements.
+
+Key points:
+• Centre over control point
+• Measure instrument height (HI)
+• Account for tunnel clearance
+• Ensure clear sight lines
+
+For inclined traverses:
+• Measure slope distance
+• Measure vertical angle
+• Measure horizontal angle`,
+        seniorContent: `2. Set up total station, measure HI, verify sight lines`
+      },
+      {
+        id: 3,
+        title: '3D Traverse',
+        juniorContent: `STEP 3 — RUN INCLINED TRAVERSE
+Measure between stations with full 3D data.
+
+In GeoNova Mining Tools:
+→ Select 3D Traverse
+→ Enter slope distance
+→ Enter vertical angle (+ or -)
+→ Enter horizontal bearing
+→ Calculate 3D coordinates
+
+Formula:
+HD = SD × cos(VA)
+VD = SD × sin(VA)
+ΔE = HD × sin(bearing)
+ΔN = HD × cos(bearing)
+ΔZ = VD`,
+        seniorContent: `3. Run 3D inclined traverse, compute coordinates`
+      },
+      {
+        id: 4,
+        title: 'Volume Calculation',
+        juniorContent: `STEP 4 — CALCULATE VOLUMES
+Compute volumes from cross sections.
+
+In GeoNova Mining Tools:
+→ Select Volume calculator
+→ Choose method:
+  - End Area (simple)
+  - Prismoidal (accurate)
+  - Cut/Fill (for earthworks)
+
+Enter section areas at chainages.`,
+        seniorContent: `4. Calculate volumes from cross sections using End Area or Prismoidal`
+      },
+      {
+        id: 5,
+        title: 'Subsidence Monitoring',
+        juniorContent: `STEP 5 — MONITOR SUBSIDENCE
+Track point movement over time.
+
+In GeoNova Mining Tools:
+→ Select Subsidence Monitoring
+→ Enter epoch 1 coordinates
+→ Enter epoch 2 coordinates
+→ Calculate 3D movement
+
+Track:
+• Vertical settlement (ΔZ)
+• Horizontal movement (ΔE, ΔN)
+• Total 3D displacement`,
+        seniorContent: `5. Monitor subsidence between survey epochs`
+      },
+      {
+        id: 6,
+        title: 'Generate Report',
+        juniorContent: `STEP 6 — MINING SURVEY REPORT
+Document your survey results.
+
+Include:
+• Traverse calculations
+• Volume computations
+• Subsidence data
+• Control point coordinates
+
+In GeoNova:
+→ Export as PDF
+→ Include all calculations`,
+        seniorContent: `6. Generate mining survey report with all calculations`
+      }
+    ]
+  },
+  'hydrographic': {
+    title: 'Hydrographic Survey',
+    icon: '🌊',
+    steps: [
+      {
+        id: 1,
+        title: 'Tide Gauge Setup',
+        juniorContent: `STEP 1 — SET UP TIDE GAUGE
+Install and operate tide gauge.
+
+Why we do this:
+Water levels change constantly.
+Soundings must be corrected to a
+common datum (chart datum).
+
+Setup:
+• Install tide gauge at fixed location
+• Record readings every hour
+• Note time of each reading
+• Mark gauge zero elevation`,
+        seniorContent: `1. Install tide gauge, record regular readings`
+      },
+      {
+        id: 2,
+        title: 'Positioning System',
+        juniorContent: `STEP 2 — SET UP POSITIONING
+Configure GPS for boat positioning.
+
+Options:
+• RTK GPS on boat
+• Total station shore setup
+• Acoustic positioning
+
+Requirements:
+• Position accuracy < 1m
+• Time sync with sounder
+• Record fix numbers`,
+        seniorContent: `2. Configure positioning system, ensure accuracy`
+      },
+      {
+        id: 3,
+        title: 'Sounding Lines',
+        juniorContent: `STEP 3 — RUN SOUNDING LINES
+Collect depth data along planned lines.
+
+Planning:
+• Parallel lines across survey area
+• Line spacing based on requirements
+• Run lines perpendicular to shore
+
+For each fix:
+• Record time
+• Record position
+• Record raw depth`,
+        seniorContent: `3. Execute sounding survey along planned lines`
+      },
+      {
+        id: 4,
+        title: 'Data Reduction',
+        juniorContent: `STEP 4 — REDUCE SOUNDINGS
+Apply tidal corrections.
+
+In GeoNova Hydro Tools:
+→ Enter tide gauge readings
+→ Enter sounding data
+→ Apply tidal correction
+
+Formula:
+Corrected Depth = Raw Depth - Tide Height
+
+Chart Datum depth = Corrected Depth - Datum Offset`,
+        seniorContent: `4. Apply tidal corrections, reduce to chart datum`
+      },
+      {
+        id: 5,
+        title: 'Generate Chart',
+        juniorContent: `STEP 5 — OUTPUT RESULTS
+Create bathymetric chart.
+
+In GeoNova:
+→ View cross sections
+→ Generate contours
+→ Export to CAD/DXF
+
+Deliverables:
+• Depth soundings table
+• Bathymetric contours
+• Survey report`,
+        seniorContent: `5. Generate bathymetric chart and survey report`
+      }
+    ]
+  },
+  'drone': {
+    title: 'Drone/UAV Survey',
+    icon: '🚁',
+    steps: [
+      {
+        id: 1,
+        title: 'GCP Planning',
+        juniorContent: `STEP 1 — PLAN GCPS
+Design Ground Control Point distribution.
+
+Why we do this:
+GCPs tie drone images to real coordinates.
+Without GCPs, accuracy is poor.
+
+Requirements:
+• Minimum 5 GCPs (more = better)
+• Evenly distributed across area
+• In corners and centre
+• Visible from air
+
+In GeoNova Drone Tools:
+→ Enter survey boundary
+→ Generate GCP positions
+→ Export coordinates`,
+        seniorContent: `1. Plan GCP distribution, minimum 5 points`
+      },
+      {
+        id: 2,
+        title: 'GCP Setting Out',
+        juniorContent: `STEP 2 — PLACE GCPs
+Mark GCPs on ground and measure.
+
+Process:
+• Navigate to each GCP position
+• Place target (panel, paint, marker)
+• Survey with total station or GNSS
+• Record coordinates
+
+Accuracy target:
+• < 2cm horizontal
+• < 3cm vertical`,
+        seniorContent: `2. Set out GCPs, survey with total station/GNSS`
+      },
+      {
+        id: 3,
+        title: 'Flight Planning',
+        juniorContent: `STEP 3 — PLAN FLIGHT
+Configure drone mission.
+
+Settings:
+• Flying height (affects GSD)
+• Front overlap (75-80%)
+• Side overlap (60-70%)
+• Grid pattern
+
+GSD Calculator:
+GSD = (sensor width × flight height) / (focal length × image width)`,
+        seniorContent: `3. Configure flight mission parameters`
+      },
+      {
+        id: 4,
+        title: 'Process Data',
+        juniorContent: `STEP 4 — PROCESS IMAGES
+Run photogrammetry software.
+
+Steps:
+1. Import images
+2. Add GCP coordinates
+3. Tie points
+4. Generate mesh
+5. Create DEM/DSM
+
+Software options:
+• Pix4D, Agisoft, DroneDeploy`,
+        seniorContent: `4. Process images with GCP constraints`
+      },
+      {
+        id: 5,
+        title: 'Accuracy Check',
+        juniorContent: `STEP 5 — VERIFY ACCURACY
+Compare independent check points.
+
+In GeoNova Drone Tools:
+→ Enter surveyed coordinates
+→ Enter drone-computed coordinates
+→ Calculate RMSE
+→ Check against accuracy class
+
+Classes:
+• Class I: ≤ 7.5cm / 15cm
+• Class II: ≤ 15cm / 30cm
+• Class III: ≤ 37.5cm / 75cm`,
+        seniorContent: `5. Verify accuracy against IHO/ASPRS standards`
+      }
+    ]
   }
 };
 

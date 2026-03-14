@@ -76,6 +76,33 @@ const guideTypes: GuideType[] = [
     time: '4-8 hours',
     difficulty: 'Advanced',
     steps: 5
+  },
+  {
+    id: 'mining',
+    name: 'Mining Survey',
+    icon: '⛏️',
+    description: 'Underground traverse, volume calculations, and subsidence monitoring',
+    time: '4-8 hours',
+    difficulty: 'Advanced',
+    steps: 6
+  },
+  {
+    id: 'hydrographic',
+    name: 'Hydrographic Survey',
+    icon: '🌊',
+    description: 'Bathymetry, tidal corrections, and chart datum conversions',
+    time: '3-6 hours',
+    difficulty: 'Advanced',
+    steps: 5
+  },
+  {
+    id: 'drone',
+    name: 'Drone/UAV Survey',
+    icon: '🚁',
+    description: 'GCP planning, accuracy verification, and survey reports',
+    time: '2-4 hours',
+    difficulty: 'Intermediate',
+    steps: 5
   }
 ];
 
