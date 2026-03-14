@@ -56,8 +56,11 @@ export const languages = [
   { code: 'ar' as Language, flag: '🇸🇦', name: 'العربية' },
   { code: 'pt' as Language, flag: '🇦🇴', name: 'Português' },
   { code: 'es' as Language, flag: '🇪🇸', name: 'Español' },
+  { code: 'zh' as Language, flag: '🇨🇳', name: '中文' },
+  { code: 'ja' as Language, flag: '🇯🇵', name: '日本語' },
+  { code: 'ru' as Language, flag: '🇷🇺', name: 'Русский' },
   { code: 'hi' as Language, flag: '🇮🇳', name: 'हिन्दी' },
   { code: 'id' as Language, flag: '🇮🇩', name: 'Bahasa Indonesia' },
   { code: 'am' as Language, flag: '🇪🇹', name: 'አማርኛ' },
-  { code: 'ha' as Language, flag: '🇳🇬', name: 'Hausa' }
+  { code: 'ha' as Language, flag: '🇳🇬', name: 'Hausa' },
 ]

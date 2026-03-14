@@ -1,0 +1,17 @@
+{
+  "nav": {"tools": "工具", "projects": "项目", "field": "现场", "import": "导入", "ai": "AI", "community": "社区", "docs": "文档", "dashboard": "仪表板", "profile": "个人资料", "account": "账户", "pricing": "价格", "login": "登录", "register": "开始", "search": "搜索..."},
+  "landing": {"hero": "专业测量简化和", "subtitle": "为全球测量员提供强大的计算工具。导线测量、水准测量、COGO、GPS放样等。", "features": "功能", "pricing": "价格", "getStarted": "免费开始"},
+  "auth": {"email": "邮箱", "password": "密码", "confirmPassword": "确认密码", "loginButton": "登录", "registerButton": "创建账户", "noAccount": "没有账户？", "hasAccount": "已有账户？"},
+  "dashboard": {"title": "您的项目", "newProject": "新项目", "noProjects": "暂无项目", "createFirst": "创建您的第一个项目", "recentProjects": "最近项目", "processNotes": "处理备注"},
+  "project": {"name": "项目名称", "location": "位置", "utmZone": "UTM区域", "hemisphere": "半球", "surveyType": "测量类型", "clientName": "客户名称", "surveyorName": "测量员姓名", "create": "创建项目", "settings": "设置", "delete": "删除项目", "open": "打开"},
+  "points": {"addPoint": "添加点", "editPoint": "编辑点", "pointName": "点名", "easting": "东坐标 (m)", "northing": "北坐标 (m)", "elevation": "高程 (m)", "controlPoint": "控制点", "primary": "主要", "secondary": "次要", "temporary": "临时", "locked": "锁定", "save": "保存", "cancel": "取消", "delete": "删除", "uploadCSV": "上传CSV"},
+  "traverse": {"title": "导线测量", "runTraverse": "执行导线", "closed": "闭合", "open": "开放", "link": "连接", "radial": "辐射", "distance": "距离 (m)", "bearing": "方位角", "precision": "精度", "misclosure": "闭合差", "excellent": "优秀", "good": "良好", "acceptable": "合格", "poor": "不合格"},
+  "leveling": {"title": "水准测量", "backsight": "后视", "foresight": "前视", "intermediate": "中间", " RL": "高程", "calculate": "计算", "arithmeticCheck": "算术检核", "pass": "通过", "fail": "未通过"},
+  "tools": {"quickTools": "快速工具", "calculations": "计算", "traverseAdjust": "导线与平差", "curves": "曲线", "leveling": "水准测量", "fieldLayout": "现场布局", "specialized": "专业测量", "distance": "距离与方位", "bearingCalc": "方位角", "area": "面积", "grade": "坡度", "coordinates": "坐标", "cogo": "COGO", "chainage": "里程", "tacheometry": "测距仪", "settingOut": "放样", "missingLine": "缺失线", "twoPegTest": "双桩测试", "heightOfObject": "物体高度", "mining": "矿山测量", "hydrographic": "水文测量", "drone": "无人机"},
+  "import": {"totalStation": "全站仪", "csvUpload": "上传CSV", "instruments": "仪器", "selectFile": "选择文件", "import": "导入"},
+  "field": {"fieldMode": "现场模式", "fieldBook": "现场手册", "processNotes": "处理备注", "stakeout": "放样"},
+  "guides": {"title": "现场指南", "closedTraverse": "闭合导线", "levelingRun": "水准路线", "radiation": "辐射测量", "settingOut": "放样", "boundary": "边界测量", "roadSurvey": "道路测量", "controlNetwork": "控制网", "mining": "矿山测量", "hydrographic": "水文测量", "drone": "无人机测量"},
+  "reports": {"generate": "生成报告", "surveyPlan": "测量计划", "exportDXF": "导出DXF", "exportLandXML": "导出LandXML", "exportGeoJSON": "导出GeoJSON", "exportProject": "导出项目"},
+  "common": {"save": "保存", "cancel": "取消", "delete": "删除", "edit": "编辑", "add": "添加", "remove": "移除", "loading": "加载中...", "error": "错误", "success": "成功", "confirm": "确认", "back": "返回", "next": "下一步", "close": "关闭", "search": "搜索", "filter": "筛选", "export": "导出", "import": "导入", "download": "下载", "upload": "上传", "print": "打印", "share": "分享"},
+  "errors": {"required": "此字段必填", "invalidEmail": "邮箱地址无效", "passwordMismatch": "密码不匹配", "networkError": "网络错误，请重试。", "unauthorized": "请登录以继续"}
+}
