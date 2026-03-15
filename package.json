@@ -7,6 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "i18n:sync": "node scripts/i18n-sync.mjs",
     "verify:engine": "npx tsc -p scripts/engine-verify.tsconfig.json && node scripts/.out/scripts/engine-verify.js"
   },
@@ -37,6 +40,9 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/jest": "^30.0.0",
     "@types/leaflet": "^1.9.8",
     "@types/node": "^20.10.0",
     "@types/papaparse": "^5.3.14",
@@ -45,8 +51,11 @@
     "autoprefixer": "^10.4.27",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.2.0",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
     "postcss": "^8.5.8",
     "tailwindcss": "^3.4.19",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.3.0"
   }
 }
