@@ -1,155 +1,95 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import {
-  getJobs,
-  getJobCategories,
-  getCountries,
-  searchJobs,
-  SurveyJob
-} from '@/lib/marketplace/jobMarketplace'
+import Link from 'next/link'
+import { getUserJobs, GeoNovaJob } from '@/lib/supabase/jobs'
+import JobCard from '@/components/jobs/JobCard'
+import { createClient } from '@/lib/supabase/client'
 
-export default function JobMarketplacePage() {
-  const [jobs, setJobs] = useState<SurveyJob[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCountry, setSelectedCountry] = useState('')
-  const [selectedType, setSelectedType] = useState('')
-  const [categories, setCategories] = useState<any[]>([])
+export default function JobsPage() {
+  const [jobs, setJobs] = useState<GeoNovaJob[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    setCategories(getJobCategories())
-    if (searchQuery) {
-      setJobs(searchJobs(searchQuery))
-    } else {
-      setJobs(getJobs({
-        country: selectedCountry || undefined,
-        surveyType: selectedType || undefined,
-      }))
-    }
-  }, [searchQuery, selectedCountry, selectedType])
+    loadJobs()
+  }, [])
 
-  const formatBudget = (amount: number, currency: string) => {
-    if (currency === 'KES') return `KES ${(amount / 1000).toFixed(0)}K`
-    if (currency === 'USD') return `$${amount.toLocaleString()}`
-    return `${currency} ${amount.toLocaleString()}`
+  const loadJobs = async () => {
+    try {
+      setLoading(true)
+      const userJobs = await getUserJobs()
+      setJobs(userJobs)
+    } catch (err: any) {
+      setError(err.message || 'Failed to load jobs')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'open': return 'bg-green-100 text-green-800'
-      case 'in_progress': return 'bg-blue-100 text-blue-800'
-      case 'completed': return 'bg-gray-100 text-gray-800'
-      default: return 'bg-gray-100 text-gray-800'
-    }
+  const handleRefresh = () => loadJobs()
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-gray-400">Loading your missions...</div>
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Survey Job Marketplace</h1>
-          <p className="text-gray-600">Find survey jobs or hire professional surveyors</p>
-        </div>
-
-        <div className="bg-blue-600 rounded-xl p-6 mb-8 text-white">
-          <h2 className="text-xl font-semibold mb-2">Earn with GeoNova</h2>
-          <p className="mb-4">Complete surveys through our marketplace. We charge 5% commission on all completed jobs.</p>
-          <button className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50">
-            Post a Job
-          </button>
-        </div>
-
-        <div className="flex flex-wrap gap-4 mb-6">
-          <input
-            type="text"
-            placeholder="Search jobs..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 min-w-64 p-3 border rounded-lg"
-          />
-          <select
-            value={selectedCountry}
-            onChange={(e) => setSelectedCountry(e.target.value)}
-            className="p-3 border rounded-lg"
-          >
-            <option value="">All Countries</option>
-            {getCountries().map(c => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-          <select
-            value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
-            className="p-3 border rounded-lg"
-          >
-            <option value="">All Types</option>
-            {categories.map(cat => (
-              <option key={cat.id} value={cat.id}>{cat.icon} {cat.name}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="grid md:grid-cols-4 gap-4 mb-6">
-          {categories.slice(0, 4).map(cat => (
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-100">Field Missions</h1>
+            <p className="text-gray-400 mt-1">Plan, schedule, and prepare your survey jobs</p>
+          </div>
+          <div className="flex gap-3">
             <button
-              key={cat.id}
-              onClick={() => setSelectedType(cat.id)}
-              className={`p-4 rounded-lg text-left transition ${
-                selectedType === cat.id 
-                  ? 'bg-blue-100 border-2 border-blue-500' 
-                  : 'bg-white border border-gray-200 hover:border-blue-300'
-              }`}
+              onClick={handleRefresh}
+              className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition"
             >
-              <span className="text-2xl">{cat.icon}</span>
-              <p className="font-medium mt-2">{cat.name}</p>
+              🔄 Refresh
             </button>
-          ))}
+            <Link
+              href="/jobs/new"
+              className="px-6 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded-lg transition-colors"
+            >
+              + New Mission
+            </Link>
+          </div>
         </div>
 
-        <div className="space-y-4">
-          {jobs.map(job => (
-            <div key={job.id} className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition">
-              <div className="flex justify-between items-start mb-3">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{job.title}</h3>
-                  <p className="text-sm text-gray-500">{job.clientName} • {job.location}</p>
-                </div>
-                <span className={`px-3 py-1 text-sm rounded ${getStatusColor(job.status)}`}>
-                  {job.status.replace('_', ' ').toUpperCase()}
-                </span>
-              </div>
-              
-              <p className="text-gray-600 mb-4 line-clamp-2">{job.description}</p>
-              
-              <div className="flex flex-wrap gap-2 mb-4">
-                {job.requiredSkills.map(skill => (
-                  <span key={skill} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                    {skill}
-                  </span>
-                ))}
-              </div>
-              
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-4">
-                  <span className="font-semibold text-green-600">{formatBudget(job.budget, job.currency)}</span>
-                  <span className="text-gray-500">📅 {new Date(job.deadline).toLocaleDateString()}</span>
-                  <span className="text-gray-500">📂 {job.proposals} proposals</span>
-                </div>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                  View Details
-                </button>
-              </div>
-            </div>
-          ))}
-          
-          {jobs.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
-              <div className="text-4xl mb-3">🔍</div>
-              <p>No jobs found matching your criteria</p>
-            </div>
-          )}
-        </div>
+        {error && (
+          <div className="mb-6 p-4 bg-red-900/30 border border-red-600/50 rounded-lg">
+            <p className="text-red-400">{error}</p>
+          </div>
+        )}
+
+        {jobs.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="text-6xl mb-6">🧭</div>
+            <h2 className="text-2xl font-bold text-gray-100 mb-4">No missions planned</h2>
+            <p className="text-gray-400 mb-8 max-w-md mx-auto">
+              Create your first field mission to get equipment recommendations, checklists, and workflow guidance.
+            </p>
+            <Link
+              href="/jobs/new"
+              className="inline-block px-8 py-3 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded-lg transition-colors"
+            >
+              Create First Mission
+            </Link>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {jobs.map((job) => (
+              <JobCard key={job.id} job={job} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
 }
+

@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
@@ -397,6 +398,14 @@ export default function NavBar() {
               </div>
             </div>
 
+            {/* Field Missions - New */}
+            <Link 
+              href="/jobs" 
+              className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors flex items-center gap-1"
+            >
+              🧭 {t('nav.jobs') || 'Missions'}
+            </Link>
+
             {/* Community Link */}
             <div className="relative group">
               <button className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
@@ -410,6 +419,7 @@ export default function NavBar() {
                 </div>
               </div>
             </div>
+
 
             {/* Docs */}
             <Link 

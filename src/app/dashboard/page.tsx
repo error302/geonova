@@ -48,7 +48,7 @@ export default async function DashboardPage() {
         )}
 
         {/* Process Field Notes - Flagship Feature */}
-        <div className="mb-8 p-6 bg-gradient-to-r from-[#E8841A]/20 to-transparent border border-[#E8841A]/30 rounded-xl">
+        <div className="mb-6 p-6 bg-gradient-to-r from-[#E8841A]/20 to-transparent border border-[#E8841A]/30 rounded-xl">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-bold text-gray-100 mb-1">📋 {t('dashboard.processFieldNotesTitle')}</h2>
@@ -64,6 +64,25 @@ export default async function DashboardPage() {
             </Link>
           </div>
         </div>
+
+        {/* Field Mission Planner */}
+        <div className="mb-8 p-6 bg-gradient-to-r from-blue-600/20 to-transparent border border-blue-500/30 rounded-xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold text-gray-100 mb-1">🧭 Field Mission Planner</h2>
+              <p className="text-blue-200 text-sm">
+                Plan jobs with equipment recommendations and checklists
+              </p>
+            </div>
+            <Link
+              href="/jobs"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+            >
+              Plan Mission
+            </Link>
+          </div>
+        </div>
+
 
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold text-gray-100">{t('dashboard.title')}</h1>
