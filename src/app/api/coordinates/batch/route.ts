@@ -85,15 +85,19 @@ export async function POST(request: NextRequest) {
           toSystem
         )
 
+        if (!result.success || !result.result) {
+          throw new Error(result.error || 'Transform failed')
+        }
+
         results.push({
           id: point.id,
           name: point.name,
-          latitude: result.latitude,
-          longitude: result.longitude,
-          easting: result.easting,
-          northing: result.northing,
-          zone: result.zone,
-          hemisphere: result.hemisphere,
+          latitude: result.result.latitude,
+          longitude: result.result.longitude,
+          easting: result.result.easting,
+          northing: result.result.northing,
+          zone: result.result.zone,
+          hemisphere: result.result.hemisphere,
           elevation: point.elevation,
           success: true
         })
