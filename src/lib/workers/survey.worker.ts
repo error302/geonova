@@ -30,13 +30,13 @@ self.onmessage = async (event: MessageEvent<CalculationMessage>) => {
         result = calculateLeveling(data as LevelingData)
         break
       case 'volume':
-        result = calculateVolume(data)
+        result = calculateVolume(data as { surfacePoints: Array<{ x: number; y: number; z: number }>; referenceZ: number; method: string })
         break
       case 'tin':
-        result = calculateTIN(data)
+        result = calculateTIN(data as { points: Array<{ x: number; y: number; z: number }> })
         break
       case 'contours':
-        result = generateContours(data)
+        result = generateContours(data as { points: Array<{ x: number; y: number; z: number }>; interval: number })
         break
       default:
         throw new Error(`Unknown calculation type: ${type}`)
