@@ -68,7 +68,8 @@
   },
   "community": {
     "surveyCommunity": "Сообщество геодезистов",
-    "controlPoints": "Опорные пункты"
+    "controlPoints": "Опорные пункты",
+    "marketplace": "Маркетплейс"
   },
   "points": {
     "addPoint": "Добавить точку",

@@ -68,7 +68,8 @@
   },
   "community": {
     "surveyCommunity": "Survey Community",
-    "controlPoints": "Control Points"
+    "controlPoints": "Control Points",
+    "marketplace": "Marketplace"
   },
   "points": {
     "addPoint": "Ajouter un Point",

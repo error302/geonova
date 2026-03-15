@@ -93,6 +93,7 @@ const communityGroups = [
     items: [
       { href: '/community', labelKey: 'community.surveyCommunity' },
       { href: '/beacons', labelKey: 'community.controlPoints' },
+      { href: '/marketplace', labelKey: 'community.marketplace' },
     ]
   },
 ]

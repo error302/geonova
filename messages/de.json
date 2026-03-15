@@ -68,7 +68,8 @@
   },
   "community": {
     "surveyCommunity": "Vermessungs-Community",
-    "controlPoints": "Festpunkte"
+    "controlPoints": "Festpunkte",
+    "marketplace": "Marktplatz"
   },
   "points": {
     "addPoint": "Punkt hinzufügen",

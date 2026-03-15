@@ -68,7 +68,8 @@
   },
   "community": {
     "surveyCommunity": "測量コミュニティ",
-    "controlPoints": "基準点"
+    "controlPoints": "基準点",
+    "marketplace": "マーケットプレイス"
   },
   "points": {
     "addPoint": "点を追加",
