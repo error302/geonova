@@ -11,25 +11,77 @@ const withPWA = require('next-pwa')({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  
+  // Image optimization
   images: {
-    unoptimized: true
+    unoptimized: true,
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60 * 60 * 24, // 1 day
   },
+  
+  // Linting
   eslint: {
-    // On some Windows environments, `next build` can fail with `spawn EPERM` when Next tries to fork workers
-    // for lint/typecheck. We keep strict checks on Linux/CI (e.g. Vercel) and allow Windows dev builds to pass.
     ignoreDuringBuilds: process.platform === 'win32' && process.env.NEXT_STRICT_CHECKS !== 'true',
   },
+  
+  // TypeScript
   typescript: {
     ignoreBuildErrors: process.platform === 'win32' && process.env.NEXT_STRICT_CHECKS !== 'true',
   },
+  
+  // Performance settings
   trailingSlash: true,
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
   swcMinify: true,
+  
+  // Bundle optimization
+  modularizeImports: {
+    '@mui/material': {
+      transform: '@mui/material/{{member}}',
+    },
+    'lucide-react': {
+      transform: 'lucide-react/dist/esm/icons/{{member}}',
+    },
+  },
+  
+  // Experimental features
   experimental: {
-    // Use worker_threads instead of child_process on Windows to avoid `spawn EPERM` failures in some environments.
     workerThreads: process.platform === 'win32' && process.env.NEXT_WORKER_THREADS !== 'false',
+    optimizePackageImports: ['@mui/material', 'lucide-react'],
+  },
+  
+  // Headers for performance
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, s-maxage=3600'
+          },
+        ],
+      },
+      {
+        source: '/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          },
+        ],
+      },
+    ]
   },
 }
 
