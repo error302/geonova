@@ -10,18 +10,7 @@ export function initSentry() {
       environment: SENTRY_ENVIRONMENT,
       tracesSampleRate: 0.1,
       replaysSessionSampleRate: 0.1,
-      replaysOnErrorSampleRate: 1.0,
-      integrations: [
-        Sentry.replayIntegration(),
-        Sentry.browserTracingIntegration()
-      ],
-      beforeSend(event: Sentry.Event) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Sentry event:', event)
-          return null
-        }
-        return event
-      }
+      replaysOnErrorSampleRate: 1.0
     })
   }
 }
