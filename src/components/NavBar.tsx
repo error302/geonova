@@ -486,6 +486,18 @@ export default function NavBar() {
                 >
                   {t('nav.pricing')}
                 </Link>
+                <Link 
+                  href="/white-label" 
+                  className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
+                >
+                  White Label
+                </Link>
+                <Link 
+                  href="/api-docs" 
+                  className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
+                >
+                  API
+                </Link>
                 <Link href="/dashboard" className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
                   {t('nav.dashboard')}
                 </Link>
