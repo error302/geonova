@@ -5,8 +5,8 @@ const config: CapacitorConfig = {
   appName: 'GeoNova',
   webDir: '.next',
   server: {
-    url: 'http://localhost:3000',
-    cleartext: true
+    url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    cleartext: process.env.NODE_ENV !== 'production'
   },
   plugins: {
     SplashScreen: {

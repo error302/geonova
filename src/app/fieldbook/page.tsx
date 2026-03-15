@@ -452,6 +452,7 @@ export default function DigitalFieldBookPage() {
           data: { ...record, updated_at: undefined },
           timestamp: now,
           projectId,
+          priority: 'normal'
         })
       }
 

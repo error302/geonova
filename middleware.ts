@@ -1,8 +1,28 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { rateLimit, getClientIdentifier } from '@/lib/security/rateLimit'
+
+const API_RATE_LIMIT = 60
+const API_RATE_WINDOW = 60000
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
+
+  const isApiRoute = request.nextUrl.pathname.startsWith('/api/')
+  
+  if (isApiRoute) {
+    const identifier = getClientIdentifier(request)
+    const { allowed, remaining } = rateLimit(identifier, API_RATE_LIMIT, API_RATE_WINDOW)
+    
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: Math.ceil(API_RATE_WINDOW / 1000) },
+        { status: 429, headers: { 'X-RateLimit-Remaining': '0', 'Retry-After': String(Math.ceil(API_RATE_WINDOW / 1000)) } }
+      )
+    }
+    
+    supabaseResponse.headers.set('X-RateLimit-Remaining', String(remaining))
+  }
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -23,7 +43,7 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  const protectedRoutes = ['/dashboard', '/project']
+  const protectedRoutes = ['/dashboard', '/project', '/fieldbook']
   const isProtected = protectedRoutes.some(route =>
     request.nextUrl.pathname.startsWith(route))
 
@@ -35,5 +55,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|tools).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|tools|icons).*)'],
 }

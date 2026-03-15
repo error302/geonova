@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+numpy
+scipy
+shapely
+geopandas
+rasterio
+pydantic
+python-multipart

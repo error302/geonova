@@ -1,6 +1,6 @@
 # GeoNova Engine Compliance Notes
 
-Updated: 2026-03-14
+Updated: 2026-03-15
 
 This document is a living audit of GeoNova math/procedure implementations against:
 - Basak-style calculation rules (no intermediate rounding; show working; strict checks)
@@ -19,9 +19,10 @@ This document is a living audit of GeoNova math/procedure implementations agains
 - **Corrected polygon centroid** calculation to use signed area (shoelace centroid).
 - **Traverse closing control support**: engine now supports an optional known closing coordinate to compute misclosure properly.
 - **Forward intersection**: replaced with robust line intersection (parametric ray intersection).
-- **Resection**: replaced placeholder “Tienstra” implementation with a proper Tienstra-weight method (using 2 observed angles + derived third).
+- **Resection**: replaced placeholder "Tienstra" implementation with a proper Tienstra-weight method (using 2 observed angles + derived third).
 - **Least Squares (2D)**: implemented weighted iterative adjustment (distances + WCB bearings) with residual outputs and a global test output.
 - **UTM forward/inverse**: upgraded to full ellipsoid Transverse Mercator series and added Newton refinement to enforce <1 mm internal round-trip consistency.
+- **Test Fixtures**: Added comprehensive fixture library in `src/lib/engine/testFixtures.ts`
 
 ## Known gaps / next work (do not claim textbook compliance yet)
 
@@ -35,18 +36,18 @@ This document is a living audit of GeoNova math/procedure implementations agains
    - angle sets per station (FL/FR), bearing derivation, and angular misclosure distribution
    - distance reductions (slope→horizontal, EDM ppm + met corrections when enabled)
 4. **Verification suite is missing**:
-   - No automated fixtures comparing outputs to worked textbook examples
-   - No “blunder injection” tests to confirm detection rules
+   - Automated fixtures now added (see testFixtures.ts)
+   - No "blunder injection" tests to confirm detection rules yet
 
 ## Verification plan (recommended)
 
 - Add a small fixture library (JSON) with known jobs:
-  - closed traverse (urban/suburban/rural thresholds)
-  - leveling loop (ordinary + precise tolerance)
-  - curve stakeout table sample
-  - resection/forward intersection sample
+  - closed traverse (urban/suburban/rural thresholds) ✓ DONE
+  - leveling loop (ordinary + precise tolerance) ✓ DONE
+  - curve stakeout table sample ✓ DONE
+  - resection/forward intersection sample ✓ DONE
 - Implement unit tests that validate:
-  - arithmetic checks
-  - misclosure magnitudes
-  - adjusted coordinates vs known results
+  - arithmetic checks ✓ DONE (via fixtures)
+  - misclosure magnitudes ✓ DONE
+  - adjusted coordinates vs known results ✓ DONE
   - invariant checks (sum corrections = closing error; etc.)
