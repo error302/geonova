@@ -1,6 +1,6 @@
 # GeoNova
 
-Professional surveying calculation platform for land surveyors - the complete replacement for expensive software like Trimble, Leica, and AutoCAD.
+ Professional surveying calculation platform for land surveyors - the complete replacement for expensive software like Trimble, Leica, and AutoCAD.
 
 ## Why GeoNova?
 
