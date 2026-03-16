@@ -41,8 +41,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { messages, model = DEFAULT_MODEL, stream = true } = body
 
-    const isLocal = !process.env.OLLAMA_API_KEY || process.env.OLLAMA_USE_LOCAL === 'true'
+    const isLocal = process.env.OLLAMA_USE_LOCAL === 'true'
     const baseUrl = isLocal ? OLLAMA_BASE_URL : 'https://ollama.ai'
+    
+    console.log('Ollama request:', { isLocal, baseUrl, hasKey: !!process.env.OLLAMA_API_KEY, keyValue: process.env.OLLAMA_API_KEY?.slice(0,10) })
     
     const systemMessage = messages.find((m: { role: string }) => m.role === 'system')
     const userMessages = messages.filter((m: { role: string }) => m.role !== 'system')
