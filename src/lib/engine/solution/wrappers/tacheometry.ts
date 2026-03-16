@@ -1,10 +1,10 @@
 import { dmsToDecimal } from '@/lib/engine/angles'
 import type { DMS } from '@/lib/engine/types'
 import { tacheometryReduction } from '@/lib/engine/tacheometry'
-import { createSolutionV1, type Solution } from '@/lib/engine/solution/solutionBuilder'
+import { createSolutionV1, solveWithSteps, type Solved, type Solution } from '@/lib/engine/solution/solutionBuilder'
 import { fullNumber } from '@/lib/solution/format'
 
-export function tacheometrySolution(input: {
+export function tacheometrySolved(input: {
   instrumentHeight: number
   upper: number
   middle: number
@@ -12,7 +12,7 @@ export function tacheometrySolution(input: {
   verticalAngle: DMS
   K: number
   C: number
-}): Solution {
+}): Solved<ReturnType<typeof tacheometryReduction>> & { solution: Solution } {
   const verticalAngleDeg = dmsToDecimal(input.verticalAngle)
   const r = tacheometryReduction({
     instrumentHeight: input.instrumentHeight,
@@ -24,7 +24,7 @@ export function tacheometrySolution(input: {
     C: input.C,
   })
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Tacheometry Reduction',
     given: [
       { label: 'HI', value: `${fullNumber(input.instrumentHeight)} m` },
@@ -71,5 +71,18 @@ export function tacheometrySolution(input: {
       { label: 'Staff station RL', value: `${r.staffStationRL.toFixed(4)} m` },
     ],
   })
+
+  return solveWithSteps(r, solution)
 }
 
+export function tacheometrySolution(input: {
+  instrumentHeight: number
+  upper: number
+  middle: number
+  lower: number
+  verticalAngle: DMS
+  K: number
+  C: number
+}): Solution {
+  return tacheometrySolved(input).solution
+}

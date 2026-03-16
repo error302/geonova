@@ -1,19 +1,17 @@
 import { compoundCurveElements, curveStakeout, reverseCurveApprox } from '@/lib/engine/curves'
-import { createSolutionV1, type Solution } from '@/lib/engine/solution/solutionBuilder'
+import { createSolutionV1, solveWithSteps, type Solved, type Solution } from '@/lib/engine/solution/solutionBuilder'
 import { formatDistanceMeters, fullNumber } from '@/lib/solution/format'
 
-export function simpleCurveSolution(input: {
+export function simpleCurveSolved(input: {
   radius: number
   deflectionDeg: number
   piChainage: number
   interval: number
-}): { solution: Solution; stakeout: ReturnType<typeof curveStakeout> } {
+}): Solved<ReturnType<typeof curveStakeout>> & { solution: Solution; stakeout: ReturnType<typeof curveStakeout> } {
   const stakeout = curveStakeout(input.piChainage, 0, input.radius, input.deflectionDeg, input.interval)
   const el = stakeout.elements
 
-  return {
-    stakeout,
-    solution: createSolutionV1({
+  const solution = createSolutionV1({
       title: 'Simple Circular Curve',
       given: [
         { label: 'Radius (R)', value: `${fullNumber(input.radius)} m` },
@@ -52,20 +50,32 @@ export function simpleCurveSolution(input: {
         { label: 'PC chainage', value: `${stakeout.pcChainage.toFixed(3)} m` },
         { label: 'PT chainage', value: `${stakeout.ptChainage.toFixed(3)} m` },
       ],
-    }),
-  }
+    })
+
+  const solved = solveWithSteps(stakeout, solution)
+  return { ...solved, stakeout: solved.result }
 }
 
-export function compoundCurveSolution(input: {
+export function simpleCurveSolution(input: {
+  radius: number
+  deflectionDeg: number
+  piChainage: number
+  interval: number
+}): { solution: Solution; stakeout: ReturnType<typeof curveStakeout> } {
+  const s = simpleCurveSolved(input)
+  return { stakeout: s.result, solution: s.solution }
+}
+
+export function compoundCurveSolved(input: {
   R1: number
   R2: number
   delta1Deg: number
   delta2Deg: number
   junctionChainage: number
-}): Solution {
+}): Solved<ReturnType<typeof compoundCurveElements>> & { solution: Solution } {
   const r = compoundCurveElements(input)
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Compound Curve (Elements)',
     given: [
       { label: 'R1', value: `${fullNumber(input.R1)} m` },
@@ -90,12 +100,24 @@ export function compoundCurveSolution(input: {
       { label: 'T2 chainage', value: `${r.chainT2.toFixed(3)} m` },
     ],
   })
+
+  return solveWithSteps(r, solution)
 }
 
-export function reverseCurveSolution(input: { R1: number; R2: number; AB: number }): Solution {
+export function compoundCurveSolution(input: {
+  R1: number
+  R2: number
+  delta1Deg: number
+  delta2Deg: number
+  junctionChainage: number
+}): Solution {
+  return compoundCurveSolved(input).solution
+}
+
+export function reverseCurveSolved(input: { R1: number; R2: number; AB: number }): Solved<ReturnType<typeof reverseCurveApprox>> & { solution: Solution } {
   const r = reverseCurveApprox(input)
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Reverse Curve (Approx. Elements)',
     given: [
       { label: 'R1', value: `${fullNumber(input.R1)} m` },
@@ -122,5 +144,10 @@ export function reverseCurveSolution(input: { R1: number; R2: number; AB: number
       { label: 'Total length', value: `${r.totalLength.toFixed(4)} m` },
     ],
   })
+
+  return solveWithSteps(r, solution)
 }
 
+export function reverseCurveSolution(input: { R1: number; R2: number; AB: number }): Solution {
+  return reverseCurveSolved(input).solution
+}

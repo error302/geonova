@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { bowditchAdjustment, transitAdjustment } from '@/lib/engine/traverse';
-import SolutionRenderer from '@/components/SolutionRenderer'
-import type { Solution } from '@/lib/solution/schema'
-import { bowditchAdjustmentSolutionFromResult } from '@/lib/engine/solution/wrappers/traverse'
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
+import { bowditchAdjustmentSolvedFromResult, transitAdjustmentSolvedFromResult } from '@/lib/engine/solution/wrappers/traverse'
 
 interface Leg {
   id: number;
@@ -24,7 +24,8 @@ export default function TraverseCalculator() {
   ]);
   const [method, setMethod] = useState<'bowditch' | 'transit'>('bowditch');
   const [result, setResult] = useState<any>(null);
-  const [solution, setSolution] = useState<Solution | null>(null)
+  const [steps, setSteps] = useState<SolutionStep[] | null>(null)
+  const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined)
 
   const addLeg = () => {
     const nextChar = String.fromCharCode(65 + legs.length);
@@ -49,11 +50,12 @@ export default function TraverseCalculator() {
         : transitAdjustment({ points, distances, bearings });
       setResult(r);
       try {
-        const s = bowditchAdjustmentSolutionFromResult(r)
-        if (method === 'transit') s.title = 'Closed Traverse Adjustment (Transit Rule)'
-        setSolution(s)
+        const s = method === 'bowditch' ? bowditchAdjustmentSolvedFromResult(r) : transitAdjustmentSolvedFromResult(r)
+        setSteps(s.steps)
+        setSolutionTitle(s.solution.title)
       } catch {
-        setSolution(null)
+        setSteps(null)
+        setSolutionTitle(undefined)
       }
     }
   };
@@ -64,10 +66,10 @@ export default function TraverseCalculator() {
       <p className="text-sm text-[var(--text-muted)] mb-8">Closed traverse adjustment using Bowditch or Transit rules</p>
 
       <div className="flex gap-4 mb-6">
-        <button onClick={() => { setMethod('bowditch'); setResult(null); }} className={`btn ${method === 'bowditch' ? 'btn-primary' : 'btn-secondary'}`}>
+        <button onClick={() => { setMethod('bowditch'); setResult(null); setSteps(null); setSolutionTitle(undefined); }} className={`btn ${method === 'bowditch' ? 'btn-primary' : 'btn-secondary'}`}>
           Bowditch Rule
         </button>
-        <button onClick={() => { setMethod('transit'); setResult(null); }} className={`btn ${method === 'transit' ? 'btn-primary' : 'btn-secondary'}`}>
+        <button onClick={() => { setMethod('transit'); setResult(null); setSteps(null); setSolutionTitle(undefined); }} className={`btn ${method === 'transit' ? 'btn-primary' : 'btn-secondary'}`}>
           Transit Rule
         </button>
       </div>
@@ -155,9 +157,9 @@ export default function TraverseCalculator() {
             </div>
           </div>
 
-          {solution ? (
+          {steps ? (
             <div className="md:col-span-2">
-              <SolutionRenderer solution={solution} />
+              <SolutionStepsRenderer title={solutionTitle} steps={steps} />
             </div>
           ) : null}
         </div>

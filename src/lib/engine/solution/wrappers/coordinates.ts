@@ -1,22 +1,22 @@
 import { geographicToUTM, utmToGeographic } from '@/lib/engine/coordinates'
 import { decimalToDMS, dmsToDecimal } from '@/lib/engine/angles'
 import type { DMS } from '@/lib/engine/types'
-import { createSolutionV1, type Solution } from '@/lib/engine/solution/solutionBuilder'
+import { createSolutionV1, solveWithSteps, type Solved, type Solution } from '@/lib/engine/solution/solutionBuilder'
 import { fullNumber } from '@/lib/solution/format'
 
-export function utmToGeographicSolution(input: {
+export function utmToGeographicSolved(input: {
   easting: number
   northing: number
   zone: number
   hemisphere: 'N' | 'S'
-}): Solution {
+}): Solved<ReturnType<typeof utmToGeographic>> & { solution: Solution } {
   const r = utmToGeographic(input.easting, input.northing, input.zone, input.hemisphere)
   const latDms = decimalToDMS(r.lat, true)
   const lonDms = decimalToDMS(r.lon, false)
   const latStr = `${latDms.degrees}° ${latDms.minutes}' ${latDms.seconds.toFixed(3)}" ${latDms.direction}`
   const lonStr = `${lonDms.degrees}° ${lonDms.minutes}' ${lonDms.seconds.toFixed(3)}" ${lonDms.direction}`
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'UTM → Geographic (WGS84)',
     given: [
       { label: 'Easting', value: `${fullNumber(input.easting)} m` },
@@ -44,11 +44,22 @@ export function utmToGeographicSolution(input: {
       { label: 'Longitude (DMS)', value: lonStr },
     ],
   })
+
+  return solveWithSteps(r, solution)
 }
 
-export function geographicToUtmSolution(input: { lat: number; lon: number }): Solution {
+export function utmToGeographicSolution(input: {
+  easting: number
+  northing: number
+  zone: number
+  hemisphere: 'N' | 'S'
+}): Solution {
+  return utmToGeographicSolved(input).solution
+}
+
+export function geographicToUtmSolved(input: { lat: number; lon: number }): Solved<ReturnType<typeof geographicToUTM>> & { solution: Solution } {
   const r = geographicToUTM(input.lat, input.lon)
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Geographic → UTM (WGS84)',
     given: [
       { label: 'Latitude', value: `${fullNumber(input.lat)}°` },
@@ -69,6 +80,12 @@ export function geographicToUtmSolution(input: { lat: number; lon: number }): So
       { label: 'Northing', value: `${r.northing.toFixed(4)} m` },
     ],
   })
+
+  return solveWithSteps(r, solution)
+}
+
+export function geographicToUtmSolution(input: { lat: number; lon: number }): Solution {
+  return geographicToUtmSolved(input).solution
 }
 
 function parseDmsLike(input: string, isLatitude: boolean): DMS | null {
@@ -115,7 +132,24 @@ export function dmsToDecimalSolution(input: { dms: string; isLatitude: boolean }
   }
 
   const decimal = dmsToDecimal(dms)
-  return createSolutionV1({
+  return dmsToDecimalSolved({ dms: input.dms, isLatitude: input.isLatitude }).solution
+}
+
+export function dmsToDecimalSolved(input: { dms: string; isLatitude: boolean }): Solved<{ decimal: number | null; parsed: DMS | null }> & { solution: Solution } {
+  const dms = parseDmsLike(input.dms, input.isLatitude)
+  if (!dms) {
+    const solution = createSolutionV1({
+      title: 'DMS → Decimal Degrees',
+      given: [{ label: 'Input', value: input.dms }],
+      toFind: ['Decimal degrees'],
+      solution: [{ formula: 'Invalid DMS input', computation: 'Unable to parse DMS.' }],
+      result: [{ label: 'Decimal degrees', value: '—' }],
+    })
+    return solveWithSteps({ decimal: null, parsed: null }, solution)
+  }
+
+  const decimal = dmsToDecimal(dms)
+  const solution = createSolutionV1({
     title: 'DMS → Decimal Degrees',
     given: [
       { label: 'Degrees', value: fullNumber(dms.degrees) },
@@ -134,12 +168,14 @@ export function dmsToDecimalSolution(input: { dms: string; isLatitude: boolean }
     ],
     result: [{ label: 'Decimal degrees', value: `${decimal.toFixed(8)}°` }],
   })
+
+  return solveWithSteps({ decimal, parsed: dms }, solution)
 }
 
-export function decimalToDmsSolution(input: { decimal: number; isLatitude: boolean }): Solution {
+export function decimalToDmsSolved(input: { decimal: number; isLatitude: boolean }): Solved<ReturnType<typeof decimalToDMS>> & { solution: Solution } {
   const dms = decimalToDMS(input.decimal, input.isLatitude)
   const formatted = `${dms.degrees}° ${dms.minutes}' ${dms.seconds.toFixed(3)}" ${dms.direction}`
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Decimal Degrees → DMS',
     given: [{ label: 'Decimal degrees', value: `${fullNumber(input.decimal)}°` }],
     toFind: ['Degrees, minutes, seconds + direction'],
@@ -152,5 +188,10 @@ export function decimalToDmsSolution(input: { decimal: number; isLatitude: boole
     ],
     result: [{ label: 'DMS', value: formatted }],
   })
+
+  return solveWithSteps(dms, solution)
 }
 
+export function decimalToDmsSolution(input: { decimal: number; isLatitude: boolean }): Solution {
+  return decimalToDmsSolved(input).solution
+}

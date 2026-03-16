@@ -1,15 +1,15 @@
 import { dmsToDecimal } from '@/lib/engine/angles'
 import type { DMS } from '@/lib/engine/types'
 import { heightOfObject } from '@/lib/engine/heightOfObject'
-import { createSolutionV1, type Solution } from '@/lib/engine/solution/solutionBuilder'
+import { createSolutionV1, solveWithSteps, type Solved, type Solution } from '@/lib/engine/solution/solutionBuilder'
 import { fullNumber } from '@/lib/solution/format'
 
-export function heightOfObjectSolution(input: {
+export function heightOfObjectSolved(input: {
   horizontalDistance: number
   angleTop: DMS
   angleBase: DMS
   instrumentHeight: number
-}): Solution {
+}): Solved<ReturnType<typeof heightOfObject> & { angleTopDeg: number; angleBaseDeg: number }> & { solution: Solution } {
   const alpha = dmsToDecimal(input.angleTop)
   const beta = dmsToDecimal(input.angleBase)
   const r = heightOfObject({
@@ -19,7 +19,7 @@ export function heightOfObjectSolution(input: {
     instrumentHeight: input.instrumentHeight,
   })
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Height of Object (Trigonometric Leveling)',
     given: [
       { label: 'Horizontal distance (D)', value: `${fullNumber(input.horizontalDistance)} m` },
@@ -49,5 +49,15 @@ export function heightOfObjectSolution(input: {
       { label: 'Total height', value: `${r.totalHeight.toFixed(4)} m` },
     ],
   })
+
+  return solveWithSteps({ ...r, angleTopDeg: alpha, angleBaseDeg: beta }, solution)
 }
 
+export function heightOfObjectSolution(input: {
+  horizontalDistance: number
+  angleTop: DMS
+  angleBase: DMS
+  instrumentHeight: number
+}): Solution {
+  return heightOfObjectSolved(input).solution
+}

@@ -1,31 +1,30 @@
 'use client';
 
 import { useState } from 'react';
-import SolutionRenderer from '@/components/SolutionRenderer';
-import type { Solution } from '@/lib/solution/schema';
-import { parseDMSString, normalizeBearing } from '@/lib/engine/angles';
-import { bearingSolutionFromCoords, backBearingSolution } from '@/lib/engine/solution/wrappers/bearing';
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer';
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder';
+import { bearingSolvedFromCoords, backBearingSolved } from '@/lib/engine/solution/wrappers/bearing';
 
 export default function BearingCalculator() {
   const [mode, setMode] = useState<'coords' | 'forward'>('coords');
   const [p1, setP1] = useState({ n: '', e: '' });
   const [p2, setP2] = useState({ n: '', e: '' });
   const [forward, setForward] = useState('');
-  const [solution, setSolution] = useState<Solution | null>(null);
+  const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {
     if (mode === 'coords') {
       const n1 = parseFloat(p1.n), e1 = parseFloat(p1.e);
       const n2 = parseFloat(p2.n), e2 = parseFloat(p2.e);
       if (isNaN(n1) || isNaN(e1) || isNaN(n2) || isNaN(e2)) return;
-      setSolution(bearingSolutionFromCoords({ e1, n1, e2, n2 }))
+      const s = bearingSolvedFromCoords({ e1, n1, e2, n2 })
+      setSteps(s.steps)
+      setSolutionTitle(s.solution.title)
     } else {
-      let fb = parseDMSString(forward);
-      if (fb === null) fb = parseFloat(forward);
-      if (isNaN(fb)) return;
-      
-      fb = normalizeBearing(fb);
-      setSolution(backBearingSolution({ forwardBearingDeg: fb }))
+      const s = backBearingSolved({ bearingDmsOrDeg: forward })
+      setSteps(s.steps)
+      setSolutionTitle(s.solution.title)
     }
   };
 
@@ -36,13 +35,13 @@ export default function BearingCalculator() {
 
       <div className="flex gap-4 mb-6">
         <button 
-          onClick={() => { setMode('coords'); setSolution(null); }}
+          onClick={() => { setMode('coords'); setSteps(null); setSolutionTitle(undefined); }}
           className={`btn ${mode === 'coords' ? 'btn-primary' : 'btn-secondary'}`}
         >
           From Coordinates
         </button>
         <button 
-          onClick={() => { setMode('forward'); setSolution(null); }}
+          onClick={() => { setMode('forward'); setSteps(null); setSolutionTitle(undefined); }}
           className={`btn ${mode === 'forward' ? 'btn-primary' : 'btn-secondary'}`}
         >
           Back Bearing
@@ -104,7 +103,7 @@ export default function BearingCalculator() {
           </button>
         </div>
 
-        {solution ? <SolutionRenderer solution={solution} /> : null}
+        {steps ? <SolutionStepsRenderer title={solutionTitle} steps={steps} /> : null}
       </div>
     </div>
   );

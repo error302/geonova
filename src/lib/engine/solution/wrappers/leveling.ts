@@ -1,9 +1,9 @@
 import type { LevelingInput } from '@/lib/engine/leveling'
 import type { LevelingResult } from '@/lib/engine/types'
-import { createSolutionV1, type Solution } from '@/lib/engine/solution/solutionBuilder'
+import { createSolutionV1, solveWithSteps, type Solved, type Solution } from '@/lib/engine/solution/solutionBuilder'
 import { formatDistanceMeters, fullNumber } from '@/lib/solution/format'
 
-export function levelingSolution(input: LevelingInput, result: LevelingResult): Solution {
+export function levelingSolved(input: LevelingInput, result: LevelingResult): Solved<LevelingResult> & { solution: Solution } {
   const sumBS = result.readings.reduce((s, r) => s + (r.bs ?? 0), 0)
   const sumFS = result.readings.reduce((s, r) => s + (r.fs ?? 0), 0)
 
@@ -13,7 +13,7 @@ export function levelingSolution(input: LevelingInput, result: LevelingResult): 
   const arithmeticDiff = (sumBS - sumFS) - (lastRL - input.openingRL)
   const distanceKm = input.distanceKm ?? 1
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: `Leveling (${result.method === 'rise_and_fall' ? 'Rise & Fall' : 'Height of Collimation'})`,
     given: [
       { label: 'Opening RL', value: `${fullNumber(input.openingRL)} m` },
@@ -68,5 +68,10 @@ export function levelingSolution(input: LevelingInput, result: LevelingResult): 
       ...(input.closingRL !== undefined ? [{ label: 'Misclosure', value: formatDistanceMeters(result.misclosure) }] : []),
     ],
   })
+
+  return solveWithSteps(result, solution)
 }
 
+export function levelingSolution(input: LevelingInput, result: LevelingResult): Solution {
+  return levelingSolved(input, result).solution
+}

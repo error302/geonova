@@ -1,11 +1,11 @@
 import { gradeFromElevations } from '@/lib/engine/grade'
-import { createSolutionV1, type Solution } from '@/lib/engine/solution/solutionBuilder'
+import { createSolutionV1, solveWithSteps, type Solved, type Solution } from '@/lib/engine/solution/solutionBuilder'
 import { fullNumber } from '@/lib/solution/format'
 
-export function gradeSolution(input: { elev1: number; elev2: number; horizontalDistance: number }): Solution {
+export function gradeSolved(input: { elev1: number; elev2: number; horizontalDistance: number }): Solved<ReturnType<typeof gradeFromElevations>> & { solution: Solution } {
   const r = gradeFromElevations(input)
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Grade / Slope',
     given: [
       { label: 'Elevation 1', value: `${fullNumber(input.elev1)} m` },
@@ -50,5 +50,10 @@ export function gradeSolution(input: { elev1: number; elev2: number; horizontalD
       { label: 'Gradient ratio', value: `1 : ${isFinite(r.ratio) ? r.ratio.toFixed(2) : '∞'}` },
     ],
   })
+
+  return solveWithSteps(r, solution)
 }
 
+export function gradeSolution(input: { elev1: number; elev2: number; horizontalDistance: number }): Solution {
+  return gradeSolved(input).solution
+}

@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 
-import SolutionRenderer from '@/components/SolutionRenderer'
-import type { Solution } from '@/lib/solution/schema'
-import { pegFromStationSolution, bearingDistanceSolution } from '@/lib/engine/solution/wrappers/settingOut'
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
+import { pegFromStationSolved, bearingDistanceSolved } from '@/lib/engine/solution/wrappers/settingOut'
 
 export default function SettingOutCalculator() {
   const [mode, setMode] = useState<'coords' | 'bearing'>('coords')
@@ -14,7 +14,8 @@ export default function SettingOutCalculator() {
   const [distance, setDistance] = useState('')
   const [target, setTarget] = useState({ e: '', n: '' })
 
-  const [solution, setSolution] = useState<Solution | null>(null)
+  const [steps, setSteps] = useState<SolutionStep[] | null>(null)
+  const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined)
 
   const calculatePegCoords = () => {
     const e1 = parseFloat(station.e)
@@ -25,7 +26,9 @@ export default function SettingOutCalculator() {
     const bs = parseFloat(bearing.s) || 0
     if (!Number.isFinite(e1) || !Number.isFinite(n1) || !Number.isFinite(d)) return
 
-    setSolution(pegFromStationSolution({ stationE: e1, stationN: n1, bearingD: bd, bearingM: bm, bearingS: bs, distance: d }))
+    const s = pegFromStationSolved({ stationE: e1, stationN: n1, bearingD: bd, bearingM: bm, bearingS: bs, distance: d })
+    setSteps(s.steps)
+    setSolutionTitle(s.solution.title)
   }
 
   const calculateBearingDistance = () => {
@@ -35,7 +38,9 @@ export default function SettingOutCalculator() {
     const n2 = parseFloat(target.n)
     if (!Number.isFinite(e1) || !Number.isFinite(n1) || !Number.isFinite(e2) || !Number.isFinite(n2)) return
 
-    setSolution(bearingDistanceSolution({ stationE: e1, stationN: n1, targetE: e2, targetN: n2 }))
+    const s = bearingDistanceSolved({ stationE: e1, stationN: n1, targetE: e2, targetN: n2 })
+    setSteps(s.steps)
+    setSolutionTitle(s.solution.title)
   }
 
   return (
@@ -44,10 +49,10 @@ export default function SettingOutCalculator() {
       <p className="text-sm text-[var(--text-muted)] mb-8">Blueprint format: Given → To Find → Solution → Check → Result</p>
 
       <div className="flex gap-4 mb-6 flex-wrap">
-        <button onClick={() => { setMode('coords'); setSolution(null) }} className={`btn ${mode === 'coords' ? 'btn-primary' : 'btn-secondary'}`}>
+        <button onClick={() => { setMode('coords'); setSteps(null); setSolutionTitle(undefined) }} className={`btn ${mode === 'coords' ? 'btn-primary' : 'btn-secondary'}`}>
           Station + Bearing → Peg
         </button>
-        <button onClick={() => { setMode('bearing'); setSolution(null) }} className={`btn ${mode === 'bearing' ? 'btn-primary' : 'btn-secondary'}`}>
+        <button onClick={() => { setMode('bearing'); setSteps(null); setSolutionTitle(undefined) }} className={`btn ${mode === 'bearing' ? 'btn-primary' : 'btn-secondary'}`}>
           Station → Target
         </button>
       </div>
@@ -118,8 +123,8 @@ export default function SettingOutCalculator() {
           </div>
         )}
 
-        {solution ? (
-          <SolutionRenderer solution={solution} />
+        {steps ? (
+          <SolutionStepsRenderer title={solutionTitle} steps={steps} />
         ) : (
           <div className="card">
             <div className="card-header">

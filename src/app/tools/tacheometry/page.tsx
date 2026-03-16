@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import SolutionRenderer from '@/components/SolutionRenderer'
-import type { Solution } from '@/lib/solution/schema'
-import { tacheometrySolution } from '@/lib/engine/solution/wrappers/tacheometry'
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
+import { tacheometrySolved } from '@/lib/engine/solution/wrappers/tacheometry'
 
 export default function TacheometryCalculator() {
   const [inputs, setInputs] = useState({
@@ -17,7 +17,8 @@ export default function TacheometryCalculator() {
     k: '100',         // multiplying constant
     c: '0'            // additive constant
   });
-  const [result, setResult] = useState<Solution | null>(null);
+  const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {
     const HI = parseFloat(inputs.hi);
@@ -33,17 +34,17 @@ export default function TacheometryCalculator() {
 
     if (isNaN(HI) || isNaN(upper) || isNaN(middle) || isNaN(lower)) return;
 
-    setResult(
-      tacheometrySolution({
-        instrumentHeight: HI,
-        upper,
-        middle,
-        lower,
-        verticalAngle: { degrees: deg, minutes: min, seconds: sec, direction: 'N' },
-        K,
-        C,
-      })
-    )
+    const s = tacheometrySolved({
+      instrumentHeight: HI,
+      upper,
+      middle,
+      lower,
+      verticalAngle: { degrees: deg, minutes: min, seconds: sec, direction: 'N' },
+      K,
+      C,
+    })
+    setSteps(s.steps)
+    setSolutionTitle(s.solution.title)
   };
 
   return (
@@ -95,7 +96,7 @@ export default function TacheometryCalculator() {
           </div>
         </div>
 
-        {result ? <SolutionRenderer solution={result} /> : null}
+        {steps ? <SolutionStepsRenderer title={solutionTitle} steps={steps} /> : null}
       </div>
     </div>
   );

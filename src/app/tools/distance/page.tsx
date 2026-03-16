@@ -1,16 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import SolutionRenderer from '@/components/SolutionRenderer';
-import type { Solution } from '@/lib/solution/schema';
-import { distanceBearingSolutionFromCoords, slopeReductionSolution } from '@/lib/engine/solution/wrappers/distance';
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer';
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder';
+import { distanceBearingSolvedFromCoords, slopeReductionSolved } from '@/lib/engine/solution/wrappers/distance';
 
 export default function DistanceCalculator() {
   const [mode, setMode] = useState<'coords' | 'slope'>('coords');
   const [p1, setP1] = useState({ n: '', e: '' });
   const [p2, setP2] = useState({ n: '', e: '' });
   const [slope, setSlope] = useState({ dist: '', angle: '' });
-  const [solution, setSolution] = useState<Solution | null>(null);
+  const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {
     if (mode === 'coords') {
@@ -18,12 +19,16 @@ export default function DistanceCalculator() {
       const n2 = parseFloat(p2.n), e2 = parseFloat(p2.e);
       if (isNaN(n1) || isNaN(e1) || isNaN(n2) || isNaN(e2)) return;
 
-      setSolution(distanceBearingSolutionFromCoords({ e1, n1, e2, n2 }))
+      const s = distanceBearingSolvedFromCoords({ e1, n1, e2, n2 })
+      setSteps(s.steps)
+      setSolutionTitle(s.solution.title)
     } else {
       const sd = parseFloat(slope.dist), va = parseFloat(slope.angle);
       if (isNaN(sd) || isNaN(va)) return;
 
-      setSolution(slopeReductionSolution({ slopeDistance: sd, verticalAngleDeg: va }))
+      const s = slopeReductionSolved({ slopeDistance: sd, verticalAngleDeg: va })
+      setSteps(s.steps)
+      setSolutionTitle(s.solution.title)
     }
   };
 
@@ -34,13 +39,13 @@ export default function DistanceCalculator() {
 
       <div className="flex gap-4 mb-6">
         <button 
-          onClick={() => { setMode('coords'); setSolution(null); }}
+          onClick={() => { setMode('coords'); setSteps(null); setSolutionTitle(undefined); }}
           className={`btn ${mode === 'coords' ? 'btn-primary' : 'btn-secondary'}`}
         >
           By Coordinates
         </button>
         <button 
-          onClick={() => { setMode('slope'); setSolution(null); }}
+          onClick={() => { setMode('slope'); setSteps(null); setSolutionTitle(undefined); }}
           className={`btn ${mode === 'slope' ? 'btn-primary' : 'btn-secondary'}`}
         >
           By Slope Distance
@@ -100,7 +105,7 @@ export default function DistanceCalculator() {
           </button>
         </div>
 
-        {solution ? <SolutionRenderer solution={solution} /> : null}
+        {steps ? <SolutionStepsRenderer title={solutionTitle} steps={steps} /> : null}
       </div>
     </div>
   );

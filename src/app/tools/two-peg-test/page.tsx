@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import SolutionRenderer from '@/components/SolutionRenderer'
-import type { Solution } from '@/lib/solution/schema'
-import { twoPegTestSolution } from '@/lib/engine/solution/wrappers/twoPegTest'
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
+import { twoPegTestSolved } from '@/lib/engine/solution/wrappers/twoPegTest'
 
 export default function TwoPegTestCalculator() {
   const [inputs, setInputs] = useState({
@@ -12,7 +12,8 @@ export default function TwoPegTestCalculator() {
     a2: '',  // Staff at A from position 2
     b2: ''   // Staff at B from position 2
   });
-  const [result, setResult] = useState<Solution | null>(null);
+  const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {
     const A1 = parseFloat(inputs.a1);
@@ -22,7 +23,9 @@ export default function TwoPegTestCalculator() {
 
     if (isNaN(A1) || isNaN(B1) || isNaN(A2) || isNaN(B2)) return;
 
-    setResult(twoPegTestSolution({ A1, B1, A2, B2 }));
+    const s = twoPegTestSolved({ A1, B1, A2, B2 })
+    setSteps(s.steps)
+    setSolutionTitle(s.solution.title)
   };
 
   return (
@@ -64,7 +67,7 @@ export default function TwoPegTestCalculator() {
           </div>
         </div>
 
-        {result ? <SolutionRenderer solution={result} /> : null}
+        {steps ? <SolutionStepsRenderer title={solutionTitle} steps={steps} /> : null}
       </div>
     </div>
   );

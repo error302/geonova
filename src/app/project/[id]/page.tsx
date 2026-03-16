@@ -373,7 +373,12 @@ export default function ProjectPage({ params }: PageProps) {
     }
   }, [project, params.id])
 
-  const handleParcelCreated = async () => {
+  const handleParcelCreated = async (created?: Parcel) => {
+    if (created) {
+      setParcels(prev => [created, ...prev.filter(p => p.id !== created.id)])
+      setParcelData(created)
+      return
+    }
     try {
       const { data } = await supabase
         .from('parcels')

@@ -1,23 +1,23 @@
 import { dmsToDecimal } from '@/lib/engine/angles'
 import { distanceBearing, polarPoint } from '@/lib/engine/distance'
-import { createSolutionV1, type Solution } from '@/lib/engine/solution/solutionBuilder'
+import { createSolutionV1, solveWithSteps, type Solved, type Solution } from '@/lib/engine/solution/solutionBuilder'
 import { formatBearingWcbDms, formatCoordMeters, formatDeltaMeters, formatDistanceMeters, fullNumber } from '@/lib/solution/format'
 
-export function pegFromStationSolution(input: {
+export function pegFromStationSolved(input: {
   stationE: number
   stationN: number
   bearingD: number
   bearingM: number
   bearingS: number
   distance: number
-}): Solution {
+}): Solved<{ peg: ReturnType<typeof polarPoint>; bearingDeg: number; deltaE: number; deltaN: number }> & { solution: Solution } {
   const bearingDec = dmsToDecimal({ degrees: input.bearingD, minutes: input.bearingM, seconds: input.bearingS, direction: 'N' })
   const peg = polarPoint({ easting: input.stationE, northing: input.stationN }, bearingDec, input.distance)
   const dE = peg.easting - input.stationE
   const dN = peg.northing - input.stationN
   const checkDist = Math.sqrt(dE * dE + dN * dN)
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Station + Bearing + Distance → Peg Coordinates',
     given: [
       { label: 'Station (E₁, N₁)', value: `(${fullNumber(input.stationE)}, ${fullNumber(input.stationN)}) m` },
@@ -50,16 +50,31 @@ export function pegFromStationSolution(input: {
       { label: 'ΔN', value: formatDeltaMeters(dN) },
     ],
   })
+
+  return solveWithSteps({ peg, bearingDeg: bearingDec, deltaE: dE, deltaN: dN }, solution)
 }
 
-export function bearingDistanceSolution(input: { stationE: number; stationN: number; targetE: number; targetN: number }): Solution {
+export function pegFromStationSolution(input: {
+  stationE: number
+  stationN: number
+  bearingD: number
+  bearingM: number
+  bearingS: number
+  distance: number
+}): Solution {
+  return pegFromStationSolved(input).solution
+}
+
+export function bearingDistanceSolved(input: { stationE: number; stationN: number; targetE: number; targetN: number }): Solved<ReturnType<typeof distanceBearing> & { moveEW: string; moveNS: string }> & {
+  solution: Solution
+} {
   const r = distanceBearing({ easting: input.stationE, northing: input.stationN }, { easting: input.targetE, northing: input.targetN })
   const check = Math.abs(r.distance * r.distance - (r.deltaE * r.deltaE + r.deltaN * r.deltaN))
 
   const moveEW = `${r.deltaE >= 0 ? 'E' : 'W'} ${Math.abs(r.deltaE).toFixed(2)} m`
   const moveNS = `${r.deltaN >= 0 ? 'N' : 'S'} ${Math.abs(r.deltaN).toFixed(2)} m`
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Station → Target (Bearing & Distance)',
     given: [
       { label: 'Station (E₁, N₁)', value: `(${fullNumber(input.stationE)}, ${fullNumber(input.stationN)}) m` },
@@ -100,5 +115,10 @@ export function bearingDistanceSolution(input: { stationE: number; stationN: num
       { label: 'ΔN', value: formatDeltaMeters(r.deltaN) },
     ],
   })
+
+  return solveWithSteps({ ...r, moveEW, moveNS }, solution)
 }
 
+export function bearingDistanceSolution(input: { stationE: number; stationN: number; targetE: number; targetN: number }): Solution {
+  return bearingDistanceSolved(input).solution
+}

@@ -1,14 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import SolutionRenderer from '@/components/SolutionRenderer'
-import type { Solution } from '@/lib/solution/schema'
-import { distanceBearingSolutionFromCoords } from '@/lib/engine/solution/wrappers/distance'
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
+import { distanceBearingSolvedFromCoords } from '@/lib/engine/solution/wrappers/distance'
 
 export default function MissingLineCalculator() {
   const [pointA, setPointA] = useState({ e: '', n: '' });
   const [pointB, setPointB] = useState({ e: '', n: '' });
-  const [result, setResult] = useState<Solution | null>(null);
+  const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {
     const e1 = parseFloat(pointA.e);
@@ -18,7 +19,9 @@ export default function MissingLineCalculator() {
 
     if (isNaN(e1) || isNaN(n1) || isNaN(e2) || isNaN(n2)) return;
 
-    setResult(distanceBearingSolutionFromCoords({ e1, n1, e2, n2 }));
+    const s = distanceBearingSolvedFromCoords({ e1, n1, e2, n2 })
+    setSteps(s.steps)
+    setSolutionTitle(s.solution.title)
   };
 
   return (
@@ -54,7 +57,7 @@ export default function MissingLineCalculator() {
           </div>
         </div>
 
-        {result ? <SolutionRenderer solution={result} /> : null}
+        {steps ? <SolutionStepsRenderer title={solutionTitle} steps={steps} /> : null}
       </div>
     </div>
   );

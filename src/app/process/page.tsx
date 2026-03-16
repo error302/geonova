@@ -2,11 +2,11 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { interpretCSV, CSVInterpretResult } from '@/lib/parsers/csvSurveyInterpreter'
-import SolutionRenderer from '@/components/SolutionRenderer'
-import type { Solution } from '@/lib/solution/schema'
-import { bowditchAdjustmentSolutionFromResult } from '@/lib/engine/solution/wrappers/traverse'
-import { levelingSolution } from '@/lib/engine/solution/wrappers/leveling'
-import { radiationSolution } from '@/lib/engine/solution/wrappers/radiation'
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
+import { bowditchAdjustmentSolvedFromResult } from '@/lib/engine/solution/wrappers/traverse'
+import { levelingSolved } from '@/lib/engine/solution/wrappers/leveling'
+import { radiationSolved } from '@/lib/engine/solution/wrappers/radiation'
 import { 
   detectSurveyType, 
   runWorkflow, 
@@ -34,7 +34,7 @@ export default function ProcessPage() {
   const [manualType, setManualType] = useState<string>('')
   const [selectedProfile, setSelectedProfile] = useState<ToleranceProfile>('cadastral')
   const [workflowResult, setWorkflowResult] = useState<WorkflowResult | null>(null)
-  const [workflowSolutions, setWorkflowSolutions] = useState<Solution[]>([])
+  const [workflowSolutions, setWorkflowSolutions] = useState<Array<{ title?: string; steps: SolutionStep[] }>>([])
   const [toleranceResult, setToleranceResult] = useState<ToleranceCheckResult | null>(null)
   const [projects, setProjects] = useState<any[]>([])
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
@@ -134,7 +134,7 @@ export default function ProcessPage() {
       const surveyType = detectSurveyTypeFromDataset(dataset)
       let result: WorkflowResult
 
-      const solutions: Solution[] = []
+      const solutions: Array<{ title?: string; steps: SolutionStep[] }> = []
 
       if (surveyType === 'traverse') {
         const traverseData: TraverseWorkflowData = {
@@ -153,7 +153,8 @@ export default function ProcessPage() {
         result = runWorkflow('traverse', traverseData)
         if (result.success && result.results?.legs) {
           try {
-            solutions.push(bowditchAdjustmentSolutionFromResult(result.results))
+            const s = bowditchAdjustmentSolvedFromResult(result.results)
+            solutions.push({ title: s.solution.title, steps: s.steps })
           } catch {}
         }
       } else if (surveyType === 'leveling') {
@@ -169,12 +170,11 @@ export default function ProcessPage() {
         result = runWorkflow('leveling', levelingData)
         if (result.success && result.results?.readings) {
           try {
-            solutions.push(
-              levelingSolution(
-                { readings: levelingData.readings, openingRL: levelingData.openingRL, closingRL: levelingData.closingRL, method: 'rise_and_fall', distanceKm: 1 },
-                result.results
-              )
+            const s = levelingSolved(
+              { readings: levelingData.readings, openingRL: levelingData.openingRL, closingRL: levelingData.closingRL, method: 'rise_and_fall', distanceKm: 1 },
+              result.results
             )
+            solutions.push({ title: s.solution.title, steps: s.steps })
           } catch {}
         }
       } else if (surveyType === 'radiation') {
@@ -194,13 +194,12 @@ export default function ProcessPage() {
         if (radiationData.observations.length > 0) {
           for (const obs of radiationData.observations.slice(0, 3)) {
             try {
-              solutions.push(
-                radiationSolution({
-                  station: { easting: radiationData.station.easting, northing: radiationData.station.northing },
-                  bearingDeg: obs.bearing,
-                  distance: obs.distance,
-                })
-              )
+              const s = radiationSolved({
+                station: { easting: radiationData.station.easting, northing: radiationData.station.northing },
+                bearingDeg: obs.bearing,
+                distance: obs.distance,
+              })
+              solutions.push({ title: s.solution.title, steps: s.steps })
             } catch {}
           }
         }
@@ -499,7 +498,7 @@ export default function ProcessPage() {
               {workflowSolutions.length > 0 ? (
                 <div className="space-y-6">
                   {workflowSolutions.map((s, i) => (
-                    <SolutionRenderer key={i} solution={s} />
+                    <SolutionStepsRenderer key={i} title={s.title} steps={s.steps} />
                   ))}
                 </div>
               ) : null}

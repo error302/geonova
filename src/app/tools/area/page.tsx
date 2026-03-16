@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { Point2D } from '@/lib/engine/types';
-import SolutionRenderer from '@/components/SolutionRenderer';
-import type { Solution } from '@/lib/solution/schema';
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer';
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder';
 import { coordinateAreaSolution, offsetAreaSolution } from '@/lib/engine/solution/wrappers/area';
 
 interface PointInput {
@@ -22,7 +22,8 @@ export default function AreaCalculator() {
   const [method, setMethod] = useState<'coordinate' | 'trapezoidal' | 'simpsons'>('coordinate');
   const [offsets, setOffsets] = useState('10, 15, 18, 22, 20, 16');
   const [interval, setInterval] = useState('20');
-  const [solution, setSolution] = useState<Solution | null>(null);
+  const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const addPoint = () => {
     setPoints([...points, { id: Date.now(), n: '', e: '' }]);
@@ -46,13 +47,15 @@ export default function AreaCalculator() {
       
       if (pts.length >= 3) {
         const out = coordinateAreaSolution(pts)
-        setSolution(out.solution)
+        setSteps(out.steps)
+        setSolutionTitle(out.solution.title)
       }
     } else {
       const ord = offsets.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
       const int = parseFloat(interval);
       const out = offsetAreaSolution({ ordinates: ord, interval: int, method: method === 'trapezoidal' ? 'trapezoidal' : 'simpsons' })
-      setSolution(out.solution)
+      setSteps(out.steps)
+      setSolutionTitle(out.solution.title)
     }
   };
 
@@ -63,19 +66,19 @@ export default function AreaCalculator() {
 
       <div className="flex gap-4 mb-6 flex-wrap">
         <button 
-          onClick={() => { setMethod('coordinate'); setSolution(null); }}
+          onClick={() => { setMethod('coordinate'); setSteps(null); setSolutionTitle(undefined); }}
           className={`btn ${method === 'coordinate' ? 'btn-primary' : 'btn-secondary'}`}
         >
           Coordinate Method
         </button>
         <button 
-          onClick={() => { setMethod('trapezoidal'); setSolution(null); }}
+          onClick={() => { setMethod('trapezoidal'); setSteps(null); setSolutionTitle(undefined); }}
           className={`btn ${method === 'trapezoidal' ? 'btn-primary' : 'btn-secondary'}`}
         >
           Trapezoidal
         </button>
         <button 
-          onClick={() => { setMethod('simpsons'); setSolution(null); }}
+          onClick={() => { setMethod('simpsons'); setSteps(null); setSolutionTitle(undefined); }}
           className={`btn ${method === 'simpsons' ? 'btn-primary' : 'btn-secondary'}`}
         >
           Simpson's Rule
@@ -137,7 +140,7 @@ export default function AreaCalculator() {
           </button>
         </div>
 
-        {solution ? <SolutionRenderer solution={solution} /> : null}
+        {steps ? <SolutionStepsRenderer title={solutionTitle} steps={steps} /> : null}
       </div>
     </div>
   );

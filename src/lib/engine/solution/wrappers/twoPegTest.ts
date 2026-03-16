@@ -1,18 +1,18 @@
 import { twoPegTest } from '@/lib/engine/twoPegTest'
-import { createSolutionV1, type Solution } from '@/lib/engine/solution/solutionBuilder'
+import { createSolutionV1, solveWithSteps, type Solved, type Solution } from '@/lib/engine/solution/solutionBuilder'
 import { fullNumber } from '@/lib/solution/format'
 
-export function twoPegTestSolution(input: {
+export function twoPegTestSolved(input: {
   A1: number
   B1: number
   A2: number
   B2: number
   baselineMeters?: number
   allowableMmPer100m?: number
-}): Solution {
+}): Solved<ReturnType<typeof twoPegTest>> & { solution: Solution } {
   const r = twoPegTest(input)
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Two Peg Test (Collimation Error)',
     given: [
       { label: 'A1 (Pos. 1)', value: `${fullNumber(input.A1)} m` },
@@ -59,5 +59,17 @@ export function twoPegTestSolution(input: {
       { label: 'Instrument status', value: r.pass ? 'PASS' : 'FAIL' },
     ],
   })
+
+  return solveWithSteps(r, solution)
 }
 
+export function twoPegTestSolution(input: {
+  A1: number
+  B1: number
+  A2: number
+  B2: number
+  baselineMeters?: number
+  allowableMmPer100m?: number
+}): Solution {
+  return twoPegTestSolved(input).solution
+}

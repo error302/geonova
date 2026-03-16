@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import SolutionRenderer from '@/components/SolutionRenderer'
-import type { Solution } from '@/lib/solution/schema'
-import { compoundCurveSolution, reverseCurveSolution, simpleCurveSolution } from '@/lib/engine/solution/wrappers/curves'
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
+import { compoundCurveSolved, reverseCurveSolved, simpleCurveSolved } from '@/lib/engine/solution/wrappers/curves'
 
 type CurveType = 'simple' | 'compound' | 'reverse';
 
@@ -25,7 +25,7 @@ export default function CurvesCalculator() {
     r2_rev: '300',
     abDistance: '150'
   });
-  const [result, setResult] = useState<null | { type: CurveType; solution: Solution; stakePoints?: any[] }>(null);
+  const [result, setResult] = useState<null | { type: CurveType; title?: string; steps: SolutionStep[]; stakePoints?: any[] }>(null);
 
   const calculate = () => {
     if (curveType === 'simple') {
@@ -37,14 +37,14 @@ export default function CurvesCalculator() {
 
       if (isNaN(R) || isNaN(deflectionDec) || isNaN(piChainage) || isNaN(interval)) return;
 
-      const { solution, stakeout } = simpleCurveSolution({
+      const s = simpleCurveSolved({
         radius: R,
         deflectionDeg: deflectionDec,
         piChainage,
         interval,
       })
 
-      setResult({ type: 'simple', solution, stakePoints: stakeout.points })
+      setResult({ type: 'simple', title: s.solution.title, steps: s.steps, stakePoints: s.result.points })
     } else if (curveType === 'compound') {
       const R1 = parseFloat(input.r1);
       const R2 = parseFloat(input.r2);
@@ -53,16 +53,16 @@ export default function CurvesCalculator() {
       const commonChainage = parseFloat(input.commonChainage);
 
       if ([R1, R2, delta1, delta2, commonChainage].some(n => isNaN(n))) return;
-      const solution = compoundCurveSolution({ R1, R2, delta1Deg: delta1, delta2Deg: delta2, junctionChainage: commonChainage })
-      setResult({ type: 'compound', solution })
+      const s = compoundCurveSolved({ R1, R2, delta1Deg: delta1, delta2Deg: delta2, junctionChainage: commonChainage })
+      setResult({ type: 'compound', title: s.solution.title, steps: s.steps })
     } else if (curveType === 'reverse') {
       const R1 = parseFloat(input.r1_rev);
       const R2 = parseFloat(input.r2_rev);
       const AB = parseFloat(input.abDistance);
 
       if (isNaN(R1) || isNaN(R2) || isNaN(AB)) return;
-      const solution = reverseCurveSolution({ R1, R2, AB })
-      setResult({ type: 'reverse', solution })
+      const s = reverseCurveSolved({ R1, R2, AB })
+      setResult({ type: 'reverse', title: s.solution.title, steps: s.steps })
     }
   };
 
@@ -126,7 +126,7 @@ export default function CurvesCalculator() {
 
         {result && (
           <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
-            <SolutionRenderer solution={result.solution} />
+            <SolutionStepsRenderer title={result.title} steps={result.steps} />
 
             {result.type === 'simple' && result.stakePoints && result.stakePoints.length > 0 ? (
               <div className="mt-6">

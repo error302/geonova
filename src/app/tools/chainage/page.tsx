@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import SolutionRenderer from '@/components/SolutionRenderer'
-import type { Solution } from '@/lib/solution/schema'
-import { chainageTableSolution, computeChainageTable, reverseChainageSolution } from '@/lib/engine/solution/wrappers/chainage'
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
+import { chainageTableSolved, computeChainageTable, reverseChainageSolved } from '@/lib/engine/solution/wrappers/chainage'
 
 interface AlignmentPoint {
   id: string;
@@ -32,8 +32,10 @@ export default function ChainageCalculator() {
   const [reverseChainage, setReverseChainage] = useState('');
   const [reverseResult, setReverseResult] = useState<{ easting: number; northing: number } | null>(null);
   const [results, setResults] = useState<ChainageResult[]>([]);
-  const [solution, setSolution] = useState<Solution | null>(null)
-  const [reverseSolutionState, setReverseSolutionState] = useState<Solution | null>(null)
+  const [steps, setSteps] = useState<SolutionStep[] | null>(null)
+  const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined)
+  const [reverseSteps, setReverseSteps] = useState<SolutionStep[] | null>(null)
+  const [reverseTitle, setReverseTitle] = useState<string | undefined>(undefined)
 
   const addPoint = () => {
     const newId = Date.now().toString();
@@ -73,18 +75,22 @@ export default function ChainageCalculator() {
     })
 
     setResults(table)
-    setSolution(chainageTableSolution({ startChainage: startCh, start: { easting: startE, northing: startN }, alignmentCount: alignment.length, table }))
+    const s = chainageTableSolved({ startChainage: startCh, start: { easting: startE, northing: startN }, alignmentCount: alignment.length, table })
+    setSteps(s.steps)
+    setSolutionTitle(s.solution.title)
     setReverseResult(null)
-    setReverseSolutionState(null)
+    setReverseSteps(null)
+    setReverseTitle(undefined)
   };
 
   const calculateReverse = () => {
     const targetCh = parseFloat(reverseChainage);
     if (isNaN(targetCh) || results.length === 0) return;
 
-    const r = reverseChainageSolution({ targetChainage: targetCh, table: results })
-    setReverseResult(r.point)
-    setReverseSolutionState(r.solution)
+    const s = reverseChainageSolved({ targetChainage: targetCh, table: results })
+    setReverseResult(s.result)
+    setReverseSteps(s.steps)
+    setReverseTitle(s.solution.title)
   };
 
   const formatChainage = (value: number): string => {
@@ -156,9 +162,9 @@ export default function ChainageCalculator() {
                   <p className="font-mono text-gray-200">N: {reverseResult.northing.toFixed(4)} m</p>
                 </div>
               )}
-              {reverseSolutionState ? (
+              {reverseSteps ? (
                 <div className="mt-4">
-                  <SolutionRenderer solution={reverseSolutionState} />
+                  <SolutionStepsRenderer title={reverseTitle} steps={reverseSteps} />
                 </div>
               ) : null}
             </div>
@@ -167,9 +173,9 @@ export default function ChainageCalculator() {
 
         {results.length > 0 && (
           <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
-            {solution ? (
+            {steps ? (
               <div className="mb-6">
-                <SolutionRenderer solution={solution} />
+                <SolutionStepsRenderer title={solutionTitle} steps={steps} />
               </div>
             ) : null}
             <h3 className="font-semibold text-gray-200 mb-4">Chainage Table</h3>

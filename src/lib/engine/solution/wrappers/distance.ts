@@ -1,12 +1,12 @@
 import { distanceBearing, gradient, horizontalDistance, verticalDistance } from '@/lib/engine/distance'
-import { createSolutionV1, type Solution } from '@/lib/engine/solution/solutionBuilder'
+import { createSolutionV1, solveWithSteps, type Solved, type Solution } from '@/lib/engine/solution/solutionBuilder'
 import { formatBearingWcbDms, formatDeltaMeters, formatDistanceMeters, fullNumber } from '@/lib/solution/format'
 
-export function distanceBearingSolutionFromCoords(input: { e1: number; n1: number; e2: number; n2: number }): Solution {
+export function distanceBearingSolvedFromCoords(input: { e1: number; n1: number; e2: number; n2: number }): Solved<ReturnType<typeof distanceBearing>> & { solution: Solution } {
   const r = distanceBearing({ easting: input.e1, northing: input.n1 }, { easting: input.e2, northing: input.n2 })
   const check = Math.abs(r.distance * r.distance - (r.deltaE * r.deltaE + r.deltaN * r.deltaN))
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Distance & Bearing (WCB)',
     given: [
       { label: 'Point A (E, N)', value: `(${fullNumber(input.e1)}, ${fullNumber(input.n1)}) m` },
@@ -44,14 +44,24 @@ export function distanceBearingSolutionFromCoords(input: { e1: number; n1: numbe
       { label: 'ΔN', value: formatDeltaMeters(r.deltaN) },
     ],
   })
+
+  return solveWithSteps(r, solution)
 }
 
-export function slopeReductionSolution(input: { slopeDistance: number; verticalAngleDeg: number }): Solution {
+export function distanceBearingSolutionFromCoords(input: { e1: number; n1: number; e2: number; n2: number }): Solution {
+  return distanceBearingSolvedFromCoords(input).solution
+}
+
+export function slopeReductionSolved(input: { slopeDistance: number; verticalAngleDeg: number }): Solved<{
+  horizontal: number
+  vertical: number
+  gradient: ReturnType<typeof gradient>
+}> & { solution: Solution } {
   const h = horizontalDistance(input.slopeDistance, input.verticalAngleDeg)
   const v = verticalDistance(input.slopeDistance, input.verticalAngleDeg)
   const g = gradient(v, h)
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Slope Reduction',
     given: [
       { label: 'Slope distance (SD)', value: `${fullNumber(input.slopeDistance)} m` },
@@ -85,5 +95,10 @@ export function slopeReductionSolution(input: { slopeDistance: number; verticalA
       { label: 'Gradient', value: `${g.percentage.toFixed(2)}% (${g.degrees.toFixed(2)}°)` },
     ],
   })
+
+  return solveWithSteps({ horizontal: h, vertical: v, gradient: g }, solution)
 }
 
+export function slopeReductionSolution(input: { slopeDistance: number; verticalAngleDeg: number }): Solution {
+  return slopeReductionSolved(input).solution
+}

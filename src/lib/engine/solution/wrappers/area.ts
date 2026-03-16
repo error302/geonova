@@ -1,13 +1,11 @@
 import { coordinateArea, simpsonsArea, trapezoidalArea } from '@/lib/engine/area'
 import type { Point2D } from '@/lib/engine/types'
-import { createSolutionV1, type Solution } from '@/lib/engine/solution/solutionBuilder'
+import { createSolutionV1, solveWithSteps, type Solution, type Solved } from '@/lib/engine/solution/solutionBuilder'
 import { formatAreaAcres, formatAreaHa, formatAreaSqm, formatDistanceMeters, fullNumber } from '@/lib/solution/format'
 
-export function coordinateAreaSolution(points: Point2D[]): { result: ReturnType<typeof coordinateArea>; solution: Solution } {
+export function coordinateAreaSolution(points: Point2D[]): Solved<ReturnType<typeof coordinateArea>> & { solution: Solution } {
   const r = coordinateArea(points)
-  return {
-    result: r,
-    solution: createSolutionV1({
+  const solution = createSolutionV1({
       title: 'Coordinate (Shoelace) Method',
       given: [
         { label: 'Vertices (in order)', value: `${points.length} point(s)` },
@@ -37,14 +35,12 @@ export function coordinateAreaSolution(points: Point2D[]): { result: ReturnType<
           ? [{ label: 'Centroid (E, N)', value: `(${fullNumber(r.centroid.easting)}, ${fullNumber(r.centroid.northing)}) m` }]
           : []),
       ],
-    }),
-  }
+    })
+
+  return solveWithSteps(r, solution)
 }
 
-export function offsetAreaSolution(input: { ordinates: number[]; interval: number; method: 'trapezoidal' | 'simpsons' }): {
-  result: any
-  solution: Solution
-} {
+export function offsetAreaSolution(input: { ordinates: number[]; interval: number; method: 'trapezoidal' | 'simpsons' }): Solved<ReturnType<typeof trapezoidalArea>> & { solution: Solution } {
   const ord = input.ordinates
   const int = input.interval
 
@@ -66,22 +62,20 @@ export function offsetAreaSolution(input: { ordinates: number[]; interval: numbe
           result: formatAreaSqm(r.areaSqm),
         }
 
-  return {
-    result: r,
-    solution: createSolutionV1({
-      title: r.method,
-      given: [
-        { label: 'Ordinates', value: ord.map((x) => fullNumber(x)).join(', ') },
-        { label: 'Interval', value: `${fullNumber(int)} m` },
-      ],
-      toFind: ['Area'],
-      solution: [step],
-      result: [
-        { label: 'Area', value: formatAreaSqm(r.areaSqm) },
-        { label: 'Area (ha)', value: formatAreaHa(r.areaHa) },
-        { label: 'Area (acres)', value: formatAreaAcres(r.areaAcres) },
-      ],
-    }),
-  }
-}
+  const solution = createSolutionV1({
+    title: r.method,
+    given: [
+      { label: 'Ordinates', value: ord.map((x) => fullNumber(x)).join(', ') },
+      { label: 'Interval', value: `${fullNumber(int)} m` },
+    ],
+    toFind: ['Area'],
+    solution: [step],
+    result: [
+      { label: 'Area', value: formatAreaSqm(r.areaSqm) },
+      { label: 'Area (ha)', value: formatAreaHa(r.areaHa) },
+      { label: 'Area (acres)', value: formatAreaAcres(r.areaAcres) },
+    ],
+  })
 
+  return solveWithSteps(r, solution)
+}

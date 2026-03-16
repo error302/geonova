@@ -19,7 +19,7 @@ interface ParcelBuilderModalProps {
   projectId: string;
   points: Point[];
   onClose: () => void;
-  onParcelCreated: () => void;
+  onParcelCreated: (parcel?: { id: string; name: string | null; boundary_points: Array<{ name?: string; easting: number; northing: number }>; created_at?: string }) => void;
 }
 
 interface BoundaryPoint {
@@ -117,7 +117,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
     try {
       const { data: { user } } = await supabase.auth.getUser();
 
-      const { error } = await supabase.from('parcels').insert({
+      const { data, error } = await supabase.from('parcels').insert({
         project_id: projectId,
         name: parcelName,
         point_ids: selectedPoints.map(p => p.id),
@@ -131,11 +131,11 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
         area_acres: areaResult.areaAcres,
         perimeter_m: areaResult.perimeter,
         created_by: user?.id
-      });
+      }).select('id, name, boundary_points, created_at').single();
 
       if (error) throw error;
 
-      onParcelCreated();
+      onParcelCreated((data as any) ?? undefined);
       onClose();
     } catch (err) {
       console.error('Error saving parcel:', err);

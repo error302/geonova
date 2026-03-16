@@ -1,14 +1,14 @@
 import { radiation } from '@/lib/engine/cogo'
 import type { Point2D } from '@/lib/engine/types'
-import { createSolutionV1, type Solution } from '@/lib/engine/solution/solutionBuilder'
+import { createSolutionV1, solveWithSteps, type Solved, type Solution } from '@/lib/engine/solution/solutionBuilder'
 import { formatBearingWcbDms, formatCoordMeters, formatDistanceMeters, fullNumber } from '@/lib/solution/format'
 
-export function radiationSolution(input: { station: Point2D; bearingDeg: number; distance: number }): Solution {
+export function radiationSolved(input: { station: Point2D; bearingDeg: number; distance: number }): Solved<ReturnType<typeof radiation> & { deltaE: number; deltaN: number }> & { solution: Solution } {
   const r = radiation(input.station, input.bearingDeg, input.distance)
   const deltaE = r.point.easting - input.station.easting
   const deltaN = r.point.northing - input.station.northing
 
-  return createSolutionV1({
+  const solution = createSolutionV1({
     title: 'Radiation (Polar to Coordinates)',
     given: [
       { label: 'Station (E, N)', value: `(${fullNumber(input.station.easting)}, ${fullNumber(input.station.northing)}) m` },
@@ -38,4 +38,10 @@ export function radiationSolution(input: { station: Point2D; bearingDeg: number;
       { label: 'Bearing (WCB)', value: formatBearingWcbDms(input.bearingDeg) },
     ],
   })
+
+  return solveWithSteps({ ...r, deltaE, deltaN }, solution)
+}
+
+export function radiationSolution(input: { station: Point2D; bearingDeg: number; distance: number }): Solution {
+  return radiationSolved(input).solution
 }

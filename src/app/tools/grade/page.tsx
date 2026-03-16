@@ -1,15 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import SolutionRenderer from '@/components/SolutionRenderer'
-import type { Solution } from '@/lib/solution/schema'
-import { gradeSolution } from '@/lib/engine/solution/wrappers/grade'
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
+import { gradeSolved } from '@/lib/engine/solution/wrappers/grade'
 
 export default function GradeCalculator() {
   const [elev1, setElev1] = useState('');
   const [elev2, setElev2] = useState('');
   const [distance, setDistance] = useState('');
-  const [result, setResult] = useState<Solution | null>(null);
+  const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {
     const e1 = parseFloat(elev1);
@@ -18,7 +19,9 @@ export default function GradeCalculator() {
 
     if (isNaN(e1) || isNaN(e2) || isNaN(d) || d === 0) return;
 
-    setResult(gradeSolution({ elev1: e1, elev2: e2, horizontalDistance: d }));
+    const s = gradeSolved({ elev1: e1, elev2: e2, horizontalDistance: d })
+    setSteps(s.steps)
+    setSolutionTitle(s.solution.title)
   };
 
   return (
@@ -48,7 +51,7 @@ export default function GradeCalculator() {
           </div>
         </div>
 
-        {result ? <SolutionRenderer solution={result} /> : null}
+        {steps ? <SolutionStepsRenderer title={solutionTitle} steps={steps} /> : null}
       </div>
     </div>
   );

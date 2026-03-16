@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import SolutionRenderer from '@/components/SolutionRenderer'
-import type { Solution } from '@/lib/solution/schema'
-import { heightOfObjectSolution } from '@/lib/engine/solution/wrappers/heightOfObject'
+import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
+import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
+import { heightOfObjectSolved } from '@/lib/engine/solution/wrappers/heightOfObject'
 
 export default function HeightOfObjectCalculator() {
   const [inputs, setInputs] = useState({
@@ -12,7 +12,8 @@ export default function HeightOfObjectCalculator() {
     angleBase: { d: '', m: '', s: '' },  // angle to base
     hi: ''            // height of instrument
   });
-  const [result, setResult] = useState<Solution | null>(null);
+  const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {
     const D = parseFloat(inputs.distance);
@@ -27,14 +28,14 @@ export default function HeightOfObjectCalculator() {
 
     if (isNaN(D)) return;
 
-    setResult(
-      heightOfObjectSolution({
-        horizontalDistance: D,
-        angleTop: { degrees: degTop, minutes: minTop, seconds: secTop, direction: 'N' },
-        angleBase: { degrees: degBase, minutes: minBase, seconds: secBase, direction: 'N' },
-        instrumentHeight: HI,
-      })
-    )
+    const s = heightOfObjectSolved({
+      horizontalDistance: D,
+      angleTop: { degrees: degTop, minutes: minTop, seconds: secTop, direction: 'N' },
+      angleBase: { degrees: degBase, minutes: minBase, seconds: secBase, direction: 'N' },
+      instrumentHeight: HI,
+    })
+    setSteps(s.steps)
+    setSolutionTitle(s.solution.title)
   };
 
   return (
@@ -74,7 +75,7 @@ export default function HeightOfObjectCalculator() {
           </div>
         </div>
 
-        {result ? <SolutionRenderer solution={result} /> : null}
+        {steps ? <SolutionStepsRenderer title={solutionTitle} steps={steps} /> : null}
       </div>
     </div>
   );
