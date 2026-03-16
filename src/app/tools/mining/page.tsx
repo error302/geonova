@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { cutFillVolumeFromSignedSections, volumeFromSections } from '@/lib/engine/volume';
 
 interface InclinedLeg {
   id: number;
@@ -181,48 +182,20 @@ export default function MiningSurveyPage() {
 
     if (sections.length < 2) return;
 
-    let volume = 0;
-    const details: any[] = [];
-
     if (volumeMethod === 'endArea') {
-      for (let i = 1; i < sections.length; i++) {
-        const L = sections[i].chainage - sections[i - 1].chainage;
-        const A1 = sections[i - 1].area;
-        const A2 = sections[i].area;
-        const v = (L / 2) * (A1 + A2);
-        volume += v;
-        details.push({ from: sections[i - 1].chainage, to: sections[i].chainage, A1, A2, L, volume: v });
-      }
-    } else if (volumeMethod === 'prismoidal') {
-      for (let i = 1; i < sections.length; i += 2) {
-        if (i + 1 < sections.length) {
-          const L = sections[i + 1].chainage - sections[i - 1].chainage;
-          const A1 = sections[i - 1].area;
-          const Am = sections[i].area;
-          const A2 = sections[i + 1].area;
-          const v = (L / 6) * (A1 + 4 * Am + A2);
-          volume += v;
-          details.push({ from: sections[i - 1].chainage, to: sections[i + 1].chainage, A1, Am, A2, L, volume: v });
-        }
-      }
-    } else {
-      let cutVolume = 0;
-      let fillVolume = 0;
-      for (let i = 1; i < sections.length; i++) {
-        const L = sections[i].chainage - sections[i - 1].chainage;
-        const A1 = sections[i - 1].area;
-        const A2 = sections[i].area;
-        const v = (L / 2) * (A1 + A2);
-        if (A1 >= 0 && A2 >= 0) cutVolume += v;
-        else if (A1 <= 0 && A2 <= 0) fillVolume += Math.abs(v);
-        details.push({ from: sections[i - 1].chainage, to: sections[i].chainage, A1, A2, L, volume: v });
-      }
-      volume = cutVolume - fillVolume;
-      setVolumeResult({ totalVolume: volume, cutVolume, fillVolume, details, method: 'crossSection' });
+      const r = volumeFromSections(sections, 'end_area');
+      setVolumeResult({ totalVolume: r.totalVolume, details: r.segments, method: volumeMethod });
       return;
     }
 
-    setVolumeResult({ totalVolume: volume, details, method: volumeMethod });
+    if (volumeMethod === 'prismoidal') {
+      const r = volumeFromSections(sections, 'prismoidal');
+      setVolumeResult({ totalVolume: r.totalVolume, details: r.segments, method: volumeMethod });
+      return;
+    }
+
+    const r = cutFillVolumeFromSignedSections(sections);
+    setVolumeResult({ totalVolume: r.netVolume, cutVolume: r.cutVolume, fillVolume: r.fillVolume, details: r.segments, method: 'crossSection' });
   };
 
   const addSubsidencePoint = () => {

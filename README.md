@@ -84,6 +84,12 @@ Surveying is mentally exhausting. Long days collecting observations, hours of ma
 - Capacitor (Android mobile)
 - PWA support (works offline)
 
+## Compute Architecture
+
+- Core survey math runs in the TypeScript engine (offline/deterministic).
+- Heavy geospatial processing is optional via a Python compute service exposed through `/api/compute/*`.
+- Details: `C:\\Users\\ADMIN\\Desktop\\Survey -ENG\\GEONOVA_COMPUTE_ARCHITECTURE.md:1`
+
 ## Supported
 
 - **14 Languages**: EN, SW, FR, AR, PT, ES, ZH, JA, RU, HI, ID, AM, HA, DE

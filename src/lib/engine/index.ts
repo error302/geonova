@@ -12,3 +12,4 @@ export * from './geometry';
 export * from './parser';
 export * from './polar';
 export * from './hydrographic';
+export * from './volume';
