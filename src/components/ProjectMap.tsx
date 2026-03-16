@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, Tooltip, Polyline, useMapEvents, useMap, LayersControl } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, Tooltip, Polyline, Polygon, useMapEvents, useMap, LayersControl } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -35,6 +35,11 @@ type MapMode = 'idle' | 'distance' | 'area' | 'traverse'
 
 interface ProjectMapProps {
   points: SurveyPoint[]
+  parcels?: Array<{
+    id: string
+    name: string | null
+    boundary_points: Array<{ easting: number; northing: number }>
+  }>
   utmZone: number
   hemisphere: 'N' | 'S'
   onMapClick?: (lat: number, lon: number) => void
@@ -146,6 +151,7 @@ function FlyToPoints({ points, utmZone, hemisphere }: { points: SurveyPoint[]; u
 
 export default function ProjectMap({ 
   points, 
+  parcels = [],
   utmZone, 
   hemisphere, 
   onMapClick, 
@@ -297,6 +303,22 @@ export default function ProjectMap({
     .filter(p => p.lat !== undefined && p.lon !== undefined)
     .map(p => [p.lat!, p.lon!] as [number, number])
 
+  const parcelPolygons = useMemo(() => {
+    const out: Array<{ id: string; name: string | null; positions: [number, number][] }> = []
+    for (const parcel of parcels) {
+      const raw = Array.isArray((parcel as any).boundary_points) ? (parcel as any).boundary_points : []
+      if (raw.length < 3) continue
+      const positions: [number, number][] = raw
+        .map((p: any) => {
+          const { lat, lon } = utmToGeographic(Number(p.easting), Number(p.northing), Number(utmZone), hemisphere as 'N' | 'S')
+          return [lat, lon] as [number, number]
+        })
+        .filter((x: any) => Number.isFinite(x[0]) && Number.isFinite(x[1]))
+      if (positions.length >= 3) out.push({ id: parcel.id, name: parcel.name ?? null, positions })
+    }
+    return out
+  }, [parcels, utmZone, hemisphere])
+
   // Build polyline for distance
   const distanceLinePositions: [number, number][] = distancePoints.length === 2
     ? [[distancePoints[0].lat!, distancePoints[0].lon!], [distancePoints[1].lat!, distancePoints[1].lon!]]
@@ -354,6 +376,22 @@ export default function ProjectMap({
         <MapClickHandler onClick={handleMapClick} />
         <RecenterMap center={center} />
         <FlyToPoints points={markers} utmZone={utmZone} hemisphere={hemisphere} />
+
+        {/* Parcel polygons */}
+        {parcelPolygons.map((p) => (
+          <Polygon
+            key={p.id}
+            positions={p.positions}
+            pathOptions={{ color: '#22c55e', weight: 2, fillColor: '#22c55e', fillOpacity: 0.12 }}
+          >
+            <Popup>
+              <div className="text-sm">
+                <strong className="text-gray-900">{p.name || 'Parcel'}</strong>
+                <div className="text-gray-600">{p.positions.length} vertices</div>
+              </div>
+            </Popup>
+          </Polygon>
+        ))}
         
         {/* Distance polyline */}
         {distanceLinePositions.length === 2 && (

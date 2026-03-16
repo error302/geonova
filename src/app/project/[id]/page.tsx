@@ -55,6 +55,13 @@ interface Point {
 
 type MapMode = 'idle' | 'distance' | 'area' | 'traverse'
 
+type Parcel = {
+  id: string
+  name: string | null
+  boundary_points: Array<{ name?: string; easting: number; northing: number }>
+  created_at?: string
+}
+
 export default function ProjectPage({ params }: PageProps) {
   const [project, setProject] = useState<Project | null>(null)
   const [points, setPoints] = useState<Point[]>([])
@@ -331,23 +338,37 @@ export default function ProjectPage({ params }: PageProps) {
     }, uploadToStorage)
   }
 
-  const [parcelData, setParcelData] = useState<any>(null)
+  const [parcelData, setParcelData] = useState<Parcel | null>(null)
+  const [parcels, setParcels] = useState<Parcel[]>([])
 
   useEffect(() => {
     if (project) {
-      const fetchParcel = async () => {
+      const fetchParcels = async () => {
         const { data } = await supabase
           .from('parcels')
-          .select('*')
+          .select('id, name, boundary_points, created_at')
           .eq('project_id', params.id)
           .order('created_at', { ascending: false })
-          .limit(1)
-          .single()
-        if (data) setParcelData(data)
+        const list = (data as any[] | null) ?? []
+        setParcels(list as any)
+        setParcelData((list[0] as any) ?? null)
       }
-      fetchParcel()
+      fetchParcels()
     }
   }, [project, params.id])
+
+  const handleParcelCreated = async () => {
+    try {
+      const { data } = await supabase
+        .from('parcels')
+        .select('id, name, boundary_points, created_at')
+        .eq('project_id', params.id)
+        .order('created_at', { ascending: false })
+      const list = (data as any[] | null) ?? []
+      setParcels(list as any)
+      setParcelData((list[0] as any) ?? null)
+    } catch {}
+  }
 
   const handleGenerateSurveyPlan = async () => {
     if (!project) return
@@ -670,6 +691,7 @@ export default function ProjectPage({ params }: PageProps) {
                 control_order: (p as any).control_order,
                 locked: (p as any).locked
               }))}
+              parcels={parcels}
               utmZone={project.utm_zone}
               hemisphere={project.hemisphere}
               onMapClick={handleMapClick}
@@ -855,7 +877,7 @@ export default function ProjectPage({ params }: PageProps) {
           projectId={params.id}
           points={points}
           onClose={() => setShowParcelBuilder(false)}
-          onParcelCreated={() => {}}
+          onParcelCreated={handleParcelCreated}
         />
       )}
     </div>
