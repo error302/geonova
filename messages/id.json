@@ -4,6 +4,7 @@
     "projects": "Proyek",
     "field": "Lapangan",
     "import": "Impor",
+    "more": "Lainnya",
     "ai": "AI",
     "community": "Komunitas",
     "docs": "Dokumen",
@@ -15,6 +16,13 @@
     "register": "Mulai",
     "signOut": "Sign Out",
     "search": "Cari..."
+  },
+  "online": {
+    "coordinateServices": "Layanan Koordinat",
+    "parcelIntelligence": "Intelijen Parcel",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "Pelacak Peralatan",
+    "digitalSignature": "Tanda Tangan Digital"
   },
   "landing": {
     "hero": "Survei Profesional Dibuat Mudah",
@@ -228,11 +236,14 @@
     "loading": "Memuat...",
     "error": "Kesalahan",
     "success": "Berhasil",
+    "pass": "LULUS",
+    "fail": "GAGAL",
     "confirm": "Konfirmasi",
     "back": "Kembali",
     "next": "Lanjut",
     "close": "Tutup",
     "search": "Cari",
+    "noResults": "Tidak ada hasil",
     "filter": "Filter",
     "export": "Ekspor",
     "exportPdf": "PDF",

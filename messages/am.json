@@ -4,6 +4,7 @@
     "projects": "ፕሮጀክቶች",
     "field": "ሜዳ",
     "import": "ጫን",
+    "more": "ተጨማሪ",
     "ai": "AI",
     "community": "ማህበረሰብ",
     "docs": "ሰነዶች",
@@ -15,6 +16,13 @@
     "register": "��ምር",
     "signOut": "Sign Out",
     "search": "ፈልግ..."
+  },
+  "online": {
+    "coordinateServices": "የኮኦርዲኔት አገልግሎቶች",
+    "parcelIntelligence": "የፓርሴል ብልህነት",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "የመሳሪያ መከታተያ",
+    "digitalSignature": "ዲጂታል ፊርማ"
   },
   "landing": {
     "hero": "ሙያዊ ስርዓተ-ስብሪት ቀላል ተደርጎ ይሆን",
@@ -228,11 +236,14 @@
     "loading": "በማስገባት...",
     "error": "ስህተት",
     "success": "ተሳክቷል",
+    "pass": "አልፏል",
+    "fail": "አልተሳካም",
     "confirm": "አረጋግጥ",
     "back": "ተመለስ",
     "next": "ቀጥል",
     "close": "ዝጋ",
     "search": "ፈልግ",
+    "noResults": "ውጤት አልተገኘም",
     "filter": "አፍር",
     "export": "ወጣ",
     "exportPdf": "PDF",

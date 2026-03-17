@@ -40,6 +40,7 @@ interface ProjectMapProps {
     name: string | null
     boundary_points: Array<{ easting: number; northing: number }>
   }>
+  draftParcelBoundary?: Array<{ easting: number; northing: number }> | null
   utmZone: number
   hemisphere: 'N' | 'S'
   onMapClick?: (lat: number, lon: number) => void
@@ -152,6 +153,7 @@ function FlyToPoints({ points, utmZone, hemisphere }: { points: SurveyPoint[]; u
 export default function ProjectMap({ 
   points, 
   parcels = [],
+  draftParcelBoundary = null,
   utmZone, 
   hemisphere, 
   onMapClick, 
@@ -319,6 +321,18 @@ export default function ProjectMap({
     return out
   }, [parcels, utmZone, hemisphere])
 
+  const draftParcelPositions = useMemo(() => {
+    const raw = Array.isArray(draftParcelBoundary) ? draftParcelBoundary : []
+    if (raw.length < 2) return null
+    const positions: [number, number][] = raw
+      .map((p) => {
+        const { lat, lon } = utmToGeographic(Number(p.easting), Number(p.northing), Number(utmZone), hemisphere as 'N' | 'S')
+        return [lat, lon] as [number, number]
+      })
+      .filter((x: any) => Number.isFinite(x[0]) && Number.isFinite(x[1]))
+    return positions.length >= 2 ? positions : null
+  }, [draftParcelBoundary, utmZone, hemisphere])
+
   // Build polyline for distance
   const distanceLinePositions: [number, number][] = distancePoints.length === 2
     ? [[distancePoints[0].lat!, distancePoints[0].lon!], [distancePoints[1].lat!, distancePoints[1].lon!]]
@@ -376,6 +390,22 @@ export default function ProjectMap({
         <MapClickHandler onClick={handleMapClick} />
         <RecenterMap center={center} />
         <FlyToPoints points={markers} utmZone={utmZone} hemisphere={hemisphere} />
+
+        {/* Parcel draft (builder) */}
+        {draftParcelPositions ? (
+          <>
+            {draftParcelPositions.length >= 3 ? (
+              <Polygon
+                positions={draftParcelPositions}
+                pathOptions={{ color: '#E8841A', weight: 2, dashArray: '6 6', fillColor: '#E8841A', fillOpacity: 0.08 }}
+              >
+                <Tooltip sticky>Parcel draft</Tooltip>
+              </Polygon>
+            ) : (
+              <Polyline positions={draftParcelPositions} pathOptions={{ color: '#E8841A', weight: 2, dashArray: '6 6' }} />
+            )}
+          </>
+        ) : null}
 
         {/* Parcel polygons */}
         {parcelPolygons.map((p) => (

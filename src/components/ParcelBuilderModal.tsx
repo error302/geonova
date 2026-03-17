@@ -20,6 +20,7 @@ interface ParcelBuilderModalProps {
   points: Point[];
   onClose: () => void;
   onParcelCreated: (parcel?: { id: string; name: string | null; boundary_points: Array<{ name?: string; easting: number; northing: number }>; created_at?: string }) => void;
+  onDraftBoundaryChange?: (boundary: Array<{ easting: number; northing: number }> | null) => void;
 }
 
 interface BoundaryPoint {
@@ -37,7 +38,7 @@ interface BoundaryLine {
   distance: number;
 }
 
-export default function ParcelBuilderModal({ projectId, points, onClose, onParcelCreated }: ParcelBuilderModalProps) {
+export default function ParcelBuilderModal({ projectId, points, onClose, onParcelCreated, onDraftBoundaryChange }: ParcelBuilderModalProps) {
   const [parcelName, setParcelName] = useState('');
   const [selectedPoints, setSelectedPoints] = useState<BoundaryPoint[]>([]);
   const [isSelecting, setIsSelecting] = useState(true);
@@ -59,6 +60,11 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
       setAreaResult(null);
     }
   }, [selectedPoints]);
+
+  useEffect(() => {
+    onDraftBoundaryChange?.(selectedPoints.length ? selectedPoints.map((p) => ({ easting: p.easting, northing: p.northing })) : null);
+    return () => onDraftBoundaryChange?.(null);
+  }, [selectedPoints, onDraftBoundaryChange]);
 
   const computeParcel = () => {
     if (selectedPoints.length < 3) return;

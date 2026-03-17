@@ -4,6 +4,7 @@
     "projects": "Проекты",
     "field": "Поле",
     "import": "Импорт",
+    "more": "Ещё",
     "ai": "ИИ",
     "community": "Сообщество",
     "docs": "Документы",
@@ -15,6 +16,13 @@
     "register": "Начать",
     "signOut": "Выйти",
     "search": "Поиск..."
+  },
+  "online": {
+    "coordinateServices": "Сервисы координат",
+    "parcelIntelligence": "Интеллект участков",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "Учёт оборудования",
+    "digitalSignature": "Цифровая подпись"
   },
   "landing": {
     "hero": "Профессиональная геодезия — просто",
@@ -228,11 +236,14 @@
     "loading": "Загрузка...",
     "error": "Ошибка",
     "success": "Успешно",
+    "pass": "ПРОЙДЕНО",
+    "fail": "НЕ ПРОЙДЕНО",
     "confirm": "Подтвердить",
     "back": "Назад",
     "next": "Далее",
     "close": "Закрыть",
     "search": "Поиск",
+    "noResults": "Нет результатов",
     "filter": "Фильтр",
     "export": "Экспорт",
     "exportPdf": "PDF",

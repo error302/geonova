@@ -4,6 +4,7 @@
     "projects": "项目",
     "field": "现场",
     "import": "导入",
+    "more": "更多",
     "ai": "AI",
     "community": "社区",
     "docs": "文档",
@@ -15,6 +16,13 @@
     "register": "开始",
     "signOut": "Sign Out",
     "search": "搜索..."
+  },
+  "online": {
+    "coordinateServices": "坐标服务",
+    "parcelIntelligence": "宗地智能",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "设备跟踪",
+    "digitalSignature": "数字签名"
   },
   "landing": {
     "hero": "专业测量简化和",
@@ -231,11 +239,14 @@
     "loading": "加载中...",
     "error": "错误",
     "success": "成功",
+    "pass": "通过",
+    "fail": "失败",
     "confirm": "确认",
     "back": "返回",
     "next": "下一步",
     "close": "关闭",
     "search": "搜索",
+    "noResults": "无结果",
     "filter": "筛选",
     "export": "导出",
     "exportPdf": "PDF",

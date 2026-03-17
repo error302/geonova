@@ -4,6 +4,7 @@
     "projects": "Proyectos",
     "field": "Campo",
     "import": "Importar",
+    "more": "Más",
     "ai": "IA",
     "community": "Comunidad",
     "docs": "Docs",
@@ -15,6 +16,13 @@
     "register": "Comenzar",
     "signOut": "Sign Out",
     "search": "Buscar..."
+  },
+  "online": {
+    "coordinateServices": "Servicios de coordenadas",
+    "parcelIntelligence": "Inteligencia parcelaria",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "Seguimiento de equipos",
+    "digitalSignature": "Firma digital"
   },
   "landing": {
     "hero": "Agrimensura Profesional Simplificada",
@@ -228,11 +236,14 @@
     "loading": "Cargando...",
     "error": "Error",
     "success": "Éxito",
+    "pass": "APROBADO",
+    "fail": "FALLA",
     "confirm": "Confirmar",
     "back": "Atrás",
     "next": "Siguiente",
     "close": "Cerrar",
     "search": "Buscar",
+    "noResults": "Sin resultados",
     "filter": "Filtrar",
     "export": "Exportar",
     "exportPdf": "PDF",

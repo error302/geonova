@@ -4,6 +4,7 @@
     "projects": "परियोजनाएं",
     "field": "क्षेत्र",
     "import": "आयात",
+    "more": "और",
     "ai": "AI",
     "community": "समुदाय",
     "docs": "दस्तावेज़",
@@ -15,6 +16,13 @@
     "register": "शुरू करें",
     "signOut": "Sign Out",
     "search": "खोजें..."
+  },
+  "online": {
+    "coordinateServices": "निर्देशांक सेवाएँ",
+    "parcelIntelligence": "पार्सल इंटेलिजेंस",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "उपकरण ट्रैकर",
+    "digitalSignature": "डिजिटल हस्ताक्षर"
   },
   "landing": {
     "hero": "प्रोफेशनल सर्वेइंग आसान",
@@ -228,11 +236,14 @@
     "loading": "लोड हो रहा है...",
     "error": "त्रुटि",
     "success": "सफल",
+    "pass": "सफल",
+    "fail": "असफल",
     "confirm": "पुष्टि करें",
     "back": "वापस",
     "next": "आगे",
     "close": "बंद करें",
     "search": "खोजें",
+    "noResults": "कोई परिणाम नहीं",
     "filter": "फ़िल्टर",
     "export": "निर्यात",
     "exportPdf": "PDF",

@@ -32,6 +32,9 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
   const [isOnPoint, setIsOnPoint] = useState(false)
   const [stakedPoints, setStakedPoints] = useState<Set<string>>(new Set())
   const [audioEnabled, setAudioEnabled] = useState(true)
+  const [showSettings, setShowSettings] = useState(false)
+  const [toleranceM, setToleranceM] = useState(0.1)
+  const [maxStakeAccuracyM, setMaxStakeAccuracyM] = useState(3)
   const [gpsWarning, setGpsWarning] = useState<string | null>(null)
   const [gpsNotice, setGpsNotice] = useState<string | null>(null)
   const lastBeepTime = useRef<number>(0)
@@ -123,13 +126,13 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
 
     playProximityBeep(result.distance)
 
-    if (result.distance < 0.1) {
+    if (result.distance < toleranceM) {
       setIsOnPoint(true)
       playProximityBeep(0)
     } else {
       setIsOnPoint(false)
     }
-  }, [userLocation, currentPoint, playProximityBeep, utmZone, hemisphere])
+  }, [userLocation, currentPoint, playProximityBeep, utmZone, hemisphere, toleranceM])
 
   useEffect(() => {
     if (userLocation && currentPoint) {
@@ -218,13 +221,31 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
     }
   })()
 
+  const gpsQuality = (() => {
+    if (gpsAccuracy === null) return { label: '—', tone: 'text-gray-400', okToStake: false }
+    if (gpsAccuracy <= 1) return { label: `±${gpsAccuracy.toFixed(0)} m (Good)`, tone: 'text-green-300', okToStake: true }
+    if (gpsAccuracy <= maxStakeAccuracyM) return { label: `±${gpsAccuracy.toFixed(0)} m (Fair)`, tone: 'text-amber-300', okToStake: true }
+    return { label: `±${gpsAccuracy.toFixed(0)} m (Poor)`, tone: 'text-red-300', okToStake: false }
+  })()
+
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col">
       <header className="bg-gray-900 border-b border-gray-800 p-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-100">GPS Stakeout</h1>
+          <div>
+            <h1 className="text-xl font-bold text-gray-100">GPS Stakeout</h1>
+            <p className="text-xs text-gray-500 mt-1 font-mono">
+              Zone {utmZone}{hemisphere} · Tol {toleranceM.toFixed(2)} m · <span className={gpsQuality.tone}>{gpsQuality.label}</span>
+            </p>
+          </div>
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-400">{progress}</span>
+            <button
+              onClick={() => setShowSettings(true)}
+              className="px-3 py-1 rounded text-sm bg-gray-800 hover:bg-gray-700 text-gray-200"
+            >
+              ⚙ Settings
+            </button>
             <button
               onClick={() => setAudioEnabled(!audioEnabled)}
               className={`px-3 py-1 rounded text-sm ${
@@ -237,6 +258,51 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
         </div>
       </header>
 
+      {showSettings ? (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={() => setShowSettings(false)}>
+          <div className="w-full max-w-lg rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-lg font-semibold text-gray-100">Stakeout Settings</div>
+              <button onClick={() => setShowSettings(false)} className="px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 text-gray-200">
+                ✕
+              </button>
+            </div>
+
+            <div className="grid gap-4">
+              <div className="rounded-xl bg-gray-950/40 border border-gray-800 p-4">
+                <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Tolerance (on-point)</div>
+                <div className="flex items-center gap-3">
+                  <input
+                    inputMode="decimal"
+                    className="w-28 bg-gray-950/40 border border-gray-800 rounded px-3 py-2 text-gray-100 font-mono"
+                    value={toleranceM}
+                    onChange={(e) => setToleranceM(Math.max(0.01, Number(e.target.value) || 0.1))}
+                  />
+                  <div className="text-sm text-gray-400">m (typical: 0.05–0.20 m)</div>
+                </div>
+              </div>
+
+              <div className="rounded-xl bg-gray-950/40 border border-gray-800 p-4">
+                <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">GPS quality gate</div>
+                <div className="flex items-center gap-3">
+                  <input
+                    inputMode="decimal"
+                    className="w-28 bg-gray-950/40 border border-gray-800 rounded px-3 py-2 text-gray-100 font-mono"
+                    value={maxStakeAccuracyM}
+                    onChange={(e) => setMaxStakeAccuracyM(Math.max(1, Number(e.target.value) || 3))}
+                  />
+                  <div className="text-sm text-gray-400">m max accuracy to allow “Mark as staked”</div>
+                </div>
+              </div>
+
+              <div className="text-xs text-gray-500">
+                Tip: if distance is unrealistically huge, verify project zone/hemisphere and confirm you’re physically near the project.
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {isOnPoint ? (
         <div className="flex-1 flex items-center justify-center bg-green-900/30">
           <div className="text-center">
@@ -244,11 +310,21 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
             <h2 className="text-3xl font-bold text-green-400 mb-4">ON POINT</h2>
             <p className="text-gray-300 mb-6">{currentPoint.name}</p>
             <button
-              onClick={handleMarkStaked}
-              className="px-8 py-4 bg-green-600 hover:bg-green-500 text-white font-bold rounded-lg text-lg"
+              onClick={() => {
+                if (!gpsQuality.okToStake) {
+                  if (!confirm('GPS accuracy is poor. Mark as staked anyway?')) return
+                }
+                handleMarkStaked()
+              }}
+              className="px-8 py-4 bg-green-600 hover:bg-green-500 text-white font-bold rounded-lg text-lg disabled:opacity-50"
             >
               Mark as Staked ✓
             </button>
+            {!gpsQuality.okToStake ? (
+              <div className="mt-3 text-xs text-gray-300">
+                Accuracy gate: <span className="text-red-300">{gpsQuality.label}</span> (raise the limit in Settings if needed)
+              </div>
+            ) : null}
           </div>
         </div>
       ) : (
@@ -260,7 +336,7 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
               E {currentPoint.easting.toFixed(4)} m · N {currentPoint.northing.toFixed(4)} m
             </p>
             <p className="text-xs text-gray-500 mt-2">
-              Project UTM: Zone {utmZone}{hemisphere} {gpsAccuracy !== null ? `· GPS ±${gpsAccuracy.toFixed(0)} m` : ''}
+              GPS: {userLocation ? `${userLocation.lat.toFixed(6)}, ${userLocation.lon.toFixed(6)}` : '—'} {gpsAccuracy !== null ? `· ±${gpsAccuracy.toFixed(0)} m` : ''}
             </p>
           </div>
 

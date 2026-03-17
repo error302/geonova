@@ -4,6 +4,7 @@
     "projects": "المشاريع",
     "field": "الميدان",
     "import": "استيراد",
+    "more": "المزيد",
     "ai": "الذكاء الاصطناعي",
     "community": "المجتمع",
     "docs": "الوثائق",
@@ -15,6 +16,13 @@
     "register": "ابدأ الآن",
     "signOut": "Sign Out",
     "search": "بحث..."
+  },
+  "online": {
+    "coordinateServices": "خدمات الإحداثيات",
+    "parcelIntelligence": "ذكاء القطع",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "متتبع المعدات",
+    "digitalSignature": "توقيع رقمي"
   },
   "landing": {
     "hero": "مسح الأراضي الاحترافي Made Simple",
@@ -231,11 +239,14 @@
     "loading": "جاري التحميل...",
     "error": "خطأ",
     "success": "نجاح",
+    "pass": "ناجح",
+    "fail": "فشل",
     "confirm": "تأكيد",
     "back": "رجوع",
     "next": "التالي",
     "close": "إغلاق",
     "search": "بحث",
+    "noResults": "لا توجد نتائج",
     "filter": "تصفية",
     "export": "تصدير",
     "exportPdf": "PDF",

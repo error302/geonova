@@ -4,6 +4,7 @@
     "projects": "Projekte",
     "field": "Feld",
     "import": "Import",
+    "more": "Mehr",
     "ai": "KI",
     "community": "Community",
     "docs": "Dokumentation",
@@ -15,6 +16,13 @@
     "register": "Loslegen",
     "signOut": "Abmelden",
     "search": "Suchen..."
+  },
+  "online": {
+    "coordinateServices": "Koordinatendienste",
+    "parcelIntelligence": "Flurstück-Analyse",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "Geräte-Tracker",
+    "digitalSignature": "Digitale Signatur"
   },
   "landing": {
     "hero": "Professionelle Vermessung – einfach gemacht",
@@ -228,11 +236,14 @@
     "loading": "Lädt...",
     "error": "Fehler",
     "success": "Erfolg",
+    "pass": "BESTANDEN",
+    "fail": "NICHT BESTANDEN",
     "confirm": "Bestätigen",
     "back": "Zurück",
     "next": "Weiter",
     "close": "Schließen",
     "search": "Suchen",
+    "noResults": "Keine Ergebnisse",
     "filter": "Filtern",
     "export": "Exportieren",
     "exportPdf": "PDF",

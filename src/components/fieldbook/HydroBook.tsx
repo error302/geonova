@@ -27,7 +27,7 @@ export function HydroBook({
       <div className="card-body space-y-4">
         <div className="overflow-x-auto">
           <table className="table min-w-[980px]">
-            <thead>
+            <thead className="sticky top-0 z-10">
               <tr>
                 <th className="text-left">{t('field.soundingId')}</th>
                 <th className="text-right">{t('common.easting')}</th>

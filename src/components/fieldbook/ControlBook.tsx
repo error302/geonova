@@ -59,7 +59,7 @@ export function ControlBook({
 
         <div className="overflow-x-auto">
           <table className="table min-w-[1100px]">
-            <thead>
+            <thead className="sticky top-0 z-10">
               <tr>
                 <th className="text-left">{t('common.pointId')}</th>
                 <th>{t('field.instrumentHeight')}</th>

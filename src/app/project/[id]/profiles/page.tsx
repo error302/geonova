@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { computeChainageTable } from '@/lib/engine/chainage'
+import { generateLongitudinalProfileSvg } from '@/lib/reports/profileSvg'
 
 interface PageProps {
   params: { id: string }
@@ -62,6 +63,12 @@ export default function ProfilesPage({ params }: PageProps) {
   const [newAlignmentName, setNewAlignmentName] = useState('');
   const [selectedPoints, setSelectedPoints] = useState<SurveyPoint[]>([]);
   const [activeTab, setActiveTab] = useState<'create' | 'profile' | 'cross-sections'>('create');
+
+  const [svgModalOpen, setSvgModalOpen] = useState(false);
+  const [svgPage, setSvgPage] = useState<'A3' | 'A4'>('A3');
+  const [svgOrientation, setSvgOrientation] = useState<'landscape' | 'portrait'>('landscape');
+  const [svgHScale, setSvgHScale] = useState<number>(1000);
+  const [svgVScale, setSvgVScale] = useState<number>(100);
 
   useEffect(() => {
     loadData();
@@ -344,33 +351,7 @@ export default function ProfilesPage({ params }: PageProps) {
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Longitudinal Profile - {selectedAlignment.name}</h2>
                 <button
-                  onClick={() => {
-                    const svg = document.getElementById('profile-svg') as SVGSVGElement | null
-                    if (!svg) return
-
-                    const clone = svg.cloneNode(true) as SVGSVGElement
-                    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-                    clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
-                    clone.setAttribute('shape-rendering', 'geometricPrecision')
-                    const vb = svg.getAttribute('viewBox')
-                    if (vb) clone.setAttribute('viewBox', vb)
-                    clone.setAttribute('preserveAspectRatio', svg.getAttribute('preserveAspectRatio') || 'xMidYMid meet')
-                    clone.removeAttribute('class')
-
-                    // Export at a higher resolution while preserving the same viewBox.
-                    clone.setAttribute('width', '1600')
-                    clone.setAttribute('height', '600')
-                    clone.setAttribute('style', 'background-color:#0b1020')
-
-                    const svgData = `<?xml version="1.0" encoding="UTF-8"?>\n` + new XMLSerializer().serializeToString(clone)
-                    const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' })
-                    const url = URL.createObjectURL(blob)
-                    const a = document.createElement('a')
-                    a.href = url
-                    a.download = `${selectedAlignment.name}_profile.svg`
-                    a.click()
-                    URL.revokeObjectURL(url)
-                  }}
+                  onClick={() => setSvgModalOpen(true)}
                   className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded text-sm"
                 >
                   Export SVG
@@ -380,6 +361,83 @@ export default function ProfilesPage({ params }: PageProps) {
               {chainagePoints.length > 0 ? (
                 <>
                   <ProfileChart points={chainagePoints} />
+
+                  {svgModalOpen && (
+                    <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={() => setSvgModalOpen(false)}>
+                      <div className="w-full max-w-2xl rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-lg font-semibold text-white">Export profile SVG (to-scale)</div>
+                          <button onClick={() => setSvgModalOpen(false)} className="px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 text-gray-200">
+                            ✕
+                          </button>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div className="rounded-xl bg-gray-950/40 border border-gray-800 p-4">
+                            <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Page</div>
+                            <div className="flex gap-2">
+                              <select value={svgPage} onChange={(e) => setSvgPage(e.target.value as any)} className="flex-1 bg-gray-900 border border-gray-800 rounded px-3 py-2 text-gray-200">
+                                <option value="A3">A3</option>
+                                <option value="A4">A4</option>
+                              </select>
+                              <select value={svgOrientation} onChange={(e) => setSvgOrientation(e.target.value as any)} className="flex-1 bg-gray-900 border border-gray-800 rounded px-3 py-2 text-gray-200">
+                                <option value="landscape">Landscape</option>
+                                <option value="portrait">Portrait</option>
+                              </select>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-2">Print at 100% for true scale.</p>
+                          </div>
+
+                          <div className="rounded-xl bg-gray-950/40 border border-gray-800 p-4">
+                            <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Scales</div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <label className="text-xs text-gray-400">
+                                Horizontal (1:)
+                                <input inputMode="numeric" value={svgHScale} onChange={(e) => setSvgHScale(parseInt(e.target.value || '1000', 10) || 1000)} className="mt-1 w-full bg-gray-900 border border-gray-800 rounded px-3 py-2 text-gray-200 font-mono" />
+                              </label>
+                              <label className="text-xs text-gray-400">
+                                Vertical (1:)
+                                <input inputMode="numeric" value={svgVScale} onChange={(e) => setSvgVScale(parseInt(e.target.value || '100', 10) || 100)} className="mt-1 w-full bg-gray-900 border border-gray-800 rounded px-3 py-2 text-gray-200 font-mono" />
+                              </label>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-2">If a scale won’t fit, GeoNova will auto-fit to the nearest standard scale.</p>
+                          </div>
+                        </div>
+
+                        <div className="mt-5 flex items-center justify-end gap-2">
+                          <button onClick={() => setSvgModalOpen(false)} className="px-4 py-2 rounded bg-gray-800 hover:bg-gray-700 text-gray-200">
+                            Cancel
+                          </button>
+                          <button
+                            onClick={() => {
+                              const svgText = generateLongitudinalProfileSvg(
+                                chainagePoints.map((p) => ({ chainage: p.chainage, elevation: p.elevation, label: p.point_name })),
+                                {
+                                  page: svgPage,
+                                  orientation: svgOrientation,
+                                  horizontalScaleDenom: svgHScale,
+                                  verticalScaleDenom: svgVScale,
+                                  title: 'LONGITUDINAL PROFILE',
+                                  subtitle: `${project?.name ?? ''} — ${selectedAlignment.name}`.trim(),
+                                }
+                              );
+                              const blob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+                              const url = URL.createObjectURL(blob);
+                              const a = document.createElement('a');
+                              a.href = url;
+                              a.download = `${selectedAlignment.name}_profile_${svgPage}_${svgOrientation}_H${svgHScale}_V${svgVScale}.svg`;
+                              a.click();
+                              URL.revokeObjectURL(url);
+                              setSvgModalOpen(false);
+                            }}
+                            className="px-4 py-2 rounded bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold"
+                          >
+                            Download SVG
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   
                   <div className="mt-6 grid grid-cols-4 gap-4">
                     <div className="bg-gray-800/50 p-3 rounded">

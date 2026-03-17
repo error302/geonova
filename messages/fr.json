@@ -4,6 +4,7 @@
     "projects": "Projets",
     "field": "Terrain",
     "import": "Importer",
+    "more": "Plus",
     "ai": "IA",
     "community": "Communauté",
     "docs": "Docs",
@@ -15,6 +16,13 @@
     "register": "Commencer",
     "signOut": "Sign Out",
     "search": "Rechercher..."
+  },
+  "online": {
+    "coordinateServices": "Services de coordonnées",
+    "parcelIntelligence": "Intelligence parcellaire",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "Suivi d’équipement",
+    "digitalSignature": "Signature numérique"
   },
   "landing": {
     "hero": "arpentage Professionnel Simplifié",
@@ -231,11 +239,14 @@
     "loading": "Chargement...",
     "error": "Erreur",
     "success": "Succès",
+    "pass": "OK",
+    "fail": "ÉCHEC",
     "confirm": "Confirmer",
     "back": "Retour",
     "next": "Suivant",
     "close": "Fermer",
     "search": "Rechercher",
+    "noResults": "Aucun résultat",
     "filter": "Filtrer",
     "export": "Exporter",
     "exportPdf": "PDF",

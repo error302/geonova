@@ -4,6 +4,7 @@
     "projects": "Miradi",
     "field": "Shamba",
     "import": "Ingiza",
+    "more": "Zaidi",
     "ai": "AI",
     "community": "Jamii",
     "docs": "Nyaraka",
@@ -15,6 +16,13 @@
     "register": "Jisajili",
     "signOut": "Sign Out",
     "search": "Tafuta..."
+  },
+  "online": {
+    "coordinateServices": "Huduma za Kuratibu",
+    "parcelIntelligence": "Uchanganuzi wa Kiwanja",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "Ufuatiliaji wa Vifaa",
+    "digitalSignature": "Sahihi ya Kidijitali"
   },
   "landing": {
     "hero": "Upimaji wa Kitaalamu Uliofanywa Rahisi",
@@ -231,11 +239,14 @@
     "loading": "Inapakia...",
     "error": "Hitilafu",
     "success": "Mfaniko",
+    "pass": "Imepita",
+    "fail": "Imeshindwa",
     "confirm": "Thibitisha",
     "back": "Rudi",
     "next": "Mbele",
     "close": "Funga",
     "search": "Tafuta",
+    "noResults": "Hakuna matokeo",
     "filter": "Chuja",
     "export": "Toa",
     "exportPdf": "PDF",

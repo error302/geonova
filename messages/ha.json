@@ -4,6 +4,7 @@
     "projects": "Ayyuka",
     "field": "Fili",
     "import": "Shigo",
+    "more": "Kari",
     "ai": "AI",
     "community": "Al'umma",
     "docs": "Takardu",
@@ -15,6 +16,13 @@
     "register": "Fara",
     "signOut": "Fita",
     "search": "Bincike..."
+  },
+  "online": {
+    "coordinateServices": "Ayyukan Ko'odinati",
+    "parcelIntelligence": "Hankalin Fili",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "Bibiyar Kayan Aiki",
+    "digitalSignature": "Sa hannun Dijital"
   },
   "landing": {
     "hero": "Aikin Auna Ƙasa na ƙwararru ya zama mai sauƙi",
@@ -227,11 +235,14 @@
     "loading": "Ana lodawa...",
     "error": "Kuskure",
     "success": "Nasara",
+    "pass": "YA WUCE",
+    "fail": "BA A WUCE BA",
     "confirm": "Tabbatar",
     "back": "Koma",
     "next": "Gaba",
     "close": "Rufe",
     "search": "Bincike",
+    "noResults": "Babu sakamako",
     "filter": "Tace",
     "export": "Fitar",
     "exportPdf": "PDF",

@@ -4,6 +4,7 @@
     "projects": "プロジェクト",
     "field": "現場",
     "import": "インポート",
+    "more": "その他",
     "ai": "AI",
     "community": "コミュニティ",
     "docs": "ドキュメント",
@@ -15,6 +16,13 @@
     "register": "無料で始める",
     "signOut": "サインアウト",
     "search": "検索..."
+  },
+  "online": {
+    "coordinateServices": "座標サービス",
+    "parcelIntelligence": "区画インテリジェンス",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "機器トラッカー",
+    "digitalSignature": "デジタル署名"
   },
   "landing": {
     "hero": "プロフェッショナル測量をシンプルに",
@@ -228,11 +236,14 @@
     "loading": "読み込み中...",
     "error": "エラー",
     "success": "成功",
+    "pass": "合格",
+    "fail": "不合格",
     "confirm": "確認",
     "back": "戻る",
     "next": "次へ",
     "close": "閉じる",
     "search": "検索",
+    "noResults": "結果なし",
     "filter": "フィルター",
     "export": "エクスポート",
     "exportPdf": "PDF",

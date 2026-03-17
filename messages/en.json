@@ -4,6 +4,7 @@
     "projects": "Projects",
     "field": "Field",
     "import": "Import",
+    "more": "More",
     "ai": "AI",
     "community": "Community",
     "docs": "Docs",
@@ -15,6 +16,13 @@
     "register": "Get Started",
     "signOut": "Sign Out",
     "search": "Search..."
+  },
+  "online": {
+    "coordinateServices": "Coordinate Services",
+    "parcelIntelligence": "Parcel Intelligence",
+    "kencorsRtk": "KenCORS RTK",
+    "equipmentTracker": "Equipment Tracker",
+    "digitalSignature": "Digital Signature"
   },
   "landing": {
     "hero": "Professional Surveying Made Simple",
@@ -250,11 +258,14 @@
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",
+    "pass": "PASS",
+    "fail": "FAIL",
     "confirm": "Confirm",
     "back": "Back",
     "next": "Next",
     "close": "Close",
     "search": "Search",
+    "noResults": "No results",
     "filter": "Filter",
     "export": "Export",
     "exportPdf": "PDF",

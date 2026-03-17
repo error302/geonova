@@ -70,7 +70,7 @@ export function LevelingBook({
 
         <div className="overflow-x-auto">
           <table className="table min-w-[920px]">
-            <thead>
+            <thead className="sticky top-0 z-10">
               <tr>
                 <th className="text-left">{t('common.station')}</th>
                 <th>{t('leveling.bs')}</th>

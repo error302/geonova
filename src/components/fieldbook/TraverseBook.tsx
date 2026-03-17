@@ -95,7 +95,7 @@ export function TraverseBook({
 
         <div className="overflow-x-auto">
           <table className="table min-w-[1000px]">
-            <thead>
+            <thead className="sticky top-0 z-10">
               <tr>
                 <th className="text-left">{t('common.station')}</th>
                 <th className="text-left">{t('traverse.bearing')}</th>

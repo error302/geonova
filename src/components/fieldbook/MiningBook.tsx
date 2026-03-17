@@ -50,7 +50,7 @@ export function MiningBook({
 
         <div className="overflow-x-auto">
           <table className="table min-w-[980px]">
-            <thead>
+            <thead className="sticky top-0 z-10">
               <tr>
                 <th className="text-left">{t('common.pointId')}</th>
                 <th className="text-left">{t('traverse.bearing')}</th>

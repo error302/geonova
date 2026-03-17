@@ -356,6 +356,7 @@ export default function ProjectPage({ params }: PageProps) {
 
   const [parcelData, setParcelData] = useState<Parcel | null>(null)
   const [parcels, setParcels] = useState<Parcel[]>([])
+  const [draftParcelBoundary, setDraftParcelBoundary] = useState<Array<{ easting: number; northing: number }> | null>(null)
 
   useEffect(() => {
     if (project) {
@@ -713,6 +714,7 @@ export default function ProjectPage({ params }: PageProps) {
                 locked: (p as any).locked
               }))}
               parcels={parcels}
+              draftParcelBoundary={draftParcelBoundary}
               utmZone={project.utm_zone}
               hemisphere={project.hemisphere}
               onMapClick={handleMapClick}
@@ -897,8 +899,12 @@ export default function ProjectPage({ params }: PageProps) {
         <ParcelBuilderModal
           projectId={params.id}
           points={points}
-          onClose={() => setShowParcelBuilder(false)}
+          onClose={() => {
+            setShowParcelBuilder(false)
+            setDraftParcelBoundary(null)
+          }}
           onParcelCreated={handleParcelCreated}
+          onDraftBoundaryChange={setDraftParcelBoundary}
         />
       )}
     </div>

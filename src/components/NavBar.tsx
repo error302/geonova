@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useLanguage, languages } from '@/lib/i18n/LanguageContext'
@@ -93,14 +93,22 @@ interface DropdownProps {
   children: React.ReactNode
   isOpen: boolean
   onToggle: () => void
+  align?: 'left' | 'right'
+  buttonClassName?: string
+  panelClassName?: string
 }
 
-function Dropdown({ label, children, isOpen, onToggle }: DropdownProps) {
+function Dropdown({ label, children, isOpen, onToggle, align = 'left', buttonClassName, panelClassName }: DropdownProps) {
   return (
     <div className="relative group">
       <button 
         onClick={onToggle}
-        className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors flex items-center gap-1"
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
+        className={
+          buttonClassName ??
+          'px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors flex items-center gap-1 rounded-lg hover:bg-white/5'
+        }
       >
         {label}
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,8 +116,8 @@ function Dropdown({ label, children, isOpen, onToggle }: DropdownProps) {
         </svg>
       </button>
       {isOpen && (
-        <div className="absolute top-full left-0 pt-1 z-50">
-          <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl min-w-[200px] py-2">
+        <div className={`absolute top-full ${align === 'right' ? 'right-0' : 'left-0'} pt-2 z-50`}>
+          <div className={`bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl ${panelClassName ?? 'min-w-[200px] py-2'}`}>
             {children}
           </div>
         </div>
@@ -122,7 +130,17 @@ type Translator = (key: string, values?: Record<string, string | number>) => str
 type MenuItem = { href: string; labelKey: string; icon?: string }
 type MenuGroup = { titleKey: string; items: MenuItem[] }
 
-function DropdownGroup({ titleKey, items, t }: { titleKey: string, items: MenuItem[], t: Translator }) {
+function DropdownGroup({
+  titleKey,
+  items,
+  t,
+  onSelect,
+}: {
+  titleKey: string
+  items: MenuItem[]
+  t: Translator
+  onSelect?: () => void
+}) {
   return (
     <div className="px-4 py-2">
       <div className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">
@@ -132,6 +150,7 @@ function DropdownGroup({ titleKey, items, t }: { titleKey: string, items: MenuIt
         <Link
           key={item.href}
           href={item.href}
+          onClick={onSelect}
           className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded"
         >
           <span className="inline-flex items-center gap-2">
@@ -144,11 +163,11 @@ function DropdownGroup({ titleKey, items, t }: { titleKey: string, items: MenuIt
   )
 }
 
-function MegaMenu({ groups, t }: { groups: MenuGroup[], t: Translator }) {
+function MegaMenu({ groups, t, onSelect }: { groups: MenuGroup[]; t: Translator; onSelect?: () => void }) {
   return (
     <div className="flex gap-6 px-4 py-3">
       {groups.map((group, idx) => (
-        <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} />
+        <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} onSelect={onSelect} />
       ))}
     </div>
   )
@@ -159,18 +178,43 @@ function GlobalSearch({ t }: { t: Translator }) {
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const results = [
-    { category: 'Tools', items: [
-      { href: '/tools/traverse', label: 'Traverse Calculator' },
-      { href: '/tools/leveling', label: 'Leveling Calculator' },
-      { href: '/tools/cogo', label: 'COGO Tools' },
-    ]},
-    { category: 'Pages', items: [
-      { href: '/dashboard', label: 'Dashboard' },
-      { href: '/guide', label: 'Field Guides' },
-      { href: '/beacons', label: 'Control Points' },
-    ]},
-  ]
+  const isMac = typeof navigator !== 'undefined' ? /mac|iphone|ipad|ipod/i.test(navigator.platform) : false
+  const hint = isMac ? '⌘K' : 'Ctrl K'
+
+  const searchIndex = useMemo(() => {
+    const flatten = (category: string, groups: MenuGroup[]) => {
+      const out: Array<{ category: string; group: string; href: string; label: string }> = []
+      for (const g of groups) {
+        const groupLabel = t(g.titleKey)
+        for (const item of g.items) {
+          out.push({ category, group: groupLabel, href: item.href, label: t(item.labelKey) })
+        }
+      }
+      return out
+    }
+
+    const docsItems = [
+      { href: '/docs', label: t('nav.docs'), group: t('nav.docs') },
+      { href: '/pricing', label: t('nav.pricing'), group: t('nav.docs') },
+    ]
+
+    return [
+      ...flatten(t('nav.tools'), toolGroups),
+      ...flatten(t('nav.field'), fieldGroups),
+      ...flatten(t('nav.import'), importGroups),
+      ...flatten(t('nav.community'), communityGroups),
+      ...docsItems.map((x) => ({ category: x.group, group: x.group, href: x.href, label: x.label })),
+      { category: t('nav.projects'), group: t('nav.projects'), href: '/dashboard', label: t('nav.dashboard') },
+    ]
+  }, [t])
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    if (!q) return searchIndex.slice(0, 18)
+    return searchIndex
+      .filter((x) => `${x.label} ${x.group} ${x.category}`.toLowerCase().includes(q))
+      .slice(0, 30)
+  }, [query, searchIndex])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -198,7 +242,7 @@ function GlobalSearch({ t }: { t: Translator }) {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
         <span className="hidden sm:inline">{t('nav.search')}</span>
-        <kbd className="hidden sm:inline px-1.5 py-0.5 text-xs bg-gray-700 rounded">⌘K</kbd>
+        <kbd className="hidden sm:inline px-1.5 py-0.5 text-xs bg-gray-700 rounded">{hint}</kbd>
       </button>
 
       {isOpen && (
@@ -225,23 +269,26 @@ function GlobalSearch({ t }: { t: Translator }) {
               <kbd className="px-2 py-1 text-xs bg-gray-800 text-gray-400 rounded">ESC</kbd>
             </div>
             <div className="max-h-[60vh] overflow-y-auto p-2">
-              {results.map((group, idx) => (
-                <div key={idx} className="mb-2">
-                  <div className="px-3 py-2 text-xs text-gray-500 uppercase tracking-wider font-semibold">
-                    {group.category}
-                  </div>
-                  {group.items.map((item, i) => (
+              {filtered.length === 0 ? (
+                <div className="p-4 text-sm text-gray-400">{t('common.noResults')}</div>
+              ) : (
+                <div className="space-y-1">
+                  {filtered.map((item) => (
                     <Link
-                      key={i}
+                      key={`${item.href}|${item.label}`}
                       href={item.href}
-                      onClick={() => { setIsOpen(false); setQuery(''); }}
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-[var(--accent)] rounded-lg"
+                      onClick={() => {
+                        setIsOpen(false)
+                        setQuery('')
+                      }}
+                      className="flex items-center justify-between gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-[var(--accent)] rounded-lg"
                     >
-                      {item.label}
+                      <span>{item.label}</span>
+                      <span className="text-xs text-gray-500">{item.group}</span>
                     </Link>
                   ))}
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -257,6 +304,7 @@ export default function NavBar() {
   const [showInstall, setShowInstall] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const navRef = useRef<HTMLDivElement>(null)
 
   const { language, setLanguage, t } = useLanguage()
 
@@ -307,11 +355,30 @@ export default function NavBar() {
     setOpenDropdown(openDropdown === name ? null : name)
   }
 
+  useEffect(() => {
+    const onDocMouseDown = (e: MouseEvent) => {
+      const target = e.target as Node | null
+      if (!target) return
+      if (navRef.current && navRef.current.contains(target)) return
+      setOpenDropdown(null)
+    }
+    const onEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpenDropdown(null)
+    }
+
+    document.addEventListener('mousedown', onDocMouseDown)
+    window.addEventListener('keydown', onEsc)
+    return () => {
+      document.removeEventListener('mousedown', onDocMouseDown)
+      window.removeEventListener('keydown', onEsc)
+    }
+  }, [])
+
   const currentLang = languages.find(l => l.code === language) || languages[0]
 
   return (
     <nav className="border-b border-[var(--border-color)] bg-[#0a0a0f] sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4">
+      <div ref={navRef} className="max-w-7xl mx-auto px-4">
         {/* Main Navbar */}
         <div className="h-16 flex items-center justify-between">
           {/* Logo */}
@@ -321,96 +388,77 @@ export default function NavBar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
-            {/* Tools Dropdown */}
-            <div className="relative group">
-              <button className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
-                {t('nav.tools')} ▾
-              </button>
-              <div className="absolute top-full left-0 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl min-w-[600px] py-2">
-                  <MegaMenu groups={toolGroups} t={t} />
-                </div>
-              </div>
-            </div>
+            <Dropdown
+              label={t('nav.tools')}
+              isOpen={openDropdown === 'tools'}
+              onToggle={() => handleDropdownToggle('tools')}
+              panelClassName="min-w-[680px] py-2"
+            >
+              <MegaMenu groups={toolGroups} t={t} onSelect={() => setOpenDropdown(null)} />
+            </Dropdown>
 
             {/* Projects Link */}
             <Link 
               href="/dashboard" 
-              className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
+              className="px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors rounded-lg hover:bg-white/5"
             >
               {t('nav.projects')}
             </Link>
 
-            {/* Field Dropdown */}
-            <div className="relative group">
-              <button className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
-                {t('nav.field')} ▾
-              </button>
-              <div className="absolute top-full left-0 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl min-w-[180px] py-2">
-                  {fieldGroups.map((group, idx) => (
-                    <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Import Dropdown */}
-            <div className="relative group">
-              <button className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
-                {t('nav.import')} ▾
-              </button>
-              <div className="absolute top-full left-0 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl min-w-[180px] py-2">
-                  {importGroups.map((group, idx) => (
-                    <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Community Link */}
-            <div className="relative group">
-              <button className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
-                {t('nav.community')} ▾
-              </button>
-              <div className="absolute top-full left-0 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl min-w-[180px] py-2">
-                  {communityGroups.map((group, idx) => (
-                    <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} />
-                  ))}
-                  <div className="border-t border-white/5 my-2" />
-                  <div className="px-4 py-2">
-                    <div className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">
-                      {t('nav.online')}
-                    </div>
-                    <Link href="/online" className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                      Coordinate Services
-                    </Link>
-                    <Link href="/parcel" className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                      Parcel Intelligence
-                    </Link>
-                    <Link href="/kencors" className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                      KenCORS RTK
-                    </Link>
-                    <Link href="/equipment" className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                      Equipment Tracker
-                    </Link>
-                    <Link href="/digital-signature" className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                      Digital Signature
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Docs */}
-            <Link 
-              href="/docs" 
-              className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
+            <Dropdown
+              label={t('nav.field')}
+              isOpen={openDropdown === 'field'}
+              onToggle={() => handleDropdownToggle('field')}
+              panelClassName="min-w-[240px] py-2"
             >
-              {t('nav.docs')}
-            </Link>
+              {fieldGroups.map((group, idx) => (
+                <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} onSelect={() => setOpenDropdown(null)} />
+              ))}
+            </Dropdown>
+
+            <Dropdown
+              label={t('nav.more')}
+              isOpen={openDropdown === 'more'}
+              onToggle={() => handleDropdownToggle('more')}
+              panelClassName="min-w-[280px] py-2"
+            >
+              {importGroups.map((group, idx) => (
+                <DropdownGroup key={`import-${idx}`} titleKey={group.titleKey} items={group.items} t={t} onSelect={() => setOpenDropdown(null)} />
+              ))}
+              <div className="border-t border-white/5 my-1" />
+              {communityGroups.map((group, idx) => (
+                <DropdownGroup key={`community-${idx}`} titleKey={group.titleKey} items={group.items} t={t} onSelect={() => setOpenDropdown(null)} />
+              ))}
+              <div className="border-t border-white/5 my-1" />
+              <div className="px-4 py-2">
+                <div className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">{t('nav.online')}</div>
+                <Link href="/online" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
+                  {t('online.coordinateServices')}
+                </Link>
+                <Link href="/parcel" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
+                  {t('online.parcelIntelligence')}
+                </Link>
+                <Link href="/kencors" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
+                  {t('online.kencorsRtk')}
+                </Link>
+                <Link href="/equipment" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
+                  {t('online.equipmentTracker')}
+                </Link>
+                <Link href="/digital-signature" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
+                  {t('online.digitalSignature')}
+                </Link>
+              </div>
+              <div className="border-t border-white/5 my-1" />
+              <div className="px-4 py-2">
+                <div className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">{t('nav.docs')}</div>
+                <Link href="/docs" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
+                  {t('nav.docs')}
+                </Link>
+                <Link href="/pricing" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-gray-300 hover:text-[var(--accent)] hover:bg-white/5 rounded">
+                  {t('nav.pricing')}
+                </Link>
+              </div>
+            </Dropdown>
           </div>
 
           {/* Right Side */}
@@ -419,29 +467,29 @@ export default function NavBar() {
             <GlobalSearch t={t} />
 
             {/* Language Selector */}
-            <div className="relative group">
-              <button className="flex items-center gap-2 px-2 py-1 text-sm text-gray-400 hover:text-[var(--accent)] transition-colors">
-                <span>{currentLang.flag}</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div className="absolute top-full right-0 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl py-1 min-w-[140px]">
-                  {languages.map(lang => (
-                    <button
-                      key={lang.code}
-                      onClick={() => setLanguage(lang.code)}
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-white/5 ${
-                        language === lang.code ? 'text-[var(--accent)]' : 'text-gray-300'
-                      }`}
-                    >
-                      {lang.flag} {lang.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <Dropdown
+              label={`${currentLang.flag} ${currentLang.code.toUpperCase()}`}
+              isOpen={openDropdown === 'lang'}
+              onToggle={() => handleDropdownToggle('lang')}
+              align="right"
+              panelClassName="min-w-[180px] py-1"
+              buttonClassName="flex items-center gap-2 px-2 py-1 text-sm text-gray-400 hover:text-[var(--accent)] transition-colors rounded-lg hover:bg-white/5"
+            >
+              {languages.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => {
+                    setLanguage(lang.code)
+                    setOpenDropdown(null)
+                  }}
+                  className={`w-full text-left px-4 py-2 text-sm hover:bg-white/5 ${
+                    language === lang.code ? 'text-[var(--accent)]' : 'text-gray-300'
+                  }`}
+                >
+                  {lang.flag} {lang.name}
+                </button>
+              ))}
+            </Dropdown>
 
             {loading ? (
               <div className="w-20 h-8 bg-gray-800 animate-pulse rounded"></div>
@@ -449,6 +497,8 @@ export default function NavBar() {
               <div className="hidden md:block relative">
                 <button
                   onClick={() => handleDropdownToggle('user')}
+                  aria-expanded={openDropdown === 'user'}
+                  aria-haspopup="menu"
                   className="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-gray-800 bg-gray-900/40 hover:border-[var(--accent)] transition-colors"
                 >
                   <span className="w-8 h-8 rounded-full bg-[#E8841A]/20 border border-[#E8841A]/30 text-[#E8841A] flex items-center justify-center font-bold">
