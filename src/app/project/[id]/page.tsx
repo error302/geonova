@@ -11,6 +11,7 @@ import { exportProject, importProject } from '@/lib/export/exportProject'
 import { downloadGeoJSON } from '@/lib/export/generateGeoJSON'
 import { coordinateAreaSolution } from '@/lib/engine/solution/wrappers/area'
 import { bowditchAdjustmentSolutionFromResult } from '@/lib/engine/solution/wrappers/traverse'
+import { coordinateArea } from '@/lib/engine/area'
 import AddPointModal from '@/components/AddPointModal'
 import CSVUploadModal from '@/components/CSVUploadModal'
 import TraverseModal from '@/components/TraverseModal'
@@ -426,6 +427,24 @@ export default function ProjectPage({ params }: PageProps) {
       setReportLoading(false)
     }
     
+    const parcelForPlan = (() => {
+      if (!parcelData || !Array.isArray(parcelData.boundary_points) || parcelData.boundary_points.length < 3) return null
+      const boundary = parcelData.boundary_points.map((p, idx) => ({
+        name: (p.name ?? '').trim() || `P${idx + 1}`,
+        easting: p.easting,
+        northing: p.northing,
+      }))
+      const area = coordinateArea(boundary.map((p) => ({ easting: p.easting, northing: p.northing })))
+      return {
+        name: parcelData.name ?? 'Parcel',
+        boundary_points: boundary,
+        area_sqm: area.areaSqm,
+        area_ha: area.areaHa,
+        area_acres: area.areaAcres,
+        perimeter_m: area.perimeter,
+      }
+    })()
+
     generateSurveyPlan({
       project: {
         name: project.name,
@@ -442,7 +461,7 @@ export default function ProjectPage({ params }: PageProps) {
         is_control: p.is_control,
         control_order: p.control_order
       })),
-      parcel: parcelData,
+      parcel: parcelForPlan,
       traverse: traverseResult ? {
         legs: traverseResult.legs.map((l: any) => ({
           fromName: l.fromName,
