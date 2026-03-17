@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -12,6 +12,8 @@ import { downloadGeoJSON } from '@/lib/export/generateGeoJSON'
 import { coordinateAreaSolution } from '@/lib/engine/solution/wrappers/area'
 import { bowditchAdjustmentSolutionFromResult } from '@/lib/engine/solution/wrappers/traverse'
 import { coordinateArea } from '@/lib/engine/area'
+import type { Solution } from '@/lib/solution/schema'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 import AddPointModal from '@/components/AddPointModal'
 import CSVUploadModal from '@/components/CSVUploadModal'
 import TraverseModal from '@/components/TraverseModal'
@@ -19,6 +21,8 @@ import ParcelAreaModal from '@/components/ParcelAreaModal'
 import StakeoutMode from '@/components/StakeoutMode'
 import NearbyBeaconsModal from '@/components/NearbyBeaconsModal'
 import ParcelBuilderModal from '@/components/ParcelBuilderModal'
+import WorkspaceShell from '@/components/organisms/WorkspaceShell'
+import SolutionRenderer from '@/components/SolutionRenderer'
 
 const ProjectMap = dynamic(() => import('@/components/ProjectMap'), {
   ssr: false,
@@ -66,6 +70,7 @@ type Parcel = {
 }
 
 export default function ProjectPage({ params }: PageProps) {
+  const { t } = useLanguage()
   const [project, setProject] = useState<Project | null>(null)
   const [points, setPoints] = useState<Point[]>([])
   const [loading, setLoading] = useState(true)
@@ -99,6 +104,23 @@ export default function ProjectPage({ params }: PageProps) {
   const [isOnline, setIsOnline] = useState(true)
 
   const supabase = createClient()
+
+  const [selectedPointId, setSelectedPointId] = useState<string | null>(null)
+  const [bottomTab, setBottomTab] = useState<'fieldbook' | 'log'>('log')
+  const [calcLog, setCalcLog] = useState<Solution[]>([])
+  const [activeSolutionIndex, setActiveSolutionIndex] = useState(0)
+
+  const pushSolution = (solution: Solution) => {
+    setCalcLog((prev) => [solution, ...prev].slice(0, 12))
+    setActiveSolutionIndex(0)
+  }
+
+  const selectedPoint = useMemo(() => points.find((p) => p.id === selectedPointId) ?? null, [points, selectedPointId])
+
+  useEffect(() => {
+    if (!selectedPointId) return
+    if (!points.some((p) => p.id === selectedPointId)) setSelectedPointId(null)
+  }, [points, selectedPointId])
 
   const fetchData = async () => {
     const { data: { user } } = await supabase.auth.getUser()
@@ -263,6 +285,7 @@ export default function ProjectPage({ params }: PageProps) {
       return prev.filter((p) => p.id !== point.id)
     })
     setAreaPoints((prev) => prev.filter((p: any) => p?.id !== point.id))
+    if (selectedPointId === point.id) setSelectedPointId(null)
 
     try {
       const { error } = await supabase.from('survey_points').delete().eq('id', point.id)
@@ -394,6 +417,10 @@ export default function ProjectPage({ params }: PageProps) {
     if (created) {
       setParcels(prev => [created, ...prev.filter(p => p.id !== created.id)])
       setParcelData(created)
+      try {
+        const pts = created.boundary_points.map((p) => ({ easting: p.easting, northing: p.northing }))
+        pushSolution(coordinateAreaSolution(pts).solution)
+      } catch {}
       return
     }
     try {
@@ -508,9 +535,12 @@ export default function ProjectPage({ params }: PageProps) {
   if (!project) return null
 
   return (
-    <div className="min-h-screen bg-gray-950 flex">
-      <aside className="w-64 border-r border-gray-800 bg-gray-900/30 p-4">
-        <div className="space-y-2">
+    <>
+      <WorkspaceShell
+        bottomTitle={bottomTab === 'log' ? 'Calculation Log' : 'Field Notes'}
+        left={
+          <div className="p-3">
+            <div className="space-y-2">
           <button
             onClick={() => {
               setPrefillCoords({})
@@ -518,19 +548,19 @@ export default function ProjectPage({ params }: PageProps) {
             }}
             className="w-full px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded text-sm transition-colors"
           >
-            Add Point
+            {t('points.addPoint')}
           </button>
           <button
             onClick={() => setShowCSVUpload(true)}
             className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors"
           >
-            Upload CSV
+            {t('points.uploadCSV')}
           </button>
           <button
             onClick={() => setShowTraverse(true)}
             className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors"
           >
-            Run Traverse
+            {t('traverse.runTraverse')}
           </button>
           <button
             onClick={() => {
@@ -544,7 +574,7 @@ export default function ProjectPage({ params }: PageProps) {
             }`}
             title="Press D to activate"
           >
-            {mapMode === 'distance' ? 'Distance Active' : 'Distance Tool'}
+            {mapMode === 'distance' ? t('workspace.distanceActive') : t('workspace.distanceTool')}
           </button>
           <button
             onClick={() => {
@@ -558,21 +588,21 @@ export default function ProjectPage({ params }: PageProps) {
             }`}
             title="Press A to activate"
           >
-            {mapMode === 'area' ? 'Area Active' : 'Compute Area'}
+            {mapMode === 'area' ? t('workspace.areaActive') : t('workspace.areaTool')}
           </button>
           <button
             onClick={handleGenerateReport}
             disabled={reportLoading}
             className="w-full px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded text-sm transition-colors disabled:opacity-50"
           >
-            {reportLoading ? 'Generating...' : '📄 Generate Report'}
+            {reportLoading ? t('common.loading') : t('reports.generate')}
           </button>
           <button
             onClick={handleGenerateSurveyPlan}
             disabled={reportLoading || points.length === 0}
             className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold rounded text-sm transition-colors disabled:opacity-50"
           >
-            🗺️ Generate Survey Plan
+            {t('workspace.generateSurveyPlan')}
           </button>
           <button
             onClick={() => {
@@ -597,7 +627,7 @@ export default function ProjectPage({ params }: PageProps) {
             disabled={points.length === 0}
             className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors disabled:opacity-50"
           >
-            📥 Export LandXML
+            {t('reports.exportLandXML')}
           </button>
           <button
             onClick={() => {
@@ -617,7 +647,7 @@ export default function ProjectPage({ params }: PageProps) {
             disabled={points.length === 0}
             className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors disabled:opacity-50"
           >
-            🗺️ Export GeoJSON
+            {t('reports.exportGeoJSON')}
           </button>
           <button
             onClick={async () => {
@@ -626,33 +656,33 @@ export default function ProjectPage({ params }: PageProps) {
             disabled={points.length === 0}
             className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors disabled:opacity-50"
           >
-            💾 Export Project
+            {t('reports.exportProject')}
           </button>
           <button
             onClick={() => setShowStakeout(true)}
             disabled={points.length === 0}
             className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors disabled:opacity-50"
           >
-            🎯 Stakeout All Points
+            {t('workspace.stakeoutAllPoints')}
           </button>
           <button
             onClick={() => setShowNearbyBeacons(true)}
             className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors"
           >
-            📍 Nearby Beacons
+            {t('workspace.nearbyBeacons')}
           </button>
           <Link
             href={`/project/${params.id}/profiles`}
             className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors text-center block"
           >
-            📐 Profiles
+            {t('workspace.profiles')}
           </Link>
           <button
             onClick={() => setShowParcelBuilder(true)}
             disabled={points.length < 3}
             className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded text-sm transition-colors disabled:opacity-50"
           >
-            🗺️ Build Parcel
+            {t('workspace.buildParcel')}
           </button>
           {shareUrl && (
             <div className="mt-2 p-2 bg-green-900/30 border border-green-700 rounded">
@@ -671,7 +701,7 @@ export default function ProjectPage({ params }: PageProps) {
                   }}
                   className="px-2 py-1 text-xs bg-gray-700 hover:bg-gray-600 text-white rounded"
                 >
-                  Copy
+                  {t('common.copy')}
                 </button>
               </div>
               <div className="text-xs text-gray-500 mt-1">Link expires in 7 days</div>
@@ -693,10 +723,11 @@ export default function ProjectPage({ params }: PageProps) {
               </span>
             </div>
           </div>
-        </div>
-      </aside>
-
-      <main className="flex-1 flex flex-col">
+            </div>
+          </div>
+        }
+        center={
+          <div className="h-full flex flex-col min-h-0">
         <header className="border-b border-gray-800 bg-gray-900/30 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -737,6 +768,7 @@ export default function ProjectPage({ params }: PageProps) {
         <div className="flex-1 p-6">
           <div className="mb-6">
             <ProjectMap
+              height="520px"
               points={points.map(p => ({
                 id: p.id,
                 name: p.name,
@@ -758,26 +790,32 @@ export default function ProjectPage({ params }: PageProps) {
               onAreaPointsUpdate={setAreaPoints}
               onDeletePoint={handleDeletePoint}
               onEditPoint={handleEditPoint}
+              selectedPointId={selectedPointId}
+              onSelectPoint={(p: any) => setSelectedPointId(p?.id ?? null)}
             />
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-gray-100 mb-4">Coordinates</h2>
+            <h2 className="text-lg font-semibold text-gray-100 mb-4">{t('workspace.coordinates')}</h2>
             <div className="border border-gray-800 bg-gray-900/30 rounded-lg overflow-hidden">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-800">
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-300">Point Name</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-300">Easting (m)</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-300">Northing (m)</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-300">Elevation (m)</th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-300">Actions</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-300">{t('points.pointName')}</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-300">{t('points.easting')}</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-300">{t('points.northing')}</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-300">{t('points.elevation')}</th>
+                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-300">{t('common.actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {points.length > 0 ? (
                     points.map((point) => (
-                      <tr key={point.id} className="border-b border-gray-800/50">
+                      <tr
+                        key={point.id}
+                        onClick={() => setSelectedPointId(point.id)}
+                        className={`border-b border-gray-800/50 ${selectedPointId === point.id ? 'bg-[var(--accent-subtle)]' : 'hover:bg-white/5'}`}
+                      >
                         <td className="px-4 py-3 font-mono text-gray-100">
                           {point.name}
                           {point.locked && <span className="ml-1">🔒</span>}
@@ -801,21 +839,21 @@ export default function ProjectPage({ params }: PageProps) {
                               onClick={() => handleCopyCoords(point)}
                               className="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded transition-colors"
                             >
-                              {copiedId === point.id ? 'Copied!' : 'Copy'}
+                              {copiedId === point.id ? t('common.copied') : t('common.copy')}
                             </button>
                             <button
                               onClick={() => handleEditPoint(point)}
                               className="text-xs px-2 py-1 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded transition-colors"
                             >
-                              Edit
+                              {t('common.edit')}
                             </button>
                             <button
                               onClick={() => handleDeletePoint(point)}
                               disabled={!!point.locked}
                               className="text-xs px-2 py-1 bg-red-900/40 hover:bg-red-900/60 text-red-200 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                              title={point.locked ? 'Locked control points cannot be deleted' : 'Delete point'}
+                              title={point.locked ? t('workspace.lockedCannotDelete') : t('workspace.deletePoint')}
                             >
-                              Delete
+                              {t('common.delete')}
                             </button>
                           </div>
                         </td>
@@ -824,7 +862,7 @@ export default function ProjectPage({ params }: PageProps) {
                   ) : (
                     <tr>
                       <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
-                        No points yet. Use "Add Point" or "Upload CSV" to get started.
+                        {t('workspace.noPointsHint')}
                       </td>
                     </tr>
                   )}
@@ -833,7 +871,164 @@ export default function ProjectPage({ params }: PageProps) {
             </div>
           </div>
         </div>
-      </main>
+          </div>
+        }
+        right={
+          <div className="p-3 space-y-3">
+            <div className="rounded border border-white/5 bg-gray-950/20 p-3">
+              <div className="text-xs uppercase tracking-wider text-gray-400 mb-2">Inspector</div>
+              {selectedPoint ? (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="font-mono text-lg text-gray-100">{selectedPoint.name}</div>
+                    <button onClick={() => setSelectedPointId(null)} className="text-xs text-gray-400 hover:text-gray-200">
+                      Clear
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="rounded bg-gray-950/30 border border-gray-800 p-2">
+                      <div className="text-gray-500">E</div>
+                      <div className="font-mono text-gray-200">{selectedPoint.easting.toFixed(4)}</div>
+                    </div>
+                    <div className="rounded bg-gray-950/30 border border-gray-800 p-2">
+                      <div className="text-gray-500">N</div>
+                      <div className="font-mono text-gray-200">{selectedPoint.northing.toFixed(4)}</div>
+                    </div>
+                    <div className="rounded bg-gray-950/30 border border-gray-800 p-2">
+                      <div className="text-gray-500">Z</div>
+                      <div className="font-mono text-gray-200">
+                        {selectedPoint.elevation !== null ? selectedPoint.elevation.toFixed(3) : '-'}
+                      </div>
+                    </div>
+                    <div className="rounded bg-gray-950/30 border border-gray-800 p-2">
+                      <div className="text-gray-500">Type</div>
+                      <div className="text-gray-200">{selectedPoint.is_control ? 'Control' : 'Detail'}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleCopyCoords(selectedPoint)}
+                      className="flex-1 px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-gray-200 text-sm"
+                    >
+                      {copiedId === selectedPoint.id ? t('common.copied') : t('common.copy')}
+                    </button>
+                    <button
+                      onClick={() => handleEditPoint(selectedPoint)}
+                      disabled={!!selectedPoint.locked}
+                      className="flex-1 px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-gray-200 text-sm disabled:opacity-50"
+                    >
+                      {t('common.edit')}
+                    </button>
+                    <button
+                      onClick={() => handleDeletePoint(selectedPoint)}
+                      disabled={!!selectedPoint.locked}
+                      className="flex-1 px-3 py-2 rounded bg-red-900/30 hover:bg-red-900/50 text-red-200 text-sm disabled:opacity-50"
+                    >
+                      {t('common.delete')}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-500">Select a point on the map or in the table.</div>
+              )}
+            </div>
+
+            <div className="rounded border border-white/5 bg-gray-950/20 p-3 text-sm text-gray-200 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-400">Points</span>
+                <span className="font-mono">{points.length}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-400">Parcels</span>
+                <span className="font-mono">{parcels.length}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-400">Map mode</span>
+                <span className="font-mono">{mapMode}</span>
+              </div>
+            </div>
+          </div>
+        }
+        bottom={
+          <div className="h-full">
+            <div className="sticky top-0 z-10 bg-[var(--bg-secondary)] border-b border-white/5 px-3 py-2 flex items-center gap-2">
+              <button
+                onClick={() => setBottomTab('log')}
+                className={`px-3 py-1.5 rounded text-sm ${
+                  bottomTab === 'log'
+                    ? 'bg-[var(--accent)] text-black font-semibold'
+                    : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
+                }`}
+              >
+                Calculation Log
+              </button>
+              <button
+                onClick={() => setBottomTab('fieldbook')}
+                className={`px-3 py-1.5 rounded text-sm ${
+                  bottomTab === 'fieldbook'
+                    ? 'bg-[var(--accent)] text-black font-semibold'
+                    : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
+                }`}
+              >
+                Field Notes
+              </button>
+            </div>
+
+            {bottomTab === 'fieldbook' ? (
+              <div className="p-3 space-y-2 text-sm text-gray-200">
+                <div className="text-gray-400">
+                  Field Notes stores structured observations (leveling, traverse, control) in textbook-style tables and keeps an audit trail.
+                </div>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/fieldbook?project=${params.id}`}
+                    className="px-4 py-2 rounded bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold"
+                  >
+                    Open Field Book
+                  </Link>
+                  <Link href="/field" className="px-4 py-2 rounded bg-gray-800 hover:bg-gray-700 text-gray-200">
+                    Open Field Mode
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className="p-3 grid grid-cols-1 lg:grid-cols-[16rem_1fr] gap-3">
+                <div className="space-y-2">
+                  <div className="text-xs uppercase tracking-wider text-gray-400">Recent</div>
+                  {calcLog.length ? (
+                    calcLog.map((s, i) => (
+                      <button
+                        key={`${s.title ?? 'solution'}-${i}`}
+                        onClick={() => setActiveSolutionIndex(i)}
+                        className={`w-full text-left px-3 py-2 rounded border ${
+                          i === activeSolutionIndex
+                            ? 'border-[var(--accent)] bg-[var(--accent-subtle)]'
+                            : 'border-gray-800 bg-gray-950/20 hover:bg-white/5'
+                        }`}
+                      >
+                        <div className="text-sm text-gray-200 truncate">{s.title ?? 'Solution'}</div>
+                        <div className="text-xs text-gray-500 truncate">
+                          {s.result?.[0]?.label ? `${s.result[0].label}: ${s.result[0].value}` : `${s.result?.length ?? 0} result(s)`}
+                        </div>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-500">Run a traverse, compute an area, or build a parcel to see solutions here.</div>
+                  )}
+                </div>
+
+                <div className="min-h-0">
+                  {calcLog[activeSolutionIndex] ? (
+                    <SolutionRenderer solution={calcLog[activeSolutionIndex]} />
+                  ) : (
+                    <div className="rounded border border-gray-800 bg-gray-950/20 p-4 text-sm text-gray-500">No solution selected.</div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        }
+      />
 
       <AddPointModal
         isOpen={showAddPoint}
@@ -873,7 +1068,12 @@ export default function ProjectPage({ params }: PageProps) {
         onClose={() => setShowTraverse(false)}
         projectId={params.id}
         onTraverseComplete={handlePointAdded}
-        onTraverseResult={setTraverseResult}
+        onTraverseResult={(r: any) => {
+          setTraverseResult(r)
+          try {
+            pushSolution(bowditchAdjustmentSolutionFromResult(r))
+          } catch {}
+        }}
       />
 
       <ParcelAreaModal
@@ -890,7 +1090,13 @@ export default function ProjectPage({ params }: PageProps) {
           elevation: p.elevation || undefined,
           is_control: p.is_control
         }))}
-        onAreaResult={setAreaResult}
+        onAreaResult={(r: any) => {
+          setAreaResult(r)
+          try {
+            const pts = areaPoints.map((p) => ({ easting: p.easting, northing: p.northing }))
+            pushSolution(coordinateAreaSolution(pts).solution)
+          } catch {}
+        }}
       />
 
       {showStakeout && (
@@ -939,6 +1145,6 @@ export default function ProjectPage({ params }: PageProps) {
           onDraftBoundaryChange={setDraftParcelBoundary}
         />
       )}
-    </div>
+    </>
   )
 }

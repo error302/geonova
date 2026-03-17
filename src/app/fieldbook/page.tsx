@@ -95,6 +95,11 @@ export default function DigitalFieldBookPage() {
   const [projectId, setProjectId] = useState('')
   const [projects, setProjects] = useState<Array<{ id: string; name: string }>>([])
 
+  useEffect(() => {
+    const pid = new URLSearchParams(window.location.search).get('project')
+    if (pid) setProjectId(pid)
+  }, [])
+
   const [name, setName] = useState('')
   const [fieldbookId, setFieldbookId] = useState<string | null>(null)
   const [saveStatus, setSaveStatus] = useState<SaveStatus>({ kind: 'idle' })

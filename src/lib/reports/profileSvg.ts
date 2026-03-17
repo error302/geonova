@@ -124,8 +124,20 @@ export function generateLongitudinalProfileSvg(points: LongitudinalProfilePoint[
   const mmPerM_H = 1000 / hDenom
   const mmPerM_V = 1000 / vDenom
 
-  const x = (ch: number) => plotX0 + (ch - minCh) * mmPerM_H
-  const y = (el: number) => plotY1 - (el - minEl) * mmPerM_V
+  const usedW = spanCh * mmPerM_H
+  const usedH = spanEl * mmPerM_V
+  const spareW = Math.max(0, plotW - usedW)
+  const spareH = Math.max(0, plotH - usedH)
+  const padChM = spareW / (2 * mmPerM_H)
+  const padElM = spareH / (2 * mmPerM_V)
+
+  const axisMinCh = minCh - padChM
+  const axisMaxCh = maxCh + padChM
+  const axisMinEl = minEl - padElM
+  const axisMaxEl = maxEl + padElM
+
+  const x = (ch: number) => plotX0 + (ch - axisMinCh) * mmPerM_H
+  const y = (el: number) => plotY1 - (el - axisMinEl) * mmPerM_V
 
   const hMajor = niceStep(spanCh / 8)
   const vMajor = niceStep(spanEl / 6)
@@ -134,13 +146,13 @@ export function generateLongitudinalProfileSvg(points: LongitudinalProfilePoint[
 
   const xTicksMinor: number[] = []
   const xTicksMajor: number[] = []
-  for (let v = Math.floor(minCh / hMinor) * hMinor; v <= maxCh + hMinor * 0.5; v += hMinor) xTicksMinor.push(v)
-  for (let v = Math.floor(minCh / hMajor) * hMajor; v <= maxCh + hMajor * 0.5; v += hMajor) xTicksMajor.push(v)
+  for (let v = Math.floor(axisMinCh / hMinor) * hMinor; v <= axisMaxCh + hMinor * 0.5; v += hMinor) xTicksMinor.push(v)
+  for (let v = Math.floor(axisMinCh / hMajor) * hMajor; v <= axisMaxCh + hMajor * 0.5; v += hMajor) xTicksMajor.push(v)
 
   const yTicksMinor: number[] = []
   const yTicksMajor: number[] = []
-  for (let v = Math.floor(minEl / vMinor) * vMinor; v <= maxEl + vMinor * 0.5; v += vMinor) yTicksMinor.push(v)
-  for (let v = Math.floor(minEl / vMajor) * vMajor; v <= maxEl + vMajor * 0.5; v += vMajor) yTicksMajor.push(v)
+  for (let v = Math.floor(axisMinEl / vMinor) * vMinor; v <= axisMaxEl + vMinor * 0.5; v += vMinor) yTicksMinor.push(v)
+  for (let v = Math.floor(axisMinEl / vMajor) * vMajor; v <= axisMaxEl + vMajor * 0.5; v += vMajor) yTicksMajor.push(v)
 
   const gridMinor = xTicksMinor
     .map((t) => {
@@ -242,4 +254,3 @@ export function generateLongitudinalProfileSvg(points: LongitudinalProfilePoint[
     `</g>\n` +
     `</svg>\n`
 }
-

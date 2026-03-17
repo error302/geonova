@@ -34,8 +34,19 @@ export function ControlBook({
 
   return (
     <div className="card">
-      <div className="card-header">
+      <div className="card-header flex items-center justify-between gap-3">
         <span className="label">{t('field.controlNotes')}</span>
+        <button
+          onClick={() =>
+            setRows((p) => [
+              ...p,
+              { id: crypto.randomUUID(), pointId: `P${p.length + 1}`, instrumentHeight: '1.500', targetHeight: '1.500', bearing: '', verticalAngle: '0', slopeDistance: '', remarks: '' },
+            ])
+          }
+          className="btn btn-secondary text-xs"
+        >
+          {t('common.addRow')}
+        </button>
       </div>
       <div className="card-body space-y-4">
         <div className="grid md:grid-cols-4 gap-3">

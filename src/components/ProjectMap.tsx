@@ -41,6 +41,9 @@ interface ProjectMapProps {
     boundary_points: Array<{ easting: number; northing: number }>
   }>
   draftParcelBoundary?: Array<{ easting: number; northing: number }> | null
+  height?: string
+  selectedPointId?: string | null
+  onSelectPoint?: (point: SurveyPoint) => void
   utmZone: number
   hemisphere: 'N' | 'S'
   onMapClick?: (lat: number, lon: number) => void
@@ -154,6 +157,9 @@ export default function ProjectMap({
   points, 
   parcels = [],
   draftParcelBoundary = null,
+  height = '500px',
+  selectedPointId = null,
+  onSelectPoint,
   utmZone, 
   hemisphere, 
   onMapClick, 
@@ -271,6 +277,8 @@ export default function ProjectMap({
       const newPoints = [...localAreaPoints, point]
       setLocalAreaPoints(newPoints)
       onAreaPointsUpdate?.(newPoints)
+    } else {
+      onSelectPoint?.(point)
     }
   }
 
@@ -354,7 +362,7 @@ export default function ProjectMap({
       <MapContainer
         center={center}
         zoom={13}
-        style={{ height: '500px', width: '100%', borderRadius: '8px' }}
+        style={{ height, width: '100%', borderRadius: '8px' }}
         className="z-0"
       >
         <LayersControl position="topright">
@@ -452,6 +460,7 @@ export default function ProjectMap({
             const isDistanceSelected = distancePoints.some(s => s.id === point.id)
             const isAreaSelected = localAreaPoints.some(d => d.id === point.id)
             const isAreaFirst = localAreaPoints.length > 0 && localAreaPoints[0].id === point.id
+            const isSelected = !!selectedPointId && point.id === selectedPointId
             
             // Default to amber for survey points
             let icon = amberIcon
@@ -464,6 +473,7 @@ export default function ProjectMap({
             }
             if (isDistanceSelected) icon = selectedIcon
             if (isAreaSelected || isAreaFirst) icon = areaIcon
+            if (isSelected) icon = selectedIcon
             
             return (
               <Marker

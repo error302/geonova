@@ -245,9 +245,14 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
             </div>
 
             <div>
-              {areaResult && !isSelecting ? (
+              {areaResult ? (
                 <div className="bg-gray-800 rounded-xl p-6">
                   <h3 className="font-bold text-white text-lg mb-4">PARCEL SUMMARY</h3>
+                  {isSelecting ? (
+                    <div className="mb-3 rounded border border-amber-700/50 bg-amber-900/10 px-3 py-2 text-xs text-amber-200">
+                      Preview only — close the boundary (click the first point again) to enter a name and save.
+                    </div>
+                  ) : null}
                   <div className="border-b border-gray-700 pb-2 mb-3">
                     <span className="text-gray-400 text-sm">Boundary: </span>
                     <span className="text-gray-200">
