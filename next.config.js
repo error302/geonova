@@ -66,10 +66,6 @@ const nextConfig = {
             key: 'X-Content-Type-Options',
             value: 'nosniff'
           },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=0, s-maxage=3600'
-          },
         ],
       },
       {
