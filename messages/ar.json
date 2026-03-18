@@ -226,6 +226,22 @@
     "exportGeoJSON": "تصدير GeoJSON",
     "exportProject": "تصدير المشروع"
   },
+  "workspace": {
+    "coordinates": "الإحداثيات",
+    "actions": "الإجراءات",
+    "distanceTool": "أداة المسافة",
+    "distanceActive": "المسافة نشطة",
+    "areaTool": "أداة المساحة",
+    "areaActive": "المساحة نشطة",
+    "generateSurveyPlan": "إنشاء خطة المسح",
+    "stakeoutAllPoints": "رصد جميع النقاط",
+    "nearbyBeacons": "المعالم القريبة",
+    "profiles": "الملفات الشخصية",
+    "buildParcel": "بناءParcel",
+    "deletePoint": "حذف النقطة",
+    "lockedCannotDelete": "لا يمكن حذف نقاط التحكم المقفلة",
+    "noPointsHint": "لا توجد نقاط حتى الآن. استخدم \"إضافة نقطة\" أو \"استيراد CSV\" للبدء."
+  },
   "common": {
     "save": "حفظ",
     "saving": "Saving...",

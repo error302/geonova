@@ -1,101 +1,135 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import type { CurrencyCode, PlanId } from '@/lib/subscription/catalog'
+import { PLAN_CATALOG } from '@/lib/subscription/catalog'
 import {
-  getPaymentMethods,
-  createPaymentIntent,
+  checkMpesaPaymentStatus,
   getCurrencyForCountry,
-  SUBSCRIPTION_PLANS,
-  SubscriptionPlan
+  getPaymentMethods,
+  startSubscriptionPayment,
+  type PaymentMethod,
 } from '@/lib/enterprise'
 
 export default function CheckoutPage() {
-  const [step, setStep] = useState(1)
-  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null)
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
+  const [selectedPlanId, setSelectedPlanId] = useState<PlanId>('pro')
   const [country, setCountry] = useState('Kenya')
-  const [currency, setCurrency] = useState('KES')
-  const [paymentMethod, setPaymentMethod] = useState('')
-  const [phone, setPhone] = useState('')
+  const [currency, setCurrency] = useState<CurrencyCode>('KES')
+  const [method, setMethod] = useState<PaymentMethod['type']>('mpesa')
+  const [phoneNumber, setPhoneNumber] = useState('')
   const [email, setEmail] = useState('')
   const [processing, setProcessing] = useState(false)
-  const [paymentSuccess, setPaymentSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [mpesa, setMpesa] = useState<{ paymentId: string; checkoutRequestId: string } | null>(null)
 
-  const paymentMethods = getPaymentMethods(country)
+  const plan = useMemo(
+    () => PLAN_CATALOG.find((p) => p.id === selectedPlanId)!,
+    [selectedPlanId]
+  )
 
-  const handleCountryChange = (c: string) => {
-    setCountry(c)
-    setCurrency(getCurrencyForCountry(c))
+  const paymentMethods = useMemo(() => getPaymentMethods(country), [country])
+
+  useEffect(() => {
+    if (!paymentMethods.some((m) => m.type === method)) {
+      setMethod(paymentMethods[0]?.type ?? 'card')
+    }
+  }, [paymentMethods, method])
+
+  const formatPrice = (amount: number) => {
+    const symbols: Partial<Record<CurrencyCode, string>> = {
+      KES: 'KSh ',
+      UGX: 'USh ',
+      TZS: 'TSh ',
+      NGN: '₦ ',
+      GHS: 'GH₵ ',
+      ZAR: 'R ',
+      USD: '$ ',
+      EUR: '€ ',
+      GBP: '£ ',
+      INR: '₹ ',
+      IDR: 'Rp ',
+      BRL: 'R$ ',
+      AUD: 'A$ ',
+    }
+    return `${symbols[currency] ?? `${currency} `}${amount.toLocaleString()}`
   }
 
-  const handleSubscribe = async () => {
-    if (!selectedPlan || !paymentMethod) return
-    
+  const onStart = async () => {
+    setError(null)
     setProcessing(true)
-    
-    const intent = createPaymentIntent(
-      selectedPlan.price,
-      currency,
-      paymentMethod as any
-    )
+    try {
+      const res = await startSubscriptionPayment({
+        planId: plan.id,
+        currency,
+        method,
+        email,
+        phoneNumber: phoneNumber || undefined,
+        country,
+      })
 
-    setTimeout(() => {
+      if (res.kind === 'activated') {
+        window.location.href = '/dashboard'
+        return
+      }
+
+      if (res.kind === 'redirect') {
+        window.location.href = res.url
+        return
+      }
+
+      if (res.kind === 'mpesa') {
+        setMpesa({ paymentId: res.paymentId, checkoutRequestId: res.checkoutRequestId })
+        setStep(4)
+        return
+      }
+
+      setError('Unexpected payment response.')
+    } catch (e: any) {
+      setError(e?.message ?? 'Payment failed.')
+    } finally {
       setProcessing(false)
-      setPaymentSuccess(true)
-    }, 2000)
+    }
   }
 
-  const formatPrice = (price: number) => {
-    const symbol = currency === 'KES' ? 'KES' : currency === 'USD' ? '$' : currency
-    return `${symbol} ${price.toLocaleString()}`
-  }
-
-  if (paymentSuccess) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">✓</span>
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Successful!</h2>
-          <p className="text-gray-600 mb-6">Your {selectedPlan?.name} subscription is now active.</p>
-          <button
-            onClick={() => window.location.href = '/dashboard'}
-            className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Go to Dashboard
-          </button>
-        </div>
-      </div>
-    )
-  }
+  const canContinueDetails =
+    !!email && (method !== 'mpesa' || !!phoneNumber) && paymentMethods.some((m) => m.type === method)
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Checkout</h1>
-        <p className="text-gray-600 mb-8">Complete your subscription payment</p>
+    <div className="min-h-screen bg-[#0a0a0f]">
+      <div className="max-w-4xl mx-auto px-6 py-10">
+        <h1 className="text-3xl font-bold text-white mb-2">Checkout</h1>
+        <p className="text-gray-400 mb-8">Choose a plan and complete payment.</p>
 
         <div className="flex gap-2 mb-8">
-          {[1, 2, 3].map(s => (
+          {[1, 2, 3].map((s) => (
             <div
               key={s}
-              className={`flex-1 h-2 rounded ${
-                step >= s ? 'bg-blue-600' : 'bg-gray-200'
-              }`}
+              className={`flex-1 h-2 rounded ${step >= (s as any) ? 'bg-[#E8841A]' : 'bg-[#222]'}`}
             />
           ))}
         </div>
 
+        {error && (
+          <div className="mb-6 rounded-lg border border-red-900/50 bg-red-900/10 px-4 py-3 text-sm text-red-200">
+            {error}
+          </div>
+        )}
+
         {step === 1 && (
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold mb-4">Select Plan</h2>
-            
+          <div className="bg-[#111] rounded-xl border border-[#222] p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">1) Select Plan</h2>
+
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Country</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Country</label>
               <select
                 value={country}
-                onChange={(e) => handleCountryChange(e.target.value)}
-                className="w-full p-3 border rounded-lg"
+                onChange={(e) => {
+                  const c = e.target.value
+                  setCountry(c)
+                  setCurrency(getCurrencyForCountry(c))
+                }}
+                className="w-full p-3 bg-[#0a0a0f] border border-[#222] rounded-lg text-white"
               >
                 <option value="Kenya">Kenya</option>
                 <option value="Uganda">Uganda</option>
@@ -103,38 +137,40 @@ export default function CheckoutPage() {
                 <option value="Nigeria">Nigeria</option>
                 <option value="Ghana">Ghana</option>
                 <option value="South Africa">South Africa</option>
+                <option value="Germany">Germany</option>
+                <option value="UK">UK</option>
+                <option value="US">US</option>
               </select>
+              <p className="text-xs text-gray-500 mt-2">Currency auto-selects from country, and you can still pay via card globally.</p>
             </div>
 
             <div className="space-y-3">
-              {SUBSCRIPTION_PLANS.map(plan => (
-                <div
-                  key={plan.id}
-                  onClick={() => setSelectedPlan(plan)}
-                  className={`p-4 border-2 rounded-lg cursor-pointer transition ${
-                    selectedPlan?.id === plan.id
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
+              {PLAN_CATALOG.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setSelectedPlanId(p.id)}
+                  className={`w-full text-left p-4 border-2 rounded-lg transition ${
+                    selectedPlanId === p.id ? 'border-[#E8841A] bg-[#E8841A]/10' : 'border-[#222] hover:border-[#333]'
                   }`}
                 >
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between gap-4">
                     <div>
-                      <h3 className="font-semibold text-lg">{plan.name}</h3>
-                      <p className="text-sm text-gray-500">{plan.storageGb}GB storage • {plan.teamMembersLimit === -1 ? 'Unlimited' : plan.teamMembersLimit} users</p>
+                      <div className="text-white font-semibold text-lg">{p.name}</div>
+                      <div className="text-gray-500 text-sm">{p.features.slice(0, 2).join(' • ')}</div>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold">{formatPrice(plan.price)}</p>
-                      <p className="text-xs text-gray-500">/year</p>
+                      <div className="text-[#E8841A] font-bold text-2xl">{formatPrice(p.prices[currency])}</div>
+                      <div className="text-gray-500 text-xs">/month</div>
                     </div>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
 
             <button
               onClick={() => setStep(2)}
-              disabled={!selectedPlan}
-              className="w-full mt-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300"
+              className="w-full mt-6 py-3 bg-[#E8841A] text-black rounded-lg hover:bg-[#d47619]"
             >
               Continue
             </button>
@@ -142,69 +178,67 @@ export default function CheckoutPage() {
         )}
 
         {step === 2 && (
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold mb-4">Payment Details</h2>
+          <div className="bg-[#111] rounded-xl border border-[#222] p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">2) Payment Details</h2>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="w-full p-3 border rounded-lg"
-              />
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  className="w-full p-3 bg-[#0a0a0f] border border-[#222] rounded-lg text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Phone (M-Pesa only)</label>
+                <input
+                  type="tel"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="+254700000000"
+                  className="w-full p-3 bg-[#0a0a0f] border border-[#222] rounded-lg text-white"
+                />
+                <p className="text-xs text-gray-500 mt-2">Required only for M-Pesa STK Push.</p>
+              </div>
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+254 700 000 000"
-                className="w-full p-3 border rounded-lg"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                For M-Pesa/Airtel Money STK push
-              </p>
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+            <div className="mt-6">
+              <label className="block text-sm font-medium text-gray-300 mb-2">Payment Method</label>
               <div className="space-y-2">
-                {paymentMethods.map(pm => (
+                {paymentMethods.map((pm) => (
                   <label
                     key={pm.id}
-                    className={`flex items-center p-3 border rounded-lg cursor-pointer ${
-                      paymentMethod === pm.id ? 'border-blue-500 bg-blue-50' : ''
+                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer ${
+                      method === pm.type ? 'border-[#E8841A] bg-[#E8841A]/10' : 'border-[#222]'
                     }`}
                   >
                     <input
                       type="radio"
                       name="paymentMethod"
                       value={pm.type}
-                      checked={paymentMethod === pm.id}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="mr-3"
+                      checked={method === pm.type}
+                      onChange={() => setMethod(pm.type)}
                     />
-                    <span>{pm.name}</span>
+                    <span className="text-gray-200">{pm.name}</span>
                   </label>
                 ))}
               </div>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setStep(1)}
-                className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                className="flex-1 py-3 border border-[#333] text-gray-200 rounded-lg hover:bg-[#0f172a]"
               >
                 Back
               </button>
               <button
                 onClick={() => setStep(3)}
-                disabled={!paymentMethod || !email}
-                className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300"
+                disabled={!canContinueDetails}
+                className="flex-1 py-3 bg-[#E8841A] text-black rounded-lg hover:bg-[#d47619] disabled:bg-gray-700 disabled:text-gray-300"
               >
                 Review Order
               </button>
@@ -212,45 +246,89 @@ export default function CheckoutPage() {
           </div>
         )}
 
-        {step === 3 && selectedPlan && (
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold mb-4">Confirm Order</h2>
+        {step === 3 && (
+          <div className="bg-[#111] rounded-xl border border-[#222] p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">3) Confirm & Pay</h2>
 
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <div className="flex justify-between mb-2">
-                <span className="text-gray-600">{selectedPlan.name} Plan</span>
-                <span className="font-medium">{formatPrice(selectedPlan.price)}</span>
+            <div className="rounded-lg border border-[#222] bg-[#0a0a0f] p-4 mb-6">
+              <div className="flex items-center justify-between text-gray-200 mb-2">
+                <span>Plan</span>
+                <span className="font-semibold">{plan.name}</span>
               </div>
-              <div className="flex justify-between mb-2">
-                <span className="text-gray-600">Processing Fee</span>
-                <span className="font-medium">{formatPrice(0)}</span>
+              <div className="flex items-center justify-between text-gray-200 mb-2">
+                <span>Currency</span>
+                <span className="font-semibold">{currency}</span>
               </div>
-              <div className="border-t pt-2 mt-2 flex justify-between">
+              <div className="flex items-center justify-between text-gray-200 mb-2">
+                <span>Method</span>
+                <span className="font-semibold">{paymentMethods.find((p) => p.type === method)?.name ?? method}</span>
+              </div>
+              <div className="flex items-center justify-between border-t border-[#222] pt-2 mt-2 text-gray-200">
                 <span className="font-semibold">Total</span>
-                <span className="font-bold text-lg">{formatPrice(selectedPlan.price)}</span>
+                <span className="font-bold text-lg text-[#E8841A]">{formatPrice(plan.prices[currency])}</span>
               </div>
             </div>
 
-            <div className="text-sm text-gray-600 mb-6">
-              <p>Payment will be processed via {paymentMethods.find(p => p.type === paymentMethod)?.name}</p>
-              <p className="mt-1">You will receive an STK push on your phone</p>
+            <div className="text-xs text-gray-500 mb-6">
+              Card payments use Stripe Checkout (Visa/Mastercard). PayPal redirects to PayPal approval. M-Pesa triggers STK push.
             </div>
 
             <div className="flex gap-3">
               <button
                 onClick={() => setStep(2)}
-                className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                className="flex-1 py-3 border border-[#333] text-gray-200 rounded-lg hover:bg-[#0f172a]"
               >
                 Back
               </button>
               <button
-                onClick={handleSubscribe}
+                onClick={onStart}
                 disabled={processing}
-                className="flex-1 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-300"
+                className="flex-1 py-3 bg-[#E8841A] text-black rounded-lg hover:bg-[#d47619] disabled:bg-gray-700 disabled:text-gray-300"
               >
-                {processing ? 'Processing...' : `Pay ${formatPrice(selectedPlan.price)}`}
+                {processing ? 'Starting payment…' : 'Pay Now'}
               </button>
             </div>
+          </div>
+        )}
+
+        {step === 4 && mpesa && (
+          <div className="bg-[#111] rounded-xl border border-[#222] p-6">
+            <h2 className="text-xl font-semibold text-white mb-2">M-Pesa STK Push Sent</h2>
+            <p className="text-gray-400 mb-6">Complete payment on your phone, then verify to activate your plan.</p>
+
+            <button
+              onClick={async () => {
+                setProcessing(true)
+                setError(null)
+                try {
+                  const r = await checkMpesaPaymentStatus(mpesa)
+                  if (r.status === 'completed') {
+                    window.location.href = '/dashboard'
+                    return
+                  }
+                  if (r.status === 'failed') setError('Payment failed. Please try again.')
+                  if (r.status === 'pending') setError('Still pending. If you have paid, wait a moment then try again.')
+                } catch (e: any) {
+                  setError(e?.message ?? 'Failed to verify payment.')
+                } finally {
+                  setProcessing(false)
+                }
+              }}
+              disabled={processing}
+              className="w-full py-3 bg-[#E8841A] text-black rounded-lg hover:bg-[#d47619] disabled:bg-gray-700 disabled:text-gray-300"
+            >
+              {processing ? 'Checking…' : 'Verify Payment'}
+            </button>
+
+            <button
+              onClick={() => {
+                setMpesa(null)
+                setStep(2)
+              }}
+              className="w-full mt-3 py-3 border border-[#333] text-gray-200 rounded-lg hover:bg-[#0f172a]"
+            >
+              Change method
+            </button>
           </div>
         )}
       </div>

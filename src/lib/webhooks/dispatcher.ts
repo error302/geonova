@@ -1,3 +1,5 @@
+import 'server-only'
+import crypto from 'crypto'
 import { createClient } from '@supabase/supabase-js'
 import { WebhookPayload, WebhookEvent, WEBHOOK_SIGNATURE_HEADER } from './types'
 
@@ -72,17 +74,9 @@ export async function dispatchWebhook(
 }
 
 function generateSignature(payload: WebhookPayload, secret: string): string {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(JSON.stringify(payload))
-  
-  let hash = 0
-  for (let i = 0; i < data.length; i++) {
-    const char = data[i]
-    hash = ((hash << 5) - hash) + char
-    hash = hash & hash
-  }
-  
-  return `sha256=${Math.abs(hash).toString(16)}`
+  const raw = JSON.stringify(payload)
+  const digest = crypto.createHmac('sha256', secret).update(raw).digest('hex')
+  return `sha256=${digest}`
 }
 
 async function recordDelivery(
@@ -106,16 +100,12 @@ async function recordDelivery(
 }
 
 export function verifyWebhookSignature(payload: string, signature: string, secret: string): boolean {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(payload)
-  
-  let hash = 0
-  for (let i = 0; i < data.length; i++) {
-    const char = data[i]
-    hash = ((hash << 5) - hash) + char
-    hash = hash & hash
+  const expected = `sha256=${crypto.createHmac('sha256', secret).update(payload).digest('hex')}`
+  try {
+    const a = Buffer.from(String(signature || ''), 'utf8')
+    const b = Buffer.from(expected, 'utf8')
+    return a.length === b.length && crypto.timingSafeEqual(a, b)
+  } catch {
+    return false
   }
-  
-  const expected = `sha256=${Math.abs(hash).toString(16)}`
-  return signature === expected
 }

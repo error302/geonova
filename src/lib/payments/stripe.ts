@@ -24,6 +24,24 @@ export interface StripePaymentIntent {
   status: string
 }
 
+export interface CreateCheckoutSessionParams {
+  mode: 'payment' | 'subscription'
+  amount: number
+  currency: string
+  name: string
+  successUrl: string
+  cancelUrl: string
+  metadata?: Record<string, string>
+}
+
+export interface StripeCheckoutSession {
+  id: string
+  url: string
+  paymentStatus?: string
+  amountTotal?: number
+  currency?: string
+}
+
 const STRIPE_API_VERSION = '2023-10-16'
 
 export class StripeService {
@@ -31,6 +49,36 @@ export class StripeService {
 
   constructor(config: StripeConfig) {
     this.secretKey = config.secretKey
+  }
+
+  private currencyMinorUnitDigits(currency: string): number {
+    try {
+      const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: currency.toUpperCase() })
+      return nf.resolvedOptions().maximumFractionDigits ?? 2
+    } catch {
+      return 2
+    }
+  }
+
+  private toMinorUnits(amount: number, currency: string): number {
+    const digits = this.currencyMinorUnitDigits(currency)
+    const factor = Math.pow(10, digits)
+    return Math.round(amount * factor)
+  }
+
+  private fromMinorUnits(amountMinor: number, currency: string): number {
+    const digits = this.currencyMinorUnitDigits(currency)
+    const factor = Math.pow(10, digits)
+    return amountMinor / factor
+  }
+
+  private buildMetadataParams(metadata?: Record<string, string>) {
+    if (!metadata) return {}
+    const out: Record<string, string> = {}
+    for (const [k, v] of Object.entries(metadata)) {
+      out[`metadata[${k}]`] = v
+    }
+    return out
   }
 
   async createPaymentIntent(params: CreatePaymentIntentParams): Promise<StripePaymentIntent> {
@@ -42,13 +90,11 @@ export class StripeService {
         'Stripe-Version': STRIPE_API_VERSION
       },
       body: new URLSearchParams({
-        amount: String(Math.round(params.amount * 100)),
+        amount: String(this.toMinorUnits(params.amount, params.currency)),
         currency: params.currency.toLowerCase(),
         ...(params.customerId && { customer: params.customerId }),
-        ...(params.metadata && { 
-          metadata: JSON.stringify(params.metadata) 
-        })
-      })
+        ...this.buildMetadataParams(params.metadata),
+      }),
     })
 
     if (!response.ok) {
@@ -60,7 +106,7 @@ export class StripeService {
     return {
       id: data.id,
       clientSecret: data.client_secret,
-      amount: data.amount / 100,
+      amount: this.fromMinorUnits(data.amount, data.currency),
       currency: data.currency,
       status: data.status
     }
@@ -136,17 +182,85 @@ export class StripeService {
   }
 
   verifyWebhookSignature(payload: string, signature: string): boolean {
-    const crypto = require('crypto')
-    const timestamp = signature.split(',')[0]?.replace('t=', '')
-    const signatures = signature.split(',')?.map((s: string) => s.replace('v1=', '')) || []
-    
-    const signedPayload = `${timestamp}.${payload}`
-    const expectedSignature = crypto
-      .createHmac('sha256', process.env.STRIPE_WEBHOOK_SECRET!)
-      .update(signedPayload)
-      .digest('hex')
+    // Stripe-style signature header: "t=timestamp,v1=signature,..."
+    const crypto = require('crypto') as typeof import('crypto')
+    const parts = String(signature || '').split(',')
+    const tPart = parts.find((p: string) => p.startsWith('t='))
+    const v1Parts = parts.filter((p: string) => p.startsWith('v1='))
+    const timestamp = tPart?.slice(2)
+    const signatures = v1Parts.map((p: string) => p.slice(3)).filter(Boolean)
 
-    return signatures.some(s => s === expectedSignature)
+    if (!timestamp || signatures.length === 0) return false
+
+    const secret = process.env.STRIPE_WEBHOOK_SECRET
+    if (!secret) return false
+
+    const signedPayload = `${timestamp}.${payload}`
+    const expected = crypto.createHmac('sha256', secret).update(signedPayload).digest('hex')
+
+    try {
+      const expectedBuf = Buffer.from(expected, 'utf8')
+      return signatures.some((s: string) => {
+        const sigBuf = Buffer.from(s, 'utf8')
+        return sigBuf.length === expectedBuf.length && crypto.timingSafeEqual(sigBuf, expectedBuf)
+      })
+    } catch {
+      return false
+    }
+  }
+
+  async createCheckoutSession(params: CreateCheckoutSessionParams): Promise<StripeCheckoutSession> {
+    const body = new URLSearchParams({
+      mode: params.mode,
+      success_url: params.successUrl,
+      cancel_url: params.cancelUrl,
+      'line_items[0][quantity]': '1',
+      'line_items[0][price_data][currency]': params.currency.toLowerCase(),
+      'line_items[0][price_data][product_data][name]': params.name,
+      'line_items[0][price_data][unit_amount]': String(this.toMinorUnits(params.amount, params.currency)),
+      ...this.buildMetadataParams(params.metadata),
+    })
+
+    const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.secretKey}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Stripe-Version': STRIPE_API_VERSION,
+      },
+      body,
+    })
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}))
+      throw new Error(error?.error?.message || 'Stripe checkout session failed')
+    }
+
+    const data = await response.json()
+    return { id: data.id, url: data.url }
+  }
+
+  async getCheckoutSession(sessionId: string): Promise<{ id: string; paymentStatus: string; amountTotal: number; currency: string }> {
+    const response = await fetch(`https://api.stripe.com/v1/checkout/sessions/${sessionId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.secretKey}`,
+        'Stripe-Version': STRIPE_API_VERSION,
+      },
+    })
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}))
+      throw new Error(error?.error?.message || 'Failed to fetch Stripe session')
+    }
+
+    const data = await response.json()
+    return {
+      id: data.id,
+      paymentStatus: data.payment_status,
+      amountTotal: this.fromMinorUnits(data.amount_total ?? 0, data.currency),
+      currency: data.currency,
+    }
   }
 }
 

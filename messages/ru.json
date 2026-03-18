@@ -223,6 +223,22 @@
     "exportGeoJSON": "Экспорт GeoJSON",
     "exportProject": "Экспорт проекта"
   },
+  "workspace": {
+    "coordinates": "Координаты",
+    "actions": "Действия",
+    "distanceTool": "Инструмент расстояния",
+    "distanceActive": "Расстояние активно",
+    "areaTool": "Инструмент площади",
+    "areaActive": "Площадь активна",
+    "generateSurveyPlan": "Создать план съёмки",
+    "stakeoutAllPoints": "Вынести все точки",
+    "nearbyBeacons": "Ближайшие реперы",
+    "profiles": "Профили",
+    "buildParcel": "Создать участок",
+    "deletePoint": "Удалить точку",
+    "lockedCannotDelete": "Заблокированные контрольные точки нельзя удалить",
+    "noPointsHint": "Пока нет точек. Используйте \"Добавить точку\" или \"Импорт CSV\" чтобы начать."
+  },
   "common": {
     "save": "Сохранить",
     "saving": "Saving...",

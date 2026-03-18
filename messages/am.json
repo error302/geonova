@@ -223,6 +223,22 @@
     "exportGeoJSON": "GeoJSON ወጣ",
     "exportProject": "ፕሮጀክት ወጣ"
   },
+  "workspace": {
+    "coordinates": "ማስፈርስ ነጥብ",
+    "actions": "ተግባራት",
+    "distanceTool": "ርቀት መሳሪያ",
+    "distanceActive": "ርቀት ንቁ",
+    "areaTool": "ቦታ መሳሪያ",
+    "areaActive": "ቦታ ንቁ",
+    "generateSurveyPlan": "የስምሪያ እቅድ አውጣ",
+    "stakeoutAllPoints": "ሁሉንም ነጥቦች ምልክ",
+    "nearbyBeacons": "ቀርቄዎች ተወላህ",
+    "profiles": "ፕሮፋይሎች",
+    "buildParcel": "ፓርስል ገንባ",
+    "deletePoint": "ነጥብ ሰርዝ",
+    "lockedCannotDelete": "ተቆልቋሮ የሚቆጣጠሩ ነጥቦች ሊይወርዱ አይችሉም",
+    "noPointsHint": "እስካሁን ምንም ነጥብ የለም። ለመጀመር \"ነጥብ ጨምር\" ወይም \"CSV አስገባ\" ተጠቀም።"
+  },
   "common": {
     "save": "አስቀምጥ",
     "saving": "Saving...",

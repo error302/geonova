@@ -239,6 +239,22 @@
     "lockedCannotDelete": "Gesperrte Festpunkte können nicht gelöscht werden",
     "noPointsHint": "Noch keine Punkte. Verwenden Sie „Punkt hinzufügen“ oder „CSV hochladen“, um zu starten."
   },
+  "workspace": {
+    "coordinates": "Koordinaten",
+    "actions": "Aktionen",
+    "distanceTool": "Entfernungswerkzeug",
+    "distanceActive": "Entfernung Aktiv",
+    "areaTool": "Flächenwerkzeug",
+    "areaActive": "Fläche Aktiv",
+    "generateSurveyPlan": "Vermessungsplan Erstellen",
+    "stakeoutAllPoints": "Alle Punkte Abstecken",
+    "nearbyBeacons": "Nahegelegene Vermessungspunkte",
+    "profiles": "Profile",
+    "buildParcel": "Parzelle Erstellen",
+    "deletePoint": "Punkt Löschen",
+    "lockedCannotDelete": "Gesperrte Kontrollpunkte können nicht gelöscht werden",
+    "noPointsHint": "Noch keine Punkte. Verwenden Sie \"Punkt Hinzufügen\" oder \"CSV Importieren\" um zu beginnen."
+  },
   "common": {
     "save": "Speichern",
     "saving": "Saving...",

@@ -17,6 +17,7 @@ export interface STKPushParams {
   amount: number
   reference: string
   description?: string
+  callbackUrl?: string
 }
 
 export interface MpesaTransaction {
@@ -89,7 +90,7 @@ export class MpesaService {
         PartyA: params.phoneNumber,
         PartyB: this.shortCode,
         PhoneNumber: params.phoneNumber,
-        CallBackURL: `${process.env.NEXT_PUBLIC_APP_URL}/api/payments/mpesa/callback`,
+        CallBackURL: params.callbackUrl || `${process.env.NEXT_PUBLIC_APP_URL}/api/payments/mpesa/callback`,
         AccountReference: params.reference,
         TransactionDesc: params.description || 'GeoNova Payment'
       })

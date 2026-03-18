@@ -77,7 +77,7 @@ const faqs = [
   },
   {
     q: 'What payment methods do you accept?',
-    a: 'M-Pesa, Visa/Mastercard, and mobile money across East and West Africa.',
+    a: 'M-Pesa (Kenya), Visa/Mastercard (Stripe), and PayPal for global payments.',
   },
   {
     q: 'Is there a free trial?',

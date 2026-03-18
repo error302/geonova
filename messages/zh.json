@@ -226,6 +226,22 @@
     "exportGeoJSON": "导出GeoJSON",
     "exportProject": "导出项目"
   },
+  "workspace": {
+    "coordinates": "坐标",
+    "actions": "操作",
+    "distanceTool": "距离工具",
+    "distanceActive": "距离激活",
+    "areaTool": "面积工具",
+    "areaActive": "面积激活",
+    "generateSurveyPlan": "生成测量计划",
+    "stakeoutAllPoints": "放样所有点",
+    "nearbyBeacons": "附近标石",
+    "profiles": "剖面",
+    "buildParcel": "创建地块",
+    "deletePoint": "删除点",
+    "lockedCannotDelete": "锁定的控制点无法删除",
+    "noPointsHint": "暂无点位。使用\"添加点位\"或\"导入CSV\"开始。"
+  },
   "common": {
     "save": "保存",
     "saving": "Saving...",

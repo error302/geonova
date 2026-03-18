@@ -223,6 +223,22 @@
     "exportGeoJSON": "Ekspor GeoJSON",
     "exportProject": "Ekspor Proyek"
   },
+  "workspace": {
+    "coordinates": "Koordinat",
+    "actions": "Tindakan",
+    "distanceTool": "Alat Jarak",
+    "distanceActive": "Jarak Aktif",
+    "areaTool": "Alat Luas",
+    "areaActive": "Luas Aktif",
+    "generateSurveyPlan": "Buat Rencana Survei",
+    "stakeoutAllPoints": "Tandai Semua Titik",
+    "nearbyBeacons": "Beacon Terdekat",
+    "profiles": "Profil",
+    "buildParcel": "Bangun Parcel",
+    "deletePoint": "Hapus Titik",
+    "lockedCannotDelete": "Titik kontrol terkunci tidak dapat dihapus",
+    "noPointsHint": "Belum ada titik. Gunakan \"Tambah Titik\" atau \"Impor CSV\" untuk memulai."
+  },
   "common": {
     "save": "Simpan",
     "saving": "Saving...",

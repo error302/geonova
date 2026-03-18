@@ -18,7 +18,7 @@ export interface PayPalOrder {
 export interface PayPalCaptureResult {
   id: string
   status: string
-  purchaseUnits: {
+  purchase_units: {
     payments: {
       captures: { id: string; status: string; amount: { value: string; currency_code: string } }[]
     }[]
@@ -71,8 +71,26 @@ export class PayPalService {
     return this.accessToken!
   }
 
-  async createOrder(amount: number, currency: string = 'USD', description?: string): Promise<PayPalOrder> {
+  private currencyMinorUnitDigits(currency: string): number {
+    try {
+      const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: currency.toUpperCase() })
+      return nf.resolvedOptions().maximumFractionDigits ?? 2
+    } catch {
+      return 2
+    }
+  }
+
+  async createOrder(input: {
+    amount: number
+    currency?: string
+    description?: string
+    returnUrl?: string
+    cancelUrl?: string
+  }): Promise<PayPalOrder> {
     const accessToken = await this.getAccessToken()
+    const currency = input.currency || 'USD'
+    const digits = this.currencyMinorUnitDigits(currency)
+    const value = input.amount.toFixed(digits)
 
     const response = await fetch(`${this.baseUrl}/v2/checkout/orders`, {
       method: 'POST',
@@ -85,10 +103,21 @@ export class PayPalService {
         purchase_units: [{
           amount: {
             currency_code: currency,
-            value: amount.toFixed(2)
+            value
           },
-          ...(description && { description })
-        }]
+          ...(input.description && { description: input.description })
+        }],
+        ...(input.returnUrl || input.cancelUrl
+          ? {
+              application_context: {
+                return_url: input.returnUrl,
+                cancel_url: input.cancelUrl,
+                brand_name: 'GeoNova',
+                landing_page: 'NO_PREFERENCE',
+                user_action: 'PAY_NOW',
+              },
+            }
+          : {}),
       })
     })
 

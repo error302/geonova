@@ -223,6 +223,22 @@
     "exportGeoJSON": "GeoJSON निर्यात",
     "exportProject": "परियोजना निर्यात"
   },
+  "workspace": {
+    "coordinates": "निर्देशांक",
+    "actions": "कार्रवाई",
+    "distanceTool": "दूरी उपकरण",
+    "distanceActive": "दूरी सक्रिय",
+    "areaTool": "क्षेत्रफल उपकरण",
+    "areaActive": "क्षेत्रफल सक्रिय",
+    "generateSurveyPlan": "सर्वेक्षण योजना बनाएं",
+    "stakeoutAllPoints": "सभी अंकों को चिह्नित करें",
+    "nearbyBeacons": "आस-पास के बीकन",
+    "profiles": "प्रोफाइल",
+    "buildParcel": "पार्सल बनाएं",
+    "deletePoint": "बिंदु हटाएं",
+    "lockedCannotDelete": "लॉक किए गए नियंत्रण बिंदु हटाए नहीं जा सकते",
+    "noPointsHint": "अभी तक कोई अंक नहीं। शुरू करने के लिए \"अंक जोड़ें\" या \"CSV आयात करें\" का उपयोग करें।"
+  },
   "common": {
     "save": "सहेजें",
     "saving": "Saving...",

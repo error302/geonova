@@ -223,6 +223,22 @@
     "exportGeoJSON": "GeoJSON出力",
     "exportProject": "プロジェクト出力"
   },
+  "workspace": {
+    "coordinates": "座標",
+    "actions": "アクション",
+    "distanceTool": "距離ツール",
+    "distanceActive": "距離アクティブ",
+    "areaTool": "面積ツール",
+    "areaActive": "面積アクティブ",
+    "generateSurveyPlan": "測量計画を生成",
+    "stakeoutAllPoints": "全点を出し",
+    "nearbyBeacons": "近くの Beacon",
+    "profiles": "プロファイル",
+    "buildParcel": "区画を作成",
+    "deletePoint": "点を削除",
+    "lockedCannotDelete": "ロックされた制御点は削除できません",
+    "noPointsHint": "まだポイントがありません。「ポイントを追加」または「CSVインポート」を使用して開始してください。"
+  },
   "common": {
     "save": "保存",
     "saving": "Saving...",

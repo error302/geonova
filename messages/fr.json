@@ -226,6 +226,22 @@
     "exportGeoJSON": "Exporter GeoJSON",
     "exportProject": "Exporter le Projet"
   },
+  "workspace": {
+    "coordinates": "Coordonnées",
+    "actions": "Actions",
+    "distanceTool": "Outil Distance",
+    "distanceActive": "Distance Active",
+    "areaTool": "Outil Surface",
+    "areaActive": "Surface Active",
+    "generateSurveyPlan": "Générer le Plan de Levé",
+    "stakeoutAllPoints": "Implanter Tous les Points",
+    "nearbyBeacons": "Bornes à Proximité",
+    "profiles": "Profils",
+    "buildParcel": "Créer Parcelle",
+    "deletePoint": "Supprimer le Point",
+    "lockedCannotDelete": "Les points de contrôle verrouillés ne peuvent pas être supprimés",
+    "noPointsHint": "Pas encore de points. Utilisez « Ajouter un Point » ou « Importer CSV » pour commencer."
+  },
   "common": {
     "save": "Enregistrer",
     "saving": "Saving...",

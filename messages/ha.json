@@ -222,6 +222,22 @@
     "exportGeoJSON": "Fitar GeoJSON",
     "exportProject": "Fitar aiki"
   },
+  "workspace": {
+    "coordinates": "Ko'odinati",
+    "actions": "Ayyuka",
+    "distanceTool": "Kayan aiki na nisa",
+    "distanceActive": "Nisa ta aiki",
+    "areaTool": "Kayan aiki na fili",
+    "areaActive": "Fili ya aiki",
+    "generateSurveyPlan": "Samar da shirin auna ƙasa",
+    "stakeoutAllPoints": "Stakeout duk digoi",
+    "nearbyBeacons": "Ma'anoni kusa",
+    "profiles": "Profiles",
+    "buildParcel": "Gina fili",
+    "deletePoint": "Goge digo",
+    "lockedCannotDelete": "Wuraren kulawa ba za a iya goge su ba",
+    "noPointsHint": "Babu digoi tukuna. Yi amfani da \"Ƙara digo\" ko \"Loda CSV\"."
+  },
   "common": {
     "save": "Ajiye",
     "saving": "Saving...",

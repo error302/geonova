@@ -102,6 +102,7 @@ export default function ProjectPage({ params }: PageProps) {
   const [viewerCount, setViewerCount] = useState(1)
   const [onlineUsers, setOnlineUsers] = useState<{ user_id: string; email?: string }[]>([])
   const [isOnline, setIsOnline] = useState(true)
+  const [pointActionError, setPointActionError] = useState<string | null>(null)
 
   const supabase = createClient()
 
@@ -121,6 +122,20 @@ export default function ProjectPage({ params }: PageProps) {
     if (!selectedPointId) return
     if (!points.some((p) => p.id === selectedPointId)) setSelectedPointId(null)
   }, [points, selectedPointId])
+
+  const normalizePoint = (p: any): Point => {
+    const parseBool = (v: any) => v === true || v === 1 || v === '1' || String(v).toLowerCase() === 'true'
+    return {
+      id: String(p.id),
+      name: String(p.name ?? ''),
+      easting: Number(p.easting),
+      northing: Number(p.northing),
+      elevation: p.elevation === null || p.elevation === undefined ? null : Number(p.elevation),
+      is_control: parseBool(p.is_control),
+      control_order: p.control_order ?? undefined,
+      locked: parseBool(p.locked) || undefined,
+    }
+  }
 
   const fetchData = async () => {
     const { data: { user } } = await supabase.auth.getUser()
@@ -146,7 +161,7 @@ export default function ProjectPage({ params }: PageProps) {
       .eq('project_id', params.id)
       .order('created_at', { ascending: true })
 
-    setPoints(pointsData || [])
+    setPoints((pointsData || []).map(normalizePoint))
     setLoading(false)
   }
 
@@ -191,12 +206,12 @@ export default function ProjectPage({ params }: PageProps) {
           if (payload.eventType === 'INSERT') {
             setPoints(prev => {
               if (prev.some(p => p.id === payload.new.id)) return prev
-              return [...prev, payload.new as any]
+              return [...prev, normalizePoint(payload.new)]
             })
           }
           if (payload.eventType === 'UPDATE') {
             setPoints(prev => prev.map(p => 
-              p.id === payload.new.id ? { ...p, ...payload.new } as any : p
+              p.id === payload.new.id ? normalizePoint({ ...p, ...payload.new }) : p
             ))
           }
           if (payload.eventType === 'DELETE') {
@@ -275,10 +290,11 @@ export default function ProjectPage({ params }: PageProps) {
   const handleDeletePoint = async (point: any) => {
     if (!point?.id) return
     if (point.locked) {
-      alert('This control point is locked and cannot be deleted.')
+      setPointActionError(t('workspace.lockedCannotDelete'))
       return
     }
 
+    setPointActionError(null)
     let snapshot: Point[] | null = null
     setPoints((prev) => {
       snapshot = prev
@@ -288,12 +304,15 @@ export default function ProjectPage({ params }: PageProps) {
     if (selectedPointId === point.id) setSelectedPointId(null)
 
     try {
+      setSyncStatus('pending')
       const { error } = await supabase.from('survey_points').delete().eq('id', point.id)
       if (error) throw error
+      setSyncStatus('synced')
     } catch (err: any) {
       console.error('Delete failed:', err)
       if (snapshot) setPoints(snapshot)
-      alert(`Failed to delete point: ${err?.message ?? 'Unknown error'}`)
+      setSyncStatus('synced')
+      setPointActionError(err?.message ? `Failed to delete: ${err.message}` : 'Failed to delete point.')
     }
   }
 
@@ -774,10 +793,10 @@ export default function ProjectPage({ params }: PageProps) {
                 name: p.name,
                 easting: p.easting,
                 northing: p.northing,
-                elevation: p.elevation || undefined,
+                elevation: p.elevation ?? undefined,
                 is_control: p.is_control,
-                control_order: (p as any).control_order,
-                locked: (p as any).locked
+                control_order: p.control_order,
+                locked: p.locked
               }))}
               parcels={parcels}
               draftParcelBoundary={draftParcelBoundary}
@@ -797,6 +816,11 @@ export default function ProjectPage({ params }: PageProps) {
 
           <div>
             <h2 className="text-lg font-semibold text-gray-100 mb-4">{t('workspace.coordinates')}</h2>
+            {pointActionError && (
+              <div className="mb-3 rounded border border-red-900/40 bg-red-900/10 px-3 py-2 text-sm text-red-200">
+                {pointActionError}
+              </div>
+            )}
             <div className="border border-gray-800 bg-gray-900/30 rounded-lg overflow-hidden">
               <table className="w-full">
                 <thead>
@@ -1087,7 +1111,7 @@ export default function ProjectPage({ params }: PageProps) {
           name: p.name,
           easting: p.easting,
           northing: p.northing,
-          elevation: p.elevation || undefined,
+          elevation: p.elevation ?? undefined,
           is_control: p.is_control
         }))}
         onAreaResult={(r: any) => {
@@ -1115,7 +1139,7 @@ export default function ProjectPage({ params }: PageProps) {
               name: p.name,
               easting: p.easting,
               northing: p.northing,
-              elevation: p.elevation || undefined
+              elevation: p.elevation ?? undefined
             }))}
             utmZone={project.utm_zone}
             hemisphere={project.hemisphere}
