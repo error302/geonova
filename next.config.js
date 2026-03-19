@@ -1,11 +1,12 @@
-const withPWA = require('next-pwa')({
+const withPWA = require('@ducanh2912/next-pwa').default({
   dest: 'public',
   register: true,
   skipWaiting: true,
   disable:
     process.env.NODE_ENV === 'development' ||
     process.env.DISABLE_PWA === 'true' ||
-    (process.platform === 'win32' && process.env.ENABLE_PWA_ON_WINDOWS !== 'true')
+    (process.platform === 'win32' && process.env.ENABLE_PWA_ON_WINDOWS !== 'true'),
+  workboxOptions: { disableDevLogs: true },
 })
 
 /** @type {import('next').NextConfig} */
