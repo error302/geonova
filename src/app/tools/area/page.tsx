@@ -23,6 +23,7 @@ export default function AreaCalculator() {
   const [offsets, setOffsets] = useState('10, 15, 18, 22, 20, 16');
   const [interval, setInterval] = useState('20');
   const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [calcError, setCalcError] = useState<string | null>(null);
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const addPoint = () => {
@@ -144,6 +145,7 @@ export default function AreaCalculator() {
       </div>
     </div>
   );
-}
+
+  }
 
  

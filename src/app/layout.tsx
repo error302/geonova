@@ -1,4 +1,7 @@
 import type { Metadata } from 'next';
+import { initSentry } from '@/lib/monitoring/sentry';
+
+initSentry();
 import './globals.css';
 import NavBar from '@/components/NavBar';
 import MobileNav from '@/components/MobileNav';
@@ -83,10 +86,11 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
       <body className="antialiased">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[var(--accent)] focus:text-black focus:rounded focus:font-semibold">Skip to content</a>
         <LanguageProvider>
           <SubscriptionProvider>
             <NavBar />
-            <main className="min-h-screen">
+            <main id="main-content" className="min-h-screen pb-16 md:pb-0">
               {children}
             </main>
             <footer className="border-t border-[var(--border-color)] py-6 mt-16">

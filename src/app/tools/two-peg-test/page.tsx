@@ -13,6 +13,7 @@ export default function TwoPegTestCalculator() {
     b2: ''   // Staff at B from position 2
   });
   const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [calcError, setCalcError] = useState<string | null>(null);
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {
@@ -71,4 +72,5 @@ export default function TwoPegTestCalculator() {
       </div>
     </div>
   );
-}
+
+  }

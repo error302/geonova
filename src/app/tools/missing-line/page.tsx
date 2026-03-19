@@ -9,6 +9,7 @@ export default function MissingLineCalculator() {
   const [pointA, setPointA] = useState({ e: '', n: '' });
   const [pointB, setPointB] = useState({ e: '', n: '' });
   const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [calcError, setCalcError] = useState<string | null>(null);
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {
@@ -61,4 +62,5 @@ export default function MissingLineCalculator() {
       </div>
     </div>
   );
-}
+
+  }

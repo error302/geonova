@@ -13,6 +13,7 @@ export default function HeightOfObjectCalculator() {
     hi: ''            // height of instrument
   });
   const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [calcError, setCalcError] = useState<string | null>(null);
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {
@@ -79,4 +80,5 @@ export default function HeightOfObjectCalculator() {
       </div>
     </div>
   );
-}
+
+  }

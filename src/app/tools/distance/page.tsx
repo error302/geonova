@@ -11,6 +11,7 @@ export default function DistanceCalculator() {
   const [p2, setP2] = useState({ n: '', e: '' });
   const [slope, setSlope] = useState({ dist: '', angle: '' });
   const [steps, setSteps] = useState<SolutionStep[] | null>(null);
+  const [calcError, setCalcError] = useState<string | null>(null);
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {
@@ -109,4 +110,5 @@ export default function DistanceCalculator() {
       </div>
     </div>
   );
-}
+
+  }

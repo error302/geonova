@@ -158,4 +158,5 @@ export default function CurvesCalculator() {
       </div>
     </div>
   );
-}
+
+  }

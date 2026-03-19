@@ -95,4 +95,23 @@ const nextConfig = {
   },
 }
 
-module.exports = withPWA(nextConfig)
+// Sentry (only wraps when NEXT_PUBLIC_SENTRY_DSN is set — no-op otherwise)
+const { withSentryConfig } = require('@sentry/nextjs')
+
+const hasSentry = Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN)
+
+module.exports = hasSentry
+  ? withSentryConfig(
+      withPWA(nextConfig),
+      {
+        silent: true,
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+      },
+      {
+        widenClientFileUpload: true,
+        hideSourceMaps: true,
+        disableLogger: true,
+      }
+    )
+  : withPWA(nextConfig)
