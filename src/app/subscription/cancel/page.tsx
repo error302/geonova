@@ -1,29 +1,23 @@
-'use client'
-
 import Link from 'next/link'
 
 export default function SubscriptionCancelPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center px-6">
-      <div className="w-full max-w-lg bg-[#111] border border-[#222] rounded-2xl p-8">
-        <h1 className="text-2xl font-bold text-white mb-2">Payment Cancelled</h1>
-        <p className="text-gray-400 mb-6">No charges were made. You can try again any time.</p>
-        <div className="flex gap-3">
-          <Link
-            href="/checkout"
-            className="flex-1 text-center py-3 bg-[#E8841A] text-black rounded-lg hover:bg-[#d47619]"
-          >
-            Return to Checkout
-          </Link>
-          <Link
-            href="/pricing"
-            className="flex-1 text-center py-3 border border-[#333] text-gray-200 rounded-lg hover:bg-[#0f172a]"
-          >
-            View Pricing
-          </Link>
+    <div className="min-h-[80vh] flex items-center justify-center px-4">
+      <div className="text-center max-w-md">
+        <div className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--bg-tertiary)] border border-[var(--border-color)]">
+          <svg className="w-8 h-8 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </div>
+        <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Payment cancelled</h1>
+        <p className="text-[var(--text-secondary)] mb-8">
+          No charge was made. Your current plan is unchanged. You can upgrade whenever you're ready.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Link href="/pricing" className="btn btn-primary">View plans</Link>
+          <Link href="/dashboard" className="btn btn-secondary">Go to dashboard</Link>
         </div>
       </div>
     </div>
   )
 }
-

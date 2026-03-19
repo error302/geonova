@@ -106,7 +106,7 @@ export default function ChainageCalculator() {
 
       <div className="grid md:grid-cols-2 gap-8">
         <div className="space-y-6">
-          <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+          <div className="bg-[var(--bg-card)] border border-gray-800 rounded-xl p-6">
             <h3 className="font-semibold text-gray-200 mb-4">Starting Station</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -124,7 +124,7 @@ export default function ChainageCalculator() {
             </div>
           </div>
 
-          <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+          <div className="bg-[var(--bg-card)] border border-gray-800 rounded-xl p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold text-gray-200">Alignment Points</h3>
               <button onClick={addPoint} className="text-sm px-3 py-1 bg-gray-800 text-gray-300 rounded hover:bg-gray-700">+ Add Point</button>
@@ -148,7 +148,7 @@ export default function ChainageCalculator() {
           </button>
 
           {results.length > 0 && (
-            <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+            <div className="bg-[var(--bg-card)] border border-gray-800 rounded-xl p-6">
               <h3 className="font-semibold text-gray-200 mb-4">Reverse Calculation</h3>
               <p className="text-xs text-gray-500 mb-3">Find coordinates at a given chainage</p>
               <div className="flex gap-2">
@@ -172,7 +172,7 @@ export default function ChainageCalculator() {
         </div>
 
         {results.length > 0 && (
-          <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+          <div className="bg-[var(--bg-card)] border border-gray-800 rounded-xl p-6">
             {steps ? (
               <div className="mb-6">
                 <SolutionStepsRenderer title={solutionTitle} steps={steps} />

@@ -136,20 +136,21 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-2 border-[#E8841A] border-t-transparent rounded-full"></div>
+      <div className="max-w-3xl mx-auto px-6 py-8 animate-pulse">
+        <div className="h-8 w-36 rounded bg-[var(--bg-tertiary)] mb-8" />
+        {[...Array(5)].map((_, i) => <div key={i} className="h-14 rounded-lg bg-[var(--bg-tertiary)] mb-4" />)}
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <header className="border-b border-gray-800 bg-gray-900/50">
+    <div className="min-h-screen bg-[var(--bg-primary)]">
+      <header className="border-b border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center">
           <a href="/dashboard" className="text-2xl font-bold" style={{ color: '#E8841A' }}>
             GEONOVA
           </a>
-          <span className="ml-4 text-gray-400">/ Profile</span>
+          <span className="ml-4 text-[var(--text-secondary)]">/ Profile</span>
         </div>
       </header>
 
@@ -158,10 +159,10 @@ export default function ProfilePage() {
 
         <div className="space-y-6">
           <div className="card">
-            <h2 className="text-lg font-semibold text-gray-100 mb-4">Personal Information</h2>
+            <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Personal Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Full Name</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-2">Full Name</label>
                 <input
                   type="text"
                   value={profile.full_name}
@@ -171,7 +172,7 @@ export default function ProfilePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Country</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-2">Country</label>
                 <select
                   value={profile.country}
                   onChange={e => setProfile({ ...profile, country: e.target.value })}
@@ -184,7 +185,7 @@ export default function ProfilePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-2">License Number</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-2">License Number</label>
                 <input
                   type="text"
                   value={profile.license_number}
@@ -194,7 +195,7 @@ export default function ProfilePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Firm/Company Name</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-2">Firm/Company Name</label>
                 <input
                   type="text"
                   value={profile.firm_name}
@@ -207,7 +208,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="card">
-            <h2 className="text-lg font-semibold text-gray-100 mb-4">Specializations</h2>
+            <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Specializations</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {specializations.map(spec => (
                 <button
@@ -216,7 +217,7 @@ export default function ProfilePage() {
                   className={`px-4 py-2 rounded text-sm text-left transition-colors ${
                     profile.specializations.includes(spec)
                       ? 'bg-[#E8841A] text-black'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                      : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)] hover:bg-gray-700'
                   }`}
                 >
                   {profile.specializations.includes(spec) ? '✓' : '○'} {spec}
@@ -226,10 +227,10 @@ export default function ProfilePage() {
           </div>
 
           <div className="card">
-            <h2 className="text-lg font-semibold text-gray-100 mb-4">Default Settings</h2>
+            <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Default Settings</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Default UTM Zone</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-2">Default UTM Zone</label>
                 <input
                   type="number"
                   min={1}
@@ -240,7 +241,7 @@ export default function ProfilePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Hemisphere</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-2">Hemisphere</label>
                 <select
                   value={profile.default_hemisphere}
                   onChange={e => setProfile({ ...profile, default_hemisphere: e.target.value })}
@@ -251,7 +252,7 @@ export default function ProfilePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Language</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-2">Language</label>
                 <select
                   value={profile.preferred_language}
                   onChange={e => setProfile({ ...profile, preferred_language: e.target.value })}

@@ -62,12 +62,12 @@ export default function AccountPage() {
           <Section title="Profile">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Email</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-1">Email</label>
                 <input
                   type="email"
                   value={user?.email || ''}
                   disabled
-                  className="w-full bg-[#111] border border-[#222] rounded-lg px-4 py-2 text-gray-500"
+                  className="w-full bg-[#111] border border-[#222] rounded-lg px-4 py-2 text-[var(--text-muted)]"
                 />
               </div>
             </div>
@@ -84,7 +84,7 @@ export default function AccountPage() {
               className="space-y-4"
             >
               <div>
-                <label className="block text-sm text-gray-400 mb-1">New Password</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-1">New Password</label>
                 <input
                   name="newPassword"
                   type="password"
@@ -116,7 +116,7 @@ export default function AccountPage() {
                     <p className="text-white font-medium capitalize">
                       {subscription.subscription_plans?.name || subscription.plan_id} Plan
                     </p>
-                    <p className="text-gray-400 text-sm">
+                    <p className="text-[var(--text-secondary)] text-sm">
                       {subscription.status === 'trial' 
                         ? `Trial ends ${new Date(subscription.trial_ends_at).toLocaleDateString()}`
                         : `Renews ${new Date(subscription.current_period_end).toLocaleDateString()}`
@@ -126,7 +126,7 @@ export default function AccountPage() {
                   <span className={`text-xs px-2 py-1 rounded ${
                     subscription.plan_id === 'team' ? 'bg-blue-900/50 text-blue-400' :
                     subscription.plan_id === 'pro' ? 'bg-green-900/50 text-green-400' :
-                    'bg-gray-800 text-gray-400'
+                    'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]'
                   }`}>
                     {subscription.plan_id.toUpperCase()}
                   </span>
@@ -139,18 +139,18 @@ export default function AccountPage() {
                 </a>
               </div>
             ) : (
-              <p className="text-gray-400">No active subscription</p>
+              <p className="text-[var(--text-secondary)]">No active subscription</p>
             )}
           </Section>
 
           <Section title="Payment History">
-            <p className="text-gray-400">No payment history yet.</p>
+            <p className="text-[var(--text-secondary)]">No payment history yet.</p>
           </Section>
 
           <Section title="Danger Zone">
             <div className="bg-red-900/20 border border-red-800 rounded-lg p-4">
               <h4 className="text-red-400 font-medium mb-2">Delete Account</h4>
-              <p className="text-gray-400 text-sm mb-4">
+              <p className="text-[var(--text-secondary)] text-sm mb-4">
                 Once you delete your account, there is no going back. All your projects and data will be permanently deleted.
               </p>
               <button className="bg-red-900 text-red-400 px-4 py-2 rounded-lg text-sm hover:bg-red-800">

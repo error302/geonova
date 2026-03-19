@@ -95,14 +95,14 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
         <div className="text-amber-500">Loading...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 py-12">
+    <div className="min-h-screen bg-[var(--bg-primary)] py-12">
       <div className="max-w-2xl mx-auto px-6">
         <div className="flex items-center gap-4 mb-8">
           <a href={`/project/${projectId}`} className="text-gray-400 hover:text-white">

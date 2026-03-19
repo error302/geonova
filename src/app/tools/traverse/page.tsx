@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { bowditchAdjustment, transitAdjustment } from '@/lib/engine/traverse';
+import { trackEvent } from '@/lib/analytics/events';
 import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
 import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
 import { bowditchAdjustmentSolvedFromResult, transitAdjustmentSolvedFromResult } from '@/lib/engine/solution/wrappers/traverse'
@@ -58,6 +59,7 @@ export default function TraverseCalculator() {
         ? bowditchAdjustment({ points, distances, bearings })
         : transitAdjustment({ points, distances, bearings });
       setResult(r);
+      trackEvent('tool_used', { tool: 'traverse', method });
       try {
         const s = method === 'bowditch' ? bowditchAdjustmentSolvedFromResult(r) : transitAdjustmentSolvedFromResult(r)
         setSteps(s.steps)

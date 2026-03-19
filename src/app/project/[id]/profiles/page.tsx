@@ -217,7 +217,7 @@ export default function ProfilesPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
-      <div className="border-b border-gray-800 bg-gray-900/50">
+      <div className="border-b border-gray-800 bg-[var(--bg-card)]">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -262,7 +262,7 @@ export default function ProfilesPage({ params }: PageProps) {
       <div className="max-w-7xl mx-auto px-4 py-6">
         {activeTab === 'create' && (
           <div className="space-y-6">
-            <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+            <div className="bg-[var(--bg-card)] border border-gray-800 rounded-xl p-6">
               <h2 className="text-lg font-semibold mb-4">Create New Alignment</h2>
               <div className="grid md:grid-cols-3 gap-4">
                 <div>
@@ -286,7 +286,7 @@ export default function ProfilesPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+            <div className="bg-[var(--bg-card)] border border-gray-800 rounded-xl p-6">
               <h3 className="font-semibold mb-4">Select Points for Alignment (in order)</h3>
               <p className="text-sm text-gray-500 mb-4">Click points in the order they appear along the centerline</p>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-64 overflow-y-auto">
@@ -326,7 +326,7 @@ export default function ProfilesPage({ params }: PageProps) {
             </div>
 
             {alignments.length > 0 && (
-              <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+              <div className="bg-[var(--bg-card)] border border-gray-800 rounded-xl p-6">
                 <h3 className="font-semibold mb-4">Existing Alignments</h3>
                 <div className="space-y-2">
                   {alignments.map(alignment => (
@@ -347,7 +347,7 @@ export default function ProfilesPage({ params }: PageProps) {
 
         {activeTab === 'profile' && selectedAlignment && (
           <div className="space-y-6">
-            <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+            <div className="bg-[var(--bg-card)] border border-gray-800 rounded-xl p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Longitudinal Profile - {selectedAlignment.name}</h2>
                 <button
@@ -373,7 +373,7 @@ export default function ProfilesPage({ params }: PageProps) {
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-4">
-                          <div className="rounded-xl bg-gray-950/40 border border-gray-800 p-4">
+                          <div className="rounded-xl bg-[var(--bg-primary)]/40 border border-gray-800 p-4">
                             <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Page</div>
                             <div className="flex gap-2">
                               <select value={svgPage} onChange={(e) => setSvgPage(e.target.value as any)} className="flex-1 bg-gray-900 border border-gray-800 rounded px-3 py-2 text-gray-200">
@@ -388,7 +388,7 @@ export default function ProfilesPage({ params }: PageProps) {
                             <p className="text-xs text-gray-500 mt-2">Print at 100% for true scale.</p>
                           </div>
 
-                          <div className="rounded-xl bg-gray-950/40 border border-gray-800 p-4">
+                          <div className="rounded-xl bg-[var(--bg-primary)]/40 border border-gray-800 p-4">
                             <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Scales</div>
                             <div className="grid grid-cols-2 gap-2">
                               <label className="text-xs text-gray-400">
@@ -467,7 +467,7 @@ export default function ProfilesPage({ params }: PageProps) {
               )}
             </div>
 
-            <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+            <div className="bg-[var(--bg-card)] border border-gray-800 rounded-xl p-6">
               <h3 className="font-semibold mb-4">Chainage Points Table</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -499,7 +499,7 @@ export default function ProfilesPage({ params }: PageProps) {
 
         {activeTab === 'cross-sections' && selectedAlignment && (
           <div className="space-y-6">
-            <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+            <div className="bg-[var(--bg-card)] border border-gray-800 rounded-xl p-6">
               <h2 className="text-lg font-semibold mb-4">Cross Sections - {selectedAlignment.name}</h2>
               <p className="text-sm text-gray-500 mb-4">
                 Select a chainage station to add cross section observations

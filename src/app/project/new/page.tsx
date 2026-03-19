@@ -105,8 +105,8 @@ export default function NewProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <header className="border-b border-gray-800 bg-gray-900/50">
+    <div className="min-h-screen bg-[var(--bg-primary)]">
+      <header className="border-b border-gray-800 bg-[var(--bg-card)]">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center">
           <a href="/dashboard" className="text-2xl font-bold" style={{ color: '#E8841A' }}>
             GEONOVA
@@ -255,7 +255,7 @@ export default function NewProjectPage() {
           </div>
         </form>
 
-        <div className="mt-12 p-4 bg-gray-900/50 rounded-lg border border-gray-800">
+        <div className="mt-12 p-4 bg-[var(--bg-card)] rounded-lg border border-gray-800">
           <h3 className="text-gray-400 text-sm font-medium mb-3">UTM Zone Reference</h3>
           <div className="grid grid-cols-4 gap-2 text-xs text-gray-500">
             <div><span className="text-amber-500">28-30</span> West Africa</div>

@@ -41,7 +41,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="bg-amber-500 text-black px-6 py-2 rounded font-bold"
+              className="bg-amber-500 text-black px-6 py-2 rounded font-bold" aria-label="Reload page"
             >
               Reload Page
             </button>

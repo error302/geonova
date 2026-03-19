@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { riseAndFall, heightOfCollimation } from '@/lib/engine/leveling';
+import { trackEvent } from '@/lib/analytics/events';
 import type { LevelingInput } from '@/lib/engine/leveling'
 import type { LevelingReading } from '@/lib/engine/types';
 import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
@@ -75,6 +76,7 @@ export default function LevelingCalculator() {
 
     setCalcError(null);
     setResult(r);
+    trackEvent('tool_used', { tool: 'leveling', method });
     const s = levelingSolved(levelingInput, r)
     setSteps(s.steps)
     setSolutionTitle(s.solution.title)

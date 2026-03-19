@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { geographicToUTM } from '@/lib/engine/coordinates'
 import { generateSurveyReport, generateSurveyPlan } from '@/lib/reports/generateReport'
+import { trackEvent } from '@/lib/analytics/events'
 import { downloadLandXML } from '@/lib/export/generateLandXML'
 import { exportProject, importProject } from '@/lib/export/exportProject'
 import { downloadGeoJSON } from '@/lib/export/generateGeoJSON'
@@ -346,6 +347,7 @@ export default function ProjectPage({ params }: PageProps) {
     if (!project) return
     
     setReportLoading(true)
+    trackEvent('report_generated', { project_id: params.id })
     setShareUrl(null)
     
     const uploadToStorage = async (blob: Blob, filename: string) => {

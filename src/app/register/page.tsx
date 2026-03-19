@@ -51,13 +51,13 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2" style={{ color: '#E8841A' }}>
             GEONOVA
           </h1>
-          <p className="text-gray-400">{t('auth.registerSubtitle')}</p>
+          <p className="text-[var(--text-secondary)]">{t('auth.registerSubtitle')}</p>
         </div>
 
           {success ? (
@@ -76,34 +76,34 @@ export default function RegisterPage() {
             )}
 
             <div>
-              <label className="block text-sm text-gray-300 mb-2">{t('auth.fullName')}</label>
+              <label className="block text-sm text-[var(--text-primary)] mb-2">{t('auth.fullName')}</label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded focus:border-[#E8841A] focus:outline-none text-gray-100"
+                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-300 mb-2">{t('auth.email')}</label>
+              <label className="block text-sm text-[var(--text-primary)] mb-2">{t('auth.email')}</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded focus:border-[#E8841A] focus:outline-none text-gray-100"
+                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-300 mb-2">{t('auth.password')}</label>
+              <label className="block text-sm text-[var(--text-primary)] mb-2">{t('auth.password')}</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded focus:border-[#E8841A] focus:outline-none text-gray-100"
+                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
                 required
                 minLength={6}
               />
@@ -119,7 +119,7 @@ export default function RegisterPage() {
           </form>
         )}
 
-        <p className="text-center mt-6 text-gray-400">
+        <p className="text-center mt-6 text-[var(--text-secondary)]">
           {t('auth.hasAccount')}{' '}
           <a href="/login" className="text-[#E8841A] hover:text-[#d67715]">
             {t('auth.loginButton')}

@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { detectTotalStationFormat, TotalStationFormat } from '@/lib/import/totalStation/detectFormat'
 import { parseGSI } from '@/lib/import/totalStation/parseGSI'
@@ -33,7 +33,7 @@ export default function ImportPage() {
   const [imported, setImported] = useState<number | null>(null)
   const [loadingProjects, setLoadingProjects] = useState(true)
 
-  useState(() => {
+  useEffect(() => {
     async function loadProjects() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
@@ -49,7 +49,7 @@ export default function ImportPage() {
       setLoadingProjects(false)
     }
     loadProjects()
-  })
+  }, [])
 
   const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
