@@ -32,7 +32,10 @@ html, body {
   padding: 0;
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -44,7 +47,8 @@ a {
 h1, h2, h3, h4 {
   font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
 }
 
 /* Input styles */
@@ -53,11 +57,11 @@ h1, h2, h3, h4 {
   border: 1px solid var(--border-color);
   color: var(--text-primary);
   padding: 10px 14px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
   width: 100%;
   font-family: 'Share Tech Mono', monospace;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .input-sm {
@@ -69,6 +73,7 @@ h1, h2, h3, h4 {
 .input:focus {
   outline: none;
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
 }
 
 .input::placeholder {
@@ -81,15 +86,15 @@ h1, h2, h3, h4 {
   align-items: center;
   justify-content: center;
   padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
   transition: all 0.15s;
-  font-family: 'Barlow Condensed', sans-serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-family: 'Inter', system-ui, sans-serif;
+  letter-spacing: 0.2px;
+  gap: 6px;
 }
 
 .btn-primary {
@@ -115,7 +120,7 @@ h1, h2, h3, h4 {
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -167,7 +172,8 @@ h1, h2, h3, h4 {
   font-weight: 600;
   margin-bottom: 6px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 /* Results */

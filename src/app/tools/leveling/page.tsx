@@ -30,6 +30,8 @@ export default function LevelingCalculator() {
   const [steps, setSteps] = useState<SolutionStep[] | null>(null)
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined)
   const [showProfile, setShowProfile] = useState(false);
+  const [calcError, setCalcError] = useState<string | null>(null);
+  const [calculating, setCalculating] = useState(false);
 
   const addReading = () => {
     setReadings([...readings, { id: Date.now(), station: String(readings.length + 1), bs: '', fs: '' }]);
@@ -40,9 +42,11 @@ export default function LevelingCalculator() {
   };
 
   const calculate = () => {
+    setCalculating(true);
+    setCalcError(null);
     const openingRL = parseFloat(bm);
     const closing = closingBm ? parseFloat(closingBm) : undefined;
-    if (isNaN(openingRL)) return;
+    if (isNaN(openingRL)) { setCalculating(false); return; }
 
     const obs = readings.map(r => ({
       station: r.station,
@@ -59,14 +63,22 @@ export default function LevelingCalculator() {
 
     // BLOCK RESULTS if arithmetic check fails (Basak rule)
     if (!r.arithmeticCheck) {
-      alert('ARITHMETIC CHECK FAILED — Results will not be displayed.\n\nAccording to Basak standards, the calculation must pass the arithmetic check before results can be shown.\n\nCheck your readings: ΣBS - ΣFS must equal ΣRise - ΣFall');
+      setCalcError(
+        'Arithmetic check failed — results cannot be displayed. ' +
+        'Per Basak standards: ΣBS − ΣFS must equal ΣRise − ΣFall. ' +
+        'Check your readings for entry errors.'
+      );
+      setResult(null);
+      setCalculating(false);
       return;
     }
 
+    setCalcError(null);
     setResult(r);
     const s = levelingSolved(levelingInput, r)
     setSteps(s.steps)
     setSolutionTitle(s.solution.title)
+    setCalculating(false);
   };
 
   return (
@@ -90,15 +102,22 @@ export default function LevelingCalculator() {
         <div className="card p-4">
           <label className="label">Method</label>
           <div className="flex gap-2 mt-2">
-            <button onClick={() => { setMethod('rf'); setResult(null); setSteps(null); setSolutionTitle(undefined); }} className={`flex-1 btn text-xs ${method === 'rf' ? 'btn-primary' : 'btn-secondary'}`}>
+            <button onClick={() => { setMethod('rf'); setResult(null); setSteps(null); setSolutionTitle(undefined); setCalcError(null); }} className={`flex-1 btn text-xs ${method === 'rf' ? 'btn-primary' : 'btn-secondary'}`}>
               Rise & Fall
             </button>
-            <button onClick={() => { setMethod('hoc'); setResult(null); setSteps(null); setSolutionTitle(undefined); }} className={`flex-1 btn text-xs ${method === 'hoc' ? 'btn-primary' : 'btn-secondary'}`}>
+            <button onClick={() => { setMethod('hoc'); setResult(null); setSteps(null); setSolutionTitle(undefined); setCalcError(null); }} className={`flex-1 btn text-xs ${method === 'hoc' ? 'btn-primary' : 'btn-secondary'}`}>
               HOC
             </button>
           </div>
         </div>
       </div>
+
+      {calcError && (
+        <div className="mb-6 rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-300">
+          <p className="font-semibold mb-1">Arithmetic check failed</p>
+          <p>{calcError}</p>
+        </div>
+      )}
 
       <div className="card mb-6">
         <div className="card-header">
@@ -151,7 +170,11 @@ export default function LevelingCalculator() {
         </div>
       </div>
 
-      <button onClick={calculate} className="btn btn-primary mb-6">Calculate</button>
+      <button onClick={calculate} disabled={calculating} className="btn btn-primary mb-6 disabled:opacity-60 disabled:cursor-not-allowed">
+          {calculating ? (
+            <><svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>Calculating…</>
+          ) : 'Calculate'}
+        </button>
 
       {result && (
         <div className="grid md:grid-cols-2 gap-6">

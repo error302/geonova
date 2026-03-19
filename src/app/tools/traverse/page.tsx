@@ -27,6 +27,7 @@ export default function TraverseCalculator() {
   const [steps, setSteps] = useState<SolutionStep[] | null>(null)
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined)
   const [calcError, setCalcError] = useState<string | null>(null)
+  const [calculating, setCalculating] = useState(false)
 
   const addLeg = () => {
     const nextChar = String.fromCharCode(65 + legs.length);
@@ -39,6 +40,7 @@ export default function TraverseCalculator() {
 
   const calculate = () => {
     setCalcError(null)
+    setCalculating(true)
     try {
       const points = legs
         .filter(l => l.n && l.e)
@@ -68,6 +70,8 @@ export default function TraverseCalculator() {
       setCalcError(err?.message || 'Calculation failed. Check your inputs.')
       setResult(null)
       setSteps(null)
+    } finally {
+      setCalculating(false)
     }
   };
 
@@ -75,6 +79,12 @@ export default function TraverseCalculator() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-2">Traverse Adjustment</h1>
       <p className="text-sm text-[var(--text-muted)] mb-8">Closed traverse adjustment using Bowditch or Transit rules</p>
+
+      <div className="mb-4 px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-muted)] flex flex-wrap gap-x-6 gap-y-1">
+        <span><span className="text-[var(--text-secondary)] font-medium">Bearings</span> — whole circle bearing in decimal degrees (e.g. 45.5234°). North = 0°, East = 90°, South = 180°, West = 270°.</span>
+        <span><span className="text-[var(--text-secondary)] font-medium">Distances</span> — horizontal distances in metres.</span>
+        <span><span className="text-[var(--text-secondary)] font-medium">First row</span> — must have Northing &amp; Easting coordinates (the starting known point).</span>
+      </div>
 
       <div className="flex gap-4 mb-6">
         <button onClick={() => { setMethod('bowditch'); setResult(null); setSteps(null); setSolutionTitle(undefined); }} className={`btn ${method === 'bowditch' ? 'btn-primary' : 'btn-secondary'}`}>
@@ -95,20 +105,20 @@ export default function TraverseCalculator() {
               <thead>
                 <tr>
                   <th>Line</th>
-                  <th>Distance (m)</th>
-                  <th>Bearing (°)</th>
-                  <th>Northing (m)</th>
-                  <th>Easting (m)</th>
+                  <th>Distance <span className="font-normal opacity-60">m</span></th>
+                  <th>Bearing <span className="font-normal opacity-60">WCB °</span></th>
+                  <th>Northing <span className="font-normal opacity-60">m</span></th>
+                  <th>Easting <span className="font-normal opacity-60">m</span></th>
                 </tr>
               </thead>
               <tbody>
                 {legs.map((l, i) => (
                   <tr key={l.id}>
                     <td className="text-left font-semibold">{l.name}</td>
-                    <td><input className="input" value={l.dist} onChange={e => updateLeg(l.id, 'dist', e.target.value)} /></td>
-                    <td><input className="input" value={l.bearing} onChange={e => updateLeg(l.id, 'bearing', e.target.value)} /></td>
-                    <td><input className="input" value={l.n} onChange={e => updateLeg(l.id, 'n', e.target.value)} /></td>
-                    <td><input className="input" value={l.e} onChange={e => updateLeg(l.id, 'e', e.target.value)} /></td>
+                    <td><input className="input" value={l.dist} placeholder="e.g. 250.00" onChange={e => updateLeg(l.id, 'dist', e.target.value)} /></td>
+                    <td><input className="input" value={l.bearing} placeholder="e.g. 45.5234" onChange={e => updateLeg(l.id, 'bearing', e.target.value)} /></td>
+                    <td><input className="input" value={l.n} placeholder={i === 0 ? 'required' : 'auto'} onChange={e => updateLeg(l.id, 'n', e.target.value)} /></td>
+                    <td><input className="input" value={l.e} placeholder={i === 0 ? 'required' : 'auto'} onChange={e => updateLeg(l.id, 'e', e.target.value)} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -119,7 +129,14 @@ export default function TraverseCalculator() {
           </div>
         </div>
 
-        <button onClick={calculate} className="btn btn-primary">Calculate Adjustment</button>
+        <button onClick={calculate} disabled={calculating} className="btn btn-primary disabled:opacity-60 disabled:cursor-not-allowed">
+          {calculating ? (
+            <>
+              <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+              Calculating…
+            </>
+          ) : 'Calculate Adjustment'}
+        </button>
       </div>
 
       {calcError && (

@@ -119,25 +119,34 @@ export default function Home() {
           </h2>
           
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-[#0a0a0f] p-6 rounded-xl border border-[#222]">
-              <div className="text-4xl mb-4">⏱</div>
+            <div className="bg-[#0a0a0f] p-6 rounded-xl border border-[#222] border-l-2 border-l-red-500/50">
+              <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center mb-4">
+                <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
               <h3 className="text-white font-semibold mb-2">Hours of Manual Computation</h3>
-              <p className="text-gray-400 text-sm">Complex traverse calculations done by hand</p>
+              <p className="text-gray-400 text-sm">Complex traverse calculations done entirely by hand</p>
             </div>
-            <div className="bg-[#0a0a0f] p-6 rounded-xl border border-[#222]">
-              <div className="text-4xl mb-4">📝</div>
+            <div className="bg-[#0a0a0f] p-6 rounded-xl border border-[#222] border-l-2 border-l-yellow-500/50">
+              <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center mb-4">
+                <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
               <h3 className="text-white font-semibold mb-2">Error-Prone Arithmetic Checks</h3>
-              <p className="text-gray-400 text-sm">Manual leveling checks that can fail</p>
+              <p className="text-gray-400 text-sm">Manual leveling checks that can fail silently</p>
             </div>
-            <div className="bg-[#0a0a0f] p-6 rounded-xl border border-[#222]">
-              <div className="text-4xl mb-4">📊</div>
+            <div className="bg-[#0a0a0f] p-6 rounded-xl border border-[#222] border-l-2 border-l-orange-500/50">
+              <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4">
+                <svg className="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              </div>
               <h3 className="text-white font-semibold mb-2">Time-Consuming Report Writing</h3>
-              <p className="text-gray-400 text-sm">Creating professional reports from scratch</p>
+              <p className="text-gray-400 text-sm">Creating professional reports entirely from scratch</p>
             </div>
           </div>
           
-          <div className="text-[#E8841A] text-4xl animate-bounce">↓</div>
-          <p className="text-white font-semibold mt-4 text-xl">GeoNova solves all three</p>
+          <div className="flex items-center justify-center gap-3 mt-4">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#E8841A]/40 max-w-[120px]"></div>
+            <p className="text-[#E8841A] font-semibold text-lg tracking-wide">GeoNova solves all three</p>
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#E8841A]/40 max-w-[120px]"></div>
+          </div>
         </div>
       </section>
 
