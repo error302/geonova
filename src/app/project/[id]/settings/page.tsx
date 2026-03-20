@@ -110,7 +110,7 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
           </a>
         </div>
 
-        <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-8">Project Settings</h1>
+        <h1 className="text-2xl font-bold text-white mb-8">Project Settings</h1>
 
         {message && (
           <div className={`p-3 rounded mb-6 ${

@@ -28,7 +28,7 @@ export default function CommunityPage() {
     <div className="min-h-screen py-16">
       <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Join the GeoNova Community
           </h1>
           <p className="text-gray-400 text-lg">
@@ -37,9 +37,9 @@ export default function CommunityPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-8 text-center">
+          <div className="bg-[#111] rounded-xl border border-[#222] p-8 text-center">
             <div className="text-6xl mb-4">💬</div>
-            <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-4">WhatsApp Community</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">WhatsApp Community</h2>
             <p className="text-gray-400 mb-6">
               Join thousands of surveyors sharing tips, asking questions, and helping each other grow.
             </p>
@@ -51,14 +51,14 @@ export default function CommunityPage() {
             </a>
           </div>
 
-          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-8">
-            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">Community Channels</h2>
+          <div className="bg-[#111] rounded-xl border border-[#222] p-8">
+            <h2 className="text-xl font-bold text-white mb-6">Community Channels</h2>
             <div className="space-y-3">
               {channels.map((channel) => (
                 <div key={channel.name} className="flex items-center gap-3">
                   <span className="text-2xl">{channel.flag}</span>
                   <div>
-                    <p className="text-[var(--text-primary)] font-medium text-sm">{channel.name}</p>
+                    <p className="text-white font-medium text-sm">{channel.name}</p>
                     <p className="text-gray-500 text-xs">{channel.desc}</p>
                   </div>
                 </div>
@@ -67,8 +67,8 @@ export default function CommunityPage() {
           </div>
         </div>
 
-        <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-8 mb-12">
-          <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Community Guidelines</h2>
+        <div className="bg-[#111] rounded-xl border border-[#222] p-8 mb-12">
+          <h2 className="text-xl font-bold text-white mb-4">Community Guidelines</h2>
           <ul className="space-y-3 text-gray-400">
             <li className="flex items-start gap-3">
               <span className="text-[#E8841A]">✓</span>
@@ -118,7 +118,7 @@ export default function CommunityPage() {
         </div>
 
         <div className="text-center">
-          <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">Follow GeoNova</h2>
+          <h2 className="text-xl font-bold text-white mb-6">Follow GeoNova</h2>
           <div className="flex justify-center gap-6">
             <div className="text-center">
               <div className="text-3xl mb-2">𝕏</div>

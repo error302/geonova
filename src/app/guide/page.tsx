@@ -204,17 +204,17 @@ export default function GuidePage() {
           <div className="grid md:grid-cols-3 gap-6 text-sm text-gray-400">
             <div>
               <div className="text-xl mb-2">👨‍🎓 👴</div>
-              <h3 className="font-medium text-[var(--text-primary)] mb-1">Two Modes</h3>
+              <h3 className="font-medium text-white mb-1">Two Modes</h3>
               <p>Junior Mode explains everything. Senior Mode gives quick prompts for experienced surveyors.</p>
             </div>
             <div>
               <div className="text-xl mb-2">📊</div>
-              <h3 className="font-medium text-[var(--text-primary)] mb-1">Track Progress</h3>
+              <h3 className="font-medium text-white mb-1">Track Progress</h3>
               <p>Your progress is saved automatically. Pick up where you left off anytime.</p>
             </div>
             <div>
               <div className="text-xl mb-2">🔗</div>
-              <h3 className="font-medium text-[var(--text-primary)] mb-1">GeoNova Tools</h3>
+              <h3 className="font-medium text-white mb-1">GeoNova Tools</h3>
               <p>Each step links directly to the relevant GeoNova calculator or tool.</p>
             </div>
           </div>

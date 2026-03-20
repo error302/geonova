@@ -13,7 +13,7 @@ export default function SolutionStepsRenderer({ title, steps }: { title?: string
         {steps.map((s, i) => {
           return (
             <Section key={`${s.label}-${i}`} title={s.label}>
-              <div className="rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)]/20 p-3 space-y-2">
+              <div className="rounded-lg border border-gray-800 bg-gray-950/20 p-3 space-y-2">
                 <StepBody step={s} />
               </div>
             </Section>

@@ -167,7 +167,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
             <h2 className="text-xl font-bold text-white">Build Parcel</h2>
             <p className="text-sm text-gray-400">Click points in boundary order. Click first point to close.</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-[var(--text-primary)] text-2xl">&times;</button>
+          <button onClick={onClose} className="text-gray-400 hover:text-white text-2xl">&times;</button>
         </div>
 
         <div className="p-6 space-y-6">
@@ -247,7 +247,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
             <div>
               {areaResult ? (
                 <div className="bg-[var(--bg-tertiary)] rounded-xl p-6">
-                  <h3 className="font-bold text-[var(--text-primary)] text-lg mb-4">PARCEL SUMMARY</h3>
+                  <h3 className="font-bold text-white text-lg mb-4">PARCEL SUMMARY</h3>
                   {isSelecting ? (
                     <div className="mb-3 rounded border border-amber-700/50 bg-amber-900/10 px-3 py-2 text-xs text-amber-200">
                       Preview only — close the boundary (click the first point again) to enter a name and save.

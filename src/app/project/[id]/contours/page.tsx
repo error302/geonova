@@ -90,7 +90,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
+      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
         <div className="flex items-center gap-3 text-amber-500">
           <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
@@ -104,10 +104,10 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
 
   if (points.length < 3) {
     return (
-      <div className="min-h-screen bg-[var(--bg-primary)] py-12 px-6">
+      <div className="min-h-screen bg-[#0a0a0f] py-12 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-4">Contour Map</h1>
-          <div className="bg-[var(--bg-secondary)] border border-red-500/30 rounded-xl p-8">
+          <h1 className="text-2xl font-bold text-white mb-4">Contour Map</h1>
+          <div className="bg-[#111] border border-red-500/30 rounded-xl p-8">
             <p className="text-red-400 mb-2">Need at least 3 points with elevations to generate contours.</p>
             <p className="text-gray-500 text-sm">Current points with elevation: {points.length}</p>
           </div>
@@ -121,7 +121,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
   const maxElev = Math.max(...elevations)
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] py-12 px-6">
+    <div className="min-h-screen bg-[#0a0a0f] py-12 px-6">
       <div className="max-w-5xl mx-auto">
         <div className="flex items-start justify-between mb-2">
           <h1 className="text-3xl font-bold text-white">Contour Map</h1>
@@ -137,7 +137,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
         </div>
         <p className="text-gray-400 mb-8">Generate contours from spot heights using Delaunay triangulation</p>
 
-        <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6 mb-8">
+        <div className="bg-[#111] rounded-xl border border-[#222] p-6 mb-8">
           <div className="flex items-center gap-4 mb-6 flex-wrap">
             <label className="text-gray-400 text-sm">Contour interval</label>
             <select
@@ -176,9 +176,9 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
               { label: 'Max elevation', value: `${maxElev.toFixed(2)} m` },
               { label: 'Contour lines', value: contours.length },
             ].map(item => (
-              <div key={item.label} className="bg-[var(--bg-primary)] p-3 rounded-lg border border-[#1e1e1e]">
+              <div key={item.label} className="bg-[#0a0a0f] p-3 rounded-lg border border-[#1e1e1e]">
                 <p className="text-gray-500 text-xs mb-1">{item.label}</p>
-                <p className="text-[var(--text-primary)] font-semibold font-mono">{item.value}</p>
+                <p className="text-white font-semibold font-mono">{item.value}</p>
               </div>
             ))}
           </div>
@@ -191,7 +191,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
         )}
 
         {contours.length > 0 && (
-          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
+          <div className="bg-[#111] rounded-xl border border-[#222] p-6">
             <ContourMap points={points} contours={contours} />
           </div>
         )}
@@ -256,7 +256,7 @@ function ContourMap({ points, contours }: { points: SpotHeight[]; contours: Cont
   return (
     <div>
       <svg width="100%" viewBox={`0 0 ${width} ${height}`}
-        className="bg-[var(--bg-primary)] rounded-lg border border-[#1e1e1e]">
+        className="bg-[#0a0a0f] rounded-lg border border-[#1e1e1e]">
 
         {/* Grid lines */}
         {[...Array(5)].map((_, i) => {

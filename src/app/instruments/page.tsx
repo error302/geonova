@@ -56,7 +56,7 @@ export default function InstrumentsPage() {
   return (
     <div className="min-h-screen py-12">
       <div className="max-w-4xl mx-auto px-6">
-        <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-2">Compatible Instruments</h1>
+        <h1 className="text-4xl font-bold text-white mb-2">Compatible Instruments</h1>
         <p className="text-gray-400 text-lg mb-12">
           GeoNova imports data from all major total station brands
         </p>
@@ -65,7 +65,7 @@ export default function InstrumentsPage() {
           {instruments.map((inst) => (
             <div
               key={inst.brand}
-              className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6"
+              className="bg-[#111] rounded-xl border border-[#222] p-6"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
@@ -92,14 +92,14 @@ export default function InstrumentsPage() {
 
               <div className="bg-[var(--bg-card)] rounded p-3">
                 <p className="text-gray-500 text-xs mb-1">How to export:</p>
-                <p className="text-[var(--text-primary)] text-sm font-mono">{inst.export}</p>
+                <p className="text-white text-sm font-mono">{inst.export}</p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
-          <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">How to Export from Your Instrument</h2>
+        <div className="bg-[#111] rounded-xl border border-[#222] p-6">
+          <h2 className="text-xl font-bold text-white mb-4">How to Export from Your Instrument</h2>
           
           <div className="space-y-4">
             <ExportStep number="1" title="Prepare your data">
@@ -131,7 +131,7 @@ function ExportStep({ number, title, children }: { number: string; title: string
         {number}
       </div>
       <div>
-        <h3 className="text-[var(--text-primary)] font-medium">{title}</h3>
+        <h3 className="text-white font-medium">{title}</h3>
         <p className="text-gray-400 text-sm">{children}</p>
       </div>
     </div>

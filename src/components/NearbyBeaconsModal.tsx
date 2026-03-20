@@ -99,7 +99,7 @@ export default function NearbyBeaconsModal({
       <div className="w-96 bg-[var(--bg-secondary)] border-r border-[var(--border-color)] flex flex-col">
         <div className="p-4 border-b border-[var(--border-color)] flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-100">Nearby Beacons</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-[var(--text-primary)] text-xl">×</button>
+          <button onClick={onClose} className="text-gray-400 hover:text-white text-xl">×</button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">

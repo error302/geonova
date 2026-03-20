@@ -209,14 +209,14 @@ export default function ProfilesPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
+      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
         <div className="text-[#E8841A]">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-white">
+    <div className="min-h-screen bg-[#0a0a0f] text-white">
       <div className="border-b border-gray-800 bg-[var(--bg-card)]">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">

@@ -144,7 +144,7 @@ export default function ImportPage() {
   return (
     <div className="min-h-screen py-12">
       <div className="max-w-4xl mx-auto px-6">
-        <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">Total Station Import</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">Total Station Import</h1>
         <p className="text-gray-400 mb-8">
           Import data directly from your total station
         </p>
@@ -175,8 +175,8 @@ export default function ImportPage() {
           </div>
         ) : (
           <>
-            <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-8 mb-8">
-              <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Supported Formats</h2>
+            <div className="bg-[#111] rounded-xl border border-[#222] p-8 mb-8">
+              <h2 className="text-lg font-semibold text-white mb-4">Supported Formats</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <FormatBadge color="blue" name="Leica GSI" />
                 <FormatBadge color="red" name="Trimble JobXML" />
@@ -188,7 +188,7 @@ export default function ImportPage() {
                 <label className="block">
                   <div className="border-2 border-dashed border-amber-500/50 rounded-xl p-12 text-center cursor-pointer hover:border-amber-500 transition-colors">
                     <div className="text-4xl mb-4">📁</div>
-                    <p className="text-[var(--text-primary)] font-medium mb-2">
+                    <p className="text-white font-medium mb-2">
                       {file ? file.name : 'Drop your file here or click to browse'}
                     </p>
                     <p className="text-gray-500 text-sm">
@@ -206,10 +206,10 @@ export default function ImportPage() {
             </div>
 
             {format !== 'unknown' && points.length > 0 && (
-              <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6 mb-8">
+              <div className="bg-[#111] rounded-xl border border-[#222] p-6 mb-8">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-[var(--text-primary)] font-semibold">
+                    <h3 className="text-white font-semibold">
                       Format detected: {formatNames[format]}
                     </h3>
                     <p className="text-gray-400 text-sm">
@@ -255,7 +255,7 @@ export default function ImportPage() {
                         onChange={() => togglePoint(i)}
                         className="accent-amber-500"
                       />
-                      <span className="text-[var(--text-primary)] font-mono text-sm w-16">{p.pointId}</span>
+                      <span className="text-white font-mono text-sm w-16">{p.pointId}</span>
                       {p.easting !== undefined ? (
                         <span className="text-gray-400 text-xs">
                           E: {p.easting.toFixed(4)} N: {p.northing?.toFixed(4)} Z: {p.elevation?.toFixed(3)}

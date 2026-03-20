@@ -98,7 +98,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen">
       <div className="max-w-4xl mx-auto px-6 py-10">
-        <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">Checkout</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">Checkout</h1>
         <p className="text-gray-400 mb-8">Choose a plan and complete payment.</p>
 
         <div className="flex gap-2 mb-8">
@@ -117,8 +117,8 @@ export default function CheckoutPage() {
         )}
 
         {step === 1 && (
-          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
-            <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">1) Select Plan</h2>
+          <div className="bg-[#111] rounded-xl border border-[#222] p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">1) Select Plan</h2>
 
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-300 mb-2">Country</label>
@@ -129,7 +129,7 @@ export default function CheckoutPage() {
                   setCountry(c)
                   setCurrency(getCurrencyForCountry(c))
                 }}
-                className="w-full p-3 bg-[var(--bg-primary)] border border-[#222] rounded-lg text-white"
+                className="w-full p-3 bg-[#0a0a0f] border border-[#222] rounded-lg text-white"
               >
                 <option value="Kenya">Kenya</option>
                 <option value="Uganda">Uganda</option>
@@ -156,7 +156,7 @@ export default function CheckoutPage() {
                 >
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <div className="text-[var(--text-primary)] font-semibold text-lg">{p.name}</div>
+                      <div className="text-white font-semibold text-lg">{p.name}</div>
                       <div className="text-gray-500 text-sm">{p.features.slice(0, 2).join(' • ')}</div>
                     </div>
                     <div className="text-right">
@@ -178,8 +178,8 @@ export default function CheckoutPage() {
         )}
 
         {step === 2 && (
-          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
-            <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">2) Payment Details</h2>
+          <div className="bg-[#111] rounded-xl border border-[#222] p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">2) Payment Details</h2>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
@@ -189,7 +189,7 @@ export default function CheckoutPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full p-3 bg-[var(--bg-primary)] border border-[#222] rounded-lg text-white"
+                  className="w-full p-3 bg-[#0a0a0f] border border-[#222] rounded-lg text-white"
                 />
               </div>
               <div>
@@ -199,7 +199,7 @@ export default function CheckoutPage() {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="+254700000000"
-                  className="w-full p-3 bg-[var(--bg-primary)] border border-[#222] rounded-lg text-white"
+                  className="w-full p-3 bg-[#0a0a0f] border border-[#222] rounded-lg text-white"
                 />
                 <p className="text-xs text-gray-500 mt-2">Required only for M-Pesa STK Push.</p>
               </div>
@@ -247,10 +247,10 @@ export default function CheckoutPage() {
         )}
 
         {step === 3 && (
-          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
-            <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">3) Confirm & Pay</h2>
+          <div className="bg-[#111] rounded-xl border border-[#222] p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">3) Confirm & Pay</h2>
 
-            <div className="rounded-lg border border-[#222] bg-[var(--bg-primary)] p-4 mb-6">
+            <div className="rounded-lg border border-[#222] bg-[#0a0a0f] p-4 mb-6">
               <div className="flex items-center justify-between text-gray-200 mb-2">
                 <span>Plan</span>
                 <span className="font-semibold">{plan.name}</span>
@@ -292,8 +292,8 @@ export default function CheckoutPage() {
         )}
 
         {step === 4 && mpesa && (
-          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
-            <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-2">M-Pesa STK Push Sent</h2>
+          <div className="bg-[#111] rounded-xl border border-[#222] p-6">
+            <h2 className="text-xl font-semibold text-white mb-2">M-Pesa STK Push Sent</h2>
             <p className="text-gray-400 mb-6">Complete payment on your phone, then verify to activate your plan.</p>
 
             <button

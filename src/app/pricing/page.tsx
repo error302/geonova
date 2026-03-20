@@ -119,7 +119,7 @@ export default function PricingPage() {
     <div className="min-h-screen py-16">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Simple, Transparent Pricing
           </h1>
           <p className="text-gray-400 text-lg">
@@ -128,7 +128,7 @@ export default function PricingPage() {
         </div>
 
         <div className="flex justify-center mb-12">
-          <div className="bg-[var(--bg-secondary)] p-1 rounded-lg flex flex-wrap justify-center gap-1">
+          <div className="bg-[#111] p-1 rounded-lg flex flex-wrap justify-center gap-1">
             {(['KES', 'UGX', 'TZS', 'NGN', 'GHS', 'ZAR', 'USD', 'EUR', 'GBP', 'INR', 'IDR', 'BRL', 'AUD'] as Currency[]).map((curr) => (
               <button
                 key={curr}
@@ -149,7 +149,7 @@ export default function PricingPage() {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`bg-[var(--bg-secondary)] rounded-2xl border ${
+              className={`bg-[#111] rounded-2xl border ${
                 plan.popular ? 'border-[#E8841A]' : 'border-[#222]'
               } p-8 relative`}
             >
@@ -159,7 +159,7 @@ export default function PricingPage() {
                 </div>
               )}
 
-              <h3 className="text-[var(--text-primary)] font-bold text-2xl mb-2">{plan.name}</h3>
+              <h3 className="text-white font-bold text-2xl mb-2">{plan.name}</h3>
               <div className="mb-6">
                 <span className="text-[#E8841A] text-4xl font-bold">
                   {formatPrice(plan.prices[currency])}
@@ -202,14 +202,14 @@ export default function PricingPage() {
         </div>
 
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-[var(--text-primary)] text-center mb-8">
+          <h2 className="text-2xl font-bold text-white text-center mb-8">
             Frequently Asked Questions
           </h2>
 
           <div className="space-y-6">
             {faqs.map((faq, i) => (
-              <div key={i} className="bg-[var(--bg-secondary)] rounded-xl p-6 border border-[#222]">
-                <h3 className="text-[var(--text-primary)] font-semibold mb-2">{faq.q}</h3>
+              <div key={i} className="bg-[#111] rounded-xl p-6 border border-[#222]">
+                <h3 className="text-white font-semibold mb-2">{faq.q}</h3>
                 <p className="text-gray-400">{faq.a}</p>
               </div>
             ))}

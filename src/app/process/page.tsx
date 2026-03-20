@@ -356,7 +356,7 @@ export default function ProcessPage() {
             />
           </div>
 
-          <div className="mt-8 p-6 bg-[var(--bg-secondary)]/50 rounded-xl border border-[var(--border-color)]">
+          <div className="mt-8 p-6 bg-gray-900/50 rounded-xl border border-[var(--border-color)]">
             <h3 className="text-sm font-semibold text-gray-400 mb-4">Download Sample Files</h3>
             <div className="flex flex-wrap gap-3">
               <a href="/sample-files/traverse_sample.csv" className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-gray-200 rounded text-sm">
@@ -373,7 +373,7 @@ export default function ProcessPage() {
         </>
       ) : interpretResult?.ok && interpretResult.dataset ? (
         <div className="space-y-6">
-          <div className="card border border-[var(--border-color)]">
+          <div className="card bg-gray-900/50 border border-[var(--border-color)]">
             <div className="card-header flex items-center gap-3">
               <span className="text-2xl">✓</span>
               <span className="font-semibold">
@@ -504,7 +504,7 @@ export default function ProcessPage() {
               ) : null}
 
               {workflowResult.surveyType === 'traverse' && workflowResult.results?.legs && (
-                <div className="card border border-[var(--border-color)]">
+                <div className="card bg-gray-900/50 border border-[var(--border-color)]">
                   <div className="card-header">
                     <span className="font-semibold">Gale's Table</span>
                   </div>
@@ -538,7 +538,7 @@ export default function ProcessPage() {
               )}
 
               {workflowResult.surveyType === 'leveling' && workflowResult.results?.readings && (
-                <div className="card border border-[var(--border-color)]">
+                <div className="card bg-gray-900/50 border border-[var(--border-color)]">
                   <div className="card-header">
                     <span className="font-semibold">Leveling Results</span>
                   </div>
@@ -573,7 +573,7 @@ export default function ProcessPage() {
                 </div>
               )}
 
-              <div className="card border border-[var(--border-color)]">
+              <div className="card bg-gray-900/50 border border-[var(--border-color)]">
                 <div className="card-body space-y-4">
                   <h3 className="font-semibold">Save to Project</h3>
                   

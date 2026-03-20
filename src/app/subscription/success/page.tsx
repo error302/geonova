@@ -79,8 +79,8 @@ export default function SubscriptionSuccessPage({
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6">
-      <div className="w-full max-w-lg bg-[var(--bg-secondary)] border border-[#222] rounded-2xl p-8">
-        <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Subscription</h1>
+      <div className="w-full max-w-lg bg-[#111] border border-[#222] rounded-2xl p-8">
+        <h1 className="text-2xl font-bold text-white mb-2">Subscription</h1>
         <p className="text-[var(--text-secondary)] mb-6">{message}</p>
 
         <div

@@ -398,7 +398,7 @@ export default function COGOCalculator() {
                   <ResultRow label="Point Name" value={result.pointName} />
                   <ResultRow label="Easting" value={`${result.point.easting.toFixed(4)} m`} />
                   <ResultRow label="Northing" value={`${result.point.northing.toFixed(4)} m`} />
-                  <div className="border-t border-[var(--border-color)] my-3"></div>
+                  <div className="border-t border-gray-700 my-3"></div>
                   <div className="text-xs text-gray-500 font-mono">
                     Formula: E₂ = E₁ + d×sin(θ), N₂ = N₁ + d×cos(θ)<br/>
                     E = {parseFloat(input.radStationE).toFixed(4)} + {result.distance}×sin({result.bearing.toFixed(4)}°)<br/>
@@ -412,15 +412,15 @@ export default function COGOCalculator() {
                   <ResultRow label="Unknown Point" value={result.pointName} />
                   <ResultRow label="Easting" value={`${result.point.easting.toFixed(4)} m`} />
                   <ResultRow label="Northing" value={`${result.point.northing.toFixed(4)} m`} />
-                  <div className="border-t border-[var(--border-color)] my-3"></div>
+                  <div className="border-t border-gray-700 my-3"></div>
                   <div className="text-sm text-gray-400 mb-2">Check Distances:</div>
                   <ResultRow label="AP" value={`${result.distA.toFixed(4)} m`} />
                   <ResultRow label="BP" value={`${result.distB.toFixed(4)} m`} />
-                  <div className="border-t border-[var(--border-color)] my-3"></div>
+                  <div className="border-t border-gray-700 my-3"></div>
                   <div className="text-sm text-gray-400 mb-2">Angles:</div>
                   <ResultRow label="∠APB" value={result.angleA.toFixed(3) + '°'} />
                   <ResultRow label="∠BPA" value={result.angleB.toFixed(3) + '°'} />
-                  <div className="border-t border-[var(--border-color)] my-3"></div>
+                  <div className="border-t border-gray-700 my-3"></div>
                   <div className="text-xs text-gray-500 font-mono">
                     Formula: {result.formula}
                   </div>
@@ -432,12 +432,12 @@ export default function COGOCalculator() {
                   <ResultRow label="Unknown Station" value={result.pointName} />
                   <ResultRow label="Easting" value={`${result.point.easting.toFixed(4)} m`} />
                   <ResultRow label="Northing" value={`${result.point.northing.toFixed(4)} m`} />
-                  <div className="border-t border-[var(--border-color)] my-3"></div>
+                  <div className="border-t border-gray-700 my-3"></div>
                   <div className="text-sm text-gray-400 mb-2">Check Distances:</div>
                   <ResultRow label="P to A" value={`${result.d1.toFixed(4)} m`} />
                   <ResultRow label="P to B" value={`${result.d2.toFixed(4)} m`} />
                   <ResultRow label="P to C" value={`${result.d3.toFixed(4)} m`} />
-                  <div className="border-t border-[var(--border-color)] my-3"></div>
+                  <div className="border-t border-gray-700 my-3"></div>
                   <div className="text-sm text-gray-400 mb-2">Check Bearings:</div>
                   <ResultRow label="P → A" value={result.bearingToP1} />
                   <ResultRow label="P → B" value={result.bearingToP2} />
@@ -450,7 +450,7 @@ export default function COGOCalculator() {
                   <ResultRow label="Distance A → B" value={`${result.distance.toFixed(4)} m`} />
                   <ResultRow label="Bearing A → B" value={result.bearingDMS} />
                   <ResultRow label="Back Bearing B → A" value={result.backBearingDMS} />
-                  <div className="border-t border-[var(--border-color)] my-3"></div>
+                  <div className="border-t border-gray-700 my-3"></div>
                   <ResultRow label="ΔEasting" value={`${result.deltaE >= 0 ? '+' : ''}${result.deltaE.toFixed(4)} m`} />
                   <ResultRow label="ΔNorthing" value={`${result.deltaN >= 0 ? '+' : ''}${result.deltaN.toFixed(4)} m`} />
                 </>
@@ -461,13 +461,13 @@ export default function COGOCalculator() {
                   <ResultRow label="Offset Point P" value="" />
                   <ResultRow label="Easting" value={`${result.point.easting.toFixed(4)} m`} />
                   <ResultRow label="Northing" value={`${result.point.northing.toFixed(4)} m`} />
-                  <div className="border-t border-[var(--border-color)] my-3"></div>
+                  <div className="border-t border-gray-700 my-3"></div>
                   <ResultRow label="Chainage" value={`${result.chainage.toFixed(3)} m`} />
                   <ResultRow label="Offset" value={`${result.offset.toFixed(3)} m ${result.offsetDirection}`} />
-                  <div className="border-t border-[var(--border-color)] my-3"></div>
+                  <div className="border-t border-gray-700 my-3"></div>
                   <ResultRow label="Bearing AB" value={result.bearingAB} />
                   <ResultRow label="Bearing to P" value={result.offsetBearing} />
-                  <div className="border-t border-[var(--border-color)] my-3"></div>
+                  <div className="border-t border-gray-700 my-3"></div>
                   <div className="text-xs text-gray-500 font-mono">
                     Formula: Bearing_AB = atan2(ΔE_AB, ΔN_AB)<br/>
                     P = A + chainage×sin(θ_AB) + offset×sin(θ_AB±90°)

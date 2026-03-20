@@ -323,7 +323,7 @@ export default function DroneSurveyPage() {
 
               <div className="mt-4 p-4 bg-gray-800 rounded">
                 <h4 className="font-semibold mb-2">GCP Distribution Map</h4>
-                <svg viewBox="0 0 400 250" className="w-full h-48 bg-[var(--bg-secondary)] rounded">
+                <svg viewBox="0 0 400 250" className="w-full h-48 bg-gray-900 rounded">
                   <rect x="20" y="20" width="360" height="210" fill="none" stroke="#444" strokeWidth="2" />
                   {gcps.map(g => {
                     const minE = parseFloat(surveyArea.minE);

@@ -60,7 +60,7 @@ export default function FeedbackWidget() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 bg-[var(--bg-secondary)] border border-[#222] rounded-xl shadow-2xl w-80 z-50 overflow-hidden">
+    <div className="fixed bottom-6 right-6 bg-[#111] border border-[#222] rounded-xl shadow-2xl w-80 z-50 overflow-hidden">
       <div className="bg-[#E8841A] px-4 py-3 flex justify-between items-center">
         <h3 className="text-black font-bold">Feedback</h3>
         <button onClick={() => setIsOpen(false)} className="text-black hover:text-gray-700">
@@ -102,7 +102,7 @@ export default function FeedbackWidget() {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="How can we improve GeoNova?"
                 rows={3}
-                className="w-full bg-[var(--bg-primary)] border border-[#222] rounded-lg px-3 py-2 text-[var(--text-primary)] text-sm resize-none"
+                className="w-full bg-[#0a0a0f] border border-[#222] rounded-lg px-3 py-2 text-white text-sm resize-none"
                 required
               />
             </div>
@@ -113,7 +113,7 @@ export default function FeedbackWidget() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email (optional)"
-                className="w-full bg-[var(--bg-primary)] border border-[#222] rounded-lg px-3 py-2 text-[var(--text-primary)] text-sm"
+                className="w-full bg-[#0a0a0f] border border-[#222] rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
 

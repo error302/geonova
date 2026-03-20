@@ -95,7 +95,7 @@ export default function FAQPage() {
           ← Back to Documentation
         </Link>
 
-        <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-4">Frequently Asked Questions</h1>
+        <h1 className="text-4xl font-bold text-white mb-4">Frequently Asked Questions</h1>
         <p className="text-gray-400 text-lg mb-12">
           Find answers to common questions about GeoNova
         </p>
@@ -103,14 +103,14 @@ export default function FAQPage() {
         <div className="space-y-12">
           {faqs.map((section) => (
             <div key={section.category}>
-              <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-6">{section.category}</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">{section.category}</h2>
               <div className="space-y-4">
                 {section.questions.map((faq, i) => (
                   <details
                     key={i}
-                    className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] overflow-hidden"
+                    className="bg-[#111] rounded-xl border border-[#222] overflow-hidden"
                   >
-                    <summary className="px-6 py-4 cursor-pointer text-[var(--text-primary)] font-medium hover:bg-[var(--bg-tertiary)]">
+                    <summary className="px-6 py-4 cursor-pointer text-white font-medium hover:bg-[#1a1a1a]">
                       {faq.q}
                     </summary>
                     <div className="px-6 pb-4 text-gray-400">
@@ -124,7 +124,7 @@ export default function FAQPage() {
         </div>
 
         <div className="mt-16 bg-gradient-to-r from-[#E8841A]/20 to-transparent border border-[#E8841A]/30 rounded-xl p-8 text-center">
-          <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-4">Still Have Questions?</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">Still Have Questions?</h2>
           <p className="text-gray-400 mb-6">
             Can't find what you're looking for? We're here to help.
           </p>
