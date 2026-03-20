@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     const resend = getResend()
     if (!resend) return NextResponse.json({ error: 'Email service not configured' }, { status: 503 })
     await resend.emails.send({
-      from: 'GeoNova <hello@geonova.app>',
+      from: process.env.RESEND_FROM_EMAIL || 'GeoNova <hello@geonova.app>',
       to: email,
       subject: 'Your GeoNova Pro trial ends in 3 days',
       html: `
