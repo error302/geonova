@@ -5,9 +5,11 @@ export default function SubscriptionStatus({ subscription }: { subscription: any
   const plan = subscription?.plan_id || 'free'
   const isTrialing = subscription?.status === 'trial'
   
-  const trialDaysLeft = isTrialing ? Math.ceil(
-    (new Date(subscription?.trial_ends_at).getTime() - Date.now()) / 86400000
-  ) : 0
+  const trialDaysLeft = isTrialing && subscription?.trial_ends_at
+    ? Math.max(0, Math.ceil(
+        (new Date(subscription.trial_ends_at).getTime() - Date.now()) / 86400000
+      ))
+    : 0
 
   const getBadge = () => {
     if (plan === 'team') {

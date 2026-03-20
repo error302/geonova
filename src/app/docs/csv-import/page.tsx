@@ -53,7 +53,7 @@ export default function CSVImportPage() {
           <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-6">Supported Formats</h2>
           <div className="space-y-6">
             {formats.map((format) => (
-              <div key={format.type} className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
+              <div key={format.type} className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-6">
                 <h3 className="text-xl font-semibold text-[#E8841A] mb-2">{format.type}</h3>
                 <p className="text-[var(--text-secondary)] text-sm mb-4">{format.description}</p>
                 <div className="bg-[var(--bg-primary)] rounded-lg p-4 mb-4">
@@ -72,12 +72,12 @@ export default function CSVImportPage() {
         <section id="samples" className="mb-12">
           <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-6">Sample Files</h2>
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-[var(--bg-secondary)] rounded-lg border border-[#222] p-4">
+            <div className="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-4">
               <h4 className="text-[var(--text-primary)] font-semibold mb-2">Sample Traverse CSV</h4>
               <p className="text-[var(--text-secondary)] text-sm mb-3">Example traverse data with 5 legs</p>
               <button className="text-[#E8841A] text-sm hover:underline">Download sample.csv</button>
             </div>
-            <div className="bg-[var(--bg-secondary)] rounded-lg border border-[#222] p-4">
+            <div className="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-4">
               <h4 className="text-[var(--text-primary)] font-semibold mb-2">Sample Leveling CSV</h4>
               <p className="text-[var(--text-secondary)] text-sm mb-3">Example leveling run with BS/FS</p>
               <button className="text-[#E8841A] text-sm hover:underline">Download sample.csv</button>

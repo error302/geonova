@@ -108,7 +108,7 @@ export default function FAQPage() {
                 {section.questions.map((faq, i) => (
                   <details
                     key={i}
-                    className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] overflow-hidden"
+                    className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] overflow-hidden"
                   >
                     <summary className="px-6 py-4 cursor-pointer text-[var(--text-primary)] font-medium hover:bg-[var(--bg-tertiary)]">
                       {faq.q}

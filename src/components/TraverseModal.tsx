@@ -822,7 +822,7 @@ export default function TraverseModal({
                     bearingSec: '', 
                     distance: '' 
                   }])}
-                  className="mt-3 px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm"
+                  className="mt-3 px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm"
                 >
                   + Add Point
                 </button>
@@ -985,7 +985,7 @@ export default function TraverseModal({
 
               <button
                 onClick={addLeg}
-                className="mt-3 px-3 py-1 text-sm bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded"
+                className="mt-3 px-3 py-1 text-sm bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded"
               >
                 + Add Row
               </button>
@@ -1074,7 +1074,7 @@ export default function TraverseModal({
             <div className="flex gap-3">
               <button
                 onClick={handleClose}
-                className="px-6 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded"
+                className="px-6 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded"
               >
                 Cancel
               </button>
@@ -1195,7 +1195,7 @@ export default function TraverseModal({
                   {blunderResults.map((b, i) => (
                     <div key={i} className={`flex items-center gap-2 text-xs ${b.isBlunder || b.distanceMismatch ? 'text-red-400' : 'text-[var(--text-secondary)]'}`}>
                       <span className="font-mono">{b.legName}</span>
-                      <div className="flex-1 h-2 bg-gray-700 rounded overflow-hidden">
+                      <div className="flex-1 h-2 bg-[var(--bg-tertiary)] rounded overflow-hidden">
                         <div 
                           className={`h-full ${b.isBlunder ? 'bg-red-500' : 'bg-green-600'}`} 
                           style={{ width: `${Math.min(parseFloat(b.contribution), 100)}%` }}
@@ -1224,7 +1224,7 @@ export default function TraverseModal({
                   setStep('input')
                   setSaveMessage(null)
                 }}
-                className="px-6 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded"
+                className="px-6 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded"
               >
                 Back
               </button>

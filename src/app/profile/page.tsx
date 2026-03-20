@@ -217,7 +217,7 @@ export default function ProfilePage() {
                   className={`px-4 py-2 rounded text-sm text-left transition-colors ${
                     profile.specializations.includes(spec)
                       ? 'bg-[#E8841A] text-black'
-                      : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)] hover:bg-gray-700'
+                      : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)] hover:bg-[var(--border-hover)]'
                   }`}
                 >
                   {profile.specializations.includes(spec) ? '✓' : '○'} {spec}

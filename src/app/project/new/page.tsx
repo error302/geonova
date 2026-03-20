@@ -241,7 +241,7 @@ export default function NewProjectPage() {
           <div className="flex gap-4 pt-4">
             <a
               href="/dashboard"
-              className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded transition-colors"
+              className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded transition-colors"
             >
               Cancel
             </a>

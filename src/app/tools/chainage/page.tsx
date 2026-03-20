@@ -127,7 +127,7 @@ export default function ChainageCalculator() {
           <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold text-[var(--text-primary)]">Alignment Points</h3>
-              <button onClick={addPoint} className="text-sm px-3 py-1 bg-[var(--bg-tertiary)] text-[var(--text-primary)] rounded hover:bg-gray-700">+ Add Point</button>
+              <button onClick={addPoint} className="text-sm px-3 py-1 bg-[var(--bg-tertiary)] text-[var(--text-primary)] rounded hover:bg-[var(--border-hover)]">+ Add Point</button>
             </div>
             <div className="space-y-3">
               {alignmentPoints.map((point, idx) => (
@@ -153,7 +153,7 @@ export default function ChainageCalculator() {
               <p className="text-xs text-[var(--text-muted)] mb-3">Find coordinates at a given chainage</p>
               <div className="flex gap-2">
                 <input className="input flex-1" value={reverseChainage} onChange={e => setReverseChainage(e.target.value)} placeholder="Chainage (m)" />
-                <button onClick={calculateReverse} className="px-4 py-2 bg-[var(--bg-tertiary)] text-[var(--text-primary)] rounded hover:bg-gray-700">Find</button>
+                <button onClick={calculateReverse} className="px-4 py-2 bg-[var(--bg-tertiary)] text-[var(--text-primary)] rounded hover:bg-[var(--border-hover)]">Find</button>
               </div>
               {reverseResult && (
                 <div className="mt-4 p-3 bg-[var(--bg-tertiary)]/50 rounded-lg">

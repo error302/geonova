@@ -122,7 +122,7 @@ export default function ParcelAreaModal({ isOpen, onClose, points, onAreaResult 
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded"
+            className="px-6 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded"
           >
             Close
           </button>

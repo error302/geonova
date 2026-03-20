@@ -359,13 +359,13 @@ export default function ProcessPage() {
           <div className="mt-8 p-6 bg-[var(--bg-secondary)]/50 rounded-xl border border-[var(--border-color)]">
             <h3 className="text-sm font-semibold text-[var(--text-secondary)] mb-4">Download Sample Files</h3>
             <div className="flex flex-wrap gap-3">
-              <a href="/sample-files/traverse_sample.csv" className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm">
+              <a href="/sample-files/traverse_sample.csv" className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm">
                 📄 Traverse Sample
               </a>
-              <a href="/sample-files/leveling_sample.csv" className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm">
+              <a href="/sample-files/leveling_sample.csv" className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm">
                 📄 Leveling Sample
               </a>
-              <a href="/sample-files/radiation_sample.csv" className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm">
+              <a href="/sample-files/radiation_sample.csv" className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm">
                 📄 Radiation Sample
               </a>
             </div>
@@ -454,7 +454,7 @@ export default function ProcessPage() {
                         setWorkflowSolutions([])
                         setToleranceResult(null)
                       }}
-                      className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded-lg"
+                      className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg"
                     >
                       Upload Different File
                     </button>
@@ -599,10 +599,10 @@ export default function ProcessPage() {
                   </div>
 
                   <div className="flex gap-3 pt-2">
-                    <Link href="/dashboard" className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded-lg text-center">
+                    <Link href="/dashboard" className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg text-center">
                       View Projects
                     </Link>
-                    <button className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded-lg">
+                    <button className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg">
                       Generate PDF Report
                     </button>
                   </div>

@@ -607,7 +607,7 @@ export default function ProjectMap({
                 onEditPoint?.(contextMenu.point)
                 setContextMenu(null)
               }}
-              className="w-full px-4 py-2 text-left text-sm text-[var(--text-primary)] hover:bg-gray-700"
+              className="w-full px-4 py-2 text-left text-sm text-[var(--text-primary)] hover:bg-[var(--border-hover)]"
             >
               Edit Point
             </button>
@@ -619,7 +619,7 @@ export default function ProjectMap({
               }}
               disabled={!!contextMenu.point.locked}
               title={contextMenu.point.locked ? 'Locked control points cannot be deleted' : 'Delete point'}
-              className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-[var(--border-hover)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Delete Point
             </button>

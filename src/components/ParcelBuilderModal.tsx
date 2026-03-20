@@ -196,7 +196,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
                                 ? 'bg-green-900/40 border border-green-700 text-green-200 hover:bg-green-900/60'
                                 : 'bg-[#E8841A] text-black'
                               : isSelecting
-                                ? 'bg-gray-700 hover:bg-gray-600 text-[var(--text-primary)]'
+                                ? 'bg-gray-700 hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
                                 : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-not-allowed'
                           }`}
                           title={canClose ? 'Click to close boundary' : undefined}
@@ -232,7 +232,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
                         if (selectedPoints.length >= 3) setIsSelecting(false)
                       }}
                       disabled={selectedPoints.length < 3}
-                      className="px-3 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm disabled:opacity-50"
+                      className="px-3 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm disabled:opacity-50"
                     >
                       Close boundary
                     </button>
@@ -326,10 +326,10 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
         </div>
 
         <div className="p-6 border-t border-[var(--border-color)] flex gap-3 justify-end">
-          <button onClick={handleReset} className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded">
+          <button onClick={handleReset} className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded">
             Reset
           </button>
-          <button onClick={onClose} className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded">
+          <button onClick={onClose} className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded">
             Cancel
           </button>
           {!isSelecting && areaResult && (

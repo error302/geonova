@@ -185,7 +185,7 @@ export default function FieldBookAIPage() {
           </div>
           <a
             href="/fieldbook"
-            className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm"
+            className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm"
           >
             ← Digital Field Book
           </a>
@@ -228,7 +228,7 @@ export default function FieldBookAIPage() {
                 />
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-gray-700 rounded-lg text-[var(--text-primary)]"
+                  className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] rounded-lg text-[var(--text-primary)]"
                 >
                   {file ? file.name : 'Select Photo'}
                 </button>

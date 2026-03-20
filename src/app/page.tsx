@@ -74,7 +74,7 @@ export default function Home() {
           <div className="hidden lg:block">
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-[#E8841A] to-[#E8841A]/20 rounded-2xl blur-3xl"></div>
-              <div className="relative bg-[#111] rounded-xl border border-[#222] p-4 shadow-2xl">
+              <div className="relative bg-[#111] rounded-xl border border-[var(--border-color)] p-4 shadow-2xl">
                 <div className="aspect-video bg-[var(--bg-primary)] rounded-lg overflow-hidden relative">
                   <svg className="w-full h-full" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg">
                     <rect fill="#0f172a" width="400" height="225"/>
@@ -119,21 +119,21 @@ export default function Home() {
           </h2>
           
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[#222] border-l-2 border-l-red-500/50">
+            <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[var(--border-color)] border-l-2 border-l-red-500/50">
               <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
               <h3 className="text-[var(--text-primary)] font-semibold mb-2">Hours of Manual Computation</h3>
               <p className="text-[var(--text-secondary)] text-sm">Complex traverse calculations done entirely by hand</p>
             </div>
-            <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[#222] border-l-2 border-l-yellow-500/50">
+            <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[var(--border-color)] border-l-2 border-l-yellow-500/50">
               <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
               </div>
               <h3 className="text-[var(--text-primary)] font-semibold mb-2">Error-Prone Arithmetic Checks</h3>
               <p className="text-[var(--text-secondary)] text-sm">Manual leveling checks that can fail silently</p>
             </div>
-            <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[#222] border-l-2 border-l-orange-500/50">
+            <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[var(--border-color)] border-l-2 border-l-orange-500/50">
               <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
               </div>
@@ -244,7 +244,7 @@ export default function Home() {
             ))}
           </div>
           
-          <div className="bg-[#111] rounded-xl border border-[#222] p-6 max-w-2xl mx-auto">
+          <div className="bg-[#111] rounded-xl border border-[var(--border-color)] p-6 max-w-2xl mx-auto">
             {activeTab === 'traverse' && (
               <div>
                 <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-4">Traverse Adjustment</h3>
@@ -451,7 +451,7 @@ export default function Home() {
               </div>
               
               <div className="flex justify-center">
-                <div className="w-48 h-80 bg-[#111] rounded-3xl border-4 border-[#222] relative overflow-hidden">
+                <div className="w-48 h-80 bg-[#111] rounded-3xl border-4 border-[var(--border-color)] relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-b from-[#E8841A]/10 to-transparent"></div>
                   <div className="p-4 pt-8">
                     <div className="text-xs text-[#E8841A] mb-2">Field Mode</div>
@@ -475,7 +475,7 @@ export default function Home() {
       </section>
 
       {/* Section 10: Footer */}
-      <footer className="bg-[var(--bg-primary)] border-t border-[#222] py-16">
+      <footer className="bg-[var(--bg-primary)] border-t border-[var(--border-color)] py-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
@@ -520,7 +520,7 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="border-t border-[#222] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="border-t border-[var(--border-color)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-[var(--text-muted)]">
               © 2026 GeoNova. Built for surveyors, by a surveyor.
             </p>
@@ -546,7 +546,7 @@ export default function Home() {
 
 function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc: string }) {
   return (
-    <div className="bg-[#111] p-6 rounded-xl border border-[#222] hover:border-[#E8841A] transition-colors">
+    <div className="bg-[#111] p-6 rounded-xl border border-[var(--border-color)] hover:border-[#E8841A] transition-colors">
       <div className="text-3xl mb-4">{icon}</div>
       <h3 className="text-[var(--text-primary)] font-semibold mb-2">{title}</h3>
       <p className="text-[var(--text-secondary)] text-sm">{desc}</p>
@@ -568,7 +568,7 @@ function StepCard({ number, title, desc }: { number: string; title: string; desc
 
 function TestimonialCard({ quote, name, title, country }: { quote: string; name: string; title: string; country: string }) {
   return (
-    <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[#222]">
+    <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[var(--border-color)]">
       <p className="text-[var(--text-secondary)] mb-4 italic">"{quote}"</p>
       <div className="flex items-center gap-3">
         <span className="text-2xl">{country}</span>
@@ -589,7 +589,7 @@ function PricingCard({ tier, price, features, cta, popular }: {
   popular: boolean;
 }) {
   return (
-    <div className={`bg-[#111] p-6 rounded-xl border ${popular ? 'border-[#E8841A]' : 'border-[#222]'} relative`}>
+    <div className={`bg-[#111] p-6 rounded-xl border ${popular ? 'border-[#E8841A]' : 'border-[var(--border-color)]'} relative`}>
       {popular && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E8841A] text-black text-xs font-bold px-3 py-1 rounded-full">
           Most Popular
@@ -617,7 +617,7 @@ function PricingCard({ tier, price, features, cta, popular }: {
 
 function GuideCard({ icon, title, steps }: { icon: string; title: string; steps: string }) {
   return (
-    <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[#222] hover:border-[#E8841A] transition-colors text-center">
+    <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[var(--border-color)] hover:border-[#E8841A] transition-colors text-center">
       <div className="text-4xl mb-3">{icon}</div>
       <h3 className="text-[var(--text-primary)] font-semibold mb-1">{title}</h3>
       <p className="text-[var(--text-muted)] text-sm">{steps}</p>

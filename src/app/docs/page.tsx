@@ -64,7 +64,7 @@ export default function DocsPage() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {sections.map((section) => (
-            <div key={section.title} className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
+            <div key={section.title} className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-6">
               <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">{section.title}</h2>
               <ul className="space-y-2">
                 {section.items.map((item) => (

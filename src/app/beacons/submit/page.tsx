@@ -76,7 +76,7 @@ export default function SubmitBeaconPage() {
                 utmZone: '37', hemisphere: 'S', authority: '',
                 beaconType: 'control', description: ''
               })}}
-              className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded-lg"
+              className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg"
             >
               Submit Another
             </button>

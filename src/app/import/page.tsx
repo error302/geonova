@@ -175,7 +175,7 @@ export default function ImportPage() {
           </div>
         ) : (
           <>
-            <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-8 mb-8">
+            <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-8 mb-8">
               <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Supported Formats</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <FormatBadge color="blue" name="Leica GSI" />
@@ -206,7 +206,7 @@ export default function ImportPage() {
             </div>
 
             {format !== 'unknown' && points.length > 0 && (
-              <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6 mb-8">
+              <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-6 mb-8">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-[var(--text-primary)] font-semibold">

@@ -1344,7 +1344,7 @@ export default function GuideTypePage({ params }: PageProps) {
           </div>
           
           <div className="mt-4 flex items-center gap-2">
-            <div className="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
+            <div className="flex-1 h-2 bg-[var(--bg-tertiary)] rounded-full overflow-hidden">
               <div 
                 className="h-full bg-[#E8841A] rounded-full transition-all"
                 style={{ width: `${(completedSteps.length / guide.steps.length) * 100}%` }}
@@ -1460,7 +1460,7 @@ export default function GuideTypePage({ params }: PageProps) {
             <div className="flex justify-center gap-4">
               <Link 
                 href="/guide"
-                className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 rounded text-[var(--text-primary)]"
+                className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] rounded text-[var(--text-primary)]"
               >
                 ← Back to Guides
               </Link>

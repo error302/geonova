@@ -211,7 +211,7 @@ export default function CSVUploadModal({
             <div className="flex gap-3">
               <button
                 onClick={handleClose}
-                className="flex-1 px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded transition-colors"
+                className="flex-1 px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded transition-colors"
               >
                 Cancel
               </button>

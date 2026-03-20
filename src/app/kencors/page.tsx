@@ -136,7 +136,7 @@ export default function KencorsPage() {
               <button
                 onClick={handleFindStations}
                 disabled={loading}
-                className="flex-1 bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 disabled:opacity-50"
+                className="flex-1 bg-[var(--border-color)] text-white py-2 px-4 rounded-lg hover:bg-[var(--border-hover)] disabled:opacity-50"
               >
                 Find Stations
               </button>

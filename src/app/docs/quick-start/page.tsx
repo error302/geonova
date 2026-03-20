@@ -52,7 +52,7 @@ export default function QuickStartPage() {
           ))}
         </div>
 
-        <div className="mt-12 p-6 bg-[var(--bg-secondary)] rounded-xl border border-[#222]">
+        <div className="mt-12 p-6 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)]">
           <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">That's It!</h3>
           <p className="text-[var(--text-secondary)] mb-4">
             Your first survey is complete. You've created a project, added points, run a traverse, and generated a report.
@@ -70,28 +70,28 @@ export default function QuickStartPage() {
           <div className="grid md:grid-cols-2 gap-4">
             <Link
               href="/docs/csv-import"
-              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[#222] hover:border-[#E8841A] transition-colors"
+              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[#E8841A] transition-colors"
             >
               <h4 className="text-[var(--text-primary)] font-semibold mb-1">Learn CSV Import</h4>
               <p className="text-[var(--text-secondary)] text-sm">Import your field notes automatically</p>
             </Link>
             <Link
               href="/guide"
-              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[#222] hover:border-[#E8841A] transition-colors"
+              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[#E8841A] transition-colors"
             >
               <h4 className="text-[var(--text-primary)] font-semibold mb-1">Field Guide</h4>
               <p className="text-[var(--text-secondary)] text-sm">Step-by-step survey workflows</p>
             </Link>
             <Link
               href="/tools/leveling"
-              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[#222] hover:border-[#E8841A] transition-colors"
+              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[#E8841A] transition-colors"
             >
               <h4 className="text-[var(--text-primary)] font-semibold mb-1">Leveling Calculator</h4>
               <p className="text-[var(--text-secondary)] text-sm">Calculate elevations with arithmetic checks</p>
             </Link>
             <Link
               href="/community"
-              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[#222] hover:border-[#E8841A] transition-colors"
+              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[#E8841A] transition-colors"
             >
               <h4 className="text-[var(--text-primary)] font-semibold mb-1">Join Community</h4>
               <p className="text-[var(--text-secondary)] text-sm">Connect with other surveyors</p>

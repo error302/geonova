@@ -293,13 +293,13 @@ export default function FieldPage() {
           <div className="mt-2 flex gap-2">
             <button
               onClick={() => router.push('/fieldbook')}
-              className="text-[10px] bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] px-2 py-1.5 rounded"
+              className="text-[10px] bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] px-2 py-1.5 rounded"
             >
               Open Field Book
             </button>
             <button
               onClick={() => router.push('/guide')}
-              className="text-[10px] bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] px-2 py-1.5 rounded"
+              className="text-[10px] bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] px-2 py-1.5 rounded"
             >
               Field Guides
             </button>
@@ -313,7 +313,7 @@ export default function FieldPage() {
               <h2 className="text-xs font-semibold text-white uppercase tracking-wide">{t('field.points')}</h2>
               <button
                 onClick={() => setShowBatch(!showBatch)}
-                className="text-[10px] bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] px-2 py-1 rounded flex items-center gap-1"
+                className="text-[10px] bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] px-2 py-1 rounded flex items-center gap-1"
               >
                 {showBatch ? t('common.close') : <><PlusIcon className="w-3 h-3" /> {t('field.batchCSV')}</>}
               </button>
@@ -332,7 +332,7 @@ export default function FieldPage() {
                   />
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={parseBatchCSV} className="flex-1 text-[10px] bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] py-1.5 rounded">
+                  <button onClick={parseBatchCSV} className="flex-1 text-[10px] bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] py-1.5 rounded">
                     {t('field.parse')}
                   </button>
                   <button onClick={saveBatchPoints} disabled={batchParseResults.length === 0} className="flex-1 text-[10px] bg-[#E8841A] hover:bg-[#d67715] text-black py-1.5 rounded disabled:opacity-50">
@@ -446,7 +446,7 @@ export default function FieldPage() {
               </div>
             </div>
 
-            <button onClick={addTraverseLeg} className="w-full py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] text-xs font-medium rounded">
+            <button onClick={addTraverseLeg} className="w-full py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] text-xs font-medium rounded">
               + {t('field.addLeg')}
             </button>
 
@@ -592,7 +592,7 @@ export default function FieldPage() {
                   setRBearingSec('')
                   setRDist('')
                 }}
-                className="w-full mt-2 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] text-xs rounded"
+                className="w-full mt-2 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] text-xs rounded"
               >
                 + Add Point
               </button>

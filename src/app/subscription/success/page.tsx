@@ -79,7 +79,7 @@ export default function SubscriptionSuccessPage({
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6">
-      <div className="w-full max-w-lg bg-[var(--bg-secondary)] border border-[#222] rounded-2xl p-8">
+      <div className="w-full max-w-lg bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8">
         <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Subscription</h1>
         <p className="text-[var(--text-secondary)] mb-6">{message}</p>
 
@@ -104,7 +104,7 @@ export default function SubscriptionSuccessPage({
           </Link>
           <Link
             href="/checkout"
-            className="flex-1 text-center py-3 border border-[#333] text-[var(--text-primary)] rounded-lg hover:bg-[#0f172a]"
+            className="flex-1 text-center py-3 border border-[var(--border-hover)] text-[var(--text-primary)] rounded-lg hover:bg-[#0f172a]"
           >
             Back to Checkout
           </Link>

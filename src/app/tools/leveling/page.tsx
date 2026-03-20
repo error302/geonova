@@ -235,7 +235,7 @@ export default function LevelingCalculator() {
             <div className="mt-4">
               <button 
                 onClick={() => setShowProfile(!showProfile)}
-                className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded"
+                className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded"
               >
                 {showProfile ? 'Hide Profile' : 'View Profile'}
               </button>

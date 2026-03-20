@@ -67,7 +67,7 @@ export default function AccountPage() {
                   type="email"
                   value={user?.email || ''}
                   disabled
-                  className="w-full bg-[var(--bg-secondary)] border border-[#222] rounded-lg px-4 py-2 text-[var(--text-muted)]"
+                  className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-4 py-2 text-[var(--text-muted)]"
                 />
               </div>
             </div>
@@ -90,7 +90,7 @@ export default function AccountPage() {
                   type="password"
                   required
                   minLength={6}
-                  className="w-full bg-[var(--bg-secondary)] border border-[#222] rounded-lg px-4 py-2 text-white"
+                  className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-4 py-2 text-white"
                 />
               </div>
               <button
@@ -166,7 +166,7 @@ export default function AccountPage() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
+    <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-6">
       <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">{title}</h2>
       {children}
     </div>

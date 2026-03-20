@@ -137,7 +137,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
         </div>
         <p className="text-[var(--text-secondary)] mb-8">Generate contours from spot heights using Delaunay triangulation</p>
 
-        <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6 mb-8">
+        <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-6 mb-8">
           <div className="flex items-center gap-4 mb-6 flex-wrap">
             <label className="text-[var(--text-secondary)] text-sm">Contour interval</label>
             <select
@@ -176,7 +176,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
               { label: 'Max elevation', value: `${maxElev.toFixed(2)} m` },
               { label: 'Contour lines', value: contours.length },
             ].map(item => (
-              <div key={item.label} className="bg-[var(--bg-primary)] p-3 rounded-lg border border-[#1e1e1e]">
+              <div key={item.label} className="bg-[var(--bg-primary)] p-3 rounded-lg border border-[var(--border-color)]">
                 <p className="text-[var(--text-muted)] text-xs mb-1">{item.label}</p>
                 <p className="text-[var(--text-primary)] font-semibold font-mono">{item.value}</p>
               </div>
@@ -191,7 +191,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
         )}
 
         {contours.length > 0 && (
-          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
+          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-6">
             <ContourMap points={points} contours={contours} />
           </div>
         )}
@@ -256,7 +256,7 @@ function ContourMap({ points, contours }: { points: SpotHeight[]; contours: Cont
   return (
     <div>
       <svg width="100%" viewBox={`0 0 ${width} ${height}`}
-        className="bg-[var(--bg-primary)] rounded-lg border border-[#1e1e1e]">
+        className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)]">
 
         {/* Grid lines */}
         {[...Array(5)].map((_, i) => {

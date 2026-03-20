@@ -297,7 +297,7 @@ export default function ProfilesPage({ params }: PageProps) {
                     className={`p-3 rounded text-left transition-colors ${
                       selectedPoints.find(p => p.id === point.id)
                         ? 'bg-[#E8841A] text-black'
-                        : 'bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)]'
+                        : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
                     }`}
                   >
                     <div className="font-medium">{point.name}</div>
@@ -333,7 +333,7 @@ export default function ProfilesPage({ params }: PageProps) {
                     <button
                       key={alignment.id}
                       onClick={() => handleAlignmentSelect(alignment)}
-                      className="w-full p-3 bg-[var(--bg-tertiary)] hover:bg-gray-700 rounded text-left flex justify-between items-center"
+                      className="w-full p-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] rounded text-left flex justify-between items-center"
                     >
                       <span className="font-medium">{alignment.name}</span>
                       <span className="text-[#E8841A]">View →</span>
@@ -352,7 +352,7 @@ export default function ProfilesPage({ params }: PageProps) {
                 <h2 className="text-lg font-semibold">Longitudinal Profile - {selectedAlignment.name}</h2>
                 <button
                   onClick={() => setSvgModalOpen(true)}
-                  className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm"
+                  className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm"
                 >
                   Export SVG
                 </button>
@@ -367,7 +367,7 @@ export default function ProfilesPage({ params }: PageProps) {
                       <div className="w-full max-w-2xl rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-5 shadow-2xl" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-4">
                           <div className="text-lg font-semibold text-white">Export profile SVG (to-scale)</div>
-                          <button onClick={() => setSvgModalOpen(false)} className="px-3 py-1 rounded bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)]">
+                          <button onClick={() => setSvgModalOpen(false)} className="px-3 py-1 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]">
                             ✕
                           </button>
                         </div>
@@ -405,7 +405,7 @@ export default function ProfilesPage({ params }: PageProps) {
                         </div>
 
                         <div className="mt-5 flex items-center justify-end gap-2">
-                          <button onClick={() => setSvgModalOpen(false)} className="px-4 py-2 rounded bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)]">
+                          <button onClick={() => setSvgModalOpen(false)} className="px-4 py-2 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]">
                             Cancel
                           </button>
                           <button
@@ -515,7 +515,7 @@ export default function ProfilesPage({ params }: PageProps) {
                       className={`p-3 rounded text-center transition-colors ${
                         hasCrossSection
                           ? 'bg-green-900/30 border border-green-700 text-green-400'
-                          : 'bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)]'
+                          : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
                       }`}
                     >
                       <div className="font-mono text-[#E8841A]">{formatChainage(cp.chainage)}</div>

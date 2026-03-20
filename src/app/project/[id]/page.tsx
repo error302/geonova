@@ -575,13 +575,13 @@ export default function ProjectPage({ params }: PageProps) {
           </button>
           <button
             onClick={() => setShowCSVUpload(true)}
-            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm transition-colors"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors"
           >
             {t('points.uploadCSV')}
           </button>
           <button
             onClick={() => setShowTraverse(true)}
-            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm transition-colors"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors"
           >
             {t('traverse.runTraverse')}
           </button>
@@ -593,7 +593,7 @@ export default function ProjectPage({ params }: PageProps) {
             className={`w-full px-4 py-2 rounded text-sm transition-colors ${
               mapMode === 'distance' 
                 ? 'bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold' 
-                : 'bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)]'
+                : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
             }`}
             title="Press D to activate"
           >
@@ -607,7 +607,7 @@ export default function ProjectPage({ params }: PageProps) {
             className={`w-full px-4 py-2 rounded text-sm transition-colors ${
               mapMode === 'area' 
                 ? 'bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold' 
-                : 'bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)]'
+                : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
             }`}
             title="Press A to activate"
           >
@@ -623,7 +623,7 @@ export default function ProjectPage({ params }: PageProps) {
           <button
             onClick={handleGenerateSurveyPlan}
             disabled={reportLoading || points.length === 0}
-            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] font-semibold rounded text-sm transition-colors disabled:opacity-50"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] font-semibold rounded text-sm transition-colors disabled:opacity-50"
           >
             {t('workspace.generateSurveyPlan')}
           </button>
@@ -648,7 +648,7 @@ export default function ProjectPage({ params }: PageProps) {
               }
             }}
             disabled={points.length === 0}
-            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm transition-colors disabled:opacity-50"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors disabled:opacity-50"
           >
             {t('reports.exportLandXML')}
           </button>
@@ -668,7 +668,7 @@ export default function ProjectPage({ params }: PageProps) {
               )
             }}
             disabled={points.length === 0}
-            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm transition-colors disabled:opacity-50"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors disabled:opacity-50"
           >
             {t('reports.exportGeoJSON')}
           </button>
@@ -677,33 +677,33 @@ export default function ProjectPage({ params }: PageProps) {
               await exportProject(params.id, supabase)
             }}
             disabled={points.length === 0}
-            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm transition-colors disabled:opacity-50"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors disabled:opacity-50"
           >
             {t('reports.exportProject')}
           </button>
           <button
             onClick={() => setShowStakeout(true)}
             disabled={points.length === 0}
-            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm transition-colors disabled:opacity-50"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors disabled:opacity-50"
           >
             {t('workspace.stakeoutAllPoints')}
           </button>
           <button
             onClick={() => setShowNearbyBeacons(true)}
-            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm transition-colors"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors"
           >
             {t('workspace.nearbyBeacons')}
           </button>
           <Link
             href={`/project/${params.id}/profiles`}
-            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm transition-colors text-center block"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors text-center block"
           >
             {t('workspace.profiles')}
           </Link>
           <button
             onClick={() => setShowParcelBuilder(true)}
             disabled={points.length < 3}
-            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded text-sm transition-colors disabled:opacity-50"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors disabled:opacity-50"
           >
             {t('workspace.buildParcel')}
           </button>
@@ -715,14 +715,14 @@ export default function ProjectPage({ params }: PageProps) {
                   type="text"
                   readOnly
                   value={shareUrl}
-                  className="flex-1 px-2 py-1 text-xs bg-[var(--bg-tertiary)] border border-gray-600 rounded text-[var(--text-primary)] font-mono"
+                  className="flex-1 px-2 py-1 text-xs bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] font-mono"
                 />
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(shareUrl)
                     alert('Link copied!')
                   }}
-                  className="px-2 py-1 text-xs bg-gray-700 hover:bg-gray-600 text-white rounded"
+                  className="px-2 py-1 text-xs bg-gray-700 hover:bg-[var(--border-hover)] text-white rounded"
                 >
                   {t('common.copy')}
                 </button>
@@ -781,7 +781,7 @@ export default function ProjectPage({ params }: PageProps) {
                 ) : (
                   <span className="text-[var(--text-secondary)]">👥 {viewerCount} viewer{viewerCount !== 1 ? 's' : ''}</span>
                 )}
-                <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500' : 'bg-gray-500'}`}></div>
+                <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500' : 'bg-[var(--text-muted)]'}`}></div>
                 <span className="text-[var(--text-muted)] text-xs">{isOnline ? 'Live' : 'Offline'}</span>
               </div>
             </div>
@@ -865,13 +865,13 @@ export default function ProjectPage({ params }: PageProps) {
                           <div className="flex items-center justify-end gap-2">
                             <button
                               onClick={() => handleCopyCoords(point)}
-                              className="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 text-[var(--text-primary)] rounded transition-colors"
+                              className="text-xs px-2 py-1 bg-gray-700 hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded transition-colors"
                             >
                               {copiedId === point.id ? t('common.copied') : t('common.copy')}
                             </button>
                             <button
                               onClick={() => handleEditPoint(point)}
-                              className="text-xs px-2 py-1 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded transition-colors"
+                              className="text-xs px-2 py-1 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded transition-colors"
                             >
                               {t('common.edit')}
                             </button>
@@ -903,7 +903,7 @@ export default function ProjectPage({ params }: PageProps) {
         }
         right={
           <div className="p-3 space-y-3">
-            <div className="rounded border border-white/5 bg-gray-950/20 p-3">
+            <div className="rounded border border-white/5 bg-[var(--bg-primary)]/20 p-3">
               <div className="text-xs uppercase tracking-wider text-[var(--text-secondary)] mb-2">Inspector</div>
               {selectedPoint ? (
                 <div className="space-y-2">
@@ -914,21 +914,21 @@ export default function ProjectPage({ params }: PageProps) {
                     </button>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="rounded bg-gray-950/30 border border-[var(--border-color)] p-2">
+                    <div className="rounded bg-[var(--bg-primary)]/30 border border-[var(--border-color)] p-2">
                       <div className="text-[var(--text-muted)]">E</div>
                       <div className="font-mono text-[var(--text-primary)]">{selectedPoint.easting.toFixed(4)}</div>
                     </div>
-                    <div className="rounded bg-gray-950/30 border border-[var(--border-color)] p-2">
+                    <div className="rounded bg-[var(--bg-primary)]/30 border border-[var(--border-color)] p-2">
                       <div className="text-[var(--text-muted)]">N</div>
                       <div className="font-mono text-[var(--text-primary)]">{selectedPoint.northing.toFixed(4)}</div>
                     </div>
-                    <div className="rounded bg-gray-950/30 border border-[var(--border-color)] p-2">
+                    <div className="rounded bg-[var(--bg-primary)]/30 border border-[var(--border-color)] p-2">
                       <div className="text-[var(--text-muted)]">Z</div>
                       <div className="font-mono text-[var(--text-primary)]">
                         {selectedPoint.elevation !== null ? selectedPoint.elevation.toFixed(3) : '-'}
                       </div>
                     </div>
-                    <div className="rounded bg-gray-950/30 border border-[var(--border-color)] p-2">
+                    <div className="rounded bg-[var(--bg-primary)]/30 border border-[var(--border-color)] p-2">
                       <div className="text-[var(--text-muted)]">Type</div>
                       <div className="text-[var(--text-primary)]">{selectedPoint.is_control ? 'Control' : 'Detail'}</div>
                     </div>
@@ -936,14 +936,14 @@ export default function ProjectPage({ params }: PageProps) {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleCopyCoords(selectedPoint)}
-                      className="flex-1 px-3 py-2 rounded bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] text-sm"
+                      className="flex-1 px-3 py-2 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] text-sm"
                     >
                       {copiedId === selectedPoint.id ? t('common.copied') : t('common.copy')}
                     </button>
                     <button
                       onClick={() => handleEditPoint(selectedPoint)}
                       disabled={!!selectedPoint.locked}
-                      className="flex-1 px-3 py-2 rounded bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] text-sm disabled:opacity-50"
+                      className="flex-1 px-3 py-2 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] text-sm disabled:opacity-50"
                     >
                       {t('common.edit')}
                     </button>
@@ -961,7 +961,7 @@ export default function ProjectPage({ params }: PageProps) {
               )}
             </div>
 
-            <div className="rounded border border-white/5 bg-gray-950/20 p-3 text-sm text-[var(--text-primary)] space-y-2">
+            <div className="rounded border border-white/5 bg-[var(--bg-primary)]/20 p-3 text-sm text-[var(--text-primary)] space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-[var(--text-secondary)]">Points</span>
                 <span className="font-mono">{points.length}</span>
@@ -985,7 +985,7 @@ export default function ProjectPage({ params }: PageProps) {
                 className={`px-3 py-1.5 rounded text-sm ${
                   bottomTab === 'log'
                     ? 'bg-[var(--accent)] text-black font-semibold'
-                    : 'bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)]'
+                    : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
                 }`}
               >
                 Calculation Log
@@ -995,7 +995,7 @@ export default function ProjectPage({ params }: PageProps) {
                 className={`px-3 py-1.5 rounded text-sm ${
                   bottomTab === 'fieldbook'
                     ? 'bg-[var(--accent)] text-black font-semibold'
-                    : 'bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)]'
+                    : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
                 }`}
               >
                 Field Notes
@@ -1014,7 +1014,7 @@ export default function ProjectPage({ params }: PageProps) {
                   >
                     Open Field Book
                   </Link>
-                  <Link href="/field" className="px-4 py-2 rounded bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)]">
+                  <Link href="/field" className="px-4 py-2 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]">
                     Open Field Mode
                   </Link>
                 </div>
@@ -1031,7 +1031,7 @@ export default function ProjectPage({ params }: PageProps) {
                         className={`w-full text-left px-3 py-2 rounded border ${
                           i === activeSolutionIndex
                             ? 'border-[var(--accent)] bg-[var(--accent-subtle)]'
-                            : 'border-[var(--border-color)] bg-gray-950/20 hover:bg-white/5'
+                            : 'border-[var(--border-color)] bg-[var(--bg-primary)]/20 hover:bg-white/5'
                         }`}
                       >
                         <div className="text-sm text-[var(--text-primary)] truncate">{s.title ?? 'Solution'}</div>
@@ -1049,7 +1049,7 @@ export default function ProjectPage({ params }: PageProps) {
                   {calcLog[activeSolutionIndex] ? (
                     <SolutionRenderer solution={calcLog[activeSolutionIndex]} />
                   ) : (
-                    <div className="rounded border border-[var(--border-color)] bg-gray-950/20 p-4 text-sm text-[var(--text-muted)]">No solution selected.</div>
+                    <div className="rounded border border-[var(--border-color)] bg-[var(--bg-primary)]/20 p-4 text-sm text-[var(--text-muted)]">No solution selected.</div>
                   )}
                 </div>
               </div>
@@ -1132,7 +1132,7 @@ export default function ProjectPage({ params }: PageProps) {
           <div className="absolute top-4 right-4 z-50">
             <button
               onClick={() => setShowStakeout(false)}
-              className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded-lg"
+              className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg"
             >
               ✕ Close
             </button>

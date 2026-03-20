@@ -242,7 +242,7 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
             <span className="text-sm text-[var(--text-secondary)]">{progress}</span>
             <button
               onClick={() => setShowSettings(true)}
-              className="px-3 py-1 rounded text-sm bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)]"
+              className="px-3 py-1 rounded text-sm bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]"
             >
               ⚙ Settings
             </button>
@@ -263,7 +263,7 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
           <div className="w-full max-w-lg rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-5 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <div className="text-lg font-semibold text-[var(--text-primary)]">Stakeout Settings</div>
-              <button onClick={() => setShowSettings(false)} className="px-3 py-1 rounded bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)]">
+              <button onClick={() => setShowSettings(false)} className="px-3 py-1 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]">
                 ✕
               </button>
             </div>
@@ -414,14 +414,14 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
             <button
               onClick={handlePrevPoint}
               disabled={currentPointIndex === 0}
-              className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded-lg disabled:opacity-50"
+              className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg disabled:opacity-50"
             >
               ← Previous
             </button>
             <button
               onClick={handleNextPoint}
               disabled={currentPointIndex === points.length - 1}
-              className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-gray-700 text-[var(--text-primary)] rounded-lg disabled:opacity-50"
+              className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg disabled:opacity-50"
             >
               Next →
             </button>

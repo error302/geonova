@@ -118,7 +118,7 @@ export default function NearbyBeaconsModal({
                   className={`w-full p-3 rounded-lg text-left transition-colors ${
                     selectedBeacon?.id === beacon.id 
                       ? 'bg-[#E8841A]/20 border border-[#E8841A]' 
-                      : 'bg-[var(--bg-tertiary)] hover:bg-gray-700 border border-transparent'
+                      : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] border border-transparent'
                   }`}
                 >
                   <div className="flex items-center justify-between">

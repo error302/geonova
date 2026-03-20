@@ -103,7 +103,7 @@ export default function UTMZonePicker({
             className={`flex-none w-6 h-8 text-xs rounded transition ${
               value === zone
                 ? 'bg-amber-500 text-black font-bold'
-                : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)] hover:bg-gray-700'
+                : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)] hover:bg-[var(--border-hover)]'
             }`}
           >
             {zone % 10 === 0 ? zone : ''}
