@@ -18,9 +18,11 @@ export default function EquipmentPage() {
   const [selectedType, setSelectedType] = useState<string>('all')
 
   useEffect(() => {
+    setLoading(true)
     setEquipment(getAllEquipment())
     setAlerts(getCalibrationAlerts())
     setSummary(getCalibrationSummary())
+    setLoading(false)
   }, [])
 
   const types = getEquipmentTypes()
@@ -30,10 +32,10 @@ export default function EquipmentPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800'
-      case 'due': return 'bg-yellow-100 text-yellow-800'
-      case 'overdue': return 'bg-red-100 text-red-800'
-      case 'calibrating': return 'bg-blue-100 text-blue-800'
+      case 'active': return 'bg-green-900/30 text-green-400 border border-green-700/30'
+      case 'due': return 'bg-yellow-900/30 text-yellow-400 border border-yellow-700/30'
+      case 'overdue': return 'bg-red-900/30 text-red-400 border border-red-700/30'
+      case 'calibrating': return 'bg-blue-900/30 text-blue-400 border border-blue-700/30'
       default: return 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
     }
   }
@@ -51,11 +53,11 @@ export default function EquipmentPage() {
         <p className="text-[var(--text-muted)] mb-8">Monitor and manage survey instrument calibration schedules</p>
 
         {alerts.length > 0 && (
-          <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <h3 className="font-medium text-yellow-800 mb-2">⚠️ Calibration Alerts</h3>
+          <div className="mb-6 p-4 bg-yellow-900/20 border border-yellow-700/40 rounded-lg">
+            <h3 className="font-medium text-yellow-300 mb-2">⚠️ Calibration Alerts</h3>
             <div className="space-y-1">
               {alerts.map((alert, i) => (
-                <p key={i} className="text-sm text-yellow-700">
+                <p key={i} className="text-sm text-yellow-400">
                   {alert.equipment.name} ({alert.equipment.brand} {alert.equipment.model}) - 
                   {alert.daysUntilDue < 0 
                     ? ` Overdue by ${Math.abs(alert.daysUntilDue)} days`

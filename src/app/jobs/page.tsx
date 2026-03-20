@@ -19,6 +19,7 @@ export default function JobMarketplacePage() {
   const [categories, setCategories] = useState<any[]>([])
 
   useEffect(() => {
+    setLoading(true)
     setCategories(getJobCategories())
     if (searchQuery) {
       setJobs(searchJobs(searchQuery))
@@ -28,6 +29,7 @@ export default function JobMarketplacePage() {
         surveyType: selectedType || undefined,
       }))
     }
+    setLoading(false)
   }, [searchQuery, selectedCountry, selectedType])
 
   const formatBudget = (amount: number, currency: string) => {
@@ -38,8 +40,8 @@ export default function JobMarketplacePage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'open': return 'bg-green-100 text-green-800'
-      case 'in_progress': return 'bg-blue-100 text-blue-800'
+      case 'open': return 'bg-green-900/30 text-green-400 border border-green-700/30'
+      case 'in_progress': return 'bg-blue-900/30 text-blue-400 border border-blue-700/30'
       case 'completed': return 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
       default: return 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
     }
@@ -73,12 +75,12 @@ export default function JobMarketplacePage() {
             placeholder="Search jobs..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 min-w-64 p-3 border rounded-lg"
+            className="flex-1 min-w-64 p-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg focus:outline-none focus:border-[var(--accent)]"
           />
           <select
             value={selectedCountry}
             onChange={(e) => setSelectedCountry(e.target.value)}
-            className="p-3 border rounded-lg"
+            className="p-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg focus:outline-none focus:border-[var(--accent)]"
           >
             <option value="">All Countries</option>
             {getCountries().map(c => (
@@ -88,7 +90,7 @@ export default function JobMarketplacePage() {
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="p-3 border rounded-lg"
+            className="p-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg focus:outline-none focus:border-[var(--accent)]"
           >
             <option value="">All Types</option>
             {categories.map(cat => (
@@ -104,7 +106,7 @@ export default function JobMarketplacePage() {
               onClick={() => setSelectedType(cat.id)}
               className={`p-4 rounded-lg text-left transition ${
                 selectedType === cat.id 
-                  ? 'bg-blue-100 border-2 border-blue-500' 
+                  ? 'bg-blue-900/30 border-2 border-blue-500' 
                   : 'bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-blue-300'
               }`}
             >

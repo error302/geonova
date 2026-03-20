@@ -23,6 +23,7 @@ export default function MarketplacePage() {
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
+    setLoading(true)
     if (activeTab === 'templates') {
       if (searchQuery) {
         setTemplates(searchTemplates(searchQuery))
@@ -36,6 +37,7 @@ export default function MarketplacePage() {
         setSurveyors(getSurveyors())
       }
     }
+    setLoading(false)
   }, [activeTab, selectedCategory, searchQuery])
 
   const categories = getCategories()
@@ -97,7 +99,7 @@ export default function MarketplacePage() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="p-3 border rounded-lg"
+              className="p-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg focus:outline-none focus:border-[var(--accent)]"
             >
               {categories.map(cat => (
                 <option key={cat.id} value={cat.id}>{cat.icon} {cat.name}</option>
@@ -187,8 +189,8 @@ export default function MarketplacePage() {
                         <p className="text-sm text-[var(--text-muted)]">{surveyor.title}</p>
                       </div>
                       <span className={`px-2 py-1 text-xs rounded ${
-                        surveyor.availability === 'available' ? 'bg-green-100 text-green-800' :
-                        surveyor.availability === 'busy' ? 'bg-yellow-100 text-yellow-800' :
+                        surveyor.availability === 'available' ? 'bg-green-900/30 text-green-400 border border-green-700/30' :
+                        surveyor.availability === 'busy' ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-700/30' :
                         'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
                       }`}>
                         {surveyor.availability}

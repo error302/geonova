@@ -23,12 +23,14 @@ export default function PeerReviewPage() {
   const [submitted, setSubmitted] = useState(false)
 
   useEffect(() => {
+    setLoading(true)
     if (selectedSpecialty) {
       setReviewers(getReviewers(selectedSpecialty))
     } else {
       setReviewers(getReviewers())
     }
     setCategories(getReviewCategories())
+    setLoading(false)
   }, [selectedSpecialty])
 
   const handleSubmit = () => {
