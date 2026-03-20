@@ -14,7 +14,9 @@
     "verify:engine": "npx tsc -p scripts/engine-verify.tsconfig.json && node scripts/.out/scripts/engine-verify.js",
     "mobile:sync": "npx cap sync android",
     "mobile:build": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
-    "mobile:open": "npx cap open android"
+    "mobile:open": "npx cap open android",
+    "test:rls": "SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY npx ts-node scripts/test-rls-isolation.ts",
+    "seed:test-users": "SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL npx ts-node scripts/seed-test-users.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.2.0",

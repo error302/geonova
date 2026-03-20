@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { geographicToUTM } from '@/lib/engine/coordinates'
-import { generateSurveyReport, generateSurveyPlan } from '@/lib/reports/generateReport'
+// Reports loaded dynamically to keep initial bundle lean
 import { trackEvent } from '@/lib/analytics/events'
 import { downloadLandXML } from '@/lib/export/generateLandXML'
 import { exportProject, importProject } from '@/lib/export/exportProject'
@@ -391,7 +391,7 @@ export default function ProjectPage({ params }: PageProps) {
       } catch {}
     }
 
-    generateSurveyReport({
+    (await import('@/lib/reports/generateReport')).generateSurveyReport({
       project: {
         name: project.name,
         location: project.location || 'Not specified',
@@ -491,15 +491,15 @@ export default function ProjectPage({ params }: PageProps) {
       setReportLoading(false)
     }
     
-    const parcelForPlan = (() => {
-      if (!parcelData || !Array.isArray(parcelData.boundary_points) || parcelData.boundary_points.length < 3) return null
-      const boundary = parcelData.boundary_points.map((p, idx) => ({
+    let parcelForPlan: { name: string; boundary_points: { name: string; easting: number; northing: number }[]; area_sqm: number; area_ha: number; area_acres: number; perimeter_m: number } | null = null
+    if (parcelData && Array.isArray(parcelData.boundary_points) && parcelData.boundary_points.length >= 3) {
+      const boundary = parcelData.boundary_points.map((p: any, idx: number) => ({
         name: (p.name ?? '').trim() || `P${idx + 1}`,
-        easting: p.easting,
-        northing: p.northing,
+        easting: p.easting as number,
+        northing: p.northing as number,
       }))
       const area = coordinateArea(boundary.map((p) => ({ easting: p.easting, northing: p.northing })))
-      return {
+      parcelForPlan = {
         name: parcelData.name ?? 'Parcel',
         boundary_points: boundary,
         area_sqm: area.areaSqm,
@@ -507,8 +507,9 @@ export default function ProjectPage({ params }: PageProps) {
         area_acres: area.areaAcres,
         perimeter_m: area.perimeter,
       }
-    })()
+    }
 
+    const { generateSurveyPlan } = await import('@/lib/reports/generateReport')
     generateSurveyPlan({
       project: {
         name: project.name,
