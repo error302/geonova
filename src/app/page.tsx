@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { useCountry, ALL_COUNTRIES } from '@/lib/country'
 
 const Icon = {
   map: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" /></svg>,
@@ -61,6 +62,7 @@ const TOOL_DEMOS_RAW: Record<string, { input: string[][]; output: string[][] }> 
 
 export default function Home() {
   const { t } = useLanguage()
+  const { country, setCountry, standard } = useCountry()
   const [active, setActive] = useState<keyof typeof TOOL_DEMOS_RAW>('traverse')
 
   const TOOL_DEMOS: Record<string, { title: string; input: string[][]; output: string[][]; badge: string }> = {
@@ -138,6 +140,62 @@ export default function Home() {
                     {f}
                   </div>
                 ))}
+              </div>
+
+              <div className="mt-6 p-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{ALL_COUNTRIES.find(c => c.id === country)?.flag ?? '🌍'}</span>
+                    <div>
+                      <div className="text-xs text-[var(--text-muted)]">{t('landing.countryActive', 'Active Standard')}</div>
+                      <div className="text-sm font-semibold text-[var(--text-primary)]">
+                        {standard.name} — {t('landing.traverseStd', 'Traverse')} 1:{standard.traverseOrders[0]?.minPrecision.toLocaleString()}
+                        <span className="text-[var(--text-muted)] font-normal ml-1">({standard.traverseOrders[0]?.regulation.split(' ')[0]})</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowCountryPicker(v => !v)}
+                      className="px-3 py-1.5 text-xs bg-[var(--accent)] text-black font-semibold rounded-lg hover:bg-[var(--accent-dim)] transition-colors"
+                    >
+                      {t('landing.changeCountry', 'Change Country')}
+                    </button>
+                    {showCountryPicker && (
+                      <div className="absolute right-0 top-full mt-2 w-64 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl shadow-xl z-50 max-h-72 overflow-y-auto">
+                        {ALL_COUNTRIES.map(c => (
+                          <button
+                            key={c.id}
+                            onClick={() => { setCountry(c.id); setShowCountryPicker(false) }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-[var(--bg-secondary)] transition-colors ${c.id === country ? 'bg-[var(--accent)]/10 border-l-2 border-l-[var(--accent)]' : ''}`}
+                          >
+                            <span className="text-xl">{c.flag}</span>
+                            <div className="text-left">
+                              <div className={`font-medium ${c.id === country ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'}`}>{c.name}</div>
+                              <div className="text-xs text-[var(--text-muted)]">{c.id === country ? standard.traverseOrders[0]?.description ?? '' : ''}</div>
+                            </div>
+                            {c.id === country && (
+                              <div className="ml-auto text-[var(--accent)] text-xs font-semibold">{t('landing.active', 'Active')}</div>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {standard.traverseOrders.slice(0, 3).map(o => (
+                    <span key={o.order} className="text-xs px-2 py-0.5 bg-[var(--bg-tertiary)] rounded text-[var(--text-secondary)]">
+                      {o.order.replace(/_/g, ' ')}: 1:{o.minPrecision.toLocaleString()}
+                    </span>
+                  ))}
+                  <span className="text-xs px-2 py-0.5 bg-[var(--bg-tertiary)] rounded text-[var(--text-secondary)]">
+                    {standard.slopeCorrection ? '✓ Slope correction' : ''}
+                  </span>
+                  <span className="text-xs px-2 py-0.5 bg-[var(--bg-tertiary)] rounded text-[var(--text-secondary)]">
+                    {standard.surveyorReport.required ? '✓ Survey report required' : ''}
+                  </span>
+                </div>
               </div>
             </div>
 

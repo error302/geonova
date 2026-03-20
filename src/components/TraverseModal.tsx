@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase/client'
 import { bowditchAdjustment } from '@/lib/engine/traverse'
 import { dmsToDecimal, decimalToDMS } from '@/lib/engine/angles'
 import { distanceBearing } from '@/lib/engine/distance'
+import { useCountry } from '@/lib/country'
+import { getTraverseValidation } from '@/lib/engine/country-math'
 
 interface BlunderResult {
   legName: string
@@ -185,6 +187,21 @@ interface RadialObservation {
   distance: string
 }
 
+function CountryPrecisionBadge({ country, totalDistance, linearError }: {
+  country: string; totalDistance: number; linearError: number
+}) {
+  const { getTraverseOrder } = useCountry()
+  const order = getTraverseOrder('default')
+  if (!order || totalDistance === 0) return null
+  const achieved = linearError > 0 ? totalDistance / linearError : Infinity
+  const passes = achieved >= order.minPrecision
+  return (
+    <span className={`px-2 py-1 rounded text-xs font-semibold ${passes ? 'bg-green-900/50 text-green-400' : 'bg-red-900/50 text-red-400'}`}>
+      {passes ? '✓' : '✗'} Req 1:{order.minPrecision.toLocaleString()}
+    </span>
+  )
+}
+
 export default function TraverseModal({
   isOpen,
   onClose,
@@ -192,6 +209,7 @@ export default function TraverseModal({
   onTraverseComplete,
   onTraverseResult
 }: TraverseModalProps) {
+  const { country, standard, getTraverseOrder } = useCountry()
   const [controlPoints, setControlPoints] = useState<ControlPoint[]>([])
   const [loading, setLoading] = useState(false)
   const [step, setStep] = useState<'input' | 'results'>('input')
@@ -1107,7 +1125,7 @@ export default function TraverseModal({
               </div>
               <div className="bg-[var(--bg-tertiary)]/50 rounded p-3">
                 <p className="text-[var(--text-secondary)] text-xs">Precision</p>
-                <p className="text-xl font-mono text-[var(--text-primary)]">1 : {Math.round(1 / results.precisionRatio)}</p>
+                <p className="text-xl font-mono text-[var(--text-primary)]">1 : {Math.round(1 / results.precisionRatio).toLocaleString()}</p>
               </div>
             </div>
 
@@ -1121,6 +1139,10 @@ export default function TraverseModal({
               }`}>
                 {results.precisionGrade.toUpperCase()}
               </span>
+              <span className="px-2 py-1 rounded text-xs bg-blue-900/50 text-blue-400">
+                {standard.isoCode} · {standard.name}
+              </span>
+              <CountryPrecisionBadge country={country} totalDistance={results.totalDistance} linearError={results.linearError} />
             </div>
 
             {saveMessage && (

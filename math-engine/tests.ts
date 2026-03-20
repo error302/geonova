@@ -18,10 +18,19 @@ import {
   bearingIntersection,
   tienstraResection,
   distanceIntersection,
+  validateTraversePrecision,
+  computeTraverseClosure,
+  TRAVERSE_ORDERS,
+  horizontalFromSlope,
+  tapeTemperatureCorrection,
+  edmAtmosphericCorrection,
+  formatAreaForDisplay,
+  minimumParcelAreaWarning,
   dmsToDecimal,
   decimalToDMS,
   bearingToString,
   normalizeBearing,
+  toRadians,
 } from "./index";
 
 // ─── TEST RUNNER ──────────────────────────────────────────────────────────────
@@ -273,6 +282,123 @@ const di = distanceIntersection(
 assert(di.ok, "Distance-distance: solution found");
 assert(di.ok && near(di.value.solution1.easting, 50),
   "Distance-distance: midpoint easting = 50");
+
+// ─── TRAVERSE ACCURACY VALIDATION ─────────────────────────────────────────────
+
+section("Traverse accuracy validation");
+
+const v1 = validateTraversePrecision(0.005, 100, "urban");
+assert(v1.isAcceptable === false, "Kenya urban: 1:20,000 required; 1:20,000 achieved = fails");
+const v2 = validateTraversePrecision(0.004, 100, "urban");
+assert(v2.isAcceptable === true,  "Kenya urban: 1:25,000 achieved = passes");
+assert(v2.order === "3rd_order",  "Kenya urban → 3rd order");
+assert(v2.warnings.length === 0,  "No warnings when precision meets standard");
+
+const v3 = validateTraversePrecision(0.010, 100, "rural");
+assert(v3.isAcceptable === true,  "Kenya rural: 1:10,000 required; exactly 1:10,000 = passes");
+assert(v3.order === "4th_order",  "Kenya rural → 4th order");
+
+const v4 = validateTraversePrecision(0.015, 100, "transmission_line");
+assert(v4.isAcceptable === false,  "KETRACO: 1:10,000 required; 1:6,667 = fails");
+
+const v5 = validateTraversePrecision(0, 100, "urban");
+assert(v5.warnings.length > 0, "Zero error triggers a perfect-closure warning");
+
+const spec3 = TRAVERSE_ORDERS["3rd_order"];
+assert(spec3.minPrecision === 20_000, "3rd order spec: 1:20,000");
+
+// ─── TRAVERSE CLOSURE ─────────────────────────────────────────────────────────
+
+section("Traverse closure computation");
+
+const closed: import("./types").NamedPoint2D[] = [
+  { name: "A", easting: 0,    northing: 0    },
+  { name: "B", easting: 100,  northing: 0    },
+  { name: "C", easting: 100,  northing: 100  },
+  { name: "A", easting: 0,    northing: 0    },
+];
+const c1 = computeTraverseClosure(closed);
+assert(c1.ok, "Closed traverse (A→B→C→A): no error");
+assert(c1.ok && near(c1.value.linearError, 0), "Closed traverse: zero error");
+assert(c1.ok && c1.value.isWithinTolerance, "Closed traverse: within Bahrain 1:20,000 tolerance");
+
+const nearlyClosed: import("./types").NamedPoint2D[] = [
+  { name: "P1", easting: 0,    northing: 0    },
+  { name: "P2", easting: 500,  northing: 0    },
+  { name: "P3", easting: 500,  northing: 500  },
+  { name: "P4", easting: 0.01, northing: 500  }, // small 1cm misclose in E
+];
+const c2 = computeTraverseClosure(nearlyClosed);
+assert(c2.ok, "Nearly-closed traverse: computed");
+assert(c2.ok && near(c2.value.precisionRatio, 500 / 0.01, 0.5),
+  `Nearly-closed: ~1:${Math.round(c2.value.precisionRatio)}`);
+
+const err1 = computeTraverseClosure([{ name: "X", easting: 0, northing: 0 }]);
+assert(!err1.ok, "Too few stations: returns error");
+
+// ─── SLOPE CORRECTION ────────────────────────────────────────────────────────
+
+section("Slope correction (Kenya Reg 62)");
+
+const s1 = horizontalFromSlope(100, 5);
+assert(s1.ok, "Slope 100m at 5°: ok");
+assert(s1.ok && near(s1.value.horizontalDistance, 100 * Math.cos(toRadians(5)), 0.001),
+  "Horizontal distance = 100 × cos(5°)");
+assert(s1.ok && s1.value.requiresTwoFace === false, "5° < 10°: two-face NOT required");
+
+const s2 = horizontalFromSlope(100, 15);
+assert(s2.ok, "Slope 100m at 15°: ok");
+assert(s2.ok && s2.value.requiresTwoFace === true,
+  "Kenya Reg 62: 15° > 10° → requires both faces");
+assert(s2.ok && s2.value.warnings.length > 0,
+  "15° slope generates a regulation warning");
+
+const s3 = horizontalFromSlope(100, 0);
+assert(s3.ok && near(s3.value.horizontalDistance, 100), "0° = horizontal distance");
+
+const s4 = horizontalFromSlope(100, 45);
+assert(s4.ok && near(s4.value.horizontalDistance, 100 * Math.cos(toRadians(45)), 0.001),
+  "45° slope: horizontal = 100 × cos(45°)");
+assert(s4.ok && near(s4.value.verticalDifference, 100 * Math.sin(toRadians(45)), 0.001),
+  "45° slope: vertical diff = 100 × sin(45°)");
+
+const tempCorr = tapeTemperatureCorrection(100, 30, 20);
+assert(near(tempCorr, 100 * 0.0000117 * 10, 0.0001),
+  "Steel tape at 30°C vs 20°C standard: positive correction");
+
+const ppm = edmAtmosphericCorrection(1000, 1000);
+assert(typeof ppm === "number" && Math.abs(ppm) < 0.1,
+  "EDM atmospheric correction: small ppm value");
+
+const err2 = horizontalFromSlope(-5, 10);
+assert(!err2.ok, "Negative slope distance: returns error");
+
+// ─── AREA PRECISION FORMATTING ────────────────────────────────────────────────
+
+section("Area precision (Kenya Reg 84)");
+
+const a1 = formatAreaForDisplay(5000);       // 0.5 ha → 4dp
+assert(a1.ok, "formatAreaForDisplay ok");
+assert(a1.decimalPlaces === 4, "≤1 ha → 4 decimal places");
+assert(a1.formattedValue.includes("0.5000"), `0.5 ha formatted as "${a1.formattedValue}"`);
+
+const a2 = formatAreaForDisplay(50_000);       // 5 ha → 3dp
+assert(a2.decimalPlaces === 3, "1–10 ha → 3 decimal places");
+
+const a3 = formatAreaForDisplay(500_000);     // 50 ha → 2dp
+assert(a3.decimalPlaces === 2, "10–100 ha → 2 decimal places");
+
+const a4 = formatAreaForDisplay(5_000_000);   // 500 ha → 1dp
+assert(a4.decimalPlaces === 1, ">100 ha → 1 decimal place");
+
+const a5 = formatAreaForDisplay(5000, "m2");
+assert(a5.unit === "m²", "m² unit label used");
+
+const a6 = formatAreaForDisplay(5000, "acres");
+assert(a6.unit === "acres", "acres unit label used");
+
+const warns = minimumParcelAreaWarning(5);
+assert(warns.length > 0, "Very small area triggers minimum parcel warning");
 
 // ─── SUMMARY ──────────────────────────────────────────────────────────────────
 

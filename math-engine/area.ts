@@ -1,6 +1,95 @@
 import { Point2D, SurveyResult, ok, err } from "./types";
 import { distanceBearing } from "./distance";
 
+// ─── AREA PRECISION FORMATTING (Kenya Survey Regs Reg 84) ─────────────────────
+// Kenya Reg 84 — decimal places for area computation:
+//   ≤1 ha     → 4 decimal places  (0.0001 ha = 1 m²)
+//   1–10 ha   → 3 decimal places
+//   10–100 ha → 2 decimal places
+//   >100 ha   → 1 decimal place
+
+export type AreaPrecision = 1 | 2 | 3 | 4;
+
+export interface AreaPrecisionResult {
+  hectares: number;
+  decimalPlaces: AreaPrecision;
+  formattedValue: string;
+  unit: "ha" | "m²" | "acres";
+  regulation: string;
+  warnings: string[];
+}
+
+export function formatAreaForDisplay(
+  squareMetres: number,
+  unit: "ha" | "m2" | "acres" = "ha"
+): AreaPrecisionResult {
+  const sqM = Math.abs(squareMetres);
+  const sqHa = sqM / 10_000;
+  const sqAcres = sqM / 4_046.856_422;
+
+  let value: number;
+  let decimals: AreaPrecision;
+  let formattedValue: string;
+  const warnings: string[] = [];
+
+  if (sqHa <= 1) {
+    decimals = 4;
+    value = unit === "ha" ? sqHa : unit === "m2" ? sqM : sqAcres;
+    formattedValue = value.toFixed(decimals);
+    if (unit === "m2") {
+      formattedValue = `${parseFloat(formattedValue).toLocaleString()} m²`;
+    } else {
+      formattedValue = `${parseFloat(formattedValue).toLocaleString()} ${unit === "ha" ? "ha" : "ac"}`;
+    }
+  } else if (sqHa <= 10) {
+    decimals = 3;
+    value = unit === "ha" ? sqHa : unit === "m2" ? sqM : sqAcres;
+    formattedValue = `${parseFloat(value.toFixed(decimals)).toLocaleString()} ${unit === "ha" ? "ha" : unit === "m2" ? "m²" : "ac"}`;
+  } else if (sqHa <= 100) {
+    decimals = 2;
+    value = unit === "ha" ? sqHa : unit === "m2" ? sqM : sqAcres;
+    formattedValue = `${parseFloat(value.toFixed(decimals)).toLocaleString()} ${unit === "ha" ? "ha" : unit === "m2" ? "m²" : "ac"}`;
+  } else {
+    decimals = 1;
+    value = unit === "ha" ? sqHa : unit === "m2" ? sqM : sqAcres;
+    formattedValue = `${parseFloat(value.toFixed(decimals)).toLocaleString()} ${unit === "ha" ? "ha" : unit === "m2" ? "m²" : "ac"}`;
+  }
+
+  if (sqHa < 0.01) {
+    warnings.push("Parcel area < 100 m² — verify against minimum cadastral parcel size.");
+  }
+
+  const label =
+    decimals === 4 ? "≤ 1 ha" :
+    decimals === 3 ? "1 – 10 ha" :
+    decimals === 2 ? "10 – 100 ha" : "> 100 ha";
+
+  return {
+    hectares: sqHa,
+    decimalPlaces: decimals,
+    formattedValue,
+    unit: unit === "m2" ? "m²" : unit === "ha" ? "ha" : "acres",
+    regulation: `Kenya Survey Reg 84 — ${label} → ${decimals} decimal place(s)`,
+    warnings,
+  };
+}
+
+export function minimumParcelAreaWarning(areaSqM: number, jurisdiction: "kenya" | "bahrain" | "nz" = "kenya"): string[] {
+  const warnings: string[] = [];
+  if (jurisdiction === "kenya") {
+    const minHa = 0.0001;
+    if (areaSqM < minHa * 10_000) {
+      warnings.push(`Kenya: Parcel area (${areaSqM.toFixed(2)} m²) below typical minimum. Verify against Physical Planning Act.`);
+    }
+  }
+  if (jurisdiction === "bahrain") {
+    if (areaSqM < 10) {
+      warnings.push(`Bahrain: Parcel area (${areaSqM.toFixed(2)} m²) below 10 m² threshold — may not be registerable.`);
+    }
+  }
+  return warnings;
+}
+
 // ─── AREA COMPUTATION ─────────────────────────────────────────────────────────
 
 export interface AreaResult {

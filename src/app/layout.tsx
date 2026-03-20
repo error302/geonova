@@ -4,6 +4,7 @@ import './globals.css';
 import NavBar from '@/components/NavBar';
 import MobileNav from '@/components/MobileNav';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
+import { CountryProvider } from '@/lib/country';
 import { SubscriptionProvider } from '@/lib/subscription/subscriptionContext';
 import FeedbackWidget from '@/components/FeedbackWidget';
 import KeyboardShortcuts from '@/components/KeyboardShortcuts';
@@ -87,20 +88,22 @@ export default function RootLayout({
       <body className="antialiased">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[var(--accent)] focus:text-black focus:rounded focus:font-semibold">Skip to content</a>
         <LanguageProvider>
-          <SubscriptionProvider>
-            <NavBar />
-            <main id="main-content" className="min-h-screen pb-16 md:pb-0">
-              {children}
-            </main>
-            <footer className="border-t border-[var(--border-color)] py-6 mt-16">
-              <div className="max-w-7xl mx-auto px-4 text-center text-xs text-[var(--text-muted)]">
-                GeoNova v1.0 — Professional Surveying Calculations
-              </div>
-            </footer>
-            <FeedbackWidget />
-            <KeyboardShortcuts />
-            <MobileNav />
-          </SubscriptionProvider>
+          <CountryProvider>
+            <SubscriptionProvider>
+              <NavBar />
+              <main id="main-content" className="min-h-screen pb-16 md:pb-0">
+                {children}
+              </main>
+              <footer className="border-t border-[var(--border-color)] py-6 mt-16">
+                <div className="max-w-7xl mx-auto px-4 text-center text-xs text-[var(--text-muted)]">
+                  GeoNova v1.0 — Professional Surveying Calculations
+                </div>
+              </footer>
+              <FeedbackWidget />
+              <KeyboardShortcuts />
+              <MobileNav />
+            </SubscriptionProvider>
+          </CountryProvider>
         </LanguageProvider>
       </body>
     </html>

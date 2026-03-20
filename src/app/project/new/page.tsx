@@ -4,11 +4,18 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { getUTMZoneFromLatLng } from '@/lib/engine/utmZones'
+import { useCountry, ALL_COUNTRIES } from '@/lib/country'
+import type { SurveyingCountry } from '@/lib/country'
 
 export default function NewProjectPage() {
+  const { country: defaultCountry, setCountry: setContextCountry } = useCountry()
   const [name, setName] = useState('')
   const [location, setLocation] = useState('')
-  const [utmZone, setUtmZone] = useState('37')
+  const [selectedCountry, setSelectedCountry] = useState<SurveyingCountry>(defaultCountry)
+  const [utmZone, setUtmZone] = useState(() => {
+    const c = ALL_COUNTRIES.find(c => c.id === defaultCountry)
+    return c ? String(c.id === 'us' ? '17' : c.id === 'uk' ? '30' : c.id === 'australia' ? '51' : 37) : '37'
+  })
   const [hemisphere, setHemisphere] = useState('S')
   const [surveyType, setSurveyType] = useState('topographic')
   const [clientName, setClientName] = useState('')
@@ -18,6 +25,52 @@ export default function NewProjectPage() {
   const [detecting, setDetecting] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+
+  const handleCountryChange = (newCountry: SurveyingCountry) => {
+    setSelectedCountry(newCountry)
+    const c = ALL_COUNTRIES.find(c => c.id === newCountry)
+    if (c) {
+      if (c.id === 'us') { setUtmZone('17'); setHemisphere('N') }
+      else if (c.id === 'uk') { setUtmZone('30'); setHemisphere('N') }
+      else if (c.id === 'australia') { setUtmZone('51'); setHemisphere('S') }
+      else if (c.id === 'new_zealand') { setUtmZone('59'); setHemisphere('S') }
+      else if (c.id === 'south_africa') { setUtmZone('35'); setHemisphere('S') }
+      else if (c.id === 'bahrain') { setUtmZone('39'); setHemisphere('N') }
+      else if (c.id === 'nigeria') { setUtmZone('31'); setHemisphere('N') }
+      else if (c.id === 'ghana') { setUtmZone('30'); setHemisphere('N') }
+      else if (c.id === 'tanzania') { setUtmZone('37'); setHemisphere('S') }
+      else if (c.id === 'uganda') { setUtmZone('36'); setHemisphere('N') }
+      else if (c.id === 'india') { setUtmZone('44'); setHemisphere('N') }
+      else if (c.id === 'indonesia') { setUtmZone('48'); setHemisphere('S') }
+      else if (c.id === 'brazil') { setUtmZone('23'); setHemisphere('S') }
+      else if (c.id === 'saudi_arabia') { setUtmZone('39'); setHemisphere('N') }
+      else if (c.id === 'oman') { setUtmZone('40'); setHemisphere('N') }
+      else if (c.id === 'uae') { setUtmZone('40'); setHemisphere('N') }
+      else { setUtmZone('37'); setHemisphere('S') }
+    }
+  }
+
+  const currentCountry = ALL_COUNTRIES.find(c => c.id === selectedCountry)
+  const datumLabels: Record<SurveyingCountry, string> = {
+    kenya: 'Arc 1960 / Clarke 1880',
+    uganda: 'Arc 1960 / Clarke 1880',
+    tanzania: 'Arc 1960 / Clarke 1880',
+    nigeria: 'Minna / Clarke 1880',
+    ghana: 'Gold Coast 1920 / War Office',
+    south_africa: 'Hartebeesthoek94 / GRS80',
+    bahrain: 'Ain Al-Abd 1970 / Clarke 1880',
+    saudi_arabia: 'IGM 1969 / Clarke 1880',
+    oman: 'OTM / GRS80 (WGS84-aligned)',
+    uae: 'NAD83(CSRS) / GRS80',
+    new_zealand: 'NZGD2000 / GRS80',
+    us: 'NAD83(2011) / GRS80',
+    uk: 'OSGB36 / Airy 1830',
+    australia: 'GDA2020 / GRS80',
+    india: 'WGS84',
+    indonesia: 'WGS84',
+    brazil: 'WGS84',
+    other: 'WGS84',
+  }
 
   const detectZoneFromGPS = () => {
     if (!navigator.geolocation) {
@@ -78,12 +131,15 @@ export default function NewProjectPage() {
       survey_type: surveyType,
       client_name: clientName || null,
       surveyor_name: surveyorName || user.email,
+      country: selectedCountry,
+      datum: datumLabels[selectedCountry],
     })
 
     if (error) {
       setError(error.message)
       setLoading(false)
     } else {
+      setContextCountry(selectedCountry)
       router.push('/dashboard')
     }
   }
@@ -192,6 +248,28 @@ export default function NewProjectPage() {
             <span>📍</span>
             {detecting ? 'Detecting...' : 'Detect zone from GPS'}
           </button>
+
+          <div>
+            <label className="block text-sm text-[var(--text-primary)] mb-2">Country / Jurisdiction</label>
+            <select
+              value={selectedCountry}
+              onChange={(e) => handleCountryChange(e.target.value as SurveyingCountry)}
+              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
+            >
+              {ALL_COUNTRIES.map(c => (
+                <option key={c.id} value={c.id}>{c.flag} {c.name}</option>
+              ))}
+            </select>
+            {currentCountry && (
+              <div className="mt-2 p-2 bg-[var(--bg-tertiary)] rounded text-xs text-[var(--text-secondary)]">
+                <span className="text-amber-500 font-medium">{currentCountry.name}</span>
+                {' · '}
+                <span>Datum: {datumLabels[selectedCountry]}</span>
+                {' · '}
+                <span>Standard: {selectedCountry === 'kenya' ? 'Kenya Reg 168/1994 (R2024)' : selectedCountry === 'us' ? 'USACE EM 1110-1-1005' : selectedCountry === 'bahrain' ? 'Bahrain CSD 2nd Ed 2024' : selectedCountry === 'saudi_arabia' || selectedCountry === 'oman' || selectedCountry === 'uae' ? 'GCC Cadastral Standard (Bahrain CSD §F framework)' : selectedCountry === 'uk' ? 'RICS / HMLR' : selectedCountry === 'new_zealand' ? 'LINZ Rule 8.2' : 'National Standard'}</span>
+              </div>
+            )}
+          </div>
 
           <div>
             <label className="block text-sm text-[var(--text-primary)] mb-2">Survey Type</label>

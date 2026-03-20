@@ -1,11 +1,15 @@
 /**
  * Survey Field Day Planner
  * Stores survey missions in localStorage — all user data, no placeholders.
+ *
+ * Country types are defined locally here to match the SurveyingCountry type
+ * from the shared country registry (@/lib/country). The country registry
+ * provides authoritative standards data; fieldplan uses it for precision rules.
  */
 
-export type SurveyType = 'traverse' | 'leveling' | 'boundary' | 'topographic' | 'engineering' | 'mining' | 'hydrographic' | 'gnss_baseline' | 'stakeout' | 'tacheometric'
+export type Country = 'kenya' | 'uganda' | 'tanzania' | 'nigeria' | 'ghana' | 'south_africa' | 'bahrain' | 'new_zealand' | 'other'
 
-export type Country = 'kenya' | 'uganda' | 'tanzania' | 'nigeria' | 'ghana' | 'south_africa' | 'other'
+export type SurveyType = 'traverse' | 'leveling' | 'boundary' | 'topographic' | 'engineering' | 'mining' | 'hydrographic' | 'gnss_baseline' | 'stakeout' | 'tacheometric'
 
 export type MissionStatus = 'planned' | 'ready' | 'in_progress' | 'completed' | 'postponed'
 
@@ -107,7 +111,7 @@ export interface Standard {
 const STD = (p: string, c: string, n: number, notes: string, docs: string[]): Standard =>
   ({ minPrecision: p, closureLimit: c, minControlPoints: n, notes, requiredDocs: docs })
 
-export const STANDARDS: Record<Country, Partial<Record<SurveyType, Standard>>> = {
+export const STANDARDS: Record<Exclude<Country, 'bahrain' | 'new_zealand'>, Partial<Record<SurveyType, Standard>>> = {
   kenya: {
     traverse:      STD('1:5000',   '1/(100√n) rad', 2, 'Survey of Kenya order III+. Retain field notes 5 years. Tie to national grid.', ['Survey plan','Field notes','Computation sheets','Surveyor certificate']),
     leveling:      STD('1:50000',  '12√K mm',       1, 'Vertical datum: MSL Mombasa. 3rd order: ±24mm/km. Close loop before leaving site.', ['Level book','Misclosure computation','Reduced level table']),
@@ -168,17 +172,29 @@ export const STANDARDS: Record<Country, Partial<Record<SurveyType, Standard>>> =
     hydrographic:  STD('1:5000',   '1m',             2, 'Ghana Ports and Harbours Authority.', ['Chart','Soundings']),
     tacheometric:  STD('1:1000',   '40cm',           2, 'Standard stadia.', ['Field sheets']),
   },
-  south_africa: {
-    traverse:      STD('1:10000',  '10mm+15ppm',    2, 'PLATO / SABS ISO 17123. SACPLAN registration required.', ['Survey record','Field notes','Computation','Diagram']),
-    leveling:      STD('1:50000',  '4√K mm',        1, 'Datum: MSL Cape Town. 1st order: ±4mm/km. Trignet tie required.', ['Level book','Adjustment']),
-    boundary:      STD('1:10000',  '25ppm',          2, 'Deeds Office lodgement. Survey record to Chief Surveyor-General.', ['Diagram','Survey record','SG No.']),
-    topographic:   STD('1:5000',   '10cm',           3, 'CSG standards. South African LO coordinate system.', ['Plan','Metadata']),
-    engineering:   STD('1:20000',  '5mm+10ppm',     3, 'ECSA registration. ISO 4463 setout tolerance.', ['Setting out plan','As-built','ECSA certificate']),
-    mining:        STD('1:5000',   '3cm',            3, 'Mine Health and Safety Act. DMR monthly submission.', ['Mine plan','Section','Volume','Certificate']),
-    hydrographic:  STD('1:5000',   '0.3m depth',    3, 'SAMSA/SAIMI standards. Chart datum: LAT.', ['Chart','Sounding record','Tide report']),
-    gnss_baseline: STD('1:200000', '5mm+0.5ppm',    1, 'Tie to TrigNet CORS. Bernese solutions accepted.', ['GNSS report','Network adjustment']),
-    stakeout:      STD('1:10000',  '10mm',           3, 'ISO 4463 construction tolerances. As-built check required.', ['Setting out record','Check sheet']),
-    tacheometric:  STD('1:2000',   '20cm',           2, 'Electronic tacheometry. Compare to independent GPS.', ['Field sheets','Plan']),
+  bahrain: {
+    traverse:      STD('1:20000',  '1:20000',       2, 'Bahrain CSD §E.3.6 — cadastral control. PRN RTK GPS primary method.', ['Surveyor report','Traverse observations','Field notes']),
+    leveling:      STD('1:50000',  '12√K mm',       1, 'Vertical datum: Bahrain National Level Datum of 1976.', ['Level book','Misclosure']),
+    boundary:      STD('1:20000',  '0.05m',          2, 'Bahrain CSD — parcel boundary marks ≤0.05m. Deed dimensions ≤0.1m.', ['Certificate of Survey','Deed plan']),
+    topographic:   STD('1:5000',   '0.15m',          3, 'Bahrain CSD — hard detail relative accuracy 0.15%.', ['Survey plan']),
+    engineering:   STD('1:10000',  '20mm',           3, 'Bahrain CSD — setting-out tolerance ≤20mm.', ['Setting out data','As-built']),
+    mining:        STD('1:2000',   '10cm',           2, 'Ministry of Industry & Commerce oversight.', ['Mine plan']),
+    hydrographic:  STD('1:2000',   '0.3m',          2, 'Bahrain Ports — chart datum per survey.', ['Chart','Soundings']),
+    gnss_baseline: STD('1:50000', '10mm+1ppm',     1, 'Bahrain PRN CORS — tie to ≥3 surrounding control marks.', ['GNSS report']),
+    stakeout:      STD('1:20000', '20mm',           3, 'Bahrain CSD §E.3.9 — stakes ≤20m (straight), ≤10m (curves).', ['Stakeout sheet','Coordinate comparison report']),
+    tacheometric:  STD('1:2000',   '0.05m',         2, 'Bahrain CSD — detail points ≤0.1m.', ['Tacheometric sheets']),
+  },
+  new_zealand: {
+    traverse:      STD('1:10000',  '10mm+20ppm',    2, 'LINZ Rule 8 — cadastral traverses must be reported.', ['Survey record','Computation','Surveyor report']),
+    leveling:      STD('1:10000',  '12√K mm',       1, 'LINZ vertical control standards.', ['Level book','Adjustment']),
+    boundary:      STD('1:10000',  '25ppm',          2, 'LINZ Rule 8 — all boundary decisions require documented reasons.', ['Survey record','Surveyor report','LDS Parcel Report']),
+    topographic:   STD('1:2000',   '20cm',           3, 'LINZ topographic standards.', ['Plan','Metadata']),
+    engineering:   STD('1:20000',  '5mm+10ppm',     3, 'LINZ engineering setout.', ['Setting out','As-built']),
+    mining:        STD('1:5000',   '5cm',            3, 'NZ minerals — Department of Conservation / regional council.', ['Mine plan']),
+    hydrographic:  STD('1:2000',   '0.3m',          2, 'LINZ hydrographic standards — chart datum.', ['Chart','Soundings']),
+    gnss_baseline: STD('1:100000', '5mm+0.5ppm',    1, 'LINZ CORS (NZ CORS) — ≥1hr observation.', ['GNSS report']),
+    stakeout:      STD('1:10000',  '20mm',           2, 'LINZ setout standards.', ['Setting out data']),
+    tacheometric:  STD('1:2000',   '20cm',           2, 'LINZ tacheometric standards.', ['Field sheets']),
   },
   other: {
     traverse:      STD('1:5000',   '12√n mm',       2, 'Apply applicable national standard. Retain field notes 5 years minimum.', ['Survey plan','Field notes','Computation']),
@@ -195,7 +211,8 @@ export const STANDARDS: Record<Country, Partial<Record<SurveyType, Standard>>> =
 }
 
 export function getStandard(country: Country, type: SurveyType): Standard {
-  return STANDARDS[country]?.[type] ?? STANDARDS.other.traverse!
+  const s = STANDARDS[country as keyof typeof STANDARDS]?.[type]
+  return s ?? STANDARDS.other.traverse!
 }
 
 export const DEFAULT_EQUIPMENT: Record<SurveyType, string[]> = {

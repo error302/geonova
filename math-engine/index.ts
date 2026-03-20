@@ -26,12 +26,34 @@ export {
 } from "./angles";
 
 // Distance & bearing
-export type { DistanceBearingResult, SlopeResult } from "./distance";
-export { distanceBearing, slopeDistance, polarPoint } from "./distance";
+export type { DistanceBearingResult, SlopeResult, SlopeCorrectionResult, TapeCorrectionResult } from "./distance";
+export {
+  distanceBearing,
+  slopeDistance,
+  polarPoint,
+  horizontalFromSlope,
+  tapeTemperatureCorrection,
+  edmAtmosphericCorrection,
+  sagCorrection,
+} from "./distance";
 
 // Traverse adjustment
-export type { TraverseLeg, TraverseResult } from "./traverse";
-export { bowditchAdjustment, transitAdjustment } from "./traverse";
+export type {
+  TraverseLeg,
+  TraverseResult,
+  TraverseOrder,
+  TraverseOrderSpec,
+  TraverseValidation,
+  TraverseEnvironment,
+  TraverseClosureResult,
+} from "./traverse";
+export {
+  TRAVERSE_ORDERS,
+  validateTraversePrecision,
+  computeTraverseClosure,
+  bowditchAdjustment,
+  transitAdjustment,
+} from "./traverse";
 
 // Leveling
 export type {
@@ -43,8 +65,18 @@ export type {
 export { riseAndFall, heightOfCollimation } from "./leveling";
 
 // Area
-export type { AreaResult, SubdivisionResult } from "./area";
-export { coordinateArea, subdividePolygon } from "./area";
+export type {
+  AreaResult,
+  SubdivisionResult,
+  AreaPrecisionResult,
+  AreaPrecision,
+} from "./area";
+export {
+  coordinateArea,
+  subdividePolygon,
+  formatAreaForDisplay,
+  minimumParcelAreaWarning,
+} from "./area";
 
 // Coordinate conversion
 export { geographicToUTM, utmToGeographic, latLonToString } from "./coordinates";
