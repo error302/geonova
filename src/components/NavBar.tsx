@@ -45,7 +45,9 @@ const toolGroups = [
       { href: '/tools/mining', icon: '⛏', labelKey: 'tools.mining' },
       { href: '/tools/hydrographic', icon: '🌊', labelKey: 'tools.hydrographic' },
       { href: '/tools/drone', icon: '🚁', labelKey: 'tools.drone' },
-      { href: '/tools/gcp-export', labelKey: 'tools.gcpExport' },
+      { href: '/tools/gcp-export',    labelKey: 'tools.gcpExport' },
+      { href: '/tools/civil-export', labelKey: 'tools.civilExport' },
+      { href: '/tools/gis-export',   labelKey: 'tools.gisExport' },
     ]
   },
 ]

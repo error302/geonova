@@ -346,7 +346,9 @@
     "mining": "矿山测量",
     "hydrographic": "水文测量",
     "drone": "无人机",
-    "gcpExport": "GCP Export"
+    "gcpExport": "GCP Export",
+    "civilExport": "Civil 3D Export",
+    "gisExport": "GIS Package"
   },
   "import": {
     "totalStation": "全站仪",

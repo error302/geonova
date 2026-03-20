@@ -689,7 +689,25 @@ export default function ProjectPage({ params }: PageProps) {
             href={`/project/${params.id}/documents`}
             className="w-full px-4 py-2 bg-[var(--accent)]/10 border border-[var(--accent)]/30 hover:bg-[var(--accent)]/20 text-[var(--accent)] rounded text-sm transition-colors text-center block font-medium"
           >
-            📋 Document package
+            Document package
+          </Link>
+          <Link
+            href="/tools/gis-export"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors text-center block"
+          >
+            GIS Package (GeoJSON/KML)
+          </Link>
+          <Link
+            href="/tools/civil-export"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors text-center block"
+          >
+            Civil 3D Export
+          </Link>
+          <Link
+            href="/tools/gcp-export"
+            className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors text-center block"
+          >
+            GCP Export (Pix4D / DroneDeploy)
           </Link>
           <button
             onClick={() => setShowStakeout(true)}

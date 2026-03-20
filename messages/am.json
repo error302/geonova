@@ -346,7 +346,9 @@
     "mining": "ማይኒንግ ስርዓተ-ስብሪት",
     "hydrographic": "ሃይድሮግራፊክ",
     "drone": "ድሮን/UAV",
-    "gcpExport": "GCP Export"
+    "gcpExport": "GCP Export",
+    "civilExport": "Civil 3D Export",
+    "gisExport": "GIS Package"
   },
   "import": {
     "totalStation": "ጠቅላላ ስታሽን",

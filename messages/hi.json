@@ -346,7 +346,9 @@
     "hydrographic": "हाइड्रोग्राफिक",
     "drone": "ड्रोन/UAV",
     "gnss": "GNSS",
-    "gcpExport": "GCP Export"
+    "gcpExport": "GCP Export",
+    "civilExport": "Civil 3D Export",
+    "gisExport": "GIS Package"
   },
   "import": {
     "totalStation": "टोटल स्टेशन",
