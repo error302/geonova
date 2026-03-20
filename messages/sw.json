@@ -172,7 +172,8 @@
     "heightOfObject": "Kurejea wa Kitu",
     "mining": "Upimaji wa Madini",
     "hydrographic": "Hydrographic",
-    "drone": "Drone/UAV"
+    "drone": "Drone/UAV",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "Kiwanda cha Total",

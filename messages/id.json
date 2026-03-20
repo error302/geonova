@@ -172,7 +172,8 @@
     "heightOfObject": "Tinggi Objek",
     "mining": "Survei Pertambangan",
     "hydrographic": "Hidrografi",
-    "drone": "Drone/UAV"
+    "drone": "Drone/UAV",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "Stasion Total",

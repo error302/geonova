@@ -172,7 +172,8 @@
     "mining": "Маркшейдерия",
     "hydrographic": "Гидрография",
     "drone": "БПЛА/дрон",
-    "gnss": "GNSS"
+    "gnss": "GNSS",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "Тахеометр",

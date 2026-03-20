@@ -172,7 +172,8 @@
     "heightOfObject": "የነገር ቁመት",
     "mining": "ማይኒንግ ስርዓተ-ስብሪት",
     "hydrographic": "ሃይድሮግራፊክ",
-    "drone": "ድሮን/UAV"
+    "drone": "ድሮን/UAV",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "ጠቅላላ ስታሽን",

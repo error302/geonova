@@ -172,7 +172,8 @@
     "mining": "खनन सर्वे",
     "hydrographic": "हाइड्रोग्राफिक",
     "drone": "ड्रोन/UAV",
-    "gnss": "GNSS"
+    "gnss": "GNSS",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "टोटल स्टेशन",

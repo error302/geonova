@@ -1,3 +1,5 @@
+import { utmToGeographic } from '@/lib/engine/coordinates'
+
 export interface SurveyPoint {
   id?: string
   name: string
@@ -8,58 +10,60 @@ export interface SurveyPoint {
   control_order?: string
 }
 
+/**
+ * Generate a GeoJSON FeatureCollection.
+ * Coordinates are converted to WGS84 lat/lon as required by the GeoJSON spec (RFC 7946).
+ * UTM coordinates are retained as properties for reference.
+ */
 export function generateGeoJSON(
   points: SurveyPoint[],
   projectName: string,
   utmZone: number = 37,
-  hemisphere: string = 'S'
+  hemisphere: 'N' | 'S' = 'S'
 ): string {
-  const features = points.map(p => ({
-    type: 'Feature',
-    geometry: {
-      type: 'Point',
-      coordinates: [p.easting, p.northing, p.elevation || 0]
-    },
-    properties: {
-      name: p.name,
-      easting: p.easting,
-      northing: p.northing,
-      elevation: p.elevation,
-      is_control: p.is_control || false,
-      control_order: p.control_order,
-      type: p.is_control ? 'control' : 'survey'
+  const features = points.map(p => {
+    const { lat, lon } = utmToGeographic(p.easting, p.northing, utmZone, hemisphere)
+    return {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        // GeoJSON uses [longitude, latitude, elevation]
+        coordinates: [
+          parseFloat(lon.toFixed(8)),
+          parseFloat(lat.toFixed(8)),
+          p.elevation ?? 0,
+        ],
+      },
+      properties: {
+        name: p.name,
+        elevation_m: p.elevation ?? 0,
+        easting_utm: p.easting,
+        northing_utm: p.northing,
+        utm_zone: `${utmZone}${hemisphere}`,
+        is_control: p.is_control || false,
+        control_order: p.control_order || null,
+        point_type: p.is_control ? 'control' : 'survey',
+      },
     }
-  }))
+  })
 
-  const epsgCode = hemisphere === 'S' ? 32700 + utmZone : 32600 + utmZone
-
-  const geojson = {
+  return JSON.stringify({
     type: 'FeatureCollection',
     name: projectName,
-    crs: {
-      type: 'name',
-      properties: { name: `urn:ogc:def:crs:EPSG::${epsgCode}` }
-    },
-    features
-  }
-
-  return JSON.stringify(geojson, null, 2)
+    // WGS84 is the default/required CRS for GeoJSON per RFC 7946
+    features,
+  }, null, 2)
 }
 
 export function downloadGeoJSON(
   points: SurveyPoint[],
   projectName: string,
   utmZone?: number,
-  hemisphere?: string
+  hemisphere?: 'N' | 'S'
 ): void {
-  const geojson = generateGeoJSON(points, projectName, utmZone, hemisphere)
-  const blob = new Blob([geojson], { type: 'application/geo+json' })
-  const url = URL.createObjectURL(blob)
+  const content = generateGeoJSON(points, projectName, utmZone ?? 37, hemisphere ?? 'S')
   const a = document.createElement('a')
-  a.href = url
-  a.download = `${projectName.replace(/\s+/g, '_')}.geojson`
-  document.body.appendChild(a)
+  a.href = URL.createObjectURL(new Blob([content], { type: 'application/geo+json' }))
+  a.download = `${projectName.replace(/\s+/g, '_')}_WGS84.geojson`
   a.click()
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
 }

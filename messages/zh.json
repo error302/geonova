@@ -172,7 +172,8 @@
     "heightOfObject": "物体高度",
     "mining": "矿山测量",
     "hydrographic": "水文测量",
-    "drone": "无人机"
+    "drone": "无人机",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "全站仪",

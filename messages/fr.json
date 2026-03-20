@@ -172,7 +172,8 @@
     "heightOfObject": "Hauteur d'Objet",
     "mining": "arpentage Minier",
     "hydrographic": "Hydrographique",
-    "drone": "Drone/UAV"
+    "drone": "Drone/UAV",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "Station Totale",

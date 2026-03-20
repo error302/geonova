@@ -172,7 +172,8 @@
     "heightOfObject": "Height of Object",
     "mining": "Mining Survey",
     "hydrographic": "Hydrographic",
-    "drone": "Drone/UAV"
+    "drone": "Drone/UAV",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "Total Station",

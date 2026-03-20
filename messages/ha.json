@@ -172,7 +172,8 @@
     "heightOfObject": "Tsayin abu",
     "mining": "Binciken ma'adinai",
     "hydrographic": "Hydrographic",
-    "drone": "Drone/UAV"
+    "drone": "Drone/UAV",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "Total station",

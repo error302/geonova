@@ -172,7 +172,8 @@
     "mining": "鉱山測量",
     "hydrographic": "水路測量",
     "drone": "ドローン/UAV",
-    "gnss": "GNSS"
+    "gnss": "GNSS",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "トータルステーション",

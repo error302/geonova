@@ -172,7 +172,8 @@
     "heightOfObject": "ارتفاع الجسم",
     "mining": "مسح المناجم",
     "hydrographic": "الهيدروغرافي",
-    "drone": "الطائرة بدون طيار"
+    "drone": "الطائرة بدون طيار",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "المحطة الشاملة",

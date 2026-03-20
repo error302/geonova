@@ -172,7 +172,8 @@
     "heightOfObject": "Altura del Objeto",
     "mining": "Agrimensura Minera",
     "hydrographic": "Hidrografía",
-    "drone": "Dron/UAV"
+    "drone": "Dron/UAV",
+    "gcpExport": "GCP Export"
   },
   "import": {
     "totalStation": "Estación Total",
