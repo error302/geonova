@@ -23,6 +23,18 @@ export interface DatumParameters {
 
 export const DATUM_REGISTRY: Record<string, DatumParameters> = {
 
+  // ── Global / Reference ──────────────────────────────────────────────────────
+  WGS84: {
+    name: 'WGS84',
+    ellipsoid: 'WGS84',
+    semiMajorAxis: 6378137.0,
+    inverseFlattening: 298.257223563,
+    dx: 0, dy: 0, dz: 0,
+    rx: 0, ry: 0, rz: 0, scale: 0,
+    countries: ['Global'],
+    projection: 'WGS84 / UTM',
+  },
+
   // ── Africa ──────────────────────────────────────────────────────────────────
   ARC1960: {
     name: 'Arc 1960',
@@ -235,6 +247,38 @@ export const DATUM_REGISTRY: Record<string, DatumParameters> = {
     rx: 0, ry: 0, rz: 0, scale: 0,
     countries: ['Ghana'],
     projection: 'Ghana National Grid',
+  },
+
+  // ── Additional datums needed by coordinates.ts ──────────────────────────────
+  CAPE: {
+    name: 'Cape Verde (Cape) 1955',
+    ellipsoid: 'Clarke 1880',
+    semiMajorAxis: 6378249.145,
+    inverseFlattening: 293.465,
+    dx: -320, dy: 550, dz: -494,
+    rx: 0, ry: 0, rz: 0, scale: 0,
+    countries: ['Cape Verde', 'Saudi Arabia', 'Somalia'],
+    projection: 'UTM',
+  },
+  ED50: {
+    name: 'European Datum 1950',
+    ellipsoid: 'International 1924',
+    semiMajorAxis: 6378388.0,
+    inverseFlattening: 297.0,
+    dx: 89.5, dy: 93.8, dz: -123.1,
+    rx: 0, ry: 0, rz: 0, scale: 0,
+    countries: ['Europe (legacy)', 'Middle East', 'North Africa'],
+    projection: 'UTM',
+  },
+  PSAD56: {
+    name: 'Provisional South American 1956',
+    ellipsoid: 'Clarke 1866',
+    semiMajorAxis: 6378206.4,
+    inverseFlattening: 294.9786982,
+    dx: -288, dy: 175, dz: -376,
+    rx: 0, ry: 0, rz: 0, scale: 0,
+    countries: ['South America (legacy)'],
+    projection: 'UTM',
   },
 }
 

@@ -4,8 +4,24 @@
  * Transforms coordinates between different CRS in real-time
  */
 
-import { AFRICAN_DATUMS, DatumParameters } from '../engine/datums'
+import { DATUM_REGISTRY, DatumParameters } from '../engine/datums'
 import { geographicToUTM, utmToGeographic } from '../engine/coordinates'
+
+const COORD_TO_DATUM: Record<CoordinateSystem, string> = {
+  WGS84: 'WGS84',
+  UTM: 'WGS84',
+  ARC1960: 'ARC1960',
+  HARTEBEESTHOEK94: 'HARTEBEESTHOEK94',
+  ADINDAN: 'ADINDAN',
+  CAPE: 'CAPE',
+  ED50: 'ED50',
+  PSAD56: 'PSAD56',
+}
+
+function getDatum(system: CoordinateSystem): DatumParameters {
+  const key = COORD_TO_DATUM[system]
+  return DATUM_REGISTRY[key] ?? DATUM_REGISTRY['WGS84']
+}
 
 export type CoordinateSystem = 
   | 'WGS84' 
@@ -43,7 +59,7 @@ export interface TransformResult {
 function helmertTransform(
   x: number, y: number, z: number,
   fromDatum: DatumParameters,
-  toDatum: DatumParameters = AFRICAN_DATUMS.WGS84
+  toDatum: DatumParameters = DATUM_REGISTRY['WGS84']
 ): { x: number; y: number; z: number } {
   const dx = toDatum.dx - fromDatum.dx
   const dy = toDatum.dy - fromDatum.dy
@@ -136,7 +152,7 @@ export async function transformCoordinates(
       latVal = input.latitude
       lonVal = input.longitude
     } else {
-      const datum = AFRICAN_DATUMS[fromSystem]
+      const datum = getDatum(fromSystem)
       if (!datum) {
         return { success: false, error: `Unknown datum: ${fromSystem}` }
       }
@@ -183,13 +199,13 @@ export async function transformCoordinates(
       }
     }
 
-    const toDatum = AFRICAN_DATUMS[toSystem]
+    const toDatum = getDatum(toSystem)
     if (!toDatum) {
       return { success: false, error: `Unknown target datum: ${toSystem}` }
     }
 
     const wgsEcef = geodeticToEcef(latVal * Math.PI / 180, lonVal * Math.PI / 180, 0)
-    const targetEcef = helmertTransform(wgsEcef.x, wgsEcef.y, wgsEcef.z, AFRICAN_DATUMS.WGS84, toDatum)
+    const targetEcef = helmertTransform(wgsEcef.x, wgsEcef.y, wgsEcef.z, DATUM_REGISTRY['WGS84'], toDatum)
     const target = ecefToGeodetic(targetEcef.x, targetEcef.y, targetEcef.z)
     
     const utm = geographicToUTM(target.lat * 180 / Math.PI, target.lon * 180 / Math.PI)

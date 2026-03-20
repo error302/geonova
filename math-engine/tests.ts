@@ -330,7 +330,8 @@ const nearlyClosed: import("./types").NamedPoint2D[] = [
 ];
 const c2 = computeTraverseClosure(nearlyClosed);
 assert(c2.ok, "Nearly-closed traverse: computed");
-assert(c2.ok && near(c2.value.precisionRatio, 500 / 0.01, 0.5),
+if (!c2.ok) throw new Error(c2.error)
+assert(near(c2.value.precisionRatio, 500 / 0.01, 0.5),
   `Nearly-closed: ~1:${Math.round(c2.value.precisionRatio)}`);
 
 const err1 = computeTraverseClosure([{ name: "X", easting: 0, northing: 0 }]);
