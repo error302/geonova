@@ -8,6 +8,8 @@ import {
   CATEGORIES, CONDITIONS, BRANDS, COUNTRIES, CURRENCIES, fmtPrice,
 } from '@/lib/marketplace/instruments'
 import { compressImage, isImageFile, MAX_IMAGES, base64Bytes } from '@/lib/marketplace/imageUtils'
+import { useSubscription } from '@/lib/subscription/subscriptionContext'
+import { createClient } from '@/lib/supabase/client'
 
 // ── tiny helpers ─────────────────────────────────────────────────────────────
 
@@ -257,14 +259,76 @@ function ImageGallery({ images }: { images: string[] }) {
 
 // ── Post listing modal ────────────────────────────────────────────────────────
 
+// ── Verified badge ───────────────────────────────────────────────────────────
+
+function VerifiedBadge({ small = false }: { small?: boolean }) {
+  return (
+    <span className={`inline-flex items-center gap-1 bg-[var(--accent)]/15 text-[var(--accent)] border border-[var(--accent)]/30 rounded-full font-medium ${small ? 'text-[9px] px-1.5 py-0.5' : 'text-xs px-2 py-0.5'}`}>
+      <svg className={small ? 'w-2.5 h-2.5' : 'w-3 h-3'} viewBox="0 0 24 24" fill="currentColor">
+        <path fillRule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.307 4.491 4.491 0 01-1.307-3.497A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
+      </svg>
+      Verified Pro
+    </span>
+  )
+}
+
+// ── Upgrade prompt ────────────────────────────────────────────────────────────
+
+function UpgradeToPost({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl w-full max-w-md p-8 text-center">
+        <div className="w-14 h-14 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center mx-auto mb-5">
+          <svg className="w-7 h-7 text-[var(--accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z" />
+          </svg>
+        </div>
+        <h2 className="text-xl font-bold text-[var(--text-primary)] mb-2">Pro required to post</h2>
+        <p className="text-sm text-[var(--text-secondary)] mb-3 leading-relaxed">
+          Posting listings on the equipment marketplace is a <strong className="text-[var(--text-primary)]">Pro feature</strong>. 
+          Upgrade to list your instruments for sale or rent — and get a <strong className="text-[var(--accent)]">Verified Pro</strong> badge 
+          that builds buyer trust.
+        </p>
+
+        {/* What Pro gets you */}
+        <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-4 mb-6 text-left space-y-2">
+          {[
+            'Post unlimited sale and rental listings',
+            'Verified Pro badge on every listing',
+            'Buyers see your listings first',
+            'Unlimited survey projects',
+            'Full PDF + DXF reports',
+            'GPS stakeout mode',
+          ].map(item => (
+            <div key={item} className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
+              <svg className="w-4 h-4 text-[var(--accent)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+              {item}
+            </div>
+          ))}
+        </div>
+
+        <div className="flex gap-3">
+          <button onClick={onClose} className="btn btn-secondary flex-1">Cancel</button>
+          <a href="/pricing" className="btn btn-primary flex-1">
+            Upgrade — KSh 500/mo
+          </a>
+        </div>
+        <p className="text-xs text-[var(--text-muted)] mt-3">14-day free trial · No card needed to start</p>
+      </div>
+    </div>
+  )
+}
+
 const BLANK: Omit<InstrumentListing, 'id' | 'postedAt' | 'sold'> = {
   type: 'sale', category: 'total_station', title: '', brand: '', model: '',
   condition: 'good', year: undefined, description: '', price: 0 as any,
   currency: 'KES', rentPeriod: undefined, location: '', country: 'Kenya',
-  sellerName: '', sellerContact: '', images: [],
+  sellerName: '', sellerContact: '', images: [], verified: false,
 }
 
-function PostModal({ onSave, onClose }: { onSave: (l: InstrumentListing) => void; onClose: () => void }) {
+function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListing) => void; onClose: () => void; verified: boolean }) {
   const [form, setForm] = useState<typeof BLANK>({ ...BLANK })
   const [err, setErr] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -282,7 +346,7 @@ function PostModal({ onSave, onClose }: { onSave: (l: InstrumentListing) => void
     setErr('')
     setSubmitting(true)
     try {
-      onSave(postListing({ ...form, price: Number(form.price) }))
+      onSave(postListing({ ...form, price: Number(form.price), verified }))
     } catch (e: any) {
       setErr(e.message || 'Failed to save. Try removing some photos.')
       setSubmitting(false)
@@ -515,7 +579,10 @@ function ListingDetail({ listing, onClose, onRefresh }: {
             <p className="text-xs uppercase tracking-wider text-[var(--text-muted)] mb-2">
               {listing.type === 'wanted' ? 'Posted by' : 'Seller'}
             </p>
-            <p className="text-sm font-medium text-[var(--text-primary)]">{listing.sellerName}</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-sm font-medium text-[var(--text-primary)]">{listing.sellerName}</p>
+              {listing.verified && <VerifiedBadge />}
+            </div>
             <p className="text-sm text-[var(--accent)] mt-0.5">{listing.sellerContact}</p>
           </div>
 
@@ -651,7 +718,10 @@ function ListingCard({ listing, onClick }: { listing: InstrumentListing; onClick
             {fmtPrice(listing.price, listing.currency, listing.type === 'rent' ? listing.rentPeriod : undefined)}
           </span>
           <div className="text-right">
-            <p className="text-xs text-[var(--text-muted)]">{listing.sellerName}</p>
+            <div className="flex items-center gap-1 justify-end">
+              {listing.verified && <VerifiedBadge small />}
+              <p className="text-xs text-[var(--text-muted)]">{listing.sellerName}</p>
+            </div>
             <p className="text-[10px] text-[var(--text-muted)]">{relTime(listing.postedAt)}</p>
           </div>
         </div>
@@ -663,12 +733,16 @@ function ListingCard({ listing, onClick }: { listing: InstrumentListing; onClick
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function MarketplacePage() {
+  const { plan, isTrialing, loading: subLoading } = useSubscription()
+  const isPro = plan === 'pro' || plan === 'team' || isTrialing
+
   const [listings, setListings]       = useState<InstrumentListing[]>([])
   const [search, setSearch]           = useState('')
   const [filterType, setFilterType]   = useState<'' | ListingType>('sale')
   const [filterCat, setFilterCat]     = useState<'' | InstrumentCategory>('')
   const [filterCountry, setFilterCountry] = useState('')
   const [showPost, setShowPost]       = useState(false)
+  const [showUpgrade, setShowUpgrade] = useState(false)
   const [active, setActive]           = useState<InstrumentListing | null>(null)
 
   const reload = useCallback(() => {
@@ -703,7 +777,17 @@ export default function MarketplacePage() {
               Buy, sell and rent survey instruments — directly between surveyors.
             </p>
           </div>
-          <button onClick={() => setShowPost(true)} className="btn btn-primary flex-shrink-0">+ Post listing</button>
+          <button
+            onClick={() => isPro ? setShowPost(true) : setShowUpgrade(true)}
+            className="btn btn-primary flex-shrink-0 flex items-center gap-2"
+          >
+            {!isPro && !subLoading && (
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+            )}
+            + Post listing
+          </button>
         </div>
 
         {/* Type tabs */}
@@ -759,7 +843,7 @@ export default function MarketplacePage() {
                 : 'Be the first to list a survey instrument. Sell, rent out, or post a wanted ad.'}
             </p>
             {!search && !filterCat && !filterCountry && (
-              <button onClick={() => setShowPost(true)} className="btn btn-primary">Post a listing</button>
+              <button onClick={() => isPro ? setShowPost(true) : setShowUpgrade(true)} className="btn btn-primary">Post a listing</button>
             )}
           </div>
         )}
@@ -774,8 +858,11 @@ export default function MarketplacePage() {
         )}
       </div>
 
+      {showUpgrade && <UpgradeToPost onClose={() => setShowUpgrade(false)} />}
+
       {showPost && (
         <PostModal
+          verified={isPro}
           onSave={l => { reload(); setShowPost(false); setActive(l) }}
           onClose={() => setShowPost(false)}
         />

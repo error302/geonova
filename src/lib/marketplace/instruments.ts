@@ -28,6 +28,8 @@ export interface InstrumentListing {
   images: string[]    // base64 or URLs — kept empty initially
   postedAt: string
   sold: boolean
+  userId?: string      // Supabase user ID of poster
+  verified: boolean    // true if poster was Pro/Team at time of posting
 }
 
 export interface InquiryMessage {
@@ -85,12 +87,13 @@ export function searchListings(q: string): InstrumentListing[] {
   ))
 }
 
-export function postListing(data: Omit<InstrumentListing, 'id' | 'postedAt' | 'sold'>): InstrumentListing {
+export function postListing(data: Omit<InstrumentListing, 'id' | 'postedAt' | 'sold' | 'verified'> & { verified?: boolean }): InstrumentListing {
   const listing: InstrumentListing = {
     ...data,
     id: `inst_${Date.now()}`,
     postedAt: new Date().toISOString(),
     sold: false,
+    verified: data.verified ?? false,
   }
   saveListings([listing, ...loadListings()])
   return listing
