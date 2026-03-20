@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Section 1: Hero */}
-      <section className="min-h-screen flex items-center bg-[#0a0a0f] relative overflow-hidden">
+      <section className="min-h-screen flex items-center bg-[var(--bg-primary)] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -75,7 +75,7 @@ export default function Home() {
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-[#E8841A] to-[#E8841A]/20 rounded-2xl blur-3xl"></div>
               <div className="relative bg-[#111] rounded-xl border border-[#222] p-4 shadow-2xl">
-                <div className="aspect-video bg-[#0a0a0f] rounded-lg overflow-hidden relative">
+                <div className="aspect-video bg-[var(--bg-primary)] rounded-lg overflow-hidden relative">
                   <svg className="w-full h-full" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg">
                     <rect fill="#0f172a" width="400" height="225"/>
                     <path d="M0 120 Q100 80 200 100 T400 90" stroke="#E8841A" strokeWidth="2" fill="none" opacity="0.8"/>
@@ -112,32 +112,32 @@ export default function Home() {
       {/* Section 2: Problem Statement */}
       <section className="py-20 bg-[#111]">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-8">
             Surveyors spend hours on manual calculations,
             <span className="text-[#E8841A]"> arithmetic checks,</span> and report writing.
             <br/>GeoNova eliminates that stress completely.
           </h2>
           
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-[#0a0a0f] p-6 rounded-xl border border-[#222] border-l-2 border-l-red-500/50">
+            <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[#222] border-l-2 border-l-red-500/50">
               <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
-              <h3 className="text-white font-semibold mb-2">Hours of Manual Computation</h3>
+              <h3 className="text-[var(--text-primary)] font-semibold mb-2">Hours of Manual Computation</h3>
               <p className="text-gray-400 text-sm">Complex traverse calculations done entirely by hand</p>
             </div>
-            <div className="bg-[#0a0a0f] p-6 rounded-xl border border-[#222] border-l-2 border-l-yellow-500/50">
+            <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[#222] border-l-2 border-l-yellow-500/50">
               <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
               </div>
-              <h3 className="text-white font-semibold mb-2">Error-Prone Arithmetic Checks</h3>
+              <h3 className="text-[var(--text-primary)] font-semibold mb-2">Error-Prone Arithmetic Checks</h3>
               <p className="text-gray-400 text-sm">Manual leveling checks that can fail silently</p>
             </div>
-            <div className="bg-[#0a0a0f] p-6 rounded-xl border border-[#222] border-l-2 border-l-orange-500/50">
+            <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[#222] border-l-2 border-l-orange-500/50">
               <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
               </div>
-              <h3 className="text-white font-semibold mb-2">Time-Consuming Report Writing</h3>
+              <h3 className="text-[var(--text-primary)] font-semibold mb-2">Time-Consuming Report Writing</h3>
               <p className="text-gray-400 text-sm">Creating professional reports entirely from scratch</p>
             </div>
           </div>
@@ -151,9 +151,9 @@ export default function Home() {
       </section>
 
       {/* Section 3: Features Grid */}
-      <section className="py-20 bg-[#0a0a0f]">
+      <section className="py-20 bg-[var(--bg-primary)]">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] text-center mb-4">
             Everything You Need
           </h2>
           <p className="text-gray-400 text-center mb-12">Professional surveying tools in one platform</p>
@@ -196,7 +196,7 @@ export default function Home() {
       {/* Section 4: How It Works */}
       <section className="py-20 bg-[#111]">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] text-center mb-12">
             How It Works
           </h2>
           
@@ -221,9 +221,9 @@ export default function Home() {
       </section>
 
       {/* Section 5: Tool Showcase */}
-      <section className="py-20 bg-[#0a0a0f]">
+      <section className="py-20 bg-[var(--bg-primary)]">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] text-center mb-4">
             Powerful Tools
           </h2>
           <p className="text-gray-400 text-center mb-12">Professional calculators following N.N. Basak standards</p>
@@ -247,8 +247,8 @@ export default function Home() {
           <div className="bg-[#111] rounded-xl border border-[#222] p-6 max-w-2xl mx-auto">
             {activeTab === 'traverse' && (
               <div>
-                <h3 className="text-xl font-semibold text-white mb-4">Traverse Adjustment</h3>
-                <div className="font-mono text-sm bg-[#0a0a0f] p-4 rounded-lg">
+                <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-4">Traverse Adjustment</h3>
+                <div className="font-mono text-sm bg-[var(--bg-primary)] p-4 rounded-lg">
                   <div className="text-gray-400 mb-2">Input:</div>
                   <div className="text-white">5 stations, 1234.56m total distance</div>
                   <div className="text-gray-400 mt-4 mb-2">Output:</div>
@@ -261,8 +261,8 @@ export default function Home() {
             )}
             {activeTab === 'leveling' && (
               <div>
-                <h3 className="text-xl font-semibold text-white mb-4">Leveling Calculator</h3>
-                <div className="font-mono text-sm bg-[#0a0a0f] p-4 rounded-lg">
+                <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-4">Leveling Calculator</h3>
+                <div className="font-mono text-sm bg-[var(--bg-primary)] p-4 rounded-lg">
                   <div className="text-gray-400 mb-2">Input:</div>
                   <div className="text-white">6 stations, 1.245km total</div>
                   <div className="text-gray-400 mt-4 mb-2">Output:</div>
@@ -275,8 +275,8 @@ export default function Home() {
             )}
             {activeTab === 'cogo' && (
               <div>
-                <h3 className="text-xl font-semibold text-white mb-4">COGO Tools</h3>
-                <div className="font-mono text-sm bg-[#0a0a0f] p-4 rounded-lg">
+                <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-4">COGO Tools</h3>
+                <div className="font-mono text-sm bg-[var(--bg-primary)] p-4 rounded-lg">
                   <div className="text-gray-400 mb-2">Available Functions:</div>
                   <div className="text-white">• Radiation</div>
                   <div className="text-white">• Intersection (Forward/Backward)</div>
@@ -290,8 +290,8 @@ export default function Home() {
             )}
             {activeTab === 'curves' && (
               <div>
-                <h3 className="text-xl font-semibold text-white mb-4">Horizontal Curves</h3>
-                <div className="font-mono text-sm bg-[#0a0a0f] p-4 rounded-lg">
+                <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-4">Horizontal Curves</h3>
+                <div className="font-mono text-sm bg-[var(--bg-primary)] p-4 rounded-lg">
                   <div className="text-gray-400 mb-2">Input:</div>
                   <div className="text-white">R = 300m, Δ = 45°</div>
                   <div className="text-gray-400 mt-4 mb-2">Output:</div>
@@ -309,7 +309,7 @@ export default function Home() {
       {/* Section 6: Testimonials */}
       <section className="py-20 bg-[#111]">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] text-center mb-4">
             What Surveyors Say
           </h2>
           <p className="text-gray-400 text-center mb-12">Join thousands of professionals</p>
@@ -338,9 +338,9 @@ export default function Home() {
       </section>
 
       {/* Section 7: Pricing */}
-      <section className="py-20 bg-[#0a0a0f]">
+      <section className="py-20 bg-[var(--bg-primary)]">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] text-center mb-4">
             Simple Pricing
           </h2>
           <p className="text-gray-400 text-center mb-12">Start free, upgrade when you need</p>
@@ -398,7 +398,7 @@ export default function Home() {
       {/* Section 8: Survey Guide Preview */}
       <section className="py-20 bg-[#111]">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] text-center mb-4">
             AI Field Guide
           </h2>
           <p className="text-gray-400 text-center mb-12">New to a survey type? GeoNova guides you step by step</p>
@@ -433,12 +433,12 @@ export default function Home() {
       </section>
 
       {/* Section 9: Mobile App Banner */}
-      <section className="py-20 bg-[#0a0a0f]">
+      <section className="py-20 bg-[var(--bg-primary)]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="bg-gradient-to-r from-[#E8841A]/20 to-transparent rounded-2xl p-12 border border-[#E8841A]/30">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-4">
                   Take GeoNova to the field
                 </h2>
                 <p className="text-gray-400 mb-8">
@@ -446,7 +446,7 @@ export default function Home() {
                 </p>
                 <div className="bg-[#1e293b] p-4 rounded-lg inline-block">
                   <p className="text-sm text-gray-400 mb-2">Add to Home Screen:</p>
-                  <p className="text-white text-sm">Open in Chrome → Menu → Add to Home Screen</p>
+                  <p className="text-[var(--text-primary)] text-sm">Open in Chrome → Menu → Add to Home Screen</p>
                 </div>
               </div>
               
@@ -475,11 +475,11 @@ export default function Home() {
       </section>
 
       {/* Section 10: Footer */}
-      <footer className="bg-[#0a0a0f] border-t border-[#222] py-16">
+      <footer className="bg-[var(--bg-primary)] border-t border-[#222] py-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
-              <h3 className="text-white font-bold text-lg mb-4">GeoNova</h3>
+              <h3 className="text-[var(--text-primary)] font-bold text-lg mb-4">GeoNova</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><a href="#" className="hover:text-[#E8841A]">About</a></li>
                 <li><a href="#" className="hover:text-[#E8841A]">Blog</a></li>
@@ -489,7 +489,7 @@ export default function Home() {
             </div>
             
             <div>
-              <h3 className="text-white font-bold text-lg mb-4">Tools</h3>
+              <h3 className="text-[var(--text-primary)] font-bold text-lg mb-4">Tools</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><a href="/tools/distance" className="hover:text-[#E8841A]">Distance & Bearing</a></li>
                 <li><a href="/tools/traverse" className="hover:text-[#E8841A]">Traverse</a></li>
@@ -500,7 +500,7 @@ export default function Home() {
             </div>
             
             <div>
-              <h3 className="text-white font-bold text-lg mb-4">Resources</h3>
+              <h3 className="text-[var(--text-primary)] font-bold text-lg mb-4">Resources</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><a href="/guide" className="hover:text-[#E8841A]">Field Guide</a></li>
                 <li><a href="/docs" className="hover:text-[#E8841A]">Documentation</a></li>
@@ -510,7 +510,7 @@ export default function Home() {
             </div>
             
             <div>
-              <h3 className="text-white font-bold text-lg mb-4">Connect</h3>
+              <h3 className="text-[var(--text-primary)] font-bold text-lg mb-4">Connect</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>support@geonova.app</li>
                 <li><a href="/community" className="hover:text-[#E8841A]">WhatsApp Community</a></li>
@@ -548,7 +548,7 @@ function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc:
   return (
     <div className="bg-[#111] p-6 rounded-xl border border-[#222] hover:border-[#E8841A] transition-colors">
       <div className="text-3xl mb-4">{icon}</div>
-      <h3 className="text-white font-semibold mb-2">{title}</h3>
+      <h3 className="text-[var(--text-primary)] font-semibold mb-2">{title}</h3>
       <p className="text-gray-400 text-sm">{desc}</p>
     </div>
   )
@@ -560,7 +560,7 @@ function StepCard({ number, title, desc }: { number: string; title: string; desc
       <div className="w-16 h-16 bg-[#E8841A] rounded-full flex items-center justify-center text-2xl font-bold text-black mx-auto mb-4">
         {number}
       </div>
-      <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
+      <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-2">{title}</h3>
       <p className="text-gray-400">{desc}</p>
     </div>
   )
@@ -568,12 +568,12 @@ function StepCard({ number, title, desc }: { number: string; title: string; desc
 
 function TestimonialCard({ quote, name, title, country }: { quote: string; name: string; title: string; country: string }) {
   return (
-    <div className="bg-[#0a0a0f] p-6 rounded-xl border border-[#222]">
+    <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[#222]">
       <p className="text-gray-400 mb-4 italic">"{quote}"</p>
       <div className="flex items-center gap-3">
         <span className="text-2xl">{country}</span>
         <div>
-          <p className="text-white font-medium">{name}</p>
+          <p className="text-[var(--text-primary)] font-medium">{name}</p>
           <p className="text-gray-500 text-sm">{title}</p>
         </div>
       </div>
@@ -595,7 +595,7 @@ function PricingCard({ tier, price, features, cta, popular }: {
           Most Popular
         </div>
       )}
-      <h3 className="text-white font-bold text-lg mb-2">{tier}</h3>
+      <h3 className="text-[var(--text-primary)] font-bold text-lg mb-2">{tier}</h3>
       <p className="text-[#E8841A] text-2xl font-bold mb-4">{price}</p>
       <ul className="space-y-2 mb-6">
         {features.map((feature, i) => (
@@ -617,9 +617,9 @@ function PricingCard({ tier, price, features, cta, popular }: {
 
 function GuideCard({ icon, title, steps }: { icon: string; title: string; steps: string }) {
   return (
-    <div className="bg-[#0a0a0f] p-6 rounded-xl border border-[#222] hover:border-[#E8841A] transition-colors text-center">
+    <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[#222] hover:border-[#E8841A] transition-colors text-center">
       <div className="text-4xl mb-3">{icon}</div>
-      <h3 className="text-white font-semibold mb-1">{title}</h3>
+      <h3 className="text-[var(--text-primary)] font-semibold mb-1">{title}</h3>
       <p className="text-gray-500 text-sm">{steps}</p>
     </div>
   )
