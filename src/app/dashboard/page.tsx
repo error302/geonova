@@ -63,10 +63,18 @@ export default async function DashboardPage() {
 
   if (!user) redirect('/login')
 
-  const [{ data: projects }, { data: subscription }] = await Promise.all([
-    supabase.from('projects').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
-    supabase.from('user_subscriptions').select('*, subscription_plans(*)').eq('user_id', user.id).single(),
-  ])
+  let projects: any[] | null = null
+  let subscription: any | null = null
+  try {
+    const [pRes, sRes] = await Promise.all([
+      supabase.from('projects').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+      supabase.from('user_subscriptions').select('*').eq('user_id', user.id).maybeSingle(),
+    ])
+    projects = pRes.data
+    subscription = sRes.data
+  } catch {
+    // Queries failed — render with empty data rather than crashing
+  }
 
   const canCreateProject = subscription?.plan_id !== 'free' || (projects?.length || 0) < 1
   const daysLeft = subscription?.trial_ends_at

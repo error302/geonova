@@ -45,13 +45,13 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
     const { data: sub } = await supabase
       .from('user_subscriptions')
-      .select('*, subscription_plans(*)')
+      .select('*')
       .eq('user_id', user.id)
       .single()
 
     if (sub) {
       setPlan(sub.plan_id as any)
-      setFeatures(sub.subscription_plans?.features || [])
+      setFeatures(sub.features || [])
       
       if (sub.status === 'trial') {
         setIsTrialing(true)

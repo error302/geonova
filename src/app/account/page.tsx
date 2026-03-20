@@ -21,9 +21,9 @@ export default function AccountPage() {
     if (user) {
       const { data: sub } = await supabase
         .from('user_subscriptions')
-        .select('*, subscription_plans(*)')
+        .select('*')
         .eq('user_id', user.id)
-        .single()
+        .maybeSingle()
       setSubscription(sub)
     }
     setLoading(false)
