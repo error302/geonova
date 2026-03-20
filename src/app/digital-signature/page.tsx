@@ -28,12 +28,12 @@ export default function DigitalSignaturePage() {
   const [verificationResult, setVerificationResult] = useState<QRVerificationResult | null>(null)
   const [qrCode, setQrCode] = useState('')
 
-  const handleSign = () => {
+  const handleSign = async () => {
     if (!signForm.documentId || !signForm.content || !signForm.signerId || !signForm.secret) {
       alert('Please fill all fields')
       return
     }
-    const signed = signDocument(
+    const signed = await signDocument(
       signForm.documentId,
       signForm.content,
       signForm.signerId,
@@ -43,7 +43,7 @@ export default function DigitalSignaturePage() {
     setQrCode(generateQRPayload(signed))
   }
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     if (!verifyForm.qrPayload || !verifyForm.originalContent || !verifyForm.secret) {
       alert('Please fill all fields')
       return
@@ -57,11 +57,11 @@ export default function DigitalSignaturePage() {
       })
       return
     }
-    const result = verifySignature(parsed, verifyForm.originalContent, verifyForm.secret)
+    const result = await verifySignature(parsed, verifyForm.originalContent, verifyForm.secret)
     setVerificationResult(result)
   }
 
-  const handleSurveySign = () => {
+  const handleSurveySign = async () => {
     if (!signForm.signerId || !signForm.secret) {
       alert('Please enter signer ID and secret')
       return
@@ -74,7 +74,7 @@ export default function DigitalSignaturePage() {
       distance_AB: 141.42,
       bearing_AB_Value: 45.0
     }
-    const signed = createSurveyReportSignature(
+    const signed = await createSurveyReportSignature(
       `SURVEY-${Date.now()}`,
       signForm.signerId,
       measurements,

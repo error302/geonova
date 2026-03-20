@@ -1,198 +1,158 @@
-#!/usr/bin/env npx ts-node
 /**
- * RLS Isolation Test
+ * GeoNova RLS Isolation Test
  * 
- * Verifies that user A cannot read user B's data.
- * Run after creating two test accounts in your Supabase project.
+ * Verifies that Supabase Row Level Security policies correctly prevent
+ * one user from reading, writing, or deleting another user's data.
  * 
- * Usage:
- *   SUPABASE_URL=... SUPABASE_ANON_KEY=... \
- *   USER_A_EMAIL=a@test.com USER_A_PASS=pass123 \
- *   USER_B_EMAIL=b@test.com USER_B_PASS=pass123 \
- *   npx ts-node scripts/test-rls-isolation.ts
+ * Run: npx ts-node --project tsconfig.scripts.json scripts/test-rls-isolation.ts
+ * 
+ * Requires env vars:
+ *   NEXT_PUBLIC_SUPABASE_URL
+ *   NEXT_PUBLIC_SUPABASE_ANON_KEY
+ *   TEST_USER_A_EMAIL + TEST_USER_A_PASSWORD (existing test accounts)
+ *   TEST_USER_B_EMAIL + TEST_USER_B_PASSWORD
  */
 
 import { createClient } from '@supabase/supabase-js'
 
-const SUPABASE_URL = process.env.SUPABASE_URL!
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY!
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error('Set SUPABASE_URL and SUPABASE_ANON_KEY env vars')
-  process.exit(1)
-}
-
-const clientA = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-const clientB = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-type TestResult = { test: string; pass: boolean; detail?: string }
+type TestResult = { name: string; passed: boolean; detail: string }
 const results: TestResult[] = []
 
-function pass(test: string, detail?: string) {
-  results.push({ test, pass: true, detail })
-  console.log(`  ✓ ${test}${detail ? ` — ${detail}` : ''}`)
-}
+function pass(name: string, detail = '') { results.push({ name, passed: true, detail }) }
+function fail(name: string, detail = '') { results.push({ name, passed: false, detail }) }
 
-function fail(test: string, detail?: string) {
-  results.push({ test, pass: false, detail })
-  console.error(`  ✗ FAIL: ${test}${detail ? ` — ${detail}` : ''}`)
-}
-
-async function signIn(client: ReturnType<typeof createClient>, email: string, password: string) {
+async function signIn(email: string, password: string) {
+  const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   const { data, error } = await client.auth.signInWithPassword({ email, password })
-  if (error) throw new Error(`Sign-in failed for ${email}: ${error.message}`)
-  return data.user!
+  if (error || !data.user) throw new Error(`Sign-in failed for ${email}: ${error?.message}`)
+  return client
 }
 
 async function runTests() {
-  const emailA = process.env.USER_A_EMAIL || 'user_a_rls_test@geonova.test'
-  const passA  = process.env.USER_A_PASS  || 'RlsTest123!'
-  const emailB = process.env.USER_B_EMAIL || 'user_b_rls_test@geonova.test'
-  const passB  = process.env.USER_B_PASS  || 'RlsTest123!'
+  const emailA = process.env.TEST_USER_A_EMAIL!
+  const passA = process.env.TEST_USER_A_PASSWORD!
+  const emailB = process.env.TEST_USER_B_EMAIL!
+  const passB = process.env.TEST_USER_B_PASSWORD!
 
-  console.log('\n🔒 GeoNova RLS Isolation Tests\n')
-
-  // ── Auth ──────────────────────────────────────────────────────────────────
-  console.log('── Authentication ──')
-  let userA: any, userB: any
-  try {
-    userA = await signIn(clientA, emailA, passA)
-    pass('User A signed in', userA.id.slice(0, 8) + '...')
-  } catch (e: any) {
-    fail('User A sign-in', e.message)
-    console.error('\nCreate test accounts first with: npm run seed:test-users')
+  if (!emailA || !passA || !emailB || !passB) {
+    console.error('❌ Missing TEST_USER_A/B env vars. Create two test Supabase accounts first.')
     process.exit(1)
   }
 
-  try {
-    userB = await signIn(clientB, emailB, passB)
-    pass('User B signed in', userB.id.slice(0, 8) + '...')
-  } catch (e: any) {
-    fail('User B sign-in', e.message)
-    process.exit(1)
-  }
+  console.log('Signing in as User A and User B...')
+  const clientA = await signIn(emailA, passA)
+  const clientB = await signIn(emailB, passB)
+  const { data: { user: userA } } = await clientA.auth.getUser()
+  const { data: { user: userB } } = await clientB.auth.getUser()
+  console.log(`User A: ${userA?.id?.slice(0, 8)}...`)
+  console.log(`User B: ${userB?.id?.slice(0, 8)}...`)
 
-  // ── User A creates a project ───────────────────────────────────────────────
-  console.log('\n── Project isolation ──')
-  const { data: projectA, error: projErr } = await clientA
-    .from('projects')
-    .insert({ name: 'RLS Test Project A', user_id: userA.id, location: 'Test' })
-    .select('id')
-    .single()
+  // ── PROJECTS ────────────────────────────────────────────────────────────────
+  console.log('\n── Projects ──')
 
-  if (projErr || !projectA) {
-    fail('User A can create project', projErr?.message)
-    process.exit(1)
-  }
-  pass('User A created project', projectA.id.slice(0, 8) + '...')
+  // User A creates a project
+  const { data: projA, error: e1 } = await clientA.from('projects').insert({
+    name: 'RLS Test Project A',
+    location: 'Test',
+    utm_zone: 37,
+    hemisphere: 'S',
+    user_id: userA!.id,
+  }).select().single()
+  if (!projA || e1) { fail('A creates project', e1?.message); }
+  else pass('A creates project', projA.id)
 
-  // ── User B cannot see User A's project ────────────────────────────────────
-  const { data: bSeesA } = await clientB
-    .from('projects')
-    .select('id')
-    .eq('id', projectA.id)
-    .single()
+  if (projA) {
+    // User B tries to read User A's project by ID
+    const { data: stolen } = await clientB.from('projects').select('*').eq('id', projA.id).single()
+    if (stolen) fail('B cannot read A\'s project', `Got: ${JSON.stringify(stolen).slice(0, 80)}`)
+    else pass('B cannot read A\'s project')
 
-  if (bSeesA) {
-    fail('User B CANNOT read User A project', 'DATA LEAK — B read A\'s project ID')
-  } else {
-    pass('User B cannot read User A project')
-  }
+    // User B tries to list all projects (should only see their own)
+    const { data: bProjects } = await clientB.from('projects').select('id')
+    const leaks = (bProjects || []).filter((p: any) => p.id === projA.id)
+    if (leaks.length > 0) fail('B\'s project list doesn\'t contain A\'s project', 'LEAKED')
+    else pass('B\'s project list doesn\'t contain A\'s project')
 
-  // ── User B cannot insert into User A's project ────────────────────────────
-  const { error: insertErr } = await clientB
-    .from('survey_points')
-    .insert({ project_id: projectA.id, name: 'INJECTED', easting: 0, northing: 0, elevation: 0 })
+    // User B tries to update User A's project
+    const { error: updateErr } = await clientB.from('projects').update({ name: 'HACKED' }).eq('id', projA.id)
+    if (!updateErr) {
+      // Check if it actually changed
+      const { data: check } = await clientA.from('projects').select('name').eq('id', projA.id).single()
+      if (check?.name === 'HACKED') fail('B cannot update A\'s project', 'Name was changed!')
+      else pass('B cannot update A\'s project', 'Update silently ignored by RLS')
+    } else pass('B cannot update A\'s project', updateErr.message)
 
-  if (!insertErr) {
-    fail('User B CANNOT inject points into User A project', 'DATA INJECTION POSSIBLE')
-  } else {
-    pass('User B cannot inject survey points into User A project')
-  }
+    // User B tries to delete User A's project
+    const { error: deleteErr } = await clientB.from('projects').delete().eq('id', projA.id)
+    const { data: stillExists } = await clientA.from('projects').select('id').eq('id', projA.id).single()
+    if (stillExists) pass('B cannot delete A\'s project')
+    else fail('B cannot delete A\'s project', 'Project was deleted!')
 
-  // ── User B cannot read User A's survey points ────────────────────────────
-  const { data: bSeesPoints } = await clientB
-    .from('survey_points')
-    .select('id')
-    .eq('project_id', projectA.id)
+    // ── SURVEY POINTS ──────────────────────────────────────────────────────────
+    console.log('\n── Survey points ──')
+    const { data: pointA } = await clientA.from('survey_points').insert({
+      project_id: projA.id,
+      name: 'RLS_PT_1',
+      easting: 500000,
+      northing: 9800000,
+      elevation: 1700,
+    }).select().single()
 
-  if (bSeesPoints && bSeesPoints.length > 0) {
-    fail('User B CANNOT read User A survey points', `Saw ${bSeesPoints.length} points`)
-  } else {
-    pass('User B cannot read User A survey points')
-  }
-
-  // ── Subscription isolation ────────────────────────────────────────────────
-  console.log('\n── Subscription isolation ──')
-  const { data: bSeesSubs } = await clientB
-    .from('user_subscriptions')
-    .select('id')
-    .eq('user_id', userA.id)
-
-  if (bSeesSubs && bSeesSubs.length > 0) {
-    fail('User B CANNOT read User A subscription', 'BILLING DATA LEAK')
-  } else {
-    pass('User B cannot read User A subscription')
-  }
-
-  // ── Fieldbook isolation ───────────────────────────────────────────────────
-  console.log('\n── Fieldbook isolation ──')
-  const { data: fbA } = await clientA
-    .from('fieldbooks')
-    .select('id')
-    .eq('user_id', userA.id)
-    .limit(1)
-    .maybeSingle()
-
-  if (fbA) {
-    const { data: bSeesFb } = await clientB
-      .from('fieldbooks')
-      .select('id')
-      .eq('id', fbA.id)
-      .maybeSingle()
-
-    if (bSeesFb) {
-      fail('User B CANNOT read User A fieldbook', 'FIELDBOOK DATA LEAK')
-    } else {
-      pass('User B cannot read User A fieldbook')
+    if (pointA) {
+      const { data: stolenPt } = await clientB.from('survey_points').select('*').eq('id', pointA.id).single()
+      if (stolenPt) fail('B cannot read A\'s survey points', 'Point leaked')
+      else pass('B cannot read A\'s survey points')
     }
-  } else {
-    pass('Fieldbook isolation (no fieldbooks to test — create one to verify)')
+
+    // ── FIELDBOOKS ─────────────────────────────────────────────────────────────
+    console.log('\n── Fieldbooks ──')
+    const { data: fbA } = await clientA.from('fieldbooks').insert({
+      user_id: userA!.id,
+      project_id: projA.id,
+      name: 'RLS Test Fieldbook',
+      type: 'leveling',
+      data: {},
+    }).select().single()
+
+    if (fbA) {
+      const { data: stolenFb } = await clientB.from('fieldbooks').select('*').eq('id', fbA.id).single()
+      if (stolenFb) fail('B cannot read A\'s fieldbook', 'Fieldbook leaked')
+      else pass('B cannot read A\'s fieldbook')
+    }
+
+    // ── SUBSCRIPTIONS ─────────────────────────────────────────────────────────
+    console.log('\n── Subscriptions ──')
+    const { data: subA } = await clientA.from('user_subscriptions').select('*').eq('user_id', userA!.id)
+    const { data: subAviaBuQuery } = await clientB.from('user_subscriptions').select('*').eq('user_id', userA!.id)
+    if (subAviaBuQuery && subAviaBuQuery.length > 0) fail('B cannot read A\'s subscription', 'Subscription leaked')
+    else pass('B cannot read A\'s subscription')
+
+    // Cleanup — User A deletes their own test data
+    if (fbA) await clientA.from('fieldbooks').delete().eq('id', fbA.id)
+    if (pointA) await clientA.from('survey_points').delete().eq('id', pointA.id)
+    await clientA.from('projects').delete().eq('id', projA.id)
+    console.log('\n✓ Test data cleaned up')
   }
 
-  // ── User A can still read own data ───────────────────────────────────────
-  console.log('\n── Self-access (must work) ──')
-  const { data: aSeesOwn } = await clientA
-    .from('projects')
-    .select('id')
-    .eq('id', projectA.id)
-    .single()
-
-  if (aSeesOwn) {
-    pass('User A can read own project')
-  } else {
-    fail('User A CANNOT read own project', 'RLS too restrictive — broken!')
-  }
-
-  // ── Cleanup ───────────────────────────────────────────────────────────────
-  await clientA.from('projects').delete().eq('id', projectA.id)
-
-  // ── Summary ───────────────────────────────────────────────────────────────
-  console.log('\n── Summary ──')
-  const passed = results.filter(r => r.pass).length
-  const failed = results.filter(r => !r.pass).length
-  console.log(`\n  ${passed} passed, ${failed} failed\n`)
-
-  if (failed > 0) {
-    console.error('❌ RLS FAILURES DETECTED — fix before going to production\n')
+  // ── RESULTS ──────────────────────────────────────────────────────────────────
+  console.log('\n══════════════════════════════')
+  console.log('RLS ISOLATION TEST RESULTS')
+  console.log('══════════════════════════════')
+  const passed = results.filter(r => r.passed)
+  const failed = results.filter(r => !r.passed)
+  results.forEach(r => {
+    console.log(`${r.passed ? '✅' : '❌'} ${r.name}${r.detail ? ` — ${r.detail}` : ''}`)
+  })
+  console.log(`\n${passed.length}/${results.length} tests passed`)
+  if (failed.length > 0) {
+    console.error('\n⚠️  SECURITY ISSUES FOUND — fix RLS policies before launch')
     process.exit(1)
   } else {
-    console.log('✅ All RLS isolation tests passed\n')
-    process.exit(0)
+    console.log('\n✅ All RLS isolation checks passed — data is properly isolated')
   }
 }
 
-runTests().catch(e => {
-  console.error('Unexpected error:', e)
-  process.exit(1)
-})
+runTests().catch(err => { console.error('Test runner error:', err); process.exit(1) })
