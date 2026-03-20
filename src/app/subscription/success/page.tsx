@@ -98,13 +98,13 @@ export default function SubscriptionSuccessPage({
         <div className="mt-6 flex gap-3">
           <Link
             href="/dashboard"
-            className="flex-1 text-center py-3 bg-[#E8841A] text-black rounded-lg hover:bg-[#d47619]"
+            className="flex-1 text-center py-3 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)]"
           >
             Go to Dashboard
           </Link>
           <Link
             href="/checkout"
-            className="flex-1 text-center py-3 border border-[var(--border-hover)] text-[var(--text-primary)] rounded-lg hover:bg-[#0f172a]"
+            className="flex-1 text-center py-3 border border-[var(--border-hover)] text-[var(--text-primary)] rounded-lg hover:bg-[var(--bg-primary)]"
           >
             Back to Checkout
           </Link>

@@ -450,7 +450,7 @@ export default function ProjectMap({
           iconCreateFunction={(cluster: any) => {
             const count = cluster.getChildCount()
             return L.divIcon({
-              html: `<div class="bg-[#E8841A] text-white rounded-full flex items-center justify-center font-bold text-xs" style="width: 30px; height: 30px;">${count}</div>`,
+              html: `<div class="bg-[var(--accent)] text-white rounded-full flex items-center justify-center font-bold text-xs" style="width: 30px; height: 30px;">${count}</div>`,
               className: '',
               iconSize: L.point(30, 30)
             })
@@ -529,8 +529,8 @@ export default function ProjectMap({
 
       {/* Mode indicator */}
       {mode !== 'idle' && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] bg-[var(--bg-secondary)]/95 border border-[#E8841A] rounded-lg px-4 py-2">
-          <span className="text-sm text-[#E8841A] font-semibold">{getModeLabel()}</span>
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] bg-[var(--bg-secondary)]/95 border border-[var(--accent)] rounded-lg px-4 py-2">
+          <span className="text-sm text-[var(--accent)] font-semibold">{getModeLabel()}</span>
           <span className="text-xs text-[var(--text-muted)] ml-2">(Esc to cancel)</span>
         </div>
       )}
@@ -547,7 +547,7 @@ export default function ProjectMap({
           <div className="space-y-1 text-xs font-mono">
             <div className="flex justify-between">
               <span className="text-[var(--text-secondary)]">Distance:</span>
-              <span className="text-[#E8841A]">{distanceInfo.distance.toFixed(4)} m</span>
+              <span className="text-[var(--accent)]">{distanceInfo.distance.toFixed(4)} m</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[var(--text-secondary)]">Bearing:</span>

@@ -137,7 +137,7 @@ export default function CSVUploadModal({
               />
               <label
                 htmlFor="csv-upload"
-                className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded transition-colors"
+                className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded transition-colors"
               >
                 {loading ? 'Parsing...' : 'Choose File'}
               </label>
@@ -158,7 +158,7 @@ export default function CSVUploadModal({
           <div className="space-y-4 flex-1 overflow-hidden flex flex-col">
             <div className="flex items-center justify-between">
               <p className="text-[var(--text-primary)]">
-                Found <span className="text-[#E8841A] font-bold">{parsedPoints.length}</span> points
+                Found <span className="text-[var(--accent)] font-bold">{parsedPoints.length}</span> points
               </p>
               <button
                 onClick={handleClose}
@@ -218,7 +218,7 @@ export default function CSVUploadModal({
               <button
                 onClick={handleImport}
                 disabled={loading}
-                className="flex-1 px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded transition-colors disabled:opacity-50"
               >
                 Import {parsedPoints.length} Points
               </button>
@@ -228,7 +228,7 @@ export default function CSVUploadModal({
 
         {step === 'importing' && (
           <div className="py-12 text-center">
-            <div className="animate-spin w-8 h-8 border-2 border-[#E8841A] border-t-transparent rounded-full mx-auto mb-4"></div>
+            <div className="animate-spin w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-[var(--text-primary)]">Importing points...</p>
           </div>
         )}

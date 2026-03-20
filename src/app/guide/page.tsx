@@ -152,7 +152,7 @@ export default function GuidePage() {
               <Link
                 key={guide.id}
                 href={`/guide/${guide.id}`}
-                className="block bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[#E8841A]/50 rounded-xl p-6 transition-all hover:shadow-lg hover:shadow-[#E8841A]/10"
+                className="block bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[var(--accent)]/50 rounded-xl p-6 transition-all hover:shadow-lg hover:shadow-[#E8841A]/10"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="text-4xl">{guide.icon}</div>
@@ -160,7 +160,7 @@ export default function GuidePage() {
                     <div className="flex items-center gap-1">
                       <div className="w-16 h-2 bg-gray-700 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-[#E8841A] rounded-full transition-all"
+                          className="h-full bg-[var(--accent)] rounded-full transition-all"
                           style={{ width: `${progressPercent}%` }}
                         />
                       </div>
@@ -181,7 +181,7 @@ export default function GuidePage() {
                 
                 {completedSteps > 0 && completedSteps < guide.steps && (
                   <div className="mt-4 pt-4 border-t border-[var(--border-color)]">
-                    <div className="text-xs text-[#E8841A]">
+                    <div className="text-xs text-[var(--accent)]">
                       Continue where you left off →
                     </div>
                   </div>

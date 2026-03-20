@@ -56,10 +56,10 @@ export default function MobileNav() {
               key={item.href}
               href={item.href}
               className={`flex flex-col items-center justify-center gap-1 px-3 py-2 text-[10px] font-medium tracking-wide transition-colors min-w-0 flex-1 ${
-                isActive ? 'text-[#E8841A]' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                isActive ? 'text-[var(--accent)]' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
               }`}
             >
-              <span className={`w-5 h-5 transition-colors ${isActive ? 'text-[#E8841A]' : ''}`}>
+              <span className={`w-5 h-5 transition-colors ${isActive ? 'text-[var(--accent)]' : ''}`}>
                 {icons[item.icon]}
               </span>
               <span className="truncate">{t(item.labelKey)}</span>

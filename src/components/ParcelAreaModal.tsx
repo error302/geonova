@@ -97,7 +97,7 @@ export default function ParcelAreaModal({ isOpen, onClose, points, onAreaResult 
         {/* Result */}
         {result && (
           <div className="mb-4 p-4 bg-[var(--bg-tertiary)]/50 rounded-lg border border-[var(--border-color)]">
-            <h3 className="text-lg font-semibold text-[#E8841A] mb-3">Parcel Area</h3>
+            <h3 className="text-lg font-semibold text-[var(--accent)] mb-3">Parcel Area</h3>
             <div className="space-y-2 font-mono">
               <div className="flex justify-between">
                 <span className="text-[var(--text-secondary)]">Area:</span>
@@ -113,7 +113,7 @@ export default function ParcelAreaModal({ isOpen, onClose, points, onAreaResult 
               </div>
               <div className="border-t border-[var(--border-color)] pt-2 mt-2 flex justify-between">
                 <span className="text-[var(--text-secondary)]">Perimeter:</span>
-                <span className="text-[#E8841A] font-semibold">{result.perimeter.toFixed(4)} m</span>
+                <span className="text-[var(--accent)] font-semibold">{result.perimeter.toFixed(4)} m</span>
               </div>
             </div>
           </div>
@@ -129,7 +129,7 @@ export default function ParcelAreaModal({ isOpen, onClose, points, onAreaResult 
           {selectedPoints.length >= 3 && !result && (
             <button
               onClick={calculateArea}
-              className="flex-1 px-6 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded"
+              className="flex-1 px-6 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded"
             >
               Calculate Area
             </button>
@@ -137,7 +137,7 @@ export default function ParcelAreaModal({ isOpen, onClose, points, onAreaResult 
           {result && (
             <button
               onClick={onClose}
-              className="flex-1 px-6 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded"
+              className="flex-1 px-6 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded"
             >
               Done
             </button>

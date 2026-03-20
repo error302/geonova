@@ -72,9 +72,9 @@ export default function CurvesCalculator() {
       <p className="text-sm text-[var(--text-muted)] mb-8">Horizontal curve calculations</p>
 
       <div className="flex gap-2 mb-6 flex-wrap">
-        <button onClick={() => { setCurveType('simple'); setResult(null); }} className={`px-4 py-2 rounded-lg font-medium ${curveType === 'simple' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Simple Curve</button>
-        <button onClick={() => { setCurveType('compound'); setResult(null); }} className={`px-4 py-2 rounded-lg font-medium ${curveType === 'compound' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Compound Curve</button>
-        <button onClick={() => { setCurveType('reverse'); setResult(null); }} className={`px-4 py-2 rounded-lg font-medium ${curveType === 'reverse' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Reverse Curve</button>
+        <button onClick={() => { setCurveType('simple'); setResult(null); }} className={`px-4 py-2 rounded-lg font-medium ${curveType === 'simple' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Simple Curve</button>
+        <button onClick={() => { setCurveType('compound'); setResult(null); }} className={`px-4 py-2 rounded-lg font-medium ${curveType === 'compound' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Compound Curve</button>
+        <button onClick={() => { setCurveType('reverse'); setResult(null); }} className={`px-4 py-2 rounded-lg font-medium ${curveType === 'reverse' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Reverse Curve</button>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
@@ -121,7 +121,7 @@ export default function CurvesCalculator() {
               </>
             )}
           </div>
-          <button onClick={calculate} className="w-full px-6 py-4 bg-[#E8841A] hover:bg-[#d67715] text-black font-bold rounded-lg">Calculate</button>
+          <button onClick={calculate} className="w-full px-6 py-4 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-bold rounded-lg">Calculate</button>
         </div>
 
         {result && (

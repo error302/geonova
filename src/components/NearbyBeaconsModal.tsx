@@ -105,7 +105,7 @@ export default function NearbyBeaconsModal({
         <div className="flex-1 overflow-y-auto p-4">
           {loading ? (
             <div className="flex items-center justify-center py-8">
-              <div className="animate-spin w-6 h-6 border-2 border-[#E8841A] border-t-transparent rounded-full"></div>
+              <div className="animate-spin w-6 h-6 border-2 border-[var(--accent)] border-t-transparent rounded-full"></div>
             </div>
           ) : beacons.length === 0 ? (
             <p className="text-[var(--text-muted)] text-center py-8">No verified beacons found</p>
@@ -117,7 +117,7 @@ export default function NearbyBeaconsModal({
                   onClick={() => setSelectedBeacon(beacon)}
                   className={`w-full p-3 rounded-lg text-left transition-colors ${
                     selectedBeacon?.id === beacon.id 
-                      ? 'bg-[#E8841A]/20 border border-[#E8841A]' 
+                      ? 'bg-[var(--accent)]/20 border border-[var(--accent)]' 
                       : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] border border-transparent'
                   }`}
                 >
@@ -125,7 +125,7 @@ export default function NearbyBeaconsModal({
                     <span className="font-medium text-[var(--text-primary)]">
                       {getMarkerIcon(beacon.beacon_type)} {beacon.name}
                     </span>
-                    <span className="text-sm text-[#E8841A]">
+                    <span className="text-sm text-[var(--accent)]">
                       {(beacon.distance / 1000).toFixed(1)} km
                     </span>
                   </div>
@@ -142,7 +142,7 @@ export default function NearbyBeaconsModal({
           <div className="p-4 border-t border-[var(--border-color)]">
             <button
               onClick={handleImport}
-              className="w-full py-3 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded-lg"
+              className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg"
             >
               Import to Project
             </button>

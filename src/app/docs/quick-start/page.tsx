@@ -32,7 +32,7 @@ export default function QuickStartPage() {
   return (
     <div className="min-h-screen py-16">
       <div className="max-w-4xl mx-auto px-6">
-        <Link href="/docs" className="text-[#E8841A] hover:underline mb-8 inline-block">
+        <Link href="/docs" className="text-[var(--accent)] hover:underline mb-8 inline-block">
           ← Back to Documentation
         </Link>
 
@@ -41,7 +41,7 @@ export default function QuickStartPage() {
         <div className="space-y-8">
           {steps.map((step) => (
             <div key={step.number} className="flex gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-[#E8841A] rounded-full flex items-center justify-center text-black font-bold text-xl">
+              <div className="flex-shrink-0 w-12 h-12 bg-[var(--accent)] rounded-full flex items-center justify-center text-black font-bold text-xl">
                 {step.number}
               </div>
               <div className="flex-1">
@@ -59,7 +59,7 @@ export default function QuickStartPage() {
           </p>
           <Link
             href="/dashboard"
-            className="inline-block px-6 py-3 bg-[#E8841A] text-black font-semibold rounded-lg hover:bg-[#d47619]"
+            className="inline-block px-6 py-3 bg-[var(--accent)] text-black font-semibold rounded-lg hover:bg-[var(--accent-dim)]"
           >
             Go to Dashboard →
           </Link>
@@ -70,28 +70,28 @@ export default function QuickStartPage() {
           <div className="grid md:grid-cols-2 gap-4">
             <Link
               href="/docs/csv-import"
-              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[#E8841A] transition-colors"
+              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)] transition-colors"
             >
               <h4 className="text-[var(--text-primary)] font-semibold mb-1">Learn CSV Import</h4>
               <p className="text-[var(--text-secondary)] text-sm">Import your field notes automatically</p>
             </Link>
             <Link
               href="/guide"
-              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[#E8841A] transition-colors"
+              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)] transition-colors"
             >
               <h4 className="text-[var(--text-primary)] font-semibold mb-1">Field Guide</h4>
               <p className="text-[var(--text-secondary)] text-sm">Step-by-step survey workflows</p>
             </Link>
             <Link
               href="/tools/leveling"
-              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[#E8841A] transition-colors"
+              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)] transition-colors"
             >
               <h4 className="text-[var(--text-primary)] font-semibold mb-1">Leveling Calculator</h4>
               <p className="text-[var(--text-secondary)] text-sm">Calculate elevations with arithmetic checks</p>
             </Link>
             <Link
               href="/community"
-              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[#E8841A] transition-colors"
+              className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)] transition-colors"
             >
               <h4 className="text-[var(--text-primary)] font-semibold mb-1">Join Community</h4>
               <p className="text-[var(--text-secondary)] text-sm">Connect with other surveyors</p>

@@ -66,7 +66,7 @@ export default function SubmitBeaconPage() {
           <div className="flex gap-3 justify-center">
             <Link 
               href="/beacons" 
-              className="px-6 py-3 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded-lg"
+              className="px-6 py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg"
             >
               View Beacons Map
             </Link>
@@ -89,7 +89,7 @@ export default function SubmitBeaconPage() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <Link href="/beacons" className="text-[#E8841A] hover:underline mb-4 inline-block">
+        <Link href="/beacons" className="text-[var(--accent)] hover:underline mb-4 inline-block">
           ← Back to Beacons Map
         </Link>
         
@@ -244,7 +244,7 @@ export default function SubmitBeaconPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 bg-[#E8841A] hover:bg-[#d67715] text-black font-bold rounded-lg disabled:opacity-50"
+            className="w-full py-4 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-bold rounded-lg disabled:opacity-50"
           >
             {loading ? 'Submitting...' : 'Submit Beacon'}
           </button>

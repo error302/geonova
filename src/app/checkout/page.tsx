@@ -105,7 +105,7 @@ export default function CheckoutPage() {
           {[1, 2, 3].map((s) => (
             <div
               key={s}
-              className={`flex-1 h-2 rounded ${step >= (s as any) ? 'bg-[#E8841A]' : 'bg-[var(--bg-tertiary)]'}`}
+              className={`flex-1 h-2 rounded ${step >= (s as any) ? 'bg-[var(--accent)]' : 'bg-[var(--bg-tertiary)]'}`}
             />
           ))}
         </div>
@@ -151,7 +151,7 @@ export default function CheckoutPage() {
                   type="button"
                   onClick={() => setSelectedPlanId(p.id)}
                   className={`w-full text-left p-4 border-2 rounded-lg transition ${
-                    selectedPlanId === p.id ? 'border-[#E8841A] bg-[#E8841A]/10' : 'border-[var(--border-color)] hover:border-[var(--border-hover)]'
+                    selectedPlanId === p.id ? 'border-[var(--accent)] bg-[var(--accent)]/10' : 'border-[var(--border-color)] hover:border-[var(--border-hover)]'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-4">
@@ -160,7 +160,7 @@ export default function CheckoutPage() {
                       <div className="text-[var(--text-muted)] text-sm">{p.features.slice(0, 2).join(' • ')}</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-[#E8841A] font-bold text-2xl">{formatPrice(p.prices[currency])}</div>
+                      <div className="text-[var(--accent)] font-bold text-2xl">{formatPrice(p.prices[currency])}</div>
                       <div className="text-[var(--text-muted)] text-xs">/month</div>
                     </div>
                   </div>
@@ -170,7 +170,7 @@ export default function CheckoutPage() {
 
             <button
               onClick={() => setStep(2)}
-              className="w-full mt-6 py-3 bg-[#E8841A] text-black rounded-lg hover:bg-[#d47619]"
+              className="w-full mt-6 py-3 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)]"
             >
               Continue
             </button>
@@ -212,7 +212,7 @@ export default function CheckoutPage() {
                   <label
                     key={pm.id}
                     className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer ${
-                      method === pm.type ? 'border-[#E8841A] bg-[#E8841A]/10' : 'border-[var(--border-color)]'
+                      method === pm.type ? 'border-[var(--accent)] bg-[var(--accent)]/10' : 'border-[var(--border-color)]'
                     }`}
                   >
                     <input
@@ -238,7 +238,7 @@ export default function CheckoutPage() {
               <button
                 onClick={() => setStep(3)}
                 disabled={!canContinueDetails}
-                className="flex-1 py-3 bg-[#E8841A] text-black rounded-lg hover:bg-[#d47619] disabled:bg-gray-700 disabled:text-[var(--text-primary)]"
+                className="flex-1 py-3 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] disabled:bg-gray-700 disabled:text-[var(--text-primary)]"
               >
                 Review Order
               </button>
@@ -265,7 +265,7 @@ export default function CheckoutPage() {
               </div>
               <div className="flex items-center justify-between border-t border-[var(--border-color)] pt-2 mt-2 text-[var(--text-primary)]">
                 <span className="font-semibold">Total</span>
-                <span className="font-bold text-lg text-[#E8841A]">{formatPrice(plan.prices[currency])}</span>
+                <span className="font-bold text-lg text-[var(--accent)]">{formatPrice(plan.prices[currency])}</span>
               </div>
             </div>
 
@@ -283,7 +283,7 @@ export default function CheckoutPage() {
               <button
                 onClick={onStart}
                 disabled={processing}
-                className="flex-1 py-3 bg-[#E8841A] text-black rounded-lg hover:bg-[#d47619] disabled:bg-gray-700 disabled:text-[var(--text-primary)]"
+                className="flex-1 py-3 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] disabled:bg-gray-700 disabled:text-[var(--text-primary)]"
               >
                 {processing ? 'Starting payment…' : 'Pay Now'}
               </button>
@@ -315,7 +315,7 @@ export default function CheckoutPage() {
                 }
               }}
               disabled={processing}
-              className="w-full py-3 bg-[#E8841A] text-black rounded-lg hover:bg-[#d47619] disabled:bg-gray-700 disabled:text-[var(--text-primary)]"
+              className="w-full py-3 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] disabled:bg-gray-700 disabled:text-[var(--text-primary)]"
             >
               {processing ? 'Checking…' : 'Verify Payment'}
             </button>

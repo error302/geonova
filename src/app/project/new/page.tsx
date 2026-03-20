@@ -135,7 +135,7 @@ export default function NewProjectPage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
+              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
               required
               placeholder="My Survey Project"
             />
@@ -146,7 +146,7 @@ export default function NewProjectPage() {
             <textarea
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)] h-24 resize-none"
+              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)] h-24 resize-none"
               placeholder="Project location or description..."
             />
           </div>
@@ -158,7 +158,7 @@ export default function NewProjectPage() {
                 type="number"
                 value={utmZone}
                 onChange={(e) => setUtmZone(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
+                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
                 min={1}
                 max={60}
                 required
@@ -175,7 +175,7 @@ export default function NewProjectPage() {
               <select
                 value={hemisphere}
                 onChange={(e) => setHemisphere(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
+                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
               >
                 <option value="N">N — Northern</option>
                 <option value="S">S — Southern</option>
@@ -198,7 +198,7 @@ export default function NewProjectPage() {
             <select
               value={surveyType}
               onChange={(e) => setSurveyType(e.target.value)}
-              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
+              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
             >
               <option value="boundary">Boundary Survey</option>
               <option value="topographic">Topographic Survey</option>
@@ -221,7 +221,7 @@ export default function NewProjectPage() {
                 type="text"
                 value={clientName}
                 onChange={(e) => setClientName(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
+                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
                 placeholder="e.g., Kenya National Highways Authority"
               />
             </div>
@@ -232,7 +232,7 @@ export default function NewProjectPage() {
                 type="text"
                 value={surveyorName}
                 onChange={(e) => setSurveyorName(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
+                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
                 placeholder="Your name or company"
               />
             </div>
@@ -248,7 +248,7 @@ export default function NewProjectPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-3 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded transition-colors disabled:opacity-50"
+              className="flex-1 py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded transition-colors disabled:opacity-50"
             >
               {loading ? 'Creating...' : 'Create Project'}
             </button>

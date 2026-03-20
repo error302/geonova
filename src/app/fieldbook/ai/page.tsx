@@ -196,13 +196,13 @@ export default function FieldBookAIPage() {
             <div className="flex gap-2 mb-4">
               <button
                 onClick={() => setInputMethod('text')}
-                className={`px-4 py-2 rounded text-sm ${inputMethod === 'text' ? 'bg-[#E8841A] text-black font-semibold' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}
+                className={`px-4 py-2 rounded text-sm ${inputMethod === 'text' ? 'bg-[var(--accent)] text-black font-semibold' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}
               >
                 Text Notes
               </button>
               <button
                 onClick={() => setInputMethod('photo')}
-                className={`px-4 py-2 rounded text-sm ${inputMethod === 'photo' ? 'bg-[#E8841A] text-black font-semibold' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}
+                className={`px-4 py-2 rounded text-sm ${inputMethod === 'photo' ? 'bg-[var(--accent)] text-black font-semibold' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}
               >
                 Photo
               </button>
@@ -241,7 +241,7 @@ export default function FieldBookAIPage() {
             <button
               onClick={handleInterpret}
               disabled={loading}
-              className="w-full mt-4 px-6 py-4 bg-[#E8841A] hover:bg-[#d67715] text-black font-bold rounded-lg disabled:opacity-50"
+              className="w-full mt-4 px-6 py-4 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-bold rounded-lg disabled:opacity-50"
             >
               {loading ? 'Interpreting...' : '🔍 Interpret Notes'}
             </button>
@@ -260,7 +260,7 @@ export default function FieldBookAIPage() {
 
                 <div className="mb-4 p-3 bg-[var(--bg-tertiary)]/50 rounded">
                   <span className="text-[var(--text-secondary)]">Survey Type Detected: </span>
-                  <span className="text-[#E8841A] font-medium uppercase">{result.survey_type}</span>
+                  <span className="text-[var(--accent)] font-medium uppercase">{result.survey_type}</span>
                 </div>
 
                 <div className="overflow-x-auto">

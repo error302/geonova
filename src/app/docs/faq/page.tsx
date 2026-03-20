@@ -91,7 +91,7 @@ export default function FAQPage() {
   return (
     <div className="min-h-screen py-16">
       <div className="max-w-4xl mx-auto px-6">
-        <Link href="/docs" className="text-[#E8841A] hover:underline mb-8 inline-block">
+        <Link href="/docs" className="text-[var(--accent)] hover:underline mb-8 inline-block">
           ← Back to Documentation
         </Link>
 
@@ -123,7 +123,7 @@ export default function FAQPage() {
           ))}
         </div>
 
-        <div className="mt-16 bg-gradient-to-r from-[#E8841A]/20 to-transparent border border-[#E8841A]/30 rounded-xl p-8 text-center">
+        <div className="mt-16 bg-gradient-to-r from-[#E8841A]/20 to-transparent border border-[var(--accent)]/30 rounded-xl p-8 text-center">
           <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-4">Still Have Questions?</h2>
           <p className="text-[var(--text-secondary)] mb-6">
             Can't find what you're looking for? We're here to help.
@@ -131,13 +131,13 @@ export default function FAQPage() {
           <div className="flex gap-4 justify-center">
             <a
               href="mailto:support@geonova.app"
-              className="px-6 py-3 bg-[#E8841A] text-black font-semibold rounded-lg hover:bg-[#d47619]"
+              className="px-6 py-3 bg-[var(--accent)] text-black font-semibold rounded-lg hover:bg-[var(--accent-dim)]"
             >
               Contact Support
             </a>
             <Link
               href="/community"
-              className="px-6 py-3 border border-[#E8841A] text-[#E8841A] font-semibold rounded-lg hover:bg-[#E8841A]/10"
+              className="px-6 py-3 border border-[var(--accent)] text-[var(--accent)] font-semibold rounded-lg hover:bg-[var(--accent)]/10"
             >
               Join Community
             </Link>

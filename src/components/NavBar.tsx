@@ -117,7 +117,7 @@ function Dropdown({ label, children, isOpen, onToggle, align = 'left', buttonCla
       </button>
       {isOpen && (
         <div className={`absolute top-full ${align === 'right' ? 'right-0' : 'left-0'} pt-2 z-50`}>
-          <div className={`bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl ${panelClassName ?? 'min-w-[200px] py-2'}`}>
+          <div className={`bg-[var(--bg-secondary)] border border-[#E8841A20] rounded-lg shadow-xl ${panelClassName ?? 'min-w-[200px] py-2'}`}>
             {children}
           </div>
         </div>
@@ -501,7 +501,7 @@ export default function NavBar() {
                   aria-haspopup="menu"
                   className="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)]/40 hover:border-[var(--accent)] transition-colors"
                 >
-                  <span className="w-8 h-8 rounded-full bg-[#E8841A]/20 border border-[#E8841A]/30 text-[#E8841A] flex items-center justify-center font-bold">
+                  <span className="w-8 h-8 rounded-full bg-[var(--accent)]/20 border border-[var(--accent)]/30 text-[var(--accent)] flex items-center justify-center font-bold">
                     {(user.email || 'U').slice(0, 1).toUpperCase()}
                   </span>
                   <span className="hidden lg:inline text-sm text-[var(--text-primary)] max-w-[180px] truncate">{user.email}</span>
@@ -512,7 +512,7 @@ export default function NavBar() {
 
                 {openDropdown === 'user' && (
                   <div className="absolute top-full right-0 pt-2 z-50">
-                    <div className="bg-[#111118] border border-[#E8841A20] rounded-lg shadow-xl min-w-[220px] py-2">
+                    <div className="bg-[var(--bg-secondary)] border border-[#E8841A20] rounded-lg shadow-xl min-w-[220px] py-2">
                       <div className="px-4 py-2">
                         <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold mb-2">{t('nav.dashboard')}</div>
                         <Link
@@ -562,10 +562,10 @@ export default function NavBar() {
               </div>
             ) : (
               <div className="hidden md:flex items-center gap-2">
-                <Link href="/login" className="px-4 py-2 text-sm border border-[#E8841A] text-[#E8841A] rounded hover:bg-[#E8841A]/10 transition-colors">
+                <Link href="/login" className="px-4 py-2 text-sm border border-[var(--accent)] text-[var(--accent)] rounded hover:bg-[var(--accent)]/10 transition-colors">
                   {t('nav.login')}
                 </Link>
-                <Link href="/register" className="px-4 py-2 text-sm bg-[#E8841A] text-black font-semibold rounded hover:bg-[#d67715] transition-colors">
+                <Link href="/register" className="px-4 py-2 text-sm bg-[var(--accent)] text-black font-semibold rounded hover:bg-[var(--accent-dim)] transition-colors">
                   {t('nav.register')}
                 </Link>
               </div>
@@ -630,10 +630,10 @@ export default function NavBar() {
               {!user && (
                 <>
                   <div className="border-t border-[var(--border-color)] my-2"></div>
-                  <Link href="/login" className="block px-4 py-2 text-[#E8841A]">
+                  <Link href="/login" className="block px-4 py-2 text-[var(--accent)]">
                     {t('nav.login')}
                   </Link>
-                  <Link href="/register" className="block px-4 py-2 text-[#E8841A] font-semibold">
+                  <Link href="/register" className="block px-4 py-2 text-[var(--accent)] font-semibold">
                     {t('nav.register')}
                   </Link>
                 </>

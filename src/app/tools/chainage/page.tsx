@@ -143,7 +143,7 @@ export default function ChainageCalculator() {
             </div>
           </div>
 
-          <button onClick={calculate} className="w-full px-6 py-4 bg-[#E8841A] hover:bg-[#d67715] text-black font-bold rounded-lg">
+          <button onClick={calculate} className="w-full px-6 py-4 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-bold rounded-lg">
             Calculate Chainages
           </button>
 
@@ -196,7 +196,7 @@ export default function ChainageCalculator() {
                       <td className="py-2 text-[var(--text-primary)] font-medium">{r.pointName}</td>
                       <td className="py-2 text-right font-mono text-[var(--text-primary)]">{r.easting.toFixed(3)}</td>
                       <td className="py-2 text-right font-mono text-[var(--text-primary)]">{r.northing.toFixed(3)}</td>
-                      <td className="py-2 text-right font-mono text-[#E8841A]">{formatChainage(r.chainage)}</td>
+                      <td className="py-2 text-right font-mono text-[var(--accent)]">{formatChainage(r.chainage)}</td>
                       <td className="py-2 text-right font-mono text-[var(--text-secondary)]">
                         {r.distance > 0 ? r.distance.toFixed(3) + ' m' : '—'}
                       </td>

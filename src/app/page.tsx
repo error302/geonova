@@ -27,7 +27,7 @@ export default function Home() {
               <>
                 <h1 className="text-5xl md:text-7xl font-bold mb-4">
                   <span className="text-[var(--text-primary)]">Professional </span>
-                  <span className="text-[#E8841A]">Surveying</span>
+                  <span className="text-[var(--accent)]">Surveying</span>
                 </h1>
                 <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">Made Simple</h1>
               </>
@@ -42,13 +42,13 @@ export default function Home() {
             <div className="flex flex-wrap gap-4">
               <a
                 href="/register"
-                className="px-8 py-4 bg-[#E8841A] text-black font-semibold rounded-lg hover:bg-[#d47619] transition-colors"
+                className="px-8 py-4 bg-[var(--accent)] text-black font-semibold rounded-lg hover:bg-[var(--accent-dim)] transition-colors"
               >
                 {t('landing.getStarted')}
               </a>
               <a
                 href="/tools"
-                className="px-8 py-4 border-2 border-[#E8841A] text-[#E8841A] font-semibold rounded-lg hover:bg-[#E8841A] hover:text-black transition-colors"
+                className="px-8 py-4 border-2 border-[var(--accent)] text-[var(--accent)] font-semibold rounded-lg hover:bg-[var(--accent)] hover:text-black transition-colors"
               >
                 {t('tools.quickTools')}
               </a>
@@ -74,7 +74,7 @@ export default function Home() {
           <div className="hidden lg:block">
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-[#E8841A] to-[#E8841A]/20 rounded-2xl blur-3xl"></div>
-              <div className="relative bg-[#111] rounded-xl border border-[var(--border-color)] p-4 shadow-2xl">
+              <div className="relative bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-4 shadow-2xl">
                 <div className="aspect-video bg-[var(--bg-primary)] rounded-lg overflow-hidden relative">
                   <svg className="w-full h-full" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg">
                     <rect fill="#0f172a" width="400" height="225"/>
@@ -94,11 +94,11 @@ export default function Home() {
                   </svg>
                 </div>
                 <div className="flex gap-2 mt-3">
-                  <div className="h-8 flex-1 bg-[#1e293b] rounded flex items-center px-3">
+                  <div className="h-8 flex-1 bg-[var(--bg-tertiary)] rounded flex items-center px-3">
                     <span className="text-xs text-[var(--text-secondary)]">Precision</span>
-                    <span className="ml-auto text-[#E8841A] text-xs font-mono">1:12,500</span>
+                    <span className="ml-auto text-[var(--accent)] text-xs font-mono">1:12,500</span>
                   </div>
-                  <div className="h-8 flex-1 bg-[#1e293b] rounded flex items-center px-3">
+                  <div className="h-8 flex-1 bg-[var(--bg-tertiary)] rounded flex items-center px-3">
                     <span className="text-xs text-[var(--text-secondary)]">Misclosure</span>
                     <span className="ml-auto text-green-500 text-xs font-mono">0.052m</span>
                   </div>
@@ -110,11 +110,11 @@ export default function Home() {
       </section>
 
       {/* Section 2: Problem Statement */}
-      <section className="py-20 bg-[#111]">
+      <section className="py-20 bg-[var(--bg-secondary)]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-8">
             Surveyors spend hours on manual calculations,
-            <span className="text-[#E8841A]"> arithmetic checks,</span> and report writing.
+            <span className="text-[var(--accent)]"> arithmetic checks,</span> and report writing.
             <br/>GeoNova eliminates that stress completely.
           </h2>
           
@@ -144,7 +144,7 @@ export default function Home() {
           
           <div className="flex items-center justify-center gap-3 mt-4">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#E8841A]/40 max-w-[120px]"></div>
-            <p className="text-[#E8841A] font-semibold text-lg tracking-wide">GeoNova solves all three</p>
+            <p className="text-[var(--accent)] font-semibold text-lg tracking-wide">GeoNova solves all three</p>
             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#E8841A]/40 max-w-[120px]"></div>
           </div>
         </div>
@@ -194,7 +194,7 @@ export default function Home() {
       </section>
 
       {/* Section 4: How It Works */}
-      <section className="py-20 bg-[#111]">
+      <section className="py-20 bg-[var(--bg-secondary)]">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] text-center mb-12">
             How It Works
@@ -235,8 +235,8 @@ export default function Home() {
                 onClick={() => setActiveTab(tool)}
                 className={`px-6 py-3 rounded-lg font-medium transition-colors ${
                   activeTab === tool
-                    ? 'bg-[#E8841A] text-black'
-                    : 'bg-[#1e293b] text-[var(--text-secondary)] hover:text-white'
+                    ? 'bg-[var(--accent)] text-black'
+                    : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-white'
                 }`}
               >
                 {tool.charAt(0).toUpperCase() + tool.slice(1)}
@@ -244,7 +244,7 @@ export default function Home() {
             ))}
           </div>
           
-          <div className="bg-[#111] rounded-xl border border-[var(--border-color)] p-6 max-w-2xl mx-auto">
+          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-6 max-w-2xl mx-auto">
             {activeTab === 'traverse' && (
               <div>
                 <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-4">Traverse Adjustment</h3>
@@ -255,7 +255,7 @@ export default function Home() {
                   <div className="text-green-400">Precision: 1 : 12,500</div>
                   <div className="text-green-400">Misclosure E: 0.042m</div>
                   <div className="text-green-400">Misclosure N: 0.031m</div>
-                  <div className="text-[#E8841A] mt-2">✓ Bowditch adjustment applied</div>
+                  <div className="text-[var(--accent)] mt-2">✓ Bowditch adjustment applied</div>
                 </div>
               </div>
             )}
@@ -268,7 +268,7 @@ export default function Home() {
                   <div className="text-[var(--text-secondary)] mt-4 mb-2">Output:</div>
                   <div className="text-green-400">ΣBS - ΣFS = 2.345m</div>
                   <div className="text-green-400">Last RL - First RL = 2.345m</div>
-                  <div className="text-[#E8841A] mt-2">✓ Arithmetic check PASSED</div>
+                  <div className="text-[var(--accent)] mt-2">✓ Arithmetic check PASSED</div>
                   <div className="text-green-400">Misclosure: ±15mm (Allowable: ±13.4mm)</div>
                 </div>
               </div>
@@ -284,7 +284,7 @@ export default function Home() {
                   <div className="text-[var(--text-primary)]">• Side Shot</div>
                   <div className="text-[var(--text-primary)]">• Offset</div>
                   <div className="text-[var(--text-primary)]">• Missing Line</div>
-                  <div className="text-[#E8841A] mt-2">✓ Full working shown</div>
+                  <div className="text-[var(--accent)] mt-2">✓ Full working shown</div>
                 </div>
               </div>
             )}
@@ -307,7 +307,7 @@ export default function Home() {
       </section>
 
       {/* Section 6: Testimonials */}
-      <section className="py-20 bg-[#111]">
+      <section className="py-20 bg-[var(--bg-secondary)]">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] text-center mb-4">
             What Surveyors Say
@@ -396,7 +396,7 @@ export default function Home() {
       </section>
 
       {/* Section 8: Survey Guide Preview */}
-      <section className="py-20 bg-[#111]">
+      <section className="py-20 bg-[var(--bg-secondary)]">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] text-center mb-4">
             AI Field Guide
@@ -424,7 +424,7 @@ export default function Home() {
           <div className="text-center">
             <a
               href="/guide"
-              className="inline-flex items-center text-[#E8841A] hover:underline font-medium"
+              className="inline-flex items-center text-[var(--accent)] hover:underline font-medium"
             >
               View All Guides →
             </a>
@@ -435,7 +435,7 @@ export default function Home() {
       {/* Section 9: Mobile App Banner */}
       <section className="py-20 bg-[var(--bg-primary)]">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-gradient-to-r from-[#E8841A]/20 to-transparent rounded-2xl p-12 border border-[#E8841A]/30">
+          <div className="bg-gradient-to-r from-[#E8841A]/20 to-transparent rounded-2xl p-12 border border-[var(--accent)]/30">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-4">
@@ -444,25 +444,25 @@ export default function Home() {
                 <p className="text-[var(--text-secondary)] mb-8">
                   Install GeoNova on your Android phone. Works offline. Syncs when you are back online.
                 </p>
-                <div className="bg-[#1e293b] p-4 rounded-lg inline-block">
+                <div className="bg-[var(--bg-tertiary)] p-4 rounded-lg inline-block">
                   <p className="text-sm text-[var(--text-secondary)] mb-2">Add to Home Screen:</p>
                   <p className="text-[var(--text-primary)] text-sm">Open in Chrome → Menu → Add to Home Screen</p>
                 </div>
               </div>
               
               <div className="flex justify-center">
-                <div className="w-48 h-80 bg-[#111] rounded-3xl border-4 border-[var(--border-color)] relative overflow-hidden">
+                <div className="w-48 h-80 bg-[var(--bg-secondary)] rounded-3xl border-4 border-[var(--border-color)] relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-b from-[#E8841A]/10 to-transparent"></div>
                   <div className="p-4 pt-8">
-                    <div className="text-xs text-[#E8841A] mb-2">Field Mode</div>
+                    <div className="text-xs text-[var(--accent)] mb-2">Field Mode</div>
                     <div className="space-y-2">
-                      <div className="bg-[#1e293b] p-2 rounded text-xs text-white">Points</div>
-                      <div className="bg-[#1e293b] p-2 rounded text-xs text-white">Traverse</div>
-                      <div className="bg-[#1e293b] p-2 rounded text-xs text-white">Leveling</div>
-                      <div className="bg-[#1e293b] p-2 rounded text-xs text-white">Radiation</div>
+                      <div className="bg-[var(--bg-tertiary)] p-2 rounded text-xs text-white">Points</div>
+                      <div className="bg-[var(--bg-tertiary)] p-2 rounded text-xs text-white">Traverse</div>
+                      <div className="bg-[var(--bg-tertiary)] p-2 rounded text-xs text-white">Leveling</div>
+                      <div className="bg-[var(--bg-tertiary)] p-2 rounded text-xs text-white">Radiation</div>
                     </div>
                     <div className="absolute bottom-4 left-4 right-4">
-                      <div className="bg-[#E8841A] text-black text-center py-2 rounded-lg text-sm font-medium">
+                      <div className="bg-[var(--accent)] text-black text-center py-2 rounded-lg text-sm font-medium">
                         📲 Add to Home Screen
                       </div>
                     </div>
@@ -481,31 +481,31 @@ export default function Home() {
             <div>
               <h3 className="text-[var(--text-primary)] font-bold text-lg mb-4">GeoNova</h3>
               <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
-                <li><a href="#" className="hover:text-[#E8841A]">About</a></li>
-                <li><a href="#" className="hover:text-[#E8841A]">Blog</a></li>
-                <li><a href="#" className="hover:text-[#E8841A]">Careers</a></li>
-                <li><a href="#" className="hover:text-[#E8841A]">Contact</a></li>
+                <li><a href="#" className="hover:text-[var(--accent)]">About</a></li>
+                <li><a href="#" className="hover:text-[var(--accent)]">Blog</a></li>
+                <li><a href="#" className="hover:text-[var(--accent)]">Careers</a></li>
+                <li><a href="#" className="hover:text-[var(--accent)]">Contact</a></li>
               </ul>
             </div>
             
             <div>
               <h3 className="text-[var(--text-primary)] font-bold text-lg mb-4">Tools</h3>
               <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
-                <li><a href="/tools/distance" className="hover:text-[#E8841A]">Distance & Bearing</a></li>
-                <li><a href="/tools/traverse" className="hover:text-[#E8841A]">Traverse</a></li>
-                <li><a href="/tools/leveling" className="hover:text-[#E8841A]">Leveling</a></li>
-                <li><a href="/tools/cogo" className="hover:text-[#E8841A]">COGO</a></li>
-                <li><a href="/tools/curves" className="hover:text-[#E8841A]">Curves</a></li>
+                <li><a href="/tools/distance" className="hover:text-[var(--accent)]">Distance & Bearing</a></li>
+                <li><a href="/tools/traverse" className="hover:text-[var(--accent)]">Traverse</a></li>
+                <li><a href="/tools/leveling" className="hover:text-[var(--accent)]">Leveling</a></li>
+                <li><a href="/tools/cogo" className="hover:text-[var(--accent)]">COGO</a></li>
+                <li><a href="/tools/curves" className="hover:text-[var(--accent)]">Curves</a></li>
               </ul>
             </div>
             
             <div>
               <h3 className="text-[var(--text-primary)] font-bold text-lg mb-4">Resources</h3>
               <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
-                <li><a href="/guide" className="hover:text-[#E8841A]">Field Guide</a></li>
-                <li><a href="/docs" className="hover:text-[#E8841A]">Documentation</a></li>
-                <li><a href="/docs/csv-import" className="hover:text-[#E8841A]">Sample Files</a></li>
-                <li><a href="#" className="hover:text-[#E8841A]">Basak Standards</a></li>
+                <li><a href="/guide" className="hover:text-[var(--accent)]">Field Guide</a></li>
+                <li><a href="/docs" className="hover:text-[var(--accent)]">Documentation</a></li>
+                <li><a href="/docs/csv-import" className="hover:text-[var(--accent)]">Sample Files</a></li>
+                <li><a href="#" className="hover:text-[var(--accent)]">Basak Standards</a></li>
               </ul>
             </div>
             
@@ -513,9 +513,9 @@ export default function Home() {
               <h3 className="text-[var(--text-primary)] font-bold text-lg mb-4">Connect</h3>
               <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
                 <li>support@geonova.app</li>
-                <li><a href="/community" className="hover:text-[#E8841A]">WhatsApp Community</a></li>
-                <li><a href="/community" className="hover:text-[#E8841A]">Twitter/X</a></li>
-                <li><a href="/community" className="hover:text-[#E8841A]">LinkedIn</a></li>
+                <li><a href="/community" className="hover:text-[var(--accent)]">WhatsApp Community</a></li>
+                <li><a href="/community" className="hover:text-[var(--accent)]">Twitter/X</a></li>
+                <li><a href="/community" className="hover:text-[var(--accent)]">LinkedIn</a></li>
               </ul>
             </div>
           </div>
@@ -546,7 +546,7 @@ export default function Home() {
 
 function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc: string }) {
   return (
-    <div className="bg-[#111] p-6 rounded-xl border border-[var(--border-color)] hover:border-[#E8841A] transition-colors">
+    <div className="bg-[var(--bg-secondary)] p-6 rounded-xl border border-[var(--border-color)] hover:border-[var(--accent)] transition-colors">
       <div className="text-3xl mb-4">{icon}</div>
       <h3 className="text-[var(--text-primary)] font-semibold mb-2">{title}</h3>
       <p className="text-[var(--text-secondary)] text-sm">{desc}</p>
@@ -557,7 +557,7 @@ function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc:
 function StepCard({ number, title, desc }: { number: string; title: string; desc: string }) {
   return (
     <div className="text-center">
-      <div className="w-16 h-16 bg-[#E8841A] rounded-full flex items-center justify-center text-2xl font-bold text-black mx-auto mb-4">
+      <div className="w-16 h-16 bg-[var(--accent)] rounded-full flex items-center justify-center text-2xl font-bold text-black mx-auto mb-4">
         {number}
       </div>
       <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-2">{title}</h3>
@@ -589,25 +589,25 @@ function PricingCard({ tier, price, features, cta, popular }: {
   popular: boolean;
 }) {
   return (
-    <div className={`bg-[#111] p-6 rounded-xl border ${popular ? 'border-[#E8841A]' : 'border-[var(--border-color)]'} relative`}>
+    <div className={`bg-[var(--bg-secondary)] p-6 rounded-xl border ${popular ? 'border-[var(--accent)]' : 'border-[var(--border-color)]'} relative`}>
       {popular && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E8841A] text-black text-xs font-bold px-3 py-1 rounded-full">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--accent)] text-black text-xs font-bold px-3 py-1 rounded-full">
           Most Popular
         </div>
       )}
       <h3 className="text-[var(--text-primary)] font-bold text-lg mb-2">{tier}</h3>
-      <p className="text-[#E8841A] text-2xl font-bold mb-4">{price}</p>
+      <p className="text-[var(--accent)] text-2xl font-bold mb-4">{price}</p>
       <ul className="space-y-2 mb-6">
         {features.map((feature, i) => (
           <li key={i} className="text-[var(--text-secondary)] text-sm flex items-center gap-2">
-            <span className="text-[#E8841A]">✓</span> {feature}
+            <span className="text-[var(--accent)]">✓</span> {feature}
           </li>
         ))}
       </ul>
       <button className={`w-full py-3 rounded-lg font-medium transition-colors ${
         popular 
-          ? 'bg-[#E8841A] text-black hover:bg-[#d47619]' 
-          : 'bg-[#1e293b] text-white hover:bg-[#334155]'
+          ? 'bg-[var(--accent)] text-black hover:bg-[var(--accent-dim)]' 
+          : 'bg-[var(--bg-tertiary)] text-white hover:bg-[var(--bg-tertiary)]'
       }`}>
         {cta}
       </button>
@@ -617,7 +617,7 @@ function PricingCard({ tier, price, features, cta, popular }: {
 
 function GuideCard({ icon, title, steps }: { icon: string; title: string; steps: string }) {
   return (
-    <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[var(--border-color)] hover:border-[#E8841A] transition-colors text-center">
+    <div className="bg-[var(--bg-primary)] p-6 rounded-xl border border-[var(--border-color)] hover:border-[var(--accent)] transition-colors text-center">
       <div className="text-4xl mb-3">{icon}</div>
       <h3 className="text-[var(--text-primary)] font-semibold mb-1">{title}</h3>
       <p className="text-[var(--text-muted)] text-sm">{steps}</p>

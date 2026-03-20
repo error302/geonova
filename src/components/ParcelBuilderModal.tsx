@@ -194,7 +194,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
                             isAlreadySelected
                               ? canClose
                                 ? 'bg-green-900/40 border border-green-700 text-green-200 hover:bg-green-900/60'
-                                : 'bg-[#E8841A] text-black'
+                                : 'bg-[var(--accent)] text-black'
                               : isSelecting
                                 ? 'bg-gray-700 hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
                                 : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-not-allowed'
@@ -220,7 +220,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
                   <h4 className="text-sm font-semibold text-[var(--text-primary)] mb-2">Selected Boundary ({selectedPoints.length})</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedPoints.map((p, idx) => (
-                      <span key={p.id} className="px-2 py-1 bg-[#E8841A]/20 text-[#E8841A] rounded text-sm">
+                      <span key={p.id} className="px-2 py-1 bg-[var(--accent)]/20 text-[var(--accent)] rounded text-sm">
                         {p.name}
                         {idx < selectedPoints.length - 1 && ' → '}
                       </span>
@@ -336,7 +336,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
             <button
               onClick={handleSave}
               disabled={!parcelName || saving}
-              className="px-6 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded disabled:opacity-50"
+              className="px-6 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded disabled:opacity-50"
             >
               {saving ? 'Saving...' : 'Save Parcel'}
             </button>

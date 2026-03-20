@@ -67,7 +67,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
+              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
               required
             />
           </div>
@@ -78,7 +78,7 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
+              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
               required
             />
           </div>
@@ -86,7 +86,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded transition-colors disabled:opacity-50"
+            className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded transition-colors disabled:opacity-50"
           >
             {loading ? t('common.loading') : t('auth.loginButton')}
           </button>
@@ -94,7 +94,7 @@ export default function LoginPage() {
 
         <p className="text-center mt-6 text-[var(--text-secondary)]">
           {t('auth.noAccount')}{' '}
-          <a href="/register" className="text-[#E8841A] hover:text-[#d67715]">
+          <a href="/register" className="text-[var(--accent)] hover:text-[var(--accent-dim)]">
             {t('nav.register')}
           </a>
         </p>

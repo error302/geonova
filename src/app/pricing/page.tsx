@@ -135,7 +135,7 @@ export default function PricingPage() {
                 onClick={() => setCurrency(curr)}
                 className={`px-3 py-2 rounded-md text-xs font-medium transition-colors ${
                   currency === curr
-                    ? 'bg-[#E8841A] text-black'
+                    ? 'bg-[var(--accent)] text-black'
                     : 'text-[var(--text-secondary)] hover:text-white'
                 }`}
               >
@@ -150,18 +150,18 @@ export default function PricingPage() {
             <div
               key={plan.id}
               className={`bg-[var(--bg-secondary)] rounded-2xl border ${
-                plan.popular ? 'border-[#E8841A]' : 'border-[var(--border-color)]'
+                plan.popular ? 'border-[var(--accent)]' : 'border-[var(--border-color)]'
               } p-8 relative`}
             >
               {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E8841A] text-black text-xs font-bold px-4 py-1 rounded-full">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--accent)] text-black text-xs font-bold px-4 py-1 rounded-full">
                   Most Popular
                 </div>
               )}
 
               <h3 className="text-[var(--text-primary)] font-bold text-2xl mb-2">{plan.name}</h3>
               <div className="mb-6">
-                <span className="text-[#E8841A] text-4xl font-bold">
+                <span className="text-[var(--accent)] text-4xl font-bold">
                   {formatPrice(plan.prices[currency])}
                 </span>
                 <span className="text-[var(--text-muted)]">/{currency === 'USD' ? 'mo' : 'month'}</span>
@@ -177,7 +177,7 @@ export default function PricingPage() {
                   >
                     <span
                       className={`text-lg ${
-                        feature.included ? 'text-[#E8841A]' : 'text-[var(--text-muted)]'
+                        feature.included ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'
                       }`}
                     >
                       {feature.included ? '✓' : '✗'}
@@ -191,8 +191,8 @@ export default function PricingPage() {
                 href={plan.id === 'free' ? '/register' : '/register'}
                 className={`block w-full py-3 rounded-lg font-medium text-center transition-colors ${
                   plan.popular
-                    ? 'bg-[#E8841A] text-black hover:bg-[#d47619]'
-                    : 'bg-[var(--bg-tertiary)] text-white hover:bg-[#334155]'
+                    ? 'bg-[var(--accent)] text-black hover:bg-[var(--accent-dim)]'
+                    : 'bg-[var(--bg-tertiary)] text-white hover:bg-[var(--bg-tertiary)]'
                 }`}
               >
                 {plan.cta}

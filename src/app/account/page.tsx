@@ -48,7 +48,7 @@ export default function AccountPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <div className="text-[#E8841A]">Loading...</div>
+        <div className="text-[var(--accent)]">Loading...</div>
       </div>
     )
   }
@@ -96,7 +96,7 @@ export default function AccountPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="bg-[#E8841A] text-black px-6 py-2 rounded-lg font-medium hover:bg-[#d47619] disabled:opacity-50"
+                className="bg-[var(--accent)] text-black px-6 py-2 rounded-lg font-medium hover:bg-[var(--accent-dim)] disabled:opacity-50"
               >
                 {saving ? 'Updating...' : 'Update Password'}
               </button>
@@ -133,7 +133,7 @@ export default function AccountPage() {
                 </div>
                 <a
                   href="/pricing"
-                  className="inline-block bg-[#E8841A] text-black px-6 py-2 rounded-lg font-medium hover:bg-[#d47619]"
+                  className="inline-block bg-[var(--accent)] text-black px-6 py-2 rounded-lg font-medium hover:bg-[var(--accent-dim)]"
                 >
                   {subscription.plan_id === 'free' ? 'Upgrade Plan' : 'Manage Plan'}
                 </a>

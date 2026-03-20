@@ -656,7 +656,7 @@ export default function TraverseModal({
                   onClick={() => setTraverseType('closed')}
                   className={`p-3 rounded-lg border text-center transition-colors ${
                     traverseType === 'closed' 
-                      ? 'border-[#E8841A] bg-[#E8841A]/10' 
+                      ? 'border-[var(--accent)] bg-[var(--accent)]/10' 
                       : 'border-[var(--border-color)] hover:border-gray-600'
                   }`}
                 >
@@ -667,7 +667,7 @@ export default function TraverseModal({
                   onClick={() => setTraverseType('link')}
                   className={`p-3 rounded-lg border text-center transition-colors ${
                     traverseType === 'link' 
-                      ? 'border-[#E8841A] bg-[#E8841A]/10' 
+                      ? 'border-[var(--accent)] bg-[var(--accent)]/10' 
                       : 'border-[var(--border-color)] hover:border-gray-600'
                   }`}
                 >
@@ -678,7 +678,7 @@ export default function TraverseModal({
                   onClick={() => setTraverseType('open')}
                   className={`p-3 rounded-lg border text-center transition-colors ${
                     traverseType === 'open' 
-                      ? 'border-[#E8841A] bg-[#E8841A]/10' 
+                      ? 'border-[var(--accent)] bg-[var(--accent)]/10' 
                       : 'border-[var(--border-color)] hover:border-gray-600'
                   }`}
                 >
@@ -689,7 +689,7 @@ export default function TraverseModal({
                   onClick={() => setTraverseType('radial')}
                   className={`p-3 rounded-lg border text-center transition-colors ${
                     traverseType === 'radial' 
-                      ? 'border-[#E8841A] bg-[#E8841A]/10' 
+                      ? 'border-[var(--accent)] bg-[var(--accent)]/10' 
                       : 'border-[var(--border-color)] hover:border-gray-600'
                   }`}
                 >
@@ -851,7 +851,7 @@ export default function TraverseModal({
                     type="radio"
                     checked={openingUseExisting}
                     onChange={() => setOpeningUseExisting(true)}
-                    className="text-[#E8841A]"
+                    className="text-[var(--accent)]"
                   />
                   Select from project
                 </label>
@@ -860,7 +860,7 @@ export default function TraverseModal({
                     type="radio"
                     checked={!openingUseExisting}
                     onChange={() => setOpeningUseExisting(false)}
-                    className="text-[#E8841A]"
+                    className="text-[var(--accent)]"
                   />
                   Manual entry
                 </label>
@@ -999,7 +999,7 @@ export default function TraverseModal({
                   type="checkbox"
                   checked={hasClosingControl}
                   onChange={(e) => setHasClosingControl(e.target.checked)}
-                  className="w-4 h-4 text-[#E8841A]"
+                  className="w-4 h-4 text-[var(--accent)]"
                 />
                 <h3 className="text-lg font-semibold text-[var(--text-primary)]">Closing Control Point</h3>
               </div>
@@ -1012,7 +1012,7 @@ export default function TraverseModal({
                         type="radio"
                         checked={closingUseExisting}
                         onChange={() => setClosingUseExisting(true)}
-                        className="text-[#E8841A]"
+                        className="text-[var(--accent)]"
                       />
                       Select from project
                     </label>
@@ -1021,7 +1021,7 @@ export default function TraverseModal({
                         type="radio"
                         checked={!closingUseExisting}
                         onChange={() => setClosingUseExisting(false)}
-                        className="text-[#E8841A]"
+                        className="text-[var(--accent)]"
                       />
                       Manual entry
                     </label>
@@ -1081,7 +1081,7 @@ export default function TraverseModal({
               <button
                 onClick={handleCalculate}
                 disabled={loading}
-                className="flex-1 px-6 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded disabled:opacity-50"
+                className="flex-1 px-6 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded disabled:opacity-50"
               >
                 {loading ? 'Calculating...' : 'Calculate'}
               </button>
@@ -1165,8 +1165,8 @@ export default function TraverseModal({
                         <td className="px-2 py-2 text-right font-mono text-[var(--text-primary)]">{leg.rawDeltaN < 0 ? Math.abs(leg.rawDeltaN).toFixed(4) : '-'}</td>
                         <td className="px-2 py-2 text-right font-mono text-[var(--text-primary)]">{leg.rawDeltaE > 0 ? leg.rawDeltaE.toFixed(4) : '-'}</td>
                         <td className="px-2 py-2 text-right font-mono text-[var(--text-primary)]">{leg.rawDeltaE < 0 ? Math.abs(leg.rawDeltaE).toFixed(4) : '-'}</td>
-                        <td className="px-2 py-2 text-right font-mono text-[#E8841A]">{leg.adjDeltaN.toFixed(4)}</td>
-                        <td className="px-2 py-2 text-right font-mono text-[#E8841A]">{leg.adjDeltaE.toFixed(4)}</td>
+                        <td className="px-2 py-2 text-right font-mono text-[var(--accent)]">{leg.adjDeltaN.toFixed(4)}</td>
+                        <td className="px-2 py-2 text-right font-mono text-[var(--accent)]">{leg.adjDeltaE.toFixed(4)}</td>
                       </tr>
                     )
                   })}
@@ -1230,7 +1230,7 @@ export default function TraverseModal({
               </button>
               <button
                 onClick={handleSaveAndClose}
-                className="flex-1 px-6 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded"
+                className="flex-1 px-6 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded"
               >
                 Save & Close
               </button>

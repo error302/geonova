@@ -1297,7 +1297,7 @@ export default function GuideTypePage({ params }: PageProps) {
       <div className="min-h-screen text-white flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl mb-4">Guide not found</p>
-          <Link href="/guide" className="text-[#E8841A] hover:underline">
+          <Link href="/guide" className="text-[var(--accent)] hover:underline">
             ← Back to Guides
           </Link>
         </div>
@@ -1313,7 +1313,7 @@ export default function GuideTypePage({ params }: PageProps) {
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <Link href="/guide" className="text-[#E8841A] hover:underline text-sm">
+              <Link href="/guide" className="text-[var(--accent)] hover:underline text-sm">
                 ← Back to Guides
               </Link>
               <h1 className="text-2xl font-bold mt-2">
@@ -1326,7 +1326,7 @@ export default function GuideTypePage({ params }: PageProps) {
                 <button
                   onClick={() => setMode('junior')}
                   className={`px-3 py-1 rounded text-sm ${
-                    mode === 'junior' ? 'bg-[#E8841A] text-black' : 'text-[var(--text-secondary)]'
+                    mode === 'junior' ? 'bg-[var(--accent)] text-black' : 'text-[var(--text-secondary)]'
                   }`}
                 >
                   👨‍🎓 Junior
@@ -1334,7 +1334,7 @@ export default function GuideTypePage({ params }: PageProps) {
                 <button
                   onClick={() => setMode('senior')}
                   className={`px-3 py-1 rounded text-sm ${
-                    mode === 'senior' ? 'bg-[#E8841A] text-black' : 'text-[var(--text-secondary)]'
+                    mode === 'senior' ? 'bg-[var(--accent)] text-black' : 'text-[var(--text-secondary)]'
                   }`}
                 >
                   ⚡ Senior
@@ -1346,7 +1346,7 @@ export default function GuideTypePage({ params }: PageProps) {
           <div className="mt-4 flex items-center gap-2">
             <div className="flex-1 h-2 bg-[var(--bg-tertiary)] rounded-full overflow-hidden">
               <div 
-                className="h-full bg-[#E8841A] rounded-full transition-all"
+                className="h-full bg-[var(--accent)] rounded-full transition-all"
                 style={{ width: `${(completedSteps.length / guide.steps.length) * 100}%` }}
               />
             </div>
@@ -1412,7 +1412,7 @@ export default function GuideTypePage({ params }: PageProps) {
                   className={`mt-1 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
                     isComplete 
                       ? 'bg-green-500 border-green-500 text-black' 
-                      : 'border-gray-600 hover:border-[#E8841A]'
+                      : 'border-gray-600 hover:border-[var(--accent)]'
                   }`}
                 >
                   {isComplete && '✓'}
@@ -1428,7 +1428,7 @@ export default function GuideTypePage({ params }: PageProps) {
                   <h3 className="text-lg font-semibold mb-3">{step.title}</h3>
                   
                   <pre className={`whitespace-pre-wrap font-mono text-sm ${
-                    mode === 'junior' ? 'text-[var(--text-primary)]' : 'text-[#E8841A]'
+                    mode === 'junior' ? 'text-[var(--text-primary)]' : 'text-[var(--accent)]'
                   }`}>
                     {content}
                   </pre>
@@ -1437,7 +1437,7 @@ export default function GuideTypePage({ params }: PageProps) {
                     <div className="mt-4 pt-4 border-t border-[var(--border-color)]">
                       <Link 
                         href={toolLink.href}
-                        className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[#E8841A] transition-colors"
+                        className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
                       >
                         <span className="text-xs">🔗</span>
                         {toolLink.label}
@@ -1466,7 +1466,7 @@ export default function GuideTypePage({ params }: PageProps) {
               </Link>
               <Link 
                 href={toolLink.href}
-                className="px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] rounded text-black font-semibold"
+                className="px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] rounded text-black font-semibold"
               >
                 Start in GeoNova →
               </Link>

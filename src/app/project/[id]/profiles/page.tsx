@@ -210,7 +210,7 @@ export default function ProfilesPage({ params }: PageProps) {
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <div className="text-[#E8841A]">Loading...</div>
+        <div className="text-[var(--accent)]">Loading...</div>
       </div>
     );
   }
@@ -221,7 +221,7 @@ export default function ProfilesPage({ params }: PageProps) {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <Link href={`/project/${params.id}`} className="text-[#E8841A] hover:underline text-sm">
+              <Link href={`/project/${params.id}`} className="text-[var(--accent)] hover:underline text-sm">
                 ← Back to Project
               </Link>
               <h1 className="text-2xl font-bold mt-1">Profile Generator</h1>
@@ -231,7 +231,7 @@ export default function ProfilesPage({ params }: PageProps) {
               <button
                 onClick={() => setActiveTab('create')}
                 className={`px-4 py-2 rounded text-sm font-medium ${
-                  activeTab === 'create' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
+                  activeTab === 'create' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
                 }`}
               >
                 Create Alignment
@@ -240,7 +240,7 @@ export default function ProfilesPage({ params }: PageProps) {
                 onClick={() => setActiveTab('profile')}
                 disabled={!selectedAlignment}
                 className={`px-4 py-2 rounded text-sm font-medium ${
-                  activeTab === 'profile' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
+                  activeTab === 'profile' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
                 } disabled:opacity-50`}
               >
                 Longitudinal Profile
@@ -249,7 +249,7 @@ export default function ProfilesPage({ params }: PageProps) {
                 onClick={() => setActiveTab('cross-sections')}
                 disabled={!selectedAlignment}
                 className={`px-4 py-2 rounded text-sm font-medium ${
-                  activeTab === 'cross-sections' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
+                  activeTab === 'cross-sections' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
                 } disabled:opacity-50`}
               >
                 Cross Sections
@@ -278,7 +278,7 @@ export default function ProfilesPage({ params }: PageProps) {
                   <button
                     onClick={createAlignment}
                     disabled={!newAlignmentName || selectedPoints.length < 2}
-                    className="px-6 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded disabled:opacity-50"
+                    className="px-6 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded disabled:opacity-50"
                   >
                     Create Alignment
                   </button>
@@ -296,7 +296,7 @@ export default function ProfilesPage({ params }: PageProps) {
                     onClick={() => togglePointSelection(point)}
                     className={`p-3 rounded text-left transition-colors ${
                       selectedPoints.find(p => p.id === point.id)
-                        ? 'bg-[#E8841A] text-black'
+                        ? 'bg-[var(--accent)] text-black'
                         : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
                     }`}
                   >
@@ -318,7 +318,7 @@ export default function ProfilesPage({ params }: PageProps) {
               {selectedPoints.length > 0 && (
                 <div className="mt-4 p-3 bg-[var(--bg-tertiary)]/50 rounded">
                   <span className="text-sm text-[var(--text-secondary)]">Selected: </span>
-                  <span className="text-[#E8841A]">
+                  <span className="text-[var(--accent)]">
                     {selectedPoints.map(p => p.name).join(' → ')}
                   </span>
                 </div>
@@ -336,7 +336,7 @@ export default function ProfilesPage({ params }: PageProps) {
                       className="w-full p-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] rounded text-left flex justify-between items-center"
                     >
                       <span className="font-medium">{alignment.name}</span>
-                      <span className="text-[#E8841A]">View →</span>
+                      <span className="text-[var(--accent)]">View →</span>
                     </button>
                   ))}
                 </div>
@@ -430,7 +430,7 @@ export default function ProfilesPage({ params }: PageProps) {
                               URL.revokeObjectURL(url);
                               setSvgModalOpen(false);
                             }}
-                            className="px-4 py-2 rounded bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold"
+                            className="px-4 py-2 rounded bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold"
                           >
                             Download SVG
                           </button>
@@ -442,11 +442,11 @@ export default function ProfilesPage({ params }: PageProps) {
                   <div className="mt-6 grid grid-cols-4 gap-4">
                     <div className="bg-[var(--bg-tertiary)]/50 p-3 rounded">
                       <div className="text-xs text-[var(--text-muted)]">Start Chainage</div>
-                      <div className="text-[#E8841A] font-mono">{formatChainage(chainagePoints[0]?.chainage || 0)}</div>
+                      <div className="text-[var(--accent)] font-mono">{formatChainage(chainagePoints[0]?.chainage || 0)}</div>
                     </div>
                     <div className="bg-[var(--bg-tertiary)]/50 p-3 rounded">
                       <div className="text-xs text-[var(--text-muted)]">End Chainage</div>
-                      <div className="text-[#E8841A] font-mono">{formatChainage(chainagePoints[chainagePoints.length - 1]?.chainage || 0)}</div>
+                      <div className="text-[var(--accent)] font-mono">{formatChainage(chainagePoints[chainagePoints.length - 1]?.chainage || 0)}</div>
                     </div>
                     <div className="bg-[var(--bg-tertiary)]/50 p-3 rounded">
                       <div className="text-xs text-[var(--text-muted)]">Lowest Point</div>
@@ -484,7 +484,7 @@ export default function ProfilesPage({ params }: PageProps) {
                     {chainagePoints.map((cp, idx) => (
                       <tr key={cp.id} className="border-b border-[var(--border-color)]">
                         <td className="py-2 text-[var(--text-primary)]">{cp.point_name}</td>
-                        <td className="py-2 text-right font-mono text-[#E8841A]">{formatChainage(cp.chainage)}</td>
+                        <td className="py-2 text-right font-mono text-[var(--accent)]">{formatChainage(cp.chainage)}</td>
                         <td className="py-2 text-right font-mono text-[var(--text-primary)]">{cp.easting.toFixed(3)}</td>
                         <td className="py-2 text-right font-mono text-[var(--text-primary)]">{cp.northing.toFixed(3)}</td>
                         <td className="py-2 text-right font-mono text-[var(--text-primary)]">{cp.elevation.toFixed(3)}</td>
@@ -518,7 +518,7 @@ export default function ProfilesPage({ params }: PageProps) {
                           : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
                       }`}
                     >
-                      <div className="font-mono text-[#E8841A]">{formatChainage(cp.chainage)}</div>
+                      <div className="font-mono text-[var(--accent)]">{formatChainage(cp.chainage)}</div>
                       <div className="text-xs mt-1">
                         {hasCrossSection ? 'Has Data' : 'Add XS'}
                       </div>
@@ -644,7 +644,7 @@ function CrossSectionTable({ crossSections, chainagePoints }: { crossSections: C
         
         return (
           <div key={ch} className="bg-[var(--bg-tertiary)]/50 rounded-lg p-4">
-            <h4 className="text-[#E8841A] font-mono mb-2">{formatChainage(parseFloat(ch))}</h4>
+            <h4 className="text-[var(--accent)] font-mono mb-2">{formatChainage(parseFloat(ch))}</h4>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[var(--border-color)]">
@@ -663,10 +663,10 @@ function CrossSectionTable({ crossSections, chainagePoints }: { crossSections: C
                     {left ? left.elevation.toFixed(3) : '—'}
                   </td>
                 </tr>
-                <tr className="border-b border-[var(--border-color)] bg-[#E8841A]/10">
-                  <td className="py-1 text-[#E8841A] font-medium">Center</td>
-                  <td className="py-1 text-right font-mono text-[#E8841A]">0.000</td>
-                  <td className="py-1 text-right font-mono text-[#E8841A]">
+                <tr className="border-b border-[var(--border-color)] bg-[var(--accent)]/10">
+                  <td className="py-1 text-[var(--accent)] font-medium">Center</td>
+                  <td className="py-1 text-right font-mono text-[var(--accent)]">0.000</td>
+                  <td className="py-1 text-right font-mono text-[var(--accent)]">
                     {center ? center.elevation.toFixed(3) : '—'}
                   </td>
                 </tr>

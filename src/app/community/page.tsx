@@ -53,7 +53,7 @@ export default function CommunityPage() {
             </p>
             <a
               href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '254700000000'}?text=${encodeURIComponent('Hello! I want to join the GeoNova Surveyors community.')}`}
-              className="inline-block px-8 py-4 bg-[#E8841A] text-black font-bold rounded-lg hover:bg-[#d47619] transition-colors"
+              className="inline-block px-8 py-4 bg-[var(--accent)] text-black font-bold rounded-lg hover:bg-[var(--accent-dim)] transition-colors"
             >
               Join GeoNova Surveyors →
             </a>
@@ -79,23 +79,23 @@ export default function CommunityPage() {
           <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Community Guidelines</h2>
           <ul className="space-y-3 text-[var(--text-secondary)]">
             <li className="flex items-start gap-3">
-              <span className="text-[#E8841A]">✓</span>
+              <span className="text-[var(--accent)]">✓</span>
               Share knowledge freely — help others learn
             </li>
             <li className="flex items-start gap-3">
-              <span className="text-[#E8841A]">✓</span>
+              <span className="text-[var(--accent)]">✓</span>
               Respect all members regardless of experience level
             </li>
             <li className="flex items-start gap-3">
-              <span className="text-[#E8841A]">✓</span>
+              <span className="text-[var(--accent)]">✓</span>
               No spam or self-promotion
             </li>
             <li className="flex items-start gap-3">
-              <span className="text-[#E8841A]">✓</span>
+              <span className="text-[var(--accent)]">✓</span>
               Help junior surveyors learn the craft
             </li>
             <li className="flex items-start gap-3">
-              <span className="text-[#E8841A]">✓</span>
+              <span className="text-[var(--accent)]">✓</span>
               Report bugs and suggestions to GeoNova team
             </li>
           </ul>

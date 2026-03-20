@@ -551,7 +551,7 @@ export default function ProjectPage({ params }: PageProps) {
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-2 border-[#E8841A] border-t-transparent rounded-full"></div>
+        <div className="animate-spin w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full"></div>
       </div>
     )
   }
@@ -571,7 +571,7 @@ export default function ProjectPage({ params }: PageProps) {
               setPrefillCoords({})
               setShowAddPoint(true)
             }}
-            className="w-full px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded text-sm transition-colors"
+            className="w-full px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded text-sm transition-colors"
           >
             {t('points.addPoint')}
           </button>
@@ -594,7 +594,7 @@ export default function ProjectPage({ params }: PageProps) {
             }}
             className={`w-full px-4 py-2 rounded text-sm transition-colors ${
               mapMode === 'distance' 
-                ? 'bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold' 
+                ? 'bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold' 
                 : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
             }`}
             title="Press D to activate"
@@ -608,7 +608,7 @@ export default function ProjectPage({ params }: PageProps) {
             }}
             className={`w-full px-4 py-2 rounded text-sm transition-colors ${
               mapMode === 'area' 
-                ? 'bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold' 
+                ? 'bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold' 
                 : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
             }`}
             title="Press A to activate"
@@ -618,7 +618,7 @@ export default function ProjectPage({ params }: PageProps) {
           <button
             onClick={handleGenerateReport}
             disabled={reportLoading}
-            className="w-full px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded text-sm transition-colors disabled:opacity-50"
+            className="w-full px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded text-sm transition-colors disabled:opacity-50"
           >
             {reportLoading ? t('common.loading') : t('reports.generate')}
           </button>

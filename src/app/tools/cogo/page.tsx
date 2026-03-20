@@ -256,11 +256,11 @@ export default function COGOCalculator() {
       <p className="text-sm text-[var(--text-muted)] mb-8">Coordinate Geometry calculations</p>
 
       <div className="flex gap-2 mb-6 flex-wrap">
-        <button onClick={() => { setMode('radiation'); setResult(null); setWarnings([]); }} className={`px-4 py-2 rounded-lg font-medium ${mode === 'radiation' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Radiation</button>
-        <button onClick={() => { setMode('forward-intersection'); setResult(null); setWarnings([]); }} className={`px-4 py-2 rounded-lg font-medium ${mode === 'forward-intersection' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Forward Intersection</button>
-        <button onClick={() => { setMode('backward-intersection'); setResult(null); setWarnings([]); }} className={`px-4 py-2 rounded-lg font-medium ${mode === 'backward-intersection' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Backward Intersection</button>
-        <button onClick={() => { setMode('missing-line'); setResult(null); setWarnings([]); }} className={`px-4 py-2 rounded-lg font-medium ${mode === 'missing-line' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Missing Line</button>
-        <button onClick={() => { setMode('side-shot'); setResult(null); setWarnings([]); }} className={`px-4 py-2 rounded-lg font-medium ${mode === 'side-shot' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Side Shot</button>
+        <button onClick={() => { setMode('radiation'); setResult(null); setWarnings([]); }} className={`px-4 py-2 rounded-lg font-medium ${mode === 'radiation' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Radiation</button>
+        <button onClick={() => { setMode('forward-intersection'); setResult(null); setWarnings([]); }} className={`px-4 py-2 rounded-lg font-medium ${mode === 'forward-intersection' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Forward Intersection</button>
+        <button onClick={() => { setMode('backward-intersection'); setResult(null); setWarnings([]); }} className={`px-4 py-2 rounded-lg font-medium ${mode === 'backward-intersection' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Backward Intersection</button>
+        <button onClick={() => { setMode('missing-line'); setResult(null); setWarnings([]); }} className={`px-4 py-2 rounded-lg font-medium ${mode === 'missing-line' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Missing Line</button>
+        <button onClick={() => { setMode('side-shot'); setResult(null); setWarnings([]); }} className={`px-4 py-2 rounded-lg font-medium ${mode === 'side-shot' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'}`}>Side Shot</button>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
@@ -386,7 +386,7 @@ export default function COGOCalculator() {
               )}
             </div>
           </div>
-          <button onClick={calculate} className="w-full px-6 py-4 bg-[#E8841A] hover:bg-[#d67715] text-black font-bold rounded-lg">Calculate</button>
+          <button onClick={calculate} className="w-full px-6 py-4 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-bold rounded-lg">Calculate</button>
         </div>
 
         {result && !result.error && (

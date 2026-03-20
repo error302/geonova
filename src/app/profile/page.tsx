@@ -216,7 +216,7 @@ export default function ProfilePage() {
                   onClick={() => toggleSpecialization(spec)}
                   className={`px-4 py-2 rounded text-sm text-left transition-colors ${
                     profile.specializations.includes(spec)
-                      ? 'bg-[#E8841A] text-black'
+                      ? 'bg-[var(--accent)] text-black'
                       : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)] hover:bg-[var(--border-hover)]'
                   }`}
                 >

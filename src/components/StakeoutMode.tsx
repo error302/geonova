@@ -355,7 +355,7 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
             <div className="grid md:grid-cols-2 gap-4">
               <div className="rounded-xl bg-[var(--bg-primary)]/40 border border-[var(--border-color)] p-4 text-center">
                 <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider">Distance</div>
-                <div className="mt-1 text-5xl font-bold text-[#E8841A] tabular-nums">{formatDistance(distance)}</div>
+                <div className="mt-1 text-5xl font-bold text-[var(--accent)] tabular-nums">{formatDistance(distance)}</div>
                 {distance !== null && distance > 5000 ? (
                   <div className="mt-2 text-xs text-[var(--text-muted)]">Very large distance — double-check project zone/hemisphere and GPS.</div>
                 ) : null}
@@ -371,10 +371,10 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
                     <div className="absolute inset-x-0 bottom-2 text-center text-[10px] text-[var(--text-secondary)]">S</div>
                     <div className="absolute inset-y-0 left-2 flex items-center text-[10px] text-[var(--text-secondary)]">W</div>
                     <div
-                      className="absolute left-1/2 top-1/2 w-1 h-10 bg-[#E8841A] rounded origin-bottom"
+                      className="absolute left-1/2 top-1/2 w-1 h-10 bg-[var(--accent)] rounded origin-bottom"
                       style={{ transform: `translate(-50%, -100%) rotate(${bearing ?? 0}deg)` }}
                     />
-                    <div className="absolute left-1/2 top-1/2 w-2.5 h-2.5 bg-[#E8841A] rounded-full -translate-x-1/2 -translate-y-1/2" />
+                    <div className="absolute left-1/2 top-1/2 w-2.5 h-2.5 bg-[var(--accent)] rounded-full -translate-x-1/2 -translate-y-1/2" />
                   </div>
                 </div>
               </div>
@@ -440,7 +440,7 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
               }}
               className={`px-4 py-2 rounded-lg text-sm whitespace-nowrap ${
                 idx === currentPointIndex 
-                  ? 'bg-[#E8841A] text-black font-bold' 
+                  ? 'bg-[var(--accent)] text-black font-bold' 
                   : stakedPoints.has(pt.id)
                     ? 'bg-green-900 text-green-400'
                     : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'

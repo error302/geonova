@@ -332,7 +332,7 @@ export default function ProcessPage() {
           <div
             className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-colors ${
               dragActive 
-                ? 'border-[#E8841A] bg-[#E8841A]/10' 
+                ? 'border-[var(--accent)] bg-[var(--accent)]/10' 
                 : 'border-[var(--border-color)] hover:border-gray-600'
             }`}
             onDragEnter={handleDrag}
@@ -399,7 +399,7 @@ export default function ProcessPage() {
                     {interpretResult.dataset!.observations.slice(0, 5).map((obs: any, i: number) => (
                       <tr key={i} className="border-t border-[var(--border-color)]">
                         <td className="px-2 py-1">{obs.station}</td>
-                        <td className="px-2 py-1 text-[#E8841A]">{obs.type}</td>
+                        <td className="px-2 py-1 text-[var(--accent)]">{obs.type}</td>
                         <td className="px-2 py-1 text-right font-mono">{obs.value1}</td>
                       </tr>
                     ))}
@@ -426,7 +426,7 @@ export default function ProcessPage() {
                           onClick={() => setSelectedProfile(profile)}
                           className={`p-3 rounded-lg border text-left transition-colors ${
                             selectedProfile === profile
-                              ? 'border-[#E8841A] bg-[#E8841A]/10'
+                              ? 'border-[var(--accent)] bg-[var(--accent)]/10'
                               : 'border-[var(--border-color)] hover:border-gray-600'
                           }`}
                         >
@@ -442,7 +442,7 @@ export default function ProcessPage() {
                     <button
                       onClick={runProcessWithWorkflow}
                       disabled={processing}
-                      className="px-6 py-3 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded-lg"
+                      className="px-6 py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg"
                     >
                       {processing ? 'Processing...' : 'Process Survey'}
                     </button>
@@ -593,7 +593,7 @@ export default function ProcessPage() {
                     <button
                       onClick={handleSaveToProject}
                       disabled={!selectedProjectId || saveLoading}
-                      className="px-6 py-3 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded-lg disabled:opacity-50"
+                      className="px-6 py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg disabled:opacity-50"
                     >
                       {saveLoading ? 'Saving...' : saveSuccess ? '✓ Saved!' : 'Save Points'}
                     </button>

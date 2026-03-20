@@ -63,7 +63,7 @@ export default function RegisterPage() {
           {success ? (
           <div className="p-4 bg-green-900/30 border border-green-600 rounded text-green-400 text-center">
             <p className="mb-4">{t('auth.checkEmailConfirm')}</p>
-            <a href="/login" className="text-[#E8841A] hover:text-[#d67715]">
+            <a href="/login" className="text-[var(--accent)] hover:text-[var(--accent-dim)]">
               {t('auth.backToSignIn')}
             </a>
           </div>
@@ -81,7 +81,7 @@ export default function RegisterPage() {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
+                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
                 required
               />
             </div>
@@ -92,7 +92,7 @@ export default function RegisterPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
+                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
                 required
               />
             </div>
@@ -103,7 +103,7 @@ export default function RegisterPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[#E8841A] focus:outline-none text-[var(--text-primary)]"
+                className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
                 required
                 minLength={6}
               />
@@ -112,7 +112,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded transition-colors disabled:opacity-50"
+              className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded transition-colors disabled:opacity-50"
             >
               {loading ? t('auth.creatingAccount') : t('auth.registerButton')}
             </button>
@@ -121,7 +121,7 @@ export default function RegisterPage() {
 
         <p className="text-center mt-6 text-[var(--text-secondary)]">
           {t('auth.hasAccount')}{' '}
-          <a href="/login" className="text-[#E8841A] hover:text-[#d67715]">
+          <a href="/login" className="text-[var(--accent)] hover:text-[var(--accent-dim)]">
             {t('auth.loginButton')}
           </a>
         </p>

@@ -140,7 +140,7 @@ export default function BeaconsPage() {
               <button
                 onClick={() => setView('beacons')}
                 className={`px-4 py-2 rounded-lg font-medium ${
-                  view === 'beacons' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
+                  view === 'beacons' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
                 }`}
               >
                 Beacons
@@ -148,7 +148,7 @@ export default function BeaconsPage() {
               <button
                 onClick={() => setView('activity')}
                 className={`px-4 py-2 rounded-lg font-medium ${
-                  view === 'activity' ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
+                  view === 'activity' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
                 }`}
               >
                 Survey Activity
@@ -171,7 +171,7 @@ export default function BeaconsPage() {
                     key={f}
                     onClick={() => setFilter(f)}
                     className={`px-3 py-2 rounded text-sm capitalize ${
-                      filter === f ? 'bg-[#E8841A] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
+                      filter === f ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
                     }`}
                   >
                     {f}
@@ -180,7 +180,7 @@ export default function BeaconsPage() {
               </div>
               <Link
                 href="/beacons/submit"
-                className="px-4 py-2 bg-[#E8841A] hover:bg-[#d67715] text-black font-semibold rounded-lg"
+                className="px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg"
               >
                 + Submit Beacon
               </Link>
@@ -192,7 +192,7 @@ export default function BeaconsPage() {
       <main className="flex-1 relative">
         {loading ? (
           <div className="flex items-center justify-center h-full">
-            <div className="animate-spin w-8 h-8 border-2 border-[#E8841A] border-t-transparent rounded-full"></div>
+            <div className="animate-spin w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full"></div>
           </div>
         ) : (
           <div className="h-full" style={{ height: 'calc(100vh - 140px)' }}>
@@ -304,7 +304,7 @@ export default function BeaconsPage() {
               <button
                 onClick={handleImport}
                 disabled={!importProject || importLoading}
-                className="flex-1 px-4 py-2 bg-[#E8841A] text-black font-semibold rounded disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-[var(--accent)] text-black font-semibold rounded disabled:opacity-50"
               >
                 {importLoading ? 'Importing...' : 'Import'}
               </button>

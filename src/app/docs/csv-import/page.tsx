@@ -40,7 +40,7 @@ export default function CSVImportPage() {
   return (
     <div className="min-h-screen py-16">
       <div className="max-w-4xl mx-auto px-6">
-        <Link href="/docs" className="text-[#E8841A] hover:underline mb-8 inline-block">
+        <Link href="/docs" className="text-[var(--accent)] hover:underline mb-8 inline-block">
           ← Back to Documentation
         </Link>
 
@@ -54,7 +54,7 @@ export default function CSVImportPage() {
           <div className="space-y-6">
             {formats.map((format) => (
               <div key={format.type} className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-6">
-                <h3 className="text-xl font-semibold text-[#E8841A] mb-2">{format.type}</h3>
+                <h3 className="text-xl font-semibold text-[var(--accent)] mb-2">{format.type}</h3>
                 <p className="text-[var(--text-secondary)] text-sm mb-4">{format.description}</p>
                 <div className="bg-[var(--bg-primary)] rounded-lg p-4 mb-4">
                   <div className="text-[var(--text-muted)] text-xs mb-2">Headers:</div>
@@ -75,12 +75,12 @@ export default function CSVImportPage() {
             <div className="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-4">
               <h4 className="text-[var(--text-primary)] font-semibold mb-2">Sample Traverse CSV</h4>
               <p className="text-[var(--text-secondary)] text-sm mb-3">Example traverse data with 5 legs</p>
-              <button className="text-[#E8841A] text-sm hover:underline">Download sample.csv</button>
+              <button className="text-[var(--accent)] text-sm hover:underline">Download sample.csv</button>
             </div>
             <div className="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-4">
               <h4 className="text-[var(--text-primary)] font-semibold mb-2">Sample Leveling CSV</h4>
               <p className="text-[var(--text-secondary)] text-sm mb-3">Example leveling run with BS/FS</p>
-              <button className="text-[#E8841A] text-sm hover:underline">Download sample.csv</button>
+              <button className="text-[var(--accent)] text-sm hover:underline">Download sample.csv</button>
             </div>
           </div>
         </section>
@@ -90,7 +90,7 @@ export default function CSVImportPage() {
           <ul className="space-y-3">
             {tips.map((tip, i) => (
               <li key={i} className="flex items-start gap-3 text-[var(--text-secondary)]">
-                <span className="text-[#E8841A]">✓</span>
+                <span className="text-[var(--accent)]">✓</span>
                 {tip}
               </li>
             ))}
