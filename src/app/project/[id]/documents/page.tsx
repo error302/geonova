@@ -6,6 +6,7 @@ import {
   getDocsForType, DocumentDef, SurveyDocType,
   generateCoverLetter, generateComputationSheet, generateAreaCertificate,
   generateFieldNotes, generateBeaconDescriptions, generateCompletionCertificate,
+  generateMutationForm, generateLevelingSummary, generateControlSubmission,
   ProjectData, PointData, TraverseData, AreaData,
 } from '@/lib/reports/documentPackage'
 import Link from 'next/link'
@@ -161,6 +162,80 @@ function ExtraFieldsForm({
     </div>
   )
 
+  if (docId === 'mutation_form') return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
+        {[
+          {k:'originalLR',   label:'Original LR No. / Plot No.',      ph:'LR 123/456'},
+          {k:'regSection',   label:'Registration Section',             ph:'Nairobi Block 123'},
+          {k:'mutationType', label:'Nature of mutation',               ph:'Subdivision'},
+          {k:'county',       label:'County',                           ph:'Nairobi'},
+          {k:'clientId',     label:'Landowner ID / Passport No.',      ph:'12345678'},
+        ].map(({k,label,ph}) => (
+          <div key={k}>
+            <label className="text-xs text-[var(--text-muted)] block mb-1">{label}</label>
+            <input value={extraFields[k]||''} onChange={e=>onChange({...extraFields,[k]:e.target.value})} placeholder={ph} className="input w-full text-sm" />
+          </div>
+        ))}
+      </div>
+      {points.filter(p=>p.is_control).map(pt => (
+        <div key={pt.name}>
+          <label className="text-xs text-[var(--text-muted)] block mb-1">Beacon {pt.name} — description</label>
+          <input value={extraFields[`beacon_desc_${pt.name}`]||''} onChange={e=>onChange({...extraFields,[`beacon_desc_${pt.name}`]:e.target.value})} className="input w-full text-sm" placeholder="Concrete beacon at NE corner..." />
+        </div>
+      ))}
+    </div>
+  )
+
+  if (docId === 'leveling_summary') return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
+        {[
+          {k:'openingBM',     label:'Opening BM name',             ph:'BM1'},
+          {k:'openingRL',     label:'Opening RL (m)',               ph:'100.000'},
+          {k:'closingBM',     label:'Closing BM name',             ph:'BM2'},
+          {k:'closingRLObs',  label:'Closing RL — observed (m)',   ph:'102.453'},
+          {k:'closingRLKnown',label:'Closing RL — known (m)',      ph:'102.451'},
+          {k:'misclosure',    label:'Misclosure (m)',               ph:'+0.002'},
+          {k:'distanceKm',    label:'Total distance (km)',          ph:'2.4'},
+          {k:'allowable',     label:'Allowable misclosure (m)',     ph:'0.019'},
+          {k:'sumBS',         label:'ΣBS (m)',                      ph:'4.521'},
+          {k:'sumFS',         label:'ΣFS (m)',                      ph:'2.068'},
+          {k:'rlDiff',        label:'Last RL − First RL (m)',       ph:'2.453'},
+        ].map(({k,label,ph}) => (
+          <div key={k}>
+            <label className="text-xs text-[var(--text-muted)] block mb-1">{label}</label>
+            <input value={extraFields[k]||''} onChange={e=>onChange({...extraFields,[k]:e.target.value})} placeholder={ph} className="input w-full text-sm" />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+
+  if (docId === 'control_submission') return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
+        {[
+          {k:'network',     label:'Network / order',         ph:'Third Order'},
+          {k:'datum',       label:'Datum',                   ph:'Arc 1960'},
+          {k:'method',      label:'Adjustment method',       ph:'Bowditch Rule'},
+          {k:'precision',   label:'Precision achieved',      ph:'1 : 12,500'},
+          {k:'dateObserved',label:'Date observed',           ph:'15 March 2025'},
+          {k:'instrument',  label:'Instrument',              ph:'Leica TS16'},
+          {k:'serial',      label:'Serial number',           ph:'1847293'},
+          {k:'calibDate',   label:'Calibration date',        ph:'January 2025'},
+          {k:'rounds',      label:'No. of rounds',           ph:'3'},
+          {k:'accuracy',    label:'Default accuracy (±m)',   ph:'0.05'},
+        ].map(({k,label,ph}) => (
+          <div key={k}>
+            <label className="text-xs text-[var(--text-muted)] block mb-1">{label}</label>
+            <input value={extraFields[k]||''} onChange={e=>onChange({...extraFields,[k]:e.target.value})} placeholder={ph} className="input w-full text-sm" />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+
   return <p className="text-sm text-[var(--text-muted)]">No additional fields required for this document.</p>
 }
 
@@ -230,6 +305,12 @@ export default function DocumentsPage({ params }: PageProps) {
       case 'completion_certificate':
       case 'as_built_certificate':
         html = generateCompletionCertificate(...args, extra); break
+      case 'mutation_form':
+        html = generateMutationForm(...args, points, area, extra); break
+      case 'leveling_summary':
+        html = generateLevelingSummary(...args, points, extra); break
+      case 'control_submission':
+        html = generateControlSubmission(...args, points, extra); break
       default:
         html = generateComputationSheet(...args, points, traverse, area)
     }

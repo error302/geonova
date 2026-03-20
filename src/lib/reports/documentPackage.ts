@@ -528,3 +528,211 @@ export function generateCompletionCertificate(
   </div>
   </body></html>`
 }
+
+// ── Mutation Form ─────────────────────────────────────────────────────────────
+
+export function generateMutationForm(
+  project: ProjectData,
+  surveyorDetails: Record<string,string>,
+  points: PointData[],
+  area?: AreaData,
+  extraFields?: Record<string,string>
+): string {
+  const today = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })
+  const beacons = points.filter(p => p.is_control)
+  const ex = extraFields || {}
+
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Mutation Form</title>${pageStyles()}</head><body>
+  ${docHeader('Mutation Form', project, surveyorDetails)}
+
+  <div style="text-align:center;margin:12px 0 20px;font-size:11px;color:#555;">
+    <strong>Note:</strong> This form must be prepared in triplicate. Original to Land Registry, 
+    copy to client, copy retained by surveyor.
+  </div>
+
+  <h2>Part A — Property Details</h2>
+  <div class="grid2">
+    <div class="box"><div class="label">Original LR No. / Plot No.</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${ex.originalLR || ''}</div></div>
+    <div class="box"><div class="label">Registration Section / District</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${ex.regSection || ''}</div></div>
+    <div class="box"><div class="label">Nature of mutation</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${ex.mutationType || 'Boundary survey / subdivision'}</div></div>
+    <div class="box"><div class="label">County / Province</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${ex.county || ''}</div></div>
+  </div>
+
+  <h2>Part B — Area</h2>
+  <div class="grid3">
+    <div class="box"><div class="label">Area (m²)</div><div style="font-family:monospace;font-size:14px;font-weight:700;">${area ? area.squareMeters.toFixed(2) : '___________'}</div></div>
+    <div class="box"><div class="label">Area (ha)</div><div style="font-family:monospace;font-size:14px;font-weight:700;">${area ? area.hectares.toFixed(4) : '___________'}</div></div>
+    <div class="box"><div class="label">Perimeter (m)</div><div style="font-family:monospace;font-size:14px;font-weight:700;">${area ? area.perimeter.toFixed(3) : '___________'}</div></div>
+  </div>
+
+  <h2>Part C — Boundary Coordinates (UTM Zone ${project.utm_zone}${project.hemisphere})</h2>
+  <table>
+    <thead><tr><th>Beacon No.</th><th>Easting (m)</th><th>Northing (m)</th><th>Beacon Description</th></tr></thead>
+    <tbody>
+      ${beacons.map(p => `<tr>
+        <td><strong>${p.name}</strong></td>
+        <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
+        <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
+        <td>${ex[`beacon_desc_${p.name}`] || ''}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>
+
+  <h2>Part D — Declaration by Licensed Surveyor</h2>
+  <p style="font-size:11px;">I certify that I am a Licensed Surveyor and that I have surveyed the land described above and 
+  that the information contained in this form is correct to the best of my knowledge.</p>
+  ${signatureBlock(project.surveyor_name || surveyorDetails.name || '', surveyorDetails.licence || '', 'Licensed Surveyor')}
+
+  <h2 style="margin-top:30px;">Part E — Declaration by Landowner / Applicant</h2>
+  <div class="grid2">
+    <div class="box"><div class="label">Full name</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${project.client_name || ''}</div></div>
+    <div class="box"><div class="label">ID / Passport No.</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${ex.clientId || ''}</div></div>
+  </div>
+  <p style="font-size:11px;">I/We confirm that the boundaries shown in this mutation form are correct and accepted.</p>
+  ${signatureBlock(project.client_name || 'Landowner', '', 'Landowner / Authorised Representative')}
+
+  <div class="highlight" style="margin-top:24px;">
+    <strong>For Land Registry Use Only</strong><br>
+    Received: _________________ &nbsp;&nbsp; File No.: _________________ &nbsp;&nbsp; Officer: _________________
+  </div>
+  </body></html>`
+}
+
+// ── Leveling Summary ──────────────────────────────────────────────────────────
+
+export function generateLevelingSummary(
+  project: ProjectData,
+  surveyorDetails: Record<string,string>,
+  points: PointData[],
+  extraFields?: Record<string,string>
+): string {
+  const ex = extraFields || {}
+  const elevationPoints = points.filter(p => p.elevation != null)
+
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Leveling Summary</title>${pageStyles()}</head><body>
+  ${docHeader('Leveling Summary / Level Book Abstract', project, surveyorDetails)}
+
+  <h2>Survey Details</h2>
+  <div class="grid3">
+    <div class="box"><div class="label">Opening BM</div><div class="value">${ex.openingBM || '—'}</div></div>
+    <div class="box"><div class="label">Opening RL</div><div class="value">${ex.openingRL || '—'} m</div></div>
+    <div class="box"><div class="label">Closing BM</div><div class="value">${ex.closingBM || '—'}</div></div>
+    <div class="box"><div class="label">Closing RL (observed)</div><div class="value">${ex.closingRLObs || '—'} m</div></div>
+    <div class="box"><div class="label">Closing RL (known)</div><div class="value">${ex.closingRLKnown || '—'} m</div></div>
+    <div class="box"><div class="label">Misclosure</div><div class="value ${
+      ex.misclosure && Math.abs(parseFloat(ex.misclosure)) < (parseFloat(ex.allowable||'999')) ? 'pass' : ''
+    }">${ex.misclosure ? parseFloat(ex.misclosure) >= 0 ? '+' : '' : ''}${ex.misclosure || '—'} m</div></div>
+    <div class="box"><div class="label">Distance (km)</div><div class="value">${ex.distanceKm || '—'} km</div></div>
+    <div class="box"><div class="label">Allowable misclosure</div><div class="value">±${ex.allowable || '—'} m</div></div>
+    <div class="box"><div class="label">Check</div><div class="value ${ex.misclosure && ex.allowable && Math.abs(parseFloat(ex.misclosure)) <= parseFloat(ex.allowable) ? 'pass' : 'fail'}">${
+      ex.misclosure && ex.allowable 
+        ? Math.abs(parseFloat(ex.misclosure)) <= parseFloat(ex.allowable) ? 'PASS' : 'FAIL'
+        : '—'
+    }</div></div>
+  </div>
+
+  <h2>Reduced Levels</h2>
+  <table>
+    <thead><tr><th>Station</th><th>Easting (m)</th><th>Northing (m)</th><th>Reduced Level (m)</th><th>Adjusted RL (m)</th><th>Remarks</th></tr></thead>
+    <tbody>
+      ${elevationPoints.map(p => `<tr>
+        <td><strong>${p.name}</strong></td>
+        <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
+        <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
+        <td style="font-family:monospace">${p.elevation!.toFixed(4)}</td>
+        <td style="font-family:monospace">${ex[`adj_${p.name}`] || p.elevation!.toFixed(4)}</td>
+        <td>${ex[`remark_${p.name}`] || (p.is_control ? 'Control BM' : 'TP')}</td>
+      </tr>`).join('')}
+      ${elevationPoints.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:#888;">No elevation data. Add elevations to survey points in the workspace.</td></tr>' : ''}
+    </tbody>
+  </table>
+
+  <h2>Arithmetic Check</h2>
+  <div class="grid3">
+    <div class="box"><div class="label">ΣBS</div><div class="value">${ex.sumBS || '—'} m</div></div>
+    <div class="box"><div class="label">ΣFS</div><div class="value">${ex.sumFS || '—'} m</div></div>
+    <div class="box"><div class="label">ΣBS − ΣFS</div><div class="value">${ex.sumBS && ex.sumFS ? (parseFloat(ex.sumBS)-parseFloat(ex.sumFS)).toFixed(5) : '—'} m</div></div>
+    <div class="box"><div class="label">Last RL − First RL</div><div class="value">${ex.rlDiff || '—'} m</div></div>
+    <div class="box"><div class="label">Check</div>
+      <div class="value ${ex.sumBS && ex.sumFS && ex.rlDiff && Math.abs((parseFloat(ex.sumBS)-parseFloat(ex.sumFS)) - parseFloat(ex.rlDiff)) < 0.001 ? 'pass' : ''}">
+        ${ex.sumBS && ex.sumFS && ex.rlDiff ? Math.abs((parseFloat(ex.sumBS)-parseFloat(ex.sumFS)) - parseFloat(ex.rlDiff)) < 0.001 ? 'PASS' : 'FAIL' : '—'}
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    The arithmetic check verifies that ΣBS − ΣFS = Last RL − First RL. 
+    A discrepancy indicates a booking or computation error.
+  </div>
+
+  ${signatureBlock(project.surveyor_name || surveyorDetails.name || '', surveyorDetails.licence || '')}
+  </body></html>`
+}
+
+// ── Control Submission Form ───────────────────────────────────────────────────
+
+export function generateControlSubmission(
+  project: ProjectData,
+  surveyorDetails: Record<string,string>,
+  points: PointData[],
+  extraFields?: Record<string,string>
+): string {
+  const ex = extraFields || {}
+  const controlPts = points.filter(p => p.is_control)
+
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Control Submission</title>${pageStyles()}</head><body>
+  ${docHeader('Control Point Submission — Form C22', project, surveyorDetails)}
+
+  <div class="highlight">
+    Submit this form with coordinates to the Survey of Kenya / national surveying authority 
+    for registration of new control points.
+  </div>
+
+  <h2>Submission Details</h2>
+  <div class="grid2">
+    <div class="box"><div class="label">Network / Order</div><div class="value">${ex.network || 'Third Order'}</div></div>
+    <div class="box"><div class="label">Datum</div><div class="value">${ex.datum || 'Arc 1960'}</div></div>
+    <div class="box"><div class="label">UTM Zone</div><div class="value">Zone ${project.utm_zone}${project.hemisphere}</div></div>
+    <div class="box"><div class="label">Adjustment method</div><div class="value">${ex.method || 'Bowditch Rule'}</div></div>
+    <div class="box"><div class="label">Precision achieved</div><div class="value">${ex.precision || '—'}</div></div>
+    <div class="box"><div class="label">Date observed</div><div class="value">${ex.dateObserved || '—'}</div></div>
+  </div>
+
+  <h2>New Control Points (${controlPts.length})</h2>
+  <table>
+    <thead><tr>
+      <th>Station Name</th><th>Easting (m)</th><th>Northing (m)</th><th>Elevation (m)</th>
+      <th>Position Accuracy</th><th>Monument Type</th>
+    </tr></thead>
+    <tbody>
+      ${controlPts.map(p => `<tr>
+        <td><strong>${p.name}</strong></td>
+        <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
+        <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
+        <td style="font-family:monospace">${p.elevation != null ? p.elevation.toFixed(3) : '—'}</td>
+        <td>${ex[`accuracy_${p.name}`] || ex.accuracy || '±0.05 m'}</td>
+        <td>${ex[`monument_${p.name}`] || 'Concrete beacon with iron pin'}</td>
+      </tr>`).join('')}
+      ${controlPts.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:#888;">No control points. Mark points as control in the project workspace.</td></tr>' : ''}
+    </tbody>
+  </table>
+
+  <h2>Field Observation Details</h2>
+  <div class="grid2">
+    <div class="box"><div class="label">Instrument used</div><div class="value">${ex.instrument || '—'}</div></div>
+    <div class="box"><div class="label">Serial number</div><div class="value">${ex.serial || '—'}</div></div>
+    <div class="box"><div class="label">Calibration date</div><div class="value">${ex.calibDate || '—'}</div></div>
+    <div class="box"><div class="label">No. of rounds observed</div><div class="value">${ex.rounds || '—'}</div></div>
+  </div>
+
+  <p style="font-size:11px;margin-top:16px;">I certify that the above coordinates were observed and computed in accordance with the 
+  applicable standards and are correct to the best of my knowledge and belief.</p>
+
+  ${signatureBlock(project.surveyor_name || surveyorDetails.name || '', surveyorDetails.licence || '', 'Licensed Surveyor')}
+
+  <div class="highlight" style="margin-top:24px;">
+    <strong>For Survey Authority Use Only</strong><br>
+    Received: _________________ &nbsp;&nbsp; Register No.: _________________ &nbsp;&nbsp; Officer: _________________
+  </div>
+  </body></html>`
+}
