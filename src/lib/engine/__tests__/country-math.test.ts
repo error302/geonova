@@ -122,13 +122,13 @@ describe('formatAreaByCountry', () => {
     expect(r.formattedHa).toBe('5.000')
   })
 
-  it('Kenya: 10–100ha → 2 decimal places', () => {
+  it('Kenya: 10–1,000ha → 2 decimal places', () => {
     const r = formatAreaByCountry('kenya', 500_000) // 50 ha
     expect(r.decimalPlaces).toBe(2)
     expect(r.formattedHa).toBe('50.00')
   })
 
-  it('Kenya: >100ha → 1 decimal place', () => {
+  it('Kenya: >1,000ha → 1 decimal place', () => {
     const r = formatAreaByCountry('kenya', 2_000_000) // 200 ha
     expect(r.decimalPlaces).toBe(1)
     expect(r.formattedHa).toBe('200.0')

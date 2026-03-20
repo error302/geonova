@@ -84,6 +84,33 @@ export interface CountrySurveyStandard {
     sqMetres: number
     regulation: string
   }
+  curvilinearPlottingScale?: number
+  coordinatePrecision?: number
+  governmentLand?: {
+    foreshoreReservationM: number
+    tidalRiverReservationM: number
+    lakeReservationM: number
+    swampExclusionWidthM: number
+    regulation: string
+  }
+  deedPlanRules?: {
+    waterproofInk: boolean
+    materialSpecifiedByDirector: boolean
+    maxCorrections: number
+    correctionsInitialedBy: 'director' | 'surveyor'
+    duplicateCopies: number
+    noErasures: boolean
+    regulation: string
+  }
+  beaconMaterials?: {
+    primary: string
+    underground: string
+    referenceMarkRequired: boolean
+  }
+  lineBeacon?: {
+    maxSegmentLengthM: number
+    regulation: string
+  }
   generalNotes: string[]
 }
 
@@ -120,7 +147,7 @@ const KENYA_STD: CountrySurveyStandard = {
   areaPrecision: [
     { maxHa: 1,    decimalPlaces: 4, unit: 'ha',    regulation: 'Kenya Survey Reg 84' },
     { maxHa: 10,   decimalPlaces: 3, unit: 'ha',    regulation: 'Kenya Survey Reg 84' },
-    { maxHa: 100,  decimalPlaces: 2, unit: 'ha',    regulation: 'Kenya Survey Reg 84' },
+    { maxHa: 1000, decimalPlaces: 2, unit: 'ha',    regulation: 'Kenya Survey Reg 84' },
     { maxHa: Infinity, decimalPlaces: 1, unit: 'ha', regulation: 'Kenya Survey Reg 84' },
   ],
   slopeCorrection: {
@@ -161,8 +188,35 @@ const KENYA_STD: CountrySurveyStandard = {
     regulation: 'Kenya Survey Act — report required for all boundary surveys',
   },
   parcelMinArea: {
-    sqMetres: 1,
-    regulation: 'Kenya Physical Planning Act — minimum plot size varies by county',
+    sqMetres: 200,
+    regulation: 'Kenya Survey Reg — deed plan parcels minimum ≥200 m²',
+  },
+  curvilinearPlottingScale: 5000,
+  coordinatePrecision: 0.01,
+  governmentLand: {
+    foreshoreReservationM: 60,
+    tidalRiverReservationM: 30,
+    lakeReservationM: 30,
+    swampExclusionWidthM: 150,
+    regulation: 'Kenya Survey Reg 110-114 — coast ≥60m above MHWST; tidal rivers ≥30m; lakes ≥30m; swamps ≥150m excluded with straight-line boundary',
+  },
+  deedPlanRules: {
+    waterproofInk: true,
+    materialSpecifiedByDirector: true,
+    maxCorrections: 3,
+    correctionsInitialedBy: 'director',
+    duplicateCopies: 2,
+    noErasures: true,
+    regulation: 'Kenya Survey Reg 99-109 — waterproof ink; ≤3 corrections initialed by Director; duplicate copies; Director authentication required',
+  },
+  beaconMaterials: {
+    primary: 'Angle-iron set in concrete with stone cairn or earth mound',
+    underground: 'Iron pin set in concrete',
+    referenceMarkRequired: true,
+  },
+  lineBeacon: {
+    maxSegmentLengthM: 30,
+    regulation: 'Kenya Survey Reg 40, 64 — ≤30m straight segments at road/railway reserves; river beacons above flood level',
   },
   generalNotes: [
     'Cassini-Soldner for 1°-wide local grids: Clarke 1858 (a=6,378,351m, 1/f=294.26)',
@@ -1223,4 +1277,34 @@ export function getFieldNoteRule(country: SurveyingCountry) {
 
 export function getSurveyorReportRequirement(country: SurveyingCountry) {
   return getCountryStandard(country).surveyorReport
+}
+
+export interface ScaleGridInterval {
+  scale: number
+  intervalMetres: number
+  intervalFeet: number | null
+  regulation: string
+}
+
+const KENYA_SCALE_GRID: ScaleGridInterval[] = [
+  { scale: 250,    intervalMetres: 25,   intervalFeet: 100,  regulation: 'Kenya Survey Reg 89' },
+  { scale: 500,    intervalMetres: 50,   intervalFeet: 200,  regulation: 'Kenya Survey Reg 89' },
+  { scale: 1_000,  intervalMetres: 100,  intervalFeet: 500,  regulation: 'Kenya Survey Reg 89' },
+  { scale: 2_500,  intervalMetres: 250,  intervalFeet: 1_000, regulation: 'Kenya Survey Reg 89' },
+  { scale: 5_000,  intervalMetres: 500,  intervalFeet: 2_000, regulation: 'Kenya Survey Reg 89' },
+  { scale: 10_000, intervalMetres: 1_000, intervalFeet: 5_000, regulation: 'Kenya Survey Reg 89' },
+  { scale: 25_000, intervalMetres: 2_500, intervalFeet: 10_000, regulation: 'Kenya Survey Reg 89' },
+  { scale: 50_000, intervalMetres: 5_000, intervalFeet: 20_000, regulation: 'Kenya Survey Reg 89' },
+  { scale: 100_000, intervalMetres: 10_000, intervalFeet: 50_000, regulation: 'Kenya Survey Reg 89' },
+  { scale: 250_000, intervalMetres: 25_000, intervalFeet: 100_000, regulation: 'Kenya Survey Reg 89' },
+]
+
+export function getScaleGridInterval(scale: number): ScaleGridInterval | null {
+  return KENYA_SCALE_GRID.find(g => g.scale === scale) ?? null
+}
+
+export function getDefaultGridInterval(scale: number, unit: 'metres' | 'feet' = 'metres'): number {
+  const grid = getScaleGridInterval(scale)
+  if (!grid) return scale / 100
+  return unit === 'metres' ? grid.intervalMetres : (grid.intervalFeet ?? grid.intervalMetres)
 }
