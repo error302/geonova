@@ -542,7 +542,7 @@ export default function ProjectMap({
             <span className="text-sm font-semibold text-gray-100">
               {distancePoints[0]?.name} → {distancePoints[1]?.name}
             </span>
-            <button onClick={clearDistanceSelection} className="text-gray-400 hover:text-white text-lg">×</button>
+            <button onClick={clearDistanceSelection} className="text-gray-400 hover:text-[var(--text-primary)] text-lg">×</button>
           </div>
           <div className="space-y-1 text-xs font-mono">
             <div className="flex justify-between">
@@ -578,7 +578,7 @@ export default function ProjectMap({
         <div className="absolute top-4 left-4 z-[1000] bg-gray-900/95 border border-purple-500 rounded-lg p-3 shadow-lg min-w-[200px]">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-semibold text-purple-400">Area Selection</span>
-            <button onClick={clearAreaSelection} className="text-gray-400 hover:text-white text-lg">×</button>
+            <button onClick={clearAreaSelection} className="text-gray-400 hover:text-[var(--text-primary)] text-lg">×</button>
           </div>
           <div className="space-y-1 text-xs">
             {localAreaPoints.map((p, i) => (

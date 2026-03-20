@@ -316,7 +316,7 @@ export default function StakeoutMode({ points, utmZone, hemisphere, onComplete }
                 }
                 handleMarkStaked()
               }}
-              className="px-8 py-4 bg-green-600 hover:bg-green-500 text-white font-bold rounded-lg text-lg disabled:opacity-50"
+              className="px-8 py-4 bg-green-600 hover:bg-green-500 text-[var(--text-primary)] font-bold rounded-lg text-lg disabled:opacity-50"
             >
               Mark as Staked ✓
             </button>

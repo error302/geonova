@@ -33,7 +33,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             <h1 className="text-amber-500 text-2xl font-bold mb-4">
               GEONOVA
             </h1>
-            <p className="text-white text-lg mb-2">
+            <p className="text-[var(--text-primary)] text-lg mb-2">
               Something went wrong
             </p>
             <p className="text-gray-400 text-sm mb-6">

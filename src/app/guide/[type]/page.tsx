@@ -1309,7 +1309,7 @@ export default function GuideTypePage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen text-white">
-      <div className="border-b border-[var(--border-color)] bg-gray-900/50">
+      <div className="border-b border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
@@ -1359,7 +1359,7 @@ export default function GuideTypePage({ params }: PageProps) {
 
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
         {(guide.fieldChecklist || guide.stopRules) && (
-          <div className="bg-gray-900/30 border border-[var(--border-color)] rounded-xl p-6">
+          <div className="bg-[var(--bg-tertiary)]/30 border border-[var(--border-color)] rounded-xl p-6">
             {guide.fieldChecklist && (
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-3">Field Checklist (Supervisor-Free)</h2>

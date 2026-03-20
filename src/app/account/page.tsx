@@ -47,16 +47,16 @@ export default function AccountPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
         <div className="text-[#E8841A]">Loading...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] py-16">
+    <div className="min-h-screen bg-[var(--bg-primary)] py-16">
       <div className="max-w-3xl mx-auto px-6">
-        <h1 className="text-3xl font-bold text-white mb-8">Account Settings</h1>
+        <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-8">Account Settings</h1>
 
         <div className="space-y-8">
           <Section title="Profile">
@@ -67,7 +67,7 @@ export default function AccountPage() {
                   type="email"
                   value={user?.email || ''}
                   disabled
-                  className="w-full bg-[#111] border border-[#222] rounded-lg px-4 py-2 text-[var(--text-muted)]"
+                  className="w-full bg-[var(--bg-secondary)] border border-[#222] rounded-lg px-4 py-2 text-[var(--text-muted)]"
                 />
               </div>
             </div>
@@ -90,7 +90,7 @@ export default function AccountPage() {
                   type="password"
                   required
                   minLength={6}
-                  className="w-full bg-[#111] border border-[#222] rounded-lg px-4 py-2 text-white"
+                  className="w-full bg-[var(--bg-secondary)] border border-[#222] rounded-lg px-4 py-2 text-white"
                 />
               </div>
               <button
@@ -113,7 +113,7 @@ export default function AccountPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-white font-medium capitalize">
+                    <p className="text-[var(--text-primary)] font-medium capitalize">
                       {subscription.subscription_plans?.name || subscription.plan_id} Plan
                     </p>
                     <p className="text-[var(--text-secondary)] text-sm">
@@ -166,8 +166,8 @@ export default function AccountPage() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-[#111] rounded-xl border border-[#222] p-6">
-      <h2 className="text-xl font-semibold text-white mb-4">{title}</h2>
+    <div className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
+      <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">{title}</h2>
       {children}
     </div>
   )

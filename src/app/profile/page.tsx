@@ -155,7 +155,7 @@ export default function ProfilePage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold text-white mb-8">👤 Your Profile</h1>
+        <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-8">👤 Your Profile</h1>
 
         <div className="space-y-6">
           <div className="card">

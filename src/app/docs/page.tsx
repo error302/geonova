@@ -54,7 +54,7 @@ export default function DocsPage() {
     <div className="min-h-screen py-16">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-4">
             GeoNova Documentation
           </h1>
           <p className="text-gray-400 text-lg">
@@ -64,8 +64,8 @@ export default function DocsPage() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {sections.map((section) => (
-            <div key={section.title} className="bg-[#111] rounded-xl border border-[#222] p-6">
-              <h2 className="text-xl font-semibold text-white mb-4">{section.title}</h2>
+            <div key={section.title} className="bg-[var(--bg-secondary)] rounded-xl border border-[#222] p-6">
+              <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">{section.title}</h2>
               <ul className="space-y-2">
                 {section.items.map((item) => (
                   <li key={item.href}>
@@ -83,7 +83,7 @@ export default function DocsPage() {
         </div>
 
         <div className="mt-16 bg-gradient-to-r from-[#E8841A]/20 to-transparent border border-[#E8841A]/30 rounded-xl p-8 text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Need More Help?</h2>
+          <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-4">Need More Help?</h2>
           <p className="text-gray-400 mb-6">
             Can't find what you're looking for? Join our WhatsApp community or contact support.
           </p>
