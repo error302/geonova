@@ -1,3 +1,7 @@
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 const withPWA = require('@ducanh2912/next-pwa').default({
   dest: 'public',
   register: true,
@@ -101,7 +105,7 @@ const hasSentry = Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN)
 
 module.exports = hasSentry
   ? withSentryConfig(
-      withPWA(nextConfig),
+      withBundleAnalyzer(withPWA(nextConfig)),
       {
         silent: true,
         org: process.env.SENTRY_ORG,
@@ -113,4 +117,4 @@ module.exports = hasSentry
         disableLogger: true,
       }
     )
-  : withPWA(nextConfig)
+  : withBundleAnalyzer(withPWA(nextConfig))

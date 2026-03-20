@@ -2,9 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
-import Papa from 'papaparse'
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
+// papaparse loaded dynamically on CSV export
+// jsPDF loaded dynamically on PDF generation
 
 import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
@@ -532,7 +531,7 @@ export default function DigitalFieldBookPage() {
     downloadBlob(`geonova-fieldbook-${type}.json`, new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }))
   }
 
-   function exportCSV() {
+   async function exportCSV() {
      let rows: any[] = []
      if (type === 'leveling') {
        rows = levelRows.map((r) => ({ Station: r.station, BS: r.bs, IS: r.is, FS: r.fs, Remarks: r.remarks }))
@@ -557,10 +556,13 @@ export default function DigitalFieldBookPage() {
        rows = miningRows.map((r) => ({ PointID: r.pointId, Bearing: r.bearing, VAngle: r.verticalAngle, SlopeDist: r.slopeDistance, Remarks: r.remarks }))
      }
 
+     const Papa = (await import('papaparse')).default
      downloadBlob(`geonova-fieldbook-${type}.csv`, new Blob([Papa.unparse(rows)], { type: 'text/csv' }))
    }
 
-  function exportPDF() {
+  async function exportPDF() {
+    const { default: jsPDF } = await import('jspdf')
+    const { default: autoTable } = await import('jspdf-autotable')
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
     const title = name.trim() || `${type.toUpperCase()} Field Book`
     doc.setFontSize(14)
