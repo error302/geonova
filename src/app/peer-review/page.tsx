@@ -10,6 +10,8 @@ import {
 } from '@/lib/marketplace/peerReview'
 
 export default function PeerReviewPage() {
+  const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'browse' | 'submit'>('browse')
   const [reviewers, setReviewers] = useState<ReviewerProfile[]>([])
   const [categories, setCategories] = useState<any[]>([])
@@ -38,6 +40,12 @@ export default function PeerReviewPage() {
       setSubmitForm({ projectName: '', surveyType: 'traverse' })
     }, 3000)
   }
+
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-[var(--text-muted)] text-sm animate-pulse">Loading...</div>
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">

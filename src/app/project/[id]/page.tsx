@@ -110,6 +110,7 @@ export default function ProjectPage({ params }: PageProps) {
 
   const [selectedPointId, setSelectedPointId] = useState<string | null>(null)
   const [bottomTab, setBottomTab] = useState<'fieldbook' | 'log'>('log')
+  const [pointError, setPointError] = useState<string | null>(null)
   const [calcLog, setCalcLog] = useState<Solution[]>([])
   const [activeSolutionIndex, setActiveSolutionIndex] = useState(0)
 
@@ -320,7 +321,7 @@ export default function ProjectPage({ params }: PageProps) {
 
   const handleEditPoint = (point: any) => {
     if (point.locked) {
-      alert('This control point is locked and cannot be edited.')
+      setPointError('This control point is locked and cannot be edited.')
       return
     }
     setEditPoint({
@@ -721,7 +722,7 @@ export default function ProjectPage({ params }: PageProps) {
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(shareUrl)
-                    alert('Link copied!')
+                    navigator.clipboard.writeText(window.location.href).catch(() => {})
                   }}
                   className="px-2 py-1 text-xs bg-gray-700 hover:bg-[var(--border-hover)] text-white rounded"
                 >

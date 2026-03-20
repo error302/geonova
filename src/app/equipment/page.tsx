@@ -10,6 +10,8 @@ import {
 } from '@/lib/integrations/equipment'
 
 export default function EquipmentPage() {
+  const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const [equipment, setEquipment] = useState<Equipment[]>([])
   const [alerts, setAlerts] = useState<any[]>([])
   const [summary, setSummary] = useState<any>(null)
@@ -35,6 +37,12 @@ export default function EquipmentPage() {
       default: return 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
     }
   }
+
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-[var(--text-muted)] text-sm animate-pulse">Loading...</div>
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">

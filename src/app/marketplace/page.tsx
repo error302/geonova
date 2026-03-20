@@ -14,6 +14,8 @@ import {
 } from '@/lib/marketplace'
 
 export default function MarketplacePage() {
+  const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'templates' | 'surveyors'>('templates')
   const [templates, setTemplates] = useState<SurveyTemplate[]>([])
   const [surveyors, setSurveyors] = useState<SurveyorProfile[]>([])
@@ -45,6 +47,12 @@ export default function MarketplacePage() {
     if (currency === 'TZS') return `TZS ${price.toLocaleString()}`
     return `$${price}`
   }
+
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-[var(--text-muted)] text-sm animate-pulse">Loading...</div>
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">

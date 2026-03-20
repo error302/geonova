@@ -10,6 +10,8 @@ import {
 } from '@/lib/marketplace/jobMarketplace'
 
 export default function JobMarketplacePage() {
+  const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const [jobs, setJobs] = useState<SurveyJob[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCountry, setSelectedCountry] = useState('')
@@ -42,6 +44,12 @@ export default function JobMarketplacePage() {
       default: return 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
     }
   }
+
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-[var(--text-muted)] text-sm animate-pulse">Loading...</div>
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">

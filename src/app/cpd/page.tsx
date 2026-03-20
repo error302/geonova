@@ -11,6 +11,8 @@ import {
 } from '@/lib/marketplace/cpdCertificates'
 
 export default function CPDPage() {
+  const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const [activities, setActivities] = useState<CPDActivity[]>([])
   const [summary, setSummary] = useState<CPDSummary | null>(null)
   const [country, setCountry] = useState('Kenya')
@@ -32,6 +34,12 @@ export default function CPDPage() {
       default: return 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
     }
   }
+
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-[var(--text-muted)] text-sm animate-pulse">Loading...</div>
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">

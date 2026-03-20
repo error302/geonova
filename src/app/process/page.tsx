@@ -26,6 +26,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 export default function ProcessPage() {
+  const [processError, setProcessError] = useState<string | null>(null)
   const [dragActive, setDragActive] = useState(false)
   const [fileContent, setFileContent] = useState<string | null>(null)
   const [interpretResult, setInterpretResult] = useState<CSVInterpretResult | null>(null)
@@ -254,7 +255,7 @@ export default function ProcessPage() {
 
   const handleSaveToProject = async () => {
     if (!selectedProjectId || !workflowResult?.results) {
-      alert('Please select a project')
+      setProcessError('Please select a project first.')
       return
     }
 
@@ -303,7 +304,7 @@ export default function ProcessPage() {
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (e) {
       console.error('Save error:', e)
-      alert('Error saving points to project')
+      setProcessError('Error saving points to project. Please try again.')
     }
 
     setSaveLoading(false)

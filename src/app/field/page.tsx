@@ -22,6 +22,7 @@ const STORAGE_KEY = 'geonova_pending_observations'
 export default function FieldPage() {
   const router = useRouter()
   const { t } = useLanguage()
+  const [msg, setMsg] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<Tab>('traverse')
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('offline')
   const [projects, setProjects] = useState<any[]>([])
@@ -174,9 +175,9 @@ export default function FieldPage() {
       setBatchErrors([])
       setShowBatch(false)
       fetchProjectPoints(selectedProject)
-      alert(`Saved ${batchParseResults.length} points`)
+      setMsg(`✓ Saved ${batchParseResults.length} points successfully`)
     } catch (e: any) {
-      alert('Error: ' + e.message)
+      setMsg('Error: ' + e.message)
     }
   }
 
