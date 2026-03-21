@@ -1,11 +1,11 @@
 {
-  "name": "METARDU \u2014 Professional Surveying",
+  "name": "METARDU",
   "short_name": "METARDU",
-  "description": "Professional surveying calculations and project management",
+  "description": "Measure the earth. Precisely.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0f",
-  "theme_color": "#E8841A",
+  "background_color": "#111111",
+  "theme_color": "#111111",
   "orientation": "portrait-primary",
   "icons": [
     {

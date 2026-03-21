@@ -11,7 +11,7 @@ import KeyboardShortcuts from '@/components/KeyboardShortcuts';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://metardu-henna.vercel.app'),
-  title: 'METARDU — Professional Surveying Platform',
+  title: 'METARDU — Measure the earth. Precisely.',
   description: 'Professional surveying platform for land surveyors worldwide. Traverse adjustment, leveling, COGO, GPS stakeout, PDF reports. Supports all 60 UTM zones. Built in Africa, used globally.',
   keywords: [
     'surveying software', 'traverse calculation', 'leveling calculator',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_APP_URL || 'https://metardu-henna.vercel.app',
     siteName: 'METARDU',
-    title: 'METARDU — Professional Surveying Platform',
+    title: 'METARDU — Measure the earth. Precisely.',
     description: 'Complete surveying platform for professional land surveyors across Africa and beyond.',
     images: [
       {
@@ -78,11 +78,12 @@ export default function RootLayout({
           rel="stylesheet"
         />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#E8841A" />
+        <meta name="theme-color" content="#111111" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="METARDU" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180.png" />
       </head>
       <body className="antialiased">

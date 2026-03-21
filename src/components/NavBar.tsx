@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useLanguage, languages } from '@/lib/i18n/LanguageContext'
+import MetarduLogo from '@/components/MetarduLogo'
 
 const toolGroups = [
   {
@@ -394,8 +395,8 @@ export default function NavBar() {
         {/* Main Navbar */}
         <div className="h-16 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold tracking-tight" style={{ color: 'var(--accent)' }}>
-            METARDU
+          <Link href="/">
+            <MetarduLogo color="var(--accent)" size={28} showWordmark={true} />
           </Link>
 
           {/* Desktop Navigation */}
