@@ -4,6 +4,10 @@
  * Uses project data already in GeoNova — surveyor fills remaining fields then prints.
  */
 
+function esc(s: string): string {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
 export type SurveyDocType =
   | 'cover_letter'
   | 'field_notes'
@@ -141,16 +145,16 @@ function docHeader(title: string, project: ProjectData, surveyorDetails: Record<
         <div style="font-size:11px;color:#666;margin-top:2px;">Professional Surveying Platform</div>
       </div>
       <div style="text-align:right;font-size:11px;color:#444;">
-        <div style="font-weight:600;">${surveyorDetails.firm || surveyorDetails.name || ''}</div>
-        ${surveyorDetails.licence ? `<div>Licence: ${surveyorDetails.licence}</div>` : ''}
-        ${surveyorDetails.phone ? `<div>${surveyorDetails.phone}</div>` : ''}
-        ${surveyorDetails.email ? `<div>${surveyorDetails.email}</div>` : ''}
+        <div style="font-weight:600;">${esc(surveyorDetails.firm || surveyorDetails.name || '')}</div>
+        ${surveyorDetails.licence ? `<div>Licence: ${esc(surveyorDetails.licence)}</div>` : ''}
+        ${surveyorDetails.phone ? `<div>${esc(surveyorDetails.phone)}</div>` : ''}
+        ${surveyorDetails.email ? `<div>${esc(surveyorDetails.email)}</div>` : ''}
       </div>
     </div>
     <div style="margin-top:16px;">
-      <div style="font-size:16px;font-weight:700;color:#111;">${title}</div>
+      <div style="font-size:16px;font-weight:700;color:#111;">${esc(title)}</div>
       <div style="font-size:11px;color:#555;margin-top:4px;">
-        Project: <strong>${project.name}</strong> &nbsp;|&nbsp;
+        Project: <strong>${esc(project.name)}</strong> &nbsp;|&nbsp;
         Date: ${today} &nbsp;|&nbsp;
         UTM: Zone ${project.utm_zone}${project.hemisphere}
       </div>
@@ -163,9 +167,9 @@ function signatureBlock(surveyorName: string, licenceNo: string, role: string = 
   <div style="margin-top:40px;display:flex;gap:60px;">
     <div style="flex:1;">
       <div style="border-bottom:1px solid #333;margin-bottom:6px;height:36px;"></div>
-      <div style="font-size:11px;font-weight:600;">${surveyorName || 'Surveyor Name'}</div>
-      <div style="font-size:10px;color:#555;">${role}</div>
-      ${licenceNo ? `<div style="font-size:10px;color:#555;">Licence No: ${licenceNo}</div>` : ''}
+      <div style="font-size:11px;font-weight:600;">${esc(surveyorName || 'Surveyor Name')}</div>
+      <div style="font-size:10px;color:#555;">${esc(role)}</div>
+      ${licenceNo ? `<div style="font-size:10px;color:#555;">Licence No: ${esc(licenceNo)}</div>` : ''}
     </div>
     <div style="flex:1;">
       <div style="border-bottom:1px solid #333;margin-bottom:6px;height:36px;"></div>
@@ -213,16 +217,16 @@ export function generateCoverLetter(
 
   <p>${today}</p>
   <p>
-    <strong>${project.client_name || extraFields.clientName || '[Client Name]'}</strong><br>
-    ${extraFields.clientAddress || '[Client Address]'}
+    <strong>${esc(project.client_name || extraFields.clientName || '[Client Name]')}</strong><br>
+    ${esc(extraFields.clientAddress || '[Client Address]')}
   </p>
 
-  <p>Dear ${project.client_name || extraFields.clientName || 'Sir/Madam'},</p>
+  <p>Dear ${esc(project.client_name || extraFields.clientName || 'Sir/Madam')},</p>
 
-  <p><strong>RE: ${typeLabel.toUpperCase()} SURVEY — ${project.name.toUpperCase()}</strong></p>
+  <p><strong>RE: ${typeLabel.toUpperCase()} SURVEY — ${esc(project.name).toUpperCase()}</strong></p>
 
   <p>We are pleased to submit herewith the survey documents for the above-referenced survey conducted at 
-  <strong>${project.location || '[Location]'}</strong>.</p>
+  <strong>${esc(project.location || '[Location]')}</strong>.</p>
 
   <p>The following documents are enclosed:</p>
   <ol style="font-size:12px;line-height:1.8;">
@@ -230,7 +234,7 @@ export function generateCoverLetter(
   </ol>
 
   <p>The survey was carried out in accordance with the applicable national standards and regulations. 
-  All computations have been independently checked. ${extraFields.closureNote || ''}</p>
+  All computations have been independently checked. ${esc(extraFields.closureNote || '')}</p>
 
   <p>Should you require any clarification or additional information, please do not hesitate to contact us.</p>
 
@@ -289,16 +293,16 @@ export function generateComputationSheet(
   ${docHeader('Survey Computation Sheet', project, surveyorDetails)}
   <div class="grid2">
     <div>
-      <div class="label">Project</div><div class="value">${project.name}</div>
+      <div class="label">Project</div><div class="value">${esc(project.name)}</div>
     </div>
     <div>
-      <div class="label">Location</div><div class="value">${project.location || '—'}</div>
+      <div class="label">Location</div><div class="value">${esc(project.location || '—')}</div>
     </div>
     <div>
       <div class="label">Survey type</div><div class="value">${typeLabel}</div>
     </div>
     <div>
-      <div class="label">Client</div><div class="value">${project.client_name || '—'}</div>
+      <div class="label">Client</div><div class="value">${esc(project.client_name || '—')}</div>
     </div>
   </div>
   ${coordTable}
@@ -325,14 +329,14 @@ export function generateAreaCertificate(
     <div style="font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:2px;">Certificate of Area</div>
   </div>
 
-  <p>I, <strong>${project.surveyor_name || surveyorDetails.name || '[Surveyor Name]'}</strong>,
+  <p>I, <strong>${esc(project.surveyor_name || surveyorDetails.name || '[Surveyor Name]')}</strong>,
   ${surveyorDetails.licence ? `Licensed Surveyor No. <strong>${surveyorDetails.licence}</strong>,` : ''}
   hereby certify that I have surveyed the land known as:</p>
 
   <div class="box" style="margin:16px 0;text-align:center;">
-    <div style="font-size:14px;font-weight:700;">${project.name}</div>
-    <div style="font-size:12px;color:#555;margin-top:4px;">${project.location || ''}</div>
-    ${extraFields?.parcelRef ? `<div style="font-size:11px;color:#555;">Parcel Ref: ${extraFields.parcelRef}</div>` : ''}
+    <div style="font-size:14px;font-weight:700;">${esc(project.name)}</div>
+    <div style="font-size:12px;color:#555;margin-top:4px;">${esc(project.location || '')}</div>
+    ${extraFields?.parcelRef ? `<div style="font-size:11px;color:#555;">Parcel Ref: ${esc(extraFields.parcelRef)}</div>` : ''}
   </div>
 
   <p>and that the area of the said land, as determined from survey coordinates in UTM Zone 
@@ -383,16 +387,16 @@ export function generateFieldNotes(
 
   <h2>Survey Information</h2>
   <div class="grid2">
-    <div class="box"><div class="label">Project</div><div class="value">${project.name}</div></div>
+    <div class="box"><div class="label">Project</div><div class="value">${esc(project.name)}</div></div>
     <div class="box"><div class="label">Survey type</div><div class="value">${typeLabel}</div></div>
-    <div class="box"><div class="label">Location</div><div class="value">${project.location || '—'}</div></div>
-    <div class="box"><div class="label">Client</div><div class="value">${project.client_name || '—'}</div></div>
-    <div class="box"><div class="label">Field date</div><div class="value">${extraFields.fieldDate || '—'}</div></div>
-    <div class="box"><div class="label">Weather</div><div class="value">${extraFields.weather || '—'}</div></div>
-    <div class="box"><div class="label">Instrument</div><div class="value">${extraFields.instrument || '—'}</div></div>
-    <div class="box"><div class="label">Serial number</div><div class="value">${extraFields.serial || '—'}</div></div>
-    <div class="box"><div class="label">Team members</div><div class="value">${extraFields.team || '—'}</div></div>
-    <div class="box"><div class="label">UTM zone / Datum</div><div class="value">Zone ${project.utm_zone}${project.hemisphere} / ${extraFields.datum || 'Arc 1960'}</div></div>
+    <div class="box"><div class="label">Location</div><div class="value">${esc(project.location || '—')}</div></div>
+    <div class="box"><div class="label">Client</div><div class="value">${esc(project.client_name || '—')}</div></div>
+    <div class="box"><div class="label">Field date</div><div class="value">${esc(extraFields.fieldDate || '—')}</div></div>
+    <div class="box"><div class="label">Weather</div><div class="value">${esc(extraFields.weather || '—')}</div></div>
+    <div class="box"><div class="label">Instrument</div><div class="value">${esc(extraFields.instrument || '—')}</div></div>
+    <div class="box"><div class="label">Serial number</div><div class="value">${esc(extraFields.serial || '—')}</div></div>
+    <div class="box"><div class="label">Team members</div><div class="value">${esc(extraFields.team || '—')}</div></div>
+    <div class="box"><div class="label">UTM zone / Datum</div><div class="value">Zone ${project.utm_zone}${project.hemisphere} / ${esc(extraFields.datum || 'Arc 1960')}</div></div>
   </div>
 
   <h2>Control Points Used (${controlPts.length})</h2>
@@ -404,7 +408,7 @@ export function generateFieldNotes(
             <td><strong>${p.name}</strong></td>
             <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
             <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
-            <td>${extraFields[`beacon_${p.name}`] || 'Existing beacon — found and used'}</td>
+            <td>${esc(extraFields[`beacon_${p.name}`] || 'Existing beacon — found and used')}</td>
           </tr>`).join('')
         : '<tr><td colspan="4" style="text-align:center;color:#888;">No control points recorded</td></tr>'}
     </tbody>
@@ -420,13 +424,13 @@ export function generateFieldNotes(
             <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
             <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
             <td style="font-family:monospace">${p.elevation != null ? p.elevation.toFixed(3) : '—'}</td>
-            <td>${extraFields[`remark_${p.name}`] || ''}</td>
+            <td>${esc(extraFields[`remark_${p.name}`] || '')}</td>
           </tr>`).join('')
         : '<tr><td colspan="5" style="text-align:center;color:#888;">No detail points recorded</td></tr>'}
     </tbody>
   </table>
 
-  ${extraFields.observations ? `<h2>Observations and Remarks</h2><p>${extraFields.observations}</p>` : ''}
+  ${extraFields.observations ? `<h2>Observations and Remarks</h2><p>${esc(extraFields.observations)}</p>` : ''}
 
   ${signatureBlock(project.surveyor_name || surveyorDetails.name || '', surveyorDetails.licence || '', 'Surveyor in Charge')}
   </body></html>`
@@ -443,7 +447,7 @@ export function generateBeaconDescriptions(
   ${docHeader('Beacon Descriptions', project, surveyorDetails)}
 
   <p>The following boundary beacons were found and/or placed during the survey of 
-  <strong>${project.name}</strong> at <strong>${project.location || '[Location]'}</strong>.</p>
+  <strong>${esc(project.name)}</strong> at <strong>${esc(project.location || '[Location]')}</strong>.</p>
 
   ${beacons.length === 0 
     ? '<div class="box" style="text-align:center;padding:24px;color:#888;">No control/boundary points recorded in this project.</div>'
@@ -461,13 +465,13 @@ export function generateBeaconDescriptions(
     <div style="margin-top:8px;">
       <div class="label">Beacon type and condition</div>
       <div style="border:1px solid #ddd;min-height:24px;padding:4px 8px;margin-top:2px;font-size:11px;">
-        ${extraFields[`beacon_type_${pt.name}`] || 'Concrete beacon with iron pin — [condition]'}
+        ${esc(extraFields[`beacon_type_${pt.name}`] || 'Concrete beacon with iron pin — [condition]')}
       </div>
     </div>
     <div style="margin-top:8px;">
       <div class="label">Physical description and access</div>
       <div style="border:1px solid #ddd;min-height:40px;padding:4px 8px;margin-top:2px;font-size:11px;">
-        ${extraFields[`beacon_desc_${pt.name}`] || ''}
+        ${esc(extraFields[`beacon_desc_${pt.name}`] || '')}
       </div>
     </div>
   </div>`).join('')}
@@ -491,17 +495,17 @@ export function generateCompletionCertificate(
     <div style="font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:2px;">Certificate of Survey Completion</div>
   </div>
 
-  <p>I, <strong>${project.surveyor_name || surveyorDetails.name || '[Surveyor Name]'}</strong>
+  <p>I, <strong>${esc(project.surveyor_name || surveyorDetails.name || '[Surveyor Name]')}</strong>
   ${surveyorDetails.licence ? `, Licensed Surveyor No. <strong>${surveyorDetails.licence}</strong>,` : ''}
   hereby certify that the <strong>${typeLabel} Survey</strong> for the project:</p>
 
   <div class="box" style="margin:16px 0;text-align:center;">
-    <div style="font-size:14px;font-weight:700;">${project.name}</div>
-    <div style="font-size:12px;color:#555;margin-top:4px;">${project.location || ''}</div>
+    <div style="font-size:14px;font-weight:700;">${esc(project.name)}</div>
+    <div style="font-size:12px;color:#555;margin-top:4px;">${esc(project.location || '')}</div>
   </div>
 
   <p>has been completed in accordance with the applicable national survey standards and regulations. 
-  The survey was conducted on <strong>${extraFields.fieldDate || '[Field Date]'}</strong> and the following 
+  The survey was conducted on <strong>${esc(extraFields.fieldDate || '[Field Date]')}</strong> and the following 
   has been verified:</p>
 
   <div style="margin:16px 0;">
@@ -513,7 +517,7 @@ export function generateCompletionCertificate(
     </div>`).join('')}
   </div>
 
-  ${extraFields.notes ? `<div class="highlight">${extraFields.notes}</div>` : ''}
+  ${extraFields.notes ? `<div class="highlight">${esc(extraFields.notes)}</div>` : ''}
 
   <p>This certificate is issued on <strong>${today}</strong>.</p>
 
@@ -523,7 +527,7 @@ export function generateCompletionCertificate(
     </div>
     ${project.client_name ? `
     <div style="flex:1;">
-      ${signatureBlock(project.client_name, '', 'Client / Authorised Representative')}
+      ${signatureBlock(esc(project.client_name), '', 'Client / Authorised Representative')}
     </div>` : ''}
   </div>
   </body></html>`
@@ -552,10 +556,10 @@ export function generateMutationForm(
 
   <h2>Part A — Property Details</h2>
   <div class="grid2">
-    <div class="box"><div class="label">Original LR No. / Plot No.</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${ex.originalLR || ''}</div></div>
-    <div class="box"><div class="label">Registration Section / District</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${ex.regSection || ''}</div></div>
-    <div class="box"><div class="label">Nature of mutation</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${ex.mutationType || 'Boundary survey / subdivision'}</div></div>
-    <div class="box"><div class="label">County / Province</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${ex.county || ''}</div></div>
+    <div class="box"><div class="label">Original LR No. / Plot No.</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${esc(ex.originalLR || '')}</div></div>
+    <div class="box"><div class="label">Registration Section / District</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${esc(ex.regSection || '')}</div></div>
+    <div class="box"><div class="label">Nature of mutation</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${esc(ex.mutationType || 'Boundary survey / subdivision')}</div></div>
+    <div class="box"><div class="label">County / Province</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${esc(ex.county || '')}</div></div>
   </div>
 
   <h2>Part B — Area</h2>
@@ -585,8 +589,8 @@ export function generateMutationForm(
 
   <h2 style="margin-top:30px;">Part E — Declaration by Landowner / Applicant</h2>
   <div class="grid2">
-    <div class="box"><div class="label">Full name</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${project.client_name || ''}</div></div>
-    <div class="box"><div class="label">ID / Passport No.</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${ex.clientId || ''}</div></div>
+    <div class="box"><div class="label">Full name</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${esc(project.client_name || '')}</div></div>
+    <div class="box"><div class="label">ID / Passport No.</div><div style="border-bottom:1px solid #aaa;min-height:20px;padding:2px 0;">${esc(ex.clientId || '')}</div></div>
   </div>
   <p style="font-size:11px;">I/We confirm that the boundaries shown in this mutation form are correct and accepted.</p>
   ${signatureBlock(project.client_name || 'Landowner', '', 'Landowner / Authorised Representative')}
@@ -614,11 +618,11 @@ export function generateLevelingSummary(
 
   <h2>Survey Details</h2>
   <div class="grid3">
-    <div class="box"><div class="label">Opening BM</div><div class="value">${ex.openingBM || '—'}</div></div>
-    <div class="box"><div class="label">Opening RL</div><div class="value">${ex.openingRL || '—'} m</div></div>
-    <div class="box"><div class="label">Closing BM</div><div class="value">${ex.closingBM || '—'}</div></div>
-    <div class="box"><div class="label">Closing RL (observed)</div><div class="value">${ex.closingRLObs || '—'} m</div></div>
-    <div class="box"><div class="label">Closing RL (known)</div><div class="value">${ex.closingRLKnown || '—'} m</div></div>
+    <div class="box"><div class="label">Opening BM</div><div class="value">${esc(ex.openingBM || '—')}</div></div>
+    <div class="box"><div class="label">Opening RL</div><div class="value">${esc(ex.openingRL || '—')} m</div></div>
+    <div class="box"><div class="label">Closing BM</div><div class="value">${esc(ex.closingBM || '—')}</div></div>
+    <div class="box"><div class="label">Closing RL (observed)</div><div class="value">${esc(ex.closingRLObs || '—')} m</div></div>
+    <div class="box"><div class="label">Closing RL (known)</div><div class="value">${esc(ex.closingRLKnown || '—')} m</div></div>
     <div class="box"><div class="label">Misclosure</div><div class="value ${
       ex.misclosure && Math.abs(parseFloat(ex.misclosure)) < (parseFloat(ex.allowable||'999')) ? 'pass' : ''
     }">${ex.misclosure ? parseFloat(ex.misclosure) >= 0 ? '+' : '' : ''}${ex.misclosure || '—'} m</div></div>
@@ -649,10 +653,10 @@ export function generateLevelingSummary(
 
   <h2>Arithmetic Check</h2>
   <div class="grid3">
-    <div class="box"><div class="label">ΣBS</div><div class="value">${ex.sumBS || '—'} m</div></div>
-    <div class="box"><div class="label">ΣFS</div><div class="value">${ex.sumFS || '—'} m</div></div>
+    <div class="box"><div class="label">ΣBS</div><div class="value">${esc(ex.sumBS || '—')} m</div></div>
+    <div class="box"><div class="label">ΣFS</div><div class="value">${esc(ex.sumFS || '—')} m</div></div>
     <div class="box"><div class="label">ΣBS − ΣFS</div><div class="value">${ex.sumBS && ex.sumFS ? (parseFloat(ex.sumBS)-parseFloat(ex.sumFS)).toFixed(5) : '—'} m</div></div>
-    <div class="box"><div class="label">Last RL − First RL</div><div class="value">${ex.rlDiff || '—'} m</div></div>
+    <div class="box"><div class="label">Last RL − First RL</div><div class="value">${esc(ex.rlDiff || '—')} m</div></div>
     <div class="box"><div class="label">Check</div>
       <div class="value ${ex.sumBS && ex.sumFS && ex.rlDiff && Math.abs((parseFloat(ex.sumBS)-parseFloat(ex.sumFS)) - parseFloat(ex.rlDiff)) < 0.001 ? 'pass' : ''}">
         ${ex.sumBS && ex.sumFS && ex.rlDiff ? Math.abs((parseFloat(ex.sumBS)-parseFloat(ex.sumFS)) - parseFloat(ex.rlDiff)) < 0.001 ? 'PASS' : 'FAIL' : '—'}

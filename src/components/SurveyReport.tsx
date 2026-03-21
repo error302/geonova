@@ -148,8 +148,6 @@ export default function SurveyReport({
 
   function validateReport(): string[] {
     const errors: string[] = []
-    if (!surveyorName.trim()) errors.push('Surveyor name is required.')
-    if (!jobNo.trim()) errors.push('Job number is required.')
     if (surveyMethods.length === 0) errors.push('At least one survey method must be selected.')
     if (!boundaryDescription.trim()) errors.push('Boundary description is required.')
     if (!certificateText.trim()) errors.push('Certificate of compliance text is required.')
