@@ -57,42 +57,42 @@ function ProjectCard({ project, openLabel }: { project: any; openLabel: string }
 }
 
 export default async function DashboardPage() {
-  const t = await getServerTranslator()
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  let t = (k: string) => k
+  try { t = await getServerTranslator() } catch {}
 
-  if (!user) redirect('/login')
+  let projects: any[] = []
+  let subscription: any = null
+  let isAdmin = false
 
-  const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase())
-  const isAdmin = ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? '')
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
 
-  let projects: any[] | null = null
-  let subscription: any | null = null
+    if (!user) redirect('/login')
 
-  if (isAdmin) {
-    subscription = { plan_id: 'premium', trial_ends_at: null }
-    try {
+    const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase())
+    isAdmin = ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? '')
+
+    if (isAdmin) {
+      subscription = { plan_id: 'premium', trial_ends_at: null }
       const { data, error } = await supabase.from('projects').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
       if (!error) projects = data ?? []
-    } catch {}
-  } else {
-    try {
+    } else {
       const [pRes, sRes] = await Promise.all([
         supabase.from('projects').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
         supabase.from('user_subscriptions').select('*').eq('user_id', user.id).maybeSingle(),
       ])
-      if (pRes.error) throw pRes.error
-      if (sRes.error && sRes.error.code !== 'PGRST116') throw sRes.error
-      projects = pRes.data ?? []
-      subscription = sRes.data ?? null
-    } catch (err) {
-      console.error('Dashboard query failed:', err)
-      projects = []
-      subscription = null
+      if (!pRes.error) projects = pRes.data ?? []
+      if (!sRes.error || sRes.error.code === 'PGRST116') subscription = sRes.data ?? null
     }
+  } catch (err) {
+    console.error('Dashboard error:', err)
   }
 
-  const canCreateProject = isAdmin || subscription?.plan_id !== 'free' || (projects?.length || 0) < 1
+  const canCreateProject = isAdmin || subscription?.plan_id !== 'free' || projects.length < 1
+  const daysLeft = subscription?.trial_ends_at
+    ? Math.max(0, Math.ceil((new Date(subscription.trial_ends_at).getTime() - Date.now()) / 86400000))
+    : null
   const daysLeft = subscription?.trial_ends_at
     ? Math.max(0, Math.ceil((new Date(subscription.trial_ends_at).getTime() - Date.now()) / 86400000))
     : null
