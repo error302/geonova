@@ -57,7 +57,7 @@ function ProjectCard({ project, openLabel }: { project: any; openLabel: string }
 }
 
 export default async function DashboardPage() {
-  const t = getServerTranslator()
+  const t = await getServerTranslator()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
