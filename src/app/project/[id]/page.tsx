@@ -114,8 +114,6 @@ export default function ProjectPage({ params }: PageProps) {
     return supabaseRef.current
   }
 
-  const supabase = getSupabase()
-
   const [selectedPointId, setSelectedPointId] = useState<string | null>(null)
   const [bottomTab, setBottomTab] = useState<'fieldbook' | 'log'>('log')
   const [pointError, setPointError] = useState<string | null>(null)
@@ -309,6 +307,9 @@ export default function ProjectPage({ params }: PageProps) {
       return
     }
 
+    const sb = getSupabase()
+    if (!sb) return
+
     setPointActionError(null)
     let snapshot: Point[] | null = null
     setPoints((prev) => {
@@ -320,7 +321,7 @@ export default function ProjectPage({ params }: PageProps) {
 
     try {
       setSyncStatus('pending')
-      const { error } = await supabase.from('survey_points').delete().eq('id', point.id)
+      const { error } = await sb.from('survey_points').delete().eq('id', point.id)
       if (error) throw error
       setSyncStatus('synced')
     } catch (err: any) {
@@ -364,11 +365,13 @@ export default function ProjectPage({ params }: PageProps) {
     setShareUrl(null)
     
     const uploadToStorage = async (blob: Blob, filename: string) => {
+      const sb = getSupabase()
+      if (!sb) { setReportLoading(false); return }
       try {
         const fileExt = filename.split('.').pop()
         const fileName = `${params.id}/${Date.now()}.${fileExt}`
         
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError } = await sb.storage
           .from('reports')
           .upload(fileName, blob, { contentType: 'application/pdf', upsert: true })
         
@@ -378,7 +381,7 @@ export default function ProjectPage({ params }: PageProps) {
           return
         }
         
-        const { data: urlData } = supabase.storage
+        const { data: urlData } = sb.storage
           .from('reports')
           .getPublicUrl(fileName)
         
@@ -435,7 +438,9 @@ export default function ProjectPage({ params }: PageProps) {
   useEffect(() => {
     if (project) {
       const fetchParcels = async () => {
-        const { data } = await supabase
+        const sb = getSupabase()
+        if (!sb) return
+        const { data } = await sb
           .from('parcels')
           .select('id, name, boundary_points, created_at')
           .eq('project_id', params.id)
@@ -458,8 +463,10 @@ export default function ProjectPage({ params }: PageProps) {
       } catch {}
       return
     }
+    const sb = getSupabase()
+    if (!sb) return
     try {
-      const { data } = await supabase
+      const { data } = await sb
         .from('parcels')
         .select('id, name, boundary_points, created_at')
         .eq('project_id', params.id)
@@ -477,11 +484,13 @@ export default function ProjectPage({ params }: PageProps) {
     setShareUrl(null)
     
     const uploadToStorage = async (blob: Blob, filename: string) => {
+      const sb = getSupabase()
+      if (!sb) { setReportLoading(false); return }
       try {
         const fileExt = filename.split('.').pop()
         const fileName = `${params.id}/${Date.now()}.${fileExt}`
         
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError } = await sb.storage
           .from('reports')
           .upload(fileName, blob, { contentType: 'application/pdf', upsert: true })
         
@@ -491,7 +500,7 @@ export default function ProjectPage({ params }: PageProps) {
           return
         }
         
-        const { data: urlData } = supabase.storage
+        const { data: urlData } = sb.storage
           .from('reports')
           .getPublicUrl(fileName)
         
@@ -688,7 +697,8 @@ export default function ProjectPage({ params }: PageProps) {
           </button>
           <button
             onClick={async () => {
-              await exportProject(params.id, supabase)
+              const sb = getSupabase()
+              if (sb) await exportProject(params.id, sb)
             }}
             disabled={points.length === 0}
             className="w-full px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm transition-colors disabled:opacity-50"
