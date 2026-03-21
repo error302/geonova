@@ -58,15 +58,16 @@ export async function middleware(request: NextRequest) {
   )
 
   // SECURITY: Always verify the JWT with Supabase — never trust the cookie alone.
-  // getSession() reads from the cookie without verifying it, allowing cookie forgery.
   // getUser() performs a network call to validate the token with the Supabase auth server.
-  const { data: { session } } = await supabase.auth.getSession()
-  const user = session?.user ?? null
+  const { data: { user } } = await supabase.auth.getUser()
 
   const authRoutes = ['/login', '/register']
   const isAuthRoute = authRoutes.some(route => request.nextUrl.pathname.startsWith(route))
+  
+  let redirectResponse: NextResponse | null = null
+
   if (isAuthRoute && user) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    redirectResponse = NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   const protectedRoutes = ['/dashboard', '/project', '/fieldbook', '/account', '/checkout']
@@ -74,7 +75,22 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith(route))
 
   if (isProtected && !user) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    redirectResponse = NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  if (redirectResponse) {
+    // Preserve cookies and headers when redirecting
+    supabaseResponse.headers.forEach((value, key) => {
+      if (key.toLowerCase() !== 'location' && key.toLowerCase() !== 'set-cookie') {
+        redirectResponse!.headers.set(key, value)
+      }
+    })
+    
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse!.cookies.set(cookie.name, cookie.value, cookie)
+    })
+    
+    return redirectResponse
   }
 
   return supabaseResponse
