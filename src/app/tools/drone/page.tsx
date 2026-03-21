@@ -219,7 +219,7 @@ export default function DroneSurveyPage() {
               <span className="label">Survey Area Boundary</span>
             </div>
             <p className="text-sm text-[var(--text-secondary)] mb-4">
-              Enter the survey area boundaries. GeoNova will suggest optimal GCP distribution.
+              Enter the survey area boundaries. METARDU will suggest optimal GCP distribution.
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>

@@ -23,7 +23,7 @@ export class CalculatorErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error) {
-    console.error(`[GeoNova] Calculator error${this.props.toolName ? ` (${this.props.toolName})` : ''}:`, error)
+    console.error(`[METARDU] Calculator error${this.props.toolName ? ` (${this.props.toolName})` : ''}:`, error)
   }
 
   render() {

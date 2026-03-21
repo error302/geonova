@@ -47,7 +47,7 @@ export default function LevelingCalculator() {
   const copyResults = () => {
     if (!result) return
     const lines = [
-      `GeoNova Leveling — ${method === 'rf' ? 'Rise & Fall' : 'HOC'}`,
+      `METARDU Leveling — ${method === 'rf' ? 'Rise & Fall' : 'HOC'}`,
       `Opening RL: ${bm} m`,
       `Misclosure: ${result.misclosure.toFixed(6)} m`,
       `Check: ${result.isAcceptable ? 'PASS' : 'FAIL'}`,

@@ -566,7 +566,7 @@ export default function DigitalFieldBookPage() {
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
     const title = name.trim() || `${type.toUpperCase()} Field Book`
     doc.setFontSize(14)
-    doc.text('GeoNova — Digital Field Book', 14, 14)
+    doc.text('METARDU — Digital Field Book', 14, 14)
     doc.setFontSize(11)
     doc.text(title, 14, 22)
     doc.setFontSize(9)

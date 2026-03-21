@@ -1,7 +1,7 @@
 /**
  * Survey Document Package Generator
  * Generates all standard documents a surveyor must deliver per survey type.
- * Uses project data already in GeoNova — surveyor fills remaining fields then prints.
+ * Uses project data already in METARDU — surveyor fills remaining fields then prints.
  */
 
 function esc(s: string): string {

@@ -10,8 +10,8 @@ import FeedbackWidget from '@/components/FeedbackWidget';
 import KeyboardShortcuts from '@/components/KeyboardShortcuts';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://geonova-henna.vercel.app'),
-  title: 'GeoNova — Professional Surveying Platform',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://metardu-henna.vercel.app'),
+  title: 'METARDU — Professional Surveying Platform',
   description: 'Professional surveying platform for land surveyors worldwide. Traverse adjustment, leveling, COGO, GPS stakeout, PDF reports. Supports all 60 UTM zones. Built in Africa, used globally.',
   keywords: [
     'surveying software', 'traverse calculation', 'leveling calculator',
@@ -22,28 +22,28 @@ export const metadata: Metadata = {
     'horizontal curves calculator', 'UTM coordinates',
     'surveying app', 'cadastral survey', 'GPS stakeout'
   ],
-  authors: [{ name: 'GeoNova' }],
-  creator: 'GeoNova',
-  publisher: 'GeoNova',
+  authors: [{ name: 'METARDU' }],
+  creator: 'METARDU',
+  publisher: 'METARDU',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_APP_URL || 'https://geonova-henna.vercel.app',
-    siteName: 'GeoNova',
-    title: 'GeoNova — Professional Surveying Platform',
+    url: process.env.NEXT_PUBLIC_APP_URL || 'https://metardu-henna.vercel.app',
+    siteName: 'METARDU',
+    title: 'METARDU — Professional Surveying Platform',
     description: 'Complete surveying platform for professional land surveyors across Africa and beyond.',
     images: [
       {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'GeoNova — Professional Surveying Platform'
+        alt: 'METARDU — Professional Surveying Platform'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GeoNova — Professional Surveying Platform',
+    title: 'METARDU — Professional Surveying Platform',
     description: 'Complete surveying platform for professional land surveyors.',
     images: ['/opengraph-image']
   },
@@ -81,7 +81,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#E8841A" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="GeoNova" />
+        <meta name="apple-mobile-web-app-title" content="METARDU" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180.png" />
       </head>
@@ -96,7 +96,7 @@ export default function RootLayout({
               </main>
               <footer className="border-t border-[var(--border-color)] py-6 mt-16">
                 <div className="max-w-7xl mx-auto px-4 text-center text-xs text-[var(--text-muted)]">
-                  GeoNova v1.0 — Professional Surveying Calculations
+                  METARDU v1.0 — Professional Surveying Calculations
                 </div>
               </footer>
               <FeedbackWidget />

@@ -536,7 +536,7 @@ export default function Home() {
               {
                 tier: t('landing.pricingTeam'), price: 'KSh 2,000', sub: t('landing.pricingPerMonth'),
                 features: [t('landing.featEverythingPro'), t('landing.featTeamMembers'), t('landing.featCollaboration'), t('landing.featRoles'), t('landing.featAudit'), t('landing.featBranded')],
-                cta: t('landing.pricingContactUs'), href: 'mailto:support@geonova.app', accent: false,
+                cta: t('landing.pricingContactUs'), href: 'mailto:support@metardu.app', accent: false,
               },
             ].map(({ tier, price, sub, features, cta, href, accent }) => (
               <div key={tier} className={`relative rounded-xl border p-6 ${accent ? 'border-[var(--accent)] bg-[var(--accent)]/5' : 'border-[var(--border-color)] bg-[var(--bg-secondary)]'}`}>
@@ -592,7 +592,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="px-3 py-2 border-b border-[var(--border-color)]">
-                  <div className="text-[10px] text-[var(--accent)] font-semibold">{t('landing.mobileGeoNovaField')}</div>
+                  <div className="text-[10px] text-[var(--accent)] font-semibold">{t('landing.mobileMETARDUField')}</div>
                   <div className="text-[9px] text-[var(--text-muted)]">{t('landing.mobileKarenSurvey')}</div>
                 </div>
                 <div className="flex-1 p-3 space-y-1.5">
@@ -641,7 +641,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8 mb-10">
             <div>
-              <div className="text-[var(--text-primary)] font-bold text-base mb-1">{t('landing.footerGeoNova')}</div>
+              <div className="text-[var(--text-primary)] font-bold text-base mb-1">{t('landing.footerMETARDU')}</div>
               <p className="text-sm text-[var(--text-muted)] mb-4 leading-relaxed">{t('landing.footerTagline')}</p>
               <p className="text-xs text-[var(--text-muted)]">{t('landing.footerSupport')}</p>
             </div>
@@ -690,7 +690,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-[var(--border-color)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[var(--text-muted)]">
-            <p>{t('landing.footerCopyright')}</p>
+            <p>© {new Date().getFullYear()} {t('landing.footerCopyright')}</p>
             <p>{t('landing.footerCountries')}</p>
           </div>
         </div>

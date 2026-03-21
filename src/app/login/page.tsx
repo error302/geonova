@@ -7,6 +7,7 @@ import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 function LoginForm() {
   const { t } = useLanguage()
+  useEffect(() => { document.title = 'Login — METARDU' }, [])
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [error, setError]       = useState('')

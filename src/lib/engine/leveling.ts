@@ -6,7 +6,7 @@
  * - Bearings: WCB 0-360° clockwise from North
  */
 
-// GeoNova Engine - Leveling calculations
+// METARDU Engine - Leveling calculations
 
 import { LevelingResult, LevelingReading } from './types';
 

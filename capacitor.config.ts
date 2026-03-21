@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.geonova.survey',
-  appName: 'GeoNova',
+  appId: 'com.metardu.survey',
+  appName: 'METARDU',
   webDir: '.next',
   server: {
     url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',

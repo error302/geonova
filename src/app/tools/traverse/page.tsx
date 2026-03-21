@@ -44,7 +44,7 @@ export default function TraverseCalculator() {
   const copyResults = () => {
     if (!result) return
     const header = [
-      `GeoNova Traverse — ${method === 'bowditch' ? 'Bowditch' : 'Transit'} Method`,
+      `METARDU Traverse — ${method === 'bowditch' ? 'Bowditch' : 'Transit'} Method`,
       `Total Distance: ${result.totalDistance.toFixed(4)} m`,
       `Linear Error: ${result.linearError.toFixed(6)} m`,
       `Precision Ratio: 1 : ${Math.round(1 / result.precisionRatio)}`,

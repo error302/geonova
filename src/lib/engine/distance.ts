@@ -6,7 +6,7 @@
  * - Bearings: WCB 0-360° clockwise from North
  */
 
-// GeoNova Engine - Distance and Bearing calculations
+// METARDU Engine - Distance and Bearing calculations
 
 import { Point2D, DistanceBearingResult } from './types';
 import { toRadians, toDegrees, normalizeBearing, bearingToString, wcbToQuadrant, backBearing } from './angles';

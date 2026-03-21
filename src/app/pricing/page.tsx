@@ -18,7 +18,7 @@ const plans = [
     name: 'Free',
     prices: { KES: 0, UGX: 0, TZS: 0, NGN: 0, USD: 0, GHS: 0, ZAR: 0, INR: 0, IDR: 0, BRL: 0, AUD: 0, GBP: 0, EUR: 0 },
     features: [
-      { text: 'All 15 quick calculation tools', included: true },
+      { text: 'All 18 quick calculation tools', included: true },
       { text: '1 survey project', included: true },
       { text: 'Up to 50 survey points', included: true },
       { text: 'Basic PDF report', included: true },
@@ -91,6 +91,8 @@ const faqs = [
 
 export default function PricingPage() {
   const [currency, setCurrency] = useState<Currency>('KES')
+
+  useEffect(() => { document.title = 'Pricing — METARDU' }, [])
 
   const formatPrice = (price: number) => {
     const symbols: Record<Currency, string> = {
@@ -187,16 +189,25 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              <Link
-                href={plan.id === 'free' ? '/register' : '/register'}
-                className={`block w-full py-3 rounded-lg font-medium text-center transition-colors ${
-                  plan.popular
-                    ? 'bg-[var(--accent)] text-black hover:bg-[var(--accent-dim)]'
-                    : 'bg-[var(--bg-tertiary)] text-white hover:bg-[var(--bg-tertiary)]'
-                }`}
-              >
-                {plan.cta}
-              </Link>
+              {plan.id === 'team' ? (
+                <a
+                  href="mailto:support@metardu.app?subject=Team%20Plan%20Inquiry"
+                  className="block w-full py-3 rounded-lg font-medium text-center transition-colors bg-[var(--bg-tertiary)] text-white hover:bg-[var(--bg-tertiary)]"
+                >
+                  {plan.cta}
+                </a>
+              ) : (
+                <Link
+                  href="/register"
+                  className={`block w-full py-3 rounded-lg font-medium text-center transition-colors ${
+                    plan.popular
+                      ? 'bg-[var(--accent)] text-black hover:bg-[var(--accent-dim)]'
+                      : 'bg-[var(--bg-tertiary)] text-white hover:bg-[var(--bg-tertiary)]'
+                  }`}
+                >
+                  {plan.cta}
+                </Link>
+              )}
             </div>
           ))}
         </div>
@@ -218,7 +229,7 @@ export default function PricingPage() {
 
         <div className="text-center mt-12 text-[var(--text-muted)] text-sm">
           <p>All prices include applicable taxes.</p>
-          <p>Need a custom enterprise plan? Contact us at support@geonova.app</p>
+          <p>Need a custom enterprise plan? Contact us at support@metardu.app</p>
         </div>
       </div>
     </div>

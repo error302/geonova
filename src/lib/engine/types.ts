@@ -1,4 +1,4 @@
-// GeoNova Engine - Type definitions
+// METARDU Engine - Type definitions
 
 export interface Point2D {
   easting: number;

@@ -2,7 +2,7 @@
  * Survey Workflow Engine
  * Reads uploaded CSV, detects survey type, runs calculation workflow
  * 
- * GeoNova Calculation Standards: N.N. Basak
+ * METARDU Calculation Standards: N.N. Basak
  * - No intermediate rounding
  * - Full floating point precision
  * - Round only at display layer

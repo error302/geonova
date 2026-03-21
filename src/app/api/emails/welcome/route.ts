@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { rateLimit } from '@/lib/security/rateLimit'
 
 
-const BASE = process.env.NEXT_PUBLIC_APP_URL || 'https://geonova-henna.vercel.app'
+const BASE = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu-henna.vercel.app'
 
 
 export async function POST(req: NextRequest) {
@@ -29,9 +29,9 @@ export async function POST(req: NextRequest) {
     const resend = getResend()
     if (!resend) return NextResponse.json({ error: 'Email service not configured' }, { status: 503 })
     await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'GeoNova <hello@geonova.app>',
+      from: process.env.RESEND_FROM_EMAIL || 'METARDU <hello@metardu.app>',
       to: email,
-      subject: 'Welcome to GeoNova — Your Pro Trial Has Started',
+      subject: 'Welcome to METARDU — Your Pro Trial Has Started',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: #0a0a0f; padding: 40px; text-align: center;">
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
           </div>
           
           <div style="padding: 40px; background: #111;">
-            <h2 style="color: #fff;">Welcome to GeoNova${name ? `, ${name}` : ''}!</h2>
+            <h2 style="color: #fff;">Welcome to METARDU${name ? `, ${name}` : ''}!</h2>
             
             <p style="color: #ccc;">
               Your 14-day Pro trial has started. You now have access to 
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
                 style="background: #E8841A; color: #000; padding: 14px 32px;
                 border-radius: 6px; text-decoration: none; font-weight: bold;
                 font-size: 16px; display: inline-block;">
-                Open GeoNova →
+                Open METARDU →
               </a>
             </div>
             
@@ -81,8 +81,8 @@ export async function POST(req: NextRequest) {
           
           <div style="background: #0a0a0f; padding: 20px; text-align: center;">
             <p style="color: #444; font-size: 12px; margin: 0;">
-              GeoNova — Built for surveyors, by a surveyor.<br>
-              © 2026 GeoNova. All rights reserved.
+              METARDU — Built for surveyors, by a surveyor.<br>
+              © 2026 METARDU. All rights reserved.
             </p>
           </div>
         </div>

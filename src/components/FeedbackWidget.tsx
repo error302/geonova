@@ -100,7 +100,7 @@ export default function FeedbackWidget() {
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="How can we improve GeoNova?"
+                placeholder="How can we improve METARDU?"
                 rows={3}
                 className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-[var(--text-primary)] text-sm resize-none"
                 required

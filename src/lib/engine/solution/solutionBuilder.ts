@@ -1,7 +1,7 @@
 import type { Solution, SolutionV1, SolutionKV, SolutionWorkStep, SolutionCheck } from '@/lib/solution/schema'
 
 /**
- * GeoNova Engine Solution Builder
+ * METARDU Engine Solution Builder
  *
  * Blueprint-standard output:
  * Given → To Find → Solution (formula → substitution → computation) → Check → Result

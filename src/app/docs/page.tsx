@@ -55,10 +55,10 @@ export default function DocsPage() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-4">
-            GeoNova Documentation
+            METARDU Documentation
           </h1>
           <p className="text-[var(--text-secondary)] text-lg">
-            Everything you need to know about GeoNova
+            Everything you need to know about METARDU
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export default function DocsPage() {
               Join Community
             </Link>
             <a
-              href="mailto:support@geonova.app"
+              href="mailto:support@metardu.app"
               className="px-6 py-3 border border-[var(--accent)] text-[var(--accent)] font-semibold rounded-lg hover:bg-[var(--accent)]/10"
             >
               Contact Support

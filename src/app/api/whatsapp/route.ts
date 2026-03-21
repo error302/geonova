@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     } else if (message?.startsWith('area')) {
       response = parseAreaCommand(message)
     } else if (message?.startsWith('help')) {
-      response = `GeoNova WhatsApp Bot 📐
+      response = `METARDU WhatsApp Bot 📐
 
 Commands:
 DISTANCE e1,n1,e2,n2
@@ -192,7 +192,7 @@ ${legs.join('\n')}`
 export async function GET() {
   return new NextResponse(
     `<?xml version="1.0" encoding="UTF-8"?>
-<Response><Message>GeoNova WhatsApp Bot is running. POST a message to use.</Message></Response>`,
+<Response><Message>METARDU WhatsApp Bot is running. POST a message to use.</Message></Response>`,
     { headers: { 'Content-Type': 'text/xml' } }
   )
 }

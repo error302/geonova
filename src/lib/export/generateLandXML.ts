@@ -33,7 +33,7 @@ export function generateLandXML(
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.landxml.org/schema/LandXML-1.2 http://www.landxml.org/schema/LandXML-1.2/LandXML-1.2.xsd">
   <Header>
-    <Creator>GeoNova - Professional Surveying Platform</Creator>
+    <Creator>METARDU - Professional Surveying Platform</Creator>
     <Created>${date.slice(0,19)}</Created>
     <Name>${escapeXml(project.name)}</Name>
   </Header>
@@ -62,7 +62,7 @@ export function generateLandXML(
       date="${date.slice(0,10)}"
       startDate="${date.slice(0,10)}"
       endDate="${date.slice(0,10)}"
-      surveyor="GeoNova User"
+      surveyor="METARDU User"
       surveyType="Topographic"/>
   </Survey>
 </LandXML>`

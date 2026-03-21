@@ -214,8 +214,8 @@ export default function GuidePage() {
             </div>
             <div>
               <div className="text-xl mb-2">🔗</div>
-              <h3 className="font-medium text-[var(--text-primary)] mb-1">GeoNova Tools</h3>
-              <p>Each step links directly to the relevant GeoNova calculator or tool.</p>
+              <h3 className="font-medium text-[var(--text-primary)] mb-1">METARDU Tools</h3>
+              <p>Each step links directly to the relevant METARDU calculator or tool.</p>
             </div>
           </div>
         </div>

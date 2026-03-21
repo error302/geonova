@@ -8,7 +8,7 @@ export interface SurveyPoint {
   control_order?: string
 }
 
-export interface GeoNovaProjectExport {
+export interface METARDUProjectExport {
   version: '1.0'
   exportDate: string
   project: {
@@ -40,7 +40,7 @@ export async function exportProject(
     supabase.from('alignments').select('*').eq('project_id', projectId)
   ])
 
-  const exportData: GeoNovaProjectExport = {
+  const exportData: METARDUProjectExport = {
     version: '1.0',
     exportDate: new Date().toISOString(),
     project: {
@@ -67,7 +67,7 @@ export async function exportProject(
   a.href = url
   a.download = `${project.data.name.replace(/\s+/g, '_')}_${
     new Date().toISOString().slice(0, 10)
-  }.geonova`
+  }.metardu`
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
@@ -80,7 +80,7 @@ export async function importProject(
 ): Promise<{ success: boolean; projectId?: string; error?: string }> {
   try {
     const text = await file.text()
-    const data: GeoNovaProjectExport = JSON.parse(text)
+    const data: METARDUProjectExport = JSON.parse(text)
 
     if (data.version !== '1.0') {
       return { success: false, error: 'Unsupported file version' }

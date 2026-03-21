@@ -222,7 +222,7 @@ export default function CivilExportPage() {
             {/* Value prop for engineers */}
             <div className="bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-xl p-4 text-sm">
               <p className="text-[var(--text-secondary)] leading-relaxed">
-                <strong className="text-[var(--text-primary)]">For civil engineers:</strong> Survey data from GeoNova is always correctly georeferenced in UTM with the datum declared. 
+                <strong className="text-[var(--text-primary)]">For civil engineers:</strong> Survey data from METARDU is always correctly georeferenced in UTM with the datum declared. 
                 You won't receive DXF files in unknown coordinate systems or CSV with missing elevations. 
                 The LandXML Surface format creates an existing ground surface in Civil 3D ready for road design and earthwork volumes immediately.
               </p>

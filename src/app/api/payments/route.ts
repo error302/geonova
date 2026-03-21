@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
           mode: 'payment',
           amount: priced.amount,
           currency: priced.currency,
-          name: `GeoNova ${priced.plan.name}`,
+          name: `METARDU ${priced.plan.name}`,
           successUrl: `${appUrl}/subscription/success?provider=stripe&paymentId=${paymentId}&planId=${planId}&session_id={CHECKOUT_SESSION_ID}`,
           cancelUrl: `${appUrl}/subscription/cancel?provider=stripe&paymentId=${paymentId}&planId=${planId}`,
           metadata: {
@@ -180,7 +180,7 @@ export async function POST(request: NextRequest) {
         const order = await paypal.createOrder({
           amount: priced.amount,
           currency: priced.currency,
-          description: `GeoNova ${priced.plan.name} subscription`,
+          description: `METARDU ${priced.plan.name} subscription`,
           returnUrl: `${appUrl}/subscription/success?provider=paypal&paymentId=${paymentId}&planId=${planId}`,
           cancelUrl: `${appUrl}/subscription/cancel?provider=paypal&paymentId=${paymentId}&planId=${planId}`,
         })
@@ -212,7 +212,7 @@ export async function POST(request: NextRequest) {
           phoneNumber: start.data.phoneNumber,
           amount: priced.amount,
           reference: paymentId,
-          description: `GeoNova ${priced.plan.name} subscription`,
+          description: `METARDU ${priced.plan.name} subscription`,
           callbackUrl,
         })
 

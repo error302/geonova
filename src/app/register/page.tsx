@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 export default function RegisterPage() {
   const { t } = useLanguage()
+  useEffect(() => { document.title = 'Create Account — METARDU' }, [])
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -55,7 +56,7 @@ export default function RegisterPage() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2 text-[var(--accent)]">
-            GEONOVA
+            METARDU
           </h1>
           <p className="text-[var(--text-secondary)]">{t('auth.registerSubtitle')}</p>
         </div>

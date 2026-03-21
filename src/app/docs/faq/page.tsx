@@ -17,8 +17,8 @@ const faqs = [
         a: 'Open your project and click "Add Point". Enter the point name, Easting, Northing, and optionally Elevation. You can also import points from CSV.'
       },
       {
-        q: 'Can I use GeoNova offline?',
-        a: 'Yes! GeoNova works offline. Once loaded, you can perform all calculations without internet. Data syncs when you\'re back online.'
+        q: 'Can I use METARDU offline?',
+        a: 'Yes! METARDU works offline. Once loaded, you can perform all calculations without internet. Data syncs when you\'re back online.'
       }
     ]
   },
@@ -26,12 +26,12 @@ const faqs = [
     category: 'Calculations',
     questions: [
       {
-        q: 'What precision does GeoNova use?',
-        a: 'GeoNova follows N.N. Basak standards: distances to 2dp (cm), coordinates to 4dp (0.1mm), bearings in DDD°MM\'SS" format, and areas in m² to 4dp.'
+        q: 'What precision does METARDU use?',
+        a: 'METARDU follows N.N. Basak standards: distances to 2dp (cm), coordinates to 4dp (0.1mm), bearings in DDD°MM\'SS" format, and areas in m² to 4dp.'
       },
       {
         q: 'How does traverse adjustment work?',
-        a: 'GeoNova uses the Bowditch method to distribute linear misclosure proportionally to each leg based on its length. Results show: formula → substitution → result for every step.'
+        a: 'METARDU uses the Bowditch method to distribute linear misclosure proportionally to each leg based on its length. Results show: formula → substitution → result for every step.'
       },
       {
         q: 'Why does my leveling show "Check Failed"?',
@@ -39,7 +39,7 @@ const faqs = [
       },
       {
         q: 'What\'s the difference between closed and open traverse?',
-        a: 'Closed traverse starts and ends at the same point (or two known points). Open traverse ends at an unknown point. GeoNova supports both with appropriate error reporting.'
+        a: 'Closed traverse starts and ends at the same point (or two known points). Open traverse ends at an unknown point. METARDU supports both with appropriate error reporting.'
       }
     ]
   },
@@ -60,7 +60,7 @@ const faqs = [
       },
       {
         q: 'Do you offer student discounts?',
-        a: 'Yes! Contact support@geonova.app with your student ID for 50% off any plan.'
+        a: 'Yes! Contact support@metardu.app with your student ID for 50% off any plan.'
       }
     ]
   },
@@ -68,12 +68,12 @@ const faqs = [
     category: 'Technical',
     questions: [
       {
-        q: 'What browsers does GeoNova support?',
-        a: 'GeoNova works best on Chrome, Firefox, Safari, and Edge (latest versions). For PWA installation, use Chrome on Android.'
+        q: 'What browsers does METARDU support?',
+        a: 'METARDU works best on Chrome, Firefox, Safari, and Edge (latest versions). For PWA installation, use Chrome on Android.'
       },
       {
-        q: 'How do I install GeoNova as an app?',
-        a: 'Open geonova.app in Chrome on Android, tap the menu (three dots), and select "Add to Home Screen". iOS users can use Safari → Share → Add to Home Screen.'
+        q: 'How do I install METARDU as an app?',
+        a: 'Open metardu.app in Chrome on Android, tap the menu (three dots), and select "Add to Home Screen". iOS users can use Safari → Share → Add to Home Screen.'
       },
       {
         q: 'Can I export to AutoCAD?',
@@ -81,7 +81,7 @@ const faqs = [
       },
       {
         q: 'How do I report a bug?',
-        a: 'Click the Feedback button (bottom right) or email support@geonova.app. We\'re quick to fix issues!'
+        a: 'Click the Feedback button (bottom right) or email support@metardu.app. We\'re quick to fix issues!'
       }
     ]
   }
@@ -97,7 +97,7 @@ export default function FAQPage() {
 
         <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-4">Frequently Asked Questions</h1>
         <p className="text-[var(--text-secondary)] text-lg mb-12">
-          Find answers to common questions about GeoNova
+          Find answers to common questions about METARDU
         </p>
 
         <div className="space-y-12">
@@ -130,7 +130,7 @@ export default function FAQPage() {
           </p>
           <div className="flex gap-4 justify-center">
             <a
-              href="mailto:support@geonova.app"
+              href="mailto:support@metardu.app"
               className="px-6 py-3 bg-[var(--accent)] text-black font-semibold rounded-lg hover:bg-[var(--accent-dim)]"
             >
               Contact Support

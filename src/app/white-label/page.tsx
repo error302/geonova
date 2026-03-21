@@ -16,7 +16,7 @@ export default function WhiteLabelPage() {
     <div className="min-h-screen bg-[var(--bg-primary)]">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">White-Label Settings</h1>
-        <p className="text-[var(--text-muted)] mb-8">Customize GeoNova for your organization</p>
+        <p className="text-[var(--text-muted)] mb-8">Customize METARDU for your organization</p>
 
         <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6">
           <div className="flex items-center justify-between mb-6">
@@ -109,7 +109,7 @@ export default function WhiteLabelPage() {
                     className="w-full p-2 border rounded-lg"
                   />
                   <p className="text-xs text-[var(--text-muted)] mt-1">
-                    Configure CNAME record to point to GeoNova
+                    Configure CNAME record to point to METARDU
                   </p>
                 </div>
 

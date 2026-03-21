@@ -6,7 +6,7 @@
  * - Bearings: WCB 0-360° clockwise from North
  */
 
-// GeoNova Engine - Coordinate conversions
+// METARDU Engine - Coordinate conversions
 
 import { LatLon, UTMCoord, DMS } from './types';
 import { decimalToDMS } from './angles';

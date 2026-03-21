@@ -8,7 +8,7 @@ function getResend() {
 import { NextRequest, NextResponse } from 'next/server'
 
 
-const BASE = process.env.NEXT_PUBLIC_APP_URL || 'https://geonova-henna.vercel.app'
+const BASE = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu-henna.vercel.app'
 
 
 export async function POST(req: NextRequest) {
@@ -36,9 +36,9 @@ export async function POST(req: NextRequest) {
     const resend = getResend()
     if (!resend) return NextResponse.json({ error: 'Email service not configured' }, { status: 503 })
     await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'GeoNova <hello@geonova.app>',
+      from: process.env.RESEND_FROM_EMAIL || 'METARDU <hello@metardu.app>',
       to: email,
-      subject: 'Your GeoNova Pro trial ends in 3 days',
+      subject: 'Your METARDU Pro trial ends in 3 days',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: #0a0a0f; padding: 40px; text-align: center;">
@@ -94,8 +94,8 @@ export async function POST(req: NextRequest) {
           
           <div style="background: #0a0a0f; padding: 20px; text-align: center;">
             <p style="color: #444; font-size: 12px; margin: 0;">
-              GeoNova — Built for surveyors, by a surveyor.<br>
-              © 2026 GeoNova. All rights reserved.
+              METARDU — Built for surveyors, by a surveyor.<br>
+              © 2026 METARDU. All rights reserved.
             </p>
           </div>
         </div>

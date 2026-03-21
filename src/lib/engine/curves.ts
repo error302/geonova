@@ -6,7 +6,7 @@
  * - Bearings: WCB 0-360° clockwise from North
  */
 
-// GeoNova Engine - Curve calculations
+// METARDU Engine - Curve calculations
 
 import { CurveElements, CurveStakeoutResult, CurveStakeoutPoint } from './types';
 import { toRadians, toDegrees, bearingToString } from './angles';

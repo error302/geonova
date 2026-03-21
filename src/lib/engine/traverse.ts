@@ -6,7 +6,7 @@
  * - Bearings: WCB 0-360° clockwise from North
  */
 
-// GeoNova Engine - Traverse calculations
+// METARDU Engine - Traverse calculations
 
 import { NamedPoint2D, TraverseResult, TraverseLeg } from './types';
 import { toRadians, bearingToString } from './angles';

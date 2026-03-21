@@ -41,7 +41,7 @@ export function useTileCache() {
 
   const getTileIndexDB = useCallback(async () => {
     return new Promise<IDBDatabase>((resolve, reject) => {
-      const request = indexedDB.open('GeoNovaTileCache', 1)
+      const request = indexedDB.open('METARDUTileCache', 1)
       
       request.onerror = () => reject(request.error)
       request.onsuccess = () => resolve(request.result)

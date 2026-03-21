@@ -57,7 +57,7 @@ Minimum equipment (trainee-safe):
 • Prism + pole + bipod (stable)
 • Plumb bob / optical plummet, rod bubble
 • Pegs/nails/paint + hammer + marker
-• Field book (or GeoNova Field Mode) + backup pen
+• Field book (or METARDU Field Mode) + backup pen
 • Tape (for short ties), machete/brush cutter if needed
 • PPE: boots, vest, helmet if construction site
 
@@ -100,14 +100,14 @@ If control comes from GNSS today:
 • Confirm fix quality (RTK FIX vs FLOAT), PDOP, and occupation time.
 • Re-observe at least once (repeat occupation) if the job is cadastral/engineering.
 
-GeoNova setup:
+METARDU setup:
 → Project Settings: confirm UTM zone + hemisphere
 → Add both control points as Primary Control
 → Lock them (prevents accidental edits)
 
 Trainee stop gate:
 If you cannot state the control source, datum, and verification check you performed, STOP.`,
-        seniorContent: `2. Establish 2+ known control points in GeoNova as Primary Control`
+        seniorContent: `2. Establish 2+ known control points in METARDU as Primary Control`
       },
       {
         id: 3,
@@ -163,17 +163,17 @@ Angular check (do this BEFORE leaving site):
   Allowable misclosure (Basak) = ±1' √n
 • If the misclosure exceeds the limit: find the problem station and re-observe (do not wait for office).
 
-GeoNova entry tip:
+METARDU entry tip:
 If you enter bearings/distances (instead of raw angles), ensure your bearings are Whole Circle Bearings (0–360°) and consistent with your backsight reference.`,
-        seniorContent: `4. FL + FR observations each leg. Enter in GeoNova Traverse tool`
+        seniorContent: `4. FL + FR observations each leg. Enter in METARDU Traverse tool`
       },
       {
         id: 5,
         title: 'Compute Traverse',
         juniorContent: `STEP 5 — COMPUTE + QUALITY CHECK (FIELD/Office SOP)
-GeoNova computes the traverse and tells you whether it is acceptable.
+METARDU computes the traverse and tells you whether it is acceptable.
 
-GeoNova computes:
+METARDU computes:
 ✓ Latitude/Departure per leg (Lat = D×cos(WCB), Dep = D×sin(WCB))
 ✓ Closing error (ΔE, ΔN) and linear misclosure
 ✓ Relative precision ratio (Total traverse length / Misclosure)
@@ -201,7 +201,7 @@ Hard stop rules:
 • Precision < 1:1000 after re-observation → reject and redesign/re-observe.
 • Angular check exceeds ±1'√n and cannot be isolated → re-observe angles.
 • Closing to a known point fails significantly (link traverse) → control or orientation problem.`,
-        seniorContent: `5. Run traverse in GeoNova. Check precision ≥ 1:3000`
+        seniorContent: `5. Run traverse in METARDU. Check precision ≥ 1:3000`
       },
       {
         id: 6,
@@ -209,7 +209,7 @@ Hard stop rules:
         juniorContent: `STEP 6 — DELIVERABLES + HANDOVER (SOP)
 Before you “finish the job”, make the work defendable.
 
-In GeoNova:
+In METARDU:
 → Generate Report (PDF)
 
 Minimum deliverables for a closed traverse job:
@@ -222,7 +222,7 @@ Minimum deliverables for a closed traverse job:
 
 Trainee rule:
 Never discard raw field notes. If a coordinate is challenged later, raw notes are your evidence.`,
-        seniorContent: `6. Generate Report in GeoNova and submit`
+        seniorContent: `6. Generate Report in METARDU and submit`
       }
     ]
   },
@@ -255,7 +255,7 @@ Minimum equipment:
 • Automatic/digital level + tripod (or total station in leveling mode)
 • 2 staffs if possible (faster and safer), with rod bubbles
 • Turning point plate (or solid peg) + chalk/marker
-• Field book (or GeoNova Field Mode) + backup pen
+• Field book (or METARDU Field Mode) + backup pen
 
 Before you start (trainee rule):
 If instrument collimation is unknown OR the job is important → do a Two Peg Test first.
@@ -335,11 +335,11 @@ If a reading was not written immediately (memory booking), STOP and re-read; do 
       },
       {
         id: 4,
-        title: 'Compute in GeoNova',
-        juniorContent: `STEP 4 — COMPUTE + CHECK (GeoNova SOP)
+        title: 'Compute in METARDU',
+        juniorContent: `STEP 4 — COMPUTE + CHECK (METARDU SOP)
 Enter the leveling data and DO NOT accept results until checks pass.
 
-GeoNova enforces Basak arithmetic check:
+METARDU enforces Basak arithmetic check:
 ΣBS − ΣFS MUST equal (Last RL − First RL).
 If this fails: treat it as an error, not “close enough”.
 
@@ -355,7 +355,7 @@ If arithmetic check PASSES:
 
 Trainee stop gate:
 If arithmetic check fails OR misclosure exceeds allowable after re-checks, do not issue RLs.`,
-        seniorContent: `4. Enter in GeoNova Leveling tool. Check arithmetic passes`
+        seniorContent: `4. Enter in METARDU Leveling tool. Check arithmetic passes`
       },
       {
         id: 5,
@@ -363,7 +363,7 @@ If arithmetic check fails OR misclosure exceeds allowable after re-checks, do no
         juniorContent: `STEP 5 — REPORT + HANDOVER (SOP)
 Deliverables should show the checks clearly (so your work is defensible).
 
-In GeoNova:
+In METARDU:
 → Generate Report (PDF)
 
 Minimum report contents:
@@ -451,7 +451,7 @@ If you lose orientation (backsight moved / wrong point), stop and re-orient befo
         juniorContent: `STEP 4 — PROCESS IN GEONOVA
 Enter observations in Radiation mode.
 
-In GeoNova:
+In METARDU:
 → COGO Tools → Radiation
 → Enter station coordinates
 → Enter bearing and distance for each point
@@ -460,7 +460,7 @@ In GeoNova:
 For multiple stations:
 → Use Radiation from each station
 → Points will have multiple observations`,
-        seniorContent: `4. Enter in GeoNova COGO → Radiation. Get coordinates`
+        seniorContent: `4. Enter in METARDU COGO → Radiation. Get coordinates`
       }
     ]
   },
@@ -504,10 +504,10 @@ Data validation (trainee-safe):
 3) Confirm CAD scale and that coordinates are “grid” (not paper units).
 4) Do a reality check: pick 1–2 known points from the drawing and compare to field control.
 
-In GeoNova:
+In METARDU:
 → Add design points to the project OR import (DXF/CSV)
 → Tag critical points (building corners, PI points, services) for double-check.`,
-        seniorContent: `1. Prepare design coordinates in GeoNova project`
+        seniorContent: `1. Prepare design coordinates in METARDU project`
       },
       {
         id: 2,
@@ -540,7 +540,7 @@ Hard stop rules:
         juniorContent: `STEP 3 — STAKE EACH POINT (FIELD SOP)
 Stakeout is a controlled procedure: stake → label → witness → check.
 
-In GeoNova:
+In METARDU:
 → Tools → Setting Out
 → Select target point(s)
 → Follow bearing + distance guidance (and GPS/audio if enabled)
@@ -556,7 +556,7 @@ Trainee mistakes to avoid:
 • Staking without labels (creates chaos later).
 • Using only one check (always do an independent check for critical points).
 • Mixing grid vs ground coordinates without applying the project’s scale factor rules.`,
-        seniorContent: `3. Use GeoNova Stakeout mode. Follow bearing/distance guidance`
+        seniorContent: `3. Use METARDU Stakeout mode. Follow bearing/distance guidance`
       },
       {
         id: 4,
@@ -654,7 +654,7 @@ Evidence capture routine (repeat for each found mark):
 2) Photograph close-up and context (include a scale if possible).
 3) Describe it: material, condition, any stamps/IDs.
 4) Record witness ties: at least two offsets to permanent features.
-5) Add it to GeoNova as a control point and LOCK it.
+5) Add it to METARDU as a control point and LOCK it.
 
 Conflict handling (trainee-safe):
 • If two monuments claim the same corner OR evidence conflicts:
@@ -735,7 +735,7 @@ If evidence is conflicting or neighbors dispute the corner, do NOT set a “new 
         juniorContent: `STEP 6 — BOUNDARY REPORT (SOP)
 Your report must explain what you found, what you reinstated, and what checks passed.
 
-In GeoNova:
+In METARDU:
 → Generate Survey Plan / Boundary Report
 
 Minimum contents:
@@ -761,22 +761,22 @@ Minimum contents:
         juniorContent: `STEP 1 — DEFINE CENTERLINE
 Establish the road centreline.
 
-In GeoNova:
+In METARDU:
 → Create points along proposed road
 → These define the centerline alignment
 
 Or:
 • Pick up from CAD design
 • Stake from existing control`,
-        seniorContent: `1. Define centerline points in GeoNova`
+        seniorContent: `1. Define centerline points in METARDU`
       },
       {
         id: 2,
         title: 'Create Alignment',
         juniorContent: `STEP 2 — CREATE ALIGNMENT
-Build the road alignment in GeoNova.
+Build the road alignment in METARDU.
 
-In GeoNova:
+In METARDU:
 → Go to Profiles in your project
 → Create new alignment
 → Select centerline points in order
@@ -805,7 +805,7 @@ Record systematically.`,
         juniorContent: `STEP 4 — ENTER IN GEONOVA
 Input cross-section data.
 
-In GeoNova Profiles:
+In METARDU Profiles:
 → Select chainage station
 → Add left offset + elevation
 → Add center elevation
@@ -820,7 +820,7 @@ Repeat for all stations.`,
         juniorContent: `STEP 5 — GENERATE PROFILE
 Create longitudinal profile and sections.
 
-In GeoNova:
+In METARDU:
 → View Longitudinal Profile
 → Export profile as image
 
@@ -889,7 +889,7 @@ for redundancy.`,
         juniorContent: `STEP 4 — ADJUST THE NETWORK
 Apply least squares adjustment.
 
-GeoNova features:
+METARDU features:
 • Basic traverse adjustment (Bowditch)
 • Network adjustment (coming soon)
 
@@ -904,7 +904,7 @@ For now:
         juniorContent: `STEP 5 — DOCUMENT CONTROL
 Save and report your control network.
 
-In GeoNova:
+In METARDU:
 → Mark points as Control
 → Set control_order (primary/secondary)
 → Generate report
@@ -913,7 +913,7 @@ Report should include:
 • Point coordinates
 • Description of markers
 • Accuracy assessment`,
-        seniorContent: `5. Mark as control in GeoNova, generate report`
+        seniorContent: `5. Mark as control in METARDU, generate report`
       }
     ]
   },
@@ -936,7 +936,7 @@ What you need:
 • Points in stable rock, not ore
 • Permanent markers (pins, bolts)
 
-In GeoNova:
+In METARDU:
 → Create new project
 → Set survey type: Mining
 → Add control points as Primary`,
@@ -966,7 +966,7 @@ For inclined traverses:
         juniorContent: `STEP 3 — RUN INCLINED TRAVERSE
 Measure between stations with full 3D data.
 
-In GeoNova Mining Tools:
+In METARDU Mining Tools:
 → Select 3D Traverse
 → Enter slope distance
 → Enter vertical angle (+ or -)
@@ -987,7 +987,7 @@ VD = SD × sin(VA)
         juniorContent: `STEP 4 — CALCULATE VOLUMES
 Compute volumes from cross sections.
 
-In GeoNova Mining Tools:
+In METARDU Mining Tools:
 → Select Volume calculator
 → Choose method:
   - End Area (simple)
@@ -1003,7 +1003,7 @@ Enter section areas at chainages.`,
         juniorContent: `STEP 5 — MONITOR SUBSIDENCE
 Track point movement over time.
 
-In GeoNova Mining Tools:
+In METARDU Mining Tools:
 → Select Subsidence Monitoring
 → Enter epoch 1 coordinates
 → Enter epoch 2 coordinates
@@ -1027,7 +1027,7 @@ Include:
 • Subsidence data
 • Control point coordinates
 
-In GeoNova:
+In METARDU:
 → Export as PDF
 → Include all calculations`,
         seniorContent: `6. Generate mining survey report with all calculations`
@@ -1096,7 +1096,7 @@ For each fix:
         juniorContent: `STEP 4 — REDUCE SOUNDINGS
 Apply tidal corrections.
 
-In GeoNova Hydro Tools:
+In METARDU Hydro Tools:
 → Enter tide gauge readings
 → Enter sounding data
 → Apply tidal correction
@@ -1113,7 +1113,7 @@ Chart Datum depth = Corrected Depth - Datum Offset`,
         juniorContent: `STEP 5 — OUTPUT RESULTS
 Create bathymetric chart.
 
-In GeoNova:
+In METARDU:
 → View cross sections
 → Generate contours
 → Export to CAD/DXF
@@ -1146,7 +1146,7 @@ Requirements:
 • In corners and centre
 • Visible from air
 
-In GeoNova Drone Tools:
+In METARDU Drone Tools:
 → Enter survey boundary
 → Generate GCP positions
 → Export coordinates`,
@@ -1208,7 +1208,7 @@ Software options:
         juniorContent: `STEP 5 — VERIFY ACCURACY
 Compare independent check points.
 
-In GeoNova Drone Tools:
+In METARDU Drone Tools:
 → Enter surveyed coordinates
 → Enter drone-computed coordinates
 → Calculate RMSE
@@ -1230,14 +1230,14 @@ export default function GuideTypePage({ params }: PageProps) {
   const guide = guideData[type];
 
   const toolLinkByGuide: Record<string, { href: string; label: string }> = {
-    'closed-traverse': { href: '/tools/traverse', label: 'Open GeoNova Tool → Traverse' },
-    leveling: { href: '/tools/leveling', label: 'Open GeoNova Tool → Leveling' },
-    boundary: { href: '/tools/traverse', label: 'Open GeoNova Tool → Traverse (Boundary)' },
-    'setting-out': { href: '/tools/setting-out', label: 'Open GeoNova Tool → Setting Out' },
-    radiation: { href: '/tools/cogo', label: 'Open GeoNova Tool → COGO (Radiation)' },
+    'closed-traverse': { href: '/tools/traverse', label: 'Open METARDU Tool → Traverse' },
+    leveling: { href: '/tools/leveling', label: 'Open METARDU Tool → Leveling' },
+    boundary: { href: '/tools/traverse', label: 'Open METARDU Tool → Traverse (Boundary)' },
+    'setting-out': { href: '/tools/setting-out', label: 'Open METARDU Tool → Setting Out' },
+    radiation: { href: '/tools/cogo', label: 'Open METARDU Tool → COGO (Radiation)' },
   }
 
-  const toolLink = toolLinkByGuide[type] ?? { href: '/project/new', label: 'Open GeoNova Tool → Create Project' }
+  const toolLink = toolLinkByGuide[type] ?? { href: '/project/new', label: 'Open METARDU Tool → Create Project' }
   
   const [mode, setMode] = useState<'junior' | 'senior'>('junior');
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
@@ -1468,7 +1468,7 @@ export default function GuideTypePage({ params }: PageProps) {
                 href={toolLink.href}
                 className="px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] rounded text-black font-semibold"
               >
-                Start in GeoNova →
+                Start in METARDU →
               </Link>
             </div>
           </div>

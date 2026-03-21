@@ -15,7 +15,7 @@ export interface ReviewRequest {
   country: string
   submitterName: string
   submitterContact: string
-  attachmentNote: string      // Link to GeoNova project or external URL
+  attachmentNote: string      // Link to METARDU project or external URL
   status: ReviewStatus
   postedAt: string
   comments: ReviewComment[]

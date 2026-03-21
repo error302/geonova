@@ -6,7 +6,7 @@
  * - Bearings: WCB 0-360° clockwise from North
  */
 
-// GeoNova Engine - Angle calculations
+// METARDU Engine - Angle calculations
 
 import { DMS } from './types';
 

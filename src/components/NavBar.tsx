@@ -395,7 +395,7 @@ export default function NavBar() {
         <div className="h-16 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-2xl font-bold tracking-tight" style={{ color: 'var(--accent)' }}>
-            GEONOVA
+            METARDU
           </Link>
 
           {/* Desktop Navigation */}

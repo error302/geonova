@@ -1,6 +1,8 @@
 import { ImageResponse } from 'next/og'
 
-export const alt = 'GeoNova — Professional Surveying Platform'
+export const dynamic = 'force-dynamic'
+
+export const alt = 'METARDU — Professional Surveying Platform'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -56,7 +58,7 @@ export default async function Image() {
             marginBottom: 16,
           }}
         >
-          GEONOVA
+          METARDU
         </div>
 
         {/* Tagline */}
@@ -85,7 +87,7 @@ export default async function Image() {
         <div style={{ display: 'flex', gap: 16 }}>
           {[
             { label: '15+ Tools', sub: 'Offline ready' },
-            { label: 'Basak Standard', sub: 'Full precision' },
+            { label: '18+ Tools', sub: 'Full precision' },
             { label: '10 Languages', sub: 'Built in Africa' },
           ].map(item => (
             <div
@@ -108,7 +110,7 @@ export default async function Image() {
 
         {/* URL */}
         <div style={{ position: 'absolute', bottom: 32, color: '#444', fontSize: 14 }}>
-{process.env.NEXT_PUBLIC_APP_URL?.replace('https://', '') || 'geonova-henna.vercel.app'}
+{process.env.NEXT_PUBLIC_APP_URL ? process.env.NEXT_PUBLIC_APP_URL.replace('https://', '') : 'metardu.app'}
         </div>
       </div>
     ),

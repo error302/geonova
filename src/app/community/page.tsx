@@ -29,7 +29,7 @@ export default function CommunityPage() {
     { flag: '🌍', name: 'General Discussion', desc: 'All survey topics' },
     { flag: '💡', name: 'Tips & Tricks', desc: 'Share knowledge' },
     { flag: '🆘', name: 'Support', desc: 'Get help from community' },
-    { flag: '📢', name: 'Announcements', desc: 'GeoNova updates' },
+    { flag: '📢', name: 'Announcements', desc: 'METARDU updates' },
   ]
 
   return (
@@ -37,7 +37,7 @@ export default function CommunityPage() {
       <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-4">
-            Join the GeoNova Community
+            Join the METARDU Community
           </h1>
           <p className="text-[var(--text-secondary)] text-lg">
             Connect with surveyors across Africa and beyond
@@ -52,10 +52,10 @@ export default function CommunityPage() {
               Join thousands of surveyors sharing tips, asking questions, and helping each other grow.
             </p>
             <a
-              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '254700000000'}?text=${encodeURIComponent('Hello! I want to join the GeoNova Surveyors community.')}`}
+              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '254700000000'}?text=${encodeURIComponent('Hello! I want to join the METARDU Surveyors community.')}`}
               className="inline-block px-8 py-4 bg-[var(--accent)] text-black font-bold rounded-lg hover:bg-[var(--accent-dim)] transition-colors"
             >
-              Join GeoNova Surveyors →
+              Join METARDU Surveyors →
             </a>
           </div>
 
@@ -96,14 +96,14 @@ export default function CommunityPage() {
             </li>
             <li className="flex items-start gap-3">
               <span className="text-[var(--accent)]">✓</span>
-              Report bugs and suggestions to GeoNova team
+              Report bugs and suggestions to METARDU team
             </li>
           </ul>
         </div>
 
         <div className="bg-[var(--bg-secondary)] rounded-xl p-6 mb-12">
           <h3 className="text-amber-500 font-bold mb-2">Stay Updated</h3>
-          <p className="text-[var(--text-secondary)] text-sm mb-4">Get weekly surveying tips and GeoNova updates</p>
+          <p className="text-[var(--text-secondary)] text-sm mb-4">Get weekly surveying tips and METARDU updates</p>
           {subscribed ? (
             <p className="text-green-500">Thanks for subscribing!</p>
           ) : (
@@ -126,7 +126,7 @@ export default function CommunityPage() {
         </div>
 
         <div className="text-center">
-          <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">Follow GeoNova</h2>
+          <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">Follow METARDU</h2>
           <div className="flex justify-center gap-6">
             <div className="text-center">
               <div className="text-3xl mb-2">𝕏</div>

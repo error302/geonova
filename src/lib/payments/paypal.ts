@@ -112,7 +112,7 @@ export class PayPalService {
               application_context: {
                 return_url: input.returnUrl,
                 cancel_url: input.cancelUrl,
-                brand_name: 'GeoNova',
+                brand_name: 'METARDU',
                 landing_page: 'NO_PREFERENCE',
                 user_action: 'PAY_NOW',
               },
@@ -182,7 +182,7 @@ export class PayPalService {
           })
         },
         application_context: {
-          brand_name: 'GeoNova',
+          brand_name: 'METARDU',
           landing_page: 'NO_PREFERENCE',
           user_action: 'SUBSCRIBE_NOW',
           return_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/success`,

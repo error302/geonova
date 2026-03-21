@@ -1,6 +1,6 @@
 /**
  * Test Fixtures Library
- * GeoNova Engine Verification Suite
+ * METARDU Engine Verification Suite
  * Based on worked textbook examples for validation
  */
 

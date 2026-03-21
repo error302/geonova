@@ -1,7 +1,7 @@
 /**
  * University API Service
  * Phase 10 - Enterprise Features
- * Educational institution access to GeoNova
+ * Educational institution access to METARDU
  */
 
 export interface UniversityLicense {

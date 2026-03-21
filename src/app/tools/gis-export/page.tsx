@@ -62,7 +62,7 @@ function generateKML(points: any[], utmZone: number, hemisphere: 'N' | 'S', proj
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <Document>
   <name>${projectName}</name>
-  <description>Survey points exported from GeoNova. Orange = Control, Green = Survey</description>
+  <description>Survey points exported from METARDU. Orange = Control, Green = Survey</description>
 ${placemarks}
 </Document>
 </kml>`

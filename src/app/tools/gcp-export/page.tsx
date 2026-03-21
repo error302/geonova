@@ -108,7 +108,7 @@ export default function GCPExportPage() {
             <strong className="text-[var(--text-primary)]">Ground Control Points</strong> are precisely surveyed reference points 
             placed on the ground before a drone flight. They allow the photogrammetry software to 
             georeference the orthophoto and 3D model to within centimetre accuracy.
-            GeoNova converts your UTM control points to WGS84 lat/lon as required by drone software.
+            METARDU converts your UTM control points to WGS84 lat/lon as required by drone software.
           </p>
         </div>
 
@@ -273,7 +273,7 @@ export default function GCPExportPage() {
 
             {/* Accuracy note */}
             <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl p-4 text-xs text-[var(--text-muted)] leading-relaxed">
-              <strong className="text-[var(--text-secondary)]">Accuracy note:</strong> GeoNova converts from UTM to WGS84 using an iterative Newton-Raphson method accurate to ±0.0001m. 
+              <strong className="text-[var(--text-secondary)]">Accuracy note:</strong> METARDU converts from UTM to WGS84 using an iterative Newton-Raphson method accurate to ±0.0001m. 
               For highest accuracy, always verify at least one GCP against an independent check measurement after import.
               For RTK/PPK surveys, use the direct WGS84 coordinates from your GNSS receiver instead.
             </div>

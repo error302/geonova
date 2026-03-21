@@ -5,7 +5,7 @@ export default function QuickStartPage() {
     {
       number: '1',
       title: 'Create Account',
-      desc: 'Go to geonova.app → Get Started → Register with your email and password',
+      desc: 'Go to metardu.app → Get Started → Register with your email and password',
     },
     {
       number: '2',

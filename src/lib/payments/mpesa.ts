@@ -92,7 +92,7 @@ export class MpesaService {
         PhoneNumber: params.phoneNumber,
         CallBackURL: params.callbackUrl || `${process.env.NEXT_PUBLIC_APP_URL}/api/payments/mpesa/callback`,
         AccountReference: params.reference,
-        TransactionDesc: params.description || 'GeoNova Payment'
+        TransactionDesc: params.description || 'METARDU Payment'
       })
     })
 
@@ -217,7 +217,7 @@ export class AirtelMoneyService {
         transaction: {
           amount,
           currency: 'UGX',
-          description: 'GeoNova Payment'
+          description: 'METARDU Payment'
         }
       })
     })

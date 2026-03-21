@@ -6,7 +6,7 @@
  * - Bearings: WCB 0-360° clockwise from North
  */
 
-// GeoNova Engine - Geometry utilities
+// METARDU Engine - Geometry utilities
 
 import { Point2D, SurveyResult } from './types';
 import { toRadians, toDegrees, normalizeBearing } from './angles';

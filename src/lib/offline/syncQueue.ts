@@ -5,7 +5,7 @@ const DB_VERSION = 3
 const MAX_RETRIES = 3
 const SYNC_INTERVAL = 30000 // 30 seconds
 
-interface GeoNovaDB extends DBSchema {
+interface METARDUDB extends DBSchema {
   sync_queue: {
     key: number
     value: SyncOperation
@@ -40,11 +40,11 @@ interface GeoNovaDB extends DBSchema {
   }
 }
 
-let dbPromise: Promise<IDBPDatabase<GeoNovaDB>> | null = null
+let dbPromise: Promise<IDBPDatabase<METARDUDB>> | null = null
 
-export async function getDB(): Promise<IDBPDatabase<GeoNovaDB>> {
+export async function getDB(): Promise<IDBPDatabase<METARDUDB>> {
   if (!dbPromise) {
-    dbPromise = openDB<GeoNovaDB>(DB_NAME, DB_VERSION, {
+    dbPromise = openDB<METARDUDB>(DB_NAME, DB_VERSION, {
       upgrade(db, oldVersion, newVersion) {
         // Sync queue with indexes
         if (!db.objectStoreNames.contains('sync_queue')) {

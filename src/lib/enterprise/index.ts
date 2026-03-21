@@ -156,7 +156,7 @@ export interface WhiteLabelConfig {
 
 export const DEFAULT_WHITE_LABEL: WhiteLabelConfig = {
   enabled: false,
-  organizationName: 'GeoNova',
+  organizationName: 'METARDU',
   primaryColor: '#0EA5E9'
 }
 

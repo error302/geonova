@@ -401,7 +401,7 @@ export default function ProfilesPage({ params }: PageProps) {
                                 <input inputMode="numeric" value={svgVScale} onChange={(e) => setSvgVScale(parseInt(e.target.value || '100', 10) || 100)} className="mt-1 w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-3 py-2 text-[var(--text-primary)] font-mono" />
                               </label>
                             </div>
-                            <p className="text-xs text-[var(--text-muted)] mt-2">If a scale won’t fit, GeoNova will auto-fit to the nearest standard scale.</p>
+                            <p className="text-xs text-[var(--text-muted)] mt-2">If a scale won’t fit, METARDU will auto-fit to the nearest standard scale.</p>
                           </div>
                         </div>
 

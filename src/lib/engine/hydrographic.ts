@@ -1,6 +1,6 @@
 /**
  * Hydrographic reductions (Wells-style tide correction basics).
- * GeoNova uses these helpers inside field notes/workflows; display formatting lives in UI.
+ * METARDU uses these helpers inside field notes/workflows; display formatting lives in UI.
  */
 
 export function applyTideCorrection(depth: number, tideCorrection: number): number {

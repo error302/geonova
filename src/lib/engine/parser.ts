@@ -1,4 +1,4 @@
-// GeoNova Engine - Field data parser
+// METARDU Engine - Field data parser
 import { NamedPoint3D } from './types';
 
 export interface ParseResult {

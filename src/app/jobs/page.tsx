@@ -178,7 +178,7 @@ function PostJobModal({ onSave, onClose }: { onSave: (j: SurveyJob) => void; onC
           </div>
 
           <p className="text-xs text-[var(--text-muted)] bg-[var(--bg-secondary)] rounded-lg px-3 py-2">
-            GeoNova charges 5% commission on completed jobs. Your contact details will be visible to surveyors who apply.
+            METARDU charges 5% commission on completed jobs. Your contact details will be visible to surveyors who apply.
           </p>
         </div>
         <div className="flex gap-3 px-6 pb-5 pt-2 border-t border-[var(--border-color)]">
@@ -448,7 +448,7 @@ export default function JobsPage() {
           <div>
             <h1 className="text-2xl font-bold text-[var(--text-primary)]">Survey job board</h1>
             <p className="text-sm text-[var(--text-muted)] mt-1">
-              Post a survey job or find work. GeoNova charges 5% commission on completed jobs.
+              Post a survey job or find work. METARDU charges 5% commission on completed jobs.
             </p>
           </div>
           <button onClick={() => setShowPost(true)} className="btn btn-primary flex-shrink-0">

@@ -99,9 +99,9 @@ function PostModal({ onSave, onClose }: { onSave: (r: ReviewRequest) => void; on
           </div>
 
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Link to your GeoNova project or computation (optional)</label>
+            <label className="block text-xs text-[var(--text-muted)] mb-1">Link to your METARDU project or computation (optional)</label>
             <input value={form.attachmentNote} onChange={e => f('attachmentNote', e.target.value)}
-              placeholder="GeoNova project URL, Google Drive link, or other reference" className="input w-full" />
+              placeholder="METARDU project URL, Google Drive link, or other reference" className="input w-full" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">

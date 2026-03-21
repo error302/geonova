@@ -2,7 +2,7 @@
  * Tolerance Engine
  * Validates survey results against tolerance profiles following Basak standards
  * 
- * GeoNova Calculation Standards: N.N. Basak
+ * METARDU Calculation Standards: N.N. Basak
  * - No intermediate rounding
  * - Full floating point precision
  * - Round only at display layer

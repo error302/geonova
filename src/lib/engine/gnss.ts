@@ -5,7 +5,7 @@
  * - Round only at final display layer
  */
 
-// GeoNova Engine - GNSS Baseline Processing
+// METARDU Engine - GNSS Baseline Processing
 
 import { Point2D, Point3D } from './types';
 import { toRadians, toDegrees } from './angles';

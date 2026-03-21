@@ -58,7 +58,7 @@ export default function InstrumentsPage() {
       <div className="max-w-4xl mx-auto px-6">
         <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-2">Compatible Instruments</h1>
         <p className="text-[var(--text-secondary)] text-lg mb-12">
-          GeoNova imports data from all major total station brands
+          METARDU imports data from all major total station brands
         </p>
 
         <div className="grid gap-6 mb-12">
@@ -114,7 +114,7 @@ export default function InstrumentsPage() {
             <ExportStep number="4" title="Transfer to computer">
               Use the instrument's data transfer software to save the file to your computer.
             </ExportStep>
-            <ExportStep number="5" title="Import to GeoNova">
+            <ExportStep number="5" title="Import to METARDU">
               Go to Import → Total Station and upload your file.
             </ExportStep>
           </div>

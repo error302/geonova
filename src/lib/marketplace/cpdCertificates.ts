@@ -106,7 +106,7 @@ const sampleActivities: CPDActivity[] = [
     userId: 'user-001',
     type: 'course',
     title: 'Advanced GNSS Processing Techniques',
-    provider: 'GeoNova Academy',
+    provider: 'METARDU Academy',
     date: Date.now() - 30 * 24 * 60 * 60 * 1000,
     hours: 8,
     country: 'Kenya',
@@ -214,7 +214,7 @@ export function issueCPDCertificate(
     hours: activity.hours,
     issuedAt: Date.now(),
     certificateNumber: certNumber,
-    verificationUrl: `https://geonova.app/verify/cpd/${certNumber}`,
+    verificationUrl: `https://metardu.app/verify/cpd/${certNumber}`,
   }
 }
 
@@ -243,6 +243,6 @@ export function verifyCertificate(certificateNumber: string): CPDCertificate | n
     hours: 8,
     issuedAt: Date.now() - 25 * 24 * 60 * 60 * 1000,
     certificateNumber,
-    verificationUrl: `https://geonova.app/verify/cpd/${certificateNumber}`,
+    verificationUrl: `https://metardu.app/verify/cpd/${certificateNumber}`,
   }
 }

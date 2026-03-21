@@ -1,5 +1,5 @@
 /**
- * Rate limiter for GeoNova API routes.
+ * Rate limiter for METARDU API routes.
  *
  * Uses Upstash Redis when UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN
  * are set (required in production — serverless functions don't share memory).
@@ -81,7 +81,7 @@ export async function rateLimit(
 
   if (process.env.NODE_ENV === 'production') {
     console.error(
-      '[GeoNova] UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN not set. ' +
+      '[METARDU] UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN not set. ' +
       'Rate limiting is disabled in production. Set these env vars in Vercel immediately.'
     )
   }

@@ -2,8 +2,8 @@ export default function APIDocsPage() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">GeoNova API Documentation</h1>
-        <p className="text-[var(--text-muted)] mb-8">Integrate GeoNova into your applications</p>
+        <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">METARDU API Documentation</h1>
+        <p className="text-[var(--text-muted)] mb-8">Integrate METARDU into your applications</p>
 
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
           <h2 className="text-lg font-semibold text-blue-900 mb-2">API Access</h2>
@@ -12,7 +12,7 @@ export default function APIDocsPage() {
           </p>
           <div className="bg-[var(--bg-secondary)] rounded-lg p-4 border border-[var(--border-color)]">
             <p className="text-sm text-[var(--text-muted)] mb-1">Base URL</p>
-            <code className="text-sm bg-[var(--bg-tertiary)] px-2 py-1 rounded">https://api.geonova.app/v1</code>
+            <code className="text-sm bg-[var(--bg-tertiary)] px-2 py-1 rounded">https://api.metardu.app/v1</code>
           </div>
         </div>
 
@@ -25,7 +25,7 @@ export default function APIDocsPage() {
             <div className="bg-[var(--bg-secondary)] rounded-lg p-4 overflow-x-auto">
               <pre className="text-green-400 text-sm">
 {`curl -H "Authorization: Bearer gnv_xxxxxxxxxxxx" \\
-     https://api.geonova.app/v1/coordinates/transform`}
+     https://api.metardu.app/v1/coordinates/transform`}
               </pre>
             </div>
           </div>

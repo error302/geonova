@@ -46,7 +46,7 @@ export default function CSVImportPage() {
 
         <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-4">CSV Import Guide</h1>
         <p className="text-[var(--text-secondary)] text-lg mb-12">
-          Import your field notes automatically. GeoNova detects the survey type from your CSV format.
+          Import your field notes automatically. METARDU detects the survey type from your CSV format.
         </p>
 
         <section className="mb-12">

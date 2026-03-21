@@ -50,7 +50,7 @@ export default function AnalyticsPage() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-[var(--text-primary)]">Analytics</h1>
-            <p className="text-[var(--text-muted)]">Track your GeoNova usage</p>
+            <p className="text-[var(--text-muted)]">Track your METARDU usage</p>
           </div>
           <select
             value={period}

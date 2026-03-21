@@ -22,7 +22,7 @@ export interface Observation {
    * - distance residuals: meters
    * - bearing residuals: radians
    *
-   * If omitted, GeoNova derives weight from `distanceSigma` / `bearingSigmaArcSec` when provided.
+   * If omitted, METARDU derives weight from `distanceSigma` / `bearingSigmaArcSec` when provided.
    */
   weight?: number
   /** Distance standard deviation (meters). Used only when `distance` is provided and `weight` is omitted. */

@@ -6,7 +6,7 @@
  * - Bearings: WCB 0-360° clockwise from North
  */
 
-// GeoNova Engine - Area calculations
+// METARDU Engine - Area calculations
 
 import { Point2D, AreaResult } from './types';
 

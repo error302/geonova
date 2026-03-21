@@ -1,4 +1,4 @@
-// GeoNova Engine - Main export
+// METARDU Engine - Main export
 export * from './types';
 export * from './angles';
 export * from './distance';
