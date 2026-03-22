@@ -21,6 +21,7 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
   const [surveyType, setSurveyType] = useState('')
   const [roadClass, setRoadClass] = useState('')
   const [terrainType, setTerrainType] = useState('')
+  const [datum, setDatum] = useState<'ARC1960' | 'WGS84' | 'WGS84Geographic'>('ARC1960')
   const [clientName, setClientName] = useState('')
   const [surveyorName, setSurveyorName] = useState('')
 
@@ -47,6 +48,7 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
       setTerrainType(data.terrain_type || '')
       setClientName(data.client_name || '')
       setSurveyorName(data.surveyor_name || '')
+      setDatum(data.datum || 'ARC1960')
       setLoading(false)
     }
 
@@ -69,6 +71,7 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
         terrain_type: terrainType || null,
         client_name: clientName || null,
         surveyor_name: surveyorName || null,
+        datum,
       })
       .eq('id', projectId)
 
@@ -158,6 +161,20 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
                 setHemisphere(hem)
               }}
             />
+          </div>
+
+          <div>
+            <label className="block text-sm text-[var(--text-primary)] mb-2">Datum</label>
+            <select
+              value={datum}
+              onChange={(e) => setDatum(e.target.value as 'ARC1960' | 'WGS84' | 'WGS84Geographic')}
+              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
+            >
+              <option value="ARC1960">ARC1960 / UTM Zone 37S (EPSG:21037) — Kenya Default</option>
+              <option value="WGS84">WGS84 / UTM Zone 37S</option>
+              <option value="WGS84Geographic">WGS84 Geographic</option>
+            </select>
+            <p className="text-xs text-[var(--text-secondary)] mt-1">ARC1960 required for KeNHA submissions per RDM 1.1 §5.2</p>
           </div>
 
           <div>

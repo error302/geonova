@@ -35,7 +35,7 @@ export interface SurveyPlanData {
     municipality?: string
     utm_zone: number
     hemisphere: 'N' | 'S'
-    datum?: string
+    datum?: 'ARC1960' | 'WGS84' | 'WGS84Geographic'
     client_name?: string
     surveyor_name?: string
     surveyor_licence?: string
