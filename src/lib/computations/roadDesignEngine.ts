@@ -33,15 +33,16 @@ export interface HorizontalCurveResult {
 export function horizontalCurveElements(input: HorizontalCurveInput): HorizontalCurveResult {
   const { radius, deflectionAngleDeg, deflectionAngleMin, deflectionAngleSec, ipChainage } = input
 
-  // Source: Ghilani & Wolf, Eq. 24.1 — Deflection angle to radians
-  const delta = (deflectionAngleDeg + deflectionAngleMin / 60 + deflectionAngleSec / 3600) * Math.PI / 180
-  const halfDelta = delta / 2
+  // Source: Ghilani & Wolf, Eq. 24.1 — Deflection angle
+  const deltaDeg = deflectionAngleDeg + deflectionAngleMin / 60 + deflectionAngleSec / 3600
+  const deltaRad = deltaDeg * Math.PI / 180
+  const halfDelta = deltaRad / 2
 
-  // Source: RDM 1.3 Section 5.2 — Tangent length
+  // Source: RDM 1.3 Section 5.2 — Tangent length: T = R × tan(Δ/2)
   const tangentLength = radius * Math.tan(halfDelta)
 
-  // Source: RDM 1.3 Section 5.2 — Arc length
-  const curveLength = Math.PI * radius * delta / 180
+  // Source: RDM 1.3 Section 5.2 — Arc length: L = πRΔ/180 (Δ in degrees)
+  const curveLength = Math.PI * radius * deltaDeg / 180
 
   // Source: RDM 1.3 Section 5.2 — Long chord
   const longChord = 2 * radius * Math.sin(halfDelta)
@@ -65,10 +66,8 @@ export function horizontalCurveElements(input: HorizontalCurveInput): Horizontal
   const ctFromTC = tcChainage + curveLength
   const arithmeticCheck = { passed: Math.abs(ctFromIP - ctFromTC) < 0.001, diff: ctFromIP - ctFromTC }
 
-  const deltaDeg = deflectionAngleDeg + deflectionAngleMin / 60 + deflectionAngleSec / 3600
-
   const steps = [
-    { description: `Δ = ${deflectionAngleDeg}° + ${deflectionAngleMin}'/60 + ${deflectionAngleSec}"/3600`, formula: `${deltaDeg.toFixed(6)}°`, value: `${delta.toFixed(8)} rad` },
+    { description: `Δ = ${deflectionAngleDeg}° + ${deflectionAngleMin}'/60 + ${deflectionAngleSec}"/3600`, formula: `${deltaDeg.toFixed(6)}°`, value: `${deltaRad.toFixed(8)} rad` },
     { description: `T = R × tan(Δ/2)`, formula: `${radius} × tan(${halfDelta.toFixed(6)})`, value: `${tangentLength.toFixed(4)} m` },
     { description: `L = π × R × Δ / 180`, formula: `π × ${radius} × ${deltaDeg.toFixed(4)}° / 180`, value: `${curveLength.toFixed(4)} m` },
     { description: `C = 2R × sin(Δ/2)`, formula: `2 × ${radius} × sin(${halfDelta.toFixed(6)})`, value: `${longChord.toFixed(4)} m` },
@@ -82,7 +81,7 @@ export function horizontalCurveElements(input: HorizontalCurveInput): Horizontal
   ]
 
   return {
-    delta, tangentLength, curveLength, longChord, midOrdinate,
+    delta: deltaRad, tangentLength, curveLength, longChord, midOrdinate,
     externalDistance, degreeOfCurve,
     tcChainage, ccChainage, ctChainage,
     arithmeticCheck, steps,
