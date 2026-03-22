@@ -15,6 +15,7 @@ import {
   svgCornerDot, svgNorthArrow, svgScaleBar,
   svgSheetBorder, svgPanelDivider,
   svgFenceLine, svgFenceCallout,
+  svgIndicatoryBeaconCallout,
   escapeXml, polylineFromPoints,
   C_BLACK, C_GREEN, C_RED, C_GRID_MINOR, C_GRID_MAJOR,
   C_LOT_FILL, C_WARNING_BG,
@@ -217,6 +218,15 @@ export class SurveyPlanRenderer {
         case 'set': svg += svgSetMonument(cx, cy); break
         case 'masonry_nail': svg += svgMasonryNail(cx, cy, 'Masonry Nail\n1-00 on production\nof boundary'); break
         case 'iron_pin': svg += svgIronPin(cx, cy); break
+        case 'indicatory_beacon': {
+          const cornerX = this.toSvgX(rotPt.easting)
+          const cornerY = this.toSvgY(rotPt.northing)
+          const offsetPx = 20
+          const ibx = cornerX + offsetPx
+          const iby = cornerY + offsetPx
+          svg += svgIndicatoryBeaconCallout(ibx, iby, cornerX, cornerY, this.scale)
+          break
+        }
       }
     }
     return svg
@@ -619,6 +629,7 @@ export class SurveyPlanRenderer {
     svg += hline(y + mmToPx(hasMun ? 21 : 15))
     svg += text(p.firm_name || '', y + mmToPx(hasMun ? 25 : 19), 8, 'bold')
     svg += text(`\u00A9 ${new Date().getFullYear()}`, y + mmToPx(hasMun ? 28.5 : 22.5), 6)
+    svg += text('Survey Act Cap. 299 | Survey Regulations 1994 | RDM 1.3 (2023)', y + mmToPx(hasMun ? 32 : 26), 4.5, 'normal', '#888')
     svg += text('Distances shown are in metres.', y + mmToPx(hasMun ? 33 : 27), 7, 'normal', '#555')
     svg += text('Divide by 0.3048 for feet.', y + mmToPx(hasMun ? 36 : 30), 7, 'italic', '#555')
     return svg
@@ -666,6 +677,7 @@ export class SurveyPlanRenderer {
       { label: 'Set monument', symbol: `<circle cx="3" cy="0" r="3" fill="none" stroke="${C_GREEN}" stroke-width="1.5"/>` },
       { label: 'Masonry Nail', symbol: `<circle cx="3" cy="0" r="2.5" fill="${C_RED}"/>` },
       { label: 'Iron Pin', symbol: `<circle cx="3" cy="0" r="2" fill="${C_RED}" stroke="${C_BLACK}" stroke-width="0.4"/>` },
+      { label: '\u25C7 Indicatory Beacon (Cap. 299 Reg. 45)', symbol: `<polygon points="3,0 6,3 3,6 0,3" fill="none" stroke="${C_GREEN}" stroke-width="1.2" transform="scale(0.6) translate(1.5,1.5)"/>` },
     ]
     for (const item of items) {
       svg += `<g transform="translate(${leftPad}, ${y += mmToPx(4)})">${item.symbol}</g>`
