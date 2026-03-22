@@ -1,28 +1,28 @@
 'use client'
 
 import { useState } from 'react'
-import { SUBSCRIPTION_PLANS } from '@/lib/reports/surveyReport/subscription'
-import type { SubscriptionTier } from '@/lib/reports/surveyReport/types'
+import Link from 'next/link'
+import { PLAN_CATALOG } from '@/lib/subscription/catalog'
+import type { PlanId } from '@/lib/subscription/catalog'
+import type { FeatureKey } from '@/lib/subscription/featureGates'
 
 interface UpgradeModalProps {
   isOpen: boolean
   onClose: () => void
-  currentTier?: SubscriptionTier
+  currentPlan?: PlanId
+  feature?: FeatureKey
 }
 
-export default function UpgradeModal({ isOpen, onClose, currentTier = 'free' }: UpgradeModalProps) {
-  const [selectedTier, setSelectedTier] = useState<SubscriptionTier>('professional')
-  const [loading, setLoading] = useState(false)
+const PLAN_COLORS: Record<PlanId, { border: string; badge: string; text: string }> = {
+  free: { border: 'border-[var(--border-color)]', badge: 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]', text: 'text-[var(--text-primary)]' },
+  pro: { border: 'border-[var(--accent)]', badge: 'bg-emerald-900/50 text-emerald-400', text: 'text-[var(--text-primary)]' },
+  team: { border: 'border-blue-600', badge: 'bg-blue-900/50 text-blue-400', text: 'text-[var(--text-primary)]' },
+}
+
+export default function UpgradeModal({ isOpen, onClose, currentPlan = 'free', feature }: UpgradeModalProps) {
+  const [selectedPlan, setSelectedPlan] = useState<PlanId>('pro')
 
   if (!isOpen) return null
-
-  const handleUpgrade = () => {
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      alert(`Thank you for your interest in the ${selectedTier} plan! Payment flow coming soon.`)
-    }, 1000)
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -31,10 +31,11 @@ export default function UpgradeModal({ isOpen, onClose, currentTier = 'free' }: 
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-xl font-bold text-[var(--text-primary)]">
-              Upgrade to Generate Survey Reports
+              {feature ? `Upgrade to Access Feature` : 'Upgrade Your Plan'}
             </h2>
             <p className="text-sm text-[var(--text-muted)] mt-1">
-              Current tier: <span className="capitalize">{currentTier}</span>
+              Current plan: <span className="capitalize font-semibold">{currentPlan}</span>
+              {feature && <span className="ml-2">· {feature.replace(/_/g, ' ')} requires Pro</span>}
             </p>
           </div>
           <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-2xl leading-none">
@@ -42,49 +43,53 @@ export default function UpgradeModal({ isOpen, onClose, currentTier = 'free' }: 
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {SUBSCRIPTION_PLANS.map(plan => (
-            <div
-              key={plan.tier}
-              onClick={() => setSelectedTier(plan.tier)}
-              className={`cursor-pointer rounded-xl border-2 p-4 transition-all ${
-                selectedTier === plan.tier
-                  ? 'border-[var(--accent)] bg-[var(--accent)]/5'
-                  : 'border-[var(--border-color)] hover:border-[var(--accent)]/50'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-bold text-[var(--text-primary)]">{plan.name}</h3>
-                {selectedTier === plan.tier && (
-                  <div className="w-5 h-5 rounded-full bg-[var(--accent)] flex items-center justify-center">
-                    <svg className="w-3 h-3 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                    </svg>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          {PLAN_CATALOG.filter(p => p.id !== 'free').map(plan => {
+            const colors = PLAN_COLORS[plan.id]
+            const isSelected = selectedPlan === plan.id
+            return (
+              <div
+                key={plan.id}
+                onClick={() => setSelectedPlan(plan.id)}
+                className={`cursor-pointer rounded-xl border-2 p-5 transition-all ${
+                  isSelected ? `${colors.border} bg-[var(--accent)]/5` : `${colors.border} hover:border-[var(--accent)]/50`
+                }`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-[var(--text-primary)]">{plan.name}</h3>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${colors.badge}`}>{plan.id.toUpperCase()}</span>
                   </div>
-                )}
+                  {isSelected && (
+                    <div className="w-5 h-5 rounded-full bg-[var(--accent)] flex items-center justify-center">
+                      <svg className="w-3 h-3 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <div className="mb-4">
+                  <span className="text-3xl font-bold text-[var(--accent)]">
+                    KES {plan.prices.KES.toLocaleString()}
+                  </span>
+                  <span className="text-sm text-[var(--text-muted)]">/month</span>
+                </div>
+                <ul className="space-y-1.5">
+                  {plan.features.slice(0, 6).map((f, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-[var(--text-secondary)]">
+                      <svg className="w-3 h-3 text-[var(--accent)] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                      {f}
+                    </li>
+                  ))}
+                  {plan.features.length > 6 && (
+                    <li className="text-xs text-[var(--text-muted)]">+ {plan.features.length - 6} more features</li>
+                  )}
+                </ul>
               </div>
-              <div className="mb-3">
-                <span className="text-2xl font-bold text-[var(--accent)]">{plan.price}</span>
-                <span className="text-sm text-[var(--text-muted)]">{plan.period}</span>
-              </div>
-              <ul className="space-y-1.5">
-                {plan.features.map((f, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-[var(--text-secondary)]">
-                    <svg className="w-3 h-3 text-green-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                    </svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <div className="bg-amber-900/20 border border-amber-700/30 rounded-lg p-3 mb-6">
-          <p className="text-xs text-amber-300">
-            <strong>Survey Reports</strong> are an exclusive Professional-tier feature. Upgrade to unlock RDM 1.1-compliant PDF reports with up to 14 sections including traverse computation, beacon descriptions, and authentication blocks.
-          </p>
+            )
+          })}
         </div>
 
         <div className="flex gap-3">
@@ -94,13 +99,13 @@ export default function UpgradeModal({ isOpen, onClose, currentTier = 'free' }: 
           >
             Cancel
           </button>
-          <button
-            onClick={handleUpgrade}
-            disabled={loading}
-            className="flex-1 px-4 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg text-sm transition-colors disabled:opacity-50"
+          <Link
+            href={`/checkout?plan=${selectedPlan}&currency=KES`}
+            onClick={onClose}
+            className="flex-1 px-4 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg text-sm transition-colors text-center"
           >
-            {loading ? 'Redirecting...' : 'Upgrade Now'}
-          </button>
+            Upgrade to {selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)}
+          </Link>
         </div>
       </div>
     </div>
