@@ -153,3 +153,11 @@ The computation engine is the product. The plan and the reports are the outputs.
 - `5116414` — feat(report): auto-generated RDM 1.1 survey report
 - `19d421a` — feat: compliance checklist, coordinate converter, datum fix, accuracy badge
 - `cfe3f4b` — docs: save METARDU master product brief
+- `bfcf084` — feat(setting-out): Brief 10 — setting out module with BS bearing, Hz/HD/VA/SD table, coordinate tolerance check (RDM 1.1 Table 5.2 ±25mm/±15mm), stake-out field sheet, chainage-offset table, CSV import. Fixes shoelace closing edge bug in earthworksEngine.
+- `6666e6a` — feat(subscription): Brief 11 — featureGates (TIERS config, canAccess/getLimit), subscriptionEngine (access checks, usage tracking), SubscriptionBadge, PricingCard, billing page (cancel/reactivate), Stripe webhook handler, plan_usage migration, UpgradeModal rewrite
+
+### Computation Integrity Rules (permanent)
+- All formulas cite RDM 1.1/RDM 1.3 or academic source in comments
+- No assumed values — all inputs from user or derived from user data
+- Intermediate values shown in derivation steps
+- Expected test values verified against independent calculation, not against brief (brief values may contain typos — engine correctness takes priority)
