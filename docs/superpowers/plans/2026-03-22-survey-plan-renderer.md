@@ -810,64 +810,56 @@ export class SurveyPlanRenderer {
   }
   
   private drawRightPanel(): string {
-    // Helper closures for consistent text rendering
     const p = this.data.project
     const leftPad = this.panelX + mmToPx(3)
     const rightPad = this.panelX + this.panelW - mmToPx(3)
     const panelInnerW = this.panelW - mmToPx(6)
 
     const svgParts: string[] = []
-
     svgParts.push(this.drawReportHeader(leftPad, rightPad, panelInnerW))
     svgParts.push(this.drawPlanInfoBox(leftPad, rightPad, panelInnerW))
     svgParts.push(this.drawLegend(leftPad, panelInnerW))
     svgParts.push(this.drawWarningBox(leftPad, rightPad, panelInnerW))
     svgParts.push(this.drawCertificate(leftPad, rightPad, panelInnerW))
     svgParts.push(this.drawCompanyFooter(leftPad, rightPad))
-
     return svgParts.join('')
   }
 
   private drawReportHeader(leftPad: number, rightPad: number, panelInnerW: number): string {
     const p = this.data.project
-    const y = this.margin + mmToPx(4)
+    const hasMun = !!p.municipality
+    let y = this.margin + mmToPx(4)
     let svg = ''
-    const text = (content: string, yPos: number, size: number, weight: string = 'normal', color: string = C_BLACK): string =>
+    const text = (content: string, yPos: number, size: number, weight = 'normal', color = C_BLACK) =>
       `<text x="${leftPad}" y="${yPos}" font-family="Share Tech Mono, Courier New" font-size="${size}" font-weight="${weight}" fill="${color}">${escapeXml(content)}</text>`
-    const line = (y1: number, y2: number): string =>
-      `<line x1="${leftPad}" y1="${y1}" x2="${rightPad}" y2="${y2}" stroke="${C_BLACK}" stroke-width="0.5"/>`
-
+    const hline = (y1: number) =>
+      `<line x1="${leftPad}" y1="${y1}" x2="${rightPad}" y2="${y1}" stroke="${C_BLACK}" stroke-width="0.5"/>`
     svg += text('SURVEYOR\'S REAL PROPERTY REPORT', y, 5)
     svg += text(p.plan_title || 'BOUNDARY IDENTIFICATION PLAN', y + mmToPx(6), 9, 'bold')
-    if (p.municipality) svg += text(p.municipality, y + mmToPx(11), 16, 'bold')
-    svg += text(`SCALE ${calcScaleLabel(this.scale)}`, y + mmToPx(p.municipality ? 18 : 12), 8, 'bold')
-    svg += line(y + mmToPx(p.municipality ? 21 : 15), y + mmToPx(p.municipality ? 21.5 : 15.5))
-    svg += text(p.firm_name || '', y + mmToPx(p.municipality ? 25 : 19), 8, 'bold')
-    svg += text(`© ${new Date().getFullYear()}`, y + mmToPx(p.municipality ? 28.5 : 22.5), 6)
-    svg += text('Distances shown are in metres.', y + mmToPx(p.municipality ? 33 : 27), 5, 'normal', '#555')
-    svg += text('Divide by 0.3048 for feet.', y + mmToPx(p.municipality ? 36 : 30), 5, 'normal', '#555')
+    if (hasMun) svg += text(p.municipality, y + mmToPx(11), 16, 'bold')
+    svg += text(`SCALE ${calcScaleLabel(this.scale)}`, y + mmToPx(hasMun ? 18 : 12), 8, 'bold')
+    svg += hline(y + mmToPx(hasMun ? 21 : 15))
+    svg += text(p.firm_name || '', y + mmToPx(hasMun ? 25 : 19), 8, 'bold')
+    svg += text(`© ${new Date().getFullYear()}`, y + mmToPx(hasMun ? 28.5 : 22.5), 6)
+    svg += text('Distances shown are in metres.', y + mmToPx(hasMun ? 33 : 27), 5, 'normal', '#555')
+    svg += text('Divide by 0.3048 for feet.', y + mmToPx(hasMun ? 36 : 30), 5, 'normal', '#555')
     return svg
   }
 
   private drawPlanInfoBox(leftPad: number, rightPad: number, panelInnerW: number): string {
     const p = this.data.project
-    const startY = this.margin + mmToPx(p.municipality ? 40 : 34)
+    const hasMun = !!p.municipality
+    const startY = this.margin + mmToPx(hasMun ? 40 : 34)
     let y = startY
     let svg = ''
     const box = (yPos: number, h: number) =>
       `<rect x="${leftPad}" y="${yPos}" width="${panelInnerW}" height="${h}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
-    const text = (label: string, value: string, yPos: number): string => {
-      const labelW = mmToPx(22)
-      return [
-        `<text x="${leftPad}" y="${yPos}" font-family="Share Tech Mono, Courier New" font-size="5" fill="#555">${escapeXml(label)}</text>`,
-        `<text x="${leftPad + labelW}" y="${yPos}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">${escapeXml(value)}</text>`,
-      ].join('')
-    }
-
+    const row = (label: string, value: string) =>
+      `<text x="${leftPad}" y="${y += mmToPx(4)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="#555">${escapeXml(label)}</text><text x="${leftPad + mmToPx(22)}" y="${y}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">${escapeXml(value)}</text>`
     svg += box(y, mmToPx(4))
     svg += `<text x="${leftPad}" y="${y + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">PLAN INFORMATION</text>`
     y += mmToPx(4)
-    const info = [
+    const info: Array<[string, string]> = [
       ['Title Ref:', p.reference || '—'],
       ['Datum:', p.datum || 'WGS84'],
       ['UTM Zone:', `${p.utm_zone}${p.hemisphere}`],
@@ -876,28 +868,28 @@ export class SurveyPlanRenderer {
       ['Client:', p.client_name || '—'],
       ['Drawing No:', p.drawing_no || `MD-${Date.now().toString().slice(-6)}`],
     ]
-    for (const [label, value] of info) {
-      svg += text(label, value, y += mmToPx(4))
-    }
+    for (const [label, value] of info) svg += row(label, value)
     return svg
   }
 
   private drawLegend(leftPad: number, panelInnerW: number): string {
-    const afterInfo = this.margin + mmToPx(this.data.project.municipality ? 40 : 34) + mmToPx(7 * 4 + 4 + 6)
+    const hasMun = !!this.data.project.municipality
+    const afterInfo = this.margin + mmToPx(hasMun ? 40 : 34) + mmToPx(7 * 4 + 4 + 6)
     let y = afterInfo
     let svg = ''
     const box = (yPos: number, h: number) =>
       `<rect x="${leftPad}" y="${yPos}" width="${panelInnerW}" height="${h}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
     svg += box(y, mmToPx(4))
     svg += `<text x="${leftPad}" y="${y + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">LEGEND</text>`
-    const legendItems = [
+    const items = [
       { label: 'Subject boundary', symbol: `<line x1="0" y1="0" x2="20" y2="0" stroke="${C_BLACK}" stroke-width="2.5"/>` },
       { label: 'Adjacent boundary', symbol: `<line x1="0" y1="0" x2="20" y2="0" stroke="${C_BLACK}" stroke-width="1"/>` },
       { label: 'Found monument', symbol: `<rect x="0" y="-3" width="6" height="6" fill="${C_GREEN}" stroke="${C_BLACK}" stroke-width="0.5"/>` },
       { label: 'Set monument', symbol: `<circle cx="3" cy="0" r="3" fill="none" stroke="${C_GREEN}" stroke-width="1.5"/>` },
       { label: 'Masonry Nail', symbol: `<circle cx="3" cy="0" r="2.5" fill="${C_RED}"/>` },
+      { label: 'Iron Pin', symbol: `<circle cx="3" cy="0" r="2" fill="${C_RED}" stroke="${C_BLACK}" stroke-width="0.4"/>` },
     ]
-    for (const item of legendItems) {
+    for (const item of items) {
       svg += `<g transform="translate(${leftPad}, ${y += mmToPx(4)})">${item.symbol}</g>`
       svg += `<text x="${leftPad + mmToPx(10)}" y="${y}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">${escapeXml(item.label)}</text>`
     }
@@ -905,7 +897,8 @@ export class SurveyPlanRenderer {
   }
 
   private drawWarningBox(leftPad: number, rightPad: number, panelInnerW: number): string {
-    const afterLegend = this.margin + mmToPx(this.data.project.municipality ? 40 : 34) + mmToPx(7 * 4 + 4 + 6) + mmToPx(5 * 4 + 6)
+    const hasMun = !!this.data.project.municipality
+    const afterLegend = this.margin + mmToPx(hasMun ? 40 : 34) + mmToPx(7 * 4 + 4 + 6) + mmToPx(6 * 4 + 6)
     const y = afterLegend
     let svg = ''
     svg += `<rect x="${leftPad}" y="${y}" width="${panelInnerW}" height="${mmToPx(12)}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
@@ -918,170 +911,40 @@ export class SurveyPlanRenderer {
   }
 
   private drawCertificate(leftPad: number, rightPad: number, panelInnerW: number): string {
-    const afterWarning = this.margin + mmToPx(this.data.project.municipality ? 40 : 34) + mmToPx(7 * 4 + 4 + 6) + mmToPx(5 * 4 + 6) + mmToPx(12 + 4)
+    const hasMun = !!this.data.project.municipality
+    const afterWarning = this.margin + mmToPx(hasMun ? 40 : 34) + mmToPx(7 * 4 + 4 + 6) + mmToPx(6 * 4 + 6) + mmToPx(12 + 4)
     const y = afterWarning
     const p = this.data.project
     let svg = ''
     svg += `<rect x="${leftPad}" y="${y}" width="${panelInnerW}" height="${mmToPx(2)}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
     svg += `<text x="${leftPad}" y="${y + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">CERTIFICATE</text>`
-    svg += `<text x="${leftPad}" y="${y + mmToPx(7)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">I certify that this plan is</text>`
-    svg += `<text x="${leftPad}" y="${y + mmToPx(10)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">correct and in accordance</text>`
-    svg += `<text x="${leftPad}" y="${y + mmToPx(13)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">with applicable standards.</text>`
-    const sigY = y + mmToPx(18)
+    svg += `<text x="${leftPad}" y="${y + mmToPx(7)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">I certify that this plan is correct and in accordance with applicable standards.</text>`
+    const sigY = y + mmToPx(11)
     svg += `<line x1="${leftPad}" y1="${sigY}" x2="${leftPad + mmToPx(50)}" y2="${sigY}" stroke="${C_BLACK}" stroke-width="0.5"/>`
     svg += `<text x="${leftPad}" y="${sigY + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">${escapeXml(p.surveyor_name || 'The Professional Licensed Surveyor')}</text>`
-    if (p.surveyor_licence) {
-      svg += `<text x="${leftPad}" y="${sigY + mmToPx(6)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">Licence No: ${escapeXml(p.surveyor_licence)}</text>`
-    }
+    if (p.surveyor_licence) svg += `<text x="${leftPad}" y="${sigY + mmToPx(6)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">Licence No: ${escapeXml(p.surveyor_licence)}</text>`
     return svg
   }
 
   private drawCompanyFooter(leftPad: number, rightPad: number): string {
-    const p = this.data.project
-    // Position below certificate
-    const certY = this.margin + mmToPx(this.data.project.municipality ? 40 : 34) + mmToPx(7 * 4 + 4 + 6) + mmToPx(5 * 4 + 6) + mmToPx(12 + 4) + mmToPx(25)
+    const hasMun = !!this.data.project.municipality
+    const certY = this.margin + mmToPx(hasMun ? 40 : 34) + mmToPx(7 * 4 + 4 + 6) + mmToPx(6 * 4 + 6) + mmToPx(12 + 4) + mmToPx(20)
     const y = certY
-    let svg = ''
-    svg += `<line x1="${leftPad}" y1="${y}" x2="${rightPad}" y2="${y}" stroke="${C_BLACK}" stroke-width="0.5"/>`
+    const p = this.data.project
+    let svg = `<line x1="${leftPad}" y1="${y}" x2="${rightPad}" y2="${y}" stroke="${C_BLACK}" stroke-width="0.5"/>`
     if (p.firm_phone) svg += `<text x="${leftPad}" y="${y + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">${escapeXml(p.firm_phone)}</text>`
     if (p.firm_email) svg += `<text x="${leftPad}" y="${y + mmToPx(6)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">${escapeXml(p.firm_email)}</text>`
     return svg
   }
-    
-    // 4. Scale text
-    svg += text(`SCALE ${calcScaleLabel(this.scale)}`, leftPad, y += mmToPx(6), 8, 'bold')
-    
-    // Horizontal rule
-    svg += line(leftPad, y += mmToPx(3), rightPad, y)
-    
-    // 5. Company name + year
-    svg += text(p.firm_name || '', leftPad, y += mmToPx(4), 8, 'bold')
-    svg += text(`© ${new Date().getFullYear()}`, leftPad, y += mmToPx(3.5), 6)
-    
-    // 6. Metric conversion note
-    svg += text('Distances shown are in metres.', leftPad, y += mmToPx(5), 5, 'normal', '#555')
-    svg += text('Divide by 0.3048 for feet.', leftPad, y += mmToPx(3), 5, 'normal', '#555')
-    
-    // 7. Plan Information box
-    svg += box(leftPad, y += mmToPx(4), panelInnerW, mmToPx(2))
-    svg += text('PLAN INFORMATION', leftPad, y += mmToPx(3.5), 5, 'bold')
-    const info = [
-      ['Title Ref:', p.reference || '—'],
-      ['Datum:', p.datum || 'WGS84'],
-      ['UTM Zone:', `${p.utm_zone}${p.hemisphere}`],
-      ['Area:', p.area_sqm ? `${p.area_sqm.toFixed(2)} m\u00B2` : '—'],
-      ['Client:', p.client_name || '—'],
-      ['Drawing No:', p.drawing_no || `MD-${Date.now().toString().slice(-6)}`],
-    ]
-    for (const [label, value] of info) {
-      svg += text(label, leftPad, y += mmToPx(4), 5, 'normal', '#555')
-      svg += text(value, leftPad + mmToPx(25), y, 5, 'bold')
-    }
-    
-    // 8. Legend
-    svg += box(leftPad, y += mmToPx(4), panelInnerW, mmToPx(2))
-    svg += text('LEGEND', leftPad, y += mmToPx(3.5), 5, 'bold')
-    
-    const legendItems = [
-      { label: 'Subject boundary', symbol: `<line x1="0" y1="0" x2="20" y2="0" stroke="${C_BLACK}" stroke-width="2.5"/>` },
-      { label: 'Adjacent boundary', symbol: `<line x1="0" y1="0" x2="20" y2="0" stroke="${C_BLACK}" stroke-width="1"/>` },
-      { label: 'Found monument', symbol: `<rect x="0" y="-3" width="6" height="6" fill="${C_GREEN}" stroke="${C_BLACK}" stroke-width="0.5"/>` },
-      { label: 'Set monument', symbol: `<circle cx="3" cy="0" r="3" fill="none" stroke="${C_GREEN}" stroke-width="1.5"/>` },
-      { label: 'Masonry Nail', symbol: `<circle cx="3" cy="0" r="2.5" fill="${C_RED}"/>` },
-    ]
-    for (const item of legendItems) {
-      svg += `<g transform="translate(${leftPad}, ${y += mmToPx(4)})">${item.symbol}</g>`
-      svg += text(item.label, leftPad + mmToPx(10), y, 5)
-    }
-    
-    // 9. Warning box
-    svg += box(leftPad, y += mmToPx(4), panelInnerW, mmToPx(10), 0.5)
-    svg += `<rect x="${leftPad + 0.5}" y="${y + 0.5}" width="${panelInnerW - 1}" height="${mmToPx(10) - 1}" fill="${C_WARNING_BG}"/>`
-    svg += text('WARNING: Fence set-out pegs', leftPad + mmToPx(2), y += mmToPx(3), 5, 'bold')
-    svg += text('must be verified on site.', leftPad + mmToPx(2), y += mmToPx(3), 5, 'bold')
-    svg += text('Dimensions subject to', leftPad + mmToPx(2), y += mmToPx(3), 5)
-    svg += text('survey verification.', leftPad + mmToPx(2), y += mmToPx(3), 5)
-    
-    // 10. Surveyor's Certificate
-    svg += box(leftPad, y += mmToPx(3), panelInnerW, mmToPx(2))
-    svg += text('CERTIFICATE', leftPad, y += mmToPx(3.5), 5, 'bold')
-    svg += text('I certify that this plan is', leftPad, y += mmToPx(4), 5)
-    svg += text('correct and in accordance', leftPad, y += mmToPx(3), 5)
-    svg += text('with applicable standards.', leftPad, y += mmToPx(3), 5)
-    
-    // Signature line
-    svg += line(leftPad, y += mmToPx(5), leftPad + mmToPx(50), y, 0.5)
-    svg += text(p.surveyor_name || 'The Professional Licensed Surveyor', leftPad, y += mmToPx(3), 5, 'bold')
-    if (p.surveyor_licence) {
-      svg += text(`Licence No: ${p.surveyor_licence}`, leftPad, y += mmToPx(3), 5)
-    }
-    
-    // 11. Company footer in panel
-    svg += line(leftPad, y += mmToPx(5), rightPad, y)
-    if (p.firm_phone) svg += text(p.firm_phone, leftPad, y += mmToPx(3), 5)
-    if (p.firm_email) svg += text(p.firm_email, leftPad, y += mmToPx(3), 5)
-    
-    return svg
-  }
-  
-  private drawSheetFooter(): string {
-    const footerY = this.pageH - this.titleBlockH
-    const footerH = this.titleBlockH
-    
-    let svg = `<rect x="${this.margin}" y="${footerY}" width="${this.pageW - this.margin * 2}" height="${footerH}" fill="#F8F8F8"/>`
-    svg += `<line x1="${this.margin}" y1="${footerY}" x2="${this.pageW - this.margin}" y2="${footerY}" stroke="${C_BLACK}" stroke-width="2"/>`
-    
-    const p = this.data.project
-    const cols = 8
-    const colW = (this.pageW - this.margin * 2) / cols
-    
-    const fields = [
-      ['Field', ''],
-      ['Drawing', p.drawing_no || `MD-${Date.now().toString().slice(-6)}`],
-      ['Checked', ''],
-      ['Address', p.firm_address || ''],
-      ['Date', new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })],
-      ['Work Order', ''],
-      ['Job No.', p.reference || ''],
-      [p.firm_name || 'METARDU', ''],
-    ]
-    
-    let x = this.margin
-    for (let i = 0; i < cols; i++) {
-      const [label, value] = fields[i] || ['', '']
-      const cx = x + colW / 2
-      svg += `<line x1="${x}" y1="${footerY}" x2="${x}" y2="${footerY + footerH}" stroke="${C_BLACK}" stroke-width="0.5"/>`
-      
-      if (i === cols - 1) {
-        // Last column: company name, dark background
-        svg += `<rect x="${x}" y="${footerY}" width="${colW}" height="${footerH}" fill="${C_BLACK}"/>`
-        svg += `<text x="${cx}" y="${footerY + footerH / 2 + 4}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="11" font-weight="bold" fill="white">${escapeXml(label)}</text>`
-      } else {
-        svg += `<text x="${cx}" y="${footerY + mmToPx(4)}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="5" fill="#555">${escapeXml(label)}</text>`
-        svg += `<text x="${cx}" y="${footerY + mmToPx(10)}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="7" font-weight="bold" fill="${C_BLACK}">${escapeXml(value)}</text>`
-      }
-      x += colW
-    }
-    
-    return svg
-  }
-  
+
   // ── Public API ─────────────────────────────────────────────────────────────
-  
+
   render(): string {
     const layers: string[] = []
-    
     layers.push(this.drawBackground())
     layers.push(this.drawSheetBorder())
-    
-    if (this.opts.includePanel) {
-      layers.push(this.drawPanelDivider())
-    }
-    
-    if (this.opts.includeGrid) {
-      layers.push(this.drawGrid())
-    }
-    
+    if (this.opts.includePanel) layers.push(this.drawPanelDivider())
+    if (this.opts.includeGrid) layers.push(this.drawGrid())
     layers.push(this.drawLotFill())
     layers.push(this.drawAdjacentLots())
     layers.push(this.drawBoundary())
@@ -1093,514 +956,11 @@ export class SurveyPlanRenderer {
     layers.push(this.drawBuildings())
     layers.push(this.drawNorthArrow())
     layers.push(this.drawScaleBar())
-    
-    if (this.opts.includePanel) {
-      layers.push(this.drawRightPanel())
-    }
-    
+    if (this.opts.includePanel) layers.push(this.drawRightPanel())
     layers.push(this.drawSheetFooter())
-    
-    const svgContent = layers.join('\n')
-    
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${this.pageW} ${this.pageH}" width="${this.pageW}" height="${this.pageH}" style="font-family: 'Share Tech Mono', 'Courier New', monospace;">${svgContent}</svg>`
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${this.pageW} ${this.pageH}" width="${this.pageW}" height="${this.pageH}" style="font-family: 'Share Tech Mono', 'Courier New', monospace;">${layers.join('\n')}</svg>`
   }
-  
+
   getScale(): number { return this.scale }
 }
-```
 
-- [ ] **Step 2: Commit**
-
-```bash
-git add src/lib/reports/surveyPlan/renderer.ts
-git commit -m "feat(surveyPlan): add SurveyPlanRenderer class with all drawing layers"
-```
-
----
-
-## Task 5: Viewer Component (`src/components/SurveyPlanViewer.tsx`)
-
-**File:** Create: `src/components/SurveyPlanViewer.tsx`
-
-- [ ] **Step 1: Write the viewer**
-
-```tsx
-'use client'
-
-import { useState, useRef, useEffect } from 'react'
-import type { SurveyPlanData, PlanOptions } from '@/lib/reports/surveyPlan/types'
-import { SurveyPlanRenderer } from '@/lib/reports/surveyPlan/renderer'
-
-interface SurveyPlanViewerProps {
-  data: SurveyPlanData
-  options?: PlanOptions
-  className?: string
-}
-
-const ZOOM_LEVELS = [0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 4.0]
-
-export default function SurveyPlanViewer({ data, options, className = '' }: SurveyPlanViewerProps) {
-  const [scale, setScale] = useState(1.0)
-  const [svgContent, setSvgContent] = useState('')
-  const [loading, setLoading] = useState(true)
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    try {
-      const renderer = new SurveyPlanRenderer(data, options)
-      setSvgContent(renderer.render())
-    } catch (e) {
-      console.error('Survey plan render error:', e)
-      setSvgContent('')
-    } finally {
-      setLoading(false)
-    }
-  }, [data, options])
-
-  const zoomIn = () => {
-    const idx = ZOOM_LEVELS.findIndex(z => z > scale)
-    if (idx !== -1) setScale(ZOOM_LEVELS[idx])
-  }
-
-  const zoomOut = () => {
-    const idx = ZOOM_LEVELS.findLastIndex(z => z < scale)
-    if (idx !== -1) setScale(ZOOM_LEVELS[idx])
-  }
-
-  const fitToWidth = () => {
-    if (!containerRef.current) return
-    setScale(1.0)
-  }
-
-  return (
-    <div className={`flex flex-col h-full ${className}`}>
-      {/* Controls */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-[var(--border)] bg-[var(--bg-secondary)]">
-        <button
-          onClick={zoomOut}
-          disabled={scale <= ZOOM_LEVELS[0]}
-          className="px-2 py-1 text-sm rounded hover:bg-[var(--bg-tertiary)] disabled:opacity-30"
-        >
-          −
-        </button>
-        <span className="text-xs font-mono min-w-[48px] text-center">
-          {Math.round(scale * 100)}%
-        </span>
-        <button
-          onClick={zoomIn}
-          disabled={scale >= ZOOM_LEVELS[ZOOM_LEVELS.length - 1]}
-          className="px-2 py-1 text-sm rounded hover:bg-[var(--bg-tertiary)] disabled:opacity-30"
-        >
-          +
-        </button>
-        <button
-          onClick={fitToWidth}
-          className="px-2 py-1 text-xs rounded hover:bg-[var(--bg-tertiary)] border border-[var(--border)]"
-        >
-          Fit
-        </button>
-        <div className="flex-1" />
-        {svgContent && (
-          <a
-            href={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgContent)}`}
-            download={`${data.project.name.replace(/\s+/g, '_')}_Plan.svg`}
-            className="px-3 py-1 text-xs rounded bg-[var(--accent)] text-black font-medium hover:opacity-80"
-          >
-            Download SVG
-          </a>
-        )}
-      </div>
-
-      {/* SVG Canvas */}
-      <div
-        ref={containerRef}
-        className="flex-1 overflow-auto bg-[#e8e8e8] p-4"
-        style={{ cursor: 'grab' }}
-      >
-        {loading ? (
-          <div className="flex items-center justify-center h-full text-[var(--text-secondary)]">
-            Generating plan...
-          </div>
-        ) : svgContent ? (
-          <div
-            className="shadow-lg mx-auto"
-            style={{
-              transform: `scale(${scale})`,
-              transformOrigin: 'top center',
-              width: 'fit-content',
-            }}
-            dangerouslySetInnerHTML={{ __html: svgContent }}
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full text-[var(--text-secondary)]">
-            No plan data available
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-```
-
-- [ ] **Step 2: Commit**
-
-```bash
-git add src/components/SurveyPlanViewer.tsx
-git commit -m "feat(surveyPlan): add SurveyPlanViewer component with zoom controls"
-```
-
----
-
-## Task 6: Export Component (`src/components/SurveyPlanExport.tsx`)
-
-**File:** Create: `src/components/SurveyPlanExport.tsx`
-
-- [ ] **Step 1: Write the export component**
-
-```tsx
-'use client'
-
-import { useState } from 'react'
-import type { SurveyPlanData, PlanOptions } from '@/lib/reports/surveyPlan/types'
-import { SurveyPlanRenderer } from '@/lib/reports/surveyPlan/renderer'
-
-interface SurveyPlanExportProps {
-  data: SurveyPlanData
-  options?: PlanOptions
-}
-
-export default function SurveyPlanExport({ data, options }: SurveyPlanExportProps) {
-  const [exporting, setExporting] = useState(false)
-
-  const handleExport = async () => {
-    setExporting(true)
-    try {
-      // Render SVG
-      const renderer = new SurveyPlanRenderer(data, options)
-      const svgString = renderer.render()
-
-      // Create a temporary div with the SVG
-      const container = document.createElement('div')
-      container.innerHTML = svgString
-      const svgEl = container.querySelector('svg')
-      if (!svgEl) throw new Error('SVG element not found')
-
-      // Dynamic import of svg2pdf (browser-only)
-      const [{ default: Svg2Pdf }, { jsPDF }] = await Promise.all([
-        import('svg2pdf.js'),
-        import('jspdf'),
-      ])
-
-      // A3 landscape dimensions in mm
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a3',
-      })
-
-      // Add SVG to PDF
-      await pdf.addSvg(svgEl, 0, 0, { width: 420, height: 297 })
-
-      // Generate filename
-      const date = new Date().toISOString().slice(0, 10)
-      const filename = `${data.project.name.replace(/\s+/g, '_')}_Survey_Plan_${date}.pdf`
-
-      pdf.save(filename)
-    } catch (err) {
-      console.error('PDF export error:', err)
-      alert('Failed to export PDF. Please try again.')
-    } finally {
-      setExporting(false)
-    }
-  }
-
-  return (
-    <button
-      onClick={handleExport}
-      disabled={exporting}
-      className="flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-black rounded-lg font-medium hover:opacity-90 disabled:opacity-50 transition-colors"
-    >
-      {exporting ? (
-        <>
-          <span className="animate-spin inline-block w-4 h-4 border-2 border-black border-t-transparent rounded-full" />
-          Generating...
-        </>
-      ) : (
-        <>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-          </svg>
-          Download PDF
-        </>
-      )}
-    </button>
-  )
-}
-```
-
-- [ ] **Step 2: Commit**
-
-```bash
-git add src/components/SurveyPlanExport.tsx
-git commit -m "feat(surveyPlan): add PDF export component with svg2pdf.js"
-```
-
----
-
-## Task 7: Integration — Documents Page (`src/app/project/[id]/documents/page.tsx`)
-
-**File:** Modify: `src/app/project/[id]/documents/page.tsx`
-
-- [ ] **Step 1: Read the current file**
-
-```bash
-head -50 src/app/project/[id]/documents/page.tsx
-```
-
-- [ ] **Step 2: Add Survey Plan tab**
-
-Add a new tab button "Survey Plan" and a corresponding tab panel that renders `<SurveyPlanViewer>` with project data and `<SurveyPlanExport>` below it. Data sources:
-- `parcel.boundaryPoints` → from parcel state
-- `controlPoints` → from survey points where `is_control = true`
-- Project metadata → from project store
-- Surveyor details → from user profile
-
-The exact implementation depends on how the documents page currently manages tabs. Add a tab and content section like the existing tabs.
-
-- [ ] **Step 3: Commit**
-
-```bash
-git add src/app/project/[id]/documents/page.tsx
-git commit -m "feat(surveyPlan): integrate viewer and export into documents page"
-```
-
----
-
-## Task 8: Delete Old Generator
-
-**File:** Delete: `src/lib/reports/surveyPlan.ts`
-
-- [ ] **Step 1: Delete the old file**
-
-```bash
-rm src/lib/reports/surveyPlan.ts
-git add -A
-git commit -m "refactor(surveyPlan): remove old jsPDF-only generator, replaced by SVG renderer"
-```
-
----
-
-## Task 9: Unit Tests
-
-**File:** Create: `src/lib/reports/surveyPlan/__tests__/renderer.test.ts`
-
-- [ ] **Step 1: Write tests for geometry utilities**
-
-```typescript
-import {
-  bearingFromDelta, bearingToDMS, distance, midpoint,
-  segmentAngle, textAngleForSegment, offsetFromMidpoint,
-  centroid, boundingBox, selectScale, calcScaleLabel, calcScaleBarMetres,
-} from '../geometry'
-
-describe('bearingFromDelta', () => {
-  it('north = 0°', () => {
-    expect(bearingFromDelta(0, 10)).toBeCloseTo(0, 1)
-  })
-  it('east = 90°', () => {
-    expect(bearingFromDelta(10, 0)).toBeCloseTo(90, 1)
-  })
-  it('south = 180°', () => {
-    expect(bearingFromDelta(0, -10)).toBeCloseTo(180, 1)
-  })
-  it('west = 270°', () => {
-    expect(bearingFromDelta(-10, 0)).toBeCloseTo(270, 1)
-  })
-  it('NE = 45°', () => {
-    expect(bearingFromDelta(10, 10)).toBeCloseTo(45, 1)
-  })
-})
-
-describe('bearingToDMS', () => {
-  it('formats 42°15\'30"', () => {
-    expect(bearingToDMS(42.25833)).toBe('42°15\'30.0"')
-  })
-  it('formats 0°0\'0"', () => {
-    expect(bearingToDMS(0)).toBe('0°0\'0.0"')
-  })
-})
-
-describe('distance', () => {
-  it('100m east-west', () => {
-    expect(distance(1000, 2000, 1100, 2000)).toBeCloseTo(100, 3)
-  })
-  it('50m diagonal', () => {
-    expect(distance(0, 0, 35.36, 35.36)).toBeCloseTo(50, 1)
-  })
-})
-
-describe('selectScale', () => {
-  it('selects 500 for small drawings', () => {
-    expect(selectScale(1000, 2)).toBe(500) // 500 px/m → 1:500
-  })
-  it('selects next scale up if raw is too large', () => {
-    expect(selectScale(500, 2)).toBe(1000)
-  })
-})
-```
-
-- [ ] **Step 2: Write tests for renderer output**
-
-```typescript
-import { SurveyPlanRenderer } from '../renderer'
-import type { SurveyPlanData } from '../types'
-
-const mockData: SurveyPlanData = {
-  project: {
-    name: 'Test Survey',
-    location: 'Nairobi',
-    municipality: 'Nairobi County',
-    utm_zone: 37,
-    hemisphere: 'S',
-    datum: 'WGS84',
-    client_name: 'Test Client',
-    surveyor_name: 'J. Doe',
-    surveyor_licence: 'LS/2024/001',
-    firm_name: 'Metro Surveyors',
-    firm_address: '1 Survey St, Nairobi',
-    firm_phone: '+254 700 000 000',
-    firm_email: 'survey@metro.co.ke',
-    drawing_no: 'MD-2024-001',
-    reference: 'REF/2024/TEST',
-    plan_title: 'Boundary Identification Plan',
-    area_sqm: 5000,
-    area_ha: 0.5,
-    parcel_id: 'LR 12345',
-  },
-  parcel: {
-    boundaryPoints: [
-      { name: '1', easting: 5000, northing: 5000 },
-      { name: '2', easting: 5100, northing: 5000 },
-      { name: '3', easting: 5100, northing: 5050 },
-      { name: '4', easting: 5000, northing: 5050 },
-    ],
-    area_sqm: 5000,
-    perimeter_m: 200,
-  },
-  controlPoints: [
-    { name: '1', easting: 5000, northing: 5000, monumentType: 'found' },
-    { name: '2', easting: 5100, northing: 5000, monumentType: 'set' },
-    { name: '3', easting: 5100, northing: 5050, monumentType: 'masonry_nail' },
-    { name: '4', easting: 5000, northing: 5050, monumentType: 'iron_pin' },
-  ],
-}
-
-describe('SurveyPlanRenderer', () => {
-  it('produces valid SVG', () => {
-    const renderer = new SurveyPlanRenderer(mockData)
-    const svg = renderer.render()
-    expect(svg).toContain('<svg xmlns="http://www.w3.org/2000/svg"')
-    expect(svg).toContain('viewBox')
-  })
-
-  it('includes lot fill', () => {
-    const renderer = new SurveyPlanRenderer(mockData)
-    const svg = renderer.render()
-    expect(svg).toContain('#F5EDD6')
-  })
-
-  it('includes boundary labels', () => {
-    const renderer = new SurveyPlanRenderer(mockData)
-    const svg = renderer.render()
-    // Check bearing labels are present
-    expect(svg).toContain('\u00B0') // degree symbol
-    expect(svg).toContain("m")       // distance labels
-  })
-
-  it('includes monument symbols', () => {
-    const renderer = new SurveyPlanRenderer(mockData)
-    const svg = renderer.render()
-    expect(svg).toContain('#1A6B32') // green monument color
-    expect(svg).toContain('#C0392B') // red nail color
-  })
-
-  it('includes scale bar', () => {
-    const renderer = new SurveyPlanRenderer(mockData)
-    const svg = renderer.render()
-    expect(svg).toContain('SCALE')
-    expect(svg).toContain('METRES')
-  })
-
-  it('includes north arrow', () => {
-    const renderer = new SurveyPlanRenderer(mockData)
-    const svg = renderer.render()
-    expect(svg).toContain('>N<')
-  })
-
-  it('includes right panel', () => {
-    const renderer = new SurveyPlanRenderer(mockData)
-    const svg = renderer.render()
-    expect(svg).toContain('SURVEYOR')
-    expect(svg).toContain('BOUNDARY IDENTIFICATION PLAN')
-  })
-
-  it('includes footer', () => {
-    const renderer = new SurveyPlanRenderer(mockData)
-    const svg = renderer.render()
-    expect(svg).toContain('F8F8F8') // footer background
-  })
-})
-```
-
-- [ ] **Step 3: Run tests**
-
-```bash
-npm test -- --testPathPattern="surveyPlan" --verbose
-```
-
-All tests must pass.
-
-- [ ] **Step 4: Commit**
-
-```bash
-git add src/lib/reports/surveyPlan/__tests__/renderer.test.ts
-git commit -m "test(surveyPlan): add unit tests for renderer and geometry"
-```
-
----
-
-## Task 10: Build Verification
-
-- [ ] **Step 1: Run build**
-
-```bash
-npm run build
-```
-
-Must pass with zero errors.
-
-- [ ] **Step 2: Run all tests**
-
-```bash
-npm test
-```
-
-322 existing tests + new tests must all pass.
-
-- [ ] **Step 3: Push**
-
-```bash
-git push
-```
-
----
-
-## Task 11: Post-Implementation Review
-
-After build passes, verify visually:
-1. Navigate to a project → Documents → Survey Plan tab
-2. Confirm the SVG renders with: lot polygon, boundary lines, bearings, monuments, north arrow, scale bar, right panel, footer
-3. Test PDF export — open the downloaded PDF and verify it's A3 landscape
-4. Zoom in/out works
-
-If any layer is missing or wrong, fix before declaring complete.
