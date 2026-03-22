@@ -384,11 +384,13 @@ describe('SurveyPlanRenderer', () => {
       expect(svg).toContain('REVISIONS')
     })
 
-    it('contains surveyor certificate with numbered paragraphs', () => {
+    it('contains Cap. 299 surveyor certificate with authentication block', () => {
       const renderer = new SurveyPlanRenderer(BASE_DATA)
       const svg = renderer.render()
-      expect(svg).toContain("SURVEYOR'S CERTIFICATE")
-      expect(svg).toContain('1.')
+      expect(svg).toContain('CERTIFICATE')
+      expect(svg).toContain('Cap. 299')
+      expect(svg).toContain('AUTHENTICATION')
+      expect(svg).toContain('Director of Surveys')
     })
 
     it('contains metric note', () => {
