@@ -1,4 +1,5 @@
 import type { SurveyPlanData, PlanOptions } from './types'
+import { generateBearingScheduleCSV } from '../bearingScheduleCSV'
 import {
   DPI, PX_PER_MM, PX_PER_M,
   PAGE_WIDTH_MM, PAGE_HEIGHT_MM,
@@ -592,4 +593,8 @@ export class SurveyPlanRenderer {
   }
 
   getScale(): number { return this.scale }
+
+  exportToCSV(): string {
+    return generateBearingScheduleCSV(this.data)
+  }
 }
