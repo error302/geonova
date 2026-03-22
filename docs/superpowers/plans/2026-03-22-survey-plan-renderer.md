@@ -480,7 +480,7 @@ import {
 import {
   svgFoundMonument, svgSetMonument, svgMasonryNail, svgIronPin,
   svgCornerDot, svgNorthArrow, svgScaleBar,
-  svgSheetBorder, svgPanelDivider, svgLotFill, svgBoundaryLine,
+  svgSheetBorder, svgPanelDivider,
   escapeXml, polylineFromPoints,
   C_BLACK, C_GREEN, C_RED, C_GRAY, C_GRID_MINOR, C_GRID_MAJOR,
   C_LOT_FILL, C_WARNING_BG,
@@ -669,12 +669,12 @@ export class SurveyPlanRenderer {
       const [mx, my] = midpoint(from.easting, from.northing, to.easting, to.northing)
       const angle = textAngleForSegment(from.easting, from.northing, to.easting, to.northing)
       
-      // Bearing above line (offset -0.15m perpendicular)
-      const [bx, by] = offsetFromMidpoint(from.easting, from.northing, to.easting, to.northing, -0.15)
+      // Bearing above line (offset 4px perpendicular — convert to metres)
+      const [bx, by] = offsetFromMidpoint(from.easting, from.northing, to.easting, to.northing, 4 / PX_PER_M)
       svg += `<text transform="translate(${bx},${by}) rotate(${angle})" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="8.5" font-weight="bold" fill="${C_BLACK}">${bearingToDMS(bearing)}</text>`
       
-      // Distance below line (offset +0.15m perpendicular)
-      const [dx, dy] = offsetFromMidpoint(from.easting, from.northing, to.easting, to.northing, 0.15)
+      // Distance below line (offset 4px perpendicular — convert to metres)
+      const [dx, dy] = offsetFromMidpoint(from.easting, from.northing, to.easting, to.northing, 4 / PX_PER_M)
       svg += `<text transform="translate(${dx},${dy}) rotate(${angle})" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="8" fill="${C_BLACK}">${dist.toFixed(2)} m</text>`
     }
     
@@ -718,9 +718,50 @@ export class SurveyPlanRenderer {
   }
   
   private drawBuildings(): string {
-    // TODO: implement when building data is available
-    // For now return empty string
     return ''
+  }
+  
+  private drawAdjacentLots(): string {
+    const lots = this.data.adjacentLots
+    if (!lots || lots.length === 0) return ''
+    let svg = ''
+    for (const lot of lots) {
+      if (lot.boundaryPoints.length < 2) continue
+      const pts = lot.boundaryPoints
+      const coords = pts.flatMap(p => [this.toSvgX(p.easting), this.toSvgY(p.northing)])
+      coords.push(this.toSvgX(pts[0].easting), this.toSvgY(pts[0].northing))
+      const pairs = []
+      for (let i = 0; i < coords.length; i += 2) pairs.push(`${coords[i]},${coords[i + 1]}`)
+      svg += `<polyline points="${pairs.join(' ')}" fill="none" stroke="${C_BLACK}" stroke-width="1"/>`
+    }
+    return svg
+  }
+  
+  private drawAdjacentLabels(): string {
+    const lots = this.data.adjacentLots
+    if (!lots || lots.length === 0) return ''
+    let svg = ''
+    for (const lot of lots) {
+      const pts = lot.boundaryPoints
+      if (pts.length < 2) continue
+      const [ce, cn] = centroid(pts)
+      // Determine side: check if centroid is to the left or right of the parcel centroid
+      const parcelCentroid = centroid(this.data.parcel.boundaryPoints)
+      const isLeft = ce < parcelCentroid[0]
+      const isTop = cn > parcelCentroid[1]
+      const px = this.toSvgX(ce)
+      const py = this.toSvgY(cn)
+      let transform = ''
+      if (isLeft) {
+        transform = `transform="translate(${px},${py}) rotate(-90)"`
+      } else if (isTop) {
+        transform = '' // horizontal
+      } else {
+        transform = `transform="translate(${px},${py}) rotate(90)"`
+      }
+      svg += `<text ${transform} x="${px}" y="${py}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="11" font-weight="bold" fill="${C_BLACK}" opacity="0.45">${escapeXml(lot.id)}</text>`
+    }
+    return svg
   }
   
   private drawLotNumber(): string {
@@ -769,36 +810,143 @@ export class SurveyPlanRenderer {
   }
   
   private drawRightPanel(): string {
+    // Helper closures for consistent text rendering
     const p = this.data.project
-    const panelTop = this.margin
-    const panelBottom = this.pageH - this.titleBlockH - this.margin
-    const panelH = panelBottom - panelTop
-    const panelInnerW = this.panelW - mmToPx(6)
-    let y = panelTop + mmToPx(4)
-    let svg = ''
-    
-    const text = (content: string, x: number, yPos: number, size: number, weight: string = 'normal', color: string = C_BLACK): string =>
-      `<text x="${x}" y="${yPos}" font-family="Share Tech Mono, Courier New" font-size="${size}" font-weight="${weight}" fill="${color}">${escapeXml(content)}</text>`
-    
-    const line = (x1: number, y1: number, x2: number, y2: number, w: number = 0.5): string =>
-      `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${C_BLACK}" stroke-width="${w}"/>`
-    
-    const box = (x: number, yPos: number, w: number, h: number, stroke: number = 0.5): string =>
-      `<rect x="${x}" y="${yPos}" width="${w}" height="${h}" fill="none" stroke="${C_BLACK}" stroke-width="${stroke}"/>`
-    
     const leftPad = this.panelX + mmToPx(3)
     const rightPad = this.panelX + this.panelW - mmToPx(3)
-    
-    // 1. Report type
-    svg += text('SURVEYOR\'S REAL PROPERTY REPORT', leftPad, y += mmToPx(5), 5, 'normal')
-    
-    // 2. Plan title
-    svg += text(p.plan_title || 'BOUNDARY IDENTIFICATION PLAN', leftPad, y += mmToPx(6), 9, 'bold')
-    
-    // 3. Municipality
-    if (p.municipality) {
-      svg += text(p.municipality, leftPad, y += mmToPx(5), 16, 'bold')
+    const panelInnerW = this.panelW - mmToPx(6)
+
+    const svgParts: string[] = []
+
+    svgParts.push(this.drawReportHeader(leftPad, rightPad, panelInnerW))
+    svgParts.push(this.drawPlanInfoBox(leftPad, rightPad, panelInnerW))
+    svgParts.push(this.drawLegend(leftPad, panelInnerW))
+    svgParts.push(this.drawWarningBox(leftPad, rightPad, panelInnerW))
+    svgParts.push(this.drawCertificate(leftPad, rightPad, panelInnerW))
+    svgParts.push(this.drawCompanyFooter(leftPad, rightPad))
+
+    return svgParts.join('')
+  }
+
+  private drawReportHeader(leftPad: number, rightPad: number, panelInnerW: number): string {
+    const p = this.data.project
+    const y = this.margin + mmToPx(4)
+    let svg = ''
+    const text = (content: string, yPos: number, size: number, weight: string = 'normal', color: string = C_BLACK): string =>
+      `<text x="${leftPad}" y="${yPos}" font-family="Share Tech Mono, Courier New" font-size="${size}" font-weight="${weight}" fill="${color}">${escapeXml(content)}</text>`
+    const line = (y1: number, y2: number): string =>
+      `<line x1="${leftPad}" y1="${y1}" x2="${rightPad}" y2="${y2}" stroke="${C_BLACK}" stroke-width="0.5"/>`
+
+    svg += text('SURVEYOR\'S REAL PROPERTY REPORT', y, 5)
+    svg += text(p.plan_title || 'BOUNDARY IDENTIFICATION PLAN', y + mmToPx(6), 9, 'bold')
+    if (p.municipality) svg += text(p.municipality, y + mmToPx(11), 16, 'bold')
+    svg += text(`SCALE ${calcScaleLabel(this.scale)}`, y + mmToPx(p.municipality ? 18 : 12), 8, 'bold')
+    svg += line(y + mmToPx(p.municipality ? 21 : 15), y + mmToPx(p.municipality ? 21.5 : 15.5))
+    svg += text(p.firm_name || '', y + mmToPx(p.municipality ? 25 : 19), 8, 'bold')
+    svg += text(`© ${new Date().getFullYear()}`, y + mmToPx(p.municipality ? 28.5 : 22.5), 6)
+    svg += text('Distances shown are in metres.', y + mmToPx(p.municipality ? 33 : 27), 5, 'normal', '#555')
+    svg += text('Divide by 0.3048 for feet.', y + mmToPx(p.municipality ? 36 : 30), 5, 'normal', '#555')
+    return svg
+  }
+
+  private drawPlanInfoBox(leftPad: number, rightPad: number, panelInnerW: number): string {
+    const p = this.data.project
+    const startY = this.margin + mmToPx(p.municipality ? 40 : 34)
+    let y = startY
+    let svg = ''
+    const box = (yPos: number, h: number) =>
+      `<rect x="${leftPad}" y="${yPos}" width="${panelInnerW}" height="${h}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
+    const text = (label: string, value: string, yPos: number): string => {
+      const labelW = mmToPx(22)
+      return [
+        `<text x="${leftPad}" y="${yPos}" font-family="Share Tech Mono, Courier New" font-size="5" fill="#555">${escapeXml(label)}</text>`,
+        `<text x="${leftPad + labelW}" y="${yPos}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">${escapeXml(value)}</text>`,
+      ].join('')
     }
+
+    svg += box(y, mmToPx(4))
+    svg += `<text x="${leftPad}" y="${y + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">PLAN INFORMATION</text>`
+    y += mmToPx(4)
+    const info = [
+      ['Title Ref:', p.reference || '—'],
+      ['Datum:', p.datum || 'WGS84'],
+      ['UTM Zone:', `${p.utm_zone}${p.hemisphere}`],
+      ['Area:', p.area_sqm ? `${p.area_sqm.toFixed(2)} m\u00B2` : '—'],
+      ['Council:', p.municipality || '—'],
+      ['Client:', p.client_name || '—'],
+      ['Drawing No:', p.drawing_no || `MD-${Date.now().toString().slice(-6)}`],
+    ]
+    for (const [label, value] of info) {
+      svg += text(label, value, y += mmToPx(4))
+    }
+    return svg
+  }
+
+  private drawLegend(leftPad: number, panelInnerW: number): string {
+    const afterInfo = this.margin + mmToPx(this.data.project.municipality ? 40 : 34) + mmToPx(7 * 4 + 4 + 6)
+    let y = afterInfo
+    let svg = ''
+    const box = (yPos: number, h: number) =>
+      `<rect x="${leftPad}" y="${yPos}" width="${panelInnerW}" height="${h}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
+    svg += box(y, mmToPx(4))
+    svg += `<text x="${leftPad}" y="${y + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">LEGEND</text>`
+    const legendItems = [
+      { label: 'Subject boundary', symbol: `<line x1="0" y1="0" x2="20" y2="0" stroke="${C_BLACK}" stroke-width="2.5"/>` },
+      { label: 'Adjacent boundary', symbol: `<line x1="0" y1="0" x2="20" y2="0" stroke="${C_BLACK}" stroke-width="1"/>` },
+      { label: 'Found monument', symbol: `<rect x="0" y="-3" width="6" height="6" fill="${C_GREEN}" stroke="${C_BLACK}" stroke-width="0.5"/>` },
+      { label: 'Set monument', symbol: `<circle cx="3" cy="0" r="3" fill="none" stroke="${C_GREEN}" stroke-width="1.5"/>` },
+      { label: 'Masonry Nail', symbol: `<circle cx="3" cy="0" r="2.5" fill="${C_RED}"/>` },
+    ]
+    for (const item of legendItems) {
+      svg += `<g transform="translate(${leftPad}, ${y += mmToPx(4)})">${item.symbol}</g>`
+      svg += `<text x="${leftPad + mmToPx(10)}" y="${y}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">${escapeXml(item.label)}</text>`
+    }
+    return svg
+  }
+
+  private drawWarningBox(leftPad: number, rightPad: number, panelInnerW: number): string {
+    const afterLegend = this.margin + mmToPx(this.data.project.municipality ? 40 : 34) + mmToPx(7 * 4 + 4 + 6) + mmToPx(5 * 4 + 6)
+    const y = afterLegend
+    let svg = ''
+    svg += `<rect x="${leftPad}" y="${y}" width="${panelInnerW}" height="${mmToPx(12)}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
+    svg += `<rect x="${leftPad + 0.5}" y="${y + 0.5}" width="${panelInnerW - 1}" height="${mmToPx(12) - 1}" fill="${C_WARNING_BG}"/>`
+    const lines = ['WARNING: Fence set-out pegs', 'must be verified on site.', 'Dimensions subject to', 'survey verification.']
+    lines.forEach((line, i) => {
+      svg += `<text x="${leftPad + mmToPx(2)}" y="${y + mmToPx(3) + i * mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="${i === 0 ? 'bold' : 'normal'}" fill="${C_BLACK}">${escapeXml(line)}</text>`
+    })
+    return svg
+  }
+
+  private drawCertificate(leftPad: number, rightPad: number, panelInnerW: number): string {
+    const afterWarning = this.margin + mmToPx(this.data.project.municipality ? 40 : 34) + mmToPx(7 * 4 + 4 + 6) + mmToPx(5 * 4 + 6) + mmToPx(12 + 4)
+    const y = afterWarning
+    const p = this.data.project
+    let svg = ''
+    svg += `<rect x="${leftPad}" y="${y}" width="${panelInnerW}" height="${mmToPx(2)}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
+    svg += `<text x="${leftPad}" y="${y + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">CERTIFICATE</text>`
+    svg += `<text x="${leftPad}" y="${y + mmToPx(7)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">I certify that this plan is</text>`
+    svg += `<text x="${leftPad}" y="${y + mmToPx(10)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">correct and in accordance</text>`
+    svg += `<text x="${leftPad}" y="${y + mmToPx(13)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">with applicable standards.</text>`
+    const sigY = y + mmToPx(18)
+    svg += `<line x1="${leftPad}" y1="${sigY}" x2="${leftPad + mmToPx(50)}" y2="${sigY}" stroke="${C_BLACK}" stroke-width="0.5"/>`
+    svg += `<text x="${leftPad}" y="${sigY + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">${escapeXml(p.surveyor_name || 'The Professional Licensed Surveyor')}</text>`
+    if (p.surveyor_licence) {
+      svg += `<text x="${leftPad}" y="${sigY + mmToPx(6)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">Licence No: ${escapeXml(p.surveyor_licence)}</text>`
+    }
+    return svg
+  }
+
+  private drawCompanyFooter(leftPad: number, rightPad: number): string {
+    const p = this.data.project
+    // Position below certificate
+    const certY = this.margin + mmToPx(this.data.project.municipality ? 40 : 34) + mmToPx(7 * 4 + 4 + 6) + mmToPx(5 * 4 + 6) + mmToPx(12 + 4) + mmToPx(25)
+    const y = certY
+    let svg = ''
+    svg += `<line x1="${leftPad}" y1="${y}" x2="${rightPad}" y2="${y}" stroke="${C_BLACK}" stroke-width="0.5"/>`
+    if (p.firm_phone) svg += `<text x="${leftPad}" y="${y + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">${escapeXml(p.firm_phone)}</text>`
+    if (p.firm_email) svg += `<text x="${leftPad}" y="${y + mmToPx(6)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">${escapeXml(p.firm_email)}</text>`
+    return svg
+  }
     
     // 4. Scale text
     svg += text(`SCALE ${calcScaleLabel(this.scale)}`, leftPad, y += mmToPx(6), 8, 'bold')
@@ -884,17 +1032,18 @@ export class SurveyPlanRenderer {
     svg += `<line x1="${this.margin}" y1="${footerY}" x2="${this.pageW - this.margin}" y2="${footerY}" stroke="${C_BLACK}" stroke-width="2"/>`
     
     const p = this.data.project
-    const cols = 7
+    const cols = 8
     const colW = (this.pageW - this.margin * 2) / cols
     
     const fields = [
       ['Field', ''],
-      ['Drawing', p.drawing_no || `MD-${Date.now().toString().slice(-6)}`', ''],
-      ['Checked],
+      ['Drawing', p.drawing_no || `MD-${Date.now().toString().slice(-6)}`],
+      ['Checked', ''],
       ['Address', p.firm_address || ''],
       ['Date', new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })],
       ['Work Order', ''],
       ['Job No.', p.reference || ''],
+      [p.firm_name || 'METARDU', ''],
     ]
     
     let x = this.margin
@@ -902,14 +1051,17 @@ export class SurveyPlanRenderer {
       const [label, value] = fields[i] || ['', '']
       const cx = x + colW / 2
       svg += `<line x1="${x}" y1="${footerY}" x2="${x}" y2="${footerY + footerH}" stroke="${C_BLACK}" stroke-width="0.5"/>`
-      svg += `<text x="${cx}" y="${footerY + mmToPx(4)}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="5" fill="#555">${escapeXml(label)}</text>`
-      svg += `<text x="${cx}" y="${footerY + mmToPx(10)}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="7" font-weight="bold" fill="${C_BLACK}">${escapeXml(value)}</text>`
+      
+      if (i === cols - 1) {
+        // Last column: company name, dark background
+        svg += `<rect x="${x}" y="${footerY}" width="${colW}" height="${footerH}" fill="${C_BLACK}"/>`
+        svg += `<text x="${cx}" y="${footerY + footerH / 2 + 4}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="11" font-weight="bold" fill="white">${escapeXml(label)}</text>`
+      } else {
+        svg += `<text x="${cx}" y="${footerY + mmToPx(4)}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="5" fill="#555">${escapeXml(label)}</text>`
+        svg += `<text x="${cx}" y="${footerY + mmToPx(10)}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="7" font-weight="bold" fill="${C_BLACK}">${escapeXml(value)}</text>`
+      }
       x += colW
     }
-    
-    // Company name in last "slot" — actually put it spanning a wider area
-    svg += `<rect x="${x}" y="${footerY}" width="${this.pageW - this.margin - x}" height="${footerH}" fill="${C_BLACK}"/>`
-    svg += `<text x="${x + (this.pageW - this.margin - x) / 2}" y="${footerY + footerH / 2 + 4}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="11" font-weight="bold" fill="white">${escapeXml(p.firm_name || 'METARDU')}</text>`
     
     return svg
   }
@@ -931,11 +1083,13 @@ export class SurveyPlanRenderer {
     }
     
     layers.push(this.drawLotFill())
+    layers.push(this.drawAdjacentLots())
     layers.push(this.drawBoundary())
     layers.push(this.drawBoundaryLabels())
     layers.push(this.drawMonuments())
     layers.push(this.drawLotNumber())
     layers.push(this.drawAreaLabel())
+    layers.push(this.drawAdjacentLabels())
     layers.push(this.drawBuildings())
     layers.push(this.drawNorthArrow())
     layers.push(this.drawScaleBar())
