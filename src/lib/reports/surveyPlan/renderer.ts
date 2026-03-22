@@ -441,25 +441,53 @@ export class SurveyPlanRenderer {
     const hasMun = !!this.data.project.municipality
     const afterWarning = this.margin + mmToPx(hasMun ? 40 : 34) + mmToPx(7 * 4 + 4 + 6) + mmToPx(6 * 4 + 6) + mmToPx(12 + 4)
     const afterRevisions = afterWarning + mmToPx(12 + 4) + mmToPx(6)
-    const y = afterRevisions
     const p = this.data.project
+    const surveyor = p.surveyor_name || ''
+    const lsNo = p.surveyor_licence || ''
+    const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })
+
+    const certY = afterRevisions
     let svg = ''
-    svg += `<rect x="${leftPad}" y="${y}" width="${panelInnerW}" height="${mmToPx(2)}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
-    svg += `<text x="${leftPad}" y="${y + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">SURVEYOR'S CERTIFICATE</text>`
-    const certY = y + mmToPx(6)
-    const paragraphs = [
-      'I certify that this plan is correct and in accordance with applicable standards and regulations.',
-      'All boundaries have been established on the ground in accordance with the Cadastral Survey Act.',
-      'Any fence set-out pegs must be verified on site by a licensed surveyor prior to construction.',
+    const panelRight = leftPad + panelInnerW
+
+    svg += `<rect x="${leftPad}" y="${certY}" width="${panelInnerW}" height="${mmToPx(2)}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
+    svg += `<text x="${leftPad}" y="${certY + mmToPx(4)}" font-family="Share Tech Mono, Courier New" font-size="5.5" font-weight="bold" fill="${C_BLACK}">CERTIFICATE</text>`
+
+    const lines = [
+      `I, ${surveyor || '_________________________________'}, Licensed Surveyor No. LS/${lsNo || '____________'},`,
+      'do hereby certify that:',
+      '',
+      '\u2022  The survey represented on this plan was carried out by me / under my direct',
+      `   supervision in accordance with the Survey Act (Cap. 299) and the Survey`,
+      '   Regulations 1994.',
+      '',
+      '\u2022  All measurements, computations and beacon placements are correct.',
+      '',
+      '\u2022  The plan has been prepared in the form and manner required by the',
+      '   Director of Surveys.',
+      '',
+      '\u2022  The boundaries and beacons shown are accurately plotted and correctly',
+      '   related to the adjoining properties.',
+      '',
+      `Dated this ______ day of ______________________ 20______`,
+      '',
+      '_____________________________________________',
+      'Signature of Licensed Surveyor',
     ]
-    paragraphs.forEach((para, i) => {
-      svg += `<text x="${leftPad}" y="${certY + i * mmToPx(4.5)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">${i + 1}. ${escapeXml(para)}</text>`
+
+    const lineHeight = mmToPx(3.2)
+    lines.forEach((line, i) => {
+      svg += `<text x="${leftPad}" y="${certY + mmToPx(7) + i * lineHeight}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">${escapeXml(line)}</text>`
     })
-    const sigY = certY + paragraphs.length * mmToPx(4.5) + mmToPx(3)
-    svg += `<line x1="${leftPad}" y1="${sigY}" x2="${leftPad + mmToPx(50)}" y2="${sigY}" stroke="${C_BLACK}" stroke-width="0.5"/>`
-    svg += `<text x="${leftPad}" y="${sigY + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">${escapeXml(p.surveyor_name || 'The Professional Licensed Surveyor')}</text>`
-    if (p.surveyor_licence) svg += `<text x="${leftPad}" y="${sigY + mmToPx(6)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">Licence No: ${escapeXml(p.surveyor_licence)}</text>`
-    svg += `<text x="${leftPad + mmToPx(55)}" y="${sigY + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">Date: ___________________</text>`
+
+    const authY = certY + mmToPx(7) + lines.length * lineHeight + mmToPx(4)
+    const authH = mmToPx(16)
+    svg += `<rect x="${leftPad}" y="${authY}" width="${panelInnerW}" height="${authH}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
+    svg += `<text x="${leftPad + 2}" y="${authY + mmToPx(4)}" font-family="Share Tech Mono, Courier New" font-size="4.5" font-weight="bold" fill="${C_BLACK}">AUTHENTICATION</text>`
+    svg += `<text x="${leftPad + 2}" y="${authY + mmToPx(7.5)}" font-family="Share Tech Mono, Courier New" font-size="4.5" fill="#555">For Director of Surveys use only</text>`
+    svg += `<text x="${leftPad + 2}" y="${authY + mmToPx(11)}" font-family="Share Tech Mono, Courier New" font-size="4.5" fill="${C_BLACK}">Signature: ___________________________</text>`
+    svg += `<text x="${leftPad + 2}" y="${authY + mmToPx(14)}" font-family="Share Tech Mono, Courier New" font-size="4.5" fill="${C_BLACK}">Seal of Survey of Kenya</text>`
+
     return svg
   }
 
@@ -668,7 +696,7 @@ export class SurveyPlanRenderer {
     let svg = `<line x1="${leftPad}" y1="${y}" x2="${rightPad}" y2="${y}" stroke="${C_BLACK}" stroke-width="0.5"/>`
     if (p.firm_phone) svg += `<text x="${leftPad}" y="${y + mmToPx(3)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">${escapeXml(p.firm_phone)}</text>`
     if (p.firm_email) svg += `<text x="${leftPad}" y="${y + mmToPx(6)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">${escapeXml(p.firm_email)}</text>`
-    if (p.iskRegNo) svg += `<text x="${leftPad}" y="${y + mmToPx(9)}" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}">ISK Reg: ${escapeXml(p.iskRegNo)}</text>`
+    if (p.iskRegNo) svg += `<text x="${leftPad}" y="${y + mmToPx(9)}" font-family="Share Tech Mono, Courier New" font-size="4.5" fill="${C_BLACK}">ISK (Chapter of Land Surveyors) Membership No. ${escapeXml(p.iskRegNo)}</text>`
     return svg
   }
 
@@ -707,6 +735,12 @@ export class SurveyPlanRenderer {
     return svg
   }
 
+  private drawLegalReferenceLine(): string {
+    const y = this.pageH - mmToPx(6)
+    const ref = 'Prepared in accordance with: Survey Act Cap. 299 | Survey Regulations 1994 | RDM 1.1 (2025) | RDM 1.3 (2023) | Ministry of Roads and Transport, Republic of Kenya'
+    return `<text x="${this.margin}" y="${y}" font-family="Share Tech Mono, Courier New" font-size="4" fill="#555">${escapeXml(ref)}</text>`
+  }
+
   render(): string {
     const totalSheets = parseInt(this.data.project.totalSheets || '1', 10)
     if (totalSheets > 1) return this.renderMultiSheet()
@@ -735,6 +769,7 @@ export class SurveyPlanRenderer {
     layers.push(this.drawAssociationStamp())
     if (this.opts.includePanel) layers.push(this.drawRightPanel())
     layers.push(this.drawSheetFooter())
+    layers.push(this.drawLegalReferenceLine())
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${this.pageW} ${this.pageH}" width="${this.pageW}" height="${this.pageH}" style="font-family: 'Share Tech Mono', 'Courier New', monospace;">${layers.join('\n')}</svg>`
   }
 
@@ -781,6 +816,7 @@ export class SurveyPlanRenderer {
       layers.push(this.drawAssociationStamp())
       if (this.opts.includePanel) layers.push(this.drawRightPanel())
       layers.push(this.drawSheetFooter())
+      layers.push(this.drawLegalReferenceLine())
       layers.push(`<text x="${this.drawingX + this.drawingAreaW / 2}" y="${this.margin + mmToPx(3)}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="10" font-weight="bold" fill="${C_BLACK}">${escapeXml(label)}</text>`)
       layers.push('</g>')
       sheets.push(layers.join('\n'))
