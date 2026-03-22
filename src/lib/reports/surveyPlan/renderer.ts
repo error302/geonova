@@ -1,4 +1,5 @@
 import type { SurveyPlanData, PlanOptions } from './types'
+import { getRoadReserveWidth } from './types'
 import { generateBearingScheduleCSV } from '../bearingScheduleCSV'
 import {
   DPI, PX_PER_MM, PX_PER_M,
@@ -776,6 +777,7 @@ export class SurveyPlanRenderer {
     layers.push(this.drawAreaLabel())
     layers.push(this.drawAdjacentLabels())
     layers.push(this.drawBuildings())
+    layers.push(this.drawRoadReserveBoundaries())
     layers.push(this.drawNorthArrow())
     layers.push(this.drawScaleBar())
     layers.push(this.drawAssociationStamp())
@@ -823,6 +825,7 @@ export class SurveyPlanRenderer {
       layers.push(this.drawAreaLabel())
       layers.push(this.drawAdjacentLabels())
       layers.push(this.drawBuildings())
+      layers.push(this.drawRoadReserveBoundaries())
       layers.push(this.drawNorthArrow())
       layers.push(this.drawScaleBar())
       layers.push(this.drawAssociationStamp())
@@ -841,5 +844,49 @@ export class SurveyPlanRenderer {
 
   exportToCSV(): string {
     return generateBearingScheduleCSV(this.data)
+  }
+
+  private drawRoadReserveBoundaries(): string {
+    const roadClass = this.data.project.road_class
+    if (!roadClass) return ''
+    const pts = this.rotatedPoints
+    if (pts.length < 2) return ''
+    const reserveWidth = getRoadReserveWidth(roadClass, true)
+    if (reserveWidth <= 0) return ''
+
+    const roadCenter = this.data.project.roadCenterLine
+    if (!roadCenter || roadCenter.length < 2) return ''
+
+    const leftPts: Array<{ easting: number; northing: number }> = []
+    const rightPts: Array<{ easting: number; northing: number }> = []
+
+    for (let i = 0; i < roadCenter.length; i++) {
+      const from = roadCenter[i]
+      const to = roadCenter[(i + 1) % roadCenter.length]
+      const dx = to.easting - from.easting
+      const dy = to.northing - from.northing
+      const len = Math.sqrt(dx * dx + dy * dy)
+      if (len === 0) continue
+      const halfWidth = reserveWidth / 2
+      const perpX = -dy / len * halfWidth
+      const perpY = dx / len * halfWidth
+      leftPts.push({ easting: from.easting + perpX, northing: from.northing + perpY })
+      rightPts.push({ easting: from.easting - perpX, northing: from.northing - perpY })
+    }
+
+    if (leftPts.length < 2) return ''
+
+    let svg = polylineFromPoints(leftPts, this.toSvgX.bind(this), this.toSvgY.bind(this), true)
+      .replace(`stroke="${C_BLACK}"`, `stroke="${C_BLACK}" stroke-width="0.5" stroke-dasharray="8,4"`)
+    svg += polylineFromPoints(rightPts, this.toSvgX.bind(this), this.toSvgY.bind(this), true)
+      .replace(`stroke="${C_BLACK}"`, `stroke="${C_BLACK}" stroke-width="0.5" stroke-dasharray="8,4"`)
+
+    const leftCentroid = centroid(leftPts)
+    const rightCentroid = centroid(rightPts)
+    const label = `ROAD RESERVE BOUNDARY (RDM 1.3 TABLE 2-3)`
+    svg += `<text x="${this.toSvgX(leftCentroid[0])}" y="${this.toSvgY(leftCentroid[1])}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}" transform="rotate(-45,${this.toSvgX(leftCentroid[0])},${this.toSvgY(leftCentroid[1])})">${escapeXml(label)}</text>`
+    svg += `<text x="${this.toSvgX(rightCentroid[0])}" y="${this.toSvgY(rightCentroid[1])}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="5" fill="${C_BLACK}" transform="rotate(-45,${this.toSvgX(rightCentroid[0])},${this.toSvgY(rightCentroid[1])})">${escapeXml(label)}</text>`
+
+    return svg
   }
 }

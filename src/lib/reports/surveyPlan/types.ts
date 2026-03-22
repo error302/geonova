@@ -51,6 +51,8 @@ export interface SurveyPlanData {
     parcel_id?: string
     street?: string
     roadEdge?: string
+    road_class?: string
+    roadCenterLine?: Array<{ easting: number; northing: number }>
     hundred?: string
     terrain_type?: 'flat' | 'rolling' | 'mountainous' | 'escarpment'
     iskRegNo?: string
@@ -104,4 +106,39 @@ export interface PlanOptions {
   includeGrid?: boolean
   includePanel?: boolean
   language?: string
+}
+
+export interface RoadClassification {
+  code: string
+  name: string
+  category: 'rural' | 'urban'
+  reserveDesirable: string
+  reserveReduced: string
+  designStandard: string
+}
+
+export const ROAD_CLASSIFICATIONS: RoadClassification[] = [
+  { code: 'S', name: 'Motorway', category: 'rural', reserveDesirable: '100m+', reserveReduced: '100m+', designStandard: 'DR1' },
+  { code: 'A', name: 'Major Arterial / International', category: 'rural', reserveDesirable: '60–120m', reserveReduced: '40–60m', designStandard: 'DR1/DR2' },
+  { code: 'B', name: 'Minor Arterial / National Trunk', category: 'rural', reserveDesirable: '60–80m', reserveReduced: '40–60m', designStandard: 'DR2/DR3' },
+  { code: 'C', name: 'Major Collector / Inter-District', category: 'rural', reserveDesirable: '40–60m', reserveReduced: '≥40m', designStandard: 'DR3/DR4' },
+  { code: 'D', name: 'Minor Collector / Divisional', category: 'rural', reserveDesirable: '30–40m', reserveReduced: '25–30m', designStandard: 'DR4/DR5' },
+  { code: 'E', name: 'Major Local / Feeder', category: 'rural', reserveDesirable: '25–30m', reserveReduced: '20–25m', designStandard: 'DR5/DR6' },
+  { code: 'F', name: 'Minor Local', category: 'rural', reserveDesirable: '20–25m', reserveReduced: '20–25m', designStandard: 'DR6/DR7' },
+  { code: 'G', name: 'Local Access / Farm to Market', category: 'rural', reserveDesirable: '15–20m', reserveReduced: '15–20m', designStandard: 'DR6/DR7' },
+  { code: 'H', name: 'Major Arterial / Urban Highway', category: 'urban', reserveDesirable: '60–80m', reserveReduced: '40–60m', designStandard: 'Urban_Arterial' },
+  { code: 'J', name: 'Minor Arterial', category: 'urban', reserveDesirable: '40–60m', reserveReduced: '30–40m', designStandard: 'Urban_Arterial' },
+  { code: 'K', name: 'Major Collector', category: 'urban', reserveDesirable: '30–40m', reserveReduced: '25–30m', designStandard: 'Urban_Collector' },
+  { code: 'L', name: 'Minor Collector', category: 'urban', reserveDesirable: '20–30m', reserveReduced: '20–25m', designStandard: 'Urban_Collector' },
+  { code: 'M', name: 'Major Local / Shopping Street', category: 'urban', reserveDesirable: '20–25m', reserveReduced: '15–20m', designStandard: 'Urban_Local' },
+  { code: 'N', name: 'Minor Local / Non-Residential', category: 'urban', reserveDesirable: '15–20m', reserveReduced: '12–15m', designStandard: 'Urban_Local' },
+  { code: 'P', name: 'Local Access / Residential', category: 'urban', reserveDesirable: '10–15m', reserveReduced: '10–12m', designStandard: 'Urban_Local' },
+]
+
+export function getRoadReserveWidth(code: string, desirable = true): number {
+  const rc = ROAD_CLASSIFICATIONS.find(r => r.code === code)
+  if (!rc) return 0
+  const val = desirable ? rc.reserveDesirable : rc.reserveReduced
+  const match = val.match(/(\d+(?:\.\d+)?)/)
+  return match ? parseFloat(match[1]) : 0
 }

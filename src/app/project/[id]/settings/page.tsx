@@ -19,6 +19,7 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
   const [utmZone, setUtmZone] = useState(37)
   const [hemisphere, setHemisphere] = useState<'N' | 'S'>('S')
   const [surveyType, setSurveyType] = useState('')
+  const [roadClass, setRoadClass] = useState('')
   const [terrainType, setTerrainType] = useState('')
   const [clientName, setClientName] = useState('')
   const [surveyorName, setSurveyorName] = useState('')
@@ -42,6 +43,7 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
       setUtmZone(data.utm_zone || 37)
       setHemisphere(data.hemisphere || 'S')
       setSurveyType(data.survey_type || 'topographic')
+      setRoadClass(data.road_class || '')
       setTerrainType(data.terrain_type || '')
       setClientName(data.client_name || '')
       setSurveyorName(data.surveyor_name || '')
@@ -63,6 +65,7 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
         utm_zone: utmZone,
         hemisphere,
         survey_type: surveyType,
+        road_class: roadClass || null,
         terrain_type: terrainType || null,
         client_name: clientName || null,
         surveyor_name: surveyorName || null,
@@ -171,6 +174,36 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
               <option value="control">Control Network</option>
               <option value="leveling">Leveling Survey</option>
               <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm text-[var(--text-primary)] mb-2">Road Classification (RDM 1.3)</label>
+            <select
+              value={roadClass}
+              onChange={(e) => setRoadClass(e.target.value)}
+              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
+            >
+              <option value="">Select road class...</option>
+              <optgroup label="Rural">
+                <option value="S">S — Motorway (100m+ reserve)</option>
+                <option value="A">A — Major Arterial / International (60–120m)</option>
+                <option value="B">B — Minor Arterial / National Trunk (60–80m)</option>
+                <option value="C">C — Major Collector / Inter-District (40–60m)</option>
+                <option value="D">D — Minor Collector / Divisional (30–40m)</option>
+                <option value="E">E — Major Local / Feeder (25–30m)</option>
+                <option value="F">F — Minor Local (20–25m)</option>
+                <option value="G">G — Local Access / Farm to Market (15–20m)</option>
+              </optgroup>
+              <optgroup label="Urban">
+                <option value="H">H — Major Arterial / Urban Highway (60–80m)</option>
+                <option value="J">J — Minor Arterial (40–60m)</option>
+                <option value="K">K — Major Collector (30–40m)</option>
+                <option value="L">L — Minor Collector (20–30m)</option>
+                <option value="M">M — Major Local / Shopping Street (20–25m)</option>
+                <option value="N">N — Minor Local / Non-Residential (15–20m)</option>
+                <option value="P">P — Local Access / Residential (10–15m)</option>
+              </optgroup>
             </select>
           </div>
 
