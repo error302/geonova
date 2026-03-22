@@ -14,6 +14,7 @@ const ZOOM_LEVELS = [0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 4.0]
 
 export default function SurveyPlanViewer({ data, options, className = '' }: SurveyPlanViewerProps) {
   const [scale, setScale] = useState(1.0)
+  const [currentSheet, setCurrentSheet] = useState(0)
   const [svgContent, setSvgContent] = useState('')
   const [loading, setLoading] = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -85,12 +86,47 @@ export default function SurveyPlanViewer({ data, options, className = '' }: Surv
           Download CSV
         </button>
       </div>
+      {svgContent && svgContent.includes('Sheet ') && (
+        (() => {
+          const match = svgContent.match(/Sheet \d+ of (\d+)/)
+          const total = match ? parseInt(match[1], 10) : 1
+          return (
+            <div className="flex items-center justify-center gap-2 px-3 py-1 border-b border-[var(--border)] bg-[var(--bg-secondary)]">
+              <span className="text-xs font-mono text-[var(--text-secondary)]">Sheet {currentSheet + 1} of {total}</span>
+              <button onClick={() => setCurrentSheet(Math.max(0, currentSheet - 1))} disabled={currentSheet === 0}
+                className="px-2 py-0.5 text-xs rounded hover:bg-[var(--bg-tertiary)] disabled:opacity-30 border border-[var(--border)]">&lt;</button>
+              <button onClick={() => setCurrentSheet(Math.min(total - 1, currentSheet + 1))} disabled={currentSheet >= total - 1}
+                className="px-2 py-0.5 text-xs rounded hover:bg-[var(--bg-tertiary)] disabled:opacity-30 border border-[var(--border)]">&gt;</button>
+            </div>
+          )
+        })()
+      )}
       <div ref={containerRef} className="flex-1 overflow-auto bg-[#e8e8e8] p-4">
         {loading ? (
           <div className="flex items-center justify-center h-full text-[var(--text-secondary)]">Generating plan...</div>
         ) : svgContent ? (
-          <div className="shadow-lg mx-auto" style={{ transform: `scale(${scale})`, transformOrigin: 'top center', width: 'fit-content' }}
-            dangerouslySetInnerHTML={{ __html: svgContent }} />
+          svgContent.includes('Sheet ') ? (
+            <div
+              className="shadow-lg mx-auto"
+              style={{
+                width: '1587px',
+                height: '1123px',
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                style={{
+                  transform: `translate(${-currentSheet * 1587 * scale}px, 0) scale(${scale})`,
+                  transformOrigin: 'top left',
+                  position: 'absolute',
+                }}
+                dangerouslySetInnerHTML={{ __html: svgContent }}
+              />
+            </div>
+          ) : (
+            <div className="shadow-lg mx-auto" style={{ transform: `scale(${scale})`, transformOrigin: 'top center', width: 'fit-content' }}
+              dangerouslySetInnerHTML={{ __html: svgContent }} />
+          )
         ) : (
           <div className="flex items-center justify-center h-full text-[var(--text-secondary)]">No plan data available</div>
         )}

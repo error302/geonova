@@ -708,6 +708,9 @@ export class SurveyPlanRenderer {
   }
 
   render(): string {
+    const totalSheets = parseInt(this.data.project.totalSheets || '1', 10)
+    if (totalSheets > 1) return this.renderMultiSheet()
+
     const layers: string[] = []
     layers.push(this.drawBackground())
     layers.push(this.drawSheetBorder())
@@ -733,6 +736,57 @@ export class SurveyPlanRenderer {
     if (this.opts.includePanel) layers.push(this.drawRightPanel())
     layers.push(this.drawSheetFooter())
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${this.pageW} ${this.pageH}" width="${this.pageW}" height="${this.pageH}" style="font-family: 'Share Tech Mono', 'Courier New', monospace;">${layers.join('\n')}</svg>`
+  }
+
+  private renderMultiSheet(): string {
+    const totalSheets = parseInt(this.data.project.totalSheets || '1', 10)
+    if (totalSheets <= 1) return this.render()
+
+    const cols = Math.ceil(Math.sqrt(totalSheets))
+    const rows = Math.ceil(totalSheets / cols)
+    const sheetW = this.pageW * cols
+    const sheetH = this.pageH * rows
+
+    const sheets: string[] = []
+    for (let i = 0; i < totalSheets; i++) {
+      const sheetCol = i % cols
+      const sheetRow = Math.floor(i / cols)
+      const originX = sheetCol * this.pageW
+      const originY = sheetRow * this.pageH
+      const sheetNum = i + 1
+      const label = `Sheet ${sheetNum} of ${totalSheets}`
+
+      const layers: string[] = []
+      layers.push(`<g transform="translate(${originX},${originY})">`)
+      layers.push(this.drawBackground())
+      layers.push(this.drawSheetBorder())
+      if (this.opts.includePanel) layers.push(this.drawPanelDivider())
+      if (this.opts.includeGrid) layers.push(this.drawGrid())
+      layers.push(this.drawLotFill())
+      layers.push(this.drawAdjacentLots())
+      layers.push(this.drawStreetInfo())
+      layers.push(this.drawBoundary())
+      layers.push(this.drawBoundaryLabels())
+      layers.push(this.drawMonuments())
+      layers.push(this.drawAdjacentLotPlanRefs())
+      layers.push(this.drawFenceOffsets())
+      layers.push(this.drawLotNumber())
+      layers.push(this.drawPinLabel())
+      layers.push(this.drawPartLabels())
+      layers.push(this.drawAreaLabel())
+      layers.push(this.drawAdjacentLabels())
+      layers.push(this.drawBuildings())
+      layers.push(this.drawNorthArrow())
+      layers.push(this.drawScaleBar())
+      layers.push(this.drawAssociationStamp())
+      if (this.opts.includePanel) layers.push(this.drawRightPanel())
+      layers.push(this.drawSheetFooter())
+      layers.push(`<text x="${this.drawingX + this.drawingAreaW / 2}" y="${this.margin + mmToPx(3)}" text-anchor="middle" font-family="Share Tech Mono, Courier New" font-size="10" font-weight="bold" fill="${C_BLACK}">${escapeXml(label)}</text>`)
+      layers.push('</g>')
+      sheets.push(layers.join('\n'))
+    }
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${sheetW}" height="${sheetH}" style="font-family: 'Share Tech Mono', 'Courier New', monospace; background: white;">${sheets.join('\n')}</svg>`
   }
 
   getScale(): number { return this.scale }
