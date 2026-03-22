@@ -210,3 +210,35 @@ export function svgFenceCallout(
     `</g>`,
   ].join('')
 }
+
+export function svgIndicatoryBeacon(cx: number, cy: number): string {
+  const size = 5
+  return [
+    `<polygon points="${cx},${cy - size} ${cx + size},${cy} ${cx},${cy + size} ${cx - size},${cy}" fill="none" stroke="${C_GREEN}" stroke-width="1.5"/>`,
+  ].join('')
+}
+
+export function svgIndicatoryBeaconCallout(
+  cx: number, cy: number,
+  cornerX: number, cornerY: number,
+  scale: number
+): string {
+  const note = 'CORNER REFERENCED BY INDICATORY BEACON \u2014 CAP. 299 REG. 45'
+  const tickLen = 5
+  const midX = (cx + cornerX) / 2
+  const midY = (cy + cornerY) / 2
+  const leaderLine = `<line x1="${cornerX}" y1="${cornerY}" x2="${cx}" y2="${cy}" stroke="${C_GREEN}" stroke-width="0.5" stroke-dasharray="2,2"/>`
+  const tw = note.length * 4.2 + 4
+  const th = 10
+  const angle = Math.atan2(cy - cornerY, cx - cornerX) * 180 / Math.PI
+  let rot = angle
+  if (rot > 90 || rot < -90) rot += 180
+  return [
+    leaderLine,
+    svgIndicatoryBeacon(cx, cy),
+    `<g transform="translate(${cx},${cy}) rotate(${rot})">`,
+    `<rect x="${tw/2}" y="${-th/2}" width="${tw}" height="${th}" fill="white" stroke="none" opacity="0.9"/>`,
+    `<text x="${tw/2 + 2}" y="3" font-family="Share Tech Mono, Courier New" font-size="3.5" fill="${C_GREEN}">${escapeXml(note)}</text>`,
+    '</g>',
+  ].join('')
+}

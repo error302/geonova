@@ -1,4 +1,4 @@
-export type MonumentType = 'found' | 'set' | 'masonry_nail' | 'iron_pin'
+export type MonumentType = 'found' | 'set' | 'masonry_nail' | 'iron_pin' | 'indicatory_beacon'
 
 export interface BoundaryPoint {
   name: string
