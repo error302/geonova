@@ -1,3 +1,8 @@
+// METARDU Traverse Accuracy Classification
+// Source: RDM 1.1 Kenya 2025, Table 2.4 — Accuracy Classification Standards
+// Source: Ghilani & Wolf, Elementary Surveying 16th Ed., Chapter 12
+// Formula: m = C/√K (mm/√km), where C = linear misclosure (mm), K = perimeter (km)
+
 export interface TraverseAccuracyClass {
   order: string
   m_mm: number
@@ -44,7 +49,7 @@ export function computeTraverseAccuracy(
     }
   }
 
-  const formula = `C = m\u221AK = ${C_mm.toFixed(2)}mm / \u221A${K_km.toFixed(2)}km = ${allowed.toFixed(2)}mm (m=${match.m_mm}mm)`
+  const formula = `C = m\u221AK = ${C_mm.toFixed(2)}mm / \u221A${K_km.toFixed(2)}km = ${allowed.toFixed(2)}mm (m=${match.m_mm}mm, RDM 1.1 Table 2.4)`
 
   return {
     order: match.order,

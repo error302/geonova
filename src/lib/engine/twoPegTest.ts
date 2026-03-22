@@ -1,3 +1,8 @@
+// METARDU Two-Peg Test Computation
+// Source: N.N. Basak, Surveying and Levelling, Chapter 14 — Two-Peg Test
+// Source: Ghilani & Wolf, Elementary Surveying 16th Ed., Chapter 23 — Instrument Adjustment Check
+// Source: USACE EM 1110-1-1005 §3-6 — Collimation error threshold 30 arc-seconds
+
 export type TwoPegTestResult = {
   obsDiff1: number
   obsDiff2: number

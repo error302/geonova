@@ -1,5 +1,8 @@
 /**
  * Calculation standard: N.N. Basak — Surveying and Levelling
+ * Source: N.N. Basak, Surveying and Levelling, Chapters 5-7
+ * Source: Ghilani & Wolf, Elementary Surveying 16th Ed., Chapters 5-6
+ * Source: RDM 1.1 Kenya 2025, Table 5.1 — Allowable misclosure 10√K mm for direct leveling
  * - No intermediate rounding
  * - Full floating point precision throughout
  * - Round only at final display layer

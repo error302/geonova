@@ -134,12 +134,21 @@ export function validateLevelingClosure(input: LevelingClosureInput): LevelingCl
   let requiredOrderObj = LEVELING_ORDERS.find(o => o.order === requiredOrder)
 
   if (country === 'kenya') {
+    // Source: RDM 1.1 Kenya 2025, Table 5.1 — Direct differential leveling: 10√K mm
+    // Kenya Survey Regulation 63 uses different terminology:
+    //   Direct: 20mm/√K (≈ indirect in older standards)
+    //   Indirect: 30mm/√K
+    // For RDM 1.1 compliant Kenya surveys: use 10√K mm (direct, most stringent)
     const directTolerance = 0.020 * Math.sqrt(distanceKm)
     const indirectTolerance = 0.030 * Math.sqrt(distanceKm)
-    allowable = indirectTolerance  // Kenya Reg 63: published tolerance is 0.030√K (indirect)
+    const rdm1_1Tolerance = 0.010 * Math.sqrt(distanceKm)  // RDM 1.1 Table 5.1: 10√K mm
+    allowable = rdm1_1Tolerance  // Kenya RDM 1.1 surveys must use 10√K
     requiredOrderObj = LEVELING_ORDERS.find(o => o.order === 'third_order')
     if (misclosureMetres > directTolerance && misclosureMetres <= indirectTolerance) {
-      warnings.push('Kenya Reg 63: Misclosure within indirect leveling tolerance (1:3,000). Direct: 0.020√K.')
+      warnings.push('Kenya Reg 63: Misclosure within indirect leveling tolerance (30mm/√K). For RDM 1.1 compliance use 10√K mm (direct).')
+    }
+    if (misclosureMetres > rdm1_1Tolerance && misclosureMetres <= directTolerance) {
+      warnings.push('RDM 1.1 Kenya: Misclosure exceeds 10√K mm but within 20√K mm. Consider repeat observation.')
     }
   }
 

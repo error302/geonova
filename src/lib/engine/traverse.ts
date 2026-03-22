@@ -1,5 +1,8 @@
 /**
  * Calculation standard: N.N. Basak — Surveying and Levelling
+ * Source: N.N. Basak, Surveying and Levelling, Chapters 10-11
+ * Source: Ghilani & Wolf, Elementary Surveying 16th Ed., Chapters 10, 12
+ * Source: Survey Regulations 1994, Cap 299, Regulation 97
  * - No intermediate rounding
  * - Full floating point precision throughout
  * - Round only at final display layer
@@ -98,7 +101,8 @@ export function forwardTraverse(input: ForwardTraverseInput): ForwardTraverseRes
 export function bowditchAdjustment(input: TraverseInput): TraverseResult {
   const { points, distances, bearings, closingPoint } = input;
   
-  // Calculate raw latitude and departure
+  // Source: Basak, Chapter 11 — Bowditch (Compass) Rule: corrections proportional to leg distance
+  // Source: Ghilani & Wolf, Chapter 12 — Bowditch adjustment formula
   let sumLat = 0;
   let sumDep = 0;
   let totalDistance = 0;
@@ -189,7 +193,8 @@ export function bowditchAdjustment(input: TraverseInput): TraverseResult {
 export function transitAdjustment(input: TraverseInput): TraverseResult {
   const { points, distances, bearings } = input;
   
-  // Calculate absolute sums for Transit rule
+  // Source: Basak, Chapter 11 — Transit Rule: corrections proportional to |Δ| of each leg
+  // Source: Ghilani & Wolf, Chapter 12 — Transit adjustment
   let sumLat = 0;
   let sumDep = 0;
   let absSumLat = 0;

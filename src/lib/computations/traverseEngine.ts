@@ -1,3 +1,9 @@
+// METARDU Traverse Computation Engine
+// Source: N.N. Basak, Surveying and Levelling, Chapters 10-11
+// Source: Ghilani & Wolf, Elementary Surveying 16th Ed., Chapters 10, 12
+// Source: RDM 1.1 Kenya 2025, Table 2.4 — Accuracy Classification
+// Source: Survey Regulations 1994, Cap 299, Regulation 97
+
 import { dmsToDecimal, bearingToString } from '@/lib/engine/angles'
 
 function dmsStr(d: number, m: number, s: number): string {
@@ -95,8 +101,12 @@ export interface AccuracyClass {
 }
 
 function classifyAccuracy(C_mm: number, K_km: number): AccuracyClass {
+  // Source: RDM 1.1 Kenya 2025, Table 2.4 — Accuracy Classification
+  // m = C/√K (mm/√km), where C = closing error in mm, K = perimeter in km
+  // Source: Ghilani & Wolf, Chapter 12 — Traverse accuracy standards
   const m = C_mm / 1000
   const K = K_km
+  // Source: RDM 1.1 Table 2.4 — m values for each order
   const allow1a = 0.5 * Math.sqrt(K)
   const allow1b = 0.7 * Math.sqrt(K)
   const allow2a = 1.0 * Math.sqrt(K)
@@ -152,10 +162,13 @@ export function computeTraverse(input: {
   if (obs.length === 0) throw new Error('No valid observations')
 
   const reduced: ReducedObservation[] = obs.map(o => {
+    // Source: Basak, Chapter 10 — Mean angle from face-left and face-right horizontal circle readings
+    // Source: Ghilani & Wolf, Chapter 12 — HCR_adj = HCR + 180° when HCR < 180°
     const hcl = dmsToDecimal({ degrees: parseInt(o.hclDeg) || 0, minutes: parseInt(o.hclMin) || 0, seconds: parseFloat(o.hclSec) || 0, direction: 'N' })
     const hcr = dmsToDecimal({ degrees: parseInt(o.hcrDeg) || 0, minutes: parseInt(o.hcrMin) || 0, seconds: parseFloat(o.hcrSec) || 0, direction: 'N' })
     let hcrAdj = hcr + 180
     if (hcrAdj >= 360) hcrAdj -= 360
+    // Source: Basak, Eq. 10.2 — meanAngle = (HCL + HCR_adj) / 2
     const meanAngle = (hcl + hcrAdj) / 2
     const meanAngleNorm = meanAngle >= 360 ? meanAngle - 360 : meanAngle < 0 ? meanAngle + 360 : meanAngle
 
@@ -165,9 +178,12 @@ export function computeTraverse(input: {
     const vaSec = parseFloat(o.vaSec) || 0
     const va = dmsToDecimal({ degrees: vaDeg, minutes: vaMin, seconds: vaSec, direction: 'N' })
     const vaRad = va * Math.PI / 180
+    // Source: Ghilani & Wolf, Eq. 13.1 — Horizontal Distance = SD × cos(zenith angle)
+    // Source: Basak — HD from slope distance and vertical/zenith angle
     const hd = sd * Math.cos(vaRad)
     const ih = parseFloat(o.ih) || 0
     const th = parseFloat(o.th) || 0
+    // Source: Ghilani & Wolf — ΔH = SD × sin(VA) + IH - TH
     const deltaH = sd * Math.sin(vaRad) + ih - th
 
     return {
@@ -204,12 +220,14 @@ export function computeTraverse(input: {
   const stations = [input.openingStation, ...obs.map(o => o.station)]
 
   for (let i = 0; i < obs.length; i++) {
+    // Source: Basak, Chapter 10 — WCB(n) = WCB(n-1) + interiorAngle
     const angle = reduced[i].meanAngle * Math.PI / 180
     let wcb = currentWCB + angle
     if (wcb < 0) wcb += 2 * Math.PI
     if (wcb >= 2 * Math.PI) wcb -= 2 * Math.PI
     const wcbDeg = wcb * 180 / Math.PI
     const hd = reduced[i].horizontalDist
+    // Source: Basak, Eq. 10.3 — Departure = HD × sin(WCB), Latitude = HD × cos(WCB)
     const dep = hd * Math.sin(wcb)
     const lat = hd * Math.cos(wcb)
     currentE += dep
@@ -261,6 +279,8 @@ export function computeTraverse(input: {
 
     const totalPerimeter = totalDist
 
+    // Source: Ghilani & Wolf, Chapter 12 — Bowditch rule: correction_i = -(C/ΣD) × D_i
+    // Source: Basak, Chapter 11 — Bowditch correction proportional to leg distance
     for (const leg of legs) {
       leg.depCorrection = -sumDep * (leg.hd / totalDist)
       leg.latCorrection = -sumLat * (leg.hd / totalDist)

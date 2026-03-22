@@ -1,5 +1,9 @@
 /**
  * Calculation standard: N.N. Basak — Surveying and Levelling
+ * Source: N.N. Basak, Surveying and Levelling, Chapter 3
+ * Source: Ghilani & Wolf, Elementary Surveying 16th Ed., Chapter 7 (UTM)
+ * Source: EPSG Guidance Note 7-2 — Standard Redfearn formula for UTM
+ * Source: USACE EM 1110-1-1005 §5-2
  * - No intermediate rounding
  * - Full floating point precision throughout
  * - Round only at final display layer
@@ -49,29 +53,28 @@ export function geographicToUTM(lat: number, lon: number, zone?: number): UTMCoo
   const e4 = WGS84_E2 * WGS84_E2
   const e6 = e4 * WGS84_E2
 
-  const M =
-    WGS84_A *
-    ((1 - WGS84_E2 / 4 - (3 * e4) / 64 - (5 * e6) / 256) * latRad -
-      ((3 * WGS84_E2) / 8 + (3 * e4) / 32 + (45 * e6) / 1024) * Math.sin(2 * latRad) +
-      ((15 * e4) / 256 + (45 * e6) / 1024) * Math.sin(4 * latRad) -
-      ((35 * e6) / 3072) * Math.sin(6 * latRad));
+  // Source: EPSG Guidance Note 7-2 — Redfearn formula, M series expansion
+  // Source: Ghilani & Wolf, Chapter 7 — Meridian distance M
+  const M = WGS84_A * (
+    (1 - WGS84_E2 / 4 - (3 * e4) / 64 - (5 * e6) / 256) * latRad
+    - ((3 * WGS84_E2) / 8 + (3 * e4) / 32 + (45 * e6) / 1024) * Math.sin(2 * latRad)
+    + ((15 * e4) / 256 + (45 * e6) / 1024) * Math.sin(4 * latRad)
+    - ((35 * e6) / 3072) * Math.sin(6 * latRad)
+  )
 
-  let easting =
-    k0 *
-      N *
-      (A +
-        ((1 - T + C) * Math.pow(A, 3)) / 6 +
-        ((5 - 18 * T + T * T + 72 * C - 58 * WGS84_EP2) * Math.pow(A, 5)) / 120) +
-    500000;
+  // Source: EPSG Guidance Note 7-2 — Easting coordinate E = k₀N(A + ...)
+  let easting = k0 * N * (
+    A
+    + ((1 - T + C) * Math.pow(A, 3)) / 6
+    + ((5 - 18 * T + T * T + 72 * C - 58 * WGS84_EP2) * Math.pow(A, 5)) / 120
+  ) + 500000
 
-  let northing =
-    k0 *
-    (M +
-      N *
-        tanLat *
-        ((A * A) / 2 +
-          ((5 - T + 9 * C + 4 * C * C) * Math.pow(A, 4)) / 24 +
-          ((61 - 58 * T + T * T + 600 * C - 330 * WGS84_EP2) * Math.pow(A, 6)) / 720));
+  // Source: EPSG Guidance Note 7-2 — Northing coordinate N = k₀(M + N·tan·φ·(...))
+  let northing = k0 * (M + N * tanLat * (
+    (A * A) / 2
+    + ((5 - T + 9 * C + 4 * C * C) * Math.pow(A, 4)) / 24
+    + ((61 - 58 * T + T * T + 600 * C - 330 * WGS84_EP2) * Math.pow(A, 6)) / 720
+  ))
 
   const hemisphere: 'N' | 'S' = lat >= 0 ? 'N' : 'S';
   if (hemisphere === 'S') northing += 10000000;

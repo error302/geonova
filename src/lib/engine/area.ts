@@ -1,5 +1,7 @@
 /**
  * Calculation standard: N.N. Basak — Surveying and Levelling
+ * Source: N.N. Basak, Surveying and Levelling, Chapter 4
+ * Source: Ghilani & Wolf, Elementary Surveying 16th Ed., Chapter 12
  * - No intermediate rounding
  * - Full floating point precision throughout
  * - Round only at final display layer
@@ -29,7 +31,8 @@ export function coordinateArea(points: Point2D[]): AreaResult {
     closed.push(points[0]);
   }
   
-  // Shoelace formula (signed double area)
+  // Shoelace formula (Source: Basak, Chapter 4 / Ghilani & Wolf, Eq. 12.5)
+  // 2A = |Σ(E_n × N_{n+1}) - Σ(N_n × E_{n+1})|
   let doubleArea = 0;
   for (let i = 0; i < closed.length - 1; i++) {
     doubleArea += closed[i].easting * closed[i + 1].northing;

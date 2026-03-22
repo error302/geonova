@@ -35,6 +35,8 @@ export function midpoint(a: Point2D, b: Point2D): Point2D {
   };
 }
 
+// Source: Basak, Chapter 10 — Angular misclosure for n-sided polygon: (n-2)×180°
+// Source: Ghilani & Wolf, Chapter 10 — Correction per angle = -misclosure/n
 export function angularMisclosureFromAngles(observedAngles: number[]): SurveyResult<AngularMisclosureResult> {
   const n = observedAngles.length;
   if (n < 3) return { ok: false, error: 'Need at least 3 angles.' };
@@ -54,6 +56,7 @@ export function angularMisclosureFromAngles(observedAngles: number[]): SurveyRes
   };
 }
 
+// Source: Basak/Ghilani & Wolf — Point-in-polygon by ray casting (Jordan curve theorem)
 export function pointInPolygon(point: Point2D, polygon: Point2D[]): boolean {
   const { easting: px, northing: py } = point;
   const n = polygon.length;
@@ -68,6 +71,7 @@ export function pointInPolygon(point: Point2D, polygon: Point2D[]): boolean {
   return inside;
 }
 
+// Source: Basak — Line intersection by simultaneous equations (determinant method)
 export function lineIntersection(
   a1: Point2D, a2: Point2D,
   b1: Point2D, b2: Point2D

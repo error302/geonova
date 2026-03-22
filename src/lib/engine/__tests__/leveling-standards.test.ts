@@ -58,14 +58,15 @@ describe('validateLevelingClosure', () => {
     expect(r.isAcceptable).toBe(true)
   })
 
-  it('Kenya: indirect tolerance 0.030√km', () => {
+  it('Kenya: RDM 1.1 direct tolerance 0.010√km', () => {
+    // Source: RDM 1.1 Kenya 2025, Table 5.1 — Direct differential leveling: 10√K mm
     const r = validateLevelingClosure({
-      misclosureMetres: 0.025,
+      misclosureMetres: 0.008,
       distanceKm: 1,
       country: 'kenya',
       environment: 'third_order',
     })
-    expect(r.allowableMisclosure).toBeCloseTo(0.030, 2)
+    expect(r.allowableMisclosure).toBeCloseTo(0.010, 2)
     expect(r.isAcceptable).toBe(true)
   })
 

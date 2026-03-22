@@ -1,9 +1,11 @@
 /**
  * Calculation standard: N.N. Basak — Surveying and Levelling
+ * Source: N.N. Basak, Surveying and Levelling, Chapters 14-16
+ * Source: Ghilani & Wolf, Elementary Surveying 16th Ed., Chapters 24-25
+ * Source: RDM 1.3 Kenya August 2023, Sections 5.2-5.4
  * - No intermediate rounding
  * - Full floating point precision throughout
  * - Round only at final display layer
- * - Bearings: WCB 0-360° clockwise from North
  */
 
 // METARDU Engine - Curve calculations
@@ -19,22 +21,23 @@ export function curveElements(
   const delta = toRadians(deflectionAngle);
   const halfDelta = delta / 2;
   
-  // Tangent length
+  // Source: RDM 1.3 Section 5.2 / Basak Chapter 14
+  // Tangent length: T = R × tan(Δ/2)
   const T = radius * Math.tan(halfDelta);
-  
-  // Arc length
+
+  // Arc length: L = R × Δ (radians)
   const L = radius * delta;
-  
-  // Long chord
+
+  // Long chord: C = 2R × sin(Δ/2)
   const C = 2 * radius * Math.sin(halfDelta);
-  
-  // External distance
+
+  // External distance: E = R × (sec(Δ/2) - 1)
   const E = radius * (1 / Math.cos(halfDelta) - 1);
-  
-  // Mid-ordinate
+
+  // Mid-ordinate: M = R × (1 - cos(Δ/2))
   const M = radius * (1 - Math.cos(halfDelta));
-  
-  // Degree of curve (arc definition)
+
+  // Degree of curve (arc definition): D = 1718.873/R
   const D = 1718.873 / radius;
   
   return {
