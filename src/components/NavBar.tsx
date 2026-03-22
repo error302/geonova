@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useLanguage, languages } from '@/lib/i18n/LanguageContext'
 import MetarduLogo from '@/components/MetarduLogo'
+import SubscriptionBadge from '@/components/SubscriptionBadge'
+import type { PlanId } from '@/lib/subscription/catalog'
 
 const toolGroups = [
   {
@@ -309,6 +311,7 @@ export default function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [userPlan, setUserPlan] = useState<PlanId>('free')
   const navRef = useRef<HTMLDivElement>(null)
 
   const { language, setLanguage, t, hydrated } = useLanguage()
@@ -321,13 +324,32 @@ export default function NavBar() {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user as { email: string } | null)
+      if (user) {
+        const { data: sub } = await supabase
+          .from('user_subscriptions')
+          .select('plan_id')
+          .eq('user_id', user.id)
+          .maybeSingle()
+        setUserPlan((sub?.plan_id as PlanId) || 'free')
+      }
       setLoading(false)
     }
     
     getUser()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user as { email: string } | null)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      const u = session?.user as { email: string; id?: string } | null
+      setUser(u)
+      if (u?.id) {
+        const { data: sub } = await supabase
+          .from('user_subscriptions')
+          .select('plan_id')
+          .eq('user_id', u.id)
+          .maybeSingle()
+        setUserPlan((sub?.plan_id as PlanId) || 'free')
+      } else {
+        setUserPlan('free')
+      }
       setLoading(false)
     })
 
@@ -517,7 +539,10 @@ export default function NavBar() {
                   <span className="w-8 h-8 rounded-full bg-[var(--accent)]/20 border border-[var(--accent)]/30 text-[var(--accent)] flex items-center justify-center font-bold">
                     {(user.email || 'U').slice(0, 1).toUpperCase()}
                   </span>
-                  <span className="hidden lg:inline text-sm text-[var(--text-primary)] max-w-[180px] truncate">{user.email}</span>
+                  <div className="hidden lg:flex flex-col">
+                    <span className="text-sm text-[var(--text-primary)] max-w-[180px] truncate leading-tight">{user.email}</span>
+                    <SubscriptionBadge plan={userPlan} compact />
+                  </div>
                   <svg className="w-4 h-4 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
@@ -526,14 +551,31 @@ export default function NavBar() {
                 {openDropdown === 'user' && (
                   <div className="absolute top-full right-0 pt-2 z-50">
                     <div className="bg-[var(--bg-secondary)] border border-[#E8841A20] rounded-lg shadow-xl min-w-[220px] py-2">
+                      <div className="px-4 pb-2 flex items-center justify-between">
+                        <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold">{t('nav.dashboard')}</div>
+                        <SubscriptionBadge plan={userPlan} compact />
+                      </div>
                       <div className="px-4 py-2">
-                        <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold mb-2">{t('nav.dashboard')}</div>
                         <Link
                           href="/dashboard"
                           onClick={() => setOpenDropdown(null)}
                           className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
                         >
                           {t('nav.dashboard')}
+                        </Link>
+                        <Link
+                          href="/account"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          Account Settings
+                        </Link>
+                        <Link
+                          href="/account/billing"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          Billing
                         </Link>
                         <Link
                           href="/pricing"
