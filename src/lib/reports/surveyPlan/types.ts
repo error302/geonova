@@ -52,6 +52,7 @@ export interface SurveyPlanData {
     street?: string
     roadEdge?: string
     hundred?: string
+    terrain_type?: 'flat' | 'rolling' | 'mountainous' | 'escarpment'
     iskRegNo?: string
     version?: string
     sheetNo?: string

@@ -19,6 +19,7 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
   const [utmZone, setUtmZone] = useState(37)
   const [hemisphere, setHemisphere] = useState<'N' | 'S'>('S')
   const [surveyType, setSurveyType] = useState('')
+  const [terrainType, setTerrainType] = useState('')
   const [clientName, setClientName] = useState('')
   const [surveyorName, setSurveyorName] = useState('')
 
@@ -41,6 +42,7 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
       setUtmZone(data.utm_zone || 37)
       setHemisphere(data.hemisphere || 'S')
       setSurveyType(data.survey_type || 'topographic')
+      setTerrainType(data.terrain_type || '')
       setClientName(data.client_name || '')
       setSurveyorName(data.surveyor_name || '')
       setLoading(false)
@@ -61,6 +63,7 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
         utm_zone: utmZone,
         hemisphere,
         survey_type: surveyType,
+        terrain_type: terrainType || null,
         client_name: clientName || null,
         surveyor_name: surveyorName || null,
       })
@@ -169,6 +172,22 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
               <option value="leveling">Leveling Survey</option>
               <option value="other">Other</option>
             </select>
+          </div>
+
+          <div>
+            <label className="block text-sm text-[var(--text-primary)] mb-2">Terrain Type</label>
+            <select
+              value={terrainType}
+              onChange={(e) => setTerrainType(e.target.value)}
+              className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
+            >
+              <option value="">Select terrain...</option>
+              <option value="flat">Flat</option>
+              <option value="rolling">Rolling</option>
+              <option value="mountainous">Mountainous</option>
+              <option value="escarpment">Escarpment</option>
+            </select>
+            <p className="text-xs text-[var(--text-secondary)] mt-1">Used for road geometric validation per RDM 1.3</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
