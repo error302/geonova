@@ -12,7 +12,7 @@ const demoData: SurveyPlanData = {
     client_name: 'Test Client',
     surveyor_name: 'J. Doe',
     surveyor_licence: 'LS/2024/001',
-    firm_name: 'Metro Surveyors',
+    firm_name: 'GeoTech Surveyors Ltd',
     firm_address: '1 Survey St, Nairobi',
     firm_phone: '+254 700 000 000',
     firm_email: 'survey@metro.co.ke',
@@ -25,6 +25,9 @@ const demoData: SurveyPlanData = {
     street: 'Kenyatta Avenue',
     hundred: 'Nairobi',
     iskRegNo: 'ISK/2024/001',
+    northRotationDeg: 0,
+    sheetNo: '1',
+    totalSheets: '1',
     revisions: [{ rev: 'A', date: '22 Mar 2026', description: 'Initial issue', by: 'J. Smith' }],
   },
   parcel: {
@@ -36,6 +39,8 @@ const demoData: SurveyPlanData = {
     ],
     area_sqm: 5000,
     perimeter_m: 200,
+    pin: 'KRN-2024-001',
+    parts: ['PART 1'],
   },
   controlPoints: [
     { name: '1', easting: 5000, northing: 5000, monumentType: 'found' },
@@ -43,7 +48,12 @@ const demoData: SurveyPlanData = {
     { name: '3', easting: 5100, northing: 5050, monumentType: 'masonry_nail' },
     { name: '4', easting: 5000, northing: 5050, monumentType: 'iron_pin' },
   ],
-  fenceOffsets: [],
+  fenceOffsets: [
+    { segmentIndex: 0, type: 'chain_link' as const, offsetMetres: 1.5 },
+    { segmentIndex: 1, type: 'board_fence' as const, offsetMetres: 2.0 },
+    { segmentIndex: 2, type: 'fence_on_boundary' as const, offsetMetres: 0 },
+    { segmentIndex: 3, type: 'chain_link' as const, offsetMetres: 1.5 },
+  ],
 }
 
 export const metadata = {
