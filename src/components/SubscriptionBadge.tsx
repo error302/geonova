@@ -27,6 +27,18 @@ const TIER_CONFIG: Record<PlanId, { label: string; bg: string; text: string; bor
     text: 'text-blue-400',
     border: 'border-blue-700/50',
   },
+  firm: {
+    label: 'FIRM',
+    bg: 'bg-purple-900/50',
+    text: 'text-purple-400',
+    border: 'border-purple-700/50',
+  },
+  enterprise: {
+    label: 'ENTERPRISE',
+    bg: 'bg-amber-900/50',
+    text: 'text-amber-400',
+    border: 'border-amber-700/50',
+  },
 }
 
 export default function SubscriptionBadge({ plan, compact = false, showUpgrade = false }: SubscriptionBadgeProps) {

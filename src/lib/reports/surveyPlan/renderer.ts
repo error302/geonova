@@ -183,7 +183,7 @@ export class SurveyPlanRenderer {
       const [bx, by] = offsetFromMidpoint(from.easting, from.northing, to.easting, to.northing, 4 / PX_PER_M)
       
       const bearingStr = formatBearingDegMinSec(bearing)
-      const distStr = dist.toFixed(3) + ' m'
+      const distStr = dist.toFixed(2) + ' m'
       const bearingWidth = bearingStr.length * 5.5
       const distWidth = distStr.length * 5
       const tw = Math.max(bearingWidth, distWidth) + 8

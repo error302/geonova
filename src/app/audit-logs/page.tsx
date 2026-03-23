@@ -1,199 +1,82 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 interface AuditLog {
   id: string
+  user_id: string
   action: string
-  resource: string
-  user: string
-  timestamp: string
-  ipAddress: string
-  details?: string
+  project_id?: string
+  point_id?: string
+  details: any
+  ip_address: string
+  user_agent: string
+  created_at: string
+  projects?: { name: string } | null
 }
 
-const mockLogs: AuditLog[] = [
-  {
-    id: '1',
-    action: 'CREATE',
-    resource: 'Project',
-    user: 'john@survey.co.ke',
-    timestamp: '2024-01-15 14:32:15',
-    ipAddress: '197.232.1.1',
-    details: 'Created project: Karen Residential Survey'
-  },
-  {
-    id: '2',
-    action: 'UPDATE',
-    resource: 'Survey Points',
-    user: 'john@survey.co.ke',
-    timestamp: '2024-01-15 14:35:22',
-    ipAddress: '197.232.1.1',
-    details: 'Added 12 new survey points'
-  },
-  {
-    id: '3',
-    action: 'EXPORT',
-    resource: 'Data',
-    user: 'john@survey.co.ke',
-    timestamp: '2024-01-15 14:40:08',
-    ipAddress: '197.232.1.1',
-    details: 'Exported project to DXF format'
-  },
-  {
-    id: '4',
-    action: 'LOGIN',
-    resource: 'Auth',
-    user: 'jane@company.co.ke',
-    timestamp: '2024-01-15 13:22:45',
-    ipAddress: '197.232.2.55',
-    details: 'Successful login'
-  },
-  {
-    id: '5',
-    action: 'DELETE',
-    resource: 'Point',
-    user: 'john@survey.co.ke',
-    timestamp: '2024-01-15 12:15:33',
-    ipAddress: '197.232.1.1',
-    details: 'Deleted point: TP-015'
-  },
-  {
-    id: '6',
-    action: 'SIGN',
-    resource: 'Document',
-    user: 'john@survey.co.ke',
-    timestamp: '2024-01-15 11:45:12',
-    ipAddress: '197.232.1.1',
-    details: 'Digitally signed survey report'
-  },
-  {
-    id: '7',
-    action: 'API_CALL',
-    resource: 'Coordinates',
-    user: 'system',
-    timestamp: '2024-01-15 10:30:00',
-    ipAddress: '197.232.1.1',
-    details: 'Coordinate transformation API call'
-  },
-  {
-    id: '8',
-    action: 'UPDATE',
-    resource: 'Settings',
-    user: 'admin@company.co.ke',
-    timestamp: '2024-01-15 09:15:44',
-    ipAddress: '197.232.3.100',
-    details: 'Updated organization settings'
-  },
-]
-
 export default function AuditLogsPage() {
-  const [logs] = useState(mockLogs)
-  const [filter, setFilter] = useState('')
-  const [actionFilter, setActionFilter] = useState('all')
+  const [logs, setLogs] = useState<AuditLog[]>([])
+  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
 
-  const filteredLogs = logs.filter(log => {
-    const matchesSearch = filter === '' || 
-      log.action.toLowerCase().includes(filter.toLowerCase()) ||
-      log.resource.toLowerCase().includes(filter.toLowerCase()) ||
-      log.user.toLowerCase().includes(filter.toLowerCase())
-    
-    const matchesAction = actionFilter === 'all' || log.action === actionFilter
-    
-    return matchesSearch && matchesAction
-  })
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+      if (data.user) {
+        supabase
+          .from('audit_logs')
+          .select('*, projects:project_id(name)')
+          .eq('user_id', data.user.id)
+          .order('created_at', { ascending: false })
+          .limit(100)
+          .then(({ data }) => {
+            setLogs(data || [])
+            setLoading(false)
+          })
+      } else {
+        setLoading(false)
+      }
+    })
+  }, [])
 
-  const getActionColor = (action: string) => {
-    switch (action) {
-      case 'CREATE': return 'bg-green-100 text-green-800'
-      case 'UPDATE': return 'bg-blue-100 text-blue-800'
-      case 'DELETE': return 'bg-red-100 text-red-800'
-      case 'EXPORT': return 'bg-purple-100 text-purple-800'
-      case 'LOGIN': return 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
-      case 'SIGN': return 'bg-yellow-100 text-yellow-800'
-      case 'API_CALL': return 'bg-cyan-100 text-cyan-800'
-      default: return 'bg-[var(--bg-tertiary)] text-[var(--text-primary)]'
-    }
-  }
+  if (loading) return <div className="max-w-6xl mx-auto px-4 py-8">Loading audit logs...</div>
+
+  if (!user) return <div className="max-w-6xl mx-auto px-4 py-8">Please log in to view audit logs.</div>
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)]">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[var(--text-primary)]">Audit Logs</h1>
-          <p className="text-[var(--text-muted)]">Track all activities in your account</p>
-        </div>
-
-        <div className="flex flex-wrap gap-4 mb-6">
-          <input
-            type="text"
-            placeholder="Search logs..."
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="flex-1 min-w-64 p-3 border rounded-lg"
-          />
-          <select
-            value={actionFilter}
-            onChange={(e) => setActionFilter(e.target.value)}
-            className="p-3 border rounded-lg"
-          >
-            <option value="all">All Actions</option>
-            <option value="CREATE">Create</option>
-            <option value="UPDATE">Update</option>
-            <option value="DELETE">Delete</option>
-            <option value="EXPORT">Export</option>
-            <option value="LOGIN">Login</option>
-            <option value="SIGN">Sign</option>
-          </select>
-        </div>
-
-        <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-[var(--bg-primary)] border-b">
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <h1 className="text-2xl font-bold mb-6">Audit Logs</h1>
+      {logs.length === 0 ? (
+        <div className="text-[var(--text-muted)]">No audit logs found.</div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            <thead>
               <tr>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[var(--text-muted)]">Action</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[var(--text-muted)]">Resource</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[var(--text-muted)]">User</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[var(--text-muted)]">Details</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[var(--text-muted)]">IP Address</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-[var(--text-muted)]">Timestamp</th>
+                <th>Time</th>
+                <th>Action</th>
+                <th>Project</th>
+                <th>Details</th>
+                <th>IP</th>
               </tr>
             </thead>
             <tbody>
-              {filteredLogs.map(log => (
-                <tr key={log.id} className="border-b hover:bg-[var(--bg-secondary)]">
-                  <td className="py-3 px-4">
-                    <span className={`px-2 py-1 text-xs rounded ${getActionColor(log.action)}`}>
-                      {log.action}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-sm">{log.resource}</td>
-                  <td className="py-3 px-4 text-sm">{log.user}</td>
-                  <td className="py-3 px-4 text-sm text-[var(--text-muted)] max-w-xs truncate">
-                    {log.details}
-                  </td>
-                  <td className="py-3 px-4 text-sm font-mono text-[var(--text-muted)]">
-                    {log.ipAddress}
-                  </td>
-                  <td className="py-3 px-4 text-sm text-[var(--text-muted)]">
-                    {log.timestamp}
-                  </td>
+              {logs.map(log => (
+                <tr key={log.id}>
+                  <td>{new Date(log.created_at).toLocaleString()}</td>
+                  <td>{log.action}</td>
+                  <td>{(log as any).projects?.name || log.project_id || '—'}</td>
+                  <td className="max-w-md"><pre className="text-xs">{JSON.stringify(log.details, null, 2)}</pre></td>
+                  <td>{log.ip_address}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-
-        {filteredLogs.length === 0 && (
-          <div className="text-center py-12 text-[var(--text-muted)]">
-            <p>No logs found matching your criteria</p>
-          </div>
-        )}
-
-        <div className="mt-4 text-sm text-[var(--text-muted)]">
-          Showing {filteredLogs.length} of {logs.length} log entries
-        </div>
-      </div>
+      )}
     </div>
   )
 }

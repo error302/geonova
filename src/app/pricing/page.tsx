@@ -68,6 +68,35 @@ const plans = [
     cta: 'Contact Us',
     popular: false,
   },
+  {
+    id: 'firm',
+    name: 'Firm',
+    prices: { KES: 5000, UGX: 150000, TZS: 100000, NGN: 20000, USD: 38, GHS: 500, ZAR: 700, INR: 3200, IDR: 580000, BRL: 190, AUD: 55, GBP: 30, EUR: 35 },
+    features: [
+      { text: 'Everything in Team', included: true },
+      { text: '20 team members', included: true },
+      { text: 'Advanced admin dashboard', included: true },
+      { text: 'Custom report branding', included: true },
+      { text: 'API access', included: true },
+      { text: 'White-label option', included: true },
+    ],
+    cta: 'Contact Us',
+    popular: false,
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    prices: { KES: 0, UGX: 0, TZS: 0, NGN: 0, USD: 0, GHS: 0, ZAR: 0, INR: 0, IDR: 0, BRL: 0, AUD: 0, GBP: 0, EUR: 0 },
+    features: [
+      { text: 'Everything in Firm', included: true },
+      { text: 'Unlimited users', included: true },
+      { text: 'On-premise deployment', included: true },
+      { text: 'Custom development', included: true },
+      { text: 'SLA & 24/7 support', included: true },
+    ],
+    cta: 'Contact Sales',
+    popular: false,
+  },
 ]
 
 const faqs = [

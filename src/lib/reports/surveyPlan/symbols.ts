@@ -4,7 +4,7 @@ export const C_RED = '#C0392B'
 export const C_GRAY = '#888888'
 export const C_GRID_MINOR = '#E0E4EC'
 export const C_GRID_MAJOR = '#B0BDD0'
-export const C_LOT_FILL = '#F5EDD6'
+export const C_LOT_FILL = '#F4EDD5'
 export const C_WARNING_BG = '#FFF9E6'
 
 export function svgFoundMonument(cx: number, cy: number): string {
@@ -89,8 +89,8 @@ export function svgScaleBar(
 
 export function svgSheetBorder(pageW: number, pageH: number, outerInset = 5, innerInset = 10): string {
   return [
-    `<rect x="${outerInset}" y="${outerInset}" width="${pageW - outerInset * 2}" height="${pageH - outerInset * 2}" fill="none" stroke="${C_BLACK}" stroke-width="2"/>`,
-    `<rect x="${innerInset}" y="${innerInset}" width="${pageW - innerInset * 2}" height="${pageH - innerInset * 2}" fill="none" stroke="${C_BLACK}" stroke-width="1"/>`,
+    `<rect x="${outerInset}" y="${outerInset}" width="${pageW - outerInset * 2}" height="${pageH - outerInset * 2}" fill="none" stroke="${C_BLACK}" stroke-width="2.5"/>`,
+    `<rect x="${innerInset}" y="${innerInset}" width="${pageW - innerInset * 2}" height="${pageH - innerInset * 2}" fill="none" stroke="${C_BLACK}" stroke-width="0.8"/>`,
   ].join('')
 }
 

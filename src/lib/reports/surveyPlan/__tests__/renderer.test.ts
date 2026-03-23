@@ -111,8 +111,8 @@ describe('SurveyPlanRenderer', () => {
     it('contains sheet border', () => {
       const renderer = new SurveyPlanRenderer(BASE_DATA)
       const svg = renderer.render()
-      expect(svg).toContain('stroke-width="2"')
-      expect(svg).toContain('stroke-width="1"')
+      expect(svg).toContain('stroke-width="2.5"')
+      expect(svg).toContain('stroke-width="0.8"')
     })
 
     it('contains panel divider when panel enabled', () => {

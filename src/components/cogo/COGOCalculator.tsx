@@ -211,11 +211,11 @@ export default function COGOCalculator({ compact = false }: Props) {
 
   const TABS: { id: Tab; label: string }[] = [
     { id: 'inverse', label: 'Inverse' },
-    { id: 'polar', label: 'Polar' },
-    { id: 'intersection', label: 'Intersection' },
+    { id: 'polar', label: 'Radiation' },
+    { id: 'intersection', label: 'Forward/Backward Intersection' },
     { id: 'resection', label: 'Resection' },
-    { id: 'area', label: 'Area' },
-    { id: 'join', label: 'Join' },
+    { id: 'area', label: 'Area (Shoelace)' },
+    { id: 'join', label: 'Missing Line' },
   ]
 
   return (
@@ -279,10 +279,10 @@ export default function COGOCalculator({ compact = false }: Props) {
             </div>
           )}
 
-          {/* POLAR */}
+          {/* RADIATION */}
           {activeTab === 'polar' && (
             <div className="card p-4 space-y-3">
-              <h2 className="font-semibold text-sm">Polar (Radiation) — Given point, bearing and distance, compute new point</h2>
+              <h2 className="font-semibold text-sm">Radiation — Station + bearing/dist → coordinates</h2>
               <div className="grid grid-cols-2 gap-3">
                 <CoordField label="Known Easting (m)" value={polE1} onChange={setPolE1} />
                 <CoordField label="Known Northing (m)" value={polN1} onChange={setPolN1} />

@@ -13,7 +13,7 @@ export type CurrencyCode =
   | 'EUR'
   | 'USD'
 
-export type PlanId = 'free' | 'pro' | 'team'
+export type PlanId = 'free' | 'pro' | 'team' | 'firm' | 'enterprise'
 
 export interface PlanCatalogEntry {
   id: PlanId
@@ -111,6 +111,66 @@ export const PLAN_CATALOG: PlanCatalogEntry[] = [
       'Audit trail',
       'Branded reports',
       'Dedicated support',
+    ],
+  },
+  {
+    id: 'firm',
+    name: 'Firm',
+    billingInterval: 'monthly',
+    prices: {
+      KES: 5000,
+      UGX: 150000,
+      TZS: 100000,
+      NGN: 20000,
+      GHS: 500,
+      ZAR: 700,
+      INR: 3500,
+      IDR: 580000,
+      BRL: 190,
+      AUD: 55,
+      GBP: 30,
+      EUR: 35,
+      USD: 38,
+    },
+    features: [
+      'Everything in Team',
+      '20 team members',
+      'Custom integrations',
+      'API access',
+      'White-label license',
+      'Bulk export',
+      'Advanced analytics',
+      'Dedicated account manager',
+    ],
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    billingInterval: 'monthly',
+    prices: {
+      KES: 15000,
+      UGX: 450000,
+      TZS: 300000,
+      NGN: 60000,
+      GHS: 1500,
+      ZAR: 2100,
+      INR: 10500,
+      IDR: 1740000,
+      BRL: 570,
+      AUD: 165,
+      GBP: 90,
+      EUR: 105,
+      USD: 115,
+    },
+    features: [
+      'Everything in Firm',
+      'Unlimited team members',
+      'On-premise deployment option',
+      'Custom development',
+      'SLA guarantee',
+      '24/7 phone support',
+      'Training sessions',
+      'Regional data residency',
     ],
   },
 ]

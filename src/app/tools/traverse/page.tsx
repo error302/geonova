@@ -249,23 +249,35 @@ export default function TraverseCalculator() {
 
           <div className="card">
             <div className="card-header">
-              <span className="label">Adjusted Coordinates</span>
+              <span className="label">Bowditch Adjustment Table</span>
             </div>
             <div className="overflow-x-auto">
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Pt</th>
-                    <th>Northing (m)</th>
-                    <th>Easting (m)</th>
+                    <th>Line</th>
+                    <th>Dist (m)</th>
+                    <th>Bearing</th>
+                    <th>DEP (E)</th>
+                    <th>LAT (N)</th>
+                    <th>CORR DEP</th>
+                    <th>CORR LAT</th>
+                    <th>Adj E</th>
+                    <th>Adj N</th>
                   </tr>
                 </thead>
                 <tbody>
                   {result.legs.map((l: any, i: number) => (
                     <tr key={i}>
-                      <td className="text-left">{l.from}</td>
-                      <td>{l.adjNorthing.toFixed(4)}</td>
+                      <td>{l.from} → {l.to}</td>
+                      <td>{l.distance.toFixed(3)}</td>
+                      <td>{l.bearingDMS}</td>
+                      <td>{l.departure.toFixed(4)}</td>
+                      <td>{l.latitude.toFixed(4)}</td>
+                      <td>{l.correctedDeparture?.toFixed(4) || '0.0000'}</td>
+                      <td>{l.correctedLatitude?.toFixed(4) || '0.0000'}</td>
                       <td>{l.adjEasting.toFixed(4)}</td>
+                      <td>{l.adjNorthing.toFixed(4)}</td>
                     </tr>
                   ))}
                 </tbody>

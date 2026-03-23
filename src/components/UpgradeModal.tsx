@@ -17,6 +17,8 @@ const PLAN_COLORS: Record<PlanId, { border: string; badge: string; text: string 
   free: { border: 'border-[var(--border-color)]', badge: 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]', text: 'text-[var(--text-primary)]' },
   pro: { border: 'border-[var(--accent)]', badge: 'bg-emerald-900/50 text-emerald-400', text: 'text-[var(--text-primary)]' },
   team: { border: 'border-blue-600', badge: 'bg-blue-900/50 text-blue-400', text: 'text-[var(--text-primary)]' },
+  firm: { border: 'border-purple-600', badge: 'bg-purple-900/50 text-purple-400', text: 'text-[var(--text-primary)]' },
+  enterprise: { border: 'border-amber-500', badge: 'bg-amber-900/50 text-amber-400', text: 'text-[var(--text-primary)]' },
 }
 
 export default function UpgradeModal({ isOpen, onClose, currentPlan = 'free', feature }: UpgradeModalProps) {

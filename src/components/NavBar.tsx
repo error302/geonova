@@ -598,6 +598,27 @@ export default function NavBar() {
                           White Label
                         </Link>
                         <Link
+                          href="/digital-signature"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          Digital Signature
+                        </Link>
+                        <Link
+                          href="/notifications"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          Notifications
+                        </Link>
+                        <Link
+                          href="/audit-logs"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          Audit Logs
+                        </Link>
+                        <Link
                           href="/api-docs"
                           onClick={() => setOpenDropdown(null)}
                           className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"

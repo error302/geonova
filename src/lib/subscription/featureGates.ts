@@ -92,6 +92,60 @@ export const TIERS: Record<PlanId, TierLimits> = {
       'dedicated_support',
     ],
   },
+  firm: {
+    maxProjects: -1,
+    maxPointsPerProject: -1,
+    maxTeamMembers: 15,
+    features: [
+      'quick_tools',
+      'unlimited_projects',
+      'unlimited_points',
+      'basic_pdf',
+      'full_pdf',
+      'csv_import',
+      'offline',
+      'dxf_export',
+      'landxml',
+      'share_link',
+      'gps_stakeout',
+      'process_notes',
+      'priority_support',
+      '5_members',
+      'realtime_collab',
+      'roles',
+      'version_history',
+      'audit_trail',
+      'branded_reports',
+      'dedicated_support',
+    ],
+  },
+  enterprise: {
+    maxProjects: -1,
+    maxPointsPerProject: -1,
+    maxTeamMembers: -1,
+    features: [
+      'quick_tools',
+      'unlimited_projects',
+      'unlimited_points',
+      'basic_pdf',
+      'full_pdf',
+      'csv_import',
+      'offline',
+      'dxf_export',
+      'landxml',
+      'share_link',
+      'gps_stakeout',
+      'process_notes',
+      'priority_support',
+      '5_members',
+      'realtime_collab',
+      'roles',
+      'version_history',
+      'audit_trail',
+      'branded_reports',
+      'dedicated_support',
+    ],
+  },
 }
 
 export function canAccess(plan: PlanId, feature: FeatureKey): boolean {
@@ -119,6 +173,8 @@ export function requiresUpgrade(
     if (!canAccess(plan, requirement.key)) {
       if (plan === 'free') return { needed: 'pro', reason: `Pro plan required for ${requirement.key}` }
       if (plan === 'pro') return { needed: 'team', reason: `Team plan required for ${requirement.key}` }
+      if (plan === 'team') return { needed: 'firm', reason: `Firm plan required for ${requirement.key}` }
+      if (plan === 'firm') return { needed: 'enterprise', reason: `Enterprise plan required for ${requirement.key}` }
     }
     return null
   }
@@ -126,7 +182,8 @@ export function requiresUpgrade(
   const limit = getLimit(plan, requirement.what)
   if (limit < 0) return null
   if (requirement.current >= limit) {
-    const nextPlan: PlanId = plan === 'free' ? 'pro' : 'team'
+    const upgradePath: Record<string, PlanId> = { free: 'pro', pro: 'team', team: 'firm', firm: 'enterprise' }
+    const nextPlan = upgradePath[plan]
     return { needed: nextPlan, reason: `${requirement.what} limit reached (${requirement.current}/${limit})` }
   }
   return null

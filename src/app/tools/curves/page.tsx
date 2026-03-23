@@ -26,44 +26,46 @@ export default function CurvesCalculator() {
     abDistance: '150'
   });
   const [result, setResult] = useState<null | { type: CurveType; title?: string; steps: SolutionStep[]; stakePoints?: any[] }>(null);
+  const [rdmValidation, setRdmValidation] = useState<any>(null);
 
-  const calculate = () => {
+  const calculate = async () => {
+    // Existing curve calc...
     if (curveType === 'simple') {
       const R = parseFloat(input.radius);
       const piChainage = parseFloat(input.piChain);
       const interval = parseFloat(input.interval);
-
       const deflectionDec = (parseFloat(input.defDeg) || 0) + (parseFloat(input.defMin) || 0) / 60 + (parseFloat(input.defSec) || 0) / 3600
-
       if (isNaN(R) || isNaN(deflectionDec) || isNaN(piChainage) || isNaN(interval)) return;
-
-      const s = simpleCurveSolved({
-        radius: R,
-        deflectionDeg: deflectionDec,
-        piChainage,
-        interval,
-      })
-
-      setResult({ type: 'simple', title: s.solution.title, steps: s.steps, stakePoints: s.result.points })
+      const s = simpleCurveSolved({ radius: R, deflectionDeg: deflectionDec, piChainage, interval });
+      setResult({ type: 'simple', title: s.solution.title, steps: s.steps, stakePoints: s.result.points });
     } else if (curveType === 'compound') {
       const R1 = parseFloat(input.r1);
       const R2 = parseFloat(input.r2);
       const delta1 = parseFloat(input.delta1);
       const delta2 = parseFloat(input.delta2);
       const commonChainage = parseFloat(input.commonChainage);
-
       if ([R1, R2, delta1, delta2, commonChainage].some(n => isNaN(n))) return;
-      const s = compoundCurveSolved({ R1, R2, delta1Deg: delta1, delta2Deg: delta2, junctionChainage: commonChainage })
-      setResult({ type: 'compound', title: s.solution.title, steps: s.steps })
+      const s = compoundCurveSolved({ R1, R2, delta1Deg: delta1, delta2Deg: delta2, junctionChainage: commonChainage });
+      setResult({ type: 'compound', title: s.solution.title, steps: s.steps });
     } else if (curveType === 'reverse') {
       const R1 = parseFloat(input.r1_rev);
       const R2 = parseFloat(input.r2_rev);
       const AB = parseFloat(input.abDistance);
-
       if (isNaN(R1) || isNaN(R2) || isNaN(AB)) return;
-      const s = reverseCurveSolved({ R1, R2, AB })
-      setResult({ type: 'reverse', title: s.solution.title, steps: s.steps })
+      const s = reverseCurveSolved({ R1, R2, AB });
+      setResult({ type: 'reverse', title: s.solution.title, steps: s.steps });
     }
+
+    // RDM 1.3 validation
+    try {
+      const rdmRes = await fetch('/api/validate-geometry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ radius: parseFloat(input.radius || '0'), designSpeed: 80, terrain: 'rolling', gradient: 0 })
+      });
+      const rdmData = await rdmRes.json();
+      setRdmValidation(rdmData);
+    } catch {}
   };
 
   return (
@@ -127,7 +129,6 @@ export default function CurvesCalculator() {
         {result && (
           <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-6">
             <SolutionStepsRenderer title={result.title} steps={result.steps} />
-
             {result.type === 'simple' && result.stakePoints && result.stakePoints.length > 0 ? (
               <div className="mt-6">
                 <h3 className="font-semibold text-[var(--text-primary)] mb-3">Stakeout Table</h3>
@@ -153,6 +154,14 @@ export default function CurvesCalculator() {
                 </div>
               </div>
             ) : null}
+            {rdmValidation && (
+              <div className="mt-6 p-4 border rounded-lg" style={{ backgroundColor: rdmValidation.status === 'GREEN' ? '#10b98120' : rdmValidation.status === 'YELLOW' ? '#f59e0b20' : '#ef444420' }}>
+                <h4 className="font-bold mb-2">RDM 1.3 Compliance: <span style={{ color: rdmValidation.status === 'GREEN' ? '#10b981' : rdmValidation.status === 'YELLOW' ? '#f59e0b' : '#ef4444' }}>{rdmValidation.status}</span></h4>
+                {rdmValidation.flags.map((flag: string, i: number) => (
+                  <p key={i} className="text-sm mb-1">{flag}</p>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
