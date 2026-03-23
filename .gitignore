@@ -23,3 +23,5 @@ next-env.d.ts
 
 # Test coverage
 coverage/
+
+nul

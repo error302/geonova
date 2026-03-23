@@ -1,0 +1,3139 @@
+
+--- PAGE 1 ---
+CADASTRAL SURVEY
+DIRECTORATE
+CADASTRAL SURVEY
+STANDARDS GUIDELINES
+MANUAL
+2nd Edition
+March 2024
+
+--- PAGE 2 ---
+Acknowledgements
+Eng. Naji Sebt / Director General Survey
+Eng. Mai Al Muraikhi / Act. Director Cadastral Survey Directorate
+Eng. Yousef Al Wazan, Eng. Mohammed Al Khudri, Eng. Abdul Rahman Showaiter, Eng.
+Mohammed Al Mahmeed, Eng. Majeed Hasan, Eng. Fawaz Al Doseri, Eng. Khaled Al
+Sheikh, Eng. Abdulla bin Sanad, Eng. Abdulla Abdulrazaq
+Eng. Jon Davies / Advisor TSD
+Eng. Eleni Tziortzioti / Advisor CSD
+
+--- PAGE 3 ---
+Table of Contents
+A. INTRODUCTION ................................................................................................................................... 7
+Overview of the Cadastral Directorate ............................................................................................... 7
+Organisational Structure ..................................................................................................................... 8
+Abbreviations ...................................................................................................................................... 9
+Purpose of the Survey Standards Guidelines Manual ...................................................................... 10
+Scope ................................................................................................................................................. 10
+DEFINITIONS ...................................................................................................................................... 11
+B. CADASTRAL IDENTIFICATIONS .......................................................................................................... 16
+Parcel, Beacon Identification and Numbering .................................................................................. 16
+Cadastral Directorate Identification ............................................................................................. 16
+Locality Codes ............................................................................................................................... 18
+Job Categories ............................................................................................................................... 23
+Primary Investigation ........................................................................................................................ 24
+Categories of Cadastral Survey ......................................................................................................... 25
+Cadastral Survey............................................................................................................................ 25
+Non-Cadastral Survey.................................................................................................................... 25
+Survey Requirements for Cadastral Land survey .............................................................................. 25
+C. CADASTRAL SURVEY PRODUCTS ....................................................................................................... 26
+1. Cadastral Plan (C.P.) ...................................................................................................................... 26
+2. Types of cadastral Plans: ............................................................................................................... 26
+Survey Drawings (Flats and Villas) ................................................................................................ 26
+MOH (As Built) .............................................................................................................................. 26
+Land and Property Subdivision ..................................................................................................... 26
+3. Certificate of Survey (CoS), known and as Land Certificate (LC) ................................................... 27
+4. C.o.S /L.C. from Closed File ........................................................................................................... 28
+5. Deed Plan ...................................................................................................................................... 29
+Deed Plan types and drawing specifications................................................................................. 29
+Deed Plan printing info and specifications. .................................................................................. 46
+6. Court Report ................................................................................................................................. 49
+7. Map Sheet ..................................................................................................................................... 49
+8. Parcel Coordinates ........................................................................................................................ 50
+9. Survey Drawings ............................................................................................................................ 50
+10. Service Consultation ................................................................................................................... 50
+
+--- PAGE 4 ---
+11. Planning Permission .................................................................................................................... 50
+12. Ownership Information ............................................................................................................... 51
+13. Corner Application ...................................................................................................................... 51
+D. PRIVATE SECTOR PARTNERSHIP - AUTHORISATION of SURVEY COMPANIES - ACCREDITATION
+REQUIREMENTS .................................................................................................................................... 52
+1. Legal Background .......................................................................................................................... 52
+2. Type of work performed by Private Sector Offices ....................................................................... 53
+3. Authorisation / Accreditation ....................................................................................................... 53
+3.1 Accreditation and Classification system for Private Sector Cadastral Offices ........................ 53
+3.2 Accreditation and Classification system for Private Sector Cadastral AUDIT Offices ............. 55
+3.3 Accreditation of Individual Practitioners ................................................................................ 56
+4. Application for Authorisation ....................................................................................................... 56
+4.1 Private Sector Surveying Offices ............................................................................................. 56
+4.2 Individual Practitioners ........................................................................................................... 57
+5. Register of Authorised PSSO’s and Individual Land Surveyors and Surveying Technicians .......... 58
+6. Human Resources ......................................................................................................................... 58
+7. Suspension, Reinstatement and Withdrawal of Authorisation .................................................... 59
+7.1 Private Sector Surveying Offices ............................................................................................. 60
+7.2 Private Sector Cadastral Audit Offices .................................................................................... 60
+7.3 Authorised Surveyors .............................................................................................................. 60
+7.4 Surveying Technicians ............................................................................................................. 61
+7.5 Withdrawal of Authorisation .................................................................................................. 62
+8. Private Sector Professional Responsibility .................................................................................... 62
+9. New: Private Sector and CSD regulations ..................................................................................... 63
+9.1 Penalty System: ....................................................................................................................... 63
+E. COORDINATED CADASTRE ................................................................................................................ 65
+1. Survey Datum ................................................................................................................................ 65
+2. PRN ................................................................................................................................................ 65
+66
+3. Guidelines for field instrumentation Cadastral Surveying ............................................................ 68
+3.1 Background ............................................................................................................................. 68
+3.2 Instrumentation ...................................................................................................................... 68
+3.3 RAW vs Instrumentally Processed Data .................................................................................. 69
+3.4 Horizontal Angle Measurement .............................................................................................. 71
+
+--- PAGE 5 ---
+3.5 Vertical Angle Measurement .................................................................................................. 72
+3.6 Traversing ................................................................................................................................ 73
+3.7 Establishment and Use of Line Points ..................................................................................... 76
+3.8 Detail Survey ........................................................................................................................... 78
+3.9 Setting out from control ......................................................................................................... 83
+3.10 Surveys By Linear Measurement Only .................................................................................. 87
+3.11 Beacon Verification by 3 Distances ....................................................................................... 89
+4. Survey by GPS – Procedure for use of GPS with the Bahrain Permanent Reference Network
+(PRN) ................................................................................................................................................. 90
+1. Usage ......................................................................................................................................... 90
+2. General ...................................................................................................................................... 91
+3. Monitoring the functioning of PRN ........................................................................................... 91
+4. Detail Surveys ............................................................................................................................ 91
+5. Setting out Surveys ................................................................................................................... 92
+6. Control Surveys ......................................................................................................................... 92
+7. PRN Data Management ............................................................................................................. 92
+5. Authorised Survey Markers .......................................................................................................... 94
+5.1 Purpose ................................................................................................................................... 94
+5.2 Standard Parcel Boundary Marks ........................................................................................... 95
+5.3 Control .................................................................................................................................... 96
+5.4 Utility Hazards ......................................................................................................................... 96
+5.5 Historical marks ....................................................................................................................... 96
+5.6 Historical Marker Numbering Systems ................................................................................... 98
+5.7 Handover of Boundary Marks Responsibility .......................................................................... 98
+5.8 Field Data Records (Private Sector Subdivision) ..................................................................... 99
+F. Cadastral Survey Standards / Accuracy ........................................................................................... 102
+Accuracy Standards ......................................................................................................................... 102
+Field Survey Precision ..................................................................................................................... 103
+Appendices .......................................................................................................................................... 104
+Appendix 1. LMB-BLOCKS ........................................................................................................... 104
+Appendix 2. Map Index 1:1000 & 1:10000 entire Bahrain areas ................................................ 104
+Appendix 3. Large Scale Mapping Index .................................................................................... 106
+Appendix 4. Private Sector Application. ..................................................................................... 107
+Appendix 5. Private Sector Staff Application Table .................................................................... 108
+
+--- PAGE 6 ---
+Appendix 6. Surveyor Report ..................................................................................................... 109
+Appendix 7. Summary of beacons ............................................................................................. 110
+Appendix 8. Examination Report ................................................................................................ 111
+Appendix 9: Field Sketch ............................................................................................................ 112
+Appendix 10: Minor Control Point Description .......................................................................... 113
+Appendix 11: Survey Marker Designs ........................................................................................ 114
+Appendix 12: Service Consultation ............................................................................................. 115
+Appendix 13: Service Consultation / New Major Subdivision .................................................... 116
+Appendix 14: Service Consultation / New Minor Subdivision ................................................... 118
+Appendix 15: Report and Comparison of Dimensions - Areas .................................................... 121
+Appendix 16: Certificate of Survey (CoS) .................................................................................... 122
+
+--- PAGE 7 ---
+A. INTRODUCTION
+Overview of the Cadastral Directorate
+Cadastral Surveying is the process of defining real estate and property legal boundaries,
+property areas and dimensions detailed measurements. The phrase "Real Estate Property"
+refers to any ground-based area or structure that is immovable and is categorized as either
+natural (land) or a designated form of building: house, office building, etc.
+The Cadastral Survey Directorate (CSD) administers the survey system primarily to provide
+accurate identification of boundaries for land tenure purposes and prepare detailed records
+and publish maps, title deed plans and survey certificates for the benefit of the public,
+private entities, and government agencies.
+Mainly, the CSD is responsible for:
+• Performing all necessary surveying activities to count, analyse, and classify different
+types of real estate units and their specifications for private and public benefit all over
+the Kingdom; Part of the activities are performed by Private Sector Offices, authorised
+by CSD.
+• Conducting cadastral surveys, and preparing deed plans, for private and public real
+estate sectors.
+• Developing and updating databases and digital maps of all cadastral related data
+records.
+• Carrying out all Royal orders regarding land allocation and grants.
+• Preparing reports and offering technical advice on property issues upon request from
+public and private sector entities.
+• Preparing survey reports and certificates, maps, ownership documents, and laying
+physical markers to determine limitations and borders for public and private real estate
+units.
+• Enhancing and updating surveying methodologies to comply with the latest technical
+advancements in this field.
+• Reviewing surveying regulations and suggesting newer ones; and
+• Contributing necessary surveying data for GIS applications in public and private entities.
+• Sharing cadastral data in real time with public stakeholders, underpinning their
+activities.
+• Authorising, monitoring, and auditing the Private Sector activities and efficiency and
+proposing all the necessary correction actions.
+• Focusing on design, development and providing internal and external audit reports and
+other related activities, within the standards and KPI’s, ensuring the QA/QC of the CSD
+products.
+7
+
+--- PAGE 8 ---
+Organisational Structure
+8
+
+--- PAGE 9 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Abbreviations
+Term Definition
+GDS Director General Survey
+CSD Cadastral Survey Directorate
+TSD Topographic Survey Directorate
+HSD Hydrographic Survey Directorate
+CSD Director Director, Cadastral Survey
+ACSD Consultant/ Advisor (Cadastral Survey)
+CCTP Chief, Cadastral Survey Technical Processing
+CCCD Chief, Cadastral Survey Coordination & Development
+CTP Section Cadastral Survey Technical Process Section
+CFO Cadastral Survey Field Operations Group
+CJM Cadastral Survey Job Management Group
+CDE Cadastral Data Examination Group
+CCD Section Cadastral Survey Coordination & Development
+CCR Cadastral Survey Coordination & Customer Relations Group
+CDE Cadastral Data Examination Group
+OSA Organisation & Audit Group
+CoS / LC Certificate of survey / Land Certificate
+CP Cadastral Plan
+DP Deed Plan
+PS Private Sector Office
+PI Primary Investigation
+TCC Technical Coordination Committee
+SC Survey Committee
+CTC Court Technical Committee
+MoF Ministry of Finance
+MUN Ministry of Municipalities
+UPDA Urban Planning & Development Authority
+LRD Land Registration Directorate
+TAD Technical Affairs Directorate
+9
+
+--- PAGE 10 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Purpose of the Survey Standards Guidelines Manual
+The Standards and the Guidelines in this CSD Survey Standards Guidelines Manual will
+enable users (internally in CSD and externally to the stakeholders):
+✓ To have access to Up-to date Standards they must comply with.
+✓ To understand the Coordinated Cadastre of Bahrain and adopt modern survey
+instrumentation and techniques to use the appropriate survey control of International
+Standards.
+✓ To understand the governance, administrative authority, and procedures of conducting
+cadastral survey within the Kingdom of Bahrain.
+Scope
+The Cadastral Survey Standards Guidelines Manual is divided in Chapters that:
+1. Introduce the Cadastral Survey Directorate
+2. Describe the Cadastral Survey Identifications
+3. Present the Cadastral Survey Directorate Products and their guidelines
+4. Present the Regulations between the Directorate and the Private Sector firms.
+5. Present the Bahrain Coordinated Cadastre and the Field Operations Guidelines
+6. Summarise the Standards.
+The Cadastral Survey Directorate is currently upgrading their systems; thus, this is the First
+Draft of the Survey Standards Guidelines Manual, and it is subject to enrichment and
+updated versions in the near future.
+10
+
+--- PAGE 11 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+DEFINITIONS
+Standards’ Guidelines Manual:
+Guideline rules issued by the Director General Survey, that determine the technical and
+administrative standards and procedures that shall be followed in the completion of a
+survey transaction.
+Land survey:
+Defining the property’s location, indicating its area, dimensions, and boundaries of
+ownership.
+Cadastral Survey: {Amendments of L13}
+Collection and processing of measurements and preparation of plans defining the physical
+extent and boundaries of land and property, encumbrances, abuttals, and neighbours, to
+represent ownership as recorded in Title Deeds and Property Register including all types of
+tenure under this Law in 2 or 3 dimensions.
+Non-Cadastral Survey:
+Survey of features of the natural and built environment other than cadastral survey such as
+topographic, geodetic, hydrographic survey and other disciplines as defined by the
+concerned directorate. May include the collection and processing of measurements and
+preparation of plans defining the physical extent of the natural and built environment.
+Survey:
+Measurement and observation by direct or non-contact methods, the collection and
+processing of measurements, capture and creation of spatial data, the preparation of plans
+and maps (in 2D and 3D), for the purpose of cadastral, topographic, geodetic, and
+hydrographic surveying and mapping under this Law.
+Topographic Survey:
+Collection and processing of measurements made to determine the location and attributes
+of features of the natural and built environments by direct and/or non-contact methods and
+observation.
+Geodetic Survey:
+Measurement and representation of the Earth including its gravitational field in three
+dimensions and according to time to enable definition of the National (foundation)
+reference framework with respect to the Bahrain National Datum and Grid to which all
+survey measurements and features can be referenced
+Hydrographic Survey:
+Collection and processing of measurements of the sea, waterways and along the coast
+relating to depth of the sea, coastal features, navigation aids, nature of the seafloor
+including sub bottom, tides, currents, and physical properties of the water column.
+11
+
+--- PAGE 12 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Cadastral Parcel
+Cadastral parcel should be considered as a single area of Earth surface, under homogeneous
+real property rights and unique ownership (adapted from UN ECE 2004 and WG-CPI, 2006).
+Remark: By unique ownership is meant that the ownership is held by one or several owners
+for the whole parcel.
+Cadastral Parcel Types
+- Numeric: Surveyed and coordinated parcels. where their data uploaded and archive in a
+database table and exported to cad tile in DGN format.
+- Graphic: Surveyed parcels. where their data uploaded and archive in a database table and
+exported to cad tile in DGN format.
+- CIM (Cadastral Index Map): Not surveyed parcels, charted from land registration charting
+map.
+Certificate of Survey (CoS) known and as Land Survey Certificate (LC):
+A technical plan outlining the property’s nature, location, indicating its area, dimensions,
+and boundaries.
+Strata:
+Each independent horizontal unit of a property, that has the descriptions and characteristics
+of the property, and it’s divided into one apartment or several apartments.
+Apartment / flat:
+Any part of a strata building which constitutes an independent horizontal unit.
+Cadastral Plan:
+A map prepared by a Private Survey Firm and approved by Cadastral Survey Directorate that
+shall have the same characteristics as that of a survey certificate and relates to a group of
+properties for any subdivision or in implementation of detailed plan.
+Deed Plan:
+An engineering drawing by the Cadastral Survey Directorate for the unit subject of a
+transaction and the property in which it is located therein. Such drawing shall be based on
+survey drawings and physical field survey. There shall be shown in it the area of the unit, its
+boundaries, its number amongst the property units, stratum in which it is located, and the
+parts associated therewith, all in accordance with the technical requirements and
+instructions mentioned in the Standard’s Guideline Manual
+Title Deed:
+A deed issued by the Bureau (SLRB) and proving title to the property.
+12
+
+--- PAGE 13 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Survey Drawings:
+Drawings prepared by a Private Engineering Firm at the request of an owner and approved
+by the Cadastral Survey Directorate in respect of units subject to a transaction. Drawings
+shall be based on field survey and detailed engineering drawings of the said units and in
+accordance with the technical requirements and instructions mentioned in the Standards’
+Guidelines Manual.
+Detailed Engineering Drawings:
+Drawings prepared by a Private Engineering Firm at the request of an owner and approved
+by the concerned municipality and based on which a permit is issued to build the property
+in which the units’ subject of a transaction are situated.
+BPMS:
+Bahrain Property Measurement Standards. Standards adopted in 2019, define what should
+be measured and consequently what is measurable in Cadastral Plans, Deed Plans etc.
+The BPMS comply with IPMS/International Property Measurement Standards.
+Property Plan:
+A plan showing the property’s area, location, boundaries, dimensions, and numbers.
+Common Property:
+An entire building, or any part thereof, or the land, or both, which is divided into Units
+allocated for ownership or usufruct. Part of such building or land shall be designated as
+Common Parts.
+Property Unit / Unit:
+An apportioned part of a Common Property, which includes any allocated off-plan part, or
+any apartment, or storey or part of a land or house (villa) whether attached to another
+house or detached, which is located within a Common Property.
+Common Parts:
+The parts of a Common Property that are held in common and are allocated for common
+use by all the owners and Occupants of the Property Units on the Property Location Plan.
+Survey Job (Job Transaction)
+A file that includes a paper or electronic application filed by and owner or his representative
+who is duly authorised by an official power of attorney to survey a property. The application
+shall be recorded in the concerned Register under a serial number and shall mention the
+necessary information, date of the application and what procedures have been done until
+the completion of the job.
+Surveyor:
+The person who does the survey works in accordance with the provisions of these
+Implementation regulations.
+13
+
+--- PAGE 14 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Private Survey offices:
+A private office authorised to perform various types of surveying under the Law 13/2013
+and its amendments, or an office that is registered and licensed with the Council for
+Regulating the Practice of Engineering Professions according to Law No. (51) of 2014, with
+respect to Regulating the Practices of Engineering Professions, and which are approved by
+the Director General Survey.
+Examination of Cadastral works:
+The Quality Check of all the Cadastre Products so that secure their accuracy and their
+compliance with CSD Standards.
+Land and Property Consolidation:
+The survey act by consolidating two or more parcels of land and defining them as one
+parcel, according to the UPDA approved plans.
+Demarcation
+The survey act to define the land boundary of registered or unregistered land.
+Re-demarcation
+The survey acts to reset out previously defined boundaries.
+Subdivision
+The process that the owner/developer of a land or building must go through to subdivide it
+into two or more parcels/plots.
+Replanning
+A request from UPDA to re-plan an area & prepare a Cadastral Plan.
+Case number:
+Is a number allocated to the property after the payment by a buyer of the real estate fees,
+whereby the buyer becomes the owner of the property subject of the transaction.
+Public bodies:
+Government ministries, agencies, and other government entities
+CRPEP:
+The Council for Regulating the Practice of Engineering Professions in the Kingdom of Bahrain
+according to Law No. (51) Of 2014.
+Data:
+All type of information text, graphic, image, audio and/or visual material, software, data,
+spatial data, database and/or system content, information and material, and data about
+data (metadata).
+14
+
+--- PAGE 15 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Spatial Data:
+Data derived from survey measurement or processing that has attribute of location in two
+or three dimensions and according to time including features, feature attribution, and data
+about data (metadata).
+Data License:
+License issued by the Concerned Directorate for the permissions to access, use, publish,
+reproduce, or re-sell data including spatial data and all associated restrictions. The Data
+license is valid for a year.
+Fundamental (or Foundation) Spatial Data:
+A set of spatial data required to produce national base maps, which is determined by SLRB.
+It is referred to a primary collection of processed measurements of the natural and built
+environment on, above or below the surface of the Earth or the sea that are surveyed and
+stored according to defined standards and position related to the National (foundation)
+reference framework, including the attributes of features and associated metadata.
+CIS (cadastral Information system):
+CSD current Job management system.
+15
+
+--- PAGE 16 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+B. CADASTRAL IDENTIFICATIONS
+Parcel, Beacon Identification and Numbering
+Land parcels in Bahrain are identified in several ways by the various authorities who have a
+legitimate interest in the management, identification, and ownership of land.
+Cadastral Directorate Identification
+Cadastral Directorate gives a unique number to each land parcel by identifying successive
+plots in geographically defined districts and sub-districts.
+The number has the format:
+DD-SS-nnnn
+DD: the Registration District Number (01-17)
+SS: the sub-District
+nnnn: the serial parcel number
+Gaps will appear in the sequence as plots are cancelled or superseded by later sub-division,
+consolidation, or re-planning. A plot number, once used, must NOT be used again.
+The general relationship between Registration District and locality is set out below.
+16
+
+--- PAGE 17 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+DISTRICT SUB-DISTRICT AREA
+ARAD, HALAT AL NEAIM, HALAT AL SLETAH, HIDD
+01 00 - 01
+SALMAN INDUSTRIAL CITY, SHARQ AL HIDD
+AL DAIR, AMWAJ, BUSAITEEN, DIYAR AL MUHARRAQ, MUHARRAQ, QALALI, RAYA
+02 00 - 04
+DISTRICT, SAMAHEEJ, SHARQ AL HIDD ( 101 )
+DIPLOMATIC AREA
+03 01
+MANAMA / SEA FRONT
+03 02 MANAMA / ALCORNICHE, MANAMA / ALHOORA, MANAMA / ALQUDAYBIYAH (321)
+03 03 MANAMA / ALQUDAYBIYAH
+03 04 MANAMA / ALFATEH, MANAMA / ALGHURAYFAH, MANAMA / ALJUFFAIR
+03 05 MANAMA / MINA SALMAN INDUSTRIAL AREA
+03 06 MANAMA / UMM ALHASSAM
+03 07 MANAMA / ALADLIYAH
+MANAMA / ALSALMANIYA (329), MANAMA / ALSUQAYYAH, MANAMA / BUASHIRAH
+03 08
+MANAMA / BUGHAZAL, MANAMA / UMM ALHASSAM (333)
+03 09 MANAMA / ALQUDAYBIYAH (308), MANAMA / ALSALMANIYA, MANAMA CENTER ( 307 )
+03 10 MANAMA / ALGUFUL
+11,12,13,14,15,1
+03 6,17,18,19,20,21 MANAMA / ALNAIM, MANAMA / ALSUWAYFIYAH (313), MANAMA CENTER
+,22,23, 24
+03 25 AL BURHAMA, MANAMA / ALSUWAYFIYAH (351), SALIHIYA
+03 26 BILAD AL QADEEM, ZINJ
+03 27 ABU BHAM, ADHARI, KHAMIS, SOUTH SEHLA
+04 01 JANNUSAN, JID AL HAJ, KARRANAH
+AL DAIH, AL MAQSHA, AL QAL AH, AL SEEF, HILLAT ABDULSALEH, JIDHAFS ( 422, 424, 426)
+04 02-06
+KARBABAD, KARRANAH (458), NURANA, SANABIS
+ABU SAYBA, AL HAJAR, AL QADAM, BU QUWAH, JEBLAT HIBSHI, MAQABAH, NORTH SEHLA,
+04 03 - 07
+SHAKHURAH
+04 04 AL MUSALLA, JIDHAFS, TASHAN
+AL DIRAZ, AL MARKH (533), BAR BAR, BUDAIYA (550, 552), JANNUSAN (508), MADINAT
+05 01 & 03
+SALMAN
+05 02 & 04 AL JANABIYAH, AL JASRAH, AL MARKH, AL QURAYYAH, BANI JAMRAH, BUDAIYA, JIDDAH
+MAQABAH, MOHAMMADIYAH, SAR, UMM AL NA SAN
+AL AKR AL GHARBI, AL HAMRIYA, AL MA AMEER, AL NUWAIDRAT, HAWRAT SANAD,
+06 00 - 02 INDUSTRIAL AREA, JUZUR AL DAR, SANAD, SHARQ SITRA CITY, SITRA ( 7 areas ),
+UM AL BAIDH
+A ALI (740, 742), AL JANABIYAH, AL RAMLI, BURI, HAWRAT A ALI, SALMABAD, ZAYED
+07 01 & 03
+TOWN
+07 02 A ALI, BURI (752, 754), RIFFA / JARYALSHAIKH
+AL NASFA, ISA TOWN, JERDAB, JIDD ALI, MANAMA / SEEF UMM ALHASSAM (373), NABIH
+08 00 - 02
+SALEH, TUBLI
+AL RIFFAH, RIFFA / ALGHARBI (932), RIFFA / ALROWDHA, RIFFA / WADI ALSAIL,
+09 01
+SAFREH
+RIFFA / ALGHARBI, RIFFA / ALHUNAYNIYAH, RIFFA / ALSHARGI, RIFFA / MO ASKAR, RIFFA /
+09 02 & 04
+SWAYFRA
+09 03 & 06 RIFFA / ALBUHAIR, RIFFA / ALBUKOWARAH, RIFFA / ALHAJIYAT, RIFFA / ALSHAMALI
+AL HAMALAH, AL JASRAH, AL LAWZI, AL SAFRIYAH, DAMISTAN, DAR KULAIB, KARZAKKAN,
+10 00 - 04
+MADINAT HAMAD, MALKIYA, SADAD, SHAHRAKKAN, ZALLAQ
+11 00 HAWRAT INGAH, JAZAER BEACH, WADI ALI, ZALLAQ
+AL AMUR, AL GHAYNAH, AL MAMTALAH, AL MAZROWIAH, AL QARAH, AL QURAYN, AL
+RUMAMIN, AL RUMAYTHAH, AL SAKHIR, AL SHABAK, AWALI, DURRAT AL BAHRAIN,
+12 00 - 01 HAFIRAH, HIDD ALJAMAL, MADINAT KHALIFA ( 8 areas), MAMLAHAT AL MAMTALAH,
+MUZARRA, RAS ABU JARJUR, RAS HAYYAN, RAS ZUWAYED, TARRAFI, UMM JIDR, UMM JIDR1 7
+AL SUMMAN, WADI ALI ( part of 1068)
+
+--- PAGE 18 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Locality Codes
+Locality codes are two to three letter codes used to identify areas around the Kingdom of
+Bahrain, these codes simplify linking the parcel to the area it is located in without having to
+write the full locality name.
+The locality Codes used are presented in the following table:
+18
+
+--- PAGE 19 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+LOCALITY CODE LOCALITY NAME LOCALITY CODE LOCALITY NAME
+1 HWS HAWRAT SANAD 61 MZR ALMAZROWIAH
+2 NUR NURANA 62 MSK ALMUASKAR
+3 SHA SHARQ AL HIDD 63 UMJ UMM JIDR
+4 MDS MADINAT SALMAN 64 UJS UMM JIDR ALSUMMAN
+5 MKA MADINAT KHALIFA/ ASKAR 65 JZB JAZAER BEACH
+6 MKN MADINAT KHALIFA/ NAAMIYAT 66 RSJ RAS ABU JARJUR
+7 MKM MADINAT KHALIFA/MISHREF 67 RBS RUBUD AL SHARQIYAH
+8 MKU MADINAT KHALIFA/ UM ALOWSAJ 68 SUJ SUWAD AL JANUBIYAH
+9 MKJ MADINAT KHALIFA/ JAU 69 SUS SUWAD AL SHAMALIYAH
+10 MKL MADINAT KHALIFA/ ALULAIM 70 SWF SWAYFRA
+11 MKR MADINAT KHALIFA/ ALMAHADIR 71 TRF TARRAFI
+12 MKD MADINAT KHALIFA/ AL DUR 72 MUZ MUZARRA
+13 SIC SLAMAN INDUSTRIAL CITY 73 MLM MAMLAHAT AL MAMTALAH
+14 DLM DILMUNIA 74 WDS WADI AL SAIL
+15 DRM DIYAR AL MUHARRAQ 75 WDA WADI ALI
+16 SRH SHARQ AL HIDD 76 RBG RUBUD AL GHARBIYAH
+17 MHD MADINAT HAMAD 77 DAB DURAT AL BAHRAIN
+18 ALZ AL-LAWZI 78 RFA AL RIFFAH
+19 RFG AL RIFFA AL GHARBI 79 BAS BANDAR AL SEEF
+20 RFS AL RIFFA AL SHARQI 80 AA ALBA
+21 RFN AL RIFFA AL SHAMALI 81 AB ABU SAYBA
+22 SAF AL SAFRIYAH 82 ABD AL-BIDAH
+23 SEF SEA FRONT 83 AD AL ADLIYAH
+24 CNM CENTRAL MANAMA 84 AJ AL-JILAH
+25 LAS LHASSAY 85 AK AKR
+26 NRC NORTH CITY 86 AL AALI
+27 AMW AMWAJ 87 AR ARAD
+28 SUW AL-SUWAFIYAH 88 AS ASKAR
+29 GUF AL-GUFUL 89 AW AWADIYA
+30 CRN AL-CORNICHE 90 AWL AWALI
+31 BUS BU ASHIRA 91 AZ ALZARARIH
+32 MSI MINA SALMAN INDUSTRIAL AREA 92 BD BUDDAIYA
+33 ZIN ZINJ 93 BH AL BURHAMAH
+34 ABA ABU AL AYASH 94 BK BU QUWAH
+35 HAJ AL-HAJIYAT 95 BL BILAD AL-QADEEM
+36 HAM AL-HAMRIYA 96 BM BUMAHER
+37 KHR AL-KHARIJIAH 97 BN BANI JAMRAH
+38 AKS AL-AKR AL SHARQI 98 BR BARBAR
+39 AKG AL-AKR AL GHARBI 99 BS BUSURAH
+40 INA INDUSTRIAL AREA 100 BU BURI
+41 NAS AL-NASFA 101 BY BUSAITEEN
+42 UMB UM AL-BAIDH 102 DH AL DAIH
+43 BUH BUHAIR 103 DK DARKULAYB
+44 BUK BU KUWARAH 104 DM DAMISTAN
+45 SUF SUFALA 105 DP DIPLOMATIC AREA
+46 MRQ MURQOBAN 106 DR AL DIRAZ
+47 MHZ MAHAZZAH 107 DU AL DUR
+48 WDN WADIYAN 108 DW DHAWAWDA
+49 JNB AL-JANABIYAH 109 DY AL DAIR
+50 MHM MOHAMMADIYA 110 FD FADEL
+51 ADR ADHARI 111 FR FARSIA
+52 UMZ UMMHAZWARAH 112 HA HAMAM
+53 JAS ALJASIRAH 113 HD HIDD
+54 HUN ALHUNAYNIYA 114 HF HAFIRAH
+55 RMN ALRUMAMIN 115 HJ HAJAR
+56 RWD ALROWDHA 116 HL HELAT ABDUL SALEH
+57 SBK AL-SHABAK 117 HM AL HAMALA
+58 GHN ALGHAYNAH 118 HR AL HOORA 19
+59 QRH ALQARYAH 119 HT HAMAD TOWN
+60 QUR ALQURAYN 120 HW JAZIRAT HAWAR
+
+--- PAGE 20 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+LOCALITY CODE LOCALITY NAME LOCALITY CODE LOCALITY NAME
+121 IT ISA TOWN 181 SL SALMABAD
+122 JA JID AL-HAJ 182 SLM AL SALMANIYA
+123 JB JUBAYLAT 183 SM SAMAHEEJ
+124 JD JIDHAFS 184 SN SANAD
+125 JDD JIDDAH 185 SNB SANABIS
+126 JF JAFOOR 186 SR SAAR
+127 JH JABALAT HABSHI 187 ST SITRA
+128 JL JIDD ALI 188 SU AL SAQIYYAH
+129 JM JAMALAH 189 SY SALIHIYAH
+130 JNN JANABIAH North 190 TB TUBLI
+131 JNS JANABIAH SOUTH 191 TN TASHAN
+132 JQ JIBLA QUILLA 192 TT TASH TASH
+133 JR JERDAB 193 UH UMM AL-HASSAM
+134 JS JANNUSAN 194 UN UMM AN NA'SAN
+135 JU AL JUFAYR 195 WS WASMIYAH
+136 JW JAU 196 ZL ZALLAQ
+137 JZ AL JASRAH 197 ZNE ZINJ EAST
+138 KB KARBABAD 198 ZNW ZINJ WEST
+139 KH KHAMIS 199 JZM JAZIRAT MUSHTAN
+140 KN KANOO 200 FA FASHT AL-ADHAM
+141 KR KARRANAH 201 JZN JAZIRAT NUN
+142 KW KAWARAH 202 FJ FASHT AL-JARIM
+143 KZ KARZAKKAN 203 ASH AS SAHAYLAH
+144 MA AL MAAMEER 204 KWF KHAWR FASHT
+145 MG MAQABAH 205 SFR SAFREH
+146 MH MUHARRAQ 206 HJM HIDD AL JAMAL
+147 ML MALKIYA 207 GU AL GHURAYFAH
+148 MN MANAMA 208 RZW RAS ZUWAYED
+149 MQ AL MAQSHA 209 HN HALAT AL NEAIM
+150 MR AL MARKH 210 HE HALAT AL SLETAH
+151 MS AL MUSALLA 211 HAL HAWRAT A'ALI
+152 MUM AL MAMTALAH 212 ABB ABU BHAM
+153 MW MUWAYLIGHAH 213 ZT ZAYID TOWN
+154 MZ AL MAHUZ 214 RAB RAS AL BARR
+155 NA AL NAIM 215 ALQ AL-QALAH
+156 NL NAKHL EL-LAWZI 216 ALF AL FATEH
+157 NS NABIH SALEH 217 JSH JARY AL SHAIKH
+158 NW AL NUWAIDRAT 218 BGZ BU GHAZAL
+159 QD AL QADAM 219 HIG HAWRAT INGAH
+160 QFE QUFOOL EAST 220 AMR AL AMUR
+161 ALS AL SAYH 221 SMH SHAMAL AL MUHARRAQ
+162 MC MANAMA CENTRE 222 SUH SEEF UMM AL HASSAM
+163 QFW QUFOOL WEST 223 MSF MARSA AL-SEEF
+164 QL QALALI 224 SEB SOUTH EAST BAHRAIN
+165 QR AL QURAYYAH 225 RAM AL RAMLI
+166 QU AL QUDAYBIYAH 226 SHS SHARAQ ALHIDD/BU SAHEEN
+167 RF RIFFA 227 SHE SHARQ AL HIDD/ALEZEL
+168 RH RAS HAYYAN 228 SHQ SHARQ AL HIDD/ALQULYAH
+169 RJ RAS JAZAIR 229 SHJ SHARQ AL HIDD/UM ALSHAJAR
+170 RQ RAS AL-QURAIN 230 SHW SHARQ AL HIDD/UM ALSAWALI
+171 RS RAS RUMAN 231 MSR MADINAT SALMAN/BU RABEA
+172 RUM AL RUMAYTHIYAH 232 MSB MADINAT SALMAN/AL-BEDA
+173 SA SHAHRAKKAN 233 MSD MADINAT SALMAN/AL-SHATA DISTRICT
+174 SAK AL SAKHIR 234 MSN MADINAT SALMAN/AL-NAKHEEL DISTRI
+175 SB SHABATHA 235 MST MADINAT SALMAN/TEENAR
+176 SD SADAD 236 SSC SHARQ SITRA CITY
+177 SF ALSEEF 237 DN DHAHYAT AL NAKHEEL
+178 SHF NORTH SEHLA 238 RD RAYA DISTRICT
+179 SHH SOUTH SEHLA
+20
+180 SK SHAKHURAH
+
+--- PAGE 21 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+PARCEL NUMBER GENERATION
+OVERFLOWS
+In general, to cover parcel serial numbers exceeding 9999 within any Registration District:
+If the center element is 00 use 01 (e.g., in Sitra, parcels with serial numbers > 9999, appears
+as 06-01-nnnn).
+REGION 13 PARCELS
+Registration District 13 was introduced to enable parcel stringing of Roads and other
+Services.
+This Registration Division District 13 is governed by the following rules:
+Region Description
+13 00 Road Reserve
+13 01 Access Way
+13 02 Car Park
+13 03 Common Access
+13 04 Master Plan Block & Planning Study Areas
+13 05 Corner Plots Restricting Access
+13 06 Mosques, Cemeteries & Religious Sites on Gov. Land
+13 07 Miscellaneous Sites on Gov. Land
+13 08 MOH Housing Sites Planned Extension Plots
+13 09 Closed Road (A corner needs neighbor approval)
+13 10 Multiple Service Corridor
+13 11 Electric Service Corridor
+13 12 WSD Service Corridor
+13 13 BATELCO Service Corridor - TRA
+13 14 BAPCO Service Corridor
+13 15 SEPPD/ Drainage Corridor
+13 16 PROTECTION ZONES
+13 20 Multi le Service Site
+13 21 Electricity Service Site
+13 22 WSD Service Site
+21
+
+--- PAGE 22 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+13 23 BATELCO Service Site - TRA
+13 24 BAPCO Reserve
+13 25 SEPPD/ Service Site
+13 26 ACCESS MULTIPLE SERVICES (Registered)
+13 27 Green Land Zones
+13 28 Train Railway, Light Metro, Transportation Lane, Sky Walk
+13 30 Common Wall
+• In most cases, services sites in Region 13, will be registered in the name of the Kingdom
+of Bahrain with a normal parcel number.
+REGION 14 (OFFSHORE) PARCELS
+Region 14 has been introduced to cover all offshore parcels.
+No sub-districts are envisaged, and all parcels too far are labelled serially in District 14.
+REGION 15 UNITS /FLATS & ATTACHED VILLAS (STRATA) PARCELS
+Region 15 has been introduced to cover all flat parcels and the horizontal Villas. Villas are
+considered as strata parcels.
+Flat parcels will be totally contained within a valid parent parcel which shall have a
+normal parcel number and Title Deed.
+REGION 16 MINISTRY OF INDUSTRY PARCELS
+Region 16 has been introduced to cover all the Ministry of Industry parcels.
+REGION 17 (REGISTERED ROADS OR SERVICES) PARCELS
+Region 17 has been introduced to cover the registration of Roads and Multiple Services
+Corridors.
+This Registration Division District 17 is governed by the following rules:
+Region Description
+17 00 Road Reserve
+17 10 Multiple Service Corridor
+22
+
+--- PAGE 23 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+OFFSHORE SECOND CROSSING
+To cope with extensive offshore work related to the second Manama/Muharraq Causeway
+Manama offshore along the whole northern length of District 3 will be sub-district 03-21,
+currently only sea front.
+REGION 88 (LEASEHOLDS) PARCELS
+Leasehold parcels are identified under Registration District 88 in the format 88SSNNNN. No
+sub-districts are envisaged.
+REGION 99 (COURT CASES) PARCELS
+Registration District 99 is used for court case parcels, which in many cases conflict with
+other parcels. Court case parcel are allocated temporary numbers in the format 99SSNNNN
+until a decision is made to issue a title deed, or the claim for the parcel is rejected by the
+courts. No sub-districts are envisaged.
+Job Categories
+CSD classify the jobs as follows:
+CATEGORY CODE DESCRIPTION DEMARCATION Comments
+1 SD LC E
+1 Mun. LC E
+1 Owner Request/LC E
+1A Normal LC E
+1F Fast LC E
+3A SD Dimensions N
+3A LA or O and L Request/Dim N
+3A Mun. Dimensions N
+3B Owner Request/Dem Y
+3B SD Demarcation Y
+3B LA or O and L Request/Dim Y
+4A LRD Inheritance Subdivision E
+4A LRD Court Implementation E
+4A LRD Metrication E
+4A LRD Exchange E
+4B LRD Sale E
+4C LRD Deed Renewal E
+23
+
+--- PAGE 24 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+4D LRD: Shares E
+4E LRD Minor Subdivision E
+4E SD Minor Subdivision E
+4F LRD Family Gift E
+4G SD OGD Acquisition E
+4P LRD: ByPass DeedPlan E
+4S LRD: Strata DeedPlan E
+Need to be modified to
+4Z SD Major Subdivision Y
+LRD: UPDA Subdivision
+5A LRD RePlan E
+5A SD RePlan E
+5B LRD Compensation E
+5B SD Compensation E
+5C LRD/LA Amiri Gift E
+5D Amiri gift form Owner.loa E
+5E SD Defective DP E
+6 Court Report E
+6A Court Deed Replacement E
+6B Resolve Complict/Dispute E
+6C Court Claim Open Land E
+6D Court Claim Occupied Land E
+6E Court Claim Exist House E
+6F WAQF Report for HCIA E
+7 SD Others E
+7 LA or O and L Layout E
+7H Housing Projects E
+7S Strata Survey E
+Primary Investigation
+Primary Investigation is a CSD process for identifying the requirements of the jobs by doing
+necessary investigations. The parcel/s are updated, or it is allocated a new parcel number/s
+and maintain a record of parcel numbers of changes by using the Cadastral Investigation
+System.
+All the relevant information is attached to the job file, and it is provided to enable surveyors
+to carry out their work.
+24
+
+--- PAGE 25 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Categories of Cadastral Survey
+Cadastral Survey
+Collection and processing of measurements and preparation of plans defining the physical
+extent and boundaries of land and property, encumbrances, abuttals, and neighbors, to
+represent ownership as recorded in Title Deeds and Property Register including all types of
+tenure under the Law 13/2013 in 2 or 3 dimensions.
+Non-Cadastral Survey
+Survey of features of the natural and built environment other than cadastral survey such as
+topographic, geodetic, hydrographic survey and other disciplines as defined by the
+concerned directorate. May include the collection and processing of measurements and
+preparation of plans defining the physical extent of the natural and built environment.
+Survey Requirements for Cadastral Land survey
+A Cadastral Survey is subject to a direct e- request or by person to the Customer Relations
+Unit, or through the Land Registration Directorate.
+a) A completed Cadastral Survey fulfill the following:
+b) Land boundaries have been determined in digital coordination system.
+c) The physical land boundaries have been defined by digital coordinated in digital
+system or demarcated by physical marks. (Flats boundaries are defined by walls)
+d) The land area has been determined.
+e) A cadastral number has been assigned by CSD.
+f) The land survey output (LC, Deed Plan etc.) has been recorded onto CSD Database.
+25
+
+--- PAGE 26 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+C. CADASTRAL SURVEY PRODUCTS
+1. Cadastral Plan (C.P.)
+A Cadastral Survey map prepared by a Private Survey Firm or by CSD and approved by
+Cadastral Survey Directorate that shall have the same characteristics as that of a Certificate
+of Survey (C.o.S.) and relates to a group of properties for any subdivision or in
+implementation of detailed plan, with a unique number assigned to each map/plan.
+(By Laws L.13/2013)
+2. Types of cadastral Plans:
+Survey Drawings (Flats and Villas)
+A Survey Drawing is a cadastral plan for flats and/or villas only, it has a unique number
+starting with F****. All the drawings following the BPMS (Bahrain Property Measurement
+Standards)
+The approved Survey Drawing is required for LRD to register surveyed flats or villas.
+MOH (As Built)
+A cadastral/Strata plan for As Built houses/flats which is requested to be surveyed by MOH.
+This type of request is only applicable to MOH, because it doesn’t require approval from
+UPDA.
+The approved Cadastral Plan /Surveying Drawing is sent to MOH.
+Land and Property Subdivision
+The survey act by dividing a parcel of land and building into two or more parcels.
+a. Normal subdivision
+The process that the owner/developer of a land or building must go through to subdivide it
+into two or more parcels/plots.
+This type of subdivision requires UPDA or in some cases Court approval.
+b. Affordable houses
+A cadastral plan survey, but with more procedures required by UPDA to the final plan to be
+approved for LRD to register the parcels/plots.
+26
+
+--- PAGE 27 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+➢ Phase 1:
+A request from UPDA to prepare a cadastral plan by subdividing a plot into an (X) number of
+parcels/plots.
+The cadastral plan is annotated that DP will not be prepared in this phase; this allows LRD to
+know that this plan is not final.
+The parent parcel/plot will not be deleted in this phase.
+The approved phase 1 cadastral plan is sent to UPDA.
+➢ Phase 2:
+A request from UPDA to prepare a cadastral plan for the As Built houses showing if all As
+Built houses are built within designated plots and if there are any encroachments to be
+shown for UPDA approval.
+The approved phase 2 cadastral plan is sent to UPDA.
+➢ Phase 3:
+UPDA reviews the cadastral plan, if no amendments are required, UPDA approves the
+Cadastral plan and send it to LRD for registration.
+Otherwise, UPDA sends a letter to CSD if there are minor within tolerance amendments to
+be done in the cadastral plan, or UPDA sends a letter to the owner to demolish or amend
+the encroachments.
+3. Certificate of Survey (CoS), known and as Land Certificate (LC)
+Certificate of Survey (CoS) is also known as Land Certificate (L.C.); is a technical plan
+outlining the property’s nature, location, indicating its area, dimensions, and boundaries.
+The CoS can be prepared by CSD or a Private Survey firm.
+The Certificate of Survey is endorsed by authorised staff of CSD. (Appendix 16)
+27
+
+--- PAGE 28 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+4. C.o.S /L.C. from Closed File
+When an owner has lost, or never received, a CoS, he may apply for a "CoS / LC from a
+closed file".
+A closed file is an archive/ record of a completed cadastral survey.
+The product is valid with the assumption that the parcel has not been affected by any
+boundary changes.
+28
+
+--- PAGE 29 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+5. Deed Plan
+An engineering drawing by the Cadastral Survey Directorate for the unit subject of a
+transaction and the property in which it is located therein. Such drawing shall be based on
+survey drawings and physical field survey. There shall be shown in it the area of the unit, its
+boundaries, its number amongst the property units, stratum in which it is located, and the
+parts associated therewith, all in accordance with the technical requirements and
+instructions mentioned in this document.
+(By Laws L.13/2013)
+Deed Plan types and drawing specifications.
+A. Types of Deed Plan and definition of their components
+There are two types of Deed Plan
+A1. Normal Deed Plan (Land, houses, and buildings)
+29
+
+--- PAGE 30 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+A2. Strata Deed Plan a) Flats, b) Villas
+B. Components of Deed Plans
+B1. Normal Deed Plan Frame
+30
+
+--- PAGE 31 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+B2. Strata Deed Plan Frame (FLAT)
+B3. Strata Deed Plan Frame (VILLA)
+If the unit consists of more than one floor, the deed plan shall be prepared from two pages.
+31
+
+--- PAGE 32 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+The area of each floor of
+the unit is written on
+the plan below the
+drawings, and the total
+area of the unit is
+written at the bottom of
+the deed plan.
+32
+
+--- PAGE 33 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+C. Standards for
+SCALE DIM ROAD PARCEL WALL preparing Deed
+Plans
+50 0.110 0.175 0.150 0.050
+100 0.220 0.350 0.300 0.100
+150 0.330 0.525 0.450 0.150
+200 0.440 0.700 0.600 0.200
+These standards are
+250 0.550 0.875 0.750 0.250
+used to determine
+350 0.770 1.225 1.050 0.350
+the size and type of
+400 0.880 1.400 1.200 0.400
+fonts used in writing
+500 1.100 1.750 1.500 0.500
+dimensions, roads,
+750 1.650 2.625 2.250 0.750
+parcel numbers, and
+1000 2.200 3.500 3.000 1.000
+the distance of
+1250 2.750 4.375 3.750 1.250
+double walls from
+1350 2.970 4.725 4.050 1.350
+the parcel
+1750 3.850 6.125 5.250 1.750
+boundaries.
+2000 4.400 7.000 6.000 2.000
+2500 5.500 8.750 7.500 2.500
+3000 6.600 10.500 9.000 3.000
+3500 7.700 12.250 10.500 3.500 FOR ARABIC TEXT: MUST
+USE (ARABIC
+4000 8.800 14.000 12.000 4.000
+TRANSPARENT) FONT
+5000 11.000 17.500 15.000 5.000
+7500 16.500 26.250 22.500 7.500
+10000 22.000 35.000 30.000 10.000
+12500 27.500 43.750 37.500 12.500
+15000 33.000 52.500 45.000 15.000
+17500 38.500 61.250 52.500 17.500
+20000 44.000 70.000 60.000 20.000
+25000 55.000 87.500 75.000 25.000
+30000 66.000 105.000 90.000 30.000
+40000 88.000 140.000 120.000 40.000
+50000 110.000 175.000 150.000 50.000
+FONT 160 ATISN 160 ATISN 1 WORKING -
+33
+
+--- PAGE 34 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+C1. Types and names of parcels that are written on the Deed Plans
+34
+
+--- PAGE 35 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+REGION NO. DESCRIPTION ف صولا
+13 00 ROAD RESERVE قيرط
+13 01 ACCESSWAY AND FOOTPATH ر ممو فيصر
+13 02 CAR PARK ت ارايس فقوم
+ر
+13 03 COMMON ACCESS كتشم رمم
+13 04 MASTER PLAN BLOCKS م اعلا ططخملا نم تاعمجم
+13 05 CORNER PARCEL ة يواز
+13 06 MOSQUES دجسم
+13 10 MULTIPLE SERVICES CORRIDOR تامدخ رمم
+13 11 ELECTRICITY SERVICE CORRIDOR ء ابرهكلا تامدخ رمم
+13 12 W.S.D. SERVICE CORRIDOR ةايملا تامدخ رمم
+13 13 BATELCO SERVICE CORRIDOR و كلتب تامدخ رمم
+13 14 BAPCO SERVICE CORRIDOR و كباب تامدخ رمم
+13 15 SDES DRAINAGE CORRIDOR يراجملا تامدخ رمم
+13 20 MULTIPLE SERVICE SITE تامدخلل ةصصخم ضرأ
+13 21 ELECTRICITY SERVICE SITE ء ابرهكلل ةصصخم ضرأ
+13 22 W.S.D. SERVICE SITE ة ايملل ةصصخم ضرأ
+13 23 BATELCO SERVICE0 SITE و كلتبل ةصصخم ضرأ
+13 24 BAPCO وكباب
+13 25 SDES DRAINAGE SITE يراجملل ةصصخم ضرأ
+13 26 ROAD RESERVE & MULTIPLE SERVICE CORRIDOR تامدخ ددعتم رممو قيرط
+ر
+13 27 GREEN AREA ء اضخ ةحاسم
+ر
+13 28 BAHRAIN METRO LANE نيرحبلا وتم راسم
+- UNDEVELOPED LAND OR EXISTING BUILDING ك لم
+- GOVERNMENT PROPERTY نيرحبلا ةكلمم ةموكح كلم
+REGION 22 PARCELS CATEGORY TABLE
+This table has the names of service parcels, which usually start with the number 13………..
+35
+
+--- PAGE 36 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+36
+
+--- PAGE 37 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+37
+
+--- PAGE 38 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+C2. Use of Standards to prepare the Deed Plans
+38
+
+--- PAGE 39 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+39
+
+--- PAGE 40 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+40
+
+--- PAGE 41 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+C3. Examples
+A Normal Deed Plan (House)
+41
+
+--- PAGE 42 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+A Strata Deed Plan (flat)
+42
+
+--- PAGE 43 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+A Strata Deed Plan (Villa)
+43
+
+--- PAGE 44 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+44
+
+--- PAGE 45 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+45
+
+--- PAGE 46 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Deed Plan printing info and specifications.
+46
+
+--- PAGE 47 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+47
+
+--- PAGE 48 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+48
+
+--- PAGE 49 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+6. Court Report
+A report be prepared by CSD to provide all the information requested by Courts in relation
+to any of the following:
+• Disputes between parties in relation to land ownership.
+• Proof of land ownership; or
+• Proof of land shares ownership.
+7. Map Sheet
+Map sheets contain all the latest known and projected cadastral information. These sheets
+are continuously updated and hence their contents are subject to change. Note that each
+sheet is 1000 * 500 km.
+The standard scales of mapping issued are:
+- 1: 10000 System based on UTM grid lines (Index #1) / (Appendix 2).
+- 1: 2000 Is the 1:10000 sheet divided into 16 sections. (Index #3) (Appendix 3)
+- 1: 1000 Is the 1: 2000 sheet broken down into 4 quadrants. The sheets of this series
+are numbered as: (TT – NN – X) (index #3) (Appendix 3)
+• Where TT is the number of the relevant 1: 10000 sheets.
+• NN is the number of 1: 2000 sheets.
+• X is the quadrant letter.
+49
+
+--- PAGE 50 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Additionally, the LMB-BLOCKS are shown at the Appendix 1.
+8. Parcel Coordinates
+The coordinates of the cadastral parcels that define their dimensions and boundaries.
+9. Survey Drawings
+Drawings prepared by a Private Engineering Firm at the request of an owner and approved
+by the Cadastral Survey Directorate in respect of units subject to a transaction. Drawings
+shall be based on field survey and detailed engineering drawings of the said units and in
+accordance with the technical requirements and instructions mentioned in the Standards’
+Guidelines Manual.
+10. Service Consultation
+An application form is prepared for these requests or inquiries based on instructions
+received from Field, Examiner, or the Director himself, to show the services affected with
+the selected area. This application is sent to CPO department to be circulated to the
+relevant authorities such as (Electricity and Water Authority, Ministry of Works, TRA,
+NOGA).
+The primary key for Services Consultation Requests application is the consultation no. as
+0000/0000/XXXX for example (2022/0145/SD)
+- Where the first four digits are the current year.
+- Next 4 digits are the request serial.
+- The last letters are the directorate initials for example (SD).
+UPDA requests Service Consultation for Major or/and Minor Subdivision. See samples
+(Appendices 12 & 13).
+11. Planning Permission
+Such requests come from various government authorities such as (Electricity and Water
+Authority, Ministry of Works, Urban Planning and Development Authority) via Tasareeh web
+system to inquire about any of the following (new subdivisions parcels, sanitary cables, or
+electricity cables) whether if they are conflicted or not with any existing plots in the
+cadastral data, through sending the following:
+- Cadastral plan reflecting the required area in PDF format.
+- Parcels attributes for the conflicted plot.
+50
+
+--- PAGE 51 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+12. Ownership Information
+Such requests come from Ministry of Works (CPO) via email to provide them with the
+available cadastral data for specific area as following:
+- Cadastral plan reflecting the required area in DGN format.
+- Parcels attributes list.
+13. Corner Application
+According to the Article 16 of the Law13/2013 definition, Corner plots (parcels) are land
+parcels whose area does not exceed 200m2, suitable to be adjusted to neighboring parcels.
+The Municipalities may sell corner plots of land whose area does not exceed 200 square
+metres (two hundred square metres) upon seeking the opinion of the concerned authorities.
+For the sale of a corner plot of land, it shall be essential that it shall be adjacent to a
+property owned by the person applying for purchase of such plot of land and shall not be
+taken out of a government owned land whose area exceeds the area mentioned in the first
+paragraph of this Article and shall not be suitable to be an independent plot of land that can
+be exploited.
+The process is taking place through an automated system, Corner Sale Application.
+A new customer can get his username and password by registering the user account with
+Municipality using the single sign-on registration.
+https://www.mun.gov.bh/corner/login
+51
+
+--- PAGE 52 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+D. PRIVATE SECTOR PARTNERSHIP - AUTHORISATION of
+SURVEY COMPANIES - ACCREDITATION REQUIREMENTS
+1. Legal Background
+History
+The Survey & Land Registration Bureau is mandated by Legislative Decree 62 of 2004 the
+responsibility for Cadastral, Topographic and Hydrographic survey. The Director, Cadastral
+Survey Directorate (CSD), by extension of Ministry of Housing Ministerial Order No. 93 of
+1992 with respect to implementing the regulations of Legislative Decree No 15 of 1979, is
+responsible for (Articles 3.1, 4) ensuring that any measurement and calculation performed
+by a surveyor has applied the proper standards and technical instructions issued by the
+Director. Article 8 identifies that Private Sector Survey Offices are authorised by the
+Directorate. Consequently, all standards and technical instructions apply equally to
+Directorate staff and PSSO’s.
+The relationship between SLRB and PSSO’s is determined by SLRB Order No 5 of 2013 (The
+Order), effective 22 February 2013, implementing Article 4 of SLRB Order No 36 of 2012.
+In 2023, the following Circulars and Resolutions published to re-determine the
+relationship between Survey and Land Registration Bureau and the Private Sector Offices:
+1. Circular No. (1) of 2023 - Deputy Prime Minister Sheikh Khalid bin Abdullah Al Khalifa •
+Concerning the transfer of government cadastral transactions and private sector
+transactions to accredited private cadastral offices.
+2. Circular No. (8) of 2023 - President of the Survey and Land Registration Bureau, Sheikh
+Salman bin Abdullah Al Khalifa • Concerning Referring all cadastral transactions for
+individuals and companies to private surveying offices and companies registered with the
+agency.
+3. Ministerial Resolution No. (17) of 2023 - President of the Survey and Land Registration
+Bureau, Sheikh Salman bin Abdullah Al Khalifa • Concerning the implementation of real
+estate surveying procedures and opening cadastral transactions.
+4. Resolution No. (197) 4) for the year 2023 - Committee • “Approval of mechanisms,
+penalties and penalties for private cadastral offices and, in addition to the Guidance Guide
+for Cadastral Standards and Procedures and Approval according to the issuance of the
+proposed decision regulating work within the Department of Land Survey and Private
+Offices and assigning the Survey and Land Registry to take necessary measures.” “The
+matter.”
+5. Resolution No. (197-5) For the year 2023 - a committee: “Assigning the Government
+Procedures Re-engineering Committee in the Office of the Prime Minister to review the
+52
+
+--- PAGE 53 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+procedures for requesting cadastral transactions and the possibility of reducing and
+simplifying the number of approval procedures in the country to expedite the completion of
+cadastral transactions and present what has been reached to the Ministerial Committee for
+Developmental Projects and Infrastructure.”
+2. Type of work performed by Private Sector Offices
+Private Sector Offices after their Authorisation by Cadastral Survey Directorate are entitled
+to perform the following cadastral works and services:
+a. Demarcation and detailed field surveying
+b. Preparation of Certificates of Survey (CoS) known and as Land Certificates (LS)
+c. Preparation of Cadastral Plans
+d. Preparation of Deed Plans
+e. Audit of the above (a., b., c., d.) cadastral works and products.
+The Private Sector Cadastral Offices, approved by CSD, will be published in SLRB Website.
+3. Authorisation / Accreditation
+Based on the legal background outlined above, and the above-mentioned cadastral works
+and services, the Director CSD will grant by means of Authorisation of a PSSO his
+responsibility for ensuring the Professional Standards of work performed by that PSSO to
+determine the limits of land to collect Spatial Data for addition to the Fundamental
+Datasets, prepare cadastral products and audit the work of other Private Sector Cadastral
+Offices. Such an Authorisation cannot be construed to create a contractual relationship of
+any kind between CSD and the Authorised PSSO.
+3.1 Accreditation and Classification system for Private Sector Cadastral
+Offices
+3.1.1 The Private Sector Cadastral Offices will be accredited in three levels:
+• Level 1 requirements:
+- At least two surveyors provided that one of them has accredited with class
+“A” and the second one with class “B” or “A” by CRPEP.
+- Availability of at least three (3) surveying technicians.
+53
+
+--- PAGE 54 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+- The office space is not less than the minimum required for this category,
+which is 150 square meters by CRPEP.
+- Availability of four units of approved field survey equipment.
+- Provides computers/hardware at the rate of one for each engineer and
+technician, with the necessary provision of printers, scanners, desks, and the
+required engineering software.
+• Level 2 requirements:
+- At least two surveyors, provided that the class of both is not less than class
+“B” as per CRPEP classification.
+- Availability of at least two (2) survey technicians.
+- The office space is not less than the minimum required for this category,
+which is 100 square meters as per CRPEP classification.
+- Availability of three units of approved field survey equipment and the
+necessary hardware and software.
+- Provides computers/hardware at the rate of one for each engineer and
+technician, with the necessary provision of printers, scanners, desks, and the
+required engineering software.
+• Level 3 requirements:
+- At least two surveyors provided that the class of both is not less than class
+“C” as per CRPEP classification.
+- Availability of at least two (2) survey technicians.
+- The office space is not less than the minimum required for this category,
+which is 50 square meters as per CRPEP classification.
+- Availability of two units of approved field survey equipment and the
+necessary hardware and software.
+- Provides computers/hardware at the rate of one for each engineer and
+technician, with the necessary provision of printers, scanners, desks, and the
+required engineering software.
+3.1.2 The PS Cadastral Offices will be able to perform the following limits of survey or
+audit work, according to their Level:
+• Job capacity for each Level:
+Level 1:
+- The offices that have the right to carry out survey or audit works and provide
+cadastral survey services for all types of jobs and projects, regardless of the cost
+of these projects.
+- There is no limit to the number of plots in a single transaction.
+- The number of live (in progress) survey jobs does not exceed 30.
+54
+
+--- PAGE 55 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Level 2:
+- The offices that are entitled to carry out survey or audit works and provide
+cadastral survey services for projects whose cost does not exceed twenty million
+Bahraini dinars.
+- The number of plots contained in a single transaction/job does not exceed 200.
+- The number of live (in progress) survey jobs does not exceed 20.
+Level 3:
+- The offices that are entitled to carry out survey work and provide cadastral
+survey services for projects whose cost does not exceed five million Bahraini
+dinars.
+- The number of plots contained in a single transaction/job does not exceed 50.
+- The number of live (in progress) survey jobs does not exceed 10.
+Summary Table
+Level Level 1 Level 2 Level 3
+Min. Land Surveyors 1A, 1B 2B 2C
+Min. Survey 3 2 2
+Technicians
+All Cadastral jobs YES YES YES
+Audit YES YES NO
+Maximum number 30 20 10
+of Jobs live
+Maximum number No limit 200 50
+of parcels/properties
+per job
+3.2 Accreditation and Classification system for Private Sector Cadastral AUDIT
+Offices
+The Private Sector Cadastral Audit Offices are Private Sector Cadastral Offices that they have
+been accredited with Licenses (by CSD) to perform Audit of the Private Sector Cadastral
+works. They do not need to apply separately.
+The Audit Licenses’ accreditation is given to the PS Cadastral Offices according to the work
+experience of the surveyor engineers, and according to their performance as Private Sector
+Cadastral Offices.
+55
+
+--- PAGE 56 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Their evaluation for accreditation or/and renewal of their licenses, is following the
+evaluation system and according to the following criteria:
+A. The highest rated Private Sector Cadastral Offices are allowed to carry out
+examination work according to the PS system of evaluation and classification.
+B. The Level of the PS Cadastral Audit Office should not be less than Level (1) and (2).
+C. The category of Surveyor Engineer (Examiner) in the PS Cadastral Audit Office should
+not be less than category (A) and (B) (CRPEP classification).
+D. The minimum number of required engineers is 2 and of technicians is 2.
+E. The Approval of Private Sector cadastral Offices that carry out examination (Audit)
+work shall be for a period of one year and based on the evaluation and classification
+system for PS, renewal or replacement of examination offices is carried out.
+F. The PS Cadastral Audit Offices approved by the CSD are published on the SLRB
+website.
+G. For annual renewal, a minimum of 10% of the total parcels must be completed
+within a year.
+3.3 Accreditation of Individual Practitioners
+Individual practitioners can be Authorised Surveyors, following the application of a Private
+Sector Cadastral Office. However, this might be a future need which will follow the path of
+the of the PSSO application. At the initial application by all PSSO’s for Authorisation after
+introduction of this chapter, full details of all staff engaged in Cadastral Survey will be
+submitted by the PSSO.
+Where PSSO staff competencies have been previously assessed, that previous assessment
+will be carried forward. Where PSSO staff competencies have not been previously assessed,
+the standard assessment process will be applied by the Director, CSD and the PSSO will be
+advised of the outcome of that assessment.
+4. Application for Authorisation
+4.1 Private Sector Surveying Offices
+An Application for Authorisation to Perform Cadastral Surveys must be made annually on
+Form PS 1 (Appendix 4), with the enclosures specified on that form. A first-time
+application must include details of all PSSO staff to be involved in Cadastral Surveys on
+Form PS 2 at (Appendix 5), with the enclosures specified on that form. Applications for
+annual renewal of authorisation need only include the enclosures for staff members not
+previously authorised.
+The Application will be evaluated by the Director, CSD based on the material provided in
+support of the application. If the material provided is insufficient to complete the
+evaluation, the Director CSD will return the application to the PSSO to provide the missing
+56
+
+--- PAGE 57 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+information. The evaluation will result in a recommendation to the Director General,
+Survey to either authorise the PSSO or reject the application.
+For rejected applications the Director, CSD will, on written request, counsel the PSSO
+concerning the reasons for the rejection. The PSSO is free at any time to re-submit its
+application. However, should an application be rejected three times for valid reasons, the
+applicant PSSO will be deemed to be unsuitable for Authorisation and no further application
+will be considered within 12 (twelve) months.
+By being assessed as Authorised to Perform Cadastral Surveys, and accepting that
+Authorisation, a PSSO expressly agrees to meet all conditions for Authorisation laid out by
+CSD at Authorisation and from time to time modified by the Director, CSD in writing. In
+addition, the PSSO expressly agrees to comply fully with all applicable provisions of CSD
+Practice & Procedures, Survey Standards Guidelines Manual, and any other Technical
+Instructions currently in force and as amended from time to time by the Director, CSD in
+writing.
+4.2 Individual Practitioners
+An application by an individual practitioner to be an Authorised Surveyor is normally made
+as part of the PSSO application. At the initial application by all PSSO’s for Authorisation
+after introduction of this chapter, full details of all staff engaged in Cadastral Survey will be
+submitted by the PSSO.
+Where PSSO staff competencies have been previously assessed, that previous assessment
+will be carried forward. Where PSSO staff competencies have not been previously assessed,
+the standard assessment process will be applied by the Director, CSD and the PSSO will be
+advised of the outcome of that assessment.
+Where a PSSO engages a new staff member in the professional category for whom
+registration with CRPEP is sought, the standard competency assessment will be performed
+by the Director, CSD at the request of CRPEP. CRPEP will use that assessment to determine
+whether to register the applicant. Following CRPEP Registration, the PSSO must make an
+extraordinary application the Director, CSD for grant of Authorised Surveyor status.
+Where a PSSO engages a new staff member and does not intend to seek CRPEP registration
+for that staff member, full educational and experience details must be provided to the
+Director CSD to assess the new staff member’s competencies to be engaged in Cadastral
+Surveying and assign the staff member the status of Authorised Surveyor or Surveying
+Technician.
+Where individual staff are found to lack the required competencies, the Director, CSD will,
+on written request, counsel the PSSO concerning the assessment. The PSSO is free at any
+57
+
+--- PAGE 58 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+time to re-submit its application. However, should an application be rejected three times
+for valid reasons, the concerned staff member will be deemed to be unsuitable for
+Authorisation or for engagement in Cadastral Surveying and no further application will be
+considered within 12 (twelve) months.
+5. Register of Authorised PSSO’s and Individual Land Surveyors and Surveying
+Technicians
+CSD will maintain a Register of PSSO’s Authorised to Perform Cadastral Surveys, the Person
+Responsible for Cadastral Surveys and all Authorised Surveyors and Surveying Technicians
+employed by the PSSO. By applying for Authorisation, a PSSO expressly consents to CSD
+making selected items of the information contained in the Register available to the public
+(e.g., CSD Website).
+6. Human Resources
+For CSD to be confident of the competency of all individuals engaged in Cadastral Surveying
+it is necessary that all such individuals are identified in the PSSO Application for
+Authorisation.
+Based on their qualification and experience, they will be categorised as follows:
+1) Authorised Surveyors.
+2) Surveying Technicians.
+Cadastral Surveys shall not be carried out by persons other than Authorised Surveyors or
+Surveying Technicians. It is the responsibility of the Person Responsible for Cadastral
+Surveys to ensure compliance with this requirement. The use of non-permanent human
+resources of unknown competency is specifically prohibited.
+It is also the responsibility of the Person Responsible for Cadastral Surveys to notify CSD in
+writing of any changes to the human resources engaged in Cadastral Surveys in his office
+immediately that they occur.
+He must also inform CSD in writing 10 days before any intended period of his absence from
+Bahrain of more than 14 days, and in the event of such absences, nominate another
+Authorised Surveyor from the PSSO who will act as the Person Responsible for Cadastral
+Surveys during his absence.
+Authorised Surveyors are those surveying professionals who have been authorised by CSD
+to be responsible for:
+• compliance with the standards set and from time to time amended by CSD, and
+58
+
+--- PAGE 59 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+• certification that the work performed by them, or by other categories of
+practitioners for whose work they accept responsibility, complies with those
+standards.
+A suitable surveyor will in general be of standard acceptable for employment within CSD as
+a professional surveyor, having the following qualifications and experience:
+1) A bachelor’s degree in surveying engineering, geomatics, or equivalent (for example
+a first degree in Civil Engineering with a post-graduate specialist qualification in
+Spatial Sciences), which includes a taught Cadastral Surveying component, from a
+recognized University or other institute of higher education; and
+2) At least four (4) years post-qualification practical cadastral surveying experience; and
+3) Licensed or Registered by the competent authority in his home country to perform
+cadastral surveys; or
+4) Registration with a recognized professional institution that proves professional
+capability or at least one (1) year of documented experience in the Kingdom of
+Bahrain in which work examined and approved by the CSD can be directly attributed
+to the surveyor and which demonstrates good knowledge of laws and procedures
+governing cadastral surveys in the Kingdom of Bahrain.
+5) All surveyors identified by CSD at the commencement of this chapter as being the
+Senior Member of an Approved Land Survey Firm responsible for Cadastral Survey
+matters will be automatically qualified as Authorised Surveyors, regardless of their
+qualifications and experience (2013).
+Surveying Technicians are expected to work under the guidance and direct personal
+supervision of an Authorised Surveyor, who will be held responsible for their work. A
+suitable technician will in general be of standard acceptable for employment within the
+Directorate as a survey technician, having the following qualifications and experience:
+1) A bachelor’s degree in surveying, geomatics, or equivalent (for example a first
+degree in Civil Engineering with a post-graduate specialist qualification in Spatial
+Sciences), which includes a taught Cadastral Surveying component, from a
+recognized University or other institute of higher education, but lacking the other
+criteria necessary for qualification as an Authorised Surveyor; or
+2) A diploma in surveying, geomatics, or equivalent (for example diploma in Civil
+Engineering with emphasis on surveying, or a second diploma or conversion course
+in surveying) from a recognized institute of higher education.
+3) In exceptional cases, the requirement for a diploma in surveying, geomatics or
+equivalent may be waived, on the condition that the surveyor can demonstrate
+having completed high school and having 10 years relevant experience, of which 3
+have been in the Kingdom of Bahrain and known to CSD.
+7. Suspension, Reinstatement and Withdrawal of Authorisation
+59
+
+--- PAGE 60 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+7.1 Private Sector Surveying Offices
+CSD reserves the right to suspend the Authorisation to Perform Cadastral Surveys of a PSSO
+in the following circumstances:
+1. Violation of the confidentiality of cadastral information
+2. A disciplinary action by the CRPEP against the PSSO
+3. Failure to fully comply with the conditions of Authorisation set out in this chapter.
+4. Submission of fraudulent credentials in support of application for Authorisation
+5. Failure to meet the quality criteria set in Section 9 (below)
+6. Failure to comply with timeliness criteria set in Section 9 (below)
+7. Breach of Technical Instructions
+8. Execution of surveys by staff whose competencies have not been evaluated and
+approved by CSD.
+9. Submission of signed statements of supervision and checking that are proved to be
+fraudulent.
+On first detected occurrence of each circumstance, CSD will provide the PSSO with notice of
+the occurrence, the remedy required and timescale for the remedy to be completed.
+On second detected occurrence of each circumstance, CSD will suspend Authorisation
+until such time that it is satisfied that underlying cause of the circumstance has been
+remedied.
+Once Authorisation is suspended, the Register entry for the PSSO will include a record of the
+suspension and the reason for it. No new jobs will be opened for a suspended PSSO, and if,
+in the judgement of the Director, CSD, the circumstances warrant it, CSD will cease to accept
+existing jobs for Examination until suspension is lifted. At the lifting of the suspension, the
+record of the suspension will be removed from the Register available to the public but
+retained on the master Register retained by CSD for internal use.
+7.2 Private Sector Cadastral Audit Offices
+Their suspension is following the Penalty System, see chapter 10 below.
+7.3 Authorised Surveyors
+CSD reserves the right to suspend the Authorisation of individual Authorised Surveyors,
+including the Person Responsible for Cadastral Surveys, in the following circumstances.
+1. Violation of the confidentiality of cadastral information
+2. A disciplinary action by the CRPEP against the individual
+3. Breach of Technical Instructions
+4. Submission of fraudulent credentials in support of application for Authorisation
+5. Submission of signed statements of supervision and checking that are proved to be
+fraudulent.
+60
+
+--- PAGE 61 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+On first detected occurrence of each circumstance, CSD will provide the PSSO with notice of
+the occurrence, the remedy required and timescale for the remedy to be completed.
+On second detected occurrence of each circumstance, CSD will require the PSSO to stop
+allocating work to the Authorised Surveyor concerned and the Authorised Surveyor
+concerned will have his individual Authorisation suspended until such time that CSD is
+satisfied that underlying cause of the circumstance has been remedied.
+Once Authorisation is suspended, the Register entry for the Authorised Surveyor will include
+a record of the suspension and the reason for it. If, in the judgement of the Director, CSD,
+the circumstances warrant it, CSD will cease to accept existing jobs performed by the
+Authorised Surveyor for Examination until suspension is lifted.
+At the lifting of the suspension, the record of the suspension will be removed from the
+Register available to the public but retained on the master Register retained by CSD for
+internal use.
+7.4 Surveying Technicians
+CSD reserves the right to require a PSSO to suspend the work of Surveying Technicians for
+Cadastral Surveys in the following circumstances.
+1. Violation of the confidentiality of cadastral information
+2. Breach of Technical Instructions
+3. Submission of fraudulent credentials in support of application for Authorisation
+4. Submission of signed statements of execution and checking of work that are proved
+to be fraudulent.
+On first detected occurrence of each circumstance, CSD will provide the PSSO with notice
+of the occurrence, the remedy required and timescale for the remedy to be completed.
+On second detected occurrence of each circumstance, CSD will require the PSSO to stop
+allocating work to the Surveying Technician concerned and Cadastral Surveys executed by
+the Surveying Technician concerned will not be accepted for examination until such time
+that CSD is satisfied that underlying cause of the circumstance has been remedied.
+Once Authorisation is suspended, the Register entry for the Surveying Technician will
+include a record of the suspension and the reason for it.
+At the lifting of the suspension, the record of the suspension will be removed from the
+Register available to the public but retained on the master Register retained by CSD for
+internal use.
+61
+
+--- PAGE 62 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+7.5 Withdrawal of Authorisation
+On the third occurrence of any of the circumstances in sections 8 and 9 (below), the
+Authorisation of a PSSO, an Authorised Surveyor or a Surveying Technician will be
+withdrawn permanently. In the case of a PSSO or Authorised Surveyor, CRPEP will also be
+informed of the withdrawal and the reason(s) for it.
+Where the Withdrawal of Authorisation of a PSSO occurs, Authorised Surveyors and/or
+Surveying Technicians who have not have their status suspended may, subject to LMRA
+regulations, be accepted as employees of another PSSO.
+Where the Withdrawal of Authorisation of individual practitioners occurs, the personnel
+concerned may not be involved in Cadastral Surveys in Bahrain in any capacity, unless they
+can demonstrate a change in their personal circumstances that would support a new
+application for Authorisation.
+A PSSO or individual subject to Withdrawal of Authorisation may lodge an appeal against the
+withdrawal, in writing, with the Director General, Survey, who will initiate an investigation
+of the circumstances of the withdrawal. At the end of the investigation, he will make his
+decision known to the PSSO or individual. His decision will be final.
+8. Private Sector Professional Responsibility
+PSSO’s by accepting Authorisation explicitly agree to abide by their obligations of
+professional responsibility as defined below.
+Fundamental concepts of surveying are:
+• Independent checking of work
+• Traceability of work to individuals
+Measures introduced in this document establish processes where observations, calculations
+and product preparation can be traced to the surveyor or surveying technician who
+performed the work, and where required, the person responsible for supervision and
+checking of the work.
+Professionals responsible for such checking must fully understand and be in no doubt that
+they will be held completely responsible for work they have certified as having checked and
+will not be allowed to pass responsibility back to the person executing the work.
+Certification of work without having fully checked it will be treated extremely seriously and
+is grounds for suspension of individual Authorisation.
+62
+
+--- PAGE 63 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+9. New: Private Sector and CSD regulations
+CSD established a system for evaluating and classifying PSSO undertaking cadastral survey
+or examination in order to follow up and monitor their performance, provided that this
+system includes the following controls:
+9.1 Penalty System:
+Penalty system for Cadastral Surveying: to determine the number of cadastral mistakes
+committed by PSSO in cadastral jobs, during a calendar year.
+• The system is to start calculating from 1st of January of each year till the end of the
+year.
+• Classification of cadastral mistakes according to their severity.
+• Cadastral mistakes have different weights (Severe mistakes receive a red warning,
+non- severe a yellow warning).
+• Type of mistakes:
+Not providing all the documents of the cadastral transaction in the
+cadastral file or not sending the digital copies of the documents for
+the cadastral transaction
+Not applying standards for drawing survey certificates, deed plans, or
+cadastral plans
+Printing errors in the survey certificate, deed plans, or cadastral plans
+Failure to apply the field survey and audit standards approved by the
+CSD
+Exceeded the specified time to complete the survey job
+Failure to comply with the plans of the Urban Planning and
+Development Authority, or the plans issued by the court, such as
+subdivision, consolidation, re-planning, or engineering drawings.
+Improper fixation of the property
+Ignoring the purpose of the required survey or the instructions of the
+Cadastral Survey Directorate
+Ignoring surveying profession standards
+Ignoring or violating laws, regulations, and judicial rulings Referred to the CRPEP
+63
+
+--- PAGE 64 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+• CSD sets a fixed limit for the number of points.
+• When a private office reaches the prescribed limit, action against the office is taken
+as follows:
+a. Warn the office in writing for the first time.
+b. Suspension of the office from carrying out cadastral survey or examination work
+for a period not exceeding one year in the second and third times.
+c. Canceling the accreditation of the office for the fourth time.
+d. CSD may, if it finds weakness or lack of knowledge of any private office in
+completing one of the types of cadastral jobs, stop the office from requesting the
+opening of this type of job within the period specified by the CSD.
+• The number of points calculated on private offices is an influential factor in the
+evaluation and classification process.
+• Points are automatically erased after the office returns from suspension or at the
+end of the calendar year without reaching the limit set for suspension. The points
+are reset again after the end of the year Gregorian calendar.
+• The point system applies to all PSSOs that have been approved by CSD to provide
+survey or examination services through SLRB, and points are calculated on the
+commercial name of the office.
+64
+
+--- PAGE 65 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+E. COORDINATED CADASTRE
+1. Survey Datum
+The Bahrain National Spatial Datum is consisted by:
+A. Geodetic Datum: Ain Al-Abd 1970 (International Ellipsoid of 1924)
+B. Horizontal Datum Definition
+• Projection: Universal Transverse Projection
+• Zone: 39 North
+• CM Scale Factor: 0.9996
+• Projection origin
+o Latitude: 0°00'00” N
+o Longitude: 51°00'00” E
+o False Northing: 0.000 M.
+o False Easting: 500000.000 M.
+C. Vertical Datum: Bahrain National Level Datum of 1976
+D. Official Transformation Parameters from ITRF2005 (WGS84) to Ain Al-Abd
+• D.1 Ain Al-Abd 3D V0 Revision-1
+• D.2 Ain Al-Abd 3D V1 (Molodensky - Badekas Model Version)
+• D.3 Ain Al-Abd 3D V1.B (Bursa-Wolf Model Version of D.2)
+NOTE: The following 3 sets are for the Island of Hawar.
+• D.4 Ain Al-Abd 3D V2007.A (Molodensky - Badekas Version)
+• D.5 Ain Al-Abd 3D V2007.B (Bursa-Wolf Version)
+• D.6 Hawar 2D HDT2019 (To be applied to the resulting grid coordinates after
+applying D.4 or D.5)
+2. PRN
+Permanent Reference Network (PRN) provides the geodetic basis for all surveying and
+engineering operations in Bahrain in that it is the Nation’s official precise positioning
+service.
+PRN comprises six (8) GNSS Reference Stations creating a network that covers all of the
+urban and development areas of the Kingdom. The six (6) reference stations are located at
+Diyar Al Muharraq, King Fahd Causeway, Scout Camp, Durrat Al Bahrain, Jauu, Budaiya,
+Hawar Islands and Umm Al Hassam.
+The PRN is available for private sector survey and engineering firms via a subscription to
+access the service.
+65
+
+--- PAGE 66 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Background
+SLRB therefore defined the
+requirements for a modern network infrastructure of permanent GNSS reference stations
+and established the network in late 2006 and renewed it with extra stations in 2021. The
+Bahrain PRN now provides the primary realisation of the Ain Al Abd datum in the Kingdom
+of Bahrain. The PRN therefore provides the geodetic basis for all surveying operations in
+Bahrain in that it is the nation’s official spatial reference framework.
+Reference Stations
+The PRN includes six (8) GNSS Reference Stations defining a network that covers all the
+readily accessible land areas of the Kingdom. The six reference stations are located at Diyar
+Al-Muharraq, King Fahd Causeway, Scout Camp, Durrat, Jauu, Budaiya, Hawar Island and at
+Umm al Hassam.
+These GNSS Reference Stations are equipped with the highest quality choke-ring antennae
+that receive both GPS and Glonass satellite signals 24 hours a day. This satellite tracking
+data is then transmitted continuously to the Data Control Centre (DCC) for real-time
+processing and archive.
+66
+
+--- PAGE 67 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Quality Assurance Stations
+The PRN includes an additional station which primarily operates as a quality assurance
+facility. This QA station is located at Awali in the center of the island and furthest from any
+of the permanent reference stations.
+This station is configured as a permanent rover with a standard geodetic antenna (not
+choke-ring) tracking both GPS and Glonass satellite signals. The station configuration is
+essentially the same as any rover except that network corrections are received over land-
+line based internet rather than mobile internet as is the case with normal rover units.
+Services
+The PRN is primarily developed to support high-precision real-time positioning
+requirements. In addition, tracking data is archived and can be accessed and downloaded
+through a RINEX data facility.
+Applications
+The Bahrain PRN provides the fundamental infrastructure for development of a huge variety
+of GNSS applications. SLRB is very interested to co-operate with agencies that can utilise the
+PRN in
+Cadastral surveying
+Mapping and geographical information system (GIS)
+Topographical survey
+Structural monitoring
+Hydrographic survey
+Land transportation applications
+Emergency services locations
+Geodetic survey
+And many other applications
+Benefits
+The PRN offers a very effective entry for all potential users into the high-precision
+positioning market. The network is compatible with all major equipment manufacturers and
+operations can commence with minimal effort in configuration.
+67
+
+--- PAGE 68 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+The cost of operating GNSS positioning equipment is kept low since users now only require a
+single rover unit rather than the previous requirement of individual operation with a base
+and a rover unit.
+In addition,
+the logistics of positioning with the PRN are greatly improved since the service is “always–
+on”.
+3. Guidelines for field instrumentation Cadastral Surveying
+3.1 Background
+The integrity of every survey depends on:
+• Selection and adoption of the most appropriate surveying techniques to achieve the
+required precision and accuracy.
+• Design survey observations to trap or quantify gross and systematic errors, using
+techniques such as redundant and repeated observations.
+• Accurate, error-free recording of the measurements taken at the time they are
+taken. This must include the recording of raw observables, not instrument-
+processed/” reduced” observations. See Section 3 below.
+• A clear audit trail from measurement to result.
+3.2 Instrumentation
+It is the responsibility of the surveyor to use his professional expertise and judgement to
+select the appropriate combination of instrumentation to achieve the required outcome
+of the survey, considering any operational and site constraints. The techniques applied
+to that instrumentation must be such as to clearly demonstrate its suitability and its
+ability to trap or identify gross and systematic errors. It is the responsibility of the
+professional surveyor to ensure that trainee professional surveyors, surveying
+technicians and field assistants fully understand and apply these concepts.
+Instrumentation that may be used is as follows:
+68
+
+--- PAGE 69 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Ref. Type Typical Examples
+1. Direct Linear Measurement Steel or Fibre tape, with or without tension and temperature
+correction
+2. Angles Theodolite or Total Station
+3. Indirect Linear Measurement Electronic Distance Measurement (with Theodolite), Total
+Station (Infra-Red or Laser, with reflector or reflector less)
+4. Direct Coordinated Positioning GNSS (GPS), standalone, post-processed, RTK (own base station
+or SLRB PRN corrections)
+Basic techniques for trapping and identifying observation errors are as follows. See
+different chapters below for each type of instrumentation for SLRB’s required minimum
+procedures required to achieve the required positional accuracy for each type of
+instrumentation. It is considered required practice for these techniques to be applied at the
+time of measurement, in the field, to identify errors at a time when check measurements
+can be made.
+Ref. Type Typical Examples
+1. Direct Linear Measure and record each measurement in opposite directions.
+Measurement Measure and record each measurement twice, once with the tape end on zero, once
+with a “random zero” e.g., 0.76 m. Calculate the measured distance and compare
+with the direct measurements. Record the checks.
+Where a feature is measured in parts, include an overall measurement, and compare
+with the sum of the parts.
+Take check measurements that create triangles and use trigonometry to confirm the
+measurements.
+2. Angles For control and traversing make multiple repeated observations, on face left and face
+right, with different zeroes. Even though the instrument may record measurements
+electronically, unless it is having the capability to set the maximum difference
+between sets and identify errors to the instrument man, and that facility is properly
+used, manual booking and reduction of sets of angles must be used, in the field, at
+the time of observation.
+3. Indirect Linear At start and end of job, measure between points of known coordinates and compare
+Measurement measured distance with computed distance corrected for projection scale factor,
+reduction to sea level, slope and differences in instrument and target height.
+Multiple repeated measurements.
+4. Direct Use mission planning software, with horizon obstruction entries made to ensure
+Coordinated number of satellites (minimum 6 for RTK) and PDOP (< 6) are suitable for site at
+Positioning planned time of observation.
+Observe points of known coordinates at start and end of job
+Avoid multi-path situations such as close to walls that are higher than the antenna.
+Be aware of effects of satellite signal blocked by buildings, trees etc that would give
+an unbalanced position solution.
+Re-observe critical points and demarcated beacons at least 20 minutes after initial
+observation to allow sufficient change to satellite constellation in view.
+3.3 RAW vs Instrumentally Processed Data
+i) Direct Linear Measurement
+69
+
+--- PAGE 70 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+As no instrumental processing is available for taped measurements, this section relates
+only to observables.
+For precise taped distance measurements, a steel tape should be used, and a record be
+made of tape tension and temperature to allow calculations of corrections for deviations
+from the standardisation values. In addition, to ensure true horizontal distances, the tape
+should be level. If significant height difference exists between the points being measured,
+it must be determined by means providing the required accuracy.
+However, given the specified tolerances for cadastral surveys and the short distances over
+which taped measurements are used, the corrections above may generally be ignored.
+Nevertheless, the surveyor must be aware of, and understand them, should it be required
+to use taped measurements in abnormal situations.
+ii) Angles and Indirect Linear measurement
+These are combined, because with the almost universal use of Total Stations it is unlikely
+that separate angle and distance measurements are being made.
+With onboard data recording and software, it is tempting to utilise these capabilities to
+simplify the surveyors’ work. For setting out or demarcation this does not present a
+problem as independent checks can be made.
+However, for traversing to establish control, it is difficult to identify whether the on-board
+processing of the total station from measurements to produce coordinates has been
+performed without error and using appropriate parameters, as manual entries cannot be
+verified, and the computational algorithms are not open for inspection and evaluation. It
+is hence not acceptable to output only a coordinate listing from the instrument, as there is
+no traceability from measurement to coordinate.
+The raw observables are:
+Height of Instrument above Station
+Height of Targets above Station
+Horizontal Angle
+Vertical Angle
+Slope Distance
+Temperature
+Pressure
+It is not acceptable to record horizontal distance with a vertical angle of 90° and 270°.
+It is not acceptable to calculate and manually input a ppm correction into the instrument
+based on a combination of temperature, pressure, and height above sea level.
+While it is acceptable to set an instrument to display other parameters for convenience of
+working, the above raw observables must be set for internal recording. If that is possible,
+a printout of the recorded raw observables may be submitted as field notes. If it is not
+possible, they must be manual recorded on an appropriate form, at the time of
+observation.
+70
+
+--- PAGE 71 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+It is not acceptable to record the data electronically then transcribe it manually onto
+field sheets in the office later.
+iii) Direct Coordinated Positioning
+When using PRN GPS, the instrument controller must be set to record pseudoranges at 1
+second intervals to all satellites in view and network corrections received.
+Field Notes – include Field Notes Surveyor’s Certificate
+3.4 Horizontal Angle Measurement
+i) Definitions
+Horizontal Angle: is the measure in degrees, minutes, and seconds of arc, between
+theodolite circle readings to two different objects, regardless of
+their relative elevation
+A Zero: is normally the mean value of the angle as measured on face right
+and face left, although in detail survey when constrained by an EDM
+attachment, a single face zero is accepted
+A Round of Angles: is defined as a succession of circle readings in a single direction
+which are closed by a final observation to the opening Reference
+Object (RO) on each face
+ii) General
+1. A control traverse should open and closed on different established control stations,
+preferably of RM standard and never of L status. Closed loop traverses are a last resort
+as these contain neither scaling nor orientation check.
+2. The reliability of both opening and closing control stations must be confirmed by a
+minimum of redundant observations, either: -
+a. Horizonal angles to 3 or more known controls, or
+b. Horizontal angles to 2 known control points and distances to 1 or more such
+points.
+The purpose, and hence the relative accuracy required of these confirmatory observations,
+is to ensure that that the control stations have not been disturbed.
+If necessary, the ends of the traverse must be extended until undisturbed control has
+been reached.
+3. Horizontal angles will be observed on two zeros from backsight clockwise to foresight.
+iii) Standard Practices
+71
+
+--- PAGE 72 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+1. Angles will be measured clockwise on face left and anti-clockwise on face right.
+2. In general, each angle will be observed individually without closure. However, if four
+or more objects are to be included, the observations will be by a closed round on each
+face.
+3. Traverse angles will always be measured from back-sight to foresight.
+4. Zero settings for four rounds will be set as:
+Round Zero setting
+1 As found.
+2 1 + 90
+3 2 + 45
+4 3 + 90
+iv) Precision
+1. With a 1" theodolite (e.g., Wild T2)
+1. Rounds to detail points should close to < 30"
+2. Multiple values of an angle lie within a 10" spread
+2. With a 20" theodolite (e.g., Wild T16)
+1. Rounds to detail points should close to < 1'
+2. Multiple values of an angle lie within a 40" spread.
+3.5 Vertical Angle Measurement
+Definitions
+A Vertical Angle is the measure in degrees, minutes, and seconds of arc of the vertical
+circle of a levelled theodolite.
+Collimation is half the amount by which face left and face right vertical angles of a
+levelled theodolite differ. In a well-adjusted theodolite it will be the
+same value as: -
+Index Error the amount by which the vertical circle reading of a levelled
+theodolite, pointing to an object in the same horizontal plane, differs
+from zero.
+Standard Practices
+72
+
+--- PAGE 73 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+One set of vertical angles will be observed.
+• to reflector for EDM traverses
+• To target at instrument height for taped traverses
+1. At the start of work each day, face left and face right vertical circle readings to an
+object with a clearly defined horizontal axis should be used to check for and
+determine the index error.
+2. When index error is known, and the theodolite is level, it is sufficient for detail
+purposes to measure the vertical circle reading on face right only.
+3. When used to correct EDM measurement, vertical angles are taken to reflector level.
+4. When used to correct tape measurements, vertical angles must be measured to a
+point at the same height above the ground as the instrument.
+5. ALWAYS ENSURE THAT THE THEODOLITE IS LEVEL AND LEVEL THE SPLIT BUBBLE ON
+ALL NON-AUTOMATIC THEODOLITES BEFORE TAKING A READING
+3.6 Traversing
+General
+1. Traverse stations are of a permanent nature.
+2. Numbering is in sequence in the 1:2000 map sheet in which they fall in the form
+xxxyy/nnn. The issue is controlled by the computer system when the traverse is
+finalised.
+3. Traverses on UTM will be observed and computed under a normal job number but with
+a 3 in third place e.g., 94 3 nnnn.
+4. Local grid traverses are permitted provided that: -
+a. boundary points may be easily re-established from hard detail on site.
+b. The parcels fall within a 150m circle.
+c. There are no UTM control stations nearby.
+d. supervisor has given approval.
+73
+
+--- PAGE 74 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+5. For local grid traverses ONLY: -
+a. Points will not be permanent.
+b. Station descriptions are not required.
+c. Traverses must be closed loop to similar standard.
+Except that single face horizontal angles will suffice
+Observations
+1. A control traverse should open and closed on different established control stations,
+preferably of RM standard and never of L status. Closed loop traverses are a last resort
+as these contain neither scaling nor orientation check.
+2. The reliability of both opening and closing control stations must be confirmed by a
+minimum of redundant observations, either: -
+a. Horizonal angles to 3 or more known controls, or
+b. Horizontal angles to 2 known control points and distances to 1 or more such
+points.
+The purpose, and hence the relative accuracy required of these confirmatory observations,
+is to ensure that that the control stations have not been disturbed. If necessary, the ends of
+the traverse must be extended until undisturbed control has been reached.
+Horizontal angles will be observed on two zeros from backsight clockwise to foresight.
+3. One set of vertical angles will be observed:
+a. to reflect for EDM traverses
+b. To target at instrument height for taped traverses
+4. Distance measurement will be either:
+a. EDM with a minimum of 3 readings for each length, and both forward and
+backward measures for each leg
+b. Steel tape with agreement between 2 independent measures:
+i. 0.01m for distances less than 100m
+ii. 0.02m for distances >100m and <200m
+iii. Distances >200m will always require EDM.
+Recording
+1. All readings will be booked on a "Traverse Observation" with the following content:
+1. Header with Job number
+74
+
+--- PAGE 75 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+2. Observer’s name - printed for legibility.
+3. Booker’s name - printed for legibility.
+4. Date of observations
+5. EDM type and colour code
+6. Station at which observations are being made.
+7. Approximate ambient temperature
+8. The mean height of the station
+9. The instrument height (particularly when taping)
+2. At the time of observation:
+1. Horizontal angles will be reduced to a mean angle from the R.O. and checked for
+standard agreement:
+1. Less than 10" for a 1" theodolite
+2. Less than 40" for a 20" theodolite
+2. Vertical angles will be reduced to ensure that the index error has not varied
+significantly from that morning's initial check.
+3. A separate sheet will be used for each station at which observations are made.
+4. A traverse diagram will be prepared as an integral part of the cover page.
+5. Erasures or obliterations on field sheets will not be accepted. Mistakes must be
+crossed through, and the correct value written above.
+3. Completed documentation.
+1. Station descriptions, on the standard form at Annex C, should be initiated for
+each new station, and completed as the computation and checking proceed.
+These are not required for local surveys on an arbitrary grid. On completion:
+a. The original of each description is filed in sheet number/serial order in
+the Station Description file maintained in each Region.
+b. A copy is supplied to Survey Operations.
+2. All new traverse stations will be plotted in black on the relevant intelligence
+sheet. The recording will be of the symbol of a vertical cross contained in a 2mm
+circle with the number of the station printed alongside. Thus
+06423003
+75
+
+--- PAGE 76 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+3. Where a control point proves to be disturbed or destroyed, the face of the
+relevant description in the regional file will be annotated accordingly and a copy
+supplied to S.O.
+Computation
+1. Reduction of field observations will be carried out on site with re-observation as
+necessary.
+2. The surveyor has the option:
+1. to compute the traverse
+2. to submit the observations, with a completed cover page, for
+computation and database loading by the Data Team.
+3. Traverses with a misclosure of better than 1:20000 or 0.0015 /L m (whichever is the
+smaller) may be loaded into the database.
+4. Traverses with a sub-standard misclosure will be referred to the Regional Surveyor
+who will arrange independent check on:
+1. R.O. comparisons
+2. Reduction of Observations and input to the calculation
+3. Closure of established control
+o If all three are acceptable, the Regional Surveyor will sign to this effect in the
+action column of their cover sheet before loading to the database.
+3.7 Establishment and Use of Line Points
+Definition
+Line Points are stations on-line between two existing control stations (either Minor Control
+Points or Reference Marks) and may be established where it is more efficient than fixing
+additional control by traverse.
+Two categories of Line Point exist:
+• Temporary Line Points. These are not finalised to the database and may be used
+where necessary for setting out checks, and detail survey.
+• Permanent Line Points. These are finalised as Minor Control Points and may be used
+where necessary for setting out, setting out checks, detail survey and traversing.
+Establishment
+• Prior to establishment of a Line Point, the reliability of the two terminal control
+stations must be proven by observation to a third control station.
+• The Line Point must be placed online from the nearest terminal control station.
+76
+
+--- PAGE 77 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+• A Line Point should not be placed closer to a terminal control station than the
+minimum focusing distance of the theodolite being used.
+• Each Line Point must be verified by observation and measurement to both terminal
+control points, and this should be recorded on the appropriate Field Sheet.
+• A clear field sketch of the Line Point shall be drawn.
+• No Line Point shall be placed online to a BT, or the balance distance to one of the
+terminal control points not measured, unless this is justified and approved by the
+Regional Surveyor. In these cases, the distance measured shall be checked by an
+independent second measurement.
+Accuracy
+• The total measured distance between the two control points must agree to within
+0.03 of the computed total distance.
+• The calculated offset from the Line Point to the join between the terminal control
+points shall not exceed 0.02.
+Temporary Line points
+Temporary Line Points that have been computed will appear in the finalised coordinate
+listing of a finalised Job with point status ‘L’. However, the Line Point is not finalised to the
+Database. There is no requirement to prepare a Minor Control Point description.
+Permanent Line points
+• The procedure for establishment as outlined in the relevant chapter is to be
+followed.
+• The Line Point should meet the accuracy requirements set out in Chapter F.
+• The Line Point coordinates should be computed on the line between the two existing
+terminal control stations. For computation, the sum of the measured distances from
+the line point to the terminal control stations must be adjusted pro-rata to agree
+with the computed distance between the terminal control stations.
+• The computed Line Point coordinates are to be supplied to Survey Operations for
+loading as Minor Control Points.
+• A Minor Control Point description is to be prepared. The Location diagram is to be
+clearly annotated ‘Online between .................. and ...................’
+• All new Stations will be plotted on the relevant Intelligence (MAP) Sheet.
+Traversing from Permanent Line Points
+Where a Permanent Line Point is utilised for traversing the normal procedures for traversing
+apply. (See Chapter F).
+77
+
+--- PAGE 78 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+3.8 Detail Survey
+Purpose
+1. Detail survey is the observation of the angles and/or distances measured to clearly
+identifiable physical features either:
+1. to enable features to be coordinated, or
+2. to enable graphic plotting.
+2. The fixed points may be used:
+1. for map revision
+2. for further fixation of Cadastral boundary marks.
+3. The points used must be clearly identified in accordance with the list of standard
+abbreviations set out at the Point Numbering (below) which is drawn up in accord
+with Survey Operations to ensure compatibility.
+Technique
+1. Fixation may be by:
+1. Bearing and distance (a polar fix)
+2. The intersection of the arcs of two measured distances
+3. The intersection of the vectors of two measured angles
+2. In every case, before calculated coordinates are used, they must include the
+observation and fixation of AT LEAST one redundant measurement. This check will
+frequently be by taping to another independently fixed point.
+3. Vertical circle readings will always be booked.
+Field Checks
+1. The coordinates will be calculated from known starting positions, EACH of which
+must be verified by check observations.
+2. Check observations consist of either:
+1. a horizontal circle reading to different RO's or,
+2. a horizontal reading and distance to a single RO.
+3. If EDM is in use, at some stage in the survey a minimum of 3 readings will be taken
+between a pair of control stations.
+78
+
+--- PAGE 79 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+4. At least once each day, the theodolite should be checked for vertical index error.
+Recordings
+1. Field recording will be on a standard form as per Cadastral Survey Field Operations
+Instructions.
+2. A fresh page will be used for each set up.
+3. A recording is made up of:
+1. Header - to be completed for EVERY page used:
+a. Station - point at which observations are made.
+b. Instrument identification code
+c. Approximate temperature in degrees Centigrade
+d. Instrument height to 0.1 m (if needed)
+e. Observer and bookers name
+f. Date of observations
+g. Job number
+2. Observation data - filled in line by line as:
+a. point observed.
+b. horizontal angle
+c. vertical angle
+d. slope distance
+e. coded description of the nature of the point
+4. Every page will open and close with readings to the RO station; and these must
+agree within:
+1. 30" in angle for T2 theodolites
+2. 1' in angle for T16 theodolites
+3. 2 cm (.02m) in distance
+5. A field sketch - an oriented sketch of the points observed on that page which
+shows:
+1. the point numbers.
+2. the links between them.
+6. The rules against erasure and requiring mistakes to be crossed through with the
+correct value written above will be STRICTLY observed.
+79
+
+--- PAGE 80 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Point Numbering
+1. Detail points throughout the survey will be numbered sequentially from 001.
+2. Each detail point will be given a unique number to be used wherever it occurs
+in the survey, i.e., if it is observed from any other station, it retains the
+number which it was originally given.
+3. Where detail points occur in the final coordinate list, they will be annotated
+with coded descriptions and cross-referenced to the relevant field record.
+THE FOLLOWING STANDARD ABBREVIATIONS WILL BE USED
+Structure Street furniture
+Building corner BC Inspection Cover IC
+Wall corner WC Manhole MH
+Wall junction WJ Road Signs RS
+Wall intersection WI Lamp Post LP
+Foundation corner UC Traffic Signal TS
+Under construction U Electricity Pole EP
+Ruin corner RC Telephone Pole TP
+Ruin (not corner) R Electricity Pylon PY
+Electricity Pylon corner PYC
+Gate Post GP
+Fencing Roads
+Barasti fence BF Asphalt Edge AE
+Close Boarded fence CBF Asphalt Centerline ACL
+Corrugated Iron fence CIF Track Edge TE
+Post & Rail fence PRF Track Centerline TCL
+Post & Wire fence PWF Road centerline RCL
+80
+
+--- PAGE 81 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Chain-Link fence CLF Kerbline K
+Fence (Other) F Footpath edge FE
+Fence Corner FC Footpath centerline FCL
+Temporary fence TF
+Temporary fence corner TFC
+Hedge H
+Miscellaneous Boundary Mark (with ref):
+Channel CH Iron Pin IP
+Channel Edge CHE Iron Pin in Concrete IPC
+Channel Centerline CCL Pipe PIP
+Bund BU
+Nail NL
+Aluminum Marker AP
+The following additional codes appear in the SURVEY OPPERATIONS manual
+Street Furniture
+Gully G Transformer TM
+Stop Valve SV Hydrant H
+Cable Marker CM Barrier BR
+Water Marker WM Bollard (incl mooring) BD
+Gas Marker GM Telephone junction box TBX
+Sewerage Marker SM Electricity junction box EBX
+81
+
+--- PAGE 82 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Unidentified duct M Street lighting box BX
+Sign Board SGN Letter box LB
+Post (<2m high) PO Telephone call box TCB
+Pole (>2m high) P Bus stop BS
+Power box PB Overhead Electric line OEL
+Miscellaneous
+Station STN Water tank WT
+Flagstaff FS Pipeline PL
+Mast MST Cemetery (limits) CE
+Palm Tree PT Vegetation (limits) VE
+Tree (other types) TR Wadi Edge WE
+Bush BSH Wadi centerline WCL
+Chimney CHY Top of slope TOS
+Steps STP Bottom of slope BOS
+Plinth PLI Apparent High-water mark AHW
+Jetty JET Apparent Low water mark ALW
+Spring (Ain) SPR Cliff CL
+Well (Water) WLL Spot Height SH
+Qanat QA Overhang OVH
+Borehole BH Spotlight SL
+Pump PMP Playground PLG
+Oil well OW Pavement PVT
+Gas well GW Pavement edge PVE
+82
+
+--- PAGE 83 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Culvert CU
+Combination use of poles
+Electricity/Telephone ETP
+Electricity/Lamp ELP
+Telephone/Lamp TLP
+Electricity/Telephone/Lamp ETL
+3.9 Setting out from control
+General
+"Setting out" is the process of establishing marks in the ground at positions defined by pre-
+determined coordinates or, occasionally, graphic infill dimensions. The positions will be
+fixed by measurement from a point or points of proven fixed position and may be by:
+1. Intersection of two computed bearings
+2. A polar fix of computed bearing and distance
+3. The intersection of arcs of two computed distances
+In every case, the mark which is emplaced must be CHECKED by a second independent
+measurement which may be:
+1. A polar from a second station
+2. Distances from two independently fixed points
+In exceptional cases ONLY, a second polar from the same point may be used and in such
+cases:
+1. the horizontal circle setting will be changed.
+2. the EDM target height will be altered.
+3. the surveyor will justify the need.
+4. the supervisor will endorse the justification.
+To obtain independent checks, it may be necessary to emplace a temporary station online
+between two control stations. It is particularly important that the coordinates of such a
+station are determined accurately (G. ESTABLISHMENT AND USE OF LINE POINTS)
+Pre-field procedures
+For each control station:
+83
+
+--- PAGE 84 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+1. A list of the coordinates of all points which could be set out from that point is
+compiled and is converted to a tabulation of setting out data by use of option 2 of
+the calculation of bearings and distances suite in SURVEYOR 4 (software under
+replacement).
+2. Setting out distances must not exceed 200m without specific authority from the
+supervisor.
+3. Included in the list are AT LEAST two RO's, chosen such that the nearer of the two is
+further from the point than any of the points to be set out.
+4. A new page of printout will be used for each setting out station.
+5. Each point to be set out should appear on the list of AT LEAST two stations; if this is
+not practicable the need for supplementary taping to enable an independent
+check must be noted.
+Booking (Field Note)
+The following data is entered at the top of the computer tabulation of points to be set out:
+1. Observer's and Booker's name (printed for clarity)
+2. EDM type and colour code
+3. Date (not to be confused with date of the printout)
+4. Approximate temperature in degrees Centigrade
+5. Job number (if this differs from that on the printout)
+Field observations are recorded directly onto the computer printout (or photocopy) and
+consist of confirmatory readings for all the points actually set out at the relevant station.
+Initial Field Checks
+1. The setting out will be conducted from known starting positions, EACH of which
+must be verified by check observations.
+2. Check observations consist of either:
+(a) a horizontal circle reading to different RO's, or,
+(b) a horizontal reading and distance to a single RO.
+3. If EDM is in use, at some stage in the survey a minimum of 3 readings will be taken
+between a pair of control stations.
+84
+
+--- PAGE 85 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+4. At least once each day, the theodolite should be checked for vertical index error.
+(Vertical Angle Measurement).
+Field Work
+At each control station
+Verify control by:
+1. Set horizontal plate to bearing of the more distant RO
+2. At the right-hand side opposite the data:
+a. Book horizontal and vertical angles to that RO
+b. Book slope distance measure to that RO
+c. Book horizontal reading of second RO
+3. Confirm that distance and angle agree within tolerance.
+From the tabulated data, set out all accessible marks which have not so far been emplaced
+using one of the techniques described above.
+For each new point:
+1. Complete the following observations and record the results on the right-hand side
+of the tabulation sheet:
+• Horizontal plate reading (angle from first RO)
+• Vertical angle
+• Slope distance
+2. Before closing the observations:
+• Check and record horizontal angles to RO1 and RO2
+• Check and record vertical angle to RO1
+• Check and record distance to RO1
+3. When setting out large numbers of points, it is recommended that this check back to
+RO's is carried out periodically throughout the survey.
+4. The setting out readings must agree within reasonable tolerance with the pre-
+computed tabulation (i.e., bearing in mind distance from the setting out station etc.)
+before the surveyor leaves the site.
+85
+
+--- PAGE 86 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+*SPURIOUS FIELD READINGS INVITE SEVERE DISCIPLINARY ACTION
+Following the measurements to newly emplaced points, check observations are made as
+follows:
+1. Complete/book any additional taping.
+2. On a separate "Detail/Setting out" sheet (see detail survey), record the H/A, V/A and
+slope distance to any accessible points which have already been emplaced from
+another station.
+3. Field sheets must NOT contain over-writing or erasure. Incorrect entries should be
+struck through, and the correct value written above.
+Post Field Work
+On return to the office:
+1. For each station, the observation data for the check observations only are entered
+into the PC using the "EDM Field Obs Entry" option and the checks are computed
+using the "Field Obs (EDM) Compute"
+2. The software will give a printout of residuals between observed/computed and
+theoretical coordinates. The residuals are examined and assessed:
+• Coordinate residuals less than 5 cm are acceptable
+• Residuals in excess of 5cm must be reviewed and endorsed by the supervisor.
+• Residual values in excess of 10cm require re-observation and further
+examination.
+3. Taped observations and re-observations
+• Where observation includes supplementary taped distances, the checks can be
+entered and confirmed using the "Verify Beacon by 3 distances" option.
+• If a mark is moved to "accommodate" the check observations, it is necessary to
+make a further check observation from an independent proven station.
+4. As a manual alternative, the Working Data Disc containing the job may be passed to
+the Data Centre so that the beacon status can be upgraded to "verified (V)" status
+before the job is finalised.
+5. A "Summary of Beacons" form (Appendix 7) is prepared to give a comprehensive
+record of:
+a) All points fixed in the survey
+86
+
+--- PAGE 87 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+b) The control point from which each was emplaced
+c) The control point(s) from which each was independently checked.
+d) A full X-reference to the relevant field and computation sheets
+e) The nature of the mark emplaced which is recorded, inter alia, in the remarks’
+column
+f) The form demonstrates that each point has been fixed at least twice.
+Presentation of Data
+The data presented for examination at the end of a setting out job must include, for each
+station:
+1. A setting out data sheet complete with confirmatory
+2. A detail/setting out sheet of check observations to previously emplaced marks
+3. Supplementary taping sketch etc. if appropriate (Appendix 9)
+4. Computer printout of check observation residuals
+5. A "Summary of Beacons" list for the whole job (appendix 7)
+6. A survey plan which contains all the information for each parcel which is as specified
+for a Certificate of Survey.
+3.10 Surveys By Linear Measurement Only
+DEFINITION OF A GRAPHIC SURVEY
+A field survey, when the work is carried out with a tape and optical square only, is normally
+defined as "graphic". Most frequently such surveys will be parcels which have a simple
+geometric shape and side lengths of less than 50m, and which can be fixed on, or related to,
+detail readily identifiable on the existing mapping.
+SIZE, SHAPE AND POSITION OF THE PARCEL
+In such surveys: -
+- The SIZE of the parcel will be determined by linear measurement, usually by a steel or
+cloth tape.
+- The SHAPE of the parcel will be determined by diagonals, optical square (rarely used
+nowadays) or such similar measurements as are necessary to fix an unambiguous
+geometric figure.
+- The POSITION of the parcel will be determined by measurements to sufficient points of
+"hard detail" to allow the parcel to be accurately charted at standard map scale. This
+charting will then be used to fix the position on the national grid to plottable accuracy.
+87
+
+--- PAGE 88 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+THE FIELD SKETCH
+The surveyor will draw the Field Sketch (Appendix 9), either on the pre-printed form or on a
+photocopy of an extract of the latest update of the standard map sheet, whichever is more
+convenient. The Field Sketch will record:
+- All measurements made by the surveyor in the field, and ONLY such
+dimensions/measurements as he has physically measured i.e., any scaled or calculated
+distances which are needed will only appear, suitable annotated, on the Certificate of
+Survey.
+- Annotation of any descriptive detail which will appear on the final certificate such as:
+▪ Road and parcel numbers
+▪ Such abuttal information as is available.
+▪ Description of the property or land use
+- The following topographical detail and services (visible & underground), where is it
+relevant or necessary to the parcel boundary, will be recorded if it falls within the parcel
+or within 10m of the parcel boundary:
+▪ Walls
+▪ Buildings
+▪ Telegraph poles
+▪ Electricity poles
+▪ Manhole covers.
+▪ Any other permanent development feature
+▪ Any other feature which might directly affect the development of the parcel e.g., any
+evidence of underground cable, or entrances, windows or A/C units in walls abutting
+the parcel.
+- All necessary measurements to identify and quantify an apparent encroachment by public
+or other private property.
+TECHNICAL REQUIREMENTS
+The following technical conditions will be observed in all cases:
+- Sufficient redundant measurements must be made to enable two independent area
+calculations and independent confirmation of the shape and positioning of the parcel. In
+particular, when setting out "online", measurements are required to fixed marks in BOTH
+directions.
+- Sufficient check measurements will be made, and recorded, to ensure that the hard detail
+which is used is correct.
+- Taped off-sets are limited to 15m, offsets with an optical square are limited to 25m.
+- Prolongations will not normally exceed twice the base length and should NEVER exceed
+50m.
+- Measurements will be made and recorded to the nearest 0.01m (i.e., 1 centimetre).
+88
+
+--- PAGE 89 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+- Curvilinear boundaries will be approximated by internal chords. In the normal case the
+chord to curve distance will be less than 0.1m. If this criterion results in marks at less than
+3m spacing the case should be referred to a supervisor for instructions.
+- Incorrect information on the field sheet must be crossed out and initialled, it must NOT
+be erased or over-written. Failure to comply will result in disciplinary action.
+FIELD COMPLETION
+Before leaving the site:
+- The surveyor will mark and number the parcel corners.
+- Where appropriate, ensure the marks have been pointed out to the client, and "Handover
+of Marks" certificate has been signed.
+NOTE
+All the field graphic surveys have been transferred to numeric environment.
+3.11 Beacon Verification by 3 Distances
+The “Verify Beacons by 3 Distances” option of Surveyor4, related to the use of
+“supplementary taped distances”.
+Particularly, relates to the process of establishing marks in the ground at positions defined
+by pre-determined coordinates, or occasionally graphic infill dimensions.
+Pre-Field states:
+For each control station:
+1. A list of the coordinates of all points which could be set out from that point is
+compiled and is converted to a tabulation of setting out data by use of option 2 of
+the calculation of bearings and distances suite in SURVEYOR.
+2. Setting out distances must not exceed 200m without specific authority from the
+supervisor.
+3. Included in the list are AT LEAST two RO's, chosen such that the nearer of the two is
+further from the point than any of the points to be set out.
+4. A new page of printout will be used for each setting out station.
+5. Each point to be set out should appear on the list of AT LEAST two stations; if this is
+not practicable the need for supplementary taping to enable an independent check
+must be noted.
+From this it is clear that the intent of the use of “supplementary taping” is for extraordinary
+situations only and only to provide an independent check of point set out by instrumental
+survey.
+89
+
+--- PAGE 90 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Consequently, the use of the PRN/RTK GPS to establish 3 coordinated points close all
+corners of a parcel, with all corners then fixed by 3 taped distances from those temporary
+points is not in keeping with the requirements of the Technical Instructions.
+A further concern lies with the quality of recording of tape measured distances on Field
+Sketches, and the absence in this process of any redundancy, gross error check or method of
+confirmation that the measured distances have been accurately recorded and no
+observation error exists. This is a fundamental principle of surveying, which is not being
+satisfied by this field procedure.
+The final concern is that this process provides no reliable accuracy assessment of the GPS
+coordinates derived for the temporary points.
+CONCLUSION
+The Field Procedure described above does not meet the Technical Standards required for
+Cadastral Surveys and hence must not be used on any jobs carried out in the field, effective
+from the date of this Notice except in exceptional circumstances.
+With effect from 1 February 2011, Private Sector Survey Offices (PSSO’s) must cease using
+this procedure except in exceptional circumstances. Any jobs submitted for examination
+where this field procedure was used after 1 February 2011 will be Returned to Surveyor for
+survey by an accepted procedure.
+Any surveyor, CSD or PSSO who can demonstrate that enhancements to the procedure can
+satisfy CSD concerns about ensuring no observation error in taping or GPS observations,
+may apply to CSD for consideration of that process.
+4. Survey by GPS – Procedure for use of GPS with the Bahrain Permanent Reference
+Network (PRN)
+1. Usage
+These instructions are valid for every survey that:
+1. utilizes GPS with the Bahrain PRN, and
+2. is to have effect on the Bahrain cadastre or any cadastral parcel.
+These instructions have been derived to overcome the fact that the Bahrain PRN provides
+coordinates that are a best fit over the Bahrain main islands, and do not allow for errors and
+adjustments that have occurred during the historic break-down of the Bahrain primary
+control network to the tertiary level (RM's) upon which the local area cadastre depends.
+Now local area corrections (where required) are provided by the system in order to agree
+with the existing grid coordinates. Functioning of PRN with local area corrections to be
+monitored for some time to check the agreement of PRN coordinates of the CSCS model
+with the existing coordinates.
+90
+
+--- PAGE 91 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+2. General
+Coordinate Validation and Proof of Origin.
+2.1 To ensure that each survey is in terms of its local area coordinates, upon
+commencement the survey must be connected to three (3) existing major control marks
+that are chosen geographically to surround the survey site.
+2.2 Coordinate validation and proof of origin observations shall be made with the GPS
+antenna held steady and vertical above each major control mark.
+2.3 Observation of each major control mark will produce PRN coordinates that agree
+with the published value of that mark to within 0.030m.
+2.4 If agreement at a major control mark cannot be obtained to the accuracy prescribed
+at 2.3 above, alternative marks can be chosen providing the geographical requirement at
+2.1 is satisfied.
+2.5 When requirements at 2.1 and 2.3 are satisfied, survey at the site may commence.
+2.6 If agreement cannot be obtained, the survey should be carried out by some other
+method (i.e., GPS using a local base station, conventional cadastral TPS techniques, etc.).
+3. Monitoring the functioning of PRN
+3.1 Surveyor must occupy at least 3 RM control points that surround the area of the
+subject parcel in Stakeout mode on commencement of each survey. (Use a Tripod when
+recording observation at RM Control Points)
+3.2 Record the coordinates of RM Control points in Stakeout mode so that the Surveyor
+can ensure the agreement between measured coordinate and original coordinate at the
+time of survey.
+3.3 Before completion of each job, Surveyor must update the records of MS spread
+sheet
+4. Detail Surveys
+Following procedure is indicative on detail survey work with Bahrain PRN (indicative) for
+Leica GPS 1200 system.
+Procedures are similar to other GPS receivers.
+4.1 Follow the field survey procedure given in the Leica GPS 1200 training to carry out
+surveys.
+4.2 Select the Coordinate System Bahrain CSCS v1 to view the National Grid Coordinates
+4.3 The Max 3D Quality should be set as 0.05m for CSD work
+4.4 Pick all details and record them as 001, 002, 003, etc.
+4.5 Open project in LGO and import data
+91
+
+--- PAGE 92 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+4.6 Export to ASCII file after filtering data.
+4.7 Import ASCII file to SURVEYOR4 for the rest of the computation.
+5. Setting out Surveys
+5.1 Import required parcel coordinates from the SURVEYOR4 (or from any other Survey
+COGO Software) to Project in LGO
+5.2 Transfer Project coordinates to Controller
+5.3 Follow the field survey procedure given in the Leica GPS 1200 training to carry out
+Staking out Surveys and Stakeout required points from the job within the limit and
+record each point.
+5.4 Open project in LGO and import data.
+5.5 Get the Coordinate Comparison Report from LGO (Appendix 15)
+5.6 No need to import stakeout coordinates to SURVEYOR4 to get 'V' Status. The
+Coordinate Comparison Report shows the accuracy of the staked-out points. The
+examination must check the Coordinate Comparison Report for the deviation of
+staked out points.
+6. Control Surveys
+The following procedure is to be adopted to establish Minor Control Points (MCP) (Appendix
+10).
+6.1 Occupy GPS system over the point using Tripod for 10-15 minutes.
+6.2 Use Point Nos as STN1, STN2…, and record data.
+6.3 Open project in LGO and import data.
+6.4 Export to ASCII file after filtering data.
+6.5 Import ASCII file to SURVEYOR4 and finalize the job.
+7. PRN Data Management
+7.1 Transfer Data to Controller
+Data from the Controller to Computer and LGO to Controller can be transferred using
+the Data Exchange Manager in LGO
+Steps:
+7.1.1 Connect Controller to Computer
+7.1.2 Open LGO
+92
+
+--- PAGE 93 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+7.1.3 Go to TOOLS and then Data Exchange Manager
+7.1.4 Double click the ActiveSync at Left Side then all jobs in Controller can be viewed.
+7.1.5 Double click the Projects at Right Side then all projects in LGO can be viewed.
+7.1.6 Transfer DBX folder from Controller to Computer or Transfer Project in LGO to
+Controller
+7.2 Data downloading and Viewing
+7.2.1 Open a new project in LGO
+7.2.2 Give Job number as Project Name and Path of your working directory
+7.2.3 Select Coordinate System as Bahrain CSCS v1
+7.2.4 Import data from your data drive (IMPORT RAW DATA & Select raw data from the
+DBX folder)
+7.2.5 Select the Job File Name: JOB & File Type: System 1200 raw data & IMPORT
+7.2.6 ASSIGN data to the Project.
+7.2.7 Select LOCAL & GRID to view the local grid coordinates
+7.3 Filtering & Quality Check
+7.3.1 Go to the TOOLS menu and select FILTERS from the pull-down menu.
+7.3.2 Select GENERAL tab & then CSD-D- Status and Click OK for Detail Survey jobs and
+CSD-MCP and Click OK for Control (MCP) Surveys.
+7.3.3 All points with good quality accepted for "D" status will be selected to export.
+(Surveyor has recorded Point 0003 before it reached the accepted quality. This
+point is now de-selected with this filtering
+7.4 Export Data from LGO (Detail Surveys)
+7.4.1 Go to EXPORT menu and select ASCII DATA
+7.4.2 Select Path & Type file name with extension .asc (0721234.asc)
+7.4.3 Select save as type: Custom ASCII file
+7.4.4 Select Format Template file LGO_DD.FRT for Detail Surveys and LGO_MCP.FRT for
+Control Surveys from W:\CSD Tech. Procedures for Survey Instruments\GPS –
+PRN\LGO_FORMAT\
+7.4.5 Select Coordinate System Bahrain CSCS v1
+7.4.6 You can import this ASCII file to SURVEYOR4
+7.5 Import Data from SURVEYOR4 to LGO
+93
+
+--- PAGE 94 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+7.5.1 Open a Job (0701234) in SURVEYOR4 Version 4.0818 & Extract data you need to
+export to GPS instrument.
+7.5.2 Export tab separated text file from the SURVEYOR4 Version 4.0818 (0701234.txt)
+7.5.3 Go to the LGO and Create a project
+7.5.4 Select Import and then select ASCII data from the pull-down menu
+7.5.5 Select File Name & Select Template: From-Surv4, Coordinate System: Local and
+import data to the project
+7.5.6 This project can be transferred to the Controller for setting out surveys.
+7.5.6 This project can be transferred to the Controller for setting out surveys.
+7.6 Stakeout Survey output from LGO
+7.6.1 Open a Project in LGO
+7.6.2 Import Stakeout data to the Project.
+7.6.3 Go to TOOLS from the main menu and then click Coordinate Comparison to get the
+Coordinate Comparison report (Appendix 15).
+7.6.4 Point No, Original Coordinates, Stakeout Coordinates, Differences in Coordinates
+and Difference Vector are shown in the Coordinate Comparison Report.
+5. Authorised Survey Markers
+5.1 Purpose
+The purpose of a survey mark is to provide physical representation of a point which is
+either: -
+o fixed on the national grid or,
+o known in relation to a coordinated point
+o mered to identifiable features of hard detail.
+In the Cadastral Directorate, marks are used: -
+o As a basis for further survey
+o Demonstrate the boundaries of a land parcel to:
+ an owner or potential purchaser
+ the Municipality for purposes of building control
+ service authorities, to control service corridors
+The mark must be: -
+✓ durable
+94
+
+--- PAGE 95 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+✓ a permanent mark should be designed to last at least 5 years
+✓ potential vehicle damage should be minimised by keeping the mark as close as
+possible to the ground
+✓ identifiable; the point's unique number to be clearly inscribed in the metal or the
+surrounding concrete.
+5.2 Standard Parcel Boundary Marks
+Depending upon the terrain, parcel boundaries should be marked by one of the following: -
+❖ Wherever practicable every boundary turning point will be marked by a departmental
+design aluminum peg driven flush to the surface. The peg will be: -
+▪ the most suitable of the three standard lengths of 25cm, 50cm or 75cm
+▪ Pre-numbered to minimise damage and early obliteration.
+❖ In urban areas it may be necessary to use:
+▪ A small metal pin driven flush into an existing wall.
+▪ A round headed, washered, pin driven into a tarred road
+▪ A discreet paint mark.
+▪ Numbering will be on the washer or, for temporary marks only, a metal dymo
+number pinned alongside.
+❖ In areas where bedrock occurs at or near the surface:
+▪ A hole drilled into bedrock with a metal pin or aluminum mark concreted
+collared to the surface.
+▪ An iron pin/pipe driven to refusal with a further construction as shown in
+Appendix 11
+❖ In reclamation areas, unconcreted marks are unlikely to survive and suitable lengths of
+2" pipe, long enough to reach firm ground or adequately compacted fill, preferably with
+a concrete filled concrete plastic collar will be required.
+❖ In the interests of permanence, the owner should be encouraged to construct a well-
+founded wall corner:
+▪ this should be not less than three blocks in each boundary direction and at least
+two blocks high.
+95
+
+--- PAGE 96 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+▪ it may be constructed over either an aluminum peg or a temporary pin
+▪ the wall must lie INSIDE the boundary as defined and not straddle or lie outside
+the boundary.
+5.3 Control
+• Bahrain is covered by a network of substantial marks fixed and maintained on the
+National Grid by Cadastral Directorate staff will not be called upon to place or build such
+marks. They are used as origin and closure for local control traverses using coordinate
+values provided to the database by Svy Ops.
+• Coordination is disseminated from the control framework by a series of closed control
+traverses. The stations used for this purpose are usually intended to be permanent,
+unless in particularly vulnerable locations, and should be marked as such.
+5.4 Utility Hazards
+• The attention of all surveyors is drawn to the dangers and risks of striking buried
+utilities, in particular:
+▪ Electricity cables of various voltage
+▪ Water mains of various diameters and materials
+▪ Telephone cable, in particular fiber-optics
+▪ Gas lines which are usually under high pressure.
+• All such cabling etc. is required to be at a depth greater than 1m, but the relevant
+authorities are unable to guarantee that this is the case.
+• If any doubt exists, the location of such services should be determined by a service
+enquiry and trial holes if necessary. In extreme cases, it may be necessary to hand clear
+the marker site rather than just drive in a metal peg.
+• In the event of damage to a utility, the relevant emergency service must be alerted
+immediately. A report detailing the circumstances and position (incl depth) of the utility
+will be made immediately upon return to the office.
+5.5 Historical marks
+In the past a variety of marks have been used which may still be found and should be
+recorded. These include:
+96
+
+--- PAGE 97 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+• Iron pins, frequently physically unnumbered, in varying amounts of concrete.
+• Iron pipes driven deep into soft or reclaimed ground usually with a concrete collar
+and inscribed number.
+• Survivors of the first experiment in a standard pattern marker consisting of a 4"
+plastic pipe, concrete filled round an iron pin in a concrete foundation, with a
+standard plastic label.
+Cadastral Survey Marker numbering
+There are two levels of ground mark in the Cadastral system.
+▪ Control points, &
+▪ Property boundary marks
+Control Points
+a. Control points are numbered in sequence in the 1:2000 map sheet in which they
+fall.
+b. The correct map sheet is indicated by the grid coordinates of the point.
+c. Numbers have the form
+1:2000 Map sheet / Serial i.e., the format XXXYY/nnn
+Parcel Boundary Turning Point Markers
+a. Parcel boundary markers are numbered in accordance with the SD job number in
+which they are emplaced.
+Job Number / Serial i.e., the format YYXXXXX/nnn
+b. Where old beacon numbers incorporate the job number but are incorrectly
+formatted, they will be re-numbered in the new system e.g.
+either 12348301 or 831234001 will become 8301234001
+c. Parcels will be numbered clockwise from the point in the northwest corner and
+will incorporate the existing beacon values and numbers of the parcels they abut.
+This includes parcels fixed by graphic survey.
+97
+
+--- PAGE 98 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+d. Where a corner point is also a point of hard detail (e.g., a house or wall corner)
+this will be indicated in the beacon description and noted on the Certificate of
+Survey.
+e. Any permanent witness marks emplaced to assist recovery after demolition will
+be numbered serially as YYXXXXX/nn/r
+5.6 Historical Marker Numbering Systems
+a. Prior to job number 83020001, marker numbering followed a different system
+b. Control points were numbered, in a series similar to the present boundary point
+system, as:
+Job No./ Year / Serial i.e., the format JJJ/YY/nn
+c. Boundary marks were either labelled as "numeric" (i.e., Fixed instrumentally) or
+"graphic".
+• Numeric points were numbered sequentially from a centrally maintained
+register as:
+Year / serial i.e., the format YY/nnnn
+• Graphic survey marks were an unnumbered iron pin.
+d. Such marks will still frequently emerge in surveys, and wherever convenient,
+they should be re-numbered in the new system
+5.7 Handover of Boundary Marks Responsibility
+INTRODUCTION
+With the introduction of the comprehensive "permanent" marking of parcels, the owners
+should be made responsible, and be made aware that they are responsible, for the markers
+emplaced to delineate their parcels.
+PROCEDURE
+• As soon as possible after demarcation, preferably on the same day for simple jobs, an
+appointment will be made with the owner or client for him to take responsibility for the
+marks.
+• In all cases this will be done before any documents are released from SLRB.
+• A form will be filled with:
+i. The locality and locality code of the survey
+ii. The name of the owner or agent receiving the parcel
+98
+
+--- PAGE 99 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+iii. The name of the owner if he is represented by an agent.
+iv. The LRD registration number of the parcel
+v. The LRD case number if one exists.
+vi. The job number of the survey
+vii. The SD parcel number of the parcel
+viii. The owner and/or agent's CPR number, signature, and date, by which he accepts
+responsibility for the marks which he has been shown.
+• Two copies are to be completed.
+i. First copy for retention by the signatory
+ii. Second copy to be secured in the relevant job file.
+5.8 Field Data Records (Private Sector Subdivision)
+Submission
+On completion of the design, calculation and demarcation of a development sub-division,
+the Private Sector firm will provide:
+1. A plan on a stable base material of all parcel corners and block corners. The plan will
+conform to the following:
+(a) Scale 1:500 (1:1000 or 1:2000 if 1:500 exceeds A1)
+(b) Plan must be clear and legible, suitable for copying
+(c) Standard panel must be completed and signed off by the professional Principal of
+the firm
+(d) To include:
+1. All parcel numbers and areas
+2. All beacon numbers
+3. All beacons join dimensions
+4. All service parcels clearly labelled
+5. All roads numbered (with widths if available)
+6. All abuttal parcel numbers or descriptions of abuttal if no parcel number
+has been allocated
+7. Grid values
+2. All beacon coordinates suitably labelled and all subordinate parcel strings (i.e., not to
+contain the parent parcel string); are recorded to the database. Exchange is
+happening by e-mail.
+3. A Report to include:
+99
+
+--- PAGE 100 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+(a) Any further correspondence.
+(b) The method of construction of the computations
+(c) Printout of joins proving road widths, splays etc.
+(d) Printout of the final coordinate list
+(e) Print of parcel strings (bearing and distance with area)
+(f) Listing of the parcels differentiating between owner's parcels and O.G.D.
+parcels (e.g., sub-station sites).
+Field Practice
+1. Every field survey must contain a minimum of at least one redundant measurement;
+more are preferable.
+2. Wherever possible, redundancies based upon "strong" geometric solutions will be
+adopted.
+3. Multiple observations to obtain reliable mean values should always be reinforced by
+independent geometric redundancies.
+Surveyor’s Report
+Initiation
+Every survey requires a surveyor's report which will: (Appendix 6)
+1. be written on a separate sheet
+2. be headed by:
+1) Job No .........
+2) Surveyor's name printed in BLOCK CAPITALS
+3) Date
+Contents
+The report will include, as appropriate, details of the following items:
+i) the nature of the parcel (rural/urban, open/built up etc.)
+ii) a verbal description of the boundary
+iii) the fixed points or hard detail points used for fixation
+iv) the method of location
+v) the method of survey
+vi) accuracies/residuals of any computation involved
+100
+
+--- PAGE 101 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+vii) all field checks applied (including a statement of results)
+viii) the area of parcel, and details of method of area calculation
+ix) any difficulties encountered in the survey
+x) any discrepancies discovered e.g.
+(a) encroachments
+(b) shortfalls
+(c) clashes with services/utilities
+(d) conflicts with planning intentions
+xi) suggestions on possible solutions to any discrepancies
+xii) a certificate of compliance with Technical Instructions
+Style
+The report should be concise, i.e., as brief as possible consistent with including all relevant
+items of the above information.
+Validation
+Before release for examination the report will be:
+i) signed by the surveyor
+ii) counter-signed and dated by his supervisor
+ADDITIONAL REPORTS
+In the event of further surveys being required, a similar report will be added to explain and
+describe the additional work.
+101
+
+--- PAGE 102 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+F. Cadastral Survey Standards / Accuracy
+Accuracy Standards
+This summary indicates the accuracy expected and represented for survey work carried
+out by, or utilised by, Cadastral Directorate
+1 Geodetic Control Closure 1:50 000
+(Closure: defined to be vector misclosure/total traverse length)
+Marks (absolute position) 0.01m
+Relative to the distance between 1:50 000
+2 Cadastral Control Surveys
+Traverse closure* the smaller of 0.0015/Lm or
+Points (position) 1:20 000
+0.02 m
+3 Cadastral Parcels
+Parcel boundary marks 0.05m
+Parcel dimensions (as quoted on Title Deeds) 0.1m
+(As quoted on LC / CoS) 0.01m
+Curvilinear boundaries - arc to chord (dev) < 0.2m
+(undeveloped) < 0.3m
+Detail points 0.1m
+4 Cadastral Index Maps (CIM)
+95% parcel corners – urban are within 1m
+- rural are within 5m
+5 Topographic Mapping
+hard detail - relative accuracy between 0.15%
+- absolute (rmse) 0.3m
+102
+
+--- PAGE 103 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Field Survey Precision
+The following indicates the consistency requirements for repeated field observations
+1 ANGLES Detail rounds Multiple values of
+Multiple values closures traverse angles
+1" Theodolite < 30" < 10" spread
+20" Theodolite < 1' < 40" spread
+2 Distances
+Tape repeatability < 100m < 0.01m
+100m < d < 200m < 0.02m
+EDM to hard detail or survey mark < 0.02m
+103
+
+--- PAGE 104 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendices
+Appendix 1. LMB-BLOCKS
+LMB-BLOCKS.xlsx
+Appendix 2. Map Index 1:1000 & 1:10000 entire Bahrain areas
+index-2014-1000-ca
+d.pdf
+104
+
+--- PAGE 105 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+105
+
+--- PAGE 106 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendix 3. Large Scale Mapping Index
+index#3.pdf
+106
+
+--- PAGE 107 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendix 4. Private Sector Application.
+107
+
+--- PAGE 108 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendix 5. Private Sector Staff Application Table
+PS Authorisation
+Application Forms 2023.docx
+108
+
+--- PAGE 109 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Survey Report.pdf Surveyors Report
+Template v1.0 20042011.docx
+Appendix 6. Surveyor Report
+109
+
+--- PAGE 110 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendix 7. Summary of beacons
+Summary of
+Beacons.pdf
+110
+
+--- PAGE 111 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+EXAM REPORT
+SHEET.pdf
+Appendix 8. Examination Report
+111
+
+--- PAGE 112 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+FIELD SKETCH.pdf
+Appendix 9: Field Sketch
+112
+
+--- PAGE 113 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendix 10: Minor Control Point Description
+113
+
+--- PAGE 114 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendix 11: Survey Marker Designs
+ANNEX A.pdf
+114
+
+--- PAGE 115 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendix 12: Service Consultation
+115
+
+--- PAGE 116 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendix 13: Service Consultation / New Major Subdivision
+New Major
+Subdivision.pdf
+116
+
+--- PAGE 117 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+117
+
+--- PAGE 118 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendix 14: Service Consultation / New Minor Subdivision
+New Minor
+Subdivision.pdf
+118
+
+--- PAGE 119 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+119
+
+--- PAGE 120 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+120
+
+--- PAGE 121 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendix 15: Report and Comparison of Dimensions - Areas
+121
+
+--- PAGE 122 ---
+CSD SURVEY STANDARDS GUIDELINESS
+2nd EDITION December 2023
+Appendix 16: Certificate of Survey (CoS)
+c13220076_v1.pdf
+122

@@ -192,7 +192,23 @@ export default function ProjectPage({ params }: PageProps) {
       .eq('project_id', params.id)
       .order('created_at', { ascending: true })
 
-    setPoints((pointsData || []).map(normalizePoint))
+    let fetchedPoints = (pointsData || []).map(normalizePoint)
+    
+    if (projectData.datum === 'ARC1960') {
+      try {
+        const { convertDatum } = await import('@/lib/compute/pythonService')
+        const converted = await convertDatum(fetchedPoints, 'WGS84', 'ARC1960')
+        fetchedPoints = fetchedPoints.map((p, i) => ({
+          ...p,
+          easting: converted[i]?.easting ?? p.easting,
+          northing: converted[i]?.northing ?? p.northing,
+        }))
+      } catch (err) {
+        console.error('Failed to convert datum on load', err)
+      }
+    }
+
+    setPoints(fetchedPoints)
     setLoading(false)
   }
 
@@ -1105,7 +1121,7 @@ export default function ProjectPage({ params }: PageProps) {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[var(--text-muted)]">Datum:</span>
-                    <span className="text-[var(--text-primary)]">{project.datum || 'WGS84'}</span>
+                    <span className="text-[var(--text-primary)]">{project.datum || 'ARC1960'}</span>
                   </div>
                 </div>
                 

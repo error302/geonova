@@ -1,0 +1,198 @@
+
+--- PAGE 1 ---
+ARCHITECTURAL AND ENGINEERING DESIGN FOR PROPOSED LOCHAB
+PERIMETER WALLING
+B.6.1.1 LAND SURVEY REPORT
+Report by:
+Aegis Development Solutions Limited
+Project Managers & Quantity Surveyors
+P.O. Box 2861-00100
+NAIROBI.
+17th August 2021
+
+--- PAGE 2 ---
+P.O. BOX 5294–01002
+Madaraka, Thika
+Tel: +254 723 768514/ 731 808768
+Email:geogreen.smconsultants@gmail.com
+SURVEYOR’S REPORT
+FOR
+A TOPOGRAPHIC & BOUNDARY SURVEY ON PROPERTIES
+LR 7785/157-160 ALONG RUNDA DRIVE, IN RUNDA
+ESTATE, NAIROBI COUNTY
+FOR
+THE USA EMBASSY IN KENYA
+UN AVENUE ROAD
+NAIROBI, KENYA
+Report by: Wallace Ottaro – Bsc. Geomatic Eng (Hons), MISK (G)
+Land Surveyor / Director
+Date: 12th August 2021
+
+--- PAGE 3 ---
+Introduction
+A report is hereby issued following a survey exercise (mentioned above) that was carried out in
+the month of August 2021 with instructions from the above mentioned client with the following
+scope;
+Scope of works
+1. Obtaining survey reference plans of the said property from relevant authorities.
+2. Conducting a boundary survey to establish the boundary beacons.
+3. Conducting a Topographic Survey at the properties and processing field data to produce a
+contoured Topographic survey plan.
+Site location
+A site location image of the site courtesy of Google Earth
+Methodology
+1. The Boundary Survey
+The survey team adopted ground survey method in executing the task while making use of the
+following equipment.
+i. Leica Total Station
+ii. KQ GEO High Precision GNSS equipment.
+
+--- PAGE 4 ---
+The LOCHAB property consists of 4 properties adjoining each other. The properties are LR 7785/
+157, 158, 159 & 160. The boundary survey was aimed at establishing the external boundary
+beacons of the adjoined 4 plots for purposes of constructing a perimeter wall around the 4
+properties. The boundary beacons that were to be established are as follows; [H7, H8, H9, H43,
+H46 & H47]
+The survey team commenced the exercise by obtaining the reference survey map of the area FR
+131/69 from the Lands registry located at the Survey of Kenya Headquarters in Ruaraka, Nairobi.
+The reference survey map contains information on the registered property boundary details
+(beacons coordinates, dimension and area) of plot LR 7785/ 157, 158, 159 & 160 and the
+adjacent properties. The registered coordinates of Beacons [H7, H8, H9, H43, H46 & H47] are
+contained within the coordinate list in survey of Kenya reference map FR 131/69 top right corner
+with the mapping system for the coordinates being Cassini. The LOCHAB Property has a
+cumulative registered acreage of approximately 2.01 Hectares.
+After obtaining the reference survey map, the survey team then moved to site to carry out the
+actual field exercise. While on site the team began by conducting initial boundary investigation
+which involved a physical search by digging up soil at the corners of the plot to expose any
+existing property beacons which could be underground. The team managed to locate Beacons
+H20 and H21 which were still in stable condition.
+Using the 2 beacons identified above as a reference point, the survey team then used appropriate
+survey methods making use of the GNSS and Total Station equipment to re-establish the other
+boundary beacons [H7, H8, H9, H43, H46 & H47].
+A typical boundary beacon appears in the form of an iron pin placed on the ground and secured
+by concrete (IPC). The approach was a success and the findings are documented in the FINDINGS
+section and captured in the drawing accompanying the report.
+The Table below shows the beacon coordinates in both Cassini coordinate systems.
+Coordinate in Cassini System
+Point ID Northings (M) Eastings (M)
+H7 -134400.79 -20471.12
+H8 -134410.98 -20416.05
+H9 -134417.26 -20360.40
+H43 -134577.79 -20503.86
+H46 -134589.07 -20442.89
+H47 -134591.94 -20392.71
+
+--- PAGE 5 ---
+2. Detailed Survey
+Thereafter, detail field survey commenced at the site. The team adopted Beacons H20 as
+benchmarks and referenced to UTM coordinate system to be used in the detailed survey. The
+features picked included and not limited to;
+ Spot levels all over the open areas on site and inside some of adjacent properties
+ Trees on and adjacent to site
+ Permanent Structures at the site and on adjacent properties
+ Temporary structures at the site
+ Perimeter wall and Barbed wire fence
+ Access road adjacent to the site e.g. Runda drive and Northern Bypass
+ Dominant vegetation on site e.g. Trees
+ Utility services on and off the site i.e. Overhead power line, Sewer lines on site
+ Drainage infrastructure on and off the site
+After fieldwork was complete, data was downloaded into field laptops for post processing.
+Processed data was then uploaded into drafting software i.e. AutoCAD. Final Topographic survey
+maps were then produced showing contours developed at intervals of 0.5m as per the Terms of
+Reference
+Findings
+In summary, we had the following findings and are explained as follows: -
+1. The Plot Boundary
+a) NONE of the 6 boundary beacons [H7, H8, H9, H43, H46 & H47] were found
+existing on site and as such all of them were re-established.
+b) At Beacon H7, the existing perimeter wall corner is approx. 0.86m away from
+the beacon.
+c) At Beacon H8, the existing perimeter wall corner is approx. 0.47m away from
+the beacon.
+d) At Beacon H9, the existing perimeter wall corner is approx. 0.78m away from
+the beacon.
+e) At Beacon H43, the existing perimeter wall corner is approx. 1.51m away from
+the beacon.
+f) At Beacon H46, the existing perimeter wall corner is approx. 0.69m away from
+the beacon.
+g) At Beacon H47, the beacon is to be located beneath an existing wall column.
+h) In general, going by the position of the plot boundary vis-a-vis the existing
+perimeter wall, it then appears a section of the property land currently lies within
+
+--- PAGE 6 ---
+the neighboring properties which can either be as a result of incorrect
+construction of the existing perimeter wall and/or encroachment by the
+neighbours.
+2. The Perimeter wall
+There is an existing perimeter wall constructed all around the property. The perimeter
+wall is approximately 3m high. This existing perimeter wall is not properly aligned to the
+property registered boundary.
+3. Utility Services
+The only utility services available at the site are Power Supply and Water Supply. There
+exists a High tension overhead power line crossing into the property along boundary line
+H43 – H46. The other overhead power line is the one meant to supply power into the
+property. The water connection point is near the main gate as the survey captured water
+meter. Sewer facilities are onsite which consist of the use of septic tanks and soak pits.
+4. Access road
+The property can only be accessed from Runda Drive which is at the frontage of the
+property. The road has a registered road reserve of 15m.
+A topographic survey drawing accompanying this report will highlight all these findings and other
+features identified inside or adjacent to site.
+Conclusion
+As witnessed during the boundary survey exercise, the registered boundary of the plot appears to
+be crossing into existing properties. This could either be as a result of incorrect construction of the
+existing perimeter wall and/or encroachment by the neighbours.
+My recommendation therefore is that, at some point before construction of the wall commences,
+the affected neighbours ought to be involved so that a joint survey is carried out so as to verify
+the cause of the encroachments if any.
+
+--- PAGE 7 ---
+BarbedWireFence
+Flower
+9865600N
+Notes
+1.Allmeasurementsareinmeters.
+2.VerticaldatumisMeanseaLevel
+3.CoordinatesreferencedtoUTMArc1960
+DatumZone37S
+4.ReferenceMapisSurveyofKenyaMap
+13169
+CLIENT:
+USEMBASSY
+Nairobi,Kenya
+SURVEYORS:
+GEOGREENSURVEYING&
+MAPPINGCONSULTANTSLTD
+P.O.Box5294-01002
+Madaraka,Thika
+Scale: 1:250
+Date: May2021
+Drawnby: W.O.O
+E000752
+9865800N
+9865750N
+9865700N
+Gate
+House
+H19
+Gate
+House
+9865650N
+Gate
+House
+Gate
+House
+H47
+E050752 E001752 E051752 E002752
+Water
+Meter
+Water
+Meter
+SOAK
+PIT
+Water
+Pump
+Water
+Meter
+Water
+Meter

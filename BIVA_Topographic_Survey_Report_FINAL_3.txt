@@ -1,0 +1,882 @@
+
+--- PAGE 1 ---
+Bonriki Inundation
+Vulnerability Assessment
+Topographic Survey Report
+Zulfikar Begg, Andrick Lal, Hervé Damlamian,
+Amrit Raj, Jens Krüger
+
+--- PAGE 3 ---
+Bonriki Inundation Vulnerability
+Assessment (BIVA)
+Topographic Survey Report
+Zulfikar Begg
+Andrick Lal
+Hervé Damlamian
+Amrit Raj
+Jens Krüger
+
+--- PAGE 4 ---
+©Copyright Secretariat of the Pacific Community (SPC) 2015
+All rights for commercial/for profit reproduction or translation, in any form, reserved. SPC authorises the
+partial reproduction or translation of this material for scientific, educational or research purposes, provided
+that SPC and the source document are properly acknowledged. Permission to reproduce the document and/or
+translate in whole, in any form, whether for commercial / for profit or non-profit purposes, must be requested
+in writing. Original SPC artwork may not be altered or separately published without permission.
+Original text: English
+Secretariat of the Pacific Community Cataloguing-in-publication data
+SPC Technical Report SPC00003
+April 2015
+Begg, Zulfikar
+Topographic Survey Report / Zulfikar Begg, Hervé Damlamian, Amrit Raj and Jens Krüger
+(Bonriki Inundation Vulnerability Assessment (BIVA) / Secretariat of the Pacific Community)
+1. Sea level — Climatic factors — Kiribati.
+2. Floods — Kiribati.
+3. Climatic changes — Social aspects — Kiribati.
+4. Climatic changes — Management — Kiribati.
+5. Climatic changes — Environmental aspects — Kiribati.
+6. Climate change mitigation — Kiribati.
+I. Begg, Zulfikar II. Damlamian, Hervé III. Raj, Amrit IV. Krüger, Jens
+V. Title VI. Secretariat of the Pacific Community VII. Series
+577.220 99593 AACR2
+ISBN: 978-982-00-0925-7
+
+--- PAGE 5 ---
+Table of Contents
+Acknowledgements ............................................................................................................................................... iii
+List of Abbreviations .............................................................................................................................................. iv
+Executive summary ................................................................................................................................................. v
+1. Introduction ................................................................................................................................................... 1
+1.1. Background ........................................................................................................................................... 1
+1.2. Purpose and scope of the report .......................................................................................................... 2
+2. Methods and results ...................................................................................................................................... 3
+2.1. SEAFRAME Datum ................................................................................................................................. 3
+2.2. Global Navigation System survey .......................................................................................................... 3
+2.3. Real-time kinematic topographic survey .............................................................................................. 6
+2.4. Field procedure ..................................................................................................................................... 9
+3. Results .......................................................................................................................................................... 15
+3.1. Global Navigation System Survey........................................................................................................ 15
+3.2. Unmanned aerial system .................................................................................................................... 25
+3.3. Discussion ............................................................................................................................................ 30
+4. Conclusion .................................................................................................................................................... 33
+5. References ................................................................................................................................................... 35
+List of Tables
+Table 1. Participants in GPS training from the Kiribati Government. ..................................................................... 8
+Table 2. Height comparison of benchmarks for the various surveys in Kiribati. The results from this survey are
+in agreement with the survey by Lal (2009). ........................................................................................................ 18
+Table 3. Benchmarks used for the RTK survey. Coordinates are referenced as UTM WGS84 Zone 59 North. .... 18
+Table 4. Example of RTK survey data exported from Trimble Business Center software..................................... 19
+List of Figures
+Figure 1. Bonriki Water Reserve Location. ............................................................................................................. 2
+Figure 2. Bonriki Inundation Vulnerability Assessment project components. ....................................................... 3
+Figure 3. Datum definition for the control and RTK survey in Bonriki. All the topography and control points are
+referenced to tide gauge zero (former University of Hawaii gauge zero) which is 4.6301 m below the
+SEAFRAME sensor benchmark (SSBM) established by the Australian Bureau of Meteorology. The SEAFRAME
+Tide Gauge Zero value is –0.419 m below SSBM. The 2013 annual mean level of the sea (not shown in the
+diagram above) is 1.26 m above tide gauge zero. .................................................................................................. 4
+Figure 4. Locations of surveyed benchmarks for the datum investigation plotted on a Google satellite
+backdrop. ................................................................................................................................................................ 5
+Figure 5. Principle of a real-time kinematic GPS survey. ........................................................................................ 6
+Figure 6. Main equipment used during the topography data acquisition survey. ................................................. 7
+Figure 7. Setting up the base station at the BON4 benchmark. ............................................................................. 9
+Figure 8. To increase radio coverage, the radio antenna was mounted on top of the Public Utilities water
+tower. ..................................................................................................................................................................... 9
+Figure 9. Capturing data on a reef crest during the RTK survey. .......................................................................... 10
+Page | i
+
+--- PAGE 6 ---
+Figure 10. GPS receiver mounted on a government pick-up truck. The rover (receiver) and its pole are mounted
+at the back of the truck. The controller is mounted inside the car to allow a real-time check of data. .............. 10
+Figure 11. A Trimble R8 was mounted on a quad bike to help collect data from the sand flats as well as the
+water reserve. ....................................................................................................................................................... 11
+Figure 12. A canoe was used in the RTK survey in the lakes and salt water marshes. ......................................... 11
+Figure 13. Trimble UX5 unmanned aerial systems (UAS). The wind span is approximately 1m. ......................... 12
+Figure 14. Trimble UX5 launching ramp used to propel the UAS into the air at high speed. ............................... 12
+Figure 15. Ground marker seen in the centre of the image deployed on a ground control point, captured by the
+UAS flying at 315 m Height above Ground. .......................................................................................................... 13
+Figure 16. Coverage of the UAS survey; flight 1 covered an area of 2.4 km2 (the red zone), and flight 2 covered
+an area of 2.6 km2 (the blue zone). ...................................................................................................................... 14
+Figure 17. Designed flight path for flight 1, using Trimble Aerial Imaging Software; black arrows show the wind
+direction................................................................................................................................................................ 15
+Figure 18. Map showing locations of benchmarks in Bonriki. .............................................................................. 16
+Figure 19. Screen capture of Trimble Business Center software, v2.81, showing the control network of
+benchmarks established in Bonriki. ...................................................................................................................... 17
+Figure 20. Map of the Bonriki study site, showing the area covered during the RTK survey. Darker points show
+the dense collection of point along the tracks of RTK collected using the quadbike. .......................................... 20
+Figure 21. Map of the Bonriki study site, showing the RTK coverage with graduated colours representing
+elevation in metres. .............................................................................................................................................. 21
+Figure 22. Detail of the RTK survey results showing higher elevation areas, which mainly includes roads and the
+water reserve area................................................................................................................................................ 22
+Figure 23. RTK survey of Bonriki showing low areas such as sand flats, reef flats and reef crests. ..................... 22
+Figure 24. Digital terrain model generated from elevation points collected from the RTK survey.Image looking
+toward the southwest. ......................................................................................................................................... 23
+Figure 25. 0.5-m contours generated from the digital terrain model. ................................................................. 24
+Figure 26. Combined orthophotos from flight 1 and flight 2; 10 cm image resolutions. ..................................... 25
+Figure 27. Orthophoto, zoomed in on the Control Tower; 10 cm resolution. ...................................................... 25
+Figure 28. Point clouds generated from the aerial imagery over Bonriki.Image looking toward the southeast. 26
+Figure 29. Zoomed in view of the point cloud generated from aerial imagery over Bonriki. .............................. 26
+Figure 30. 25 cm digital surface model generated from cloud points. ................................................................. 27
+Figure 31. 3D image of the digital surface model of Bonriki, using the same colour scale as Figure 30. Image is
+looking toward the southwest. ............................................................................................................................. 27
+Figure 32. 50 cm digital terrain model (generated by the Trimble Business Center software). ........................... 28
+Figure 33. Land use map derived from spectral analysis of the orthophoto imagery. The land use map is based
+on three categories: bare land (brown), vegetation (dark green) and grassland (light green). Buildings were
+manually cropped out (white). Image clustering is only used on land. ................................................................ 29
+Figure 34. Topographic points selected to generate a digital terrain model. ...................................................... 29
+Figure 35. Digital terrain model after using image classification technique; 10 m resolution. ............................ 30
+Figure 36. Comparison between heights measured by the RTK GPS system and heights derived from the UAS.
+The dashed line is the line of best fit. ................................................................................................................... 31
+Figure 37. Height difference (Hd) between RTK data and UAS data; blue is Hd < 0.1 m, green is Hd < 0.2 m,
+yellow is Hd < 0.5 m, orange is Hd < 1.0 m and red is Hd > 1.0 m. ....................................................................... 31
+Figure 38. DTM generated from a weighted interpolation between RTK data and UAS data. The image looks
+toward the southwest. ......................................................................................................................................... 33
+Page | ii
+
+--- PAGE 7 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Acknowledgements
+The BIVA project is part of the Australian Government’s Pacific-Australia Climate Change Science and
+Adaptation Planning Program (PACCSAP), within the International Climate Change Adaptation
+Initiative. The project was developed by the Secretariat of the Pacific Community’s (SPC) Geoscience
+Division (GSD) in partnership with the Australian Government and the Government of Kiribati (GoK).
+Key GoK stakeholders that contributed to the implementation of the project were:
+ Ministry of Public Works and Utilities (MPWU), in particular the Water Engineering Unit with
+the MPWU
+ The Public Utilities Board (PUB), in particular the Water and Sanitation Division and the
+Customer Relations Division within the PUB
+ The Office of the President, in particular the Disaster Management Office
+ The Ministry of Environment, Lands and Agricultural Development (MELAD) Lands Division
+ The Ministry of Fisheries and Marine Resources Development (MFMRD) Minerals Division
+ Members of the Kiribati National Expert Group on climate change and disaster risk
+management (KNEG)
+The Bonriki Village community members also played a key role in the implementation of the project.
+Community members participated in the school water science and mapping program, assisted with
+construction of new piezometers and data collection for the groundwater component, and shared
+their knowledge and experiences with regards to historical inundation events and coastal processes.
+Key technical advisors involved with implementation of the project included:
+ Flinders University, Adelaide, Australia
+ University of Western Australia, Perth, Australia
+ The University of Auckland, Auckland, New Zealand
+ United Nations Educational, Scientific and Cultural Organization, Institute for Water
+Education (UNESCO-IHE), Delft, the Netherlands
+ Technical advisors Tony Falkland and Ian White
+Page | iii Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 8 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+List of Abbreviations
+AusAID Australian Government Overseas Aid Program
+BM benchmark
+BoM Bureau of Meteorology, Australian Government
+GPS Global Positioning System
+MELAD Ministry of Environment, Lands and Agricultural Development
+MFMRD Ministry of Fisheries and Marine Resources Development
+MPWU Ministry of Public Works & Utilities
+MSL mean sea level
+RTK real-time kinematic
+SOPAC Secretariat of the Pacific Community’s Geoscience Division
+SPC Secretariat of the Pacific Community
+TBC Trimble Business Center software
+UAS unmanned aerial system
+Page | iv Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 9 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Executive summary
+The impact of climate change and variability on the coastal zone is one of the major constraints on
+coastal development in small island developing states. Geospatial information is necessary to
+adequately address infrastructure development. One of the more basic but critical datasets needed
+is that of topography, or a digital model of the terrain, which provides a baseline and underpins
+most of the development aspirations of the state and local communities. As a result, both dense and
+good topography data are equally important for coastal zone development and management.
+The Bonriki Inundation Vulnerability Assessment project was established to study the probability of
+the freshwater lens being inundated with saltwater. One of the core objectives of the project is to
+produce a hydrodynamic model and a groundwater model, which both require topographic data.
+Topographic data were collected using Trimble global navigation satellite system (GNSS) instruments
+across a survey area in Bonriki. Surveys were completed using 12 benchmarks; and 36,626 data
+points were measured. Geomorphological features such as vegetation line, beach berms, toe of
+beach, reef flats, sand flats, lakes and reef crests were captured during the survey.
+In addition, an unmanned aerial system (UAS) – the Trimble UX5 aerial imaging solution –was used
+to compare and complement topography data. This was probably the first time a fixed-wing UAS was
+deployed in Kiribati, and provided an innovative solution to address the lack of coverage inherent
+with a ground-based survey such as the Trimble GNSS system.
+The Kiribati tide gauge datum was investigated to verify and document the appropriate vertical
+reference level. Past survey results from Geoscience Australia, BECA International and Lal (2009)
+were compared. As a result of this, the topography data collected were referenced to tide gauge
+zero, which is 4.6301 m below the Sea Level Fine Resolution Acoustic Measuring Equipment
+(SEAFRAME) sensor benchmark established by the Australian Bureau of Meteorology. The data were
+then processed using Trimble Business Center software, and a digital elevation model was created.
+Having established ground control points and dense topography, this survey will be of use to future
+projects related to coastal zone management in the Bonriki area.
+Page | v Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 10 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+1. Introduction
+1.1. Background
+The Bonriki Inundation Vulnerability Assessment (BIVA) project is part of the Australian
+government’s Pacific–Australia Climate Change Science and Adaptation Planning Program
+(PACCSAP), within the International Climate Change Adaptation Initiative. The objectives of PACCSAP
+are to:
+ improve scientific understanding of climate change in the Pacific;
+ increase awareness of climate science, impacts and adaptation options; and
+ improve adaptation planning to build resilience to climate change impacts.
+The BIVA project was developed by the Geoscience Division (GSD) of the Secretariat of the Pacific
+Community (SPC) in partnership with the Australian government and the Government of Kiribati
+(GoK).
+1.1.1. Project objective and outcomes
+The BIVA project aims to improve our understanding of the vulnerability of the Bonriki freshwater
+reserve to coastal hazards and climate variability and change. Improving our knowledge of risks to
+this freshwater resource will enable better adaptation planning by the GoK.
+More specifically, the project has sought to use this knowledge to support adaptation planning
+through the following outcomes:
+ Improved understanding and ability to model the role of reef systems in the dissipation of
+ocean surface waves and the generation of longer-period motions that contribute to coastal
+hazards.
+ Improved understanding of freshwater lens systems in atoll environments with respect to
+seawater overtopping and infiltration, as well as current and future abstraction demands,
+recharge scenarios and land-use activities.
+ Enhanced data to inform a risk-based approach in the design, construction and protection of
+the Bonriki water reserve.
+ Increased knowledge provided to the GoK and the community of the risks associated with
+the impact of coastal hazards on freshwater resources in response to climate change,
+variability and sea-level rise.
+1.1.2. Context
+The Republic of Kiribati is located in the Central Pacific and comprises 33 atolls in three principal
+island groups. The islands are scattered within an area of about 5 million square kilometres. The
+BIVA project focuses on the Kiribati National Water Reserve of Bonriki. Bonriki is located on Tarawa
+atoll within the Gilbert group of islands in Western Kiribati (Figure 1). South Tarawa is the main
+urban area in Kiribati, with the 2010 census recording 50,182 people of the more than 103,058 total
+population (KNSO and SPC 2012). Impacts to the Bonriki water resource from climate change,
+inundation, abstraction and other anthropogenic influences have potential for severe impacts on
+Page | 1 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 11 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+people’s livelihood of South Tarawa. The Bonriki water reserve is used as the primary raw water
+supply for the Public Utilities Board (PUB) reticulated water system. PUB water is the source of
+potable water used by at least 67% of the more than 50,182 people of South Tarawa (KNSO and SPC
+2012). Key infrastructure including the PUB Water Treatment Plant and Bonriki International Airport
+and residential houses are also located on Bonriki, above the freshwater lens, making it an important
+economic, social and cultural area for the Republic of Kiribati.
+Figure 1. Bonriki Water Reserve Location.
+1.2. Purpose and scope of the report
+The ultimate goal of the coastal phase of the project was to develop a hydrodynamic model for
+Bonriki. However, before a hydrodynamic model can be developed, a coastal terrain model derived
+from topographical data is needed.
+The first part of the report investigates/reports previous benchmarks used in the collection of
+topographical data. The remainder of the report provides a summary of topographical surveys of
+Bonriki, using real-time kinematic (RTK) survey and unmanned aerial system (UAS) methods, to
+obtain data for the development of a coastal terrain model. It also compares data collected from the
+two methods.
+Page | 2 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 12 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 2. Bonriki Inundation Vulnerability Assessment project components.
+2. Methods and results
+2.1. SEAFRAME Datum
+2.2. Global Navigation System survey
+Vertical datum
+In 1992, a Sea Level Fine Resolution Acoustic Measuring Equipment (SEAFRAME) gauge was installed
+in Betio, South Tarawa, as part of the South Pacific Sea Level and Climate Monitoring Project. This
+tide gauge supplanted an older tide gauge operated by the University of Hawaii. The SEAFRAME
+Page | 3 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 13 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+gauge records sea level, air and water temperature, atmospheric pressure, wind speed and
+direction. The SEAFRAME sensor benchmark (SSBM) is referenced to tide gauge zero, which is
+equivalent to the University of Hawaii tide gauge zero (AMSAT et al. 2004; Yates and Lal 2012),
+where tide gauge zero is 4.6301m below SSBM (Figure 3).
+Previous researchers (Ramsay et al. 2008) reported an inconsistency with the vertical datum of the
+SEAFRAME tide gauge, and how it relates to the older Hawaii tide gauge zero. The datum for the
+SEAFRAME tide gauge was therefore reviewed to check its suitability as a consistent reference point
+and for comparison with benchmarks surveyed by Lal (2009) and Beca International (2011).
+The Kiribati datum was comprehensively analysed by Ramsay et al. (2008). Ramsay et al. (2008)
+identified a shift of 419 mm in the datum on the SEAFRAME gauge installed in Betio. Heights derived
+under the GPS control network survey by Lal (2009) is referenced to tide gauge zero (SSBM). These
+heights were used as the origin for this topography survey.
+A comparison of topography data with water level statistics collected as part of the BIVA project
+produced a discrepancy of 420 mm, reconfirming the shift identified by Ramsay et al. (2008).
+Similarly, comparison of benchmark data from Yates and Lal (2012), Beca International (2011) and
+Lal (2009) revealed similarities in some locations and variation in the others, reconfirming the
+inconsistencies between vertical datums. Because of these inconsistencies, a survey was required to
+determine to what degree the values differed. Hence, static global navigation satellite system (GNSS)
+observations were made on a number of benchmarks surveyed by Yates and Lal (2013), Beca
+International (2011) and Lal (2009).
+Figure 3. Datum definition for the control and RTK survey in Bonriki. All the topography and control points are
+referenced to tide gauge zero (former University of Hawaii gauge zero) which is 4.6301 m below the SEAFRAME
+sensor benchmark (SSBM) established by the Australian Bureau of Meteorology. The SEAFRAME Tide Gauge
+Zero value is –0.419 m below SSBM. The 2013 annual mean level of the sea (not shown in the diagram above) is
+1.26 m above tide gauge zero.
+Page | 4 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 14 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 4. Locations of surveyed benchmarks for the datum investigation plotted on a Google satellite backdrop.
+Page | 5 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 15 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+2.3. Real-time kinematic topographic survey
+The real-time kinematic (RTK) method was used to collect topographical data using Trimble R8
+models 2 and 3. Twelve benchmarks were established in Bonriki (Figure 18), with benchmark BON4
+used as the control to correct heights for all other points as it is included in the Tarawa control
+network.
+Two GPS receivers were used – a reference (base) receiver set up on a known point and one roving
+receiver set up on a pick-up truck. The reference receiver takes measurements from the satellites in
+view, with a minimum of 10 satellites, and transmits them with the position of the reference
+receiver via two Trimble radios to the roving receivers in real time.
+The roving receivers also take measurements from the satellites in view, with a minimum of
+10 satellites, and process them in real time with the measurement data and location from the
+reference receiver. The result is measurement vectors in the WGS84 datum from the reference
+receiver to the rover receiver. Using these measurement vectors, coordinates for the points
+occupied by the rover can be computed.
+Roving Base receiver
+receiver – on a known
+unknown point
+Figure 5. Principle of a real-time kinematic GPS survey.
+Page | 6 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 16 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+The local coordinate system established before the survey was:
+ map projection: UTM Zone 59 North
+ horizontal datum: WGS84
+ vertical datum: tide gauge zero
+The survey also recorded all geomorphological features, such as vegetation line, beach berm, reef
+flats, and reef crest, which were processed using the Trimble Business Center software.
+4× Trimble RTK R8s with their controllers
+2× Trimble HPB 450 radios
+2× Trimble Omni antennas
+2× antenna cables: 30 m and 4 m long
+Figure 6. Main equipment used during the topography data acquisition survey.
+Page | 7 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 17 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+2.3.1. Capacity building
+Local staff from the Ministry of Fisheries and Marine Resources Development (MFMRD); the Ministry
+of Public Works & Utilities (MPWU); and the Ministry of Environment, Lands and Agricultural
+Development (MELAD) were trained to use the Trimble GPS systems over two days of theory and
+three weeks of field surveys (Table 1). The field surveys involved learning the basics and set up of a
+GPS and practising different survey styles with the GPS system. Software such as the Trimble
+Business Centre and Quantum GIS were then used to show how to download and process field data.
+Table 1. Participants in GPS training from the Kiribati Government.
+Participant Division Ministry
+Tiuere Torua Lands MELAD
+Tentao Takaio Lands MELAD
+Taie Nikora Lands MELAD
+Romano Reo Lands MELAD
+Tokabai Bauro Mineral Unit MFMRD
+Bwenaate Rabunimango Mineral Unit MFMRD
+Teebete England Mineral Unit MFMRD
+Rateiti Uateraoi Fisheries MFMRD
+Naomi Atauea Mineral Unit MFMRD
+Tion Uriam Mineral MFMRD
+Taina Temwakei Water MPWU
+Upon completion of this training, the government departments, particularly Lands and Minerals,
+were able to initiate RTK surveys as part of their respective programme projects. One such project is
+coastline monitoring of Tarawa, where the shoreline is being repeatedly surveyed from Betio to
+Bonriki.
+Page | 8 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 18 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+2.4. Field procedure
+Figure 7. Setting up the base station at the BON4 benchmark.
+Figure 8. To increase radio coverage, the radio antenna was mounted on top of the Public Utilities water tower.
+Page | 9 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 19 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 9. Capturing data on a reef crest during the RTK survey.
+Figure 10. GPS receiver mounted on a government pick-up truck. The rover (receiver) and its pole are mounted
+at the back of the truck. The controller is mounted inside the car to allow a real-time check of data.
+Page | 10 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 20 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 11. A Trimble R8 was mounted on a quad bike to help collect data from the sand flats as well as the
+water reserve.
+Figure 12. A canoe was used in the RTK survey in the lakes and salt water marshes.
+2.4.1. Unmanned aerial system survey
+Page | 11 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 21 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Part of the funding received for the BIVA project was used to purchase and test the latest Trimble
+Unmanned Aircraft System – the Trimble UX5 (Figure 13). Three SPC staff and one representative of
+the Kiribati Government participated in a one-week training course on the surveying and processing
+components of the UX5. A Trimble UX5 remote pilot licence was issued to the three SPC staff upon
+successful completion of the practical and theoretical exams. SPC is now able to undertake UAS
+surveys in all of its member countries.
+The two main components of the UX5 are the plane (Figure 13) and the launching ramp (Figure 14).
+Figure 13. Trimble UX5 unmanned aerial systems (UAS). The wind span is approximately 1m.
+Figure 14. Trimble UX5 launching ramp used to propel the UAS into the air at high speed.
+After the training, the team conducted a UAS survey over the study site, which included four
+components: flight planning, establishment of control points, flights and data processing.
+Page | 12 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 22 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Ground control points
+Ground control points (GCP) are essential to georeference the imagery taken by the UX5. A
+minimum of five well-distributed GCPs are usually recommended to constrain the 2D planar surface
+of the cloud point, or digital surface model (DSM) derived during data processing phase.
+In this survey, 12 GCPs where used, including three GCPs (BK5, BK6 and BK7) newly surveyed using
+the RTK GPS system. Unfortunately, during the survey, two ground markers (BK3 and TH27) were
+removed.
+Figure 15. Ground marker seen in the centre of the image deployed on a ground control point, captured by the
+UAS flying at 315 m Height above Ground.
+Parameter settings
+The survey included two 40 minute flights. To maximise the data coverage of each flight, the Height
+above Ground (HaG) of the UX5 was set at 750 m – the maximum allowed by the system. HaG and
+coverage are proportional, but are inversely proportional to the data resolution or the pixel size of
+the aerial imagery. A lower flight altitude results in higher resolution imagery and DSM.
+Page | 13 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 23 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 16. Coverage of the UAS survey; flight 1 covered an area of 2.4 km2 (the red zone), and flight 2 covered
+an area of 2.6 km2 (the blue zone).
+Although only two flights were needed to cover Bonriki (Figure 16), data accuracy and resolution
+were compromised. At a HaG of 750 m, the UX5 was able to capture imagery at a resolution of
+24 cm. At a 75 m HaG, the minimum allowed by the system, the UX5 can capture imagery at a
+resolution of 2.4 cm. While this setting would give much higher accuracy, it would also require a
+large number of flights to compensate for the relatively small data coverage obtained on each flight.
+Moreover, the UAS allows the user to define a percentage of overlap in the aerial imagery. The
+overlap controls the accuracy of the data; however, higher overlap leads to smaller coverage, which
+requires more flights to complete the survey. The percentage of overlap commonly used ranges
+from 70% to 90%, giving low to high accuracy (relatively to the HaG chosen), respectively. An overlap
+of 80% was used in the test survey.
+Flight
+Wind parameters are essential for flight planning. During the flight there was south westerly wind in
+Tarawa with a speed of 5 m/s to 10 m/s. The flight path was adjusted to make the survey lines
+perpendicular to the wind direction. The flight path for flight 1 can be seen in Figure 17.
+Page | 14 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 24 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 17. Designed flight path for flight 1, using Trimble Aerial Imaging Software; black arrows show the wind
+direction.
+3. Results
+3.1. Global Navigation System Survey
+3.1.1. Vertical datum
+Evaluation of data from the survey suggests that the vertical component (elevation) values concur
+with the data from Lal (2009). Variations between 0 to 9mm (Table 2) were discerned but these are
+considered to be negligible in this situation as these surveys were accomplished with the GNSS
+system which has an uncertainty of up to 20mm for values in the vertical. The discrepancy of 420mm
+produced in comparison of water level data to topography was due to variation in reference points.
+The water level derived from the SEAFRAME gauge is referenced to the SEAFRAME datum whereas
+topography data is referenced to tide gauge zero. This also confirms the datum definition by Ramsay
+et al. (2008) which states, the SEAFRAME datum is 419mm below the tide gauge zero (Figure 3).
+3.1.2. Real-time kinematic topographic survey
+All the benchmarks were networked with BON4 (Figure 18, Figure 19, and Table 3), which has a
+known coordinate and is connected to the KIR1 benchmark. KIR1 is referenced to the SEAFRAME
+station installed by the Australian Bureau of Meteorology, and all heights are therefore relative to
+tide gauge zero (Figure 3). A total of 36,626 data points were measured during the survey (Figure
+20). The topography data collected show a range of elevations between about –0.918 m across the
+sand flat on the lagoon side to 5.679 m inland at the water reserve. Various features on the either
+Page | 15 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 25 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+side of water reserve such as reef crest, reef flat, base of beach, high tide level, vegetation line, sand
+flat etc. were recorded during the RTK survey as shown in Table 4. This was done in order to be able
+to separate and compare elevations between the various regions such as inland on the islet, lagoon,
+and on the reef flat (Figure 22 to Figure 25) which contributes towards a more detailed
+understanding of the geomorphology and also improves the calibration of the inundation model for
+which the topography was used.
+Figure 18. Map showing locations of benchmarks in Bonriki.
+Page | 16 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 26 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 19. Screen capture of Trimble Business Center software, v2.81, showing the control network of benchmarks established in Bonriki.
+Page | 17 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 27 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Table 2. Height comparison of benchmarks for the various surveys in Kiribati. The results from this survey are in agreement with the survey by Lal (2009).
+Elevation Differences between surveys
+Point ID Easting Northing BIVA project Yates & Lal (2013) BECA (2011) SOPAC (2009) Y&L–BIVA BECA–BIVA SOPAC–BIVA
+7032 738907.7 152764.8 2.984
+7033 739959.9 152713 3.844
+BON4 737781.6 152955.3 3.613 3.613 0
+KIR3 713946.7 149822.8 3.569 4.6316 3.565 1.0626 –0.004
+KIR12 715063.2 150964.2 4.357 4.2188 4.22 –0.1382 –0.137
+KIR102 714863.2 150237.4 4.085 4.0096 4.01 –0.0754 –0.075
+KIRI 713951.3 149807.1 5.356 5.3576 0.0016
+PIN103 726937.6 149285.2 3.637 3.559 –0.078
+TH09 737843 152951.2 3.605 3.983 0.378
+TH27 739959.1 152685.1 4.129 4.641 0.512
+UT179A 719711 147125.4 4.236 4.145 4.237 –0.091 0.001
+UT348 721890.9 147086.2 3.591 3.482 3.596 –0.109 0.005
+UT407 728523.2 149931.1 3.054 3.063 0.009
+Table 3. Benchmarks used for the RTK survey. Coordinates are referenced as UTM WGS84 Zone 59 North.
+Point ID Easting Northing Elevation
+ARP1 738814.3 152767.5 2.641
+BK1 738177.4 154044.2 3.423
+BK2 739353.4 153085.6 4.644
+BK3 737489.4 153757.1 6.138
+BN20 738255.3 153365.7 3.143
+BON4 737781.6 152955.3 3.613
+BON7 738383.1 152967.3 2.709
+BON8 739403.8 152836.4 3.221
+PTP25 737404.9 152390.8 3.266
+PUB1 738675.1 153193.5 7.57
+TH27 739959.1 152685.1 4.137
+UT323 738525.2 153675.5 3.857
+Page | 18 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 28 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Table 4. Example of RTK survey data exported from Trimble Business Center software.
+Point ID Easting Northing Elevation Feature Co Point ID Easting Northing Elevation Feature Co
+A0001 737784 152899.8 3.106 TOPO BRA246 739958.1 152743.5 2.19 BEACH ROCK
+A0002 737782.8 152891.5 3.034 TOPO BRA247 739960.5 152741.5 1.998 BEACH ROCK
+A0003 737780.8 152877.5 2.933 TOPO BRA248 739959.8 152739.8 2.132 BEACH ROCK
+A0004 737778.2 152868.9 2.798 TOPO BRA249 739962.8 152737.2 2.43 BEACH ROCK
+A0005 737792.6 152860.9 2.421 TOPO BRA25 739787.3 152810 2.087 BEACH ROCK
+A0006 737802.6 152888.6 3.011 TOPO BRA250 739964.3 152738.4 2.131 BEACH ROCK
+A0007 737913.7 152873.6 2.983 TOPO BRA251 739967.6 152736.2 2.118 BEACH ROCK
+A0008 737902.4 152851.1 2.876 TOPO BRA252 739966.9 152734.8 2.313 BEACH ROCK
+A0009 737885.3 152801 2.841 TOPO BRA253 739970.7 152733.9 2.114 BEACH ROCK
+A0010 737873.7 152775.4 2.548 TOPO BRA254 739969.8 152732.4 2.385 BEACH ROCK
+A0011 737870.5 152739 2.761 TOPO BRA255 739973.8 152729.5 2.301 BEACH ROCK
+A0012 737879.3 152753.3 2.678 TOPO BRA256 739975.2 152730.4 2.1 BEACH ROCK
+A0013 737893.3 152773 2.969 TOPO BRA257 739978.4 152728.5 1.813 BEACH ROCK
+A0014 737899.6 152728.2 2.823 TOPO BRA258 739977.7 152727 2.27 BEACH ROCK
+A0015 737909.8 152749.6 2.986 TOPO BRA259 739980.7 152724.7 2.245 BEACH ROCK
+A0016 737934.4 152792.8 2.94 TOPO BRA26 739785.3 152813.5 2.026 BEACH ROCK
+A0017 737959.7 152869.2 3.142 TOPO BRA260 739982 152725.8 1.864 BEACH ROCK
+A0018 737958.4 152859.4 3.252 TOPO BRA261 739985.7 152723.3 1.839 BEACH ROCK
+A0019 737957.8 152849.9 2.771 TOPO BRA262 739984.4 152721.9 2.053 BEACH ROCK
+A0020 737942.6 152824.1 2.996 TOPO BRA263 739987.6 152718.9 2.048 BEACH ROCK
+A0021 737935.1 152805 2.745 TOPO BRA264 739989.4 152719.9 1.808 BEACH ROCK
+A0022 737931.3 152795.6 2.942 TOPO BRA265 739991.9 152717.6 1.831 BEACH ROCK
+A0023 737940.1 152721.8 2.242 TOPO BRA266 739990.8 152716 2.119 BEACH ROCK
+Page | 19 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 29 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 20. Map of the Bonriki study site, showing the area covered during the RTK survey. Darker points show the dense collection of point along the tracks of RTK collected
+using the quadbike.
+Page | 20 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 30 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 21. Map of the Bonriki study site, showing the RTK coverage with graduated colours representing elevation in metres.
+Page | 21 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 31 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 22. Detail of the RTK survey results showing higher elevation areas, which mainly includes roads and the
+water reserve area.
+Figure 23. RTK survey of Bonriki showing low areas such as sand flats, reef flats and reef crests.
+Page | 22 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 32 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 24. Digital terrain model generated from elevation points collected from the RTK survey.Image looking toward the southwest.
+Page | 23 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 33 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 25. 0.5-m contours generated from the digital terrain model.
+Page | 24 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 34 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+3.2. Unmanned aerial system
+The photogrammetry module of the Trimble Business Center software was used to process the data
+obtained from the UAS survey. The software provides four outputs: an orthophoto (Figure 26 and
+Figure 27), a point cloud (Figure 28 and Figure 29). The point clouds were interpolated into a 25 cm
+grid over the study site. The resulting digital surface model is shown in Figure 30 and Figure 31.
+Figure 26. Combined orthophotos from flight 1 and flight 2; 10 cm image resolutions.
+Figure 27. Orthophoto, zoomed in on the Control Tower; 10 cm resolution.
+Page | 25 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 35 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 28. Point clouds generated from the aerial imagery over Bonriki.Image looking toward the southeast.
+Figure 29. Zoomed in view of the point cloud generated from aerial imagery over Bonriki.
+Page | 26 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 36 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 30. 25 cm digital surface model generated from cloud points.
+Figure 31. 3D image of the digital surface model of Bonriki, using the same colour scale as Figure 300. Image is
+looking toward the southwest.
+Page | 27 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 37 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+In order to progress to an elevation model that shows bare earth only (DTM), buildings and
+vegetation have to be removed from the surface model (DSM). The automated processing to
+generate the DTM successfully removed buildings and a reasonable number of trees. However, the
+resulting elevation is still highly influenced by vegetation, with large areas showing elevation higher
+than 7 m and up to 18 m above tide gauge zero (Figure 32).
+Figure 32. 50 cm digital terrain model (generated by the Trimble Business Center software).
+To remove all the outliers, the orthophoto was clustered into six groups (Vegetation, Grassland, Bare
+land, Buildings, Runway and Saltwater Marsh, as shown in Figure 33) using standard image
+classification techniques. The 50 cm DTM grid was converted into xyz points.
+A script was developed to select points falling on pixels categorised as ‘bare land’ and ‘runway’
+(Figure 34). Finally, the selected points were used to generate a 5-m grid DTM (Figure 35).
+Page | 28 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 38 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 33. Land use map derived from spectral analysis of the orthophoto imagery. The land use map is based
+on three categories: bare land (brown), vegetation (dark green) and grassland (light green). Buildings were
+manually cropped out (white). Image clustering is only used on land.
+Figure 34. Topographic points selected to generate a digital terrain model.
+Page | 29 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 39 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 35. Digital terrain model after using image classification technique; 10 m resolution.
+3.3. Discussion
+In this section we compare topography data measured from RTK GPS and topography data derived
+from the Trimble UX5.
+The point cloud generated by the UAS was reduced to only keep data on bare land.
+A script was developed to compute the height difference between each RTK data point and its
+closest UX5 data point, as long as they were less than 50 cm apart.
+To quantify the difference between the RTK and UAS topography data, two statistical measurements
+were computed: the root mean square (RMS) and a goodness-of-fit of the two datasets to the 1-to-1
+line (R2) (Figure 36).
+The RMS of 0.29 m was calculated as follows
+RMS = √ (    ((  −  ) ))
+       
+where Z is the elevation referenced to tide gauge zero
+The R2 of 0.88 was calculated as follows
+R2 =    (    −    (  ) ×
+          (     ) 
+)
+           (     )×   (     )
+where Z is the elevation referenced to tide gauge zero and Std is the standard deviation.
+Page | 30 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 40 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Figure 36. Comparison between heights measured by the RTK GPS system and heights derived from the UAS.
+The dashed line is the line of best fit.
+To understand the height differences (Hd) between the two topographic datasets, the RTK dataset
+with Hd as the attribute was overlayed onto the orthophoto (Figure 37).
+Figure 37. Height difference (Hd) between RTK data and UAS data; blue is Hd < 0.1 m, green is Hd < 0.2 m,
+yellow is Hd < 0.5 m, orange is Hd < 1.0 m and red is Hd > 1.0 m.
+Page | 31 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 41 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+Acquiring topography data using RTK GPS or using UAS has advantages and disadvantages. Since
+new data were collected to produce a DTM of Bonriki, they can be qualitatively compared around
+two main factors: data accuracy and data coverage.
+RTK GPS measurement can deliver topography data with a high vertical accuracy (<2 cm), depending
+on the methodology used during the survey. In this survey, data were either measured while on
+foot, while driving a quad bike or car, or while in a canoe. The data are expected to have a high
+vertical accuracy (decimetre range) when collected while on foot. However, the confidence in the
+vertical accuracy can decrease when the RTK GPS is mounted on vehicles, especially when surveying
+on bumpy tracks and terrain, as is often the case in Bonriki.
+The vertical accuracy of the data derived from photogrammetry primarily depends on the pixel size
+of the imagery captured by the UX5. The manufacturer, Trimble, assumes the vertical accuracy to be
+less than three times the pixel size of the aerial imagery. For our survey in Bonriki, with a set of aerial
+imageries captured at 10 cm resolution, the vertical accuracy should therefore be less than 30 cm.
+Thus, the vertical accuracy of the data collected by RTK GPS is expected to be much higher, i.e.
+better, than the accuracy of data derived from the UX5.
+The calculated Hd can provide some indications on the vertical accuracy of the UAS data. Figure 37
+gives much information on the possible improvements and the current limitation of the UAS survey.
+The Hd shows a much higher accuracy of the UAS data on the runway and tracks with little
+vegetation, with Hd < 10 cm. Low accuracy, indicated by a high Hd, is seen along the ocean side.
+Along the coastline, with a relative high number of buildings and trees, the land coverage is more
+complex, which led to a low vertical accuracy as indicated by the overall higher Hd. It seems that the
+10 cm pixel size combined with an image overlap of 80% led to significant differences between RTK
+measurement and UAS data. We need to keep in mind however that RTK GPS and UAS points had to
+be co-located within 0.5 m for comparison and that this may have resulted in discrepancies in areas
+of complex morphology such as over erosional scarps in the nearshore area.
+The northern and southern sides of Bonriki show low vertical accuracy. This is because the GCP
+markers in both regions were removed by an act of vandalism during the survey and so the UAS data
+could not be adequately orthorectified.
+From Figure 37 it is clear that UAS data accuracy not only depends on the image pixel size but also
+on the number and distribution of the GCPs used in the survey and the complexity of the terrain and
+its coverage.
+Finally, the major disadvantage of the RTK GPS survey is the relative sparseness of the resulting data.
+Using an RTK GPS survey to create a DTM on a relatively large scale is unpractical because it requires
+a dense cloud of points. In practice, sparse data are collected in areas such as along roads and
+remaining areas are filled by interpolation, potentially introducing large errors. In contrast, the UAS
+produces a dense cloud of points with a nearly complete coverage of the area with only two flights,
+whereas the RTK GPS survey took several weeks to complete.
+To get the best DTM possible, a weighted interpolation was performed using both dataset. Weights
+of 0.75 and 0.25 were attributed to the RTK data and the UAS data, respectively. As a result, the
+Page | 32 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 42 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+DTM generation is highly influenced by the RTK data where the data is available. The UAS data is
+used as an alternative to large interpolation where no RTK data is available.
+Figure 38. DTM generated from a weighted interpolation between RTK data and UAS data. The image looks
+toward the southwest.
+4. Conclusion
+The datum issue raised by Ramsey et al. (2008) was further investigated, and it was determined that
+all benchmarks derived and surveyed under the South Pacific Sea Level and Climate Monitoring
+Project project and by Lal (2009) are referenced to tide gauge zero. The heights derived under this
+project are consistent with Lal (2009).
+Topography data was collected over Bonriki using two methods: RTK GNSS and UAS.
+The RTK survey was successful and produced good quality data over the area surrounding the water
+reserve, along the coast and across the beach, on the lagoon intertidal areas and on the reef flat. To
+maximise data coverage and data density, the rover was mounted on various vehicles such as a quad
+bike, a truck and a canoe. Unfortunately, some parts of the site were not mapped because of dense
+vegetation and time constraints. The data produced a realistic DTM of Bonriki, accounting for all
+morphological features.
+Co-funded between Australia through the BIVA project and supplemented with funds that New
+Zealand provides to SPC, SPC purchased the Trimble UX5. After a week of training, the team
+conducted a UAS survey, collecting aerial images at 10 cm resolution over Bonriki. The images were
+processed using the photogrammetry module of the Trimble Business Centre software. Outputs of
+the software were a high-resolution orthophoto of Bonriki, a dense point cloud, a 25 cm digital
+surface model and a DTM. To remove large discrepancies in the DTM, we developed a new method.
+Based on the high-resolution orthophoto, areas/pixels of bare land were extracted, and a new DTM
+Page | 33 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 43 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+was created by interpolating the topographic data on bare land onto a 10 m resolution grid over
+Bonriki.
+The datasets from the RTK and UAS surveys were compared to assess the benefits of each to create
+a DTM. While RTK data provides a better accuracy in a survey time period measuring weeks, UAS
+data offers a full coverage of the area in a matter of days.
+The height differences found between RTK and UAS data indicate the importance of establishing
+well-distributed GCPs over a survey site. By capturing 10 cm resolution images with 80% overlap, the
+photogrammetry algorithm was able to estimate heights of small areas between trees. However,
+there is low confidence in the resulting vertical accuracy, with points showing more than 50 cm
+height difference with RTK measurement. This contrasts with the good accuracy (less than a pixel
+size) delivered by the UAS in clear areas such as the airport runway.
+It seems clear that more surveys are required to better estimate the optimal UAS setting, depending
+on the land cover and the complexity of the terrain. A new UAS survey is planned for London, the
+urban centre of Kiritimati atoll, in early 2015, providing a good opportunity to further test the
+system. The urban area will be surveyed using the Trimble UX5 maximised setting – capturing 2.4 cm
+resolution imagery with a 90% image overlap. This will provide the member countries with a better
+understanding of the new capabilities SPC can offer with their UAS.
+This topography survey was also used as a training opportunity. A number of local staff from the
+Kiribati Government were trained in RTK surveying and data processing, and one government
+representative attended the one week training on UAS surveying and processing.
+Page | 34 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 44 ---
+Topography Survey Report
+Bonriki, Tarawa, Kiribati
+5. References
+AMSAT, AusAID, NTF Australia. 2004. Pacific country report on sea level and climate: their present
+state. Kiribati, June 2002. Australian Agency for International Development. Australian Marine
+Science and Technology Limited. National Tidal Facility Australia, JC0163a.
+Australian Government Bureau of Meteorology. 2010. Pacific country report, sea level & climate:
+Their present state Kiribati.
+http://www.bom.gov.au/oceanography/projects/spslcmp/country_report.shtml accessed on
+February 2014.
+Beca International. 2011. Coastal Monitoring Benchmark Network, Report for the Office of Te
+Beretitenti, Government of Kiribati, prepared under the KAP – II – FS6 Improving the Protection of
+Public Assets Project.
+KNSO and SPC. 2012. Kiribati 2010 census. Volume 2, Analytical report. Kiribati National Statistics
+Office and the Secretariat of the Pacific Community Statistics for Development Program.
+Lal A. 2009. Tarawa Secondary Photo Control Surveys Static and Kinematic Global Positioning
+Systems (GPS) Surveys,Tarawa, Kiribati. SOPAC Technical Report (unpublished), Suva, Fiji.
+PASAP (Pacific-Australia Climate Change Science and Adaptation Planning Program). 2013. Pacific
+Australia Climate Change Science and Adaptation Planning Program, Bonriki Inundation Vulnerability
+Assessment (BIVA) Project, project proposal.
+Ramsay, D.L., Stephens , S., Gorman , R., Oldman , J., Bell, R. 2008. Kiribati Adaptation Programme:
+Phase II: Information for climate risk management. Sea levels, waves, run-up and overtopping. NIWA
+draft client report HAM2008-022.
+Yates S.J.K and Lal A. 2012. EDM Height Traversing Levelling Survey Report Tarawa, Kiribati, April
+2012. Record 2014/17. Geoscience Australia.
+Yates S.J.K. & Lal A. 2014. EDM Height Traversing Levelling Survey Report: Tarawa, Kiribati, August
+2013. Record 2014/018. Geoscience Australia.
+Page | 35 Bonriki Inundation Vulnerability Assessment
+Bonriki, Tarawa, Kiribati
+
+--- PAGE 45 ---
+CONTACT DETAILS
+Secretariat of the Pacific Community
+SPC Headquarters SPC Suva Regional Office SPC Pohnpei Regional Office SPC Solomon Islands
+BP D5, Private Mail Bag, PO Box Q, Country Office
+98848 Noumea Cedex, Suva, Kolonia, Pohnpei, 96941 FM, PO Box 1468
+New Caledonia Fiji, Federated States of Micronesia Honiara, Solomon Islands
+Telephone: +687 26 20 00 Telephone: +679 337 0733 Telephone: +691 3207 523 Telephone: + 677 25543 /
+Fax: +687 26 38 18 Fax: +679 337 0021 Fax: +691 3202 725 +677 25574
+Fax: +677 25547
+Email: spc@spc.int
+Website: www.spc.int

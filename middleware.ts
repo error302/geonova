@@ -1,6 +1,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { rateLimit, getClientIdentifier } from '@/lib/security/rateLimit'
+import { env } from '@/lib/env'
+import { apiError } from '@/lib/api/response'
 
 const API_RATE_LIMIT = 60
 const API_RATE_WINDOW = 60000
@@ -28,7 +30,7 @@ export async function middleware(request: NextRequest) {
 
     if (!allowed) {
       return NextResponse.json(
-        { error: 'Too many requests', retryAfter: Math.ceil(API_RATE_WINDOW / 1000) },
+        apiError('Too many requests', { retryAfter: Math.ceil(API_RATE_WINDOW / 1000) }),
         { status: 429, headers: { 'X-RateLimit-Remaining': '0', 'Retry-After': String(Math.ceil(API_RATE_WINDOW / 1000)) } }
       )
     }
@@ -37,8 +39,8 @@ export async function middleware(request: NextRequest) {
   }
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
         getAll() { return request.cookies.getAll() },

@@ -9,9 +9,23 @@ export default function ProjectCard({ project, openLabel }: { project: any; open
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const surveyType = project.survey_type
-    ? project.survey_type.charAt(0).toUpperCase() + project.survey_type.slice(1)
-    : 'TOPO'
+  const getSurveyBadgeLabel = (type?: string): string => {
+    switch ((type || '').toLowerCase()) {
+      case 'road': return 'ROAD'
+      case 'boundary': return 'BOUNDARY'
+      case 'topographic': return 'TOPO'
+      case 'control': return 'CONTROL'
+      case 'hydrographic': return 'HYDRO'
+      case 'mining': return 'MINING'
+      case 'construction': return 'CONSTRUCTION'
+      case 'leveling': return 'LEVELING'
+      case 'drone': return 'DRONE'
+      case 'gnss': return 'GNSS'
+      default: return (type || 'TOPO').toUpperCase()
+    }
+  }
+
+  const surveyType = getSurveyBadgeLabel(project.survey_type)
 
   const pointCount = project.point_count ?? project._pointCount ?? 0
   const parcelCount = project.parcel_count ?? project._parcelCount ?? 0

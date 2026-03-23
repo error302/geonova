@@ -1,0 +1,1579 @@
+
+--- PAGE 1 ---
+LAWS OF KENYA
+THE SURVEY REGULATIONS
+NO. 168 OF 1994
+Revised and published by the National Council for Law Reporting
+with the authority of the Attorney-General as gazetted by the Government Printer
+www.kenyalaw.org
+
+--- PAGE 2 ---
+Kenya
+Survey Act
+The Survey Regulations
+Legal Notice 168 of 1994
+Legislation as at 25 April 2024
+By Kenya Law and Laws.Africa. Share widely and freely.
+www.kenyalaw.org | info@kenyalaw.org
+FRBR URI: /akn/ke/act/ln/1994/168/eng@2024-04-25
+There is no copyright on the legislative content of this document.
+This PDF copy is licensed under a Creative Commons Attribution NonCommercial ShareAlike 4.0 License (CC BY-NC-
+SA 4.0). This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format
+for noncommercial purposes only, and only so long as attribution is given to the creator. If you remix, adapt, or build
+upon the material, you must license the modified material under identical terms. CC BY-NC-SA includes the following
+elements:
+• BY: credit must be given to the creator.
+• NC: Only noncommercial uses of the work are permitted.
+• SA: Adaptations must be shared under the same terms.
+Share widely and freely.
+
+--- PAGE 3 ---
+The Survey Regulations (Legal Notice 168 of 1994)
+Contents
+Part I – PRELIMINARY ....................................................................................................................................................................................... 1
+1. Citation ......................................................................................................................................................................................................... 1
+2. Interpretation ............................................................................................................................................................................................. 1
+Part II – THE LAND SURVEYORS BOARD ................................................................................................................................................... 1
+3. Quorum of the Board ............................................................................................................................................................................. 1
+4. Place of meetings, and minutes ......................................................................................................................................................... 1
+5. Expenses of members ............................................................................................................................................................................ 2
+6. Register of Surveyors .............................................................................................................................................................................. 2
+Part III – THE STANDING COMMITTEE ON GEOGRAPHICAL NAMES ................................................................................................ 2
+7. Chairperson and quorum ....................................................................................................................................................................... 2
+8. Meetings ...................................................................................................................................................................................................... 2
+9. List of names to be sent to Cabinet Secretary ............................................................................................................................. 2
+10. Expenses of members .......................................................................................................................................................................... 2
+Part IV – EXAMINATIONS AND ISSUE OF LICENCES ............................................................................................................................. 3
+11. Holding of examinations .................................................................................................................................................................... 3
+12. Appointment of examiners ................................................................................................................................................................ 3
+13. Persons entitled to be examined .................................................................................................................................................... 3
+14. Exemptions ............................................................................................................................................................................................... 3
+15. Alternative qualifications .................................................................................................................................................................... 3
+16. Syllabus ..................................................................................................................................................................................................... 3
+17. Pass mark .................................................................................................................................................................................................. 4
+18. Conditions applicable ........................................................................................................................................................................... 4
+19. Fees ............................................................................................................................................................................................................. 4
+20. Conduct of examinations .................................................................................................................................................................... 4
+21. Certificate for trial survey .................................................................................................................................................................. 4
+Part V – REGULATIONS AFFECTING ALL SURVEYS MADE UNDER SECTION 22 OF THE ACT .................................................. 4
+22. Disputes ..................................................................................................................................................................................................... 4
+23. Units of measurement ......................................................................................................................................................................... 4
+24. Systems of co-ordinates and projections ..................................................................................................................................... 5
+25. Maintenance of measuring instruments ....................................................................................................................................... 5
+26. Presentation of surveys ....................................................................................................................................................................... 5
+27. Permissible errors of measurement ................................................................................................................................................ 6
+28. Checking of surveys .............................................................................................................................................................................. 6
+29. Information prior to survey ............................................................................................................................................................... 6
+
+--- PAGE 4 ---
+30. Prior approval by statutory authorities ......................................................................................................................................... 6
+31. Authority for entry upon land .......................................................................................................................................................... 6
+32. Refusal of entry ...................................................................................................................................................................................... 7
+33. Employment of approved assistants .............................................................................................................................................. 7
+34. Fees chargeable by the Director ..................................................................................................................................................... 8
+35. Fees chargeable by licensed surveyors ......................................................................................................................................... 8
+36. Application to have plan prepared from existing records ...................................................................................................... 8
+Part VI – SURVEY MARKS, BOUNDARY BEACONS AND BOUNDARIES ............................................................................................. 8
+37. Design and specification of survey marks .................................................................................................................................... 8
+38. Placement of survey marks ................................................................................................................................................................ 9
+39. Referencing of boundary beacons ................................................................................................................................................... 9
+40. Line beacons and river beacons ...................................................................................................................................................... 9
+41. Placing beacons on boundary line ............................................................................................................................................... 10
+42. Beacons placed from computed data .......................................................................................................................................... 10
+43. Boundaries adjoining trust land or forest areas ..................................................................................................................... 10
+44. When beacons cannot be placed .................................................................................................................................................. 10
+45. Damaged beacons cannot be repaired ....................................................................................................................................... 10
+46. Trigonometrical station to be repaired ....................................................................................................................................... 10
+47. Missing beacons ................................................................................................................................................................................... 11
+48. Re-establishment of missing beacons ......................................................................................................................................... 11
+49. Redundant beacons ............................................................................................................................................................................ 11
+50. Surveys and re-establishment of boundaries ........................................................................................................................... 11
+Part VII – SURVEYS PERFORMED BY TRIANGULATION, TRILATERATION, TRAVERSE AND AIR SURVEY ........................... 11
+51. Guiding principle ................................................................................................................................................................................. 11
+52. Geodetic and secondary triangulation ........................................................................................................................................ 11
+53. Lower order triangulation ................................................................................................................................................................ 11
+54. Tertiary and minor triangulation ................................................................................................................................................... 12
+55. Instruments used for triangulation and trilateration ............................................................................................................. 12
+56. Method of taking triangulation ..................................................................................................................................................... 12
+57. Fixing of beacons ................................................................................................................................................................................ 12
+58. Isolated surveys ................................................................................................................................................................................... 13
+59. Geodetic and secondary traverse .................................................................................................................................................. 13
+60. Lower order traverses ........................................................................................................................................................................ 13
+61. Angular measurement of traverses .............................................................................................................................................. 14
+62. Linear measurements of traverses ............................................................................................................................................... 14
+
+--- PAGE 5 ---
+63. Surveys of curvilinear boundaries ................................................................................................................................................ 14
+64. Road and railway reserves .............................................................................................................................................................. 14
+65. Swinging or hanging traverses ...................................................................................................................................................... 14
+66. Verification of points of departure and termination of traverses ...................................................................................... 15
+67. Verification of datum stations ........................................................................................................................................................ 15
+68. Air survey ............................................................................................................................................................................................... 15
+Part VIII – FIELD NOTES ................................................................................................................................................................................ 15
+69. Field notes to be on special forms .............................................................................................................................................. 15
+70. Recording of triangulation observations .................................................................................................................................... 15
+71. Recording of traverse observations .............................................................................................................................................. 15
+72. Topographical features ...................................................................................................................................................................... 15
+73. Method of entering field notes ...................................................................................................................................................... 16
+74. Erasures and corrections .................................................................................................................................................................. 16
+75. Nomenclature ....................................................................................................................................................................................... 16
+76. Cover and page index ....................................................................................................................................................................... 16
+77. Unorthodox methods ......................................................................................................................................................................... 16
+Part IX – COMPUTATIONS ............................................................................................................................................................................. 16
+78. Computations to be in special forms .......................................................................................................................................... 16
+79. Method of entering computations ................................................................................................................................................ 17
+80. Triangulation and trilateration ....................................................................................................................................................... 17
+81. Traverse computations ...................................................................................................................................................................... 17
+82. Independent checks to be made ................................................................................................................................................... 17
+83. Method of computing areas ............................................................................................................................................................ 17
+84. Degree of accuracy for computing areas ................................................................................................................................... 17
+85. Presentation of computation .......................................................................................................................................................... 18
+Part X – PLANS .................................................................................................................................................................................................. 18
+86. Plans to be drawn on special forms ............................................................................................................................................ 18
+87. Scales to be used ................................................................................................................................................................................ 18
+88. Plotting of curvilinear boundaries ................................................................................................................................................ 18
+89. Plotting by co-ordinates ................................................................................................................................................................... 19
+90. General rules for plotting ................................................................................................................................................................ 19
+91. Abutting boundaries ........................................................................................................................................................................... 19
+92. Co-ordinates and numerical data .................................................................................................................................................. 20
+93. Triangulation and trilateration charts ......................................................................................................................................... 20
+94. Colour and style of printing ........................................................................................................................................................... 20
+
+--- PAGE 6 ---
+95. Topographical features ...................................................................................................................................................................... 20
+96. Erasures and corrections .................................................................................................................................................................. 21
+97. Certificates .............................................................................................................................................................................................. 21
+98. Authentication by Director .............................................................................................................................................................. 21
+Part XI – DEED PLANS .................................................................................................................................................................................... 21
+99. Deed plans to be drawn on special forms ................................................................................................................................ 21
+100. General rules for deed plans ....................................................................................................................................................... 21
+101. Numerical data .................................................................................................................................................................................. 21
+102. Topographical features ................................................................................................................................................................... 21
+103. Abutting boundaries ........................................................................................................................................................................ 22
+104. Areas ...................................................................................................................................................................................................... 22
+105. Erasures and corrections ................................................................................................................................................................ 22
+106. Locality index number .................................................................................................................................................................... 22
+107. Name of surveyor .............................................................................................................................................................................. 22
+108. Authentification ................................................................................................................................................................................. 22
+109. Cancellation of deed plan ............................................................................................................................................................. 23
+Part XII – GOVERNMENT LAND SURVEYS ............................................................................................................................................... 23
+110. Coast foreshore reservation .......................................................................................................................................................... 23
+111. Tidal river reservations .................................................................................................................................................................. 23
+112. Lake reservations .............................................................................................................................................................................. 23
+113. Defining of reservation boundaries ........................................................................................................................................... 23
+114. Defining swamp boundaries ......................................................................................................................................................... 23
+Part XIII – MISCELLANEOUS ......................................................................................................................................................................... 24
+115. Written evidence for Board ........................................................................................................................................................... 24
+116. Public access to maps and plans ............................................................................................................................................... 24
+117. Government copyright ..................................................................................................................................................................... 24
+118. Repeal of regulations ...................................................................................................................................................................... 24
+FIRST SCHEDULE [r. 14] .................................................................................................................................................................................. 24
+SECOND SCHEDULE [r. 16] ............................................................................................................................................................................ 24
+THIRD SCHEDULE [rr. 13 & 14] ................................................................................................................................................................... 25
+FOURTH SCHEDULE [r. 30, L.N. 133/2020, r. 10] .................................................................................................................................. 27
+FIFTH SCHEDULE [r. 34] ................................................................................................................................................................................. 27
+SIXTH SCHEDULE [r. 34] ................................................................................................................................................................................. 29
+SEVENTH SCHEDULE [r. 34] .......................................................................................................................................................................... 30
+EIGHTH SCHEDULE [r. 35] .............................................................................................................................................................................. 30
+
+--- PAGE 7 ---
+NINTH SCHEDULE [r. 33(6)] ........................................................................................................................................................................... 36
+
+--- PAGE 8 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+SURVEY ACT
+THE SURVEY REGULATIONS
+LEGAL NOTICE 168 OF 1994
+Published in Kenya Gazette Vol. XCVI—No. 26 on 27 May 1994
+Commenced on 27 May 1994
+[Amended by Survey (Amendment) Regulations, 1999 (Legal Notice 96 of 1999) on 16 July 1999]
+[Amended by Survey (Amendment) Regulations, 2020 (Legal Notice 133 of 2020) on 24 July 2020]
+[Amended by Survey (Amendment) Regulations, 2020 (Legal Notice 223 of 2020) on 22 January 2021]
+[Revised by 24th Annual Supplement (Legal Notice 221 of 2023) on 31 December 2022]
+[Amended by Survey (Amendment) Regulations, 2024 (Legal Notice 29 of 2024) on 19 January 2024]
+[Amended by Survey (Amendment) Regulations, 2024 (Legal Notice 71 of 2024) on 25 April 2024]
+Part I – PRELIMINARY
+1. Citation
+These Regulations may be cited as the Survey Regulations.
+2. Interpretation
+In these Regulations, except where the context otherwise requires—
+"approved assistant" means any person other than a licensed surveyor who assists a licensed surveyor in
+the execution of field surveys, but does not include skilled and semi-skilled chainmen and labourers;
+"forest area" means any area of land declared under section 4 of the Forest Conservation and Managment
+Act (Cap. 385) to be a forest area;
+"survey" means any survey made under the Act.
+Part II – THE LAND SURVEYORS BOARD
+3. Quorum of the Board
+(1) The quorum for a meeting of the Board shall be one half of all the gazetted members, of whom the
+Chairperson, or deputy Chairperson, shall be one.
+(2) At every meeting of the Board each member shall have the right to one vote on any matter under
+discussion:
+Provided that in the event of the voting for and against being equal the Chairperson shall have a
+casting vote.
+4. Place of meetings, and minutes
+(1) The Board shall normally meet four times in a year in the Survey Office in Nairobi:
+Provided a special meeting of the Board may be called by the Chairperson or by at least one-half of
+the members of the Board.
+(2) The Secretary shall keep minutes of all meetings of the Board in a minute book kept for that
+purpose, which shall be preserved in the Survey Office when not in use.
+1
+
+--- PAGE 9 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(3) The Secretary shall notify every member of the Board of every meeting not less than fourteen days
+before the date fixed for the meeting.
+5. Expenses of members
+(1) The members of the Board and the secretary may claim travelling and subsistence expenses for
+attendance at meetings, in accordance with these Regulations and at the rates for the time being in
+force in respect of such allowances to Government officers.
+(2) All claims under paragraph (1) shall be made in such form as the Director may determine, and shall
+be addressed to the Secretary.
+6. Register of Surveyors
+There shall be a register of all surveyors registered under the Act which shall be maintained in an
+electronic format in the Survey Office, and the register shall contain the following particulars of the
+surveyors so registered—
+(a) name and permanent address;
+(b) a short statement of all professional examinations passed, together with relevant numbers of
+certificates of examination, diplomas, degrees, licences and titles;
+(c) the date of passing examinations of the Board; and
+(d) a record of any offence committed by the surveyor under the Act, with, in every case, the Board’s
+order and the number of any notification in the Gazette in connection therewith.
+[L.N. 133/2020, r. 2.]
+Part III – THE STANDING COMMITTEE ON GEOGRAPHICAL NAMES
+7. Chairperson and quorum
+(1) The Chairperson shall preside at meetings, but if he is unable to attend any meeting he may
+nominate any other member of the committee or an officer of the Survey Department to be
+Chairperson at such a meeting.
+(2) The quorum for a meeting of the Committee shall be three members.
+8. Meetings
+(1) The secretary shall give at least fifteen days’ notice of all meetings.
+(2) The frequency of meetings shall not be fixed, but shall be determined by the amount of business to
+be disposed of.
+9. List of names to be sent to Cabinet Secretary
+The Committee shall, from time to time, send to the Cabinet Secretary a list of names which are
+recommended to him for approval.
+10. Expenses of members
+(1) Members may claim travelling and subsistence expenses for attendance at meetings in accordance
+with these Regulations and at the rates for the time being in force in respect of such allowances to
+Government officers.
+2
+
+--- PAGE 10 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(2) All such claims shall be in such form as the Director may determine, and shall be addressed to the
+Secretary.
+Part IV – EXAMINATIONS AND ISSUE OF LICENCES
+11. Holding of examinations
+Examination of candidates for licences will be held each year at such time and such place as the Board may
+determine, which shall be notified in advance in the Kenya Gazette.
+12. Appointment of examiners
+(1) The Board shall appoint a moderator and at least two of the examiners.
+(2) All papers shall be marked independently by at least two of the examiners.
+(3) The moderator shall report to the Board full particulars of the marks given to each candidate in
+each subject.
+(4) A report under paragraph (3) shall be in writing, signed by each examiner.
+(5) The results of the examinations shall be determined by the Board, and shall be conveyed in writing
+by the Secretary to the candidates within a period of six months from the date of the sitting
+presentation.
+(6) Examiners may claim certain travelling and subsistence expenses incurred in their duties, and all
+such claims, shall be in such form as the Director may determine, addressed to the Secretary.
+(7) The Secretary shall inform examiners of the scale of payment for the time being approved by the
+Board in respect of any claim under paragraph (6).
+13. Persons entitled to be examined
+No person shall be entitled to be examined for a licence unless he is eligible in accordance with section 11
+of the Act, and produces the declaration or other evidence mentioned therein, which declaration shall be
+in Form A in the Third Schedule.
+14. Exemptions
+(1) The qualifications set out in the First Schedule shall be recognised by the Board and shall entitle
+candidates who apply for exemption to be granted exemption from examination in the respective
+subjects set out in that Schedule.
+(2) Every applicant for exemption shall forward declarations in Forms A and B in the Third Schedule.
+15. Alternative qualifications
+The Board may accept the examinations for the East African Land Survey Certificate as set out in the
+East African Common Services Organization, Legal Notice No. 40, published on 30th October, 1967, and
+any subsequent amendments thereto in lieu of setting any similar examinations, with the exception of
+a Trial Survey, a written paper on Kenya Land Law and production of evidence of full membership of the
+Institution of Surveyors of Kenya, Chapter of Land Surveyors.
+16. Syllabus
+The syllabus for the Trial Survey and Law Examinations for candidates for the Kenya Land Surveyors
+Licence shall be as set out in the Second Schedule.
+3
+
+--- PAGE 11 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+17. Pass mark
+(1) The pass-mark in the Law Examination shall be 50 percent.
+(2) Marks will not be allocated for a Trial Survey, but a candidate shall be adjudged as having either
+passed or failed.
+18. Conditions applicable
+(1) A candidate must have had at least two years’ approved training and experience in land surveying
+before taking the examination.
+(2) The trial survey shall be so designed that a competent candidate can complete it in ten weeks.
+(3) Candidates shall sit the Law Examination at a time to be decided by the Board.
+19. Fees
+Fees for the examination shall be as follows—
+(a) on application for consideration in accordance with regulation 13, KSh. 500 for a first application
+and KSh. 200 for every subsequent application;
+(b) on application to sit the Kenya Land Surveyors Board Law Examination KSh. 500 for the first
+attempt and KSh. 200 for every subsequent attempt;
+(c) on application to sit the full examination for licence, KSh. 1,000 for the first attempt and KSh. 200
+for every subsequent attempt.
+20. Conduct of examinations
+(1) The Board shall appoint one or more invigilators to be in attendance for any written examination.
+(2) The moderator shall submit for the approval of the Board the particulars of the Trial Survey and
+Law Examinations.
+21. Certificate for trial survey
+A certificate in Form C in the Third Schedule shall be furnished by the candidate when submitting the
+results of a Trial Survey.
+Part V – REGULATIONS AFFECTING ALL
+SURVEYS MADE UNDER SECTION 22 OF THE ACT
+22. Disputes
+(1) If a dispute arises between a licensed surveyor and the Director over the application of the
+regulations, either party may refer the matter to the Board.
+(2) The Board shall hear and determine any dispute under paragraph (1) and its decision shall be final.
+23. Units of measurement
+(1) All distances shown on plans shall be in international metres and decimals of a metre.
+(2) All angular measurements shall be in degrees, minutes and seconds of arc.
+(3) For purposes of conversion from imperial feet to international metres, the relationship to be used
+shall be one international metre = 3.280 840 feet, or one foot = 0.3048 metres.
+4
+
+--- PAGE 12 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+24. Systems of co-ordinates and projections
+(1) The figure of the earth and projection to be used in the computation of co-ordinates of any survey
+shall be one of the following, as the Director may specify, that is, either—
+(a) the Universal Transverse Mercator Projection zones 36 or 37 using the Clarke 1880 (modified)
+figure having elements; semi-diameter-major 6,378.249 international metres ellipticity
+1/293.465; or
+(b) the Cassini-Soldner Projection calculated from origins at the intersections of odd-
+numbered-degree meridians with the equator and extending over successive zones of two
+degrees of longitude, using the Clarke 1858 figure having elements—
+semi-diameter-major (6,378,351 metres) 20,926,348 imperial feet
+ellipticity ........................................... 1/294.26.
+(c) any other figure as the Director may from time to time, deem necessary.
+(2) All co-ordinates required by regulations 85, 92 and 93 of these Regulations shall be listed in the
+same units as the datum points.
+[L.N. 133/2020, r. 3.]
+25. Maintenance of measuring instruments
+(1) The Director may issue specifications for instruments to be used for surveys and guidelines on
+calibration of such instruments.
+(2) Every surveyor shall record in their field notes the manufacturer's name and number of the model of
+the equipment used for each survey.
+(3) The Director may require a licensed surveyor to submit any measuring equipment for inspection.
+(4) The Director may on receipt of measuring equipment under paragraph (3), refuse to authenticate
+any survey, which has been made with inappropriate or defective measuring equipment.
+(5) The Director shall inspect and authenticate a survey within twenty-one days of the receipt of
+measuring equipment under paragraph (4).
+[L.N. 133/2020, r. 4, L.N. 233/2020. r. 2.]
+26. Presentation of surveys
+(1) Every licensed surveyor shall be personally responsible for the accuracy, fidelity, and completeness
+of every survey presented by him for the approval of the Director.
+(2) It shall be the duty of every surveyor making any survey under these Regulations to record all the
+relevant information that may aid in securing the accuracy and completeness of every such survey.
+(3) Every surveyor shall perform sufficient work to enable him to apply a thorough check to every part
+of his survey.
+(4) Every surveyor shall present his plan, computations and connected documents of every survey in
+such a manner as the Director, after consultation with the Board, may require, and if any surveyor
+forwards to the Director any plan, computation or connected document which does not conform
+substantially with the appropriate requirements, the Director may, at his discretion, return the
+plan, computations and connected documents to the surveyor and may refuse to authenticate
+any such plan, computation or connected document until it has been made to confirm with the
+appropriate requirements.
+(5) All surveys returned to a surveyor shall be re-submitted to the Director without undue delay.
+5
+
+--- PAGE 13 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(6) The director of Surveys shall not release the final documents for registration of title without express
+authority from the licensed surveyor who carried out the survey.
+27. Permissible errors of measurement
+All measurements must be made in accordance with regulations 56, 57 and 60, and the Director may
+refuse to authenticate any survey which contains errors in excess of those that can be expected from
+measurements properly carried out in the manner specified.
+28. Checking of surveys
+The Director may at any time depute any surveyor to check in the field any survey made under the Act by
+any other surveyor, and such check may include the verification of any information recorded in connection
+with such survey and may also include the inspection of any survey mark established under the Act or any
+regulations made thereunder.
+29. Information prior to survey
+(1) Before carrying out any survey, every licensed surveyor shall be provided, or shall provide himself,
+with all available information in respect of any previous survey of the plot of land to be surveyed
+and of any adjoining plot.
+(2) Applications to the Director for this information shall be in writing, and shall state whether the
+land is freehold or leasehold, and shall, whenever applicable, make reference to the approval for
+subdivision, or other transaction.
+(3) The Director shall make available to any licensed surveyor all technical information in his
+possession. Where the licensed surveyor extracts the information himself by personal search no
+fee will be payable, but where the information is extracted on his behalf by the Director, the fee
+prescribed in the Seventh Schedule shall be paid.
+30. Prior approval by statutory authorities
+(1) Before submitting any survey to the Director, a licensed surveyor shall ensure that approval has
+been obtained for a subdivision or other transaction of any plot of land in any case where such
+approval is required by any Act and that the survey submitted conforms with such approval.
+(2) The Director may from time to time give guidance on the competent Authority responsible for
+giving approval for the subdivision of land or other transaction of any plot of land under relevant
+legislation.
+[L.N. 133/2020, r. 5.]
+31. Authority for entry upon land
+(1) In pursuance of section 23 of the Act, the Director shall furnish to every surveyor an official letter
+of authority in Form D in the Third Schedule to these Regulations and every such letter of authority
+shall bear the official seal.
+(2) Every surveyor shall present his letter of authority to any owner or occupier of land who demands
+proof that such surveyor is duly authorized to enter upon his land.
+(3) Every surveyor so authorized shall, whenever practicable, give reasonable notice to the owner or
+occupier of the land of his intention to enter thereon.
+6
+
+--- PAGE 14 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(4) Whenever any tree or crops are cut or damaged by any surveyor in the exercise of any of the powers
+conferred by section 23 of the Act, compensation shall be calculated and paid in accordance with
+the following—
+(a) the surveyor and the owner or occupier of the land shall agree upon a fair compensation
+for the damage done by the surveyor, and a statement of the damage done and of the
+compensation which is agreed upon shall be duly signed by both the owner or occupier of the
+land and the surveyor; or
+(b) where the surveyor and the owner or occupier of the land are unable to agree upon the
+amount of compensation payable, the surveyor shall apply to an officer of the Forest
+Department or of the Agricultural Department to inspect the damage done to the tree or
+crops, as the case may be, and to assess the amount of compensation which shall be paid;
+if the owner or occupier of the land thereupon agrees with the amount of compensation
+proposed, then both the owner or occupier and the said officer of the Forest Department or
+the Agricultural Department, as the case may be, shall sign a statement of the amount of
+compensation duly agreed upon; or
+(c) where the owner or occupier of the land and the officer of the Forest Department or of
+the Agricultural Department, as the case may be, are unable to agree upon the amount of
+compensation payable, a statement to this effect shall be forwarded to the Director, and
+the Director shall apply to the Attorney-General for the case in dispute to be referred to
+arbitration under the Arbitration Act (Cap. 49).
+(5) When the amount of compensation has been determined in accordance with paragraph (4) of
+this regulation, the agreed amount shall be paid by the Government surveyor, or by the licensed
+surveyor himself when he has caused the damage in question to the owner or occupier of the land:
+Provided that compensation shall not be paid for damage to trees or crops within any reservation
+for a trigonometrical station or fundamental benchmark which is made in accordance with section
+25 of the Act.
+32. Refusal of entry
+If any person refuses to allow a surveyor or person authorized in accordance with section 23 of entry, the
+act to enter upon any land, the surveyor or authorized person shall in no circumstances use force to gain
+entry upon the land, but the surveyor or authorised person shall immediately report all relevant details of
+the obstruction to the Director.
+33. Employment of approved assistants
+(1) No licensed surveyor shall employ an approved assistant without the written approval of the Board:
+Provided that the Director may give provisional approval pending decision by the Board.
+(2) When such approval is given it shall be for a period as indicated by the licensed surveyor in the first
+instance and may be cancelled or renewed at the discretion of the Board.
+(3) Such approval shall normally be limited to such number of assistants as the Board may determine in
+each case.
+(4) The work done by any such approved assistant shall be under the director personal control of the
+licensed surveyor, who shall himself carry out a sufficient check to ensure that the work done by
+such assistant is correct. The licensed surveyor shall accept full personal responsibility for all work
+performed by the approved assistant.
+(5) The approved assistant shall certify all field notes and computations made by him, and those field
+notes and computations shall be signed by the approved assistant and countersigned by the licensed
+surveyor.
+7
+
+--- PAGE 15 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(6) The surveyor shall supply a certificate which shall be drawn up in the form in the Ninth Schedule to
+these Regulations.
+(7) If the Director finds that an approved assistant has performed any work which has not been
+supervised and checked by the licensed surveyor he may suspend approval for the employment of
+the approved assistant, and the case shall be referred to the Board whose decision on the matter
+shall be final.
+34. Fees chargeable by the Director
+(1) The Director shall charge fees for all surveys carried out by the Survey Department in accordance
+with the charges prescribed in the Fifth Schedule to these Regulations.
+(2) The Director shall charge fees in accordance with the charges prescribed in the Fifth Schedule
+to these Regulations for the authentication under section 32 of the Act of a plan submitted by a
+licensed surveyor.
+(3) The Director shall charge fees in respect of all documents issued or services rendered by the Survey
+Department in accordance with the charges prescribed in the Fifth Schedule to these Regulations.
+[L.N. 29/2024, r. 2, L.N. 71/2024, r. 2.]
+35. Fees chargeable by licensed surveyors
+(1) The fees prescribed in the Eighth Schedule to these Regulations shall be charged by a licensed
+surveyor in respect of work done by him.
+(2) Any licensed surveyor who charges or attempts to charge or offers to do work at, or holds himself
+out as being prepared to do work at, a survey fee other than that which is prescribed in the scale
+of fees in the Eighth Schedule to these Regulations shall be guilty of an offence and liable to a fine
+not exceeding five thousand shillings or to imprisonment for a term not exceeding five months, or
+to both such fine and such imprisonment; and a licensed surveyor who is a partner in a firm which,
+or who is associated with a person who charges, or attempts to charge or offers to do work at, or
+holds himself out as being prepared to do work at a survey fee other than which is prescribed in the
+scale of fees in the Eighth Schedule to these Regulations shall be guilty of an offence punishable
+as aforesaid, unless he proves that he took all reasonable steps to prevent any such breach of this
+regulation.
+36. Application to have plan prepared from existing records
+Every person who applies to the Director to have a plan prepared from existing survey records in respect of
+his land shall provide a beacon certificate from a licensed surveyor to the effect that the beacons exist or
+have been re-established in accordance with the Survey Act.
+Part VI – SURVEY MARKS, BOUNDARY BEACONS AND BOUNDARIES
+37. Design and specification of survey marks
+(1) The design of survey marks shall be as specified by the Director, except in special circumstances
+which must be set out in the report on the survey.
+(2) When an original grant is being re-surveyed or subdivided, any beacon which does not constitute
+a permanent and fine mark shall be replaced by a new beacon or be referenced to a nearby witness
+mark.
+(3) Every new triangulation or trilateration station other than a purely auxiliary station shall be
+permanently marked.
+8
+
+--- PAGE 16 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(4) In third order traverses as defined in regulation 60 of these Regulations, all traverse stations shall
+whenever possible be permanent points.
+(5) Where conditions do not permit the establishment of permanent traverse stations, the surveyor
+shall provide an alternative form of referencing, and the reason shall be stated in the surveyor’s
+report.
+38. Placement of survey marks
+(1) Boundary beacons shall be of such type as the Director may require, and shall normally be
+surmounted by a cairn of stones or a mound of earth.
+(2) The primary consideration in placing all survey beacons is their durability, having regard to the
+fineness of the mark required for the purpose.
+39. Referencing of boundary beacons
+(1) All boundary beacons for which no adequate reference mark already exists, the co-ordinates of
+which are required by regulation 92 of these Regulations to be tabulated on a plan, shall, except
+as provided below, be referenced by the establishment, with adequate check, of a permanent
+underground mark in the vicinity of the beacon and in a position where it is least likely to
+be disturbed; such underground mark may be a permanent control station established under
+regulation 37 of these Regulations:
+Provided that two existing nearby beacons may be used instead of one underground mark.
+(2) The guiding principle in the placing of reference marks is the necessity to provide a ready and
+accurate means of re-establishing the beacons of the property as well as to provide the basis for any
+future survey, and the surveyor shall ensure that this requirement is met in a reasonable manner.
+(3) With a view to facilitating the location of isolated boundary beacons, such beacons shall, in
+addition, be referenced to any nearby telephone pole, suitable tree or other prominent physical
+feature.
+(4) In order to maintain a record of reference marks, the surveyor shall verify the position of
+any previously placed reference marks at beacons involved in his survey, and shall record the
+appropriate measurements in the field notes.
+40. Line beacons and river beacons
+(1) Where a rectilinear boundary intersects a curvilinear boundary, and a beacon cannot be placed at
+the intersection, a beacon shall be placed on the rectilinear boundary as near as is practicable to the
+intersection. Such beacon shall be known as a line beacon.
+(2) Where the rectilinear boundary continues on both sides of the curvilinear boundary, a line beacon
+shall be placed on both sections of the rectilinear boundary.
+(3) Where the curvilinear boundary falls within a river or swamp, the line beacon shall be placed above
+flood level and shall be known as a river beacon.
+(4) Distances from line or river beacons shall be measured to the precision required by regulation 88(3).
+(5) All subdivisions of a property (including any remainder) which are situated across a road or railway
+reserve shall be fully beaconed as self-contained units.
+(6) When a curvilinear feature is adopted as a sub divisional boundary the several subdivisions and any
+remainder shall be fully beaconed as self-contained units.
+9
+
+--- PAGE 17 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+41. Placing beacons on boundary line
+(1) Where a beacon is placed on a boundary line, it shall be proved to be on line by establishing either
+directly or indirectly its relationship with the terminal beacons of the line.
+(2) Where no rectilinear boundary of a subdivision coincides in whole or in part with any perimeter
+boundary of the land being subdivided, the relationship of the subdivisional beacons to at least two
+of the perimeter beacons shall be directly or indirectly established.
+42. Beacons placed from computed data
+Where a beacon is placed from computed data, its position shall be proved by an independent field check
+and calculation.
+43. Boundaries adjoining trust land or forest areas
+(1) Where any area of land which shares a common boundary with an area of trust land is surveyed,
+that common boundary shall be defined by intervisible beacons.
+(2) Where any land adjoining any boundary of a forest area is surveyed, the common boundary shall be
+surveyed and defined by beacons placed thereon at reasonable intervals, so that the boundary can
+be easily identified.
+(3) Where the common boundary surveyed as aforesaid has been cut through forest, beacons need not
+be intervisible, but they shall be intervisible when the boundary passes through glades or scattered
+bush.
+44. When beacons cannot be placed
+(1) When the corner of a plot of land coincides with the corner of a permanent building, such corner
+shall be surveyed and it may be adopted as the beacon.
+(2) Where the corner of a plot of land does not coincide with the corner of a permanent building but is
+in such close proximity to it that a standard boundary beacon cannot be established, such corner of
+the building shall be surveyed and its position relative to the plot corner established.
+(3) When the corner of a plot of land falls within inaccessible ground, where a beacon cannot be placed,
+the position of such corner shall be permanently referenced by at least one indicatory beacon
+placed on a boundary line as near as possible to the corner.
+(4) In all the above situations details shall be indicated on the plan.
+(5) When the corner of a plot of land is occupied by a permanent and easily recognized mark, such
+as a substantial fence-post and fencing or a tree, such corner shall be referenced by at least one
+permanent underground mark.
+45. Damaged beacons cannot be repaired
+Where an old beacon of the plot of land under survey is found to be damaged, the surveyor shall repair or
+renew the beacon, and shall make a record of the repairs in his field notes.
+46. Trigonometrical station to be repaired
+(1) Every surveyor engaged on Government work who discovers any trigonometrical station to be
+damaged and in need of repair shall carry out such repair as may be necessary.
+(2) A licensed surveyor not engaged on Government work is not required to repair any damaged
+trigonometrical station, but he shall report in writing to the Director the name, number and
+position of such station and the nature of the damage which he has observed.
+10
+
+--- PAGE 18 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+47. Missing beacons
+Missing beacons shall be noted in the surveyor’s report (regulation 85(a) refresh), and in order to
+demonstrate that he has searched in the right place the surveyor shall furnish such measurements and
+observations as may be needed.
+48. Re-establishment of missing beacons
+(1) If a surveyor is required to re-establish a missing beacon he shall submit his field notes,
+computations, and report, to the Director.
+(2) Normally such survey shall be carried out in conformity with the provisions of these Regulations
+covering the determination of new beacons, having regard to all other evidence, but in special cases
+such as within the areas of the compass surveys in the Coast Province, the Director may authorize
+methods and make alternative requirements.
+49. Redundant beacons
+Where the existence of a visible redundant beacon is likely to lead to confusion, it shall be removed or
+replaced by an underground witness mark.
+50. Surveys and re-establishment of boundaries
+(1) In every survey of land, where the position of an existing beacon is found to differ materially from
+that indicated by the relevant previous survey, the surveyor shall exercise the greatest care—
+(a) in establishing that the discrepancy actually does exist; and
+(b) in collecting all evidence which may have a bearing on the eventual action to be taken.
+(2) A careful search shall be made in the position indicated by the previous survey to ascertain whether
+or not any evidence of an old beacon or its reference marks still exists, and the position of any
+buildings or other development shall be recorded.
+(3) Where the situation allows, the surveyor, before taking further action, shall provide the Director
+with a full report, and shall request instructions.
+Part VII – SURVEYS PERFORMED BY TRIANGULATION,
+TRILATERATION, TRAVERSE AND AIR SURVEY
+51. Guiding principle
+All licensed surveyors shall assist, as far as is consonant with efficient and economical survey, in the
+establishment and increase of permanent control marks of all types throughout Kenya.
+Triangulation and Trilateration
+52. Geodetic and secondary triangulation
+All geodetic and secondary triangulation shall be carried out under the control of the Director, and shall
+normally be performed by Government surveyors.
+53. Lower order triangulation
+(1) All new triangulation and trilateration of lower order than geodetic or secondary required to
+provide general control for cadastral surveys shall be brought into harmony with existing control by
+methods conforming with current survey practice.
+11
+
+--- PAGE 19 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(2) When issuing survey data for such work to a licensed surveyor, the Director may recommend either
+a particular sequence in the computation of new work or any special computations which the
+circumstances may require, and it shall be the duty of a licensed surveyor so informed not to depart
+from the Director’s recommendation without reasonable cause.
+54. Tertiary and minor triangulation
+For the purpose of regulations 55 and 56, tertiary triangulation means triangulation established to an
+accuracy which makes it suitable for use as a basis of further triangulation; minor triangulation means
+triangulation established to a lower accuracy and suitable only as a basis for fixing local traverses and
+beacons.
+55. Instruments used for triangulation and trilateration
+(1) A micrometer theodolite of an approved pattern reading directly to one second of arc, or better,
+shall be used for geodetic, secondary, or tertiary triangulation.
+(2) A micrometer theodolite of an approved pattern reading directly to twenty seconds of arc or better,
+shall be used for minor triangulation.
+(3) Electronic distance measuring equipment of an approved pattern shall be used for trilateration
+distance measurement.
+56. Method of taking triangulation
+(1) The minimum requirement for tertiary and minor triangulation shall be two arcs observed on
+different zeros:
+Provided that two rounds observed in different zeros may be sufficient for observations to points
+situated less than two kilometres distant.
+(2) An arc of angular observations for triangulation shall consist of two rounds observed in opposite
+directions on the same zero, one round being on face left and the other on face right.
+(3) For each arc a suitable reference stating shall be selected and both rounds of the arc shall be closed
+on to it, and the misclosure of each round shall be appropriate to the class of theodolite used.
+(4) The difference between measurements of any angle on different arcs shall be appropriate to the
+class of theodolite used.
+(5) Where electronic distance measuring equipment is used, sufficient observations shall be taken to
+eliminate any ambiguities, and achieve the accuracy required by regulation 27.
+57. Fixing of beacons
+(1) Triangulation, trilateration, or a combination of these techniques for determining the position of
+beacons shall be carried out in accordance with the procedure laid down in regulations 53 to 56
+of these Regulations and the method of computation shall conform with current standard survey
+practice.
+(2) Beacons may also be fixed by—
+(a) intersection, provided at least three suitable rays are observed on to the point to be fixed;
+(b) re-section, provided at least four points in favourable positions for such fixing are observed;
+(c) any other method which is capable of fixing a point with no less accuracy than that of the
+methods of intersection and re-section:
+Provided that no point fixed by any of the methods specified in subparagraphs (a), (b) and (c) of this
+paragraph shall be used to form the basis of further triangulation.
+12
+
+--- PAGE 20 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+58. Isolated surveys
+In areas where no triangulation exists, the datum shall consist of an astronomically determined position
+and azimuth, but in special circumstances the Director, may give written approval for the adoption of local
+origin and bearings based on a magnetic orientation.
+(a) Such isolated surveys shall, wherever possible, be made by triangulation, and a base-line shall be
+measured to provide the length of the first side.
+(b) Generally, the base-line shall be in length not less than one fourth of the greatest distance across
+the area to be surveyed.
+(c) When a measuring band is used, such base-line shall be measured at least twice, and in two or
+more sections not necessarily in one straight line. The several sections shall be compared with one
+another through subsidiary triangles.
+(d) If, after all appropriate corrections have been made, the difference between any two measurements
+exceeds one part in 12,000 of the measured distance, the base shall again be measured until the
+resultant difference between any two measurements does not exceed this limit.
+(e) When electronic distance measuring equipment is used, the measurements shall conform with the
+requirements of regulation 56(5).
+Traverse Surveys
+59. Geodetic and secondary traverse
+All geodetic and secondary traverses shall be carried out under the control of the Director and shall
+normally be performed by Government surveyors.
+60. Lower order traverses
+(1) (a) All main control traverses in built-up areas shall be observed to third order standard.
+(b) All such lines shall be double-chained, and field operations shall be appropriate to a standard
+of accuracy of not less than 1:20,000.
+(2) (a) All other control traverses shall be observed to fourth order standard.
+(b) Field operations for such surveys shall be appropriate to a standard of accuracy of 1:10,000,
+but computational misclosures shall be allowed to the same degree of accuracy as the datum
+supplied by the Director.
+(c) A surveyor shall not use a loop traverse closing on his starting point if it is practicable to
+traverse between two previously fixed stations.
+(d) When a surveyor is unable to close his work within the limits prescribed by the Director,
+the Director may at his discretion authorize or instruct the surveyor to accept a lower order
+of misclosure, otherwise he shall close his new work by a loop traverse, orientation being
+confirmed in a satisfactory manner.
+(3) (a) The survey of curvilinear boundaries such as roads, railways, rivers, high-water marks, etc.,
+shall be made by subsidiary traverse or by air-survey methods:
+Provided that this regulation shall not preclude any more accurate method.
+(b) Such surveys of curvilinear boundaries shall be carried out to a standard of accuracy
+appropriate to the plotting scale of the plan of the survey.
+(4) Where traverses are extremely short, a reasonable misclosure shall be allowed irrespective of the
+minimum requirements under these Regulations.
+13
+
+--- PAGE 21 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+61. Angular measurement of traverses
+(1) A theodolite permitted by regulation 55(2) shall be used for all traverses other than subsidiary
+traverses.
+(2) Angular measurements for subsidiary traverses may be made either with a theodolite or a compass
+of approved pattern, subject to the necessity to achieve the standard of accuracy required by
+regulation 60 (3)(b) of these Regulations. If a compass is used, both forward and back observations
+must be observed at each station.
+(3) At every traverse station in other than subsidiary traverses, not less than two rounds on different
+faces and different zeros shall be observed. It is not necessary to close the rounds on to a reference
+station.
+(4) The first round at each station shall be set, when possible to the general orientation which is to be
+used throughout the survey.
+62. Linear measurements of traverses
+(1) All linear measurements of third and fourth order traverses shall be measured using equipment and
+methods appropriate to the standards of accuracy specified in regulation 60 of these Regulations.
+(2) Slopes shall be determined by a theodolite, with a degree of precision appropriate to the standards
+specified in regulation 60 of these Regulations, and where the slope is in excess of 10° the
+theodolite shall be read on both faces.
+(3) All measurements shall be reduced to the horizontal at mean sea level and corrected for
+temperature and sag.
+63. Surveys of curvilinear boundaries
+(1) In survey of curvilinear boundaries by the tacheometric method, distances determined by staff
+readings shall normally not exceed 200 metres and all three stadia readings on the staff shall be
+recorded.
+(2) Offsets substantially exceeding 75 metres in surveys of plots over 10 hectares in area, and exceeding
+50 metres in surveys of smaller plots, shall be set out instrumentally and the method recorded in
+the field notes.
+(3) If a surveyor wishes to adopt an existing survey of a curvilinear boundary for a sub-divisional
+survey, he shall first obtain the consent of the Director.
+64. Road and railway reserves
+(1) A road or railway reserve boundary shall be taken as a line parallel to the centre line of the road or
+railway at such distance from it as may be specified.
+(2) When an area fronts on to a railway reserve, and the approved scheme of subdivision or grant
+demands that the boundary between the property and the railway reserve be demarcated by straight
+lines, this boundary shall be defined by one or more straight lines, not exceeding 30 metres each in
+length, beacons being placed at the specified distance from the centre line:
+Provided that the Director may relax this requirement where he considers that such relaxation will
+not materially affect the definition of the reserve.
+65. Swinging or hanging traverses
+Swinging or hanging traverses unsupported by independent checks shall not be used.
+14
+
+--- PAGE 22 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+66. Verification of points of departure and termination of traverses
+Where the means exist, every point of departure of a new traverse and every terminating point shall be
+identified and verified by observations and measurements, and these observations and measurements
+shall be recorded in the field notes.
+67. Verification of datum stations
+Where a traverse station is converted for use as a boundary beacon, or where a previously co-ordinated
+traverse station is used to place a boundary beacon, the surveyor shall verify the station by observations
+and measurements, and shall record them in his field notes.
+Air Survey
+68. Air survey
+Air survey methods may be employed in special cases with the prior written approval of the Director.
+Part VIII – FIELD NOTES
+69. Field notes to be on special forms
+(1) The Director may specify the forms and formats for making field notes.
+(2) Licensed surveyors shall pay to the Director the cost price of any blank forms supplied to them by
+the Director.
+[L.N. 133/2020, r. 6.]
+70. Recording of triangulation observations
+(1) At each triangulation station every surveyor shall, when taking observations, record in his field
+notes the date, the time, the weather conditions and the degree of visibility.
+(2) When it is necessary, for any reason, for a surveyor to divide his observations, at any station into
+two sets, the second set shall in corporate at least two stations which have been observed in the
+first set.
+71. Recording of traverse observations
+(1) All traverse observations and measurements shall be recorded in the field notes, in the sequence in
+which they are observed or measured.
+(2) A full description of every beacon and other mark used in the course of survey, whether placed,
+found and used, or adopted, shall be recorded in the field notes.
+Topographical Features
+72. Topographical features
+(1) Sketched topographical features shall be recorded where possible, and with special care in the
+vicinity of a beacon to facilitate its location.
+(2) All developments on any plot, such as buildings, wells and boreholes, and any other development,
+such as pipelines which in the surveyor’s opinion may involve a question of easement, right-of-way
+or any prescriptive rights, shall be surveyed.
+15
+
+--- PAGE 23 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+73. Method of entering field notes
+(1) All observations and measurements made in the field shall be recorded clearly and legibly in hard
+pencil, and shall be in such manner as the Director may require.
+(2) All entries in field notes, which are not made in the field shall be written in blue or blue-black ink.
+(3) All entries in field notes shall be indexed and referenced in such a way that any competent person
+may be able to prepare a true plan therefrom, and they shall be in such form that they have only one
+reasonable and correct interpretation.
+74. Erasures and corrections
+(1) In no circumstances shall any erasure be made in field notes.
+(2) Corrections shall be made by drawing a thin line through the erroneous entry, so as to leave the
+original entry still legible; the correct entry shall be written outside the erroneous entry and not
+across it.
+(3) Corrections to field notes shall be made in the field, and shall be a true record of actual
+measurements or re-observation, and shall be initialed by the surveyor.
+75. Nomenclature
+(1) The letters, names, or numerals, by which any beacon or survey mark is identified in field notes
+shall be in plain roman or italic script.
+(2) In choosing suitable descriptions, surveyors shall take care to avoid nomenclature which is likely to
+lead to confusion, and the letters, I, O, S, and Z, shall not be used.
+76. Cover and page index
+(1) The cover page of field notes shall be completed with such information as the Director may require.
+(2) This information shall include the standard temperature and tension for the measuring band used
+in the survey and, where measurements have been made in catenary, the weight per 100 feet (or
+other standard length) of the measuring band.
+(3) The pages of field notes shall be numbered, and an index in alphabetical and numerical order of all
+observations and measurements in the field notes shall be given on the reverse of the cover page.
+77. Unorthodox methods
+When any surveyor is compelled to used unorthodox methods of survey owing to obstructions or
+difficulties in the field, he shall give explanatory notes and, where necessary, diagrams in his field notes, to
+explain clearly the method which he has used and recorded.
+Part IX – COMPUTATIONS
+78. Computations to be in special forms
+(1) The Director may specify the forms and formats for making computations.
+(2) Licensed surveyors shall pay to the Director the cost price of any blank forms supplied to them by
+the Director.
+[L.N. 133/2020, r. 7.]
+16
+
+--- PAGE 24 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+79. Method of entering computations
+Computations shall be clearly and legibly set out in ink, and the entry of numbers or words to indicate
+checks on the computations shall be made in pencil or in a different coloured ink; provided that red
+ink shall be reserved for the use of the Director. Where computer facilities are used, the print-out must
+conform to the requirements of the Director of Surveys.
+80. Triangulation and trilateration
+Surveys carried out by triangulation and trilateration shall normally be set out and computed by the
+Direction Method, or in conformity with any other current standard survey method.
+81. Traverse computations
+(1) In surveys carried out by traverse methods, each separate traverse shall normally be set out in
+suitable form so as to demonstrate the initial datum bearing or bearings, the bearing misclosure
+and the consequent adjustment of bearing.
+(2) The linear error of closure, its distribution through the traverse, and the final adjusted values of all
+traverse points, shall be demonstrated in conformity with current standard survey practice.
+82. Independent checks to be made
+Before any surveyor forwards any computations to the Director for authentication he shall make
+in independent and complete check of all his calculations, and such checks shall accompany the
+computations and be clearly demonstrated.
+83. Method of computing areas
+(1) Rectilinear areas shall be computed mathematically.
+(2) When a portion of the boundary of a property is a curvilinear boundary, the area of the property
+shall be determined partly by computing from co-ordinates and partly by planimeter determination
+from a large scale drawing of the carvilinear boundary, in conformity with regulation 88 of these
+Regulations.
+(3) If necessary, the co-ordinates of accurately scaled points on the drawing of the curvilinear
+boundary shall be used in the computation, in order to reduce to a minimum the effect of plotting
+and other errors on the area determined by the planimeter.
+84. Degree of accuracy for computing areas
+Areas shall normally be calculated to the degree of accuracy specified in the following table:
+Plots not exceeding 1 hectare .................................. 0.0001
+Plots over 1 hectare and up to 10 hectares ............... 0.001
+Plots over 10 hectares and up to 1,000 hectares .......... 0.01
+Plots over 100 hectares ................................................... 0.1
+17
+
+--- PAGE 25 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+85. Presentation of computation
+The computations of every survey submitted shall be preceded by—
+(a) a report; and
+(b) a general index to the computations; and
+(c) a complete list of final co-ordinates of every point adopted or calculated in the survey; this list
+shall be arranged in groups comprising datum points, new triangulation, trilateration, and traverse
+stations, other old or re-established boundary beacons and new boundary beacons, arranged in
+either alphabetical or numerical order; and on this co-ordinate list a description of every point shall
+be given, and reference shall be made to the source of co-ordinates including datum plans or pages
+of computations.
+Part X – PLANS
+86. Plans to be drawn on special forms
+(1) The Director may specify the manner and format in which plans may be drawn.
+(2) Licensed surveyors shall pay to the Director the cost price of any plan forms supplied to them by the
+Director.
+[L.N. 133/2020, r. 8.]
+87. Scales to be used
+(1) Plans shall be plotted at one of the standard scales tabulated in regulation 89.
+(2) The scale shall be selected so that all essential detail is clearly shown, and the plan area of any
+parcel shall not be less than 5 square centimetres:
+Provided that, in a survey comprising both large and small parcels, enlargements of the small
+parcel(s) may be shown in inset(s) at a larger scale than that of the main plan.
+88. Plotting of curvilinear boundaries
+(1) Curvilinear boundaries of any property not exceeding 1,000 hectares in extent, being boundaries
+which have been fully surveyed, shall be plotted accurately on scale not smaller than 1 in 5,000; for
+larger areas the Director shall specify the scale to be used.
+(2) Where the consent of the Director has been obtained to the adoption of an existing survey of a
+curvilinear boundary, the surveyor shall—
+(a) make an accurate reduction of the larger scale plan for use at a smaller scale; or
+(b) make an accurate transfer for use at the same scale; or
+(c) re-plot from the original field notes and computations for use at a larger scale.
+(3) Where a rectilinear boundary intersects a curvilinear boundary and the provisions of regulation
+40(1) and (2) are applicable, the distance from each line or river beacon to the intersection shall
+be shown to the nearest metre, but the distances between successive beacons along the rectilinear
+boundary shall be shown to the degree of precision required by regulation 92(3).
+(4) A curvilinear boundary shall be distinctively described.
+18
+
+--- PAGE 26 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+89. Plotting by co-ordinates
+(1) All plans shall be plotted by rectangular co-ordinates.
+(2) A plotting grid of squares covering the surveyed area shall be drawn in blue or such other colour
+as the Director may require as such, that grid line values shall be multiples of the metric intervals
+shown in the following table:
+Provided that where regulation 24(2) requires co-ordinates to be expressed in feet, the line values
+shall be multiples of the foot intervals in the table.
+INTERVAL
+Scale Metres Feet
+1: 250 25 100
+1: 500 50 200
+1: 1,000 100 500
+1: 2,500 .. .. .. .. .. .. .. .. 250 1,000
+1: 5,000 .. .. .. .. .. .. .. .. 500 2,000
+1: 10,000 .. .. .. .. .. .. .. .. 1,000 5,000
+1: 25,000 .. .. .. .. .. .. .. .. 2,500 10,000
+1: 50,000 .. .. .. .. .. .. .. .. 5,000 20,000
+1: 100,000 .. .. .. .. .. .. .. .. 10,000 50,000
+1: 250,000 .. .. .. .. .. .. .. .. 25,000 100,000
+(3) Every plan shall contain at least one complete grid square and no square shall have sides exceeding
+20 cm. in length.
+90. General rules for plotting
+(1) Every detail shown on a plan shall be distinct, and the camping of figures shall be avoided.
+(2) The north point on every plan shall be upwards, and parallel to the sides of the plan form.
+91. Abutting boundaries
+(1) All boundaries abutting on any property which has been surveyed shall be shown on the plan.
+19
+
+--- PAGE 27 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(2) Where the plot or plots adjoin a surveyed road or railway reserve, and when the scale of plotting
+permits, the boundaries abutting on to the opposite side of the reserve shall be shown.
+92. Co-ordinates and numerical data
+(1) In every survey the co-ordinates of block corners of regular shaped figures, of permanent control
+and numerical stations, and of all beacons of irregular-shaped figures shall be shown on the plan.
+(2) The length and bearing of every boundary shall, when possible, be inscribed along the lines to
+which they refer, and such lengths and bearings shall be deduced from the final co-ordinates as
+tabulated on the plan.
+(3) In surveys of all properties the lengths and co-ordinates shall be shown to two decimal places of a
+metre.
+(4) (a) The area of every plot shall be inscribed where possible within the figures to which it refers
+to the degree of accuracy prescribed for the net area by regulation 84 of these Regulations.
+(b) Areas shall be shown as follows—
+(i) area.................................. ha. (approx.)
+(ii) when reserves are to be deducted—
+total area............................. ha. (approx.)
+less reserve........................... ha. (approx.)
+net area............................... ha. (approx.)
+(c) Sufficient space shall be left for the plot number and the deed plan number to be inserted by
+the Director.
+(d) No plot number shall be inserted by any surveyor.
+(5) All data of any unco-ordinated connexions as prescribed in regulation 39 of these Regulations and
+of terminal and perimeter connections as prescribed in regulation 41 of these Regulations, and of
+connexions to building corners as prescribed in regulation 44 (2), and any other data which serve to
+clarify or to complete any survey plan, shall be shown on the plan.
+93. Triangulation and trilateration charts
+When surveys have been made by triangulation or trilateration or a combination of these techniques, a
+chart drawn on a separate plan form shall be made showing all rays observed and/or measured. Such charts
+shall show a tabulated list of final co-ordinates of all permanent control points:
+Provided that it shall not be necessary to draw a separate plan where the control points have been
+surveyed by methods permitted by regulation 57(2).
+94. Colour and style of printing
+Every survey plan shall be drawn in accordance with the requirements of the Director, in respect of
+colours, style of printing and other details.
+95. Topographical features
+(1) All topographical features have been accurately fixed by survey, or have been sketched with
+reasonable precision, in accordance with regulation 72 of these Regulations, shall be shown in their
+correct plotted positions of the plan.
+(2) When roads have not been surveyed with the same accuracy as other features, they shall be marked
+"approximate only".
+20
+
+--- PAGE 28 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(3) When form lines add nothing of significant value to the plan, they shall not be shown.
+(4) Topographical information may be taken from any official map published by the Director, or any
+authority approved by the Director with due caution in regard to the limitations enjoined by the
+scale of the map.
+(5) Where topographical information is taken from aerial photographs or other remotely sensed data,
+the source shall be quoted on the plan.
+96. Erasures and corrections
+(1) No erasures shall be made after a plan has been drawn in ink.
+(2) Necessary corrections shall be made by scoring through the incorrect word, letter, or numeral, in
+ink, and every such correction shall be initialed by the surveyor.
+97. Certificates
+The certificate on every plan form shall be signed and dated by the surveyor who has made the survey.
+98. Authentication by Director
+The Director may refuse to authenticate any plan submitted by a licensed surveyor which, in his opinion,
+has been drawn carelessly and untidily, or is received by him in a dilapidated or damaged condition.
+Part XI – DEED PLANS
+99. Deed plans to be drawn on special forms
+(1) Deed plans shall be drawn in waterproof ink on such forms as the Director may require, and shall be
+used by every surveyor.
+(2) Licensed surveyors shall pay to the Director the cost price of any forms supplied to them by the
+Director.
+(3) Deed plans for initial grants of Government land shall normally be prepared by the Director.
+(4) Printed deed plans may be used in such circumstances as the Director may decide.
+(5) Except where the contrary is expressly stated in the documents of the case issuing from the
+Commissioner of Lands, deed plans for the purpose of surrender, regrant, change of user, or
+consolidation, may be prepared by a licensed surveyor.
+(6) Regulations 44(4), 87, 88(3), 90(1), and 98 of these Regulations shall apply to deed plans.
+(7) The director shall specify the quality of the deed plan material to be used.
+100. General rules for deed plans
+All deed plans shall be drawn in accordance with the requirements of the Director.
+101. Numerical data
+The Director shall specify the nature of the numerical data to be shown on the deed plan.
+102. Topographical features
+Topographical features and details of development, except as prescribed by regulations 44(4) and 88(3)
+shall not be shown on deed plans.
+21
+
+--- PAGE 29 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+103. Abutting boundaries
+Abutting boundaries shall be shown in the manner laid down in regulation 91 of these Regulations.
+104. Areas
+(1) Areas shall be shown in the manner specified in regulation 92(4).
+(2) When two or more properties are combined in one Certificate of Title, the total shall be given as
+in regulation 92(4)(a) and (b), and beneath such total each area must be tabulated separately as
+follows—
+L.R. No. ................................. area........................ ha. (approx.)
+L.R. No. ................................. area........................ ha. (approx.)
+L.R. No. ................................. area........................ ha. (approx.)
+Total area ................................................. ha. (approx)
+(3) All the areas shall be quoted to the precision for the total area by regulation 84 of these
+Regulations.
+105. Erasures and corrections
+(1) No erasures shall be made on a deed plan.
+(2) Corrections shall not exceed three in number on any one deed plan, and shall be effected by scoring
+through the incorrect letter, word, or numeral.
+(3) Such corrections shall be initialed by or on behalf of the Director and not the surveyor.
+106. Locality index number
+The general locality of any plot of land shall be given by reference to the nearest urban area or railway
+station and to the standard topographical sheet.
+107. Name of surveyor
+Deed plans prepared by or on behalf of a licensed surveyor shall have his name printed on the bottom left-
+hand corner of each copy.
+108. Authentification
+(1) Deed plans shall be prepared in duplicate.
+(2) One copy shall be authenticated by bearing thereon the signature of the Director or of a person
+authorized by him, together with the date of signature. The other copy shall bear the printed name
+of the person who signed the authenticated copy, together with the date of signature and the
+imprint of the official seal.
+(3) The signed copy of every deed plan shall be deposited with the Director, and shall be the official
+copy, and the evidence contained in his official copy, read with the authenticated survey plan upon
+which it has been based, shall prevail in every case.
+(4) The Director may at his discretion prepare and issue a duplicate copy of a deed plan that has been
+mislaid or lost. Such copy shall bear the signature of the Director or of a person authorized by him,
+together with the date of signature and the imprint of the official seal and the words "Certified True
+Copy".
+22
+
+--- PAGE 30 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+109. Cancellation of deed plan
+(1) In accordance with section 33 of the Act, any deed plan which is withdrawn by the Director shall be
+cancelled by him, and evidence of the cancellation shall be the word "Cancelled" inscribed on the
+deposited copy supported by the signature of the Director, or of a person authorized by him.
+(2) The duplicate and triplicate copies of a cancelled deed plan shall, whenever available, be withdrawn
+from the person in whose custody they are kept, and shall be destroyed.
+Part XII – GOVERNMENT LAND SURVEYS
+110. Coast foreshore reservation
+(1) Where unalienated Government land fronting on the area coast is being surveyed for alienation, a
+strip of land not less than 60 metres in width shall normally be reserved above high-water mark for
+Government purposes:
+Provided that, if the interests of development require, the Cabinet Secretary may direct that the
+width of this reservation shall be less than 60 metres in special cases.
+(2) High-water mark in all cases in these Regulations means the Mean High Water Mark of Spring
+Tides.
+111. Tidal river reservations
+On all tidal rivers a reservation of not less than 30 metres in width above high-water shall be made for
+Government purposes:
+Provided that, the Cabinet Secretary may direct that the width of this reservation shall be less than 30
+metres in special cases.
+112. Lake reservations
+For boundaries fronting on lakes, a reservation of not less than 30 metres in width from the water edge at
+ordinary high-water shall be made for Government purposes:
+Provided that, if the interests of development require the Cabinet Secretary may direct that the width of
+this reservation shall be less than 30 metres in special cases.
+113. Defining of reservation boundaries
+When surveying the reservations referred to in regulations 110, and 112 of these Regulations, a surveyor
+may make each boundary a straight line or a series of straight lines at a distance approximating closely to
+the specified distance from the feature for which a reservation is needed.
+114. Defining swamp boundaries
+(1) Where an area fronts on a swamp, a give-and-take straight line boundary shall be adopted wherever
+possible.
+(2) Indefinite median lines, which cannot be re-established by survey, shall be avoided.
+(3) Swamps of an average width of 150 metres or more shall be excluded from farms, and a straight line
+boundary along the edge of the swamp shall be surveyed and beaconed.
+23
+
+--- PAGE 31 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+Part XIII – MISCELLANEOUS
+115. Written evidence for Board
+The evidence of the matters specified in subsection (1) of section 12 of the Act required by that subsection
+to be produced, shall be such written evidences as satisfies the Board as to those matters.
+116. Public access to maps and plans
+(1) Any person shall have access, free of, to every published map and plan in the possession of the
+Director:
+Provided that the Director or his representative may refuse access as he may deem necessary in the
+public interest.
+(2) A search fee of one hundred shillings per plan shall be paid in advance by any person who is not a
+licensed surveyor or not on Government duty, for access to any unpublished plan.
+117. Government copyright
+(1) The Government copyright of all maps published in physical or electronic format by the Director
+and of all plans deposited in the survey office in accordance with the provisions of section 30 of the
+Act, is vested in the Director.
+(2) No person shall publish or cause to be published in physical or electronic format a copy of any map
+or plan of which the copyright is vested in the Director without payment of such royalty as the
+Director may determine in each case.
+[L.N. 133/2020, r. 9.]
+118. Repeal of regulations
+The Survey Regulations are repealed.
+FIRST SCHEDULE [r. 14]
+QUALIFICATIONS GIVING EXEMPTION FROM EXAMINATION
+IN PRESCRIBED SUBJECTS IN THE TRIAL SURVEY AND LAW
+EXAMINATIONS FOR THE KENYA LAND SURVEYORS LICENCE
+Qualifications Subject in which exemption may be granted
+1. Land Surveyors Licence valid in Kenya prior to the As provided under section 12 of the Act
+commencement of this Act.
+2. Any other qualification. As provided under section 12 of the Act
+SECOND SCHEDULE [r. 16]
+EXAMINATIONS FOR ADMISSION AS A LICENSED SURVEYOR
+Syllabus for the Trial Survey and Law Examinations
+24
+
+--- PAGE 32 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(a) Viva voce in land surveying and related matters.
+(b) Trial survey
+Field determination of local time, latitude, longitude and azimuth.
+Provisions of adequate control to cover a rural area, the subject of further survey.
+Survey of rural area referred to, including the traverse of a curvilinear boundary, and the re-establishment of a
+lost beacon. The curvilinear boundary may be required to be determined from air photographs supplied.
+Survey of a small township area with buildings thereon, which include restoration of an old survey.
+Topographical and Contour Survey.
+Setting out Engineering structures.
+The original field notes, computations and plans must be submitted to the Board, together with a certificate in
+the form prescribed in regulation 21 of these Regulations.
+(c) Law Examination
+A written examination on the text and application of such Acts as the Board may from time to time prescribe,
+and the rules, regulations and by-laws made thereunder, so far as they affect survey and the law relating to land
+control, land registration and title to land.
+THIRD SCHEDULE [rr. 13 & 14]
+PRESCRIBED FORMS
+Form A
+DECLARATION
+I, ............................, solemnly and sincerely declare that ................ has served regularly and faithfully with the
+Survey Department/me* as a surveyor/an approved assistant* for a period of ............... years and ........... months
+from ......... to ..........
+The nature of his employment during the period specified is as follows -
+SUMMARY OF EMPLOYMENT
+Declared at ................... this ................. day of .............
+19 ........................
+....................................................................
+Signature
+*Delete the words which are inapplicable.
+FORM B (r. 14)
+DECLARATION
+25
+
+--- PAGE 33 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+I, ..................................., of ................... solemnly and sincerely declare that I am a graduate of the University
+of ........ and have taken a course in land Surveying leading ................... and that I have pursued the courses of
+study and have had practical experience in land surveying as set out in the summary below.
+SUMMARY
+Course(s) of study at ....................... from .............. to periods of practical experience at ....................
+from ........................ to ...................
+Declared at ...................... this ................... day of ...................., 19.............
+......................................................
+Signature
+FORM C (r. 21)
+CERTIFICATES TO BE SUPPLIED IN PRACTICAL TESTS
+I, ...................., hereby certify that I have carried out this examination without technical advice or assistance
+since receipt of the
+instructions on ..........................
+......................................................
+Signature
+FORM D (r. 31)
+LETTER OF AUTHORITY
+IN EXERCISE of the powers conferred upon him by regulation 31 of the Survey Regulations, the Director of
+Surveys hereby authorizes ......... (name and designation of person authorized) to enter upon any land to perform
+any duty which he is required to perform under the Survey Act.
+Impression of
+Seal of Office,
+Survey of Kenya,
+Nairobi.
+Date ...................................... ...................................................................
+Director of Surveys
+Note.—The relevant sections 23 and 38 of the Survey Act are printed for general information, on the back of this
+letter of Authority.
+26
+
+--- PAGE 34 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+FOURTH SCHEDULE [r. 30, L.N. 133/2020, r. 10]
+COMPETENT AUTHORITIES FOR THE SUBDIVISION OF LAND
+Deleted
+FIFTH SCHEDULE [r. 34]
+FEES
+[L.N. 96/1999, r. 2, L.N. 29/2024, r. 3, L.N. 71/2024, r. 3.]
+FEES
+S/NO Land Survey and Mapping Fees Fees (Kshs)
+1. Consultancy fees on land survey and mapping 3,000 per hour, the number of hours as assessed
+matters by the Director of Surveys.
+2. Application for Licensing. 15,000
+3. Approval of Geodetic Controls including CORS 10,000 per station
+and other geo-referencing infrastructure per
+annum
+4. Geo-referencing of land parcels 15,000xH Minimum 15,000 x H(H is Square root of Area in
+square root of area in Hectares excluding the Hectares).
+expenses as per the Eighth Schedule of the
+Survey Regulations, 1994.
+5. Search 500.
+6. Fixed Boundary Survey. Minimum 20,000xH(H is Square root of Area in
+Hectares) plus 3% of the value of the Land.
+7. Geo-referencing and survey of a sectional i. 1-5 units=35,000 per unit.
+Unit. ii. 6-15 units=28,000 per unit.
+iii. 16-30 units=25,000 per unit.
+Above 30 units=20,000 per unit.
+8. Processing and approval of mutation surveys. 600 per portion
+9. Mutation surveys per land parcel (3000xH 5,000xH per portion (H is Square root of Area in
+where H is square root of area in Hectares). Hectares) plus 3% of the value of the land.
+10. Topographical surveys. 30,000 per Ha or part thereof.
+27
+
+--- PAGE 35 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+FEES
+11. Attending court or a place outside the office 3,000 plus transport as per AA rates.
+for a day or less than a day.
+12. Attending court or a place outside the office 3,000 plus transport as per AA rates and daily
+for more than a day. subsistence allowance prescribed by the Salaries
+and Remuneration Commission.
+13. Resolution of boundary dispute. 10,000 plus transport as per AA rates and Daily
+Subsistence Allowance prescribed by the Salaries
+and Remuneration Commission.
+14. Authentication of plan, diagram or imagery 2,000 per plan.
+extract.
+15. RIM amendments. 2,500 Per parcel of land.
+16. Sale of maps (blue prints). A0 = 500A1 = 400A2 andA3 = 350
+17. Sale of the National Atlas. 10,000.
+18. Sale of mutation forms. 200 per set.
+19. Sale of assorted stationaries (file folders, 50 per a page.
+computations sheets, cover note, parcel files,
+etc.)
+20. Sale of topographical maps (SK series, county, 1,000 per hard copy.
+varies scales topo maps etc.)
+21. Sale of Nautical Charts. 5,000.
+22. Sale of digital geospatial data in form PDF or 300.
+Jpeg.
+23. Approval for aerial survey including drone 10,000.
+mapping (minimum fee).
+AERIAL SURVEY AND DRONE MAPPING (AS PER CLUSTERS)
+24. Cluster 1
+Flight Planning fee. 100,000.
+28
+
+--- PAGE 36 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+FEES
+1-100 Acres. 1,600 per Acre.
+101-500 Acres. 1,400 per Acre.
+25. Cluster 2
+Flight Planning fee. 150,000.
+501-1000 Acres. 1,200 per Acre.
+26. Cluster 3
+Flight Planning fee. 250,000.
+1001-5000 Acres. 900 per Acre.
+27. Cluster 4
+Flight Planning fee. 300,000.
+5001-10,000 Acres. 850 per Acre.
+28. Cluster 5
+Flight Planning fee. 600,000.
+10,001 - 25,000 Acres. 800 per Acre.
+29. Cluster 6
+Flight Planning fee. 1,000,000.
+25,001-50,000. 600 per Acre.
+SIXTH SCHEDULE [r. 34]
+FEES PAYABLE FOR THE AUTHENTICATION OF PLANS
+SUBMITTED TO THE DIRECTOR FOR APPROVAL
+[L.N. 96/1999, r. 3.]
+29
+
+--- PAGE 37 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+Deleted by L.N. 71/2024, r. 4.
+SEVENTH SCHEDULE [r. 34]
+FEES CHARGEABLE FOR DOCUMENTS AND MATERIALS ISSUED
+AND OTHER SERVICES RENDERED BY THE SURVEY OF KENYA
+Deleted by L.N. 71/2024, r. 4.
+EIGHTH SCHEDULE [r. 35]
+SCALE OF FEES CHARGEABLE BY A LICENSED
+SURVEYOR FOR SURVEYS MADE BY HIM
+[L.N. 96/1999, r. 4.]
+1. Interpretation
+In this Schedule, except where the context requires—
+"basic charge" means a charge designed to cover the cost of investigation of survey records, the collection
+of survey data, and the clarification of the position in regard to title and survey and in relation to the
+market value of the land to be surveyed;
+"hilly", in relation to land, means that the average slope is between 3 degrees and 15 degrees;
+"rough", in relation to land, means that the average slope exceeds 15 degrees;
+"topographical charge" means a charge designed to cover the additional cost of surveys carried out in
+rough country or hilly country;
+"unhealthy area" means any area classified as unhealthy in the Code of Regulations published by the
+Government for the purposes of the computation of leave to be taken by Government officers.
+2. Method of payment
+(1) (a) The charges prescribed in this Schedule shall be payable as to 75 percent of the cost on
+completion of the survey and the plan being deposited with the Director of Surveys, and the
+remaining 25 percent shall be payable when the survey has been approved by the Director of
+Surveys:
+Provided that when accepting a survey commission a surveyor may require the payment of a
+deposit against eventual charges to be raised in connection with the survey.
+(b) In cases where no plan is necessary the full charge shall be payable on completion of the field
+survey.
+(2) In large surveys, the surveyor shall be entitled to progress payment at monthly intervals throughout
+the period of the survey, and such payment shall be at the rate of 75 percent of the value of the
+work done, and shall be computed in accordance with the appropriate scale prescribed in this
+Schedule.
+(3) When a surveyor is unable, owing to his client’s instructions, to complete either the survey or the
+plan, he shall be entitled to payment of the full value of the work completed.
+3. Inclusive charges
+Except where otherwise stated, the charges prescribed in this Schedule include the charges for—
+(a) the plan of the survey, together with the field notes, computations, and other information required
+by these Regulations but do not include any plan referred to in paragraph 4 of this Schedule, and
+30
+
+--- PAGE 38 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+do not include any triangulation and/or trilateration charges referred to in paragraph 8 of this
+Schedule; and
+(b) the cost of all labour and materials, but do not include the cost of boundary marks and survey
+marks, which shall be charged for as prescribed in paragraph 7 of this Schedule.
+4. Charge for deed plans
+The charge for deed plans shall be Sh. 2,000 for each set.
+[L.N. 96/1999.]
+5. Travelling and subsistence allowances
+(1) The surveyor shall be entitled to recover transport and travelling charges at the rate of Sh. 80 per
+kilometre for necessary journeys incurred in the survey when travelling in his own transport, plus a
+time rate of Sh. 40 per kilometre travelled to cover the surveyor’s professional time.
+(2) (i) When a journey is made by train, the transport and travelling charge shall be the cost of first
+class train fares, plus a time rate of Sh. 40 per kilometre travelled.
+(ii) When a journey is made by air, the transport and travelling charge shall be the cost of first
+class air fares plus a time rate of Sh. 40 per kilometre travelled.
+(3) The surveyor shall be entitled to reasonable subsistence allowance and hotel, camp, or other
+accommodation expenses.
+[L.N. 96/1999.]
+6. Charges at daily rates
+(1) Consultancy fees shall be charged and shall not be below Sh. 5,000 per hour.
+(2) On hourly rates the surveyor’s charge shall be Sh. 5,000 per hour.
+(3) The cost of labour, materials, and travelling charges, and subsistence and accommodation allowances shall
+be added to the fee prescribed in subparagraph (1) and (2) of this paragraph.
+(4) Hourly rates are to be charged only when the conditions are such that the other rates set out herein are
+inapplicable; and without prejudice to the foregoing they may be charged in the following cases—
+(a) the preparation of plans from existing records, where no field work is required;
+(b) interviews with officials of Government departments or local authorities;
+(c) the preparation of additional plans or tracings, or the investigation of data required for title
+surveys, and not covered by any other provision in this Schedule.
+(d) work involved when the client changes his scheme or layout after the survey has commenced;
+(e) the location and verification of control points and beacons, and surveys to re-establish beacons,
+such surveys not amounting to complete resurvey;
+(f) surveys within built-up commercial areas.
+[L.N. 96/1999.]
+7. Surveys within municipalities, townships, etc.
+The following fees shall be charged for surveys of areas surveyed as plots of less than 10 hectares—
+(a) the basic charge shall be as prescribed in paragraph 9 of this Schedule;
+(b) the traversing charge for all traverse lines which are surveyed in accordance with regulation 60
+of these Regulations for the establishment of the exterior boundaries of the land which is being
+surveyed, including the necessary connections to trigonometrical stations, standard traverses or
+31
+
+--- PAGE 39 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+other marks, and including such traverses as are required to establish new internal boundaries,
+shall be charged at the following rates—
+Sh.
+(i) third order traverses, for every 100 metres 3,000
+surveyed ................
+(ii) fourth order traverses for every 100 metres 2,000
+surveyed .......................
+(iii) fourth order traverses, requiring tachy-metric 4,000
+connections ox offsets to a curvilinear boundary, for
+every 100 metres surveyed ..........................
+(iv) all subsidiary traverses ....................... half the
+rates for
+fourth
+order
+traverses.
+(c) the station charge for every station necessarily occupied for the observation of horizontal angles
+shall be Sh. 1,200:
+Provided that the charge shall be made once only for every such station;
+Sh. cts
+(i) third order traverses, for every 100 3,000 00
+metres surveyed .............
+(ii) fourth order traverses, for every 2,000 00
+100 metres surveyed ..................
+(iii) fourth order traverses, requiring 4,000 00
+tachymetric connections or offsets to
+a curvilinear boundary, for every 100
+metres surveyed ..............
+(iv) all subsidiary traverses ...................... half the rate for fourth order traverses
+(c) the station charge for every station necessarily occupied for the observation of horizontal angles shall be
+Sh. 1,200;
+Provided that the charge shall be made once only for every such station;
+32
+
+--- PAGE 40 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(d) the lot charges charged for the survey of each lot shall be as follows-
+(i) not exceeding 1/4 hectare - 4,500 00
+upto to 10 lots ................. 3,000 00
+(ii) exceeding 1/4 hectare but not 7,000 00
+exceeding one hectare -
+up to 10 lots ........
+in excess of 10 lots ........................ 5,000 00
+(iii) exceeding 1 hectare but not 9,000 00
+exceeding 5 hectares -
+up to 10 lots .......
+in excess of 10 lots ........................ 7,000 00
+(iv) exceeding 5 hectares but not 12,000 00
+exceeding
+10 hectares -
+upto 10 lots ............... 9,000 00
+in excess of 10 lots ......
+(v) exceeding 10 hectares - 14,000 00
+up to 10 lots ..................
+in excess of 10 lots ...... 10,000 00
+(vi) For new roads within the survey, each 250 metres or as part thereof shall be deemed to be a lot of area in
+(ii) above;
+(e) where a topographical charge is payable, the traversing charge, the station charge, and the lot charge shall
+be increased by the following percentages -
+(i) where the lot is hilly, 20 percent;
+(ii) where the lot is rough, 331/3 percent;
+(f)(i) where it is necessary for the surveyor using his own labour to cut or clear, then to the fees set out above
+shall be added to the following charges for every 100 metres or part thereof, of necessary cutting and clearing
+-
+33
+
+--- PAGE 41 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+for light bush or long grass ...... 1,800 00
+for medium scrub ...................... 5,000 00
+for heavy dense bush .................... 10,000 00
+(ii) where, by prior arrangement, the landowner supplies the labour for cutting and clearing no additional
+charge shall be made if such cutting and clearing is carried out to the satisfaction of the surveyor, who shall be
+entitled to charge for the delay to survey operations at the hourly rates set out in paragraph 6 of this Schedule,
+when he necessarily exercises personal supervision of the operations hereinbefore described;
+(iii) where the landowner, having agreed to undertake cutting and clearing, fails to do so, the surveyor may at
+his discretion charge under both of sections (i) and (ii) of this subparagraph;
+(g) the corner charge for every beacon, the co-ordinates of which are necessary to establish the consistency
+and areas of the figures surveyed, shall be Sh. 150 for each beacon;
+(h) the beacon placing/fixing charge shall be—
+(i) for each beacon fixed or 1,500 00
+placed in manner that its check is
+necessarily in-corporated in the
+course of other measurement or
+observations required for subsequent
+survey ..........................
+(ii) for each beacon fixed or 3,000 00
+placed in such manner that its
+check is necessarily in additional
+measurements or observations not
+required for any subsequent survey
+(i) the beaconing charge shall be, in addition to the fees set out hereinbefore in this paragraph, payable at the
+following rates-
+(i) for every angle-iron set in 2,000 00
+concrete ...
+(ii) for every pin set in concrete 1,500 00
+under-ground
+(iii) for every iron pin set in concrete 1,000 00
+(iv) for every iron pin not set in 500 00
+concrete ...
+34
+
+--- PAGE 42 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+Provided, that, where excavation of coral or other rock is made for the proper erection of any items specified
+in paragraphs (i), (ii) and (iii) of this subparagraph, charge of Sh. 367.50 per beacon may he made;
+(j) the unhealthy areas charge shall be an increase of 25 percent added to the charges prescribed by this
+paragraph.
+[L.N. 96/1999.]
+8. Rural surveys
+(1) The following fees shall be charged for surveys in areas subdivided into plots each exceeding ten hectares.
+(2) The basic charge shall be as prescribed in paragraph 9 of this Schedule.
+(3) The traversing charge for—
+(a) all fourth order traverse lines surveyed in accordance with these Regulations shall be at the
+following rates—
+Sh. cts
+(i) in easy country, for every 100 metres ... 1,500 00
+(ii) in hilly country, for every 100 metres ... 2,000 00
+(iii) in rough country, for every 100 metres 3,000 00
+(b) all subsidiary traverses shall be at half the rates for fourth order traverses;
+(c) all traverses requiring the measurements of offsets or tachymetric connections to curvilinear
+boundaries shall be at double the charges for fourth order or subsidiary traverses, as the case may
+be.
+(4) The station charge for every station occupied for the observation or horizontal angles shall be Sh.
+1,000:
+Provided that the charge shall be made once only for each station.
+35
+
+--- PAGE 43 ---
+The Survey Regulations (Legal Notice 168 of 1994) Kenya
+(5) The triangulation and trilateration charges, where the survey or a proportion of the survey is
+carried out by these methods, shall be calculated on a time basis on rates as prescribed in paragraph
+6 of this Schedule, plus a charge for the minimum necessary signals based on actual costs.
+(6) (a) Traverse connections shall be charged at the rate prescribed in subparagraph (3) of this
+paragraph.
+(b) Measurement of base lines shall be charged for at the rate prescribed in paragraph 7(b)(i) of
+this Schedule.
+(7) The cutting and clearing charges, the corner charges, the beacon placing/fixing charge, the
+beaconing charge, and the unhealthy areas charge, shall be as prescribed in paragraph 7 of this
+Schedule.
+[L.N. 96/1999.]
+9. Basic charges
+(a) The basic charge shall be 50 percent of the charges prescribed in paragraph 7 and 8 of this Schedule
+plus 3 percent of the market value of the land to be surveyed and shall also include charges made
+under paragraph 8 of the Eighth Schedule.
+(b) The value of the land shall be as mutually agreed between the licensed surveyor and the client or
+determined by a value under the Valuers Act (Cap. 532).
+[L.N. 96/1999.]
+10. Special charges
+Notwithstanding any provision to the contrary in this Schedule, a licensed surveyor may, with the prior
+written agreement and approval of the Director, depart from the prescribed charges in cases where
+peculiar or special circumstances appear to warrant such a departure.
+11. Charges to Government
+Any taxes or charges levied by the Government shall be added to the total of the other charges.
+[L.N. 96/1999.]
+NINTH SCHEDULE [r. 33(6)]
+HEADING CERTIFICATE FOR APPROVED ASSISTANTS
+I certify that all the work performed in the field and in the office by my approved
+assistant ..................................., has been carried out under my personal direction, and I take full responsibility
+for all work so performed.
+Signed .........................
+Licensed Surveyor
+36

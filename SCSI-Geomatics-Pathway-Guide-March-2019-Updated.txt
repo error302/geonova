@@ -1,0 +1,1355 @@
+
+--- PAGE 1 ---
+Your APC pathway guide to
+Geomatics Surveying
+
+--- PAGE 2 ---
+Your pathway guide to Geomatics Surveying
+Contents
+Introduction 4
+Pathway requirements 7
+Geomatics APC 7
+Competency guidance 8
+Big Data (T099) 9
+Building information modelling (BIM) management (T087) 11
+Cadastre and land management (T007) 12
+Conflict avoidance, management and dispute resolution procedures (M006) 13
+Construction technology and environmental services (T013) 15
+Consultancy services (T014) 16
+Data Management 17
+Development/project briefs (T024) 18
+Engineering surveying (T027) 19
+Environmental assessment (T028) 20
+Geodesy (T035) 21
+GIS (T036) 22
+Ground engineering and subsidence (T037) 24
+Hydrographic (marine) surveying (T042) 25
+Legal/regulatory compliance (T051) 26
+Management of the natural environment and landscape (T055) 27
+Measurement (T057) 28
+Planning development and management (T061) 29
+Remote sensing and photogrammetry (T075) 31
+Surveying and mapping (T078) 32
+Surveying land and sea (T081) 33
+Use of the marine environment (T082) 34
+3
+
+--- PAGE 3 ---
+Your pathway guide to
+Geomatics Surveying
+Introduction
+About the APC How to use this guide
+The RICS/SCSI Assessment of Professional Competence (APC) This guide is designed to help you understand more about
+ensures that those applying for RICS/SCSI membership are qualifying as an RICS/SCSI member in geomatics. The guide
+competent to practise and meet the high standards of is based on Irish market practice and may be unsuitable for
+professionalism required by RICS/SCSI. There is a wide range candidates based in other countries. The material is set out in
+of pathways available to qualify as an RICS/SCSI member three sections.
+covering 19 different areas of practice, at APC (Chartered).
+Section one- provides information on this area of practice with
+The APC normally consists of: a general overview of the geomatics pathways.
+• a period of structured training Section two- lists the competency requirements of the
+• a final assessment. geomatics APC
+The structured training is based on candidates achieving a Section three- describes the main technical competencies
+set of requirements or competencies. These are a mix of associated with geomatics, providing expanded sector
+technical, professional, interpersonal, business and specific guidance on each of them. This forms the main
+management skills. part of the guide.
+4
+
+--- PAGE 4 ---
+Your pathway guide to
+Geomatics Surveying
+About the competencies Choosing your competencies
+The APC aims to assess that you are competent to carry out It is important that you give careful thought to your choice
+the work of a qualified chartered surveyor. To be competent and combination of competencies. Your choice will inevitably
+is to have the skill or ability to perform a task or function. reflect the work you do in your day-to-day environment
+The RICS/SCSI competencies are not just a list of tasks or (driven by the needs of your clients/employer). Your choice
+functions, they are also based upon attitudes and and combination of competencies will be a reflection of your
+behaviours. The competencies have been drawn up in a judgement. At final assessment, the assessors will take these
+generic way so that they can be applied to different areas choices into account. They will expect you to present a
+of practice and geographical locations. This guide is sensible and realistic choice that reflects the skills needed to
+designed to help you interpret these competencies within fulfil the role of a surveyor in your field of practice.
+the context of geomatics.
+This guide should help candidates and employers with a
+The competencies are defined at three levels of attainment degree of assistance in choosing the competencies that are
+and each APC pathway has its own specific combination of most appropriate to their area of practice.
+competencies that you must achieve at the appropriate level.
+You must reach the required level in a logical progression
+How to find help
+and in successive stages:
+Level 1– knowledge and understanding SCSI Education and Membership will be able to help you
+Level 2– application of knowledge and understanding with any general APC queries:
+Level 3–reasoned advice and depth of technical knowledge. T 01 6445500
+F 01 6611797
+The competencies are in three distinct categories: education@scsi.ie
+www.scsi.ie
+Mandatory competencies– the personal, interpersonal,
+professional practice and business competencies common to
+all pathways and compulsory for all candidates. These are
+explained in more detail in the Requirements and
+Competencies guide.
+Core competencies– the primary competencies of your
+chosen APC pathway.
+Optional competencies – a set of competencies selected
+by the candidate from a list defined for the particular pathway.
+In most cases there is an element of choice. These are mostly
+technical competencies, but certain mandatory competencies
+also appear on the optional competency list and candidates
+are permitted to select oneof these at a higher level.
+This guide only deals with the principal core and optional
+competencies associated with this area. It does not cover
+the mandatory competencies.
+5
+
+--- PAGE 5 ---
+Your pathway guide to
+Geomatics Surveying
+About geomatics
+Geomatics is the science and study of spatially related information focusing on the collection, interpretation/analysis
+and presentation of the natural, built, social and economic environments. As the underpinning information provider
+of the land and property life cycle, geomatics is of fundamental importance to society. A recent study found between
+£79 and £136 billion of Gross Value Added in the UK economy was dependent on the products and services of the
+Ordnance Survey, the UK national mapping agency.
+Geomatics is one of the fastest expanding global markets and a truly worldwide profession. A recent (2004 Frost &
+Sullivan) economic study found that the EU GIS market is worth over 1.5 billion euro; the global hydrographic survey
+market is in excess of 1.3 billion euro and the Survey Association (a trade body representing professional survey
+companies in the UK) estimates that its 80 members generated a total turnover of 140 million euro in 2003-04.
+Driven by technology and maintaining its role in land law and other socio-economic areas, leading chartered
+surveying firms realise the importance of geomatics, not only to the profession but to the future success of their
+businesses. Particularly in the day-to-day integration of geomatics with traditional forms of real estate management,
+land administration and construction.
+There is huge demand and are major opportunities for chartered land, hydrographic and engineering surveyors.
+This is due to a high media profile, coupled with the changing nature of mapping and spatial data management
+worldwide. This includes rapid advancements in Information Technology eg GIS, Global Navigation Satellite
+Systems, ‘joined up government’ initiatives, digital cadastres and many more. The growth in EU and national
+governments’ spatial data agendas and legislation needs chartered surveyors to fill senior management and
+advisor roles, offering highly specialist expertise and knowledge.
+Geomatics APC • Photogrammetry and remote sensing
+• Spatial and metadata management, interpretation
+The Geomatics APC is targeted at graduate level practitioners and manipulation
+from both accredited courses and through the senior • Land, coastal and marine information management
+professional and other routes cognate and non-cognate • Ocean bed and resource surveys
+graduates. • Monitoring of structures
+• Project management
+This APC would also suit anyone with a good aptitude for • Research and consultancy.
+science, technology, geography, internationalism,
+mathematics and much more. The faculty counts under its
+auspices the following areas, all of which a chartered Chartered alternative designations
+land/hydrographic/engineering surveyor could potentially related to this pathway
+work within.
+Candidates who successfully complete this pathway may
+• Land and hydrographic surveying select the from the following chartered alternative designations:
+• Mapping and positioning
+• Global and local navigation systems Chartered Land Surveyor
+• Geographic information science
+• Engineering survey Chartered Hydrographic Surveyor (candidates pursuing this
+• Cadastre and land registration route must take the hydrographic core competency to level 3)
+• Private, regional and international boundaries determination
+• Dispute resolution and expert witness Chartered Engineering Surveyor (candidates pursuing this route
+• Land law, administration and reform must take the engineering surveying core competency to level
+• Cartography
+6
+
+--- PAGE 6 ---
+Your pathway guide to
+Geomatics Surveying
+Pathway Requirements
+Geomatics (including hydrographic) APC
+Mandatory
+Level 3 • Ethics, rules of conduct & professionalism
+Level 2 • Client Care
+• Communication and negotiation
+• Health and safety
+Level 3 • Accounting principles and procedures
+• Business planning
+• Conflict avoidance, management and dispute resolution procedures
+• Data management
+• Diversity, inclusion and teamworking
+• Inclusive environments
+• Sustainability
+Core
+Level 3 • Cadastre and land administration
+• Conflict avoidance, management and dispute resolution procedures
+• Engineering surveying
+• Geodesy
+• GIS
+• Hydrographic surveying
+• Legal/regulatory compliance
+• Measurement
+• Remote sensing and photogrammetry
+• Surveying and mapping
+• Surveying of land and sea
+• Use of the marine environment
+Level 1 • Measurement
+Optional
+One to Level 3 and two to • Big data
+Level 2, including any not • BIM management
+already chosen from the • Construction technology and environmental services
+core list • Consultancy services
+• Data management
+• Development/project briefs
+• Environmental assessment
+• Ground engineering and subsidence
+• Management of the natural environment and landscape
+• Planning and development management
+• Planning and development management
+Plus, one to Level 2from the full list of technical competencies, including any not already chosen from the core or optional lists
+To achieve the Chartered Engineering Surveyordesignation candidates must select Engineering surveying to Level 3.
+To achieve the Chartered Hydrographic Surveyor designation candidates must select Hydrographic surveying to Level 3.
+To achieve the Chartered Land Surveyordesignation candidates must select Surveying and mapping to Level 3.
+7
+
+--- PAGE 7 ---
+Your pathway guide to
+Geomatics Surveying
+Competency guidance
+The pages that follow are intended to provide guidance for users on the main competencies
+associated with geomatics.
+The guidance has been drawn up by experienced practitioners and aims to give you a clear and practical
+understanding of how to apply the listed core and optional competencies in the context of geomatics. The
+guidance does not cover the mandatory competency requirements.
+The official competency definitions (at levels one, two and three) are provided, followed by a description of
+the key knowledge and activities that are likely to fall within the scope of each competency.
+The information provided is designed to be helpful but informal guidance. The knowledge and activities
+described under each competency are not exhaustive, and should not be relied upon as any form of
+revision list. Candidates must satisfy themselves and their employers that they have reached the required
+level of attainment before applying for final assessment.
+The competencies are arranged in alphabetical order.
+The full list of RICS/SCSI competencies and pathway requirements can be found in the Requirements and
+Competencies guide.
+Big Data (T099) 9
+Building information modelling (BIM) management (T087) 11
+Cadastre and land management (T007) 12
+Conflict avoidance, management and dispute resolution procedures (M006) 13
+Construction technology and environmental services (T013) 15
+Consultancy services (T014) 16
+Data Management 17
+Development/project briefs (T024) 18
+Engineering surveying (T027) 19
+Environmental assessment (T028) 20
+Geodesy (T035) 21
+GIS (T036) 22
+Ground engineering and subsidence (T037) 24
+Hydrographic (marine) surveying (T042) 25
+Legal/regulatory compliance (T051) 26
+Management of the natural environment and landscape (T055) 27
+Measurement (T057) 28
+Planning development and management (T061) 29
+Remote sensing and photogrammetry (T075) 31
+Surveying and mapping (T078) 32
+Surveying land and sea (T081) 33
+Use of the marine environment (T082) 34
+8
+
+--- PAGE 8 ---
+Your pathway guide to
+Geomatics Surveying
+Big data
+Description of competency in context of this sector
+This competency involves the identification of complex problems as applied to the built and natural environment and the
+leveraging of data value.
+Candidates will be part of multidisciplinary project teams, including planners, city engineers, surveyors, data architects, data
+engineers, and analysts, working with big data. The work is likely to include liaison with policy and operations teams to
+understand how big data can be leveraged and combined to add value.
+It requires a knowledge of the technical challenges posed by big data, and the specialised IT architectures and techniques
+employed for the storage, retrieval and manipulation of big data structures.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Demonstrate an understanding of the Provide evidence of design and
+understanding of the principles of big techniques and the tools required for implementation of big data analysis
+data processing, the range of available the maintenance of data quality, data using algorithms to handle data sets
+sources of big data, data dynamics hygiene and the statistical modelling, in a scientific computing environment
+and a critical appreciation of the latest analysis and visual data interrogation for the analysis of big data.
+big data research issues. of big data sets.
+Examples of activities and Examples of activities and knowledge Examples of activities and knowledge
+knowledge comprised within this comprised within this level are: comprised within this level are:
+level are: • Ability to source, access, manipulate • Be able to explore and visualise the
+• The different phases of software and engineer data processes with data to present the ‘story’ of the data
+lifecycle data that typically have in a meaningful way to a range of
+• The value of analysis and which characteristics of volume, velocity technical and nontechnical
+data sources, analytical techniques and variety audiences
+and tools can be used • Can select and use appropriate • Advise on how big data can be used
+• How algorithms are designed, statistical methods for sampling, to support strategic and operational
+optimised and applied at scale distribution assessment, bias and decision making to create impact
+• What data is important to ensure error and add value from its use
+business performance • Different data engineering tools for • Advise on the selection, design,
+• The importance of presentation and repeatable data processing and can justification, implementation and
+applicability of any data that is compare between different data operation of controls and
+captured through dashboards or models management strategies to maintain
+client portals • Build credible statistical models from the security, confidentiality, integrity,
+• Have an appreciation of the the data and use best coding availability, accountability and
+possible benefits of Machine practices to generate reproducible relevant compliance of information
+learning and Artificial Intelligence work systems with legislation, regulation
+and how this can be supported • Problem structuring methods and and relevant standards
+through data evaluating when each method is • Driving business change through the
+• The various Computer Aided appropriate application of big data analytics
+packages that are available in the • Draw on relevant technical and • Advise on the future of big data.
+marketplace analytical standards from across
+government and industry
+continued next page >
+continued next page >
+9
+
+--- PAGE 9 ---
+Your pathway guide to
+Geomatics Surveying
+Big data
+Continued
+Examples of likely knowledge, skills and experience at each level
+Level 1 (continued) Level 2 (continued)
+• The principles of a technical • Expose data from systems (for
+security architecture and how these example, through APIs), link data
+can be used to reduce information from multiple systems and deliver
+risk streaming services
+• The principles of Information • Works with other technologists and
+Security Governance and the analysts to integrate and separate
+purpose of Information Security data feeds to map, produce,
+strategies transform and test scalable data
+• Legislative and regulatory products that meet client needs
+instruments relevant to Information • Applies scientific methods through
+• Security relevant to own area of experimental design, exploratory
+practice and location data analysis and hypothesis testing
+• Beyond RICS/SCSI ethical to reach robust conclusions
+standards, candidates should • The ability to data mine and discover
+understand and adhere to the trends or sequences that can inform
+applicable data science ethics and direct business direction.
+framework.
+10
+
+--- PAGE 10 ---
+Your pathway guide to
+Geomatics Surveying
+Building Information Modelling
+(BIM) management
+Reference no. T087
+Description of competency in context of this sector
+This competency encompasses the establishment and management of the information modelling systems on projects. It covers
+collaborative process and technological principles involved in implementing Building Information Modelling (BIM) management.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Develop and apply management Show how the knowledge and
+understanding of the technical, systems to facilitate the use of BIM experience gained in this
+process and collaborative aspects of on projects including unified control competency has been applied to
+the use of BIM on projects. and reporting procedures. advising clients and/or senior
+management on BIM strategy.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• BIM strategies and implementation • Preparation of a BIM execution plan • Analysing, assessing, evaluating and
+• The various technical options and • Designing and implementing a BIM reporting on options for BIM
+solutions for information modelling management process strategies at a corporate or project
+• The collaborative processes • Analysing comparative BIM solutions level
+necessary for BIM adoption • Maintaining an information model • Designing and advising on
+• Standard classification systems and • Agreeing and implementing collaborative strategies for the
+their use in infrastructure contractual aspects of BIM such as successful implementation of BIM on
+• Relevant internationally recognised separate protocol projects
+management standards such as • Facilitating and managing project • Advising on the contractual and
+Construction Operations Building team members for BIM commercial implications of using BIM
+Information Exchange (COBie). implementation. on projects
+• Advising on options for software and
+protocols on BIM projects
+• Advising on technical information
+systems requirements for BIM at
+corporate or project level.
+11
+
+--- PAGE 11 ---
+Your pathway guide to
+Geomatics Surveying
+Cadastre and land management
+Reference no. T007
+Description of competency in context of this sector
+This competency deals with assessing documents relating to the demarcation, registration and transfer of land in order to
+define, on the ground, the extent of legal and/or registered title. It involves the preparation of expert lucid reports
+for the legal profession and provision of opinions to the legal profession and property owners.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge of the Provide evidence of reasoned advice,
+understanding of field and office principles of land registration, land and fully understand the role and
+procedures for boundary and/or management, administration and responsibility of an expert witness,
+cadastral surveys appropriate to legislation related to rights in real on the resolution of disputes by
+your national and/or international estate internationally and nationally. litigation and alternative procedures.
+location. Understand legal and Understand the relationship between
+physical boundaries and provide the surveyor, client and legal
+examples of these. Understand the profession and preparation of
+principles of land management. evidence for the legal process.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• An understanding of the property • Adopting appropriate scales for • Advising on the duty of an expert to
+registers in use measured surveys to be used in the Court
+• An understanding of all plans relating cadastre • Preparing expert reports for use in
+to the registration process • Choosing which documentation to litigation
+• Limitations of national mapping rely upon • Advising on the requirements of an
+• Definition of ‘extent of registered title’ • Practising with complete expert witness within the civil
+• An understanding of paper-title independence from the client procedure rules
+(the deeds) • Requesting documents from the • Advising on the requirements and
+• The status of a deed plan when legal profession role of an expert at a ‘meeting of
+referred to in the text of a deed • Obtaining documents from the experts’
+• Understanding common law Land Registries • Advising on the role of an expert at a
+presumptions regarding property • Using and interpreting of aerial ‘conference with counsel’
+boundaries photography and digital imagery • Preparing for trial
+• Understanding the law relating to • Reporting relevant matters back to • Advising on the role of an expert
+‘moving boundaries’ accretion, the legal profession during and after the Trial
+erosion, foreshore. • Understanding of the requirements • An appreciation of alternative dispute
+• Global economic and market for Determining Boundaries. resolution options, particularly the
+conditions differences and advantages/
+• The changing nature of business disadvantages when comparing
+• Core business drivers Mediation with Arbitration.
+• Clear view of what is meant by a
+business’s vision and mission
+• Organisational structures, values
+and objectives
+• Business performance
+• Strategic use of real estate
+• Decentralised vs centralised
+• Organisational objectives.
+12
+
+--- PAGE 12 ---
+Your pathway guide to
+Geomatics Surveying
+Conflict avoidance, management
+and dispute resolution procedures
+Reference no. M006
+Description of competency in context of this sector
+This covers the recognition, avoidance, management and resolution of disputes, involving an awareness of different dispute
+resolution processes and an understanding of the application of dispute resolution procedures appropriate to the area and
+jurisdiction of professional practice.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Provide evidence of practical Provide evidence of the application
+understanding of the techniques for application in your area of practice of the above in the context of
+conflict avoidance, conflict having regard to the relevant law. advising stakeholders in the various
+management and dispute resolution circumstances referred to above.
+procedures including for example
+adjudication and arbitration,
+appropriate to your pathway.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+A basic knowledge and understanding Adopting – or encouraging the adoption • Advising clients of the most suitable
+of some of the following, as most of (as appropriate) – suitable dispute means of dispute avoidance on their
+appropriate to your market sector/ avoidance techniques projects, and of dispute resolution
+areas of specialism: • Negotiating actively on behalf of procedures appropriate to their
+• Common causes of disputes clients (e.g. performance failure, individual circumstances,
+• The contribution of some of the unavailability, contract variations, demonstrating appreciation of when
+following to dispute avoidance: contract interpretations and to seek further specialist advice and
+– Risk management (its basic payment) prior to third-party referral when to advise clients within the
+principles and techniques) • Assisting in the collation or scope of the insurance cover of the
+– Early warning systems preparation of claims/counterclaims candidate’s organisation
+– Partnering techniques and submissions • Involvement in, or assistance with, a
+– Clear and robust client briefings • Assisting in the identification, referral to a third-party resolution
+• Theories of negotiation and the role gathering and collation of facts process and associated
+of effective communication and and expert evidence for use in management of that process on
+negotiation expert reports behalf of clients.
+• The primary features, advantages • Sufficient understanding of the main
+and disadvantages of a range of points of the statutory or non- NB: Please note that the roles of
+dispute resolution procedures and statutory law relevant acting as a third-party dispute
+their surrounding statutory and/or to/underpinning any particular resolver – or expert witness, are –
+non-statutory legal/ judicial context dispute resolution process and its for the vast majority of candidates –
+(e.g. how forms of contract deal application. not likely to be an activity that is
+with dispute resolution, and the undertaken. It is only a small minority
+scope of such clauses): of candidates with substantive work
+experience for whom this is likely to
+be relevant.
+continued next page >
+13
+
+--- PAGE 13 ---
+Your pathway guide to
+Geomatics Surveying
+Conflict avoidance, management
+and dispute resolution procedures
+Continued
+Examples of likely knowledge, skills and experience at each level
+Level 1 (continued)
+– Mediation (could include
+contracted and project mediation)
+and conciliation
+– Dispute Resolution Boards (DRBs)
+– Dispute Resolution Advisers
+(DRAs)
+– Adjudication
+– Independent expert determination
+– Arbitration
+– Litigation
+• The possible roles of a surveyor as
+an expert witness and/or an
+advocate, to include an awareness
+of the existence and scope of
+applicability of RICS/SCSI guidance
+for expert witnesses and advocates
+• The range of nominating bodies and
+services available to resolve
+disputes, and particularly the role of
+the RICS/SCSI Dispute Resolution
+Service and any specialised dispute
+resolution schemes it offers relevant
+to your market sector
+• The RICS/SCSI Global Professional
+Statement on Conflict of Interest
+and any appropriate national SCSI
+guidance.
+14
+
+--- PAGE 14 ---
+Your pathway guide to
+Geomatics Surveying
+Construction technology and
+environmental services
+Reference no. T013
+Description of competency in context of this sector
+This competency covers the design, engineering surveying and construction of buildings and other structures. Candidates
+should have a clear understanding of the design and construction processes commonly used in the industry. They should have
+detailed knowledge of construction solutions relevant to their projects. This competency is particularly useful for those on the
+chartered engineering surveying route.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge to the design Advise on the selection and
+understanding of the principles of and construction processes. application of particular processes
+design and construction relating to within your area of experience.
+your chosen field of practice. This should include liaison with
+specialists and consultants to
+develop project specific design
+and construction solutions.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• The stages of design from inception • Understanding alternative • Advising on the choice of
+to completion construction details in relation to construction solutions for your project
+• Impact of current legislation and functional elements of the design • Reporting on the impact of different
+regulations (both national and such as different types of piling or design solutions and construction
+international) in particular Health structural frame solutions processes on cost and programme.
+and Safety regulations • Implement appropriate engineering
+• How the various elements of the surveying methods to project
+building work and inter-relate • Produce as built drawings/surveys to
+• The process of constructing the appropriate and agreed formats,
+works scales, accuracies and output
+• Ability to adapt engineering • Advise on monitoring, engineering
+surveying methods and surveying and survey
+instrumentation to particular techniques/methods.
+construction processes/methods
+• Be aware of calibration and
+instrumentation/survey method
+limitations.
+15
+
+--- PAGE 15 ---
+Your pathway guide to
+Geomatics Surveying
+Consultancy services
+Reference no. T014
+Description of competency in context of this sector
+This competency is about the provision of management consultancy services to a range of different clients from inception to
+completion. Consultancy can occur in all areas of geomatics but particularly within the areas of GIS, land management
+and cadastre, remote sensing/imagery, geodesy and marine survey. The geomatics emphasis is on a ‘holistic’ approach to
+projects and problem solving. This approach calls for a clear, defined and sometimes in-depth understanding of client needs.
+Within the context of the actual competency wording, for real estate, read geographic.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge of the Give reasoned advice, prepare and
+understanding of the procurement provision of consultancy services in present consultancy reports,
+and execution of advisory and the context of the real estate and together with relevant analysis to
+strategic consultancy services in construction sectors. clients, in the context of the real
+the context of the real estate and estate and construction sectors.
+construction sectors.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• The consultancy cycle • Preparing consultancy service plans • Providing reports containing strategic
+• Different forms of procurement for • Preparing client briefs advice and recommendations to a
+consultancy services • Update reports to clients range of clients
+• The range of different consultancy • Negotiating client contracts • Presenting to clients
+interventions and approaches. • Dealing with ethical dilemmas • Implementing consultancy
+• The types of problems, risks and • Keeping appropriate records. intervention.
+issues that may arise during each • Selecting appropriate tools and
+phase of the consultancy cycle techniques for a given consultancy
+• The importance of agreeing a clear service
+contract with clients • Using selected tools and techniques
+• The need for the planning, timing to achieve agreed outcomes
+and managing of consultancy
+interventions
+• Managing the use of resources
+• Managing client expectations
+• Forms of reporting
+• Importance of confidentiality when
+dealing with sensitive information
+• The principal tools and techniques
+relevant to consultancy services
+• Importance of confidentiality when
+dealing with sensitive information.
+16
+
+--- PAGE 16 ---
+Your pathway guide to
+Geomatics Surveying
+Data Management
+Reference no. T089
+Description of competency in context of this sector
+This competency covers how data relating to individual projects and a surveyor’s work generally is collected, stored and
+retrieved. In addition to having knowledge of the different storage systems and data sources and how they work, a candidate
+should also understand the principles behind the systems and what makes them effective. Candidates should also have
+knowledge of how general information and data is managed on a project and the increasing use of computerised central
+project databases.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Provide evidence of practical Provide evidence of reasoned advice
+understanding of the sources of application in your area of practice given to clients and others on the
+information, law and data and understand the relevance of use and practical application of the
+management methods, and the information gathered and the uses information collected and systems
+systems applicable to your area of to which it can be applied. Analyse used, and/or specify the most
+practice, including the methodologies the information and data collected. appropriate way for your own and/or
+and techniques most appropriate to client organisation to collect, analyse
+collect, collate and store data. and apply relevant information and
+data.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• The use of published sources of • Obtaining data from published • Advising on data storage system
+data sources for use on a project • Advising on business filling systems
+• How data is collected, analysed and • Obtaining data from in-house sources • Benchmarking from analysed historic
+stored within your employer’s • Extracting data for inclusion in a data
+organisation database • Advising on the use of a
+• How project information is stored • Setting up and using paper based or computerised central project
+within your employer’s organisation electronic project filling systems database
+• How electronic database systems • Using a computerised central project • Complying with client’s data security
+work database requirements.
+• The use of computerised central • Inputting and extracting data from
+project databases or Building BIM
+Information Modelling, the benefits, • Retrieving information from a
+challenges and dangers technical library
+• How technical libraries are set up • Setting up a technical library.
+and used
+• Legislation applicable to data
+management and data access.
+17
+
+--- PAGE 17 ---
+Your pathway guide to
+Geomatics Surveying
+Development/project briefs
+Reference no. T024
+Description of competency in context of this sector
+The purpose of development briefs is to stimulate interest in development sites whilst project briefs influence the form that a
+desired development will take. Both provide a framework for developers in the conception of major types of development
+schemes. Geomatics professionals can play a major role in the spatial and procedural aspects of development/projects briefs.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge to identify, Apply information in the preparation
+understanding of the information select, assemble and analyse and presentation of development
+required to prepare a development information relevant to the briefs or detailed design briefs, or
+brief or project brief. preparation of development briefs parts thereof.
+or outline project briefs.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• The objectives of • Producing a development/project • Using a development/project brief to
+development/project briefs brief understanding geospatial design a development scheme
+• Essential site details including elements • Negotiating agreements with
+history, location, accessibility, • Analysing gathered information and stakeholder interests
+services and utilities data for a development/project brief • Planning the implementation of a
+• Environmental features and issues • Produce agreed specification and development scheme
+• The consultation process decide on survey needs • Formulating financial arrangements
+• The planning policy background • Review and highlight any legal for a development scheme.
+• Market conditions constraints (ie easements, neighbour
+• Be aware of relevant guidance (ie issues)
+EIA, 1:500 scale etc) • Advise on boundary issues including
+• Review land ownership determined boundaries and as built
+documentation and boundary surveys.
+definition
+• Assess spatial data capture and
+output needs
+• Assess data needs (ie aerial survey,
+national mapping, planning portal,
+historical mapping etc).
+18
+
+--- PAGE 18 ---
+Your pathway guide to
+Geomatics Surveying
+Engineering surveying
+Reference no. T027
+Description of competency in context of this sector
+Engineering surveying is the art of determining, and/or setting-out the position of features on, above, or below the earth’s
+surface to facilitate the design and construction of engineering projects, and buildings.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge on site and be Plan, specify and give reasoned
+understanding of the principles of aware of safety, site management advice on engineering surveys;
+construction setting out, procedures and civil engineering/ define and assess accuracies and
+deformation and as-built surveys. structural principles. tolerances; manage the engineering
+Be fully conversant with all forms of surveying element in large projects;
+construction drawings, plans and and understand the principles of
+surveys. good engineering practice.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• Types of ground markers, • Recognising options, choosing and • Designing and supervising provision,
+installation techniques and justifying instrument suitability for use observation, computation and
+suitability for use in engineering projects checking of plan and height control
+• Requirements for survey data • Understanding accuracies and errors • Advising other construction/design
+capture and presentation for design and how they apply professionals on all aspects of site
+purposes in your field of operation • Checking the work of others measurement; contributing to project
+• Setting-out techniques • Leading the work of teams and management team decision making
+• Understand the importance of individuals • Producting project resource plans
+comparison of designed and as- • Identifying hazards and undertaking and budgets for programmes of work
+built spatial locations risk assessments • Defining survey processes and
+• Be conversant with construction • Producing method statements for site assessing accuracy and tolerances of
+drawings, plans and surveys survey activities survey systems
+• Understand site H & S issues • Communicating and presenting • Managing the engineering survey
+• Understand basic principles of civil results of surveys to others. element within a large project
+engineering, terminology and • Understanding and analysing the
+construction techniques. impact of your decisions on all
+aspects of the project
+• Implementing project H & S strategy
+for site surveying elements of a
+project.
+19
+
+--- PAGE 19 ---
+Your pathway guide to
+Geomatics Surveying
+Environmental assessment
+Reference no. T028
+Description of competency in context of this sector
+This competency is about an understanding and application of the principles of environmental assessment, particularly
+Environmental Impact Assessment and Strategic Environmental Impact Assessment for projects, within the planning
+and regulatory framework.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply in practice your understanding Provide evidence of reasoned advice
+understanding of appropriate of environmental assessment and including the preparation and
+environmental assessment the requirements for compliance, production of reports based on
+concepts, processes and systems. including undertaking an appropriate environmental
+This should include responsibilities environmental assessment. assessments.
+imposed by law, codes of practice
+and other regulations relating to
+environmental assessment.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• Principles of Environmental Impact • Advising on the need for • Advising on the need and application
+Assessment (EIA) and Strategic environmental assessment, including of EIA, SIA and EA
+Environmental Impact Assessment EIA and SIA for development projects • Co-ordinating and providing
+(SIA) regulations arising from EC • Advising on requirements and scope specialist advice on these, including
+Directives and national/local of EIA and the regulators’ roles negotiations with clients and
+legislation • Integrating EIA with topographic regulators
+• Understand the data gathering mapping and other data sources to • Preparing and compiling
+processes needed for EIAs form a complete client brief. environmental statements and non-
+• Demonstrate knowledge of where technical summaries for submission
+EA may apply and whether this to clients and regulators, and other
+involves formal or informal stakeholders.
+environmental assessment
+• Understand the basic processes,
+procedures and requirements of
+formal EIA and SIA.
+20
+
+--- PAGE 20 ---
+Your pathway guide to
+Geomatics Surveying
+Geodesy
+Reference no. T035
+Description of competency in context of this sector
+Geodesy is primarily concerned with positioning and the gravity field and geometrical aspects of their temporal variations,
+although it can also include the study of the Earth’s magnetic field. Geodesy can be divided in geomensuration, which is
+concerned with measuring the earth on a global scale, and surveying, which is concerned with measuring parts of the surface.
+Geodesy is a primary skill set of all chartered land and hydrographic surveyors.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge in practice, Provide evidence of reasoned advice
+understanding of the principles of specify and plan surveys and on advanced practice and planning.
+geodesy, Global Navigation Satellite instrumentation needs. Be aware of Use advanced software and carry
+Systems, global/regional/national error sources and ‘fitness for out adjustments and analysis. Advise
+geodetic reference systems, geoids, purpose’ of data. Use industry on client specifications and final
+datums and projections. standard software and apply product needs.
+network adjustments and/or
+transformations.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• Understand the difference between • Understanding the various modes of • Understanding differences between
+geoid and ellipsoid GNSS (GPS) positioning (static, rapid various obit products, where to
+• Being aware of the differences static, kinematic, real-time kinematic obtain and when to apply
+between types of projections, with • Understanding the levels of accuracy • Being able to select and apply
+their advantages and disadvantages achievable, equipment, data appropriate models/estimation
+• An appreciation of the applications collection and processing strategies strategies within commercial GNSS
+and limitations of GNSS, with required for a variety of (GPS) processing software eg
+particular emphasis on GPS surveying/engineering tasks including: tropospheric estimation
+• Be aware of the definition of a topographic survey, setting out, • Being able to advise clients on
+datum, and the existence of datums control establishment detailed design, observation and
+relevant to the location of the • Planning and executing relevant processing requirements for high
+candidate. GNSS (GPS) surveys to appropriate precision or large scale projects
+levels of accuracy, including data • Producing and commenting final
+processing processing reports and comment
+• Using standard commercial GNSS from a strong knowledge base on
+(GPS) processing packages and levels of achieved accuracies
+appropriate transformation routines to • Supervising and training junior
+transform GPS based coordinatesto colleagues in the field use of GPS
+National datums. equipment and data processing
+techniques.
+21
+
+--- PAGE 21 ---
+Your pathway guide to
+Geomatics Surveying
+GIS (Geographical Information Systems)
+Reference no. T036
+Description of competency in context of this sector
+A GIS uses computer technology to integrate, manipulate and display a wide range of information to create a picture of an area’s
+geography, environment and socio-economic characteristics. Beginning with a computerised topographic map as its base, a
+GIS overlays and integrates graphic and textual information from separate databases. The end result is a tool that can support
+decision making and problem solving and provide almost instantaneous answers to complex questions.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2
+Demonstrate knowledge and Apply your knowledge and assess
+understanding of the principles data quality; define and us
+of geographic information science appropriate input and data transfer
+and systems. Be aware of industry methods; analyse data and prepare
+standard GIS, data structures, databases; identify digital data
+types and their applications, and of sources and assess ‘fitness for use’.
+appropriate capture and output Understand and be aware of national
+systems. and international data standards.
+Examples of knowledge comprised Examples of activities and knowledge
+within this level are: comprised within this level are:
+• Understand and be able to explain • Specifying capture methods • Identifying, assessing and sourcing
+the generic concepts in GIS appropriate to the data source and datasets appropriate to user
+appropriate to different audiences the application, explaining and requirements and assessing their
+• Compare and contrast different justifying the rationale used quality and fitness for purpose in the
+commercial GIS software packages • Managing data capture projects and context of quantitative and qualitative
+and explain their relative merits providing quality control over the measures such as: spatial resolution,
+• Proficiently operate at least one acquisition of spatial data for use in accuracy/precision, temporal
+commercially available off-the-shelf GIS resolution, purpose of original
+GIS software package eg create. • Understanding the principles capture etc
+store, access, view, analyse and underlying the analysis of spatial data • Understanding international de jure
+plot spatial data and implement these with typical GIS and de facto industry standards and
+• Understand and be able to describe algorithms using standard how these apply in local jurisdictions
+the data types and data structures functionality and/or a high level and to local customs and practices
+used for spatial data and explain programming language • Understanding metadata for third
+their relative merits • Applying query languages in relation to party datasets and be able to prepare,
+• Understand and be able to explain database management systems eg creating and maintaining appropriate
+different open source and data modelling, data loading, data metadata for new datasets.
+proprietary data formats and maintenance, query, translate data
+explain their relative merits formats, data export.
+• Understand and be able to describe Continued over page>
+the different methods of primary,
+and especially secondary, data
+capture and their underpinning
+technologies
+• Understand and be able to describe
+the different output options and
+their underpinning technologies.
+22
+
+--- PAGE 22 ---
+Your pathway guide to
+Geomatics Surveying
+GIS (Geographical Information Systems)
+Reference no. T036
+Continued
+Examples of likely knowledge, skills and experience at each level
+Level 3
+Assess clients’ needs and advise
+them accordingly. Define
+specifications including data and
+process modelling, customise
+systems, carry out advanced spatial
+analyses, and manage data and
+observe data standards.
+Examples of activities and • Defining appropriate data
+knowledge comprised within this management standards with respect
+level are: to; currency requirements, conflict
+• Designing and conducting user resolution, archiving, availability,
+requirements analysis at backup and recovery, system
+consultancy level resilience etc
+• Analysing and synthesising user • Explaining all of the above in the
+requirements into a coherent and context of the customer’s wider
+convincing strategy information systems
+• Presenting, explaining and justifying • Identifying and explaining the
+findings and advice in a language implications and limitations of advice
+appropriate to the customer with respect to any of the above
+• Defining data standards to meet • Preparing project proposals and draft
+specific user requirements tender documentation for system
+• Analysing customer processes and procurement, conducting benchmark
+presenting options to model these tests, and overseeing implementation
+as appropriate with respect to programmes.
+availability of resources, criticality
+and customer expectations
+• Customising GIS software using a
+high level programming language in
+order to implement data
+specifications, data models,
+process models etc
+• Analysing, defining and implementing
+appropriate analytical methods
+23
+
+--- PAGE 23 ---
+Your pathway guide to
+Geomatics Surveying
+Ground engineering and subsidence
+Reference no. T037
+Description of competency in context of this sector
+Understanding of rock and soil mechanics and how these are applied to ground and slope stability problems. Understanding of
+natural and mining induced subsidence in terms of causation, effect, mitigation and remedies. Understanding of the methodology
+of large scale metrology (LSM), deformation monitoring and advising on appropriate instrumentation and survey methods.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Undertake appropriate Collate, analyse and interpret Provide evidence of reasoned advice,
+investigations including site information gathered after initial prepare and present reports.
+inspection to research site history research.
+and geology.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• An understanding of soil and rock • Designing and implementing (in • Producing a report on slope instability
+properties accordance with client brief) a recommending means of minimising
+• An understanding of causation of monitoring survey scheme risk
+natural and mining induced • Investigating geological and mining • Assisting with the preparation of an
+subsidence records to produce a report on expert witness report on ground
+• Monitoring ground movement in a causation of ground movement engineering/subsidence
+subsidence area using • Examining the options for minimising • Analysing the results of ground
+agreed/specified survey the risk of ground movement movement monitoring and producing
+instrumentation and methods • Examining the amount of ground a report with conclusions
+• Monitoring the effect of ground movement expected and the strains • Evaluating the options for treating
+movement on a building/structure induced using appropriate LSM subterranean voids and mine outlets
+• Be aware of calibration issues, ISO methods and recommending a course of
+documentation and relevant • Being fully aware of calibration issues action.
+guidance and client guides. and instrument capabilities
+• Producing a full statistical analysis of
+tall survey work, advising on
+appropriate output formats.
+24
+
+--- PAGE 24 ---
+Your pathway guide to
+Geomatics Surveying
+Hydrographic (marine) surveying
+Reference no. T042
+Description of competency in context of this sector
+Hydrographic surveying involves precise positioning and data acquisition in marine environments ranging from inland waters
+and rivers, to ports and the deep oceans. This competency involves the ability to provide precise three-dimensional position
+and measurement of various physical features within the marine environment such as bottom depth and structure, currents,
+tides and waves.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate a working knowledge Plan the conduct of marine surveys. Assess the client’s needs and define
+and understanding of the principles Be fully aware of safety issues. specifications, tenders and/or
+and limitations of hydrographic Specify appropriate instrumentation contracts. Manage marine surveys.
+survey. Conduct measurements in and ensure correct calibration. Analyse the data collected and use it
+the marine environment. Understand the principles of geodesy to prepare reports and briefings. Be
+on a local and international basis, and conversant with the International
+its application in a marine Law of the Sea and/or maritime
+environment. Fully understand the boundaries.
+principles, application and limitations
+of navigation, geophysical and marine
+survey instrumentation and software.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• Providing navigation and data • Being actively involved in project • Assuming full responsibility for the
+collection for oil, gas and mineral initiation and execution as Senior initiation of the works in accordance
+resource exploration and extraction Surveyor/Navigator, including with the approved project specific
+• Conducting data collection for assessment of survey requirements, and standard survey procedures,
+environmental monitoring, equipment specifications and customer requirements and technical
+aquaculture and oceanographic suitability specifications
+research • Conducting safety risk assessments • Preparing tender documents and
+• Providing surveying support for and reviewing project safety plans for being responsible for financial control
+dredging, coastal works, near-shore various activities of projects
+and/or off-shore construction • Being responsible for, and ensuring • Liaising and advising clients
+projects that, equipment is fully calibrated and regarding contract execution and
+• Quality control and processing of understanding the importance of having overall responsibility for the
+hydrographic data calibration methods and the successful performance of the
+• Presenting hydrographic data using relationship to data quality technical team
+a range of paper (chart) and • Ensuring geodetic parameters • Evaluating and presenting survey
+electronic formats. specified for the project are correctly results and advising clients with
+defined and implemented within respect to survey findings
+acquisition software. QC all supplied • Assisting clients with their further
+positional information. requirements and helping develop
+future potential
+• Advising clients on national/
+international policy and legislation
+and its influence on survey activities.
+25
+
+--- PAGE 25 ---
+Your pathway guide to
+Geomatics Surveying
+Legal/regulatory compliance
+Reference no. T051
+Description of competency in context of this sector
+Legal issues are at the heart of many areas of traditional land survey practice. All land surveyors should have a good working
+knowledge of any legislation which may impact on their work whether it be health and safety legislation in engineering surveying,
+land law and/or cadastral regulations or the law of the sea. Although land/engineering/hydrographic surveyors are not asked to
+be expert in legal matters, some are and many add expert witness training to their skillsets. For many international members and
+prospective members, this competency will be especially applicable in a cadastral context.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge to comply Provide evidence of reasoned advice,
+understanding of any legal/ with legal/regulatory requirements in prepare and present reports on
+regulatory compliance requirements specific situations within your area legal/regulatory compliance
+in relation to your area of practice. of practice. requirements in relation to your
+area of practice.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• Be aware of the legislative needs of • Apply your knowledge of land law in • Apply your legal knowledge in a
+land and marine survey work an international/national and/or court scenario
+• Be aware and understand the regional scenario • Prepare legal reports
+basics of land law as applicable in • Apply your legal knowledge in a • Advise on legislative obligations
+your geographic location professional scenario such as a minor (Health and Safety etc) to clients
+• Be aware of legislative strictures boundary dispute • Advise clients of survey and mapping
+such as health and safety legislation • Be aware of all relevant and issues in combination with legal
+and/or traffic management for applicable guidance and practice advice in boundary disputes
+example notes in this area (such as Expert • Advise on other types of dispute such
+• Be aware of tort/contract law and Witness) as party walls, right to light and
+its basic principles as applicable in • Be aware of expert witness training subsidence
+your geographical area • Apply your knowledge in a cadastral • Advise courts of mapping issues,
+• Be aware of national land context. explain complex surveying problems
+registration issues/legislation and (map accuracy for example) to legal
+cadastral laws. professionals
+• Carry out cadastral surveys in
+compliance with national/regional
+legislation.
+26
+
+--- PAGE 26 ---
+Your pathway guide to
+Geomatics Surveying
+Management of the natural
+environment and landscape
+Reference no. T055
+Description of competency in context of this sector
+This competency is about the management of landscape and natural resources and habitat.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge of nature Provide evidence of reasoned advice,
+understanding of the importance conservation and landscape in the write reports and negotiate on all
+and role of nature conservation and management of real estate and matters relating to nature
+the landscape in real estate, development. conservation and landscape.
+business management and
+development.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• Landscape and designations and • Advising on grants available for • Providing strategic advice on land
+agri-environmental schemes protection of landscape and natural use, management practice, and
+• Relevant legislation governing habitat and natural resources management of specific habitats
+designation schemes • Advising on mapping and survey and species
+• Bodies charged with bringing in and specifications relating to nature • Interpreting and filtering advice
+delivering such legislation conservation and landscape • Providing balanced report writing to
+• Understand legislative drivers • Advising on spatial issues which may provide over-arching view of
+behind Sites of Special Scientific impact on nature conservation (ie management of a landscape.
+Interest (SSSI’s) and other rights of access).
+designated areas
+• Understand the impact of spatial
+data and land law on conservation
+and the natural environment.
+27
+
+--- PAGE 27 ---
+Your pathway guide to
+Geomatics Surveying
+Measurement
+Reference no. T057
+Description of competency in context of this sector
+This competency is relevant to all data capture and surveying/measurement areas of practice. Particularly, land survey,
+engineering survey and measured building survey.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge to undertake Evaluate, present, manage, analyse
+understanding of the principles and measurement. Use basic and/or data and/or apply spatial data and
+limitations of measurement relevant advanced instrumentation to collect information. Show an advanced
+to your area of practice. data. Present appropriate information understanding of accuracy, precision
+gained from measurement. and error sources.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• Be aware of all checking • Using advanced data capture • Being fully conversant with all
+procedures and be able to ascertain instrumentation such as reflectorless RICS/SCSI geomatics specification
+the suitability of different EDM, GPS, handheld GIS data and guidance and other official RICS
+instrumentation and measurement capture tools etc /SCSI guidance as appropriate to
+techniques • Understanding the principles of your area of practice
+• Understand the principles of error measured building surveying and • Appreciating all legislative issues
+sources its outputs such as health and safety
+• Understand data capture • Understanding the differences • Advising on appropriate data capture
+techniques and limitations of use between different data capture techniques
+• Understand and use different basic techniques and their fitness for • Explaining complex survey data
+survey instrumentation (EDMs, purpose capture techniques and terminology
+automatic levels, lasers etc) • Producing final output and utilising to clients
+• Understand the principles of data post processing techniques • Describing the principles of meta
+representation and the use of • Understanding specifications and data and property data information
+appropriate data capture guidance. and compatibility.
+techniques to achieve agreed
+survey output.
+28
+
+--- PAGE 28 ---
+Your pathway guide to
+Geomatics Surveying
+Planning development and
+management
+Reference no. T061
+Description of competency in context of this sector
+Planning appraisal is one of the crucial starting points in the development or refurbishment process. Such appraisals draw
+together all the relevant policies and site history as pertaining to a site. A planning brief or supplementary planning document
+may also be used to stimulate interest in development or provide guidance or mandatory criteria by which a scheme may be
+developed. They may be used in conjunction with an allocated site in a development plan or a site being promoted by a land
+owner for sale. Both provide a framework and guide for developers in the preparation of development schemes. Development
+management covers the process of managing or obtaining the grant of planning consents from the local authority or client-side
+perspective. The competency also covers the appeals process and the criteria by which cases will be considered by inspectors.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and
+understanding site inspection and Apply your knowledge to identify, Apply information and reasoned
+evaluation and the information select, assemble and analyse advice in the preparation,
+required to prepare a planning, information relevant to the presentation and /or negotiation of
+design and/or development brief preparation of briefs. site evaluation reports, planning
+and/or to submit a planning application and appeals
+application or appeal. documentation, planning and
+development briefs or more detailed
+design briefs, or parts thereof.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• Site/building surveys and details • Producing a planning, design and • Liaising with and negotiating with
+e.g. site planning history, flood risk, development brief and/or planning and estates officers, clients,
+biodiversity, archaeology, supplementary planning guidance fellow professionals and third-party
+architectural character, • Prepare/make presentations at stakeholders in relationship to a
+conservation, accessibility, meetings development project
+highways, services and utilities • Support the making of planning • Using a brief to assist in the
+• Environmental features and issues applications and appeal promotion and/or design and
+• Gross and net site development documentation implementation of a development
+areas • Selecting, researching and analysing scheme or a site disposal or
+• Urban design principles and information and data and writing acquisition
+characteristics reports • Preparing planning appraisals of land,
+• Basic architectural and urban • Programming or phasing of the buildings and concepts and area
+design language in relation to stages of development wide planning parameter studies
+planning proposals • Producing a risk analysis • Making a planning application and/or
+• The objectives and characteristics • Identify and help ensure compliance submitting an appeal and appearing
+of different kinds of brief with planning policies and guidance at an informal or public inquiry
+• The stages of the development • Support the preparation of a design
+application and appeals process and access statement.
+continued next page >
+continued next page >
+29
+
+--- PAGE 29 ---
+Your pathway guide to
+Geomatics Surveying
+Planning development and
+management
+Continued
+Examples of likely knowledge, skills and experience at each level
+Level 1 (continued) Level 3 (continued)
+• The consultation process and • Lead the preparation or write a
+stakeholder management design and access statement
+• The role of supplementary planning • Planning and phasing the
+documents, design guides and implementation of a development
+codes in guiding planning scheme
+applications and their consideration. • Formulating and negotiating a
+planning or highways agreements
+• Creativity, problem solving and
+dispute mediation in scheme
+development.
+30
+
+--- PAGE 30 ---
+Your pathway guide to
+Geomatics Surveying
+Remote sensing and photogrammetry
+Reference no. T075
+Description of competency in context of this sector
+Remote sensing and photogrammetry are activities and methods within the Geomatics profession related to provision of spatial
+information. This involves using photographs and digital imagery to provide information about the Earth’s surface and changes
+which occur within the landscape. It also covers the science and technology of making precise measurements on the imagery to
+model, in three dimensions, the landscape and features or structures on the Earth’s surface.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge and be aware Give advice on client requirements.
+understanding of the principles of of scales, camera and satellite Identify and assess client
+remote sensing and photogrammetry principles and different data capture specifications. Use advanced
+both aerial and terrestrial). echniques. Understand and industry software and advise on
+undertake procedures for routine data transfer and/or format.
+data capture, and analyse and/or
+djust/transform data. Use standard
+industry software.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• Principles of photogrammetry • Interpreting of specifications • Providing reasoned advice on tenders
+• Camera geometry – scales, • Setting up equipment – resolving and contracts
+precision, ground sample distance interior and exterior orientations • Comparing and advising on benefits
+• Properties of photography – • Providing ground control – aerial of alternative methodology
+principal point, radial properties triangulation • Project design and drafting of quality
+• Principles of remote sensing • Digital Surface Modelling – plans and method statements
+• Sensors – geometric characteristics techniques • Project and contract management
+• Image processing • 3D data capture. • Producing reports, error detection
+• Types of imagery, the source of and analysis.
+acquisition, and their practical
+application
+• Remote sensed data – infra-red,
+panchromatic, colour, thermal
+• Stereo photography and the
+requirements to achieve 3D
+measurement
+• Oblique photography
+• Ortho-photography (true,
+ortho-rectified, Geo-rectified).
+31
+
+--- PAGE 31 ---
+Your pathway guide to
+Geomatics Surveying
+Surveying and mapping
+Reference no. T078
+Description of competency in context of this sector
+Mapping, in this context, is an exceptionally broad potential area of practice. Encompassing everything from LIDAR, IFSAR,
+aerial photography and other primary data capture techniques to ground control using GPS and/or traditional techniques and
+the production of digital elevation models, DTMs or any form of geographical output including GIS data capture and output.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge of mapping Provide evidence of reasoned advice
+understanding of the principles of and geographical sciences in on the design and specification of
+mapping and geographic information relation to your area of practice, mapping and/or geo-information
+sciences appropriate to your area of including data capture error projects in a national and/or
+practice, including the accuracy, sources, instrument calibration and international context.
+scale, currency and fitness for limitations. Use mapping/
+purpose of hardcopy and/or digital cartographic survey software,
+maps, drawings, imagery and plans. understand production processes
+and digital data capture (scanning
+and/or digitisation), and carry out
+surveys through to the end product.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• The limitations of use of spatial data • Using post processing survey/ • Using all forms of survey/mapping/
+capture instrumentation and mapping software competently imagery contracts competently and
+techniques • Using survey industry standard software describing the nuances of each (i.e.
+• Instrument checking techniques and post processing techniques accuracy/ fitness for purpose issues)
+• The basic principles of geodesy and • Understanding the principles of data • Being fully conversant with all RICS
+its application to mapping per your integration and compatibility, Geomatics specifications and
+area of practice integrating different data sets to guidance in relation to mapping
+• Basic survey software achieve client needs • Explaining complex mapping issues
+• Data quality and checking criteria • Understanding scalability in the context to clients and discerning their ‘actual’
+and techniques of both mapping and user requirements needs.
+• The issues around visual • Using imagery software and GIS data
+representation of spatial data and its capture tools
+relationship with data capture • Using modern survey instrumentation
+techniques and understanding checking/calibration
+• Understand scalability, fitness for techniques
+purpose and accuracy constraints. • A good understanding of error sources,
+probability and statistical analysis
+according to your area of practice
+• Being fully conversant with the
+production of digital terrain models,
+digital elevation modelling and data
+integration techniques (overlaying OS
+map layers with surveyed
+topographical data for example)
+• Understanding survey contracts and
+specifications (in conjunction with
+senior colleagues).
+32
+
+--- PAGE 32 ---
+Your pathway guide to
+Geomatics Surveying
+Surveying land and sea
+Reference no. T081
+Description of competency in context of this sector
+This competence covers aspects of both terrestrial and marine surveying. It involves the collection, processing, analysis and
+dissemination of geospatial data.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate knowledge and Apply your knowledge by identifying, Define and assess client needs.
+understanding of the principles of planning and accessing survey Define specifications and prepare
+geomatics and the various requirements, specifications and tenders and/or contracts.
+applications of its techniques within appropriate instrumentation. Use Demonstrate that you are fully
+the natural, maritime and built industry standard survey and/or conversant with the principles of
+environments. offshore software, and demonstrate geodesy on a national, international
+an understanding of the principles, and/or maritime basis.
+uses and limitations of Global
+Navigation Satellite Systems and
+other navigation systems.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• Conducting marine navigation and • Being responsible for and ensuring • Assuming full responsibility for the
+offshore data collection for that survey equipment is fully initiation of a survey in accordance
+exploration and exploitation calibrated, and understanding the with the approved project specific
+purposes importance of calibration methods and standard survey procedures,
+• Collecting and quality controlling and the relationship to data quality customer requirements and technical
+spatial data for control networks • Undertaking post-process GNSS specifications
+and/or topographic detail surveys observations and performing • Sourcing, managing and assessing
+• Conducting engineering surveys to adjustments within a network survey contractors performing work
+provide dimensional control, setting • Performing datum transformations on your behalf
+out and QA checks for the and understanding the relationship • Helping to create the overall direction,
+construction industry between local datum and global strategy, and coordination for the
+• Collecting and/or manipulating data datums such as WGS84 business development and marketing
+for a specific use within a • Being involved in project initiation of a GIS product and service
+Geographic Information System and execution as Senior Surveyor • Advising clients upon coastal
+• Conducting Photogrammetric including assessment of survey processes and the potential impact of
+measurements (2D or 3D) from requirements, equipment any activity and/or construction in the
+photographs or imagery stored specifications and suitability nearshore environment.
+electronically. • Working directly with program • Advising clients on national/
+managers, software development international policy and legislation
+engineers, and testers to write and its influence on survey activities.
+documentation that helps customers
+understand and use a GIS system.
+33
+
+--- PAGE 33 ---
+Your pathway guide to
+Geomatics Surveying
+Use of the marine environment
+Reference no. T082
+Description of competency in context of this sector
+This competency covers the wide range of sea area usage; application of national and international legislation; conducting data
+acquisition and analysis. It also involves presentation professional and scientific reports, assisting in sea area evaluation and the
+preparation of planning applications. Additionally it incorporates assistance provided to clients in respect of marine exploitation,
+with due regard to the environment.
+Examples of likely knowledge, skills and experience at each level
+Level 1 Level 2 Level 3
+Demonstrate an understanding of Apply these principles to planning for Oversee the conduct of operations to
+the principles of inshore and offshore the exploitation and/or use of marine use and/or exploit marine resources.
+resource development, exploitation resources. Use appropriate marine Analyse the data collected and
+and/or conservation. Be aware of the data capture and analysis software prepare reports and briefings on the
+relevant legal guidance and and/or instrumentation. data collected. Advise on national
+environmental issues. and international policy on ocean
+and inshore resource management.
+Examples of knowledge comprised Examples of activities and knowledge Examples of activities and knowledge
+within this level are: comprised within this level are: comprised within this level are:
+• Be aware of the global distribution • Determining appropriate assessment • Liaising with and advising clients on
+of physical, biological and chemical techniques for sea area valuation project planning
+resources within the sea, upon and • Planning and executing a marine • Conducting project management
+beneath the seabed that may be of survey in order to determine both pre, post and during
+value to humankind economic yield, seabed topography, development projects
+• Understand ethics and ecology and/or geophysical structure • Evaluating and presenting survey
+international/national legislation • Undertaking water quality and results with respect to planned sea
+affecting sea areas movement observations and analysis area usage within scientific reports
+• Understand the role of economic • Appreciating the application and • Advising clients in lay terms on
+markets, property rights and market limitations of different data project findings
+structures acquisition equipment • Assisting clients in the development
+• Appreciate the range of sea area • Displaying acquired data within a of their future plans
+utilisation and the concept of range of paper and electronic media • Applying national and international
+conflict management formats. policy to future developments.
+• Appreciate the concepts of
+sustainable development.
+34
+
+--- PAGE 34 ---
+Dating back to 1895, the Society of Chartered Surveyors www.scsi.ie
+www.scsi.ie
+Ireland is the independent professional body for Chartered
+Surveyors working and practicing in Ireland.
+Working in partnership with RICS, the pre-eminent Chartered Society of
+professional body for the construction, landandpropertysectors Chartered Surveyors Ireland
+around the world, the Society and RICS act in the public interest: 38 Merrion Square
+setting and maintaining the highest standards of competence Dublin 2
+and integrityamong the profession; and providing impartial, education@scsi.ie
+authoritativeadvice on key issues for business, society and T 01 6445500
+governments worldwide. F 01 6611797
+Advancing standardsin construction, land and property, the
+Chartered Surveyor professional qualification is the world’s leading
+qualificationwhen it comes to professional standards. In a world
+where more and more people, governments, banks and commercial
+organisations demand greater certainty of professional standards and
+ethics, attaining the Chartered Surveyor qualification is the recognised
+mark of property professionalism.
+Members of the profession are typically employed in the construction,
+land and property markets through private practice, in central and
+local government, in state agencies, in academic institutions, in
+business organisations and in non-governmental organisations.
+Members’services are diverse and can include offering strategic
+advice on the economics, valuation, law, technology, finance and
+management in all aspects of the construction, land and property
+industry.
+All aspects of the profession, from educationthrough to
+qualificationand the continuing maintenance of the highest
+professional standardsare regulatedand overseen through the
+partnership of the Society of Chartered Surveyors Ireland and RICS, in
+the public interest.
+This valuable partnership with RICS enables access to a worldwide
+network of research, experienceand advice.

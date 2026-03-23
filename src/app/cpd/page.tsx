@@ -46,6 +46,13 @@ export default function CPDPage() {
       <div className="max-w-6xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">CPD Certificates</h1>
         <p className="text-[var(--text-muted)] mb-8">Continuing Professional Development tracking and certificates</p>
+        
+        <div className="bg-blue-50/50 border border-blue-100 rounded-lg p-3 mb-6 flex items-start gap-3 text-sm">
+          <div className="text-blue-500 mt-0.5">ℹ️</div>
+          <p className="text-[var(--text-secondary)]">
+            <span className="font-medium text-[var(--text-primary)]">Auto-logging active:</span> Hours are auto-logged when you use METARDU computation tools. Manual entries can be added below.
+          </p>
+        </div>
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-[var(--text-muted)] mb-2">Select Country</label>

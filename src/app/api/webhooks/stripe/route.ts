@@ -37,6 +37,20 @@ export async function POST(request: NextRequest) {
       const userId = session.metadata?.user_id
       const planId = session.metadata?.plan_id
 
+      if (session.metadata?.type === 'peer_review') {
+        const reviewReqId = session.metadata.review_request_id
+        if (reviewReqId) {
+          await supabase
+            .from('peer_reviews')
+            .update({ 
+              payment_status: 'paid', 
+              stripe_payment_intent_id: session.payment_intent 
+            })
+            .eq('id', reviewReqId)
+        }
+        break
+      }
+
       if (!paymentId || !userId || !planId) {
         console.error('Stripe webhook: missing metadata in checkout.session.completed')
         break

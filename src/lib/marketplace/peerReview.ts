@@ -17,6 +17,7 @@ export interface ReviewRequest {
   submitterContact: string
   attachmentNote: string      // Link to METARDU project or external URL
   status: ReviewStatus
+  paymentStatus?: string
   postedAt: string
   comments: ReviewComment[]
 }
@@ -32,63 +33,101 @@ export interface ReviewComment {
   postedAt: string
 }
 
-const REQ_KEY  = 'geonova_review_requests'
-const COM_KEY  = 'geonova_review_comments'
+import { createClient } from '../supabase/client'
 
-function loadRequests(): ReviewRequest[] {
+export async function getRequests(status?: ReviewStatus): Promise<ReviewRequest[]> {
   if (typeof window === 'undefined') return []
-  try { return JSON.parse(localStorage.getItem(REQ_KEY) || '[]') } catch { return [] }
-}
-function saveRequests(r: ReviewRequest[]) {
-  if (typeof window === 'undefined') return
-  localStorage.setItem(REQ_KEY, JSON.stringify(r))
-}
-function loadComments(): ReviewComment[] {
-  if (typeof window === 'undefined') return []
-  try { return JSON.parse(localStorage.getItem(COM_KEY) || '[]') } catch { return [] }
-}
-function saveComments(c: ReviewComment[]) {
-  if (typeof window === 'undefined') return
-  localStorage.setItem(COM_KEY, JSON.stringify(c))
+  const supabase = createClient()
+  
+  let q = supabase.from('peer_reviews').select(`
+    id, project_name, survey_type, description, country, submitter_name, submitter_contact, 
+    attachment_note, status, posted_at, payment_status,
+    peer_review_comments(id, request_id, reviewer_name, reviewer_title, comment, category, rating, posted_at)
+  `).order('posted_at', { ascending: false })
+  
+  if (status) q = q.eq('status', status)
+    
+  const { data } = await q
+  if (!data) return []
+  
+  return data.map((r: any) => ({
+    id: r.id,
+    projectName: r.project_name,
+    surveyType: r.survey_type as SurveyTypeOption,
+    description: r.description,
+    country: r.country,
+    submitterName: r.submitter_name,
+    submitterContact: r.submitter_contact,
+    attachmentNote: r.attachment_note,
+    status: r.status as ReviewStatus,
+    paymentStatus: r.payment_status,
+    postedAt: r.posted_at,
+    comments: (r.peer_review_comments || []).map((c: any) => ({
+      id: c.id,
+      requestId: c.request_id,
+      reviewerName: c.reviewer_name,
+      reviewerTitle: c.reviewer_title,
+      comment: c.comment,
+      category: c.category,
+      rating: c.rating,
+      postedAt: c.posted_at
+    }))
+  }))
 }
 
-export function getRequests(status?: ReviewStatus): ReviewRequest[] {
-  const all = loadRequests().sort((a, b) => b.postedAt.localeCompare(a.postedAt))
-  return status ? all.filter(r => r.status === status) : all
-}
+export async function postRequest(data: Omit<ReviewRequest, 'id' | 'postedAt' | 'comments' | 'status' | 'paymentStatus'>): Promise<ReviewRequest> {
+  const supabase = createClient()
+  
+  const { data: authData } = await supabase.auth.getUser()
 
-export function postRequest(data: Omit<ReviewRequest, 'id' | 'postedAt' | 'comments' | 'status'>): ReviewRequest {
-  const req: ReviewRequest = {
-    ...data, id: `rev_${Date.now()}`,
-    postedAt: new Date().toISOString(), status: 'open', comments: [],
+  const { data: ret, error } = await supabase.from('peer_reviews').insert({
+    user_id: authData?.user?.id || null,
+    project_name: data.projectName,
+    survey_type: data.surveyType,
+    description: data.description,
+    country: data.country,
+    submitter_name: data.submitterName,
+    submitter_contact: data.submitterContact,
+    attachment_note: data.attachmentNote,
+    status: 'open',
+    payment_status: 'pending'
+  }).select().single()
+  
+  if (error) throw new Error(error.message)
+  
+  return {
+    ...data, id: ret.id, postedAt: ret.posted_at, status: 'open', comments: [], paymentStatus: 'pending'
   }
-  saveRequests([req, ...loadRequests()])
-  return req
 }
 
-export function postComment(data: Omit<ReviewComment, 'id' | 'postedAt'>): ReviewComment {
-  const comment: ReviewComment = { ...data, id: `com_${Date.now()}`, postedAt: new Date().toISOString() }
-  const comments = loadComments()
-  saveComments([...comments, comment])
-  // Update comment count on request
-  const requests = loadRequests()
-  const idx = requests.findIndex(r => r.id === data.requestId)
-  if (idx !== -1) {
-    requests[idx] = { ...requests[idx], comments: [...requests[idx].comments, comment], status: 'reviewed' }
-    saveRequests(requests)
-  }
-  return comment
+export async function postComment(data: Omit<ReviewComment, 'id' | 'postedAt'>): Promise<ReviewComment> {
+  const supabase = createClient()
+  
+  const { data: ret, error } = await supabase.from('peer_review_comments').insert({
+    request_id: data.requestId,
+    reviewer_name: data.reviewerName,
+    reviewer_title: data.reviewerTitle,
+    comment: data.comment,
+    category: data.category,
+    rating: data.rating
+  }).select().single()
+  
+  if (error) throw new Error(error.message)
+  
+  // Mark review as requested and bump updated_at
+  await supabase.from('peer_reviews').update({ status: 'reviewed', updated_at: new Date().toISOString() }).eq('id', data.requestId)
+  
+  return { ...data, id: ret.id, postedAt: ret.posted_at }
 }
 
-export function closeRequest(id: string) {
-  const requests = loadRequests()
-  const idx = requests.findIndex(r => r.id === id)
-  if (idx !== -1) { requests[idx] = { ...requests[idx], status: 'closed' }; saveRequests(requests) }
+export async function closeRequest(id: string) {
+  const supabase = createClient()
+  await supabase.from('peer_reviews').update({ status: 'closed' }).eq('id', id)
 }
 
-export function deleteRequest(id: string) {
-  saveRequests(loadRequests().filter(r => r.id !== id))
-  saveComments(loadComments().filter(c => c.requestId !== id))
+export async function deleteRequest(id: string) {
+  const supabase = createClient()
+  await supabase.from('peer_reviews').delete().eq('id', id)
 }
 
 export const SURVEY_TYPES: { id: SurveyTypeOption; label: string }[] = [

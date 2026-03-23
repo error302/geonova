@@ -50,12 +50,29 @@ function PostModal({ onSave, onClose }: { onSave: (r: ReviewRequest) => void; on
   const [err, setErr] = useState('')
   const f = (k: keyof typeof form, v: string) => setForm(p => ({ ...p, [k]: v }))
 
-  const submit = () => {
+  const submit = async () => {
     if (!form.projectName.trim())     { setErr('Project name is required'); return }
     if (!form.description.trim())     { setErr('Describe what you want reviewed'); return }
     if (!form.submitterName.trim())   { setErr('Your name is required'); return }
     if (!form.submitterContact.trim()){ setErr('Contact details required so reviewers can reach you'); return }
-    onSave(postRequest(form))
+    
+    setErr('Creating request... Redirecting to payment...')
+    try {
+      const req = await postRequest(form)
+      const res = await fetch('/api/payments/peer-review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reviewRequestId: req.id })
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        setErr(data.error || 'Failed to start payment')
+      }
+    } catch (e: any) {
+      setErr(e.message || 'Failed to post request')
+    }
   }
 
   return (
@@ -142,11 +159,18 @@ function ReviewDetail({ request, onClose, onRefresh }: {
 
   const typeLabel = SURVEY_TYPES.find(t => t.id === request.surveyType)?.label ?? request.surveyType
 
-  const submitComment = () => {
+  const submitComment = async () => {
     if (!form.reviewerName.trim()) { setErr('Your name is required'); return }
     if (!form.comment.trim())     { setErr('Write your review comment'); return }
-    postComment({ requestId: request.id, ...form })
-    setSent(true); onRefresh()
+    
+    setErr('Posting review...')
+    try {
+      await postComment({ requestId: request.id, ...form })
+      setSent(true)
+      onRefresh()
+    } catch (e: any) {
+      setErr(e.message || 'Failed to post review')
+    }
   }
 
   // Sort comments newest first
@@ -349,8 +373,9 @@ export default function PeerReviewPage() {
   const [showPost, setShowPost]         = useState(false)
   const [activeReq, setActiveReq]       = useState<ReviewRequest | null>(null)
 
-  const reload = useCallback(() => {
-    setRequests(getRequests(filterStatus || undefined as any))
+  const reload = useCallback(async () => {
+    const data = await getRequests(filterStatus || undefined as any)
+    setRequests(data)
   }, [filterStatus])
 
   useEffect(() => { reload() }, [reload])
@@ -392,9 +417,9 @@ export default function PeerReviewPage() {
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-6">
           {([
-            { key: 'open',     label: 'Needs review', count: getRequests('open').length },
-            { key: 'reviewed', label: 'Reviewed',      count: getRequests('reviewed').length },
-            { key: '',         label: 'All',            count: getRequests().length },
+            { key: 'open',     label: 'Needs review', count: requests.filter(r => r.status === 'open').length },
+            { key: 'reviewed', label: 'Reviewed',      count: requests.filter(r => r.status === 'reviewed').length },
+            { key: '',         label: 'All',            count: requests.length },
           ] as const).map(({ key, label, count }) => (
             <button key={key} onClick={() => setFilterStatus(key as any)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors border ${

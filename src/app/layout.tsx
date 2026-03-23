@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 import './globals.css';
 import NavBar from '@/components/NavBar';
@@ -97,7 +98,7 @@ export default function RootLayout({
               </main>
               <footer className="border-t border-[var(--border-color)] py-6 mt-16">
                 <div className="max-w-7xl mx-auto px-4 text-center text-xs text-[var(--text-muted)]">
-                  METARDU v1.0 — Professional Surveying Calculations
+                  METARDU v1.0 — Professional Surveying Calculations — <Link href="/community" className="text-[var(--accent)] hover:underline">Join Community</Link>
                 </div>
               </footer>
               <FeedbackWidget />

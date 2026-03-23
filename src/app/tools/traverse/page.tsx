@@ -6,6 +6,7 @@ import { trackEvent } from '@/lib/analytics/events';
 import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
 import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
 import { bowditchAdjustmentSolvedFromResult, transitAdjustmentSolvedFromResult } from '@/lib/engine/solution/wrappers/traverse'
+import { computeTraverseAccuracy } from '@/lib/reports/traverseAccuracy'
 
 interface Leg {
   id: number;
@@ -13,15 +14,24 @@ interface Leg {
   n: string;
   e: string;
   dist: string;
-  bearing: string;
+  bearingD: string;
+  bearingM: string;
+  bearingS: string;
+}
+
+function dmsToDecimal(d: string, m: string, s: string): number {
+  const deg = parseFloat(d) || 0;
+  const min = parseFloat(m) || 0;
+  const sec = parseFloat(s) || 0;
+  return deg + min / 60 + sec / 3600;
 }
 
 export default function TraverseCalculator() {
   const [legs, setLegs] = useState<Leg[]>([
-    { id: 1, name: 'A', n: '5000', e: '3000', dist: '250.0', bearing: '45.5234' },
-    { id: 2, name: 'B', n: '', e: '', dist: '180.5', bearing: '120.1234' },
-    { id: 3, name: 'C', n: '', e: '', dist: '220.75', bearing: '200.3456' },
-    { id: 4, name: 'D', n: '', e: '', dist: '190.25', bearing: '290.5678' },
+    { id: 1, name: 'A', n: '5000', e: '3000', dist: '250.0', bearingD: '45', bearingM: '32', bearingS: '08' },
+    { id: 2, name: 'B', n: '', e: '', dist: '180.5', bearingD: '120', bearingM: '07', bearingS: '24' },
+    { id: 3, name: 'C', n: '', e: '', dist: '220.75', bearingD: '200', bearingM: '20', bearingS: '44' },
+    { id: 4, name: 'D', n: '', e: '', dist: '190.25', bearingD: '290', bearingM: '34', bearingS: '04' },
   ]);
   const [method, setMethod] = useState<'bowditch' | 'transit'>('bowditch');
   const [result, setResult] = useState<any>(null);
@@ -33,7 +43,7 @@ export default function TraverseCalculator() {
 
   const addLeg = () => {
     const nextChar = String.fromCharCode(65 + legs.length);
-    setLegs([...legs, { id: Date.now(), name: nextChar, n: '', e: '', dist: '', bearing: '' }]);
+    setLegs([...legs, { id: Date.now(), name: nextChar, n: '', e: '', dist: '', bearingD: '', bearingM: '', bearingS: '' }]);
   };
 
   const updateLeg = (id: number, field: keyof Leg, value: string) => {
@@ -69,7 +79,7 @@ export default function TraverseCalculator() {
         .map(l => ({ name: l.name, northing: parseFloat(l.n), easting: parseFloat(l.e) }));
 
       const distances = legs.map(l => parseFloat(l.dist)).filter(d => !isNaN(d));
-      const bearings = legs.map(l => parseFloat(l.bearing)).filter(b => !isNaN(b));
+      const bearings = legs.map(l => dmsToDecimal(l.bearingD, l.bearingM, l.bearingS)).filter(b => !isNaN(b));
 
       if (points.length < 2 || distances.length < 2 || bearings.length < 2) {
         setCalcError('Please enter at least 2 legs with valid distances, bearings, and at least one known coordinate.')
@@ -104,7 +114,7 @@ export default function TraverseCalculator() {
       <p className="text-sm text-[var(--text-muted)] mb-8">Closed traverse adjustment using Bowditch or Transit rules</p>
 
       <div className="mb-4 px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-muted)] flex flex-wrap gap-x-6 gap-y-1">
-        <span><span className="text-[var(--text-secondary)] font-medium">Bearings</span> — whole circle bearing in decimal degrees (e.g. 45.5234°). North = 0°, East = 90°, South = 180°, West = 270°.</span>
+        <span><span className="text-[var(--text-secondary)] font-medium">Bearings</span> — Enter Whole Circle Bearing in Degrees Minutes Seconds as read from your instrument.</span>
         <span><span className="text-[var(--text-secondary)] font-medium">Distances</span> — horizontal distances in metres.</span>
         <span><span className="text-[var(--text-secondary)] font-medium">First row</span> — must have Northing &amp; Easting coordinates (the starting known point).</span>
       </div>
@@ -121,7 +131,7 @@ export default function TraverseCalculator() {
       <div className="grid gap-6 mb-6">
         <div className="card">
           <div className="card-header">
-            <span className="label">Traverse Legs — Gale's Table</span>
+            <span className="label">Traverse Computation Table — Bowditch Adjustment</span>
           </div>
           <div className="overflow-x-auto">
             <table className="table">
@@ -129,7 +139,7 @@ export default function TraverseCalculator() {
                 <tr>
                   <th>Line</th>
                   <th>Distance <span className="font-normal opacity-60">m</span></th>
-                  <th>Bearing <span className="font-normal opacity-60">WCB °</span></th>
+                  <th>WCB <span className="font-normal opacity-60">D°M'S&quot;</span></th>
                   <th>Northing <span className="font-normal opacity-60">m</span></th>
                   <th>Easting <span className="font-normal opacity-60">m</span></th>
                 </tr>
@@ -139,7 +149,16 @@ export default function TraverseCalculator() {
                   <tr key={l.id}>
                     <td className="text-left font-semibold">{l.name}</td>
                     <td><input className="input" value={l.dist} placeholder="e.g. 250.00" onChange={e => updateLeg(l.id, 'dist', e.target.value)} /></td>
-                    <td><input className="input" value={l.bearing} placeholder="e.g. 45.5234" onChange={e => updateLeg(l.id, 'bearing', e.target.value)} /></td>
+                    <td>
+                      <div className="flex items-center gap-1">
+                        <input className="input w-12 text-center" value={l.bearingD} placeholder="DDD" maxLength={3} onChange={e => updateLeg(l.id, 'bearingD', e.target.value)} />
+                        <span className="text-[var(--text-muted)]">°</span>
+                        <input className="input w-10 text-center" value={l.bearingM} placeholder="MM" maxLength={2} onChange={e => updateLeg(l.id, 'bearingM', e.target.value)} />
+                        <span className="text-[var(--text-muted)]">&apos;</span>
+                        <input className="input w-12 text-center" value={l.bearingS} placeholder="SS" maxLength={5} onChange={e => updateLeg(l.id, 'bearingS', e.target.value)} />
+                        <span className="text-[var(--text-muted)]">&quot;</span>
+                      </div>
+                    </td>
                     <td><input className="input" value={l.n} placeholder={i === 0 ? 'required' : 'auto'} onChange={e => updateLeg(l.id, 'n', e.target.value)} /></td>
                     <td><input className="input" value={l.e} placeholder={i === 0 ? 'required' : 'auto'} onChange={e => updateLeg(l.id, 'e', e.target.value)} /></td>
                   </tr>
@@ -196,6 +215,37 @@ export default function TraverseCalculator() {
               <ResultRow label="Grade" value={result.precisionGrade} />
             </div>
           </div>
+
+          {(() => {
+            const acc = computeTraverseAccuracy(result.linearError, result.totalDistance)
+            if (!acc) return null
+            const badgeClass = acc.order === 'FIRST ORDER CLASS I' ? 'bg-emerald-700 text-white'
+              : acc.order === 'FIRST ORDER CLASS II' ? 'bg-emerald-600 text-white'
+              : acc.order === 'SECOND ORDER CLASS I' ? 'bg-amber-500 text-black'
+              : acc.order === 'SECOND ORDER CLASS II' ? 'bg-orange-600 text-white'
+              : 'bg-red-600 text-white'
+            return (
+              <div className="card">
+                <div className="card-header">
+                  <span className="label">Traverse Accuracy — RDM 1.1</span>
+                </div>
+                <div className="card-body space-y-3">
+                  <ResultRow label="Total Perimeter" value={`${result.totalDistance.toFixed(4)} m`} />
+                  <ResultRow label="Linear Misclosure" value={`${result.linearError.toFixed(6)} m`} />
+                  <ResultRow label="Precision Ratio" value={`1 : ${Math.round(1 / result.precisionRatio)}`} />
+                  <ResultRow label="Allowable (RDM 1.1)" value={`m = ${acc.m_mm}√K mm`} />
+                  <ResultRow label="Computed m" value={`${acc.allowed.toFixed(4)} mm/√km`} />
+                  <div className="mt-3 p-4 rounded-lg text-center">
+                    <p className="text-xs text-[var(--text-muted)] mb-2">TRAVERSE ACCURACY</p>
+                    <span className={`inline-block px-4 py-2 rounded-lg font-bold text-sm ${badgeClass}`}>
+                      {acc.order}
+                    </span>
+                    <p className="text-xs text-[var(--text-muted)] mt-2 font-mono">{acc.formula}</p>
+                  </div>
+                </div>
+              </div>
+            )
+          })()}
 
           <div className="card">
             <div className="card-header">

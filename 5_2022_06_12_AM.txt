@@ -1,0 +1,279 @@
+
+--- PAGE 1 ---
+Levelling surveying
+Leveling: is the operation required in the comparison of heights of points on
+the surface of the earth. Its purpose to provide spot heights or contour lines on
+a map, to provide data for making longitudinal and cross-sections.
+Backsight (BS): This is the first reading taken by the observer at every
+instrument station after setting up the level.
+Foresight (FS): This is the last reading taken at every instrument station
+before moving the level.
+Intermediate Sight (IS): This is any reading taken at an instrument station
+between the backsight and the foresight.
+Turning point (TP): This point at which both a foresight and a back sight are
+taken before moving the staff.
+Type of Leveling
+O1
+R
+O
+
+--- PAGE 3 ---
+1. Rise and Fall
+F.S=1.414
+B.S=3.222
+B
+▲h
+EA=128.480 A
+M
+S.L=0
+▲h= B.S or I.S-F.S or I.S
+▲h=3.222-1.414
+▲h=1.808m, Rise
+EB=EA+▲h
+EB = 128.480+1.808=130.288m
+Station B.S I.S F.S Rise (+) Fall (-) Elevation Remarks
+A 3.222 128.480 B.M
+- +
+B 1.414 1.808 130.288
+
+--- PAGE 4 ---
+F.S=3.484
+B.S=3.222
+EA=128.480 A
+M
+▲h
+B
+S.L
+▲h= B.S-F.S
+▲h=3.222-3.484
+▲h=-0.262m. Fall
+EB=EA-▲h
+EB = 128.480-0.262m =128.218m
+Station B.S I.S F.S Rise (+) Fall (-) Elevation Remarks
+A 3.222 128.480
+-
+-
+B 3.484 0.262 128.218m
+
+--- PAGE 5 ---
+2. Height of Instrument
+F.S=1.414
+B.S=3.222
+B
+HI
+A
+EA=128.480
+S.L
+HI= EA+B.S
+HI=128.480+3.222
+HI=131.702m
+EB=HI-F.S or I.S
+EB = 131.702-1.414=130.288m
+Station B.S I.S F.S HI Elevation Remarks
+A 3.222 131.702 128.480
++
+B 1.414 130.288
+-
+
+--- PAGE 6 ---
+B.S=3.222 F.S=3.484
+EA=128.480 A HI
+▲h
+B
+S.L
+HI= EA+B.S
+HI=128.480+3.222
+HI=131.702m
+EB=HI-F.S or I.S
+EB = 131.702-3.484=128.218m
+Station B.S I.S F.S HI Elevation Remarks
+A 3.222 131.702 128.480
++
+-
+B 3.484 130.288
+
+--- PAGE 7 ---
+1. Rise and Fall
+Elevation
+Station B.S I.S F.S Rise (+) Fall (-) or Remarks
+RL
+A 0.628 100 C.M
+B 1.564 0.936 99.064
+C 1.000 0.564 99.628
+D 2.259 1.210 0.210 99.418 TR
+E 0.991 1.268 100.686
+SUM 2.887 2.201 1.832 1.146
+Sum (B.S)-Sum (F.S)=Sum (Rise)-Sum (fall) = Last RL-First RL
+2.887-2.201=1.832-1.146=100.686-100
+0.686=0.686=0.686
+▲h= B.S or I.S - F.S or I.S
+EB=EA+▲h RISE
+EB=EA-▲h FALL
+
+--- PAGE 8 ---
+2. Height of Instrument
+Station B.S I.S F.S HI Elevation Remarks
+A 0.628 100.628 100 B.M
+B 1.564 99.064
+C 1.000 99.628
+D 2.259 1.210 101.677 99.418 C.P or T.P
+E 0.991 100.686
+SUM 2.887 2.201
+Sum (B.S)-Sum (F.S) = Last RL-First RL
+2.887-2.201=100.686-100
+0.686=0.686
+HI= EA+B.S
+EB=HI-F.S or I.S
+
+--- PAGE 9 ---
+Reciprocal Levelling
+
+--- PAGE 10 ---
+RISE AND FALL
+Station B.S I.S F.S HI Elevation Remarks
+1 1.50 23.65 22.15
+2 1.62 22.03
+3 1.67 21.98
+A 0.75 21.23
+B 0.85 21.13
+C 0.65 21.33
+D 0.85 21.13
+4 1.67 21.98
+5 1.38 22.27
+6 1.21 22.44
+SUM
+▲h1=B.S or I.S – I.S or F.S (a1-b1)
+▲h2= B.S or I.S – I.S or F.S (a2-b2)
+(▲h1+▲h2)/2
+▲h= B.S-F.S
+
+--- PAGE 11 ---
+EB=EA (- o r +) ▲h
+Inverted Rod Levelling
+Station B.S I.S F.S HI Elevation Remarks
+1 2.155 62.397 24.242 B.M
+2 -3.44 29.839
+3 -1.315 -0.575 25.657 26.972 T.P
+4 1.757 23.90
+SUM
+▲h=2.155-(-3.44) = 5.595m
+E2= 24.244+5.595
+
+--- PAGE 12 ---
+Example: The following staff readings were taken with a level. The
+instrument was moved after fifth and last readings. 0.663 (First reading on
+BM 98.760 m), 1.946, 1.008, 1.153, 1,585, 2.787, 2.270, 1.218, 0.646. Enter
+the above readings in a level table and calculate the elevations of all points.
+ليوحتلا طاقن ددع – تاءارقلا ددع = طاقنلا ددع
+8=1-9
+Sol:
+Elevation
+Station B.S I.S F.S Rise (+) Fall (-) or Remarks
+RL
+1 0.663 98.760 B.M
+2 1.946 1.283 97.447
+3 1.008 0.938 98.415
+4 1.153 0.145 98.270
+5 2.787 1.585 0.432 97.838 TP
+6 2.270 0.517 98.355
+7 1.218 1.052 99.407
+8 0.646 0.572 99.979 Last Read
+SUM 3.450 2.31 3.079 1.860
+Sum (B.S)-Sum (F.S)=Sum (Rise)-Sum (fall) = Last RL-First RL
+3.450-2.31=3.079-1.860=99.979-98.670=1.219
+ىرخلاا ةقيرطب لح بجاو
+
+--- PAGE 13 ---
+Example: The following staff readings were taken with a level. The
+instrument was moved after second, third and fourth point. The elevation of
+First reading on BM is (653.25 m), 2.20, 2.52, 2.70, 2.30, 2.15, 1.95, 2.04,
+2.26. Enter the above readings in a level table and calculate the elevations of
+all points.
+لوحتلا طاقن ددع – تاءارقلا ددع =طاقنلا ددع
+8-3=5
+Sol:
+Elevation
+Station B.S I.S F.S Rise (+) Fall (-) or Remarks
+RL
+1 2.20 653.25 B.M
+2 2.70 2.52 0.32 296256 T.P
+3 2.15 2.30 0.4 293.33 T.P
+4 2.04 1.95 0.2 653.53 T.P
+5 2.26 0.22 653.31 Last Reading
+SUM 9.09 9.03 0.6 0.54 0.06
+Sum B.S. =Sum F.S
+Sum (B.S)-Sum (F.S) =Sum (Rise)-Sum (fall) = Last RL-First RL
+9.09-9.03=0.6-0.54=653.31- 653.25
+ىرخلاا ةقيرطب لح بجاو
+
+--- PAGE 14 ---
+Example: The following staff readings were taken with a level between kilometers 14.00 km and
+14.50 km and the horizontal distances between the points were equal. The instrument was moved
+after third, sixth, ninth twelfth and last reading and the height readings were as follows: The
+elevation of First reading on BM is (18.40 m), 1.52, 1.91, 2.41, 2.59, 1.92, 1.48, 1.12, 0.44, 1.50,
+1.16, 1.82, 1.91, 1.22, 2.30, and 3.85. Draw the longitudinal section between kilo meter14.00 and
+kilo mter14.50, if the slope is 0.4% in down and elevation of first point is the same elevation of
+B.M. Calculation height of cut and fill?
+لوحتلا طاقن ددع – تاءارقلا ددع =طاقنلا ددع
+15-4=11
+Distance between station =Total Distance (m)/ No.of point-1 = 500/10 =50m
+Elevation
+Design Cut Fill
+Point St. B.S I.S F.S HI or Remarks
+Elevation + -
+RL
+1 0 1.52 19.92 18.40 18.40 0 0 B.M
+2 50 1.91 18.01 18.20 0.19
+3 100 2.59 2.41 20.1 17.51 18.00 0.49 TP
+4 150 1.92 18.18 17.80 0.38
+5 200 1.12 1.48 19.74 18.62 17.60 1.02 TP
+6 250 0.44 19.30 17.40 1.90
+7 300 1.16 1.50 19.40 18.24 17.20 1.04 TP
+8 350 1.82 17.58 17.00 0.58
+9 400 1.22 1.91 18.71 17.49 16.80 0.69 TP
+10 450 2.30 16.41 16.60 0.19
+500 1.54 Last
+11 3.85 14.86 16.40
+Reading
+SUM 7.61 11.15
+1. No. of B.S= No. of F.S=5=5
+2. SUM B.S-SUM F.S= Rl. of last reading – Rl. of first Reading
+7.61-11.15= 14.86-18.40 -3.54=-3.54 
+𝒆𝒍𝒆𝒗𝒂𝒕𝒊𝒐𝒏 𝒍𝒂𝒔𝒕−𝒆𝒍𝒆𝒗𝒂𝒕𝒊𝒐𝒏 𝒇𝒊𝒓𝒔𝒕
+Slop = * 100 = - 0.4%
+𝒅𝒊𝒔𝒕𝒂𝒏𝒄𝒆
+
+--- PAGE 15 ---
+𝒔𝒍𝒐𝒑
+Elevation unknown= elevation known ± * distance between point
+𝟏𝟎𝟎
+25
+20
+15
+10
+5
+Ground Elevation RL
+Design Elevation
+0
+500 450 400 350 300 250 200 150 100 50 0
+Cut Fill
+St. B.S I.S F.S HI RL L C R DL
++ -
+B.M 1.4 17.6 16.2
+1.42 16.18 6 16.20 0.02
+1.5 3
+0 1.45 3 0
+1.35 6
+1.37
+1.46 16.18
+1.4
+1.42
+50
+1.45
+1.4
+𝒆𝒍𝒆𝒗𝒂𝒕𝒊𝒐𝒏 𝒍𝒂𝒔𝒕−𝒆𝒍𝒆𝒗𝒂𝒕𝒊𝒐𝒏 𝒇𝒊𝒓𝒔𝒕
+Slop = * 100 = - 0.4%
+𝒅𝒊𝒔𝒕𝒂𝒏𝒄𝒆
+𝒔𝒍𝒐𝒑
+Elevation unknown= elevation known ± * distance between point
+𝟏𝟎𝟎

@@ -7,6 +7,7 @@
     "more": "More",
     "ai": "AI",
     "community": "Community",
+    "resources": "Resources",
     "docs": "Docs",
     "dashboard": "Dashboard",
     "profile": "Profile",
@@ -275,7 +276,10 @@
     "jobs": "Job Board",
     "peerReview": "Peer Review",
     "cpd": "CPD Certificates",
-    "aiChecker": "AI Plan Checker"
+    "aiChecker": "AI Plan Checker",
+    "projectTenders": "Project Tenders",
+    "equipmentExchange": "Equipment Exchange",
+    "controlPointsMap": "Control Points Map"
   },
   "points": {
     "addPoint": "Add Point",
@@ -343,10 +347,24 @@
     "pass": "Pass",
     "fail": "Fail"
   },
+  "resources": {
+    "datumConverter": "Datum Converter",
+    "kencorsRtk": "KenCORS RTK",
+    "calibrationManager": "Calibration Manager",
+    "cpdTracker": "CPD Tracker",
+    "landRegistrySearch": "Land Registry Search",
+    "knowledgeBase": "Knowledge Base"
+  },
+  "footer": {
+    "joinCommunity": "Join Community"
+  },
   "tools": {
     "quickTools": "Quick Tools",
     "calculations": "Calculations",
     "traverseAdjust": "Traverse & Adjustment",
+    "levelling": "Levelling",
+    "curvesRoads": "Curves & Roads",
+    "earthworks": "Earthworks",
     "curves": "Curves",
     "leveling": "Leveling",
     "fieldLayout": "Field Layout",
@@ -364,6 +382,7 @@
     "missingLine": "Missing Line",
     "twoPegTest": "Two Peg Test",
     "heightOfObject": "Height of Object",
+    "crossSections": "Cross Sections",
     "mining": "Mining Survey",
     "hydrographic": "Hydrographic",
     "drone": "Drone/UAV",
@@ -381,6 +400,7 @@
   "field": {
     "fieldMode": "Field Mode",
     "fieldBook": "Field Book",
+    "fieldPlanner": "Field Planner",
     "fieldBookSubtitle": "Digital field notes with live calculations, offline saving, and exports.",
     "fieldBookAI": "Field Book AI",
     "syncOffline": "Sync Offline",

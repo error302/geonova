@@ -1,0 +1,16 @@
+{
+  "functions": {
+    "api/convert-datum.py": {
+      "runtime": "vercel-python@3.0"
+    },
+    "api/validate-geometry.py": {
+      "runtime": "vercel-python@3.0"
+    },
+    "api/compute/contours.py": {
+      "runtime": "vercel-python@3.0"
+    },
+    "api/compute/volume.py": {
+      "runtime": "vercel-python@3.0"
+    }
+  }
+}

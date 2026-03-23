@@ -12,7 +12,7 @@ export default function SightDistanceChecker() {
   const [result, setResult] = useState<ReturnType<typeof sightDistanceCheck> | null>(null)
   const [radiusResult, setRadiusResult] = useState<ReturnType<typeof checkRadiusCompliance> | null>(null)
 
-  function computeSSD() {
+  async function computeSSD() {
     const input: SightDistanceInput = {
       designSpeed: parseInt(designSpeed) || 80,
       roadClass: 'DR4',
@@ -21,14 +21,38 @@ export default function SightDistanceChecker() {
       proposedSSD: proposedSSD ? parseFloat(proposedSSD) : undefined,
     }
     setResult(sightDistanceCheck(input))
+    
+    // Call Python Engine for true RDM 1.3 Verification
+    const { validateGeometry } = await import('@/lib/compute/pythonService')
+    const pyRes = await validateGeometry({
+      terrain,
+      designSpeed: parseInt(designSpeed) || 80,
+      gradient: parseFloat(gradient) || 0,
+      radius: parseFloat(proposedRadius) || 9999,
+      ssd: proposedSSD ? parseFloat(proposedSSD) : undefined
+    })
+    setPythonValidation(pyRes)
   }
 
-  function computeRadius() {
+  async function computeRadius() {
     const R = parseFloat(proposedRadius)
     if (!R) return
-    const res = checkRadiusCompliance(R, parseInt(designSpeed) || 80, terrain)
-    setRadiusResult(res)
+    const tsRes = checkRadiusCompliance(R, parseInt(designSpeed) || 80, terrain)
+    setRadiusResult(tsRes)
+    
+    // Call Python Engine for true RDM 1.3 Verification
+    const { validateGeometry } = await import('@/lib/compute/pythonService')
+    const pyRes = await validateGeometry({
+      terrain,
+      designSpeed: parseInt(designSpeed) || 80,
+      gradient: parseFloat(gradient) || 0,
+      radius: R,
+      ssd: proposedSSD ? parseFloat(proposedSSD) : undefined
+    })
+    setPythonValidation(pyRes)
   }
+
+  const [pythonValidation, setPythonValidation] = useState<any>(null)
 
   return (
     <div className="space-y-6">
@@ -137,6 +161,29 @@ export default function SightDistanceChecker() {
             </div>
           ))}
         </div>
+      )}
+
+      {pythonValidation && (
+        <>
+          <h3 className="text-sm font-semibold text-[var(--accent)] mt-8">Python RDM 1.3 Validation Engine</h3>
+          <div className="bg-[var(--bg-tertiary)] border border-[var(--border-color)] p-4 rounded mt-3">
+            <div className="flex items-center gap-3">
+              <span className={`px-2 py-1 text-xs font-bold rounded ${pythonValidation.status === 'GREEN' ? 'bg-green-900/30 text-green-400' : pythonValidation.status === 'YELLOW' ? 'bg-yellow-900/30 text-yellow-500' : 'bg-red-900/30 text-red-400'}`}>
+                {pythonValidation.status}
+              </span>
+              <span className="text-sm text-[var(--text-primary)]">
+                {pythonValidation.status === 'GREEN' ? 'Design meets all RDM 1.3 requirements.' : 'Departures from standard detected.'}
+              </span>
+            </div>
+            {pythonValidation.flags?.length > 0 && (
+              <ul className="mt-3 space-y-1 text-sm text-[var(--text-muted)] list-disc pl-5">
+                {pythonValidation.flags.map((f: string, i: number) => (
+                  <li key={i} className={f.includes('RED') || f.includes('FAIL') || f.includes('DEPARTURE') ? 'text-red-400' : 'text-yellow-500'}>{f}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </>
       )}
     </div>
   )

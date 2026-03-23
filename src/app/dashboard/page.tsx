@@ -6,8 +6,11 @@ import Link from 'next/link'
 import SubscriptionStatus from '@/components/SubscriptionStatus'
 import UpgradePrompt from '@/components/UpgradePrompt'
 import { getServerTranslator } from '@/lib/i18n/server'
+import { Logger } from '@/lib/logger'
 
 import ProjectCard from '@/components/ProjectCard'
+
+const logger = new Logger('DashboardPage')
 
 export default async function DashboardPage() {
   let t = (k: string) => k
@@ -39,7 +42,7 @@ export default async function DashboardPage() {
       if (!sRes.error || sRes.error.code === 'PGRST116') subscription = sRes.data ?? null
     }
   } catch (err) {
-    console.error('Dashboard error:', err)
+    logger.error('Failed to load dashboard data or user session', err)
   }
 
   const canCreateProject = isAdmin || subscription?.plan_id !== 'free' || projects.length < 1

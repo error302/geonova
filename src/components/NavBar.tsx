@@ -28,18 +28,25 @@ const toolGroups = [
     ]
   },
   {
-    titleKey: 'tools.leveling',
+    titleKey: 'tools.levelling',
     items: [
-      { href: '/tools/leveling', labelKey: 'leveling.title' },
+      { href: '/tools/levelling', labelKey: 'leveling.title' },
       { href: '/tools/two-peg-test', labelKey: 'tools.twoPegTest' },
     ]
   },
   {
-    titleKey: 'tools.curves',
+    titleKey: 'tools.curvesRoads',
     items: [
       { href: '/tools/curves', labelKey: 'tools.curves' },
-      { href: '/tools/tacheometry', labelKey: 'tools.tacheometry' },
       { href: '/tools/chainage', labelKey: 'tools.chainage' },
+      { href: '/tools/tacheometry', labelKey: 'tools.tacheometry' },
+    ]
+  },
+  {
+    titleKey: 'tools.earthworks',
+    items: [
+      { href: '/tools/cross-sections', labelKey: 'tools.crossSections' },
+      { href: '/tools/setting-out', labelKey: 'tools.settingOut' },
     ]
   },
   {
@@ -48,9 +55,9 @@ const toolGroups = [
       { href: '/tools/mining', icon: '⛏', labelKey: 'tools.mining' },
       { href: '/tools/hydrographic', icon: '🌊', labelKey: 'tools.hydrographic' },
       { href: '/tools/drone', icon: '🚁', labelKey: 'tools.drone' },
-      { href: '/tools/gcp-export',    labelKey: 'tools.gcpExport' },
+      { href: '/tools/gcp-export', labelKey: 'tools.gcpExport' },
       { href: '/tools/civil-export', labelKey: 'tools.civilExport' },
-      { href: '/tools/gis-export',   labelKey: 'tools.gisExport' },
+      { href: '/tools/gis-export', labelKey: 'tools.gisExport' },
     ]
   },
 ]
@@ -61,14 +68,14 @@ const fieldGroups = [
     items: [
       { href: '/field', labelKey: 'field.fieldMode' },
       { href: '/fieldbook', labelKey: 'field.fieldBook' },
-      { href: '/tools/setting-out', labelKey: 'tools.settingOut' },
+      { href: '/ai-plan-checker', labelKey: 'field.fieldPlanner' },
       { href: '/process', labelKey: 'field.processNotes' },
       { href: '/guide', labelKey: 'guides.title' },
     ]
   },
 ]
 
-const importGroups = [
+const moreGroups = [
   {
     titleKey: 'nav.import',
     items: [
@@ -77,19 +84,24 @@ const importGroups = [
       { href: '/instruments', labelKey: 'import.instruments' },
     ]
   },
-]
-
-const communityGroups = [
   {
     titleKey: 'nav.community',
     items: [
-      { href: '/community', labelKey: 'community.surveyCommunity' },
-      { href: '/beacons', labelKey: 'community.controlPoints' },
-      { href: '/marketplace', labelKey: 'community.marketplace' },
-      { href: '/jobs', labelKey: 'community.jobs' },
+      { href: '/jobs', labelKey: 'community.projectTenders' },
+      { href: '/marketplace', labelKey: 'community.equipmentExchange' },
       { href: '/peer-review', labelKey: 'community.peerReview' },
-      { href: '/cpd', labelKey: 'community.cpd' },
-      { href: '/ai-plan-checker', labelKey: 'community.aiChecker' },
+      { href: '/beacons', labelKey: 'community.controlPointsMap' },
+    ]
+  },
+  {
+    titleKey: 'nav.resources',
+    items: [
+      { href: '/online', labelKey: 'resources.datumConverter' },
+      { href: '/kencors', labelKey: 'resources.kencorsRtk' },
+      { href: '/equipment', labelKey: 'resources.calibrationManager', badgeKey: 'calibration' },
+      { href: '/cpd', labelKey: 'resources.cpdTracker' },
+      { href: '/parcel', labelKey: 'resources.landRegistrySearch' },
+      { href: '/docs', labelKey: 'resources.knowledgeBase' },
     ]
   },
 ]
@@ -133,7 +145,7 @@ function Dropdown({ label, children, isOpen, onToggle, align = 'left', buttonCla
 }
 
 type Translator = (key: string, values?: Record<string, string | number>) => string
-type MenuItem = { href: string; labelKey: string; icon?: string }
+type MenuItem = { href: string; labelKey: string; icon?: string; badgeKey?: string }
 type MenuGroup = { titleKey: string; items: MenuItem[] }
 
 function DropdownGroup({
@@ -141,11 +153,13 @@ function DropdownGroup({
   items,
   t,
   onSelect,
+  badgeCounts,
 }: {
   titleKey: string
   items: MenuItem[]
   t: Translator
   onSelect?: () => void
+  badgeCounts?: Record<string, number>
 }) {
   return (
     <div className="px-4 py-2">
@@ -162,6 +176,11 @@ function DropdownGroup({
           <span className="inline-flex items-center gap-2">
             {item.icon ? <span aria-hidden>{item.icon}</span> : null}
             <span>{t(item.labelKey)}</span>
+            {item.badgeKey && badgeCounts && badgeCounts[item.badgeKey] > 0 && (
+              <span className="inline-flex items-center justify-center w-4 h-4 text-xs font-bold bg-red-600 text-white rounded-full">
+                !
+              </span>
+            )}
           </span>
         </Link>
       ))}
@@ -207,8 +226,7 @@ function GlobalSearch({ t }: { t: Translator }) {
     return [
       ...flatten(t('nav.tools'), toolGroups),
       ...flatten(t('nav.field'), fieldGroups),
-      ...flatten(t('nav.import'), importGroups),
-      ...flatten(t('nav.community'), communityGroups),
+      ...flatten(t('nav.more'), moreGroups),
       ...docsItems.map((x) => ({ category: x.group, group: x.group, href: x.href, label: x.label })),
       { category: t('nav.projects'), group: t('nav.projects'), href: '/dashboard', label: t('nav.dashboard') },
     ]
@@ -312,6 +330,7 @@ export default function NavBar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
   const [userPlan, setUserPlan] = useState<PlanId>('free')
+  const [calibrationOverdueCount, setCalibrationOverdueCount] = useState(0)
   const navRef = useRef<HTMLDivElement>(null)
 
   const { language, setLanguage, t, hydrated } = useLanguage()
@@ -457,32 +476,9 @@ export default function NavBar() {
               onToggle={() => handleDropdownToggle('more')}
               panelClassName="min-w-[280px] py-2"
             >
-              {importGroups.map((group, idx) => (
-                <DropdownGroup key={`import-${idx}`} titleKey={group.titleKey} items={group.items} t={t} onSelect={() => setOpenDropdown(null)} />
+              {moreGroups.map((group, idx) => (
+                <DropdownGroup key={`more-${idx}`} titleKey={group.titleKey} items={group.items} t={t} onSelect={() => setOpenDropdown(null)} badgeCounts={{ calibration: calibrationOverdueCount }} />
               ))}
-              <div className="border-t border-white/5 my-1" />
-              {communityGroups.map((group, idx) => (
-                <DropdownGroup key={`community-${idx}`} titleKey={group.titleKey} items={group.items} t={t} onSelect={() => setOpenDropdown(null)} />
-              ))}
-              <div className="border-t border-white/5 my-1" />
-              <div className="px-4 py-2">
-                <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold mb-2">{t('nav.online')}</div>
-                <Link href="/online" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                  {t('online.coordinateServices')}
-                </Link>
-                <Link href="/parcel" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                  {t('online.parcelIntelligence')}
-                </Link>
-                <Link href="/kencors" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                  {t('online.kencorsRtk')}
-                </Link>
-                <Link href="/equipment" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                  {t('online.equipmentTracker')}
-                </Link>
-                <Link href="/digital-signature" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                  {t('online.digitalSignature')}
-                </Link>
-              </div>
               <div className="border-t border-white/5 my-1" />
               <div className="px-4 py-2">
                 <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold mb-2">{t('nav.docs')}</div>

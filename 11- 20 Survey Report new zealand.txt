@@ -1,0 +1,39 @@
+
+--- PAGE 1 ---
+Survey Report
+A survey report can be considered one of the most important parts of a CSD. It can provide the
+thoughts and assessments of the surveyor conducting the work. Good reporting gives future users of
+the CSD a better insight into the what, how, and why for any determinations that were reached.
+Did you know surveyors have been generating survey reports since 1879? However, these early
+reports were often very brief and pre 1920, they are particularly scarce. Survey reports were not
+supplied for every plan as they were not compulsory until the commencement of the 1972 Survey
+Regulations, 9(4).
+Today survey reports are required by rule, with additional pre-validation requirements found in the
+Standard for lodgement of cadastral survey datasets.
+One of the most useful sections is the reporting on definition. Rule 8.2(a)(ix) requires the reasons
+for, and details of decisions made regarding each existing boundary defined by survey, and the
+information considered in order to reach those decisions. Just stating that all boundaries were
+defined by survey is insufficient. It gives no insight to future users.
+Below are listed some resources to help with documenting useful information in a survey report.
+There are two very useful articles in the KnowledgeBase:
+KB 763 - Survey Report
+KB 855 - Tips for compliance with Rule 8.2
+The survey report templates, both the Word/PDF document and the Automated Survey Report
+template, include guidance on completing the questions and comments in a useful way. A review of
+copies with the included notes, including a read of the ‘hover over’ comments in the Automated
+Survey Report, can help refresh our knowledge.
+Survey Report template:
+Figure 1: Example of the notes found in the Word/PDF template
+
+--- PAGE 2 ---
+Figure 2: Example of the notes found in items 1 and 2 of the report template
+Figure 3: Screen shot showing a guidance note provided when hovering over the item in the
+Automated Survey Report
+Also see Rule 8.2 and Lodgement Standard 7.
+Rules for Cadastral Survey 2010 – 8.2 Survey Report
+Standard for lodgement of cadastral survey datasets - LINZS70000
+The Survey Report helps convey insight into the surveyors thinking and considerations at the time of
+survey. It gives future users an outline of items considered, assessments made and a record of
+decisions reached. A conscientious report is considered good survey practice and will be very useful
+in the future.
+Prepared by Cadastral Surveyors Group, Property Rights, LINZ

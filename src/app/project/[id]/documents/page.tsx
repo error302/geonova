@@ -498,7 +498,7 @@ export default function DocumentsPage({ params }: PageProps) {
               )}
             </div>
             <div className="flex justify-end">
-              {planData && <SurveyPlanExport data={planData} />}
+              {planData && <SurveyPlanExport data={planData} projectId={params.id} />}
             </div>
           </div>
         )}
