@@ -1,16 +1,16 @@
 {
   "functions": {
     "api/convert-datum.py": {
-      "runtime": "python-3.12"
+      "runtime": "python@3.12"
     },
     "api/validate-geometry.py": {
-      "runtime": "python-3.12"
+      "runtime": "python@3.12"
     },
     "api/compute/contours.py": {
-      "runtime": "python-3.12"
+      "runtime": "python@3.12"
     },
     "api/compute/volume.py": {
-      "runtime": "python-3.12"
+      "runtime": "python@3.12"
     }
   }
 }
