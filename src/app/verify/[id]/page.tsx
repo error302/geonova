@@ -1,24 +1,46 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
+import { z } from 'zod'
+import { Logger } from '@/lib/logger'
+import { env } from '@/lib/env'
+
+const logger = new Logger('SignatureVerification')
 
 export const metadata = { title: 'Signature Verification | METARDU' }
 
 export default async function VerifySignaturePage({ params }: { params: { id: string } }) {
   const cookieStore = cookies()
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     { cookies: { get(name: string) { return cookieStore.get(name)?.value } } }
   )
 
-  const { data: signature, error } = await supabase
-    .from('signatures')
-    .select('*, projects(name)')
-    .eq('id', params.id)
-    .single()
+  const idValidation = z.string().uuid().safeParse(params.id)
 
-  if (error || !signature) {
+  let signature: any = null
+  let error: any = null
+
+  if (!idValidation.success) {
+    logger.warn('Invalid signature verification UUID attempt', { provided_id: params.id, issues: idValidation.error.issues })
+  } else {
+    const res = await supabase
+      .from('signatures')
+      .select('*, projects(name)')
+      .eq('id', idValidation.data)
+      .single()
+    signature = res.data
+    error = res.error
+  }
+
+  if (error || !signature || !idValidation.success) {
+    if (error) {
+      logger.error('Database connection or query failed during signature verification', error, { lookup_id: idValidation.data })
+    } else if (idValidation.success) {
+      logger.info('Signature not found or already revoked', { lookup_id: idValidation.data })
+    }
+    
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center p-4">
         <div className="bg-[var(--bg-card)] border border-red-500/30 rounded-xl max-w-md w-full p-8 text-center">

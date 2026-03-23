@@ -16,6 +16,7 @@ class handler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'application/json')
             self.end_headers()
             self.wfile.write(json.dumps({
+                'data': None,
                 'error': 'Minimum 2 sections required'
             }).encode())
             return
@@ -77,12 +78,15 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'application/json')
         self.end_headers()
         self.wfile.write(json.dumps({
-            'sections': results,
-            'totals': {
-                'total_cut_prismoidal': round(total_cut, 3),
-                'total_fill_prismoidal': round(total_fill, 3),
-                'net_cut': round(total_cut - total_fill, 3),
-                'shrinkage_factor': shrinkage
+            'data': {
+                'sections': results,
+                'totals': {
+                    'total_cut_prismoidal': round(total_cut, 3),
+                    'total_fill_prismoidal': round(total_fill, 3),
+                    'net_cut': round(total_cut - total_fill, 3),
+                    'shrinkage_factor': shrinkage
+                },
+                'mass_haul': mass_ordinates
             },
-            'mass_haul': mass_ordinates
+            'error': None
         }).encode())

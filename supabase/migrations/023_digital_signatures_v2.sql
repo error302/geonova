@@ -7,8 +7,12 @@ create table if not exists signatures (
   signer_name text not null,
   isk_number text,
   signed_at timestamptz not null default now(),
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
+
+create index if not exists idx_signatures_user_id on signatures(user_id);
+create index if not exists idx_signatures_project_id on signatures(project_id);
 
 alter table signatures enable row level security;
 

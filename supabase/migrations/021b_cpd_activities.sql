@@ -8,8 +8,11 @@ create table if not exists cpd_activities (
   hours numeric(4,1) not null,
   category text not null,
   source text not null,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
+
+create index if not exists idx_cpd_activities_user_id on cpd_activities(user_id);
 
 alter table cpd_activities enable row level security;
 
