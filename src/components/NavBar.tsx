@@ -341,15 +341,25 @@ export default function NavBar() {
     const supabase = createClient()
     
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user as { email: string } | null)
-      if (user) {
-        const { data: sub } = await supabase
-          .from('user_subscriptions')
-          .select('plan_id')
-          .eq('user_id', user.id)
-          .maybeSingle()
-        setUserPlan((sub?.plan_id as PlanId) || 'free')
+      const authPromise = supabase.auth.getUser()
+      const timeoutPromise = new Promise<{data: {user: null}}>((_, reject) => 
+        setTimeout(() => reject(new Error('Auth timeout')), 5000)
+      )
+      try {
+        const result = await Promise.race([authPromise, timeoutPromise])
+        const user = result?.data?.user ?? null
+        setUser(user as { email: string } | null)
+        if (user) {
+          const { data: sub } = await supabase
+            .from('user_subscriptions')
+            .select('plan_id')
+            .eq('user_id', user.id)
+            .maybeSingle()
+          setUserPlan((sub?.plan_id as PlanId) || 'free')
+        }
+      } catch {
+        setUser(null)
+        setUserPlan('free')
       }
       setLoading(false)
     }

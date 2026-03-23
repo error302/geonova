@@ -165,8 +165,12 @@ export default function ProjectCard({ project, openLabel }: { project: any; open
                   if (confirm(`Delete "${project.name}"? This cannot be undone.`)) {
                     const { createClient } = await import('@/lib/supabase/client')
                     const sb = createClient()
-                    await sb.from('projects').delete().eq('id', project.id)
-                    router.refresh()
+                    const { error } = await sb.from('projects').delete().eq('id', project.id)
+                    if (error) {
+                      alert(`Failed to delete: ${error.message}`)
+                    } else {
+                      router.refresh()
+                    }
                   }
                 }}
                 className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-[var(--border-hover)] transition-colors"

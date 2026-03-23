@@ -164,7 +164,17 @@ export default function ProjectPage({ params }: PageProps) {
     const sb = getSupabase()
     if (!sb) return
 
-    const { data: { session } } = await sb.auth.getSession()
+    const authPromise = sb.auth.getSession()
+    const timeoutPromise = new Promise<{data: {session: null}}>((_, reject) => 
+      setTimeout(() => reject(new Error('Auth timeout')), 5000)
+    )
+    let session: { user: any } | null = null
+    try {
+      const result = await Promise.race([authPromise, timeoutPromise])
+      session = result?.data?.session ?? null
+    } catch {
+      session = null
+    }
     const user = session?.user ?? null
     if (!user) {
       const next = encodeURIComponent(window.location.pathname)
