@@ -109,7 +109,7 @@ export default function TraverseCalculator() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="w-full max-w-6xl mx-auto px-3 md:px-4 py-4 md:py-8">
       <h1 className="text-3xl font-bold mb-2">Traverse Adjustment</h1>
       <p className="text-sm text-[var(--text-muted)] mb-8">Closed traverse adjustment using Bowditch or Transit rules</p>
 
@@ -134,14 +134,14 @@ export default function TraverseCalculator() {
             <span className="label">Traverse Computation Table — Bowditch Adjustment</span>
           </div>
           <div className="overflow-x-auto">
-            <table className="table">
+            <table className="min-w-[550px] table">
               <thead>
                 <tr>
                   <th>Line</th>
-                  <th>Distance <span className="font-normal opacity-60">m</span></th>
-                  <th>WCB <span className="font-normal opacity-60">D°M'S&quot;</span></th>
-                  <th>Northing <span className="font-normal opacity-60">m</span></th>
-                  <th>Easting <span className="font-normal opacity-60">m</span></th>
+                  <th>Dist (m)</th>
+                  <th>WCB</th>
+                  <th>N (m)</th>
+                  <th>E (m)</th>
                 </tr>
               </thead>
               <tbody>
@@ -150,13 +150,13 @@ export default function TraverseCalculator() {
                     <td className="text-left font-semibold">{l.name}</td>
                     <td><input className="input" value={l.dist} placeholder="e.g. 250.00" onChange={e => updateLeg(l.id, 'dist', e.target.value)} /></td>
                     <td>
-                      <div className="flex items-center gap-1">
-                        <input className="input w-12 text-center" value={l.bearingD} placeholder="DDD" maxLength={3} onChange={e => updateLeg(l.id, 'bearingD', e.target.value)} />
-                        <span className="text-[var(--text-muted)]">°</span>
-                        <input className="input w-10 text-center" value={l.bearingM} placeholder="MM" maxLength={2} onChange={e => updateLeg(l.id, 'bearingM', e.target.value)} />
-                        <span className="text-[var(--text-muted)]">&apos;</span>
-                        <input className="input w-12 text-center" value={l.bearingS} placeholder="SS" maxLength={5} onChange={e => updateLeg(l.id, 'bearingS', e.target.value)} />
-                        <span className="text-[var(--text-muted)]">&quot;</span>
+                      <div className="flex items-center gap-0.5 md:gap-1">
+                        <input className="input w-10 md:w-12 text-center text-xs md:text-sm" value={l.bearingD} placeholder="DDD" maxLength={3} onChange={e => updateLeg(l.id, 'bearingD', e.target.value)} />
+                        <span className="text-[var(--text-muted)] text-xs">°</span>
+                        <input className="input w-8 md:w-10 text-center text-xs md:text-sm" value={l.bearingM} placeholder="MM" maxLength={2} onChange={e => updateLeg(l.id, 'bearingM', e.target.value)} />
+                        <span className="text-[var(--text-muted)] text-xs">&apos;</span>
+                        <input className="input w-10 md:w-12 text-center text-xs md:text-sm" value={l.bearingS} placeholder="SS" maxLength={5} onChange={e => updateLeg(l.id, 'bearingS', e.target.value)} />
+                        <span className="text-[var(--text-muted)] text-xs">&quot;</span>
                       </div>
                     </td>
                     <td><input className="input" value={l.n} placeholder={i === 0 ? 'required' : 'auto'} onChange={e => updateLeg(l.id, 'n', e.target.value)} /></td>
@@ -252,14 +252,14 @@ export default function TraverseCalculator() {
             </div>
             <p className="text-xs text-[var(--text-muted)] px-4 pt-2">Source: Ghilani &amp; Wolf, Elementary Surveying 16th Ed., Chapter 10, Table 10.1</p>
             <div className="overflow-x-auto">
-              <table className="table">
+              <table className="min-w-[550px] table">
                 <thead>
                   <tr>
                     <th>Line</th>
-                    <th>WCB (D°M'S")</th>
-                    <th>HD (m)</th>
-                    <th className="text-right">DEPARTURE (m)</th>
-                    <th className="text-right">LATITUDE (m)</th>
+                    <th>WCB</th>
+                    <th className="text-right">HD</th>
+                    <th className="text-right">DEP</th>
+                    <th className="text-right">LAT</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -288,17 +288,17 @@ export default function TraverseCalculator() {
             <div className="card-header">
               <span className="label">Table 2 — Bowditch Corrections</span>
             </div>
-            <div className="overflow-x-auto">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Line</th>
-                    <th className="text-right">HD (m)</th>
-                    <th className="text-right">CORR DEP (m)</th>
-                    <th className="text-right">CORR LAT (m)</th>
-                    <th className="text-right">ADJ DEP (m)</th>
-                    <th className="text-right">ADJ LAT (m)</th>
-                  </tr>
+              <div className="overflow-x-auto">
+                <table className="min-w-[650px] table">
+                  <thead>
+                    <tr>
+                      <th>Line</th>
+                      <th className="text-right">HD</th>
+                      <th className="text-right">C-Dep</th>
+                      <th className="text-right">C-Lat</th>
+                      <th className="text-right">A-Dep</th>
+                      <th className="text-right">A-Lat</th>
+                    </tr>
                 </thead>
                 <tbody>
                   {result.legs.map((l: any, i: number) => (

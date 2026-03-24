@@ -60,17 +60,14 @@ export async function middleware(request: NextRequest) {
   )
 
   // SECURITY: Always verify the JWT with Supabase — never trust the cookie alone.
-  // getUser() performs a network call to validate the token with the Supabase auth server.
-  // Add timeout to prevent hanging when Supabase is unreachable
-  const authPromise = supabase.auth.getUser()
-  const timeoutPromise = new Promise<{ data: { user: null } }>((_, reject) => setTimeout(() => reject(new Error('Auth timeout')), 5000))
-  let user: any = null
-  try {
-    const result = await Promise.race([authPromise, timeoutPromise])
-    user = result?.data?.user ?? null
-  } catch (err) {
-    console.warn('Auth check timed out or failed, allowing request through:', err instanceof Error ? err.message : 'unknown')
-    user = null
+  // getSession() reads from the cookie directly and is instant — no network call.
+  // getUser() is only used as a fallback to validate with Supabase server.
+  const { data: { session } } = await supabase.auth.getSession()
+  let user = session?.user ?? null
+
+  if (!user) {
+    const { data: { user: validatedUser } } = await supabase.auth.getUser()
+    user = validatedUser ?? null
   }
 
   const authRoutes = ['/login', '/register']
@@ -109,5 +106,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|tools|icons).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|manifest.json|tools|icons|sw.js).*)'],
 }

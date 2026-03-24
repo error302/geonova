@@ -155,7 +155,7 @@ Computed using METARDU | Survey Act Cap 299 | RDM 1.1 (2025) | Generated ${new D
 
       {activeTab === 'input' && (
         <div className="space-y-4">
-          <div className="grid grid-cols-3 gap-4 p-4 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 md:p-4 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)]">
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Opening BM RL (m)</label>
               <input value={openingRL} onChange={e => setOpeningRL(e.target.value)} type="number" step="0.001"
@@ -174,15 +174,15 @@ Computed using METARDU | Survey Act Cap 299 | RDM 1.1 (2025) | Generated ${new D
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-xs">
+            <table className="min-w-[700px] w-full text-xs">
               <thead>
                 <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/30">
                   <th className="px-1.5 py-2 text-left text-[var(--text-secondary)] w-8">#</th>
                   <th className="px-1.5 py-2 text-left text-[var(--text-secondary)]">Station</th>
-                  <th className="px-1.5 py-2 text-right text-[var(--text-secondary)]">BS (m)</th>
-                  <th className="px-1.5 py-2 text-right text-[var(--text-secondary)]">IS (m)</th>
-                  <th className="px-1.5 py-2 text-right text-[var(--text-secondary)]">FS (m)</th>
-                  <th className="px-1.5 py-2 text-right text-[var(--text-secondary)]">Distance (m)</th>
+                  <th className="px-1.5 py-2 text-right text-[var(--text-secondary)]">BS</th>
+                  <th className="px-1.5 py-2 text-right text-[var(--text-secondary)]">IS</th>
+                  <th className="px-1.5 py-2 text-right text-[var(--text-secondary)]">FS</th>
+                  <th className="px-1.5 py-2 text-right text-[var(--text-secondary)]">Dist</th>
                   <th className="px-1.5 py-2 text-left text-[var(--text-secondary)]">Remarks</th>
                   <th className="w-6"></th>
                 </tr>
@@ -195,16 +195,16 @@ Computed using METARDU | Survey Act Cap 299 | RDM 1.1 (2025) | Generated ${new D
                       className="w-full px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" placeholder="BM1" /></td>
                     <td className="px-1 py-1"><input value={row.bs} onChange={e => updateRow(i, 'bs', e.target.value)}
                       type="number" step="0.001" placeholder="0.000"
-                      className="w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
+                      className="w-12 md:w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     <td className="px-1 py-1"><input value={row.is} onChange={e => updateRow(i, 'is', e.target.value)}
                       type="number" step="0.001" placeholder="0.000"
-                      className="w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
+                      className="w-12 md:w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     <td className="px-1 py-1"><input value={row.fs} onChange={e => updateRow(i, 'fs', e.target.value)}
                       type="number" step="0.001" placeholder="0.000"
-                      className="w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
+                      className="w-12 md:w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     <td className="px-1 py-1"><input value={row.distance} onChange={e => updateRow(i, 'distance', e.target.value)}
                       type="number" step="0.01" placeholder="0.00"
-                      className="w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
+                      className="w-12 md:w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     <td className="px-1 py-1"><input value={row.remarks} onChange={e => updateRow(i, 'remarks', e.target.value)}
                       className="w-full px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" placeholder="IS / BM" /></td>
                     <td><button onClick={() => removeRow(i)} className="text-red-400 hover:text-red-300 text-lg leading-none">×</button></td>

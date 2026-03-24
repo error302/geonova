@@ -15,11 +15,11 @@ function DMSField({ label, deg, min, sec, onChange }: { label: string; deg: stri
       <label className="block text-xs text-[var(--text-muted)] mb-1">{label}</label>
       <div className="flex gap-1">
         <input value={deg} onChange={e => onChange('d', e.target.value)} type="number" min="0" max="359" placeholder="Deg"
-          className="w-14 px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
+          className="w-10 md:w-14 px-1 md:px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-xs md:text-sm" />
         <input value={min} onChange={e => onChange('m', e.target.value)} type="number" min="0" max="59" placeholder="Min"
-          className="w-12 px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
+          className="w-8 md:w-12 px-1 md:px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-xs md:text-sm" />
         <input value={sec} onChange={e => onChange('s', e.target.value)} type="number" step="0.001" min="0" max="59.999" placeholder="Sec"
-          className="flex-1 px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
+          className="flex-1 min-w-[50px] px-1 md:px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-xs md:text-sm" />
       </div>
     </div>
   )
@@ -40,11 +40,11 @@ function StepsDisplay({ steps, title }: { steps: InverseStep[]; title?: string }
       {title && <h3 className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">{title}</h3>}
       <div className="space-y-1">
         {steps.map((step, i) => (
-          <div key={i} className="grid grid-cols-[1fr_auto_1fr_auto] gap-x-2 text-xs font-mono py-1 border-b border-[var(--border-color)]/20">
+          <div key={i} className="grid grid-cols-[1fr_auto_1fr] md:grid-cols-[1fr_auto_1fr_auto] gap-x-1 md:gap-x-2 text-xs font-mono py-1 border-b border-[var(--border-color)]/20">
             <span className="text-[var(--text-secondary)]">{step.description}</span>
             <span className="text-[var(--text-muted)]">=</span>
             <span className="text-[var(--text-primary)] text-right">{step.value}</span>
-            <span className="text-[var(--text-muted)] text-right min-w-[120px] text-right">{step.formula}</span>
+            <span className="hidden md:block text-[var(--text-muted)] text-right min-w-[120px] text-right">{step.formula}</span>
           </div>
         ))}
       </div>
@@ -332,16 +332,16 @@ export default function COGOCalculator({ compact = false }: Props) {
   }
 
   const TABS: { id: Tab; label: string }[] = [
-    { id: 'inverse', label: 'Inverse' },
+    { id: 'inverse', label: 'Distance & Bearing' },
     { id: 'polar', label: 'Radiation' },
-    { id: 'intersection', label: 'Forward/Backward Intersection' },
-    { id: 'resection', label: 'Resection' },
-    { id: 'area', label: 'Area (Shoelace)' },
+    { id: 'intersection', label: 'Forward Intersection' },
+    { id: 'resection', label: 'Backward Intersection' },
+    { id: 'area', label: 'Area by Coordinates' },
     { id: 'join', label: 'Missing Line' },
   ]
 
   return (
-    <div className={compact ? '' : 'max-w-7xl mx-auto px-4 py-8'}>
+    <div className={compact ? '' : 'w-full max-w-7xl mx-auto px-3 md:px-4 py-4 md:py-8'}>
       {!compact && (
         <>
           <h1 className="text-3xl font-bold mb-2">COGO Calculator</h1>
@@ -639,7 +639,7 @@ export default function COGOCalculator({ compact = false }: Props) {
             <div className="card p-4 space-y-4">
               <h2 className="font-semibold text-sm">Join Table</h2>
               <div className="overflow-x-auto">
-                <table className="w-full text-xs font-mono">
+                <table className="min-w-[600px] w-full text-xs font-mono">
                   <thead>
                     <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/30">
                       <th className="px-2 py-1.5 text-left text-[var(--text-secondary)]">From</th>
