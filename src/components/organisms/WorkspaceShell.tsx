@@ -25,7 +25,7 @@ export default function WorkspaceShell({
 
         {/* Left sidebar — collapsible */}
         <aside
-          className={`flex-shrink-0 transition-all duration-200 min-h-0 overflow-y-auto rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] ${
+          className={`hidden md:flex flex-shrink-0 transition-all duration-200 min-h-0 overflow-y-auto rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] ${
             leftCollapsed ? 'w-10' : 'w-72'
           }`}
         >
@@ -61,7 +61,7 @@ export default function WorkspaceShell({
         </main>
 
         {/* Right sidebar */}
-        <aside className="flex-shrink-0 w-80 min-h-0 overflow-y-auto rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)]">
+        <aside className="hidden lg:flex flex-shrink-0 w-80 min-h-0 overflow-y-auto rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)]">
           {right}
         </aside>
       </div>

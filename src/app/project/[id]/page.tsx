@@ -882,24 +882,26 @@ export default function ProjectPage({ params }: PageProps) {
         }
         center={
           <div className="h-full flex flex-col min-h-0">
-        <header className="border-b border-[var(--border-color)] bg-[var(--bg-secondary)]/30 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-[var(--text-primary)]">{project.name}</h1>
-              <span className={`badge text-[10px] border ${surveyTypeBadge.badgeColor}`}>
+        <header className="px-3 py-3 md:px-6 md:py-4 border-b border-[var(--border-color)]">
+          <div className="flex flex-col md:flex-row gap-1 md:items-center md:justify-between">
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg md:text-xl font-bold text-[var(--text-primary)] truncate max-w-[200px] md:max-w-none">
+                {project.name}
+              </h1>
+              <span className={`badge text-[10px] border hidden sm:inline ${surveyTypeBadge.badgeColor}`}>
                 {surveyTypeBadge.label} SURVEY
               </span>
             </div>
-            <div className="flex items-center gap-4">
-              <p className="text-sm text-[var(--text-secondary)]">
+            <div className="flex items-center gap-2 md:gap-4 text-xs md:text-sm">
+              <span className="hidden md:inline text-[var(--text-secondary)]">
                 UTM Zone {project.utm_zone}{project.hemisphere}{project.location && ` — ${project.location}`}
-              </p>
-              <div className="flex items-center gap-2 text-sm">
+              </span>
+              <div className="flex items-center gap-1 md:gap-2">
                 {onlineUsers.length > 0 ? (
                   <div className="flex items-center gap-1">
                     <div className="flex -space-x-2">
                       {onlineUsers.slice(0, 3).map((u, i) => (
-                        <div 
+                        <div
                           key={i}
                           className="w-6 h-6 rounded-full bg-blue-500 border-2 border-[var(--border-color)] flex items-center justify-center text-xs text-white"
                           title={u.email}
@@ -908,13 +910,13 @@ export default function ProjectPage({ params }: PageProps) {
                         </div>
                       ))}
                     </div>
-                    <span className="text-[var(--text-secondary)]">{viewerCount} online</span>
+                    <span className="hidden md:inline text-[var(--text-secondary)]">{viewerCount} online</span>
                   </div>
                 ) : (
-                  <span className="text-[var(--text-secondary)]">👥 {viewerCount} viewer{viewerCount !== 1 ? 's' : ''}</span>
+                  <span className="text-[var(--text-secondary)]">👥 {viewerCount}</span>
                 )}
                 <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500' : 'bg-[var(--text-muted)]'}`}></div>
-                <span className="text-[var(--text-muted)] text-xs">{isOnline ? 'Live' : 'Offline'}</span>
+                <span className="text-[var(--text-muted)]">{isOnline ? 'Live' : 'Offline'}</span>
               </div>
             </div>
           </div>
@@ -958,76 +960,115 @@ export default function ProjectPage({ params }: PageProps) {
               </div>
             )}
             <div className="border border-[var(--border-color)] bg-[var(--bg-secondary)]/30 rounded-lg overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-[var(--border-color)]">
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-primary)]">{t('points.pointName')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-primary)]">{t('points.easting')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-primary)]">{t('points.northing')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-primary)]">{t('points.elevation')}</th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold text-[var(--text-primary)]">{t('common.actions')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {points.length > 0 ? (
-                    points.map((point) => (
-                      <tr
-                        key={point.id}
-                        onClick={() => setSelectedPointId(point.id)}
-                        className={`border-b border-[var(--border-color)]/50 ${selectedPointId === point.id ? 'bg-[var(--accent-subtle)]' : 'hover:bg-white/5'}`}
-                      >
-                        <td className="px-4 py-3 font-mono text-[var(--text-primary)]">
-                          {point.name}
-                          {point.locked && <span className="ml-1">🔒</span>}
-                          {point.is_control && (
-                            <span className={`ml-2 text-xs ${
-                              point.control_order === 'primary' ? 'text-red-400' :
-                              point.control_order === 'secondary' ? 'text-orange-400' :
-                              point.control_order === 'temporary' ? 'text-yellow-400' :
-                              'text-red-400'
-                            }`}>
-                              ({point.control_order === 'temporary' ? 'TMP' : point.control_order === 'secondary' ? 'SEC' : 'PRI'})
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 font-mono text-[var(--text-primary)]">{point.easting.toFixed(4)}</td>
-                        <td className="px-4 py-3 font-mono text-[var(--text-primary)]">{point.northing.toFixed(4)}</td>
-                        <td className="px-4 py-3 font-mono text-[var(--text-primary)]">{point.elevation?.toFixed(3) ?? '—'}</td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center justify-end gap-2">
-                            <button
-                              onClick={() => handleCopyCoords(point)}
-                              className="text-xs px-2 py-1 bg-gray-700 hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded transition-colors"
-                            >
-                              {copiedId === point.id ? t('common.copied') : t('common.copy')}
-                            </button>
-                            <button
-                              onClick={() => handleEditPoint(point)}
-                              className="text-xs px-2 py-1 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded transition-colors"
-                            >
-                              {t('common.edit')}
-                            </button>
-                            <button
-                              onClick={() => handleDeletePoint(point)}
-                              disabled={!!point.locked}
-                              className="text-xs px-2 py-1 bg-red-900/40 hover:bg-red-900/60 text-red-200 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                              title={point.locked ? t('workspace.lockedCannotDelete') : t('workspace.deletePoint')}
-                            >
-                              {t('common.delete')}
-                            </button>
-                          </div>
+              <div className="md:hidden space-y-2 p-3">
+                {points.length > 0 ? (
+                  points.map((point) => (
+                    <div
+                      key={point.id}
+                      onClick={() => setSelectedPointId(point.id)}
+                      className={`bg-[var(--bg-secondary)] p-3 rounded border ${selectedPointId === point.id ? 'border-[var(--accent)]' : 'border-[var(--border-color)]'}`}
+                    >
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="font-mono font-bold text-sm">{point.name}</span>
+                        <div className="flex gap-1">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleEditPoint(point); }}
+                            className="text-xs px-2 py-1 bg-[var(--bg-tertiary)] rounded"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleDeletePoint(point); }}
+                            disabled={!!point.locked}
+                            className="text-xs px-2 py-1 bg-red-900/40 text-red-200 rounded disabled:opacity-50"
+                          >
+                            Del
+                          </button>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-1 text-xs font-mono text-[var(--text-secondary)]">
+                        <span>E: {point.easting.toFixed(3)}</span>
+                        <span>N: {point.northing.toFixed(3)}</span>
+                        <span>RL: {point.elevation?.toFixed(3) ?? '—'}</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center py-4 text-[var(--text-muted)] text-sm">{t('workspace.noPointsHint')}</p>
+                )}
+              </div>
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-[var(--border-color)]">
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-primary)]">{t('points.pointName')}</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-primary)]">{t('points.easting')}</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-primary)]">{t('points.northing')}</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-primary)]">{t('points.elevation')}</th>
+                      <th className="px-4 py-3 text-right text-sm font-semibold text-[var(--text-primary)]">{t('common.actions')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {points.length > 0 ? (
+                      points.map((point) => (
+                        <tr
+                          key={point.id}
+                          onClick={() => setSelectedPointId(point.id)}
+                          className={`border-b border-[var(--border-color)]/50 ${selectedPointId === point.id ? 'bg-[var(--accent-subtle)]' : 'hover:bg-white/5'}`}
+                        >
+                          <td className="px-4 py-3 font-mono text-[var(--text-primary)]">
+                            {point.name}
+                            {point.locked && <span className="ml-1">🔒</span>}
+                            {point.is_control && (
+                              <span className={`ml-2 text-xs ${
+                                point.control_order === 'primary' ? 'text-red-400' :
+                                point.control_order === 'secondary' ? 'text-orange-400' :
+                                point.control_order === 'temporary' ? 'text-yellow-400' :
+                                'text-red-400'
+                              }`}>
+                                ({point.control_order === 'temporary' ? 'TMP' : point.control_order === 'secondary' ? 'SEC' : 'PRI'})
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 font-mono text-[var(--text-primary)]">{point.easting.toFixed(4)}</td>
+                          <td className="px-4 py-3 font-mono text-[var(--text-primary)]">{point.northing.toFixed(4)}</td>
+                          <td className="px-4 py-3 font-mono text-[var(--text-primary)]">{point.elevation?.toFixed(3) ?? '—'}</td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => handleCopyCoords(point)}
+                                className="text-xs px-2 py-1 bg-gray-700 hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded transition-colors"
+                              >
+                                {copiedId === point.id ? t('common.copied') : t('common.copy')}
+                              </button>
+                              <button
+                                onClick={() => handleEditPoint(point)}
+                                className="text-xs px-2 py-1 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded transition-colors"
+                              >
+                                {t('common.edit')}
+                              </button>
+                              <button
+                                onClick={() => handleDeletePoint(point)}
+                                disabled={!!point.locked}
+                                className="text-xs px-2 py-1 bg-red-900/40 hover:bg-red-900/60 text-red-200 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                title={point.locked ? t('workspace.lockedCannotDelete') : t('workspace.deletePoint')}
+                              >
+                                {t('common.delete')}
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={5} className="px-4 py-8 text-center text-[var(--text-muted)]">
+                          {t('workspace.noPointsHint')}
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={5} className="px-4 py-8 text-center text-[var(--text-muted)]">
-                        {t('workspace.noPointsHint')}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -1263,6 +1304,27 @@ export default function ProjectPage({ params }: PageProps) {
           </div>
         }
       />
+
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--bg-secondary)] border-t border-[var(--border-color)] px-4 py-2 flex justify-around z-50">
+        <button
+          onClick={() => setShowAddPoint(true)}
+          className="text-xs px-3 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] rounded text-[var(--text-primary)]"
+        >
+          + Point
+        </button>
+        <button
+          onClick={() => setShowTraverse(true)}
+          className="text-xs px-3 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] rounded text-[var(--text-primary)]"
+        >
+          Traverse
+        </button>
+        <button
+          onClick={handleGenerateSurveyPlan}
+          className="text-xs px-3 py-2 bg-[var(--accent)] hover:opacity-90 rounded text-black font-medium"
+        >
+          Generate Plan
+        </button>
+      </div>
 
       <AddPointModal
         isOpen={showAddPoint}
