@@ -208,11 +208,10 @@ export default function TraverseCalculator() {
             <div className="card-body space-y-3">
               <ResultRow label="Method" value={method === 'bowditch' ? 'Bowditch Rule' : 'Transit Rule'} />
               <ResultRow label="Total Distance" value={`${result.totalDistance.toFixed(4)} m`} />
-              <ResultRow label="Closing Error (E)" value={`${result.closingErrorE.toFixed(6)} m`} />
-              <ResultRow label="Closing Error (N)" value={`${result.closingErrorN.toFixed(6)} m`} />
-              <ResultRow label="Linear Error" value={`${result.linearError.toFixed(6)} m`} />
+              <ResultRow label="ΣDepartures" value={`${result.legs.reduce((s: number, l: any) => s + l.departure, 0).toFixed(4)} m`} />
+              <ResultRow label="ΣLatitudes" value={`${result.legs.reduce((s: number, l: any) => s + l.latitude, 0).toFixed(4)} m`} />
+              <ResultRow label="Linear Misclosure" value={`${result.linearError.toFixed(6)} m`} />
               <ResultRow label="Precision Ratio" value={`1 : ${Math.round(1/result.precisionRatio)}`} highlight />
-              <ResultRow label="Grade" value={result.precisionGrade} />
             </div>
           </div>
 
@@ -249,35 +248,93 @@ export default function TraverseCalculator() {
 
           <div className="card">
             <div className="card-header">
-              <span className="label">Bowditch Adjustment Table</span>
+              <span className="label">Table 1 — Traverse Computation</span>
+            </div>
+            <p className="text-xs text-[var(--text-muted)] px-4 pt-2">Source: Ghilani &amp; Wolf, Elementary Surveying 16th Ed., Chapter 10, Table 10.1</p>
+            <div className="overflow-x-auto">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Line</th>
+                    <th>WCB (D°M'S")</th>
+                    <th>HD (m)</th>
+                    <th className="text-right">DEPARTURE (m)</th>
+                    <th className="text-right">LATITUDE (m)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.legs.map((l: any, i: number) => (
+                    <tr key={i}>
+                      <td className="font-semibold">{l.from} → {l.to}</td>
+                      <td className="font-mono">{l.bearingDMS}</td>
+                      <td className="text-right font-mono">{l.distance.toFixed(4)}</td>
+                      <td className="text-right font-mono">{l.departure >= 0 ? '+' : ''}{l.departure.toFixed(4)}</td>
+                      <td className="text-right font-mono">{l.latitude >= 0 ? '+' : ''}{l.latitude.toFixed(4)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr className="font-semibold bg-[var(--bg-tertiary)]">
+                    <td colSpan={3} className="text-right">Σ</td>
+                    <td className="text-right font-mono">{result.legs.reduce((s: number, l: any) => s + l.departure, 0).toFixed(4)}</td>
+                    <td className="text-right font-mono">{result.legs.reduce((s: number, l: any) => s + l.latitude, 0).toFixed(4)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header">
+              <span className="label">Table 2 — Bowditch Corrections</span>
             </div>
             <div className="overflow-x-auto">
               <table className="table">
                 <thead>
                   <tr>
                     <th>Line</th>
-                    <th>Dist (m)</th>
-                    <th>Bearing</th>
-                    <th>DEP (E)</th>
-                    <th>LAT (N)</th>
-                    <th>CORR DEP</th>
-                    <th>CORR LAT</th>
-                    <th>Adj E</th>
-                    <th>Adj N</th>
+                    <th className="text-right">HD (m)</th>
+                    <th className="text-right">CORR DEP (m)</th>
+                    <th className="text-right">CORR LAT (m)</th>
+                    <th className="text-right">ADJ DEP (m)</th>
+                    <th className="text-right">ADJ LAT (m)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {result.legs.map((l: any, i: number) => (
                     <tr key={i}>
-                      <td>{l.from} → {l.to}</td>
-                      <td>{l.distance.toFixed(3)}</td>
-                      <td>{l.bearingDMS}</td>
-                      <td>{l.departure.toFixed(4)}</td>
-                      <td>{l.latitude.toFixed(4)}</td>
-                      <td>{l.correctedDeparture?.toFixed(4) || '0.0000'}</td>
-                      <td>{l.correctedLatitude?.toFixed(4) || '0.0000'}</td>
-                      <td>{l.adjEasting.toFixed(4)}</td>
-                      <td>{l.adjNorthing.toFixed(4)}</td>
+                      <td className="font-semibold">{l.from} → {l.to}</td>
+                      <td className="text-right font-mono">{l.distance.toFixed(4)}</td>
+                      <td className="text-right font-mono">{(l.correctedDeparture - l.departure).toFixed(4)}</td>
+                      <td className="text-right font-mono">{(l.correctedLatitude - l.latitude).toFixed(4)}</td>
+                      <td className="text-right font-mono font-semibold">{l.correctedDeparture.toFixed(4)}</td>
+                      <td className="text-right font-mono font-semibold">{l.correctedLatitude.toFixed(4)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header">
+              <span className="label">Table 3 — Adjusted Coordinates</span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Point</th>
+                    <th className="text-right">EASTING (m)</th>
+                    <th className="text-right">NORTHING (m)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.legs.map((l: any, i: number) => (
+                    <tr key={i}>
+                      <td className="font-semibold">{l.to}</td>
+                      <td className="text-right font-mono font-semibold text-[var(--accent)]">{l.adjEasting.toFixed(4)}</td>
+                      <td className="text-right font-mono font-semibold text-[var(--accent)]">{l.adjNorthing.toFixed(4)}</td>
                     </tr>
                   ))}
                 </tbody>

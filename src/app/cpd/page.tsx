@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import {
   getCPDRequirements,
   getUserActivities,
@@ -18,12 +19,26 @@ export default function CPDPage() {
   const [country, setCountry] = useState('Kenya')
   const [requirements, setRequirements] = useState<any[]>([])
   const [activityTypes, setActivityTypes] = useState<any[]>([])
+  const [userId, setUserId] = useState<string | null>(null)
 
   useEffect(() => {
-    setRequirements(getCPDRequirements(country))
-    setActivities(getUserActivities('user-001'))
-    setSummary(calculateCPDSummary('user-001', country))
-    setActivityTypes(getActivityTypes())
+    const loadUser = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      const uid = user?.id ?? null
+      setUserId(uid)
+      setRequirements(getCPDRequirements(country))
+      setActivityTypes(getActivityTypes())
+      if (uid) {
+        setActivities(getUserActivities(uid))
+        setSummary(calculateCPDSummary(uid, country))
+      } else {
+        setActivities(getUserActivities('guest'))
+        setSummary(calculateCPDSummary('guest', country))
+      }
+      setLoading(false)
+    }
+    loadUser()
   }, [country])
 
   const getStatusColor = (status: string) => {
