@@ -90,6 +90,7 @@ export default function ProjectPage({ params }: PageProps) {
   const [project, setProject] = useState<Project | null>(null)
   const [points, setPoints] = useState<Point[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingStage, setLoadingStage] = useState<string>('init')
   const [showAddPoint, setShowAddPoint] = useState(false)
   const [showCSVUpload, setShowCSVUpload] = useState(false)
   const [showTraverse, setShowTraverse] = useState(false)
@@ -162,12 +163,20 @@ export default function ProjectPage({ params }: PageProps) {
 
   const fetchData = async () => {
     const sb = getSupabase()
-    if (!sb) return
+    if (!sb) {
+      console.log('METARDU DEBUG: getSupabase returned null')
+      return
+    }
 
+    setLoadingStage('auth-check')
+    console.log('METARDU DEBUG: fetchData stage=auth-check')
+    
     const { data: { session } } = await sb.auth.getSession()
     let user = session?.user ?? null
 
     if (!user) {
+      setLoadingStage('refresh')
+      console.log('METARDU DEBUG: session null, refreshing...')
       const { data: { session: refreshed } } = await sb.auth.refreshSession()
       user = refreshed?.user ?? null
     }
@@ -178,6 +187,9 @@ export default function ProjectPage({ params }: PageProps) {
       return
     }
 
+    setLoadingStage('fetch-project')
+    console.log('METARDU DEBUG: fetchData stage=fetch-project, user=', user.id)
+    
     const { data: projectData } = await sb
       .from('projects')
       .select('*')
@@ -191,6 +203,8 @@ export default function ProjectPage({ params }: PageProps) {
     }
 
     setProject(projectData)
+    setLoadingStage('fetch-points')
+    console.log('METARDU DEBUG: fetchData stage=fetch-points')
 
     const { data: pointsData } = await sb
       .from('survey_points')
@@ -215,6 +229,8 @@ export default function ProjectPage({ params }: PageProps) {
     }
 
     setPoints(fetchedPoints)
+    setLoadingStage('done')
+    console.log('METARDU DEBUG: fetchData complete, points=', fetchedPoints.length)
     setLoading(false)
   }
 
@@ -323,6 +339,18 @@ export default function ProjectPage({ params }: PageProps) {
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log('METARDU DEBUG — page state after 5s:', {
+        loading,
+        loadingStage,
+        project: !!project,
+        points: points?.length,
+      })
+    }, 5000)
+    return () => clearTimeout(timer)
+  }, [loading, loadingStage, project, points])
 
   const handleMapClick = (lat: number, lon: number) => {
     if (!project) return
