@@ -107,25 +107,42 @@ export default function NotificationsPage() {
     const updated = notifications.map(n => n.id === id ? { ...n, read: true } : n)
     setNotifications(updated)
     saveLocal(updated)
-    // Best-effort Supabase update
-    createClient().from('notifications').update({ read: true }).eq('id', id).then(() => {})
+    try {
+      createClient().from('notifications').update({ read: true }).eq('id', id).then(({ error }) => {
+        if (error) console.error('Failed to mark read:', error)
+      })
+    } catch (e) {
+      console.error('Failed to mark read:', e)
+    }
   }
 
   const markAllRead = () => {
     const updated = notifications.map(n => ({ ...n, read: true }))
     setNotifications(updated)
     saveLocal(updated)
-    createClient().from('notifications')
-      .update({ read: true })
-      .in('id', notifications.map(n => n.id))
-      .then(() => {})
+    try {
+      createClient().from('notifications')
+        .update({ read: true })
+        .in('id', notifications.map(n => n.id))
+        .then(({ error }) => {
+          if (error) console.error('Failed to mark all read:', error)
+        })
+    } catch (e) {
+      console.error('Failed to mark all read:', e)
+    }
   }
 
   const dismiss = (id: string) => {
     const updated = notifications.filter(n => n.id !== id)
     setNotifications(updated)
     saveLocal(updated)
-    createClient().from('notifications').delete().eq('id', id).then(() => {})
+    try {
+      createClient().from('notifications').delete().eq('id', id).then(({ error }) => {
+        if (error) console.error('Failed to dismiss:', error)
+      })
+    } catch (e) {
+      console.error('Failed to dismiss:', e)
+    }
   }
 
   const shown = filter === 'unread' ? notifications.filter(n => !n.read) : notifications

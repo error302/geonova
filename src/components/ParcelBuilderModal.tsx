@@ -97,7 +97,8 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
   const handlePointClick = (point: Point) => {
     if (!isSelecting) return;
 
-    if (selectedPoints.length > 0 && selectedPoints[0].id === point.id) {
+    const firstPoint = selectedPoints[0]
+    if (selectedPoints.length > 0 && firstPoint && firstPoint.id === point.id) {
       if (selectedPoints.length >= 3) setIsSelecting(false);
       return;
     }

@@ -113,6 +113,12 @@ export function useProjectRealtime(
         setPoints(offlinePoints)
       }
 
+      if (!supabase) {
+        console.error('Supabase not initialized')
+        if (mounted) setIsLoading(false)
+        return
+      }
+
       const { data: remotePoints } = await supabase
         .from('survey_points')
         .select('*')
@@ -128,6 +134,11 @@ export function useProjectRealtime(
     }
 
     loadInitialData()
+
+    if (!supabase) {
+      console.error('Supabase not initialized')
+      return
+    }
 
     const subscription = supabase
       .channel(`project-points:${projectId}`)
@@ -156,7 +167,9 @@ export function useProjectRealtime(
 
     return () => {
       mounted = false
-      supabase.removeChannel(subscription)
+      if (supabase) {
+        supabase.removeChannel(subscription)
+      }
     }
   }, [projectId, user])
 

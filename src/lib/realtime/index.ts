@@ -1,9 +1,13 @@
 import { createClient, RealtimeChannel, User } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const supabase = supabaseUrl && supabaseAnonKey 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null
+
+export { supabase }
 
 export interface PresenceUser {
   user_id: string
@@ -30,6 +34,10 @@ class RealtimeService {
     config: RealtimeConfig,
     user: User
   ): Promise<RealtimeChannel> {
+    if (!supabase) {
+      throw new Error('Supabase not initialized')
+    }
+    
     const channelName = `${config.table}:${projectId}`
     
     if (this.channels.has(channelName)) {
@@ -157,9 +165,14 @@ class RealtimeService {
 export const realtimeService = new RealtimeService()
 
 export async function enableRealtimeForTable(table: string): Promise<void> {
-  const { error } = await supabase.rpc('enable_realtime_for_table', { table_name: table })
-  if (error) {
-    console.error(`Failed to enable realtime for ${table}:`, error)
+  if (!supabase) return
+  try {
+    const { error } = await supabase.rpc('enable_realtime_for_table', { table_name: table })
+    if (error) {
+      console.error(`Failed to enable realtime for ${table}:`, error)
+    }
+  } catch (err) {
+    console.error(`Failed to enable realtime for ${table}:`, err)
   }
 }
 

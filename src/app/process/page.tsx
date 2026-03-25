@@ -285,7 +285,10 @@ export default function ProcessPage() {
           })
         }
 
-        await supabase.from('survey_points').insert(points)
+        const { error: insertError } = await supabase.from('survey_points').insert(points)
+        if (insertError) {
+          throw new Error(`Failed to save points: ${insertError.message}`)
+        }
       } 
       else if (workflowResult.surveyType === 'radiation' && workflowResult.results.points) {
         const points = workflowResult.results.points.map((pt: any) => ({
@@ -297,7 +300,10 @@ export default function ProcessPage() {
           is_control: false
         }))
 
-        await supabase.from('survey_points').insert(points)
+        const { error: insertError } = await supabase.from('survey_points').insert(points)
+        if (insertError) {
+          throw new Error(`Failed to save points: ${insertError.message}`)
+        }
       }
 
       setSaveSuccess(true)

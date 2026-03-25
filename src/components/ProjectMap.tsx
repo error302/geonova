@@ -346,18 +346,22 @@ export default function ProjectMap({
   }
 
   let distanceInfo: { distance: number; bearing: string; backBearing: string; deltaE: number; deltaN: number } | null = null
-  if (distancePoints.length === 2) {
-    const result = distanceBearing(
-      { easting: distancePoints[0].easting, northing: distancePoints[0].northing },
-      { easting: distancePoints[1].easting, northing: distancePoints[1].northing }
-    )
-    const backBearing = (result.bearing + 180) % 360
-    distanceInfo = {
-      distance: result.distance,
-      bearing: bearingToString(result.bearing),
-      backBearing: bearingToString(backBearing),
-      deltaE: result.deltaE,
-      deltaN: result.deltaN
+  if (distancePoints.length >= 2) {
+    const p1 = distancePoints[0]
+    const p2 = distancePoints[1]
+    if (p1 && p2) {
+      const result = distanceBearing(
+        { easting: p1.easting, northing: p1.northing },
+        { easting: p2.easting, northing: p2.northing }
+      )
+      const backBearing = (result.bearing + 180) % 360
+      distanceInfo = {
+        distance: result.distance,
+        bearing: bearingToString(result.bearing),
+        backBearing: bearingToString(backBearing),
+        deltaE: result.deltaE,
+        deltaN: result.deltaN
+      }
     }
   }
 
