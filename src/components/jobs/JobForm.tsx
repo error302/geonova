@@ -55,7 +55,7 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
           type="text"
           value={formData.name}
           onChange={(e) => setFormData({...formData, name: e.target.value})}
-          className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg focus:border-[#E8841A] focus:outline-none text-gray-100"
+          className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
           required
         />
       </div>
@@ -66,7 +66,7 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
           type="text"
           value={formData.client}
           onChange={(e) => setFormData({...formData, client: e.target.value})}
-          className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg focus:border-[#E8841A] focus:outline-none text-gray-100"
+          className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
         />
       </div>
 
@@ -75,7 +75,7 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
         <select
           value={formData.survey_type}
           onChange={(e) => handleTypeChange(e.target.value)}
-          className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg focus:border-[#E8841A] focus:outline-none text-gray-100"
+          className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
           required
         >
           <option value="boundary">Boundary Survey</option>
@@ -95,7 +95,7 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
       {equipment.length > 0 && (
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">Recommended Equipment</label>
-          <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+          <div className="bg-[var(--bg-tertiary)]/50 p-4 rounded-lg border border-[var(--border-color)]">
             <div className="flex flex-wrap gap-2">
               {equipment.map((item, idx) => (
                 <span key={idx} className="text-xs bg-[#E8841A]/20 text-[#E8841A] px-2 py-1 rounded">
@@ -130,7 +130,7 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
             onChange={(e) => setFormData({...formData, crew_size: parseInt(e.target.value)})}
             min="1"
             max="20"
-            className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg focus:border-[#E8841A] focus:outline-none text-gray-100"
+            className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
           />
         </div>
         <div>
@@ -139,7 +139,7 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
             type="date"
             value={formData.scheduled_date}
             onChange={(e) => setFormData({...formData, scheduled_date: e.target.value})}
-            className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg focus:border-[#E8841A] focus:outline-none text-gray-100"
+            className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
           />
         </div>
       </div>
