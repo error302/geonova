@@ -1,5 +1,7 @@
 // src/app/fieldguard/page.tsx
 
+export const dynamic = 'force-dynamic'
+
 import DataCleaner from '@/components/fieldguard/DataCleaner'
 
 export default function FieldGuardPage() {
