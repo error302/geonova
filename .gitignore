@@ -16,6 +16,7 @@ npm-debug.log*
 
 # Local env files
 .env*.local
+.env
 
 # TypeScript
 *.tsbuildinfo
@@ -24,4 +25,39 @@ next-env.d.ts
 # Test coverage
 coverage/
 
-nul
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+thumbs.db
+Thumbs.db
+
+# Build outputs
+dist/
+.turbo/
+
+# Unity/Capacitor
+android/
+ios/
+capacitor.config.ts
+capacitor/
+
+# OpenCode/AI
+.continue/
+.opencode/
+
+# Debug files
+TODO.md
+notes.txt
+*.log
+
+# PDF/Blueprints
+*.pdf
+geonova-blueprint.pdf
+
+# Backup files
+*.bak
+*.tmp
