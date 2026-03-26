@@ -8,6 +8,7 @@ import {
   SUPPORTED_EXTENSIONS,
   PARSER_VERSION,
 } from './types'
+import { parseDXFFileContent } from './parseDXF'
 
 export interface RouteFileOptions {
   file: File
@@ -85,7 +86,9 @@ export async function routeFile(options: RouteFileOptions): Promise<ParsedInput>
 }
 
 async function parseDXF(file: File, base: ParsedInput, enhance: boolean): Promise<ParsedInput> {
-  throw new Error('TODO: parseDXF not implemented - requires dxf-parser dependency')
+  const content = await file.text()
+  const result = await parseDXFFileContent(content, file.name)
+  return result
 }
 
 async function parseDWG(file: File, base: ParsedInput, enhance: boolean): Promise<ParsedInput> {
