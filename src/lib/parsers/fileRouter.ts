@@ -9,7 +9,9 @@ import {
   PARSER_VERSION,
 } from './types'
 import { parseDXFFileContent } from './parseDXF'
-import { parseIFCFile, parsePDFContent, parseImageFile, parseGLTFFile, parseOBJFile, parseBOQSpreadsheet } from './stubs'
+import { parsePDFContent } from './parsePDF'
+import { parseGLTFFile, parseOBJFile } from './parse3D'
+import { parseBOQSpreadsheet } from './parseBOQ'
 
 export interface RouteFileOptions {
   file: File
@@ -88,91 +90,46 @@ export async function routeFile(options: RouteFileOptions): Promise<ParsedInput>
 
 async function parseDXF(file: File, base: ParsedInput, enhance: boolean): Promise<ParsedInput> {
   const content = await file.text()
-  const result = await parseDXFFileContent(content, file.name)
-  return result
+  return await parseDXFFileContent(content, file.name)
 }
 
 async function parseDWG(file: File, base: ParsedInput, enhance: boolean): Promise<ParsedInput> {
-  try {
-    return await parseIFCFile(file) // DWG requires conversion first, will throw appropriate error
-  } catch {
-    return {
-      ...base,
-      errors: ['DWG files require conversion to DXF. Please export from AutoCAD as DXF or use LibreCAD.'],
-    }
+  return {
+    ...base,
+    errors: ['DWG files require conversion to DXF. Please export from AutoCAD as DXF or use LibreCAD.'],
   }
 }
 
 async function parseIFC(file: File, base: ParsedInput, enhance: boolean): Promise<ParsedInput> {
-  try {
-    return await parseIFCFile(file)
-  } catch (err) {
-    return {
-      ...base,
-      errors: [err instanceof Error ? err.message : 'IFC parsing not yet implemented'],
-      warnings: ['Install web-ifc to enable IFC/BIM parsing'],
-    }
+  return {
+    ...base,
+    errors: ['IFC parsing not yet implemented'],
+    warnings: ['Install web-ifc to enable IFC/BIM parsing'],
   }
 }
 
 async function parsePDF(file: File, base: ParsedInput, enhance: boolean): Promise<ParsedInput> {
-  try {
-    return await parsePDFContent(file)
-  } catch (err) {
-    return {
-      ...base,
-      errors: [err instanceof Error ? err.message : 'PDF parsing not yet implemented'],
-      warnings: ['PDF requires AI vision integration. Coming soon.'],
-    }
-  }
+  return await parsePDFContent(file)
 }
 
 async function parseImage(file: File, base: ParsedInput, enhance: boolean): Promise<ParsedInput> {
-  try {
-    return await parseImageFile(file)
-  } catch (err) {
-    return {
-      ...base,
-      errors: [err instanceof Error ? err.message : 'Image parsing not yet implemented'],
-      warnings: ['Image parsing requires AI vision. Coming soon.'],
-    }
+  return {
+    ...base,
+    errors: ['Image parsing not yet implemented'],
+    warnings: ['Image parsing requires AI vision. Coming soon.'],
   }
 }
 
 async function parseGLTF(file: File, base: ParsedInput, enhance: boolean): Promise<ParsedInput> {
-  try {
-    return await parseGLTFFile(file)
-  } catch (err) {
-    return {
-      ...base,
-      errors: [err instanceof Error ? err.message : '3D model parsing not yet implemented'],
-      warnings: ['GLTF parsing requires three.js. Coming soon.'],
-    }
-  }
+  return await parseGLTFFile(file)
 }
 
 async function parseOBJ(file: File, base: ParsedInput, enhance: boolean): Promise<ParsedInput> {
-  try {
-    return await parseOBJFile(file)
-  } catch (err) {
-    return {
-      ...base,
-      errors: [err instanceof Error ? err.message : 'OBJ parsing not yet implemented'],
-      warnings: ['OBJ parsing requires three.js. Coming soon.'],
-    }
-  }
+  return await parseOBJFile(file)
 }
 
 async function parseBOQ(file: File, base: ParsedInput): Promise<ParsedInput> {
-  try {
-    return await parseBOQSpreadsheet(file)
-  } catch (err) {
-    return {
-      ...base,
-      errors: [err instanceof Error ? err.message : 'BOQ parsing not yet implemented'],
-      warnings: ['BOQ parsing requires xlsx and AI. Coming soon.'],
-    }
-  }
+  return await parseBOQSpreadsheet(file)
 }
 
 export function calculateConfidence(data: ExtractedBuildingData): number {
