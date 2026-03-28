@@ -57,7 +57,7 @@ export default function SurveyReportBuilder({ projectId, existingReportId }: Sur
 
   const supabase = createClient()
 
-  const generateReport = async (input: Partial<SurveyReportInput>) => {
+  const generateReport = useCallback(async (input: Partial<SurveyReportInput>) => {
     setIsGenerating(true)
     setError(null)
     try {
@@ -81,7 +81,7 @@ export default function SurveyReportBuilder({ projectId, existingReportId }: Sur
     } finally {
       setIsGenerating(false)
     }
-  }
+  }, [projectId])
 
   const loadReport = useCallback(async () => {
     if (existingReportId) {
