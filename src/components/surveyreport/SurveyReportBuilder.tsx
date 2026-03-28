@@ -57,32 +57,6 @@ export default function SurveyReportBuilder({ projectId, existingReportId }: Sur
 
   const supabase = createClient()
 
-  const loadReport = useCallback(async () => {
-    if (existingReportId) {
-      try {
-        const { getSurveyReportById } = await import('@/lib/supabase/surveyReports')
-        const report = await getSurveyReportById(existingReportId)
-        if (report) {
-          setReportInput({
-            ...report,
-            projectId
-          } as SurveyReportInput)
-          setGeneratedSections(report.sections)
-          setReportId(existingReportId)
-          await generateReport(report as SurveyReportInput)
-        }
-      } catch (err) {
-        console.error('Failed to load report:', err)
-      }
-    } else {
-      await generateReport({ projectId } as SurveyReportInput)
-    }
-  }, [existingReportId, projectId])
-
-  useEffect(() => {
-    loadReport()
-  }, [loadReport])
-
   const generateReport = async (input: Partial<SurveyReportInput>) => {
     setIsGenerating(true)
     setError(null)
@@ -109,7 +83,33 @@ export default function SurveyReportBuilder({ projectId, existingReportId }: Sur
     }
   }
 
-  const saveReport = async () => {
+  const loadReport = useCallback(async () => {
+    if (existingReportId) {
+      try {
+        const { getSurveyReportById } = await import('@/lib/supabase/surveyReports')
+        const report = await getSurveyReportById(existingReportId)
+        if (report) {
+          setReportInput({
+            ...report,
+            projectId
+          } as SurveyReportInput)
+          setGeneratedSections(report.sections)
+          setReportId(existingReportId)
+          await generateReport(report as SurveyReportInput)
+        }
+      } catch (err) {
+        console.error('Failed to load report:', err)
+      }
+    } else {
+      await generateReport({ projectId } as SurveyReportInput)
+    }
+  }, [existingReportId, projectId, generateReport])
+
+  useEffect(() => {
+    loadReport()
+  }, [loadReport])
+
+  const saveReport = useCallback(async () => {
     if (!completeness) return
     
     setIsSaving(true)
@@ -140,7 +140,7 @@ export default function SurveyReportBuilder({ projectId, existingReportId }: Sur
     } finally {
       setIsSaving(false)
     }
-  }
+  }, [completeness, reportId, projectId, reportInput, generatedSections])
 
   const debouncedSave = useMemo(() => {
     let timeout: NodeJS.Timeout
@@ -148,7 +148,7 @@ export default function SurveyReportBuilder({ projectId, existingReportId }: Sur
       clearTimeout(timeout)
       timeout = setTimeout(saveReport, 2000)
     }
-  }, [reportInput, generatedSections, completeness])
+  }, [saveReport])
 
   useEffect(() => {
     if (isDirty && reportInput.projectId) {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Video, Camera, RefreshCw, Maximize2, AlertCircle } from 'lucide-react'
 import { getCameraFeedUrl } from '@/lib/compute/safety'
 
@@ -17,7 +17,7 @@ export default function CameraFeed({ projectId, cameraId, cameraName = 'Camera F
   const [error, setError] = useState<string | null>(null)
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date())
 
-  const fetchFeed = async () => {
+  const fetchFeed = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
@@ -30,13 +30,13 @@ export default function CameraFeed({ projectId, cameraId, cameraName = 'Camera F
     } finally {
       setLoading(false)
     }
-  }
+  }, [projectId, cameraId])
 
   useEffect(() => {
     fetchFeed()
     const interval = setInterval(fetchFeed, 30000)
     return () => clearInterval(interval)
-  }, [projectId, cameraId])
+  }, [fetchFeed])
 
   return (
     <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg overflow-hidden">

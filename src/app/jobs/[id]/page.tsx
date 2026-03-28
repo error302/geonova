@@ -3,7 +3,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getJob, getEquipmentByType, getChecklistByType, MetarduJob } from '@/lib/supabase/jobs'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import JobCard from '@/components/jobs/JobCard'
 
 interface WorkflowGuide {
@@ -44,11 +44,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
   const [checklist, setChecklist] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadJob()
-  }, [params.id])
-
-  const loadJob = async () => {
+  const loadJob = useCallback(async () => {
     try {
       setLoading(true)
       const jobData = await getJob(params.id)
@@ -68,7 +64,11 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [params.id])
+
+  useEffect(() => {
+    loadJob()
+  }, [loadJob])
 
   if (loading) {
     return <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center"><div>Loading mission...</div></div>

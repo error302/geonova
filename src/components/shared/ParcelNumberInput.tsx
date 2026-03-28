@@ -93,7 +93,7 @@ export default function ParcelNumberInput({
     
     const { zone, hemisphere } = getUTMZoneForParcel(selectedSection)
     onUTMZoneDetected?.(zone, hemisphere)
-  }, [selectedCounty, selectedSection, blockNumber, parcelNumber, currentSection, onChange, onUTMZoneDetected])
+  }, [selectedSection, blockNumber, parcelNumber, currentSection, onChange, onUTMZoneDetected])
 
   return (
     <div className="space-y-4">
