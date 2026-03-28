@@ -37,6 +37,7 @@
     "clsx": "^2.1.0",
     "dxf-parser": "^1.1.2",
     "dxf-writer": "^1.18.4",
+    "firebase": "^12.11.0",
     "idb": "^8.0.3",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
