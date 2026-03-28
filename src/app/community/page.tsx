@@ -1,141 +1,173 @@
 'use client'
-import { useState } from 'react'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Briefcase, Users, Award, Building2, Search, Star, CheckCircle, Clock, ArrowRight } from 'lucide-react'
+
+interface CommunityStats {
+  stats: {
+    totalSurveyors: number
+    totalJobsPosted: number
+    totalReviewsCompleted: number
+    totalCPDPointsAwarded: number
+  }
+  openPeerReviews: number
+  surveyorsCount: number
+}
 
 export default function CommunityPage() {
-  const [email, setEmail] = useState('')
-  const [subscribed, setSubscribed] = useState(false)
+  const [stats, setStats] = useState<CommunityStats | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email) return
-    try {
-      const { createClient } = await import('@/lib/supabase/client')
-      const supabase = createClient()
-      await supabase.from('newsletter_subscribers').upsert(
-        { email, source: 'community_page' },
-        { onConflict: 'email' }
-      )
-    } catch {
-      // Non-fatal
+  useEffect(() => {
+    fetch('/api/community/stats')
+      .then(res => res.json())
+      .then(data => setStats(data))
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [])
+
+  const features = [
+    {
+      icon: Briefcase,
+      title: 'Job Marketplace',
+      description: 'Find survey work or hire licensed surveyors',
+      links: [
+        { label: 'Browse Jobs', href: '/jobs?tab=browse' },
+        { label: 'Post a Job', href: '/jobs?tab=post' }
+      ],
+      color: 'bg-blue-500'
+    },
+    {
+      icon: Users,
+      title: 'Peer Review',
+      description: 'Get your plans reviewed by fellow professionals',
+      links: [
+        { label: 'Submit for Review', href: '/peer-review?tab=submit' },
+        { label: 'Review Others', href: '/peer-review?tab=open' }
+      ],
+      color: 'bg-purple-500'
+    },
+    {
+      icon: Award,
+      title: 'CPD Tracker',
+      description: 'Track your professional development points',
+      links: [
+        { label: 'View My CPD', href: '/cpd' },
+        { label: 'Generate Certificate', href: '/cpd?action=generate' }
+      ],
+      color: 'bg-green-500'
+    },
+    {
+      icon: Building2,
+      title: 'Professional Bodies',
+      description: 'Verify your ISK membership',
+      links: [
+        { label: 'Manage Memberships', href: '/profile?tab=bodies' },
+        { label: 'Find Surveyors', href: '/jobs?tab=surveyors' }
+      ],
+      color: 'bg-amber-500'
     }
-    setSubscribed(true)
-  }
-
-  const channels = [
-    { flag: 'KE', name: 'Kenya Surveyors', desc: 'Connect with Kenyan surveyors' },
-    { flag: 'UG', name: 'Uganda Surveyors', desc: 'Uganda surveying community' },
-    { flag: 'TZ', name: 'Tanzania Surveyors', desc: 'Tanzania land surveyors' },
-    { flag: 'NG', name: 'Nigeria Surveyors', desc: 'West Africa surveyors' },
-    { flag: '🌍', name: 'General Discussion', desc: 'All survey topics' },
-    { flag: '💡', name: 'Tips & Tricks', desc: 'Share knowledge' },
-    { flag: '🆘', name: 'Support', desc: 'Get help from community' },
-    { flag: '📢', name: 'Announcements', desc: 'METARDU updates' },
   ]
 
   return (
-    <div className="min-h-screen py-16">
-      <div className="max-w-4xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-4">
-            Join the METARDU Community
-          </h1>
-          <p className="text-[var(--text-secondary)] text-lg">
-            Connect with surveyors across Africa and beyond
-          </p>
+    <div className="min-h-screen bg-[var(--bg-primary)]">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">Community Hub</h1>
+        <p className="text-[var(--text-muted)] mb-8">
+          Connect with East African surveyors, find work, and grow professionally
+        </p>
+
+        {/* Stats Banner */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Users className="w-5 h-5 text-blue-500" />
+              <span className="text-2xl font-bold">{loading ? '...' : stats?.stats.totalSurveyors || 0}</span>
+            </div>
+            <p className="text-sm text-[var(--text-muted)]">Surveyors</p>
+          </div>
+          <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Briefcase className="w-5 h-5 text-green-500" />
+              <span className="text-2xl font-bold">{loading ? '...' : stats?.stats.totalJobsPosted || 0}</span>
+            </div>
+            <p className="text-sm text-[var(--text-muted)]">Jobs Posted</p>
+          </div>
+          <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <CheckCircle className="w-5 h-5 text-purple-500" />
+              <span className="text-2xl font-bold">{loading ? '...' : stats?.stats.totalReviewsCompleted || 0}</span>
+            </div>
+            <p className="text-sm text-[var(--text-muted)]">Reviews Done</p>
+          </div>
+          <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Award className="w-5 h-5 text-amber-500" />
+              <span className="text-2xl font-bold">{loading ? '...' : stats?.stats.totalCPDPointsAwarded || 0}</span>
+            </div>
+            <p className="text-sm text-[var(--text-muted)]">CPD Points</p>
+          </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-8 text-center">
-            <div className="text-6xl mb-4">💬</div>
-            <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-4">WhatsApp Community</h2>
-            <p className="text-[var(--text-secondary)] mb-6">
-              Join thousands of surveyors sharing tips, asking questions, and helping each other grow.
-            </p>
-            <a
-              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '254700000000'}?text=${encodeURIComponent('Hello! I want to join the METARDU Surveyors community.')}`}
-              className="inline-block px-8 py-4 bg-[var(--accent)] text-black font-bold rounded-lg hover:bg-[var(--accent-dim)] transition-colors"
-            >
-              Join METARDU Surveyors →
-            </a>
-          </div>
-
-          <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-8">
-            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">Community Channels</h2>
-            <div className="space-y-3">
-              {channels.map((channel) => (
-                <div key={channel.name} className="flex items-center gap-3">
-                  <span className="text-2xl">{channel.flag}</span>
-                  <div>
-                    <p className="text-[var(--text-primary)] font-medium text-sm">{channel.name}</p>
-                    <p className="text-[var(--text-muted)] text-xs">{channel.desc}</p>
+        {/* Feature Cards */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {features.map(feature => (
+            <div key={feature.title} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6">
+              <div className="flex items-start gap-4">
+                <div className={`${feature.color} p-3 rounded-lg`}>
+                  <feature.icon className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-[var(--text-primary)]">{feature.title}</h3>
+                  <p className="text-sm text-[var(--text-muted)] mb-4">{feature.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {feature.links.map(link => (
+                      <Link
+                        key={link.label}
+                        href={link.href}
+                        className="flex items-center gap-1 text-sm text-sky-600 hover:text-sky-700"
+                      >
+                        {link.label}
+                        <ArrowRight className="w-3 h-3" />
+                      </Link>
+                    ))}
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
+          ))}
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mt-8 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6">
+          <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            <Link href="/jobs" className="p-4 border rounded-lg hover:bg-[var(--bg-secondary)] transition">
+              <Search className="w-5 h-5 text-blue-500 mb-2" />
+              <p className="font-medium">Find Survey Work</p>
+              <p className="text-sm text-[var(--text-muted)]">Browse open jobs</p>
+            </Link>
+            <Link href="/cpd" className="p-4 border rounded-lg hover:bg-[var(--bg-secondary)] transition">
+              <Clock className="w-5 h-5 text-green-500 mb-2" />
+              <p className="font-medium">Track CPD Points</p>
+              <p className="text-sm text-[var(--text-muted)]">ISK renewal requires 20 points/year</p>
+            </Link>
+            <Link href="/peer-review" className="p-4 border rounded-lg hover:bg-[var(--bg-secondary)] transition">
+              <Star className="w-5 h-5 text-purple-500 mb-2" />
+              <p className="font-medium">Get Peer Review</p>
+              <p className="text-sm text-[var(--text-muted)]">Before submitting to registry</p>
+            </Link>
           </div>
         </div>
 
-        <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-8 mb-12">
-          <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Community Guidelines</h2>
-          <ul className="space-y-3 text-[var(--text-secondary)]">
-            <li className="flex items-start gap-3">
-              <span className="text-[var(--accent)]">✓</span>
-              Share knowledge freely — help others learn
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-[var(--accent)]">✓</span>
-              Respect all members regardless of experience level
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-[var(--accent)]">✓</span>
-              No spam or self-promotion
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-[var(--accent)]">✓</span>
-              Help junior surveyors learn the craft
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-[var(--accent)]">✓</span>
-              Report bugs and suggestions to METARDU team
-            </li>
-          </ul>
-        </div>
-
-        <div className="bg-[var(--bg-secondary)] rounded-xl p-6 mb-12">
-          <h3 className="text-amber-500 font-bold mb-2">Stay Updated</h3>
-          <p className="text-[var(--text-secondary)] text-sm mb-4">Get weekly surveying tips and METARDU updates</p>
-          {subscribed ? (
-            <p className="text-green-500">Thanks for subscribing!</p>
-          ) : (
-            <form onSubmit={handleSubscribe} className="flex gap-2">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="flex-1 bg-[var(--bg-tertiary)] text-white px-3 py-2 rounded text-sm"
-              />
-              <button
-                type="submit"
-                className="bg-amber-500 text-black px-4 py-2 rounded text-sm font-bold"
-              >
-                Subscribe
-              </button>
-            </form>
-          )}
-        </div>
-
-        <div className="text-center">
-          <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">Join the Conversation</h2>
-          <p className="text-[var(--text-muted)] mb-4">Connect with surveyors on WhatsApp</p>
-          <a
-            href="https://chat.whatsapp.com/your-community-link"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
-          >
-            <span>Join WhatsApp Community</span>
-          </a>
+        {/* Info */}
+        <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-blue-800">
+            <strong>ISK CPD Requirement:</strong> Institution of Surveyors of Kenya requires 20 CPD points 
+            per year for license renewal. GeoNova automatically awards points for completed jobs, 
+            peer reviews, and document signatures.
+          </p>
         </div>
       </div>
     </div>

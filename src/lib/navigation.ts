@@ -82,29 +82,33 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Projects', href: '/project', icon: Layers, group: 'DATA', description: 'Manage survey projects and revision history' },
   { label: 'Online Services', href: '/online', icon: Globe, group: 'DATA', description: 'GNSS baseline, coordinate API, Sentinel-2 imagery' },
   { label: 'Land Registry', href: '/registry', icon: Building2, group: 'DATA', badge: 'NEW', description: 'NLIMS parcel lookup and title verification' },
+  { label: 'Land Law', href: '/land-law', icon: Scale, group: 'DATA', badge: 'NEW', description: 'Boundary law, dispute resolution, plan compliance' },
   { label: 'KenCORS', href: '/kencors', icon: Globe, group: 'DATA', description: 'Kenya CORS RTK correction network' },
   { label: 'Field Data', href: '/field', icon: HardDrive, group: 'DATA', description: 'Field data collection and sync' },
   { label: 'Import', href: '/import', icon: Folder, group: 'DATA', description: 'Import survey data from various formats' },
-  { label: 'CP Certificates', href: '/cpd', icon: FileSearch, group: 'DATA', description: 'Control point certificate management' },
+  { label: 'CP Certificates', href: '/cpd', icon: FileSearch, group: 'DATA', description: 'CPD tracker and certificates' },
 
   // COMMUNITY
-  { label: 'Community', href: '/community', icon: Users, group: 'COMMUNITY', description: 'Surveyor forums and peer network' },
-  { label: 'Jobs', href: '/jobs', icon: ShoppingBag, group: 'COMMUNITY', description: 'Survey job marketplace' },
+  { label: 'Community', href: '/community', icon: Users, group: 'COMMUNITY', badge: 'NEW', description: 'Surveyor network hub' },
+  { label: 'Jobs', href: '/jobs', icon: ShoppingBag, group: 'COMMUNITY', badge: 'NEW', description: 'Survey job marketplace' },
   { label: 'Marketplace', href: '/marketplace', icon: ShoppingBag, group: 'COMMUNITY', description: 'Templates and services store' },
-  { label: 'Peer Review', href: '/peer-review', icon: Users, group: 'COMMUNITY', description: 'Peer review marketplace' },
+  { label: 'Peer Review', href: '/peer-review', icon: Users, group: 'COMMUNITY', badge: 'NEW', description: 'Professional plan review' },
   { label: 'Beacons Map', href: '/beacons', icon: MapPin, group: 'COMMUNITY', description: 'Community beacon map' },
   { label: 'AI Plan Checker', href: '/ai-plan-checker', icon: Shield, group: 'COMMUNITY', badge: 'AI', description: 'AI-powered plan review' },
 
   // ENTERPRISE
   { label: 'Analytics', href: '/analytics', icon: BarChart2, group: 'ENTERPRISE', description: 'Usage analytics and performance', requiresSubscription: 'enterprise' },
   { label: 'Audit Logs', href: '/audit-logs', icon: Shield, group: 'ENTERPRISE', description: 'Security and compliance audit trail', requiresSubscription: 'enterprise' },
-  { label: 'White Label', href: '/white-label', icon: Building2, group: 'ENTERPRISE', description: 'Enterprise branding configuration', requiresSubscription: 'enterprise' },
+  { label: 'White Label', href: '/white-label', icon: Building2, group: 'ENTERPRISE', badge: 'NEW', description: 'Enterprise branding configuration', requiresSubscription: 'enterprise' },
+  { label: 'Organization', href: '/organization', icon: Users, group: 'ENTERPRISE', badge: 'NEW', description: 'Manage organization seats and members', requiresSubscription: 'enterprise' },
+  { label: 'University', href: '/university', icon: BookOpen, group: 'ENTERPRISE', badge: 'NEW', description: 'University API and student management', requiresSubscription: 'enterprise' },
   { label: 'API Docs', href: '/api-docs', icon: FileText, group: 'ENTERPRISE', description: 'REST API documentation and keys' },
 
   // SETTINGS
   { label: 'Profile', href: '/profile', icon: Settings, group: 'SETTINGS', description: 'User profile settings' },
   { label: 'Account', href: '/account', icon: Settings, group: 'SETTINGS', description: 'Account management' },
   { label: 'Equipment', href: '/equipment', icon: Cpu, group: 'SETTINGS', description: 'Instrument calibration tracker' },
+  { label: 'Billing', href: '/checkout', icon: Calculator, group: 'SETTINGS', description: 'Subscription and payment history' },
   { label: 'Pricing', href: '/pricing', icon: Calculator, group: 'SETTINGS', description: 'Subscription plans' },
   { label: 'Documentation', href: '/docs', icon: BookOpen, group: 'SETTINGS', description: 'Knowledge base and guides' },
 ]
