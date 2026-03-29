@@ -1,10 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import WorkflowCanvas from '@/components/automator/WorkflowCanvas'
+import dynamic from 'next/dynamic'
 import { executeWorkflow, generateReport } from '@/lib/compute/workflowEngine'
 import { Play, FileText, Loader2 } from 'lucide-react'
 import type { Node, Edge } from 'reactflow'
+
+const WorkflowCanvas = dynamic(
+  () => import('@/components/automator/WorkflowCanvas'),
+  { ssr: false, loading: () => <div className="animate-pulse bg-[var(--bg-secondary)] rounded-lg h-96">Loading workflow...</div> }
+)
 
 export default function AutomatorPage() {
   const [running, setRunning] = useState(false)

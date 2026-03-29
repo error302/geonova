@@ -5,11 +5,16 @@
 import { useState } from 'react'
 import { Upload, Loader2 } from 'lucide-react'
 import Papa from 'papaparse'
-import MineViewer3D from '@/components/minetwin/MineViewer3D'
+import dynamic from 'next/dynamic'
 import VolumePanel from '@/components/minetwin/VolumePanel'
 import ConvergencePanel from '@/components/minetwin/ConvergencePanel'
 import { processMineTwin } from '@/lib/compute/mineTwin'
 import type { SurveyPoint3D, ProcessTwinResponse } from '@/types/minetwin'
+
+const MineViewer3D = dynamic(
+  () => import('@/components/minetwin/MineViewer3D'),
+  { ssr: false, loading: () => <div className="animate-pulse bg-[var(--bg-secondary)] rounded-lg h-64">Loading 3D viewer...</div> }
+)
 
 export default function MineTwinPage() {
   const [loading, setLoading] = useState(false)

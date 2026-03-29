@@ -1,11 +1,13 @@
 // src/app/fieldguard/page.tsx
 
-export const dynamic = 'force-dynamic'
+import dynamic from 'next/dynamic'
 
-import DataCleaner from '@/components/fieldguard/DataCleaner'
+const DataCleaner = dynamic(
+  () => import('@/components/fieldguard/DataCleaner'),
+  { ssr: false, loading: () => <div className="p-8">Loading...</div> }
+)
 
 export default function FieldGuardPage() {
-  // TODO: Get projectId from context/URL - using placeholder for now
   const projectId = 'default-project'
   
   return (
