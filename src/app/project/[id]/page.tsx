@@ -176,17 +176,22 @@ export default function ProjectPage({ params }: PageProps) {
     setLoadingStage('auth-check')
     console.log('METARDU DEBUG: fetchData stage=auth-check')
     
-    const { data: { session } } = await sb.auth.getSession()
-    let user = session?.user ?? null
-
-    if (!user) {
-      setLoadingStage('refresh')
-      console.log('METARDU DEBUG: session null, refreshing...')
-      const { data: { session: refreshed } } = await sb.auth.refreshSession()
-      user = refreshed?.user ?? null
+    // Use getUser() instead of getSession() - it's faster and more reliable
+    // Middleware already handles session refresh, so we just need to verify user exists
+    let user = null
+    try {
+      const { data: { user: authUser }, error: authError } = await sb.auth.getUser()
+      if (authError) {
+        console.error('METARDU: Auth error:', authError.message)
+      } else {
+        user = authUser
+      }
+    } catch (err) {
+      console.error('METARDU: Auth getUser failed:', err)
     }
 
     if (!user) {
+      console.log('METARDU: No user found, redirecting to login')
       const next = encodeURIComponent(window.location.pathname)
       window.location.replace('/login?next=' + next)
       return
