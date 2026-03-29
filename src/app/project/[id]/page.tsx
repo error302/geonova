@@ -176,29 +176,20 @@ export default function ProjectPage({ params }: PageProps) {
     setLoadingStage('auth-check')
     console.log('METARDU DEBUG: fetchData stage=auth-check')
     
-    // Use getUser() instead of getSession() - it's faster and more reliable
-    // Middleware already handles session refresh, so we just need to verify user exists
-    let user = null
-    try {
-      const { data: { user: authUser }, error: authError } = await sb.auth.getUser()
-      if (authError) {
-        console.error('METARDU: Auth error:', authError.message)
-      } else {
-        user = authUser
-      }
-    } catch (err) {
-      console.error('METARDU: Auth getUser failed:', err)
-    }
+    // Use getSession() - reads from cookie, no network call
+    // getUser() makes a network call to Supabase auth server which can timeout
+    const { data: { session } } = await sb.auth.getSession()
+    const user = session?.user ?? null
 
     if (!user) {
-      console.log('METARDU: No user found, redirecting to login')
+      console.log('METARDU: No session found, redirecting to login')
       const next = encodeURIComponent(window.location.pathname)
       window.location.replace('/login?next=' + next)
       return
     }
 
-    setLoadingStage('fetch-project')
-    console.log('METARDU DEBUG: fetchData stage=fetch-project, user=', user.id)
+    setLoadingStage('querying')
+    console.log('METARDU DEBUG: fetchData stage=querying, user=', user.id)
     
     const { data: projectData, error: projectError } = await sb
       .from('projects')
@@ -233,7 +224,6 @@ export default function ProjectPage({ params }: PageProps) {
 
     if (pointsError) {
       console.error('METARDU: Points fetch error:', pointsError.code, pointsError.message, pointsError.details)
-      // Don't fail the whole page if points fail - just log and continue with empty array
     }
 
     let fetchedPoints = (pointsData || []).map(normalizePoint)
