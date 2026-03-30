@@ -407,7 +407,9 @@
     "drone": "Drone/UAV",
     "gcpExport": "GCP Export",
     "civilExport": "Civil 3D Export",
-    "gisExport": "GIS Package"
+    "gisExport": "GIS Package",
+    "outputs": "Computation Outputs",
+    "workingDiagram": "Working Diagram"
   },
   "import": {
     "totalStation": "Total Station",
