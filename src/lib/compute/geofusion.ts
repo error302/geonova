@@ -26,6 +26,11 @@ export interface AlignmentResult {
   transformed_data: any
 }
 
+async function readError(response: Response, fallbackMessage: string): Promise<Error> {
+  const error = await response.json().catch(() => null)
+  return new Error(typeof error?.error === 'string' && error.error.trim() ? fallbackMessage : fallbackMessage)
+}
+
 export async function createGeoFusionProject(params: {
   project_id: string
   name: string
@@ -40,8 +45,7 @@ export async function createGeoFusionProject(params: {
   })
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: 'Unknown error' }))
-    throw new Error(error.error || 'Failed to create GeoFusion project')
+    throw await readError(res, 'Failed to create GeoFusion project')
   }
 
   return res.json() as Promise<GeoFusionProjectSummary>
@@ -51,8 +55,7 @@ export async function getGeoFusionProjects(projectId: string) {
   const res = await fetch(`${BASE}/api/geofusion/projects?project_id=${projectId}`)
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: 'Unknown error' }))
-    throw new Error(error.error || 'Failed to fetch GeoFusion projects')
+    throw await readError(res, 'Failed to fetch GeoFusion projects')
   }
 
   return res.json() as Promise<GeoFusionProjectSummary[]>
@@ -76,11 +79,17 @@ export async function alignLayers(params: {
   })
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: 'Unknown error' }))
-    throw new Error(error.error || 'Failed to align layers')
+    throw await readError(res, 'Failed to align layers')
   }
 
-  return res.json() as Promise<AlignmentResult>
+  const data = await res.json()
+
+  return {
+    alignment_id: data.alignment_id || `${params.project_id}:${params.source_layer_id}`,
+    status: data.status || 'completed',
+    accuracy_score: typeof data.accuracy_score === 'number' ? data.accuracy_score : 0,
+    transformed_data: data.transformed_data ?? data,
+  } as AlignmentResult
 }
 
 export async function integrateLayers(params: {
@@ -95,11 +104,20 @@ export async function integrateLayers(params: {
   })
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: 'Unknown error' }))
-    throw new Error(error.error || 'Failed to integrate layers')
+    throw await readError(res, 'Failed to integrate layers')
   }
 
-  return res.json() as Promise<{ integrated_data: any; layer_count: number; features_created: number }>
+  const data = await res.json()
+
+  return {
+    integrated_data: data.integrated_data ?? data.transformed_data ?? data,
+    layer_count: typeof data.layer_count === 'number' ? data.layer_count : params.layer_ids.length,
+    features_created: typeof data.features_created === 'number'
+      ? data.features_created
+      : Array.isArray(data.integrated_data?.features)
+        ? data.integrated_data.features.length
+        : 0,
+  }
 }
 
 export async function uploadLayer(params: {
@@ -126,11 +144,19 @@ export async function uploadLayer(params: {
   })
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: 'Unknown error' }))
-    throw new Error(error.error || 'Failed to upload layer')
+    throw await readError(res, 'Failed to upload layer')
   }
 
-  return res.json() as Promise<LayerSummary>
+  const data = await res.json()
+
+  return {
+    id: data.id || `${params.geofusion_project_id}:${params.layer_name}`,
+    layer_name: data.layer_name || params.layer_name,
+    layer_type: data.layer_type || params.layer_type,
+    geometry_type: data.geometry_type,
+    visibility: typeof data.visibility === 'boolean' ? data.visibility : true,
+    opacity: typeof data.opacity === 'number' ? data.opacity : 1,
+  }
 }
 
 export async function updateLayerStyle(layerId: string, style: {
@@ -145,8 +171,7 @@ export async function updateLayerStyle(layerId: string, style: {
   })
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: 'Unknown error' }))
-    throw new Error(error.error || 'Failed to update layer style')
+    throw await readError(res, 'Failed to update layer style')
   }
 
   return res.json() as Promise<LayerSummary>
@@ -164,9 +189,16 @@ export async function getCrossAnalysis(params: {
   })
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: 'Unknown error' }))
-    throw new Error(error.error || 'Failed to run cross analysis')
+    throw await readError(res, 'Failed to run cross analysis')
   }
 
-  return res.json() as Promise<{ results: any; summary: any }>
+  const data = await res.json()
+
+  return {
+    results: data.results ?? data,
+    summary: data.summary ?? {
+      analysis_type: params.analysis_type,
+      layer_count: params.layer_ids.length,
+    },
+  }
 }

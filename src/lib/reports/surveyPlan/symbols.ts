@@ -4,7 +4,7 @@ export const C_RED = '#C0392B'
 export const C_GRAY = '#888888'
 export const C_GRID_MINOR = '#E0E4EC'
 export const C_GRID_MAJOR = '#B0BDD0'
-export const C_LOT_FILL = '#F4EDD5'
+export const C_LOT_FILL = '#F5EDD6'
 export const C_WARNING_BG = '#FFF9E6'
 
 export function svgFoundMonument(cx: number, cy: number): string {

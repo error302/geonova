@@ -29,6 +29,25 @@ const COUNTY_ABBREVIATIONS: Record<string, string> = {
   'KIR': 'Kirinyaga', 'MUR': 'Muranga', 'EMBU': 'Embu', 'MAS': 'Makueni'
 }
 
+function getCanonicalSectionLabel(section: RegistrationSection | null, fallback: string): string {
+  return (section?.name || fallback).toUpperCase()
+}
+
+function resolveRegistrationSection(input: string): { code: string; info: RegistrationSection | null } {
+  const normalized = input.toUpperCase().trim()
+  const sectionInfo = lookupRegistrationSection(normalized)
+
+  if (sectionInfo) {
+    return { code: sectionInfo.code, info: sectionInfo }
+  }
+
+  return { code: normalized, info: null }
+}
+
+function isSectionCodeStyle(input: string): boolean {
+  return /^[A-Z0-9]{2,5}$/.test(input.trim().toUpperCase())
+}
+
 export function parseParcelNumber(raw: string): ParsedParcelNumber {
   const normalized = raw.trim().toUpperCase()
     .replace(/\s+/g, ' ')
@@ -50,14 +69,20 @@ export function parseParcelNumber(raw: string): ParsedParcelNumber {
 
   // Try to detect format and parse
   // Format A: NAIROBI BLOCK 2/1234 or NRBN/B2/1234
-  const blockPattern = /^(?:([A-Z]{2,4})\s+)?BLOCK\s*(\d+)\/(\d+)(?:\/(\d+))?$/i
-  const blockMatch = normalized.match(blockPattern)
+  const blockPatterns = [
+    /^(?:([A-Z][A-Z\s]{1,})\s+)?BLOCK\s*(\d+)\/(\d+)(?:\/(\d+))?$/i,
+    /^([A-Z0-9]{2,10})\/B(?:LOCK)?\s*(\d+)\/(\d+)(?:\/(\d+))?$/i,
+  ]
+  const blockMatch = blockPatterns
+    .map(pattern => normalized.match(pattern))
+    .find((match): match is RegExpMatchArray => Boolean(match))
   
   if (blockMatch) {
-    const section = blockMatch[1] || 'NRBN'
+    const prefix = (blockMatch[1] || 'NRBN').trim()
     const block = parseInt(blockMatch[2], 10)
     const parcel = parseInt(blockMatch[3], 10)
     const suffix = blockMatch[4]
+    const { code: section, info: sectionInfo } = resolveRegistrationSection(prefix)
     
     if (isNaN(block) || block <= 0) {
       errors.push('Block number must be a positive integer')
@@ -66,15 +91,14 @@ export function parseParcelNumber(raw: string): ParsedParcelNumber {
       errors.push('Parcel number must be a positive integer')
     }
     
-    const sectionInfo = lookupRegistrationSection(section)
     const formatted = sectionInfo 
-      ? `${sectionInfo.name} BLOCK ${block}/${parcel}${suffix ? '/' + suffix : ''}`
-      : `${section} BLOCK ${block}/${parcel}${suffix ? '/' + suffix : ''}`
+      ? `${getCanonicalSectionLabel(sectionInfo, section)} BLOCK ${block}/${parcel}${suffix ? '/' + suffix : ''}`
+      : `${prefix} BLOCK ${block}/${parcel}${suffix ? '/' + suffix : ''}`
     
     return {
       raw,
       format: 'BLOCK',
-      county: sectionInfo?.county,
+      county: sectionInfo?.county || prefix,
       registrationSection: section,
       block,
       parcelNumber: parcel,
@@ -87,30 +111,30 @@ export function parseParcelNumber(raw: string): ParsedParcelNumber {
   }
 
   // Format B: KIAMBU/456 or KIAMBU/RUIRU/456
-  const sectionPattern = /^([A-Z]{2,6})\/(\d+)(?:\/(\d+))?$/i
+  const sectionPattern = /^([A-Z][A-Z\s]{1,}|[A-Z0-9]{2,10})\/(\d+)(?:\/(\d+))?$/i
   const sectionMatch = normalized.match(sectionPattern)
   
   if (sectionMatch) {
-    const section = sectionMatch[1]
+    const prefix = sectionMatch[1].trim()
     const parcel = parseInt(sectionMatch[2], 10)
     const suffix = sectionMatch[3]
+    const { code: section, info: sectionInfo } = resolveRegistrationSection(prefix)
     
     if (isNaN(parcel) || parcel <= 0) {
       errors.push('Parcel number must be a positive integer')
     }
     
-    const sectionInfo = lookupRegistrationSection(section)
-    if (!sectionInfo && !COUNTY_ABBREVIATIONS[section]) {
-      errors.push(`Registration section "${section}" not found in Kenya locality database`)
+    if (!sectionInfo && !COUNTY_ABBREVIATIONS[section] && !COUNTY_ABBREVIATIONS[prefix]) {
+      errors.push(`Registration section "${prefix}" not found in Kenya locality database`)
     }
     
     const formatted = sectionInfo
-      ? `${sectionInfo.name}/${parcel}${suffix ? '/' + suffix : ''}`
-      : `${section}/${parcel}${suffix ? '/' + suffix : ''}`
+      ? `${getCanonicalSectionLabel(sectionInfo, section)}/${parcel}${suffix ? '/' + suffix : ''}`
+      : `${prefix}/${parcel}${suffix ? '/' + suffix : ''}`
     
     return {
       raw,
-      format: sectionInfo?.hasBlocks ? 'BLOCK' : 'SECTION',
+      format: sectionInfo?.hasBlocks || isSectionCodeStyle(prefix) ? 'BLOCK' : 'SECTION',
       county: sectionInfo?.county,
       registrationSection: section,
       parcelNumber: parcel,
@@ -177,7 +201,7 @@ export function formatParcelNumber(
   suffix?: string
 ): string {
   const sectionInfo = lookupRegistrationSection(section)
-  const sectionName = sectionInfo?.name || section
+  const sectionName = getCanonicalSectionLabel(sectionInfo, section.toUpperCase())
   
   if (block !== null && block !== undefined) {
     return `${sectionName} BLOCK ${block}/${number}${suffix ? '/' + suffix : ''}`
@@ -199,10 +223,10 @@ export function generateParcelReference(
   }
   
   if (block) {
-    return `${sectionInfo.name} BLOCK ${block}/${parcelNumber}`
+    return `${getCanonicalSectionLabel(sectionInfo, sectionCode)} BLOCK ${block}/${parcelNumber}`
   }
   
-  return `${sectionInfo.name}/${parcelNumber}`
+  return `${getCanonicalSectionLabel(sectionInfo, sectionCode)}/${parcelNumber}`
 }
 
 export function lookupRegistrationSection(input: string): RegistrationSection | null {

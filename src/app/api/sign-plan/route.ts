@@ -3,15 +3,15 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { apiSuccess, apiError } from '@/lib/api/response'
 import { Logger } from '@/lib/logger'
-import { env } from '@/lib/env'
+import { requireEnv } from '@/lib/env'
 
 const logger = new Logger('SignPlanAPI')
 
 export async function POST(req: Request) {
   const cookieStore = cookies()
   const supabase = createServerClient(
-    env.NEXT_PUBLIC_SUPABASE_URL,
-    env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    requireEnv('NEXT_PUBLIC_SUPABASE_URL'),
+    requireEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
     {
       cookies: {
         get(name: string) { return cookieStore.get(name)?.value },

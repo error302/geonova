@@ -162,145 +162,39 @@ const MODE_LABELS: Record<SurveyMode, string> = {
   gnss: 'GNSS Mode',
 };
 
-function BeaconDataPanel({ project, beacons, setBeacons, boundaries, saving, onSave }: { 
-  project: MetarduProject; 
-  beacons: Array<{id: string; name: string; type: string; easting: number; northing: number; description: string}>;
-  setBeacons: React.Dispatch<React.SetStateAction<Array<{id: string; name: string; type: string; easting: number; northing: number; description: string}>>>;
-  boundaries: Array<{from: string; to: string; bearing: number; distance: number}>;
-  saving: boolean;
-  onSave: () => void;
-}) {
-  const [newBeacon, setNewBeacon] = useState({ name: '', type: 'new', easting: 0, northing: 0, description: '' });
-
-  const addBeacon = () => {
-    const id = `B${beacons.length + 1}`;
-    setBeacons([...beacons, { ...newBeacon, id }]);
-    setNewBeacon({ name: '', type: 'new', easting: 0, northing: 0, description: '' });
-  };
-
-  const removeBeacon = (id: string) => {
-    setBeacons(beacons.filter(b => b.id !== id));
-  };
-
+function BeaconDataPanel({ project }: { project: MetarduProject }) {
   return (
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold text-white mb-1">Beacon & Boundary Data</h3>
         <p className="text-zinc-400 text-sm">Enter your beacons once here. They will auto-populate the Working Diagram, Deed Plan(s), RDM Report, and all export tables.</p>
       </div>
-      
-      {/* Beacon list */}
       <div className="rounded-lg border border-zinc-700 overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 bg-zinc-800 border-b border-zinc-700">
-          <span className="text-sm font-medium text-white">Beacons ({beacons.length})</span>
-          <button onClick={onSave} disabled={saving} className="text-xs px-3 py-1.5 rounded bg-[#f59e0b] text-black font-semibold hover:bg-[#f59e0b]/90 transition-colors disabled:opacity-50">
-            {saving ? 'Saving...' : 'Save'}
-          </button>
+          <span className="text-sm font-medium text-white">Beacons</span>
+          <button className="text-xs px-3 py-1.5 rounded bg-[#f59e0b] text-black font-semibold hover:bg-[#f59e0b]/90 transition-colors">+ Add Beacon</button>
         </div>
-        {beacons.length === 0 ? (
-          <div className="p-4 text-center text-zinc-500 text-sm py-10">
-            <div className="text-2xl mb-2">📍</div>
-            No beacons added yet. Add your first beacon below.
-          </div>
-        ) : (
-          <div className="max-h-64 overflow-y-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-zinc-800 text-zinc-400 text-xs uppercase">
-                <tr>
-                  <th className="px-3 py-2 text-left">ID</th>
-                  <th className="px-3 py-2 text-left">Type</th>
-                  <th className="px-3 py-2 text-right">Easting</th>
-                  <th className="px-3 py-2 text-right">Northing</th>
-                  <th className="px-3 py-2"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {beacons.map(b => (
-                  <tr key={b.id} className="border-t border-zinc-800">
-                    <td className="px-3 py-2 text-white font-medium">{b.id}</td>
-                    <td className="px-3 py-2 text-zinc-400">{b.type}</td>
-                    <td className="px-3 py-2 text-right text-zinc-300">{b.easting.toFixed(3)}</td>
-                    <td className="px-3 py-2 text-right text-zinc-300">{b.northing.toFixed(3)}</td>
-                    <td className="px-3 py-2">
-                      <button onClick={() => removeBeacon(b.id)} className="text-red-400 text-xs hover:underline">Remove</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Add beacon form */}
-      <div className="rounded-lg border border-zinc-700 p-4">
-        <h4 className="text-sm font-medium text-white mb-3">Add New Beacon</h4>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-          <input type="text" placeholder="Name (e.g. B1)" value={newBeacon.name} onChange={e => setNewBeacon({...newBeacon, name: e.target.value})} className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm text-white" />
-          <select value={newBeacon.type} onChange={e => setNewBeacon({...newBeacon, type: e.target.value})} className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm text-white">
-            <option value="new">New</option>
-            <option value="old">Old</option>
-            <option value="reference">Reference</option>
-          </select>
-          <input type="number" placeholder="Easting" value={newBeacon.easting || ''} onChange={e => setNewBeacon({...newBeacon, easting: parseFloat(e.target.value) || 0})} className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm text-white" />
-          <input type="number" placeholder="Northing" value={newBeacon.northing || ''} onChange={e => setNewBeacon({...newBeacon, northing: parseFloat(e.target.value) || 0})} className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm text-white" />
-          <button onClick={addBeacon} className="px-3 py-1.5 bg-[#f59e0b] text-black rounded text-sm font-medium hover:bg-[#f59e0b]/90">Add</button>
+        <div className="p-4 text-center text-zinc-500 text-sm py-10">
+          <div className="text-2xl mb-2">📍</div>
+          No beacons added yet. Click "+ Add Beacon" to start.
         </div>
       </div>
-
-      {/* Boundaries */}
       <div className="rounded-lg border border-zinc-700 overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 bg-zinc-800 border-b border-zinc-700">
-          <span className="text-sm font-medium text-white">Boundary Lines ({boundaries.length})</span>
+          <span className="text-sm font-medium text-white">Boundary Lines</span>
+          <button className="text-xs px-3 py-1.5 rounded bg-zinc-700 text-zinc-300 font-medium hover:bg-zinc-600 transition-colors">Auto-compute from beacons</button>
         </div>
-        {boundaries.length === 0 ? (
-          <div className="p-4 text-center text-zinc-500 text-sm py-8">Add at least 3 beacons to define boundaries.</div>
-        ) : (
-          <div className="max-h-48 overflow-y-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-zinc-800 text-zinc-400 text-xs uppercase">
-                <tr>
-                  <th className="px-3 py-2 text-left">From</th>
-                  <th className="px-3 py-2 text-left">To</th>
-                  <th className="px-3 py-2 text-right">Bearing</th>
-                  <th className="px-3 py-2 text-right">Distance</th>
-                </tr>
-              </thead>
-              <tbody>
-                {boundaries.map((b, i) => (
-                  <tr key={i} className="border-t border-zinc-800">
-                    <td className="px-3 py-2 text-white">{b.from}</td>
-                    <td className="px-3 py-2 text-white">{b.to}</td>
-                    <td className="px-3 py-2 text-right text-zinc-300">{b.bearing.toFixed(4)}°</td>
-                    <td className="px-3 py-2 text-right text-zinc-300">{b.distance.toFixed(3)}m</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <div className="p-4 text-center text-zinc-500 text-sm py-8">Add beacons first to define boundary lines.</div>
+      </div>
+      <div className="flex gap-3">
+        <button className="flex-1 py-2.5 rounded-lg border border-zinc-700 text-zinc-300 text-sm hover:bg-zinc-800 transition-colors">Import from CSV</button>
+        <button className="flex-1 py-2.5 rounded-lg border border-zinc-700 text-zinc-300 text-sm hover:bg-zinc-800 transition-colors">Import from Total Station</button>
       </div>
     </div>
   );
 }
 
-function FieldBookPanel({ 
-  project,
-  stations,
-  setStations,
-  levelLine,
-  setLevelLine,
-  saving,
-  onSave
-}: { 
-  project: MetarduProject;
-  stations: Array<{id: string; stationId: string; backSight?: number; intermediateSight?: number; foreSight?: number; reducedLevel?: number; remarks?: string}>;
-  setStations: React.Dispatch<React.SetStateAction<Array<{id: string; stationId: string; backSight?: number; intermediateSight?: number; foreSight?: number; reducedLevel?: number; remarks?: string}>>>;
-  levelLine: {startBMRef: string; startRL: number; endBMRef?: string; endRL?: number; totalDistance: number};
-  setLevelLine: React.Dispatch<React.SetStateAction<{startBMRef: string; startRL: number; endBMRef?: string; endRL?: number; totalDistance: number}>>;
-  saving: boolean;
-  onSave: () => void;
-}) {
+function FieldBookPanel({ project }: { project: MetarduProject }) {
   const method = (project.levelling_data as Record<string, unknown>)?.computation_method ?? 'hpc';
   return (
     <div className="space-y-6">
@@ -346,19 +240,7 @@ function FieldBookPanel({
   );
 }
 
-function LevelLineSetupPanel({ 
-  project,
-  levelLine,
-  setLevelLine,
-  saving,
-  onSave
-}: { 
-  project: MetarduProject;
-  levelLine: {startBMRef: string; startRL: number; endBMRef?: string; endRL?: number; totalDistance: number};
-  setLevelLine: React.Dispatch<React.SetStateAction<{startBMRef: string; startRL: number; endBMRef?: string; endRL?: number; totalDistance: number}>>;
-  saving: boolean;
-  onSave: () => void;
-}) {
+function LevelLineSetupPanel({ project }: { project: MetarduProject }) {
   return (
     <div className="space-y-6">
       <div>
@@ -429,25 +311,12 @@ function GenericStepPanel({ step }: { step: WorkspaceStep }) {
   );
 }
 
-function renderStepContent(
-  step: WorkspaceStep | undefined, 
-  project: MetarduProject, 
-  steps: WorkspaceStep[],
-  beacons: Array<{id: string; name: string; type: string; easting: number; northing: number; description: string}>,
-  setBeacons: React.Dispatch<React.SetStateAction<Array<{id: string; name: string; type: string; easting: number; northing: number; description: string}>>>,
-  boundaries: Array<{from: string; to: string; bearing: number; distance: number}>,
-  saving: boolean,
-  onSave: () => void,
-  stations: Array<{id: string; stationId: string; backSight?: number; intermediateSight?: number; foreSight?: number; reducedLevel?: number; remarks?: string}>,
-  setStations: React.Dispatch<React.SetStateAction<Array<{id: string; stationId: string; backSight?: number; intermediateSight?: number; foreSight?: number; reducedLevel?: number; remarks?: string}>>>,
-  levelLine: {startBMRef: string; startRL: number; endBMRef?: string; endRL?: number; totalDistance: number},
-  setLevelLine: React.Dispatch<React.SetStateAction<{startBMRef: string; startRL: number; endBMRef?: string; endRL?: number; totalDistance: number}>>
-) {
+function renderStepContent(step: WorkspaceStep | undefined, project: MetarduProject, steps: WorkspaceStep[]) {
   if (!step) return null;
   switch (step.id) {
-    case 'beacons': return <BeaconDataPanel project={project} beacons={beacons} setBeacons={setBeacons} boundaries={boundaries} saving={saving} onSave={onSave} />;
-    case 'field_book': return <FieldBookPanel project={project} stations={stations} setStations={setStations} levelLine={levelLine} setLevelLine={setLevelLine} saving={saving} onSave={onSave} />;
-    case 'line_setup': return <LevelLineSetupPanel project={project} levelLine={levelLine} setLevelLine={setLevelLine} saving={saving} onSave={onSave} />;
+    case 'beacons': return <BeaconDataPanel project={project} />;
+    case 'field_book': return <FieldBookPanel project={project} />;
+    case 'line_setup': return <LevelLineSetupPanel project={project} />;
     case 'export': return <ExportPanel project={project} steps={steps} />;
     default: return <GenericStepPanel step={step} />;
   }
@@ -462,114 +331,21 @@ export default function ProjectWorkspacePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeStep, setActiveStep] = useState<string>('');
-  const [saving, setSaving] = useState(false);
-
-  // Beacon/boundary state
-  const [beacons, setBeacons] = useState<Array<{id: string; name: string; type: string; easting: number; northing: number; description: string}>>([]);
-  const [boundaries, setBoundaries] = useState<Array<{from: string; to: string; bearing: number; distance: number}>>([]);
-
-  // Levelling state
-  const [stations, setStations] = useState<Array<{id: string; stationId: string; backSight?: number; intermediateSight?: number; foreSight?: number; reducedLevel?: number; remarks?: string}>>([]);
-  const [levelLine, setLevelLine] = useState<{startBMRef: string; startRL: number; endBMRef?: string; endRL?: number; totalDistance: number}>({startBMRef: '', startRL: 0, totalDistance: 0});
 
   const fetchProject = useCallback(async () => {
     setLoading(true);
-    
-    try {
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-      if (sessionError) {
-        throw sessionError;
-      }
-
-      if (!session?.user) {
-        const next = encodeURIComponent(window.location.pathname);
-        window.location.href = '/login?next=' + next;
-        return;
-      }
-
-      const { data, error: err } = await supabase.from('projects').select('*').eq('id', params.id).single();
-      if (err || !data) {
-        setError(err?.message ?? 'Project not found');
-      } else {
-        setProject(data as MetarduProject);
-        
-        // Load boundary data
-        const bd = (data.boundary_data as any) || {};
-        setBeacons(bd.beacons || []);
-        setBoundaries(bd.boundaries || []);
-        
-        // Load levelling data
-        const ld = (data.levelling_data as any) || {};
-        setStations(ld.stations || []);
-        setLevelLine(ld.level_line || {startBMRef: '', startRL: 0, totalDistance: 0});
-        
-        const mode = getSurveyMode(data.survey_type);
-        const steps = getWorkspaceSteps(data as MetarduProject, mode);
-        const firstActive = steps.find(s => s.status === 'in_progress') ?? steps.find(s => s.status === 'pending') ?? steps[0];
-        setActiveStep(firstActive?.id ?? steps[0]?.id ?? '');
-      }
-    } catch (err) {
-      console.warn('Project auth or load check failed:', err);
-      const next = encodeURIComponent(window.location.pathname);
-      window.location.href = '/login?next=' + next;
-      return;
+    const { data, error: err } = await supabase.from('projects').select('*').eq('id', params.id).single();
+    if (err || !data) {
+      setError(err?.message ?? 'Project not found');
+    } else {
+      setProject(data as MetarduProject);
+      const mode = getSurveyMode(data.survey_type);
+      const steps = getWorkspaceSteps(data as MetarduProject, mode);
+      const firstActive = steps.find(s => s.status === 'in_progress') ?? steps.find(s => s.status === 'pending') ?? steps[0];
+      setActiveStep(firstActive?.id ?? steps[0]?.id ?? '');
     }
     setLoading(false);
   }, [params.id, supabase]);
-
-  // Save beacons to Supabase
-  const saveBeacons = async () => {
-    if (!project) return;
-    setSaving(true);
-    
-    // Auto-compute boundaries from consecutive beacons
-    const computedBoundaries = [];
-    for (let i = 0; i < beacons.length; i++) {
-      const from = beacons[i];
-      const to = beacons[(i + 1) % beacons.length]; // wrap around for closed traverse
-      if (from && to) {
-        const dx = to.easting - from.easting;
-        const dy = to.northing - from.northing;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        let bearing = Math.atan2(dx, dy) * (180 / Math.PI);
-        if (bearing < 0) bearing += 360;
-        computedBoundaries.push({ from: from.id, to: to.id, bearing, distance });
-      }
-    }
-    
-    const boundaryData = {
-      beacons,
-      boundaries: computedBoundaries,
-      lots: [],
-      total_area: null,
-      working_diagram_status: 'pending',
-      rdm_report_status: 'pending'
-    };
-    
-    await supabase.from('projects').update({ boundary_data: boundaryData }).eq('id', project.id);
-    setBoundaries(computedBoundaries);
-    setSaving(false);
-  };
-
-  // Save levelling to Supabase
-  const saveLevelling = async () => {
-    if (!project) return;
-    setSaving(true);
-    
-    const levellingData = {
-      level_line: levelLine,
-      stations,
-      computation_method: 'hpc',
-      misclosure_allowed: levelLine.totalDistance > 0 ? 12 * Math.sqrt(levelLine.totalDistance) : null,
-      field_book_status: 'complete',
-      computation_status: 'pending',
-      level_report_status: 'pending'
-    };
-    
-    await supabase.from('projects').update({ levelling_data: levellingData }).eq('id', project.id);
-    setSaving(false);
-  };
 
   useEffect(() => { fetchProject(); }, [fetchProject]);
 
@@ -611,10 +387,7 @@ export default function ProjectWorkspacePage() {
             <div className="text-xs text-zinc-600 mt-0.5">UTM Zone {project.utm_zone}{project.hemisphere} · {project.country}{project.client_name && ` · ${project.client_name}`}</div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <div className="hidden sm:block w-24 h-1.5 rounded-full bg-zinc-800">
-              <div className="h-full rounded-full bg-[#f59e0b] transition-all duration-500" style={{ width: `${progressPct}%` }} />
-            </div>
-            <span className="text-xs text-zinc-400">{progressPct}%</span>
+            <Link href={`/project/${project.id}`} className="text-xs px-3 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-600 transition-colors">← Classic View</Link>
           </div>
         </div>
       </div>
@@ -661,7 +434,7 @@ export default function ProjectWorkspacePage() {
               {currentStep?.toolRoute && <Link href={`${currentStep.toolRoute}?project=${project.id}`} className="text-xs px-3 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-600 transition-colors">Open in Tool ↗</Link>}
             </div>
           </div>
-          <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-6">{renderStepContent(currentStep, project, steps, beacons, setBeacons, boundaries, saving, () => saveBeacons(), stations, setStations, levelLine, setLevelLine)}</div>
+          <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-6">{renderStepContent(currentStep, project, steps)}</div>
           <div className="flex items-center justify-between mt-4">
             <button onClick={() => { const idx = steps.findIndex(s => s.id === activeStep); if (idx > 0) setActiveStep(steps[idx - 1].id); }} disabled={steps.findIndex(s => s.id === activeStep) === 0} className="text-sm text-zinc-500 hover:text-zinc-300 disabled:opacity-30 transition-colors">← Previous</button>
             <span className="text-xs text-zinc-700">Step {steps.findIndex(s => s.id === activeStep) + 1} of {steps.length}</span>

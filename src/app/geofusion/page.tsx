@@ -46,7 +46,17 @@ export default function GeoFusionHubPage() {
   ]
 
   const handleIntegrationComplete = (result: any) => {
-    console.log('Integration complete:', result)
+    setLayers(prev => [
+      ...prev,
+      {
+        id: `integration-${Date.now()}`,
+        layer_name: `Integrated ${result.layer_count} layers`,
+        layer_type: 'vector',
+        geometry_type: 'multi',
+        visibility: true,
+        opacity: 0.9,
+      },
+    ])
   }
 
   return (

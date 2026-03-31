@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Layers, Eye, EyeOff, Trash2, Edit2, Upload, ChevronUp, ChevronDown } from 'lucide-react'
 import { updateLayerStyle, type LayerSummary } from '@/lib/compute/geofusion'
 
@@ -16,43 +16,66 @@ export default function LayerManager({ projectId, layers, onLayersChange }: Laye
   const [editingLayer, setEditingLayer] = useState<string | null>(null)
   const [localLayers, setLocalLayers] = useState(layers)
 
+  useEffect(() => {
+    setLocalLayers(layers)
+  }, [layers])
+
+  const applyLayers = (nextLayers: LayerSummary[]) => {
+    setLocalLayers(nextLayers)
+    onLayersChange?.(nextLayers)
+  }
+
   const toggleVisibility = async (layerId: string, currentVisibility: boolean) => {
+    const nextLayers = localLayers.map(layer =>
+      layer.id === layerId ? { ...layer, visibility: !currentVisibility } : layer
+    )
+
+    if (projectId === 'default') {
+      applyLayers(nextLayers)
+      return
+    }
+
     try {
       await updateLayerStyle(layerId, { visibility: !currentVisibility })
-      setLocalLayers(prev => prev.map(l => 
-        l.id === layerId ? { ...l, visibility: !l.visibility } : l
-      ))
+      applyLayers(nextLayers)
     } catch (err) {
       console.error('Failed to toggle visibility:', err)
     }
   }
 
   const handleOpacityChange = async (layerId: string, opacity: number) => {
+    const nextLayers = localLayers.map(layer =>
+      layer.id === layerId ? { ...layer, opacity } : layer
+    )
+
+    if (projectId === 'default') {
+      applyLayers(nextLayers)
+      return
+    }
+
     try {
       await updateLayerStyle(layerId, { opacity })
-      setLocalLayers(prev => prev.map(l => 
-        l.id === layerId ? { ...l, opacity } : l
-      ))
+      applyLayers(nextLayers)
     } catch (err) {
       console.error('Failed to update opacity:', err)
     }
   }
 
   const handleMoveLayer = (layerId: string, direction: 'up' | 'down') => {
-    const index = localLayers.findIndex(l => l.id === layerId)
+    const index = localLayers.findIndex(layer => layer.id === layerId)
     if (index === -1) return
-    
+
     const newIndex = direction === 'up' ? index - 1 : index + 1
     if (newIndex < 0 || newIndex >= localLayers.length) return
-    
+
     const newLayers = [...localLayers]
     ;[newLayers[index], newLayers[newIndex]] = [newLayers[newIndex], newLayers[index]]
-    setLocalLayers(newLayers.map((l, i) => ({ ...l, z_index: i })))
+    applyLayers(newLayers)
   }
 
   const handleDeleteLayer = (layerId: string) => {
     if (!confirm('Are you sure you want to delete this layer?')) return
-    setLocalLayers(prev => prev.filter(l => l.id !== layerId))
+    applyLayers(localLayers.filter(layer => layer.id !== layerId))
   }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +83,7 @@ export default function LayerManager({ projectId, layers, onLayersChange }: Laye
     if (!files || files.length === 0) return
 
     setIsUploading(true)
-    
+
     Array.from(files).forEach(file => {
       const reader = new FileReader()
       reader.onload = (event) => {
@@ -70,22 +93,27 @@ export default function LayerManager({ projectId, layers, onLayersChange }: Laye
             id: `temp-${Date.now()}-${Math.random()}`,
             layer_name: file.name.replace(/\.[^/.]+$/, ''),
             layer_type: 'vector',
-            geometry_type: geojson.type === 'FeatureCollection' ? 'multi' : 
-              geojson.type === 'Point' ? 'point' :
-              geojson.type === 'LineString' ? 'line' :
-              geojson.type === 'Polygon' ? 'polygon' : undefined,
+            geometry_type: geojson.type === 'FeatureCollection'
+              ? 'multi'
+              : geojson.type === 'Point'
+                ? 'point'
+                : geojson.type === 'LineString'
+                  ? 'line'
+                  : geojson.type === 'Polygon'
+                    ? 'polygon'
+                    : undefined,
             visibility: true,
             opacity: 1
           }
-          setLocalLayers(prev => [...prev, newLayer])
+          applyLayers([...localLayers, newLayer])
         } catch (err) {
           console.error('Invalid GeoJSON:', err)
+        } finally {
+          setIsUploading(false)
         }
       }
       reader.readAsText(file)
     })
-
-    setIsUploading(false)
   }
 
   return (
@@ -97,24 +125,24 @@ export default function LayerManager({ projectId, layers, onLayersChange }: Laye
         </div>
         <label className="flex items-center gap-2 px-3 py-1.5 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black text-sm font-medium rounded-lg cursor-pointer transition-colors">
           <Upload className="h-4 w-4" />
-          <span>Add Layer</span>
-          <input 
-            type="file" 
-            accept=".json,.geojson,.gml,.shp,.zip" 
+          <span>{isUploading ? 'Uploading...' : 'Add Layer'}</span>
+          <input
+            type="file"
+            accept=".json,.geojson,.gml,.shp,.zip"
             onChange={handleFileUpload}
             multiple
-            className="hidden" 
+            className="hidden"
           />
         </label>
       </div>
 
       <div className="space-y-2">
         {localLayers.map((layer, index) => (
-          <div 
+          <div
             key={layer.id}
             className={`p-3 rounded-lg border transition-colors ${
-              selectedLayer === layer.id 
-                ? 'bg-[var(--bg-primary)] border-[var(--accent)]' 
+              selectedLayer === layer.id
+                ? 'bg-[var(--bg-primary)] border-[var(--accent)]'
                 : 'bg-[var(--bg-primary)] border-[var(--border-color)] hover:border-[var(--text-muted)]'
             }`}
             onClick={() => setSelectedLayer(layer.id)}
@@ -137,7 +165,7 @@ export default function LayerManager({ projectId, layers, onLayersChange }: Laye
                 <div>
                   <p className="text-sm font-medium text-[var(--text-primary)]">{layer.layer_name}</p>
                   <p className="text-xs text-[var(--text-muted)]">
-                    {layer.layer_type} {layer.geometry_type && `• ${layer.geometry_type}`}
+                    {layer.layer_type}{layer.geometry_type ? ` - ${layer.geometry_type}` : ''}
                   </p>
                 </div>
               </div>
@@ -213,7 +241,7 @@ export default function LayerManager({ projectId, layers, onLayersChange }: Laye
 
       <div className="mt-4 pt-4 border-t border-[var(--border-color)]">
         <p className="text-xs text-[var(--text-muted)]">
-          {localLayers.length} layer(s) • {localLayers.filter(l => l.visibility).length} visible
+          {localLayers.length} layer(s) - {localLayers.filter(layer => layer.visibility).length} visible
         </p>
       </div>
     </div>

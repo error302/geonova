@@ -9,7 +9,7 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 const mpesa = new MpesaService({
   consumerKey: process.env.MPESA_CONSUMER_KEY || '',
   consumerSecret: process.env.MPESA_CONSUMER_SECRET || '',
-  shortCode: process.env.MPESA_SHORTCODE || '',
+  shortCode: process.env.MPESA_SHORT_CODE || process.env.MPESA_SHORTCODE || '',
   initiatorName: process.env.MPESA_INITIATOR_NAME || '',
   securityCredential: process.env.MPESA_SECURITY_CREDENTIAL || '',
   environment: (process.env.MPESA_ENV as 'sandbox' | 'production') || 'sandbox'

@@ -13,7 +13,6 @@ const BASE = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu-henna.vercel.ap
 
 
 export async function POST(req: NextRequest) {
-  const resend = new Resend(process.env.RESEND_API_KEY)
   try {
     const { email, name } = await req.json()
 

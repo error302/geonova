@@ -194,8 +194,8 @@ export function getBeaconColor(type: BeaconType, status?: BeaconStatus): string 
   const def = BEACON_DEFINITIONS[type]
   if (!def) return '#000000'
   
-  if (def.isControlMark) return '#1d4ed8'
   if (def.type === 'BM' || def.type === 'TBM') return '#059669'
+  if (def.isControlMark) return '#1d4ed8'
   return '#000000'
 }
 

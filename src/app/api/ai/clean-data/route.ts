@@ -3,10 +3,16 @@ import { createClient } from '@supabase/supabase-js'
 import { callPythonCompute } from '@/lib/compute/pythonService'
 import type { CleanDataRequest, CleanDataResponse } from '@/types/fieldguard'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function createServiceClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !serviceRoleKey) {
+    return null
+  }
+
+  return createClient(url, serviceRoleKey)
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,9 +52,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing project_id or id' }, { status: 400 })
   }
   
-  let query
-  
   if (datasetId) {
+    const supabase = createServiceClient()
+    if (!supabase) {
+      return NextResponse.json({ error: 'Supabase service role is not configured' }, { status: 503 })
+    }
+
     const { data, error } = await supabase
       .from('cleaned_datasets')
       .select('*')
@@ -61,6 +70,11 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json(data)
   } else if (projectId) {
+    const supabase = createServiceClient()
+    if (!supabase) {
+      return NextResponse.json({ error: 'Supabase service role is not configured' }, { status: 503 })
+    }
+
     const { data, error } = await supabase
       .from('cleaned_datasets')
       .select('*')

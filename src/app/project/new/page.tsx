@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { getUTMZoneFromLatLng } from '@/lib/engine/utmZones'
@@ -105,15 +105,22 @@ export default function NewProjectPage() {
     )
   }
 
-  useState(() => {
+  useEffect(() => {
+    let mounted = true
+
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user?.email) {
-        setSurveyorName(user.email)
+      const { data: { session } } = await supabase.auth.getSession()
+      if (mounted && session?.user?.email) {
+        setSurveyorName(session.user.email)
       }
     }
-    getUser()
-  })
+
+    void getUser()
+
+    return () => {
+      mounted = false
+    }
+  }, [supabase])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -282,17 +289,26 @@ export default function NewProjectPage() {
               onChange={(e) => setSurveyType(e.target.value)}
               className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
             >
-              <option value="boundary">Boundary Survey</option>
-              <option value="topographic">Topographic Survey</option>
-              <option value="road">Road Survey</option>
-              <option value="construction">Construction Survey</option>
-              <option value="control">Control Network</option>
-              <option value="leveling">Leveling Survey</option>
-              <option value="mining">Mining Survey</option>
-              <option value="hydrographic">Hydrographic Survey</option>
-              <option value="drone">Drone/UAV Survey</option>
-              <option value="gnss">GNSS Survey</option>
-              <option value="other">Other</option>
+              <optgroup label="Boundary Surveys">
+                <option value="subdivision">Subdivision</option>
+                <option value="amalgamation">Amalgamation</option>
+                <option value="resurvey">Boundary Resurvey</option>
+                <option value="mutation">Mutation</option>
+                <option value="gnss_control">GNSS Control Survey</option>
+              </optgroup>
+              <optgroup label="Levelling Surveys">
+                <option value="differential">Differential Levelling</option>
+                <option value="profile">Profile Levelling</option>
+                <option value="cross_section">Cross-Section Levelling</option>
+                <option value="benchmark_establishment">Benchmark Establishment</option>
+                <option value="two_peg_test">Two Peg Test</option>
+              </optgroup>
+              <optgroup label="Other Surveys">
+                <option value="topographic">Topographic Survey</option>
+                <option value="mining">Mining Survey</option>
+                <option value="hydrographic">Hydrographic Survey</option>
+                <option value="drone_uav">Drone / UAV Survey</option>
+              </optgroup>
             </select>
           </div>
 

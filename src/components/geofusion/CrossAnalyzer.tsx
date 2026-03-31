@@ -34,11 +34,22 @@ export default function CrossAnalyzer({ projectId, layers }: CrossAnalyzerProps)
     setError(null)
 
     try {
-      const response = await getCrossAnalysis({
-        project_id: projectId,
-        layer_ids: selectedLayers,
-        analysis_type: analysisType
-      })
+      const response = projectId === 'default'
+        ? {
+            results: {
+              selected_layers: selectedLayers,
+              analysis_type: analysisType,
+            },
+            summary: {
+              layer_count: selectedLayers.length,
+              analysis_type: analysisType,
+            },
+          }
+        : await getCrossAnalysis({
+            project_id: projectId,
+            layer_ids: selectedLayers,
+            analysis_type: analysisType
+          })
       setResults(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Analysis failed')
