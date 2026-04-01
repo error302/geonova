@@ -51,6 +51,19 @@ export interface SurveyorProfile {
   signature_url?: string
 }
 
+export interface SurveyorDocumentProfile {
+  userId: string
+  name: string
+  firm: string
+  licence: string
+  phone: string
+  email: string
+  address: string
+  county?: string
+  sealImagePath?: string
+  profilePublic?: boolean
+}
+
 export interface AttachmentSlot {
   id: string
   label: string
@@ -107,5 +120,25 @@ export interface PackageValidation {
   ready: boolean
   blockers: string[]
   warnings: string[]
+}
+
+export type SubmissionPackageStatus = 'draft' | 'incomplete' | 'ready' | 'submitted'
+
+export interface ProjectSubmissionRecord {
+  id: string
+  project_id: string
+  user_id: string
+  surveyor_profile_user_id: string | null
+  submission_year: number
+  sequence_number: number | null
+  revision_number: number
+  submission_number: string | null
+  package_status: SubmissionPackageStatus
+  required_documents: unknown[] | null
+  generated_artifacts: Record<string, unknown> | null
+  supporting_attachments: Record<string, unknown> | null
+  validation_results: Record<string, unknown> | null
+  created_at: string
+  updated_at: string
 }
 
