@@ -62,6 +62,7 @@ export interface SurveyorDocumentProfile {
   county?: string
   sealImagePath?: string
   profilePublic?: boolean
+  verifiedLicence?: boolean
 }
 
 export interface AttachmentSlot {

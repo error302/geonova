@@ -43,8 +43,8 @@ export function surveyorProfileToDetailsRecord(profile: SurveyorDocumentProfile)
     phone: profile.phone,
     email: profile.email,
     address: profile.address,
-    county: profile.county,
-    sealImagePath: profile.sealImagePath,
+    county: profile.county || '',
+    sealImagePath: profile.sealImagePath || '',
   }
 }
 
@@ -55,13 +55,13 @@ export function detailsRecordToSurveyorProfile(
   return {
     ...current,
     name: details.name?.trim() || current.name,
-    firm: details.firm?.trim() || '',
-    licence: details.licence?.trim() || '',
-    phone: details.phone?.trim() || '',
+    firm: details.firm?.trim() || current.firm,
+    licence: details.licence?.trim() || current.licence,
+    phone: details.phone?.trim() || current.phone,
     email: details.email?.trim() || current.email,
-    address: details.address?.trim() || '',
+    address: details.address?.trim() || current.address,
     county: details.county?.trim() || current.county,
-    sealImagePath: details.sealImagePath?.trim() || '',
+    sealImagePath: details.sealImagePath?.trim() || current.sealImagePath,
   }
 }
 
