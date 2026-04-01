@@ -114,6 +114,7 @@ export interface SurveyReportOptions {
   scale?: number
   reportTitle?: string
   parcelRef?: string
+  submission_number?: string  // Phase 13: Submission package numbering
 }
 
 export type SubscriptionTier = 'free' | 'professional' | 'firm' | 'enterprise'

@@ -4,7 +4,9 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client'
+import { getActiveSurveyorProfile } from '@/lib/submission/surveyorProfile'
 import dynamic from 'next/dynamic'
+import { SubmissionStepPanel } from '@/components/project/SubmissionStepPanel'
 
 const WorkingDiagramClient = dynamic(
   () => import('@/components/working-diagram/WorkingDiagramClient'),
@@ -96,6 +98,7 @@ function getBoundarySteps(project: MetarduProject): WorkspaceStep[] {
 
   steps.push({ id: 'rdm', label: 'RDM Report', description: 'Auto-populated beacon list + area tables', status: 'pending', gated: true });
   steps.push({ id: 'export', label: 'Export Package', description: 'PDF, DXF, GeoJSON — unlocks when all outputs done', status: 'locked', gated: true });
+  steps.push({ id: 'submission', label: 'Submission Package', description: 'Assemble benchmark-compliant handoff package', status: 'locked', gated: true });
 
   return steps;
 }
@@ -486,6 +489,7 @@ function renderStepContent(
     case 'line_setup': return <LevelLineSetupPanel project={project} levelLine={levelLine} setLevelLine={setLevelLine} saving={saving} onSave={onSave} />;
     case 'working_diagram': return <WorkingDiagramPanel project={project} beacons={beacons} boundaries={boundaries} />;
     case 'export': return <ExportPanel project={project} steps={steps} />;
+    case 'submission': return <SubmissionStepPanel projectId={project.id} />;
     default: return <GenericStepPanel step={step} />;
   }
 }

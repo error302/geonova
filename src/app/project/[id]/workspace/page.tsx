@@ -1,39 +1,23 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client'
+import { useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 
-type StepStatus = 'locked' | 'pending' | 'in_progress' | 'complete';
-type SurveyMode = 'boundary' | 'levelling' | 'topographic' | 'gnss';
+export default function WorkspaceRedirect() {
+  const router = useRouter()
+  const params = useParams()
 
-interface WorkspaceStep {
-  id: string;
-  label: string;
-  description: string;
-  status: StepStatus;
-  gated?: boolean;
-  toolRoute?: string;
-  count?: number;
-}
+  useEffect(() => {
+    if (params.id) {
+      router.replace(`/project/${params.id}`)
+    }
+  }, [params.id, router])
 
-interface MetarduProject {
-  id: string;
-  name: string;
-  description?: string;
-  survey_type: string;
-  utm_zone: number;
-  hemisphere: 'N' | 'S';
-  country: string;
-  datum?: string;
-  client_name?: string;
-  surveyor_name?: string;
-  created_at: string;
-  updated_at: string;
-  status: 'draft' | 'in_progress' | 'complete' | 'archived';
-  boundary_data?: Record<string, unknown>;
-  levelling_data?: Record<string, unknown>;
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="text-zinc-400 text-sm">Redirecting to main workspace...</div>
+    </div>
+  )
 }
 
 const SURVEY_TYPE_LABELS: Record<string, string> = {

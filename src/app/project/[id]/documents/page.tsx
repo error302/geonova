@@ -2,6 +2,13 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { getOrCreateProjectSubmission, updateProjectSubmission } from '@/lib/supabase/projectSubmissions'
+import {
+  detailsRecordToSurveyorProfile,
+  getOwnSurveyorDocumentProfile,
+  saveOwnSurveyorDocumentProfile,
+  surveyorProfileToDetailsRecord,
+} from '@/lib/supabase/surveyorProfiles'
 import {
   getDocsForType, DocumentDef, SurveyDocType,
   generateCoverLetter, generateComputationSheet, generateAreaCertificate,
@@ -22,6 +29,7 @@ import {
   distance,
 } from '@/lib/reports/surveyPlan/geometry'
 import { computeTraverseAccuracy, getAccuracyBadgeLabel, getAccuracyBadgeClass } from '@/lib/reports/traverseAccuracy'
+import type { ProjectSubmissionRecord, SurveyorDocumentProfile } from '@/types/submission'
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -36,19 +44,28 @@ function openPrint(html: string, filename: string) {
 
 // ── Surveyor details form (fills once, cached in localStorage) ───────────────
 
-const SD_KEY = 'metardu_surveyor_details'
-
-function loadSD(): Record<string,string> {
-  if (typeof window === 'undefined') return {}
-  try { return JSON.parse(localStorage.getItem(SD_KEY) || '{}') } catch { return {} }
-}
-
 function SurveyorDetailsPanel({
-  details, onChange,
-}: { details: Record<string,string>; onChange: (d: Record<string,string>) => void }) {
+  details, onChange, saveState,
+}: {
+  details: Record<string,string>
+  onChange: (d: Record<string,string>) => void
+  saveState: 'idle' | 'saving' | 'saved' | 'error'
+}) {
   const [open, setOpen] = useState(Object.keys(details).length === 0)
   const [local, setLocal] = useState(details)
   const f = (k: string, v: string) => { const n = {...local,[k]:v}; setLocal(n); onChange(n) }
+
+  useEffect(() => {
+    setLocal(details)
+  }, [details])
+
+  const saveLabel = saveState === 'saving'
+    ? 'Saving profile...'
+    : saveState === 'saved'
+      ? 'Saved to your profile'
+      : saveState === 'error'
+        ? 'Unable to save profile'
+        : 'Profile-backed document identity'
 
   return (
     <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl mb-6 overflow-hidden">
@@ -60,13 +77,19 @@ function SurveyorDetailsPanel({
           </svg>
           Your surveyor details — printed on every document
         </div>
-        <svg className={`w-4 h-4 text-[var(--text-muted)] transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+        <div className="flex items-center gap-3">
+          <span className={`text-[11px] ${saveState === 'error' ? 'text-red-400' : 'text-[var(--text-muted)]'}`}>
+            {saveLabel}
+          </span>
+          <svg className={`w-4 h-4 text-[var(--text-muted)] transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+        </div>
       </button>
 
       {open && (
         <div className="px-5 pb-5 grid grid-cols-2 gap-4 border-t border-[var(--border-color)] pt-4">
           {[
-            { k:'name',    label:'Full name / firm name', ph:'John Kamau Surveying Co.' },
+            { k:'name',    label:'Full name', ph:'John Kamau' },
+            { k:'firm',    label:'Firm name', ph:'John Kamau Surveying Co.' },
             { k:'licence', label:'Licence / reg. number',  ph:'LSK/2456' },
             { k:'phone',   label:'Phone',                  ph:'+254712345678' },
             { k:'email',   label:'Email',                  ph:'jkamau@survey.co.ke' },
