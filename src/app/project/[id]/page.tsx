@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client'
 import { getActiveSurveyorProfile } from '@/lib/submission/surveyorProfile'
 import dynamic from 'next/dynamic'
-import { SubmissionStepPanel } from '@/components/project/SubmissionStepPanel'
 
 const WorkingDiagramClient = dynamic(
   () => import('@/components/working-diagram/WorkingDiagramClient'),
@@ -489,7 +488,6 @@ function renderStepContent(
     case 'line_setup': return <LevelLineSetupPanel project={project} levelLine={levelLine} setLevelLine={setLevelLine} saving={saving} onSave={onSave} />;
     case 'working_diagram': return <WorkingDiagramPanel project={project} beacons={beacons} boundaries={boundaries} />;
     case 'export': return <ExportPanel project={project} steps={steps} />;
-    case 'submission': return <SubmissionStepPanel projectId={project.id} />;
     default: return <GenericStepPanel step={step} />;
   }
 }
