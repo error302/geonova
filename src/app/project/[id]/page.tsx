@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client'
-import { getActiveSurveyorProfile } from '@/lib/submission/surveyorProfile'
 import dynamic from 'next/dynamic'
 
 const WorkingDiagramClient = dynamic(
