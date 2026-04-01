@@ -31,7 +31,7 @@ export interface ValidationResult {
 
 // Benchmark-aligned section order (matches 5 acres compilation + 4 acres theoretical)
 export const SUBMISSION_SECTIONS: SubmissionSection[] = [
-  { id: 'surveyor_report',       order: 1, label: \"Surveyor's Report\",          required: true,  status: 'missing' },
+  { id: 'surveyor_report',       order: 1, label: "Surveyor",          required: true,  status: 'missing' },
   { id: 'index',                 order: 2, label: 'Index to Computations',       required: true,  status: 'missing' },
   { id: 'coordinate_list',       order: 3, label: 'Final Coordinate List',       required: true,  status: 'missing' },
   { id: 'working_diagram',       order: 4, label: 'Working Diagram',             required: true,  status: 'missing' },

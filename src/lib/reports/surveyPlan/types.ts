@@ -66,6 +66,22 @@ export interface SurveyPlanData {
     bearingSchedule?: BearingEntry[]
     revisions?: RevisionEntry[]
     notes?: string
+    // Form No. 4 / Kenya submission fields
+    folioNumber?: string
+    registerNumber?: string
+    lrNumber?: string
+    plotParcelNumber?: string
+    refMapRIM?: string
+    registrationBlock?: string
+    registrationDistrict?: string
+    locality?: string
+    formNumber?: string
+    computationsNo?: string
+    fieldBookNo?: string
+    dateReceived?: string
+    fileReference?: string
+    scale?: string
+    firNumber?: string
   }
   parcel: Parcel
   traverse?: Traverse
@@ -150,4 +166,21 @@ export function getRoadReserveWidth(code: string, desirable = true): number {
   const val = desirable ? rc.reserveDesirable : rc.reserveReduced
   const match = val.match(/(\d+(?:\.\d+)?)/)
   return match ? parseFloat(match[1]) : 0
+}
+
+export interface CoordinateScheduleEntry {
+  station: string
+  northing: number
+  easting: number
+  height?: number
+  beaconClass: 'new' | 'old' | 'theoretical' | 'IPCU'
+  description?: string
+}
+
+export interface InsetDiagram {
+  scale: string
+  beacons: string[]
+  position: 'top-right' | 'bottom-left'
+  labelText: string
+  notToScale: boolean
 }

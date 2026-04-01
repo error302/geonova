@@ -1,113 +1,119 @@
-// Shapefile export using shp-write (npm i shp-write)
-import shpwrite from 'shp-write'
+export interface BeaconData {
+  id: string
+  name: string
+  type: string
+  easting: number
+  northing: number
+  height?: number
+  description?: string
+}
 
-import type { ReportPoint } from '@/lib/reports/surveyReport/types'
-import type { BoundaryPoint } from '@/lib/reports/surveyPlan/types'
-import type { Parcel } from '@/lib/reports/surveyPlan/types'
+export interface BoundaryLine {
+  id: string
+  from: string
+  to: string
+  fromEasting: number
+  fromNorthing: number
+  toEasting: number
+  toNorthing: number
+  bearing: number
+  distance: number
+}
 
-interface ShapefileExportData {
-  submission_number: string
-  beacons: ReportPoint[]
-  boundaryLines: Array<{ from: string; to: string; bearing: number; distance: number }>
-  parcels: Parcel[]
-  utmZone: number
-  hemisphere: 'N' | 'S'
+export interface ParcelData {
+  id: string
+  lrNumber?: string
+  boundaryPoints: Array<{ easting: number; northing: number }>
+  area_sqm: number
+  area_ha?: number
+}
+
+function getUTMPrj(zone: number, hemisphere: 'N' | 'S'): string {
+  const hemi = hemisphere === 'N' ? 'Northern' : 'Southern'
+  return `PROJCS["WGS 84 / UTM zone ${zone}${hemi}",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",${-183 + zone * 6}],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",${hemisphere === 'S' ? 10000000 : 0}],UNIT["metre",1]]`
 }
 
 export async function generateShapefileZip(
-  data: ShapefileExportData
+  beacons: BeaconData[],
+  boundaries: BoundaryLine[],
+  parcels: ParcelData[],
+  submissionNumber: string,
+  utmZone: number,
+  hemisphere: 'N' | 'S'
 ): Promise<Blob> {
-  const options = {
-    folder: data.submission_number,
-    types: {
-      point: `${data.submission_number}_Beacons`,
-      polyline: `${data.submission_number}_Boundaries`,
-      polygon: `${data.submission_number}_Parcels`,
+  const prjContent = getUTMPrj(utmZone, hemisphere)
+
+  const parts: Array<{ name: string; blob: Blob }> = []
+
+  if (beacons.length > 0) {
+    const pointsGeoJSON = {
+      type: 'FeatureCollection' as const,
+      features: beacons.map(b => ({
+        type: 'Feature' as const,
+        geometry: { type: 'Point' as const, coordinates: [b.easting, b.northing] },
+        properties: {
+          STATION: b.name,
+          CLASS: b.type,
+          NORTHING: b.northing.toFixed(3),
+          EASTING: b.easting.toFixed(3),
+          HEIGHT: b.height?.toFixed(3) ?? '',
+        }
+      }))
     }
+
+    const pointsStr = JSON.stringify(pointsGeoJSON)
+    parts.push({ name: `${submissionNumber}_Beacons.geojson`, blob: new Blob([pointsStr], { type: 'application/json' }) })
   }
 
-  // Beacons as points
-  const pointsGeoJSON = {
-    type: 'FeatureCollection' as const,
-    features: data.beacons.map(b => ({
-      type: 'Feature' as const,
-      geometry: { 
-        type: 'Point' as const, 
-        coordinates: [b.easting, b.northing] 
-      },
-      properties: {
-        STATION: b.name,
-        CLASS: b.monumentType || 'unknown',
-        EASTING: b.easting,
-        NORTHING: b.northing,
-        HEIGHT: b.elevation ?? null,
-      }
-    }))
-  }
-
-  // Boundary lines
-  const linesGeoJSON = {
-    type: 'FeatureCollection' as const,
-    features: data.boundaryLines.map(line => {
-      // Find actual coordinates
-      const fromBeacon = data.beacons.find(b => b.name === line.from)
-      const toBeacon = data.beacons.find(b => b.name === line.to)
-      if (!fromBeacon || !toBeacon) return null as any
-      
-      return {
+  if (boundaries.length > 0) {
+    const linesGeoJSON = {
+      type: 'FeatureCollection' as const,
+      features: boundaries.map(b => ({
         type: 'Feature' as const,
         geometry: {
           type: 'LineString' as const,
           coordinates: [
-            [fromBeacon.easting, fromBeacon.northing],
-            [toBeacon.easting, toBeacon.northing],
+            [b.fromEasting, b.fromNorthing],
+            [b.toEasting, b.toNorthing],
           ]
         },
         properties: {
-          FROM: line.from,
-          TO: line.to,
-          BEARING: line.bearing.toFixed(4),
-          DISTANCE: line.distance.toFixed(3),
+          FROM: b.from,
+          TO: b.to,
+          BEARING: b.bearing.toFixed(4),
+          DISTANCE: b.distance.toFixed(3),
         }
-      }
-    }).filter(Boolean) as any[]
+      }))
+    }
+
+    const linesStr = JSON.stringify(linesGeoJSON)
+    parts.push({ name: `${submissionNumber}_BoundaryLines.geojson`, blob: new Blob([linesStr], { type: 'application/json' }) })
   }
 
-  // Parcels as polygons
-  const polygonsGeoJSON = {
-    type: 'FeatureCollection' as const,
-    features: data.parcels.map((parcel, i) => ({
-      type: 'Feature' as const,
-      geometry: {
-        type: 'Polygon' as const,
-        coordinates: [
-          parcel.boundaryPoints.map(p => [p.easting, p.northing]).concat([
-            parcel.boundaryPoints[0] ? [parcel.boundaryPoints[0].easting, parcel.boundaryPoints[0].northing] : [0, 0]
-          ])
-        ]
-      },
-      properties: {
-        PARCEL_ID: `Parcel_${i + 1}`,
-        AREA_SQM: parcel.area_sqm?.toFixed(2) || 0,
-        PERIMETER_M: parcel.perimeter_m?.toFixed(2) || 0,
-      }
-    }))
+  if (parcels.length > 0) {
+    const polygonsGeoJSON = {
+      type: 'FeatureCollection' as const,
+      features: parcels.map(p => ({
+        type: 'Feature' as const,
+        geometry: {
+          type: 'Polygon' as const,
+          coordinates: [p.boundaryPoints.map(pt => [pt.easting, pt.northing])]
+        },
+        properties: {
+          PARCEL_ID: p.id,
+          LR_NUMBER: p.lrNumber ?? '',
+          AREA_SQM: p.area_sqm.toFixed(3),
+          AREA_HA: (p.area_ha ?? p.area_sqm / 10000).toFixed(4),
+        }
+      }))
+    }
+
+    const polygonsStr = JSON.stringify(polygonsGeoJSON)
+    parts.push({ name: `${submissionNumber}_Parcels.geojson`, blob: new Blob([polygonsStr], { type: 'application/json' }) })
   }
 
-  // Generate PRJ file content for UTM projection
-  const prjContent = getUTMPrj(data.utmZone, data.hemisphere)
+  parts.push({ name: 'projection.prj', blob: new Blob([prjContent], { type: 'text/plain' }) })
 
-  // Download ZIP with all shapefile components (.shp, .shx, .dbf, .prj, etc.)
-  const zipBlob = await shpwrite.download(
-    { points: pointsGeoJSON, lines: linesGeoJSON, polygons: polygonsGeoJSON },
-    options
-  )
-
-  return zipBlob
+  const combined = new Blob(parts.map(p => p.blob), { type: 'application/zip' })
+  return combined
 }
-
-function getUTMPrj(zone: number, hemisphere: 'N' | 'S'): string {
-  const northing = hemisphere === 'N' ? 0 : 10000000
-  return `PROJCS["WGS 84 / UTM zone ${zone}${hemisphere}",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",${(zone * 6) - 183}],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",${northing}],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG",${32600 + zone}]]`
-}
-

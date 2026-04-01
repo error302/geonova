@@ -29,7 +29,7 @@ import {
   distance,
 } from '@/lib/reports/surveyPlan/geometry'
 import { computeTraverseAccuracy, getAccuracyBadgeLabel, getAccuracyBadgeClass } from '@/lib/reports/traverseAccuracy'
-import type { ProjectSubmissionRecord, SurveyorDocumentProfile } from '@/types/submission'
+import type { ProjectSubmission } from '@/types/submission'
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -285,7 +285,7 @@ export default function DocumentsPage({ params }: PageProps) {
   const [traverse, setTraverse] = useState<TraverseData | undefined>()
   const [area, setArea]         = useState<AreaData | undefined>()
   const [loading, setLoading]   = useState(true)
-  const [surveyorDetails, setSurveyorDetails] = useState<Record<string,string>>(loadSD())
+  const [surveyorDetails, setSurveyorDetails] = useState<Record<string,string>>({})
   const [activeTab, setActiveTab] = useState<'docs' | 'plan'>('docs')
   const [activeDoc, setActiveDoc] = useState<SurveyDocType | null>(null)
   const [extraFields, setExtraFields] = useState<Record<string,Record<string,string>>>({})
@@ -315,12 +315,7 @@ export default function DocumentsPage({ params }: PageProps) {
 
   useEffect(() => { load() }, [load])
 
-  // Persist surveyor details to localStorage
-  useEffect(() => {
-    if (Object.keys(surveyorDetails).length > 0) {
-      localStorage.setItem(SD_KEY, JSON.stringify(surveyorDetails))
-    }
-  }, [surveyorDetails])
+
 
   const getExtra = (docId: SurveyDocType) => extraFields[docId] || {}
   const setExtra = (docId: SurveyDocType, d: Record<string,string>) =>
@@ -547,7 +542,7 @@ export default function DocumentsPage({ params }: PageProps) {
         </div>
 
         {/* Surveyor details */}
-        <SurveyorDetailsPanel details={surveyorDetails} onChange={setSurveyorDetails} />
+        <SurveyorDetailsPanel details={surveyorDetails} onChange={setSurveyorDetails} saveState="saved" />
 
         {/* Document list */}
         <div className="space-y-3">
