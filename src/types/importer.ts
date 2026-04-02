@@ -19,6 +19,7 @@ export interface ParsedPoint {
   code?: string;
   remark?: string;
   raw?: Record<string, unknown>;
+  raw_data?: Record<string, unknown>;
 }
 
 export interface ParseResult {
