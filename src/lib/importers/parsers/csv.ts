@@ -25,11 +25,14 @@ registerParser({
       });
 
       const point: ParsedPoint = {
-        point_no: String(raw['point'] ?? raw['pt'] ?? raw['name'] ?? String(i)),
+        point_no: String(raw['point'] ?? raw['pt'] ?? raw['name'] ?? raw['station'] ?? raw['stn'] ?? String(i)),
         easting: parseFloat(String(raw['easting'] ?? raw['e'] ?? raw['x'] ?? '')),
         northing: parseFloat(String(raw['northing'] ?? raw['n'] ?? raw['y'] ?? '')),
         rl: parseFloat(String(raw['rl'] ?? raw['elevation'] ?? raw['z'] ?? raw['height'] ?? '')),
+        bearing: parseFloat(String(raw['bearing'] ?? raw['azimuth'] ?? raw['brg'] ?? raw['bear'] ?? '')),
+        distance: parseFloat(String(raw['distance'] ?? raw['dist'] ?? raw['hd'] ?? raw['slope_dist'] ?? '')),
         code: String(raw['code'] ?? raw['description'] ?? raw['desc'] ?? ''),
+        remark: String(raw['remark'] ?? raw['remark'] ?? raw['notes'] ?? ''),
         raw,
       };
 
