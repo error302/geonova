@@ -9,11 +9,12 @@ interface Props {
   onCancel: () => void;
   committing: boolean;
   error: string | null;
+  precision?: string;
 }
 
 const PREVIEW_COLUMNS: (keyof ParseResult['points'][0])[] = ['point_no', 'easting', 'northing', 'rl', 'code', 'remark'];
 
-export default function ImportPreviewTable({ result, fileName, onCommit, onCancel, committing, error }: Props) {
+export default function ImportPreviewTable({ result, fileName, onCommit, onCancel, committing, error, precision }: Props) {
   const preview = result.points.slice(0, 20);
 
   return (
@@ -24,6 +25,9 @@ export default function ImportPreviewTable({ result, fileName, onCommit, onCance
           <p className="text-sm text-gray-500">
             Format: <strong>{result.format.toUpperCase()}</strong> — {result.points.length} points parsed
           </p>
+          {precision && (
+            <p className="text-sm text-green-600 font-medium">Precision: {precision}</p>
+          )}
         </div>
         <div className="flex gap-2">
           <button onClick={onCancel} className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50">

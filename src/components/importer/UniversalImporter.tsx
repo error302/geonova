@@ -7,6 +7,7 @@ import GenericCSVMapper from './GenericCSVMapper';
 
 import '@/lib/importers/index';
 import { detectFormat, getParser } from '@/lib/importers/registry';
+import { smartImport, SmartImportResult } from '@/lib/importers/universalImporter';
 
 interface Props {
   projectId: string;
@@ -18,6 +19,7 @@ type ImportStep = 'idle' | 'parsing' | 'mapping' | 'preview' | 'committing' | 'd
 export default function UniversalImporter({ projectId, onImportComplete }: Props) {
   const [step, setStep] = useState<ImportStep>('idle');
   const [parseResult, setParseResult] = useState<ParseResult | null>(null);
+  const [smartResult, setSmartResult] = useState<SmartImportResult | null>(null);
   const [fileName, setFileName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -28,26 +30,15 @@ export default function UniversalImporter({ projectId, onImportComplete }: Props
     setStep('parsing');
 
     try {
-      const content = await file.text();
-      const format = detectFormat(file.name, content);
-
-      if (format === 'unknown') {
-        setStep('mapping');
-        setParseResult({
-          format: 'unknown',
-          points: [],
-          warnings: ['Format not recognised. Please map columns manually.'],
-          metadata: { rawContent: content },
-        });
-        return;
+      const result = await smartImport(file);
+      setSmartResult(result);
+      
+      if (result.success) {
+        setStep('preview');
+      } else {
+        setError(result.errors.join(', ') || 'Import failed');
+        setStep('idle');
       }
-
-      const parser = getParser(format);
-      if (!parser) throw new Error(`No parser for format: ${format}`);
-
-      const result = parser.parse(content);
-      setParseResult(result);
-      setStep('preview');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Unknown error');
       setStep('idle');
@@ -67,7 +58,7 @@ export default function UniversalImporter({ projectId, onImportComplete }: Props
   }, [processFile]);
 
   const handleCommit = async () => {
-    if (!parseResult || parseResult.points.length === 0) return;
+    if (!smartResult || smartResult.entries.length === 0) return;
     setStep('committing');
 
     try {
@@ -76,9 +67,10 @@ export default function UniversalImporter({ projectId, onImportComplete }: Props
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           projectId,
-          points: parseResult.points,
+          entries: smartResult.entries,
+          adjustedLegs: smartResult.adjustedLegs,
           fileName,
-          format: parseResult.format,
+          relativePrecision: smartResult.relativePrecision,
         }),
       });
 
@@ -130,15 +122,16 @@ export default function UniversalImporter({ projectId, onImportComplete }: Props
     );
   }
 
-  if ((step === 'preview' || step === 'committing') && parseResult) {
+  if ((step === 'preview' || step === 'committing') && smartResult) {
     return (
       <ImportPreviewTable
-        result={parseResult}
+        result={{ format: 'csv', points: smartResult.entries.map(e => ({ point_no: e.station, bearing: e.bearing, distance: e.distance, raw_data: { deltaE: e.deltaE, deltaN: e.deltaN } })), warnings: smartResult.warnings, errors: smartResult.errors }}
         fileName={fileName}
         onCommit={handleCommit}
         onCancel={() => setStep('idle')}
         committing={step === 'committing'}
         error={error}
+        precision={smartResult.relativePrecision}
       />
     );
   }
@@ -147,8 +140,11 @@ export default function UniversalImporter({ projectId, onImportComplete }: Props
     return (
       <div className="text-center py-12">
         <p className="text-green-600 font-semibold text-lg">Import complete</p>
+        {smartResult?.relativePrecision && (
+          <p className="text-sm text-gray-600 mt-1">Precision: {smartResult.relativePrecision}</p>
+        )}
         <button
-          onClick={() => { setStep('idle'); setParseResult(null); }}
+          onClick={() => { setStep('idle'); setSmartResult(null); }}
           className="mt-4 px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200"
         >
           Import another file
