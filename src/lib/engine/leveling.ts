@@ -118,7 +118,7 @@ export function riseAndFall(input: LevelingInput): LevelingResult {
 
   const misclosure = closingRL !== undefined ? (lastComputedRL - closingRL) : 0;
 
-  const allowableMisclosure = 12 * Math.sqrt(distanceKm) / 1000;
+  const allowableMisclosure = 10 * Math.sqrt(distanceKm) / 1000;
   const isAcceptable = closingRL === undefined ? true : Math.abs(misclosure) <= allowableMisclosure;
 
   if (closingRL !== undefined && isAcceptable && misclosure !== 0) {
@@ -211,7 +211,7 @@ export function heightOfCollimation(input: LevelingInput): LevelingResult {
   const arithmeticCheck = Math.abs(arithmeticDiff) < 0.001;
 
   const misclosure = closingRL !== undefined ? (lastComputedRL - closingRL) : 0;
-  const allowableMisclosure = 12 * Math.sqrt(distanceKm) / 1000;
+  const allowableMisclosure = 10 * Math.sqrt(distanceKm) / 1000;
   const isAcceptable = closingRL === undefined ? true : Math.abs(misclosure) <= allowableMisclosure;
 
   return {
