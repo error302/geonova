@@ -73,6 +73,13 @@ export async function generateDocument(
       mimeType = 'application/pdf';
       break;
     }
+    case 'boundary-shapefile': {
+      const { generateBoundaryShapefile } = await import('../generators/boundaryShapefile');
+      buffer = await generateBoundaryShapefile(projectId, supabase);
+      fileName = `boundary-shapefile-${projectId}.zip`;
+      mimeType = 'application/zip';
+      break;
+    }
     default:
       throw new Error(`Generator not yet implemented for: ${documentId}. This document type is coming in a future phase.`);
   }
