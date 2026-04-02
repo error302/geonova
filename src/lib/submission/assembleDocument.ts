@@ -80,6 +80,13 @@ export async function generateDocument(
       mimeType = 'application/zip';
       break;
     }
+    case 'setting-out-dxf': {
+      const { generateSettingOutDxf } = await import('../generators/settingOutDxf');
+      buffer = await generateSettingOutDxf(projectId, supabase);
+      fileName = `setting-out-${projectId}.dxf`;
+      mimeType = 'application/dxf';
+      break;
+    }
     default:
       throw new Error(`Generator not yet implemented for: ${documentId}. This document type is coming in a future phase.`);
   }
