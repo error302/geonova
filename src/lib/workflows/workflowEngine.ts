@@ -263,7 +263,7 @@ export function runLevelingWorkflow(data: LevelingWorkflowData): WorkflowResult 
     if (data.closingRL && result.misclosure !== undefined) {
       const closingErrorMm = Math.abs(result.misclosure) * 1000
       const distanceKm = data.readings.length * 0.1
-      const allowableMm = 12 * Math.sqrt(distanceKm)
+      const allowableMm = 10 * Math.sqrt(distanceKm)
       
       checks.push({
         name: 'Closing Error',

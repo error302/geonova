@@ -51,11 +51,11 @@ export const LEVELING_ORDERS: LevelingOrder[] = [
   },
   {
     order: 'third_order',
-    closureFormula: '0.050·√M ft  |  12·√K mm/km',
-    closureMetres: 0.012,  // 12mm/√km
+    closureFormula: '0.050·√M ft  |  10·√K mm/km',
+    closureMetres: 0.010,  // Kenya RDM 1.1 Table 5.1: 10mm/√km
     closureFeet: 0.050,
     description: 'Third Order — detail surveys, construction setting-out',
-    regulation: 'USACE EM 1110-1-1005 Table 4-2',
+    regulation: 'Kenya RDM 1.1 Table 5.1 / USACE EM 1110-1-1005',
   },
   {
     order: 'fourth_order',
@@ -177,7 +177,7 @@ export function validateLevelingClosure(input: LevelingClosureInput): LevelingCl
 
 function getAllowableMisclosure(km: number, order: string): number {
   const entry = LEVELING_ORDERS.find(o => o.order === order)
-  return entry ? entry.closureMetres * Math.sqrt(km) : 0.012 * Math.sqrt(km)
+  return entry ? entry.closureMetres * Math.sqrt(km) : 0.010 * Math.sqrt(km) // Kenya RDM 1.1 default
 }
 
 function deriveLevelingOrder(misclosureMetres: number, km: number): string {

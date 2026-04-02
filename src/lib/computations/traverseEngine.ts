@@ -446,7 +446,7 @@ export function computeLevelBook(input: {
   const arithmeticPass = Math.abs(arithmeticCheck) < 0.001
 
   const misclosure = closingRL !== undefined ? Math.abs(currentRL - closingRL) : 0
-  const allowable = (12 * Math.sqrt(distanceKm)) / 1000 // Kenya RDM 1.1: 12√K mm
+  const allowable = (10 * Math.sqrt(distanceKm)) / 1000 // Kenya RDM 1.1 Table 5.1: 10√K mm
   const isAcceptable = closingRL !== undefined ? misclosure <= allowable : true
 
   return {
@@ -464,6 +464,6 @@ export function computeLevelBook(input: {
     openingRL,
     closingRL,
     distanceKm,
-    formula: `Allowable = 10√K = 10√${distanceKm.toFixed(3)} = ${allowable.toFixed(3)} m`,
+    formula: `Allowable = 10√K = 10√${distanceKm.toFixed(3)} = ${allowable.toFixed(3)} m (RDM 1.1 Table 5.1)`,
   }
 }
