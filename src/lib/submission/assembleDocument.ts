@@ -108,6 +108,27 @@ export async function generateDocument(
       mimeType = 'application/pdf';
       break;
     }
+    case 'orthophoto-plan': {
+      const { generateOrthophotoPlan } = await import('../generators/orthophotoPlan');
+      buffer = await generateOrthophotoPlan(projectId, supabase);
+      fileName = `orthophoto-plan-${projectId}.pdf`;
+      mimeType = 'application/pdf';
+      break;
+    }
+    case 'sounding-chart': {
+      const { generateSoundingChart } = await import('../generators/soundingChart');
+      buffer = await generateSoundingChart(projectId, supabase);
+      fileName = `sounding-chart-${projectId}.pdf`;
+      mimeType = 'application/pdf';
+      break;
+    }
+    case 'deformation-report': {
+      const { generateDeformationReport } = await import('../generators/deformationReport');
+      buffer = await generateDeformationReport(projectId, supabase);
+      fileName = `deformation-report-${projectId}.pdf`;
+      mimeType = 'application/pdf';
+      break;
+    }
     default:
       throw new Error(`Generator not yet implemented for: ${documentId}. This document type is coming in a future phase.`);
   }
