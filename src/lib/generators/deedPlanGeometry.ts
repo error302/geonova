@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client';
+import { computePolygonArea } from '@/math/area';
 
 export interface TraverseStation {
   station: string;
@@ -54,17 +55,6 @@ function decimalToDMS(deg: number): string {
   const m = Math.floor(mRaw);
   const s = ((mRaw - m) * 60).toFixed(1);
   return `${String(d).padStart(3, '0')}°${String(m).padStart(2, '0')}'${s.padStart(4, '0')}"`;
-}
-
-function shoelaceArea(pts: { e: number; n: number }[]): number {
-  let sum = 0;
-  const n = pts.length;
-  for (let i = 0; i < n; i++) {
-    const j = (i + 1) % n;
-    sum += pts[i].e * pts[j].n;
-    sum -= pts[j].e * pts[i].n;
-  }
-  return Math.abs(sum) / 2;
 }
 
 export async function computeDeedPlanGeometry(
@@ -154,7 +144,7 @@ export async function computeDeedPlanGeometry(
   }
 
   const pts = adjusted.map((s) => ({ e: s.easting, n: s.northing }));
-  const areaM2 = shoelaceArea(pts);
+  const areaM2 = computePolygonArea(pts);
   const areaHa = areaM2 / 10000;
   const areaAcres = areaHa * 2.47105;
 
