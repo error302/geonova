@@ -52,7 +52,7 @@ const insuranceProviders = [
 
 export function getInsuranceProviders(country?: string) {
   if (!country) return insuranceProviders
-  return insuranceProviders.filter(p => p.country.toLowerCase() === country.toLowerCase())
+  return insuranceProviders.filter((p: any) => p.country.toLowerCase() === country.toLowerCase())
 }
 
 export function getInsuranceQuote(
@@ -106,7 +106,7 @@ export function purchasePolicy(
   quote: InsuranceQuote,
   insurerId: string
 ): InsurancePolicy {
-  const insurer = insuranceProviders.find(i => i.id === insurerId) || insuranceProviders[0]
+  const insurer = insuranceProviders.find((i: any) => i.id === insurerId) || insuranceProviders[0]
   
   const policy: InsurancePolicy = {
     id: `policy-${Date.now()}`,

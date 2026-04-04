@@ -49,7 +49,7 @@ export function LegacyUnitBadge({
             onChange={(e) => onLegacyUnitChange(e.target.value as LegacyUnit)}
             className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm"
           >
-            {UNIT_OPTIONS.map(opt => (
+            {UNIT_OPTIONS.map((opt: any) => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
             ))}
           </select>

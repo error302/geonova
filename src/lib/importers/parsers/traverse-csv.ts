@@ -9,19 +9,19 @@ registerParser({
   detect: (content) => {
     const lines = content.trim().split('\n');
     if (lines.length < 2) return false;
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-    const hasBearing = headers.some(h => ['bearing', 'azimuth', 'brg', 'bear'].includes(h));
-    const hasDistance = headers.some(h => ['distance', 'dist', 'hd', 'length'].includes(h));
+    const headers = lines[0].split(',').map((h: any) => h.trim().toLowerCase());
+    const hasBearing = headers.some((h: any) => ['bearing', 'azimuth', 'brg', 'bear'].includes(h));
+    const hasDistance = headers.some((h: any) => ['distance', 'dist', 'hd', 'length'].includes(h));
     return hasBearing && hasDistance;
   },
   parse: (content): ParseResult => {
     const lines = content.trim().split('\n');
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const headers = lines[0].split(',').map((h: any) => h.trim().toLowerCase());
     const points: ParsedPoint[] = [];
     const warnings: string[] = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.trim());
+      const values = lines[i].split(',').map((v: any) => v.trim());
       if (values.length < 2) continue;
 
       const raw: Record<string, unknown> = {};

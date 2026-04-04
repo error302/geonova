@@ -37,14 +37,14 @@ export async function POST(request: NextRequest) {
   const input = parsed.data
   const dxf = generateDXF({
     projectName: input.projectName,
-    points: input.points.map(p => ({
+    points: input.points.map((p: any) => ({
       name: p.name,
       easting: p.easting,
       northing: p.northing,
       elevation: p.elevation,
       is_control: p.is_control,
     })),
-    traverseLegs: input.traverseLegs?.map(l => ({ from: l.from, to: l.to, distance: l.distance, bearing: l.bearing })) ?? [],
+    traverseLegs: input.traverseLegs?.map((l: any) => ({ from: l.from, to: l.to, distance: l.distance, bearing: l.bearing })) ?? [],
     includeElevations: input.includeElevations,
   })
 

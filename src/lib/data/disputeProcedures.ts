@@ -254,11 +254,11 @@ export const DISPUTE_PROCEDURES: DisputeProcedure[] = [
 ]
 
 export function getDisputeProcedureByType(type: DisputeType): DisputeProcedure | undefined {
-  return DISPUTE_PROCEDURES.find(proc => proc.disputeType === type)
+  return DISPUTE_PROCEDURES.find((proc: any) => proc.disputeType === type)
 }
 
 export function getAllDisputeTypes(): { type: DisputeType; title: string }[] {
-  return DISPUTE_PROCEDURES.map(proc => ({
+  return DISPUTE_PROCEDURES.map((proc: any) => ({
     type: proc.disputeType,
     title: proc.title
   }))

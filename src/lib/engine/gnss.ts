@@ -226,7 +226,7 @@ export function processGNSSNetwork(
   }
   
   // Calculate network statistics
-  const residuals = baselines.map(b => b.sigma)
+  const residuals = baselines.map((b: any) => b.sigma)
   const rms = Math.sqrt(residuals.reduce((sum, r) => sum + r * r, 0) / residuals.length) || 0
   
   return {
@@ -318,7 +318,7 @@ export function calculatePDOP(satellites: Array<{ x: number; y: number; z: numbe
 
 // Matrix utilities
 function transpose(m: number[][]): number[][] {
-  return m[0].map((_, i) => m.map(row => row[i]))
+  return m[0].map((_, i) => m.map((row: any) => row[i]))
 }
 
 function multiply(a: number[][], b: number[][]): number[][] {
@@ -360,5 +360,5 @@ function inverse(m: number[][]): number[][] | null {
     }
   }
   
-  return aug.map(row => row.slice(n))
+  return aug.map((row: any) => row.slice(n))
 }

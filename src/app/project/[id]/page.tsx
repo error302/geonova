@@ -1,8 +1,9 @@
-import { createClient } from '@/lib/supabase/client';
 import { redirect } from 'next/navigation';
 import { SurveyType } from '@/types/project';
 import { getWorkflow } from '@/lib/workflows/workflowRegistry';
 import ProjectWorkspaceClient from './ProjectWorkspaceClient';
+import { getAuthUser } from '@/lib/auth/session';
+import { createClient } from '@/lib/supabase/server';
 
 interface Props {
   params: { id: string };
@@ -10,19 +11,18 @@ interface Props {
 }
 
 export default async function ProjectWorkspacePage({ params, searchParams }: Props) {
-  const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  const user = await getAuthUser();
+  if (!user) redirect('/login');
 
-  if (!session) redirect('/login');
-
+  const supabase = await createClient();
   const { data: project, error } = await supabase
     .from('projects')
     .select('id, name, survey_type, workflow_step, workflow_max_unlocked')
     .eq('id', params.id)
-    .eq('user_id', session.user.id)
+    .eq('user_id', user.id)
     .single();
 
-  if (error || !project) redirect('/projects');
+  if (error || !project) redirect('/dashboard');
 
   const surveyType = project.survey_type as SurveyType;
   const workflow = getWorkflow(surveyType);

@@ -34,10 +34,10 @@ export default function AnomalyHeatmap({ points, anomalies }: AnomalyHeatmapProp
   useEffect(() => {
     if (!mapInstance.current || points.length === 0) return
     
-    const anomalyIds = new Set(anomalies.map(a => a.point_id))
+    const anomalyIds = new Set(anomalies.map((a: any) => a.point_id))
     
     const bounds = L.latLngBounds(
-      points.map(p => [p.northing, p.easting] as [number, number])
+      points.map((p: any) => [p.northing, p.easting] as [number, number])
     )
     mapInstance.current.fitBounds(bounds, { padding: [50, 50] })
     

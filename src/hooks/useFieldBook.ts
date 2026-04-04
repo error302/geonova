@@ -38,7 +38,7 @@ export function useFieldBook({ projectId, surveyType, initialRows = [] }: UseFie
     }
 
     if (data && data.length > 0) {
-      const loadedRows = data.map((r) => {
+      const loadedRows = data.map((r: any) => {
         const row: FieldBookRow = { ...r.raw_data };
         row._id = r.id;
         row._rowIndex = r.row_index;
@@ -61,7 +61,7 @@ export function useFieldBook({ projectId, surveyType, initialRows = [] }: UseFie
       setSaving(true);
       setError(null);
 
-      const records = rowsToSave.map((row, idx) => {
+      const records = rowsToSave.map((row: any, idx: any) => {
         const { _id, _rowIndex, ...data } = row;
         return {
           project_id: projectId,
@@ -108,3 +108,4 @@ export function useFieldBook({ projectId, surveyType, initialRows = [] }: UseFie
     error,
   };
 }
+

@@ -29,15 +29,15 @@ export default function BeaconReferencePage() {
           </p>
         </div>
 
-        {CATEGORIES.map(category => (
+        {CATEGORIES.map((category: any) => (
           <div key={category.title} className="mb-10">
             <h2 className="text-lg font-semibold mb-4 pb-2 border-b border-[var(--border-color)]">
               {category.title}
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {category.types.map(type => {
-                const def = BEACON_DEFINITIONS[type]
+              {category.types.map((type: any) => {
+                const def = BEACON_DEFINITIONS[type as BeaconType]
                 
                 return (
                   <div 
@@ -75,7 +75,7 @@ export default function BeaconReferencePage() {
                     <div className="border-t border-[var(--border-color)] pt-3">
                       <div className="text-xs text-[var(--text-muted)] mb-2">Status variants:</div>
                       <div className="grid grid-cols-4 gap-2">
-                        {STATUSES.map(status => (
+                        {STATUSES.map((status: any) => (
                           <div key={status} className="flex flex-col items-center">
                             <div 
                               className="w-10 h-10"

@@ -80,7 +80,7 @@ export default function InstrumentsPage() {
               </div>
 
               <div className="flex flex-wrap gap-2 mb-4">
-                {inst.models.map(model => (
+                {inst.models.map((model: any) => (
                   <span
                     key={model}
                     className="px-2 py-1 bg-[var(--bg-tertiary)] text-[var(--text-primary)] text-xs rounded"

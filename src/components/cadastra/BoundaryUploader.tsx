@@ -21,10 +21,10 @@ export default function BoundaryUploader({ onUpload, loading }: BoundaryUploader
       boundary = data.features ? data.features[0].geometry : data
     } else {
       const lines = text.trim().split('\n')
-      const points = lines.map(line => {
+      const points = lines.map((line: any) => {
         const [easting, northing] = line.split(',').map(Number)
         return { easting, northing }
-      }).filter(p => !isNaN(p.easting) && !isNaN(p.northing))
+      }).filter((p: any) => !isNaN(p.easting) && !isNaN(p.northing))
       boundary = { points }
     }
     

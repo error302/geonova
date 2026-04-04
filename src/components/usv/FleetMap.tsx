@@ -97,13 +97,13 @@ export default function FleetMap({
 
   const waypointPath: [number, number][] = useMemo(() => {
     return waypoints
-      .sort((a, b) => a.order - b.order)
+      .sort((a: any, b: any) => a.order - b.order)
       .map((wp) => [wp.lat, wp.lng])
   }, [waypoints])
 
   const usvPath: [number, number][] = useMemo(() => {
     return usvPositions
-      .sort((a, b) => new Date(a.recorded_at).getTime() - new Date(b.recorded_at).getTime())
+      .sort((a: any, b: any) => new Date(a.recorded_at).getTime() - new Date(b.recorded_at).getTime())
       .map((t) => [t.position.lat, t.position.lng])
   }, [usvPositions])
 

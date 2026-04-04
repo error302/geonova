@@ -81,7 +81,7 @@ export default function HydrographicSurveyPage() {
   };
 
   const updateTideReading = (id: number, field: keyof TideReading, value: string) => {
-    setTideReadings(tideReadings.map(t => t.id === id ? { ...t, [field]: value } : t));
+    setTideReadings(tideReadings.map((t: any) => t.id === id ? { ...t, [field]: value } : t));
   };
 
   const addSoundingRecord = () => {
@@ -100,18 +100,18 @@ export default function HydrographicSurveyPage() {
   };
 
   const updateSoundingRecord = (id: number, field: keyof SoundingRecord, value: string) => {
-    setSoundingRecords(soundingRecords.map(s => s.id === id ? { ...s, [field]: value } : s));
+    setSoundingRecords(soundingRecords.map((s: any) => s.id === id ? { ...s, [field]: value } : s));
   };
 
   const calculateTidalCorrection = () => {
     const sortedReadings = tideReadings
-      .map(t => ({ time: parseTimeToHours(t.time), level: parseFloat(t.level) }))
-      .filter(t => !isNaN(t.time) && !isNaN(t.level))
-      .sort((a, b) => a.time - b.time);
+      .map((t: any) => ({ time: parseTimeToHours(t.time), level: parseFloat(t.level) }))
+      .filter((t: any) => !isNaN(t.time) && !isNaN(t.level))
+      .sort((a: any, b: any) => a.time - b.time);
 
     if (sortedReadings.length < 2) return;
 
-    const results = soundingRecords.map(s => {
+    const results = soundingRecords.map((s: any) => {
       const soundingTime = parseTimeToHours(s.time);
       const rawDepth = parseFloat(s.rawDepth);
       if (isNaN(soundingTime) || isNaN(rawDepth)) return null;
@@ -168,14 +168,14 @@ export default function HydrographicSurveyPage() {
   };
 
   const updateCrossSectionMeasurement = (id: number, field: keyof CrossSectionMeasurement, value: string) => {
-    setCrossSectionMeasurements(crossSectionMeasurements.map(m => m.id === id ? { ...m, [field]: value } : m));
+    setCrossSectionMeasurements(crossSectionMeasurements.map((m: any) => m.id === id ? { ...m, [field]: value } : m));
   };
 
   const calculateCrossSection = () => {
     const measurements = crossSectionMeasurements
-      .map(m => ({ distance: parseFloat(m.distanceFromBank), depth: parseFloat(m.depth) }))
-      .filter(m => !isNaN(m.distance) && !isNaN(m.depth))
-      .sort((a, b) => a.distance - b.distance);
+      .map((m: any) => ({ distance: parseFloat(m.distanceFromBank), depth: parseFloat(m.depth) }))
+      .filter((m: any) => !isNaN(m.distance) && !isNaN(m.depth))
+      .sort((a: any, b: any) => a.distance - b.distance);
 
     if (measurements.length < 2) return;
 
@@ -213,8 +213,8 @@ export default function HydrographicSurveyPage() {
 
   const analyzeSeabed = async () => {
     const points = soundingRecords
-      .filter(r => r.easting && r.northing && r.rawDepth)
-      .map(r => ({
+      .filter((r: any) => r.easting && r.northing && r.rawDepth)
+      .map((r: any) => ({
         easting: parseFloat(r.easting),
         northing: parseFloat(r.northing),
         depth: parseFloat(r.rawDepth),
@@ -231,7 +231,7 @@ export default function HydrographicSurveyPage() {
       if (res.ok) setSeabedResults(data)
     } catch {
       // fallback: compute locally
-      const depths = points.map(p => p.depth)
+      const depths = points.map((p: any) => p.depth)
       setSeabedResults({
         depth_min: Math.min(...depths),
         depth_max: Math.max(...depths),
@@ -279,7 +279,7 @@ export default function HydrographicSurveyPage() {
           { id: 'datum', label: 'Chart Datum' },
           { id: 'sounding', label: 'Sounding Records' },
           { id: 'crossSection', label: 'River Cross Section' },
-        ].map(tab => (
+        ].map((tab: any) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
@@ -312,7 +312,7 @@ export default function HydrographicSurveyPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {tideReadings.map(t => (
+                  {tideReadings.map((t: any) => (
                     <tr key={t.id}>
                       <td><input className="input w-24" value={t.time} onChange={e => updateTideReading(t.id, 'time', e.target.value)} placeholder="HH:MM" /></td>
                       <td><input className="input w-32" value={t.level} onChange={e => updateTideReading(t.id, 'level', e.target.value)} placeholder="m" /></td>
@@ -346,7 +346,7 @@ export default function HydrographicSurveyPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {soundingRecords.map(s => (
+                  {soundingRecords.map((s: any) => (
                     <tr key={s.id}>
                       <td><input className="input w-20" value={s.line} onChange={e => updateSoundingRecord(s.id, 'line', e.target.value)} /></td>
                       <td><input className="input w-20" value={s.fixNo} onChange={e => updateSoundingRecord(s.id, 'fixNo', e.target.value)} /></td>
@@ -561,7 +561,7 @@ export default function HydrographicSurveyPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {soundingRecords.map(s => (
+                  {soundingRecords.map((s: any) => (
                     <tr key={s.id}>
                       <td><input className="input w-16" value={s.line} onChange={e => updateSoundingRecord(s.id, 'line', e.target.value)} /></td>
                       <td><input className="input w-16" value={s.fixNo} onChange={e => updateSoundingRecord(s.id, 'fixNo', e.target.value)} /></td>
@@ -602,7 +602,7 @@ export default function HydrographicSurveyPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {crossSectionMeasurements.map(m => (
+                  {crossSectionMeasurements.map((m: any) => (
                     <tr key={m.id}>
                       <td><input className="input w-32" value={m.distanceFromBank} onChange={e => updateCrossSectionMeasurement(m.id, 'distanceFromBank', e.target.value)} /></td>
                       <td><input className="input w-32" value={m.depth} onChange={e => updateCrossSectionMeasurement(m.id, 'depth', e.target.value)} /></td>

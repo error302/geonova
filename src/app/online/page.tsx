@@ -119,7 +119,7 @@ export default function OnlineServicesPage() {
             { id: 'edm', label: 'EDM Corrections' },
             { id: 'benchmarks', label: 'Benchmarks' },
             { id: 'imagery', label: 'Satellite Imagery' }
-          ].map(tab => (
+          ].map((tab: any) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
@@ -165,7 +165,7 @@ export default function OnlineServicesPage() {
                   onChange={e => setTransformInput({ ...transformInput, fromSystem: e.target.value })}
                   className="w-full p-2 border rounded-lg"
                 >
-                  {systems.map(s => (
+                  {systems.map((s: any) => (
                     <option key={s.id} value={s.id}>{s.name}</option>
                   ))}
                 </select>
@@ -255,7 +255,7 @@ export default function OnlineServicesPage() {
                   onChange={e => setTransformInput({ ...transformInput, toSystem: e.target.value })}
                   className="w-full p-2 border rounded-lg"
                 >
-                  {systems.map(s => (
+                  {systems.map((s: any) => (
                     <option key={s.id} value={s.id}>{s.name}</option>
                   ))}
                 </select>
@@ -312,7 +312,7 @@ export default function OnlineServicesPage() {
                   className="w-full p-2 border rounded-lg"
                 >
                   <option value="">All Countries</option>
-                  {countries.map(c => (
+                  {countries.map((c: any) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
@@ -325,7 +325,7 @@ export default function OnlineServicesPage() {
                   className="w-full p-2 border rounded-lg"
                 >
                   <option value="ALL">All Types</option>
-                  {benchmarkTypes.map(t => (
+                  {benchmarkTypes.map((t: any) => (
                     <option key={t.id} value={t.id}>{t.name}</option>
                   ))}
                 </select>
@@ -343,7 +343,7 @@ export default function OnlineServicesPage() {
 
             {benchmarkResults.length > 0 && (
               <div className="space-y-3">
-                {benchmarkResults.map(bm => (
+                {benchmarkResults.map((bm: any) => (
                   <div key={bm.id} className="p-4 border rounded-lg hover:bg-[var(--bg-secondary)]">
                     <div className="flex justify-between items-start">
                       <div>

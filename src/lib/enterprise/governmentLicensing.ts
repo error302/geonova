@@ -91,14 +91,14 @@ const activeLicenses: GovernmentLicense[] = []
 
 export function getGovernmentDepartments(country?: string) {
   if (!country) return governmentDepartments
-  return governmentDepartments.filter(d => d.country.toLowerCase() === country.toLowerCase())
+  return governmentDepartments.filter((d: any) => d.country.toLowerCase() === country.toLowerCase())
 }
 
 export function requestGovernmentLicense(
   departmentId: string,
   seats: number
 ): GovernmentLicense {
-  const dept = governmentDepartments.find(d => d.id === departmentId)
+  const dept = governmentDepartments.find((d: any) => d.id === departmentId)
   if (!dept) throw new Error('Department not found')
   
   const license: GovernmentLicense = {
@@ -122,7 +122,7 @@ export function requestGovernmentLicense(
 }
 
 export function getDepartmentLicense(licenseId: string): GovernmentLicense | undefined {
-  return activeLicenses.find(l => l.id === licenseId)
+  return activeLicenses.find((l: any) => l.id === licenseId)
 }
 
 export function addLicenseSeat(
@@ -132,7 +132,7 @@ export function addLicenseSeat(
   userEmail: string,
   role: LicenseSeat['role']
 ): LicenseSeat | null {
-  const license = activeLicenses.find(l => l.id === licenseId)
+  const license = activeLicenses.find((l: any) => l.id === licenseId)
   if (!license) return null
   
   if (license.seatsUsed >= license.seats) {

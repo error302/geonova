@@ -74,7 +74,7 @@ export function parseParcelNumber(raw: string): ParsedParcelNumber {
     /^([A-Z0-9]{2,10})\/B(?:LOCK)?\s*(\d+)\/(\d+)(?:\/(\d+))?$/i,
   ]
   const blockMatch = blockPatterns
-    .map(pattern => normalized.match(pattern))
+    .map((pattern: any) => normalized.match(pattern))
     .find((match): match is RegExpMatchArray => Boolean(match))
   
   if (blockMatch) {
@@ -237,7 +237,7 @@ export function lookupRegistrationSection(input: string): RegistrationSection | 
   if (direct) return direct
   
   // Try county code
-  const county = KENYA_COUNTIES.find(c => 
+  const county = KENYA_COUNTIES.find((c: any) => 
     c.code.toUpperCase() === normalized || 
     c.name.toUpperCase() === normalized
   )
@@ -247,7 +247,7 @@ export function lookupRegistrationSection(input: string): RegistrationSection | 
   
   // Fuzzy match on section name
   const allSections = getAllRegistrationSections()
-  const fuzzy = allSections.find(s => 
+  const fuzzy = allSections.find((s: any) => 
     s.name.toUpperCase().includes(normalized) ||
     s.code.toUpperCase().includes(normalized)
   )
@@ -256,7 +256,7 @@ export function lookupRegistrationSection(input: string): RegistrationSection | 
   // Check abbreviations
   const expanded = COUNTY_ABBREVIATIONS[normalized]
   if (expanded) {
-    const countyByName = KENYA_COUNTIES.find(c => c.name.toUpperCase() === expanded.toUpperCase())
+    const countyByName = KENYA_COUNTIES.find((c: any) => c.name.toUpperCase() === expanded.toUpperCase())
     if (countyByName?.registrationSections[0]) {
       return countyByName.registrationSections[0]
     }

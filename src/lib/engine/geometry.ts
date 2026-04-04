@@ -51,7 +51,7 @@ export function angularMisclosureFromAngles(observedAngles: number[]): SurveyRes
       theoreticalSum: theoretical,
       misclosure,
       correctionPerStation: corrPerStation,
-      correctedAngles: observedAngles.map(a => a - corrPerStation),
+      correctedAngles: observedAngles.map((a: any) => a - corrPerStation),
     }
   };
 }

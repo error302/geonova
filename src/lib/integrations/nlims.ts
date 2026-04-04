@@ -120,36 +120,36 @@ export async function searchParcel(params: NLIMSSearchParams): Promise<NLIMSResu
   let results = [...MOCK_NLIMS_DATA]
   
   if (params.parcelId) {
-    results = results.filter(p => p.parcelId.toLowerCase().includes(params.parcelId!.toLowerCase()))
+    results = results.filter((p: any) => p.parcelId.toLowerCase().includes(params.parcelId!.toLowerCase()))
   }
   
   if (params.registryPlotNumber) {
-    results = results.filter(p => 
+    results = results.filter((p: any) => 
       p.registryPlotNumber.toLowerCase().includes(params.registryPlotNumber!.toLowerCase())
     )
   }
   
   if (params.county) {
-    results = results.filter(p => 
+    results = results.filter((p: any) => 
       p.county.toLowerCase() === params.county!.toLowerCase()
     )
   }
   
   if (params.subCounty) {
-    results = results.filter(p => 
+    results = results.filter((p: any) => 
       p.subCounty.toLowerCase().includes(params.subCounty!.toLowerCase())
     )
   }
   
   if (params.ward) {
-    results = results.filter(p => 
+    results = results.filter((p: any) => 
       p.ward.toLowerCase().includes(params.ward!.toLowerCase())
     )
   }
   
   if (params.ownerName) {
-    results = results.filter(p => 
-      p.owners.some(o => o.toLowerCase().includes(params.ownerName!.toLowerCase()))
+    results = results.filter((p: any) => 
+      p.owners.some((o: any) => o.toLowerCase().includes(params.ownerName!.toLowerCase()))
     )
   }
   
@@ -162,7 +162,7 @@ export async function searchParcel(params: NLIMSSearchParams): Promise<NLIMSResu
 
 export async function getParcelById(parcelId: string): Promise<NLIMSParcel | null> {
   await new Promise(resolve => setTimeout(resolve, 300))
-  return MOCK_NLIMS_DATA.find(p => p.parcelId === parcelId) || null
+  return MOCK_NLIMS_DATA.find((p: any) => p.parcelId === parcelId) || null
 }
 
 export async function verifyLandOwnership(
@@ -175,7 +175,7 @@ export async function verifyLandOwnership(
     return { verified: false, message: 'Parcel not found in NLIMS registry' }
   }
   
-  const isOwner = parcel.owners.some(o => 
+  const isOwner = parcel.owners.some((o: any) => 
     o.toLowerCase().includes(ownerName.toLowerCase())
   )
   

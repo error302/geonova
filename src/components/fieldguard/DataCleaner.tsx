@@ -25,7 +25,7 @@ export default function DataCleaner({ projectId }: { projectId: string }) {
         northing: parseFloat(row.northing || row.Northing || row.Y || 0),
         elevation: parseFloat(row.elevation || row.RL || row.Z),
         code: row.code || row.Code || ''
-      })).filter(p => !isNaN(p.easting) && !isNaN(p.northing))
+      })).filter((p: any) => !isNaN(p.easting) && !isNaN(p.northing))
       setRawPoints(points)
     } else if (file.name.endsWith('.json')) {
       const text = await file.text()

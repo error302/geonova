@@ -70,7 +70,7 @@ export default function MissionPlanner({
 
   const handleSave = () => {
     const updatedWaypoints: Waypoint[] = nodes
-      .sort((a, b) => a.position.x - b.position.x || a.position.y - b.position.y)
+      .sort((a: any, b: any) => a.position.x - b.position.x || a.position.y - b.position.y)
       .map((node, idx) => ({
         ...node.data.waypoint,
         order: idx

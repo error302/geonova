@@ -23,13 +23,13 @@ export default function ChainageOffsetTable({ points, halfCarriageway = 3.5, sho
         <table className="w-full text-xs font-mono border-collapse">
           <thead>
             <tr className="bg-[var(--bg-tertiary)]">
-              {['Chainage', 'CL RL', 'Left Offset', 'Right Offset', 'Left RL', 'Right RL', 'Cut/Fill at CL'].map(h => (
+              {['Chainage', 'CL RL', 'Left Offset', 'Right Offset', 'Left RL', 'Right RL', 'Cut/Fill at CL'].map((h: any) => (
                 <th key={h} className="px-3 py-2 text-left border border-[var(--border-color)] text-[var(--text-muted)] font-medium">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {points.map(row => {
+            {points.map((row: any) => {
               const cutFill = 0
               const mode = 'LEVEL'
               return (

@@ -44,7 +44,7 @@ export default function CoordinateTransformer() {
       } else {
         // Parse batch input (CSV: id,x,y,z)
         coords = batchInput.split('\n')
-          .filter(line => line.trim())
+          .filter((line: any) => line.trim())
           .map((line, i) => {
             const parts = line.split(',')
             return {
@@ -82,7 +82,7 @@ export default function CoordinateTransformer() {
   }
 
   const copyResults = () => {
-    const text = results.map(r => 
+    const text = results.map((r: any) => 
       `${r.id || ''},${r.x?.toFixed(4)},${r.y?.toFixed(4)}${r.z !== undefined ? ',' + r.z.toFixed(3) : ''}`
     ).join('\n')
     navigator.clipboard.writeText(text)
@@ -117,7 +117,7 @@ export default function CoordinateTransformer() {
             onChange={e => setFromDatum(e.target.value as DatumCode)}
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg"
           >
-            {DATUM_OPTIONS.map(d => (
+            {DATUM_OPTIONS.map((d: any) => (
               <option key={d.value} value={d.value}>{d.label}</option>
             ))}
           </select>
@@ -149,7 +149,7 @@ export default function CoordinateTransformer() {
             onChange={e => setToDatum(e.target.value as DatumCode)}
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg"
           >
-            {DATUM_OPTIONS.map(d => (
+            {DATUM_OPTIONS.map((d: any) => (
               <option key={d.value} value={d.value}>{d.label}</option>
             ))}
           </select>

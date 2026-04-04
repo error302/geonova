@@ -128,36 +128,36 @@ export async function searchPlot(params: TanzaniaSearchParams): Promise<Tanzania
   let results = [...MOCK_TANZANIA_DATA]
   
   if (params.plotNumber) {
-    results = results.filter(p => p.plotNumber.toLowerCase().includes(params.plotNumber!.toLowerCase()))
+    results = results.filter((p: any) => p.plotNumber.toLowerCase().includes(params.plotNumber!.toLowerCase()))
   }
   
   if (params.sheetNumber) {
-    results = results.filter(p => 
+    results = results.filter((p: any) => 
       p.sheetNumber.toLowerCase().includes(params.sheetNumber!.toLowerCase())
     )
   }
   
   if (params.district) {
-    results = results.filter(p => 
+    results = results.filter((p: any) => 
       p.district.toLowerCase() === params.district!.toLowerCase()
     )
   }
   
   if (params.region) {
-    results = results.filter(p => 
+    results = results.filter((p: any) => 
       p.region.toLowerCase() === params.region!.toLowerCase()
     )
   }
   
   if (params.ward) {
-    results = results.filter(p => 
+    results = results.filter((p: any) => 
       p.ward.toLowerCase().includes(params.ward!.toLowerCase())
     )
   }
   
   if (params.ownerName) {
-    results = results.filter(p => 
-      p.owners.some(o => o.toLowerCase().includes(params.ownerName!.toLowerCase()))
+    results = results.filter((p: any) => 
+      p.owners.some((o: any) => o.toLowerCase().includes(params.ownerName!.toLowerCase()))
     )
   }
   
@@ -170,7 +170,7 @@ export async function searchPlot(params: TanzaniaSearchParams): Promise<Tanzania
 
 export async function getPlotByNumber(plotNumber: string): Promise<TanzaniaPlot | null> {
   await new Promise(resolve => setTimeout(resolve, 300))
-  return MOCK_TANZANIA_DATA.find(p => p.plotNumber === plotNumber) || null
+  return MOCK_TANZANIA_DATA.find((p: any) => p.plotNumber === plotNumber) || null
 }
 
 export function getTenureTypes(): { id: string; name: string }[] {

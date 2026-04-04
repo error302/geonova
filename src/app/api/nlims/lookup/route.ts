@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import db from '@/lib/db'
 import type { NLIMSSearchResult, NLIMSParcel } from '@/types/nlims'
 
 export const dynamic = 'force-dynamic'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 function deriveSectionFromParcel(parcelNumber: string): string {
   const match = parcelNumber.match(/^([A-Za-z]+)/)
@@ -50,44 +46,43 @@ export async function GET(request: NextRequest) {
     const sanitizedParcel = parcelNumber.trim().toUpperCase().replace(/\s+/g, '')
 
     if (userId) {
-      const { data: personalVault } = await supabase
-        .from('parcel_vault')
-        .select('*')
-        .eq('parcel_number', sanitizedParcel)
-        .eq('user_id', userId)
-        .single()
+      const personalVault = await db.query(
+        'SELECT * FROM parcel_vault WHERE parcel_number = $1 AND user_id = $2',
+        [sanitizedParcel, userId]
+      )
 
-      if (personalVault) {
+      if (personalVault.rows.length > 0) {
+        const vault = personalVault.rows[0]
         return NextResponse.json({
           found: true,
-          parcel: personalVault.parsed_data as NLIMSParcel,
+          parcel: vault.parsed_data as NLIMSParcel,
           isMockData: false,
           source: 'VAULT_PERSONAL',
-          freshness: personalVault.freshness,
-          certificateDate: personalVault.certificate_date
+          freshness: vault.freshness,
+          certificateDate: vault.certificate_date
         } as NLIMSSearchResult & { source?: string; freshness?: string; certificateDate?: string })
       }
 
-      const { data: sharedVault } = await supabase
-        .from('parcel_vault_shared')
-        .select('*')
-        .eq('parcel_number', sanitizedParcel)
-        .single()
+      const sharedVault = await db.query(
+        'SELECT * FROM parcel_vault_shared WHERE parcel_number = $1',
+        [sanitizedParcel]
+      )
 
-      if (sharedVault) {
+      if (sharedVault.rows.length > 0) {
+        const sv = sharedVault.rows[0]
         const mockFromVault: NLIMSParcel = {
-          parcelNumber: sharedVault.parcel_number,
-          registrationSection: sharedVault.registration_section || '',
-          county: sharedVault.county,
-          area: sharedVault.area_sqm || 0,
-          areaHectares: (sharedVault.area_sqm || 0) / 10000,
+          parcelNumber: sv.parcel_number,
+          registrationSection: sv.registration_section || '',
+          county: sv.county,
+          area: sv.area_sqm || 0,
+          areaHectares: (sv.area_sqm || 0) / 10000,
           ownerName: '[Community Shared - Owner Hidden]',
           ownerType: 'INDIVIDUAL',
-          titleDeedNumber: sharedVault.title_deed_number || '',
-          titleDeedDate: sharedVault.certificate_date,
+          titleDeedNumber: sv.title_deed_number || '',
+          titleDeedDate: sv.certificate_date,
           encumbrances: [],
-          status: (sharedVault.status as any) || 'REGISTERED',
-          lastTransactionDate: sharedVault.certificate_date,
+          status: (sv.status as 'REGISTERED' | 'PENDING' | 'DISPUTED' | 'CANCELLED') || 'REGISTERED',
+          lastTransactionDate: sv.certificate_date,
           lastTransactionType: 'SEARCH',
           source: 'VAULT_SHARED',
           fetchedAt: new Date().toISOString()
@@ -97,28 +92,27 @@ export async function GET(request: NextRequest) {
           parcel: mockFromVault,
           isMockData: true,
           source: 'VAULT_SHARED',
-          freshness: sharedVault.freshness,
-          certificateDate: sharedVault.certificate_date
+          freshness: sv.freshness,
+          certificateDate: sv.certificate_date
         } as NLIMSSearchResult & { source?: string; freshness?: string; certificateDate?: string })
       }
     }
 
-    const { data: cached } = await supabase
-      .from('nlims_cache')
-      .select('data, fetched_at')
-      .eq('parcel_number', sanitizedParcel)
-      .eq('county', county || '')
-      .single()
+    const cached = await db.query(
+      'SELECT data, fetched_at FROM nlims_cache WHERE parcel_number = $1 AND county = $2',
+      [sanitizedParcel, county || '']
+    )
 
-    if (cached) {
-      const cacheAge = Date.now() - new Date(cached.fetched_at).getTime()
+    if (cached.rows.length > 0) {
+      const row = cached.rows[0]
+      const cacheAge = Date.now() - new Date(row.fetched_at).getTime()
       const oneDay = 24 * 60 * 60 * 1000
 
       if (cacheAge < oneDay) {
         return NextResponse.json({
           found: true,
-          parcel: cached.data as NLIMSParcel,
-          isMockData: cached.data.source === 'NLIMS_CACHED'
+          parcel: row.data as NLIMSParcel,
+          isMockData: row.data?.source === 'NLIMS_CACHED'
         } as NLIMSSearchResult)
       }
     }
@@ -128,14 +122,12 @@ export async function GET(request: NextRequest) {
     if (!apiKey) {
       const mockParcel = generateMockParcel(sanitizedParcel, county || '')
 
-      await supabase
-        .from('nlims_cache')
-        .upsert({
-          parcel_number: sanitizedParcel,
-          county: county || '',
-          data: mockParcel,
-          fetched_at: new Date().toISOString()
-        }, { onConflict: 'parcel_number,county' })
+      await db.query(
+        `INSERT INTO nlims_cache (parcel_number, county, data, fetched_at)
+         VALUES ($1, $2, $3, $4)
+         ON CONFLICT (parcel_number, county) DO UPDATE SET data = $3, fetched_at = $4`,
+        [sanitizedParcel, county || '', mockParcel, new Date().toISOString()]
+      )
 
       return NextResponse.json({
         found: true,
@@ -162,14 +154,12 @@ export async function GET(request: NextRequest) {
           fetchedAt: new Date().toISOString()
         }
 
-        await supabase
-          .from('nlims_cache')
-          .upsert({
-            parcel_number: sanitizedParcel,
-            county: county || '',
-            data: parcel,
-            fetched_at: new Date().toISOString()
-          }, { onConflict: 'parcel_number,county' })
+        await db.query(
+          `INSERT INTO nlims_cache (parcel_number, county, data, fetched_at)
+           VALUES ($1, $2, $3, $4)
+           ON CONFLICT (parcel_number, county) DO UPDATE SET data = $3, fetched_at = $4`,
+          [sanitizedParcel, county || '', parcel, new Date().toISOString()]
+        )
 
         return NextResponse.json({
           found: true,
@@ -183,14 +173,12 @@ export async function GET(request: NextRequest) {
 
     const mockParcel = generateMockParcel(sanitizedParcel, county || '')
 
-    await supabase
-      .from('nlims_cache')
-      .upsert({
-        parcel_number: sanitizedParcel,
-        county: county || '',
-        data: mockParcel,
-        fetched_at: new Date().toISOString()
-      }, { onConflict: 'parcel_number,county' })
+    await db.query(
+      `INSERT INTO nlims_cache (parcel_number, county, data, fetched_at)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (parcel_number, county) DO UPDATE SET data = $3, fetched_at = $4`,
+      [sanitizedParcel, county || '', mockParcel, new Date().toISOString()]
+    )
 
     return NextResponse.json({
       found: true,

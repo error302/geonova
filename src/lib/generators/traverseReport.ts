@@ -20,7 +20,7 @@ export async function generateTraverseReport(
     .eq('project_id', projectId)
     .order('row_index', { ascending: true });
 
-  const rows = (entries ?? []).map((e) => e.raw_data as Record<string, unknown>);
+  const rows = (entries ?? []).map((e: any) => e.raw_data as Record<string, unknown>);
 
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   const today = new Date().toLocaleDateString('en-KE');
@@ -42,7 +42,7 @@ export async function generateTraverseReport(
   autoTable(doc, {
     startY: y,
     head: [['Station', 'Bearing (°)', 'Distance (m)', 'Code', 'Monument No.', 'Remark']],
-    body: rows.map((r) => [
+    body: rows.map((r: any) => [
       String(r.station ?? ''),
       String(r.bearing ?? ''),
       String(r.distance ?? ''),
@@ -68,7 +68,7 @@ export async function generateTraverseReport(
   doc.text('2. CLOSURE SUMMARY', 15, y);
   y += 6;
 
-  const totalDistance = rows.reduce((sum, r) => sum + (parseFloat(String(r.distance ?? '0')) || 0), 0);
+  const totalDistance = rows.reduce((sum: any, r: any) => sum + (parseFloat(String(r.distance ?? '0')) || 0), 0);
 
   autoTable(doc, {
     startY: y,
@@ -91,3 +91,4 @@ export async function generateTraverseReport(
 
   return Buffer.from(doc.output('arraybuffer'));
 }
+

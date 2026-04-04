@@ -120,7 +120,7 @@ export function generateSurveyReport(options: ReportOptions, onBlob?: (blob: Blo
   autoTable(doc, {
     startY: yPos,
     head: [['Point', 'Easting (m)', 'Northing (m)', 'Elevation (m)', 'Type']],
-    body: points.map(p => [
+    body: points.map((p: any) => [
       p.name,
       p.easting.toFixed(4),
       p.northing.toFixed(4),
@@ -159,7 +159,7 @@ export function generateSurveyReport(options: ReportOptions, onBlob?: (blob: Blo
     autoTable(doc, {
       startY: yPos,
       head: [['Line', 'Dist (m)', 'Bearing', 'ΔN Raw', 'ΔE Raw', 'Corr N', 'Corr E', 'Adj ΔN', 'Adj ΔE']],
-      body: traverse.legs.map(l => {
+      body: traverse.legs.map((l: any) => {
         return [
           `${l.fromName}→${l.toName}`,
           l.distance.toFixed(2),
@@ -390,7 +390,7 @@ export function generateSurveyPlan(options: SurveyPlanOptions, onBlob?: (blob: B
   drawNorthArrow(doc, frame.x + frame.w - 20, frame.y + 18, amber)
   drawScaleBar(doc, frame.x + 8, frame.y + frame.h - 10, transform, dark, white)
 
-  const pointMap = new Map(points.map(p => [p.name, p]))
+  const pointMap = new Map(points.map((p: any) => [p.name, p]))
   
   if (parcel?.boundary_points) {
     drawParcelBoundary(doc, parcel.boundary_points, transform, amber)
@@ -423,7 +423,7 @@ export function generateSurveyPlan(options: SurveyPlanOptions, onBlob?: (blob: B
   autoTable(doc, {
     startY: yPos + 10,
     head: [['Point', 'Easting (m)', 'Northing (m)', 'Elevation (m)', 'Type']],
-    body: points.map(p => [
+    body: points.map((p: any) => [
       p.name,
       p.easting.toFixed(4),
       p.northing.toFixed(4),

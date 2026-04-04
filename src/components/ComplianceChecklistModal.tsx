@@ -86,7 +86,7 @@ export default function ComplianceChecklistModal({
     },
   ]
 
-  const passed = items.filter(i => i.pass).length
+  const passed = items.filter((i: any) => i.pass).length
   const total = items.length
   const allPassed = passed === total
 
@@ -131,7 +131,7 @@ export default function ComplianceChecklistModal({
 
         {/* Checklist items */}
         <div className="space-y-2 mb-6">
-          {items.map(item => (
+          {items.map((item: any) => (
             <div
               key={item.key}
               className={`flex items-start gap-3 px-3 py-2.5 rounded-lg border transition-colors ${

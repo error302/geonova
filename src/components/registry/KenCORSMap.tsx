@@ -22,13 +22,13 @@ const Popup = dynamic(
   { ssr: false }
 )
 
-const statusColors = {
+const statusColors: Record<KenCORSStation['status'], string> = {
   ONLINE: 'bg-green-500',
   DEGRADED: 'bg-yellow-500',
   OFFLINE: 'bg-red-500'
 }
 
-const statusLabels = {
+const statusLabels: Record<KenCORSStation['status'], string> = {
   ONLINE: 'ONLINE',
   DEGRADED: 'DEGRADED',
   OFFLINE: 'OFFLINE'
@@ -184,7 +184,10 @@ Password: [your KenCORS password]`
                   <p className="font-medium">{station.name}</p>
                   <p className="text-sm text-[var(--text-muted)]">{station.county}</p>
                 </div>
-                <span className={`w-2 h-2 rounded-full ${statusColors[station.status]}`} />
+                <span
+                  className={`w-2 h-2 rounded-full ${statusColors[station.status]}`}
+                  title={statusLabels[station.status]}
+                />
               </div>
             </button>
           ))}

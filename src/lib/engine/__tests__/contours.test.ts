@@ -16,7 +16,7 @@ describe('triangulate', () => {
 
   it('each triangle has 3 vertices', () => {
     const tris = triangulate(SPOT_HEIGHTS)
-    tris.forEach(tri => {
+    tris.forEach((tri: any) => {
       expect(tri.p1).toBeDefined()
       expect(tri.p2).toBeDefined()
       expect(tri.p3).toBeDefined()
@@ -36,11 +36,11 @@ describe('generateContours', () => {
   })
 
   it('all contour elevations are between min and max elevation', () => {
-    const elevations = SPOT_HEIGHTS.map(p => p.elevation)
+    const elevations = SPOT_HEIGHTS.map((p: any) => p.elevation)
     const minE = Math.min(...elevations)
     const maxE = Math.max(...elevations)
     const contours = generateContours(SPOT_HEIGHTS, 5)
-    contours.forEach(c => {
+    contours.forEach((c: any) => {
       expect(c.elevation).toBeGreaterThanOrEqual(minE)
       expect(c.elevation).toBeLessThanOrEqual(maxE)
     })

@@ -15,7 +15,7 @@ export async function generateSettingOutDxf(
 
   const geom = await computeDeedPlanGeometry(projectId, supabase);
 
-  const beacons = geom.stations.map((s) => ({
+  const beacons = geom.stations.map((s: any) => ({
     name: s.station,
     e: s.easting,
     n: s.northing,
@@ -116,3 +116,4 @@ EOF
 
   return Buffer.from(dxf, 'utf-8');
 }
+

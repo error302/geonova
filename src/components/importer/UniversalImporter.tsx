@@ -125,7 +125,7 @@ export default function UniversalImporter({ projectId, onImportComplete }: Props
   if ((step === 'preview' || step === 'committing') && smartResult) {
     return (
       <ImportPreviewTable
-        result={{ format: 'csv', points: smartResult.entries.map(e => ({ point_no: e.station, bearing: e.bearing, distance: e.distance, raw_data: { deltaE: e.deltaE, deltaN: e.deltaN } })), warnings: smartResult.warnings, errors: smartResult.errors }}
+        result={{ format: 'csv', points: smartResult.entries.map((e: any) => ({ point_no: e.station, bearing: e.bearing, distance: e.distance, raw_data: { deltaE: e.deltaE, deltaN: e.deltaN } })), warnings: smartResult.warnings, errors: smartResult.errors }}
         fileName={fileName}
         onCommit={handleCommit}
         onCancel={() => setStep('idle')}

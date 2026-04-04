@@ -139,12 +139,12 @@ export function distanceKm(lat1: number, lon1: number, lat2: number, lon2: numbe
 /** Find nearest N stations to given coordinates */
 export function getNearestStations(lat: number, lon: number, n = 5, network?: NetworkId): (CORSStation & { distanceKm: number })[] {
   return STATIONS
-    .filter(s => !network || s.network === network)
-    .map(s => ({ ...s, distanceKm: distanceKm(lat, lon, s.latitude, s.longitude) }))
-    .sort((a, b) => a.distanceKm - b.distanceKm)
+    .filter((s: any) => !network || s.network === network)
+    .map((s: any) => ({ ...s, distanceKm: distanceKm(lat, lon, s.latitude, s.longitude) }))
+    .sort((a: any, b: any) => a.distanceKm - b.distanceKm)
     .slice(0, n)
 }
 
 export function getCounties(): string[] {
-  const seen = new Set<string>(); return STATIONS.map(s => s.county).filter(c => { if (seen.has(c)) return false; seen.add(c); return true }).sort()
+  const seen = new Set<string>(); return STATIONS.map((s: any) => s.county).filter((c: any) => { if (seen.has(c)) return false; seen.add(c); return true }).sort()
 }

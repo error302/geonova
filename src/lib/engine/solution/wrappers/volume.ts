@@ -18,7 +18,7 @@ function formatVolumeCubicMeters(v: number): string {
 
 function chainageSummary(sections: VolumeSection[]) {
   if (!sections.length) return '—'
-  const sorted = [...sections].sort((a, b) => a.chainage - b.chainage)
+  const sorted = [...sections].sort((a: any, b: any) => a.chainage - b.chainage)
   return `${sorted[0].chainage} m → ${sorted[sorted.length - 1].chainage} m`
 }
 

@@ -18,7 +18,7 @@ interface BlunderResult {
 }
 
 function detectBlunders(legs: any[], totalDistance: number): BlunderResult[] {
-  const corrections = legs.map(l => Math.sqrt(l.correctionE ** 2 + l.correctionN ** 2))
+  const corrections = legs.map((l: any) => Math.sqrt(l.correctionE ** 2 + l.correctionN ** 2))
   const avgCorrection = corrections.reduce((a, b) => a + b, 0) / corrections.length
 
   return legs.map((leg, i) => {
@@ -71,8 +71,8 @@ function TraverseDiagram({ stations, closingError }: {
   const height = 400
   const padding = 50
 
-  const eastings = stations.map(s => s.easting)
-  const northings = stations.map(s => s.northing)
+  const eastings = stations.map((s: any) => s.easting)
+  const northings = stations.map((s: any) => s.northing)
   const minE = Math.min(...eastings)
   const maxE = Math.max(...eastings)
   const minN = Math.min(...northings)
@@ -89,7 +89,7 @@ function TraverseDiagram({ stations, closingError }: {
     }
   }
 
-  const points = stations.map(s => ({
+  const points = stations.map((s: any) => ({
     ...s,
     ...toScreen(s.easting, s.northing)
   }))
@@ -280,18 +280,18 @@ export default function TraverseModal({
   }, [isOpen, fetchControlPoints])
 
   const addLeg = () => {
-    const newId = legs.length > 0 ? Math.max(...legs.map(l => l.id)) + 1 : 1
+    const newId = legs.length > 0 ? Math.max(...legs.map((l: any) => l.id)) + 1 : 1
     setLegs([...legs, { id: newId, stationName: '', distance: '', bearingDeg: '', bearingMin: '', bearingSec: '' }])
   }
 
   const removeLeg = (id: number) => {
     if (legs.length > 2) {
-      setLegs(legs.filter(l => l.id !== id))
+      setLegs(legs.filter((l: any) => l.id !== id))
     }
   }
 
   const updateLeg = (id: number, field: keyof TraverseLeg, value: string) => {
-    setLegs(legs.map(l => l.id === id ? { ...l, [field]: value } : l))
+    setLegs(legs.map((l: any) => l.id === id ? { ...l, [field]: value } : l))
   }
 
   const handleCalculate = async () => {
@@ -305,7 +305,7 @@ export default function TraverseModal({
           throw new Error('Select instrument station')
         }
         
-        const station = controlPoints.find(p => p.id === radialStationId)
+        const station = controlPoints.find((p: any) => p.id === radialStationId)
         if (!station) throw new Error('Instrument station not found')
         
         const computedPoints = []
@@ -360,7 +360,7 @@ export default function TraverseModal({
         let openingE: number, openingN: number, openingPtName: string
         
         if (openingUseExisting && openingPointId) {
-          const pt = controlPoints.find(p => p.id === openingPointId)
+          const pt = controlPoints.find((p: any) => p.id === openingPointId)
           if (!pt) throw new Error('Select opening control point')
           openingE = pt.easting
           openingN = pt.northing
@@ -438,7 +438,7 @@ export default function TraverseModal({
       let openingE: number, openingN: number, openingPtName: string
       
       if (openingUseExisting && openingPointId) {
-        const pt = controlPoints.find(p => p.id === openingPointId)
+        const pt = controlPoints.find((p: any) => p.id === openingPointId)
         if (!pt) throw new Error('Select opening control point')
         openingE = pt.easting
         openingN = pt.northing
@@ -497,7 +497,7 @@ export default function TraverseModal({
         let closingE: number, closingN: number
         
         if (closingUseExisting && closingPointId) {
-          const pt = controlPoints.find(p => p.id === closingPointId)
+          const pt = controlPoints.find((p: any) => p.id === closingPointId)
           if (!pt) throw new Error('Select closing control point')
           closingE = pt.easting
           closingN = pt.northing
@@ -533,7 +533,7 @@ export default function TraverseModal({
       setBlunderResults(blunders)
 
       // Build diagram stations
-      const diagramPts: NamedPoint2D[] = points.map(p => ({
+      const diagramPts: NamedPoint2D[] = points.map((p: any) => ({
         name: p.name,
         easting: p.easting,
         northing: p.northing
@@ -552,7 +552,7 @@ export default function TraverseModal({
     setOpeningUseExisting(true)
     // Will need to find CP1 from controlPoints
     setTimeout(() => {
-      const cp1 = controlPoints.find(p => p.name === 'CP1')
+      const cp1 = controlPoints.find((p: any) => p.name === 'CP1')
       if (cp1) {
         setOpeningPointId(cp1.id)
       }
@@ -736,7 +736,7 @@ export default function TraverseModal({
                     className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
                   >
                     <option value="">Select station...</option>
-                    {controlPoints.map(p => (
+                    {controlPoints.map((p: any) => (
                       <option key={p.id} value={p.id}>{p.name}</option>
                     ))}
                   </select>
@@ -890,7 +890,7 @@ export default function TraverseModal({
                   onChange={(e) => setOpeningPointId(e.target.value)}
                   className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
                 >
-                  {controlPoints.map(p => (
+                  {controlPoints.map((p: any) => (
                     <option key={p.id} value={p.id}>{p.name} (E: {p.easting.toFixed(4)}, N: {p.northing.toFixed(4)})</option>
                   ))}
                 </select>
@@ -1051,7 +1051,7 @@ export default function TraverseModal({
                       onChange={(e) => setClosingPointId(e.target.value)}
                       className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
                     >
-                      {controlPoints.map(p => (
+                      {controlPoints.map((p: any) => (
                         <option key={p.id} value={p.id}>{p.name}</option>
                       ))}
                     </select>
@@ -1229,10 +1229,10 @@ export default function TraverseModal({
                     </div>
                   ))}
                 </div>
-                {blunderResults.some(b => b.warning) && (
+                {blunderResults.some((b: any) => b.warning) && (
                   <div className="mt-3 pt-2 border-t border-[var(--border-color)]">
                     <p className="text-xs text-[var(--text-secondary)] mb-1">Warnings:</p>
-                    {blunderResults.filter(b => b.warning).map((b, i) => (
+                    {blunderResults.filter((b: any) => b.warning).map((b, i) => (
                       <p key={i} className="text-xs text-red-400">• {b.warning}</p>
                     ))}
                   </div>

@@ -25,10 +25,10 @@ function buildLocalFallback(points: RawSurveyPoint[]): CleanDataResponse {
     { easting: 0, northing: 0 }
   )
 
-  const distances = points.map(point =>
+  const distances = points.map((point: any) =>
     Math.hypot(point.easting - centroid.easting, point.northing - centroid.northing)
   )
-  const sortedDistances = [...distances].sort((a, b) => a - b)
+  const sortedDistances = [...distances].sort((a: any, b: any) => a - b)
   const medianDistance = sortedDistances[Math.floor(sortedDistances.length / 2)] || 0
   const anomalyThreshold = Math.max(medianDistance * 3, 5)
 
@@ -63,7 +63,7 @@ function buildLocalFallback(points: RawSurveyPoint[]): CleanDataResponse {
   const confidence_scores = Object.fromEntries(
     points.map((point, index) => {
       const pointId = point.id || String(index)
-      const hasAnomaly = anomalies.some(anomaly => anomaly.point_id === pointId)
+      const hasAnomaly = anomalies.some((anomaly: any) => anomaly.point_id === pointId)
       return [pointId, hasAnomaly ? 0.7 : 0.95]
     })
   )
@@ -85,7 +85,7 @@ function buildLocalFallback(points: RawSurveyPoint[]): CleanDataResponse {
     confidence_scores,
     summary: {
       total_points: points.length,
-      outliers_removed: anomalies.filter(anomaly => anomaly.type === 'outlier').length,
+      outliers_removed: anomalies.filter((anomaly: any) => anomaly.type === 'outlier').length,
       classified_count: 0,
       confidence_avg: confidenceValues.reduce((sum, value) => sum + value, 0) / confidenceValues.length,
     },

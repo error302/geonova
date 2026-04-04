@@ -49,12 +49,12 @@ export async function GET(request: NextRequest) {
 
     // Calculate distance for each benchmark and filter
     const results = (benchmarks || [])
-      .map(bm => ({
+      .map((bm: any) => ({
         ...bm,
         distanceKm: calculateDistance(latitude, longitude, bm.latitude, bm.longitude)
       }))
-      .filter(bm => bm.distanceKm <= radius)
-      .sort((a, b) => a.distanceKm - b.distanceKm)
+      .filter((bm: any) => bm.distanceKm <= radius)
+      .sort((a: any, b: any) => a.distanceKm - b.distanceKm)
       .slice(0, limit)
 
     return NextResponse.json(results)

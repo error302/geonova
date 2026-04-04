@@ -99,7 +99,7 @@ const complianceRules: ComplianceRule[] = [
     applicableTo: ['traverse', 'boundary', 'topographic', 'engineering'],
     severity: 'warning',
     check: (input) => {
-      const invalidPoints = input.points.filter(p => 
+      const invalidPoints = input.points.filter((p: any) => 
         p.easting < 100000 || p.easting > 900000 ||
         p.northing < 0 || p.northing > 10000000
       )
@@ -111,7 +111,7 @@ const complianceRules: ComplianceRule[] = [
           title: 'Unusual Coordinate Range',
           description: `${invalidPoints.length} point(s) have unusual UTM coordinates.`,
           recommendation: 'Verify coordinate system (UTM zone) is correct.',
-          relatedPoints: invalidPoints.map(p => p.name),
+          relatedPoints: invalidPoints.map((p: any) => p.name),
         }
       }
       return null
@@ -144,7 +144,7 @@ const complianceRules: ComplianceRule[] = [
     applicableTo: ['traverse', 'leveling', 'boundary', 'topographic', 'engineering'],
     severity: 'error',
     check: (input) => {
-      const names = input.points.map(p => p.name)
+      const names = input.points.map((p: any) => p.name)
       const duplicates = names.filter((name, i) => names.indexOf(name) !== i)
       if (duplicates.length > 0) {
         return {
@@ -184,8 +184,8 @@ export function checkSurveyPlan(input: PlanCheckInput): PlanCheckResult {
     }
   }
 
-  const errors = issues.filter(i => i.severity === 'error')
-  const warnings = issues.filter(i => i.severity === 'warning')
+  const errors = issues.filter((i: any) => i.severity === 'error')
+  const warnings = issues.filter((i: any) => i.severity === 'warning')
 
   let overallScore = 100
   overallScore -= errors.length * 20

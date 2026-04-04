@@ -96,7 +96,7 @@ export default function ImportPage() {
   }, [])
 
   const toggleAll = (select: boolean) => {
-    setPoints(points.map(p => ({ ...p, selected: select })))
+    setPoints(points.map((p: any) => ({ ...p, selected: select })))
   }
 
   const togglePoint = (idx: number) => {
@@ -107,9 +107,9 @@ export default function ImportPage() {
     if (!selectedProject) return
 
     setImporting(true)
-    const selectedPoints = points.filter(p => p.selected)
+    const selectedPoints = points.filter((p: any) => p.selected)
 
-    const insertData = selectedPoints.map(p => ({
+    const insertData = selectedPoints.map((p: any) => ({
       project_id: selectedProject,
       name: p.pointId,
       easting: p.easting || 0,
@@ -139,8 +139,8 @@ export default function ImportPage() {
     unknown: 'Unknown'
   }
 
-  const selectedCount = points.filter(p => p.selected).length
-  const projectName = projects.find(p => p.id === selectedProject)?.name
+  const selectedCount = points.filter((p: any) => p.selected).length
+  const projectName = projects.find((p: any) => p.id === selectedProject)?.name
 
   return (
     <div className="min-h-screen py-12">
@@ -278,7 +278,7 @@ export default function ImportPage() {
                     className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-4 py-2 text-[var(--text-primary)]"
                   >
                     <option value="">Select a project...</option>
-                    {projects.map(proj => (
+                    {projects.map((proj: any) => (
                       <option key={proj.id} value={proj.id}>{proj.name}</option>
                     ))}
                   </select>

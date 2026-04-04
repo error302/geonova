@@ -120,12 +120,12 @@ export const PERMITTED_ERRORS: Record<string, string> = {
 }
 
 export function getAccuracyForOrder(order: string): AccuracyStandard | undefined {
-  return TRAVERSE_ACCURACY_STANDARDS.find(s => s.name.includes(order)) || 
-         LEVELING_ACCURACY_STANDARDS.find(s => s.name.includes(order))
+  return TRAVERSE_ACCURACY_STANDARDS.find((s: any) => s.name.includes(order)) || 
+         LEVELING_ACCURACY_STANDARDS.find((s: any) => s.name.includes(order))
 }
 
 export function getLevellingAllowable(distanceKm: number, order: string): number {
-  const standard = LEVELING_ACCURACY_STANDARDS.find(s => s.name.includes(order))
+  const standard = LEVELING_ACCURACY_STANDARDS.find((s: any) => s.name.includes(order))
   if (!standard) return 20 * Math.sqrt(distanceKm)
   
   const sqrtK = parseFloat(standard.levelingAllowable.replace('√K', ''))

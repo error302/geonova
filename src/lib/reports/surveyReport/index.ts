@@ -254,7 +254,7 @@ function methodologySection(doc: jsPDF, data: SurveyReportData): void {
 function controlNetworkSection(doc: jsPDF, data: SurveyReportData): void {
   sectionTitle(doc, 'Control Network', '3')
 
-  const controlPts = data.controlPoints.filter(p => p.is_control)
+  const controlPts = data.controlPoints.filter((p: any) => p.is_control)
   if (controlPts.length === 0) {
     bodyText(doc, 'No control points recorded for this survey.')
     return
@@ -263,7 +263,7 @@ function controlNetworkSection(doc: jsPDF, data: SurveyReportData): void {
   autoTable(doc, {
     startY: _yPos,
     head: [['Point', 'Easting (m)', 'Northing (m)', 'Elevation (m)', 'Type', 'Order']],
-    body: controlPts.map(p => [
+    body: controlPts.map((p: any) => [
       p.name,
       p.easting.toFixed(4),
       p.northing.toFixed(4),
@@ -308,7 +308,7 @@ function traverseComputationSection(doc: jsPDF, data: SurveyReportData): void {
   autoTable(doc, {
     startY: _yPos,
     head: [['Line', 'Dist (m)', 'Bearing', 'ΔN Raw', 'ΔE Raw', 'Adj ΔN', 'Adj ΔE']],
-    body: t.legs.map(l => [
+    body: t.legs.map((l: any) => [
       `${l.fromName} → ${l.toName}`,
       l.distance.toFixed(3),
       bearingToString(l.adjustedBearing || l.rawBearing),
@@ -384,7 +384,7 @@ function boundaryDescriptionSection(doc: jsPDF, data: SurveyReportData): void {
     autoTable(doc, {
       startY: _yPos,
       head: [['Line', 'Bearing', 'Distance (m)']],
-      body: data.bearingSchedule.map(b => [b.from === b.to ? b.from : `${b.from} → ${b.to}`, b.bearing, b.distance.toFixed(3)]),
+      body: data.bearingSchedule.map((b: any) => [b.from === b.to ? b.from : `${b.from} → ${b.to}`, b.bearing, b.distance.toFixed(3)]),
       headStyles: { fillColor: DARK, textColor: AMBER, fontStyle: 'bold', fontSize: 8 },
       bodyStyles: { fontSize: 8, textColor: [30, 30, 30] },
       alternateRowStyles: { fillColor: LIGHT_GRAY },
@@ -398,7 +398,7 @@ function boundaryDescriptionSection(doc: jsPDF, data: SurveyReportData): void {
 function beaconDescriptionSection(doc: jsPDF, data: SurveyReportData): void {
   sectionTitle(doc, 'Beacon Description', '6')
 
-  const beacons: BeaconDescription[] = data.beaconDescriptions || data.controlPoints.filter(p => p.is_control).map(p => ({
+  const beacons: BeaconDescription[] = data.beaconDescriptions || data.controlPoints.filter((p: any) => p.is_control).map((p: any) => ({
     name: p.name,
     easting: p.easting,
     northing: p.northing,
@@ -416,7 +416,7 @@ function beaconDescriptionSection(doc: jsPDF, data: SurveyReportData): void {
   autoTable(doc, {
     startY: _yPos,
     head: [['Beacon', 'Easting (m)', 'Northing (m)', 'Elev. (m)', 'Monument', 'Condition', 'Description']],
-    body: beacons.map(b => [
+    body: beacons.map((b: any) => [
       b.name,
       b.easting.toFixed(4),
       b.northing.toFixed(4),
@@ -451,7 +451,7 @@ function topographicFeaturesSection(doc: jsPDF, data: SurveyReportData): void {
   autoTable(doc, {
     startY: _yPos,
     head: [['Point', 'Easting (m)', 'Northing (m)', 'Elevation (m)']],
-    body: data.spotLevels.map(s => [s.name, s.easting.toFixed(4), s.northing.toFixed(4), s.elevation.toFixed(3)]),
+    body: data.spotLevels.map((s: any) => [s.name, s.easting.toFixed(4), s.northing.toFixed(4), s.elevation.toFixed(3)]),
     headStyles: { fillColor: DARK, textColor: AMBER, fontStyle: 'bold', fontSize: 8 },
     bodyStyles: { fontSize: 8, textColor: [30, 30, 30] },
     alternateRowStyles: { fillColor: LIGHT_GRAY },

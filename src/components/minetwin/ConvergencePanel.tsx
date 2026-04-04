@@ -8,7 +8,7 @@ interface ConvergencePanelProps {
 }
 
 export default function ConvergencePanel({ convergence }: ConvergencePanelProps) {
-  const maxShift = convergence.length > 0 ? Math.max(...convergence.map(c => c.total_shift), 0) : 0
+  const maxShift = convergence.length > 0 ? Math.max(...convergence.map((c: any) => c.total_shift), 0) : 0
   const avgShift = convergence.length > 0 ? convergence.reduce((sum, c) => sum + c.total_shift, 0) / convergence.length : 0
   
   const getSeverityColor = (shift: number) => {

@@ -54,7 +54,7 @@ export default function ImageryViewer() {
       <div>
         <label className="block text-sm font-medium text-[var(--text-muted)] mb-2">Imagery Layer</label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {layers.map(layer => (
+          {layers.map((layer: any) => (
             <button
               key={layer.id}
               onClick={() => setSelectedLayer(layer.id)}
@@ -100,7 +100,7 @@ export default function ImageryViewer() {
             <p className="text-lg font-medium mb-2">Map Preview</p>
             <p className="text-sm">Lat: {centerLat}, Lon: {centerLon}</p>
             <p className="text-sm">Zoom: {zoom}</p>
-            <p className="text-sm mt-2">{layers.find(l => l.id === selectedLayer)?.name}</p>
+            <p className="text-sm mt-2">{layers.find((l: any) => l.id === selectedLayer)?.name}</p>
             <p className="text-xs mt-4 text-[var(--text-muted)]">
               Integrate with Leaflet or Mapbox for interactive map
             </p>

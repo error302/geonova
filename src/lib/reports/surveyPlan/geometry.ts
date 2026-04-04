@@ -21,7 +21,7 @@ export function pxToM(px: number): number {
 
 export function selectScale(drawingWidthPx: number, drawingWidthM: number): number {
   const rawScale = drawingWidthPx / drawingWidthM
-  return STANDARD_SCALES.find(s => s >= rawScale) || 50000
+  return STANDARD_SCALES.find((s: any) => s >= rawScale) || 50000
 }
 
 export function calcScaleLabel(scale: number): string {
@@ -87,8 +87,8 @@ export function centroid(points: Array<{ easting: number; northing: number }>): 
 }
 
 export function boundingBox(points: Array<{ easting: number; northing: number }>) {
-  const eastings = points.map(p => p.easting)
-  const northings = points.map(p => p.northing)
+  const eastings = points.map((p: any) => p.easting)
+  const northings = points.map((p: any) => p.northing)
   const minE = Math.min(...eastings)
   const maxE = Math.max(...eastings)
   const minN = Math.min(...northings)
@@ -143,14 +143,14 @@ export function rotatePoints(
     for (const p of points) { mx += p.easting; my += p.northing }
     mx /= points.length; my /= points.length
   }
-  return points.map(p => ({
+  return points.map((p: any) => ({
     easting: cos * (p.easting - mx) - sin * (p.northing - my) + mx,
     northing: sin * (p.easting - mx) + cos * (p.northing - my) + my,
   }))
 }
 
 export function parseCornersCSV(csv: string): Array<{ name: string; easting: number; northing: number }> {
-  const lines = csv.trim().split('\n').map(l => l.trim()).filter(Boolean)
+  const lines = csv.trim().split('\n').map((l: any) => l.trim()).filter(Boolean)
   const result: Array<{ name: string; easting: number; northing: number }> = []
   for (const line of lines) {
     const parts = line.split(/[,\t]+/)
@@ -201,7 +201,7 @@ export function computeFenceBoundary(
   for (let i = 0; i < pts.length; i++) {
     const from = pts[i]
     const to = pts[(i + 1) % pts.length]
-    const fo = fenceOffsets.find(o => o.segmentIndex === i)
+    const fo = fenceOffsets.find((o: any) => o.segmentIndex === i)
     if (fo && fo.offsetMetres > 0) {
       fence.push(offsetPointPerpendicular(from, to, fo.offsetMetres))
     } else {

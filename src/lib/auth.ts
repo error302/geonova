@@ -1,9 +1,21 @@
 import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import bcrypt from 'bcryptjs'
+import { Pool } from 'pg'
+import { env } from '@/lib/env'
 
-function hashPassword(password: string): string {
-  const crypto = require('crypto')
-  return crypto.createHash('sha256').update(password).digest('hex')
+let pool: Pool | null = null
+function getPool(): Pool {
+  if (!pool) {
+    if (env.DATABASE_URL) {
+      pool = new Pool({ connectionString: env.DATABASE_URL, max: 5, connectionTimeoutMillis: 5000 })
+    } else if (env.DB_HOST && env.DB_NAME && env.DB_USER) {
+      pool = new Pool({ host: env.DB_HOST, port: env.DB_PORT ?? 5432, database: env.DB_NAME, user: env.DB_USER, password: env.DB_PASSWORD, max: 5 })
+    } else {
+      throw new Error('Database not configured for auth')
+    }
+  }
+  return pool
 }
 
 export const authOptions: AuthOptions = {
@@ -16,29 +28,29 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
-        
-        // Demo users - in production, check against database
-        const demoUsers: Record<string, { id: string; name: string; passwordHash: string }> = {
-          'mohameddosho20@gmail.com': {
-            id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-            name: 'Mohamed Dosho',
-            passwordHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8' // password
-          }
-        }
-        
-        const user = demoUsers[credentials.email]
-        if (!user) return null
-        
-        // Accept 'password' as the demo password
-        if (credentials.password === 'password') {
+
+        try {
+          const p = getPool()
+          const { rows } = await p.query(
+            'SELECT id, email, password_hash, full_name FROM users WHERE email = $1 LIMIT 1',
+            [credentials.email.toLowerCase().trim()]
+          )
+
+          if (rows.length === 0) return null
+
+          const user = rows[0]
+          const valid = await bcrypt.compare(credentials.password, user.password_hash)
+          if (!valid) return null
+
           return {
             id: user.id,
-            email: credentials.email,
-            name: user.name,
+            email: user.email,
+            name: user.full_name || user.email.split('@')[0],
           }
+        } catch (err) {
+          console.error('[auth] Login DB error:', err)
+          return null
         }
-        
-        return null
       },
     }),
   ],
@@ -46,13 +58,16 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
+        token.email = user.email
+        token.name = user.name
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-        // @ts-ignore - NextAuth session type extension
-        session.user.id = token.id
+        (session.user as any).id = token.id
+        session.user.email = token.email as string
+        session.user.name = token.name as string
       }
       return session
     },
@@ -62,6 +77,11 @@ export const authOptions: AuthOptions = {
   },
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  secret: process.env.AUTH_SECRET || 'development-secret-key-change-in-production',
+  secret: (() => {
+    const s = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET
+    if (!s) throw new Error('AUTH_SECRET is not set. Run: openssl rand -base64 32')
+    return s
+  })(),
 }

@@ -62,7 +62,7 @@ export default function SurveyPlanExport({ data, options, projectId, plan = 'fre
       const dataBuf = encoder.encode(svgString)
       const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuf)
       const hashArray = Array.from(new Uint8Array(hashBuffer))
-      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+      const hashHex = hashArray.map((b: any) => b.toString(16).padStart(2, '0')).join('')
 
       // Create signature record
       const res = await fetch('/api/sign-plan', {

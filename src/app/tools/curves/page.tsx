@@ -144,7 +144,7 @@ export default function CurvesCalculator() {
       const delta1 = parseFloat(input.delta1);
       const delta2 = parseFloat(input.delta2);
       const commonChainage = parseFloat(input.commonChainage);
-      if ([R1, R2, delta1, delta2, commonChainage].some(n => isNaN(n))) return;
+      if ([R1, R2, delta1, delta2, commonChainage].some((n: any) => isNaN(n))) return;
       const s = compoundCurveSolved({ R1, R2, delta1Deg: delta1, delta2Deg: delta2, junctionChainage: commonChainage });
       setResult({ type: 'compound', title: s.solution.title, steps: s.steps });
     } else if (curveType === 'reverse') {
@@ -253,7 +253,7 @@ export default function CurvesCalculator() {
                 <div className="mt-4">
                   <label className="label">Design Speed (km/h) — for K compliance</label>
                   <div className="flex flex-wrap gap-2 mt-1">
-                    {designSpeedOptions.map(s => (
+                    {designSpeedOptions.map((s: any) => (
                       <button key={s} onClick={() => setDesignSpeed(s)}
                         className={`px-2 py-1 text-xs rounded border ${designSpeed === s ? 'bg-[var(--accent)] text-black border-[var(--accent)]' : 'border-[var(--border-color)] text-[var(--text-secondary)]'}`}>
                         {s}

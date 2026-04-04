@@ -104,30 +104,30 @@ export async function searchLand(params: NLISSearchParams): Promise<NLISResult> 
   let results = [...MOCK_NLIS_DATA]
   
   if (params.parcelId) {
-    results = results.filter(p => p.parcelId.toLowerCase().includes(params.parcelId!.toLowerCase()))
+    results = results.filter((p: any) => p.parcelId.toLowerCase().includes(params.parcelId!.toLowerCase()))
   }
   
   if (params.titleNumber) {
-    results = results.filter(p => 
+    results = results.filter((p: any) => 
       p.titleNumber.toLowerCase().includes(params.titleNumber!.toLowerCase())
     )
   }
   
   if (params.county) {
-    results = results.filter(p => 
+    results = results.filter((p: any) => 
       p.county.toLowerCase() === params.county!.toLowerCase()
     )
   }
   
   if (params.subCounty) {
-    results = results.filter(p => 
+    results = results.filter((p: any) => 
       p.subCounty.toLowerCase().includes(params.subCounty!.toLowerCase())
     )
   }
   
   if (params.ownerName) {
-    results = results.filter(p => 
-      p.registeredOwners.some(o => o.toLowerCase().includes(params.ownerName!.toLowerCase()))
+    results = results.filter((p: any) => 
+      p.registeredOwners.some((o: any) => o.toLowerCase().includes(params.ownerName!.toLowerCase()))
     )
   }
   
@@ -140,13 +140,13 @@ export async function searchLand(params: NLISSearchParams): Promise<NLISResult> 
 
 export async function getLandById(parcelId: string): Promise<NLISParcel | null> {
   await new Promise(resolve => setTimeout(resolve, 300))
-  return MOCK_NLIS_DATA.find(p => p.parcelId === parcelId) || null
+  return MOCK_NLIS_DATA.find((p: any) => p.parcelId === parcelId) || null
 }
 
 export async function validateTitle(
   titleNumber: string
 ): Promise<{ valid: boolean; status: string; message: string }> {
-  const parcel = MOCK_NLIS_DATA.find(p => p.titleNumber === titleNumber)
+  const parcel = MOCK_NLIS_DATA.find((p: any) => p.titleNumber === titleNumber)
   
   if (!parcel) {
     return { valid: false, status: 'not_found', message: `Title ${titleNumber} not found in NLIS` }

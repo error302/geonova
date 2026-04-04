@@ -42,7 +42,7 @@ export default function EarthworkQuantitiesTable({ result, sections }: Props) {
           <table className="w-full text-xs font-mono border-collapse">
             <thead>
               <tr className="bg-[var(--bg-tertiary)]">
-                {['From', 'To', 'Dist', 'Cut A1', 'Fill A1', 'Cut A2', 'Fill A2', 'Cut Vol\n(EA)', 'Fill Vol\n(EA)', 'Cut Vol\n(Pris)', 'Fill Vol\n(Pris)', 'Cum Cut', 'Cum Fill'].map(h => (
+                {['From', 'To', 'Dist', 'Cut A1', 'Fill A1', 'Cut A2', 'Fill A2', 'Cut Vol\n(EA)', 'Fill Vol\n(EA)', 'Cut Vol\n(Pris)', 'Fill Vol\n(Pris)', 'Cum Cut', 'Cum Fill'].map((h: any) => (
                   <th key={h} className="px-1.5 py-1.5 text-[var(--text-muted)] font-medium border border-[var(--border-color)] whitespace-pre-line text-[10px] leading-tight">
                     {h}
                   </th>

@@ -165,7 +165,7 @@ export default function HydroLivePage() {
           
           {result.hazards.length > 0 && (
             <div className="space-y-2">
-              {result.hazards.map(hazard => (
+              {result.hazards.map((hazard: any) => (
                 <HazardAlert key={hazard.id} hazard={hazard} />
               ))}
             </div>

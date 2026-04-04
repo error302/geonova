@@ -255,13 +255,13 @@ export function getTopoConfigForCountry(country: SurveyingCountry): TopoConfig {
 // ─── ASPRS TABLE LOOKUP ───────────────────────────────────────────────────────
 
 export function getASPRSRMSE(scale: string, asprsClass: 1 | 2 | 3 = 1): number {
-  const entry = ASPRS_PLANIMETRIC.find(e => e.scale === scale)
+  const entry = ASPRS_PLANIMETRIC.find((e: any) => e.scale === scale)
   if (!entry) return 0
   return entry[`class${asprsClass}`] as number
 }
 
 export function getASPRSContourRMSE(contourFt: number, asprsClass: 1 | 2 | 3 = 1): number {
-  const entry = ASPRS_TOPOGRAPHIC.find(e => e.contourInterval === contourFt)
+  const entry = ASPRS_TOPOGRAPHIC.find((e: any) => e.contourInterval === contourFt)
   if (!entry) return 0
   return entry[`class${asprsClass}`] as number
 }

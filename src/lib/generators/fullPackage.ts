@@ -40,7 +40,7 @@ export async function generateFullPackage(
     `Documents included: ${readyDocs.length}`,
     '',
     'Contents:',
-    ...readyDocs.map((d) => `  - ${d.document_id}`),
+    ...readyDocs.map((d: any) => `  - ${d.document_id}`),
     '',
     'Prepared by Metardu — Professional Survey Platform',
   ].join('\n'));
@@ -48,3 +48,4 @@ export async function generateFullPackage(
   const buffer = await zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
   return Buffer.from(buffer);
 }
+

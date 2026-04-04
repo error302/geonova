@@ -60,7 +60,7 @@ export async function searchParcel(params: ParcelSearchParams): Promise<Universa
       })
       
       if (nlimsResults.parcels) {
-        results = nlimsResults.parcels.map(p => convertNLIMSParcel(p))
+        results = nlimsResults.parcels.map((p: any) => convertNLIMSParcel(p))
       }
       break
     }
@@ -75,7 +75,7 @@ export async function searchParcel(params: ParcelSearchParams): Promise<Universa
       })
       
       if (nlisResults.parcels) {
-        results = nlisResults.parcels.map(p => convertNLISParcel(p))
+        results = nlisResults.parcels.map((p: any) => convertNLISParcel(p))
       }
       break
     }
@@ -90,7 +90,7 @@ export async function searchParcel(params: ParcelSearchParams): Promise<Universa
       })
       
       if (tzResults.plots) {
-        results = tzResults.plots.map(p => convertTanzaniaPlot(p))
+        results = tzResults.plots.map((p: any) => convertTanzaniaPlot(p))
       }
       break
     }

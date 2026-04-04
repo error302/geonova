@@ -23,7 +23,7 @@ export function parseGSI(content: string): {
 } {
   const warnings: string[] = []
   const records: GSIRecord[] = []
-  const lines = content.trim().split('\n').filter(l => l.trim())
+  const lines = content.trim().split('\n').filter((l: any) => l.trim())
 
   if (!lines.length) {
     return { ok: false, records: [], warnings: ['Empty file'], format: 'unknown' }

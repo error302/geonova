@@ -39,7 +39,7 @@ function getPRJ(utmZone: number, hemisphere: 'N' | 'S'): string {
 // ── MapInfo TAB-compatible CSV ───────────────────────────────────────────────
 function generateMapInfoCSV(points: any[], utmZone: number, hemisphere: 'N' | 'S', projectName: string): string {
   const lines = [`"Name","Easting","Northing","Elevation","Type","Lat_WGS84","Lon_WGS84"`]
-  points.forEach(p => {
+  points.forEach((p: any) => {
     const { lat, lon } = utmToGeographic(p.easting, p.northing, utmZone, hemisphere)
     lines.push(`"${p.name}",${p.easting.toFixed(4)},${p.northing.toFixed(4)},${(p.elevation||0).toFixed(4)},"${p.is_control?'Control':'Survey'}",${lat.toFixed(8)},${lon.toFixed(8)}`)
   })
@@ -48,7 +48,7 @@ function generateMapInfoCSV(points: any[], utmZone: number, hemisphere: 'N' | 'S
 
 // ── KML for Google Earth / Maps ──────────────────────────────────────────────
 function generateKML(points: any[], utmZone: number, hemisphere: 'N' | 'S', projectName: string): string {
-  const placemarks = points.map(p => {
+  const placemarks = points.map((p: any) => {
     const { lat, lon } = utmToGeographic(p.easting, p.northing, utmZone, hemisphere)
     const color = p.is_control ? 'ff0080ff' : 'ff00ff80'
     return `  <Placemark>
@@ -91,8 +91,8 @@ export default function GISExportPage() {
       .then(({ data }) => { if (data) setPoints(data); setLoading(false) })
   }, [projectId])
 
-  const project = projects.find(p => p.id === projectId)
-  const ptsMapped = points.map(p => ({
+  const project = projects.find((p: any) => p.id === projectId)
+  const ptsMapped = points.map((p: any) => ({
     name: p.name, easting: p.easting, northing: p.northing,
     elevation: p.elevation ?? 0, is_control: p.is_control,
   }))
@@ -198,7 +198,7 @@ export default function GISExportPage() {
                 ? <p className="text-sm text-[var(--text-muted)]">No projects. <Link href="/project/new" className="text-[var(--accent)]">Create one →</Link></p>
                 : <select value={projectId} onChange={e => setProjectId(e.target.value)} className="input w-full">
                     <option value="">— Select project —</option>
-                    {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                    {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
               }
             </div>
@@ -219,7 +219,7 @@ export default function GISExportPage() {
 
         {/* Export grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {EXPORT_ITEMS.map(item => {
+          {EXPORT_ITEMS.map((item: any) => {
             const done = exports.has(item.key)
             return (
               <div key={item.key}

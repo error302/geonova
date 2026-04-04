@@ -192,7 +192,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                   onChange={(e) => setInput({ ...input, scale: Number(e.target.value) as 500 | 1000 | 2500 | 5000 })}
                   className="w-full px-3 py-2 border rounded-lg"
                 >
-                  {SCALES.map(s => (
+                  {SCALES.map((s: any) => (
                     <option key={s} value={s}>1 : {s}</option>
                   ))}
                 </select>
@@ -346,7 +346,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                           }}
                           className="px-2 py-1 border rounded"
                         >
-                          {MARK_TYPES.map(t => (
+                          {MARK_TYPES.map((t: any) => (
                             <option key={t} value={t}>{t}</option>
                           ))}
                         </select>
@@ -361,7 +361,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                           }}
                           className="px-2 py-1 border rounded"
                         >
-                          {MARK_STATUSES.map(s => (
+                          {MARK_STATUSES.map((s: any) => (
                             <option key={s} value={s}>{s}</option>
                           ))}
                         </select>

@@ -114,11 +114,11 @@ export const NAV_ITEMS: NavItem[] = [
 ]
 
 export function getNavGroup(group: NavGroup): NavItem[] {
-  return NAV_ITEMS.filter(item => item.group === group)
+  return NAV_ITEMS.filter((item: any) => item.group === group)
 }
 
 export function getActiveGroups(): NavGroup[] {
-  const groupsWithItems = new Set(NAV_ITEMS.map(i => i.group))
+  const groupsWithItems = new Set(NAV_ITEMS.map((i: any) => i.group))
   return Object.entries(NAV_GROUPS)
     .filter(([group]) => groupsWithItems.has(group as NavGroup))
     .sort(([, a], [, b]) => a.order - b.order)
@@ -126,5 +126,5 @@ export function getActiveGroups(): NavGroup[] {
 }
 
 export function getNavItemByHref(href: string): NavItem | undefined {
-  return NAV_ITEMS.find(item => item.href === href)
+  return NAV_ITEMS.find((item: any) => item.href === href)
 }

@@ -21,7 +21,7 @@ export function generateGeoJSON(
   utmZone: number = 37,
   hemisphere: 'N' | 'S' = 'S'
 ): string {
-  const features = points.map(p => {
+  const features = points.map((p: any) => {
     const { lat, lon } = utmToGeographic(p.easting, p.northing, utmZone, hemisphere)
     return {
       type: 'Feature',

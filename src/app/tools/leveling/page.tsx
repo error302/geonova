@@ -40,7 +40,7 @@ export default function LevelingCalculator() {
   };
 
   const updateReading = (id: number, field: 'bs' | 'fs', value: string) => {
-    setReadings(readings.map(r => r.id === id ? { ...r, [field]: value } : r));
+    setReadings(readings.map((r: any) => r.id === id ? { ...r, [field]: value } : r));
   };
 
 
@@ -68,7 +68,7 @@ export default function LevelingCalculator() {
     const closing = closingBm ? parseFloat(closingBm) : undefined;
     if (isNaN(openingRL)) { setCalculating(false); return; }
 
-    const obs = readings.map(r => ({
+    const obs = readings.map((r: any) => ({
       station: r.station,
       bs: r.bs ? parseFloat(r.bs) : undefined,
       fs: r.fs ? parseFloat(r.fs) : undefined
@@ -297,10 +297,10 @@ function LevelingProfile({ readings }: { readings: any[] }) {
   const height = 250;
   const padding = 50;
 
-  const validReadings = readings.filter(r => r.reducedLevel !== undefined);
+  const validReadings = readings.filter((r: any) => r.reducedLevel !== undefined);
   if (validReadings.length === 0) return null;
 
-  const rls = validReadings.map(r => r.adjustedRL || r.reducedLevel);
+  const rls = validReadings.map((r: any) => r.adjustedRL || r.reducedLevel);
   const minRL = Math.min(...rls) - 0.5;
   const maxRL = Math.max(...rls) + 0.5;
   const maxIdx = validReadings.length - 1;

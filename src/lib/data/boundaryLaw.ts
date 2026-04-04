@@ -563,7 +563,7 @@ export const BOUNDARY_LAW_ENTRIES: BoundaryLawEntry[] = [
 ]
 
 export function getBoundaryLawByType(type: BoundaryIssueType): BoundaryLawEntry[] {
-  return BOUNDARY_LAW_ENTRIES.filter(entry => entry.issueType === type)
+  return BOUNDARY_LAW_ENTRIES.filter((entry: any) => entry.issueType === type)
 }
 
 export function searchBoundaryLaw(query: string): BoundaryLawEntry[] {
@@ -573,8 +573,8 @@ export function searchBoundaryLaw(query: string): BoundaryLawEntry[] {
       entry.title.toLowerCase().includes(lowerQuery) ||
       entry.description.toLowerCase().includes(lowerQuery) ||
       entry.issueType.toLowerCase().includes(lowerQuery) ||
-      entry.relevantActs.some(act => act.toLowerCase().includes(lowerQuery)) ||
-      entry.caseLaw.some(c => c.toLowerCase().includes(lowerQuery))
+      entry.relevantActs.some((act: any) => act.toLowerCase().includes(lowerQuery)) ||
+      entry.caseLaw.some((c: any) => c.toLowerCase().includes(lowerQuery))
   )
 }
 

@@ -45,7 +45,7 @@ export default function LevelBook({ projectId }: LevelBookProps) {
   const handleCompute = () => {
     setError('')
     if (!openingRL) { setError('Enter opening benchmark RL'); return }
-    const obsRows = rows.map(r => ({
+    const obsRows = rows.map((r: any) => ({
       station: r.station,
       bs: r.bs ? parseFloat(r.bs) : undefined,
       is: r.is ? parseFloat(r.is) : undefined,
@@ -92,7 +92,7 @@ export default function LevelBook({ projectId }: LevelBookProps) {
 <h1>Table 1 — Field Book</h1>
 <table>
 <tr><th>Station</th><th>BS (m)</th><th>IS (m)</th><th>FS (m)</th><th>HI (m)</th><th>Rise (m)</th><th>Fall (m)</th><th>RL (m)</th><th>Dist (m)</th><th>Remarks</th></tr>
-${r.rows.map(row => `<tr>
+${r.rows.map((row: any) => `<tr>
 <td>${row.station}</td>
 <td class="right">${row.bs !== undefined ? row.bs.toFixed(3) : ''}</td>
 <td class="right">${row.is !== undefined ? row.is.toFixed(3) : ''}</td>
@@ -128,7 +128,7 @@ Computed using METARDU | Survey Act Cap 299 | RDM 1.1 (2025) | Generated ${new D
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 border-b border-[var(--border-color)] pb-2">
-        {(['input', 'compute', 'print'] as const).map(tab => (
+        {(['input', 'compute', 'print'] as const).map((tab: any) => (
           <button key={tab} onClick={() => setActiveTab(tab)}
             className={`px-3 py-1.5 rounded text-sm font-medium capitalize transition-colors ${
               activeTab === tab ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--border-hover)]'

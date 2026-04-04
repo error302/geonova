@@ -19,7 +19,7 @@ describe('LEVELING_ORDERS table', () => {
   })
 
   it('each order has closure formula', () => {
-    LEVELING_ORDERS.forEach(o => {
+    LEVELING_ORDERS.forEach((o: any) => {
       expect(o.closureFormula).toContain('√')
     })
   })
@@ -92,7 +92,7 @@ describe('C_FACTOR_TABLE', () => {
   })
 
   it('K=1/100: max C = 0.004', () => {
-    const entry = C_FACTOR_TABLE.find(e => Math.abs(e.kValue - 1/100) < 0.001)
+    const entry = C_FACTOR_TABLE.find((e: any) => Math.abs(e.kValue - 1/100) < 0.001)
     expect(entry?.maxCFactor).toBe(0.004)
   })
 })
@@ -154,7 +154,7 @@ describe('runTwoPegTest', () => {
       country: 'us',
       daysSinceLastTest: 100,
     })
-    expect(r.warnings.some(w => w.includes('overdue'))).toBe(true)
+    expect(r.warnings.some((w: any) => w.includes('overdue'))).toBe(true)
     expect(r.daysUntilNextTest).toBe(0)
   })
 

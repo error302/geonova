@@ -24,7 +24,7 @@ function FitBounds({ soundings }: { soundings: SoundingPoint[] }) {
   useEffect(() => {
     if (soundings.length === 0) return
     
-    const bounds = soundings.map(s => [s.northing, s.easting] as [number, number])
+    const bounds = soundings.map((s: any) => [s.northing, s.easting] as [number, number])
     map.fitBounds(bounds, { padding: [50, 50] })
   }, [soundings, map])
   
@@ -32,8 +32,8 @@ function FitBounds({ soundings }: { soundings: SoundingPoint[] }) {
 }
 
 export default function BathymetryMap({ soundings, height = '400px' }: BathymetryMapProps) {
-  const minDepth = useMemo(() => Math.min(...soundings.map(s => s.depth)), [soundings])
-  const maxDepth = useMemo(() => Math.max(...soundings.map(s => s.depth)), [soundings])
+  const minDepth = useMemo(() => Math.min(...soundings.map((s: any) => s.depth)), [soundings])
+  const maxDepth = useMemo(() => Math.max(...soundings.map((s: any) => s.depth)), [soundings])
   
   const center: [number, number] = useMemo(() => {
     if (soundings.length === 0) return [0, 0]

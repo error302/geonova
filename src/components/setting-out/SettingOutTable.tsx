@@ -27,13 +27,13 @@ export default function SettingOutTable({ result }: Props) {
         <table className="w-full text-xs font-mono border-collapse">
           <thead>
             <tr className="bg-[var(--bg-tertiary)]">
-              {['Point', 'Design E', 'Design N', 'Design RL', 'Hz Angle', 'HD (m)', 'VA', 'SD (m)', 'TH (m)'].map(h => (
+              {['Point', 'Design E', 'Design N', 'Design RL', 'Hz Angle', 'HD (m)', 'VA', 'SD (m)', 'TH (m)'].map((h: any) => (
                 <th key={h} className="px-3 py-2 text-left border border-[var(--border-color)] text-[var(--text-muted)] font-medium">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {rows.map(row => (
+            {rows.map((row: any) => (
               <tr key={row.id} className="hover:bg-[var(--bg-tertiary)]/30 border border-[var(--border-color)]/50">
                 <td className="px-3 py-2 text-[var(--text-primary)] font-semibold">{row.id}</td>
                 <td className="px-3 py-2 text-[var(--text-primary)] text-right">{row.designE.toFixed(3)}</td>

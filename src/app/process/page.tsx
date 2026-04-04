@@ -426,7 +426,7 @@ export default function ProcessPage() {
                   <div className="mt-6">
                     <label className="block text-sm text-[var(--text-secondary)] mb-2">Tolerance Profile</label>
                     <div className="grid grid-cols-3 gap-3">
-                      {getAllToleranceProfiles().map(profile => (
+                      {getAllToleranceProfiles().map((profile: any) => (
                         <button
                           key={profile}
                           onClick={() => setSelectedProfile(profile)}
@@ -591,7 +591,7 @@ export default function ProcessPage() {
                       className="flex-1 px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)]"
                     >
                       <option value="">Select a project...</option>
-                      {projects.map(p => (
+                      {projects.map((p: any) => (
                         <option key={p.id} value={p.id}>{p.name}</option>
                       ))}
                     </select>

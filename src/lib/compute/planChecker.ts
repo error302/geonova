@@ -76,12 +76,12 @@ export function runPlanCheck(input: PlanInput): PlanCheckReport {
   checks.push(...checkEasements(input))
   checks.push(...checkRegulatoryCompliance(input))
   
-  const passedChecks = checks.filter(c => c.passed).length
+  const passedChecks = checks.filter((c: any) => c.passed).length
   const totalChecks = checks.length
   const score = Math.round((passedChecks / totalChecks) * 100)
-  const errors = checks.filter(c => c.severity === 'ERROR' && !c.passed).length
-  const warnings = checks.filter(c => c.severity === 'WARNING' && !c.passed).length
-  const suggestions = checks.filter(c => c.severity === 'INFO' && !c.passed).map(c => c.recommendation).filter((r): r is string => !!r)
+  const errors = checks.filter((c: any) => c.severity === 'ERROR' && !c.passed).length
+  const warnings = checks.filter((c: any) => c.severity === 'WARNING' && !c.passed).length
+  const suggestions = checks.filter((c: any) => c.severity === 'INFO' && !c.passed).map((c: any) => c.recommendation).filter((r): r is string => !!r)
   
   return {
     planId: input.planId,
@@ -265,7 +265,7 @@ function checkCoordinateSystem(input: PlanInput): PlanCheckResult[] {
   
   const validSystems = ['Arc 1960', 'WGS84', 'Minna', 'UTM']
   const hasValidSystem = !!input.coordinatesSystem && 
-    validSystems.some(s => input.coordinatesSystem?.toUpperCase().includes(s.toUpperCase()))
+    validSystems.some((s: any) => input.coordinatesSystem?.toUpperCase().includes(s.toUpperCase()))
   
   checks.push(createCheck(
     'BOUNDARY',

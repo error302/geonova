@@ -79,7 +79,7 @@ export default function UTMZonePicker({
       <div>
         <p className="text-[var(--text-muted)] text-xs mb-2">Quick select:</p>
         <div className="flex flex-wrap gap-2">
-          {commonZones.map(cz => (
+          {commonZones.map((cz: any) => (
             <button
               key={cz.zone}
               onClick={() => onChange(cz.zone, hemisphere)}
@@ -96,7 +96,7 @@ export default function UTMZonePicker({
       </div>
 
       <div className="flex gap-1 overflow-x-auto pb-2">
-        {Array.from({ length: 60 }, (_, i) => i + 1).map(zone => (
+        {Array.from({ length: 60 }, (_, i) => i + 1).map((zone: any) => (
           <button
             key={zone}
             onClick={() => onChange(zone, hemisphere)}

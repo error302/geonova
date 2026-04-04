@@ -97,13 +97,13 @@ function PostModal({ onSave, onClose }: { onSave: (r: ReviewRequest) => void; on
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Survey type</label>
               <select value={form.surveyType} onChange={e => f('surveyType', e.target.value as any)} className="input w-full">
-                {SURVEY_TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+                {SURVEY_TYPES.map((t: any) => <option key={t.id} value={t.id}>{t.label}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Country</label>
               <select value={form.country} onChange={e => f('country', e.target.value)} className="input w-full">
-                {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
+                {COUNTRIES.map((c: any) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
           </div>
@@ -157,7 +157,7 @@ function ReviewDetail({ request, onClose, onRefresh }: {
   })
   const f = (k: keyof typeof form, v: any) => setForm(p => ({ ...p, [k]: v }))
 
-  const typeLabel = SURVEY_TYPES.find(t => t.id === request.surveyType)?.label ?? request.surveyType
+  const typeLabel = SURVEY_TYPES.find((t: any) => t.id === request.surveyType)?.label ?? request.surveyType
 
   const submitComment = async () => {
     if (!form.reviewerName.trim()) { setErr('Your name is required'); return }
@@ -174,7 +174,7 @@ function ReviewDetail({ request, onClose, onRefresh }: {
   }
 
   // Sort comments newest first
-  const comments = [...(request.comments || [])].sort((a,b) => b.postedAt.localeCompare(a.postedAt))
+  const comments = [...(request.comments || [])].sort((a: any, b: any) => b.postedAt.localeCompare(a.postedAt))
 
   return (
     <div className="fixed inset-0 z-40 flex" onClick={onClose}>
@@ -253,7 +253,7 @@ function ReviewDetail({ request, onClose, onRefresh }: {
               <div>
                 <label className="text-xs text-[var(--text-muted)] block mb-1">Category</label>
                 <select value={form.category} onChange={e => f('category', e.target.value as any)} className="input w-full text-sm">
-                  {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+                  {CATEGORIES.map((c: any) => <option key={c.id} value={c.id}>{c.label}</option>)}
                 </select>
               </div>
 
@@ -262,7 +262,7 @@ function ReviewDetail({ request, onClose, onRefresh }: {
                   Overall rating (5 = no issues found)
                 </label>
                 <div className="flex gap-2">
-                  {([1,2,3,4,5] as const).map(r => (
+                  {([1,2,3,4,5] as const).map((r: any) => (
                     <button key={r} onClick={() => f('rating', r)}
                       className={`flex-1 py-2 rounded-lg text-sm border transition-colors ${
                         form.rating === r
@@ -293,7 +293,7 @@ function ReviewDetail({ request, onClose, onRefresh }: {
                 Reviews ({comments.length})
               </p>
               <div className="space-y-3">
-                {comments.map(c => (
+                {comments.map((c: any) => (
                   <div key={c.id} className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div>
@@ -305,8 +305,8 @@ function ReviewDetail({ request, onClose, onRefresh }: {
                         <p className="text-[10px] text-[var(--text-muted)] mt-0.5">{relTime(c.postedAt)}</p>
                       </div>
                     </div>
-                    <span className={`text-[10px] px-2 py-0.5 rounded border ${catBadge[c.category]} inline-block mb-2`}>
-                      {CATEGORIES.find(cat => cat.id === c.category)?.label}
+                    <span className={`text-[10px] px-2 py-0.5 rounded border ${catBadge[c.category as keyof typeof catBadge]} inline-block mb-2`}>
+                      {CATEGORIES.find((cat: any) => cat.id === c.category)?.label}
                     </span>
                     <p className="text-sm text-[var(--text-secondary)] leading-relaxed whitespace-pre-wrap">{c.comment}</p>
                   </div>
@@ -323,7 +323,7 @@ function ReviewDetail({ request, onClose, onRefresh }: {
 // ── Request card ──────────────────────────────────────────────────────────────
 
 function RequestCard({ request, onClick }: { request: ReviewRequest; onClick: () => void }) {
-  const typeLabel = SURVEY_TYPES.find(t => t.id === request.surveyType)?.label ?? request.surveyType
+  const typeLabel = SURVEY_TYPES.find((t: any) => t.id === request.surveyType)?.label ?? request.surveyType
   const avgRating = request.comments.length > 0
     ? (request.comments.reduce((s, c) => s + c.rating, 0) / request.comments.length).toFixed(1)
     : null
@@ -380,7 +380,7 @@ export default function PeerReviewPage() {
 
   useEffect(() => { reload() }, [reload])
 
-  const filtered = filterType ? requests.filter(r => r.surveyType === filterType) : requests
+  const filtered = filterType ? requests.filter((r: any) => r.surveyType === filterType) : requests
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
@@ -417,8 +417,8 @@ export default function PeerReviewPage() {
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-6">
           {([
-            { key: 'open',     label: 'Needs review', count: requests.filter(r => r.status === 'open').length },
-            { key: 'reviewed', label: 'Reviewed',      count: requests.filter(r => r.status === 'reviewed').length },
+            { key: 'open',     label: 'Needs review', count: requests.filter((r: any) => r.status === 'open').length },
+            { key: 'reviewed', label: 'Reviewed',      count: requests.filter((r: any) => r.status === 'reviewed').length },
             { key: '',         label: 'All',            count: requests.length },
           ] as const).map(({ key, label, count }) => (
             <button key={key} onClick={() => setFilterStatus(key as any)}
@@ -433,7 +433,7 @@ export default function PeerReviewPage() {
           <select value={filterType} onChange={e => setFilterType(e.target.value)}
             className="bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] rounded-lg px-3 py-1.5 text-sm">
             <option value="">All types</option>
-            {SURVEY_TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+            {SURVEY_TYPES.map((t: any) => <option key={t.id} value={t.id}>{t.label}</option>)}
           </select>
         </div>
 
@@ -460,7 +460,7 @@ export default function PeerReviewPage() {
         {/* Grid */}
         {filtered.length > 0 && (
           <div className="grid md:grid-cols-2 gap-4">
-            {filtered.map(req => (
+            {filtered.map((req: any) => (
               <RequestCard key={req.id} request={req}
                 onClick={() => setActiveReq(req)} />
             ))}
@@ -477,7 +477,7 @@ export default function PeerReviewPage() {
 
       {activeReq && (
         <ReviewDetail
-          request={requests.find(r => r.id === activeReq.id) ?? activeReq}
+          request={requests.find((r: any) => r.id === activeReq.id) ?? activeReq}
           onClose={() => setActiveReq(null)}
           onRefresh={reload}
         />

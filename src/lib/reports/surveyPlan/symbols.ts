@@ -125,7 +125,7 @@ export function svgFenceLine(
   type: 'fence_on_boundary' | 'chain_link' | 'board_fence' | 'iron_fence' | 'galv_iron' | 'no_fence' | 'end_of_fence' | 'end_of_bf'
 ): string {
   if (points.length < 2) return ''
-  const coords: string[] = points.map(p => `${toSvgX(p.easting)},${toSvgY(p.northing)}`)
+  const coords: string[] = points.map((p: any) => `${toSvgX(p.easting)},${toSvgY(p.northing)}`)
   coords.push(`${toSvgX(points[0].easting)},${toSvgY(points[0].northing)}`)
   const polyline = `<polyline points="${coords.join(' ')}" fill="none" stroke="#666666"/>`
   switch (type) {

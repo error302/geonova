@@ -87,14 +87,14 @@ function EquipmentForm({
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Type *</label>
               <select value={form.type} onChange={e => f('type', e.target.value as Equipment['type'])} className="input w-full">
-                {types.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+                {types.map((t: any) => <option key={t.id} value={t.id}>{t.label}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Brand</label>
               <input value={form.brand} onChange={e => f('brand', e.target.value)}
                 list="brands-list" placeholder="Leica, Trimble…" className="input w-full" />
-              <datalist id="brands-list">{BRANDS.map(b => <option key={b} value={b} />)}</datalist>
+              <datalist id="brands-list">{BRANDS.map((b: any) => <option key={b} value={b} />)}</datalist>
             </div>
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Model</label>
@@ -115,7 +115,7 @@ function EquipmentForm({
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Calibration interval *</label>
               <select value={form.intervalDays} onChange={e => f('intervalDays', Number(e.target.value))} className="input w-full">
-                {INTERVALS.map(i => <option key={i.days} value={i.days}>{i.label}</option>)}
+                {INTERVALS.map((i: any) => <option key={i.days} value={i.days}>{i.label}</option>)}
               </select>
             </div>
             <div className="col-span-2">
@@ -176,7 +176,7 @@ function LogForm({ equipment, onSave, onCancel }: { equipment: EquipmentWithStat
           <div>
             <label className="block text-xs text-[var(--text-muted)] mb-1">Result *</label>
             <div className="flex gap-2">
-              {(['passed', 'adjusted', 'failed'] as const).map(r => (
+              {(['passed', 'adjusted', 'failed'] as const).map((r: any) => (
                 <button key={r} onClick={() => f('result', r)}
                   className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${
                     form.result === r
@@ -257,12 +257,12 @@ function DetailDrawer({ equipment, onClose, onEdit, onLog, onDelete }: {
           {/* Details */}
           <div className="grid grid-cols-2 gap-3 text-sm">
             {[
-              ['Type', getEquipmentTypes().find(t => t.id === equipment.type)?.label || equipment.type],
+              ['Type', getEquipmentTypes().find((t: any) => t.id === equipment.type)?.label || equipment.type],
               ['Brand / Model', `${equipment.brand} ${equipment.model}`.trim() || '—'],
               ['Serial number', equipment.serialNumber || '—'],
               ['Location', equipment.location || '—'],
               ['Purchase date', equipment.purchaseDate ? fmtDate(equipment.purchaseDate) : '—'],
-              ['Interval', INTERVALS.find(i => i.days === equipment.intervalDays)?.label || `${equipment.intervalDays} days`],
+              ['Interval', INTERVALS.find((i: any) => i.days === equipment.intervalDays)?.label || `${equipment.intervalDays} days`],
             ].map(([k, v]) => (
               <div key={k}>
                 <p className="text-[var(--text-muted)] text-xs">{k}</p>
@@ -290,7 +290,7 @@ function DetailDrawer({ equipment, onClose, onEdit, onLog, onDelete }: {
             <div>
               <h3 className="text-sm font-medium text-[var(--text-primary)] mb-3">Calibration history</h3>
               <div className="space-y-2">
-                {logs.map(log => (
+                {logs.map((log: any) => (
                   <div key={log.id} className="bg-[var(--bg-secondary)] rounded-lg p-3 text-sm">
                     <div className="flex justify-between items-center mb-1">
                       <span className="font-medium">{fmtDate(log.date)}</span>
@@ -324,12 +324,12 @@ export default function EquipmentPage() {
   const reload = useCallback(() => setItems(getAll()), [])
   useEffect(() => { reload() }, [reload])
 
-  const filtered = view === 'all' ? items : items.filter(i => i.status === view)
+  const filtered = view === 'all' ? items : items.filter((i: any) => i.status === view)
 
   const counts = {
-    overdue: items.filter(i => i.status === 'overdue').length,
-    due_soon: items.filter(i => i.status === 'due_soon').length,
-    ok: items.filter(i => i.status === 'ok').length,
+    overdue: items.filter((i: any) => i.status === 'overdue').length,
+    due_soon: items.filter((i: any) => i.status === 'due_soon').length,
+    ok: items.filter((i: any) => i.status === 'ok').length,
   }
 
   return (
@@ -386,7 +386,7 @@ export default function EquipmentPage() {
                 No instruments with that status
               </div>
             )}
-            {filtered.map(eq => (
+            {filtered.map((eq: any) => (
               <div key={eq.id}
                 className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-5 cursor-pointer hover:border-[var(--accent)]/40 transition-colors"
                 onClick={() => setDetailItem(eq)}>
@@ -443,7 +443,7 @@ export default function EquipmentPage() {
       )}
       {detailItem && (
         <DetailDrawer
-          equipment={items.find(i => i.id === detailItem.id) || detailItem}
+          equipment={items.find((i: any) => i.id === detailItem.id) || detailItem}
           onClose={() => setDetailItem(null)}
           onEdit={() => { setEditItem(detailItem); setDetailItem(null) }}
           onLog={() => { setLogItem(detailItem); setDetailItem(null) }}

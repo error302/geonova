@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { BeaconType, BeaconStatus, BeaconDefinition } from '@/types/deedPlan'
+import type { BeaconType, BeaconStatus } from '@/types/deedPlan'
 import { BEACON_DEFINITIONS, getBeaconSymbolSVG, BEACON_CATEGORIES } from '@/lib/compute/beaconSymbols'
 
 interface BeaconPickerProps {

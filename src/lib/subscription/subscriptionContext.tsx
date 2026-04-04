@@ -1,5 +1,6 @@
 'use client'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
 import { createClient } from '@/lib/supabase/client'
 import type { PlanId } from '@/lib/subscription/catalog'
 
@@ -28,6 +29,8 @@ const SubscriptionContext = createContext<SubscriptionContextType>({
 })
 
 export function SubscriptionProvider({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession()
+  const userId = (session?.user as { id?: string } | undefined)?.id
   const [plan, setPlan] = useState<PlanId>('free')
   const [isTrialing, setIsTrialing] = useState(false)
   const [trialDaysLeft, setTrialDaysLeft] = useState(0)
@@ -35,23 +38,19 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const [projectCount, setProjectCount] = useState(0)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadSubscription()
-  }, [])
+  const loadSubscription = useCallback(async () => {
+    if (!userId) { setLoading(false); return }
 
-  async function loadSubscription() {
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setLoading(false); return }
 
     const { data: sub } = await supabase
       .from('user_subscriptions')
       .select('*')
-      .eq('user_id', user.id)
-      .single()
+      .eq('user_id', userId)
+      .maybeSingle()
 
     if (sub) {
-      setPlan(sub.plan_id as any)
+      setPlan(sub.plan_id as PlanId)
       setFeatures(sub.features || [])
       
       if (sub.status === 'trial') {
@@ -66,11 +65,20 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     const { count } = await supabase
       .from('projects')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
 
     setProjectCount(count || 0)
     setLoading(false)
-  }
+  }, [userId])
+
+  useEffect(() => {
+    if (status === 'loading') return
+    if (!session?.user) {
+      setLoading(false)
+      return
+    }
+    loadSubscription()
+  }, [loadSubscription, session?.user, status])
 
   const canCreateProject = plan !== 'free' || projectCount < 1
   const canAddPoints = true

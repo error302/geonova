@@ -83,7 +83,7 @@ function generateDocxFromSections(sections: SectionContent[], title: string, rep
       .replace(/\n+/g, '\n')
       .trim()
     
-    const lines = plainText.split('\n').filter(l => l.trim())
+    const lines = plainText.split('\n').filter((l: any) => l.trim())
     for (const line of lines) {
       if (line.trim()) {
         bodyContent += `

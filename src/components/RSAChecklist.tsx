@@ -117,7 +117,7 @@ export default function RSAChecklist() {
     id: parseInt(id),
     name: t.name,
     description: t.description,
-    items: t.items.map(item => ({
+    items: t.items.map((item: any) => ({
       id: `${id}-${item}`,
       text: item,
       checked: completed[parseInt(id)]?.has(`${id}-${item}`) ?? false,
@@ -136,12 +136,12 @@ export default function RSAChecklist() {
     })
   }
 
-  const currentStage = stages.find(s => s.id === activeStage)
-  const checkedCount = currentStage?.items.filter(i => i.checked).length ?? 0
+  const currentStage = stages.find((s: any) => s.id === activeStage)
+  const checkedCount = currentStage?.items.filter((i: any) => i.checked).length ?? 0
   const totalCount = currentStage?.items.length ?? 0
   const allChecked = checkedCount === totalCount && totalCount > 0
 
-  const completedStages = stages.filter(s => {
+  const completedStages = stages.filter((s: any) => {
     const stageSet = completed[s.id]
     return stageSet && stageSet.size === STAGE_TEMPLATES[s.id].items.length
   }).length
@@ -154,7 +154,7 @@ export default function RSAChecklist() {
       </div>
 
       <div className="flex overflow-x-auto border-b border-[var(--border-color)]">
-        {stages.map(stage => {
+        {stages.map((stage: any) => {
           const stageSet = completed[stage.id]
           const isDone = stageSet && stageSet.size === STAGE_TEMPLATES[stage.id].items.length
           return (
@@ -182,7 +182,7 @@ export default function RSAChecklist() {
           <span className="text-xs text-[var(--text-secondary)]">{checkedCount}/{totalCount} items</span>
         </div>
 
-        {currentStage?.items.map(item => (
+        {currentStage?.items.map((item: any) => (
           <label key={item.id} className="flex items-start gap-3 cursor-pointer group">
             <input
               type="checkbox"

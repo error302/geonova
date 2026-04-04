@@ -299,7 +299,7 @@ function UpgradeToPost({ onClose }: { onClose: () => void }) {
             'Unlimited survey projects',
             'Full PDF + DXF reports',
             'GPS stakeout mode',
-          ].map(item => (
+          ].map((item: any) => (
             <div key={item} className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
               <svg className="w-4 h-4 text-[var(--accent)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -370,7 +370,7 @@ function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListin
           <div>
             <label className="block text-xs text-[var(--text-muted)] mb-2">Listing type *</label>
             <div className="flex gap-2">
-              {(['sale','rent','wanted'] as ListingType[]).map(t => (
+              {(['sale','rent','wanted'] as ListingType[]).map((t: any) => (
                 <button key={t} onClick={() => f('type', t)}
                   className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${
                     form.type === t ? typeBadge(t) : 'bg-[var(--bg-secondary)] text-[var(--text-muted)] border-[var(--border-color)]'
@@ -385,20 +385,20 @@ function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListin
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Category *</label>
               <select value={form.category} onChange={e => f('category', e.target.value as InstrumentCategory)} className="input w-full">
-                {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+                {CATEGORIES.map((c: any) => <option key={c.id} value={c.id}>{c.label}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Condition *</label>
               <select value={form.condition} onChange={e => f('condition', e.target.value as Condition)} className="input w-full">
-                {CONDITIONS.map(c => <option key={c.id} value={c.id}>{c.label} — {c.desc}</option>)}
+                {CONDITIONS.map((c: any) => <option key={c.id} value={c.id}>{c.label} — {c.desc}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Brand *</label>
               <input value={form.brand} onChange={e => f('brand', e.target.value)} list="brand-list"
                 placeholder="Leica, Trimble…" className="input w-full" />
-              <datalist id="brand-list">{BRANDS.map(b => <option key={b} value={b} />)}</datalist>
+              <datalist id="brand-list">{BRANDS.map((b: any) => <option key={b} value={b} />)}</datalist>
             </div>
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Model *</label>
@@ -420,7 +420,7 @@ function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListin
                   onChange={e => f('price', e.target.value)}
                   placeholder="Amount" className="input flex-1" />
                 <select value={form.currency} onChange={e => f('currency', e.target.value as Currency)} className="input w-20">
-                  {CURRENCIES.map(c => <option key={c.id} value={c.id}>{c.id}</option>)}
+                  {CURRENCIES.map((c: any) => <option key={c.id} value={c.id}>{c.id}</option>)}
                 </select>
               </div>
             </div>
@@ -466,7 +466,7 @@ function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListin
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Country *</label>
               <select value={form.country} onChange={e => f('country', e.target.value)} className="input w-full">
-                {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
+                {COUNTRIES.map((c: any) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
@@ -505,8 +505,8 @@ function ListingDetail({ listing, onClose, onRefresh }: {
   const [form, setForm] = useState({ buyerName: '', buyerContact: '', message: '' })
   const fq = (k: keyof typeof form, v: string) => setForm(p => ({ ...p, [k]: v }))
 
-  const catLabel  = CATEGORIES.find(c => c.id === listing.category)?.label  ?? listing.category
-  const condLabel = CONDITIONS.find(c  => c.id === listing.condition)?.label ?? listing.condition
+  const catLabel  = CATEGORIES.find((c: any) => c.id === listing.category)?.label  ?? listing.category
+  const condLabel = CONDITIONS.find((c: any) => c.id === listing.condition)?.label ?? listing.condition
 
   const submit = () => {
     if (!form.buyerName)      { setIqErr('Your name is required');    return }
@@ -638,7 +638,7 @@ function ListingDetail({ listing, onClose, onRefresh }: {
                 Messages received ({inquiries.length})
               </p>
               <div className="space-y-2">
-                {inquiries.map(iq => (
+                {inquiries.map((iq: any) => (
                   <div key={iq.id} className="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-3 text-sm">
                     <div className="flex justify-between items-baseline mb-1">
                       <span className="font-medium text-[var(--text-primary)]">{iq.buyerName}</span>
@@ -660,8 +660,8 @@ function ListingDetail({ listing, onClose, onRefresh }: {
 // ── Listing card ─────────────────────────────────────────────────────────────
 
 function ListingCard({ listing, onClick }: { listing: InstrumentListing; onClick: () => void }) {
-  const catLabel  = CATEGORIES.find(c => c.id === listing.category)?.label  ?? listing.category
-  const condLabel = CONDITIONS.find(c  => c.id === listing.condition)?.label ?? listing.condition
+  const catLabel  = CATEGORIES.find((c: any) => c.id === listing.category)?.label  ?? listing.category
+  const condLabel = CONDITIONS.find((c: any) => c.id === listing.condition)?.label ?? listing.condition
   const cover     = listing.images[0]
 
   return (
@@ -817,12 +817,12 @@ export default function MarketplacePage() {
           <select value={filterCat} onChange={e => setFilterCat(e.target.value as any)}
             className="bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] rounded-lg px-3 py-2 text-sm">
             <option value="">All categories</option>
-            {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+            {CATEGORIES.map((c: any) => <option key={c.id} value={c.id}>{c.label}</option>)}
           </select>
           <select value={filterCountry} onChange={e => setFilterCountry(e.target.value)}
             className="bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] rounded-lg px-3 py-2 text-sm">
             <option value="">All countries</option>
-            {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
+            {COUNTRIES.map((c: any) => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
 
@@ -851,7 +851,7 @@ export default function MarketplacePage() {
         {/* Grid */}
         {listings.length > 0 && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {listings.map(l => (
+            {listings.map((l: any) => (
               <ListingCard key={l.id} listing={l} onClick={() => setActive(l)} />
             ))}
           </div>
@@ -870,7 +870,7 @@ export default function MarketplacePage() {
 
       {active && (
         <ListingDetail
-          listing={listings.find(l => l.id === active.id) ?? active}
+          listing={listings.find((l: any) => l.id === active.id) ?? active}
           onClose={() => setActive(null)}
           onRefresh={reload}
         />

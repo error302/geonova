@@ -84,7 +84,7 @@ export default function ParcelSearchPage() {
                   onChange={e => setSearchParams({ ...searchParams, country: e.target.value as any })}
                   className="w-full p-2 border rounded-lg"
                 >
-                  {countries.map(c => (
+                  {countries.map((c: any) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
@@ -174,7 +174,7 @@ export default function ParcelSearchPage() {
               <div>
                 <h3 className="font-medium mb-3">Select Situation</h3>
                 <div className="space-y-2">
-                  {legalScenarios.map(scenario => (
+                  {legalScenarios.map((scenario: any) => (
                     <button
                       key={scenario.id}
                       onClick={() => handleLegalGuidance(scenario.id)}

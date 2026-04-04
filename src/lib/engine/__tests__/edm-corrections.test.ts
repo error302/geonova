@@ -18,7 +18,7 @@ describe('slopeFromEDM', () => {
   it('zenith 91°: flagged for two-face', () => {
     const r = slopeFromEDM({ slopeDistanceMetres: 100, zenithAngle: 91 })
     expect(r.requiresTwoFace).toBe(true)
-    expect(r.warnings.some(w => w.includes('both-face'))).toBe(true)
+    expect(r.warnings.some((w: any) => w.includes('both-face'))).toBe(true)
   })
 
   it('zenith 89°: flagged for two-face', () => {
@@ -28,7 +28,7 @@ describe('slopeFromEDM', () => {
 
   it('≥500m: meteorological warning', () => {
     const r = slopeFromEDM({ slopeDistanceMetres: 500, zenithAngle: 90 })
-    expect(r.warnings.some(w => w.includes('meteorological'))).toBe(true)
+    expect(r.warnings.some((w: any) => w.includes('meteorological'))).toBe(true)
   })
 })
 

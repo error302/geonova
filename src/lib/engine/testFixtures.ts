@@ -379,9 +379,9 @@ export function validateLeveling(result: LevelingResult, fixture: LevelingFixtur
 export function getFixturesByCategory(category: string, type: 'traverse' | 'leveling' | 'curve' | 'intersection' | 'resection') {
   switch (type) {
     case 'traverse':
-      return traverseFixtures.filter(f => f.category === category)
+      return traverseFixtures.filter((f: any) => f.category === category)
     case 'leveling':
-      return levelingFixtures.filter(f => f.category === category)
+      return levelingFixtures.filter((f: any) => f.category === category)
     default:
       return []
   }

@@ -165,10 +165,10 @@ export const TRACT_NUMBERING = {
 }
 
 export function getLandStatusDescription(type: string): string {
-  const status = LAND_STATUS_TYPES.find(s => s.type === type)
+  const status = LAND_STATUS_TYPES.find((s: any) => s.type === type)
   return status?.description || ''
 }
 
 export function getLegalDescriptionInfo(name: string): LegalDescriptionType | undefined {
-  return LEGAL_DESCRIPTION_TYPES.find(t => t.name.toLowerCase().includes(name.toLowerCase()))
+  return LEGAL_DESCRIPTION_TYPES.find((t: any) => t.name.toLowerCase().includes(name.toLowerCase()))
 }

@@ -48,7 +48,7 @@ export default function MobileNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-[var(--bg-primary)] border-t border-[var(--border-color)] md:hidden z-50 safe-area-inset-bottom">
       <div className="flex justify-around items-stretch py-1">
-        {mobileNavItems.map(item => {
+        {mobileNavItems.map((item) => {
           const isActive = pathname === item.href ||
             (item.href !== '/dashboard' && pathname.startsWith(item.href))
           return (

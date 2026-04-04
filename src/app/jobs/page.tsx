@@ -104,13 +104,13 @@ function PostJobModal({ onSave, onClose }: { onSave: (j: SurveyJob) => void; onC
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Survey type *</label>
               <select value={form.surveyType} onChange={e => f('surveyType', e.target.value as SurveyJobType)} className="input w-full">
-                {JOB_TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+                {JOB_TYPES.map((t: any) => <option key={t.id} value={t.id}>{t.label}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Country *</label>
               <select value={form.country} onChange={e => f('country', e.target.value)} className="input w-full">
-                {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
+                {COUNTRIES.map((c: any) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
@@ -130,7 +130,7 @@ function PostJobModal({ onSave, onClose }: { onSave: (j: SurveyJob) => void; onC
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">Currency</label>
               <select value={form.currency} onChange={e => f('currency', e.target.value as Currency)} className="input w-full">
-                {CURRENCIES.map(c => <option key={c.id} value={c.id}>{c.id} — {c.country}</option>)}
+                {CURRENCIES.map((c: any) => <option key={c.id} value={c.id}>{c.id} — {c.country}</option>)}
               </select>
             </div>
           </div>
@@ -145,7 +145,7 @@ function PostJobModal({ onSave, onClose }: { onSave: (j: SurveyJob) => void; onC
             </div>
             {/* Quick add common skills */}
             <div className="flex flex-wrap gap-1.5 mb-2">
-              {COMMON_SKILLS.filter(s => !form.requiredSkills.includes(s)).slice(0, 8).map(s => (
+              {COMMON_SKILLS.filter((s: any) => !form.requiredSkills.includes(s)).slice(0, 8).map((s: any) => (
                 <button key={s} onClick={() => addSkill(s)}
                   className="text-xs px-2 py-0.5 rounded border border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--accent)]/50 hover:text-[var(--accent)] transition-colors">
                   + {s}
@@ -154,10 +154,10 @@ function PostJobModal({ onSave, onClose }: { onSave: (j: SurveyJob) => void; onC
             </div>
             {form.requiredSkills.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
-                {form.requiredSkills.map(s => (
+                {form.requiredSkills.map((s: any) => (
                   <span key={s} className="text-xs px-2 py-0.5 rounded bg-[var(--accent)]/10 border border-[var(--accent)]/20 text-[var(--accent)] flex items-center gap-1">
                     {s}
-                    <button onClick={() => f('requiredSkills', form.requiredSkills.filter(x => x !== s))} className="hover:text-red-400">×</button>
+                    <button onClick={() => f('requiredSkills', form.requiredSkills.filter((x: any) => x !== s))} className="hover:text-red-400">×</button>
                   </span>
                 ))}
               </div>
@@ -201,7 +201,7 @@ function JobDetail({ job, onClose, onRefresh }: { job: SurveyJob; onClose: () =>
 
   useEffect(() => { setProposals(getProposalsForJob(job.id)) }, [job.id])
 
-  const typeLabel = JOB_TYPES.find(t => t.id === job.surveyType)?.label ?? job.surveyType
+  const typeLabel = JOB_TYPES.find((t: any) => t.id === job.surveyType)?.label ?? job.surveyType
   const dl = daysLeft(job.deadline)
 
   const sendProposal = () => {
@@ -261,7 +261,7 @@ function JobDetail({ job, onClose, onRefresh }: { job: SurveyJob; onClose: () =>
             <div>
               <p className="text-xs uppercase tracking-wider text-[var(--text-muted)] mb-2">Required skills</p>
               <div className="flex flex-wrap gap-1.5">
-                {job.requiredSkills.map(s => (
+                {job.requiredSkills.map((s: any) => (
                   <span key={s} className="text-xs px-2 py-0.5 rounded bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)]">{s}</span>
                 ))}
               </div>
@@ -313,7 +313,7 @@ function JobDetail({ job, onClose, onRefresh }: { job: SurveyJob; onClose: () =>
                         placeholder="Amount" className="input flex-1 text-sm py-1.5" />
                       <select value={propForm.currency} onChange={e => setPropForm(p => ({ ...p, currency: e.target.value as Currency }))}
                         className="input w-24 text-sm py-1.5">
-                        {CURRENCIES.map(c => <option key={c.id} value={c.id}>{c.id}</option>)}
+                        {CURRENCIES.map((c: any) => <option key={c.id} value={c.id}>{c.id}</option>)}
                       </select>
                     </div>
                   </div>
@@ -339,7 +339,7 @@ function JobDetail({ job, onClose, onRefresh }: { job: SurveyJob; onClose: () =>
                 Proposals received ({proposals.length})
               </p>
               <div className="space-y-3">
-                {proposals.map(p => (
+                {proposals.map((p: any) => (
                   <div key={p.id} className="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-3">
                     <div className="flex justify-between items-start mb-2">
                       <p className="text-sm font-semibold text-[var(--text-primary)]">{p.surveyorName}</p>
@@ -362,7 +362,7 @@ function JobDetail({ job, onClose, onRefresh }: { job: SurveyJob; onClose: () =>
 // ── Job card ──────────────────────────────────────────────────────────────────
 
 function JobCard({ job, onClick }: { job: SurveyJob; onClick: () => void }) {
-  const typeLabel = JOB_TYPES.find(t => t.id === job.surveyType)?.label ?? job.surveyType
+  const typeLabel = JOB_TYPES.find((t: any) => t.id === job.surveyType)?.label ?? job.surveyType
   const dl = daysLeft(job.deadline)
 
   return (
@@ -386,7 +386,7 @@ function JobCard({ job, onClick }: { job: SurveyJob; onClick: () => void }) {
 
       {job.requiredSkills.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-3">
-          {job.requiredSkills.slice(0, 4).map(s => (
+          {job.requiredSkills.slice(0, 4).map((s: any) => (
             <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-muted)]">{s}</span>
           ))}
           {job.requiredSkills.length > 4 && (
@@ -482,13 +482,13 @@ export default function JobsPage() {
           <select value={filterType} onChange={e => setFilterType(e.target.value)}
             className="bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] rounded-lg px-3 py-2 text-sm">
             <option value="">All types</option>
-            {JOB_TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+            {JOB_TYPES.map((t: any) => <option key={t.id} value={t.id}>{t.label}</option>)}
           </select>
 
           <select value={filterCountry} onChange={e => setFilterCountry(e.target.value)}
             className="bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] rounded-lg px-3 py-2 text-sm">
             <option value="">All countries</option>
-            {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
+            {COUNTRIES.map((c: any) => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
 
@@ -517,7 +517,7 @@ export default function JobsPage() {
         {/* Job grid */}
         {shown.length > 0 && (
           <div className="space-y-3">
-            {shown.map(job => (
+            {shown.map((job: any) => (
               <JobCard key={job.id} job={job} onClick={() => setActiveJob(job)} />
             ))}
           </div>
@@ -533,7 +533,7 @@ export default function JobsPage() {
 
       {activeJob && (
         <JobDetail
-          job={jobs.find(j => j.id === activeJob.id) ?? activeJob}
+          job={jobs.find((j: any) => j.id === activeJob.id) ?? activeJob}
           onClose={() => setActiveJob(null)}
           onRefresh={reload}
         />

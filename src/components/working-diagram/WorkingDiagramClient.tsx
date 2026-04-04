@@ -52,15 +52,15 @@ export default function WorkingDiagramClient() {
   const updateBeacon = (id: string, updates: Partial<BeaconPoint>) => {
     setDiagram(d => ({
       ...d,
-      beacons: d.beacons.map(b => b.id === id ? { ...b, ...updates } : b),
+      beacons: d.beacons.map((b: any) => b.id === id ? { ...b, ...updates } : b),
     }))
   }
 
   const removeBeacon = (id: string) => {
     setDiagram(d => ({
       ...d,
-      beacons: d.beacons.filter(b => b.id !== id),
-      boundaries: d.boundaries.filter(b => b.fromBeaconId !== id && b.toBeaconId !== id),
+      beacons: d.beacons.filter((b: any) => b.id !== id),
+      boundaries: d.boundaries.filter((b: any) => b.fromBeaconId !== id && b.toBeaconId !== id),
     }))
   }
 
@@ -84,7 +84,7 @@ export default function WorkingDiagramClient() {
 
   const updateBoundary = (id: string, updates: Partial<BoundaryLine>) => {
     setDiagram(d => {
-      const boundaries = d.boundaries.map(b => {
+      const boundaries = d.boundaries.map((b: any) => {
         if (b.id !== id) return b
         const updated = { ...b, ...updates }
         if (updates.bearingDMS !== undefined) {
@@ -100,7 +100,7 @@ export default function WorkingDiagramClient() {
   }
 
   const removeBoundary = (id: string) => {
-    setDiagram(d => ({ ...d, boundaries: d.boundaries.filter(b => b.id !== id) }))
+    setDiagram(d => ({ ...d, boundaries: d.boundaries.filter((b: any) => b.id !== id) }))
   }
 
   const addSubArea = () => {
@@ -119,12 +119,12 @@ export default function WorkingDiagramClient() {
   const updateSubArea = (id: string, updates: Partial<SubArea>) => {
     setDiagram(d => ({
       ...d,
-      subAreas: d.subAreas.map(a => a.id === id ? { ...a, ...updates } : a),
+      subAreas: d.subAreas.map((a: any) => a.id === id ? { ...a, ...updates } : a),
     }))
   }
 
   const removeSubArea = (id: string) => {
-    setDiagram(d => ({ ...d, subAreas: d.subAreas.filter(a => a.id !== id) }))
+    setDiagram(d => ({ ...d, subAreas: d.subAreas.filter((a: any) => a.id !== id) }))
   }
 
   const exportSVG = () => {
@@ -161,7 +161,7 @@ export default function WorkingDiagramClient() {
       <div className="flex flex-1 overflow-hidden">
         <div className="w-[380px] border-r bg-white overflow-y-auto p-4">
           <div className="flex border-b mb-4">
-            {tabs.map(tab => (
+            {tabs.map((tab: any) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -212,7 +212,7 @@ export default function WorkingDiagramClient() {
           {activeTab === 'beacons' && (
             <div className="space-y-3">
               <button onClick={addBeacon} className="w-full px-3 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">+ Add Beacon</button>
-              {diagram.beacons.map(beacon => (
+              {diagram.beacons.map((beacon: any) => (
                 <div key={beacon.id} className="border rounded p-2 space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="font-medium text-sm">{beacon.id}</span>
@@ -240,7 +240,7 @@ export default function WorkingDiagramClient() {
           {activeTab === 'boundaries' && (
             <div className="space-y-3">
               <button onClick={addBoundary} disabled={diagram.beacons.length < 2} className="w-full px-3 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300">+ Add Boundary</button>
-              {diagram.boundaries.map(boundary => (
+              {diagram.boundaries.map((boundary: any) => (
                 <div key={boundary.id} className="border rounded p-2 space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="font-medium text-sm">{boundary.id}</span>
@@ -248,10 +248,10 @@ export default function WorkingDiagramClient() {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <select value={boundary.fromBeaconId} onChange={e => updateBoundary(boundary.id, { fromBeaconId: e.target.value })} className="w-full px-2 py-1 border rounded text-sm">
-                      {diagram.beacons.map(b => <option key={b.id} value={b.id}>{b.label}</option>)}
+                      {diagram.beacons.map((b: any) => <option key={b.id} value={b.id}>{b.label}</option>)}
                     </select>
                     <select value={boundary.toBeaconId} onChange={e => updateBoundary(boundary.id, { toBeaconId: e.target.value })} className="w-full px-2 py-1 border rounded text-sm">
-                      {diagram.beacons.map(b => <option key={b.id} value={b.id}>{b.label}</option>)}
+                      {diagram.beacons.map((b: any) => <option key={b.id} value={b.id}>{b.label}</option>)}
                     </select>
                   </div>
                   <input type="text" value={boundary.bearingDMS} onChange={e => updateBoundary(boundary.id, { bearingDMS: e.target.value })} placeholder="0° 00' 00''" className="w-full px-2 py-1 border rounded text-sm" />

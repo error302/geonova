@@ -49,12 +49,12 @@ export default function ChainageCalculator() {
 
   const removePoint = (id: string) => {
     if (alignmentPoints.length > 2) {
-      setAlignmentPoints(alignmentPoints.filter(p => p.id !== id));
+      setAlignmentPoints(alignmentPoints.filter((p: any) => p.id !== id));
     }
   };
 
   const updatePoint = (id: string, field: keyof AlignmentPoint, value: string) => {
-    setAlignmentPoints(alignmentPoints.map(p => p.id === id ? { ...p, [field]: value } : p));
+    setAlignmentPoints(alignmentPoints.map((p: any) => p.id === id ? { ...p, [field]: value } : p));
   };
 
   const calculate = () => {
@@ -65,8 +65,8 @@ export default function ChainageCalculator() {
     if (isNaN(startE) || isNaN(startN)) return;
 
     const alignment = alignmentPoints
-      .map(p => ({ name: p.name, easting: parseFloat(p.easting), northing: parseFloat(p.northing) }))
-      .filter(p => !isNaN(p.easting) && !isNaN(p.northing))
+      .map((p: any) => ({ name: p.name, easting: parseFloat(p.easting), northing: parseFloat(p.northing) }))
+      .filter((p: any) => !isNaN(p.easting) && !isNaN(p.northing))
 
     const table = computeChainageTable({
       start: { easting: startE, northing: startN },

@@ -38,7 +38,7 @@ export async function getUserJobs(): Promise<MetarduJob[]> {
     .from('jobs')
     .select('*')
     .eq('user_id', user.id)
-    .order('scheduled_date', { ascending: true, nullsFirst: true })
+    .order('scheduled_date', { ascending: true })
 
   if (error) throw error
   return data || []

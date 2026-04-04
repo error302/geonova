@@ -301,7 +301,7 @@ export function getDatumByCountry(country: string): DatumParameters[] {
     other: ['WGS84', 'NAD83_2011'],
   }
   const keys = map[country] ?? ['WGS84']
-  return keys.map(k => DATUM_REGISTRY[k]).filter(Boolean)
+  return keys.map((k: any) => DATUM_REGISTRY[k]).filter(Boolean)
 }
 
 export function getDatumByCountryAndIndex(country: string, index: number): DatumParameters {

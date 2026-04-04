@@ -12,16 +12,16 @@ export function interpretCSV(csvText: string): CSVInterpretResult {
   const warnings: string[] = []
   
   try {
-    const lines = csvText.trim().split('\n').filter(l => l.trim())
+    const lines = csvText.trim().split('\n').filter((l: any) => l.trim())
     if (lines.length < 2) {
       return { ok: false, error: 'File must have headers and at least one row', warnings }
     }
     
     // Parse headers
-    const headers = lines[0].split(',').map(h => h.trim())
+    const headers = lines[0].split(',').map((h: any) => h.trim())
     
     // Parse rows
-    const rows = lines.slice(1).map(line => {
+    const rows = lines.slice(1).map((line: any) => {
       const values = line.split(',')
       const row: Record<string, string> = {}
       headers.forEach((h, i) => {
@@ -43,7 +43,7 @@ export function interpretCSV(csvText: string): CSVInterpretResult {
       station: row['Station'] || row['station'] || row['Point'] || row['point'] || `P${i}`,
       target: row['Target'] || row['target'],
       type: mapRowToType(row, headers),
-      value1: parseFloat(Object.values(row).find(v => !isNaN(parseFloat(v))) || '0'),
+      value1: parseFloat(Object.values(row).find((v: any) => !isNaN(parseFloat(v))) || '0'),
       raw: Object.values(row).join(',')
     }))
     
@@ -69,7 +69,7 @@ export function interpretCSV(csvText: string): CSVInterpretResult {
 }
 
 function mapRowToType(row: Record<string, string>, headers: string[]): ObservationType {
-  const h = headers.map(h => h.toLowerCase())
+  const h = headers.map((h: any) => h.toLowerCase())
   if (h.includes('bs') && row['BS']) return 'BS'
   if (h.includes('fs') && row['FS']) return 'FS'
   if (h.includes('is') && row['IS']) return 'IS'

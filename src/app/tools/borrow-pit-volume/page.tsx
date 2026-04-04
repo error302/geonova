@@ -41,24 +41,24 @@ export default function BorrowPitVolumePage() {
   }
 
   const updatePoint = (id: number, field: keyof GridPoint, value: number) => {
-    setPoints(points.map(p => p.id === id ? { ...p, [field]: value } : p))
+    setPoints(points.map((p: any) => p.id === id ? { ...p, [field]: value } : p))
   }
 
   const removePoint = (id: number) => {
-    setPoints(points.filter(p => p.id !== id))
+    setPoints(points.filter((p: any) => p.id !== id))
   }
 
   const computeVolume = () => {
     if (points.length < 4) return { cut: 0, fill: 0, net: 0 }
 
     const rows = new Map<number, GridPoint[]>()
-    points.forEach(p => {
+    points.forEach((p: any) => {
       const row = rows.get(p.northing) || []
       row.push(p)
-      rows.set(p.northing, row.sort((a, b) => a.easting - b.easting))
+      rows.set(p.northing, row.sort((a: any, b: any) => a.easting - b.easting))
     })
 
-    const sortedRows = Array.from(rows.values()).sort((a, b) => a[0].northing - b[0].northing)
+    const sortedRows = Array.from(rows.values()).sort((a: any, b: any) => a[0].northing - b[0].northing)
     
     let totalCut = 0
     let totalFill = 0
@@ -121,7 +121,7 @@ export default function BorrowPitVolumePage() {
                 onChange={e => {
                   const val = Number(e.target.value)
                   setDesignElevation(val)
-                  setPoints(points.map(p => ({ ...p, designLevel: val })))
+                  setPoints(points.map((p: any) => ({ ...p, designLevel: val })))
                 }}
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white"
               />

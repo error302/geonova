@@ -533,12 +533,12 @@ export function areaComputation(input: AreaInput): AreaResult {
   const steps: InverseStep[] = [
     {
       description: `Σ(E × N_next) — positive diagonal products`,
-      formula: diagonalRows.map(r => `${r.from}×${r.to}=${r.posProduct.toFixed(2)}`).join(' + '),
+      formula: diagonalRows.map((r: any) => `${r.from}×${r.to}=${r.posProduct.toFixed(2)}`).join(' + '),
       value: `${posSum.toFixed(4)} m²`,
     },
     {
       description: `Σ(N × E_next) — negative diagonal products`,
-      formula: diagonalRows.map(r => `${r.to}×${r.from}=${r.negProduct.toFixed(2)}`).join(' + '),
+      formula: diagonalRows.map((r: any) => `${r.to}×${r.from}=${r.negProduct.toFixed(2)}`).join(' + '),
       value: `${negSum.toFixed(4)} m²`,
     },
     {

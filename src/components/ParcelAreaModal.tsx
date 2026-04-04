@@ -29,7 +29,7 @@ export default function ParcelAreaModal({ isOpen, onClose, points, onAreaResult 
     }
     
     // Add point if not already selected
-    if (!selectedPoints.some(p => p.id === point.id)) {
+    if (!selectedPoints.some((p: any) => p.id === point.id)) {
       setSelectedPoints([...selectedPoints, point])
     }
   }
@@ -37,7 +37,7 @@ export default function ParcelAreaModal({ isOpen, onClose, points, onAreaResult 
   const calculateArea = () => {
     if (selectedPoints.length < 3) return
 
-    const coords = selectedPoints.map(p => ({
+    const coords = selectedPoints.map((p: any) => ({
       easting: p.easting,
       northing: p.northing
     }))

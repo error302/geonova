@@ -110,7 +110,7 @@ function calculateTitlePageCompleteness(input: SurveyReportInput): number {
     input.reportDate,
     input.reportNumber
   ]
-  const present = requiredFields.filter(f => f && f.trim().length > 0).length
+  const present = requiredFields.filter((f: any) => f && f.trim().length > 0).length
   return Math.round((present / requiredFields.length) * 100)
 }
 
@@ -123,7 +123,7 @@ function calculateIntroductionCompleteness(input: SurveyReportInput): number {
     input.surveyPeriodStart,
     input.surveyPeriodEnd
   ]
-  const present = fields.filter(f => f && f.trim().length > 0).length
+  const present = fields.filter((f: any) => f && f.trim().length > 0).length
   return Math.round((present / fields.length) * 100)
 }
 

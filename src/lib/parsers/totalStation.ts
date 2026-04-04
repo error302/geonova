@@ -23,7 +23,7 @@ function detectFormat(content: string, filename: string): string {
     if (trimmed.startsWith('<')) return 'jobxml'
   }
   if (ext === 'csv' || ext === 'txt') {
-    const lines = content.split('\n').filter(l => l.trim())
+    const lines = content.split('\n').filter((l: any) => l.trim())
     if (lines[0]?.toLowerCase().includes('pt') && lines[0]?.toLowerCase().includes('n')) return 'topcon'
     if (lines[0]?.toLowerCase().includes('point') || lines[0]?.toLowerCase().includes('easting')) return 'csv'
   }
@@ -39,7 +39,7 @@ function parseGSI(content: string): ParseResult {
   const warnings: string[] = []
   const metadata: Record<string, string> = { format: 'Leica GSI' }
 
-  const lines = content.split('\n').filter(l => l.trim())
+  const lines = content.split('\n').filter((l: any) => l.trim())
   let pointCount = 0
 
   for (const line of lines) {
@@ -137,7 +137,7 @@ function parseTopconGTS(content: string): ParseResult {
   const warnings: string[] = []
   const metadata: Record<string, string> = { format: 'Topcon GTS' }
 
-  const lines = content.split('\n').filter(l => l.trim())
+  const lines = content.split('\n').filter((l: any) => l.trim())
   const header = lines[0]?.toLowerCase() || ''
   const hasHeader = header.includes('pt') || header.includes('n') || header.includes('e')
 
@@ -145,7 +145,7 @@ function parseTopconGTS(content: string): ParseResult {
   let pointCount = 0
 
   for (const line of dataLines) {
-    const parts = line.split(/[,\t\s]+/).filter(p => p.trim())
+    const parts = line.split(/[,\t\s]+/).filter((p: any) => p.trim())
     if (parts.length < 3) continue
 
     const pointId = parts[0].trim()
@@ -182,14 +182,14 @@ function parseCSV(content: string): ParseResult {
   const warnings: string[] = []
   const metadata: Record<string, string> = { format: 'Generic CSV' }
 
-  const lines = content.split('\n').filter(l => l.trim())
+  const lines = content.split('\n').filter((l: any) => l.trim())
   if (lines.length < 2) {
     errors.push('CSV file must have at least a header row and one data row.')
     return { format: 'csv', points, errors, warnings, metadata }
   }
 
   const header = lines[0].toLowerCase()
-  const cols = lines[0].split(/[,\t]+/).map(c => c.trim().toLowerCase().replace(/[^a-z0-9_]/g, ''))
+  const cols = lines[0].split(/[,\t]+/).map((c: any) => c.trim().toLowerCase().replace(/[^a-z0-9_]/g, ''))
 
   const pidIdx = cols.findIndex(c => c.includes('id') || c.includes('label') || c === 'pt' || c === 'point')
   const eIdx = cols.findIndex(c => c.includes('east') || c === 'e' || c === 'x')
@@ -203,7 +203,7 @@ function parseCSV(content: string): ParseResult {
   }
 
   for (let i = 1; i < lines.length; i++) {
-    const parts = lines[i].split(/[,\t]+/).map(p => p.trim())
+    const parts = lines[i].split(/[,\t]+/).map((p: any) => p.trim())
     const pointId = pidIdx >= 0 ? (parts[pidIdx] || `P${i}`) : `P${i}`
     const easting = parseFloat(parts[eIdx])
     const northing = parseFloat(parts[nIdx])
@@ -254,17 +254,17 @@ export function parseTraverseCSV(content: string): {
   rows: string[][]
   errors: string[]
 } {
-  const lines = content.split('\n').filter(l => l.trim())
+  const lines = content.split('\n').filter((l: any) => l.trim())
   if (lines.length < 2) return { headers: [], rows: [], errors: ['File is empty or has no data rows'] }
 
-  const headers = lines[0].split(/[,\t]+/).map(h => h.trim().toLowerCase().replace(/\s+/g, '_'))
-  const rows = lines.slice(1).map(line =>
-    line.split(/[,\t]+/).map(cell => cell.trim())
-  ).filter(r => r.some(c => c.length > 0))
+  const headers = lines[0].split(/[,\t]+/).map((h: any) => h.trim().toLowerCase().replace(/\s+/g, '_'))
+  const rows = lines.slice(1).map((line: any) =>
+    line.split(/[,\t]+/).map((cell: any) => cell.trim())
+  ).filter((r: any) => r.some((c: any) => c.length > 0))
 
   const errors: string[] = []
-  if (!headers.some(h => h.includes('station'))) errors.push('Missing "station" column')
-  if (!headers.some(h => h.includes('slope_dist') || h.includes('dist') || h.includes('sd'))) {
+  if (!headers.some((h: any) => h.includes('station'))) errors.push('Missing "station" column')
+  if (!headers.some((h: any) => h.includes('slope_dist') || h.includes('dist') || h.includes('sd'))) {
     errors.push('Missing slope distance column (slope_dist, dist, or sd)')
   }
 

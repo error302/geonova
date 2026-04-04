@@ -26,7 +26,7 @@ export default function LayerManager({ projectId, layers, onLayersChange }: Laye
   }
 
   const toggleVisibility = async (layerId: string, currentVisibility: boolean) => {
-    const nextLayers = localLayers.map(layer =>
+    const nextLayers = localLayers.map((layer: any) =>
       layer.id === layerId ? { ...layer, visibility: !currentVisibility } : layer
     )
 
@@ -44,7 +44,7 @@ export default function LayerManager({ projectId, layers, onLayersChange }: Laye
   }
 
   const handleOpacityChange = async (layerId: string, opacity: number) => {
-    const nextLayers = localLayers.map(layer =>
+    const nextLayers = localLayers.map((layer: any) =>
       layer.id === layerId ? { ...layer, opacity } : layer
     )
 
@@ -75,7 +75,7 @@ export default function LayerManager({ projectId, layers, onLayersChange }: Laye
 
   const handleDeleteLayer = (layerId: string) => {
     if (!confirm('Are you sure you want to delete this layer?')) return
-    applyLayers(localLayers.filter(layer => layer.id !== layerId))
+    applyLayers(localLayers.filter((layer: any) => layer.id !== layerId))
   }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +84,7 @@ export default function LayerManager({ projectId, layers, onLayersChange }: Laye
 
     setIsUploading(true)
 
-    Array.from(files).forEach(file => {
+    Array.from(files).forEach((file: any) => {
       const reader = new FileReader()
       reader.onload = (event) => {
         try {
@@ -241,7 +241,7 @@ export default function LayerManager({ projectId, layers, onLayersChange }: Laye
 
       <div className="mt-4 pt-4 border-t border-[var(--border-color)]">
         <p className="text-xs text-[var(--text-muted)]">
-          {localLayers.length} layer(s) - {localLayers.filter(layer => layer.visibility).length} visible
+          {localLayers.length} layer(s) - {localLayers.filter((layer: any) => layer.visibility).length} visible
         </p>
       </div>
     </div>

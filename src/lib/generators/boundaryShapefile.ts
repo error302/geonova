@@ -32,7 +32,7 @@ export async function generateBoundaryShapefile(
       type: 'Feature',
       geometry: {
         type: 'Polygon',
-        coordinates: [beacons.map(b => [b.e, b.n]).concat([[beacons[0].e, beacons[0].n]])]
+        coordinates: [beacons.map((b: any) => [b.e, b.n]).concat([[beacons[0].e, beacons[0].n]])]
       },
       properties: {
         project: project.name,
@@ -55,3 +55,4 @@ export async function generateBoundaryShapefile(
   const blob = await zip.generateAsync({ type: 'nodebuffer' });
   return Buffer.from(blob);
 }
+

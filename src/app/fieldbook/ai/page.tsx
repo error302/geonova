@@ -49,7 +49,7 @@ export default function FieldBookAIPage() {
   };
 
   const parseTextToObservations = (text: string): ParsedFieldBook => {
-    const lines = text.split('\n').filter(l => l.trim());
+    const lines = text.split('\n').filter((l: any) => l.trim());
     const observations: Observation[] = [];
     const warnings: string[] = [];
     let surveyType = 'unknown';
@@ -70,7 +70,7 @@ export default function FieldBookAIPage() {
       match = line.match(/(\w+)\s+bs\s+(\d+\.?\d*)/i);
       if (match && match[1] && match[2]) {
         surveyType = 'leveling';
-        const existing = observations.find(o => o.from === match![1] && o.bs === undefined);
+        const existing = observations.find((o: any) => o.from === match![1] && o.bs === undefined);
         if (existing) {
           existing.bs = parseFloat(match[2]);
         } else {
@@ -82,7 +82,7 @@ export default function FieldBookAIPage() {
       match = line.match(/(\w+)\s+fs\s+(\d+\.?\d*)/i);
       if (match && match[1] && match[2]) {
         surveyType = 'leveling';
-        const existing = observations.find(o => o.from === match![1] && o.fs === undefined);
+        const existing = observations.find((o: any) => o.from === match![1] && o.fs === undefined);
         if (existing) {
           existing.fs = parseFloat(match[2]);
         } else {
@@ -153,7 +153,7 @@ export default function FieldBookAIPage() {
 
     setSaving(true);
     try {
-      const insertData = result.stations.map(obs => ({
+      const insertData = result.stations.map((obs: any) => ({
         project_id: selectedProject,
         name: obs.to || obs.from,
         easting: 0,
@@ -312,7 +312,7 @@ export default function FieldBookAIPage() {
                       onChange={(e) => setSelectedProject(e.target.value)}
                     >
                       <option value="">Select a project...</option>
-                      {projects.map(p => (
+                      {projects.map((p: any) => (
                         <option key={p.id} value={p.id}>{p.name}</option>
                       ))}
                     </select>

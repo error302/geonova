@@ -158,3 +158,4 @@ export async function generateWorkingDiagramPdf(
 
   return Buffer.from(doc.output('arraybuffer'));
 }
+

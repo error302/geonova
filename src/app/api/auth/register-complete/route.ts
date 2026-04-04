@@ -1,52 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient as createAdminClient } from '@supabase/supabase-js'
-import { createClient } from '@/lib/supabase/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import db from '@/lib/db'
 
-function getAdmin() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) return null
-  return createAdminClient(url, key, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  })
-}
-
-// Called server-side after Supabase auth.signUp succeeds.
-// Creates the trial subscription using the service role key (bypasses RLS safely).
 export async function POST(req: NextRequest) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const admin = getAdmin()
-  if (!admin) {
-    // Non-fatal — subscription can be created later
-    return NextResponse.json({ ok: true, note: 'admin not configured' })
-  }
+  const existingSub = await db.query(
+    'SELECT id FROM user_subscriptions WHERE user_id = $1',
+    [session.user.id]
+  )
 
-  // Idempotent: skip if trial already exists
-  const { data: existing } = await admin
-    .from('user_subscriptions')
-    .select('id')
-    .eq('user_id', user.id)
-    .maybeSingle()
-
-  if (existing) {
+  if (existingSub.rows.length > 0) {
     return NextResponse.json({ ok: true })
   }
 
   const now = new Date()
-  await admin.from('user_subscriptions').insert({
-    user_id: user.id,
-    plan_id: 'pro',
-    status: 'trial',
-    trial_ends_at: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-    current_period_start: now.toISOString(),
-    current_period_end: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-  })
+  await db.query(
+    `INSERT INTO user_subscriptions 
+     (user_id, plan_id, status, trial_ends_at, current_period_start, current_period_end)
+     VALUES ($1, 'pro', 'trial', $2, $3, $4)`,
+    [
+      session.user.id,
+      new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+      now.toISOString(),
+      new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString()
+    ]
+  )
 
   return NextResponse.json({ ok: true })
 }

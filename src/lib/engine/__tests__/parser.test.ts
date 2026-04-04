@@ -42,7 +42,7 @@ describe('pointsToCSV', () => {
 
   it('has the same number of data rows as points', () => {
     const csv = pointsToCSV(POINTS)
-    const lines = csv.trim().split('\n').filter(l => l.trim())
+    const lines = csv.trim().split('\n').filter((l: any) => l.trim())
     // May have a header row — data rows should include all points
     expect(lines.length).toBeGreaterThanOrEqual(POINTS.length)
   })

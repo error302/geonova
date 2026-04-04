@@ -20,7 +20,7 @@ export default function GNSSProcessor({ projectId = '' }: { projectId?: string }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files).map(file => ({
+      const newFiles = Array.from(e.target.files).map((file: any) => ({
         file,
         stationLabel: ''
       }))
@@ -53,22 +53,22 @@ export default function GNSSProcessor({ projectId = '' }: { projectId?: string }
       setStatus('Processing baselines...')
       
       const formData = new FormData()
-      files.forEach(f => formData.append('files', f.file))
+      files.forEach((f: any) => formData.append('files', f.file))
       formData.append('projectId', projectId)
-      formData.append('stationLabels', JSON.stringify(files.map(f => f.stationLabel)))
+      formData.append('stationLabels', JSON.stringify(files.map((f: any) => f.stationLabel)))
 
       const response = await fetch('/api/gnss/process', {
         method: 'POST',
         body: JSON.stringify({
           projectId,
-          files: files.map(f => ({
+          files: files.map((f: any) => ({
             filename: f.file.name,
             stationId: f.stationLabel,
             fileType: f.file.name.endsWith('.nav') ? 'NAV' : 'OBS',
             sizeBytes: f.file.size,
             storagePath: ''
           })),
-          stationLabels: files.map(f => f.stationLabel)
+          stationLabels: files.map((f: any) => f.stationLabel)
         })
       })
 
@@ -91,8 +91,8 @@ export default function GNSSProcessor({ projectId = '' }: { projectId?: string }
     }
   }
 
-  const fixedCount = results.filter(r => r.fixed).length
-  const rmsValues = results.map(r => r.rmsError)
+  const fixedCount = results.filter((r: any) => r.fixed).length
+  const rmsValues = results.map((r: any) => r.rmsError)
   const bestRms = rmsValues.length ? Math.min(...rmsValues) : 0
   const worstRms = rmsValues.length ? Math.max(...rmsValues) : 0
 

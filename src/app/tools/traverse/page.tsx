@@ -47,7 +47,7 @@ export default function TraverseCalculator() {
   };
 
   const updateLeg = (id: number, field: keyof Leg, value: string) => {
-    setLegs(legs.map(l => l.id === id ? { ...l, [field]: value } : l));
+    setLegs(legs.map((l: any) => l.id === id ? { ...l, [field]: value } : l));
   };
 
 
@@ -75,11 +75,11 @@ export default function TraverseCalculator() {
     setCalculating(true)
     try {
       const points = legs
-        .filter(l => l.n && l.e)
-        .map(l => ({ name: l.name, northing: parseFloat(l.n), easting: parseFloat(l.e) }));
+        .filter((l: any) => l.n && l.e)
+        .map((l: any) => ({ name: l.name, northing: parseFloat(l.n), easting: parseFloat(l.e) }));
 
-      const distances = legs.map(l => parseFloat(l.dist)).filter(d => !isNaN(d));
-      const bearings = legs.map(l => dmsToDecimal(l.bearingD, l.bearingM, l.bearingS)).filter(b => !isNaN(b));
+      const distances = legs.map((l: any) => parseFloat(l.dist)).filter((d: any) => !isNaN(d));
+      const bearings = legs.map((l: any) => dmsToDecimal(l.bearingD, l.bearingM, l.bearingS)).filter((b: any) => !isNaN(b));
 
       if (points.length < 2 || distances.length < 2 || bearings.length < 2) {
         setCalcError('Please enter at least 2 legs with valid distances, bearings, and at least one known coordinate.')

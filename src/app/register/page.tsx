@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { signIn } from 'next-auth/react'
 import { Eye, EyeOff, CheckCircle2, Mail } from 'lucide-react'
 
 function getPasswordStrength(password: string): { label: string; color: string; width: string } {
@@ -30,7 +30,6 @@ export default function RegisterPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
-  const supabase = createClient()
   const strength = getPasswordStrength(password)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,38 +46,42 @@ export default function RegisterPage() {
     }
 
     setLoading(true)
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { full_name: fullName },
-        emailRedirectTo: `${window.location.origin}/auth/callback`
-      }
-    })
 
-    if (signUpError) {
-      if (signUpError.message.includes('User already registered')) {
-        setError('An account with this email already exists.')
-      } else {
-        setError('Registration failed. Please try again.')
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, fullName }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Registration failed. Please try again.')
+        setLoading(false)
+        return
       }
+
+      // Auto-login after successful registration
+      const loginResult = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (loginResult?.error) {
+        // Registration succeeded but auto-login failed — send to login page
+        setSuccess(true)
+        setLoading(false)
+        return
+      }
+
+      // Redirect to dashboard
+      window.location.href = '/dashboard'
+    } catch {
+      setError('Registration failed. Please try again.')
       setLoading(false)
-      return
     }
-
-    if (data.user) {
-      await Promise.allSettled([
-        fetch('/api/auth/register-complete', { method: 'POST' }),
-        fetch('/api/emails/welcome', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, name: fullName }),
-        }),
-      ])
-    }
-
-    setSuccess(true)
-    setLoading(false)
   }
 
   return (
@@ -111,11 +114,11 @@ export default function RegisterPage() {
           {success ? (
             <div className="text-center">
               <Mail className="w-16 h-16 text-[var(--accent)] mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Verify your email</h2>
-              <p className="text-[var(--text-secondary)] mb-1">We&apos;ve sent a confirmation link to:</p>
-              <p className="text-[var(--text-primary)] font-medium mb-4">{email}</p>
-              <p className="text-sm text-[var(--text-muted)] mb-6">Click the link to activate your account.</p>
-              <a href="/login" className="text-[var(--accent)] hover:underline">Back to sign in</a>
+              <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Account created!</h2>
+              <p className="text-[var(--text-secondary)] mb-4">Your account has been created successfully.</p>
+              <a href="/login" className="inline-block px-6 py-3 bg-[var(--accent)] text-black font-semibold rounded-lg hover:bg-[var(--accent-dim)] transition-colors">
+                Sign in now
+              </a>
             </div>
           ) : (
             <>

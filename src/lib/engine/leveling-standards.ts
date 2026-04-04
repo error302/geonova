@@ -131,7 +131,7 @@ export function validateLevelingClosure(input: LevelingClosureInput): LevelingCl
 
   let requiredOrder = environment
   let allowable = getAllowableMisclosure(distanceKm, environment)
-  let requiredOrderObj = LEVELING_ORDERS.find(o => o.order === requiredOrder)
+  let requiredOrderObj = LEVELING_ORDERS.find((o: any) => o.order === requiredOrder)
 
   if (country === 'kenya') {
     // Source: RDM 1.1 Kenya 2025, Table 5.1 — Direct differential leveling: 10√K mm
@@ -143,7 +143,7 @@ export function validateLevelingClosure(input: LevelingClosureInput): LevelingCl
     const indirectTolerance = 0.030 * Math.sqrt(distanceKm)
     const rdm1_1Tolerance = 0.010 * Math.sqrt(distanceKm)  // RDM 1.1 Table 5.1: 10√K mm
     allowable = rdm1_1Tolerance  // Kenya RDM 1.1 surveys must use 10√K
-    requiredOrderObj = LEVELING_ORDERS.find(o => o.order === 'third_order')
+    requiredOrderObj = LEVELING_ORDERS.find((o: any) => o.order === 'third_order')
     if (misclosureMetres > directTolerance && misclosureMetres <= indirectTolerance) {
       warnings.push('Kenya Reg 63: Misclosure within indirect leveling tolerance (30mm/√K). For RDM 1.1 compliance use 10√K mm (direct).')
     }
@@ -176,7 +176,7 @@ export function validateLevelingClosure(input: LevelingClosureInput): LevelingCl
 }
 
 function getAllowableMisclosure(km: number, order: string): number {
-  const entry = LEVELING_ORDERS.find(o => o.order === order)
+  const entry = LEVELING_ORDERS.find((o: any) => o.order === order)
   return entry ? entry.closureMetres * Math.sqrt(km) : 0.010 * Math.sqrt(km) // Kenya RDM 1.1 default
 }
 
@@ -214,7 +214,7 @@ export function validateCFactor(input: CFactorInput): CFactorResult {
   const ci = contourInterval ?? 100
   const k = 1 / ci
 
-  const entry = C_FACTOR_TABLE.find(e => Math.abs(e.kValue - k) < 0.001)
+  const entry = C_FACTOR_TABLE.find((e: any) => Math.abs(e.kValue - k) < 0.001)
     ?? C_FACTOR_TABLE[C_FACTOR_TABLE.length - 1]
 
   const cFactor = maxError / horizontalDistance
@@ -320,10 +320,10 @@ export function getLevelingOrderForCountry(
       default: 'third_order',
     }
     const orderId = envMap[environment ?? 'default'] ?? 'third_order'
-    return LEVELING_ORDERS.find(o => o.order === orderId) ?? LEVELING_ORDERS[2]
+    return LEVELING_ORDERS.find((o: any) => o.order === orderId) ?? LEVELING_ORDERS[2]
   }
-  if (country === 'kenya') return LEVELING_ORDERS.find(o => o.order === 'third_order') ?? LEVELING_ORDERS[2]
-  if (country === 'uk') return LEVELING_ORDERS.find(o => o.order === 'third_order') ?? LEVELING_ORDERS[2]
-  if (country === 'australia') return LEVELING_ORDERS.find(o => o.order === 'third_order') ?? LEVELING_ORDERS[2]
-  return LEVELING_ORDERS.find(o => o.order === 'third_order') ?? LEVELING_ORDERS[2]
+  if (country === 'kenya') return LEVELING_ORDERS.find((o: any) => o.order === 'third_order') ?? LEVELING_ORDERS[2]
+  if (country === 'uk') return LEVELING_ORDERS.find((o: any) => o.order === 'third_order') ?? LEVELING_ORDERS[2]
+  if (country === 'australia') return LEVELING_ORDERS.find((o: any) => o.order === 'third_order') ?? LEVELING_ORDERS[2]
+  return LEVELING_ORDERS.find((o: any) => o.order === 'third_order') ?? LEVELING_ORDERS[2]
 }

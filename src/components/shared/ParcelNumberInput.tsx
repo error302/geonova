@@ -34,10 +34,10 @@ export default function ParcelNumberInput({
   const [parcelNumber, setParcelNumber] = useState('')
 
   const sections = selectedCounty 
-    ? KENYA_COUNTIES.find(c => c.code === selectedCounty)?.registrationSections || []
+    ? KENYA_COUNTIES.find((c: any) => c.code === selectedCounty)?.registrationSections || []
     : []
 
-  const currentSection = sections.find(s => s.code === selectedSection)
+  const currentSection = sections.find((s: any) => s.code === selectedSection)
 
   // Parse free-text input
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function ParcelNumberInput({
     if (result.registrationSection) {
       const section = lookupRegistrationSection(result.registrationSection)
       if (section) {
-        const county = KENYA_COUNTIES.find(c => c.code === section.county)
+        const county = KENYA_COUNTIES.find((c: any) => c.code === section.county)
         if (county) {
           setSelectedCounty(county.code)
           setSelectedSection(section.code)
@@ -141,7 +141,7 @@ export default function ParcelNumberInput({
               className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-sm"
             >
               <option value="">Select County</option>
-              {KENYA_COUNTIES.map(c => (
+              {KENYA_COUNTIES.map((c: any) => (
                 <option key={c.code} value={c.code}>{c.name}</option>
               ))}
             </select>
@@ -159,7 +159,7 @@ export default function ParcelNumberInput({
               className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-sm"
             >
               <option value="">Select Section</option>
-              {sections.map(s => (
+              {sections.map((s: any) => (
                 <option key={s.code} value={s.code}>{s.name}</option>
               ))}
             </select>

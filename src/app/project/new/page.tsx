@@ -14,7 +14,7 @@ export default function NewProjectPage() {
   const [location, setLocation] = useState('')
   const [selectedCountry, setSelectedCountry] = useState<SurveyingCountry>(defaultCountry)
   const [utmZone, setUtmZone] = useState(() => {
-    const c = ALL_COUNTRIES.find(c => c.id === defaultCountry)
+    const c = ALL_COUNTRIES.find((c: any) => c.id === defaultCountry)
     return c ? String(c.id === 'us' ? '17' : c.id === 'uk' ? '30' : c.id === 'australia' ? '51' : 37) : '37'
   })
   const [hemisphere, setHemisphere] = useState('S')
@@ -29,7 +29,7 @@ export default function NewProjectPage() {
 
   const handleCountryChange = (newCountry: SurveyingCountry) => {
     setSelectedCountry(newCountry)
-    const c = ALL_COUNTRIES.find(c => c.id === newCountry)
+    const c = ALL_COUNTRIES.find((c: any) => c.id === newCountry)
     if (c) {
       if (c.id === 'us') { setUtmZone('17'); setHemisphere('N') }
       else if (c.id === 'uk') { setUtmZone('30'); setHemisphere('N') }
@@ -51,7 +51,7 @@ export default function NewProjectPage() {
     }
   }
 
-  const currentCountry = ALL_COUNTRIES.find(c => c.id === selectedCountry)
+  const currentCountry = ALL_COUNTRIES.find((c: any) => c.id === selectedCountry)
   const datumLabels: Record<SurveyingCountry, string> = {
     kenya: 'ARC1960',
     uganda: 'ARC1960',
@@ -268,7 +268,7 @@ export default function NewProjectPage() {
               onChange={(e) => handleCountryChange(e.target.value as SurveyingCountry)}
               className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
             >
-              {ALL_COUNTRIES.map(c => (
+              {ALL_COUNTRIES.map((c: any) => (
                 <option key={c.id} value={c.id}>{c.flag} {c.name}</option>
               ))}
             </select>

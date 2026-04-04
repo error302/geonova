@@ -7,7 +7,7 @@ export function levelingSolved(input: LevelingInput, result: LevelingResult): So
   const sumBS = result.readings.reduce((s, r) => s + (r.bs ?? 0), 0)
   const sumFS = result.readings.reduce((s, r) => s + (r.fs ?? 0), 0)
 
-  const last = [...result.readings].reverse().find(r => typeof r.reducedLevel === 'number')
+  const last = [...result.readings].reverse().find((r: any) => typeof r.reducedLevel === 'number')
   const lastRL = last?.reducedLevel ?? input.openingRL
 
   const arithmeticDiff = (sumBS - sumFS) - (lastRL - input.openingRL)

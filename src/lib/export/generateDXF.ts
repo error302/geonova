@@ -50,7 +50,7 @@ export function generateDXF(options: DXFExportOptions): string {
   drawing.addLayer('TRAVERSE', Drawing.ACI.CYAN, 'CONTINUOUS')
   drawing.addLayer('LABELS', Drawing.ACI.WHITE, 'CONTINUOUS')
 
-  const byName = new Map(points.map(p => [p.name, p] as const))
+  const byName = new Map(points.map((p: any) => [p.name, p] as const))
 
   // Points + labels
   for (const p of points) {
@@ -110,7 +110,7 @@ export function generateDXFFromProject(
     projectName,
     points,
     traverseLegs:
-      traverseResult?.legs.map(l => ({
+      traverseResult?.legs.map((l: any) => ({
         from: l.from,
         to: l.to,
         distance: 0,

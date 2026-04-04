@@ -1278,7 +1278,7 @@ export default function GuideTypePage({ params }: PageProps) {
 
   const toggleStep = (stepId: number) => {
     const newCompleted = completedSteps.includes(stepId)
-      ? completedSteps.filter(s => s !== stepId)
+      ? completedSteps.filter((s: any) => s !== stepId)
       : [...completedSteps, stepId];
     setCompletedSteps(newCompleted);
     saveProgress(newCompleted, mode);
@@ -1286,7 +1286,7 @@ export default function GuideTypePage({ params }: PageProps) {
 
   const toggleFieldChecklist = (index: number) => {
     const next = fieldChecklistDone.includes(index)
-      ? fieldChecklistDone.filter(i => i !== index)
+      ? fieldChecklistDone.filter((i: any) => i !== index)
       : [...fieldChecklistDone, index]
     setFieldChecklistDone(next)
     localStorage.setItem(`guide_${type}_fieldChecklist`, JSON.stringify(next))

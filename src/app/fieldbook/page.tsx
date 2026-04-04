@@ -257,7 +257,7 @@ export default function DigitalFieldBookPage() {
           setSavedFieldbooks((prev) => {
             const byId = new Map(prev.map((x) => [x.id, x]))
             for (const row of data as any[]) byId.set(row.id, row)
-            return Array.from(byId.values()).sort((a, b) => String(b.updated_at ?? b.created_at ?? '').localeCompare(String(a.updated_at ?? a.created_at ?? '')))
+            return Array.from(byId.values()).sort((a: any, b: any) => String(b.updated_at ?? b.created_at ?? '').localeCompare(String(a.updated_at ?? a.created_at ?? '')))
           })
         }
       } catch {}

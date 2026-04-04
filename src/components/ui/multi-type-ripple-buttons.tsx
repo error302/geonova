@@ -25,7 +25,7 @@ interface RippleButtonProps {
 const hexToRgba = (hex: string, alpha: number): string => {
   let hexValue = hex.startsWith('#') ? hex.slice(1) : hex;
   if (hexValue.length === 3) {
-    hexValue = hexValue.split('').map(char => char + char).join('');
+    hexValue = hexValue.split('').map((char: any) => char + char).join('');
   }
   const r = parseInt(hexValue.slice(0, 2), 16);
   const g = parseInt(hexValue.slice(2, 4), 16);
@@ -144,7 +144,7 @@ const RippleButton: React.FC<RippleButtonProps> = ({
     const newRipple: RippleState = { key: Date.now(), x, y, size, color: determinedJsRippleColor };
     setJsRipples(prev => [...prev, newRipple]);
     setTimeout(() => {
-      setJsRipples(currentRipples => currentRipples.filter(r => r.key !== newRipple.key));
+      setJsRipples(currentRipples => currentRipples.filter((r: any) => r.key !== newRipple.key));
     }, rippleDuration);
   };
 
@@ -157,7 +157,7 @@ const RippleButton: React.FC<RippleButtonProps> = ({
 
   const jsRippleElements = (
     <div className="absolute inset-0 pointer-events-none z-[5]">
-      {jsRipples.map(ripple => (
+      {jsRipples.map((ripple: any) => (
         <span
           key={ripple.key}
           className="absolute rounded-full animate-js-ripple-effect"

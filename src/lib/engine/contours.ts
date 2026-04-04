@@ -68,7 +68,7 @@ export function generateContours(
 ): ContourLine[] {
   if (points.length < 3) return []
 
-  const elevations = points.map(p => p.elevation)
+  const elevations = points.map((p: any) => p.elevation)
   const minElev = Math.min(...elevations)
   const maxElev = Math.max(...elevations)
 

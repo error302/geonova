@@ -17,7 +17,7 @@ describe('riseAndFall', () => {
   it('produces readings with reduced levels', () => {
     const r = riseAndFall(LEVELING_INPUT)
     expect(r.readings.length).toBeGreaterThan(0)
-    const withRL = r.readings.filter(row => row.reducedLevel !== undefined)
+    const withRL = r.readings.filter((row: any) => row.reducedLevel !== undefined)
     expect(withRL.length).toBeGreaterThan(0)
   })
 
@@ -48,7 +48,7 @@ describe('riseAndFall', () => {
 
   it('opening RL is first reduced level', () => {
     const r = riseAndFall(LEVELING_INPUT)
-    const first = r.readings.find(x => x.reducedLevel !== undefined)
+    const first = r.readings.find((x: any) => x.reducedLevel !== undefined)
     expect(first?.reducedLevel).toBeCloseTo(100.000, 3)
   })
 })
@@ -58,7 +58,7 @@ describe('heightOfCollimation', () => {
 
   it('returns readings with reduced levels', () => {
     const r = heightOfCollimation(HOC_INPUT)
-    expect(r.readings.some(x => x.reducedLevel !== undefined)).toBe(true)
+    expect(r.readings.some((x: any) => x.reducedLevel !== undefined)).toBe(true)
   })
 
   it('arithmetic check is a boolean', () => {
@@ -70,8 +70,8 @@ describe('heightOfCollimation', () => {
   it('final RL matches rise-and-fall for same input', () => {
     const rf = riseAndFall(LEVELING_INPUT)
     const hoc = heightOfCollimation(HOC_INPUT)
-    const rfFinal = [...rf.readings].reverse().find(x => x.reducedLevel !== undefined)?.reducedLevel
-    const hocFinal = [...hoc.readings].reverse().find(x => x.reducedLevel !== undefined)?.reducedLevel
+    const rfFinal = [...rf.readings].reverse().find((x: any) => x.reducedLevel !== undefined)?.reducedLevel
+    const hocFinal = [...hoc.readings].reverse().find((x: any) => x.reducedLevel !== undefined)?.reducedLevel
     if (rfFinal !== undefined && hocFinal !== undefined) {
       expect(hocFinal).toBeCloseTo(rfFinal, 2)
     }

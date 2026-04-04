@@ -103,7 +103,7 @@ export function renderBoundaryPlan(doc: jsPDF, geom: DeedPlanGeometry, panel: Pa
   const rawScale = Math.max(scaleFromE, scaleFromN) * 1.15;
 
   const standardScales = [100, 200, 250, 500, 1000, 1250, 2000, 2500, 5000];
-  const scaleRatio = standardScales.find((s) => s >= rawScale) ?? 10000;
+  const scaleRatio = standardScales.find((s: any) => s >= rawScale) ?? 10000;
 
   const centreE = (geom.minE + geom.maxE) / 2;
   const centreN = (geom.minN + geom.maxN) / 2;
@@ -114,7 +114,7 @@ export function renderBoundaryPlan(doc: jsPDF, geom: DeedPlanGeometry, panel: Pa
     return [px, py];
   };
 
-  const pts = geom.stations.map((s) => worldToMm(s.easting, s.northing));
+  const pts = geom.stations.map((s: any) => worldToMm(s.easting, s.northing));
 
   doc.setDrawColor(30, 80, 100);
   doc.setLineWidth(0.5);
@@ -158,3 +158,4 @@ export function renderBoundaryPlan(doc: jsPDF, geom: DeedPlanGeometry, panel: Pa
 
   return scaleRatio;
 }
+

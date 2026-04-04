@@ -50,7 +50,7 @@ export default function CSVUploadModal({
       }
 
       const validationWarnings = validatePoints(result.points)
-      setParsedPoints(result.points.map(p => ({
+      setParsedPoints(result.points.map((p: any) => ({
         name: p.name,
         easting: p.easting,
         northing: p.northing,
@@ -70,7 +70,7 @@ export default function CSVUploadModal({
     setLoading(true)
 
     try {
-      const pointsToInsert = parsedPoints.map(p => ({
+      const pointsToInsert = parsedPoints.map((p: any) => ({
         project_id: projectId,
         name: p.name,
         easting: p.easting,

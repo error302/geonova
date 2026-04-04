@@ -59,20 +59,20 @@ function saveProposals(p: JobProposal[]) {
 }
 
 export function getJobs(filters?: { country?: string; surveyType?: string; status?: JobStatus }): SurveyJob[] {
-  let jobs = loadJobs().sort((a, b) => b.postedAt.localeCompare(a.postedAt))
-  if (filters?.country) jobs = jobs.filter(j => j.country === filters.country)
-  if (filters?.surveyType) jobs = jobs.filter(j => j.surveyType === filters.surveyType)
-  if (filters?.status) jobs = jobs.filter(j => j.status === filters.status)
+  let jobs = loadJobs().sort((a: any, b: any) => b.postedAt.localeCompare(a.postedAt))
+  if (filters?.country) jobs = jobs.filter((j: any) => j.country === filters.country)
+  if (filters?.surveyType) jobs = jobs.filter((j: any) => j.surveyType === filters.surveyType)
+  if (filters?.status) jobs = jobs.filter((j: any) => j.status === filters.status)
   return jobs
 }
 
 export function getJobById(id: string): SurveyJob | undefined {
-  return loadJobs().find(j => j.id === id)
+  return loadJobs().find((j: any) => j.id === id)
 }
 
 export function searchJobs(query: string): SurveyJob[] {
   const q = query.toLowerCase()
-  return loadJobs().filter(j =>
+  return loadJobs().filter((j: any) =>
     j.title.toLowerCase().includes(q) ||
     j.description.toLowerCase().includes(q) ||
     j.location.toLowerCase().includes(q) ||
@@ -103,7 +103,7 @@ export function updateJobStatus(id: string, status: JobStatus): boolean {
 }
 
 export function deleteJob(id: string) {
-  saveJobs(loadJobs().filter(j => j.id !== id))
+  saveJobs(loadJobs().filter((j: any) => j.id !== id))
 }
 
 export function submitProposal(data: Omit<JobProposal, 'id' | 'submittedAt'>): JobProposal {
@@ -118,7 +118,7 @@ export function submitProposal(data: Omit<JobProposal, 'id' | 'submittedAt'>): J
 }
 
 export function getProposalsForJob(jobId: string): JobProposal[] {
-  return loadProposals().filter(p => p.jobId === jobId).sort((a, b) => b.submittedAt.localeCompare(a.submittedAt))
+  return loadProposals().filter((p: any) => p.jobId === jobId).sort((a: any, b: any) => b.submittedAt.localeCompare(a.submittedAt))
 }
 
 export const JOB_TYPES: { id: SurveyJobType; label: string }[] = [
@@ -153,7 +153,7 @@ export const COMMON_SKILLS = [
 ]
 
 export function formatBudget(amount: number, currency: Currency): string {
-  const c = CURRENCIES.find(c => c.id === currency)
+  const c = CURRENCIES.find((c: any) => c.id === currency)
   const sym = c?.symbol ?? currency
   if (currency === 'KES' || currency === 'UGX' || currency === 'TZS' || currency === 'NGN') {
     return `${sym} ${amount.toLocaleString()}`

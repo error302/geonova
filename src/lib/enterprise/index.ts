@@ -120,7 +120,7 @@ export interface CloudProject {
 }
 
 export function getPlanById(id: string): SubscriptionPlan | undefined {
-  return SUBSCRIPTION_PLANS.find(p => p.id === id)
+  return SUBSCRIPTION_PLANS.find((p: any) => p.id === id)
 }
 
 export function canAccessFeature(planId: string, feature: string): boolean {

@@ -1158,7 +1158,7 @@ export function getCountryStandard(country: SurveyingCountry): CountrySurveyStan
 }
 
 export function getCountryByISO(isoCode: string): CountrySurveyStandard | undefined {
-  return Object.values(COUNTRY_REGISTRY).find(c => c.isoCode === isoCode.toUpperCase())
+  return Object.values(COUNTRY_REGISTRY).find((c: any) => c.isoCode === isoCode.toUpperCase())
 }
 
 export type SurveyEnvironment =
@@ -1174,29 +1174,29 @@ export function getTraverseOrderForEnvironment(
   const orders = std.traverseOrders
 
   if (country === 'kenya') {
-    if (environment === 'urban') return orders.find(o => o.order === '3rd_order_urban')
-    if (environment === 'transmission_line') return orders.find(o => o.order === '4th_order_other')
-    return orders.find(o => o.order === '4th_order_other')
+    if (environment === 'urban') return orders.find((o: any) => o.order === '3rd_order_urban')
+    if (environment === 'transmission_line') return orders.find((o: any) => o.order === '4th_order_other')
+    return orders.find((o: any) => o.order === '4th_order_other')
   }
 
   if (country === 'bahrain') {
-    if (environment === 'geodetic') return orders.find(o => o.order === 'geodetic')
-    if (environment === 'detail') return orders.find(o => o.order === 'detail_survey' || o.order === 'detail')
-    return orders.find(o => o.order === 'cadastral_control') ?? orders.find(o => o.order === 'geodetic')
+    if (environment === 'geodetic') return orders.find((o: any) => o.order === 'geodetic')
+    if (environment === 'detail') return orders.find((o: any) => o.order === 'detail_survey' || o.order === 'detail')
+    return orders.find((o: any) => o.order === 'cadastral_control') ?? orders.find((o: any) => o.order === 'geodetic')
   }
 
   if (country === 'new_zealand') {
-    return orders.find(o => o.order === 'cadastral')
+    return orders.find((o: any) => o.order === 'cadastral')
   }
 
   if (country === 'south_africa') {
-    if (environment === 'detail') return orders.find(o => o.order === 'cadastral')
-    return orders.find(o => o.order === 'cadastral')
+    if (environment === 'detail') return orders.find((o: any) => o.order === 'cadastral')
+    return orders.find((o: any) => o.order === 'cadastral')
   }
 
   if (country === 'rwanda' || country === 'burundi' || country === 'south_sudan' || country === 'zambia') {
-    if (environment === 'first_order' || environment === 'geodetic') return orders.find(o => o.order === 'geodetic' || o.order === 'primary_control')
-    return orders.find(o => o.order === 'cadastral') ?? orders[0]
+    if (environment === 'first_order' || environment === 'geodetic') return orders.find((o: any) => o.order === 'geodetic' || o.order === 'primary_control')
+    return orders.find((o: any) => o.order === 'cadastral') ?? orders[0]
   }
 
   if (country === 'us') {
@@ -1215,7 +1215,7 @@ export function getTraverseOrderForEnvironment(
       default: '3rd_order_class_i',
     }
     const orderId = usMap[environment] ?? '3rd_order_class_i'
-    return orders.find(o => o.order === orderId) ?? orders.find(o => o.order === '3rd_order_class_i')
+    return orders.find((o: any) => o.order === orderId) ?? orders.find((o: any) => o.order === '3rd_order_class_i')
   }
 
   if (country === 'uk') {
@@ -1230,13 +1230,13 @@ export function getTraverseOrderForEnvironment(
       default: 'cadastral',
     }
     const orderId = ukMap[environment] ?? 'cadastral'
-    return orders.find(o => o.order === orderId) ?? orders.find(o => o.order === 'cadastral')
+    return orders.find((o: any) => o.order === orderId) ?? orders.find((o: any) => o.order === 'cadastral')
   }
 
   if (country === 'saudi_arabia' || country === 'oman' || country === 'uae') {
-    if (environment === 'geodetic') return orders.find(o => o.order === 'geodetic')
-    if (environment === 'detail') return orders.find(o => o.order === 'detail')
-    return orders.find(o => o.order === 'cadastral') ?? orders.find(o => o.order === 'geodetic')
+    if (environment === 'geodetic') return orders.find((o: any) => o.order === 'geodetic')
+    if (environment === 'detail') return orders.find((o: any) => o.order === 'detail')
+    return orders.find((o: any) => o.order === 'cadastral') ?? orders.find((o: any) => o.order === 'geodetic')
   }
 
   if (country === 'australia') {
@@ -1252,16 +1252,16 @@ export function getTraverseOrderForEnvironment(
       default: 'cadastral',
     }
     const orderId = auMap[environment] ?? 'cadastral'
-    return orders.find(o => o.order === orderId) ?? orders.find(o => o.order === 'cadastral')
+    return orders.find((o: any) => o.order === orderId) ?? orders.find((o: any) => o.order === 'cadastral')
   }
 
-  return orders.find(o => o.order === std.defaultTraverseOrder) ?? orders[0]
+  return orders.find((o: any) => o.order === std.defaultTraverseOrder) ?? orders[0]
 }
 
 export function getAreaDecimalPlaces(country: SurveyingCountry, sqMetres: number): AreaPrecisionRule {
   const std = getCountryStandard(country)
   const ha = sqMetres / 10_000
-  const rule = std.areaPrecision.find(r => ha <= r.maxHa)
+  const rule = std.areaPrecision.find((r: any) => ha <= r.maxHa)
   return rule ?? { maxHa: Infinity, decimalPlaces: 2, unit: 'm2', regulation: std.country }
 }
 
@@ -1302,7 +1302,7 @@ const KENYA_SCALE_GRID: ScaleGridInterval[] = [
 ]
 
 export function getScaleGridInterval(scale: number): ScaleGridInterval | null {
-  return KENYA_SCALE_GRID.find(g => g.scale === scale) ?? null
+  return KENYA_SCALE_GRID.find((g: any) => g.scale === scale) ?? null
 }
 
 export function getDefaultGridInterval(scale: number, unit: 'metres' | 'feet' = 'metres'): number {

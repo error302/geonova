@@ -42,3 +42,4 @@ export async function generateOrthophotoPlan(
 
   return Buffer.from(doc.output('arraybuffer'));
 }
+

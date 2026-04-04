@@ -137,9 +137,9 @@ function calculateVolume(data: { surfacePoints: Array<{ x: number; y: number; z:
   
   if (surfacePoints.length < 3) return { volume: 0, error: 'Need at least 3 points' }
 
-  const xs = surfacePoints.map(p => p.x)
-  const ys = surfacePoints.map(p => p.y)
-  const zs = surfacePoints.map(p => p.z)
+  const xs = surfacePoints.map((p: any) => p.x)
+  const ys = surfacePoints.map((p: any) => p.y)
+  const zs = surfacePoints.map((p: any) => p.z)
 
   const minX = Math.min(...xs)
   const maxX = Math.max(...xs)
@@ -210,8 +210,8 @@ function generateContours(data: { points: Array<{ x: number; y: number; z: numbe
   
   if (points.length < 3) return { contours: [] }
 
-  const minZ = Math.min(...points.map(p => p.z))
-  const maxZ = Math.max(...points.map(p => p.z))
+  const minZ = Math.min(...points.map((p: any) => p.z))
+  const maxZ = Math.max(...points.map((p: any) => p.z))
 
   const levels: number[] = []
   for (let z = Math.floor(minZ / interval) * interval; z <= maxZ; z += interval) {

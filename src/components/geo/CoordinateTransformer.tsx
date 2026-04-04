@@ -74,7 +74,7 @@ export default function CoordinateTransformer({ projectId }: { projectId?: strin
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, idx) => (
+          {rows.map((row: any, idx: any) => (
             <tr key={idx}>
               <td className="border px-1"><input value={row.id} onChange={(e) => updateRow(idx, 'id', e.target.value)} className="w-full outline-none px-1" /></td>
               <td className="border px-1"><input value={row.x} onChange={(e) => updateRow(idx, 'x', e.target.value)} className="w-full outline-none px-1" placeholder="0.000" /></td>

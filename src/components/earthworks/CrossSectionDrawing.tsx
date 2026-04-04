@@ -31,9 +31,9 @@ export default function CrossSectionDrawing({ section, template }: Props) {
   const rightFormX = toSvgX(halfWidth)
   const formTopY = toSvgY(formationRL)
 
-  const groundPts = groundPolygon.map(p => `${toSvgX(p.x).toFixed(1)},${toSvgY(p.y).toFixed(1)}`).join(' ')
-  const cutPts = section.cutPolygon.map(p => `${toSvgX(p.x).toFixed(1)},${toSvgY(p.y).toFixed(1)}`).join(' ')
-  const fillPts = section.fillPolygon.map(p => `${toSvgX(p.x).toFixed(1)},${toSvgY(p.y).toFixed(1)}`).join(' ')
+  const groundPts = groundPolygon.map((p: any) => `${toSvgX(p.x).toFixed(1)},${toSvgY(p.y).toFixed(1)}`).join(' ')
+  const cutPts = section.cutPolygon.map((p: any) => `${toSvgX(p.x).toFixed(1)},${toSvgY(p.y).toFixed(1)}`).join(' ')
+  const fillPts = section.fillPolygon.map((p: any) => `${toSvgX(p.x).toFixed(1)},${toSvgY(p.y).toFixed(1)}`).join(' ')
 
   const fmtCh = (ch: number) => {
     const km = Math.floor(ch / 1000)

@@ -26,7 +26,7 @@ describe('bowditchAdjustment', () => {
 
   it('adjusted coordinates are finite numbers', () => {
     const r = bowditchAdjustment(STANDARD_TRAVERSE)
-    r.legs.forEach(leg => {
+    r.legs.forEach((leg: any) => {
       expect(Number.isFinite(leg.adjEasting)).toBe(true)
       expect(Number.isFinite(leg.adjNorthing)).toBe(true)
     })

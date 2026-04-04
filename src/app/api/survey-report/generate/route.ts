@@ -48,7 +48,7 @@ export async function POST(request: Request) {
       markType: p.mark_type || 'Concrete Beacon'
     }))
 
-    const benchmarks = controlPoints.filter(cp => 
+    const benchmarks = controlPoints.filter((cp: any) => 
       cp.markType.toLowerCase().includes('bm') || 
       cp.markType.toLowerCase().includes('benchmark')
     )

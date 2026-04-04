@@ -94,11 +94,11 @@ export function submitCloudRender(
 }
 
 export function getRenderJob(jobId: string): CloudRenderJob | undefined {
-  return renderQueue.find(j => j.id === jobId)
+  return renderQueue.find((j: any) => j.id === jobId)
 }
 
 export function getUserRenderJobs(userId: string): CloudRenderJob[] {
-  return renderQueue.filter(j => j.userId === userId)
+  return renderQueue.filter((j: any) => j.userId === userId)
 }
 
 export function createCloudProject(
@@ -120,7 +120,7 @@ export function createCloudProject(
 }
 
 export function getCloudProject(projectId: string): CloudProject | undefined {
-  return cloudProjects.find(p => p.id === projectId)
+  return cloudProjects.find((p: any) => p.id === projectId)
 }
 
 export function getRenderTypes() {

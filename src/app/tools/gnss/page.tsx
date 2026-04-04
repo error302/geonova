@@ -48,11 +48,11 @@ export default function GNSSProcessor() {
   };
 
   const updateObservation = (id: number, field: keyof Observation, value: string) => {
-    setObservations(observations.map(o => o.id === id ? { ...o, [field]: value } : o));
+    setObservations(observations.map((o: any) => o.id === id ? { ...o, [field]: value } : o));
   };
 
   const removeObservation = (id: number) => {
-    setObservations(observations.filter(o => o.id !== id));
+    setObservations(observations.filter((o: any) => o.id !== id));
   };
 
   const calculate = () => {
@@ -91,7 +91,7 @@ export default function GNSSProcessor() {
         });
       } else {
         // Network processing
-        const obsData = observations.map(o => ({
+        const obsData = observations.map((o: any) => ({
           pointName: o.name,
           x: 0, y: 0, z: 0,
           sigmaX: parseFloat(o.sigma)
@@ -180,7 +180,7 @@ export default function GNSSProcessor() {
               <button onClick={addObservation} className="btn btn-secondary text-sm">+ Add Point</button>
             </div>
             <div className="space-y-3">
-              {observations.map(obs => (
+              {observations.map((obs: any) => (
                 <div key={obs.id} className="grid grid-cols-6 gap-2 items-end">
                   <div className="col-span-1">
                     <label className="block text-xs mb-1">Name</label>

@@ -32,19 +32,19 @@ export default function AreaCalculator() {
 
   const removePoint = (id: number) => {
     if (points.length > 3) {
-      setPoints(points.filter(p => p.id !== id));
+      setPoints(points.filter((p: any) => p.id !== id));
     }
   };
 
   const updatePoint = (id: number, field: 'n' | 'e', value: string) => {
-    setPoints(points.map(p => p.id === id ? { ...p, [field]: value } : p));
+    setPoints(points.map((p: any) => p.id === id ? { ...p, [field]: value } : p));
   };
 
   const calculate = () => {
     if (method === 'coordinate') {
       const pts: Point2D[] = points
-        .map(p => ({ northing: parseFloat(p.n), easting: parseFloat(p.e) }))
-        .filter(p => !isNaN(p.northing) && !isNaN(p.easting));
+        .map((p: any) => ({ northing: parseFloat(p.n), easting: parseFloat(p.e) }))
+        .filter((p: any) => !isNaN(p.northing) && !isNaN(p.easting));
       
       if (pts.length >= 3) {
         const out = coordinateAreaSolution(pts)
@@ -52,7 +52,7 @@ export default function AreaCalculator() {
         setSolutionTitle(out.solution.title)
       }
     } else {
-      const ord = offsets.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+      const ord = offsets.split(',').map((s: any) => parseFloat(s.trim())).filter((n: any) => !isNaN(n));
       const int = parseFloat(interval);
       const out = offsetAreaSolution({ ordinates: ord, interval: int, method: method === 'trapezoidal' ? 'trapezoidal' : 'simpsons' })
       setSteps(out.steps)

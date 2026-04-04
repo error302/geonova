@@ -136,7 +136,7 @@ class RealtimeService {
       }
     }
 
-    toRemove.forEach(name => {
+    toRemove.forEach((name: any) => {
       this.channels.delete(name)
       this.presenceHandlers.delete(name)
     })

@@ -64,7 +64,7 @@ function addCoordinateListSheet(wb: XLSX.WorkBook, data: SubmissionWorkbookData)
   const wsData = [
     ['FINAL COORDINATE LIST', ''],
     ['Station', 'Northing', 'Easting', 'Height', 'Class', 'Description'],
-    ...data.beacons.map(b => [
+    ...data.beacons.map((b: any) => [
       b.name,
       b.northing.toFixed(4),
       b.easting.toFixed(4),
@@ -81,7 +81,7 @@ function addDatumJoinsSheet(wb: XLSX.WorkBook, data: SubmissionWorkbookData): vo
   const wsData = [
     ['DATUM JOINS', ''],
     ['From', 'To', 'ΔNorthing', 'ΔEasting', 'Distance', 'Bearing'],
-    ...data.datumJoins.map(j => [
+    ...data.datumJoins.map((j: any) => [
       j.from,
       j.to,
       j.deltaN.toFixed(4),
@@ -98,7 +98,7 @@ function addTheoreticalComputationsSheet(wb: XLSX.WorkBook, data: SubmissionWork
   const wsData = [
     ['THEORETICAL COORDINATES', ''],
     ['Station', 'Northing', 'Easting', 'Class'],
-    ...data.theoreticalCoords.map(p => [
+    ...data.theoreticalCoords.map((p: any) => [
       p.name || '',
       p.northing.toFixed(4),
       p.easting.toFixed(4),
@@ -120,7 +120,7 @@ function addConsistencyChecksSheet(wb: XLSX.WorkBook, data: SubmissionWorkbookDa
   const wsData = [
     ['CONSISTENCY CHECKS', ''],
     ['Station', 'Computed N', 'Computed E', 'Plan N', 'Plan E', 'ΔN', 'ΔE', 'Status'],
-    ...data.consistencyChecks.map(c => [
+    ...data.consistencyChecks.map((c: any) => [
       c.station,
       c.computedN.toFixed(4),
       c.computedE.toFixed(4),

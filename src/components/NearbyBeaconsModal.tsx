@@ -43,13 +43,13 @@ export default function NearbyBeaconsModal({
       .limit(20)
 
     if (data) {
-      const withDistance = data.map(b => ({
+      const withDistance = data.map((b: any) => ({
         ...b,
         distance: Math.sqrt(
           Math.pow(b.easting - projectEasting, 2) + 
           Math.pow(b.northing - projectNorthing, 2)
         )
-      })).sort((a, b) => a.distance - b.distance)
+      })).sort((a: any, b: any) => a.distance - b.distance)
 
       setBeacons(withDistance)
     }
@@ -111,7 +111,7 @@ export default function NearbyBeaconsModal({
             <p className="text-[var(--text-muted)] text-center py-8">No verified beacons found</p>
           ) : (
             <div className="space-y-2">
-              {beacons.map(beacon => (
+              {beacons.map((beacon: any) => (
                 <button
                   key={beacon.id}
                   onClick={() => setSelectedBeacon(beacon)}

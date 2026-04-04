@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { getJobById, applyToJob, awardJob as awardJobFn, completeJob as completeJobFn } from '@/lib/supabase/community'
-import { awardCPDPoints } from '@/lib/supabase/cpd'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-const supabase = createClient(supabaseUrl, supabaseKey)
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import db from '@/lib/db'
+import { getJobById, applyToJob, awardJob, completeJob } from '@/lib/community'
+import { awardCPDPoints } from '@/lib/cpd'
 
 export async function GET(
   request: NextRequest,
@@ -18,12 +16,12 @@ export async function GET(
       return NextResponse.json({ error: 'Job not found' }, { status: 404 })
     }
 
-    const { data: applications } = await supabase
-      .from('job_applications')
-      .select('*')
-      .eq('job_id', id)
+    const applicationsResult = await db.query(
+      'SELECT * FROM job_applications WHERE job_id = $1',
+      [id]
+    )
 
-    return NextResponse.json({ job, applications: applications || [] })
+    return NextResponse.json({ job, applications: applicationsResult.rows })
 
   } catch (error) {
     console.error('Job GET error:', error)
@@ -37,42 +35,34 @@ export async function POST(
 ) {
   try {
     const { id: jobId } = await params
-    const authHeader = request.headers.get('authorization')
-    if (!authHeader) {
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const token = authHeader.replace('Bearer ', '')
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token)
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
 
     const body = await request.json()
     const action = body.action
 
     if (action === 'apply') {
-      await applyToJob(jobId, body.application, user.id)
+      await applyToJob(jobId, body.application, session.user.id)
       return NextResponse.json({ success: true })
     }
 
     if (action === 'award') {
-      await awardJobFn(jobId, body.surveyorId)
+      await awardJob(jobId, body.surveyorId)
       return NextResponse.json({ success: true })
     }
 
     if (action === 'complete') {
-      await completeJobFn(jobId)
+      await completeJob(jobId)
       
-      const { data: job } = await supabase
-        .from('survey_jobs')
-        .select('awarded_to')
-        .eq('id', jobId)
-        .single()
+      const jobResult = await db.query(
+        'SELECT awarded_to FROM survey_jobs WHERE id = $1',
+        [jobId]
+      )
 
-      if (job?.awarded_to) {
-        await awardCPDPoints(job.awarded_to, 'JOB_COMPLETED', `Completed job ${jobId}`, jobId)
+      if (jobResult.rows.length > 0 && jobResult.rows[0].awarded_to) {
+        await awardCPDPoints(jobResult.rows[0].awarded_to, 'JOB_COMPLETED', `Completed job ${jobId}`, jobId)
       }
 
       return NextResponse.json({ success: true })

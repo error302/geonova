@@ -6,10 +6,22 @@ import SettingOutTable from './SettingOutTable'
 import StakeOutSheet from './StakeOutSheet'
 import ChainageOffsetTable from './ChainageOffsetTable'
 
+type PointRow = {
+  id: string
+  e: string
+  n: string
+  rl: string
+  th: string
+  desc: string
+}
+
+const pointFields: Array<keyof PointRow> = ['id', 'e', 'n', 'rl', 'th', 'desc']
+const pointHeaders = ['ID', 'Easting', 'Northing', 'RL', 'TH', 'Description', ''] as const
+
 export default function SettingOutCalculator() {
   const [station, setStation] = useState({ e: '484620.000', n: '9863280.000', rl: '50.100', ih: '1.540' })
   const [bs, setBs] = useState({ e: '484693.000', n: '9863310.000' })
-  const [points, setPoints] = useState<Array<{ id: string; e: string; n: string; rl: string; th: string; desc: string }>>([
+  const [points, setPoints] = useState<PointRow[]>([
     { id: 'CL0+000', e: '484780.000', n: '9863390.000', rl: '48.900', th: '2.000', desc: 'Centreline peg' },
   ])
   const [result, setResult] = useState<SettingOutResult | null>(null)
@@ -47,7 +59,7 @@ export default function SettingOutCalculator() {
 
   function runCheck() {
     if (!result || !checkResults.pointId) return
-    const pt = result.rows.find(r => r.id === checkResults.pointId)
+    const pt = result.rows.find((r: any) => r.id === checkResults.pointId)
     if (!pt) return
     const obs: ReObservation = {
       observedHz: parseFloat(checkResults.obsHz) || 0,
@@ -99,7 +111,7 @@ export default function SettingOutCalculator() {
     setPoints(prev => prev.filter((_, idx) => idx !== i))
   }
 
-  function updatePoint(i: number, field: keyof typeof points[0], value: string) {
+  function updatePoint(i: number, field: keyof PointRow, value: string) {
     setPoints(prev => prev.map((p, idx) => idx === i ? { ...p, [field]: value } : p))
   }
 
@@ -138,19 +150,19 @@ export default function SettingOutCalculator() {
         <div className="overflow-x-auto">
           <table className="w-full text-xs font-mono border-collapse">
             <thead>
-              <tr className="bg-[var(--bg-tertiary)]">
-                {['ID', 'Easting', 'Northing', 'RL', 'TH', 'Description', ''].map(h => (
-                  <th key={h} className="px-2 py-2 text-left border border-[var(--border-color)] text-[var(--text-muted)] font-medium">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {points.map((p, i) => (
-                <tr key={i} className="hover:bg-[var(--bg-tertiary)]/30">
-                  {(['id', 'e', 'n', 'rl', 'th', 'desc'] as const).map(f => (
-                    <td key={f} className="px-1 py-1 border border-[var(--border-color)]/50">
-                      <input value={p[f]} onChange={e => updatePoint(i, f, e.target.value)}
-                        className="w-full px-2 py-1 bg-transparent text-[var(--text-primary)]" />
+                <tr className="bg-[var(--bg-tertiary)]">
+                  {pointHeaders.map(h => (
+                    <th key={h} className="px-2 py-2 text-left border border-[var(--border-color)] text-[var(--text-muted)] font-medium">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {points.map((p, i) => (
+                  <tr key={i} className="hover:bg-[var(--bg-tertiary)]/30">
+                    {pointFields.map(f => (
+                      <td key={f} className="px-1 py-1 border border-[var(--border-color)]/50">
+                        <input value={p[f]} onChange={e => updatePoint(i, f, e.target.value)}
+                          className="w-full px-2 py-1 bg-transparent text-[var(--text-primary)]" />
                     </td>
                   ))}
                   <td className="px-1 py-1 border border-[var(--border-color)]/50">
@@ -178,7 +190,7 @@ export default function SettingOutCalculator() {
       {/* Tabs */}
       {result && (
         <div className="flex gap-1 border-b border-[var(--border-color)]">
-          {(['table', 'chainage', 'check'] as const).map(tab => (
+          {(['table', 'chainage', 'check'] as const).map((tab: any) => (
             <button key={tab} onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 text-sm font-medium border-b-2 rounded-t ${activeTab === tab ? 'border-[var(--accent)] text-[var(--accent)]' : 'border-transparent text-[var(--text-muted)]'}`}>
               {tab === 'table' ? 'Setting Out Table' : tab === 'chainage' ? 'Chainage & Offset' : 'Re-Observation Check'}
@@ -201,7 +213,7 @@ export default function SettingOutCalculator() {
               <select value={checkResults.pointId} onChange={e => setCheckResults(r => ({ ...r, pointId: e.target.value }))}
                 className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm">
                 <option value="">Select point</option>
-                {result.rows.map(r => <option key={r.id} value={r.id}>{r.id} — {r.designE.toFixed(3)}/{r.designN.toFixed(3)}</option>)}
+                {result.rows.map((r: any) => <option key={r.id} value={r.id}>{r.id} — {r.designE.toFixed(3)}/{r.designN.toFixed(3)}</option>)}
               </select>
             </div>
             <Field label="Observed Hz (°)" value={checkResults.obsHz} onChange={v => setCheckResults(r => ({ ...r, obsHz: v }))} />

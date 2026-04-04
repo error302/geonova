@@ -104,7 +104,7 @@ export default function NotificationsPage() {
   useEffect(() => { load() }, [load])
 
   const markRead = (id: string) => {
-    const updated = notifications.map(n => n.id === id ? { ...n, read: true } : n)
+    const updated = notifications.map((n: any) => n.id === id ? { ...n, read: true } : n)
     setNotifications(updated)
     saveLocal(updated)
     try {
@@ -117,13 +117,13 @@ export default function NotificationsPage() {
   }
 
   const markAllRead = () => {
-    const updated = notifications.map(n => ({ ...n, read: true }))
+    const updated = notifications.map((n: any) => ({ ...n, read: true }))
     setNotifications(updated)
     saveLocal(updated)
     try {
       createClient().from('notifications')
         .update({ read: true })
-        .in('id', notifications.map(n => n.id))
+        .in('id', notifications.map((n: any) => n.id))
         .then(({ error }) => {
           if (error) console.error('Failed to mark all read:', error)
         })
@@ -133,7 +133,7 @@ export default function NotificationsPage() {
   }
 
   const dismiss = (id: string) => {
-    const updated = notifications.filter(n => n.id !== id)
+    const updated = notifications.filter((n: any) => n.id !== id)
     setNotifications(updated)
     saveLocal(updated)
     try {
@@ -145,8 +145,8 @@ export default function NotificationsPage() {
     }
   }
 
-  const shown = filter === 'unread' ? notifications.filter(n => !n.read) : notifications
-  const unreadCount = notifications.filter(n => !n.read).length
+  const shown = filter === 'unread' ? notifications.filter((n: any) => !n.read) : notifications
+  const unreadCount = notifications.filter((n: any) => !n.read).length
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
@@ -170,7 +170,7 @@ export default function NotificationsPage() {
 
         {/* Filter tabs */}
         <div className="flex gap-2 mb-5">
-          {(['all', 'unread'] as const).map(f => (
+          {(['all', 'unread'] as const).map((f: any) => (
             <button key={f} onClick={() => setFilter(f)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 filter === f
@@ -185,7 +185,7 @@ export default function NotificationsPage() {
         {/* Loading */}
         {loading && (
           <div className="space-y-3">
-            {[1, 2, 3].map(i => (
+            {[1, 2, 3].map((i: any) => (
               <div key={i} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-4 animate-pulse">
                 <div className="flex gap-3">
                   <div className="w-8 h-8 rounded-full bg-[var(--bg-tertiary)]" />
@@ -220,7 +220,7 @@ export default function NotificationsPage() {
         {/* Notification list */}
         {!loading && shown.length > 0 && (
           <div className="space-y-2">
-            {shown.map(n => (
+            {shown.map((n: any) => (
               <div key={n.id}
                 className={`group relative bg-[var(--bg-card)] rounded-xl border transition-colors cursor-pointer ${
                   !n.read

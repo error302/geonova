@@ -107,12 +107,12 @@ export default function DroneSurveyPage() {
   };
 
   const updateGCP = (id: number, field: keyof GCPPoint, value: string) => {
-    setGcps(gcps.map(g => g.id === id ? { ...g, [field]: value } : g));
+    setGcps(gcps.map((g: any) => g.id === id ? { ...g, [field]: value } : g));
   };
 
   const exportGCPCSV = () => {
     const csv = 'Name,Easting,Northing,Elevation,Status\n' + 
-      gcps.map(g => `${g.name},${g.easting},${g.northing},${g.elevation},${g.status}`).join('\n');
+      gcps.map((g: any) => `${g.name},${g.easting},${g.northing},${g.elevation},${g.status}`).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -133,11 +133,11 @@ export default function DroneSurveyPage() {
   };
 
   const updateAccuracyPoint = (id: number, field: keyof AccuracyPoint, value: string) => {
-    setAccuracyPoints(accuracyPoints.map(p => p.id === id ? { ...p, [field]: value } : p));
+    setAccuracyPoints(accuracyPoints.map((p: any) => p.id === id ? { ...p, [field]: value } : p));
   };
 
   const calculateAccuracy = () => {
-    const results = accuracyPoints.map(p => {
+    const results = accuracyPoints.map((p: any) => {
       const se = parseFloat(p.surveyE);
       const sn = parseFloat(p.surveyN);
       const sz = parseFloat(p.surveyZ);
@@ -160,9 +160,9 @@ export default function DroneSurveyPage() {
 
     if (validResults.length === 0) return;
 
-    const horizontalErrors = validResults.map(r => r.horizontalError);
-    const verticalErrors = validResults.map(r => Math.abs(r.dZ));
-    const errors3D = validResults.map(r => r.error3D);
+    const horizontalErrors = validResults.map((r: any) => r.horizontalError);
+    const verticalErrors = validResults.map((r: any) => Math.abs(r.dZ));
+    const errors3D = validResults.map((r: any) => r.error3D);
 
     const hRMSE = calculateRMSE(horizontalErrors);
     const vRMSE = calculateRMSE(verticalErrors);
@@ -197,7 +197,7 @@ export default function DroneSurveyPage() {
           { id: 'settingout', label: 'Setting Out' },
           { id: 'accuracy', label: 'Accuracy Check' },
           { id: 'report', label: 'Report' },
-        ].map(tab => (
+        ].map((tab: any) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
@@ -298,7 +298,7 @@ export default function DroneSurveyPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {gcps.map(g => (
+                    {gcps.map((g: any) => (
                       <tr key={g.id}>
                         <td className="font-semibold">{g.name}</td>
                         <td><input className="input w-32 font-mono" value={g.easting} onChange={e => updateGCP(g.id, 'easting', e.target.value)} /></td>
@@ -325,7 +325,7 @@ export default function DroneSurveyPage() {
                 <h4 className="font-semibold mb-2">GCP Distribution Map</h4>
                 <svg viewBox="0 0 400 250" className="w-full h-48 bg-[var(--bg-secondary)] rounded">
                   <rect x="20" y="20" width="360" height="210" fill="none" stroke="#444" strokeWidth="2" />
-                  {gcps.map(g => {
+                  {gcps.map((g: any) => {
                     const minE = parseFloat(surveyArea.minE);
                     const maxE = parseFloat(surveyArea.maxE);
                     const minN = parseFloat(surveyArea.minN);
@@ -363,7 +363,7 @@ export default function DroneSurveyPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {gcps.filter(g => g.status !== 'measured').map((g, idx) => (
+                {gcps.filter((g: any) => g.status !== 'measured').map((g, idx) => (
                   <div key={g.id} className="p-4 bg-[var(--bg-tertiary)] rounded flex justify-between items-center">
                     <div>
                       <div className="font-semibold text-lg">{g.name}</div>
@@ -382,7 +382,7 @@ export default function DroneSurveyPage() {
 
                 <div className="p-4 bg-green-900/30 border border-green-600 rounded">
                   <span className="text-green-400 font-semibold">
-                    {gcps.filter(g => g.status === 'measured').length} / {gcps.length} GCPs measured
+                    {gcps.filter((g: any) => g.status === 'measured').length} / {gcps.length} GCPs measured
                   </span>
                 </div>
               </div>
@@ -418,7 +418,7 @@ export default function DroneSurveyPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {accuracyPoints.map(p => (
+                  {accuracyPoints.map((p: any) => (
                     <tr key={p.id}>
                       <td><input className="input w-16" value={p.name} onChange={e => updateAccuracyPoint(p.id, 'name', e.target.value)} /></td>
                       <td><input className="input w-28" value={p.surveyE} onChange={e => updateAccuracyPoint(p.id, 'surveyE', e.target.value)} /></td>
@@ -443,7 +443,7 @@ export default function DroneSurveyPage() {
               <span className="label">Accuracy Standard</span>
             </div>
             <div className="flex gap-2 flex-wrap">
-              {accuracyClasses.map(c => (
+              {accuracyClasses.map((c: any) => (
                 <button
                   key={c.name}
                   onClick={() => { setSelectedClass(c); setAccuracyResults(null); }}
@@ -556,11 +556,11 @@ export default function DroneSurveyPage() {
                   </div>
                   <div>
                     <span className="text-[var(--text-secondary)]">Measured:</span>
-                    <span className="ml-2">{gcps.filter(g => g.status === 'measured').length}</span>
+                    <span className="ml-2">{gcps.filter((g: any) => g.status === 'measured').length}</span>
                   </div>
                   <div>
                     <span className="text-[var(--text-secondary)]">Planned:</span>
-                    <span className="ml-2">{gcps.filter(g => g.status === 'planned').length}</span>
+                    <span className="ml-2">{gcps.filter((g: any) => g.status === 'planned').length}</span>
                   </div>
                 </div>
               </div>

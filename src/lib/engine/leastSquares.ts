@@ -146,7 +146,7 @@ function gaussianSolve(A: number[][], b: number[]) {
     }
   }
 
-  return M.map(row => row[n])
+  return M.map((row: any) => row[n])
 }
 
 function invertMatrix(A: number[][]) {
@@ -157,8 +157,8 @@ function invertMatrix(A: number[][]) {
   // Solve A * X = I column-by-column
   const inv = zeros(n, n)
   for (let col = 0; col < n; col++) {
-    const e = I.map(row => row[col])
-    const x = gaussianSolve(A.map(r => [...r]), [...e])
+    const e = I.map((row: any) => row[col])
+    const x = gaussianSolve(A.map((r: any) => [...r]), [...e])
     for (let i = 0; i < n; i++) inv[i][col] = x[i]
   }
   return inv
@@ -268,7 +268,7 @@ export function leastSquaresAdjustment(
     }
   }
 
-  const hasAtLeastOneBearing = observations.some(o => typeof o.bearing === 'number')
+  const hasAtLeastOneBearing = observations.some((o: any) => typeof o.bearing === 'number')
   if (!hasAtLeastOneBearing && fixedPoints.length < 2) {
     return {
       ok: false,
@@ -286,7 +286,7 @@ export function leastSquaresAdjustment(
   unknownPoints.forEach((p, i) => unknownIndex.set(p.name, i))
 
   const fixed = new Map<string, Point>()
-  fixedPoints.forEach(p => fixed.set(p.name, { easting: p.easting, northing: p.northing }))
+  fixedPoints.forEach((p: any) => fixed.set(p.name, { easting: p.easting, northing: p.northing }))
 
   const x: number[] = new Array(unknownPoints.length * 2)
   for (let i = 0; i < unknownPoints.length; i++) {
@@ -302,7 +302,7 @@ export function leastSquaresAdjustment(
     return { easting: x[2 * idx], northing: x[2 * idx + 1] }
   }
 
-  const activeObservations = observations.filter(o => o.distance !== undefined || o.bearing !== undefined)
+  const activeObservations = observations.filter((o: any) => o.distance !== undefined || o.bearing !== undefined)
   const m = activeObservations.length
   const n = unknownPoints.length * 2
   if (m <= n) {
@@ -465,7 +465,7 @@ export function leastSquaresAdjustment(
 
     let dx: number[]
     try {
-      dx = gaussianSolve(Nmat.map(r => [...r]), u)
+      dx = gaussianSolve(Nmat.map((r: any) => [...r]), u)
     } catch (e: any) {
       return {
         ok: false,

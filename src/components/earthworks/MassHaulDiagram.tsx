@@ -15,8 +15,8 @@ export default function MassHaulDiagram({ result }: Props) {
   const maxCh = massOrdinates[massOrdinates.length - 1].chainage
   const chRange = maxCh - minCh || 1
 
-  const maxOrd = Math.max(...massOrdinates.map(o => o.ordinate), 0)
-  const minOrd = Math.min(...massOrdinates.map(o => o.ordinate), 0)
+  const maxOrd = Math.max(...massOrdinates.map((o: any) => o.ordinate), 0)
+  const minOrd = Math.min(...massOrdinates.map((o: any) => o.ordinate), 0)
   const ordRange = Math.max(maxOrd - minOrd, 1)
 
   const svgW = 800

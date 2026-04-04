@@ -36,7 +36,7 @@ export default function ValidationReport({ result, projectId }: ValidationReport
       autoTable(doc, {
         startY: 100,
         head: [['ID', 'Area (m²)', 'Severity', 'Description']],
-        body: result.overlaps.map(o => [o.id, String(o.area), o.severity, o.description])
+        body: result.overlaps.map((o: any) => [o.id, String(o.area), o.severity, o.description])
       })
     }
     
@@ -47,7 +47,7 @@ export default function ValidationReport({ result, projectId }: ValidationReport
       autoTable(doc, {
         startY: startY + 6,
         head: [['ID', 'Area (m²)', 'Severity', 'Description']],
-        body: result.gaps.map(g => [g.id, String(g.area), g.severity, g.description])
+        body: result.gaps.map((g: any) => [g.id, String(g.area), g.severity, g.description])
       })
     }
     

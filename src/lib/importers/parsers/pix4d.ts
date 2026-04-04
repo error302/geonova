@@ -2,10 +2,10 @@ import { ParsedSurveyData } from '../droneTypes';
 
 export async function parsePix4dCsv(file: File): Promise<ParsedSurveyData> {
   const text = await file.text();
-  const rows = text.trim().split('\n').filter(row => !row.startsWith('#') && row.trim());
+  const rows = text.trim().split('\n').filter((row: any) => !row.startsWith('#') && row.trim());
 
-  const points: ParsedSurveyData['points'] = rows.map(row => {
-    const cols = row.split(',').map(c => c.trim());
+  const points: ParsedSurveyData['points'] = rows.map((row: any) => {
+    const cols = row.split(',').map((c: any) => c.trim());
     return {
       easting: parseFloat(cols[0]) || 0,
       northing: parseFloat(cols[1]) || 0,
@@ -13,7 +13,7 @@ export async function parsePix4dCsv(file: File): Promise<ParsedSurveyData> {
       code: cols[3] || 'GCP',
       description: cols[4] || '',
     };
-  }).filter(p => p.easting !== 0 || p.northing !== 0);
+  }).filter((p: any) => p.easting !== 0 || p.northing !== 0);
 
   return {
     points,

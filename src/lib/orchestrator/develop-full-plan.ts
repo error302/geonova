@@ -183,7 +183,7 @@ Net: ${volume.netVolume.toFixed(2)} m³
 function generateSettingOutReport(data: SettingOutPoints): string {
   return `SETTING OUT DATA
 Point,Northing,Easting,Chainage,Offset
-${data.points.map(p => `${p.name},${p.easting.toFixed(3)},${p.northing.toFixed(3)},${p.chainage},${p.offset}`).join('\n')}
+${data.points.map((p: any) => `${p.name},${p.easting.toFixed(3)},${p.northing.toFixed(3)},${p.chainage},${p.offset}`).join('\n')}
 `
 }
 

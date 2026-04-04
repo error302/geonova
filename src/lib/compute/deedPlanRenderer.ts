@@ -13,11 +13,11 @@ export function renderDeedPlanSVG(
   const DRAWING_WIDTH = 580
   const PANEL_X = 580
 
-  const coords = boundaryPoints.map(p => ({ x: p.easting, y: p.northing }))
-  const minX = Math.min(...coords.map(c => c.x))
-  const maxX = Math.max(...coords.map(c => c.x))
-  const minY = Math.min(...coords.map(c => c.y))
-  const maxY = Math.max(...coords.map(c => c.y))
+  const coords = boundaryPoints.map((p: any) => ({ x: p.easting, y: p.northing }))
+  const minX = Math.min(...coords.map((c: any) => c.x))
+  const maxX = Math.max(...coords.map((c: any) => c.x))
+  const minY = Math.min(...coords.map((c: any) => c.y))
+  const maxY = Math.max(...coords.map((c: any) => c.y))
 
   const rangeX = maxX - minX || 1
   const rangeY = maxY - minY || 1
@@ -33,7 +33,7 @@ export function renderDeedPlanSVG(
   const toSvgX = (easting: number) => DRAWING_WIDTH / 2 + (easting - centerX) * plotScale
   const toSvgY = (northing: number) => VIEWBOX_HEIGHT / 2 - (northing - centerY) * plotScale
 
-  let polygonPoints = boundaryPoints.map(p => 
+  let polygonPoints = boundaryPoints.map((p: any) => 
     `${toSvgX(p.easting)},${toSvgY(p.northing)}`
   ).join(' ')
 
@@ -47,8 +47,8 @@ export function renderDeedPlanSVG(
   let boundaryLabels = ''
   for (let i = 0; i < bearingSchedule.length; i++) {
     const leg = bearingSchedule[i]
-    const fromPt = boundaryPoints.find(p => p.id === leg.fromPoint)
-    const toPt = boundaryPoints.find(p => p.id === leg.toPoint)
+    const fromPt = boundaryPoints.find((p: any) => p.id === leg.fromPoint)
+    const toPt = boundaryPoints.find((p: any) => p.id === leg.toPoint)
     if (!fromPt || !toPt) continue
 
     const mx = (toSvgX(fromPt.easting) + toSvgX(toPt.easting)) / 2
@@ -58,7 +58,7 @@ export function renderDeedPlanSVG(
   }
 
   let pointLabels = ''
-  boundaryPoints.forEach(p => {
+  boundaryPoints.forEach((p: any) => {
     const sx = toSvgX(p.easting) + 4
     const sy = toSvgY(p.northing) - 4
     pointLabels += `<text x="${sx}" y="${sy}" font-size="3">${p.id}</text>`
@@ -224,7 +224,7 @@ function generateBearingSchedule(legs: BoundaryLeg[], panelX: number): string {
 function generateCoordinateSchedule(points: BoundaryPoint[], panelX: number): string {
   let rows = ''
   let yPos = 388
-  points.forEach(p => {
+  points.forEach((p: any) => {
     rows += `<text x="${panelX + 15}" y="${yPos}" class="table-text">${p.id}</text>`
     rows += `<text x="${panelX + 45}" y="${yPos}" class="table-text">${p.markType}</text>`
     rows += `<text x="${panelX + 90}" y="${yPos}" class="table-text">${p.markStatus}</text>`

@@ -129,7 +129,7 @@ export default function FieldPage() {
 
     for (const line of lines) {
       lineNum++
-      const parts = line.split(',').map(p => p.trim())
+      const parts = line.split(',').map((p: any) => p.trim())
       if (parts.length < 3) {
         errors.push(`Line ${lineNum}: Need at least 3 columns`)
         continue
@@ -167,7 +167,7 @@ export default function FieldPage() {
 
     try {
       await supabase.from('survey_points').insert(
-        batchParseResults.map(p => ({ ...p, project_id: selectedProject }))
+        batchParseResults.map((p: any) => ({ ...p, project_id: selectedProject }))
       )
       setBatchCSV('')
       setBatchParseResults([])
@@ -272,7 +272,7 @@ export default function FieldPage() {
               className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-2 py-1 text-xs text-[var(--text-primary)] w-36"
             >
               <option value="">Select Project</option>
-              {projects.map(p => (
+              {projects.map((p: any) => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
             </select>
@@ -393,7 +393,7 @@ export default function FieldPage() {
             {points.length > 0 && (
               <div className="space-y-1">
                 <div className="text-[10px] text-[var(--text-muted)]">Recent:</div>
-                {points.slice(0, 5).map(p => (
+                {points.slice(0, 5).map((p: any) => (
                   <div key={p.id} className="bg-[var(--bg-secondary)]/50 rounded px-2 py-1.5 flex justify-between items-center text-[10px]">
                     <span className="text-[var(--text-primary)]">{p.name}</span>
                     <span className="text-[var(--text-muted)] font-mono">{p.easting.toFixed(0)}, {p.northing.toFixed(0)}</span>
@@ -476,7 +476,7 @@ export default function FieldPage() {
             </div>
 
             <div className="grid grid-cols-3 gap-1.5">
-              {(['BS', 'IS', 'FS'] as const).map(type => (
+              {(['BS', 'IS', 'FS'] as const).map((type: any) => (
                 <button
                   key={type}
                   onClick={() => setLType(type)}
@@ -499,9 +499,9 @@ export default function FieldPage() {
                 />
                 <button onClick={() => {
                   if (!lStation || !lReading) return
-                  const existing = lReadings.find(r => r.station === lStation)
+                  const existing = lReadings.find((r: any) => r.station === lStation)
                   if (existing) {
-                    setLReadings(lReadings.map(r => 
+                    setLReadings(lReadings.map((r: any) => 
                       r.id === existing.id ? { ...r, [lType.toLowerCase()]: parseFloat(lReading) } : r
                     ))
                   } else {
@@ -554,7 +554,7 @@ export default function FieldPage() {
               <label className="text-[10px] text-[var(--text-muted)] mb-1 block">Instrument Station</label>
               <select value={rStation} onChange={e => setRStation(e.target.value)} className={inputClass}>
                 <option value="">Select...</option>
-                {points.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
+                {points.map((p: any) => <option key={p.id} value={p.name}>{p.name}</option>)}
               </select>
             </div>
 
@@ -600,7 +600,7 @@ export default function FieldPage() {
 
             {rPoints.length > 0 && (
               <div className="space-y-1 max-h-48 overflow-y-auto">
-                {rPoints.map(p => (
+                {rPoints.map((p: any) => (
                   <div key={p.id} className="bg-[var(--bg-secondary)]/50 rounded px-2 py-1.5 flex justify-between items-center text-[10px]">
                     <span className="text-[var(--text-primary)]">{p.pointName}</span>
                     <span className="text-[var(--text-muted)] font-mono">

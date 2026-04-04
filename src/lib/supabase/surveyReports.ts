@@ -90,7 +90,7 @@ export async function getSurveyReportsByProject(
 
   if (error) throw error
 
-  return (data || []).map(row => ({
+  return (data || []).map((row: any) => ({
     id: row.id,
     reportNumber: row.report_number,
     reportTitle: row.report_title,

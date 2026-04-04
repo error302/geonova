@@ -150,7 +150,7 @@ function ExtraFieldsForm({
   if (docId === 'beacon_descriptions') return (
     <div className="space-y-3">
       <p className="text-xs text-[var(--text-muted)]">Describe each control/boundary beacon. These descriptions appear in the official document.</p>
-      {points.filter(p => p.is_control).map(pt => (
+      {points.filter((p: any) => p.is_control).map((pt: any) => (
         <div key={pt.name} className="border border-[var(--border-color)] rounded-lg p-3">
           <p className="text-sm font-semibold text-[var(--text-primary)] mb-2">Beacon {pt.name}</p>
           <div className="space-y-2">
@@ -165,7 +165,7 @@ function ExtraFieldsForm({
           </div>
         </div>
       ))}
-      {points.filter(p => p.is_control).length === 0 && (
+      {points.filter((p: any) => p.is_control).length === 0 && (
         <p className="text-xs text-amber-400 bg-amber-900/20 border border-amber-700/30 rounded px-3 py-2">No control points in this project. Mark points as control in the workspace to generate beacon descriptions.</p>
       )}
     </div>
@@ -213,7 +213,7 @@ function ExtraFieldsForm({
           </div>
         ))}
       </div>
-      {points.filter(p=>p.is_control).map(pt => (
+      {points.filter((p: any) =>p.is_control).map((pt: any) => (
         <div key={pt.name}>
           <label className="text-xs text-[var(--text-muted)] block mb-1">Beacon {pt.name} — description</label>
           <input value={extraFields[`beacon_desc_${pt.name}`]||''} onChange={e=>onChange({...extraFields,[`beacon_desc_${pt.name}`]:e.target.value})} className="input w-full text-sm" placeholder="Concrete beacon at NE corner..." />
@@ -306,7 +306,7 @@ export default function DocumentsPage({ params }: PageProps) {
     ])
 
     if (proj) setProject(proj)
-    if (pts) setPoints(pts.map(p => ({
+    if (pts) setPoints(pts.map((p: any) => ({
       name: p.name, easting: p.easting, northing: p.northing,
       elevation: p.elevation ?? undefined, is_control: p.is_control,
     })))
@@ -374,8 +374,8 @@ export default function DocumentsPage({ params }: PageProps) {
   const buildSurveyPlanData = (): SurveyPlanData | null => {
     if (!project) return null
     const controlPts: ControlPoint[] = points
-      .filter(p => p.is_control)
-      .map(p => ({
+      .filter((p: any) => p.is_control)
+      .map((p: any) => ({
         name: p.name,
         easting: p.easting,
         northing: p.northing,
@@ -538,13 +538,13 @@ export default function DocumentsPage({ params }: PageProps) {
         {/* Info banner */}
         <div className="bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-xl p-4 mb-6 text-sm">
           <p className="text-[var(--text-secondary)]">
-            <strong className="text-[var(--text-primary)]">{docs.filter(d=>d.required).length} required documents</strong> for a {(project.survey_type||'boundary').toLowerCase()} survey — pre-filled with your project data.
+            <strong className="text-[var(--text-primary)]">{docs.filter((d: any) =>d.required).length} required documents</strong> for a {(project.survey_type||'boundary').toLowerCase()} survey — pre-filled with your project data.
             Fill in the extra fields for each document, then click <strong>Generate &amp; Print</strong>. Each opens in a new tab ready to print as PDF.
           </p>
         </div>
         <div className="bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-xl p-4 mb-6 text-sm">
           <p className="text-[var(--text-secondary)]">
-            <strong className="text-[var(--text-primary)]">{docs.filter(d=>d.required).length} required documents</strong> for a {(project.survey_type||'boundary').toLowerCase()} survey — pre-filled with your project data.
+            <strong className="text-[var(--text-primary)]">{docs.filter((d: any) =>d.required).length} required documents</strong> for a {(project.survey_type||'boundary').toLowerCase()} survey — pre-filled with your project data.
             Fill in the extra fields for each document, then click <strong>Generate & Print</strong>. Each opens in a new tab ready to print as PDF.
           </p>
         </div>
@@ -554,7 +554,7 @@ export default function DocumentsPage({ params }: PageProps) {
 
         {/* Document list */}
         <div className="space-y-3">
-          {docs.map(doc => {
+          {docs.map((doc: any) => {
             const isActive = activeDoc === doc.id
             const isDone = generated.has(doc.id)
 
@@ -626,7 +626,7 @@ export default function DocumentsPage({ params }: PageProps) {
         </div>
 
         {/* Generate all button */}
-        {docs.filter(d => !generated.has(d.id)).length > 0 && (
+        {docs.filter((d: any) => !generated.has(d.id)).length > 0 && (
           <div className="mt-6 pt-6 border-t border-[var(--border-color)]">
             <button onClick={() => docs.forEach((d, i) => setTimeout(() => generateDoc(d.id), i * 300))}
               className="btn btn-secondary w-full">

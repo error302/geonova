@@ -135,7 +135,7 @@ export default function Home() {
                 </Link>
               </div>
               <div className="flex flex-wrap gap-5 text-sm text-[var(--text-muted)]">
-                {[t('landing.pricePro'), t('landing.trial14Days'), t('landing.worksOffline'), t('landing.androidPWA')].map(f => (
+                {[t('landing.pricePro'), t('landing.trial14Days'), t('landing.worksOffline'), t('landing.androidPWA')].map((f: any) => (
                   <div key={f} className="flex items-center gap-1.5">
                     <div className="text-[var(--accent)]">{Icon.check}</div>
                     {f}
@@ -146,7 +146,7 @@ export default function Home() {
               <div className="mt-6 p-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">{ALL_COUNTRIES.find(c => c.id === country)?.flag ?? '🌍'}</span>
+                    <span className="text-2xl">{ALL_COUNTRIES.find((c: any) => c.id === country)?.flag ?? '🌍'}</span>
                     <div>
                       <div className="text-xs text-[var(--text-muted)]">{t('landing.countryActive')}</div>
                       <div className="text-sm font-semibold text-[var(--text-primary)]">
@@ -164,7 +164,7 @@ export default function Home() {
                     </button>
                     {showCountryPicker && (
                       <div className="absolute right-0 top-full mt-2 w-64 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl shadow-xl z-50 max-h-72 overflow-y-auto">
-                        {ALL_COUNTRIES.map(c => (
+                        {ALL_COUNTRIES.map((c: any) => (
                           <button
                             key={c.id}
                             onClick={() => { setCountry(c.id); setShowCountryPicker(false) }}
@@ -185,7 +185,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {standard.traverseOrders.slice(0, 3).map(o => (
+                  {standard.traverseOrders.slice(0, 3).map((o: any) => (
                     <span key={o.order} className="text-xs px-2 py-0.5 bg-[var(--bg-tertiary)] rounded text-[var(--text-secondary)]">
                       {o.order.replace(/_/g, ' ')}: 1:{o.minPrecision.toLocaleString()}
                     </span>
@@ -320,7 +320,7 @@ export default function Home() {
                       <span>{t('landing.mockupPts')}</span>
                     </div>
                     <div className="flex gap-2">
-                      {[t('landing.mockupPDFReport'), t('landing.mockupDXFExport')].map(a => (
+                      {[t('landing.mockupPDFReport'), t('landing.mockupDXFExport')].map((a: any) => (
                         <div key={a} className="px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[10px] text-[var(--text-secondary)]">{a}</div>
                       ))}
                     </div>
@@ -403,7 +403,7 @@ export default function Home() {
 
           <div className="bg-[var(--bg-secondary)] rounded-2xl border border-[var(--border-color)] overflow-hidden">
             <div className="flex border-b border-[var(--border-color)]">
-              {(Object.keys(TOOL_DEMOS) as Array<keyof typeof TOOL_DEMOS>).map(k => (
+              {(Object.keys(TOOL_DEMOS) as Array<keyof typeof TOOL_DEMOS>).map((k: any) => (
                 <button key={k} onClick={() => setActive(k)}
                   className={`flex-1 py-3 text-sm font-medium transition-colors capitalize ${
                     active === k
@@ -551,7 +551,7 @@ export default function Home() {
                   <span className="text-sm text-[var(--text-muted)]">{sub}</span>
                 </div>
                 <ul className="space-y-2.5 mb-6">
-                  {features.map(f => (
+                  {features.map((f: any) => (
                     <li key={f} className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
                       <div className="mt-0.5 text-[var(--accent)] flex-shrink-0">{Icon.check}</div>
                       {f}
@@ -596,7 +596,7 @@ export default function Home() {
                   <div className="text-[9px] text-[var(--text-muted)]">{t('landing.mobileKarenSurvey')}</div>
                 </div>
                 <div className="flex-1 p-3 space-y-1.5">
-                  {[t('landing.mobileLevelingBook'), t('landing.mobileTraverseCapture'), t('landing.mobileRadiation'), t('landing.mobileStakeout'), t('landing.mobileQuickCalc')].map(item => (
+                  {[t('landing.mobileLevelingBook'), t('landing.mobileTraverseCapture'), t('landing.mobileRadiation'), t('landing.mobileStakeout'), t('landing.mobileQuickCalc')].map((item: any) => (
                     <div key={item} className="flex items-center gap-2 bg-[var(--bg-secondary)] rounded-lg px-2.5 py-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
                       <span className="text-[10px] text-[var(--text-primary)]">{item}</span>
@@ -604,7 +604,7 @@ export default function Home() {
                   ))}
                 </div>
                 <div className="flex justify-around py-2 border-t border-[var(--border-color)]">
-                  {[t('landing.mobileHome'), t('landing.mobileMap'), t('landing.mobileSync')].map(n => (
+                  {[t('landing.mobileHome'), t('landing.mobileMap'), t('landing.mobileSync')].map((n: any) => (
                     <div key={n} className="text-[9px] text-[var(--text-muted)] text-center">
                       <div className="w-4 h-4 mx-auto mb-0.5 bg-[var(--border-color)] rounded" />
                       {n}

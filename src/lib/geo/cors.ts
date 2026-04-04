@@ -45,6 +45,6 @@ export function findNearestCORS(lat: number, lng: number, maxResults = 3): Neare
       else baselineQualityNote = 'Long baseline — use static GNSS, minimum 2 hrs occupation';
       return { station, distanceKm: Math.round(distanceKm * 10) / 10, baselineQualityNote };
     })
-    .sort((a, b) => a.distanceKm - b.distanceKm)
+    .sort((a: any, b: any) => a.distanceKm - b.distanceKm)
     .slice(0, maxResults);
 }

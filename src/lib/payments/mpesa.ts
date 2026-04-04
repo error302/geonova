@@ -167,7 +167,7 @@ export class MpesaService {
 
     const items = body.stkCallback.CallbackMetadata.Item
     const getValue = (name: string): string | number | undefined => 
-      items.find(i => i.Name === name)?.Value
+      items.find((i: any) => i.Name === name)?.Value
 
     return {
       transactionId: String(getValue('MpesaReceiptNumber') || ''),

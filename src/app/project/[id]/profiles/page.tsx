@@ -173,8 +173,8 @@ export default function ProfilesPage({ params }: PageProps) {
   };
 
   const togglePointSelection = (point: SurveyPoint) => {
-    if (selectedPoints.find(p => p.id === point.id)) {
-      setSelectedPoints(selectedPoints.filter(p => p.id !== point.id));
+    if (selectedPoints.find((p: any) => p.id === point.id)) {
+      setSelectedPoints(selectedPoints.filter((p: any) => p.id !== point.id));
     } else {
       setSelectedPoints([...selectedPoints, point]);
     }
@@ -189,7 +189,7 @@ export default function ProfilesPage({ params }: PageProps) {
   const addCrossSection = async (chainage: number) => {
     if (!selectedAlignment) return;
 
-    const centerPoint = chainagePoints.find(cp => Math.abs(cp.chainage - chainage) < 0.001);
+    const centerPoint = chainagePoints.find((cp: any) => Math.abs(cp.chainage - chainage) < 0.001);
     
     await supabase.from('cross_sections').insert({
       alignment_id: selectedAlignment.id,
@@ -291,12 +291,12 @@ export default function ProfilesPage({ params }: PageProps) {
               <h3 className="font-semibold mb-4">Select Points for Alignment (in order)</h3>
               <p className="text-sm text-[var(--text-muted)] mb-4">Click points in the order they appear along the centerline</p>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-64 overflow-y-auto">
-                {points.map(point => (
+                {points.map((point: any) => (
                   <button
                     key={point.id}
                     onClick={() => togglePointSelection(point)}
                     className={`p-3 rounded text-left transition-colors ${
-                      selectedPoints.find(p => p.id === point.id)
+                      selectedPoints.find((p: any) => p.id === point.id)
                         ? 'bg-[var(--accent)] text-black'
                         : 'bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]'
                     }`}
@@ -320,7 +320,7 @@ export default function ProfilesPage({ params }: PageProps) {
                 <div className="mt-4 p-3 bg-[var(--bg-tertiary)]/50 rounded">
                   <span className="text-sm text-[var(--text-secondary)]">Selected: </span>
                   <span className="text-[var(--accent)]">
-                    {selectedPoints.map(p => p.name).join(' → ')}
+                    {selectedPoints.map((p: any) => p.name).join(' → ')}
                   </span>
                 </div>
               )}
@@ -330,7 +330,7 @@ export default function ProfilesPage({ params }: PageProps) {
               <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6">
                 <h3 className="font-semibold mb-4">Existing Alignments</h3>
                 <div className="space-y-2">
-                  {alignments.map(alignment => (
+                  {alignments.map((alignment: any) => (
                     <button
                       key={alignment.id}
                       onClick={() => handleAlignmentSelect(alignment)}
@@ -452,13 +452,13 @@ export default function ProfilesPage({ params }: PageProps) {
                     <div className="bg-[var(--bg-tertiary)]/50 p-3 rounded">
                       <div className="text-xs text-[var(--text-muted)]">Lowest Point</div>
                       <div className="text-[var(--text-primary)] font-mono">
-                        {Math.min(...chainagePoints.map(p => p.elevation)).toFixed(3)} m
+                        {Math.min(...chainagePoints.map((p: any) => p.elevation)).toFixed(3)} m
                       </div>
                     </div>
                     <div className="bg-[var(--bg-tertiary)]/50 p-3 rounded">
                       <div className="text-xs text-[var(--text-muted)]">Highest Point</div>
                       <div className="text-[var(--text-primary)] font-mono">
-                        {Math.max(...chainagePoints.map(p => p.elevation)).toFixed(3)} m
+                        {Math.max(...chainagePoints.map((p: any) => p.elevation)).toFixed(3)} m
                       </div>
                     </div>
                   </div>
@@ -507,8 +507,8 @@ export default function ProfilesPage({ params }: PageProps) {
               </p>
 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-6">
-                {chainagePoints.map(cp => {
-                  const hasCrossSection = crossSections.some(cs => Math.abs(cs.chainage - cp.chainage) < 0.001);
+                {chainagePoints.map((cp: any) => {
+                  const hasCrossSection = crossSections.some((cs: any) => Math.abs(cs.chainage - cp.chainage) < 0.001);
                   return (
                     <button
                       key={cp.id}
@@ -544,11 +544,11 @@ function ProfileChart({ points }: { points: ChainagePoint[] }) {
 
   if (points.length === 0) return null;
 
-  const elevations = points.map(p => p.elevation);
+  const elevations = points.map((p: any) => p.elevation);
   const minElev = Math.min(...elevations);
   const maxElev = Math.max(...elevations);
-  const minCh = Math.min(...points.map(p => p.chainage));
-  const maxCh = Math.max(...points.map(p => p.chainage));
+  const minCh = Math.min(...points.map((p: any) => p.chainage));
+  const maxCh = Math.max(...points.map((p: any) => p.chainage));
   const chRange = maxCh - minCh || 1;
   const elevRange = maxElev - minElev || 1;
 
@@ -582,7 +582,7 @@ function ProfileChart({ points }: { points: ChainagePoint[] }) {
       
       <path d={pathData} stroke="#E8841A" strokeWidth={2} fill="none"/>
       
-      {points.map(p => (
+      {points.map((p: any) => (
         <g key={p.id}>
           <circle cx={toX(p.chainage)} cy={toY(p.elevation)} r={4} fill="#E8841A"/>
           <text x={toX(p.chainage)} y={height - 10} fill="white" fontSize={9} textAnchor="middle">
@@ -614,7 +614,7 @@ function ProfileChart({ points }: { points: ChainagePoint[] }) {
 function CrossSectionTable({ crossSections, chainagePoints }: { crossSections: CrossSection[]; chainagePoints: ChainagePoint[] }) {
   const groupedSections: { [key: number]: CrossSection[] } = {};
   
-  crossSections.forEach(cs => {
+  crossSections.forEach((cs: any) => {
     if (!groupedSections[cs.chainage]) {
       groupedSections[cs.chainage] = [];
     }
@@ -639,9 +639,9 @@ function CrossSectionTable({ crossSections, chainagePoints }: { crossSections: C
   return (
     <div className="space-y-4">
       {Object.entries(groupedSections).map(([ch, sections]) => {
-        const center = sections.find(s => s.offset_direction === 'center');
-        const left = sections.find(s => s.offset_direction === 'left');
-        const right = sections.find(s => s.offset_direction === 'right');
+        const center = sections.find((s: any) => s.offset_direction === 'center');
+        const left = sections.find((s: any) => s.offset_direction === 'left');
+        const right = sections.find((s: any) => s.offset_direction === 'right');
         
         return (
           <div key={ch} className="bg-[var(--bg-tertiary)]/50 rounded-lg p-4">

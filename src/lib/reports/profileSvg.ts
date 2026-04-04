@@ -50,7 +50,7 @@ function niceStep(rawStep: number) {
 }
 
 function fitScaleDenom(groundSpanM: number, availableMm: number, allowed: number[], requested?: number) {
-  const sorted = [...allowed].sort((a, b) => a - b)
+  const sorted = [...allowed].sort((a: any, b: any) => a - b)
   const startIdx = requested ? Math.max(0, sorted.findIndex((x) => x >= requested)) : 0
 
   for (let i = startIdx; i < sorted.length; i++) {
@@ -77,7 +77,7 @@ export function generateLongitudinalProfileSvg(points: LongitudinalProfilePoint[
   const clean = points
     .map((p) => ({ chainage: Number(p.chainage), elevation: Number(p.elevation), label: p.label }))
     .filter((p) => Number.isFinite(p.chainage) && Number.isFinite(p.elevation))
-    .sort((a, b) => a.chainage - b.chainage)
+    .sort((a: any, b: any) => a.chainage - b.chainage)
 
   if (clean.length < 2) {
     return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="210mm" height="100mm" viewBox="0 0 210 100">\n<rect x=\"0\" y=\"0\" width=\"210\" height=\"100\" fill=\"#ffffff\"/>\n<text x=\"10\" y=\"50\" font-family=\"Arial\" font-size=\"12\" fill=\"#111\">Not enough points to generate profile.</text>\n</svg>\n`

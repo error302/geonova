@@ -98,9 +98,9 @@ function findCatchPoint(
 
   // Collect all candidate shots sorted by absolute offset
   const sorted = [...shots]
-    .map(s => ({ offset: s.offset, rl: s.rl }))
-    .filter(s => side === 'left' ? s.offset <= -0.001 : s.offset >= 0.001)
-    .sort((a, b) => Math.abs(b.offset) - Math.abs(a.offset))
+    .map((s: any) => ({ offset: s.offset, rl: s.rl }))
+    .filter((s: any) => side === 'left' ? s.offset <= -0.001 : s.offset >= 0.001)
+    .sort((a: any, b: any) => Math.abs(b.offset) - Math.abs(a.offset))
 
   if (sorted.length === 0) return null
 
@@ -233,10 +233,10 @@ export function computeCrossSection(
   // Ground polygon: sorted by offset (CW around perimeter)
   // Source: Ghilani & Wolf, Section 26.3
   const allGroundPts = [
-    ...leftShots.map(s => ({ x: s.offset, y: s.rl })),
+    ...leftShots.map((s: any) => ({ x: s.offset, y: s.rl })),
     { x: 0, y: centrelineRL },
-    ...rightShots.map(s => ({ x: s.offset, y: s.rl })),
-  ].sort((a, b) => a.x - b.x)
+    ...rightShots.map((s: any) => ({ x: s.offset, y: s.rl })),
+  ].sort((a: any, b: any) => a.x - b.x)
 
   // Add closure: last point back to first
   const groundWithClose = [...allGroundPts, allGroundPts[0]]
@@ -260,8 +260,8 @@ export function computeCrossSection(
 
   // Compute cut and fill trapezoids between consecutive ground points
   // Filter points between catches and compute area above/below formation
-  const cutPoints = allGroundPts.filter(pt => pt.x >= leftX - 0.001 && pt.x <= rightX + 0.001)
-  const fillPoints = allGroundPts.filter(pt => pt.x >= leftX - 0.001 && pt.x <= rightX + 0.001)
+  const cutPoints = allGroundPts.filter((pt: any) => pt.x >= leftX - 0.001 && pt.x <= rightX + 0.001)
+  const fillPoints = allGroundPts.filter((pt: any) => pt.x >= leftX - 0.001 && pt.x <= rightX + 0.001)
 
   let cutArea = 0
   let fillArea = 0
@@ -291,7 +291,7 @@ export function computeCrossSection(
   const rightFormY = formYAt(rightX)
   const cutPolygon = [
     { x: leftX, y: leftFormY },
-    ...allGroundPts.filter(pt => pt.x >= leftX - 0.001 && pt.x <= rightX + 0.001),
+    ...allGroundPts.filter((pt: any) => pt.x >= leftX - 0.001 && pt.x <= rightX + 0.001),
     { x: rightX, y: rightFormY },
     { x: rightFormationEdgeOffset, y: rightFormationEdgeRL },
     { x: 0, y: formationRL },
@@ -302,7 +302,7 @@ export function computeCrossSection(
   // Fill polygon for SVG: formation closing (ground below formation area shown separately)
   const fillPolygon = [
     { x: leftX, y: leftFormY },
-    ...allGroundPts.filter(pt => pt.x >= leftX - 0.001 && pt.x <= rightX + 0.001 && pt.y < formYAt(pt.x) - 0.001),
+    ...allGroundPts.filter((pt: any) => pt.x >= leftX - 0.001 && pt.x <= rightX + 0.001 && pt.y < formYAt(pt.x) - 0.001),
     { x: rightX, y: rightFormY },
     { x: rightFormationEdgeOffset, y: rightFormationEdgeRL },
     { x: 0, y: formationRL },
@@ -591,7 +591,7 @@ export function parseEarthworkCSV(csv: string): CrossSectionInput[] {
     const line = lines[i].trim()
     if (!line || line.toLowerCase().startsWith('chainage')) continue
 
-    const cols = line.split(',').map(c => c.trim())
+    const cols = line.split(',').map((c: any) => c.trim())
     if (cols.length < 4) continue
 
     const chainageKm = parseFloat(cols[0]) || 0

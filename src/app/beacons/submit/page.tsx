@@ -206,7 +206,7 @@ export default function SubmitBeaconPage() {
                   onChange={e => setForm({...form, utmZone: e.target.value})}
                   className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)]"
                 >
-                  {[35,36,37,38,39,40,41,42,43,44,45,46,47,48].map(z => (
+                  {[35,36,37,38,39,40,41,42,43,44,45,46,47,48].map((z: any) => (
                     <option key={z} value={z}>{z}</option>
                   ))}
                 </select>

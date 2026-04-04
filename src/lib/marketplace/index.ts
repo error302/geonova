@@ -196,44 +196,44 @@ const surveyors: SurveyorProfile[] = [
 
 export function getTemplates(category?: string): SurveyTemplate[] {
   if (!category || category === 'all') return templates
-  return templates.filter(t => t.category === category)
+  return templates.filter((t: any) => t.category === category)
 }
 
 export function getTemplateById(id: string): SurveyTemplate | undefined {
-  return templates.find(t => t.id === id)
+  return templates.find((t: any) => t.id === id)
 }
 
 export function searchTemplates(query: string): SurveyTemplate[] {
   const q = query.toLowerCase()
-  return templates.filter(t => 
+  return templates.filter((t: any) => 
     t.name.toLowerCase().includes(q) ||
     t.description.toLowerCase().includes(q) ||
-    t.tags.some(tag => tag.toLowerCase().includes(q))
+    t.tags.some((tag: any) => tag.toLowerCase().includes(q))
   )
 }
 
 export function getTopTemplates(limit = 5): SurveyTemplate[] {
-  return [...templates].sort((a, b) => b.downloads - a.downloads).slice(0, limit)
+  return [...templates].sort((a: any, b: any) => b.downloads - a.downloads).slice(0, limit)
 }
 
 export function getSurveyors(specialty?: string): SurveyorProfile[] {
   if (!specialty || specialty === 'all') return surveyors
-  return surveyors.filter(s => s.specialties.some(sp => 
+  return surveyors.filter((s: any) => s.specialties.some((sp: any) => 
     sp.toLowerCase().includes(specialty.toLowerCase())
   ))
 }
 
 export function getSurveyorById(id: string): SurveyorProfile | undefined {
-  return surveyors.find(s => s.id === id)
+  return surveyors.find((s: any) => s.id === id)
 }
 
 export function searchSurveyors(query: string): SurveyorProfile[] {
   const q = query.toLowerCase()
-  return surveyors.filter(s => 
+  return surveyors.filter((s: any) => 
     s.name.toLowerCase().includes(q) ||
     s.title.toLowerCase().includes(q) ||
     s.country.toLowerCase().includes(q) ||
-    s.specialties.some(sp => sp.toLowerCase().includes(q))
+    s.specialties.some((sp: any) => sp.toLowerCase().includes(q))
   )
 }
 

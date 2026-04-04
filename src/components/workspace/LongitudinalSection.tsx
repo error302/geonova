@@ -43,7 +43,7 @@ export default function LongitudinalSection({ projectId, points = [] }: Props) {
           </tr>
         </thead>
         <tbody>
-          {data.map((row, idx) => (
+          {data.map((row: any, idx: any) => (
             <tr key={idx}>
               <td className="border px-1 py-1">
                 <input

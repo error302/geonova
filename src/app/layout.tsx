@@ -4,6 +4,7 @@ import Link from 'next/link';
 import './globals.css';
 import NavBar from '@/components/NavBar';
 import MobileNav from '@/components/MobileNav';
+import AuthProvider from '@/components/AuthProvider';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { CountryProvider } from '@/lib/country';
 import { SubscriptionProvider } from '@/lib/subscription/subscriptionContext';
@@ -86,6 +87,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[var(--accent)] focus:text-black focus:rounded focus:font-semibold">Skip to content</a>
+        <AuthProvider>
         <LanguageProvider>
           <CountryProvider>
             <SubscriptionProvider>
@@ -104,6 +106,7 @@ export default function RootLayout({
             </SubscriptionProvider>
           </CountryProvider>
         </LanguageProvider>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -97,7 +97,7 @@ export default function ProfilePage() {
     setProfile(prev => ({
       ...prev,
       specializations: prev.specializations.includes(spec)
-        ? prev.specializations.filter(s => s !== spec)
+        ? prev.specializations.filter((s: any) => s !== spec)
         : [...prev.specializations, spec]
     }))
   }
@@ -180,7 +180,7 @@ export default function ProfilePage() {
                   className="input w-full"
                 >
                   <option value="">Select country</option>
-                  {countries.map(c => (
+                  {countries.map((c: any) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
@@ -211,7 +211,7 @@ export default function ProfilePage() {
           <div className="card">
             <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Specializations</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {specializations.map(spec => (
+              {specializations.map((spec: any) => (
                 <button
                   key={spec}
                   onClick={() => toggleSpecialization(spec)}
@@ -259,7 +259,7 @@ export default function ProfilePage() {
                   onChange={e => setProfile({ ...profile, preferred_language: e.target.value })}
                   className="input w-full"
                 >
-                  {languages.map(l => (
+                  {languages.map((l: any) => (
                     <option key={l.code} value={l.code}>{l.name}</option>
                   ))}
                 </select>

@@ -104,7 +104,7 @@ export default function DynamicFieldBook({ projectId, surveyType, initialRows = 
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     saveTimeoutRef.current = setTimeout(async () => {
       setSaving(true);
-      const records = rowsRef.current.map((row, idx) =>
+      const records = rowsRef.current.map((row: any, idx: any) =>
         rowToDbRecord(row, idx, projectId, surveyType, template.columns)
       );
       const { error: dbError } = await supabase
@@ -146,7 +146,7 @@ export default function DynamicFieldBook({ projectId, surveyType, initialRows = 
         const sections = rows
           .filter((r) => r.chainage && r.area)
           .map((r) => ({ chainage: Number(r.chainage), area: Number(r.area) }))
-          .sort((a, b) => a.chainage - b.chainage);
+          .sort((a: any, b: any) => a.chainage - b.chainage);
         
         if (sections.length >= 2) {
           const result = computeCutFillVolume(sections);
@@ -178,7 +178,7 @@ export default function DynamicFieldBook({ projectId, surveyType, initialRows = 
     setSaving(true);
     setError(null);
 
-    const records = rows.map((row, idx) =>
+    const records = rows.map((row: any, idx: any) =>
       rowToDbRecord(row, idx, projectId, surveyType, template.columns)
     );
 

@@ -383,11 +383,11 @@ export const EASEMENT_GUIDANCE: EasementGuidance[] = [
 ]
 
 export function getEasementByType(type: EasementType): EasementGuidance | undefined {
-  return EASEMENT_GUIDANCE.find(e => e.easementType === type)
+  return EASEMENT_GUIDANCE.find((e: any) => e.easementType === type)
 }
 
 export function getAllEasementTypes(): { type: EasementType; title: string }[] {
-  return EASEMENT_GUIDANCE.map(e => ({
+  return EASEMENT_GUIDANCE.map((e: any) => ({
     type: e.easementType,
     title: e.title
   }))
@@ -400,6 +400,6 @@ export function searchEasements(query: string): EasementGuidance[] {
       e.title.toLowerCase().includes(lowerQuery) ||
       e.description.toLowerCase().includes(lowerQuery) ||
       e.easementType.toLowerCase().includes(lowerQuery) ||
-      e.typicalDisputes.some(d => d.toLowerCase().includes(lowerQuery))
+      e.typicalDisputes.some((d: any) => d.toLowerCase().includes(lowerQuery))
   )
 }

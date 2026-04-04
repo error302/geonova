@@ -64,7 +64,7 @@ export default function AuditLogsPage() {
               </tr>
             </thead>
             <tbody>
-              {logs.map(log => (
+              {logs.map((log: any) => (
                 <tr key={log.id}>
                   <td>{new Date(log.created_at).toLocaleString()}</td>
                   <td>{log.action}</td>

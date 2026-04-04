@@ -22,8 +22,8 @@ export class Logger {
     const scrubbedMeta = meta ? JSON.parse(JSON.stringify(meta)) : undefined
     if (scrubbedMeta) {
       const sensitiveKeys = ['password', 'token', 'secret', 'key', 'credential', 'credit_card']
-      Object.keys(scrubbedMeta).forEach(k => {
-        if (sensitiveKeys.some(sk => k.toLowerCase().includes(sk))) {
+      Object.keys(scrubbedMeta).forEach((k: any) => {
+        if (sensitiveKeys.some((sk: any) => k.toLowerCase().includes(sk))) {
           scrubbedMeta[k] = '[REDACTED]'
         }
       })

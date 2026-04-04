@@ -19,7 +19,7 @@ export default function CrossAnalyzer({ projectId, layers }: CrossAnalyzerProps)
   const toggleLayer = (layerId: string) => {
     setSelectedLayers(prev => 
       prev.includes(layerId) 
-        ? prev.filter(id => id !== layerId)
+        ? prev.filter((id: any) => id !== layerId)
         : [...prev, layerId]
     )
   }
@@ -92,7 +92,7 @@ export default function CrossAnalyzer({ projectId, layers }: CrossAnalyzerProps)
             Analysis Type
           </label>
           <div className="grid grid-cols-3 gap-2">
-            {analysisTypes.map(type => (
+            {analysisTypes.map((type: any) => (
               <button
                 key={type.value}
                 onClick={() => setAnalysisType(type.value as any)}
@@ -108,7 +108,7 @@ export default function CrossAnalyzer({ projectId, layers }: CrossAnalyzerProps)
             ))}
           </div>
           <p className="mt-2 text-xs text-[var(--text-muted)]">
-            {analysisTypes.find(t => t.value === analysisType)?.description}
+            {analysisTypes.find((t: any) => t.value === analysisType)?.description}
           </p>
         </div>
 
@@ -117,7 +117,7 @@ export default function CrossAnalyzer({ projectId, layers }: CrossAnalyzerProps)
             Compare Layers ({selectedLayers.length} selected)
           </label>
           <div className="max-h-48 overflow-y-auto space-y-1">
-            {layers.map(layer => (
+            {layers.map((layer: any) => (
               <label 
                 key={layer.id}
                 className="flex items-center gap-2 p-2 rounded hover:bg-[var(--bg-primary)] cursor-pointer"

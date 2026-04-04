@@ -121,11 +121,11 @@ export async function getPendingOperations(projectId?: string): Promise<SyncOper
   let operations = await db.getAll('sync_queue')
   
   if (projectId) {
-    operations = operations.filter(op => op.projectId === projectId)
+    operations = operations.filter((op: any) => op.projectId === projectId)
   }
   
   // Sort by priority (high first) then by timestamp
-  const priorityOrder = { high: 0, normal: 1, low: 2 }
+  const priorityOrder: Record<SyncOperation['priority'], number> = { high: 0, normal: 1, low: 2 }
   return operations.sort((a, b) => {
     const pDiff = priorityOrder[a.priority] - priorityOrder[b.priority]
     if (pDiff !== 0) return pDiff
@@ -309,7 +309,7 @@ export async function savePointsOffline(points: any[]): Promise<void> {
   const db = await getDB()
   const tx = db.transaction('survey_points', 'readwrite')
   await Promise.all([
-    ...points.map(p => tx.store.put(p)),
+    ...points.map((p: any) => tx.store.put(p)),
     tx.done
   ])
 }

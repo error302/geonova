@@ -101,13 +101,13 @@ export default function EnterprisePage() {
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Enterprise Features</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map(feature => (
+            {features.map((feature: any) => (
               <div key={feature.title} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6">
                 <feature.icon className="w-10 h-10 text-sky-600 mb-4" />
                 <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
                 <p className="text-sm text-[var(--text-muted)] mb-4">{feature.description}</p>
                 <ul className="space-y-1">
-                  {feature.items.map(item => (
+                  {feature.items.map((item: any) => (
                     <li key={item} className="text-sm flex items-center gap-2">
                       <Check className="w-4 h-4 text-green-500" />
                       {item}
@@ -125,7 +125,7 @@ export default function EnterprisePage() {
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Pricing Plans</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {plans.map(plan => (
+            {plans.map((plan: any) => (
               <div 
                 key={plan.name} 
                 className={`bg-[var(--bg-card)] border rounded-xl p-8 ${
@@ -138,7 +138,7 @@ export default function EnterprisePage() {
                   <span className="text-[var(--text-muted)]">{plan.period}</span>
                 </div>
                 <ul className="space-y-2 mb-6">
-                  {plan.features.map(feature => (
+                  {plan.features.map((feature: any) => (
                     <li key={feature} className="text-sm flex items-center gap-2">
                       <Check className="w-4 h-4 text-green-500" />
                       {feature}

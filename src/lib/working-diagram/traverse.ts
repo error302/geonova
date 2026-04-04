@@ -11,7 +11,7 @@ export function computePositions(
 
   if (hasCoords) {
     const map = new Map<string, Point2D>()
-    beacons.forEach(b => {
+    beacons.forEach((b: any) => {
       map.set(b.id, { x: b.easting!, y: b.northing! })
     })
     return map
@@ -47,10 +47,10 @@ export function normalizeToViewport(
   const pts = Array.from(positions.values())
   if (pts.length === 0) return positions
 
-  const minX = Math.min(...pts.map(p => p.x))
-  const maxX = Math.max(...pts.map(p => p.x))
-  const minY = Math.min(...pts.map(p => p.y))
-  const maxY = Math.max(...pts.map(p => p.y))
+  const minX = Math.min(...pts.map((p: any) => p.x))
+  const maxX = Math.max(...pts.map((p: any) => p.x))
+  const minY = Math.min(...pts.map((p: any) => p.y))
+  const maxY = Math.max(...pts.map((p: any) => p.y))
 
   const rangeX = maxX - minX || 1
   const rangeY = maxY - minY || 1
@@ -73,7 +73,7 @@ export function polygonCentroid(
   beaconIds: string[],
   positions: Map<string, Point2D>
 ): Point2D {
-  const pts = beaconIds.map(id => positions.get(id)).filter(Boolean) as Point2D[]
+  const pts = beaconIds.map((id: any) => positions.get(id)).filter(Boolean) as Point2D[]
   if (pts.length === 0) return { x: 0, y: 0 }
   return {
     x: pts.reduce((s, p) => s + p.x, 0) / pts.length,

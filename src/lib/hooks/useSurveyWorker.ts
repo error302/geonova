@@ -54,7 +54,7 @@ const workerCode = `
         case 'volume': {
           const { surfacePoints, referenceZ } = data;
           if (surfacePoints.length < 3) throw new Error('Need at least 3 points');
-          const xs = surfacePoints.map(p => p.x), ys = surfacePoints.map(p => p.y), zs = surfacePoints.map(p => p.z);
+          const xs = surfacePoints.map((p: any) => p.x), ys = surfacePoints.map((p: any) => p.y), zs = surfacePoints.map((p: any) => p.z);
           const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
           const resolution = 50, stepX = (maxX - minX) / resolution, stepY = (maxY - minY) / resolution;
           let cutVolume = 0, fillVolume = 0;

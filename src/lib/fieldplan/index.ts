@@ -70,7 +70,7 @@ function persist(items: FieldMission[]) {
 }
 
 export function getMissions(): FieldMission[] {
-  return load().sort((a, b) => a.fieldDate.localeCompare(b.fieldDate))
+  return load().sort((a: any, b: any) => a.fieldDate.localeCompare(b.fieldDate))
 }
 
 export function saveMission(m: Omit<FieldMission, 'id' | 'createdAt' | 'updatedAt'>): FieldMission {
@@ -91,7 +91,7 @@ export function updateMission(id: string, updates: Partial<FieldMission>): boole
 }
 
 export function deleteMission(id: string) {
-  persist(load().filter(m => m.id !== id))
+  persist(load().filter((m: any) => m.id !== id))
 }
 
 export function daysUntil(dateStr: string): number {

@@ -92,8 +92,8 @@ function blankMission(type: SurveyType = 'traverse', country: Country = 'kenya')
     requiredPrecision: std.minPrecision,
     closureLimit: std.closureLimit,
     controlPoints: [],
-    equipment: DEFAULT_EQUIPMENT[type].map(item => ({ item, quantity: 1, checked: false })),
-    preChecklist: PRE_CHECKLIST[type].map(item => ({ item, done: false })),
+    equipment: DEFAULT_EQUIPMENT[type].map((item: any) => ({ item, quantity: 1, checked: false })),
+    preChecklist: PRE_CHECKLIST[type].map((item: any) => ({ item, done: false })),
     objectives: '',
     hazards: '',
     accessNotes: '',
@@ -109,10 +109,10 @@ function MissionCard({ mission, onOpen, onDelete }: {
 }) {
   const days = daysUntil(mission.fieldDate)
   const cd = countdown(days)
-  const done = mission.preChecklist.filter(c => c.done).length
+  const done = mission.preChecklist.filter((c: any) => c.done).length
   const total = mission.preChecklist.length
   const pct = total > 0 ? Math.round((done / total) * 100) : 0
-  const typeLabel = SURVEY_TYPES.find(t => t.id === mission.surveyType)?.label ?? mission.surveyType
+  const typeLabel = SURVEY_TYPES.find((t: any) => t.id === mission.surveyType)?.label ?? mission.surveyType
 
   return (
     <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-4 hover:border-[var(--accent)]/30 transition-colors cursor-pointer group"
@@ -180,8 +180,8 @@ function MissionEditor({ mission: initial, onSave, onClose }: {
       surveyType: type,
       requiredPrecision: newStd.minPrecision,
       closureLimit: newStd.closureLimit,
-      equipment: DEFAULT_EQUIPMENT[type].map(item => ({ item, quantity: 1, checked: false })),
-      preChecklist: PRE_CHECKLIST[type].map(item => ({ item, done: false })),
+      equipment: DEFAULT_EQUIPMENT[type].map((item: any) => ({ item, quantity: 1, checked: false })),
+      preChecklist: PRE_CHECKLIST[type].map((item: any) => ({ item, done: false })),
     }))
   }
 
@@ -205,7 +205,7 @@ function MissionEditor({ mission: initial, onSave, onClose }: {
     { id: 'details', label: 'Mission details' },
     { id: 'standards', label: 'Standards' },
     { id: 'equipment', label: `Equipment (${m.equipment.length})` },
-    { id: 'checklist', label: `Pre-field (${m.preChecklist.filter(c=>c.done).length}/${m.preChecklist.length})` },
+    { id: 'checklist', label: `Pre-field (${m.preChecklist.filter((c: any) =>c.done).length}/${m.preChecklist.length})` },
     { id: 'notes', label: 'Notes' },
   ]
 
@@ -220,7 +220,7 @@ function MissionEditor({ mission: initial, onSave, onClose }: {
               {m.projectName || 'New survey mission'}
             </h2>
             <p className="text-xs text-[var(--text-muted)] mt-0.5">
-              {SURVEY_TYPES.find(t => t.id === m.surveyType)?.label} · {COUNTRIES.find(c => c.id === m.country)?.label}
+              {SURVEY_TYPES.find((t: any) => t.id === m.surveyType)?.label} · {COUNTRIES.find((c: any) => c.id === m.country)?.label}
             </p>
           </div>
           <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-xl leading-none p-1">×</button>
@@ -228,7 +228,7 @@ function MissionEditor({ mission: initial, onSave, onClose }: {
 
         {/* Tabs */}
         <div className="flex border-b border-[var(--border-color)] overflow-x-auto">
-          {TABS.map(t => (
+          {TABS.map((t: any) => (
             <button key={t.id} onClick={() => setTab(t.id)}
               className={`flex-shrink-0 px-4 py-2.5 text-sm font-medium transition-colors border-b-2 ${
                 tab === t.id
@@ -265,13 +265,13 @@ function MissionEditor({ mission: initial, onSave, onClose }: {
                 <div>
                   <label className="block text-xs text-[var(--text-muted)] mb-1">Survey type *</label>
                   <select value={m.surveyType} onChange={e => changeType(e.target.value as SurveyType)} className="input w-full">
-                    {SURVEY_TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+                    {SURVEY_TYPES.map((t: any) => <option key={t.id} value={t.id}>{t.label}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs text-[var(--text-muted)] mb-1">Country *</label>
                   <select value={m.country} onChange={e => changeCountry(e.target.value as Country)} className="input w-full">
-                    {COUNTRIES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+                    {COUNTRIES.map((c: any) => <option key={c.id} value={c.id}>{c.label}</option>)}
                   </select>
                 </div>
                 <div>
@@ -350,7 +350,7 @@ function MissionEditor({ mission: initial, onSave, onClose }: {
             <div className="space-y-5">
               <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-4">
                 <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-3">
-                  {COUNTRIES.find(c => c.id === m.country)?.label} — {SURVEY_TYPES.find(t => t.id === m.surveyType)?.label}
+                  {COUNTRIES.find((c: any) => c.id === m.country)?.label} — {SURVEY_TYPES.find((t: any) => t.id === m.surveyType)?.label}
                 </h3>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   {[
@@ -431,7 +431,7 @@ function MissionEditor({ mission: initial, onSave, onClose }: {
                 ))}
               </div>
               <p className="text-xs text-[var(--text-muted)] mt-3">
-                {m.equipment.filter(e => e.checked).length}/{m.equipment.length} items loaded
+                {m.equipment.filter((e: any) => e.checked).length}/{m.equipment.length} items loaded
               </p>
             </div>
           )}
@@ -460,7 +460,7 @@ function MissionEditor({ mission: initial, onSave, onClose }: {
               </div>
               <div className="mt-4 h-1.5 bg-[var(--bg-tertiary)] rounded-full overflow-hidden">
                 <div className="h-full bg-green-500 rounded-full transition-all"
-                  style={{ width: `${m.preChecklist.length ? Math.round(m.preChecklist.filter(c=>c.done).length/m.preChecklist.length*100) : 0}%` }} />
+                  style={{ width: `${m.preChecklist.length ? Math.round(m.preChecklist.filter((c: any) =>c.done).length/m.preChecklist.length*100) : 0}%` }} />
               </div>
             </div>
           )}
@@ -514,17 +514,17 @@ export default function FieldPlannerPage() {
   useEffect(() => { reload() }, [reload])
 
   const today = new Date().toISOString().split('T')[0]
-  const upcoming = missions.filter(m => m.fieldDate && m.fieldDate >= today && m.status !== 'completed')
-  const overdue  = missions.filter(m => m.fieldDate && m.fieldDate < today && m.status !== 'completed')
+  const upcoming = missions.filter((m: any) => m.fieldDate && m.fieldDate >= today && m.status !== 'completed')
+  const overdue  = missions.filter((m: any) => m.fieldDate && m.fieldDate < today && m.status !== 'completed')
 
   const shown = (() => {
-    if (filter === 'upcoming') return missions.filter(m => m.status !== 'completed')
-    if (filter === 'ready')    return missions.filter(m => m.status === 'ready')
-    if (filter === 'completed')return missions.filter(m => m.status === 'completed')
+    if (filter === 'upcoming') return missions.filter((m: any) => m.status !== 'completed')
+    if (filter === 'ready')    return missions.filter((m: any) => m.status === 'ready')
+    if (filter === 'completed')return missions.filter((m: any) => m.status === 'completed')
     return missions
   })()
 
-  const editMission = missions.find(m => m.id === editId)
+  const editMission = missions.find((m: any) => m.id === editId)
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
@@ -550,17 +550,17 @@ export default function FieldPlannerPage() {
               {overdue.length} field day{overdue.length > 1 ? 's' : ''} past due
             </p>
             <p className="text-red-400 text-xs">
-              {overdue.map(m => m.projectName).join(' · ')}
+              {overdue.map((m: any) => m.projectName).join(' · ')}
             </p>
           </div>
         )}
 
-        {upcoming.length > 0 && upcoming.some(m => daysUntil(m.fieldDate) <= 3) && (
+        {upcoming.length > 0 && upcoming.some((m: any) => daysUntil(m.fieldDate) <= 3) && (
           <div className="mb-4 p-4 rounded-xl bg-amber-900/20 border border-amber-700/40 text-sm">
             <p className="text-amber-300 font-semibold mb-1">Coming up in the next 3 days:</p>
             <div className="space-y-1">
-              {upcoming.filter(m => daysUntil(m.fieldDate) <= 3).map(m => {
-                const done = m.preChecklist.filter(c => c.done).length
+              {upcoming.filter((m: any) => daysUntil(m.fieldDate) <= 3).map((m: any) => {
+                const done = m.preChecklist.filter((c: any) => c.done).length
                 const total = m.preChecklist.length
                 return (
                   <p key={m.id} className="text-amber-400 text-xs">
@@ -578,8 +578,8 @@ export default function FieldPlannerPage() {
             {[
               { key: 'all', label: 'All', count: missions.length, color: 'text-[var(--text-primary)]' },
               { key: 'upcoming', label: 'Active', count: upcoming.length, color: 'text-blue-400' },
-              { key: 'ready', label: 'Ready', count: missions.filter(m=>m.status==='ready').length, color: 'text-green-400' },
-              { key: 'completed', label: 'Done', count: missions.filter(m=>m.status==='completed').length, color: 'text-[var(--text-muted)]' },
+              { key: 'ready', label: 'Ready', count: missions.filter((m: any) =>m.status==='ready').length, color: 'text-green-400' },
+              { key: 'completed', label: 'Done', count: missions.filter((m: any) =>m.status==='completed').length, color: 'text-[var(--text-muted)]' },
             ].map(({ key, label, count, color }) => (
               <button key={key} onClick={() => setFilter(key as any)}
                 className={`p-3 rounded-xl border text-left transition-all ${filter === key ? 'border-[var(--accent)]/40 bg-[var(--accent)]/5' : 'border-[var(--border-color)] bg-[var(--bg-card)]'}`}>
@@ -611,7 +611,7 @@ export default function FieldPlannerPage() {
         {/* Mission grid */}
         {shown.length > 0 && (
           <div className="grid md:grid-cols-2 gap-4">
-            {shown.map(m => (
+            {shown.map((m: any) => (
               <MissionCard key={m.id} mission={m}
                 onOpen={() => setEditId(m.id)}
                 onDelete={() => { deleteMission(m.id); reload() }}

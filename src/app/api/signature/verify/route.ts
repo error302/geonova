@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import db from '@/lib/db'
 import type { VerifySignatureResponse } from '@/types/signature'
 
 export const dynamic = 'force-dynamic'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,13 +16,14 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const { data: signature, error } = await supabase
-      .from('document_signatures')
-      .select('*')
-      .eq('verification_token', token.toUpperCase())
-      .single()
+    const result = await db.query(
+      'SELECT * FROM document_signatures WHERE verification_token = $1',
+      [token.toUpperCase()]
+    )
 
-    if (error || !signature) {
+    const signature = result.rows[0]
+
+    if (!signature) {
       return NextResponse.json({
         status: 'NOT_FOUND',
         valid: false

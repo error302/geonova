@@ -112,7 +112,7 @@ export default function CommunityPage() {
 
         {/* Feature Cards */}
         <div className="grid md:grid-cols-2 gap-6">
-          {features.map(feature => (
+          {features.map((feature: any) => (
             <div key={feature.title} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6">
               <div className="flex items-start gap-4">
                 <div className={`${feature.color} p-3 rounded-lg`}>
@@ -122,7 +122,7 @@ export default function CommunityPage() {
                   <h3 className="text-lg font-semibold text-[var(--text-primary)]">{feature.title}</h3>
                   <p className="text-sm text-[var(--text-muted)] mb-4">{feature.description}</p>
                   <div className="flex flex-wrap gap-2">
-                    {feature.links.map(link => (
+                    {feature.links.map((link: any) => (
                       <Link
                         key={link.label}
                         href={link.href}

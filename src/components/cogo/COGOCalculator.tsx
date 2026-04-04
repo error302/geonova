@@ -173,8 +173,8 @@ export default function COGOCalculator({ compact = false }: Props) {
 
   const handleArea = () => {
     setError('')
-    const lines = areaText.trim().split('\n').filter(l => l.trim())
-    const points = lines.map(line => {
+    const lines = areaText.trim().split('\n').filter((l: any) => l.trim())
+    const points = lines.map((line: any) => {
       const parts = line.split(/[,\t]+/)
       if (parts.length < 3) return null
       return { label: parts[0].trim(), easting: parseFloat(parts[1]), northing: parseFloat(parts[2]) }
@@ -187,8 +187,8 @@ export default function COGOCalculator({ compact = false }: Props) {
 
   const handleJoin = () => {
     setError('')
-    const lines = joinText.trim().split('\n').filter(l => l.trim())
-    const points = lines.map(line => {
+    const lines = joinText.trim().split('\n').filter((l: any) => l.trim())
+    const points = lines.map((line: any) => {
       const parts = line.split(/[,\t]+/)
       if (parts.length < 3) return null
       return { label: parts[0].trim(), easting: parseFloat(parts[1]), northing: parseFloat(parts[2]) }
@@ -218,7 +218,7 @@ export default function COGOCalculator({ compact = false }: Props) {
       doc.setFontSize(16)
       doc.text('METARDU — COGO Computation Report', 14, 14)
       doc.setFontSize(10)
-      doc.text(`Computation Type: ${TABS.find(t => t.id === activeTab)?.label || activeTab}`, 14, 22)
+      doc.text(`Computation Type: ${TABS.find((t: any) => t.id === activeTab)?.label || activeTab}`, 14, 22)
       doc.setFontSize(8)
       doc.text(`Generated: ${new Date().toLocaleString()} | Survey Act Cap. 299 | RDM 1.1 (2025)`, 14, 28)
       doc.setDrawColor(150)
@@ -305,7 +305,7 @@ export default function COGOCalculator({ compact = false }: Props) {
         autoTable(doc, {
           startY: 34,
           head: [['From', 'To', 'Delta E (m)', 'Delta N (m)', 'Distance (m)', 'WCB', 'Back Bearing']],
-          body: joinResult.rows.map(r => [r.from, r.to, r.deltaE.toFixed(4), r.deltaN.toFixed(4), r.distance.toFixed(4), r.wcbDMS, r.backBearingDMS]),
+          body: joinResult.rows.map((r: any) => [r.from, r.to, r.deltaE.toFixed(4), r.deltaN.toFixed(4), r.distance.toFixed(4), r.wcbDMS, r.backBearingDMS]),
           styles: { fontSize: 8 },
           headStyles: { fillColor: [34, 197, 94] },
         })
@@ -323,7 +323,7 @@ export default function COGOCalculator({ compact = false }: Props) {
       doc.setTextColor(0)
 
       const date = new Date().toISOString().slice(0, 10)
-      const tabName = TABS.find(t => t.id === activeTab)?.label.replace(/[^a-zA-Z]/g, '_') || activeTab
+      const tabName = TABS.find((t: any) => t.id === activeTab)?.label.replace(/[^a-zA-Z]/g, '_') || activeTab
       doc.save(`METARDU_COGO_${tabName}_${date}.pdf`)
     } catch (err) {
       console.error('PDF export error:', err)
@@ -353,7 +353,7 @@ export default function COGOCalculator({ compact = false }: Props) {
 
       {/* Tab Bar */}
       <div className="flex items-center gap-1 border-b border-[var(--border-color)] mb-4 overflow-x-auto">
-        {TABS.map(tab => (
+        {TABS.map((tab: any) => (
           <button key={tab.id} onClick={() => { setActiveTab(tab.id); clearAll() }}
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
               activeTab === tab.id

@@ -25,14 +25,14 @@ export function RoadBoundarySelector({ value, onChange, roadLabel, onRoadLabelCh
         onChange={(e) => onChange(e.target.value as BoundaryType)}
         className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
       >
-        {BOUNDARY_OPTIONS.map(opt => (
+        {BOUNDARY_OPTIONS.map((opt: any) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}
           </option>
         ))}
       </select>
       <div className="flex gap-2 mt-2">
-        {BOUNDARY_OPTIONS.map(opt => (
+        {BOUNDARY_OPTIONS.map((opt: any) => (
           value === opt.value && (
             <span key={opt.value} className="text-xs text-gray-500 font-mono">
               {opt.preview}

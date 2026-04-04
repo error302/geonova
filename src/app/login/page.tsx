@@ -96,8 +96,21 @@ function LoginForm() {
     if (emailErr) return
 
     setLoading(true)
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      if (res.ok) {
+        setView('sent')
+      } else {
+        setError('Password reset is not yet available. Please contact support at mohameddosho20@gmail.com')
+      }
+    } catch {
+      setError('Password reset is not yet available. Please contact support at mohameddosho20@gmail.com')
+    }
     setLoading(false)
-    setView('sent')
   }
 
   return (

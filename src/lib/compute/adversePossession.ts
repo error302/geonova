@@ -54,7 +54,7 @@ export function computeAdversePossession(input: AdversePossessionInput): Adverse
     passed: durationYears > 0
   })
   
-  const hasHostileEvidence = input.evidence.some(e => 
+  const hasHostileEvidence = input.evidence.some((e: any) => 
     e.type === 'DOCUMENTARY' || e.type === 'WITNESS' || e.type === 'OCCUPATION_RECORD'
   )
   const hostileStrength = calculateStrength(input.evidence, ['DOCUMENTARY', 'WITNESS'])
@@ -63,8 +63,8 @@ export function computeAdversePossession(input: AdversePossessionInput): Adverse
     code: 'HOSTILE',
     met: hasHostileEvidence,
     evidence: input.evidence
-      .filter(e => ['DOCUMENTARY', 'WITNESS', 'OCCUPATION_RECORD'].includes(e.type))
-      .map(e => e.description),
+      .filter((e: any) => ['DOCUMENTARY', 'WITNESS', 'OCCUPATION_RECORD'].includes(e.type))
+      .map((e: any) => e.description),
     strength: hostileStrength
   })
   
@@ -75,7 +75,7 @@ export function computeAdversePossession(input: AdversePossessionInput): Adverse
     passed: hasHostileEvidence
   })
   
-  const hasOpenEvidence = input.evidence.some(e => 
+  const hasOpenEvidence = input.evidence.some((e: any) => 
     e.type === 'PHOTOGRAPHIC' || e.type === 'SURVEY' || e.type === 'OCCUPATION_RECORD'
   )
   const openStrength = calculateStrength(input.evidence, ['PHOTOGRAPHIC', 'SURVEY', 'OCCUPATION_RECORD'])
@@ -84,8 +84,8 @@ export function computeAdversePossession(input: AdversePossessionInput): Adverse
     code: 'OPEN',
     met: hasOpenEvidence,
     evidence: input.evidence
-      .filter(e => ['PHOTOGRAPHIC', 'SURVEY', 'OCCUPATION_RECORD'].includes(e.type))
-      .map(e => e.description),
+      .filter((e: any) => ['PHOTOGRAPHIC', 'SURVEY', 'OCCUPATION_RECORD'].includes(e.type))
+      .map((e: any) => e.description),
     strength: openStrength
   })
   
@@ -96,7 +96,7 @@ export function computeAdversePossession(input: AdversePossessionInput): Adverse
     passed: hasOpenEvidence
   })
   
-  const hasNotoriousEvidence = input.evidence.some(e => 
+  const hasNotoriousEvidence = input.evidence.some((e: any) => 
     e.type === 'WITNESS' || e.type === 'DOCUMENTARY' || e.type === 'RATE_PAYMENT'
   )
   const notoriousStrength = calculateStrength(input.evidence, ['WITNESS', 'DOCUMENTARY', 'RATE_PAYMENT'])
@@ -105,8 +105,8 @@ export function computeAdversePossession(input: AdversePossessionInput): Adverse
     code: 'NOTORIOUS',
     met: hasNotoriousEvidence,
     evidence: input.evidence
-      .filter(e => ['WITNESS', 'DOCUMENTARY', 'RATE_PAYMENT'].includes(e.type))
-      .map(e => e.description),
+      .filter((e: any) => ['WITNESS', 'DOCUMENTARY', 'RATE_PAYMENT'].includes(e.type))
+      .map((e: any) => e.description),
     strength: notoriousStrength
   })
   
@@ -118,15 +118,15 @@ export function computeAdversePossession(input: AdversePossessionInput): Adverse
   })
   
   const exclusiveTypes = ['DOCUMENTARY', 'RATE_PAYMENT', 'IMPROVEMENT']
-  const hasExclusiveEvidence = input.evidence.some(e => exclusiveTypes.includes(e.type))
+  const hasExclusiveEvidence = input.evidence.some((e: any) => exclusiveTypes.includes(e.type))
   const exclusiveStrength = calculateStrength(input.evidence, exclusiveTypes)
   requirements.push({
     name: 'Exclusive Possession',
     code: 'EXCLUSIVE',
     met: hasExclusiveEvidence,
     evidence: input.evidence
-      .filter(e => exclusiveTypes.includes(e.type))
-      .map(e => e.description),
+      .filter((e: any) => exclusiveTypes.includes(e.type))
+      .map((e: any) => e.description),
     strength: exclusiveStrength
   })
   
@@ -184,15 +184,15 @@ export function computeAdversePossession(input: AdversePossessionInput): Adverse
 }
 
 function calculateStrength(evidence: AdversePossessionEvidenceInput[], types: string[]): 'STRONG' | 'MODERATE' | 'WEAK' {
-  const matching = evidence.filter(e => types.includes(e.type))
+  const matching = evidence.filter((e: any) => types.includes(e.type))
   if (matching.length >= 3) return 'STRONG'
   if (matching.length >= 1) return 'MODERATE'
   return 'WEAK'
 }
 
 function calculateTotalStrength(requirements: AdversePossessionRequirement[]): 'STRONG' | 'MODERATE' | 'WEAK' {
-  const strongCount = requirements.filter(r => r.strength === 'STRONG').length
-  const moderateCount = requirements.filter(r => r.strength === 'MODERATE').length
+  const strongCount = requirements.filter((r: any) => r.strength === 'STRONG').length
+  const moderateCount = requirements.filter((r: any) => r.strength === 'MODERATE').length
   
   if (strongCount >= 4) return 'STRONG'
   if (strongCount + moderateCount >= 4) return 'MODERATE'
@@ -202,7 +202,7 @@ function calculateTotalStrength(requirements: AdversePossessionRequirement[]): '
 export function createAdversePossessionCase(input: AdversePossessionInput): AdversePossessionCase {
   const analysis = computeAdversePossession(input)
   
-  const evidence: AdversePossessionEvidence[] = input.evidence.map(e => ({
+  const evidence: AdversePossessionEvidence[] = input.evidence.map((e: any) => ({
     type: e.type,
     description: e.description,
     date: e.date,

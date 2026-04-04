@@ -1,18 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import db from '@/lib/db'
 import { callPythonCompute } from '@/lib/compute/pythonService'
 import type { CleanDataRequest, CleanDataResponse } from '@/types/fieldguard'
-
-function createServiceClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-  if (!url || !serviceRoleKey) {
-    return null
-  }
-
-  return createClient(url, serviceRoleKey)
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -52,39 +41,28 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing project_id or id' }, { status: 400 })
   }
   
-  if (datasetId) {
-    const supabase = createServiceClient()
-    if (!supabase) {
-      return NextResponse.json({ error: 'Supabase service role is not configured' }, { status: 503 })
+  try {
+    if (datasetId) {
+      const result = await db.query(
+        'SELECT * FROM cleaned_datasets WHERE id = $1',
+        [datasetId]
+      )
+      
+      if (result.rows.length === 0) {
+        return NextResponse.json({ error: 'Dataset not found' }, { status: 404 })
+      }
+      
+      return NextResponse.json(result.rows[0])
+    } else if (projectId) {
+      const result = await db.query(
+        'SELECT * FROM cleaned_datasets WHERE project_id = $1 ORDER BY created_at DESC',
+        [projectId]
+      )
+      
+      return NextResponse.json(result.rows)
     }
-
-    const { data, error } = await supabase
-      .from('cleaned_datasets')
-      .select('*')
-      .eq('id', datasetId)
-      .single()
-    
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
-    }
-    
-    return NextResponse.json(data)
-  } else if (projectId) {
-    const supabase = createServiceClient()
-    if (!supabase) {
-      return NextResponse.json({ error: 'Supabase service role is not configured' }, { status: 503 })
-    }
-
-    const { data, error } = await supabase
-      .from('cleaned_datasets')
-      .select('*')
-      .eq('project_id', projectId)
-      .order('created_at', { ascending: false })
-    
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
-    }
-    
-    return NextResponse.json(data)
+  } catch (error) {
+    console.error('Cleaned datasets GET error:', error)
+    return NextResponse.json({ error: 'Failed to fetch datasets' }, { status: 500 })
   }
 }

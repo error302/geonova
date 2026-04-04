@@ -73,3 +73,4 @@ export function addPageFooter(doc: jsPDF, pageNum: number, totalPages: number, p
     { align: 'right' }
   );
 }
+

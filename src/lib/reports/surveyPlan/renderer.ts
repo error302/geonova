@@ -76,7 +76,7 @@ export class SurveyPlanRenderer {
       const scaleByWidth = drawW / bb.rangeE
       const scaleByHeight = drawH / bb.rangeN
       const rawScale = Math.min(scaleByWidth, scaleByHeight) * PX_PER_M
-      this.scale = STANDARD_SCALES.find(s => s >= rawScale) || 500
+      this.scale = STANDARD_SCALES.find((s: any) => s >= rawScale) || 500
     }
     this.mPerPx = this.scale / PX_PER_M
     const offsetX = (drawW - bb.rangeE * PX_PER_M) / 2

@@ -68,7 +68,7 @@ export default function SurveyRegulationsPage() {
             Datums & Projections (Reg 24)
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {KENYA_DATUMS.map(datum => (
+            {KENYA_DATUMS.map((datum: any) => (
               <div key={datum.code} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-4">
                 <div className="font-semibold">{datum.name}</div>
                 <div className="text-xs text-[var(--text-muted)] mt-1">Code: {datum.code}</div>
@@ -157,7 +157,7 @@ export default function SurveyRegulationsPage() {
             Survey Marks (Reg 37-47)
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {SURVEY_MARKS.map(mark => (
+            {SURVEY_MARKS.map((mark: any) => (
               <div key={mark.code} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-mono font-semibold">{mark.code}</span>

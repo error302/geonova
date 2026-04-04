@@ -84,7 +84,7 @@ export default function CPDPage() {
           </select>
         </div>
 
-        {requirements.map(req => (
+        {requirements.map((req: any) => (
           <div key={req.id} className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <h3 className="font-semibold text-blue-900">{req.body}</h3>
             <p className="text-sm text-blue-700">{req.notes}</p>
@@ -165,7 +165,7 @@ export default function CPDPage() {
         <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-color)] p-6">
           <h2 className="text-lg font-semibold mb-4">My Activities</h2>
           <div className="space-y-3">
-            {activities.map(activity => (
+            {activities.map((activity: any) => (
               <div key={activity.id} className="flex items-center justify-between border-b pb-3">
                 <div>
                   <h4 className="font-medium">{activity.title}</h4>

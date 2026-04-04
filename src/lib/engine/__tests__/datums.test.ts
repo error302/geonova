@@ -16,7 +16,7 @@ describe('getAvailableDatums', () => {
   })
 
   it('each datum has required geodetic parameters', () => {
-    getAvailableDatums().forEach(d => {
+    getAvailableDatums().forEach((d: any) => {
       expect(typeof d.name).toBe('string')
       expect(d.name.length).toBeGreaterThan(0)
       expect(typeof d.ellipsoid).toBe('string')
@@ -37,37 +37,37 @@ describe('getDatumByCountry (new IDs)', () => {
   it('returns Arc1960 for kenya', () => {
     const datums = getDatumByCountry('kenya')
     expect(datums.length).toBeGreaterThan(0)
-    expect(datums.some(d => d.name === 'Arc 1960')).toBe(true)
+    expect(datums.some((d: any) => d.name === 'Arc 1960')).toBe(true)
   })
 
   it('returns NAD83 for us', () => {
     const datums = getDatumByCountry('us')
     expect(datums.length).toBeGreaterThan(0)
-    expect(datums.some(d => d.name.includes('NAD83'))).toBe(true)
+    expect(datums.some((d: any) => d.name.includes('NAD83'))).toBe(true)
   })
 
   it('returns GDA2020 for australia', () => {
     const datums = getDatumByCountry('australia')
     expect(datums.length).toBeGreaterThan(0)
-    expect(datums.some(d => d.name === 'GDA2020')).toBe(true)
+    expect(datums.some((d: any) => d.name === 'GDA2020')).toBe(true)
   })
 
   it('returns NZGD2000 for new_zealand', () => {
     const datums = getDatumByCountry('new_zealand')
     expect(datums.length).toBeGreaterThan(0)
-    expect(datums.some(d => d.name === 'NZGD2000')).toBe(true)
+    expect(datums.some((d: any) => d.name === 'NZGD2000')).toBe(true)
   })
 
   it('returns OSGB36 for uk', () => {
     const datums = getDatumByCountry('uk')
     expect(datums.length).toBeGreaterThan(0)
-    expect(datums.some(d => d.name === 'OSGB36')).toBe(true)
+    expect(datums.some((d: any) => d.name === 'OSGB36')).toBe(true)
   })
 
   it('returns Hartebeesthoek94 for south_africa', () => {
     const datums = getDatumByCountry('south_africa')
     expect(datums.length).toBeGreaterThan(0)
-    expect(datums.some(d => d.name === 'Hartebeesthoek94')).toBe(true)
+    expect(datums.some((d: any) => d.name === 'Hartebeesthoek94')).toBe(true)
   })
 })
 

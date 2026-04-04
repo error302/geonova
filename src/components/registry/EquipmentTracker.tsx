@@ -24,6 +24,13 @@ const statusConfig = {
   INACTIVE: { color: 'bg-gray-100 text-gray-800', icon: X, label: 'Inactive' }
 }
 
+const statusOrder: Record<Equipment['status'], number> = {
+  OVERDUE: 0,
+  DUE_SOON: 1,
+  CURRENT: 2,
+  INACTIVE: 3,
+}
+
 export default function EquipmentTracker() {
   const [equipment, setEquipment] = useState<Equipment[]>([])
   const [loading, setLoading] = useState(true)
@@ -112,10 +119,7 @@ export default function EquipmentTracker() {
 
           <div className="space-y-2 max-h-[500px] overflow-y-auto">
             {[...equipment]
-              .sort((a, b) => {
-                const order = { OVERDUE: 0, DUE_SOON: 1, CURRENT: 2, INACTIVE: 3 }
-                return order[a.status] - order[b.status]
-              })
+              .sort((a, b) => statusOrder[a.status] - statusOrder[b.status])
               .map(eq => (
                 <button
                   key={eq.id}
@@ -168,11 +172,11 @@ export default function EquipmentTracker() {
                   <p className="font-medium">{selectedEquipment.serialNumber}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Type</p>
-                  <p className="font-medium">
-                    {EQUIPMENT_TYPES.find(t => t.value === selectedEquipment.type)?.label}
-                  </p>
-                </div>
+                    <p className="text-sm text-gray-500">Type</p>
+                    <p className="font-medium">
+                      {EQUIPMENT_TYPES.find(t => t.value === selectedEquipment.type)?.label}
+                    </p>
+                  </div>
                 <div>
                   <p className="text-sm text-gray-500">Last Calibration</p>
                   <p className="font-medium">{selectedEquipment.lastCalibrationDate}</p>
@@ -323,7 +327,7 @@ function AddEquipmentModal({ onClose, onAdd }: { onClose: () => void; onAdd: () 
               onChange={e => setForm({ ...form, type: e.target.value as EquipmentType })}
               className="w-full p-2 border rounded-lg"
             >
-              {EQUIPMENT_TYPES.map(t => (
+              {EQUIPMENT_TYPES.map((t: any) => (
                 <option key={t.value} value={t.value}>{t.label}</option>
               ))}
             </select>

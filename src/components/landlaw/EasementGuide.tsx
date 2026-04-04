@@ -72,7 +72,7 @@ export default function EasementGuide() {
       {searchResults.length > 0 && (
         <div className="space-y-2">
           <p className="text-sm text-gray-600">Search results ({searchResults.length})</p>
-          {searchResults.map(easement => (
+          {searchResults.map((easement: any) => (
             <button
               key={easement.id}
               onClick={() => handleSelectEasement(easement.easementType)}

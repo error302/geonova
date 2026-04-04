@@ -31,7 +31,7 @@ export function searchIndiaRegistry(query: string): Parcel[] {
       status: 'registered',
     },
   ]
-  return data.filter(p => 
+  return data.filter((p: any) => 
     p.parcelNumber.toLowerCase().includes(query.toLowerCase()) ||
     p.ownerName.toLowerCase().includes(query.toLowerCase())
   )
@@ -53,7 +53,7 @@ export function searchBangladeshRegistry(query: string): Parcel[] {
       status: 'registered',
     },
   ]
-  return data.filter(p => 
+  return data.filter((p: any) => 
     p.parcelNumber.toLowerCase().includes(query.toLowerCase()) ||
     p.ownerName.toLowerCase().includes(query.toLowerCase())
   )
@@ -75,7 +75,7 @@ export function searchIndonesiaRegistry(query: string): Parcel[] {
       status: 'registered',
     },
   ]
-  return data.filter(p => 
+  return data.filter((p: any) => 
     p.parcelNumber.toLowerCase().includes(query.toLowerCase()) ||
     p.ownerName.toLowerCase().includes(query.toLowerCase())
   )
@@ -97,7 +97,7 @@ export function searchMalaysiaRegistry(query: string): Parcel[] {
       status: 'registered',
     },
   ]
-  return data.filter(p => 
+  return data.filter((p: any) => 
     p.parcelNumber.toLowerCase().includes(query.toLowerCase()) ||
     p.ownerName.toLowerCase().includes(query.toLowerCase())
   )
@@ -119,7 +119,7 @@ export function searchBrazilRegistry(query: string): Parcel[] {
       status: 'registered',
     },
   ]
-  return data.filter(p => 
+  return data.filter((p: any) => 
     p.parcelNumber.toLowerCase().includes(query.toLowerCase()) ||
     p.ownerName.toLowerCase().includes(query.toLowerCase())
   )
@@ -141,7 +141,7 @@ export function searchColombiaRegistry(query: string): Parcel[] {
       status: 'registered',
     },
   ]
-  return data.filter(p => 
+  return data.filter((p: any) => 
     p.parcelNumber.toLowerCase().includes(query.toLowerCase()) ||
     p.ownerName.toLowerCase().includes(query.toLowerCase())
   )
@@ -163,7 +163,7 @@ export function searchEgyptRegistry(query: string): Parcel[] {
       status: 'registered',
     },
   ]
-  return data.filter(p => 
+  return data.filter((p: any) => 
     p.parcelNumber.toLowerCase().includes(query.toLowerCase()) ||
     p.ownerName.toLowerCase().includes(query.toLowerCase())
   )
@@ -185,7 +185,7 @@ export function searchMoroccoRegistry(query: string): Parcel[] {
       status: 'registered',
     },
   ]
-  return data.filter(p => 
+  return data.filter((p: any) => 
     p.parcelNumber.toLowerCase().includes(query.toLowerCase()) ||
     p.ownerName.toLowerCase().includes(query.toLowerCase())
   )

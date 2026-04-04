@@ -219,7 +219,7 @@ function DropdownGroup({
       <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold mb-2">
         {t(titleKey)}
       </div>
-      {items.map(item => (
+      {items.map((item: any) => (
         <Link
           key={item.href}
           href={item.href}
@@ -454,8 +454,14 @@ export default function NavBar() {
   }
 
   const handleSignOut = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    // Sign out via NextAuth
+    try {
+      const { signOut } = await import('next-auth/react')
+      await signOut({ redirect: false })
+    } catch {
+      // Fallback: call signout API directly
+      await fetch('/api/auth/signout', { method: 'POST' })
+    }
     window.location.href = '/'
   }
 
@@ -482,7 +488,7 @@ export default function NavBar() {
     }
   }, [])
 
-  const currentLang = languages.find(l => l.code === language) || languages[0]
+  const currentLang = languages.find((l: any) => l.code === language) || languages[0]
 
   if (!mounted) {
     return (

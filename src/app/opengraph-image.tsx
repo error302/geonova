@@ -89,7 +89,7 @@ export default async function Image() {
             { label: '15+ Tools', sub: 'Offline ready' },
             { label: '18+ Tools', sub: 'Full precision' },
             { label: '10 Languages', sub: 'Built in Africa' },
-          ].map(item => (
+          ].map((item: any) => (
             <div
               key={item.label}
               style={{

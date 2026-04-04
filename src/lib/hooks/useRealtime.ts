@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { User } from '@supabase/supabase-js'
-import { subscribeToProjectChanges, PresenceUser, supabase } from '@/lib/realtime'
+import type { User } from '@supabase/supabase-js'
+import { subscribeToProjectChanges, type PresenceUser } from '@/lib/realtime'
+import { createClient } from '@/lib/supabase/client'
 import { savePointsOffline, getOfflinePoints } from '@/lib/offline/syncQueue'
 
 export function useRealtimeCollaboration(
@@ -46,7 +47,7 @@ export function useRealtimeCollaboration(
             } else if (payload.eventType === 'DELETE') {
               const points = await getOfflinePoints(projectId)
               const oldRecord = payload.old as { id: string } | undefined
-              const filtered = points.filter(p => p.id !== oldRecord?.id)
+              const filtered = points.filter((p: any) => p.id !== oldRecord?.id)
               await savePointsOffline(filtered)
             }
           }
@@ -87,7 +88,7 @@ export function useRealtimeCollaboration(
     isConnected,
     updateCursor,
     updateActiveTool,
-    otherUsers: onlineUsers.filter(u => (u as { id?: string }).id !== user?.id)
+    otherUsers: onlineUsers.filter((u: any) => (u as { id?: string }).id !== user?.id)
   }
 }
 
@@ -114,6 +115,8 @@ export function useProjectRealtime(
         setPoints(offlinePoints)
       }
 
+      const supabase = createClient()
+
       if (!supabase) {
         console.error('Supabase not initialized')
         if (mounted) setIsLoading(false)
@@ -136,31 +139,20 @@ export function useProjectRealtime(
 
     loadInitialData()
 
-    if (!supabase) {
-      console.error('Supabase not initialized')
-      return
-    }
+    if (typeof window === 'undefined') return
 
+    const supabase = createClient()
+
+    // Note: real-time postgres_changes require a native Supabase connection.
+    // With the VM-based client, subscribe() is a no-op.
     const subscription = supabase
       .channel(`project-points:${projectId}`)
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'survey_points',
-        filter: `project_id=eq.${projectId}`
-      }, (payload) => {
+      .on('broadcast', { event: 'update' }, (payload: any) => {
         if (!mounted) return
-
         setPoints(current => {
-          if (payload.eventType === 'INSERT') {
-            return [...current, payload.new]
-          }
-          if (payload.eventType === 'UPDATE') {
-            return current.map(p => p.id === payload.new.id ? payload.new : p)
-          }
-          if (payload.eventType === 'DELETE') {
-            return current.filter(p => p.id !== payload.old.id)
-          }
+          if (payload.eventType === 'INSERT') return [...current, payload.new]
+          if (payload.eventType === 'UPDATE') return current.map((p: any) => p.id === payload.new.id ? payload.new : p)
+          if (payload.eventType === 'DELETE') return current.filter((p: any) => p.id !== payload.old.id)
           return current
         })
       })
@@ -168,9 +160,7 @@ export function useProjectRealtime(
 
     return () => {
       mounted = false
-      if (supabase) {
-        supabase.removeChannel(subscription)
-      }
+      supabase.removeChannel(subscription)
     }
   }, [projectId, user])
 

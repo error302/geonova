@@ -146,7 +146,7 @@ export function verticalCurve(
     }
   }
   
-  return results.sort((a, b) => a.chainage - b.chainage);
+  return results.sort((a: any, b: any) => a.chainage - b.chainage);
 }
 
 export type CompoundCurveElements = {

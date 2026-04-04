@@ -132,7 +132,7 @@ function FitBoundsOnLoad({ markers, map }: { markers: SurveyPoint[]; map: L.Map 
     if (markers.length > 0 && map && !hasFitted.current) {
       hasFitted.current = true
       const bounds = L.latLngBounds(
-        markers.map(p => {
+        markers.map((p: any) => {
           let lat = p.lat
           let lon = p.lon
           if (lat === undefined || lon === undefined) {
@@ -163,7 +163,7 @@ function FlyToPoints({ points, utmZone, hemisphere }: { points: SurveyPoint[]; u
       map.flyTo([converted.lat, converted.lon], 16, { duration: 1 })
     } else if (points.length > 1 && prevPointsLength.current === 0) {
       const bounds = L.latLngBounds(
-        points.map(p => {
+        points.map((p: any) => {
           const converted = utmToGeographic(p.easting, p.northing, utmZone, hemisphere)
           return [converted.lat, converted.lon] as [number, number]
         })
@@ -187,7 +187,7 @@ function MapController({ markers, utmZone, hemisphere }: { markers: SurveyPoint[
       if (!hasFittedInitial.current) {
         hasFittedInitial.current = true
         const bounds = L.latLngBounds(
-          markers.map(p => {
+          markers.map((p: any) => {
             let lat = p.lat
             let lon = p.lon
             if (lat === undefined || lon === undefined) {
@@ -325,7 +325,7 @@ export default function ProjectMap({
       if (localAreaPoints.length > 0 && localAreaPoints[localAreaPoints.length - 1].id === point.id) {
         return
       }
-      if (localAreaPoints.some(p => p.id === point.id)) {
+      if (localAreaPoints.some((p: any) => p.id === point.id)) {
         return
       }
       const newPoints = [...localAreaPoints, point]
@@ -366,8 +366,8 @@ export default function ProjectMap({
   }
 
   const areaLinePositions: [number, number][] = localAreaPoints
-    .filter(p => p.lat !== undefined && p.lon !== undefined)
-    .map(p => [p.lat!, p.lon!] as [number, number])
+    .filter((p: any) => p.lat !== undefined && p.lon !== undefined)
+    .map((p: any) => [p.lat!, p.lon!] as [number, number])
 
   const parcelPolygons = useMemo(() => {
     const out: Array<{ id: string; name: string | null; positions: [number, number][] }> = []
@@ -510,8 +510,8 @@ export default function ProjectMap({
           }}
         >
           {markers.map((point, idx) => {
-            const isDistanceSelected = distancePoints.some(s => s.id === point.id)
-            const isAreaSelected = localAreaPoints.some(d => d.id === point.id)
+            const isDistanceSelected = distancePoints.some((s: any) => s.id === point.id)
+            const isAreaSelected = localAreaPoints.some((d: any) => d.id === point.id)
             const isAreaFirst = localAreaPoints.length > 0 && localAreaPoints[0].id === point.id
             const isSelected = !!selectedPointId && point.id === selectedPointId
             

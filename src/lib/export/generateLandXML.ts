@@ -19,7 +19,7 @@ export function generateLandXML(
 ): string {
   const date = new Date().toISOString()
   
-  const cgPoints = points.map(p => `
+  const cgPoints = points.map((p: any) => `
     <CgPoint name="${escapeXml(p.name)}" 
       pntRef="${escapeXml(p.name)}"
       featureCode="${p.is_control ? 'CTRL' : 'SURV'}">

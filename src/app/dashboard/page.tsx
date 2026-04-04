@@ -1,12 +1,13 @@
 export const dynamic = 'force-dynamic'
 
-import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import SubscriptionStatus from '@/components/SubscriptionStatus'
 import UpgradePrompt from '@/components/UpgradePrompt'
 import { getServerTranslator } from '@/lib/i18n/server'
 import { Logger } from '@/lib/logger'
+import { getAuthUser, isAdmin as checkIsAdmin } from '@/lib/auth/session'
+import { createClient } from '@/lib/supabase/server'
 
 import ProjectCard from '@/components/ProjectCard'
 
@@ -16,20 +17,19 @@ export default async function DashboardPage() {
   let t = (k: string) => k
   try { t = await getServerTranslator() } catch {}
 
+  // Auth check — OUTSIDE try/catch so redirect() works properly
+  const user = await getAuthUser()
+  if (!user) redirect('/login')
+
+  const userIsAdmin = await checkIsAdmin()
+
   let projects: any[] = []
   let subscription: any = null
-  let isAdmin = false
 
   try {
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
 
-    if (!user) redirect('/login')
-
-    const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase())
-    isAdmin = ADMIN_EMAILS.includes(user.email?.toLowerCase() ?? '')
-
-    if (isAdmin) {
+    if (userIsAdmin) {
       subscription = { plan_id: 'premium', trial_ends_at: null }
       const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false })
       if (!error) projects = data ?? []
@@ -39,13 +39,13 @@ export default async function DashboardPage() {
         supabase.from('user_subscriptions').select('*').eq('user_id', user.id).maybeSingle(),
       ])
       if (!pRes.error) projects = pRes.data ?? []
-      if (!sRes.error || sRes.error.code === 'PGRST116') subscription = sRes.data ?? null
+      if (!sRes.error || sRes.error?.code === 'PGRST116') subscription = sRes.data ?? null
     }
   } catch (err) {
-    logger.error('Failed to load dashboard data or user session', err)
+    logger.error('Failed to load dashboard data', err)
   }
 
-  const canCreateProject = isAdmin || subscription?.plan_id !== 'free' || projects.length < 1
+  const canCreateProject = userIsAdmin || subscription?.plan_id !== 'free' || projects.length < 1
   const daysLeft = subscription?.trial_ends_at
     ? Math.max(0, Math.ceil((new Date(subscription.trial_ends_at).getTime() - Date.now()) / 86400000))
     : null
@@ -138,7 +138,7 @@ export default async function DashboardPage() {
             <Link href="/project/new" className="px-6 py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg transition-colors">
               + New Project
             </Link>
-            <Link href="/tools/traverseAdjust" className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] font-medium rounded-lg transition-colors border border-[var(--border-color)]">
+            <Link href="/tools/traverse" className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] font-medium rounded-lg transition-colors border border-[var(--border-color)]">
               Open Traverse Tool
             </Link>
             <Link href="/process" className="px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] font-medium rounded-lg transition-colors border border-[var(--border-color)]">
@@ -155,7 +155,7 @@ export default async function DashboardPage() {
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {projectsWithCounts.map(project => (
+          {projectsWithCounts.map((project: any) => (
             <ProjectCard key={project.id} project={project} openLabel={t('project.open')} />
           ))}
         </div>

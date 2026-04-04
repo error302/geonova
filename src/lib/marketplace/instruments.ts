@@ -67,18 +67,18 @@ export function getListings(filters?: {
   country?: string
   maxPrice?: number
 }): InstrumentListing[] {
-  let items = loadListings().filter(l => !l.sold)
-    .sort((a, b) => b.postedAt.localeCompare(a.postedAt))
-  if (filters?.type) items = items.filter(l => l.type === filters.type)
-  if (filters?.category) items = items.filter(l => l.category === filters.category)
-  if (filters?.country) items = items.filter(l => l.country === filters.country)
-  if (filters?.maxPrice) items = items.filter(l => l.price <= filters.maxPrice!)
+  let items = loadListings().filter((l: any) => !l.sold)
+    .sort((a: any, b: any) => b.postedAt.localeCompare(a.postedAt))
+  if (filters?.type) items = items.filter((l: any) => l.type === filters.type)
+  if (filters?.category) items = items.filter((l: any) => l.category === filters.category)
+  if (filters?.country) items = items.filter((l: any) => l.country === filters.country)
+  if (filters?.maxPrice) items = items.filter((l: any) => l.price <= filters.maxPrice!)
   return items
 }
 
 export function searchListings(q: string): InstrumentListing[] {
   const query = q.toLowerCase()
-  return loadListings().filter(l => !l.sold && (
+  return loadListings().filter((l: any) => !l.sold && (
     l.title.toLowerCase().includes(query) ||
     l.brand.toLowerCase().includes(query) ||
     l.model.toLowerCase().includes(query) ||
@@ -106,7 +106,7 @@ export function markSold(id: string) {
 }
 
 export function deleteListing(id: string) {
-  saveListings(loadListings().filter(l => l.id !== id))
+  saveListings(loadListings().filter((l: any) => l.id !== id))
 }
 
 export function sendInquiry(data: Omit<InquiryMessage, 'id' | 'sentAt'>): InquiryMessage {
@@ -116,8 +116,8 @@ export function sendInquiry(data: Omit<InquiryMessage, 'id' | 'sentAt'>): Inquir
 }
 
 export function getInquiriesFor(listingId: string): InquiryMessage[] {
-  return loadInquiries().filter(m => m.listingId === listingId)
-    .sort((a, b) => b.sentAt.localeCompare(a.sentAt))
+  return loadInquiries().filter((m: any) => m.listingId === listingId)
+    .sort((a: any, b: any) => b.sentAt.localeCompare(a.sentAt))
 }
 
 export const CATEGORIES: { id: InstrumentCategory; label: string }[] = [
@@ -149,7 +149,7 @@ export const CURRENCIES: { id: Currency; symbol: string }[] = [
 ]
 
 export function fmtPrice(amount: number, currency: Currency, rentPeriod?: string): string {
-  const sym = CURRENCIES.find(c => c.id === currency)?.symbol ?? currency
+  const sym = CURRENCIES.find((c: any) => c.id === currency)?.symbol ?? currency
   const base = `${sym} ${amount.toLocaleString()}`
   if (rentPeriod) return `${base} / ${rentPeriod}`
   return base

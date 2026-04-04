@@ -1,6 +1,6 @@
 // src/lib/compute/pythonService.ts
 
-const BASE = process.env.NEXT_PUBLIC_URL || ''
+const BASE = (typeof window === 'undefined' ? process.env.NEXT_PUBLIC_APP_URL : '') || ''
 
 export async function convertDatum(
   coords: Array<{id?: string, easting: number, northing: number}>,
@@ -18,7 +18,7 @@ export async function convertDatum(
     return await res.json()
   } catch (err) {
     console.error('Datum conversion failed — returning original coords:', err)
-    return coords.map(c => ({ ...c, datum: fromDatum, fallback: true }))
+    return coords.map((c: any) => ({ ...c, datum: fromDatum, fallback: true }))
   }
 }
 

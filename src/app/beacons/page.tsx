@@ -88,7 +88,7 @@ export default function BeaconsPage() {
     return colors[type] || '#6b7280'
   }
 
-  const filteredBeacons = beacons.filter(b => {
+  const filteredBeacons = beacons.filter((b: any) => {
     if (filter !== 'all' && b.beacon_type !== filter) return false
     if (search && !b.name.toLowerCase().includes(search.toLowerCase()) && 
         !b.authority?.toLowerCase().includes(search.toLowerCase())) return false
@@ -167,7 +167,7 @@ export default function BeaconsPage() {
                 className="flex-1 px-4 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)]"
               />
               <div className="flex gap-2">
-                {['all', 'trig', 'control', 'boundary', 'benchmark'].map(f => (
+                {['all', 'trig', 'control', 'boundary', 'benchmark'].map((f: any) => (
                   <button
                     key={f}
                     onClick={() => setFilter(f)}
@@ -207,7 +207,7 @@ export default function BeaconsPage() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
 
-              {view === 'beacons' && filteredBeacons.map(beacon => {
+              {view === 'beacons' && filteredBeacons.map((beacon: any) => {
                 const coords = utmToGeographic(beacon.easting, beacon.northing, beacon.utm_zone, beacon.hemisphere as 'N' | 'S')
                 const color = getMarkerColor(beacon.beacon_type)
                 const icon = getMarkerIcon(beacon.beacon_type)
@@ -239,7 +239,7 @@ export default function BeaconsPage() {
                 )
               })}
 
-              {view === 'activity' && projects.filter(p => p.survey_type).map(project => {
+              {view === 'activity' && projects.filter((p: any) => p.survey_type).map((project: any) => {
                 const center = getProjectCenter(project)
                 const icons: Record<string, string> = {
                   boundary: '📐',
@@ -289,7 +289,7 @@ export default function BeaconsPage() {
                 className="w-full px-4 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
               >
                 <option value="">Choose project...</option>
-                {projects.map(p => (
+                {projects.map((p: any) => (
                   <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
               </select>

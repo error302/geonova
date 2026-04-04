@@ -68,7 +68,7 @@ function parseDXFFile(content: string): DXFParseResult {
   }
   
   let units = 'meters'
-  const unitsEntity = entities.find(e => e.type === 'INSUNITS')
+  const unitsEntity = entities.find((e: any) => e.type === 'INSUNITS')
   if (unitsEntity && unitsEntity.text) {
     const unitCode = parseInt(unitsEntity.text)
     const unitMap: Record<number, string> = {
@@ -79,9 +79,9 @@ function parseDXFFile(content: string): DXFParseResult {
   }
   
   let minE = Infinity, maxE = -Infinity, minN = Infinity, maxN = -Infinity
-  entities.forEach(e => {
+  entities.forEach((e: any) => {
     const coords = getEntityCoordinates(e)
-    coords.forEach(p => {
+    coords.forEach((p: any) => {
       if (p.easting < minE) minE = p.easting
       if (p.easting > maxE) maxE = p.easting
       if (p.northing < minN) minN = p.northing
@@ -170,7 +170,7 @@ function getEntityCoordinates(entity: DXFEntity): Point2D[] {
 function inferWalls(entities: DXFEntity[], boundingBox: BoundingBox2D): ExtractedWall[] {
   const walls: ExtractedWall[] = []
   const wallLayers = ['WALLS', 'WALL', 'A-WALL', 'STRUCTURAL', 'MAIN', 'PARTITION']
-  const lineEntities = entities.filter(e => 
+  const lineEntities = entities.filter((e: any) => 
     e.type === 'LINE' && 
     e.x1 !== undefined && e.y1 !== undefined &&
     e.x2 !== undefined && e.y2 !== undefined
@@ -184,7 +184,7 @@ function inferWalls(entities: DXFEntity[], boundingBox: BoundingBox2D): Extracte
     
     if (length > 0.5) {
       const layer = line.layer?.toUpperCase() || ''
-      const isLoadBearing = wallLayers.some(l => 
+      const isLoadBearing = wallLayers.some((l: any) => 
         layer.includes('MAIN') || layer.includes('STRUCTURAL') || layer.includes('BEARING')
       )
       
@@ -206,7 +206,7 @@ function inferWalls(entities: DXFEntity[], boundingBox: BoundingBox2D): Extracte
 
 function extractAnnotations(entities: DXFEntity[]): ExtractedAnnotation[] {
   const annotations: ExtractedAnnotation[] = []
-  const textEntities = entities.filter(e => 
+  const textEntities = entities.filter((e: any) => 
     (e.type === 'TEXT' || e.type === 'MTEXT') && 
     e.text && e.x !== undefined && e.y !== undefined
   )

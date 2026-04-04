@@ -243,7 +243,7 @@ function Step1Setup({
             onChange={e => setRoadClass(e.target.value)}
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white"
           >
-            {ROAD_CLASSES.map(c => (
+            {ROAD_CLASSES.map((c: any) => (
               <option key={c} value={c}>Class {c} {standard === 'KRDM2017' ? '- ' + (c === 'A' ? 'Major Arterial' : c === 'D' ? 'Minor Collector' : '') : ''}</option>
             ))}
           </select>
@@ -1322,7 +1322,7 @@ function renderStepContent(
               <p className="text-zinc-400 text-sm">Generate drainage layout PDF, invert levels schedule.</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              {['Drainage Layout PDF', 'Invert Levels Schedule', 'Manhole Schedule', 'Long Section PDF'].map(fmt => (
+              {['Drainage Layout PDF', 'Invert Levels Schedule', 'Manhole Schedule', 'Long Section PDF'].map((fmt: any) => (
                 <button key={fmt} className="py-3 rounded-lg border border-zinc-700 text-zinc-300 text-sm hover:bg-zinc-800">
                   ↓ {fmt}
                 </button>
@@ -1338,7 +1338,7 @@ function renderStepContent(
             <p className="text-zinc-400 text-sm">Generate PDF reports, long section, peg book.</p>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            {['Horizontal Alignment Report', 'Vertical Alignment Report', 'Earthworks Summary', 'Long Section PDF'].map(fmt => (
+            {['Horizontal Alignment Report', 'Vertical Alignment Report', 'Earthworks Summary', 'Long Section PDF'].map((fmt: any) => (
               <button key={fmt} className="py-3 rounded-lg border border-zinc-700 text-zinc-300 text-sm hover:bg-zinc-800">
                 ↓ {fmt}
               </button>
@@ -1454,7 +1454,7 @@ export default function EngineeringWorkspacePage() {
   }
 
   const steps = getEngineeringSteps(project.engineering_data || null)
-  const currentStep = steps.find(s => s.id === activeStep) || steps[0]
+  const currentStep = steps.find((s: any) => s.id === activeStep) || steps[0]
   const mode = project.engineering_data?.mode || 'road'
 
   return (

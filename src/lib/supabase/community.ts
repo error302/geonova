@@ -183,7 +183,7 @@ export async function submitPeerReview(
     await supabase
       .from('review_comments')
       .insert(
-        comments.map(c => ({
+        comments.map((c: any) => ({
           reviewer_id_fk: reviewer.id,
           section: c.section,
           severity: c.severity,

@@ -161,7 +161,7 @@ export const ROAD_CLASSIFICATIONS: RoadClassification[] = [
 ]
 
 export function getRoadReserveWidth(code: string, desirable = true): number {
-  const rc = ROAD_CLASSIFICATIONS.find(r => r.code === code)
+  const rc = ROAD_CLASSIFICATIONS.find((r: any) => r.code === code)
   if (!rc) return 0
   const val = desirable ? rc.reserveDesirable : rc.reserveReduced
   const match = val.match(/(\d+(?:\.\d+)?)/)

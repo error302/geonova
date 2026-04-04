@@ -109,7 +109,7 @@ export default function MiningSurveyPage() {
   };
 
   const updateLeg = (id: number, field: keyof InclinedLeg, value: string) => {
-    setLegs(legs.map(l => l.id === id ? { ...l, [field]: value } : l));
+    setLegs(legs.map((l: any) => l.id === id ? { ...l, [field]: value } : l));
   };
 
   const calculate3DTraverse = () => {
@@ -172,14 +172,14 @@ export default function MiningSurveyPage() {
   };
 
   const updateVolumeSection = (id: number, field: keyof VolumeSection, value: string) => {
-    setVolumeSections(volumeSections.map(s => s.id === id ? { ...s, [field]: value } : s));
+    setVolumeSections(volumeSections.map((s: any) => s.id === id ? { ...s, [field]: value } : s));
   };
 
   const calculateVolume = () => {
     const sections = volumeSections
-      .map(s => ({ chainage: parseFloat(s.chainage), area: parseFloat(s.area) }))
-      .filter(s => !isNaN(s.chainage) && !isNaN(s.area))
-      .sort((a, b) => a.chainage - b.chainage);
+      .map((s: any) => ({ chainage: parseFloat(s.chainage), area: parseFloat(s.area) }))
+      .filter((s: any) => !isNaN(s.chainage) && !isNaN(s.area))
+      .sort((a: any, b: any) => a.chainage - b.chainage);
 
     if (sections.length < 2) return;
 
@@ -211,11 +211,11 @@ export default function MiningSurveyPage() {
   };
 
   const updateSubsidencePoint = (id: number, field: keyof SubsidencePoint, value: string) => {
-    setSubsidencePoints(subsidencePoints.map(p => p.id === id ? { ...p, [field]: value } : p));
+    setSubsidencePoints(subsidencePoints.map((p: any) => p.id === id ? { ...p, [field]: value } : p));
   };
 
   const calculateSubsidence = () => {
-    const results = subsidencePoints.map(p => {
+    const results = subsidencePoints.map((p: any) => {
       const e1 = parseFloat(p.epoch1E);
       const n1 = parseFloat(p.epoch1N);
       const z1 = parseFloat(p.epoch1Z);
@@ -270,7 +270,7 @@ export default function MiningSurveyPage() {
 
   const exportBlastCSV = () => {
     const csv = 'Row,Hole,Easting,Northing\n' + 
-      blastHoles.map(h => `${h.row},${h.hole},${h.easting.toFixed(4)},${h.northing.toFixed(4)}`).join('\n');
+      blastHoles.map((h: any) => `${h.row},${h.hole},${h.easting.toFixed(4)},${h.northing.toFixed(4)}`).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -290,7 +290,7 @@ export default function MiningSurveyPage() {
           { id: 'volume', label: 'Volume' },
           { id: 'subsidence', label: 'Subsidence' },
           { id: 'blast', label: 'Blast Holes' },
-        ].map(tab => (
+        ].map((tab: any) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
@@ -326,7 +326,7 @@ export default function MiningSurveyPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {legs.map(leg => (
+                  {legs.map((leg: any) => (
                     <tr key={leg.id}>
                       <td><input className="input w-20" value={leg.fromStation} onChange={e => updateLeg(leg.id, 'fromStation', e.target.value)} /></td>
                       <td><input className="input w-20" value={leg.toStation} onChange={e => updateLeg(leg.id, 'toStation', e.target.value)} /></td>
@@ -416,7 +416,7 @@ export default function MiningSurveyPage() {
               { id: 'endArea', label: 'End Area' },
               { id: 'prismoidal', label: 'Prismoidal' },
               { id: 'crossSection', label: 'Cut/Fill' },
-            ].map(m => (
+            ].map((m: any) => (
               <button
                 key={m.id}
                 onClick={() => { setVolumeMethod(m.id as any); setVolumeResult(null); }}
@@ -446,7 +446,7 @@ export default function MiningSurveyPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {volumeSections.map(s => (
+                  {volumeSections.map((s: any) => (
                     <tr key={s.id}>
                       <td><input className="input w-32" value={s.chainage} onChange={e => updateVolumeSection(s.id, 'chainage', e.target.value)} /></td>
                       <td><input className="input w-32" value={s.area} onChange={e => updateVolumeSection(s.id, 'area', e.target.value)} /></td>
@@ -575,7 +575,7 @@ export default function MiningSurveyPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {subsidencePoints.map(p => (
+                  {subsidencePoints.map((p: any) => (
                     <tr key={p.id}>
                       <td><input className="input w-16" value={p.pointName} onChange={e => updateSubsidencePoint(p.id, 'pointName', e.target.value)} /></td>
                       <td><input className="input w-24" value={p.epoch1E} onChange={e => updateSubsidencePoint(p.id, 'epoch1E', e.target.value)} /></td>

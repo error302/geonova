@@ -52,7 +52,7 @@ export default function LandLawPage() {
         <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
           <div className="border-b">
             <nav className="flex">
-              {tabs.map(tab => (
+              {tabs.map((tab: any) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as Tab)}

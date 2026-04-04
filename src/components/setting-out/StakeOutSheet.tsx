@@ -43,7 +43,7 @@ export default function StakeOutSheet({ result, station }: Props) {
           </tr>
         </thead>
         <tbody>
-          {rows.map(row => (
+          {rows.map((row: any) => (
             <tr key={row.id} className="border-b border-gray-300">
               <td className="py-2 pr-4 font-bold">{row.id}</td>
               <td className="py-2 pr-4 text-right">{row.HzAngle}"</td>

@@ -205,7 +205,7 @@ export function analyzeBoundarySituation(
 }
 
 export function getEvidencePriority(type: string): number {
-  const evidence = EVIDENCE_HIERARCHY.find(e => e.type === type)
+  const evidence = EVIDENCE_HIERARCHY.find((e: any) => e.type === type)
   return evidence?.priority || 99
 }
 

@@ -291,12 +291,12 @@ export const KENYA_COUNTIES: KenyaCounty[] = [
 ]
 
 export function getCountyByCode(code: string): KenyaCounty | undefined {
-  return KENYA_COUNTIES.find(c => c.code.toUpperCase() === code.toUpperCase())
+  return KENYA_COUNTIES.find((c: any) => c.code.toUpperCase() === code.toUpperCase())
 }
 
 export function getRegistrationSectionByCode(code: string): RegistrationSection | undefined {
   for (const county of KENYA_COUNTIES) {
-    const section = county.registrationSections.find(s => 
+    const section = county.registrationSections.find((s: any) => 
       s.code.toUpperCase() === code.toUpperCase()
     )
     if (section) return section

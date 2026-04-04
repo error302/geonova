@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const results = coordinates.map(coord => {
+    const results = coordinates.map((coord: any) => {
       let x = coord.x
       let y = coord.y
       let z = coord.z || 0

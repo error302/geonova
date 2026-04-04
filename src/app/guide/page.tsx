@@ -115,7 +115,7 @@ export default function GuidePage() {
       try {
         const parsed = JSON.parse(saved);
         const progressMap: { [key: string]: number } = {};
-        Object.keys(parsed).forEach(key => {
+        Object.keys(parsed).forEach((key: any) => {
           const data = parsed[key];
           progressMap[key] = data.completedSteps || 0;
         });
@@ -144,7 +144,7 @@ export default function GuidePage() {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {guideTypes.map(guide => {
+          {guideTypes.map((guide: any) => {
             const completedSteps = progress[guide.id] || 0;
             const progressPercent = Math.round((completedSteps / guide.steps) * 100);
             

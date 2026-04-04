@@ -112,7 +112,7 @@ export async function importProject(
 
     const allPoints = [...data.control_points, ...data.survey_points]
     if (allPoints.length > 0) {
-      const pointsToInsert = allPoints.map(p => ({
+      const pointsToInsert = allPoints.map((p: any) => ({
         project_id: newProject.id,
         name: p.name,
         easting: p.easting,

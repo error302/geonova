@@ -31,7 +31,7 @@ function toWGS84(pt: GCPPoint): GCPExportResult {
 // GCP_Name,Latitude,Longitude,Altitude(m)
 export function exportPix4D(points: GCPPoint[]): string {
   const header = '#GCP_name,Latitude,Longitude,Altitude(m)'
-  const rows = points.map(pt => {
+  const rows = points.map((pt: any) => {
     const { lat, lon, elevation, name } = toWGS84(pt)
     return `${name},${lat.toFixed(8)},${lon.toFixed(8)},${elevation.toFixed(3)}`
   })
@@ -42,7 +42,7 @@ export function exportPix4D(points: GCPPoint[]): string {
 // GCP Name,Lat,Lon,Alt
 export function exportDroneDeploy(points: GCPPoint[]): string {
   const header = 'GCP Name,Lat,Lon,Alt'
-  const rows = points.map(pt => {
+  const rows = points.map((pt: any) => {
     const { lat, lon, elevation, name } = toWGS84(pt)
     return `${name},${lat.toFixed(8)},${lon.toFixed(8)},${elevation.toFixed(3)}`
   })
@@ -53,7 +53,7 @@ export function exportDroneDeploy(points: GCPPoint[]): string {
 // label,x/long,y/lat,z/alt (WGS84 degrees, then elevation)
 export function exportMetashape(points: GCPPoint[]): string {
   const header = '#Metashape GCP file\n#label\tx/long\ty/lat\tz/alt'
-  const rows = points.map(pt => {
+  const rows = points.map((pt: any) => {
     const { lat, lon, elevation, name } = toWGS84(pt)
     return `${name}\t${lon.toFixed(8)}\t${lat.toFixed(8)}\t${elevation.toFixed(3)}`
   })
@@ -65,7 +65,7 @@ export function exportMetashape(points: GCPPoint[]): string {
 // name lat lon alt
 export function exportODM(points: GCPPoint[]): string {
   const header = '+proj=latlong +datum=WGS84'
-  const rows = points.map(pt => {
+  const rows = points.map((pt: any) => {
     const { lat, lon, elevation, name } = toWGS84(pt)
     return `${lon.toFixed(8)} ${lat.toFixed(8)} ${elevation.toFixed(3)} 0 0 ${name}`
   })
@@ -75,7 +75,7 @@ export function exportODM(points: GCPPoint[]): string {
 // ── Generic CSV (for QGIS, ArcGIS, Excel) ────────────────────────────────────
 export function exportGenericCSV(points: GCPPoint[]): string {
   const header = 'Name,Latitude_WGS84,Longitude_WGS84,Elevation_m,Easting_UTM,Northing_UTM,UTM_Zone'
-  const rows = points.map(pt => {
+  const rows = points.map((pt: any) => {
     const { lat, lon } = toWGS84(pt)
     return `${pt.name},${lat.toFixed(8)},${lon.toFixed(8)},${pt.elevation.toFixed(3)},${pt.easting.toFixed(4)},${pt.northing.toFixed(4)},${pt.utmZone}${pt.hemisphere}`
   })
@@ -84,7 +84,7 @@ export function exportGenericCSV(points: GCPPoint[]): string {
 
 // ── GeoJSON (WGS84) for QGIS / ArcGIS ────────────────────────────────────────
 export function exportGCPGeoJSON(points: GCPPoint[]): string {
-  const features = points.map(pt => {
+  const features = points.map((pt: any) => {
     const { lat, lon } = toWGS84(pt)
     return {
       type: 'Feature',
@@ -114,7 +114,7 @@ export const GCP_FORMATS: { id: GCPFormat; label: string; ext: string; desc: str
 ]
 
 export function exportGCPs(points: GCPPoint[], format: GCPFormat): { content: string; ext: string } {
-  const fmt = GCP_FORMATS.find(f => f.id === format)!
+  const fmt = GCP_FORMATS.find((f: any) => f.id === format)!
   const exportFns: Record<GCPFormat, (pts: GCPPoint[]) => string> = {
     pix4d:       exportPix4D,
     dronedeploy: exportDroneDeploy,

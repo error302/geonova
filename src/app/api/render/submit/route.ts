@@ -1,22 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-const supabase = createClient(supabaseUrl, supabaseKey)
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import db from '@/lib/db'
 
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('authorization')
-    if (!authHeader) {
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const token = authHeader.replace('Bearer ', '')
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token)
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -28,30 +19,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         message: 'Small job - process synchronously',
         pointCount,
-        // In production, generate SVG here
         svg: '<svg></svg>'
       })
     }
 
-    const { data: job, error: jobError } = await supabase
-      .from('render_jobs')
-      .insert({
-        user_id: user.id,
-        project_id: projectId,
-        type,
-        status: 'QUEUED',
-        input_data: inputData,
-        output_format: outputFormat || 'PDF',
-        point_count: pointCount,
-        estimated_secs: Math.ceil(pointCount * 0.1)
-      })
-      .select()
-      .single()
+    const result = await db.query(
+      `INSERT INTO render_jobs (user_id, project_id, type, status, input_data, output_format, point_count, estimated_secs)
+       VALUES ($1, $2, $3, 'QUEUED', $4, $5, $6, $7)
+       RETURNING id, estimated_secs`,
+      [session.user.id, projectId, type, inputData, outputFormat || 'PDF', pointCount, Math.ceil(pointCount * 0.1)]
+    )
 
-    if (jobError) {
-      console.error('Render job error:', jobError)
+    if (result.rows.length === 0) {
       return NextResponse.json({ error: 'Failed to create render job' }, { status: 500 })
     }
+
+    const job = result.rows[0]
 
     return NextResponse.json({
       jobId: job.id,

@@ -1,14 +1,7 @@
-// src/app/api/ai/cadastra-validate/route.ts
-
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import db from '@/lib/db'
 import { callPythonCompute } from '@/lib/compute/pythonService'
 import type { ValidateRequest, ValidateResponse } from '@/types/cadastra'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,21 +37,28 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing project_id or id' }, { status: 400 })
   }
   
-  let query = supabase.from('cadastra_validations').select('*')
-  
-  if (validationId) {
-    const { data, error } = await query.eq('id', validationId).single()
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+  try {
+    if (validationId) {
+      const result = await db.query(
+        'SELECT * FROM cadastra_validations WHERE id = $1',
+        [validationId]
+      )
+      
+      if (result.rows.length === 0) {
+        return NextResponse.json({ error: 'Validation not found' }, { status: 404 })
+      }
+      
+      return NextResponse.json(result.rows[0])
     }
-    return NextResponse.json(data)
+    
+    const result = await db.query(
+      'SELECT * FROM cadastra_validations WHERE project_id = $1 ORDER BY created_at DESC',
+      [projectId]
+    )
+    
+    return NextResponse.json(result.rows)
+  } catch (error) {
+    console.error('Cadastra validations GET error:', error)
+    return NextResponse.json({ error: 'Failed to fetch validations' }, { status: 500 })
   }
-  
-  const { data, error } = await query.eq('project_id', projectId).order('created_at', { ascending: false })
-  
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-  
-  return NextResponse.json(data)
 }

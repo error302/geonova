@@ -59,7 +59,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
       return;
     }
 
-    const coords = selectedPoints.map(p => ({ easting: p.easting, northing: p.northing }));
+    const coords = selectedPoints.map((p: any) => ({ easting: p.easting, northing: p.northing }));
     const areaData = coordinateArea(coords);
 
     const lines: BoundaryLine[] = [];
@@ -103,7 +103,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
       return;
     }
 
-    if (selectedPoints.find(p => p.id === point.id)) return;
+    if (selectedPoints.find((p: any) => p.id === point.id)) return;
 
     setSelectedPoints([
       ...selectedPoints,
@@ -126,8 +126,8 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
       const { data, error } = await supabase.from('parcels').insert({
         project_id: projectId,
         name: parcelName,
-        point_ids: selectedPoints.map(p => p.id),
-        boundary_points: selectedPoints.map(p => ({
+        point_ids: selectedPoints.map((p: any) => p.id),
+        boundary_points: selectedPoints.map((p: any) => ({
           name: p.name,
           easting: p.easting,
           northing: p.northing
@@ -175,12 +175,12 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
             <div>
               <h3 className="font-semibold text-[var(--text-primary)] mb-3">Available Points</h3>
               <div className="bg-[var(--bg-tertiary)] rounded-lg p-3 max-h-64 overflow-y-auto">
-                {points.filter(p => !p.locked).length === 0 ? (
+                {points.filter((p: any) => !p.locked).length === 0 ? (
                   <p className="text-[var(--text-muted)] text-sm">No points available</p>
                 ) : (
                   <div className="grid grid-cols-2 gap-2">
-                    {points.filter(p => !p.locked).map(point => {
-                      const isAlreadySelected = selectedPoints.some(p => p.id === point.id)
+                    {points.filter((p: any) => !p.locked).map((point: any) => {
+                      const isAlreadySelected = selectedPoints.some((p: any) => p.id === point.id)
                       const isFirst = selectedPoints.length > 0 && selectedPoints[0].id === point.id
                       const canClose = isFirst && selectedPoints.length >= 3
                       const disabled = !isSelecting || (isAlreadySelected && !canClose)
@@ -256,7 +256,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
                   <div className="border-b border-[var(--border-color)] pb-2 mb-3">
                     <span className="text-[var(--text-secondary)] text-sm">Boundary: </span>
                     <span className="text-[var(--text-primary)]">
-                      {selectedPoints.map(p => p.name).join(' → ')}
+                      {selectedPoints.map((p: any) => p.name).join(' → ')}
                     </span>
                   </div>
 

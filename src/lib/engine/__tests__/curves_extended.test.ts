@@ -6,7 +6,7 @@ describe('curveStakeout', () => {
     expect(r.points.length).toBeGreaterThan(1)
     // First point is PC (chord=0); subsequent points have positive chords
     const afterPC = r.points.slice(1)
-    afterPC.forEach(p => {
+    afterPC.forEach((p: any) => {
       expect(Number.isFinite(p.chordLength)).toBe(true)
       expect(p.chordLength).toBeGreaterThan(0)
     })
@@ -24,7 +24,7 @@ describe('verticalCurve', () => {
     // Rising grade 2%, falling grade -1%, 200m curve
     const pts = verticalCurve(2, -1, 200, 100.0, 20)
     expect(pts.length).toBeGreaterThan(0)
-    pts.forEach(p => {
+    pts.forEach((p: any) => {
       expect(Number.isFinite(p.rl)).toBe(true)
       expect(Number.isFinite(p.chainage)).toBe(true)
     })

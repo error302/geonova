@@ -98,7 +98,7 @@ export function calcStatus(eq: Equipment): EquipmentWithStatus {
 // ── CRUD ─────────────────────────────────────────────────────────────────────
 
 export function getAll(): EquipmentWithStatus[] {
-  return load().map(calcStatus).sort((a, b) => a.daysUntilDue - b.daysUntilDue)
+  return load().map(calcStatus).sort((a: any, b: any) => a.daysUntilDue - b.daysUntilDue)
 }
 
 export function addEquipment(data: Omit<Equipment, 'id' | 'createdAt'>): Equipment {
@@ -118,8 +118,8 @@ export function updateEquipment(id: string, updates: Partial<Omit<Equipment, 'id
 }
 
 export function deleteEquipment(id: string): void {
-  save(load().filter(e => e.id !== id))
-  saveLogs(loadLogs().filter(l => l.equipmentId !== id))
+  save(load().filter((e: any) => e.id !== id))
+  saveLogs(loadLogs().filter((l: any) => l.equipmentId !== id))
 }
 
 export function logCalibration(data: Omit<CalibrationLog, 'id'>): CalibrationLog {
@@ -131,7 +131,7 @@ export function logCalibration(data: Omit<CalibrationLog, 'id'>): CalibrationLog
 }
 
 export function getLogsFor(equipmentId: string): CalibrationLog[] {
-  return loadLogs().filter(l => l.equipmentId === equipmentId).sort((a, b) => b.date.localeCompare(a.date))
+  return loadLogs().filter((l: any) => l.equipmentId === equipmentId).sort((a: any, b: any) => b.date.localeCompare(a.date))
 }
 
 export function getEquipmentTypes(): { id: EquipmentType; label: string }[] {

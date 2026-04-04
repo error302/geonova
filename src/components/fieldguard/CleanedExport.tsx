@@ -20,8 +20,8 @@ export default function CleanedExport({ cleanedData, projectId }: CleanedExportP
     const geojson = {
       type: 'FeatureCollection',
       features: cleanedData.cleaned_points
-        .filter(p => p.cleaned)
-        .map(p => ({
+        .filter((p: any) => p.cleaned)
+        .map((p: any) => ({
           type: 'Feature',
           geometry: {
             type: 'Point',
@@ -55,7 +55,7 @@ export default function CleanedExport({ cleanedData, projectId }: CleanedExportP
       confidence: p.confidence
     }))
     const csv = ['point_id,easting,northing,elevation,code,cleaned,classification,confidence']
-      .concat(rows.map(r => Object.values(r).join(',')))
+      .concat(rows.map((r: any) => Object.values(r).join(',')))
       .join('\n')
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
@@ -90,7 +90,7 @@ export default function CleanedExport({ cleanedData, projectId }: CleanedExportP
     })
     
     if (cleanedData.anomalies.length > 0) {
-      const anomalyData = cleanedData.anomalies.map(a => [
+      const anomalyData = cleanedData.anomalies.map((a: any) => [
         a.point_id,
         a.type,
         a.severity,

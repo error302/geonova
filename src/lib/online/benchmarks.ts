@@ -239,31 +239,31 @@ export async function searchBenchmarks(params: BenchmarkSearchParams): Promise<B
   let results = [...BENCHMARK_DATABASE]
   
   if (params.country) {
-    results = results.filter(b => 
+    results = results.filter((b: any) => 
       b.country.toLowerCase() === params.country!.toLowerCase()
     )
   }
   
   if (params.region) {
-    results = results.filter(b => 
+    results = results.filter((b: any) => 
       b.region?.toLowerCase().includes(params.region!.toLowerCase())
     )
   }
   
   if (params.type && params.type !== 'ALL') {
-    results = results.filter(b => b.type === params.type)
+    results = results.filter((b: any) => b.type === params.type)
   }
   
   if (params.latitude !== undefined && params.longitude !== undefined && params.radiusKm) {
     const radiusDeg = params.radiusKm / 111
-    results = results.filter(b => {
+    results = results.filter((b: any) => {
       if (b.latitude === undefined || b.longitude === undefined) return false
       const latDiff = Math.abs(b.latitude - params.latitude!)
       const lonDiff = Math.abs(b.longitude - params.longitude!)
       return latDiff <= radiusDeg && lonDiff <= radiusDeg
     })
     
-    results.sort((a, b) => {
+    results.sort((a: any, b: any) => {
       if (a.latitude === undefined || b.latitude === undefined) return 0
       const distA = Math.pow(a.latitude - params.latitude!, 2) + Math.pow(a.longitude! - params.longitude!, 2)
       const distB = Math.pow(b.latitude - params.latitude!, 2) + Math.pow(b.longitude! - params.longitude!, 2)
@@ -279,7 +279,7 @@ export async function searchBenchmarks(params: BenchmarkSearchParams): Promise<B
 }
 
 export async function getBenchmarkById(id: string): Promise<Benchmark | null> {
-  return BENCHMARK_DATABASE.find(b => b.id === id) || null
+  return BENCHMARK_DATABASE.find((b: any) => b.id === id) || null
 }
 
 export async function getBenchmarksByCountry(country: string): Promise<BenchmarkSearchResult> {
@@ -287,7 +287,7 @@ export async function getBenchmarksByCountry(country: string): Promise<Benchmark
 }
 
 export function getAvailableCountries(): string[] {
-  const countries = new Set(BENCHMARK_DATABASE.map(b => b.country))
+  const countries = new Set(BENCHMARK_DATABASE.map((b: any) => b.country))
   return Array.from(countries).sort()
 }
 

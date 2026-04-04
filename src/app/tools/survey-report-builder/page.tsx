@@ -75,7 +75,7 @@ export default function SurveyReportBuilderPage() {
             <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6">
               <h2 className="text-lg font-semibold mb-4">Select Project</h2>
               <div className="space-y-2">
-                {projects.map(p => (
+                {projects.map((p: any) => (
                   <button
                     key={p.id}
                     onClick={() => setSelectedProjectId(p.id)}

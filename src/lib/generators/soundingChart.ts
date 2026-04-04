@@ -25,13 +25,13 @@ export async function generateSoundingChart(
   }
 
   const soundingData = entries
-    .map((e) => ({
+    .map((e: any) => ({
       point: e.station || `S${e.row_index}`,
       easting: parseFloat(String(e.raw_data?.easting || e.raw_data?.e || 0)),
       northing: parseFloat(String(e.raw_data?.northing || e.raw_data?.n || 0)),
       depth: parseFloat(String(e.raw_data?.depth || e.raw_data?.sounding || 0)),
     }))
-    .filter((s) => s.depth > 0);
+    .filter((s: any) => s.depth > 0);
 
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
 
@@ -44,7 +44,7 @@ export async function generateSoundingChart(
   doc.text(`Project: ${project.name}`, 14, 25);
   doc.text(`Date: ${new Date().toLocaleDateString('en-KE')}`, 250, 25, { align: 'right' });
 
-  const tableData = soundingData.map((s) => [
+  const tableData = soundingData.map((s: any) => [
     s.point,
     s.easting.toFixed(3),
     s.northing.toFixed(3),
@@ -62,3 +62,4 @@ export async function generateSoundingChart(
 
   return Buffer.from(doc.output('arraybuffer'));
 }
+

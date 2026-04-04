@@ -116,7 +116,7 @@ export default function BoundaryLawSearch() {
                   <h5 className="font-medium text-gray-900">{entry.title}</h5>
                   <p className="text-sm text-gray-600 line-clamp-2">{entry.description}</p>
                   <div className="flex gap-2 mt-2">
-                    {entry.relevantActs.slice(0, 2).map((act, i) => (
+                    {entry.relevantActs.slice(0, 2).map((act: string, i: number) => (
                       <span key={i} className="text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded">
                         {act}
                       </span>

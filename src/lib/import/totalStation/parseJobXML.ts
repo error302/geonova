@@ -24,7 +24,7 @@ export function parseJobXML(content: string): {
       ?.getAttribute('JobName') || undefined
 
     const pointRecords = doc.querySelectorAll('PointRecord')
-    pointRecords.forEach(pr => {
+    pointRecords.forEach((pr: any) => {
       const id = pr.querySelector('Name')?.textContent?.trim()
       if (!id) return
 
@@ -49,9 +49,9 @@ export function parseJobXML(content: string): {
     })
 
     const obsRecords = doc.querySelectorAll('RawObservation')
-    obsRecords.forEach(obs => {
+    obsRecords.forEach((obs: any) => {
       const id = obs.querySelector('TargetID')?.textContent?.trim()
-      if (!id || records.find(r => r.pointId === id)) return
+      if (!id || records.find((r: any) => r.pointId === id)) return
       warnings.push(`Raw observation for ${id} — no coordinates computed`)
     })
 

@@ -5,7 +5,7 @@ export function detectSurveyType(
   rows: Record<string, string>[]
 ): SurveyDataset['surveyType'] {
   
-  const h = headers.map(h => h.toLowerCase().trim())
+  const h = headers.map((h: any) => h.toLowerCase().trim())
   
   // Leveling detection
   if (h.includes('bs') || h.includes('fs') || h.includes('is')) {

@@ -369,7 +369,7 @@ export function parseSettingOutCSV(csv: string): DesignPoint[] {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim()
     if (!line || line.toLowerCase().startsWith('point_id') || line.toLowerCase().startsWith('id')) continue
-    const cols = line.split(',').map(c => c.trim())
+    const cols = line.split(',').map((c: any) => c.trim())
     if (cols.length < 4) continue
     const id = cols[0] || String(i + 1)
     const e = parseFloat(cols[1])

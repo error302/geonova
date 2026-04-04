@@ -48,7 +48,7 @@ export async function generateCoordinateSchedule(
   });
   ws.getRow(3).height = 18;
 
-  (beacons ?? []).forEach((beacon, idx) => {
+  (beacons ?? []).forEach((beacon: any, idx: any) => {
     const row = ws.addRow([
       beacon.beacon_no,
       beacon.easting,
@@ -84,3 +84,4 @@ export async function generateCoordinateSchedule(
   const buffer = await wb.xlsx.writeBuffer();
   return Buffer.from(buffer);
 }
+

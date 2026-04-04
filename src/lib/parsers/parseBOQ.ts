@@ -27,7 +27,7 @@ export async function parseBOQSpreadsheet(file: File): Promise<ParsedInput> {
     const headers = jsonData[0].map((h: string) => String(h || '').toLowerCase().trim())
     
     const findColumn = (patterns: string[]): number => {
-      return headers.findIndex(h => patterns.some(p => h.includes(p)))
+      return headers.findIndex(h => patterns.some((p: any) => h.includes(p)))
     }
     
     const descCol = findColumn(['description', 'item', 'work', 'description', 'particular'])

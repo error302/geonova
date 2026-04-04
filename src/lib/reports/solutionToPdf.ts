@@ -33,7 +33,7 @@ export function appendSolutionToPdf(doc: jsPDF, solution: Solution, startY: numb
   autoTable(doc, {
     startY: y,
     head: [['Given', 'Value']],
-    body: solution.given.map(g => [g.label, g.value]),
+    body: solution.given.map((g: any) => [g.label, g.value]),
     margin: { left: MARGIN_X, right: MARGIN_X },
     styles: { fontSize: 8, cellPadding: 1.6, overflow: 'linebreak' },
     headStyles: { fillColor: [15, 15, 20], textColor: [232, 132, 26], fontStyle: 'bold' },
@@ -45,7 +45,7 @@ export function appendSolutionToPdf(doc: jsPDF, solution: Solution, startY: numb
   autoTable(doc, {
     startY: y,
     head: [['To Find']],
-    body: solution.toFind.map(t => [t]),
+    body: solution.toFind.map((t: any) => [t]),
     margin: { left: MARGIN_X, right: MARGIN_X },
     styles: { fontSize: 8, cellPadding: 1.6, overflow: 'linebreak' },
     headStyles: { fillColor: [15, 15, 20], textColor: [232, 132, 26], fontStyle: 'bold' },
@@ -82,7 +82,7 @@ export function appendSolutionToPdf(doc: jsPDF, solution: Solution, startY: numb
     autoTable(doc, {
       startY: y,
       head: [['Check', 'Value']],
-      body: solution.check.map(c => [c.label, c.value]),
+      body: solution.check.map((c: any) => [c.label, c.value]),
       margin: { left: MARGIN_X, right: MARGIN_X },
       styles: { fontSize: 8, cellPadding: 1.6, overflow: 'linebreak' },
       headStyles: { fillColor: [15, 15, 20], textColor: [232, 132, 26], fontStyle: 'bold' },
@@ -96,7 +96,7 @@ export function appendSolutionToPdf(doc: jsPDF, solution: Solution, startY: numb
   autoTable(doc, {
     startY: y,
     head: [['Result', 'Value']],
-    body: solution.result.map(r => [r.label, r.value]),
+    body: solution.result.map((r: any) => [r.label, r.value]),
     margin: { left: MARGIN_X, right: MARGIN_X },
     styles: { fontSize: 8, cellPadding: 1.6, overflow: 'linebreak' },
     headStyles: { fillColor: [15, 15, 20], textColor: [232, 132, 26], fontStyle: 'bold' },

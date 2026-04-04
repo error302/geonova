@@ -72,7 +72,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
       const vaS = headers.findIndex(h => h.includes('va_sec') || h.includes('va_s') || h.includes('vert_s'))
       const ihIdx = headers.findIndex(h => h.includes('ih'))
       const thIdx = headers.findIndex(h => h.includes('th'))
-      const imported: RawObservation[] = rows.map(row => ({
+      const imported: RawObservation[] = rows.map((row: any) => ({
         station: stationIdx >= 0 ? row[stationIdx] || '' : '',
         bs: '', fs: '',
         hclDeg: hclD >= 0 ? row[hclD] || '' : '',
@@ -99,7 +99,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
     setError('')
     if (!openingE || !openingN) { setError('Enter opening point coordinates'); return }
     if (!bsDeg) { setError('Enter backsight bearing'); return }
-    const validObs = observations.filter(o => o.station && o.slopeDist)
+    const validObs = observations.filter((o: any) => o.station && o.slopeDist)
     if (validObs.length === 0) { setError('At least one valid observation required'); return }
     try {
       const res = computeTraverse({
@@ -163,7 +163,7 @@ ${r.rawObservations.map((raw, i) => {
 <h1>Table 2 — Traverse Computation</h1>
 <table>
 <tr><th>Line</th><th>WCB</th><th>SD (m)</th><th>HD (m)</th><th>Departure</th><th>Latitude</th><th>Dep Corr.</th><th>Lat Corr.</th><th>Adj Dep</th><th>Adj Lat</th></tr>
-${r.legs.map(l => `<tr>
+${r.legs.map((l: any) => `<tr>
 <td>${l.from} → ${l.to}</td>
 <td class="center">${l.wcbDMS}</td>
 <td class="right">${l.sd.toFixed(3)}</td>
@@ -186,7 +186,7 @@ ${r.legs.map(l => `<tr>
 <h1>Table 3 — Adjusted Coordinate List</h1>
 <table>
 <tr><th>Point</th><th>Easting (m)</th><th>Northing (m)</th><th>RL (m)</th></tr>
-${r.coordinates.map(c => `<tr>
+${r.coordinates.map((c: any) => `<tr>
 <td>${c.station}</td><td class="right">${c.easting.toFixed(4)}</td><td class="right">${c.northing.toFixed(4)}</td><td class="right">${c.rl?.toFixed(3) ?? '—'}</td>
 </tr>`).join('\n')}
 </table>
@@ -212,7 +212,7 @@ Computed using METARDU | Survey Act Cap 299 | RDM 1.1 (2025) | Generated ${new D
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 border-b border-[var(--border-color)] pb-2">
-        {(['input', 'compute', 'print'] as const).map(tab => (
+        {(['input', 'compute', 'print'] as const).map((tab: any) => (
           <button key={tab} onClick={() => setActiveTab(tab)}
             className={`px-3 py-1.5 rounded text-sm font-medium capitalize transition-colors ${
               activeTab === tab ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--border-hover)]'
@@ -301,7 +301,7 @@ Computed using METARDU | Survey Act Cap 299 | RDM 1.1 (2025) | Generated ${new D
                 </tr>
                 <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/30">
                   <th></th><th></th><th></th><th></th>
-                  {[1,2,3,4,5,6,7,8,9].map(i => <th key={i} className="px-1 py-1 text-[10px] text-[var(--text-muted)]">{['','Deg','Min','Sec','','Deg','Min','Sec','','Deg','Min','Sec','',''][i-1]}</th>)}
+                  {[1,2,3,4,5,6,7,8,9].map((i: any) => <th key={i} className="px-1 py-1 text-[10px] text-[var(--text-muted)]">{['','Deg','Min','Sec','','Deg','Min','Sec','','Deg','Min','Sec','',''][i-1]}</th>)}
                 </tr>
               </thead>
               <tbody>
@@ -314,18 +314,18 @@ Computed using METARDU | Survey Act Cap 299 | RDM 1.1 (2025) | Generated ${new D
                       className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     <td className="px-1 py-1"><input value={obs.fs} onChange={e => updateObs(i, 'fs', e.target.value)}
                       className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
-                    {(['hclDeg','hclMin','hclSec']).map(f => (
+                    {(['hclDeg','hclMin','hclSec']).map((f: any) => (
                       <td key={f} className="px-0.5 py-1"><input value={(obs as any)[f]} onChange={e => updateObs(i, f as keyof RawObservation, e.target.value)}
                         type="number" className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     ))}
                     <td className="w-3"></td>
-                    {(['hcrDeg','hcrMin','hcrSec']).map(f => (
+                    {(['hcrDeg','hcrMin','hcrSec']).map((f: any) => (
                       <td key={f} className="px-0.5 py-1"><input value={(obs as any)[f]} onChange={e => updateObs(i, f as keyof RawObservation, e.target.value)}
                         type="number" className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     ))}
                     <td className="px-1 py-1"><input value={obs.slopeDist} onChange={e => updateObs(i, 'slopeDist', e.target.value)}
                       type="number" step="0.001" className="w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
-                    {(['vaDeg','vaMin','vaSec']).map(f => (
+                    {(['vaDeg','vaMin','vaSec']).map((f: any) => (
                       <td key={f} className="px-0.5 py-1"><input value={(obs as any)[f]} onChange={e => updateObs(i, f as keyof RawObservation, e.target.value)}
                         type="number" className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     ))}

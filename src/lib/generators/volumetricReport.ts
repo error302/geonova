@@ -26,12 +26,12 @@ export async function generateVolumetricReport(
   }
 
   const sections: CrossSection[] = entries
-    .map((e) => ({
+    .map((e: any) => ({
       chainage: parseFloat(String(e.raw_data?.chainage || e.row_index * 10)),
       area: parseFloat(String(e.raw_data?.area || e.raw_data?.cross_section_area || 0)),
     }))
-    .filter((s) => s.area > 0)
-    .sort((a, b) => a.chainage - b.chainage);
+    .filter((s: any) => s.area > 0)
+    .sort((a: any, b: any) => a.chainage - b.chainage);
 
   if (sections.length < 2) {
     throw new Error('Need at least 2 sections with area > 0');
@@ -63,7 +63,7 @@ export async function generateVolumetricReport(
   doc.setFont('helvetica', 'bold');
   doc.text('CROSS SECTIONS', 14, 35);
 
-  const tableData = sections.map((s) => [
+  const tableData = sections.map((s: any) => [
     s.chainage.toFixed(2),
     s.area.toFixed(2),
     s.description || '',
@@ -105,3 +105,4 @@ export async function generateVolumetricReport(
 
   return Buffer.from(doc.output('arraybuffer'));
 }
+

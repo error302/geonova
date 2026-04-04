@@ -57,12 +57,12 @@ export default function AnalyticsPage() {
         const d = new Date()
         d.setDate(d.getDate() - i)
         const dateStr = d.toISOString().split('T')[0]
-        const count = projects.filter(p => p.created_at?.startsWith(dateStr)).length
+        const count = projects.filter((p: any) => p.created_at?.startsWith(dateStr)).length
         last7Days.push({ date: dateStr, count })
       }
 
       const projectTypesMap: Record<string, number> = {}
-      projects.forEach(p => {
+      projects.forEach((p: any) => {
         const type = p.survey_type || 'Other'
         projectTypesMap[type] = (projectTypesMap[type] || 0) + 1
       })
@@ -70,7 +70,7 @@ export default function AnalyticsPage() {
       setData({
         totalProjects: projects.length,
         activeProjects: projects.length,
-        completedSurveys: projects.filter(p => p.survey_type).length,
+        completedSurveys: projects.filter((p: any) => p.survey_type).length,
         totalPoints: points.length,
         storageUsed: Math.round((points.length * 0.001) * 100) / 100,
         apiCalls: 0,
@@ -83,7 +83,7 @@ export default function AnalyticsPage() {
     fetchAnalytics()
   }, [period])
 
-  const maxActivity = data.userActivity.length > 0 ? Math.max(...data.userActivity.map(d => d.count)) : 0
+  const maxActivity = data.userActivity.length > 0 ? Math.max(...data.userActivity.map((d: any) => d.count)) : 0
 
   if (loading) {
     return (

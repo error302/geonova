@@ -71,7 +71,7 @@ export interface SurfaceVolumeGridResult {
 }
 
 function sortByChainage(sections: VolumeSection[]): VolumeSection[] {
-  return [...sections].sort((a, b) => a.chainage - b.chainage)
+  return [...sections].sort((a: any, b: any) => a.chainage - b.chainage)
 }
 
 export function endAreaVolume(sections: VolumeSection[]): VolumeResult {

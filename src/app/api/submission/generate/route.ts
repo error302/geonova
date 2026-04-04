@@ -1,8 +1,8 @@
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { session } } = await supabase.auth.getSession();
 
   if (!session) {
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { generateDocument } = await import('@/lib/submission/assembleDocument');
-    const result = await generateDocument({ projectId, documentId, surveyType: project.survey_type, supabase });
+    const result = await generateDocument({ projectId, documentId, surveyType: project.survey_type, supabase: supabase as any });
 
     await supabase
       .from('submission_documents')

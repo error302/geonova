@@ -125,7 +125,7 @@ export default function VerticalCurveCalculator() {
             <table className="w-full text-xs font-mono border-collapse">
               <thead>
                 <tr className="bg-[var(--bg-tertiary)]">
-                  {['Chainage', 'RL (m)', 'x (m)', 'y (m)', 'Point'].map(h => (
+                  {['Chainage', 'RL (m)', 'x (m)', 'y (m)', 'Point'].map((h: any) => (
                     <th key={h} className="px-3 py-2 text-left text-[var(--text-muted)] font-medium border border-[var(--border-color)]">{h}</th>
                   ))}
                 </tr>

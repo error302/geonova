@@ -13,7 +13,7 @@ export function buildPackageManifest(
   project: Record<string, any>,
   submission: Record<string, any> | null
 ) {
-  return SUBMISSION_SECTIONS.map(section => ({
+  return SUBMISSION_SECTIONS.map((section: any) => ({
     ...section,
     status: submission?.generated_artifacts?.[section.id] ? 'ready' as const : 'missing' as const,
   }))

@@ -70,7 +70,7 @@ const ghanaRegistryData: GhanaParcel[] = [
 
 export function searchGhanaRegistry(query: string): GhanaSearchResult {
   const q = query.toLowerCase()
-  const results = ghanaRegistryData.filter(p => 
+  const results = ghanaRegistryData.filter((p: any) => 
     p.parcelId.toLowerCase().includes(q) ||
     p.blockNumber.toLowerCase().includes(q) ||
     p.plotNumber.toLowerCase().includes(q) ||
@@ -87,7 +87,7 @@ export function searchGhanaRegistry(query: string): GhanaSearchResult {
 }
 
 export function getGhanaParcelById(parcelId: string): GhanaParcel | undefined {
-  return ghanaRegistryData.find(p => p.parcelId === parcelId)
+  return ghanaRegistryData.find((p: any) => p.parcelId === parcelId)
 }
 
 export function getGhanaDistricts() {

@@ -18,7 +18,7 @@ export async function generateFieldBookExcel(
     .eq('project_id', projectId)
     .order('row_index', { ascending: true });
 
-  const rows = (entries ?? []).map((e) => e.raw_data as Record<string, unknown>);
+  const rows = (entries ?? []).map((e: any) => e.raw_data as Record<string, unknown>);
 
   const wb = new ExcelJS.Workbook();
   wb.creator = 'Metardu';
@@ -57,7 +57,7 @@ export async function generateFieldBookExcel(
   });
   ws.getRow(3).height = 20;
 
-  rows.forEach((row, idx) => {
+  rows.forEach((row: any, idx: any) => {
     const dataRow = ws.addRow(allKeys.map((k) => row[k] ?? ''));
     if (idx % 2 === 0) {
       dataRow.eachCell((cell) => {
@@ -81,3 +81,4 @@ export async function generateFieldBookExcel(
   const buffer = await wb.xlsx.writeBuffer();
   return Buffer.from(buffer);
 }
+

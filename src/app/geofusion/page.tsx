@@ -128,7 +128,7 @@ export default function GeoFusionHubPage() {
                   <p className="text-xs text-[var(--text-muted)]">Layers</p>
                 </div>
                 <div className="p-2 bg-[var(--bg-primary)] rounded">
-                  <p className="text-lg font-bold text-[var(--accent)]">{layers.filter(l => l.visibility).length}</p>
+                  <p className="text-lg font-bold text-[var(--accent)]">{layers.filter((l: any) => l.visibility).length}</p>
                   <p className="text-xs text-[var(--text-muted)]">Visible</p>
                 </div>
                 <div className="p-2 bg-[var(--bg-primary)] rounded">
@@ -145,7 +145,7 @@ export default function GeoFusionHubPage() {
 
           <div className="flex-1">
             <div className="flex gap-2 mb-4 border-b border-[var(--border-color)]">
-              {tabs.map(tab => (
+              {tabs.map((tab: any) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}

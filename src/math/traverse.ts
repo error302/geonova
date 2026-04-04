@@ -33,7 +33,7 @@ export const applyBowditchAdjustment = (run: TraverseRun) => {
   const misclosureLat = run.endN !== undefined ? (run.startN + sumLat) - run.endN : sumLat;
   const misclosureDep = run.endE !== undefined ? (run.startE + sumDep) - run.endE : sumDep;
 
-  const correctedLegs = run.legs.map(leg => {
+  const correctedLegs = run.legs.map((leg: any) => {
     const ratio = leg.length / totalLength;
     const corrLat = -misclosureLat * ratio;
     const corrDep = -misclosureDep * ratio;
@@ -64,7 +64,7 @@ export const computeCoordinates = (startE: number, startN: number, legs: Travers
   let n = startN;
   const points: { station: string; e: number; n: number }[] = [{ station: legs[0].from, e, n }];
 
-  legs.forEach(leg => {
+  legs.forEach((leg: any) => {
     e += leg.correctedDep || leg.departure;
     n += leg.correctedLat || leg.latitude;
     points.push({ station: leg.to, e: Number(e.toFixed(4)), n: Number(n.toFixed(4)) });

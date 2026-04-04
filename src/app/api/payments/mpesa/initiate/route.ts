@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import db from '@/lib/db'
 import { MpesaService } from '@/lib/payments/mpesa'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 const mpesa = new MpesaService({
   consumerKey: process.env.MPESA_CONSUMER_KEY || '',
@@ -17,16 +15,9 @@ const mpesa = new MpesaService({
 
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('authorization')
-    if (!authHeader) {
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const token = authHeader.replace('Bearer ', '')
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token)
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -36,25 +27,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Amount and phone number required' }, { status: 400 })
     }
 
-    const { data: paymentIntent, error: paymentError } = await supabase
-      .from('payment_intents')
-      .insert({
-        user_id: user.id,
-        amount,
-        currency,
-        amount_kes: amount,
-        purpose,
-        reference_id: referenceId,
-        method: 'MPESA',
-        status: 'PENDING'
-      })
-      .select()
-      .single()
+    const paymentResult = await db.query(
+      `INSERT INTO payment_intents (user_id, amount, currency, amount_kes, purpose, reference_id, method, status)
+       VALUES ($1, $2, $3, $4, $5, $6, 'MPESA', 'PENDING')
+       RETURNING id`,
+      [session.user.id, amount, currency, amount, purpose, referenceId]
+    )
 
-    if (paymentError) {
-      console.error('Payment intent error:', paymentError)
+    if (paymentResult.rows.length === 0) {
       return NextResponse.json({ error: 'Failed to create payment' }, { status: 500 })
     }
+
+    const paymentIntent = paymentResult.rows[0]
 
     try {
       const mpesaResponse = await mpesa.initiateSTKPush({
@@ -64,13 +48,10 @@ export async function POST(request: NextRequest) {
         description: `Metardu ${purpose}`
       })
 
-      await supabase
-        .from('payment_intents')
-        .update({
-          provider_ref: mpesaResponse.checkoutRequestId,
-          status: 'PROCESSING'
-        })
-        .eq('id', paymentIntent.id)
+      await db.query(
+        `UPDATE payment_intents SET provider_ref = $1, status = 'PROCESSING' WHERE id = $2`,
+        [mpesaResponse.checkoutRequestId, paymentIntent.id]
+      )
 
       return NextResponse.json({
         paymentIntentId: paymentIntent.id,
@@ -80,10 +61,10 @@ export async function POST(request: NextRequest) {
     } catch (mpesaError) {
       console.error('M-Pesa error:', mpesaError)
       
-      await supabase
-        .from('payment_intents')
-        .update({ status: 'FAILED' })
-        .eq('id', paymentIntent.id)
+      await db.query(
+        `UPDATE payment_intents SET status = 'FAILED' WHERE id = $1`,
+        [paymentIntent.id]
+      )
 
       return NextResponse.json({ 
         error: mpesaError instanceof Error ? mpesaError.message : 'M-Pesa payment failed' 

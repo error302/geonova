@@ -48,7 +48,7 @@ export async function generateShapefileZip(
   if (beacons.length > 0) {
     const pointsGeoJSON = {
       type: 'FeatureCollection' as const,
-      features: beacons.map(b => ({
+      features: beacons.map((b: any) => ({
         type: 'Feature' as const,
         geometry: { type: 'Point' as const, coordinates: [b.easting, b.northing] },
         properties: {
@@ -68,7 +68,7 @@ export async function generateShapefileZip(
   if (boundaries.length > 0) {
     const linesGeoJSON = {
       type: 'FeatureCollection' as const,
-      features: boundaries.map(b => ({
+      features: boundaries.map((b: any) => ({
         type: 'Feature' as const,
         geometry: {
           type: 'LineString' as const,
@@ -93,11 +93,11 @@ export async function generateShapefileZip(
   if (parcels.length > 0) {
     const polygonsGeoJSON = {
       type: 'FeatureCollection' as const,
-      features: parcels.map(p => ({
+      features: parcels.map((p: any) => ({
         type: 'Feature' as const,
         geometry: {
           type: 'Polygon' as const,
-          coordinates: [p.boundaryPoints.map(pt => [pt.easting, pt.northing])]
+          coordinates: [p.boundaryPoints.map((pt: any) => [pt.easting, pt.northing])]
         },
         properties: {
           PARCEL_ID: p.id,
@@ -114,6 +114,6 @@ export async function generateShapefileZip(
 
   parts.push({ name: 'projection.prj', blob: new Blob([prjContent], { type: 'text/plain' }) })
 
-  const combined = new Blob(parts.map(p => p.blob), { type: 'application/zip' })
+  const combined = new Blob(parts.map((p: any) => p.blob), { type: 'application/zip' })
   return combined
 }
