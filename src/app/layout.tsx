@@ -10,6 +10,7 @@ import { CountryProvider } from '@/lib/country';
 import { SubscriptionProvider } from '@/lib/subscription/subscriptionContext';
 import FeedbackWidget from '@/components/FeedbackWidget';
 import KeyboardShortcuts from '@/components/KeyboardShortcuts';
+import { QuickCompute } from '@/components/layout/QuickCompute';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.vercel.app'),
@@ -102,6 +103,7 @@ export default function RootLayout({
               </footer>
               <FeedbackWidget />
               <KeyboardShortcuts />
+              <QuickCompute />
               <MobileNav />
             </SubscriptionProvider>
           </CountryProvider>

@@ -492,66 +492,29 @@ export default function NavBar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
-            <Dropdown
-              label={t('nav.tools')}
-              isOpen={openDropdown === 'tools'}
-              onToggle={() => handleDropdownToggle('tools')}
-              panelClassName="min-w-[680px] py-2"
-            >
-              <MegaMenu groups={toolGroups} t={t} onSelect={() => setOpenDropdown(null)} />
-            </Dropdown>
-
-            {/* Projects Link */}
+            {/* Dashboard Link */}
             <Link 
               href="/dashboard" 
               className="px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors rounded-lg hover:bg-white/5"
             >
-              {t('nav.projects')}
+              Dashboard
             </Link>
 
-            {/* Documents Dropdown */}
-            <Dropdown
-              label={t('nav.documents')}
-              isOpen={openDropdown === 'documents'}
-              onToggle={() => handleDropdownToggle('documents')}
-              panelClassName="min-w-[240px] py-2"
+            {/* Projects Link */}
+            <Link 
+              href="/projects" 
+              className="px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors rounded-lg hover:bg-white/5"
             >
-              {documentGroups.map((group, idx) => (
-                <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} onSelect={() => setOpenDropdown(null)} />
-              ))}
-            </Dropdown>
+              Projects
+            </Link>
 
-            <Dropdown
-              label={t('nav.field')}
-              isOpen={openDropdown === 'field'}
-              onToggle={() => handleDropdownToggle('field')}
-              panelClassName="min-w-[240px] py-2"
+            {/* Community Link */}
+            <Link 
+              href="/community" 
+              className="px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors rounded-lg hover:bg-white/5"
             >
-              {fieldGroups.map((group, idx) => (
-                <DropdownGroup key={idx} titleKey={group.titleKey} items={group.items} t={t} onSelect={() => setOpenDropdown(null)} />
-              ))}
-            </Dropdown>
-
-            <Dropdown
-              label={t('nav.more')}
-              isOpen={openDropdown === 'more'}
-              onToggle={() => handleDropdownToggle('more')}
-              panelClassName="min-w-[280px] py-2"
-            >
-              {moreGroups.map((group, idx) => (
-                <DropdownGroup key={`more-${idx}`} titleKey={group.titleKey} items={group.items} t={t} onSelect={() => setOpenDropdown(null)} badgeCounts={{ calibration: calibrationOverdueCount }} />
-              ))}
-              <div className="border-t border-white/5 my-1" />
-              <div className="px-4 py-2">
-                <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold mb-2">{t('nav.docs')}</div>
-                <Link href="/docs" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                  {t('nav.docs')}
-                </Link>
-                <Link href="/pricing" onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded">
-                  {t('nav.pricing')}
-                </Link>
-              </div>
-            </Dropdown>
+              Community
+            </Link>
           </div>
 
           {/* Right Side */}
@@ -641,6 +604,69 @@ export default function NavBar() {
                           className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
                         >
                           {t('nav.pricing')}
+                        </Link>
+                        <Link
+                          href="/docs"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          Documentation
+                        </Link>
+                        <Link
+                          href="/cpd"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          CPD Tracker
+                        </Link>
+                        <Link
+                          href="/instruments"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          Calibration Manager
+                        </Link>
+                        <Link
+                          href="/kencors"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          KenCORS RTK
+                        </Link>
+                        <Link
+                          href="/equipment"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          Equipment Tracker
+                        </Link>
+                        <Link
+                          href="/guide"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          Field Guides
+                        </Link>
+                        <Link
+                          href="/tools/beacon-reference"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          Beacon Reference
+                        </Link>
+                        <Link
+                          href="/tools/survey-regulations"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          Kenya Survey Regulations
+                        </Link>
+                        <Link
+                          href="/tools/us-survey-reference"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-2 py-1.5 text-sm text-[var(--text-primary)] hover:text-[var(--accent)] hover:bg-white/5 rounded"
+                        >
+                          US Survey Standards
                         </Link>
                         <Link
                           href="/enterprise"
