@@ -10,6 +10,7 @@ import ErrorBoundary from '@/components/ErrorBoundary'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import { heightOfCollimation, riseAndFall } from '@/lib/engine/leveling'
 import { bowditchAdjustment, forwardTraverse } from '@/lib/engine/traverse'
+import { TRAVERSE_PRECISION_STANDARDS } from '@/lib/engine/traverse'
 import { bearingToString, normalizeBearing, parseDMSString, parseFieldAngle } from '@/lib/engine/angles'
 import { polar3DWithHeights } from '@/lib/engine/polar'
 import { isOnline, queueOperation, setupOnlineListener, syncPendingOperations } from '@/lib/offline/syncQueue'
@@ -133,15 +134,19 @@ function TabButton({ active, onClick, children }: { active: boolean; onClick: ()
 // Displays precision stats and statutory compliance for closed/link traverses.
 // Uses the TraverseResult from the existing bowditchAdjustment() engine.
 
-function BowditchSummary({ adjusted }: { adjusted: import('@/lib/engine/types').TraverseResult }) {
+function BowditchSummary({ adjusted, threshold = TRAVERSE_PRECISION_STANDARDS.cadastral, surveyClassLabel = 'cadastral' }: {
+  adjusted: import('@/lib/engine/types').TraverseResult
+  threshold?: number
+  surveyClassLabel?: string
+}) {
   const precisionRatio = adjusted.precisionRatio
   const linearError = adjusted.linearError
   const totalDistance = adjusted.totalDistance
   const grade = adjusted.precisionGrade
 
-  const threshold = 10000 // urban default
   const isAcceptable = precisionRatio >= threshold
   const ratioDisplay = `1:${precisionRatio.toLocaleString()}`
+  const thresholdDisplay = `1:${threshold.toLocaleString()}`
 
   const gradeConfig: Record<string, { color: string; bg: string; label: string }> = {
     excellent: { color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/30', label: 'Excellent' },
@@ -172,7 +177,7 @@ function BowditchSummary({ adjusted }: { adjusted: import('@/lib/engine/types').
             {ratioDisplay}
           </div>
           <div className="text-[9px] text-gray-600 mt-0.5">
-            Threshold: 1:10,000
+            Threshold: {thresholdDisplay}
           </div>
         </div>
         <div className="p-2.5 rounded-lg bg-[var(--bg-tertiary)]/50">
@@ -201,7 +206,7 @@ function BowditchSummary({ adjusted }: { adjusted: import('@/lib/engine/types').
             <path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
           </svg>
           <p className="text-[11px] text-red-400/80">
-            Precision is below the statutory threshold (1:10,000 for urban surveys per Survey Act Cap 299).
+            Precision is below the statutory threshold ({thresholdDisplay} for {surveyClassLabel} surveys per Survey Act Cap 299 / Survey Regulations 1994).
             Check observations for errors before submitting.
           </p>
         </div>
@@ -542,12 +547,14 @@ export default function DigitalFieldBookPage() {
   const currentComputed = type === 'leveling' ? levelingComputed : type === 'traverse' ? traverseComputed : controlComputed
 
   // ── AUDIT FIX (2026-07-05): Auto-save + QC notifications (wired AFTER state) ──
+  // Content-based snapshot: include the actual editable state (not just row
+  // counts) so edits *inside* a row trigger auto-save, not only add/remove.
   const autoSaveData = useMemo(() => ({
     type, name, projectId,
-    travRows: travRows.length,
-    levelRows: levelRows.length,
-    controlRows: controlRows.length,
-  }), [type, name, projectId, travRows, levelRows, controlRows])
+    openingRL, closingRL, distanceKm, levelMethod, levelRows,
+    travMode, startStation, startE, startN, closeE, closeN, travRows,
+    controlSetups,
+  }), [type, name, projectId, openingRL, closingRL, distanceKm, levelMethod, levelRows, travMode, startStation, startE, startN, closeE, closeN, travRows, controlSetups])
 
   useAutoSave({
     data: autoSaveData,

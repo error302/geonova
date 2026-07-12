@@ -1,34 +1,41 @@
 # Dockerfile.collaboration — WebSocket collaboration server
 #
-# AUDIT FIX: The old Dockerfile used ts-node which isn't installed.
-# This Dockerfile compiles the TypeScript collaboration server to JS
-# during the build, then runs the compiled JS — no ts-node needed.
+# Lightweight dedicated image for the realtime collaboration server.
+# Only needs `ws` at runtime — NOT the full app dependency tree (canvas,
+# postgres, etc.), so we install just ws and compile the one TypeScript
+# file. Keeps the image ~120MB vs ~1.5GB for the full app.
 
+# ── Builder: compile the TS module ─────────────────────────────────────────
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
-RUN npm install --legacy-peer-deps --no-audit --no-fund
+# Install ONLY ws (the WebSocket library the server imports). Avoids pulling
+# in canvas/better-sqlite3/puppeteer which would need native build toolchain.
+RUN npm init -y && npm install ws@^8.21.0 --no-audit --no-fund
 
-COPY tsconfig.json ./
+# Pull the typescript compiler + node types from npm without installing full deps
+RUN npm install typescript@~5.9.0 @types/node@~20.10.0 @types/ws@^8.5.10 --no-audit --no-fund
+
 COPY src/lib/realtime/ ./src/lib/realtime/
+COPY tsconfig.json ./
 
-# Compile only the realtime module to JS
-RUN npx tsc --module commonjs --moduleResolution node --esModuleInterop --skipLibCheck \
-    --outDir dist src/lib/realtime/collaborationServer.ts
+# Compile the entry file (which imports collaborationServer.ts) to CommonJS.
+RUN npx tsc --module commonjs --moduleResolution node --target es2020 \
+    --esModuleInterop --skipLibCheck --resolveJsonModule \
+    --outDir dist src/lib/realtime/collabEntry.ts
 
-# ── Runner ──────────────────────────────────────────────────────────────────
-
+# ── Runner: minimal runtime ────────────────────────────────────────────────
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Install only ws (the WebSocket library)
-RUN npm install ws@^8.21.0 --no-audit --no-fund
+# ws is the only runtime dep
+RUN npm init -y && npm install ws@^8.21.0 --no-audit --no-fund
 
-# Copy compiled JS
-COPY --from=builder /app/dist/lib/realtime/collaborationServer.js ./collaborationServer.js
+# Copy compiled JS (tsc flattens to outDir root since all inputs share src/lib/realtime)
+COPY --from=builder /app/dist/collabEntry.js ./collabEntry.js
+COPY --from=builder /app/dist/collaborationServer.js ./collaborationServer.js
 
 # Non-root user
 RUN addgroup --system --gid 1001 collab && \
@@ -37,7 +44,7 @@ USER collab
 
 EXPOSE 3001
 
-HEALTHCHECK --interval=10s --timeout=5s --retries=3 \
-  CMD wget -qO- http://localhost:3001/health || exit 1
+HEALTHCHECK --interval=10s --timeout=5s --retries=3 --start-period=5s \
+  CMD wget -qO- http://127.0.0.1:3001/health || exit 1
 
-CMD ["node", "collaborationServer.js"]
+CMD ["node", "collabEntry.js"]

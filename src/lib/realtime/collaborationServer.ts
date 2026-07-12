@@ -197,7 +197,24 @@ export class CollaborationServer {
   ]
 
   start(port: number = 3001) {
-    const server = createServer()
+    const server = createServer((req, res) => {
+      // Tiny HTTP listener for health checks. The collaboration server's
+      // real traffic is WebSocket on /ws/collaboration; this endpoint only
+      // exists so orchestrators (docker-compose healthcheck, k8s liveness)
+      // can confirm the process is alive.
+      if ((req.url || '').split('?')[0] === '/health') {
+        res.writeHead(200, { 'content-type': 'application/json' })
+        res.end(JSON.stringify({
+          status: 'healthy',
+          collaborators: this.collaborators.size,
+          projects: this.projectRooms.size,
+          uptime: process.uptime(),
+        }))
+        return
+      }
+      res.writeHead(404, { 'content-type': 'text/plain' })
+      res.end('Not Found')
+    })
     this.wss = new WebSocketServer({ server, path: '/ws/collaboration' })
 
     this.wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {

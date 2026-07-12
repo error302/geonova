@@ -80,7 +80,7 @@ export interface OLVectorLayer extends OLLayer {
   setStyle(style: unknown): void
 }
 
-export interface OLTileLayer extends OLLayer {}
+export type OLTileLayer = OLLayer
 
 // ─── OL Sources ───────────────────────────────────────────────────────────
 
@@ -165,13 +165,13 @@ export interface OLSelect extends OLInteraction {
   getFeatures(): { getArray(): OLFeature[]; clear(): void }
 }
 
-export interface OLDraw extends OLInteraction {}
+export type OLDraw = OLInteraction
 
-export interface OLModify extends OLInteraction {}
+export type OLModify = OLInteraction
 
-export interface OLSnap extends OLInteraction {}
+export type OLSnap = OLInteraction
 
-export interface OLDragAndDrop extends OLInteraction {}
+export type OLDragAndDrop = OLInteraction
 
 // ─── OL Geolocation ───────────────────────────────────────────────────────
 

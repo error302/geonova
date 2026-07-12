@@ -81,9 +81,8 @@ services:
   metardu-collaboration:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.collaboration
     container_name: metardu-collaboration
-    command: node -e "require('ts-node/register'); const { getCollaborationServer } = require('./src/lib/realtime/collaborationServer'); getCollaborationServer().start(3001);"
     ports:
       - "3001:3001"
     environment:

@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { email, password, fullName } = parsed.data
+    const { email, password, fullName, iskNumber } = parsed.data
     const normalizedEmail = email.toLowerCase().trim()
 
     // Check if user already exists
@@ -77,15 +77,27 @@ export async function POST(request: NextRequest) {
         [newUser.id]
       )
 
-      // Try to create profiles record (best effort — may not have right schema)
+      // Create profiles record (best effort). The profiles table is keyed by
+      // id = users.id (FK) and has NO email column — email lives on users.
+      //
+      // CRITICAL: a failed statement poisons the entire PostgreSQL transaction
+      // — every subsequent command (including COMMIT) is then treated as
+      // ROLLBACK. A plain try/catch does NOT recover; it silently discards the
+      // users + surveyor_profiles rows we just inserted (registration returns
+      // 200 but nothing persists). We MUST use a SAVEPOINT so a failure here
+      // rolls back only this statement, leaving the outer transaction intact.
+      await client.query('SAVEPOINT sp_profiles')
       try {
         await client.query(
-          `INSERT INTO profiles (id, email, full_name)
+          `INSERT INTO profiles (id, full_name, isk_number)
            VALUES ($1, $2, $3)`,
-          [newUser.id, normalizedEmail, fullName]
+          [newUser.id, fullName, iskNumber ?? null]
         )
+        await client.query('RELEASE SAVEPOINT sp_profiles')
       } catch {
-        // profiles table may have different schema — not critical
+        // profiles table may have a different schema in some deployments —
+        // roll back just this statement, keep users + surveyor_profiles.
+        await client.query('ROLLBACK TO SAVEPOINT sp_profiles')
       }
 
       return newUser

@@ -77,6 +77,7 @@ import { createProjectPointsLayer } from '@/lib/map/projectPointsLayer'
 import { SchemeLayerPanel } from '@/app/map/components/SchemeLayerPanel'
 import type { StakeoutState } from '@/lib/map/stakeout'
 import type { MapCleanupRefs } from '@/lib/map/olTypes'
+import type { PlanGeometry } from '@/lib/engine/planGeometry'
 import {
   createTraversePolygonPreview,
   removeTraversePolygonPreview,
@@ -123,7 +124,7 @@ const OfflineTileDownloader = dynamic(
 
 const SheetLayout = dynamic(
   () => import('@/components/map/SheetLayout'),
-  { ssr: false }
+  { ssr: false, loading: () => null }
 )
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -288,6 +289,9 @@ export default function MapClient() {
 
   // ── Print/PDF state (Tier 1: usePrint + SheetLayout) ──
   const [showSheetLayout, setShowSheetLayout] = useState(false)
+  // Derived at print time from the largest drawn polygon so the sheet's scale,
+  // area and perimeter reflect the actual survey (not the "As Noted" fallback).
+  const [printPlanGeometry, setPrintPlanGeometry] = useState<PlanGeometry | null>(null)
 
   // ── Identify Panel state ──
   const [identifiedFeature, setIdentifiedFeature] = useState<IdentifiedFeature | null>(null)
@@ -522,7 +526,20 @@ export default function MapClient() {
   // ── Keyboard shortcuts ──
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+      // Don't hijack keys while the user is typing in any editable control.
+      // Covers inputs, textareas, native selects, and contenteditable hosts,
+      // plus IME composition (e.g. Windows character composing) which can
+      // briefly retarget events and cause accidental Delete mishits.
+      const target = e.target as HTMLElement | null
+      if (
+        e.isComposing ||
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement ||
+        (target && target.isContentEditable)
+      ) {
+        return
+      }
 
       if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
         e.preventDefault()
@@ -581,14 +598,33 @@ export default function MapClient() {
 
   // ── Print handler: show sheet layout overlay then trigger browser print ──
   const handlePrintMap = useCallback(async (overrides?: any) => {
+    // Force the SheetLayout chunk to load BEFORE we show + print. Without this,
+    // the dynamic import races the 500ms delay and the first print can come out
+    // blank (overlay not yet mounted) on slow connections.
+    try { await import('@/components/map/SheetLayout') } catch {}
+    // Derive plan geometry from the largest drawn polygon so the sheet shows a
+    // real scale / area / perimeter instead of "As Noted".
+    try {
+      const { derivePlanGeometryFromDrawSource } = await import('./utils/derivePlanGeometry')
+      const geom = await derivePlanGeometryFromDrawSource(drawSourceRef.current, currentUtmEpsg)
+      setPrintPlanGeometry(geom)
+    } catch {
+      setPrintPlanGeometry(null)
+    }
     setShowSheetLayout(true)
-    // Small delay to let sheet layout render before print
-    await new Promise(resolve => setTimeout(resolve, 400))
+    // Let React commit and the browser paint the overlay before printing.
+    await new Promise(resolve => setTimeout(resolve, 500))
     await printMap(overrides)
-    // Sheet layout stays visible so it appears in the printed output
-    // It will be hidden when the user closes the print dialog
-    setTimeout(() => setShowSheetLayout(false), 6000)
-  }, [printMap])
+    // The overlay is hidden by the `afterprint` listener (below) once the user
+    // closes the print dialog — a reliable signal instead of a fixed timeout.
+  }, [printMap, currentUtmEpsg])
+
+  // Hide the sheet-layout overlay when the print dialog closes.
+  useEffect(() => {
+    const onAfterPrint = () => setShowSheetLayout(false)
+    window.addEventListener('afterprint', onAfterPrint)
+    return () => window.removeEventListener('afterprint', onAfterPrint)
+  }, [])
 
   // ── Offline dialog toggle (async: resolves map extent when opening) ──
   const handleToggleOfflineDialog = useCallback(async (open: boolean) => {
@@ -1515,7 +1551,7 @@ export default function MapClient() {
                 <SheetLayout
                   show={showSheetLayout}
                   map={mapInstance.current}
-                  planGeometry={null}
+                  planGeometry={printPlanGeometry}
                   projectName={schemeProjectId ? `Project ${schemeProjectId}` : 'Global Map'}
                 />
               )}

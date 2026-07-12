@@ -2,6 +2,17 @@ import { SurveyPlanRenderer } from '../surveyPlan/renderer'
 import { SurveyPlanData } from '../surveyPlan/types'
 
 describe('SurveyPlanRenderer', () => {
+  // The renderer stamps the current date into the title block / revisions, so
+  // pin the clock to a fixed instant — otherwise the snapshot breaks every day
+  // at midnight. Midday UTC avoids timezone date-rollover on either side.
+  beforeAll(() => {
+    jest.useFakeTimers()
+    jest.setSystemTime(new Date('2026-06-15T12:00:00Z'))
+  })
+  afterAll(() => {
+    jest.useRealTimers()
+  })
+
   const mockData: SurveyPlanData = {
     project: {
       name: 'TEST PROJECT',

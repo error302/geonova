@@ -13,7 +13,7 @@ import {
 } from '@/lib/compute/cogoReconstruct'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
-interface LegRow extends DeedLeg {}
+type LegRow = DeedLeg
 
 const SAMPLE_LEGS: LegRow[] = [
   { id: '1', bearingDeg: '87', bearingMin: '14', bearingSec: '22', distance: '124.83', description: 'AB1 → AB2' },
