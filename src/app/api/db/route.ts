@@ -75,6 +75,7 @@ const USER_SCOPED_TABLES = new Set([
   'scheme_activity_log',
   'survey_firms', 'raw_observations', 'control_points', 'road_centrelines',
   'levelling_observations', 'monitoring_epochs', 'data_audit',
+  'fieldbooks', 'cpd_records', 'cpd_certificates', 'notifications',
 ])
 
 // Tables scoped to project_id (not user_id).
@@ -83,12 +84,14 @@ const PROJECT_SCOPED_TABLES = new Set([
   'project_fieldbook_entries', 'survey_epochs', 'leveling_runs',
   'parcel_traverses', 'network_adjustments',
   'mining_surveys', 'hydro_surveys', 'gnss_sessions',
+  'peer_review_requests', 'supporting_documents',
 ])
 
 // Tables that are read-only for all authenticated users
 const READ_ONLY_SHARED_TABLES = new Set([
   'benchmarks', 'survey_standards', 'countries', 'professional_bodies',
   'land_law_cases', 'land_law_regulations', 'nlims_cache',
+  'public_beacons',
 ])
 
 // Tables accessible only by admins
@@ -152,8 +155,10 @@ export const POST = apiHandler({ auth: false, rateLimit: { max: 120, windowMs: 6
   let userEmail: string | null = null
 
   if (!PUBLIC_TABLES.has(table as string)) {
-    // Use the session from apiHandler context (may be null since auth: false)
-    const session = ctx.session
+    // /api/db uses apiHandler({ auth: false }) for conditional auth, so
+    // ctx.session is NOT populated by the wrapper. Fetch the session here
+    // directly so authenticated (non-public) tables are properly gated.
+    const session = await getServerSession(authOptions)
     if (!session?.user) {
       return NextResponse.json(
         { data: null, error: { message: 'Not authenticated', code: 'AUTH_REQUIRED' } },
