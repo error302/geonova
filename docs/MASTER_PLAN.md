@@ -154,7 +154,7 @@ Findings from Task 5-ui deep-dive (see `/home/z/my-project/worklog.md` section `
 | UI-12 | Consolidate three onboarding systems into one (~500 LOC removed) | med | medium | pending | `src/components/ui/OnboardingModal.tsx`, `src/components/shared/OnboardingChecklist.tsx`, `src/components/shared/OnboardingWrapper.tsx`, `src/components/onboarding/OnboardingTour.tsx` |
 | UI-13 | Wire `DashboardSearch` (561 LOC) into the dashboard — built, never imported | med | medium | pending | `src/app/(dashboard)/page.tsx` or `src/app/dashboard/page.tsx`, `src/components/dashboard/DashboardSearch.tsx` |
 | UI-14 | Replace 5 hardcoded navy hex colors in `login/page.tsx` with CSS variables | med | small | done | `src/app/login/page.tsx` — `#edf0f4`→`var(--bg-secondary)`, `#0e1f35`/`#0a1628`→`var(--bg-primary)`, `#080e18`→`var(--bg-card)`, vignette rgba→warm charcoal. Login page now matches the brand palette instead of cold navy. |
-| UI-15 | Delete 3 unused landing images OR use them (mobile fieldbook UI deserves a feature section) | low | small | pending | `public/landing/` |
+| UI-15 | Delete 3 unused landing images OR use them (mobile fieldbook UI deserves a feature section) | low | small | done | `public/landing/cta-contour.png` (172KB, deleted), `public/landing/proof-parcels.jpg` (396KB, deleted). `feature-fieldbook.jpg` (464KB) kept for future mobile fieldbook feature section. `hero-topo.jpg` (1.7MB) is used on landing page. 568KB repo weight saved. |
 
 ### What to preserve (don't touch)
 
@@ -200,7 +200,7 @@ Findings from Task 2-engine deep-dive (see worklog section `2-engine`).
 | DOC-2 | Reconcile tunnel-strategy drift across docs (same as P0-7) | pending | `CLOUDFLARE_TUNNEL_SETUP.md`, `docs/deployment/duckdns-cloudflare-tunnel.md` | small | |
 | DOC-3 | Cross-reference `GOING_LIVE_CHECKLIST.md` with AUDIT.md Phase 1 blockers | pending | `docs/GOING_LIVE_CHECKLIST.md` | small | Currently checklist is code-blocker-blind. Add "Do not go live until P0-1 through P0-5 are done" warning. |
 | DOC-4 | Update `docs/AUDIT.md` to mark C8, C2, H4, H7, H10, H11, H12, H13, H14 as resolved | done | `docs/AUDIT.md` | small | Added a "Resolution Status (updated 2026-07-24)" section after the executive summary with two tables (10 Criticals + 14 Highs) showing current status, resolution, and MASTER_PLAN cross-references. Summary: 10/10 Criticals addressed (6 fully resolved, 4 partially/open), 11/14 Highs fully resolved, 1 ready-to-execute (H6), 2 open (H5, H9). |
-| DOC-5 | Archive the 4 gap-analysis docs with explicit "SUPERSEDED by ROADMAP.md + MASTER_PLAN.md" header | pending | `docs/PROFESSIONAL_GAP_ANALYSIS.md`, `docs/GEOMATICS_GAP_ANALYSIS.md`, `docs/ENGINEERING_CADASTRAL_GAP_ANALYSIS.md`, `docs/TOPO_GAP_ANALYSIS.md` | tiny | ROADMAP.md already says this but the docs themselves don't. |
+| DOC-5 | Archive the 4 gap-analysis docs with explicit "SUPERSEDED by ROADMAP.md + MASTER_PLAN.md" header | done | `docs/PROFESSIONAL_GAP_ANALYSIS.md`, `docs/GEOMATICS_GAP_ANALYSIS.md`, `docs/ENGINEERING_CADASTRAL_GAP_ANALYSIS.md`, `docs/TOPO_GAP_ANALYSIS.md` | tiny | All 4 docs now start with a `⚠️ ARCHIVED` blockquote pointing to ROADMAP.md + MASTER_PLAN.md as the current source of truth. Unique findings were already cross-walked into ROADMAP G-NN IDs. Docs kept for historical reference. |
 
 ---
 
