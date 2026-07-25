@@ -100,12 +100,16 @@ export function OnboardingTour() {
   const [step, setStep] = useState(0)
 
   // Check if tour should auto-start
+  // UI-12 (2026-07-24): Also check the checklist's dismissed state so
+  // the tour doesn't fire before the user has seen the checklist.
   useEffect(() => {
     if (typeof window === 'undefined') return
     const completed = localStorage.getItem(STORAGE_KEY)
     const skipped = localStorage.getItem('metardu:onboarding-skipped')
-    if (!completed && !skipped) {
-      // Delay to let the page load
+    const checklistDismissed = localStorage.getItem('metardu_onboarding_dismissed')
+    if (!completed && !skipped && checklistDismissed) {
+      // Only start the tour AFTER the checklist has been dismissed —
+      // otherwise the user gets two onboarding overlays at once.
       const timer = setTimeout(() => setActive(true), 1500)
       return () => clearTimeout(timer)
     }
