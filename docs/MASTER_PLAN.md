@@ -104,7 +104,7 @@ Bigger items that compound. Each is a multi-day effort.
 | ID | Title | Status | Effort | Notes |
 |----|-------|--------|--------|-------|
 | P3-1 | L1 — OpenAPI/Swagger spec for API | pending | medium | |
-| P3-2 | L2 — API versioning policy (when to bump v1→v2) | pending | small | |
+| P3-2 | L2 — API versioning policy (when to bump v1→v2) | done | `docs/API_CONVENTIONS_V3.md` (new "API Versioning Policy" section) | small | Documented: current state (v1 via middleware rewrite), when to bump v2 (breaking changes), what's NOT breaking (additive changes), deprecation process (6-month sunset with `Deprecation`/`Sunset`/`Link` headers), compatibility guarantee. |
 | P3-3 | L3 — Cursor pagination for large tables | pending | medium | |
 | P3-4 | L4 — Streaming responses for large exports | pending | medium | |
 | P3-5 | L6 — OpenTelemetry traces exported to collector | pending | medium | Instrumentation exists, not exported. |
@@ -153,7 +153,7 @@ Findings from Task 5-ui deep-dive (see `/home/z/my-project/worklog.md` section `
 | UI-11 | Replace WorkflowStepper's Tailwind blue/green with brand tokens | med | small | done | `src/components/workspace/WorkflowStepper.tsx` — `bg-blue-600`→`var(--accent)`, `bg-green-500`→`var(--accent-dim)`, `text-green-400`→`var(--accent-dim)`, `bg-green-400`/`bg-gray-200` connectors→`var(--accent)`/`var(--border-color)`. Active step now uses burnt sienna with black text; done step uses dimmed accent with white text. |
 | UI-12 | Consolidate three onboarding systems into one (~500 LOC removed) | med | medium | pending | `src/components/ui/OnboardingModal.tsx`, `src/components/shared/OnboardingChecklist.tsx`, `src/components/shared/OnboardingWrapper.tsx`, `src/components/onboarding/OnboardingTour.tsx` |
 | UI-13 | Wire `DashboardSearch` (561 LOC) into the dashboard — built, never imported | med | medium | pending | `src/app/(dashboard)/page.tsx` or `src/app/dashboard/page.tsx`, `src/components/dashboard/DashboardSearch.tsx` |
-| UI-14 | Replace 5 hardcoded navy hex colors in `login/page.tsx` with CSS variables | med | small | pending | `src/app/login/page.tsx` |
+| UI-14 | Replace 5 hardcoded navy hex colors in `login/page.tsx` with CSS variables | med | small | done | `src/app/login/page.tsx` — `#edf0f4`→`var(--bg-secondary)`, `#0e1f35`/`#0a1628`→`var(--bg-primary)`, `#080e18`→`var(--bg-card)`, vignette rgba→warm charcoal. Login page now matches the brand palette instead of cold navy. |
 | UI-15 | Delete 3 unused landing images OR use them (mobile fieldbook UI deserves a feature section) | low | small | pending | `public/landing/` |
 
 ### What to preserve (don't touch)

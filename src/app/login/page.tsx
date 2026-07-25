@@ -196,20 +196,20 @@ function LoginForm() {
         {/* Fallback background color while image loads */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-[#edf0f4]"
+          className="absolute inset-0 bg-[var(--bg-secondary)]"
           style={{ zIndex: -1 }}
         />
-        {/* Very subtle navy tint — lets contour lines shine through */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0e1f35]/30 via-[#0a1628]/20 to-[#0e1f35]/35" />
+        {/* Very subtle warm tint — lets contour lines shine through */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-primary)]/30 via-[var(--bg-secondary)]/20 to-[var(--bg-primary)]/35" />
         {/* Bottom darkening so card/badges contrast cleanly */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080e18]/60 via-transparent to-[#080e18]/15" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/60 via-transparent to-[var(--bg-primary)]/15" />
         {/* Soft vignette */}
         <div
           aria-hidden
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse at center, transparent 45%, rgba(8,14,24,0.35) 100%)',
+              'radial-gradient(ellipse at center, transparent 45%, rgba(26,24,22,0.35) 100%)',
           }}
         />
       </div>
@@ -222,7 +222,7 @@ function LoginForm() {
         >
           <MetarduLogo size={36} showWordmark={true} color="#FFFFFF" />
         </a>
-        <div className="hidden sm:flex items-center gap-2 text-xs text-white/90 px-3 py-1.5 rounded-full bg-[#080e18]/50 border border-white/20 backdrop-blur-md drop-shadow-md">
+        <div className="hidden sm:flex items-center gap-2 text-xs text-white/90 px-3 py-1.5 rounded-full bg-[var(--bg-card)]/50 border border-white/20 backdrop-blur-md drop-shadow-md">
           <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
           <span>East Africa Survey Platform</span>
         </div>
@@ -232,7 +232,7 @@ function LoginForm() {
       <main className="relative z-10 flex min-h-[calc(100vh-88px)] items-center justify-center px-4 sm:px-6 pb-12">
         <div className="w-full max-w-md">
           {/* Dark frosted-glass card — pops against the light topo map */}
-          <div className="relative rounded-2xl border border-white/10 bg-[#080e18]/80 backdrop-blur-2xl shadow-[0_24px_80px_-12px_rgba(0,0,0,0.7)] overflow-hidden">
+          <div className="relative rounded-2xl border border-white/10 bg-[var(--bg-card)]/80 backdrop-blur-2xl shadow-[0_24px_80px_-12px_rgba(0,0,0,0.7)] overflow-hidden">
             {/* Top accent stripe */}
             <div className="h-1 w-full bg-gradient-to-r from-[var(--accent)] via-orange-400 to-[var(--accent)]" />
 
