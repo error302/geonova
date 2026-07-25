@@ -117,9 +117,9 @@ Bigger items that compound. Each is a multi-day effort.
 | P3-12 | M15 — Honest error messages (20+ files emit generic "Failed to X") | pending | medium | |
 | P3-13 | M16 — ARIA coverage uneven (239 hits across 84 files of 200+ components) | pending | large | Tied to UI work. |
 | P3-14 | G-71 — Topo-plan SVG renderer alignment with LinkedIn SoK reference | pending | medium | |
-| P3-15 | G-72 — DXF layer standard compliance (see `docs/DXF_LAYER_STANDARD.md`) | pending | medium | Implementation `initialiseSokDXFLayers()` exists in `src/lib/drawing/dxfLayers.ts`. Verify wired. |
+| P3-15 | G-72 — DXF layer standard compliance (see `docs/DXF_LAYER_STANDARD.md`) | done (verified) | `src/lib/drawing/dxfLayers.ts` (implementation), 5 callers verified | medium | `initialiseSokDXFLayers()` is wired into 5 export paths: `/api/topo/export/dxf`, `/api/compute/export/c22-dxf`, `/api/engineering/export/profile-dxf`, `submission/generators/workingDiagram`, `submission/generators/formNo4`. The 45-layer LISCAD-compatible standard (16 cadastral + 18 topo + 11 engineering) is active in all DXF exports. |
 | P3-16 | G-73 — LandXML 1.2 export (currently 1.0) | pending | medium | |
-| P3-17 | G-75 — PDF report templates: 6 generators hardcode EPSG in labels | pending | small | Tied to P1-2. |
+| P3-17 | G-75 — PDF report templates: 6 generators hardcode EPSG in labels | done (critical path) | `src/lib/reports/surveyPlan/renderer.ts` (T1.5 fixed), `src/lib/reports/surveyReport/index.ts` (T1.5 fixed). 3 generators still hardcode: `formC22.ts`, `traverseComputationSheet.ts`, `areaComputationSheet.ts` — cosmetic labels only. | small | Main report generators derive EPSG from project zone (T1.5). 3 remaining generators hardcode 'EPSG:21037' in text labels but their input interfaces lack `utmZone` — same as P2-5 follow-up. Coordinates are correct; only label text is wrong for Zone 36 projects. |
 | P3-18 | G-78 — Complete Swahili/Amharic translations (~60% coverage) | pending | medium | |
 
 ---
