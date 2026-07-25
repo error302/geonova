@@ -461,3 +461,19 @@ export interface SurveyorDocumentProfile {
   profilePublic: boolean
   verifiedLicence: boolean
 }
+
+/**
+ * P2-1 Phase 13 Workstream 2 (2026-07-24): DB-backed surveyor profile.
+ * The single source of truth for surveyor identity in all official
+ * document generation, submission numbering, and deed plan signing.
+ * Replaces localStorage-based identity lookup.
+ */
+export interface SurveyorProfile {
+  id: string
+  user_id: string
+  full_name: string
+  registration_number: string   // e.g. "RS149" — used in submission number
+  firm_name?: string
+  seal_url?: string             // storage path to seal image
+  signature_url?: string
+}
