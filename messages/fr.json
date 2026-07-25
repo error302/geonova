@@ -46,7 +46,7 @@
     "remarks": "Remarques",
     "addRow": "Ajouter une ligne",
     "startStation": "Station de départ",
-    "startEasting": "Estimation de départ (E)",
+    "startEasting": "Coordonnée Est de départ (E)",
     "startNorthing": "Coordonnée Nord de départ (N)",
     "optional": "Facultatif",
     "pass": "Conforme",

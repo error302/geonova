@@ -111,9 +111,9 @@ Bigger items that compound. Each is a multi-day effort.
 | P3-6 | L7 — MFA/2FA for admin accounts | pending | medium | |
 | P3-7 | L8 — Session revocation list (JWT can't be invalidated) | pending | medium | Tied to P1-1 (NextAuth v5 has better revocation). |
 | P3-8 | M2 — EGM2008 2.5′ grid (currently EGM96 5°) | pending | medium | |
-| P3-9 | M12 — Remove Vitest from production deps (unused) | pending | tiny | |
-| P3-10 | M13 — Add Dependabot config | pending | tiny | |
-| P3-11 | M14 — Fix i18n mistranslations (Swahili "Miradi"=projection, French "Estimation"=easting) | pending | small | |
+| P3-9 | M12 — Remove Vitest from production deps (unused) | done | `package.json` (removed vitest from devDependencies), `vitest.config.ts` (deleted) | tiny | Vitest was in devDependencies (not production — audit was slightly wrong) but completely unused: CI uses Jest, test files were converted from vitest to jest, no `from 'vitest'` imports remain. Removed vitest dep + deleted vitest.config.ts. Reduces install time + dependency surface. |
+| P3-10 | M13 — Add Dependabot config | done | New `.github/dependabot.yml` | tiny | Weekly checks for npm (Mon), github-actions (Tue), docker (Wed). npm minor/patch grouped to reduce PR noise; major versions get individual PRs. Next.js and React majors ignored (need manual migration). Security updates always opened immediately regardless of schedule. |
+| P3-11 | M14 — Fix i18n mistranslations (Swahili "Miradi"=projection, French "Estimation"=easting) | done | `messages/fr.json` (startEasting fixed) | small | Swahili was already correct: `"projection": "Projecki"` (not "Miradi" — audit was stale). French had one bug: `startEasting: "Estimation de départ"` → `"Coordonnée Est de départ"` ("Estimation" means "estimate", not "easting"). No other "Estimation" instances in fr.json. |
 | P3-12 | M15 — Honest error messages (20+ files emit generic "Failed to X") | pending | medium | |
 | P3-13 | M16 — ARIA coverage uneven (239 hits across 84 files of 200+ components) | pending | large | Tied to UI work. |
 | P3-14 | G-71 — Topo-plan SVG renderer alignment with LinkedIn SoK reference | pending | medium | |
