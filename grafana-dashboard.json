@@ -1,0 +1,244 @@
+{
+  "annotations": { "list": [] },
+  "description": "METARDU Survey Platform — Application Metrics",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "HTTP Requests/sec",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "rate(metardu_http_requests_total[5m])",
+          "legendFormat": "{{method}} {{path}} {{status_code}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps" }
+      }
+    },
+    {
+      "title": "HTTP Request Duration (p95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, rate(metardu_http_request_duration_seconds_bucket[5m]))",
+          "legendFormat": "{{method}} {{path}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      }
+    },
+    {
+      "title": "Active HTTP Requests",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "metardu_http_active_requests",
+          "legendFormat": "Active"
+        }
+      ]
+    },
+    {
+      "title": "HTTP Error Rate (5xx)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 8 },
+      "targets": [
+        {
+          "expr": "rate(metardu_http_requests_total{status_code=~\"5..\"}[5m])",
+          "legendFormat": "5xx/sec"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.01 },
+              { "color": "red", "value": 0.1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Survey Computations/sec",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "targets": [
+        {
+          "expr": "rate(metardu_survey_computations_total[5m])",
+          "legendFormat": "{{operation}} ({{status}})"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "ops" }
+      }
+    },
+    {
+      "title": "Survey Computation Duration (p50/p95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, rate(metardu_survey_computation_duration_seconds_bucket[5m]))",
+          "legendFormat": "p50 {{operation}}"
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(metardu_survey_computation_duration_seconds_bucket[5m]))",
+          "legendFormat": "p95 {{operation}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      }
+    },
+    {
+      "title": "Accuracy Check Pass Rate",
+      "type": "gauge",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(metardu_survey_accuracy_checks_total{passed=\"true\"}[1h])) / sum(rate(metardu_survey_accuracy_checks_total[1h])) * 100",
+          "legendFormat": "Pass Rate"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "max": 100,
+          "thresholds": {
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 80 },
+              { "color": "green", "value": 95 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Documents Generated",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(metardu_survey_documents_generated_total)",
+          "legendFormat": "Total"
+        }
+      ]
+    },
+    {
+      "title": "DB Query Duration (p95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, rate(metardu_db_query_duration_seconds_bucket[5m]))",
+          "legendFormat": "{{operation}} {{table}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      }
+    },
+    {
+      "title": "DB Connection Pool",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "targets": [
+        {
+          "expr": "metardu_db_pool_active_connections",
+          "legendFormat": "Active"
+        },
+        {
+          "expr": "metardu_db_pool_idle_connections",
+          "legendFormat": "Idle"
+        },
+        {
+          "expr": "metardu_db_pool_waiting_requests",
+          "legendFormat": "Waiting"
+        }
+      ]
+    },
+    {
+      "title": "WebSocket Connections",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 28 },
+      "targets": [
+        {
+          "expr": "metardu_ws_active_connections",
+          "legendFormat": "Active WS"
+        }
+      ]
+    },
+    {
+      "title": "Sync Queue Size",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 28 },
+      "targets": [
+        {
+          "expr": "sum(metardu_sync_queue_size)",
+          "legendFormat": "Pending"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 10 },
+              { "color": "red", "value": 100 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Sync Operations/sec",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 6, "y": 24 },
+      "targets": [
+        {
+          "expr": "rate(metardu_sync_operations_total[5m])",
+          "legendFormat": "{{entity}} ({{status}})"
+        }
+      ]
+    },
+    {
+      "title": "Node.js Memory Usage",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{job=\"metardu\"}",
+          "legendFormat": "RSS"
+        },
+        {
+          "expr": "nodejs_heap_size_used_bytes{job=\"metardu\"}",
+          "legendFormat": "Heap Used"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" }
+      }
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["metardu", "surveying", "nodejs"],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "Africa/Nairobi",
+  "title": "METARDU Platform",
+  "uid": "metardu-platform",
+  "version": 1
+}

@@ -1,0 +1,64 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# METARDU — Prometheus Metrics Caddy Configuration
+# ═══════════════════════════════════════════════════════════════════════════
+# Add this snippet to your Caddyfile to:
+#   1. Expose /api/public/metrics only to your Prometheus scraper
+#   2. Block public access to the metrics endpoint
+#   3. Proxy WebSocket connections for collaboration server
+# ═══════════════════════════════════════════════════════════════════════════
+
+{$DOMAIN:metardu.space} {
+    # ── Prometheus metrics (restricted to internal/scraper IPs) ──
+    handle /api/public/metrics {
+        # Only allow Prometheus scraper IPs
+        # Replace with your actual Prometheus server IP(s)
+        @metrics_blocked not remote_ip 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 127.0.0.1
+        respond @metrics_blocked 403
+
+        reverse_proxy web:3000
+    }
+
+    # ── Collaboration WebSocket ──
+    handle /ws/* {
+        reverse_proxy collaboration:3001 {
+            transport http {
+                read_timeout 86400s
+                write_timeout 86400s
+            }
+        }
+    }
+
+    # ── NTRIP WebSocket ──
+    handle_path /ntrip/* {
+        reverse_proxy ntrip_proxy:8090
+    }
+
+    # ── All other traffic ──
+    reverse_proxy web:3000
+
+    # ── Compression ──
+    encode gzip zstd
+
+    # ── Logging ──
+    log {
+        output stdout
+        format console
+    }
+}
+
+# ── Prometheus Scrape Config (add to prometheus.yml) ──────────────────────
+#
+# scrape_configs:
+#   - job_name: 'metardu'
+#     scrape_interval: 15s
+#     metrics_path: /api/public/metrics
+#     static_configs:
+#       - targets: ['metardu.space']
+#         labels:
+#           app: metardu
+#           env: production
+#     scheme: https
+#     # If you add basic auth to the metrics endpoint:
+#     # basic_auth:
+#     #   username: prometheus
+#     #   password: <secret>
