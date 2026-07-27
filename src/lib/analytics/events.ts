@@ -17,6 +17,19 @@ export async function trackEvent(
   try {
     if (process.env.NODE_ENV !== 'production') return
 
+    // AUDIT FIX (M-003, 2026-07-27): Avoid 401 console noise for anonymous
+    // users. The /api/analytics endpoint requires auth, and posting without
+    // a session produces a noisy 401 the user can't act on. The session
+    // cookie name is `next-auth.session-token` (prod override in cookies()
+    // would change this, but the localStorage workaround below is plenty:
+    // unauth users by definition have no session cookie).
+    if (typeof document !== 'undefined') {
+      const hasSession = document.cookie
+        .split(';')
+        .some(c => c.trim().startsWith('next-auth.session-token=') || c.trim().startsWith('__Secure-next-auth.session-token='))
+      if (!hasSession) return
+    }
+
     await fetch('/api/analytics', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

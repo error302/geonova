@@ -1,7 +1,7 @@
 'use client';
 import React from 'react'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { createClient } from '@/lib/api-client/client'
 import { utmToGeographic } from '@/lib/geodesy/coordinates'
 import Link from 'next/link'
@@ -92,7 +92,9 @@ export default function BeaconsPage() {
   const mapInstance = useRef<MapType | null>(null)
   const overlayRef = useRef<OverlayType | null>(null)
 
-  const dbClient = createClient()
+  // AUDIT FIX (H-007, 2026-07-27): useMemo to prevent infinite loop on /beacons.
+  // Same pattern as H-003 in /fieldbook.
+  const dbClient = useMemo(() => createClient(), [])
 
   const fetchData = useCallback(async () => {
     setLoading(true)

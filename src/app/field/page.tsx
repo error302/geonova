@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { createClient } from '@/lib/api-client/client'
 import dynamic from 'next/dynamic'
 // ponytail: lazy-load instrument connection panel (heavy component with Web Serial API)
@@ -83,7 +83,8 @@ export default function FieldPage() {
   const [rBearingSec, setRBearingSec] = useState('')
   const [rDist, setRDist] = useState('')
 
-  const dbClient = createClient()
+  // AUDIT FIX (H-007, 2026-07-27): useMemo prevents infinite loop.
+  const dbClient = useMemo(() => createClient(), [])
 
   const fetchProjects = useCallback(async (userId: string) => {
     const { data } = await dbClient

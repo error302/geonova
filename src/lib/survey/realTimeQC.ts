@@ -485,7 +485,7 @@ export function formatPrecisionIndicator(
   }
 
   return {
-    label: `1:${ratio.toLocaleString()}`,
+    label: ratio > 0 && Number.isFinite(ratio) ? `1:${ratio.toLocaleString()}` : '—',
     compliant,
     color,
   }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { createClient, type BrowserSession } from '@/lib/api-client/client'
 import Link from 'next/link'
 
@@ -20,7 +20,8 @@ export default function SubmitBeaconPage() {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
 
-  const dbClient = createClient()
+  // AUDIT FIX (H-007, 2026-07-27): useMemo to prevent object ref churn.
+  const dbClient = useMemo(() => createClient(), [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { createClient } from '@/lib/api-client/client'
 import { bowditchAdjustment } from '@/lib/engine/traverse'
@@ -288,7 +288,8 @@ export default function TraverseModal({
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [error, setError] = useState('')
   
-  const dbClient = createClient()
+  // AUDIT FIX (H-007, 2026-07-27): useMemo prevents infinite loop.
+  const dbClient = useMemo(() => createClient(), [])
 
   const fetchControlPoints = useCallback(async () => {
     const { data } = await dbClient

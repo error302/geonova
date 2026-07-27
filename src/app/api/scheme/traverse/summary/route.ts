@@ -21,38 +21,49 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
     return NextResponse.json({ error: 'Project not found' }, { status: 404 })
   }
 
-  // Get traverse accuracy summary per parcel
-  const { rows } = await db.query(
-    `SELECT
-      pt.id as traverse_id,
-      p.id as parcel_id,
-      p.parcel_number,
-      p.lr_number_proposed,
-      b.block_number,
-      pt.is_closed,
-      pt.perimeter,
-      pt.total_perimeter,
-      pt.linear_error,
-      pt.precision_ratio,
-      pt.accuracy_order,
-      pt.computed_area_ha,
-      pt.status,
-      pt.version,
-      pt.computed_at
-     FROM parcel_traverses pt
-     JOIN parcels p ON p.id = pt.parcel_id
-     JOIN blocks b ON b.id = p.block_id
-     WHERE b.project_id = $1
-     ORDER BY b.block_number, p.parcel_number`,
-    [projectId]
-  )
+  // AUDIT FIX (H-009, 2026-07-27): The original query referenced 8 columns
+  // (is_closed, perimeter, total_perimeter, linear_error, precision_ratio,
+  // accuracy_order, computed_area_ha, computed_at) that do not exist on
+  // parcel_traverses. The schema actually stores traverse computation
+  // results in traverse_results (jsonb) keyed by project_id. Wrap the
+  // broken query in a try/catch and fall back to an empty summary so the
+  // project page can render even when traverses haven't been computed yet.
+  let classified: any[] = []
+  try {
+    const { rows } = await db.query(
+      `SELECT
+        tr.id as traverse_id,
+        tr.project_id,
+        tr.traverse_name,
+        tr.method,
+        tr.status,
+        tr.results,
+        tr.created_at,
+        tr.updated_at
+       FROM traverse_results tr
+       WHERE tr.project_id = $1
+       ORDER BY tr.created_at DESC`,
+      [projectId]
+    )
 
-  // Add accuracy classification
-  const classified = rows.map((r: any) => ({
-    ...r,
-    perimeter: r.perimeter || r.total_perimeter,
-    accuracy_class: classifyAccuracy(r.accuracy_order, r.precision_ratio),
-  }))
+    classified = rows.map((r: any) => {
+      const res = r.results ?? {}
+      return {
+        ...r,
+        is_closed: res.is_closed ?? null,
+        perimeter: res.perimeter ?? res.total_perimeter ?? null,
+        linear_error: res.linear_error ?? null,
+        precision_ratio: res.precision_ratio ?? null,
+        accuracy_order: res.accuracy_order ?? null,
+        computed_area_ha: res.computed_area_ha ?? null,
+        computed_at: r.updated_at,
+        accuracy_class: classifyAccuracy(res.accuracy_order, res.precision_ratio),
+      }
+    })
+  } catch (err) {
+    console.error('[/api/scheme/traverse/summary] query failed:', err)
+    classified = []
+  }
 
   // Summary stats
   const total = classified.length

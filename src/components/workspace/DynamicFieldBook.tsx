@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { createClient } from '@/lib/api-client/client';
 import { usePrint, PrintButton, PrintHeader } from '@/hooks/usePrint';
 import { SurveyType } from '@/types/project';
@@ -65,7 +65,8 @@ function rowToDbRecord(
 
 export default function DynamicFieldBook({ projectId, surveyType, initialRows = [], openingRL, closingRL, startPoint }: Props) {
   const { print, isPrinting, paperSize, setPaperSize, orientation, setOrientation } = usePrint({ title: 'Field Book' });
-  const dbClient = createClient();
+  // AUDIT FIX (H-007, 2026-07-27): useMemo prevents infinite loop.
+  const dbClient = useMemo(() => createClient(), []);
   const template = getFieldBookTemplate(surveyType);
 
   const [rows, setRows] = useState<FieldBookRow[]>(

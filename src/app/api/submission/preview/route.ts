@@ -19,7 +19,13 @@ export async function GET(req: NextRequest) {
 
     const surveyor = await getActiveSurveyorProfile()
     if (!surveyor) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+      // AUDIT FIX (H-010, 2026-07-27): the underlying helper throws on missing
+      // profile; we caught it above (line 18-23 of surveyorProfile.ts). Return
+      // a 404 with a helpful message instead of letting it bubble up as 500.
+      return NextResponse.json(
+        { error: 'Surveyor profile not found. Please complete your profile before generating a submission.', code: 'PROFILE_REQUIRED' },
+        { status: 404 }
+      )
     }
 
     // IDOR protection — verify project ownership before returning

@@ -398,7 +398,7 @@ export default function ToolsPage() {
   const userPlanRank = PLAN_RANK[plan] ?? 0
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 md:py-16">
+    <div className="max-w-7xl mx-auto px-4 py-8 md:py-24 lg:pb-32">
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>

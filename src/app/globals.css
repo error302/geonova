@@ -99,32 +99,36 @@ h1, h2, h3 { text-wrap: balance; }
   --shadcn-chart-5: 340 40% 58%;
 
   /* Unprefixed shadcn tokens — wire --shadcn-* to the names tailwind.config.ts expects.
-     Without these, shadcn <Card>/<Button>/<Badge>/<Alert> render with no theme color. */
-  --background: 20 14% 9%;
-  --foreground: 30 14% 89%;
-  --card: 20 12% 11%;
-  --card-foreground: 30 14% 89%;
-  --popover: 20 14% 11%;
-  --popover-foreground: 30 14% 89%;
-  --primary: 22 60% 56%;
-  --primary-foreground: 20 14% 9%;
-  --secondary: 20 10% 15%;
-  --secondary-foreground: 30 14% 89%;
-  --muted: 20 10% 15%;
-  --muted-foreground: 30 8% 55%;
-  --accent: 22 60% 56%;
-  --accent-foreground: 20 14% 9%;
-  --destructive: 0 50% 58%;
-  --destructive-foreground: 30 14% 89%;
-  --border: 20 10% 18%;
-  --input: 20 10% 18%;
-  --ring: 22 60% 56%;
+     Without these, shadcn <Card>/<Button>/<Badge>/<Alert> render with no theme color.
+     AUDIT FIX (2026-07-27): previously these used bare HSL component format
+     (e.g. "22 60% 56%"), but globals.css uses var(--accent) directly without
+     an hsl() wrapper, making btn-primary and any var(--accent) consumer
+     render with transparent background. Switched to hex equivalents. */
+  --background: #1A1816;
+  --foreground: #E8E4DE;
+  --card: #1F1C19;
+  --card-foreground: #E8E4DE;
+  --popover: #221F1C;
+  --popover-foreground: #E8E4DE;
+  --primary: #D17B47;
+  --primary-foreground: #1A1816;
+  --secondary: #2A2622;
+  --secondary-foreground: #E8E4DE;
+  --muted: #2A2622;
+  --muted-foreground: #A89E92;
+  --accent: #D17B47;
+  --accent-foreground: #1A1816;
+  --destructive: #C75D5D;
+  --destructive-foreground: #E8E4DE;
+  --border: #332E29;
+  --input: #332E29;
+  --ring: #D17B47;
   --radius: 0.5rem;
-  --chart-1: 22 60% 56%;
-  --chart-2: 90 20% 58%;
-  --chart-3: 30 50% 56%;
-  --chart-4: 210 30% 55%;
-  --chart-5: 340 40% 58%;
+  --chart-1: #D17B47;
+  --chart-2: #94AB80;
+  --chart-3: #D5A07A;
+  --chart-4: #6B8AAE;
+  --chart-5: #B57A92;
 }
 
 /* ========================================================================

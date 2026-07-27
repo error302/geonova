@@ -46,9 +46,14 @@ export const GET = apiHandler(
     }
 
     // ── Parcel & beacon counts ──
+    // AUDIT FIX (H-004, 2026-07-27): there is no `beacons` table — the schema
+    // uses `public_beacons` and `rim_beacons`. Use UNION ALL so the count
+    // reflects all beacons regardless of subtype.
     const [totalParcelsRes, totalBeaconsRes] = await Promise.all([
       db.query('SELECT COUNT(*)::int AS count FROM parcels'),
-      db.query('SELECT COUNT(*)::int AS count FROM beacons'),
+      db.query(
+        'SELECT (SELECT COUNT(*) FROM public_beacons) + (SELECT COUNT(*) FROM rim_beacons) AS count'
+      ),
     ])
 
     const totalParcels = totalParcelsRes.rows[0]?.count ?? 0

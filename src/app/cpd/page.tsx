@@ -151,42 +151,38 @@ export default function CPDPage() {
           <h2 className="text-lg font-semibold mb-4">Category Breakdown</h2>
           {summary && (
             <div className="space-y-3">
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Technical</span>
-                  <span>{summary.categoryBreakdown.technical} hours</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${(summary.categoryBreakdown.technical / summary.totalHours) * 100}%` }}></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Ethics</span>
-                  <span>{summary.categoryBreakdown.ethics} hours</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-green-600 h-2 rounded-full" style={{ width: `${(summary.categoryBreakdown.ethics / summary.totalHours) * 100}%` }}></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Safety</span>
-                  <span>{summary.categoryBreakdown.safety} hours</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-yellow-600 h-2 rounded-full" style={{ width: `${(summary.categoryBreakdown.safety / summary.totalHours) * 100}%` }}></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Management</span>
-                  <span>{summary.categoryBreakdown.management} hours</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-purple-600 h-2 rounded-full" style={{ width: `${(summary.categoryBreakdown.management / summary.totalHours) * 100}%` }}></div>
-                </div>
-              </div>
+              {/* AUDIT FIX (H-008, 2026-07-27): categoryBreakdown is not part
+                  of the locally-built CPDSummary shape (only totalHours,
+                  requirementHours, compliancePercentage, status). The API
+                  (`/api/cpd`) returns a different shape. Guard with `?.` to
+                  prevent "Cannot read properties of undefined (reading
+                  'technical')". */}
+              {(['technical', 'ethics', 'safety', 'management'] as const).map((cat) => {
+                const hours = summary.categoryBreakdown?.[cat] ?? 0
+                const pct = summary.totalHours > 0 ? (hours / summary.totalHours) * 100 : 0
+                const barColor =
+                  cat === 'technical' ? 'bg-blue-600' :
+                  cat === 'ethics' ? 'bg-green-600' :
+                  cat === 'safety' ? 'bg-yellow-600' :
+                  'bg-purple-600'
+                const label = cat.charAt(0).toUpperCase() + cat.slice(1)
+                return (
+                  <div key={cat}>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>{label}</span>
+                      <span>{hours} hours</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className={`${barColor} h-2 rounded-full`} style={{ width: `${pct}%` }}></div>
+                    </div>
+                  </div>
+                )
+              })}
+              {!summary.categoryBreakdown && (
+                <p className="text-sm text-[var(--text-muted)]">
+                  Category breakdown unavailable — your CPD records haven't been categorized yet.
+                </p>
+              )}
             </div>
           )}
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { interpretCSV, CSVInterpretResult } from '@/lib/parsers/csvSurveyInterpreter'
 import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
@@ -44,7 +44,8 @@ export default function ProcessPage() {
   const [saveSuccess, setSaveSuccess] = useState(false)
   
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const dbClient = createClient()
+  // AUDIT FIX (H-007, 2026-07-27): useMemo to prevent infinite loop on /process.
+  const dbClient = useMemo(() => createClient(), [])
 
   const fetchProjects = useCallback(async () => {
     const { data: { session } } = await dbClient.auth.getSession()

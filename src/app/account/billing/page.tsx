@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { createClient, type BrowserSession } from '@/lib/api-client/client'
 import type { PlanId } from '@/lib/subscription/catalog'
@@ -62,7 +62,8 @@ const STATUS_COLORS: Record<string, string> = {
 }
 
 export default function BillingPage() {
-  const dbClient = createClient()
+  // AUDIT FIX (H-007, 2026-07-27): useMemo prevents infinite loop.
+  const dbClient = useMemo(() => createClient(), [])
   const [user, setUser] = useState<any>(null)
   const [subscription, setSubscription] = useState<SubscriptionRecord | null>(null)
   const [payments, setPayments] = useState<PaymentRecord[]>([])

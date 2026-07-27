@@ -46,6 +46,10 @@ export async function assembleSubmissionPackage(
 ): Promise<{ zipBuffer: Buffer; ref: string; qa: QAGateResult }> {
   const dbClient = await createClient()
   const surveyor = await getActiveSurveyorProfile()
+  if (!surveyor) {
+    // AUDIT FIX (H-010, 2026-07-27): guard against missing surveyor profile.
+    throw new Error('Surveyor profile not found — please complete your profile before generating a submission.')
+  }
   const asNum = (value: unknown, fallback = 0): number => {
     const parsed = Number(value)
     return Number.isFinite(parsed) ? parsed : fallback

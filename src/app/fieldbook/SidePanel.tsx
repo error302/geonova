@@ -101,6 +101,8 @@ export default function SidePanel({
         )}
 
         <div className="pt-2 border-t border-[var(--border-color)]">
+          {/* "Develop Full Plan" uses green per METARDU's "go" action convention
+              (used in 30+ places: develop/save/verify/approve). Not a bug. */}
           <button
             onClick={handleDevelopFullPlan}
             disabled={planGenerating || !projectId}

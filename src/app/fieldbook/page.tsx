@@ -1,6 +1,13 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+
+// AUDIT FIX (H-003, 2026-07-27): useMemo to prevent infinite loop.
+// Previously `const dbClient = createClient()` ran on every render, creating
+// a new client object each time. useEffects with `[dbClient]` deps (lines
+// 374, 390, 420) then re-ran on every render, triggering API calls in an
+// infinite loop. (Confirmed on /fieldbook causing 100s of /api/db and
+// /api/auth/session requests.)
 import Link from 'next/link'
 // papaparse loaded dynamically on CSV export
 // jsPDF loaded dynamically on PDF generation
@@ -145,7 +152,11 @@ function BowditchSummary({ adjusted, threshold = TRAVERSE_PRECISION_STANDARDS.ca
   const grade = adjusted.precisionGrade
 
   const isAcceptable = precisionRatio >= threshold
-  const ratioDisplay = `1:${precisionRatio.toLocaleString()}`
+  // AUDIT FIX (M-007, 2026-07-27): handle zero/invalid precision — previously
+  // showed "1:0" when no observations were added. Show placeholder instead.
+  const ratioDisplay = precisionRatio > 0 && Number.isFinite(precisionRatio)
+    ? `1:${precisionRatio.toLocaleString()}`
+    : '—'
   const thresholdDisplay = `1:${threshold.toLocaleString()}`
 
   const gradeConfig: Record<string, { color: string; bg: string; label: string }> = {
@@ -228,7 +239,7 @@ function BowditchSummary({ adjusted, threshold = TRAVERSE_PRECISION_STANDARDS.ca
 
 export default function DigitalFieldBookPage() {
   const { t } = useLanguage()
-  const dbClient = createClient()
+  const dbClient = useMemo(() => createClient(), [])
   const isMobile = useIsMobile()
 
   // ── AUDIT FIX (2026-07-05): Wire notifications ──

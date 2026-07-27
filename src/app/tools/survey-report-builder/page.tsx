@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, useMemo, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { createClient } from '@/lib/api-client/client'
@@ -26,7 +26,8 @@ function SurveyReportBuilderContent() {
   const [selectedProjectId, setSelectedProjectId] = useState('')
   const [loading, setLoading] = useState(true)
 
-  const dbClient = createClient()
+  // AUDIT FIX (H-007, 2026-07-27): useMemo prevents infinite loop.
+  const dbClient = useMemo(() => createClient(), [])
 
   useEffect(() => {
     if (sessionStatus === 'loading') return

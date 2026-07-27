@@ -1532,8 +1532,8 @@ export default function MapClient() {
               </div>
 
               {/* OSM Buildings Overlay Layer */}
-              {mapInstance && (
-                <OsmBuildingsLayer map={mapInstance} visible={showOsmBuildings} />
+              {mapInstance.current && (
+                <OsmBuildingsLayer map={mapInstance.current} visible={showOsmBuildings} />
               )}
 
               {/* ── Vertex Edit Toolbar (bottom-left, near map controls) ── */}

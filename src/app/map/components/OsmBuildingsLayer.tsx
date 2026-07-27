@@ -34,37 +34,52 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
   useEffect(() => {
     if (!map || layerRef.current) return
 
-    try {
-      const VectorSource = (window as any).ol.source.Vector
-      const VectorLayer = (window as any).ol.layer.Vector
-      const GeoJSON = (window as any).ol.format.GeoJSON
-      const Style = (window as any).ol.style.Style
-      const Fill = (window as any).ol.style.Fill
-      const Stroke = (window as any).ol.style.Stroke
+    let cancelled = false
 
-      const source = new VectorSource({})
-      const layer = new VectorLayer({
-        source,
-        style: new Style({
-          fill: new Fill({ color: 'rgba(209, 123, 71, 0.15)' }),  // accent at 15% opacity
-          stroke: new Stroke({ color: 'rgba(209, 123, 71, 0.6)', width: 1 }),
-        }),
-        zIndex: 15,  // above basemap, below survey data
-      })
+    // AUDIT FIX (H-006, 2026-07-27): switched from `window.ol.*` (a legacy
+    // global that isn't loaded — caused "Cannot read properties of undefined
+    // (reading 'source')") to dynamic `ol/*` imports, matching every other
+    // map component in this codebase.
+    ;(async () => {
+      try {
+        const { default: VectorSource } = await import('ol/source/Vector')
+        const { default: VectorLayer } = await import('ol/layer/Vector')
+        const { default: GeoJSON } = await import('ol/format/GeoJSON')
+        const { default: Style } = await import('ol/style/Style')
+        const { default: Fill } = await import('ol/style/Fill')
+        const { default: Stroke } = await import('ol/style/Stroke')
 
-      map.addLayer(layer)
-      sourceRef.current = source
-      layerRef.current = layer
-      // Store GeoJSON format for later use
-      ;(layerRef.current as any).geoJSONFormat = new GeoJSON()
+        if (cancelled) return
 
-      return () => {
-        map.removeLayer(layer)
+        const source = new VectorSource({})
+        const layer = new VectorLayer({
+          source,
+          style: new Style({
+            fill: new Fill({ color: 'rgba(209, 123, 71, 0.15)' }),  // accent at 15% opacity
+            stroke: new Stroke({ color: 'rgba(209, 123, 71, 0.6)', width: 1 }),
+          }),
+          zIndex: 15,  // above basemap, below survey data
+        })
+
+        map.addLayer(layer)
+        sourceRef.current = source
+        layerRef.current = layer
+        // Store GeoJSON format for later use
+        ;(layerRef.current as any).geoJSONFormat = new GeoJSON()
+      } catch (err) {
+        if (!cancelled) {
+          console.error('[osm-buildings] Failed to init layer:', err)
+        }
+      }
+    })()
+
+    return () => {
+      cancelled = true
+      if (layerRef.current) {
+        map.removeLayer(layerRef.current)
         layerRef.current = null
         sourceRef.current = null
       }
-    } catch (err) {
-      console.error('[osm-buildings] Failed to init layer:', err)
     }
   }, [map])
 

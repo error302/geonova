@@ -549,7 +549,15 @@ export default function NavBar() {
                   </span>
                   <div className="hidden lg:flex flex-col">
                     <span className="text-sm text-[var(--text-primary)] max-w-[180px] truncate leading-tight">{user?.email}</span>
-                    <SubscriptionBadge plan={userPlan} compact />
+                    {/* AUDIT FIX (M-005, 2026-07-27): Admin users shouldn't show "FREE"
+                        even on the free plan — it's confusing. Show role badge instead. */}
+                    {isAdminUser ? (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-amber-900/50 text-amber-400 border border-amber-700/50">
+                        {userRole === 'super_admin' ? 'SUPER ADMIN' : 'ADMIN'}
+                      </span>
+                    ) : (
+                      <SubscriptionBadge plan={userPlan} compact />
+                    )}
                   </div>
                   <svg className="w-4 h-4 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -561,7 +569,14 @@ export default function NavBar() {
                     <div className="bg-[var(--bg-secondary)] border border-[#D17B4720] rounded-lg shadow-xl min-w-[220px] py-2">
                       <div className="px-4 pb-2 flex items-center justify-between">
                         <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider font-semibold">Account</div>
-                        <SubscriptionBadge plan={userPlan} compact />
+                        {/* AUDIT FIX (M-005, 2026-07-27): show ADMIN badge for admin users. */}
+                        {isAdminUser ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-amber-900/50 text-amber-400 border border-amber-700/50">
+                            {userRole === 'super_admin' ? 'SUPER ADMIN' : 'ADMIN'}
+                          </span>
+                        ) : (
+                          <SubscriptionBadge plan={userPlan} compact />
+                        )}
                       </div>
                       <div className="px-4 py-2">
                         <Link
