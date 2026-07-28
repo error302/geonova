@@ -1,29 +1,29 @@
 # Metardu Caddy Reverse Proxy Configuration
 # ============================================
 # Automatic HTTPS via Let's Encrypt / ZeroSSL
-# SSL termination, security headers, and reverse proxy to Next.js
+# SSL termination and reverse proxy to Next.js
+#
+# Security headers (HSTS, CSP, Permissions-Policy, etc.) are handled
+# by Next.js middleware (middleware.ts) — NOT here. This avoids
+# duplicate headers which confuse some CDNs and browsers.
 
 {$DOMAIN:metardu.duckdns.org} {
 	# Reverse proxy to Next.js app
 	reverse_proxy web:3000
 
-	# Security headers
-	header {
-		# HSTS — 2 years, include subdomains, preload
-		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
-		# Prevent clickjacking
-		X-Frame-Options "DENY"
-		# Prevent MIME sniffing
-		X-Content-Type-Options "nosniff"
-		# Referrer policy
-		Referrer-Policy "strict-origin-when-cross-origin"
-		# Permissions policy — restrict browser features
-		Permissions-Policy "camera=(), microphone=(self), geolocation=(self), bluetooth=(self)"
-	}
-
 	# NTRIP WebSocket proxy path
 	handle_path /ntrip/* {
 		reverse_proxy ntrip_proxy:8090
+	}
+
+	# Collaboration WebSocket proxy
+	handle /ws/* {
+		reverse_proxy collaboration:3001 {
+			transport http {
+				read_timeout 86400s
+				write_timeout 86400s
+			}
+		}
 	}
 
 	# Compression

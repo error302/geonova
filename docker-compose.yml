@@ -23,8 +23,10 @@ services:
   metardu-postgres:
     image: postgis/postgis:15-3.3-alpine
     container_name: metardu-postgres
-    ports:
-      - "5432:5432"
+    # No host port mapping — only accessible within Docker network.
+    # For local debugging, temporarily add: ports: ["127.0.0.1:5432:5432"]
+    expose:
+      - "5432"
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-metardu}
       - POSTGRES_USER=${POSTGRES_USER:-metardu}
@@ -33,25 +35,72 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-metardu} -d ${POSTGRES_DB:-metardu}"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 2G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+    restart: unless-stopped
+
+  # Redis for caching, rate limiting, session store, and real-time pub/sub.
+  metardu-redis:
+    image: redis:7-alpine
+    container_name: metardu-redis
+    expose:
+      - "6379"
+    command: >
+      redis-server
+        --appendonly yes
+        --maxmemory 256mb
+        --maxmemory-policy allkeys-lru
+        --save 60 1000
+        --save 300 10
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
     restart: unless-stopped
 
   metardu-worker:
     build:
       context: ./python_worker
     container_name: metardu-worker
-    ports:
-      - "8000:8000"
+    # No host port mapping — only accessible within Docker network
+    expose:
+      - "8000"
     environment:
       - ENVIRONMENT=${ENVIRONMENT:-development}
       - WORKER_SECRET=${WORKER_SECRET:?WORKER_SECRET must be set in .env}
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
     restart: unless-stopped
 
   metardu-app:
@@ -69,13 +118,25 @@ services:
       - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-ws://localhost:3001/ws/collaboration}
       - PYTHON_COMPUTE_URL=http://metardu-worker:8000
       - WORKER_SECRET=${WORKER_SECRET:?WORKER_SECRET must be set in .env}
+      - REDIS_URL=redis://metardu-redis:6379
       - HOSTNAME=0.0.0.0
-      - DISABLE_PWA=${DISABLE_PWA:-true}
+      - DISABLE_PWA=${DISABLE_PWA:-false}
+      - NODE_ENV=production
     depends_on:
       metardu-postgres:
         condition: service_healthy
       metardu-worker:
         condition: service_healthy
+      metardu-redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
     restart: unless-stopped
 
   metardu-collaboration:
@@ -83,12 +144,31 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: metardu-collaboration
-    command: node -e "require('ts-node/register'); const { getCollaborationServer } = require('./src/lib/realtime/collaborationServer'); getCollaborationServer().start(3001);"
-    ports:
-      - "3001:3001"
+    command: ["node", "scripts/start-collaboration.mjs"]
+    # No host port — Caddy proxies via /ws/ path
+    expose:
+      - "3001"
     environment:
       - AUTH_SECRET=${AUTH_SECRET:?AUTH_SECRET must be set in .env}
       - NODE_ENV=production
+      - PORT=3001
+      - REDIS_URL=redis://metardu-redis:6379
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      metardu-redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
     restart: unless-stopped
 
   # AUDIT FIX (H7, 2026-07-02): Backup sidecar runs backup.sh daily.
@@ -144,4 +224,5 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
   backups:
