@@ -5,7 +5,7 @@
 // Uses the same raw pg Pool as the rest of the application.
 // ──────────────────────────────────────────────────────────────────────────
 
-import { getPool } from '@/lib/db/pool';
+import { getPool } from '@/lib/db';
 import type { AuditEntry, AuditOperation } from './audit-trail';
 
 // ─── Table Initialization ────────────────────────────────────────────────

@@ -76,17 +76,17 @@ export async function POST(
       [projectId],
     );
 
-    const fieldObs: FieldObservation[] = obsResult.rows.map((row: Record<string, unknown>) => ({
-      fromStation: row.from_station || row.station_from || '',
-      toStation: row.to_station || row.station_to || '',
-      bearing: row.bearing ? parseFloat(row.bearing) : undefined,
-      slopeDistance: parseFloat(row.slope_distance || row.slope_distance_m || 0),
-      verticalAngle: row.vertical_angle ? parseFloat(row.vertical_angle) : undefined,
-      ih: row.instrument_height ? parseFloat(row.instrument_height) : undefined,
-      th: row.target_height ? parseFloat(row.target_height) : undefined,
-      temperature: row.temperature ? parseFloat(row.temperature) : undefined,
-      pressure: row.pressure ? parseFloat(row.pressure) : undefined,
-      humidity: row.humidity ? parseFloat(row.humidity) : undefined,
+    const fieldObs: FieldObservation[] = obsResult.rows.map((row: Record<string, any>) => ({
+      fromStation: String(row.from_station || row.station_from || ''),
+      toStation: String(row.to_station || row.station_to || ''),
+      bearing: row.bearing ? parseFloat(String(row.bearing)) : undefined,
+      slopeDistance: parseFloat(String(row.slope_distance || row.slope_distance_m || 0)),
+      verticalAngle: row.vertical_angle ? parseFloat(String(row.vertical_angle)) : undefined,
+      ih: row.instrument_height ? parseFloat(String(row.instrument_height)) : undefined,
+      th: row.target_height ? parseFloat(String(row.target_height)) : undefined,
+      temperature: row.temperature ? parseFloat(String(row.temperature)) : undefined,
+      pressure: row.pressure ? parseFloat(String(row.pressure)) : undefined,
+      humidity: row.humidity ? parseFloat(String(row.humidity)) : undefined,
     }));
 
     // ── Run field-to-finish pipeline ──

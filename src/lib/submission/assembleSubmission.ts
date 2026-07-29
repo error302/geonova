@@ -121,7 +121,7 @@ export async function assembleSubmissionPackage(
 
   const { ref, revision } = await generateSubmissionRef(
     projectId,
-    surveyor.registrationNumber
+    surveyor!.registration_number
   )
 
   const supportingDocs = (proj.supporting_documents ?? []).map((doc: any) => ({
@@ -135,7 +135,7 @@ export async function assembleSubmissionPackage(
   const pkg: SubmissionPackage = {
     submissionRef: ref,
     projectId,
-    surveyor,
+    surveyor: surveyor as any,
     subtype: (proj.survey_type || 'cadastral_subdivision') as SurveySubtype,
     parcel: {
       lrNumber: proj.lr_number || '',
@@ -193,9 +193,9 @@ export async function assembleSubmissionPackage(
       scaleDenominator: 2500,
     },
     surveyor: {
-      name: surveyor.fullName,
-      iskNumber: surveyor.iskNumber,
-      firmName: surveyor.firmName ?? '',
+      name: surveyor!.full_name,
+      iskNumber: surveyor!.registration_number,
+      firmName: surveyor!.firm_name ?? '',
     },
     submission: {
       referenceNumber: ref,
@@ -278,9 +278,9 @@ export async function assembleSubmissionPackage(
     applicantName: project.client_name ?? '',
     applicantAddress: project.client_address ?? '',
     applicantIdNumber: project.client_id_number,
-    surveyorName: surveyor.fullName,
-    iskNumber: surveyor.iskNumber,
-    firmName: surveyor.firmName ?? '',
+    surveyorName: surveyor!.full_name,
+    iskNumber: surveyor!.registration_number,
+    firmName: surveyor!.firm_name ?? '',
     surveyDate: project.survey_date ?? new Date().toISOString(),
     referenceNumber: ref,
   } as unknown as PPA2Input
@@ -300,8 +300,8 @@ export async function assembleSubmissionPackage(
     transfereeName: project.client_name ?? '',
     transferorIdNumber: project.owner_id_number,
     transfereeIdNumber: project.client_id_number,
-    surveyorName: surveyor.fullName,
-    iskNumber: surveyor.iskNumber,
+    surveyorName: surveyor!.full_name,
+    iskNumber: surveyor!.registration_number,
     surveyDate: project.survey_date ?? new Date().toISOString(),
     referenceNumber: ref,
     lbcApplicationNumber: project.lbc_application_number,
@@ -329,9 +329,9 @@ export async function assembleSubmissionPackage(
         easting: st.easting,
         northing: st.northing,
       })),
-      surveyorName: surveyor.fullName,
-      iskNumber: surveyor.iskNumber,
-      firmName: surveyor.firmName ?? '',
+      surveyorName: surveyor!.full_name,
+      iskNumber: surveyor!.registration_number,
+      firmName: surveyor!.firm_name ?? '',
       surveyDate: project.survey_date ?? new Date().toISOString(),
       referenceNumber: ref,
       mutationNumber: project.mutation_number,
