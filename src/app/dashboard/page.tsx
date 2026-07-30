@@ -11,9 +11,8 @@ import { createClient } from '@/lib/api-client/server'
 
 import ProjectCard from '@/components/ProjectCard'
 import { ConnectivityIndicator } from '@/components/shared/ConnectivityIndicator'
-import OnboardingWrapper from '@/components/shared/OnboardingWrapper'
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed'
-import { DashboardSearch } from '@/components/dashboard/DashboardSearch'
+import DashboardSearch from '@/components/dashboard/DashboardSearch'
 
 export default async function DashboardPage() {
   let t = (k: string) => k
@@ -93,7 +92,6 @@ export default async function DashboardPage() {
       <div className="flex items-center justify-end mb-4">
         <ConnectivityIndicator />
       </div>
-      <OnboardingWrapper />
       <SubscriptionStatus subscription={subscription} />
 
       {subscription?.status === 'trial' && daysLeft !== null && (

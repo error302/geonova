@@ -19,7 +19,7 @@ export async function GET() {
   // ── Redis check (if configured) ──
   if (process.env.REDIS_URL) {
     try {
-      const { default: RedisCache } = await import('@/lib/cache/redis')
+      const { RedisCache } = await import('@/lib/cache/redis')
       const redis = new RedisCache()
       const redisStart = Date.now()
       await redis.connect()

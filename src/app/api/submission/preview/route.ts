@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
 
     const { ref, revision } = await generateSubmissionRef(
       projectId,
-      surveyor.registrationNumber
+      surveyor.registration_number
     )
 
     const pkg = {

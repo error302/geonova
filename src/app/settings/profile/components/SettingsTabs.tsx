@@ -7,6 +7,8 @@ import ProfileSection from './ProfileSection'
 import CompanySection from './CompanySection'
 import NotificationsSection from './NotificationsSection'
 import SecuritySection from './SecuritySection'
+import { apiPatch, ApiError } from '@/lib/api/client'
+import { z } from 'zod'
 
 export interface ProfileData {
   id: string
@@ -61,17 +63,12 @@ export default function SettingsTabs({ initialProfile, sessionEmail }: SettingsT
   const handlePatch = useCallback(async (patch: Partial<ProfileData>) => {
     setSaveState({ status: 'saving' })
     try {
-      const res = await fetch('/api/profile/settings', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(patch),
-      })
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'Update failed' }))
-        throw new Error(err.error || `Failed (status ${res.status})`)
-      }
-      const json = await res.json()
-      setProfile(prev => ({ ...prev, ...json.data }))
+      const result = await apiPatch(
+        '/api/profile/settings',
+        z.object({ data: z.any() }).passthrough(),
+        patch
+      )
+      setProfile(prev => ({ ...prev, ...result.data }))
       setSaveState({ status: 'saved', message: 'Changes saved' })
 
       // Refresh session so navbar avatar/name updates immediately

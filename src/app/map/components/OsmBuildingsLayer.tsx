@@ -141,15 +141,9 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
           types: 'buildings',
         })
 
-        const res = await fetch(`/api/osm/features?${params}`)
-        if (!res.ok) {
-          if (res.status === 503) {
-            setError('Python worker offline')
-          }
-          return
-        }
-
-        const data = await res.json()
+        const { apiGet, ApiError } = await import('@/lib/api/client')
+        const { z } = await import('zod')
+        const data = await apiGet(`/api/osm/features?${params}`, z.any(), { ttlMs: 30_000 })
         if (cancelled) return
 
         const buildings = data.features?.buildings
@@ -164,9 +158,13 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
           sourceRef.current.addFeatures(features)
           setFeatureCount(features.length)
         }
-      } catch (err) {
+      } catch (err: any) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Fetch failed')
+          if (err?.status === 503) {
+            setError('Python worker offline')
+          } else {
+            setError(err instanceof Error ? err.message : 'Fetch failed')
+          }
         }
       } finally {
         if (!cancelled) setLoading(false)
