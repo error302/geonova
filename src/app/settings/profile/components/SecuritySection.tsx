@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { apiPost, ApiError } from '@/lib/api/client'
+import { z } from 'zod'
 
 interface SecuritySectionProps {
   email: string
@@ -32,19 +34,14 @@ export default function SecuritySection({ email }: SecuritySectionProps) {
     setStatus({ state: 'saving' })
 
     try {
-      const res = await fetch('/api/auth/update-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      await apiPost(
+        '/api/auth/update-password',
+        z.any(),
+        {
           currentPassword,
           password: newPassword,
-        }),
-      })
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'Password update failed' }))
-        throw new Error(err.error || `Failed (status ${res.status})`)
-      }
+        }
+      )
 
       setStatus({ state: 'saved', message: 'Password updated successfully.' })
       setCurrentPassword('')
@@ -53,7 +50,7 @@ export default function SecuritySection({ email }: SecuritySectionProps) {
     } catch (err) {
       setStatus({
         state: 'error',
-        message: err instanceof Error ? err.message : 'Password update failed',
+        message: err instanceof ApiError ? err.message : (err as Error).message || 'Password update failed',
       })
     }
   }

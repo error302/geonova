@@ -1050,11 +1050,10 @@ export default function MapClient() {
     // Check if there are computed traverses for this project
     const checkTraverse = async () => {
       try {
-        const res = await fetch(`/api/scheme/traverse/summary?project_id=${schemeProjectId}`)
-        if (res.ok) {
-          const data = await res.json()
-          setHasTraverse(data.data?.hasTraverses ?? false)
-        }
+        const { apiGet } = await import('@/lib/api/client')
+        const { z } = await import('zod')
+        const data = await apiGet(`/api/scheme/traverse/summary?project_id=${schemeProjectId}`, z.any())
+        setHasTraverse(data.data?.hasTraverses ?? false)
       } catch {
         // API not available — assume no traverse
         setHasTraverse(false)
@@ -1069,18 +1068,16 @@ export default function MapClient() {
 
     try {
       // Fetch traverse data to get coordinates
-      const res = await fetch(`/api/scheme/traverse/summary?project_id=${schemeProjectId}`)
-      if (!res.ok) throw new Error('Failed to fetch traverse summary')
-      const summaryData = await res.json()
+      const { apiGet } = await import('@/lib/api/client')
+      const { z } = await import('zod')
+      const summaryData = await apiGet(`/api/scheme/traverse/summary?project_id=${schemeProjectId}`, z.any())
 
       // Get the first parcel with a traverse
       const parcelId = summaryData.data?.parcels?.[0]?.id
       if (!parcelId) throw new Error('No parcels with traverses found')
 
       // Fetch the actual traverse coordinates
-      const traverseRes = await fetch(`/api/scheme/traverse?parcel_id=${parcelId}`)
-      if (!traverseRes.ok) throw new Error('Failed to fetch traverse coordinates')
-      const traverseData = await traverseRes.json()
+      const traverseData = await apiGet(`/api/scheme/traverse?parcel_id=${parcelId}`, z.any())
 
       const coordinates = traverseData.data?.coordinates
       if (!coordinates || coordinates.length < 3) {
@@ -1121,8 +1118,9 @@ export default function MapClient() {
 
     try {
       // Get the first parcel with a traverse
-      const summaryRes = await fetch(`/api/scheme/traverse/summary?project_id=${schemeProjectId}`)
-      const summaryData = await summaryRes.json()
+      const { apiGet } = await import('@/lib/api/client')
+      const { z } = await import('zod')
+      const summaryData = await apiGet(`/api/scheme/traverse/summary?project_id=${schemeProjectId}`, z.any())
       const parcelId = summaryData.data?.parcels?.[0]?.id
 
       if (!parcelId) throw new Error('No parcel found for traverse')
