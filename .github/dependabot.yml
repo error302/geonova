@@ -1,61 +1,64 @@
-# Dependabot configuration for METARDU
-# AUDIT FIX (M13, 2026-07-02): Automated dependency update PRs.
-# Runs weekly (Monday) for npm + Docker + GitHub Actions.
-# Security updates are generated immediately (not weekly).
+# Dependabot configuration — P3-10 (2026-07-24)
+# Keeps dependencies updated with weekly checks. Each ecosystem has
+# its own schedule so PRs don't all land on the same day.
+#
+# Security updates (critical/high CVEs) are always opened immediately
+# regardless of this schedule — this config is for routine version bumps.
 
 version: 2
+
 updates:
-  # npm dependencies
-  - package-ecosystem: "npm"
-    directory: "/"
+  # npm — production + dev dependencies
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "Africa/Nairobi"
-    open-pull-requests-limit: 10
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
     # Group minor/patch updates to reduce PR noise
     groups:
-      eslint:
-        patterns: ["eslint", "eslint-*"]
-      radix-ui:
-        patterns: ["@radix-ui/*"]
-      types:
-        patterns: ["@types/*"]
-      next:
-        patterns: ["next", "eslint-config-next"]
-      testing:
-        patterns: ["jest", "jest-*", "ts-jest", "@testing-library/*"]
-    # Don't auto-update major versions — those need manual review
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    # Major version bumps get individual PRs for careful review
     ignore:
-      - dependency-name: "next"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "react"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "react-dom"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "next-auth"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "zod"
-        update-types: ["version-update:semver-major"]
-    labels: ["dependencies", "automated"]
+      # Don't auto-bump Next.js major (14→15 needs manual migration)
+      - dependency-name: next
+        update-types: major
+      # Don't auto-bump React major (18→19 needs concurrent features audit)
+      - dependency-name: react
+        update-types: major
+      - dependency-name: react-dom
+        update-types: major
+    labels:
+      - dependencies
+      - npm
     commit-message:
-      prefix: "chore(deps)"
+      prefix: chore(deps)
 
-  # Docker base images
-  - package-ecosystem: "docker"
-    directory: "/"
+  # GitHub Actions — keep workflow actions pinned to latest
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
-    labels: ["dependencies", "docker", "automated"]
+      interval: weekly
+      day: tuesday
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: chore(ci)
 
-  # GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  # Docker — keep base images updated
+  - package-ecosystem: docker
+    directory: /
     schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
-    labels: ["dependencies", "ci", "automated"]
+      interval: weekly
+      day: wednesday
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - docker
+    commit-message:
+      prefix: chore(docker)

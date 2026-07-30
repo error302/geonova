@@ -119,10 +119,19 @@ export function ProcessingToolbox({ compact = false }: { compact?: boolean }) {
   const [favorites, setFavorites] = useState<string[]>([])
   const [recent, setRecent] = useState<string[]>([])
 
-  // Load favorites and recent from localStorage
+  // Load favorites and recent from localStorage.
+  // P1-4 (2026-07-24): Unified with /tools catalog page storage keys.
+  // Read from both old (metardu-tool-*) and canonical (metardu-*-tools)
+  // keys for backward compat, write only to canonical.
   useEffect(() => {
-    const fav = JSON.parse(localStorage.getItem('metardu-tool-favorites') || '[]')
-    const rec = JSON.parse(localStorage.getItem('metardu-tool-recent') || '[]')
+    const canonicalFav = JSON.parse(localStorage.getItem('metardu-fav-tools') || '[]')
+    const oldFav = JSON.parse(localStorage.getItem('metardu-tool-favorites') || '[]')
+    const fav = Array.from(new Set([...canonicalFav, ...oldFav])) as string[]
+
+    const canonicalRec = JSON.parse(localStorage.getItem('metardu-recent-tools') || '[]')
+    const oldRec = JSON.parse(localStorage.getItem('metardu-tool-recent') || '[]')
+    const rec = Array.from(new Set([...canonicalRec, ...oldRec])) as string[]
+
     setFavorites(fav)
     setRecent(rec)
   }, [])
@@ -132,7 +141,8 @@ export function ProcessingToolbox({ compact = false }: { compact?: boolean }) {
       const next = prev.includes(toolId)
         ? prev.filter(id => id !== toolId)
         : [...prev, toolId]
-      localStorage.setItem('metardu-tool-favorites', JSON.stringify(next))
+      // Write to canonical key only
+      localStorage.setItem('metardu-fav-tools', JSON.stringify(next))
       return next
     })
   }, [])
@@ -141,7 +151,8 @@ export function ProcessingToolbox({ compact = false }: { compact?: boolean }) {
     // Add to recent
     setRecent(prev => {
       const next = [tool.id, ...prev.filter(id => id !== tool.id)].slice(0, 8)
-      localStorage.setItem('metardu-tool-recent', JSON.stringify(next))
+      // Write to canonical key only
+      localStorage.setItem('metardu-recent-tools', JSON.stringify(next))
       return next
     })
     router.push(tool.href)

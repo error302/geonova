@@ -117,7 +117,7 @@ const STATUS_CONFIG: Record<PhaseProgress['status'], { icon: React.ReactNode; co
   delayed: { icon: <AlertTriangle className="w-4 h-4" />, color: 'text-red-400', label: 'Delayed' },
 }
 
-export default function ProgressMonitorPage() {
+function ProgressMonitorPage() {
   const { t } = useLanguage()
   const [activeTab, setActiveTab] = useState<'overview' | 'inspections'>('overview')
   const searchParams = useSearchParams()
@@ -328,5 +328,20 @@ export default function ProgressMonitorPage() {
         <ProgressMonitorPanel projectId={projectId || ''} />
       )}
     </div>
+  )
+}
+
+// P0-2 (2026-07-24): Wrap in <ToolGate> so direct-URL access can't
+// bypass the plan check. The catalog page (/tools) shows lock badges,
+// but those are display-only — this gate enforces the same check at
+// the page level. Server-side enforcement for any export API this
+// tool calls happens via the requirePlan() decorator on the route.
+import { ToolGate } from '@/components/shared/ToolGate'
+
+export default function ProgressMonitorPageGated() {
+  return (
+    <ToolGate toolPath="/tools/progress-monitor">
+      <ProgressMonitorPage />
+    </ToolGate>
   )
 }

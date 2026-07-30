@@ -1,4 +1,12 @@
 /**
+ * @deprecated P1-5 (2026-07-24): Use `@/lib/engine/networkAdjustment.ts`
+ *   (the `adjustNetwork` function) instead. That module is the canonical
+ *   enterprise-grade LSA with sparse Cholesky, free-network inner
+ *   constraints, Huber robust estimation, and full Baarda reliability.
+ *   This older parametric-LSA module lacks those features and is kept
+ *   only because `/tools/lsa` imports `adjustTraverseLSA` from here.
+ *   New code should not import from this module.
+ *
  * @module leastSquaresAdjustment
  *
  * Least Squares Adjustment for survey control networks

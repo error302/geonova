@@ -176,11 +176,15 @@ export async function POST(request: NextRequest) {
   )
 
   // 9. Write historical record to payment_history (audit trail)
+  // ByteByteGo audit fix: idempotent INSERT — use ON CONFLICT to prevent
+  // duplicate rows when Safaricom retries the callback. The provider_id
+  // (CheckoutRequestID) is unique per transaction.
   await db.query(
     `INSERT INTO payment_history
        (user_id, amount, currency, payment_method, provider, provider_id,
         status, transaction_id, metadata)
-     VALUES ($1, $2, $3, 'mpesa', 'safaricom', $4, 'completed', $5, $6)`,
+     VALUES ($1, $2, $3, 'mpesa', 'safaricom', $4, 'completed', $5, $6)
+     ON CONFLICT (provider_id) DO NOTHING`,
     [
       paymentRow.user_id,
       paidAmount || paymentRow.amount,

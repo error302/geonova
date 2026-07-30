@@ -4,6 +4,54 @@ import crypto from 'crypto'
 import { createClient } from '@/lib/api-client/server'
 import { WebhookPayload, WebhookEvent, WEBHOOK_SIGNATURE_HEADER } from './types'
 
+// ByteByteGo audit fix: retry with exponential backoff + jitter
+// Per ByteByteGo "Retry strategies": exponential jitter is recommended
+const MAX_RETRIES = 3
+const BASE_DELAY_MS = 1000  // 1s, 2s, 4s
+
+async function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit,
+  maxRetries: number = MAX_RETRIES,
+): Promise<Response> {
+  let lastError: Error | null = null
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, options)
+
+      // 4xx → don't retry (client error, per ByteByteGo guidance)
+      if (response.status >= 400 && response.status < 500) {
+        return response
+      }
+
+      // 5xx → retry with exponential backoff
+      if (response.status >= 500 && attempt < maxRetries) {
+        const delay = BASE_DELAY_MS * Math.pow(2, attempt) + Math.random() * 500  // jitter
+        await sleep(delay)
+        continue
+      }
+
+      return response
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err))
+      // Network error → retry
+      if (attempt < maxRetries) {
+        const delay = BASE_DELAY_MS * Math.pow(2, attempt) + Math.random() * 500
+        await sleep(delay)
+        continue
+      }
+    }
+  }
+
+  // All retries exhausted — throw the last error
+  throw lastError || new Error('All retries exhausted')
+}
+
 export async function dispatchWebhook(
   event: WebhookEvent,
   data: Record<string, unknown>,
@@ -38,7 +86,7 @@ export async function dispatchWebhook(
     try {
       const signature = generateSignature(payload, webhook.secret)
 
-      const response = await fetch(webhook.url, {
+      const response = await fetchWithRetry(webhook.url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,7 +111,7 @@ export async function dispatchWebhook(
         payload,
         'failed',
         undefined,
-        'Unknown error'
+        'Unknown error (after retries)'
       )
     }
   }

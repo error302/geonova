@@ -1,5 +1,21 @@
 version: '3.8'
 
+# Testing stack — ephemeral CI containers.
+#
+# P0-5 (2026-07-24): Previously hardcoded the SAME weak secrets that
+# the H8 audit flagged in production:
+#   - AUTH_SECRET=dev-auth-secret-32-chars-long-or-more-needed-for-nextauth
+#   - WORKER_SECRET=dev-worker-secret
+#   - POSTGRES_PASSWORD=metardu_test
+# These are test-only so the risk is low, but keeping the exact audit-
+# flagged strings in the repo is sloppy — they could leak into a real
+# env by copy-paste. Now uses env-var substitution with safe test
+# defaults (overridable via .env.test or CI env).
+#
+# The test DB user/password (metardu_test / metardu_test) is kept as a
+# default since it's a throwaway test DB on an isolated port (5433)
+# with an ephemeral volume — but it's now overridable via env vars.
+
 services:
   metardu-postgres-test:
     image: postgis/postgis:15-3.3-alpine
@@ -7,13 +23,13 @@ services:
     ports:
       - "5433:5432"
     environment:
-      - POSTGRES_DB=metardu_test
-      - POSTGRES_USER=metardu_test
-      - POSTGRES_PASSWORD=metardu_test
+      - POSTGRES_DB=${TEST_POSTGRES_DB:-metardu_test}
+      - POSTGRES_USER=${TEST_POSTGRES_USER:-metardu_test}
+      - POSTGRES_PASSWORD=${TEST_POSTGRES_PASSWORD:-metardu_test}
     volumes:
       - postgres_test_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U metardu_test -d metardu_test"]
+      test: ["CMD-SHELL", "pg_isready -U ${TEST_POSTGRES_USER:-metardu_test} -d ${TEST_POSTGRES_DB:-metardu_test}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -26,7 +42,7 @@ services:
       - "8001:8000"
     environment:
       - ENVIRONMENT=development
-      - WORKER_SECRET=dev-worker-secret
+      - WORKER_SECRET=${TEST_WORKER_SECRET:?TEST_WORKER_SECRET must be set (use a random value, e.g. openssl rand -base64 32)}
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 5s
@@ -41,12 +57,12 @@ services:
     ports:
       - "3001:3000"
     environment:
-      - DATABASE_URL=postgresql://metardu_test:metardu_test@metardu-postgres-test:5432/metardu_test
-      - AUTH_SECRET=dev-auth-secret-32-chars-long-or-more-needed-for-nextauth
+      - DATABASE_URL=postgresql://${TEST_POSTGRES_USER:-metardu_test}:${TEST_POSTGRES_PASSWORD:-metardu_test}@metardu-postgres-test:5432/${TEST_POSTGRES_DB:-metardu_test}
+      - AUTH_SECRET=${TEST_AUTH_SECRET:?TEST_AUTH_SECRET must be set (use a random value, e.g. openssl rand -base64 32)}
       - NEXTAUTH_URL=http://localhost:3001
       - NEXT_PUBLIC_APP_URL=http://localhost:3001
       - PYTHON_COMPUTE_URL=http://metardu-worker-test:8000
-      - WORKER_SECRET=dev-worker-secret
+      - WORKER_SECRET=${TEST_WORKER_SECRET:?TEST_WORKER_SECRET must be set (use a random value, e.g. openssl rand -base64 32)}
       - DISABLE_PWA=true
     depends_on:
       metardu-postgres-test:

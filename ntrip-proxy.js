@@ -17,7 +17,9 @@
  *   ALLOWED_HOSTS — Comma-separated NTRIP caster hosts (default: allow all)
  *
  * Docker:
- *   Add to docker-compose.yml as a service
+ *   Wired into docker-compose.yml as the metardu-ntrip service (P0-6, 2026-07-24).
+ *   Build via Dockerfile.ntrip. Expose port 8090. Configure ALLOWED_HOSTS
+ *   via the NTRIP_ALLOWED_HOSTS env var (comma-separated).
  *
  * Protocol:
  *   1. Browser opens WebSocket to ws://proxy-host:8090/ntrip

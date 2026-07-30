@@ -60,22 +60,13 @@ import {
  *  TOOL FEATURE GATE MAP
  *  Maps each tool route to the minimum plan + feature key required.
  *  If a tool is NOT in this map, it's available on ALL tiers (free+).
+ *
+ *  P0-2 (2026-07-24): Moved to src/lib/subscription/toolGates.ts as the
+ *  single source of truth. The catalog page imports it for badge display;
+ *  each gated tool page wraps its content in <ToolGate> for enforcement.
  * ══════════════════════════════════════════════════════════════════════ */
-type GateInfo = { minPlan: PlanId; feature: FeatureKey; label: string }
-
-const TOOL_GATES: Record<string, GateInfo> = {
-  '/tools/civil-export':    { minPlan: 'pro', feature: 'dxf_export',   label: 'DXF Export' },
-  '/tools/gis-export':      { minPlan: 'pro', feature: 'landxml',     label: 'LandXML' },
-  '/tools/machine-control': { minPlan: 'pro', feature: 'dxf_export',  label: 'DXF Export' },
-  '/tools/topo-drawing':    { minPlan: 'pro', feature: 'dxf_export',  label: 'DXF Export' },
-  '/tools/survey-plan-demo':{ minPlan: 'pro', feature: 'full_pdf',    label: 'Full PDF' },
-  '/tools/gnss-baseline':   { minPlan: 'pro', feature: 'process_notes', label: 'Process Notes' },
-  '/tools/drone':           { minPlan: 'pro', feature: 'process_notes', label: 'Process Notes' },
-  '/tools/slope-analysis':  { minPlan: 'pro', feature: 'full_pdf',    label: 'Full PDF' },
-  '/tools/progress-monitor':{ minPlan: 'team', feature: 'realtime_collab', label: 'Collaboration' },
-}
-
-const PLAN_RANK: Record<PlanId, number> = { free: 0, pro: 1, team: 2, firm: 3, enterprise: 4 }
+import { TOOL_GATES, PLAN_RANK, type GateInfo } from '@/lib/subscription/toolGates'
+type GateInfoLocal = GateInfo // alias to keep the rest of this file unchanged
 
 const TOOL_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   '/tools/beacon-certificate': FileBadge,

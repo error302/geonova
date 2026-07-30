@@ -176,8 +176,7 @@
     "ssh2": "^1.17.0",
     "tailwindcss": "^3.4.19",
     "ts-jest": "^29.4.9",
-    "typescript": "^5.9.3",
-    "vitest": "^4.1.9"
+    "typescript": "^5.9.3"
   },
   "overrides": {
     "@tootallnate/once": "^3.0.1",

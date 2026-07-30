@@ -109,6 +109,15 @@ The digitizing toolbar (Split / Merge / Reshape / Rotate / Offset) had 8 bugs wh
 - **G-25** Clothoid transition curves — engine exists, no UI
 - **G-26** Earthworks (end-area) — engine exists, no BoQ export
 
+### Field Hardware Integration (P1-11, re-added 2026-07-24)
+*Source: `docs/GEOMATICS_GAP_ANALYSIS.md` — these were the #1 feature requests
+from Kenyan surveyors but had no ROADMAP home. They close the field-to-finish
+loop so a surveyor can capture, compute, and submit without leaving the browser.*
+
+- **G-27** Total station integration via Web Serial API / USB OTG — live observations into the field book from a connected total station (Topcon, Leica, Sokkia, Trimble). The `InstrumentConnectionPanel` component exists but only mocks the connection. Web Serial is supported in Chrome/Edge; Android via Capacitor Bluetooth plugin already in deps.
+- **G-28** GNSS RTK rover over Bluetooth Low Energy (BLE) — connect to a rover receiver (e.g. Trimble R2, Leica GS18, Emlid Reach RS3) and stream NMEA + RTCM corrections to the `GNSSConnectionPanel`. The `@capacitor-community/bluetooth-le` dep is installed; needs the NMEA parser + RTCM relay wired to the now-deployed `metardu-ntrip` proxy (P0-6).
+- **G-29** Real-time QC dashboard during field observation — show satellite count, PDOP, horizontal/vertical accuracy, fix type (float vs fixed), and correction age live in the field UI. The `RealTimeQCPanel` component exists but is a stub. Depends on G-28 for the data feed.
+
 ### UX / UI
 - **G-41** Honest error messages — 20+ files emit generic "Failed to X". Tier 0 fixed digitizing area only.
 - **G-42** Mobile field UI — Capacitor Android app works but iOS unsupported

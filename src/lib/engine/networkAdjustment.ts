@@ -1,6 +1,16 @@
 /**
  * @module networkAdjustment
  *
+ * ✅ CANONICAL (P1-5, 2026-07-24): This is the single source of truth
+ *   for least-squares adjustment in METARDU. Four other LSA modules
+ *   are deprecated and point here:
+ *     - `engine/leastSquares.ts` (dense 2D-only, kept for KAT tests)
+ *     - `engine/leastSquaresAdjustment.ts` (older parametric, kept for /tools/lsa)
+ *     - `survey/lsaIterative.ts` (non-linear, subsumed by this module's
+ *       iterative relinearization)
+ *     - `survey/networkAdjustment.ts` (has DB side effects, anti-pattern)
+ *   New code should import `adjustNetwork` from here.
+ *
  * Enterprise-grade least squares adjustment for survey control networks.
  *
  * Improvements over the legacy `leastSquares.ts` / `leastSquaresAdjustment.ts`:

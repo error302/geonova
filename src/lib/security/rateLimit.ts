@@ -125,8 +125,16 @@ export async function rateLimit(
   }
 
   if (process.env.NODE_ENV === 'production') {
-    // Single VM deployment: in-memory rate limiting is acceptable.
-    // For multi-instance, set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.
+    // ByteByteGo audit fix: in-memory rate limiting is NOT acceptable in production.
+    // It silently fails in multi-instance deployments (each instance gets its own
+    // counter, so attackers get N×the limit). Fail loudly instead.
+    console.error(
+      '[rate-limit] PRODUCTION ERROR: UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN ' +
+      'must be set in production. In-memory rate limiting is disabled. ' +
+      'Set these env vars or set NODE_ENV=development for local dev.'
+    )
+    // Fail OPEN (allow the request) but log the error — failing closed would lock everyone out
+    return Promise.resolve({ allowed: true, remaining: 0 })
   }
 
   return Promise.resolve(inMemoryRateLimit(identifier, maxRequests, windowMs))

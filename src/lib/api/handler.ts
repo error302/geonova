@@ -312,6 +312,13 @@ export function apiHandler<TInput = unknown>(
 
   return async (req, context) => {
     const requestId = generateRequestId()
+    // ByteByteGo audit: distributed tracing — extract/generate trace context
+    let traceId = ''
+    try {
+      const { getTraceContext } = await import('@/lib/monitoring/tracing')
+      const traceCtx = getTraceContext(req)
+      traceId = traceCtx.traceId
+    } catch {}
     let userId = 'anonymous'
     let userEmail = ''
     let userRole = ''
@@ -418,6 +425,7 @@ export function apiHandler<TInput = unknown>(
 
       // ─── Attach X-Request-Id to successful responses ──────────────────
       result.headers.set('X-Request-Id', requestId)
+      if (traceId) result.headers.set('X-Trace-Id', traceId)
       return result
     } catch (err: unknown) {
       // ─── Structured logging ────────────────────────────────────────────

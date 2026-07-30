@@ -1,0 +1,38 @@
+# Dockerfile.ntrip — NTRIP WebSocket Proxy
+#
+# P0-6 (2026-07-24): Standalone container for ntrip-proxy.js.
+# Browsers cannot open raw TCP sockets to NTRIP casters (RTCM
+# correction streams for GNSS rovers), so this WebSocket-to-TCP
+# bridge is required for any in-browser RTK workflow.
+#
+# Reuses the same node:20-alpine base as the main app. Only needs
+# the `ws` package (already a project dependency) and ntrip-proxy.js.
+# Keeps a tiny footprint by copying only what's needed.
+
+FROM node:20-alpine
+
+LABEL org.opencontainers.image.title="metardu-ntrip"
+LABEL org.opencontainers.image.description="METARDU NTRIP WebSocket Proxy — bridges browser WebSockets to NTRIP caster TCP"
+LABEL org.opencontainers.image.source="https://github.com/error302/metardu"
+
+# ws is a project dependency; we need it installed in this image.
+# Copy package.json + package-lock.json and install only production deps.
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+RUN npm install --omit=dev --omit=optional --no-audit --no-fund ws 2>/dev/null || \
+    npm install --omit=dev --omit=optional --no-audit --no-fund
+
+# Copy the proxy script
+COPY ntrip-proxy.js ./
+
+# Non-root user for security
+RUN addgroup -S ntrip && adduser -S ntrip -G ntrip
+USER ntrip
+
+EXPOSE 8090
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:8090/health | grep -q '"status":"ok"' || exit 1
+
+CMD ["node", "ntrip-proxy.js"]

@@ -145,120 +145,35 @@ function Dropdown({ label, children, isOpen, onToggle, align = 'left', buttonCla
 
 type Translator = (key: string, values?: Record<string, string | number>) => string
 
-function GlobalSearch({ t, isAuthenticated }: { t: Translator; isAuthenticated: boolean }) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [query, setQuery] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
-
+// UI-5 (2026-07-24): Replaced the 130-line GlobalSearch function with a
+// tiny trigger button. The full-featured CommandPalette (in AppShell,
+// using the cmdk library) already handles Cmd+K globally — this button
+// just dispatches a synthetic Cmd+K to open it. Removes the duplicate
+// search index, modal, and keyboard listener that were fighting with
+// CommandPalette for the Cmd+K binding.
+function SearchTrigger({ t }: { t: Translator }) {
   const isMac = typeof navigator !== 'undefined' ? /mac|iphone|ipad|ipod/i.test(navigator.platform) : false
   const hint = isMac ? '⌘K' : 'Ctrl K'
 
-  const searchIndex = useMemo(() => {
-    const baseItems = searchablePages.map((p) => ({
-      category: p.category,
-      group: p.group,
-      href: p.href,
-      label: t(p.labelKey),
-    }))
-
-    return isAuthenticated
-      ? [
-          ...baseItems,
-          { category: 'Navigation', group: 'Navigation', href: '/dashboard', label: t('nav.dashboard') },
-        ]
-      : [
-          ...baseItems,
-          { category: 'Auth', group: 'Auth', href: '/login', label: t('nav.login') },
-          { category: 'Auth', group: 'Auth', href: '/register', label: t('nav.register') },
-        ]
-  }, [isAuthenticated, t])
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    if (!q) return searchIndex.slice(0, 18)
-    return searchIndex
-      .filter((x) => `${x.label} ${x.group} ${x.category}`.toLowerCase().includes(q))
-      .slice(0, 30)
-  }, [query, searchIndex])
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault()
-        setIsOpen(true)
-        setTimeout(() => inputRef.current?.focus(), 100)
-      }
-      if (e.key === 'Escape') {
-        setIsOpen(false)
-        setQuery('')
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
+  const openPalette = () => {
+    // CommandPalette.tsx listens for (e.metaKey || e.ctrlKey) && e.key === 'k'
+    document.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true })
+    )
+  }
 
   return (
-    <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)] rounded-lg text-xs sm:text-sm text-[var(--text-secondary)] hover:border-[var(--accent)] transition-colors"
-      >
-        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <span className="hidden sm:inline">{t('nav.search')}</span>
-        <kbd className="hidden sm:inline px-1.5 py-0.5 text-xs bg-gray-700 rounded">{hint}</kbd>
-      </button>
-
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/70 flex items-start justify-center pt-[15vh] z-50"
-          onClick={() => { setIsOpen(false); setQuery(''); }}
-        >
-          <div 
-            className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl w-full max-w-xl shadow-2xl"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="flex items-center gap-3 p-4 border-b border-[var(--border-color)]">
-              <svg className="w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input aria-label="Search"
-                ref={inputRef}
-                type="text"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                placeholder={t('nav.search')}
-                className="flex-1 bg-transparent text-white placeholder-gray-500 outline-none"
-              />
-              <kbd className="px-2 py-1 text-xs bg-[var(--bg-tertiary)] text-[var(--text-secondary)] rounded">ESC</kbd>
-            </div>
-            <div className="max-h-[60vh] overflow-y-auto p-2">
-              {filtered.length === 0 ? (
-                <div className="p-4 text-sm text-[var(--text-secondary)]">{t('common.noResults')}</div>
-              ) : (
-                <div className="space-y-1">
-                  {filtered.map((item) => (
-                    <Link
-                      key={`${item.href}|${item.label}`}
-                      href={item.href}
-                      onClick={() => {
-                        setIsOpen(false)
-                        setQuery('')
-                      }}
-                      className="flex items-center justify-between gap-3 px-3 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)] rounded-lg"
-                    >
-                      <span>{item.label}</span>
-                      <span className="text-xs text-[var(--text-muted)]">{item.group}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <button
+      onClick={openPalette}
+      className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)] rounded-lg text-xs sm:text-sm text-[var(--text-secondary)] hover:border-[var(--accent)] transition-colors"
+      aria-label={t('nav.search')}
+    >
+      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <span className="hidden sm:inline">{t('nav.search')}</span>
+      <kbd className="hidden sm:inline px-1.5 py-0.5 text-xs bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded">{hint}</kbd>
+    </button>
   )
 }
 
@@ -499,8 +414,8 @@ export default function NavBar() {
 
           {/* Right Side */}
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            {/* Global Search */}
-            <GlobalSearch t={t} isAuthenticated={isAuthenticated} />
+            {/* Global Search — opens CommandPalette via synthetic Cmd+K (UI-5) */}
+            <SearchTrigger t={t} />
 
             {/* Language Selector — compact on mobile */}
             <div className={isRootPath(pathname) ? "block" : "hidden md:block"}>

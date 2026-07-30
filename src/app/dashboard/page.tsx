@@ -13,6 +13,7 @@ import ProjectCard from '@/components/ProjectCard'
 import { ConnectivityIndicator } from '@/components/shared/ConnectivityIndicator'
 import OnboardingWrapper from '@/components/shared/OnboardingWrapper'
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed'
+import { DashboardSearch } from '@/components/dashboard/DashboardSearch'
 
 export default async function DashboardPage() {
   let t = (k: string) => k
@@ -106,6 +107,15 @@ export default async function DashboardPage() {
               : 'Your trial has ended. '}
             <Link href="/pricing" className="underline hover:text-green-300">Upgrade to keep Pro access →</Link>
           </p>
+        </div>
+      )}
+
+      {/* UI-13 (2026-07-24): DashboardSearch — 561 LOC component that was
+          built but never imported. Now wired in so surveyors can search
+          across projects, submissions, and surveyors from the dashboard. */}
+      {projectsWithCounts?.length > 0 && (
+        <div className="mb-6">
+          <DashboardSearch />
         </div>
       )}
 

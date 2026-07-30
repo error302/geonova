@@ -89,7 +89,7 @@ export interface StreamExtractResult {
 
 // ─── Worker Secret ──────────────────────────────────────────────────────────
 
-const WORKER_SECRET = process.env.WORKER_SECRET || 'dev-worker-secret'
+const WORKER_SECRET = process.env.WORKER_SECRET || ''  // P0-5: fail-closed, no dev fallback
 
 function workerHeaders(): HeadersInit {
   return {

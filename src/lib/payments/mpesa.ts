@@ -3,6 +3,8 @@
  * Supports Kenya M-Pesa, Uganda Airtel Money, Tanzania M-Pesa
  */
 
+import { mpesaBreaker } from '@/lib/resilience/circuitBreaker'
+
 export interface MpesaConfig {
   consumerKey: string
   consumerSecret: string
@@ -83,7 +85,7 @@ export class MpesaService {
     const timestamp = new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 14)
     const password = Buffer.from(`${this.shortCode}${process.env.MPESA_PASSKEY || ''}${timestamp}`).toString('base64')
 
-    const response = await fetch(`${this.baseUrl}/mpesa/stkpush/v1/processrequest`, {
+    const response = await mpesaBreaker.execute(() => fetch(`${this.baseUrl}/mpesa/stkpush/v1/processrequest`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`,
@@ -102,7 +104,7 @@ export class MpesaService {
         AccountReference: params.reference,
         TransactionDesc: params.description || 'METARDU Payment'
       })
-    })
+    }))
 
     if (!response.ok) {
       const error = await response.json()

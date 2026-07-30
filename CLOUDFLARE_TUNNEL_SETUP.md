@@ -1,5 +1,13 @@
 # Cloudflare Named Tunnel Setup (METARDU)
 
+> **Canonical topology (P0-7, 2026-07-24):** Production `metardu.space` runs
+> behind Cloudflare DNS/protection → Nginx (TLS via Certbot) → Next.js on
+> port 3000. This document is the **Windows-dev alternative** for surveyors
+> running METARDU on a Windows machine without Nginx — it uses a Cloudflare
+> named tunnel directly to `localhost:3000`. For the Linux/DuckDNS production
+> guide, see `docs/deployment/duckdns-cloudflare-tunnel.md`. The `bore.pub`
+> tunnel has been removed (was redundant with Cloudflare).
+
 ## Why a named tunnel?
 - Provides a **stable hostname** (e.g. `https://<YOUR_DOMAIN>.com`).
 - No need to rewrite environment variables on every restart.

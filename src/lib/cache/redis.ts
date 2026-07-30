@@ -78,10 +78,18 @@ class RedisCache {
     if (!this.isConnected || !this.client) return
 
     try {
-      const keys = await this.client.keys(pattern)
-      if (keys.length > 0) {
-        await this.client.del(keys)
-      }
+      // ByteByteGo audit fix: use SCAN instead of KEYS to avoid blocking Redis
+      // in production. KEYS * scans the entire keyspace and blocks the event loop.
+      // SCAN is non-blocking and returns { cursor, keys } for iteration.
+      let cursor = '0'
+      do {
+        const result = await this.client.scan(cursor, { MATCH: pattern, COUNT: 100 })
+        cursor = result.cursor
+        const keys = result.keys
+        if (keys.length > 0) {
+          await this.client.del(keys)
+        }
+      } while (cursor !== '0')
     } catch {
       // Silently fail
     }

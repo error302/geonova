@@ -46,7 +46,21 @@ export const GET = apiHandler(
 )
 
 export const POST = apiHandler(
-  { auth: true, schema: SubmitMembershipSchema, rateLimit: { max: 10, windowMs: 60000 } },
+  {
+    auth: true,
+    schema: SubmitMembershipSchema,
+    rateLimit: { max: 10, windowMs: 60000 },
+    // P0-3 (2026-07-24): Wire membership submissions into the tamper-evident
+    // audit chain. ISK/EBK membership claims are a fraud vector — a surveyor
+    // could submit a fake membership number, get verified, then generate
+    // statutory documents. The chain entry proves who submitted what and
+    // when, and is tamper-detectable if anyone later alters the record.
+    auditChain: {
+      entityType: 'system',
+      action: 'submit',
+      reason: 'professional membership submission (pending admin verification)',
+    },
+  },
   async (_req, ctx) => {
     const input = ctx.body as z.infer<typeof SubmitMembershipSchema>
 

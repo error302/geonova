@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import './globals.css'
 import AuthProvider from '@/components/AuthProvider'
+import { ThemeProvider } from 'next-themes'
 import { ProjectionInit } from '@/components/layout/ProjectionInit'
 import AppShell from '@/components/layout/AppShell'
 import QueryProvider from '@/lib/api/QueryProvider'
@@ -125,26 +126,34 @@ export default function RootLayout({
           Skip to content
         </a>
         <AuthProvider>
-          <QueryProvider>
-            <WebVitals />
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  '@context': 'https://schema.org',
-                  '@type': 'Organization',
-                  name: 'METARDU',
-                  url: publicAppUrl,
-                  description: 'Professional land-surveying platform built in Kenya for the East African market.',
-                  areaServed: 'KE',
-                  knowsAbout: ['Survey Act Cap. 299', 'RDM 1.1', 'NLIMS', 'ArdhiSasa', 'EPSG:21037'],
-                }),
-              }}
-            />
-            <AppShell>
-              {children}
-            </AppShell>
-          </QueryProvider>
+          {/* UI-8 (2026-07-24): Wire ThemeProvider so next-themes useTheme()
+              works across the app. The CSS in globals.css uses
+              html[data-theme="light"] and html[data-theme="field"], so we
+              use attribute="data-theme". Default is dark (the :root vars).
+              Sonner toasts, field mode toggle, and outdoor mode toggle can
+              now use useTheme() to switch between 'dark', 'light', 'field'. */}
+          <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
+            <QueryProvider>
+              <WebVitals />
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'Organization',
+                    name: 'METARDU',
+                    url: publicAppUrl,
+                    description: 'Professional land-surveying platform built in Kenya for the East African market.',
+                    areaServed: 'KE',
+                    knowsAbout: ['Survey Act Cap. 299', 'RDM 1.1', 'NLIMS', 'ArdhiSasa', 'EPSG:21037'],
+                  }),
+                }}
+              />
+              <AppShell>
+                {children}
+              </AppShell>
+            </QueryProvider>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

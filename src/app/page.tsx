@@ -533,7 +533,11 @@ function PricingSection({ annual, onToggleAnnual }: { annual: boolean; onToggleA
                 <ul className="space-y-3 mb-8 list-none p-0">
                   {plan.features.map((feature, j) => (
                     <li key={j} className="flex items-start gap-3 text-sm text-[var(--text-primary)]/85">
-                      <span className="mt-0.5 text-[var(--accent)]" aria-hidden></span>
+                      <span className="mt-0.5 text-[var(--accent)]" aria-hidden>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                      </span>
                       {feature}
                     </li>
                   ))}

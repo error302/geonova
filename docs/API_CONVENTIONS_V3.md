@@ -163,3 +163,38 @@ try {
 ```
 
 Queue auto-syncs on reconnect. Server reconciles by `X-Client-UUID` header.
+
+## API Versioning Policy (P3-2, 2026-07-24)
+
+### Current state
+- Routes live under `/api/` (no version prefix in the URL path)
+- The middleware rewrites `/api/v1/*` → `/api/*` internally so clients
+  CAN use `/api/v1/projects` but existing clients use `/api/projects`
+- There is no v2
+
+### When to bump to v2
+Bump the major version when a **breaking change** is introduced:
+- Removing a field from a response
+- Changing a field's type or semantics
+- Changing the URL structure of an existing resource
+- Changing auth requirements for an existing endpoint
+- Changing the error envelope shape
+
+### What is NOT a breaking change (no version bump needed)
+- Adding a new field to a response (additive — clients ignore unknown fields)
+- Adding a new endpoint
+- Adding optional request parameters
+- Changing internal implementation (e.g. DB schema, caching)
+
+### Deprecation process
+1. When v2 is introduced, v1 routes continue to work for **6 months**
+2. v1 responses include a `Deprecation: true` header + `Sunset: <date>` header
+3. v1 responses include a `Link: </api/v2/...>; rel="successor-version"` header
+4. After 6 months, v1 routes return `410 Gone` with a migration guide URL
+5. The migration guide lives at `/docs/api/migration/v1-to-v2`
+
+### Current compatibility guarantee
+All existing `/api/*` routes are treated as v1. Any breaking change
+requires introducing `/api/v2/*` routes (new files) and keeping the
+old routes alive per the deprecation process above.
+

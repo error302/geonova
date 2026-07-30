@@ -2,13 +2,12 @@
 
 import { usePathname } from 'next/navigation'
 import { ReactNode, useEffect, useState } from 'react'
-import OnboardingModal from '@/components/ui/OnboardingModal'
 import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
 import FeedbackWidget from '@/components/FeedbackWidget'
 import { QuickCompute } from '@/components/layout/QuickCompute'
 import MobileNav from '@/components/MobileNav'
-import KeyboardShortcuts from '@/components/KeyboardShortcuts'
+import { HotkeyHelpOverlay } from '@/components/shared/HotkeyHelpOverlay'
 import { AppUpdateBanner } from '@/components/app/AppUpdateBanner'
 import { OfflineIndicator } from '@/components/app/OfflineIndicator'
 import { PWAInstallBanner } from '@/components/app/PWAInstallBanner'
@@ -79,8 +78,18 @@ export default function AppShell({ children }: { children: ReactNode }) {
   // (Footer, FeedbackWidget, QuickCompute, MobileNav, CommandPalette)
   // overlap the entry form and steal taps from the surveyor on a phone.
   const hideGlobalOverlays = mapPage || fieldbookPage
-  const [showOnboarding, setShowOnboarding] = useState(false)
   const [initialLoading, setInitialLoading] = useState(!_hasShownLoadingScreen)
+
+  // UI-12 (2026-07-24): Removed the OnboardingModal state + localStorage
+  // 'metardu_onboarding_seen' key. The modal was redundant with the
+  // OnboardingChecklist (rendered via OnboardingWrapper in the dashboard)
+  // and the OnboardingTour (rendered below). Three onboarding flows
+  // firing independently with 3 different localStorage keys created a
+  // confusing first-run experience. Now there are exactly two:
+  //   1. OnboardingChecklist (dashboard) — persistent progress tracker
+  //   2. OnboardingTour (AppShell) — guided walk-through, respects the
+  //      checklist's dismissed state so it doesn't fire before the
+  //      user has seen the checklist.
 
   // Show branded loading screen only on very first app load
   useEffect(() => {
@@ -97,23 +106,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (isAuthRoute(pathname)) return
-    if (!localStorage.getItem('metardu_onboarding_seen')) {
-      setShowOnboarding(true)
-    }
+    // UI-12: OnboardingModal removed — see comment above.
   }, [pathname])
-
-  const dismissOnboarding = () => {
-    localStorage.setItem('metardu_onboarding_seen', 'true')
-    setShowOnboarding(false)
-  }
-
-  const onboardingModal = (
-    <OnboardingModal
-      open={showOnboarding}
-      onClose={dismissOnboarding}
-      onComplete={dismissOnboarding}
-    />
-  )
 
   // Auth routes (login/register): bare page, no chrome
   if (auth) {
@@ -158,9 +152,9 @@ export default function AppShell({ children }: { children: ReactNode }) {
                 <NotificationBell />
               </div>
               <CommandPalette />
-              <KeyboardShortcuts />
+              <HotkeyHelpOverlay />
               <NotificationToast />
-              {onboardingModal}
+              
             </SubscriptionProvider>
           </CountryProvider>
         </LanguageProvider>
@@ -188,9 +182,9 @@ export default function AppShell({ children }: { children: ReactNode }) {
                 <FieldModeToggle />
               </div>
               <CommandPalette />
-              <KeyboardShortcuts />
+              <HotkeyHelpOverlay />
               <NotificationToast />
-              {onboardingModal}
+              
             </SubscriptionProvider>
           </CountryProvider>
         </LanguageProvider>
@@ -225,14 +219,14 @@ export default function AppShell({ children }: { children: ReactNode }) {
             </main>
             <Footer />
             {!hideGlobalOverlays && <FeedbackWidget />}
-            <KeyboardShortcuts />
+            <HotkeyHelpOverlay />
             {/* Hide QuickCompute and FeedbackWidget on map + fieldbook pages — they overlap entry controls */}
             {!hideGlobalOverlays && <QuickCompute />}
             {!dashboard && !hideGlobalOverlays && <MobileNav />}
             {!hideGlobalOverlays && <CommandPalette />}
             <NotificationToast />
             <OnboardingTour />
-            {onboardingModal}
+            
           </SubscriptionProvider>
         </CountryProvider>
       </LanguageProvider>

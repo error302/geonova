@@ -238,8 +238,13 @@ export const GET = apiHandler(
 
     sql += ` ORDER BY is_control DESC, point_name ASC`
 
+    // ByteByteGo audit fix: add LIMIT to prevent returning tens of thousands of rows
+    const limit = Math.min(parseInt(searchParams.get('limit') || '500'), 5000)
+    sql += ` LIMIT $${paramIdx}`
+    params.push(limit)
+
     const { rows } = await db.query(sql, params)
 
-    return NextResponse.json({ data: rows, count: rows.length })
+    return NextResponse.json({ data: rows, count: rows.length, limit })
   },
 )

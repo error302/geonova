@@ -21,6 +21,17 @@
  * Reference: "UAV Photogrammetry" by Colomina & Molina (2014)
  */
 
+import { utmToGeographic } from '@/lib/geodesy/coordinates'
+
+/**
+ * Default UTM zone for METARDU — Kenya Arc 1960 / UTM Zone 37S (EPSG:21037).
+ * Used when a project-level zone is not supplied to the exporters.
+ * Most of Kenya (incl. Nairobi, Mombasa) falls in Zone 37S; western Kenya
+ * (incl. Kisumu, Eldoret, Turkana) falls in Zone 36S (EPSG:21036).
+ */
+export const DEFAULT_UTM_ZONE = 37
+export const DEFAULT_HEMISPHERE: 'N' | 'S' = 'S'
+
 export interface ProjectArea {
   /** Polygon vertices defining the project boundary */
   boundary: Array<{ easting: number; northing: number }>
@@ -220,19 +231,30 @@ export function markGCPPhotoCaptured(
 /**
  * Generate a GCP export file for Pix4D.
  * Format: GCP Name, Lat (WGS84), Lon (WGS84), Alt, Accuracy X, Accuracy Y, Accuracy Z
+ *
+ * P0-1 FIX (2026-07-24): Previously exported `lat=0, lng=0` with the comment
+ * "Would be transformed" — producing a file full of zeros that Pix4D would
+ * silently accept and then fail to georeference. Now transforms UTM→WGS84
+ * via the Redfearn formula in `geodesy/coordinates.ts` (Basak Ch.3,
+ * Ghilani & Wolf Ch.7, EPSG Guidance Note 7-2).
+ *
+ * @param gcps        - GCPs with easting/northing in the project's UTM zone
+ * @param utmZone     - UTM zone (1-60). Defaults to 37 (Kenya).
+ * @param hemisphere  - 'N' or 'S'. Defaults to 'S' (Kenya).
  */
-export function exportForPix4D(gcps: GCPPoint[]): string {
+export function exportForPix4D(
+  gcps: GCPPoint[],
+  utmZone: number = DEFAULT_UTM_ZONE,
+  hemisphere: 'N' | 'S' = DEFAULT_HEMISPHERE,
+): string {
   let csv = 'GCP Label,Latitude (WGS84),Longitude (WGS84),Altitude (WGS84),Horizontal Accuracy (m),Vertical Accuracy (m)\n'
 
   for (const gcp of gcps) {
-    // Note: In production, transform EPSG:21037 to WGS84
-    // For now, placeholder values
-    const lat = 0  // Would be transformed
-    const lng = 0
+    const { lat, lon } = utmToGeographic(gcp.easting, gcp.northing, utmZone, hemisphere)
     const alt = gcp.elevation || 0
     const acc = gcp.accuracy || 0.02
 
-    csv += `${gcp.name},${lat.toFixed(9)},${lng.toFixed(9)},${alt.toFixed(4)},${acc.toFixed(4)},${acc.toFixed(4)}\n`
+    csv += `${gcp.name},${lat.toFixed(9)},${lon.toFixed(9)},${alt.toFixed(4)},${acc.toFixed(4)},${acc.toFixed(4)}\n`
   }
 
   return csv
@@ -241,16 +263,26 @@ export function exportForPix4D(gcps: GCPPoint[]): string {
 /**
  * Generate a GCP export file for WebODM.
  * Format: lon,lat,alt,name
+ *
+ * P0-1 FIX (2026-07-24): Same zero-export bug as `exportForPix4D`. Now
+ * transforms UTM→WGS84 via Redfearn.
+ *
+ * @param gcps        - GCPs with easting/northing in the project's UTM zone
+ * @param utmZone     - UTM zone (1-60). Defaults to 37 (Kenya).
+ * @param hemisphere  - 'N' or 'S'. Defaults to 'S' (Kenya).
  */
-export function exportForWebODM(gcps: GCPPoint[]): string {
+export function exportForWebODM(
+  gcps: GCPPoint[],
+  utmZone: number = DEFAULT_UTM_ZONE,
+  hemisphere: 'N' | 'S' = DEFAULT_HEMISPHERE,
+): string {
   let csv = ''
 
   for (const gcp of gcps) {
-    const lat = 0  // Would be transformed
-    const lng = 0
+    const { lat, lon } = utmToGeographic(gcp.easting, gcp.northing, utmZone, hemisphere)
     const alt = gcp.elevation || 0
 
-    csv += `${lng.toFixed(9)},${lat.toFixed(9)},${alt.toFixed(4)},${gcp.name}\n`
+    csv += `${lon.toFixed(9)},${lat.toFixed(9)},${alt.toFixed(4)},${gcp.name}\n`
   }
 
   return csv

@@ -1,3 +1,5 @@
+> **⚠️ ARCHIVED (2026-07-24):** This gap analysis is superseded by `docs/ROADMAP.md` (consolidated 2026-07-09) and `docs/MASTER_PLAN.md` (agent work plan). Unique findings have been cross-walked into ROADMAP Tier 1-4 items (G-NN IDs). This document is kept for historical reference only — do not act on findings here without checking ROADMAP.md first.
+
 # METARDU — Professional Gap Analysis (Ground Truth Audit)
 **Date:** 2026-05-06 | **Auditor:** Full source-level audit against the 16-item previous analysis
 

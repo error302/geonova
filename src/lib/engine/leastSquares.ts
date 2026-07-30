@@ -1,4 +1,12 @@
 /**
+ * @deprecated P1-5 (2026-07-24): Use `@/lib/engine/networkAdjustment.ts`
+ *   (the `adjustNetwork` function) instead. That module is the canonical
+ *   enterprise-grade LSA: sparse Cholesky, free-network inner constraints,
+ *   Huber robust estimation, full Baarda reliability, 2D/3D, 6 observation
+ *   types. This dense 2D-only module is kept for the `leastSquares3d.test.ts`
+ *   KAT suite and the `traverseToLSQ` bridge, but new code should not
+ *   import from here.
+ *
  * Least Squares Adjustment (2D) — Weighted, iterative
  * References: standard surveying adjustment (Ghilani/Wolf; Ghilani "Adjustment Computations")
  *

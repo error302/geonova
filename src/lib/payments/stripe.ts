@@ -3,7 +3,8 @@
  * Processes card payments via Stripe API
  */
 
-import { createHmac, timingSafeEqual } from 'crypto'
+import { createHmac, timingSafeEqual, randomUUID } from 'crypto'
+import { stripeBreaker } from '@/lib/resilience/circuitBreaker'
 
 export interface StripeConfig {
   secretKey: string
@@ -84,7 +85,7 @@ export class StripeService {
   }
 
   async createPaymentIntent(params: CreatePaymentIntentParams): Promise<StripePaymentIntent> {
-    const response = await fetch('https://api.stripe.com/v1/payment_intents', {
+    const response = await stripeBreaker.execute(() => fetch('https://api.stripe.com/v1/payment_intents', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${this.secretKey}`,
@@ -97,7 +98,7 @@ export class StripeService {
         ...(params.customerId && { customer: params.customerId }),
         ...this.buildMetadataParams(params.metadata),
       }),
-    })
+    }))
 
     if (!response.ok) {
       const error = await response.json()
@@ -154,7 +155,8 @@ export class StripeService {
   async createSubscription(
     customerId: string,
     priceId: string,
-    metadata?: Record<string, string>
+    metadata?: Record<string, string>,
+    idempotencyKey?: string,
   ): Promise<{ subscriptionId: string; clientSecret: string }> {
     const params = new URLSearchParams()
     params.append('customer', customerId)
@@ -172,17 +174,21 @@ export class StripeService {
       }
     }
 
-    const response = await fetch('https://api.stripe.com/v1/subscriptions', {
+    // ByteByteGo audit fix: use a stable client-supplied idempotency key (UUID)
+    // instead of Date.now() which defeats idempotency on retries within the same second.
+    // Also wrap the call in a circuit breaker to prevent cascading failures.
+    const key = idempotencyKey || randomUUID()
+
+    const response = await stripeBreaker.execute(() => fetch('https://api.stripe.com/v1/subscriptions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${this.secretKey}`,
         'Content-Type': 'application/x-www-form-urlencoded',
         'Stripe-Version': STRIPE_API_VERSION,
-        // AUDIT FIX (HIGH 6, 2026-07-02): Idempotency key prevents double-charge on retry
-        'Idempotency-Key': `sub_${customerId}_${Date.now()}`,
+        'Idempotency-Key': key,
       },
       body: params
-    })
+    }))
 
     if (!response.ok) {
       const error = await response.json()

@@ -1,4 +1,14 @@
 /**
+ * @deprecated P1-5 (2026-07-24): Use `@/lib/engine/networkAdjustment.ts`
+ *   (the `adjustNetwork` function) instead. That module is the canonical
+ *   enterprise-grade LSA with sparse Cholesky, free-network inner
+ *   constraints, Huber robust estimation, full Baarda reliability,
+ *   AND iterative relinearization for non-linear observations (slope
+ *   distances, horizontal directions, zenith angles). This standalone
+ *   iterative module is kept because `/api/survey/robust-adjustment`
+ *   imports types from here, but its functionality is now subsumed
+ *   by the canonical module. New code should not import from here.
+ *
  * Iterative Least Squares Adjustment — non-linear observation support
  *
  * PROBLEM

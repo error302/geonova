@@ -93,7 +93,22 @@ const ManualEntrySchema = z.object({
 })
 
 export const POST = apiHandler(
-  { auth: true, schema: ManualEntrySchema, rateLimit: { max: 10, windowMs: 60_000 } },
+  {
+    auth: true,
+    schema: ManualEntrySchema,
+    rateLimit: { max: 10, windowMs: 60_000 },
+    // P0-3 (2026-07-24): Wire manual CPD submissions into the tamper-evident
+    // audit chain. Manual CPD entries are a fraud vector per FRAUD_PREVENTION.md
+    // (self-awarded points, fake training). The chain entry proves the
+    // submission was made by this user at this time, and is tamper-detectable
+    // via verifyChain() if anyone later tries to modify or delete it.
+    auditChain: {
+      entityType: 'system',
+      action: 'submit',
+      entityIdParam: undefined, // no URL param — falls back to body.id / 'unknown'
+      reason: 'manual CPD entry submission (pending admin approval)',
+    },
+  },
   async (req, ctx) => {
     const body = ctx.body as z.infer<typeof ManualEntrySchema>
 

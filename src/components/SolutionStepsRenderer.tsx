@@ -66,7 +66,18 @@ function StepBody({ step }: { step: SolutionStep }) {
     return lines.length ? (
       <div className="space-y-2">
         {lines.map((l, idx) => {
-          const ok = l.startsWith('') ? true : l.startsWith('[x]') ? false : null
+          // UI-3 FIX (2026-07-24): l.startsWith('') is always true, so every
+          // check line rendered as green (pass) — even failed checks. The
+          // solution builder (solutionBuilder.ts:90) emits:
+          //   '[x] Label: value' when c.ok === false  (FAIL)
+          //   '• Label: value'     when c.ok == null  (neutral)
+          //   ' Label: value'      when c.ok === true  (PASS, leading space)
+          // Detect in that order.
+          const ok: boolean | null = l.startsWith('[x]')
+            ? false
+            : l.startsWith('•')
+              ? null
+              : true
           return (
             <div
               key={`${l}-${idx}`}

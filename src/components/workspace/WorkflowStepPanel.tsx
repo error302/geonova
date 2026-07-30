@@ -22,6 +22,7 @@ const surveyReportGenerateSchema = z.object({
 const DynamicFieldBook = dynamic(() => import('./DynamicFieldBook'), { ssr: false });
 const GenerateReportModal = dynamic(() => import('./GenerateReportModal'), { ssr: false });
 const CadastralComputeIntegration = dynamic(() => import('./CadastralComputeIntegration'), { ssr: false });
+const FieldToFinishButton = dynamic(() => import('./FieldToFinishButton').then(m => ({ default: m.FieldToFinishButton })), { ssr: false });
 
 interface Props {
   projectId: string;
@@ -99,6 +100,9 @@ function ComputeStepPanel({ surveyType, projectId }: { surveyType: SurveyType; p
             </Link>
           </div>
           <CadastralComputeIntegration projectId={projectId} />
+          <div className="mt-4">
+            <FieldToFinishButton projectId={projectId} />
+          </div>
         </div>
       ) : (
         <div className="rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] p-5">

@@ -35,6 +35,7 @@ import type { CapturedBeaconPhoto } from '@/components/fieldbook/BeaconPhotoCapt
 import { CheckCircle2 } from 'lucide-react'
 import { RealTimeQCPanel } from '@/components/survey/RealTimeQCPanel'
 import { InstrumentStreamBar, type StreamedReading, type SurveyType as StreamSurveyType } from '@/components/fieldbook/InstrumentStreamBar'
+import { InstantClosureFeedback } from '@/components/fieldbook/InstantClosureFeedback'
 import { useAutoSave } from '@/hooks/useAutoSave'
 import { useNotifications } from '@/hooks/useNotifications'
 import { crossCheckArea, crossCheckBearing, crossCheckClosure, crossCheckDistance } from '@/lib/engine/calculationCrossCheck'
@@ -1463,6 +1464,19 @@ export default function DigitalFieldBookPage() {
                 setTravRows={setTravRows}
                 computed={traverseComputed}
               />
+
+              {/* Instant Closure Feedback — updates in real-time as surveyor types */}
+              <InstantClosureFeedback
+                rows={travRows}
+                startE={startE}
+                startN={startN}
+                closeE={closeE}
+                closeN={closeN}
+                mode={travMode}
+                surveyType={surveyType || 'cadastral'}
+                t={t}
+              />
+
               {/* Bowditch Adjustment Summary — shows precision stats and statutory compliance */}
               {traverseComputed.ok && traverseComputed.mode !== 'open' && (
                 <BowditchSummary adjusted={traverseComputed.adjusted} />

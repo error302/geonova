@@ -21,12 +21,16 @@ import {
   generateValidationChecklist,
   exportForPix4D,
   exportForWebODM,
+  DEFAULT_UTM_ZONE,
+  DEFAULT_HEMISPHERE,
   type GCPPlan,
   type GCPPoint,
 } from '@/lib/engine/gcpOptimizer'
 
 export function GCPOptimizerPanel() {
   const [areaHa, setAreaHa] = useState('')
+  const [utmZone, setUtmZone] = useState<number>(DEFAULT_UTM_ZONE)
+  const [hemisphere, setHemisphere] = useState<'N' | 'S'>(DEFAULT_HEMISPHERE)
   const [plan, setPlan] = useState<GCPPlan | null>(null)
   const [generating, setGenerating] = useState(false)
 
@@ -58,7 +62,9 @@ export function GCPOptimizerPanel() {
 
   const handleExport = useCallback((format: 'pix4d' | 'webodm') => {
     if (!plan) return
-    const csv = format === 'pix4d' ? exportForPix4D(plan.gcps) : exportForWebODM(plan.gcps)
+    const csv = format === 'pix4d'
+      ? exportForPix4D(plan.gcps, utmZone, hemisphere)
+      : exportForWebODM(plan.gcps, utmZone, hemisphere)
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -66,7 +72,7 @@ export function GCPOptimizerPanel() {
     a.download = `gcp-export-${format}.csv`
     a.click()
     URL.revokeObjectURL(url)
-  }, [plan])
+  }, [plan, utmZone, hemisphere])
 
   return (
     <div className="space-y-4">
@@ -79,7 +85,7 @@ export function GCPOptimizerPanel() {
             step="0.01"
             value={areaHa}
             onChange={e => setAreaHa(e.target.value)}
-            aria-label="10.5" placeholder="10.5"
+            aria-label="Project area in hectares" placeholder="10.5"
             className="flex-1 h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] font-mono"
           />
           <button
@@ -90,6 +96,36 @@ export function GCPOptimizerPanel() {
             {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Drone className="w-4 h-4" />}
             Plan GCPs
           </button>
+        </div>
+        {/* UTM zone + hemisphere for export correctness (P0-1) */}
+        <div className="flex items-center gap-2 mt-2">
+          <label className="text-[9px] text-gray-500 uppercase tracking-wider">UTM Zone</label>
+          <input
+            type="number"
+            min={1}
+            max={60}
+            value={utmZone}
+            onChange={e => {
+              const z = parseInt(e.target.value, 10)
+              if (z >= 1 && z <= 60) setUtmZone(z)
+            }}
+            aria-label="UTM zone (1 to 60)"
+            className="w-16 h-7 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono text-center"
+          />
+          <div className="flex rounded-lg border border-[var(--border-color)] overflow-hidden">
+            {(['N', 'S'] as const).map(h => (
+              <button
+                key={h}
+                onClick={() => setHemisphere(h)}
+                className={`px-3 h-7 text-xs font-mono ${hemisphere === h ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-gray-400'}`}
+                aria-pressed={hemisphere === h}
+                aria-label={`Hemisphere ${h === 'N' ? 'North' : 'South'}`}
+              >
+                {h}
+              </button>
+            ))}
+          </div>
+          <span className="text-[9px] text-gray-600">Used for Pix4D/WebODM WGS84 export</span>
         </div>
       </div>
 

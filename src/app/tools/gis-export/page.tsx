@@ -70,7 +70,7 @@ ${placemarks}
 </kml>`
 }
 
-export default function GISExportPage() {
+function GISExportPage() {
   const { t } = useLanguage()
   const [projects, setProjects]   = useState<any[]>([])
   const [projectId, setProjectId] = useState('')
@@ -329,5 +329,20 @@ export default function GISExportPage() {
         )}
       </div>
     </div>
+  )
+}
+
+// P0-2 (2026-07-24): Wrap in <ToolGate> so direct-URL access can't
+// bypass the plan check. The catalog page (/tools) shows lock badges,
+// but those are display-only — this gate enforces the same check at
+// the page level. Server-side enforcement for any export API this
+// tool calls happens via the requirePlan() decorator on the route.
+import { ToolGate } from '@/components/shared/ToolGate'
+
+export default function GISExportPageGated() {
+  return (
+    <ToolGate toolPath="/tools/gis-export">
+      <GISExportPage />
+    </ToolGate>
   )
 }

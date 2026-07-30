@@ -283,10 +283,13 @@ export const authOptions: AuthOptions = {
     }),
 
     // ── Google OAuth ────────────────────────────────────────────────────────
+    // SECURITY FIX (ByteByteGo audit): allowDangerousEmailAccountLinking was true,
+    // which let an attacker register a Google account with a victim's email and
+    // gain access. Now false — OAuth accounts must be explicitly linked.
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-      allowDangerousEmailAccountLinking: true,
+      allowDangerousEmailAccountLinking: false,
     }),
 
     // ── Microsoft / Azure AD OAuth ──────────────────────────────────────────
@@ -294,7 +297,7 @@ export const authOptions: AuthOptions = {
       clientId: process.env.AZURE_AD_CLIENT_ID || '',
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET || '',
       tenantId: 'common', // Allow both work/school and personal Microsoft accounts
-      allowDangerousEmailAccountLinking: true,
+      allowDangerousEmailAccountLinking: false,
     }),
   ],
   callbacks: {

@@ -76,13 +76,47 @@ export const GET = apiHandler({
   requireAuth: true,
   rateLimit: { max: 60, windowMs: 60000 },
   handler: async (ctx) => {
-    const result = await db.query(
-      `SELECT id, name, survey_type, location, utm_zone, hemisphere, project_type,
-              client_name, surveyor_name, country, datum, created_at
-       FROM projects WHERE user_id = $1 ORDER BY created_at DESC`,
-      [ctx.userId]
-    )
+    // ByteByteGo audit fix: cursor-based pagination (avoids offset performance issues)
+    const url = new URL(ctx.req.url)
+    const cursor = url.searchParams.get('cursor')
+    const limit = Math.min(parseInt(url.searchParams.get('limit') || '50'), 200)
 
-    return NextResponse.json({ data: result.rows })
+    let query: string
+    let params: any[]
+
+    if (cursor) {
+      // Cursor is the created_at of the last item from the previous page
+      query = `SELECT id, name, survey_type, location, utm_zone, hemisphere, project_type,
+                      client_name, surveyor_name, country, datum, created_at
+               FROM projects
+               WHERE user_id = $1 AND created_at < $2
+               ORDER BY created_at DESC
+               LIMIT $3`
+      params = [ctx.userId, cursor, limit + 1]
+    } else {
+      query = `SELECT id, name, survey_type, location, utm_zone, hemisphere, project_type,
+                      client_name, surveyor_name, country, datum, created_at
+               FROM projects
+               WHERE user_id = $1
+               ORDER BY created_at DESC
+               LIMIT $2`
+      params = [ctx.userId, limit + 1]
+    }
+
+    const result = await db.query(query, params)
+
+    // Check if there are more results
+    const hasMore = result.rows.length > limit
+    const data = hasMore ? result.rows.slice(0, limit) : result.rows
+    const nextCursor = hasMore ? data[data.length - 1]?.created_at : null
+
+    return NextResponse.json({
+      data,
+      pagination: {
+        limit,
+        hasMore,
+        nextCursor,
+      },
+    })
   },
 })

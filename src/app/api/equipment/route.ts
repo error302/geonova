@@ -62,7 +62,19 @@ export const GET = apiHandler(
  * Add new equipment.
  */
 export const POST = apiHandler(
-  { auth: true, rateLimit: { max: 30, windowMs: 60000 } },
+  {
+    auth: true,
+    rateLimit: { max: 30, windowMs: 60000 },
+    // P1-3 (2026-07-24): Equipment registration affects calibration
+    // compliance — total stations with expired calibration produce
+    // legally indefensible measurements. Audit chain proves who
+    // registered what and when.
+    auditChain: {
+      entityType: 'system',
+      action: 'create',
+      reason: 'equipment registration',
+    },
+  },
   async (req, ctx) => {
     const user = await getAuthUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -96,7 +108,15 @@ export const POST = apiHandler(
  * Update equipment.
  */
 export const PATCH = apiHandler(
-  { auth: true, rateLimit: { max: 60, windowMs: 60000 } },
+  {
+    auth: true,
+    rateLimit: { max: 60, windowMs: 60000 },
+    auditChain: {
+      entityType: 'system',
+      action: 'update',
+      reason: 'equipment update',
+    },
+  },
   async (req, ctx) => {
     const user = await getAuthUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -143,7 +163,15 @@ export const PATCH = apiHandler(
  * DELETE /api/equipment?id=<id>
  */
 export const DELETE = apiHandler(
-  { auth: true, rateLimit: { max: 30, windowMs: 60000 } },
+  {
+    auth: true,
+    rateLimit: { max: 30, windowMs: 60000 },
+    auditChain: {
+      entityType: 'system',
+      action: 'delete',
+      reason: 'equipment deletion',
+    },
+  },
   async (req, ctx) => {
     const user = await getAuthUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

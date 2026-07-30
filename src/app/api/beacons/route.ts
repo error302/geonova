@@ -3,6 +3,7 @@ import { apiHandler, apiSuccess } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { getAuthUser } from '@/lib/auth/session'
 import { validateBody, beaconInputSchema } from '@/lib/validation/apiValidation'
+import redisCache from '@/lib/cache/redis'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,23 +27,34 @@ export const GET = apiHandler(
     const beaconType = url.searchParams.get('beacon_type')
     const limit = Math.min(200, parseInt(url.searchParams.get('limit') || '50', 10))
 
-    // Proximity search
+    // Proximity search — ByteByteGo audit fix: cache-aside pattern for hot path
     if (easting && northing) {
       const e = parseFloat(easting)
       const n = parseFloat(northing)
       if (!isFinite(e) || !isFinite(n)) {
         return NextResponse.json({ error: 'Invalid easting/northing' }, { status: 400 })
       }
+
+      // Cache key: rounded to 10m grid (nearby searches share cache within 10m)
+      const cacheKey = `beacons:near:${Math.round(e / 10) * 10}:${Math.round(n / 10) * 10}:${radius}:${limit}`
+      const cached = await redisCache.get<any>(cacheKey)
+      if (cached) {
+        return apiSuccess({ ...cached, cached: true })
+      }
+
       const result = await db.query(
         `SELECT * FROM find_nearby_beacons($1, $2, $3, $4)`,
         [e, n, radius, limit],
       )
-      return apiSuccess({
+      const data = {
         beacons: result.rows,
-        searchType: 'proximity',
+        searchType: 'proximity' as const,
         center: { easting: e, northing: n },
         radiusM: radius,
-      })
+      }
+      // Cache for 5 minutes (beacons don't move often)
+      await redisCache.set(cacheKey, data, 300)
+      return apiSuccess({ ...data, cached: false })
     }
 
     // Text search
@@ -88,7 +100,19 @@ export const GET = apiHandler(
  * Add a beacon to the registry.
  */
 export const POST = apiHandler(
-  { auth: true, rateLimit: { max: 30, windowMs: 60000 } },
+  {
+    auth: true,
+    rateLimit: { max: 30, windowMs: 60000 },
+    // P1-3 (2026-07-24): Beacon registry writes are a fraud vector —
+    // a forged beacon could support a fraudulent deed plan. The chain
+    // entry proves who registered the beacon and when, and is
+    // tamper-detectable via verifyChain().
+    auditChain: {
+      entityType: 'control_point',
+      action: 'create',
+      reason: 'beacon registry submission',
+    },
+  },
   async (req, ctx) => {
     const user = await getAuthUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

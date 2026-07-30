@@ -7,7 +7,7 @@
 import { NextResponse } from 'next/server'
 
 const PYTHON_WORKER_URL = process.env.PYTHON_WORKER_URL || 'http://localhost:8001'
-const WORKER_SECRET = process.env.WORKER_SECRET || 'dev-worker-secret'
+const WORKER_SECRET = process.env.WORKER_SECRET || ''  // P0-5: fail-closed, no dev fallback
 
 export async function GET() {
   try {

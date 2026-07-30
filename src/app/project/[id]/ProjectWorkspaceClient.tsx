@@ -14,6 +14,9 @@ import {
 } from '@/lib/workflows/projectWorkflowEngine';
 import WorkflowStepper from '@/components/workspace/WorkflowStepper';
 import WorkflowStepPanel from '@/components/workspace/WorkflowStepPanel';
+import EnhancedSplitLayout from '@/components/workspace/EnhancedSplitLayout';
+import WorkspaceMap from '@/components/workspace/WorkspaceMap';
+import ComputationLog from '@/components/workspace/ComputationLog';
 import WorkflowQualityGate from '@/components/shared/WorkflowQualityGate';
 import WorkflowOverviewPanel from '@/components/shared/WorkflowOverviewPanel';
 import { CollaborationPanel } from '@/components/realtime/CollaborationPanel';
@@ -268,7 +271,7 @@ export default function ProjectWorkspaceClient({ project, workflow }: Props) {
   const nextStepDef = nextStep !== null ? workflow.steps.find((s) => s.index === nextStep) : null;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen bg-[var(--bg-primary)]">
       <div className="bg-[var(--bg-secondary)] border-b border-[var(--border-color)] px-4 py-4">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between mb-1">
@@ -309,69 +312,84 @@ export default function ProjectWorkspaceClient({ project, workflow }: Props) {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-6">
-        {currentStepDef && (
-          <p className="text-sm text-[var(--text-muted)] mb-4">{currentStepDef.description}</p>
-        )}
+      {/* UI-4 (2026-07-24): Wire EnhancedSplitLayout — brings 1,255 LOC of
+          dead workspace UI (EnhancedSplitLayout + WorkspaceMap + ComputationLog)
+          to life. Desktop: resizable left (workflow 55%) / right (map 45%)
+          split with a collapsible computation log at the bottom + a compact
+          status bar showing misclosure/precision/area/selection. Mobile:
+          stacked layout. The header (WorkflowStepper) stays above; the
+          collaboration/QA/batch panels stay below. */}
+      <EnhancedSplitLayout
+        leftPanel={
+          <div className="px-4 py-6 max-w-5xl mx-auto">
+            {currentStepDef && (
+              <p className="text-sm text-[var(--text-muted)] mb-4">{currentStepDef.description}</p>
+            )}
 
-        {/* Blocker warnings from workflow engine */}
-        {workflowStatus && workflowStatus.blockers.length > 0 && (
-          <div className="mb-4 p-3 rounded-lg bg-amber-500/5 border border-amber-500/20 text-sm">
-            <div className="flex items-start gap-2">
-              <svg className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-              </svg>
-              <div>
-                <p className="text-amber-400 font-medium mb-1">Workflow Blockers</p>
-                {workflowStatus.blockers.map((b, i) => (
-                  <p key={`${b}-${i}`} className="text-amber-400/80 text-xs">{b}</p>
-                ))}
+            {/* Blocker warnings from workflow engine */}
+            {workflowStatus && workflowStatus.blockers.length > 0 && (
+              <div className="mb-4 p-3 rounded-lg bg-amber-500/5 border border-amber-500/20 text-sm">
+                <div className="flex items-start gap-2">
+                  <svg className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                  </svg>
+                  <div>
+                    <p className="text-amber-400 font-medium mb-1">Workflow Blockers</p>
+                    {workflowStatus.blockers.map((b, i) => (
+                      <p key={`${b}-${i}`} className="text-amber-400/80 text-xs">{b}</p>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
+
+            {currentStep < 5 && (
+              <WorkflowStepPanel
+                projectId={project.id}
+                surveyType={project.surveyType}
+                stepIndex={currentStep}
+                projectName={project.name}
+              />
+            )}
+
+            {!isLastStep && nextStepDef && (
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={handleContinue}
+                  disabled={saving}
+                  className="px-5 py-2 bg-[var(--accent)] text-black text-sm font-medium rounded hover:bg-[var(--accent-dim)] disabled:opacity-50 transition-colors"
+                >
+                  Continue to {nextStepDef.label} →
+                </button>
+              </div>
+            )}
+
+            {currentStep === 4 && (
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  onClick={() => router.push(`/mobile/field?project=${project.id}`)}
+                  className="px-5 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm font-medium rounded hover:border-[var(--accent)]/40 transition-colors flex items-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                  Field Collection
+                </button>
+                <button
+                  onClick={() => router.push(`/project/${project.id}/submission`)}
+                  className="px-5 py-2 bg-[var(--accent)] text-black text-sm font-medium rounded hover:bg-[var(--accent-dim)] transition-colors"
+                >
+                  Go to Submission →
+                </button>
+              </div>
+            )}
           </div>
-        )}
-
-        {currentStep < 5 && (
-          <WorkflowStepPanel
-            projectId={project.id}
-            surveyType={project.surveyType}
-            stepIndex={currentStep}
-            projectName={project.name}
-          />
-        )}
-
-{!isLastStep && nextStepDef && (
-      <div className="mt-6 flex justify-end">
-        <button
-          onClick={handleContinue}
-          disabled={saving}
-          className="px-5 py-2 bg-[var(--accent)] text-white text-sm font-medium rounded hover:bg-[var(--accent-dim)] disabled:opacity-50 transition-colors"
-        >
-          Continue to {nextStepDef.label} →
-        </button>
-      </div>
-    )}
-
-    {currentStep === 4 && (
-      <div className="mt-6 flex justify-end gap-3">
-        <button
-          onClick={() => router.push(`/mobile/field?project=${project.id}`)}
-          className="px-5 py-2 bg-purple-600 text-white text-sm font-medium rounded hover:bg-purple-700 transition-colors flex items-center gap-2"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-          </svg>
-          Field Collection
-        </button>
-        <button
-          onClick={() => router.push(`/project/${project.id}/submission`)}
-          className="px-5 py-2 bg-emerald-600 text-white text-sm font-medium rounded hover:bg-emerald-700 transition-colors"
-        >
-          Go to Submission →
-        </button>
-      </div>
-    )}
-      </div>
+        }
+        rightPanel={
+          <WorkspaceMap projectId={project.id} projectName={project.name} />
+        }
+        logPanel={<ComputationLog />}
+      />
 
       {/* Quality Gate Modal */}
       {qualityGateTarget && workflowData && (

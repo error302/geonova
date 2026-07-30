@@ -1,0 +1,284 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# METARDU — Production Docker Compose (Hardened)
+# ═══════════════════════════════════════════════════════════════════════════
+# Changes from base docker-compose.yml:
+#   1. Network segmentation (frontend/backend)
+#   2. No host port exposure for internal services
+#   3. Resource limits on all services
+#   4. Read-only filesystem where possible
+#   5. Redis added for caching/rate limiting
+#   6. PostgreSQL tuned via custom config
+#   7. Security hardening (no-new-privileges, tmpfs)
+#
+# Usage:
+#   cp .env.example .env        # Fill in secrets
+#   docker compose -f docker-compose.secure.yml up -d --build
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─── Networks ─────────────────────────────────────────────────────────────
+# frontend: Public-facing services (app, caddy)
+# backend:  Internal services (postgres, redis, worker) — no external access
+# ntrip:    NTRIP proxy (separate because it bridges WebSocket↔TCP)
+
+networks:
+  frontend:
+    driver: bridge
+    name: metardu-frontend
+  backend:
+    driver: bridge
+    name: metardu-backend
+    internal: true   # ← KEY: No internet access from this network
+  ntrip:
+    driver: bridge
+    name: metardu-ntrip
+
+# ─── Volumes ──────────────────────────────────────────────────────────────
+
+volumes:
+  postgres_data:
+    name: metardu-postgres-data
+  redis_data:
+    name: metardu-redis-data
+  backups:
+    name: metardu-backups
+
+# ─── Services ─────────────────────────────────────────────────────────────
+
+services:
+
+  # ── PostgreSQL + PostGIS ────────────────────────────────────────────────
+  metardu-postgres:
+    image: postgis/postgis:15-3.3-alpine
+    container_name: metardu-postgres
+    # NO ports mapping — only accessible within Docker network
+    # To connect from host for debugging, temporarily add:
+    #   ports: ["127.0.0.1:5432:5432"]
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-metardu}
+      - POSTGRES_USER=${POSTGRES_USER:-metardu}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres-custom.conf:/etc/postgresql/postgresql.conf:ro
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-metardu} -d ${POSTGRES_DB:-metardu}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 2G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  # ── Redis (Caching + Rate Limiting + Pub/Sub) ──────────────────────────
+  metardu-redis:
+    image: redis:7-alpine
+    container_name: metardu-redis
+    # NO ports mapping — internal only
+    command: >
+      redis-server
+        --appendonly yes
+        --maxmemory 256mb
+        --maxmemory-policy allkeys-lru
+        --save 60 1000
+        --save 300 10
+        --requirepass ${REDIS_PASSWORD:-metardu_redis_secret}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-metardu_redis_secret}", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  # ── Python Compute Worker ──────────────────────────────────────────────
+  metardu-worker:
+    build:
+      context: ./python_worker
+    container_name: metardu-worker
+    # NO ports mapping — only accessible via internal network
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - WORKER_SECRET=${WORKER_SECRET:?WORKER_SECRET must be set}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  # ── Next.js Application ────────────────────────────────────────────────
+  metardu-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: metardu-app
+    ports:
+      - "3000:3000"   # Exposed to host for Caddy/reverse proxy
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-metardu}:${POSTGRES_PASSWORD}@metardu-postgres:5432/${POSTGRES_DB:-metardu}
+      - AUTH_SECRET=${AUTH_SECRET:?AUTH_SECRET must be set}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-ws://localhost:3001/ws/collaboration}
+      - PYTHON_COMPUTE_URL=http://metardu-worker:8000
+      - WORKER_SECRET=${WORKER_SECRET}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-metardu_redis_secret}@metardu-redis:6379
+      - HOSTNAME=0.0.0.0
+      - DISABLE_PWA=${DISABLE_PWA:-false}
+      - NODE_ENV=production
+    depends_on:
+      metardu-postgres:
+        condition: service_healthy
+      metardu-worker:
+        condition: service_healthy
+      metardu-redis:
+        condition: service_healthy
+    networks:
+      - frontend
+      - backend  # Needs backend to reach postgres, redis, worker
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    security_opt:
+      - no-new-privileges:true
+    # tmpfs for Next.js cache (avoids writing to container filesystem)
+    tmpfs:
+      - /app/.next/cache:size=256M
+    restart: unless-stopped
+
+  # ── Collaboration WebSocket Server ─────────────────────────────────────
+  metardu-collaboration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: metardu-collaboration
+    command: ["node", "scripts/start-collaboration.mjs"]
+    # NO ports mapping — Caddy proxies WebSocket via /ws/ path
+    environment:
+      - AUTH_SECRET=${AUTH_SECRET}
+      - NODE_ENV=production
+      - PORT=3001
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-metardu_redis_secret}@metardu-redis:6379
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      metardu-redis:
+        condition: service_healthy
+    networks:
+      - frontend   # Caddy reaches it
+      - backend    # Reaches redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  # ── NTRIP WebSocket-to-TCP Proxy ───────────────────────────────────────
+  metardu-ntrip:
+    build:
+      context: .
+      dockerfile: Dockerfile.ntrip
+    container_name: metardu-ntrip
+    ports:
+      - "${NTRIP_PORT:-8090}:8090"
+    environment:
+      - PORT=8090
+      - ALLOWED_HOSTS=${NTRIP_ALLOWED_HOSTS:-}
+    networks:
+      - ntrip
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.05'
+          memory: 32M
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  # ── Database Backup Sidecar ────────────────────────────────────────────
+  metardu-backup:
+    build:
+      context: .
+      dockerfile: Dockerfile.backup
+    container_name: metardu-backup
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-metardu}:${POSTGRES_PASSWORD}@metardu-postgres:5432/${POSTGRES_DB:-metardu}
+      - BACKUP_DIR=/backups
+      - BACKUP_CRON=${BACKUP_CRON:-0 2 * * *}
+      - BACKUP_RETENTION=${BACKUP_RETENTION:-30}
+      - GPG_RECIPI=${GPG_RECIPI:-}
+      - BACKUP_OFFSITE_DIR=${BACKUP_OFFSITE_DIR:-}
+      - BACKUP_LOG_FILE=/var/log/backup.log
+    volumes:
+      - backups:/backups
+      - ./backups:/host-backups:ro
+    depends_on:
+      metardu-postgres:
+        condition: service_healthy
+    networks:
+      - backend   # Only needs postgres access
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped

@@ -34,9 +34,17 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
 
   const job = result.rows[0]
 
+  // ByteByteGo audit fix: return 202 Accepted with Location header for async job
+  // Per ByteByteGo "Async Request-Reply" pattern: return 202 + polling URL
   return NextResponse.json({
     jobId: job.id,
     status: 'QUEUED',
-    estimatedSeconds: job.estimated_secs
+    estimatedSeconds: job.estimated_secs,
+    pollUrl: `/api/workers/${job.id}`,
+  }, {
+    status: 202,
+    headers: {
+      'Location': `/api/workers/${job.id}`,
+    },
   })
 })

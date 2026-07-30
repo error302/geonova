@@ -1,6 +1,12 @@
 # DuckDNS + Cloudflare Tunnel Setup Guide
 ## Host METARDU on metardu.duckdns.org — Free, HTTPS, No ngrok
 
+> **Canonical topology (P0-7, 2026-07-24):** This is the **production guide**
+> for hosting METARDU on `metardu.duckdns.org` (or any DuckDNS subdomain)
+> via Cloudflare Tunnel + Nginx. For the Windows-dev alternative (Cloudflare
+> named tunnel without Nginx), see `../../CLOUDFLARE_TUNNEL_SETUP.md`. The
+> `bore.pub` tunnel has been removed (was redundant with Cloudflare).
+
 This guide walks you through setting up a free Cloudflare Tunnel (`cloudflared`) on your local Docker host and pointing your DuckDNS subdomain (`metardu.duckdns.org`) to it. The result: your locally-hosted METARDU app is accessible worldwide at `https://metardu.duckdns.org` with automatic HTTPS — no GCP, no ngrok, no port forwarding.
 
 ---

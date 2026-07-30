@@ -1,3 +1,16 @@
+/**
+ * @deprecated P1-5 (2026-07-24): Use `@/lib/engine/networkAdjustment.ts`
+ *   (the `adjustNetwork` function) instead. That module is the canonical
+ *   enterprise-grade LSA with sparse Cholesky, free-network inner
+ *   constraints, Huber robust estimation, full Baarda reliability,
+ *   and 2D/3D support. This `survey/` copy has a Supabase DB side
+ *   effect inside the engine module (anti-pattern — engine modules
+ *   should be pure), and lacks sparse algebra. Kept only because
+ *   `NetworkAdjustmentPanel`, `ErrorEllipseCanvas`, and
+ *   `regulatoryCompliance.ts` import types from here. New code
+ *   should not import from this module.
+ */
+
 import { z } from 'zod'
 
 export const StationSchema = z.object({

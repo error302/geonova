@@ -6,7 +6,20 @@ import { UpdateBlockSchema } from '@/lib/validation/apiSchemas'
 export const dynamic = 'force-dynamic'
 
 export const PATCH = apiHandler(
-  { auth: true, schema: UpdateBlockSchema, optimisticLock: true, audit: 'block_updated' , rateLimit: { max: 60, windowMs: 60000 } },
+  {
+    auth: true,
+    schema: UpdateBlockSchema,
+    optimisticLock: true,
+    audit: 'block_updated',
+    rateLimit: { max: 60, windowMs: 60000 },
+    // P1-3 (2026-07-24): Scheme block updates are cadastral mutations.
+    auditChain: {
+      entityType: 'parcel',
+      action: 'update',
+      entityIdParam: 'id',
+      reason: 'scheme block update',
+    },
+  },
   async (req, ctx) => {
     const blockId = ctx.params.id
     const validated = ctx.body as Record<string, unknown> & {
@@ -79,7 +92,17 @@ export const PATCH = apiHandler(
 )
 
 export const DELETE = apiHandler(
-  { auth: true, audit: 'block_deleted' , rateLimit: { max: 60, windowMs: 60000 } },
+  {
+    auth: true,
+    audit: 'block_deleted',
+    rateLimit: { max: 60, windowMs: 60000 },
+    auditChain: {
+      entityType: 'parcel',
+      action: 'delete',
+      entityIdParam: 'id',
+      reason: 'scheme block deletion',
+    },
+  },
   async (req, ctx) => {
     const blockId = ctx.params.id
 

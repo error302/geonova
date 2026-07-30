@@ -56,7 +56,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Hash password
-    const passwordHash = await bcrypt.hash(password, 10)
+    // SECURITY FIX (ByteByteGo audit): bumped bcrypt cost from 10 to 12 per OWASP 2023 guidance
+    const passwordHash = await bcrypt.hash(password, 12)
 
     // Insert user + create surveyor_profile in a transaction
     const user = await db.transaction(async (client) => {

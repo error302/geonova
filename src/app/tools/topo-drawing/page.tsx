@@ -11,7 +11,7 @@ const TopoDrawingComposer = dynamic(() => import('@/components/topo/TopoDrawingC
   loading: () => <div className="p-8 text-center text-[var(--text-muted)]">Loading Topo Drawing Composer…</div>,
 })
 
-export default function TopoDrawingPage() {
+function TopoDrawingPage() {
   const { t } = useLanguage()
   const searchParams = useSearchParams()
   const projectId = searchParams.get('project') || undefined
@@ -26,5 +26,20 @@ export default function TopoDrawingPage() {
       </div>
       <TopoDrawingComposer projectId={projectId} />
     </div>
+  )
+}
+
+// P0-2 (2026-07-24): Wrap in <ToolGate> so direct-URL access can't
+// bypass the plan check. The catalog page (/tools) shows lock badges,
+// but those are display-only — this gate enforces the same check at
+// the page level. Server-side enforcement for any export API this
+// tool calls happens via the requirePlan() decorator on the route.
+import { ToolGate } from '@/components/shared/ToolGate'
+
+export default function TopoDrawingPageGated() {
+  return (
+    <ToolGate toolPath="/tools/topo-drawing">
+      <TopoDrawingPage />
+    </ToolGate>
   )
 }

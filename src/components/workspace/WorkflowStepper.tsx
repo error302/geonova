@@ -53,8 +53,8 @@ export default function WorkflowStepper({
                   aria-current={isActive ? 'step' : undefined}
                   className={[
                     'w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold border-2 transition-colors',
-                    isActive ? 'bg-blue-600 border-blue-600 text-white' :
-                    isDone ? 'bg-green-500 border-green-500 text-white' :
+                    isActive ? 'bg-[var(--accent)] border-[var(--accent)] text-black' :
+                    isDone ? 'bg-[var(--accent-dim)] border-[var(--accent-dim)] text-white' :
                     unlocked ? 'bg-[var(--bg-card)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent)] hover:text-[var(--accent)]' :
                     'bg-[var(--bg-tertiary)] border-[var(--border-color)] text-[var(--text-muted)] cursor-not-allowed',
                   ].join(' ')}
@@ -66,13 +66,13 @@ export default function WorkflowStepper({
                   ) : step.index}
                 </button>
                 <div className="mt-2 text-center px-1">
-                  <p className={`text-xs font-medium leading-tight ${isActive ? 'text-[var(--accent)]' : isDone ? 'text-green-400' : unlocked ? 'text-[var(--text-secondary)]' : 'text-[var(--text-muted)]'}`}>
+                  <p className={`text-xs font-medium leading-tight ${isActive ? 'text-[var(--accent)]' : isDone ? 'text-[var(--accent-dim)]' : unlocked ? 'text-[var(--text-secondary)]' : 'text-[var(--text-muted)]'}`}>
                     {step.label}
                   </p>
                   <p className="text-xs text-[var(--text-muted)] leading-tight mt-0.5 hidden lg:block">{step.description}</p>
                 </div>
               </div>
-              {!isLast && <div className={`flex-1 h-0.5 mt-4 mx-1 ${step.index < currentStep ? 'bg-green-400' : 'bg-gray-200'}`} />}
+              {!isLast && <div className={`flex-1 h-0.5 mt-4 mx-1 ${step.index < currentStep ? 'bg-[var(--accent)]' : 'bg-[var(--border-color)]'}`} />}
             </li>
           );
         })}
@@ -89,8 +89,8 @@ export default function WorkflowStepper({
               disabled={!unlocked || isPending}
               className={[
                 'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors',
-                isActive ? 'bg-blue-600 border-blue-600 text-white' :
-                isDone ? 'bg-green-500 border-green-500 text-white' :
+                isActive ? 'bg-[var(--accent)] border-[var(--accent)] text-black' :
+                isDone ? 'bg-[var(--accent-dim)] border-[var(--accent-dim)] text-white' :
                 unlocked ? 'bg-[var(--bg-card)] border-[var(--border-color)] text-[var(--text-secondary)]' :
                 'bg-[var(--bg-tertiary)] border-[var(--border-color)] text-[var(--text-muted)] cursor-not-allowed',
               ].join(' ')}

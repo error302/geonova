@@ -142,7 +142,11 @@ jobs:
       # Now: run with --coverage --coverageReporters=text-summary so the
       # thresholds gate the CI. If coverage drops below the configured
       # thresholds, this job fails.
-      - run: npx jest --silent --coverage --coverageReporters=text-summary --passWithNoTests
+      #
+      # P2-7 (2026-07-24): Removed --passWithNoTests. METARDU has 132+ test
+      # suites — if Jest finds zero tests, that's a configuration error
+      # that should fail the build, not silently pass.
+      - run: npx jest --silent --coverage --coverageReporters=text-summary
 
   e2e:
     name: E2E Tests (Playwright)

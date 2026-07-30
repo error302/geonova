@@ -35,7 +35,7 @@ export const POST = apiHandler(
     const params = body.jobId ? [body.jobId] : [limit]
     const { rows: jobs } = await db.query(fetchQuery, params)
 
-    const results: Array<{ jobId: string; status: string; error?: string; durationMs: number }> = []
+    const results: Array<{ jobId: string; status: string; error?: string; durationMs: number; retries?: number; nextRetryIn?: string }> = []
 
     for (const job of jobs) {
       const start = Date.now()
@@ -67,18 +67,41 @@ export const POST = apiHandler(
         const durationMs = Date.now() - start
         const message = err instanceof Error ? err.message : 'Unknown error'
 
-        await db.query(
-          `UPDATE background_jobs
-             SET status = 'failed',
-                 error_message = $2,
-                 completed_at = NOW(),
-                 duration_ms = $3,
-                 retry_count = retry_count + 1
-             WHERE id = $1`,
-          [job.id, message.slice(0, 500), durationMs]
-        )
+        // ByteByteGo audit fix: DLQ pattern — after 3 retries, move to dead-letter
+        // Per ByteByteGo "6 cloud messaging patterns": failed messages go to DLQ
+        // for human inspection instead of retrying forever.
+        const MAX_RETRIES = 3
+        const newRetryCount = (job.retry_count || 0) + 1
+        const isDeadLetter = newRetryCount >= MAX_RETRIES
 
-        results.push({ jobId: job.id, status: 'failed', error: message, durationMs })
+        if (isDeadLetter) {
+          // Move to dead-letter queue (keep in same table but mark as 'dead_letter')
+          await db.query(
+            `UPDATE background_jobs
+               SET status = 'dead_letter',
+                   error_message = $2,
+                   completed_at = NOW(),
+                   duration_ms = $3,
+                   retry_count = $4
+             WHERE id = $1`,
+            [job.id, `DLQ: ${message.slice(0, 450)}`, durationMs, newRetryCount]
+          )
+          results.push({ jobId: job.id, status: 'dead_letter', error: message, durationMs, retries: newRetryCount })
+        } else {
+          // Re-queue for retry (set back to pending with exponential backoff delay)
+          const delayMs = Math.pow(2, newRetryCount) * 1000  // 2s, 4s, 8s
+          await db.query(
+            `UPDATE background_jobs
+               SET status = 'pending',
+                   error_message = $2,
+                   duration_ms = $3,
+                   retry_count = $4,
+                   scheduled_at = NOW() + ($5 || '0')::interval
+             WHERE id = $1`,
+            [job.id, message.slice(0, 500), durationMs, newRetryCount, `${delayMs} milliseconds`]
+          )
+          results.push({ jobId: job.id, status: 'requeued', error: message, durationMs, retries: newRetryCount, nextRetryIn: `${delayMs}ms` })
+        }
       }
     }
 

@@ -6,7 +6,20 @@ import { CreateBlockSchema } from '@/lib/validation/apiSchemas'
 export const dynamic = 'force-dynamic'
 
 export const POST = apiHandler(
-  { auth: true, schema: CreateBlockSchema, audit: 'block_created' , rateLimit: { max: 60, windowMs: 60000 } },
+  {
+    auth: true,
+    schema: CreateBlockSchema,
+    audit: 'block_created',
+    rateLimit: { max: 60, windowMs: 60000 },
+    // P1-3 (2026-07-24): Scheme block creation is a cadastral mutation —
+    // blocks contain parcels whose boundaries are legally binding.
+    auditChain: {
+      entityType: 'parcel',
+      action: 'create',
+      projectIdFromBody: 'project_id',
+      reason: 'scheme block creation',
+    },
+  },
   async (req, ctx) => {
     const { project_id, block_number, block_name, description } = ctx.body as {
       project_id: string; block_number: string; block_name?: string; description?: string
