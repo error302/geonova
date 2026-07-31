@@ -19,6 +19,8 @@
  * - Automatic reconnection attempts
  */
 
+import { Capacitor } from '@capacitor/core'
+import { UsbSerial } from '@leeskies/capacitor-usb-serial'
 import { createStreamParser, type ParsedInstrumentData, type InstrumentStreamParser } from './protocolParsers'
 
 // ─── Types ────────────────────────────────────────────────────────────────
@@ -133,6 +135,10 @@ export class InstrumentSerialConnection {
   private onDataCallbacks: Set<DataCallback> = new Set()
   private onStatusCallbacks: Set<StatusCallback> = new Set()
   private onErrorCallbacks: Set<ErrorCallback> = new Set()
+  
+  // Capacitor Native
+  private nativePortId: string | null = null
+  private nativeDataListener: any = null
 
   constructor(config: Partial<SerialConnectionConfig> = {}) {
     this._config = { ...DEFAULT_CONFIG, ...config }
@@ -167,55 +173,108 @@ export class InstrumentSerialConnection {
 
   // ─── Connection Lifecycle ───────────────────────────────────────────
 
-  /**
-   * Request the user to select a serial port and connect.
-   * Must be called from a user gesture (click).
-   */
   async connect(): Promise<void> {
-    // Check browser support
-    if (!('serial' in navigator)) {
-      throw new Error('Web Serial API is not supported in this browser. Please use Chrome or Edge.')
-    }
-
     this.setStatus('connecting')
 
     try {
-      // Request port selection from user
-      const serial = (navigator as any).serial as Serial
-      this.port = await serial.requestPort()
+      if (Capacitor.isNativePlatform()) {
+        // --- NATIVE ANDROID MODE ---
+        const devicesResult = await UsbSerial.listDevices()
+        const devices = devicesResult.devices
+        
+        if (!devices || devices.length === 0) {
+          throw new Error('No USB serial devices found. Please connect an instrument via OTG.')
+        }
 
-      // Open the port with configured parameters
-      await this.port.open({
-        baudRate: this._config.baudRate,
-        dataBits: this._config.dataBits,
-        stopBits: this._config.stopBits,
-        parity: this._config.parity,
-        flowControl: this._config.flowControl,
-      })
+        const deviceId = devices[0].deviceId
+        await UsbSerial.requestPermission({ deviceId })
 
-      // Initialize state
-      this.parser = createStreamParser()
-      this._stats = {
-        bytesReceived: 0,
-        messagesParsed: 0,
-        errors: 0,
-        connectedAt: new Date(),
-        lastDataAt: new Date(),
+        const openResult = await UsbSerial.open({ deviceId })
+        this.nativePortId = openResult.portId
+
+        // Note: The plugin types use DataBits, StopBits, Parity enums
+        // For simplicity we cast our numbers to any/expected types if needed
+        await UsbSerial.setParameters({
+          portId: this.nativePortId,
+          baudRate: this._config.baudRate,
+          dataBits: this._config.dataBits as any,
+          stopBits: this._config.stopBits as any,
+          parity: (this._config.parity === 'none' ? 0 : this._config.parity === 'odd' ? 1 : 2) as any,
+        })
+
+        // Ensure DTR/RTS is active
+        await UsbSerial.setDTR({ portId: this.nativePortId, value: true }).catch(() => {})
+        await UsbSerial.setRTS({ portId: this.nativePortId, value: true }).catch(() => {})
+
+        this.parser = createStreamParser()
+        this._stats = {
+          bytesReceived: 0,
+          messagesParsed: 0,
+          errors: 0,
+          connectedAt: new Date(),
+          lastDataAt: new Date(),
+        }
+
+        this.setStatus('connected')
+        this.reconnectAttempts = 0
+        this.startHealthCheck()
+        
+        // Listen for data natively
+        this.nativeDataListener = await UsbSerial.addListener('data', (data: any) => {
+          if (!this.parser || !this.readLoopActive) return
+          // Native plugin returns base64
+          const text = atob(data.data)
+          
+          if (this._stats) {
+            this._stats.bytesReceived += text.length
+            this._stats.lastDataAt = new Date()
+          }
+          
+          const results = this.parser.feed(text)
+          for (const result of results) {
+            this.processParsedResult(result)
+          }
+        })
+
+        await UsbSerial.startReading({ portId: this.nativePortId })
+        this.readLoopActive = true
+        this.setStatus('streaming')
+        
+      } else {
+        // --- WEB BROWSER MODE ---
+        if (!('serial' in navigator)) {
+          throw new Error('Web Serial API is not supported in this browser. Please use Chrome or Edge.')
+        }
+
+        const serial = (navigator as any).serial as Serial
+        this.port = await serial.requestPort()
+
+        await this.port.open({
+          baudRate: this._config.baudRate,
+          dataBits: this._config.dataBits,
+          stopBits: this._config.stopBits,
+          parity: this._config.parity,
+          flowControl: this._config.flowControl,
+        })
+
+        this.parser = createStreamParser()
+        this._stats = {
+          bytesReceived: 0,
+          messagesParsed: 0,
+          errors: 0,
+          connectedAt: new Date(),
+          lastDataAt: new Date(),
+        }
+
+        if (this.port.writable) {
+          this.writer = this.port.writable.getWriter()
+        }
+
+        this.setStatus('connected')
+        this.reconnectAttempts = 0
+        this.startReadLoop()
+        this.startHealthCheck()
       }
-
-      // Get the writer for sending commands
-      if (this.port.writable) {
-        this.writer = this.port.writable.getWriter()
-      }
-
-      this.setStatus('connected')
-      this.reconnectAttempts = 0
-
-      // Start reading data
-      this.startReadLoop()
-
-      // Start health monitoring
-      this.startHealthCheck()
 
     } catch (error) {
       if ((error as Error).name === 'NotFoundError') {
@@ -239,17 +298,27 @@ export class InstrumentSerialConnection {
     this.stopReconnect()
 
     try {
-      if (this.writer) {
-        await this.writer.close().catch(() => {})
-        this.writer = null
-      }
-      if (this.reader) {
-        await this.reader.cancel().catch(() => {})
-        this.reader = null
-      }
-      if (this.port) {
-        await this.port.close().catch(() => {})
-        this.port = null
+      if (Capacitor.isNativePlatform() && this.nativePortId) {
+        if (this.nativeDataListener) {
+          await this.nativeDataListener.remove().catch(() => {})
+          this.nativeDataListener = null
+        }
+        await UsbSerial.stopReading({ portId: this.nativePortId }).catch(() => {})
+        await UsbSerial.close({ portId: this.nativePortId }).catch(() => {})
+        this.nativePortId = null
+      } else {
+        if (this.writer) {
+          await this.writer.close().catch(() => {})
+          this.writer = null
+        }
+        if (this.reader) {
+          await this.reader.cancel().catch(() => {})
+          this.reader = null
+        }
+        if (this.port) {
+          await this.port.close().catch(() => {})
+          this.port = null
+        }
       }
     } catch {
       // Ignore close errors
@@ -279,12 +348,15 @@ export class InstrumentSerialConnection {
 
   // ─── Data Transmission ─────────────────────────────────────────────
 
-  /**
-   * Send raw bytes to the instrument
-   */
   async send(data: Uint8Array): Promise<void> {
-    if (!this.writer) throw new Error('Not connected')
-    await this.writer.write(data)
+    if (Capacitor.isNativePlatform()) {
+      if (!this.nativePortId) throw new Error('Not connected natively')
+      const b64 = btoa(String.fromCharCode.apply(null, Array.from(data)))
+      await UsbSerial.write({ portId: this.nativePortId, data: b64 })
+    } else {
+      if (!this.writer) throw new Error('Not connected')
+      await this.writer.write(data)
+    }
   }
 
   /**
@@ -398,32 +470,7 @@ export class InstrumentSerialConnection {
 
           // Emit parsed data
           for (const result of results) {
-            if (result.type !== 'unknown') {
-              if (this._stats) this._stats.messagesParsed++
-              this.emitData(result)
-
-              // Detect instrument info from first valid message
-              if (!this._instrumentInfo) {
-                this._instrumentInfo = {
-                  manufacturer: 'Unknown',
-                  protocol: result.type,
-                  detectedAt: new Date(),
-                }
-
-                // Try to detect manufacturer from protocol data
-                if (result.type === 'gsi') {
-                  this._instrumentInfo.manufacturer = 'Leica / Leica Geosystems'
-                } else if (result.type === 'nmea') {
-                  this._instrumentInfo.manufacturer = 'GNSS Receiver'
-                } else if (result.type === 'topcon') {
-                  this._instrumentInfo.manufacturer = 'Topcon'
-                } else if (result.type === 'trimble') {
-                  this._instrumentInfo.manufacturer = 'Trimble'
-                } else if (result.type === 'sokkia') {
-                  this._instrumentInfo.manufacturer = 'Sokkia'
-                }
-              }
-            }
+            this.processParsedResult(result)
           }
         }
       } catch (error) {
@@ -512,6 +559,33 @@ export class InstrumentSerialConnection {
     if (this.healthCheckTimer) {
       clearInterval(this.healthCheckTimer)
       this.healthCheckTimer = null
+    }
+  }
+
+  private processParsedResult(result: ParsedInstrumentData) {
+    if (result.type !== 'unknown') {
+      if (this._stats) this._stats.messagesParsed++
+      this.emitData(result)
+
+      if (!this._instrumentInfo) {
+        this._instrumentInfo = {
+          manufacturer: 'Unknown',
+          protocol: result.type,
+          detectedAt: new Date(),
+        }
+
+        if (result.type === 'gsi') {
+          this._instrumentInfo.manufacturer = 'Leica / Leica Geosystems'
+        } else if (result.type === 'nmea') {
+          this._instrumentInfo.manufacturer = 'GNSS Receiver'
+        } else if (result.type === 'topcon') {
+          this._instrumentInfo.manufacturer = 'Topcon'
+        } else if (result.type === 'trimble') {
+          this._instrumentInfo.manufacturer = 'Trimble'
+        } else if (result.type === 'sokkia') {
+          this._instrumentInfo.manufacturer = 'Sokkia'
+        }
+      }
     }
   }
 }
