@@ -15,7 +15,35 @@ const withPWA = require('@ducanh2912/next-pwa').default({
     process.env.NODE_ENV !== 'production' ||
     process.env.DISABLE_PWA === 'true' ||
     (process.platform === 'win32' && process.env.ENABLE_PWA_ON_WINDOWS !== 'true'),
-  workboxOptions: { disableDevLogs: true },
+  workboxOptions: { 
+    disableDevLogs: true,
+    runtimeCaching: [
+      {
+        urlPattern: /^https:\/\/server\.arcgisonline\.com\/.*$/,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'esri-map-tiles',
+          expiration: {
+            maxEntries: 5000,
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+          },
+          cacheableResponse: { statuses: [0, 200] },
+        },
+      },
+      {
+        urlPattern: /^https:\/\/[a-z]\.tile\.openstreetmap\.org\/.*$/,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'osm-map-tiles',
+          expiration: {
+            maxEntries: 5000,
+            maxAgeSeconds: 30 * 24 * 60 * 60,
+          },
+          cacheableResponse: { statuses: [0, 200] },
+        },
+      }
+    ]
+  },
 })
 
 /** @type {import('next').NextConfig} */

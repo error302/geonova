@@ -2,8 +2,9 @@
 
 import { useState, useCallback } from 'react'
 import { Upload, Download, FileSpreadsheet, AlertCircle, CheckCircle2 } from 'lucide-react'
-import { getAvailableFormats, type InstrumentFormat } from '@/lib/survey/instrumentWriters'
-import type { SettingOutResult } from '@/lib/computations/settingOutEngine'
+import { getAvailableFormats, exportStakeout, type InstrumentFormat } from '@/lib/survey/instrumentWriters'
+import { computeSettingOut, type SettingOutResult, type InstrumentStation, type Backsight } from '@/lib/computations/settingOutEngine'
+import { extractDesignPointsFromDXF } from '@/lib/survey/dxfDesignExtractor'
 import { compareAsBuiltToDesign, type ComparisonReport } from '@/lib/survey/asBuiltComparison'
 
 export default function SettingOutPage() {
@@ -36,39 +37,45 @@ export default function SettingOutPage() {
     }
     setLoading(true); setError(''); setResult(null); setWarnings([])
     try {
-      const res = await fetch('/api/stakeout/import-dxf', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          dxfContent,
-          stationE: parseFloat(stationE), stationN: parseFloat(stationN),
-          stationRL: parseFloat(stationRL || '0'),
-          backsightE: parseFloat(backsightE), backsightN: parseFloat(backsightN),
-        }),
-      })
-      if (!res.ok) { const e = await res.json(); throw new Error(e.error || 'Failed') }
-      const data = await res.json()
-      setResult(data.data); setWarnings(data.warnings || [])
-    } catch (e) { setError(e instanceof Error ? e.message : 'Failed') }
+      // Run the parsing completely on the client (offline-first)
+      const extraction = extractDesignPointsFromDXF(dxfContent, { layerFilter: [] })
+      if (extraction.points.length === 0) {
+        throw new Error('No design points found in DXF')
+      }
+
+      const station: InstrumentStation = {
+        e: parseFloat(stationE),
+        n: parseFloat(stationN),
+        rl: parseFloat(stationRL || '0'),
+        ih: 1.5,
+      }
+      const backsight: Backsight = {
+        e: parseFloat(backsightE),
+        n: parseFloat(backsightN),
+      }
+
+      const computedResult = computeSettingOut(station, backsight, extraction.points)
+      setResult(computedResult)
+      setWarnings(extraction.warnings || [])
+    } catch (e) { 
+      setError(e instanceof Error ? e.message : 'Failed to process DXF locally') 
+    }
     finally { setLoading(false) }
   }
 
   const handleExport = async () => {
     if (!result) return
     try {
-      const res = await fetch('/api/stakeout/export', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ settingOutResult: result, format: exportFormat }),
-      })
-      if (!res.ok) throw new Error('Export failed')
-      const data = await res.json()
-      const blob = new Blob([data.content], { type: data.mimeType })
+      // Generate export locally
+      const exportData = exportStakeout(result, exportFormat, { stationName: 'STN1' })
+      const blob = new Blob([exportData.content], { type: exportData.mimeType })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
-      a.href = url; a.download = data.filename; a.click()
+      a.href = url; a.download = exportData.filename; a.click()
       URL.revokeObjectURL(url)
-    } catch (e) { setError(e instanceof Error ? e.message : 'Export failed') }
+    } catch (e) { 
+      setError(e instanceof Error ? e.message : 'Export failed locally') 
+    }
   }
 
   const handleCompare = () => {

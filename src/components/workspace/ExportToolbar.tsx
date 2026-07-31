@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { z } from 'zod'
-import { Loader2, FileText, Download, MapPin, Activity } from 'lucide-react'
+import { Loader2, FileText, Download, MapPin, Activity, Upload } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Tooltip,
@@ -10,6 +10,8 @@ import {
   TooltipContent,
 } from '@/components/ui/tooltip'
 import { apiPost, ApiError } from '@/lib/api/client'
+import { realtimeService } from '@/lib/realtime'
+import * as Y from 'yjs'
 
 // ponytail: response schemas — Phase 4 wave 2 will move these to src/lib/api/schemas/
 
@@ -125,6 +127,36 @@ export default function ExportToolbar({
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
   }, [])
+
+  const handleExportProject = useCallback(() => {
+    try {
+      const doc = realtimeService.getDoc(projectId)
+      const stateUpdate = Y.encodeStateAsUpdate(doc)
+      const blob = new Blob([stateUpdate as unknown as BlobPart], { type: 'application/octet-stream' })
+      downloadBlob(blob, `${projectName.replace(/[^a-z0-9]/gi, '_')}.metardu`)
+    } catch (err) {
+      setError('Failed to export project: ' + (err as Error).message)
+    }
+  }, [projectId, projectName, downloadBlob])
+
+  const handleImportProject = useCallback(() => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.metardu'
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
+      if (!file) return
+      try {
+        const arrayBuffer = await file.arrayBuffer()
+        const update = new Uint8Array(arrayBuffer)
+        const doc = realtimeService.getDoc(projectId)
+        Y.applyUpdate(doc, update)
+      } catch (err) {
+        setError('Failed to import project: ' + (err as Error).message)
+      }
+    }
+    input.click()
+  }, [projectId])
 
   const clearError = useCallback(() => setError(null), [])
 
@@ -330,6 +362,38 @@ export default function ExportToolbar({
       )}
 
       {/* Run Adjustment */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleImportProject}
+            className="gap-1.5"
+          >
+            <Upload className="size-3.5" />
+            <span className="hidden xl:inline">Load Project</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Load offline .metardu file</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportProject}
+            className="gap-1.5"
+          >
+            <Download className="size-3.5" />
+            <span className="hidden xl:inline">Save Project</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Save to offline .metardu file</TooltipContent>
+      </Tooltip>
+
+      <div className="w-px h-6 bg-white/10 mx-1" />
+
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
