@@ -58,6 +58,7 @@
     "@ducanh2912/next-pwa": "^10.2.9",
     "@google-cloud/storage": "^7.14.0",
     "@leeskies/capacitor-usb-serial": "^0.1.0",
+    "@mlc-ai/web-llm": "^0.2.84",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
