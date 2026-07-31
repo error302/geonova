@@ -36,6 +36,7 @@
     "middleware.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
+    "tests/**/*.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": [

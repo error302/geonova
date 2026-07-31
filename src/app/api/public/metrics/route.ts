@@ -39,7 +39,7 @@ async function initializeMetrics() {
 
   // Set initial project counts (if DB is available)
   try {
-    const { getPool } = await import('@/lib/db/pool');
+    const { getPool } = await import('@/lib/db');
     const pool = getPool();
 
     const result = await pool.query(

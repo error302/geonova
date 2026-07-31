@@ -13,7 +13,7 @@ import ProjectCard from '@/components/ProjectCard'
 import { ConnectivityIndicator } from '@/components/shared/ConnectivityIndicator'
 import OnboardingWrapper from '@/components/shared/OnboardingWrapper'
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed'
-import { DashboardSearch } from '@/components/dashboard/DashboardSearch'
+import DashboardSearch from '@/components/dashboard/DashboardSearch'
 
 export default async function DashboardPage() {
   let t = (k: string) => k

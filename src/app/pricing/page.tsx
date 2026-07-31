@@ -69,7 +69,9 @@ export default function PricingPage() {
     detectCurrency()
   }, [])
 
-  // Load PayPal Hosted Button
+  const [selectedPlanId, setSelectedPlanId] = useState<string>('pro')
+
+  // Load PayPal SDK v6
   useEffect(() => {
     if (paypalLoadedRef.current) return
 
@@ -79,30 +81,90 @@ export default function PricingPage() {
       console.warn('PayPal client ID not configured — set NEXT_PUBLIC_PAYPAL_CLIENT_ID (M-Pesa still works)')
       return
     }
-    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&components=hosted-buttons&disable-funding=credit,card`
+    
+    script.src = `https://www.paypal.com/web-sdk/v6/core`
     script.async = true
-    script.onload = () => {
+    script.onload = async () => {
       paypalLoadedRef.current = true
-      // Render the hosted button after script loads
       try {
-        // @ts-expect-error PayPal SDK global
-        if (window.paypal?.HostedButtons) {
-          // @ts-expect-error PayPal SDK global
-          window.paypal.HostedButtons({
-            hostedButtonId: 'V8SP7YFGMUMGG',
-          }).render('#paypal-hosted-button-container')
+        // @ts-expect-error PayPal v6 SDK global
+        const sdkInstance = await window.paypal.createInstance({
+          clientId,
+          components: ["paypal-payments"],
+          pageType: "checkout",
+          currency: currency
+        })
+
+        const paymentSessionOptions = {
+          async onApprove(data: any) {
+            console.log("Payment approved:", data)
+            try {
+              const res = await fetch('/api/payments/paypal/capture', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId: data.orderId })
+              })
+              const captureData = await res.json()
+              if (captureData.error) throw new Error(captureData.error)
+              console.log("Payment captured successfully:", captureData)
+              alert("Payment successful! Thank you for subscribing.")
+            } catch (error) {
+              console.error("Payment capture failed:", error)
+              alert("Payment capture failed.")
+            }
+          },
+          onCancel(data: any) {
+            console.log("Payment cancelled:", data)
+          },
+          onError(error: any) {
+            console.error("Payment error:", error)
+            alert("An error occurred during payment.")
+          },
+        }
+
+        const paypalPaymentSession = sdkInstance.createPayPalOneTimePaymentSession(paymentSessionOptions)
+
+        const paypalButton = document.getElementById("paypal-v6-button")
+        if (paypalButton) {
+          paypalButton.removeAttribute("hidden")
+          paypalButton.addEventListener("click", async () => {
+            try {
+              await paypalPaymentSession.start(
+                { presentationMode: "auto" },
+                () => {
+                  return fetch("/api/payments/paypal/create", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    // Access the current selectedPlanId and currency from a mutable ref or closures if necessary,
+                    // but since this is bound once, we should fetch the current value from the DOM or state.
+                    // We'll use a hack to read from a data attribute or global, but easiest is reading a data-plan attribute.
+                    body: JSON.stringify({ 
+                      planId: document.getElementById('paypal-v6-button')?.getAttribute('data-plan') || 'pro', 
+                      currency: document.getElementById('paypal-v6-button')?.getAttribute('data-currency') || 'USD' 
+                    })
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.error) throw new Error(data.error)
+                    return { orderId: data.orderId }
+                  })
+                }
+              )
+            } catch (error) {
+              console.error("PayPal payment start error:", error)
+            }
+          })
         }
       } catch (err) {
-        console.warn('[Pricing] PayPal Hosted Button render error:', err)
+        console.warn('[Pricing] PayPal SDK v6 render error:', err)
       }
     }
     document.body.appendChild(script)
 
     return () => {
-      // Cleanup script on unmount
       if (script.parentNode) script.parentNode.removeChild(script)
     }
-  }, [])
+  }, [currency]) // Re-bind if currency changes to ensure correct currency in createInstance (though technically sdkInstance might not re-init easily, keeping it simple for now)
 
   // Show Free, Pro, and Team plans on pricing page (single source of truth from PLAN_CATALOG)
   const visiblePlans = PLAN_CATALOG.filter(p => ['free', 'pro', 'team'].includes(p.id))
@@ -136,18 +198,35 @@ export default function PricingPage() {
       subtitle="Start free, upgrade when you need more. No hidden fees, cancel anytime."
       plans={plans}
     >
-      {/* PayPal Hosted Button section */}
+      {/* PayPal SDK v6 Web Component section */}
       <div className="w-full max-w-5xl mx-auto mt-12 mb-8">
         <div className="text-center mb-6">
           <h3 className="text-xl font-semibold text-foreground mb-2">Pay with PayPal</h3>
-          <p className="text-foreground/70 text-sm">Secure payment via PayPal — no account required</p>
+          <p className="text-foreground/70 text-sm mb-4">Secure checkout for one-time payments</p>
+          
+          <div className="flex justify-center gap-2 mb-6 items-center">
+            <span className="text-sm font-medium">Select Plan:</span>
+            <select 
+              className="bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/20 rounded-md px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              value={selectedPlanId}
+              onChange={(e) => setSelectedPlanId(e.target.value as string)}
+            >
+              {visiblePlans.map(p => (
+                <option key={p.id} value={p.id}>{p.name} — {formatPrice(getPlanPrice(p.id, currency), currency)}</option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="flex justify-center">
-          <div
-            id="paypal-hosted-button-container"
-            ref={paypalContainerRef}
-            className="min-h-[200px] flex items-center justify-center"
-          />
+          <div className="min-h-[200px] flex items-center justify-center w-full max-w-xs">
+            {/* @ts-expect-error custom web component */}
+            <paypal-button 
+              id="paypal-v6-button" 
+              hidden 
+              data-plan={selectedPlanId}
+              data-currency={currency}
+            />
+          </div>
         </div>
       </div>
     </ModernPricingPage>

@@ -24,7 +24,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { Settings, Target, List, Cloud, ChevronRight, X } from 'lucide-react'
+import { Settings, Target, List, Cloud, ChevronRight, X, Camera } from 'lucide-react'
 import { FieldConnectionBar } from './FieldConnectionBar'
 import { FieldMeasureButton } from './FieldMeasureButton'
 import { FieldObservationList } from './FieldObservationList'
@@ -51,12 +51,25 @@ export function FieldDataCollector({
   const [showSetup, setShowSetup] = useState(!sessionState.setup)
   const [activePanel, setActivePanel] = useState<Panel>('measure')
   const [showInstrumentPanel, setShowInstrumentPanel] = useState(false)
+  const [activeFeatureCode, setActiveFeatureCode] = useState<string>('')
   const [stakeoutTarget, setStakeoutTarget] = useState<{ e: number; n: number; z: number } | null>(null)
+  const [isSunlightMode, setIsSunlightMode] = useState(false)
+  const [audioEnabled, setAudioEnabled] = useState(true)
 
   // Load existing measurements on mount
   useEffect(() => {
     session.loadMeasurements()
   }, [session])
+
+  // Voice synthesis guidance for stakeout
+  const announceStakeoutGuidance = useCallback((de: number, dn: number) => {
+    if (!audioEnabled || typeof window === 'undefined' || !('speechSynthesis' in window)) return
+    const text = `Delta East ${de >= 0 ? 'Right' : 'Left'} ${Math.abs(de).toFixed(1)} meters. Delta North ${dn >= 0 ? 'Forward' : 'Backward'} ${Math.abs(dn).toFixed(1)} meters.`
+    window.speechSynthesis.cancel() // stop prior phrase
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.rate = 1.1
+    window.speechSynthesis.speak(utterance)
+  }, [audioEnabled])
 
   // Auto-sync when online
   useEffect(() => {
@@ -66,8 +79,8 @@ export function FieldDataCollector({
     }
   }, [sessionState.isOnline, sessionState.pendingSyncCount, sessionState.isSyncing, session])
 
-  const handleCapture = useCallback(async (pointId: string): Promise<boolean> => {
-    const measurement = await session.captureMeasurement({ pointId })
+  const handleCapture = useCallback(async (pointId: string, code?: string): Promise<boolean> => {
+    const measurement = await session.captureMeasurement({ pointId, notes: code })
     return measurement !== null
   }, [session])
 
@@ -91,7 +104,8 @@ export function FieldDataCollector({
       elevation: target.z,
     })
     setActivePanel('stakeout')
-  }, [session])
+    announceStakeoutGuidance(target.e, target.n)
+  }, [session, announceStakeoutGuidance])
 
   // ─── Setup Screen ────────────────────────────────────────────────────────
   if (showSetup) {
@@ -115,7 +129,7 @@ export function FieldDataCollector({
 
   // ─── Main Collector UI ───────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] flex flex-col">
+    <div className={`min-h-screen flex flex-col ${isSunlightMode ? 'bg-white text-black font-bold border-b-4 border-black' : 'bg-[var(--bg-primary)]'}`}>
       {/* Connection Bar */}
       <FieldConnectionBar
         isOnline={sessionState.isOnline}
@@ -125,21 +139,30 @@ export function FieldDataCollector({
       />
 
       {/* Station Info Bar */}
-      <div className="flex items-center gap-3 px-4 py-2 bg-[var(--bg-secondary)] border-b border-[var(--border-color)]">
+      <div className={`flex items-center gap-3 px-4 py-2 border-b ${isSunlightMode ? 'bg-yellow-300 text-black border-black border-b-2 font-black' : 'bg-[var(--bg-secondary)] border-[var(--border-color)]'}`}>
         <div className="flex-1 flex items-center gap-3">
-          <span className="text-sm font-mono font-bold text-[var(--accent)]">
+          <span className={`text-sm font-mono font-bold ${isSunlightMode ? 'text-black underline' : 'text-[var(--accent)]'}`}>
             {sessionState.setup?.stationName}
           </span>
-          <span className="text-xs text-[var(--text-muted)]">
-            IH: {sessionState.setup?.instrumentHeight?.toFixed(3)}m
-          </span>
-          <span className="text-xs text-[var(--text-muted)]">
-            TH: {sessionState.setup?.targetHeight?.toFixed(3)}m
+          <span className="text-xs opacity-70">
+            IH: {sessionState.setup?.instrumentHeight}m | TH: {sessionState.setup?.targetHeight}m
           </span>
         </div>
+
+        <button
+          onClick={() => setIsSunlightMode(!isSunlightMode)}
+          className={`px-3 py-1 text-xs rounded font-bold border transition ${
+            isSunlightMode ? 'bg-black text-white border-black shadow-lg' : 'bg-black/10 dark:bg-white/10 text-foreground border-white/20'
+          }`}
+          title="Toggle Sunlight High-Contrast Outdoor Mode"
+        >
+          {isSunlightMode ? '☀️ Sunlight Mode ON' : '🌤️ Outdoor Mode'}
+        </button>
         <button
           onClick={() => setShowSetup(true)}
-          className="flex items-center gap-1 text-xs text-[var(--text-secondary)] hover:text-[var(--accent)]"
+          className={`flex items-center gap-1 text-xs transition-colors ${
+            isSunlightMode ? 'text-black hover:text-gray-700' : 'text-[var(--text-secondary)] hover:text-[var(--accent)]'
+          }`}
         >
           <Settings className="w-3 h-3" /> Edit
         </button>
@@ -155,13 +178,44 @@ export function FieldDataCollector({
       {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto">
         {activePanel === 'measure' && (
-          <div className="flex flex-col items-center py-8 px-4">
+          <div className="flex flex-col items-center py-8 px-4 w-full">
             {/* Measure Button */}
             <FieldMeasureButton
-              onCapture={handleCapture}
+              onCapture={(pointId) => handleCapture(pointId, activeFeatureCode || undefined)}
               stationSetup={!!sessionState.setup}
               pointIdPrefix={surveyType === 'cadastral' ? 'BP' : 'P'}
             />
+
+            {/* Smart Feature Coding */}
+            <div className="mt-8 w-full max-w-md">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-semibold text-[var(--text-secondary)]">Feature Code</span>
+                <button 
+                  className="flex items-center gap-2 px-3 py-1.5 bg-[var(--bg-secondary)] rounded-full hover:bg-[var(--bg-tertiary)] transition-colors border border-[var(--border-color)] text-xs font-medium text-[var(--text-primary)] shadow-sm"
+                  title="Attach Photo"
+                >
+                  <Camera className="w-4 h-4 text-[var(--accent)]" />
+                  <span>Photo</span>
+                </button>
+              </div>
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide w-full">
+                {['FENCE_START', 'FENCE_LINE', 'FENCE_END', 'TREE', 'WALL', 'BLDG', 'ROAD_EDGE'].map(code => (
+                  <button
+                    key={code}
+                    onClick={() => setActiveFeatureCode(code === activeFeatureCode ? '' : code)}
+                    className={`shrink-0 px-4 py-2 rounded-full text-xs font-bold border transition-colors ${
+                      activeFeatureCode === code
+                        ? 'bg-[var(--accent)] text-white border-[var(--accent)] shadow-md'
+                        : isSunlightMode 
+                          ? 'bg-white text-black border-black border-2 hover:bg-gray-100'
+                          : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--accent)]'
+                    }`}
+                  >
+                    {code}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {/* Instrument Connection CTA */}
             {!showInstrumentPanel && (

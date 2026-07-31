@@ -26,6 +26,7 @@ import {
   drawBeaconSymbol,
   drawNorthArrow,
   drawScaleBar,
+  drawDigitalSignatureStamp,
   PAPER_SIZES,
   LINE_WEIGHTS,
   TEXT_SIZES,
@@ -224,6 +225,21 @@ export async function generateDeedPlan(input: DeedPlanInput): Promise<Buffer> {
   // ─── Draw title block ──────────────────────────────────────
   drawTitleBlock(doc, pageW - MARGIN, pageH - MARGIN, titleData);
   
+  // ─── Digital Signature Stamp ───────────────────────────────
+  if (titleData.surveyorName && titleData.surveyorLicense) {
+    const stampX = pageW - MARGIN - 160 - 35; // 160 is title block width, 35 for stamp width+margin
+    const stampY = pageH - MARGIN - 35; // Bottom aligned with title block
+    drawDigitalSignatureStamp(
+      doc,
+      stampX,
+      stampY,
+      titleData.surveyorName,
+      titleData.surveyorLicense,
+      titleData.date,
+      30 // 30mm diameter
+    );
+  }
+
   // ─── Finalize PDF ──────────────────────────────────────────
   doc.end();
   

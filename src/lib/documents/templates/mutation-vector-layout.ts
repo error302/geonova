@@ -26,10 +26,12 @@ import {
   drawText,
   drawCompanyLogo,
   drawMetarduWatermark,
+  drawDigitalSignatureStamp,
   PAPER_SIZES,
   LINE_WEIGHTS,
   TEXT_SIZES,
 } from '../pdf-engine'
+import { drawGridOverlay } from '../deed-plan/grid-overlay'
 import type { SurveyPoint } from '@/lib/map/turfHelpers'
 
 // ---------------------------------------------------------------------------
@@ -123,28 +125,18 @@ function autoSelectScale(bboxWidth: number, bboxHeight: number, availableWidthMm
   return 5000
 }
 
-/**
- * Transform a survey coordinate to PDF page coordinates.
- */
 function transformToPage(
   vertex: SurveyPoint,
   bbox: ReturnType<typeof getBoundingBox>,
   scale: number,
   originX: number,
   originY: number,
-  pageHeight: number,
 ): [number, number] {
-  // Scale: 1 mm on page = `scale` mm on ground = `scale / 1000` meters
   const scaleM = scale / 1000 // meters per mm
-
   const dxMm = (vertex.easting - bbox.minE) / scaleM
-  const dyMm = (vertex.northing - bbox.minN) / scaleM
+  const dyMm = (bbox.maxN - vertex.northing) / scaleM // Y inverted
 
-  // PDF coordinates: origin is bottom-left, Y increases upward
-  const x = originX + dxMm
-  const y = originY + dyMm
-
-  return [x, y]
+  return [originX + dxMm, originY + dyMm]
 }
 
 // ---------------------------------------------------------------------------
@@ -276,6 +268,21 @@ export async function generateMutationVectorLayout(data: MutationLayoutData): Pr
     drawingWidth - 20, drawingHeight - 20,
   )
 
+  const mapMargin = 10;
+  
+  // Draw Grid Overlay
+  drawGridOverlay(doc, {
+    originEasting: bbox.minE,
+    originNorthing: bbox.minN,
+    groundWidth: bbox.width,
+    groundHeight: bbox.height,
+    paperOriginX: drawingX + mapMargin,
+    paperOriginY: drawingY + mapMargin,
+    paperWidth: drawingWidth - 2 * mapMargin,
+    paperHeight: drawingHeight - 2 * mapMargin,
+    scale: actualScale,
+  })
+
   // Draw parent parcel boundary
   if (data.parentVertices.length >= 2) {
     doc.save()
@@ -284,16 +291,16 @@ export async function generateMutationVectorLayout(data: MutationLayoutData): Pr
 
     const firstPt = transformToPage(
       data.parentVertices[0], bbox, actualScale,
-      drawingX + 10, drawingY + 10, pageHeight,
+      drawingX + mapMargin, drawingY + mapMargin
     )
-    doc.moveTo(firstPt[0], pageHeight - firstPt[1])
+    doc.moveTo(firstPt[0], firstPt[1])
 
     for (let i = 1; i < data.parentVertices.length; i++) {
       const pt = transformToPage(
         data.parentVertices[i], bbox, actualScale,
-        drawingX + 10, drawingY + 10, pageHeight,
+        drawingX + mapMargin, drawingY + mapMargin
       )
-      doc.lineTo(pt[0], pageHeight - pt[1])
+      doc.lineTo(pt[0], pt[1])
     }
     doc.closePath()
     doc.stroke()
@@ -311,16 +318,16 @@ export async function generateMutationVectorLayout(data: MutationLayoutData): Pr
 
     const firstPt = transformToPage(
       parcel.vertices[0], bbox, actualScale,
-      drawingX + 10, drawingY + 10, pageHeight,
+      drawingX + mapMargin, drawingY + mapMargin
     )
-    doc.moveTo(firstPt[0], pageHeight - firstPt[1])
+    doc.moveTo(firstPt[0], firstPt[1])
 
     for (let i = 1; i < parcel.vertices.length; i++) {
       const pt = transformToPage(
         parcel.vertices[i], bbox, actualScale,
-        drawingX + 10, drawingY + 10, pageHeight,
+        drawingX + mapMargin, drawingY + mapMargin
       )
-      doc.lineTo(pt[0], pageHeight - pt[1])
+      doc.lineTo(pt[0], pt[1])
     }
     doc.closePath()
     doc.stroke()
@@ -333,28 +340,28 @@ export async function generateMutationVectorLayout(data: MutationLayoutData): Pr
     )
     const labelPt = transformToPage(
       centroid, bbox, actualScale,
-      drawingX + 10, drawingY + 10, pageHeight,
+      drawingX + mapMargin, drawingY + mapMargin
     )
-    drawText(doc, parcel.parcelNumber, labelPt[0] - 5, pageHeight - labelPt[1] - 1, TEXT_SIZES.small, { bold: true })
+    drawText(doc, parcel.parcelNumber, labelPt[0] - 5, labelPt[1] - 1, TEXT_SIZES.small, { bold: true })
   }
 
   // Draw beacons
   for (const beacon of data.beacons) {
     const pt = transformToPage(
       beacon.coordinate, bbox, actualScale,
-      drawingX + 10, drawingY + 10, pageHeight,
+      drawingX + mapMargin, drawingY + mapMargin
     )
     // Small cross marker
     doc.save()
     doc.lineWidth(0.2)
     doc.lineJoin('round')
-    doc.circle(pt[0], pageHeight - pt[1], 0.8)
+    doc.circle(pt[0], pt[1], 0.8)
     doc.fillColor('black')
     doc.fill()
     doc.restore()
 
     // Beacon label
-    drawText(doc, beacon.beaconNumber, pt[0] + 1, pageHeight - pt[1] - 1, TEXT_SIZES.small, )
+    drawText(doc, beacon.beaconNumber, pt[0] + 1, pt[1] - 1, TEXT_SIZES.small, )
   }
 
   // North arrow (top-right of drawing area, pointing up)
@@ -432,11 +439,20 @@ export async function generateMutationVectorLayout(data: MutationLayoutData): Pr
   drawText(doc, `DATE: ${data.datePrepared}`, pageWidth - mx - 40, fy, TEXT_SIZES.small, { align: 'right' })
   fy += 6
 
-  // Signature lines
-  drawLine(doc, mx, fy, mx + 50, fy, LINE_WEIGHTS.gridLine)
-  drawLine(doc, pageWidth - mx - 50, fy, pageWidth - mx, fy, LINE_WEIGHTS.gridLine)
-  drawText(doc, 'Surveyor Signature', mx, fy + 2, 2)
-  drawText(doc, 'Director of Surveys', pageWidth - mx - 50, fy + 2, 2)
+  // Digital Signature Stamp
+  drawDigitalSignatureStamp(
+    doc,
+    mx,
+    fy + 1,
+    data.surveyorName,
+    data.surveyorLicense,
+    data.datePrepared,
+    25 // 25mm diameter
+  )
+  
+  // Director of Surveys
+  drawLine(doc, pageWidth - mx - 50, fy + 8, pageWidth - mx, fy + 8, LINE_WEIGHTS.gridLine)
+  drawText(doc, 'Director of Surveys', pageWidth - mx - 50, fy + 10, 2)
 
   // Watermark (free plan only)
   if (data.plan === 'free' || !data.plan) {

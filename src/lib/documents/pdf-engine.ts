@@ -346,6 +346,82 @@ export function drawCompanyLogo(
 }
 
 /**
+ * Draw a digital signature stamp.
+ * Represents a digital seal for a licensed surveyor.
+ */
+export function drawDigitalSignatureStamp(
+  doc: PDFKit.PDFDocument,
+  x: number, y: number,
+  surveyorName: string,
+  licenseNumber: string,
+  date: string,
+  sizeMm: number = 30
+): void {
+  const mmToPt = 2.8346;
+  const s = sizeMm * mmToPt;
+  const cx = x * mmToPt + s / 2;
+  const cy = y * mmToPt + s / 2;
+  
+  doc.save();
+  
+  // Outer circle
+  doc
+    .lineWidth(0.5 * mmToPt)
+    .strokeColor('#1B3A5C')
+    .circle(cx, cy, s / 2)
+    .stroke();
+    
+  // Inner circle
+  doc
+    .lineWidth(0.2 * mmToPt)
+    .circle(cx, cy, s / 2 - 2 * mmToPt)
+    .stroke();
+    
+  // Text
+  doc
+    .fontSize(2.5 * mmToPt)
+    .fillColor('#1B3A5C')
+    .font('Helvetica-Bold')
+    .text('LICENSED SURVEYOR', cx - s / 2, cy - s / 6, {
+      width: s,
+      align: 'center'
+    });
+    
+  doc
+    .fontSize(1.8 * mmToPt)
+    .font('Helvetica')
+    .text(surveyorName.toUpperCase(), cx - s / 2, cy + 1 * mmToPt, {
+      width: s,
+      align: 'center'
+    });
+    
+  doc
+    .fontSize(1.5 * mmToPt)
+    .text(`LSK No: ${licenseNumber}`, cx - s / 2, cy + 4 * mmToPt, {
+      width: s,
+      align: 'center'
+    });
+    
+  // Signature path
+  doc
+    .lineWidth(0.4 * mmToPt)
+    .strokeColor('#2563EB') // Blue ink
+    .moveTo(cx - s / 3, cy + s / 4)
+    .bezierCurveTo(cx - s / 6, cy + s / 2, cx + s / 6, cy, cx + s / 3, cy + s / 4)
+    .stroke();
+    
+  doc
+    .fontSize(1.2 * mmToPt)
+    .fillColor('#1B3A5C')
+    .text(`Signed: ${date}`, cx - s / 2, cy + s / 2 + 1 * mmToPt, {
+      width: s,
+      align: 'center'
+    });
+
+  doc.restore();
+}
+
+/**
  * Draw the METARDU watermark diagonally across the document.
  * Applied only for free-tier users.
  *

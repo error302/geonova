@@ -1473,7 +1473,7 @@ export default function DigitalFieldBookPage() {
                 closeE={closeE}
                 closeN={closeN}
                 mode={travMode}
-                surveyType={surveyType || 'cadastral'}
+                surveyType={'cadastral'}
                 t={t}
               />
 

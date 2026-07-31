@@ -23,15 +23,7 @@ import {
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
-/* ── Dynamic import for OL-heavy component (SSR-safe) ─────────────── */
-const MapViewer = dynamic(() => import('@/components/field/MapViewer'), {
-  ssr: false,
-  loading: () => (
-    <div className="absolute inset-0 flex items-center justify-center bg-[var(--bg-primary)]">
-      <p className="text-white/50 text-sm">Loading map…</p>
-    </div>
-  ),
-});
+import MapViewer from '@/components/field/MapViewer';
 
 /* ── Non-OL imports (safe to import at module level) ──────────────── */
 const GeoPDFImport = dynamic(() => import('@/components/field/GeoPDFImport'), {
@@ -56,6 +48,7 @@ export default function FieldMapPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [gpsActive, setGpsActive] = useState(false);
   const [gpsAccuracy, setGpsAccuracy] = useState<number | null>(null);
+  const [gpsLocation, setGpsLocation] = useState<{lat: number, lng: number} | null>(null);
   const [gpsWatchId, setGpsWatchId] = useState<number | null>(null);
   const [tooltip, setTooltip] = useState<string | null>(null);
   const kmlInputRef = useRef<HTMLInputElement>(null);
@@ -147,8 +140,11 @@ export default function FieldMapPage() {
     if (!navigator.geolocation) { alert('Geolocation not available.'); return; }
     setGpsActive(true);
     const id = navigator.geolocation.watchPosition(
-      (pos) => setGpsAccuracy(pos.coords.accuracy),
-      () => { setGpsActive(false); setGpsAccuracy(null); },
+      (pos) => {
+        setGpsAccuracy(pos.coords.accuracy);
+        setGpsLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      },
+      () => { setGpsActive(false); setGpsAccuracy(null); setGpsLocation(null); },
       { enableHighAccuracy: true, maximumAge: 2000 },
     );
     setGpsWatchId(id);
@@ -189,6 +185,8 @@ export default function FieldMapPage() {
           parcels={[]}
           geoPDFLayers={geoPDFLayers}
           mbtilesSessions={mbtilesSessions}
+          gpsLocation={gpsLocation}
+          gpsAccuracy={gpsAccuracy}
         />
       </div>
 
@@ -228,7 +226,7 @@ export default function FieldMapPage() {
           onMouseLeave={hideTooltip}
           onTouchStart={() => showTooltip('Zoom In')}
           onTouchEnd={() => { hideTooltip(); }}
-          className="w-12 h-12 flex items-center justify-center rounded-xl bg-black/55 text-white backdrop-blur-md hover:bg-black/70 active:scale-95 transition-all"
+          className="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-900 text-white hover:bg-slate-800 active:scale-95 transition-all shadow-md"
           aria-label="Zoom In"
         >
           <Plus className="w-5 h-5" />
@@ -238,7 +236,7 @@ export default function FieldMapPage() {
           onClick={() => mapRef.current?.zoomOut()}
           onMouseEnter={() => showTooltip('Zoom Out')}
           onMouseLeave={hideTooltip}
-          className="w-12 h-12 flex items-center justify-center rounded-xl bg-black/55 text-white backdrop-blur-md hover:bg-black/70 active:scale-95 transition-all"
+          className="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-900 text-white hover:bg-slate-800 active:scale-95 transition-all shadow-md"
           aria-label="Zoom Out"
         >
           <Minus className="w-5 h-5" />
@@ -250,7 +248,7 @@ export default function FieldMapPage() {
           onMouseLeave={hideTooltip}
           onTouchStart={() => showTooltip('Reset to Kenya')}
           onTouchEnd={() => { hideTooltip(); }}
-          className="w-12 h-12 flex items-center justify-center rounded-xl bg-[#D17B47]/80 text-white backdrop-blur-md hover:bg-[#D17B47] active:scale-95 transition-all font-bold text-xs"
+          className="w-12 h-12 flex items-center justify-center rounded-xl bg-[#D17B47] text-white hover:bg-[#b06335] active:scale-95 transition-all font-bold text-xs shadow-md"
           aria-label="Reset to Kenya view"
         >
           KEN
@@ -262,7 +260,7 @@ export default function FieldMapPage() {
       {/* ═══════════════════════════════════════════════════════════ */}
       {gpsActive && gpsAccuracy !== null && (
         <div
-          className="absolute z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-mono"
+          className="absolute z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 text-white text-xs font-mono shadow-md"
           style={{
             bottom: 'calc(16px + env(safe-area-inset-bottom, 0px))',
             left: 16,
@@ -311,7 +309,7 @@ export default function FieldMapPage() {
           className={`w-12 h-12 flex items-center justify-center rounded-full shadow-lg transition-all active:scale-95 ${
             gpsActive
               ? 'bg-green-600 text-white shadow-green-900/30'
-              : 'bg-black/60 text-white backdrop-blur-md hover:bg-black/70'
+              : 'bg-slate-900 text-white hover:bg-slate-800'
           }`}
           aria-label={gpsActive ? 'Stop GPS' : 'Start GPS'}
         >
@@ -324,7 +322,7 @@ export default function FieldMapPage() {
           onMouseLeave={hideTooltip}
           onTouchStart={() => showTooltip('Import KML')}
           onTouchEnd={() => { hideTooltip(); }}
-          className="w-12 h-12 flex items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-md hover:bg-black/70 shadow-lg active:scale-95 transition-all"
+          className="w-12 h-12 flex items-center justify-center rounded-full bg-slate-900 text-white hover:bg-slate-800 shadow-lg active:scale-95 transition-all"
           aria-label="Import KML"
         >
           <Upload className="w-5 h-5" />
@@ -363,7 +361,7 @@ export default function FieldMapPage() {
       >
         {/* Drawer body */}
         <div
-          className="h-full flex flex-col bg-black/65 backdrop-blur-xl border-r border-white/[0.08] text-white"
+          className="h-full flex flex-col bg-slate-900 border-r border-white/[0.08] text-white"
           style={{ width: 'min(240px, 65vw)' }}
         >
           {/* Drawer header */}
@@ -476,7 +474,7 @@ export default function FieldMapPage() {
       {!drawerOpen && (
         <button
           onClick={openDrawer}
-          className="absolute z-10 top-1/2 -translate-y-1/2 w-10 flex items-center justify-center rounded-r-lg bg-black/50 backdrop-blur-md hover:bg-black/65 text-white/60 hover:text-white transition-all py-4"
+          className="absolute z-10 top-1/2 -translate-y-1/2 w-10 flex items-center justify-center rounded-r-lg bg-slate-900 hover:bg-slate-800 text-white/60 hover:text-white transition-all py-4 shadow-md"
           style={{ left: 0 }}
           aria-label="Open export drawer"
         >
@@ -489,7 +487,7 @@ export default function FieldMapPage() {
       {/* ═══════════════════════════════════════════════════════════ */}
       {geoPDFOpen && (
         <div
-          className="absolute z-20 left-0 right-0 bg-black/65 backdrop-blur-xl border-t border-white/[0.08]"
+          className="absolute z-20 left-0 right-0 bg-slate-900 border-t border-white/[0.08]"
           style={{ bottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
           <div className="flex items-center gap-2 px-3 py-2">
@@ -512,7 +510,7 @@ export default function FieldMapPage() {
       {/* ═══════════════════════════════════════════════════════════ */}
       {tooltip && (
         <div
-          className="absolute z-40 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md text-white text-[10px] font-medium pointer-events-none whitespace-nowrap"
+          className="absolute z-40 px-2.5 py-1 rounded-lg bg-slate-900 text-white text-[10px] font-medium pointer-events-none whitespace-nowrap shadow-md"
           style={{ bottom: 'calc(200px + env(safe-area-inset-bottom, 0px))', right: 72 }}
         >
           {tooltip}

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { BoundarySelectorMap } from '@/components/project/BoundarySelectorMap'
 import { getUTMZoneFromLatLng } from '@/lib/geodesy/utmZones'
 import { useCountry, ALL_COUNTRIES } from '@/lib/country'
 import type { SurveyingCountry } from '@/lib/country'
@@ -27,6 +28,9 @@ export default function NewProjectPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [detecting, setDetecting] = useState(false)
+  
+  const [polygonCoordinates, setPolygonCoordinates] = useState<number[][]>([])
+  const [estimatedArea, setEstimatedArea] = useState<number | null>(null)
 
   // Phase 25: Project scale selector
   const [projectType, setProjectType] = useState<ProjectType>('small')
@@ -94,6 +98,8 @@ export default function NewProjectPage() {
         surveyor_name: surveyorName || undefined,
         country: selectedCountry,
         datum: datumLabels[selectedCountry],
+        boundary: polygonCoordinates.length > 0 ? { type: 'Polygon', coordinates: [polygonCoordinates] } : undefined,
+        area_sqm: estimatedArea || undefined,
       }
 
       if (projectType === 'scheme') {
@@ -166,6 +172,51 @@ export default function NewProjectPage() {
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-1">Create New Project</h1>
           <p className="text-sm text-[var(--text-secondary)]">Set up your survey project parameters and coordinate system.</p>
+
+          {/* 1-Click Survey Type Presets */}
+          <div className="mt-4 p-4 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl">
+            <span className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider block mb-2">⚡ 1-Click Survey Presets</span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setSurveyType('cadastral')
+                  setProjectType('scheme')
+                  setName(name || 'Cadastral Parcel Subdivision')
+                }}
+                className="px-3 py-2 text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-500/20 text-left transition"
+              >
+                📜 <strong>Cadastral Subdivision</strong>
+                <span className="block text-[10px] opacity-70 mt-0.5">Cap 299, Beacon tables, Mutation export</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSurveyType('engineering')
+                  setProjectType('medium')
+                  setName(name || 'Road Corridor Alignment')
+                }}
+                className="px-3 py-2 text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 text-left transition"
+              >
+                🛣️ <strong>Road Engineering</strong>
+                <span className="block text-[10px] opacity-70 mt-0.5">RDM 1.3 Curves, Cross-sections, Chainage</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSurveyType('topographic')
+                  setProjectType('small')
+                  setName(name || 'Topographic Site Survey')
+                }}
+                className="px-3 py-2 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/20 text-left transition"
+              >
+                ⛰️ <strong>Topographic Survey</strong>
+                <span className="block text-[10px] opacity-70 mt-0.5">TIN Contours, Point cloud, DXF Plot</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Error / Info Banner */}
@@ -223,6 +274,27 @@ export default function NewProjectPage() {
             <input aria-label="Project name" type="text" value={name} onChange={e => setName(e.target.value)}
               className={inputClass} required autoFocus
               placeholder={projectType === 'scheme' ? 'e.g., Mwavumbo Ward Cadastral Subdivision' : 'e.g., Karen Estate Boundary Survey'} />
+          </div>
+
+          {/* Interactive Boundary Selector */}
+          <div>
+            <label className={labelClass}>Project Boundary Map</label>
+            <BoundarySelectorMap 
+              className="w-full h-64 mb-2"
+              onBoundaryChange={(coords, area, center) => {
+                setPolygonCoordinates(coords)
+                setEstimatedArea(area)
+                // Auto-detect UTM zone from drawn center
+                const { zone, hemisphere: hem } = getUTMZoneFromLatLng(center[1], center[0])
+                setUtmZone(String(zone))
+                setHemisphere(hem as 'N' | 'S')
+              }}
+            />
+            {estimatedArea && (
+              <p className="text-xs text-green-600 dark:text-green-400">
+                Estimated Area: {(estimatedArea / 10000).toFixed(4)} Hectares ({(estimatedArea / 4046.86).toFixed(4)} Acres)
+              </p>
+            )}
           </div>
 
           {/* Location */}

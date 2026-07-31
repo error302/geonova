@@ -33,7 +33,8 @@
 import { bowditchAdjustment, transitAdjustment, type TraverseInput, type SurveyTypeKey, TRAVERSE_PRECISION_STANDARDS, evaluateTraverseClosure } from '@/lib/engine/traverse';
 import { toRadians } from '@/lib/engine/angles';
 import { reduceEDMObservation } from './adapter';
-import { computeArea, computeClosureCheck, type BoundaryPoint } from '@/lib/compute/deedPlan';
+import { computeArea, computeClosureCheck } from '@/lib/compute/deedPlan';
+import type { BoundaryPoint } from '@/types/deedPlan';
 import { processObservations, type RawObservation, KENYA_DEFAULT_CONFIG } from './pipeline/correction-pipeline';
 
 // ─── Types ───────────────────────────────────────────────────────────────
@@ -206,7 +207,7 @@ export async function fieldToFinish(input: FieldToFinishInput): Promise<FieldToF
       from: obs.fromStation,
       to: obs.toStation,
       rawSlopeDistance: obs.slopeDistance,
-      correctedDistance: edmResult.correctedDistance,
+      correctedDistance: edmResult.gridDistance,
       horizontalDistance: edmResult.horizontalDistance,
       gridDistance: edmResult.gridDistance,
       atmosphericPPM: edmResult.atmosphericPPM,
@@ -281,6 +282,8 @@ export async function fieldToFinish(input: FieldToFinishInput): Promise<FieldToF
     id: p.name || `P${i}`,
     easting: p.easting,
     northing: p.northing,
+    markType: 'IRON_PIN',
+    markStatus: 'SET',
   }));
 
   let areaResult = { squareMetres: 0, hectares: 0, acres: 0 };

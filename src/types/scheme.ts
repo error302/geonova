@@ -3,7 +3,7 @@
 // Cadastral subdivision scheme support (ward-level, adjudication, etc.)
 // ============================================================
 
-export type ProjectType = 'small' | 'scheme'
+export type ProjectType = 'small' | 'medium' | 'scheme'
 
 export type SchemeStatus =
   | 'planning'

@@ -171,3 +171,27 @@ export async function deleteVaultEntry(parcelNumber: string, userId: string): Pr
     [parcelNumber, userId]
   )
 }
+
+/**
+ * Generates a deterministic SHA-256 cryptographic seal hash for a parcel state
+ * by sorting all object keys alphabetically (Canonical JSON).
+ */
+export function generateCanonicalParcelHash(obj: any): string {
+  const { createHash } = require('crypto')
+
+  function stringifyCanonical(data: any): string {
+    if (data === null || typeof data !== 'object') {
+      return JSON.stringify(data)
+    }
+    if (Array.isArray(data)) {
+      return '[' + data.map(stringifyCanonical).join(',') + ']'
+    }
+    const sortedKeys = Object.keys(data).sort()
+    const kvPairs = sortedKeys.map(key => `${JSON.stringify(key)}:${stringifyCanonical(data[key])}`)
+    return '{' + kvPairs.join(',') + '}'
+  }
+
+  const canonicalJson = stringifyCanonical(obj)
+  return createHash('sha256').update(canonicalJson).digest('hex')
+}
+

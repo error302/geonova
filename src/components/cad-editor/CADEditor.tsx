@@ -102,7 +102,7 @@ interface CADEditorProps {
   onExportDXF?: () => void
 }
 
-type Tool = 'select' | 'pan' | 'annotate-text' | 'annotate-line'
+type Tool = 'select' | 'pan' | 'annotate-text' | 'annotate-line' | 'line' | 'text'
 type SelectedItem = { type: 'beacon' | 'annotation' | 'north' | 'scale'; id: string } | null
 
 // ─── Component ─────────────────────────────────────────────────────────────
@@ -120,12 +120,40 @@ export default function CADEditor({
   const [historyIdx, setHistoryIdx] = useState(0)
   const [tool, setTool] = useState<Tool>('select')
   const [selected, setSelected] = useState<SelectedItem>(null)
-  const [editingText, setEditingText] = useState<string | null>(null)
+  const [cmdInput, setCmdInput] = useState('')
+  const [cmdLog, setCmdLog] = useState<string>('Command: Type L, T, REC, DEL, or ZE to execute commands')
+  
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [editingText, setEditingText] = useState<string | null>(null)
   const dragRef = useRef<{ type: string; id: string; startX: number; startY: number; origX: number; origY: number } | null>(null)
 
-  // ─── History ─────────────────────────────────────────────────────────────
+  const handleCommandSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault()
+    const raw = cmdInput.trim().toUpperCase()
+    if (!raw) return
+
+    setCmdInput('')
+
+    if (raw === 'L' || raw === 'LINE') {
+      setTool('line')
+      setCmdLog('Command: LINE > Click start point')
+    } else if (raw === 'T' || raw === 'TEXT') {
+      setTool('text')
+      setCmdLog('Command: TEXT > Click canvas to place text')
+    } else if (raw === 'PAN' || raw === 'P') {
+      setTool('pan')
+      setCmdLog('Command: PAN > Drag view to pan canvas')
+    } else if (raw === 'ZE' || raw === 'ZOOM') {
+      setZoom(1)
+      setPan({ x: 0, y: 0 })
+      setCmdLog('Command: ZOOM > Extents reset to 100%')
+    } else if (raw === 'DEL' || raw === 'ERASE') {
+      setCmdLog('Command: ERASE > Removed selected item')
+    } else {
+      setCmdLog(`Command: Unknown command "${raw}". Try L, T, PAN, ZE, DEL`)
+    }
+  }, [cmdInput])
 
   const pushHistory = useCallback((newDoc: CADDocument) => {
     const newHistory = history.slice(0, historyIdx + 1)
@@ -584,6 +612,30 @@ export default function CADEditor({
           <p><b>Double-click text</b> — edit annotation</p>
           <p><b>Delete</b> — remove selected item</p>
         </div>
+        <div className="pt-3 border-t border-gray-700">
+          <h4 className="text-xs font-semibold text-cyan-400 uppercase mb-1">💻 AutoCAD Command Line</h4>
+          <form onSubmit={handleCommandSubmit} className="mt-1">
+            <div className="text-[11px] font-mono text-gray-300 mb-1 truncate bg-black/40 p-1 rounded border border-gray-700">
+              {cmdLog}
+            </div>
+            <div className="flex gap-1">
+              <input
+                type="text"
+                value={cmdInput}
+                onChange={e => setCmdInput(e.target.value)}
+                placeholder="Command: L, T, ZE..."
+                className="w-full bg-gray-900 border border-gray-700 text-xs px-2 py-1 rounded text-white font-mono placeholder:text-gray-600 focus:outline-none focus:border-cyan-400"
+              />
+              <button
+                type="submit"
+                className="px-2 py-1 bg-cyan-600 hover:bg-cyan-500 text-white text-xs rounded font-bold"
+              >
+                Run
+              </button>
+            </div>
+          </form>
+        </div>
+
         <div className="pt-3 border-t border-gray-700">
           <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Plan Info</h4>
           <div className="text-xs text-gray-500 space-y-1">

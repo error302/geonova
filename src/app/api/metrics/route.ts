@@ -12,11 +12,11 @@
  */
 
 import { NextResponse } from 'next/server'
-import { getMetricsText } from '@/lib/monitoring/metrics'
+import { getMetrics } from '@/lib/monitoring/metrics'
 
 export async function GET() {
   try {
-    const text = await getMetricsText()
+    const text = await getMetrics()
     return new NextResponse(text, {
       status: 200,
       headers: {

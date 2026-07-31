@@ -106,8 +106,10 @@ export class InstrumentedPool {
     await this.pool.end();
   }
 
-  on(event: string, listener: (...args: unknown[]) => void): this {
-    this.pool.on(event, listener as (...args: unknown[]) => void);
+  on(event: 'error', listener: (err: Error, client: PoolClient) => void): this;
+  on(event: 'connect' | 'acquire' | 'remove', listener: (client: PoolClient) => void): this;
+  on(event: string, listener: (...args: any[]) => void): this {
+    this.pool.on(event as any, listener);
     return this;
   }
 
@@ -175,10 +177,7 @@ export class InstrumentedClient {
     this.client.release(err);
   }
 
-  // Proxy other client methods as needed
-  get rowCount(): number | undefined {
-    return this.client.rowCount;
-  }
+  // Removed invalid rowCount proxy
 }
 
 // ─── Factory ─────────────────────────────────────────────────────────────

@@ -84,7 +84,7 @@ interface MetarduOfflineDB extends DBSchema {
     indexes: {
       'by-survey': string;
       'by-project': string;
-      'by-synced': boolean;
+      'by-synced': number;
       'by-created': number;
     };
   };
@@ -93,7 +93,7 @@ interface MetarduOfflineDB extends DBSchema {
     value: OfflineStation;
     indexes: {
       'by-survey': string;
-      'by-synced': boolean;
+      'by-synced': number;
     };
   };
   cache: {
@@ -108,7 +108,7 @@ interface MetarduOfflineDB extends DBSchema {
     value: OfflineMediaAttachment;
     indexes: {
       'by-observation': string;
-      'by-synced': boolean;
+      'by-synced': number;
     };
   };
   syncQueue: {

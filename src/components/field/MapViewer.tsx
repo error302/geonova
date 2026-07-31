@@ -21,15 +21,19 @@ interface Props {
   onMapClick?: (lat: number, lng: number) => void;
   onGPSUpdate?: (lat: number, lng: number, accuracy: number) => void;
   onPerimeterWalk?: () => void;
+  gpsLocation?: { lat: number; lng: number } | null;
+  gpsAccuracy?: number | null;
 }
 
 const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
-  { layers, beacons, parcels, geoPDFLayers, mbtilesSessions, onMapClick, onGPSUpdate, onPerimeterWalk },
+  { layers, beacons, parcels, geoPDFLayers, mbtilesSessions, onMapClick, onGPSUpdate, onPerimeterWalk, gpsLocation, gpsAccuracy },
   ref
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const kenyaCenterRef = useRef<number[]>([0, 0]);
+  const gpsFeatureRef = useRef<any>(null);
+  const olHelpersRef = useRef<any>(null);
 
 
   /* ---- Expose imperative handle to parent ---- */
@@ -120,6 +124,8 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
         const olControl = await import('ol/control');
         const defaultControls = olControl.defaults;
 
+        olHelpersRef.current = { Point, fromLonLat };
+
         if (!mounted || !containerRef.current) return;
 
         // Cleanup previous map
@@ -200,9 +206,48 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
           }),
         });
 
+        // GPS Layer
+        const gpsFeature = new Feature();
+        gpsFeatureRef.current = gpsFeature;
+        
+        const gpsLayer = new VectorLayer({
+          source: new VectorSource({ features: [gpsFeature] }),
+          style: (feature: any) => {
+            const acc = feature.get('accuracy') || 10;
+            let color = 'rgba(239,68,68,0.4)'; // Red (Single) > 3m
+            let strokeColor = '#ef4444';
+            
+            if (acc <= 0.05) {
+              color = 'rgba(16,185,129,0.4)'; // Green (Fixed)
+              strokeColor = '#10b981';
+            } else if (acc <= 3) {
+              color = 'rgba(234,179,8,0.4)'; // Yellow (Float)
+              strokeColor = '#eab308';
+            }
+            
+            // Map accuracy in meters to roughly pixels for the circle
+            // OL CircleStyle radius is in pixels. For a true physical cone, we'd use a Polygon.
+            // But a dynamic styled circle based on zoom is acceptable here.
+            const mapObj = mapRef.current;
+            let radiusPx = 10;
+            if (mapObj) {
+              const res = mapObj.getView().getResolution() || 1;
+              radiusPx = Math.max(5, acc / res);
+            }
+
+            return new Style({
+              image: new CircleStyle({
+                radius: radiusPx,
+                fill: new Fill({ color }),
+                stroke: new Stroke({ color: strokeColor, width: 2 }),
+              })
+            });
+          }
+        });
+
         const map = new Map({
           target: containerRef.current,
-          layers: [baseLayer, ...vectorLayers, parcelLayer, beaconLayer],
+          layers: [baseLayer, ...vectorLayers, parcelLayer, beaconLayer, gpsLayer],
           view: new View({
             center: kenyaCenter,
             zoom: 6,
@@ -273,6 +318,21 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
       }
     };
   }, [layers, beacons, parcels, geoPDFLayers, mbtilesSessions]);
+
+  useEffect(() => {
+    // Dynamic GPS update without re-initializing the whole map
+    if (gpsFeatureRef.current && olHelpersRef.current) {
+      const feature = gpsFeatureRef.current;
+      const { Point, fromLonLat } = olHelpersRef.current;
+
+      if (gpsLocation) {
+        feature.setGeometry(new Point(fromLonLat([gpsLocation.lng, gpsLocation.lat])));
+        feature.set('accuracy', gpsAccuracy || 10);
+      } else {
+        feature.setGeometry(undefined);
+      }
+    }
+  }, [gpsLocation, gpsAccuracy]);
 
   return (
     <div
