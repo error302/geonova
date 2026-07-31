@@ -100,7 +100,7 @@
     "crypto-browserify": "^3.12.1",
     "d3-contour": "^4.0.2",
     "delaunator": "^5.1.0",
-    "docx": "^9.6.1",
+    "docx": "^9.7.1",
     "dompurify": "^3.3.3",
     "dxf-writer": "^1.18.4",
     "embla-carousel-react": "^8.6.0",
