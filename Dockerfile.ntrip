@@ -16,12 +16,10 @@ LABEL org.opencontainers.image.description="METARDU NTRIP WebSocket Proxy — br
 LABEL org.opencontainers.image.source="https://github.com/error302/metardu"
 
 # ws is a project dependency; we need it installed in this image.
-# Copy package.json + package-lock.json and install only production deps.
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
-RUN npm install --omit=dev --omit=optional --no-audit --no-fund ws 2>/dev/null || \
-    npm install --omit=dev --omit=optional --no-audit --no-fund
+# Just install ws locally instead of copying the huge root package.json
+RUN npm init -y && npm install ws@^8.21.0 --no-audit --no-fund
 
 # Copy the proxy script
 COPY ntrip-proxy.js ./

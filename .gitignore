@@ -182,3 +182,11 @@ data/cassini-source/_scratch/
 
 # Auto-generated audit outputs
 scripts/*_audit.json
+
+# Temp Agent Files
+.freebuff/
+.playwright-mcp/
+*.png
+tunnel-log*.txt
+tunnel-url.txt
+fix-roles.sql

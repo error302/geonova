@@ -221,7 +221,7 @@ export default function ProjectCard({ project, openLabel }: { project: any; open
     <>
       <div
         onClick={handleCardClick}
-        className="group block rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 hover:border-[var(--accent)]/50 hover:bg-[var(--bg-tertiary)] transition-all cursor-pointer"
+        className="group block h-full card p-6 hover:border-[var(--border-hover)] hover:bg-[var(--bg-tertiary)] transition-premium cursor-pointer relative"
       >
         <div className="flex items-start justify-between gap-3 mb-3">
           <h3 className="font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors leading-snug flex-1 truncate">

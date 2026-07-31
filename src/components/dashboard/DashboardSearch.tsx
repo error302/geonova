@@ -358,7 +358,7 @@ export default function DashboardSearch() {
 
     if (isLoading && !results) {
       return (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] shadow-lg overflow-hidden">
+        <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)]/80 backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300">
           <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-[var(--text-muted)]">
             <Loader2 className="h-4 w-4 animate-spin" />
             <span>Searching...</span>
@@ -369,7 +369,7 @@ export default function DashboardSearch() {
 
     if (results && !hasResults && query.trim()) {
       return (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] shadow-lg overflow-hidden">
+        <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)]/80 backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300">
           <div className="flex flex-col items-center justify-center px-4 py-8">
             <Search className="h-8 w-8 text-[var(--text-muted)] mb-2 opacity-50" />
             <p className="text-sm text-[var(--text-secondary)]">No results found</p>
@@ -387,7 +387,7 @@ export default function DashboardSearch() {
     let flatIdx = 0;
 
     return (
-      <div className="absolute top-full left-0 right-0 z-50 mt-1 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] shadow-lg overflow-hidden">
+      <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)]/80 backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300">
         <div className="max-h-80 overflow-y-auto overscroll-contain">
           {order.map((type) => {
             const items = results[type];
@@ -483,7 +483,7 @@ export default function DashboardSearch() {
         </div>
 
         {/* Footer hint */}
-        <div className="flex items-center justify-between px-3 py-2 border-t border-[var(--border-color)] bg-[var(--bg-primary)]/50 text-[10px] text-[var(--text-muted)]">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-[var(--border-color)] bg-[var(--bg-primary)]/40 text-[10px] text-[var(--text-muted)]">
           <span>{results ? Object.values(results).reduce((sum, arr) => sum + arr.length, 0) : 0} results</span>
           <div className="flex items-center gap-2">
             <kbd className="px-1 py-0.5 rounded border border-[var(--border-color)] bg-[var(--bg-tertiary)] text-[9px]">
@@ -509,9 +509,9 @@ export default function DashboardSearch() {
       {/* Search input */}
       <div
         className={cn(
-          'flex items-center gap-2 rounded-lg border bg-[var(--bg-secondary)] px-3 py-2 transition-all duration-200',
+          'flex items-center gap-3 rounded-full border bg-[var(--bg-secondary)] px-5 py-3 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]',
           isOpen
-            ? 'border-[var(--accent)] shadow-[0_0_0_3px_var(--accent-subtle)]'
+            ? 'border-[var(--accent)] shadow-[0_0_0_3px_var(--accent-subtle)] bg-[var(--bg-card)]'
             : 'border-[var(--border-color)] hover:border-[var(--border-hover)]',
         )}
       >
