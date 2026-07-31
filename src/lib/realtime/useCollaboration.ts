@@ -1,23 +1,8 @@
 'use client'
 
-/**
- * useCollaboration — Client-side hook for real-time collaboration
- *
- * Features:
- * - Connect to WebSocket collaboration server
- * - Track online collaborators in a project
- - Share cursor position with other users
- * - Receive live feature edits from other users
- * - Send chat messages
- *
- * Usage:
- * const { collaborators, sendCursor, isConnected } = useCollaboration({
- *   projectId: '123',
- *   userName: 'John Doe'
- * })
- */
-
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { subscribeToProjectChanges, PresenceUser, realtimeService } from './index'
+import { initProjectSync } from './zustand-yjs-sync'
 
 export interface Collaborator {
   userId: string
@@ -30,10 +15,6 @@ interface UseCollaborationProps {
   projectId: string | null
   userId?: string
   userName?: string
-  /** JWT token for authentication (from NextAuth session) */
-  token?: string
-  /** WebSocket URL — defaults to same host on port 3001 */
-  wsUrl?: string
 }
 
 interface UseCollaborationReturn {
@@ -53,160 +34,105 @@ export function useCollaboration({
   projectId,
   userId,
   userName,
-  token,
-  wsUrl,
 }: UseCollaborationProps): UseCollaborationReturn {
   const [collaborators, setCollaborators] = useState<Collaborator[]>([])
   const [isConnected, setIsConnected] = useState(false)
-  const [conflictWarnings, setConflictWarnings] = useState<string[]>([])
-  const wsRef = useRef<WebSocket | null>(null)
+  const [conflictWarnings] = useState<string[]>([])
+  
   const callbacksRef = useRef<{
     onFeatureEdit?: (feature: any, userId: string) => void
     onFeatureDelete?: (featureId: string, userId: string) => void
     onChat?: (message: string, userName: string, userId: string) => void
   }>({})
 
-  // Determine WebSocket URL
-  const finalWsUrl = wsUrl || (
-    typeof window !== 'undefined'
-      ? process.env.NEXT_PUBLIC_WS_URL ||
-        `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.hostname}:3001/ws/collaboration`
-      : ''
-  )
-
-  // Connect to WebSocket
   useEffect(() => {
-    if (!projectId || !userId || !finalWsUrl) return
+    if (!projectId || !userId) return
 
-    const params = new URLSearchParams({
-      userId,
-      userName: userName || '',
+    // 1. Initialize Zustand-Yjs Data Sync
+    initProjectSync(projectId)
+
+    // 2. Initialize Presence via Yjs Awareness
+    const subscription = subscribeToProjectChanges(
       projectId,
-    })
-    if (token) params.set('token', token)
-
-    const url = `${finalWsUrl}?${params.toString()}`
-
-    const ws = new WebSocket(url)
-    wsRef.current = ws
-
-    ws.onopen = () => {
-      setIsConnected(true)
-    }
-
-    ws.onmessage = (event) => {
-      try {
-        const msg = JSON.parse(event.data)
-
-        switch (msg.type) {
-          case 'presence':
-            if (Array.isArray(msg.payload)) {
-              setCollaborators(msg.payload.filter((c: Collaborator) => c.userId !== userId))
-            }
-            break
-
-          case 'join':
-            setCollaborators(prev => {
-              if (prev.some(c => c.userId === msg.userId)) return prev
-              return [...prev, {
-                userId: msg.userId,
-                userName: msg.userName || 'Unknown',
-                color: '#3B82F6',
-              }]
-            })
-            break
-
-          case 'leave':
-            setCollaborators(prev => prev.filter(c => c.userId !== msg.userId))
-            break
-
-          case 'cursor':
-            setCollaborators(prev =>
-              prev.map(c =>
-                c.userId === msg.userId
-                  ? { ...c, cursor: msg.cursor, userName: msg.userName || c.userName }
-                  : c
-              )
-            )
-            break
-
-          case 'feature_edit':
-            callbacksRef.current.onFeatureEdit?.(msg.feature, msg.userId)
-            break
-
-          case 'feature_delete':
-            callbacksRef.current.onFeatureDelete?.(msg.featureId, msg.userId)
-            break
-
-          case 'chat':
-            callbacksRef.current.onChat?.(msg.message, msg.userName, msg.userId)
-            break
-
-          case 'conflict_rejected':
-            setConflictWarnings(prev => [...prev, msg.message || 'Update rejected'])
-            setTimeout(() => setConflictWarnings(prev => prev.slice(1)), 5000)
-            break
+      { id: userId, name: userName },
+      {
+        onPresenceChange: (users: PresenceUser[]) => {
+          setCollaborators(users.map(u => ({
+            userId: u.userId,
+            userName: u.userName,
+            color: u.color,
+            cursor: u.cursor
+          })))
         }
-      } catch (err) {
-        console.error('[useCollaboration] Message parse error:', err)
       }
-    }
+    )
 
-    ws.onclose = () => {
-      setIsConnected(false)
-      setCollaborators([])
-    }
-
-    ws.onerror = (err) => {
-      console.error('[useCollaboration] WebSocket error:', err)
+    // Monitor WebRTC connection state
+    const provider = realtimeService.getProvider(projectId)
+    if (provider) {
+      provider.on('status', ({ connected }: { connected: boolean }) => {
+        setIsConnected(connected)
+      })
+      // If already connected before listener was attached
+      setIsConnected(provider.connected)
     }
 
     return () => {
-      ws.close()
-      wsRef.current = null
+      subscription.unsubscribe()
     }
-  }, [projectId, userId, userName, token, finalWsUrl])
+  }, [projectId, userId, userName])
 
-  // Send functions
-  const sendCursor = useCallback((lat: number, lng: number) => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({
-        type: 'cursor',
-        cursor: { lat, lng },
-        timestamp: Date.now(),
-      }))
-    }
-  }, [])
-
-  const sendFeatureEdit = useCallback((feature: any) => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({
-        type: 'feature_edit',
-        feature,
-        timestamp: Date.now(),
-      }))
-    }
-  }, [])
-
-  const sendFeatureDelete = useCallback((featureId: string) => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({
-        type: 'feature_delete',
-        featureId,
-        timestamp: Date.now(),
-      }))
-    }
-  }, [])
-
+  // Real-time Chat via Yjs Array
   const sendChat = useCallback((message: string) => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({
-        type: 'chat',
-        message,
-        timestamp: Date.now(),
-      }))
+    if (!projectId || !userId) return
+    const doc = realtimeService.getDoc(projectId)
+    const yChat = doc.getArray('chat')
+    yChat.push([{
+      userId,
+      userName: userName || 'Unknown',
+      message,
+      timestamp: Date.now()
+    }])
+  }, [projectId, userId, userName])
+
+  // Setup Chat Observer
+  useEffect(() => {
+    if (!projectId) return
+    const doc = realtimeService.getDoc(projectId)
+    const yChat = doc.getArray('chat')
+    
+    const observer = (event: any) => {
+      event.changes.added.forEach((item: any) => {
+        item.content.getContent().forEach((msg: any) => {
+          if (msg.userId !== userId) {
+            callbacksRef.current.onChat?.(msg.message, msg.userName, msg.userId)
+          }
+        })
+      })
     }
-  }, [])
+    
+    yChat.observe(observer)
+    return () => yChat.unobserve(observer)
+  }, [projectId, userId])
+
+  // Mouse Cursor Sharing via Yjs Awareness
+  const sendCursor = useCallback((lat: number, lng: number) => {
+    if (!projectId || !userId) return
+    const provider = realtimeService.getProvider(projectId)
+    if (provider) {
+      const awareness = provider.awareness
+      const localState = awareness.getLocalState()
+      awareness.setLocalState({
+        ...localState,
+        user: { ...localState?.user, cursor: { lat, lng } }
+      })
+    }
+  }, [projectId, userId])
+
+  // Feature Edits are now handled automatically by the Zustand-Yjs sync layer.
+  // These are kept as no-ops to satisfy the component prop types.
+  const sendFeatureEdit = useCallback(() => {}, [])
+  const sendFeatureDelete = useCallback(() => {}, [])
 
   return {
     collaborators,
