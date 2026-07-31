@@ -137,6 +137,12 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/public/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     restart: unless-stopped
 
   metardu-collaboration:
@@ -144,8 +150,8 @@ services:
       context: .
       dockerfile: Dockerfile.collaboration
     container_name: metardu-collaboration
-    command: ["node", "scripts/start-collaboration.mjs"]
-    # No host port — Caddy proxies via /ws/ path
+    # CMD is defined in Dockerfile.collaboration as ["node", "collabEntry.js"]
+    # Do NOT override command here — the compiled entrypoint handles everything.
     expose:
       - "3001"
     environment:
@@ -154,10 +160,11 @@ services:
       - PORT=3001
       - REDIS_URL=redis://metardu-redis:6379
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
       interval: 15s
       timeout: 5s
       retries: 3
+      start_period: 15s
     depends_on:
       metardu-redis:
         condition: service_healthy
@@ -169,7 +176,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 64M
-    restart: unless-stopped
+    restart: on-failure:5
 
   # AUDIT FIX (H7, 2026-07-02): Backup sidecar runs backup.sh daily.
   # Backups are written to the `backups` volume (mount to host for
