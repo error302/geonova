@@ -371,6 +371,11 @@ class AbuttalsRequest(BaseModel):
     lon: float
     radius: int = 200
 
+class ContextGeoJSONRequest(BaseModel):
+    lat: float
+    lon: float
+    radius: int = 500  # meters
+
 # ─── API Router ─────────────────────────────────────────────────────────────
 
 overpass_router = APIRouter(prefix="/osm", tags=["osm-overpass"])
@@ -417,3 +422,52 @@ async def api_auto_abuttals(request: AbuttalsRequest):
             detail="OSMPythonTools not installed. Run: pip install OSMPythonTools",
         )
     return auto_populate_abuttals(request.lat, request.lon, request.radius)
+
+@overpass_router.post("/context-geojson")
+async def api_context_geojson(request: ContextGeoJSONRequest):
+    """
+    Query Overpass API for buildings and highways within the radius,
+    and return as a GeoJSON FeatureCollection.
+    """
+    tools = get_osm_tools()
+    osm2geojson_lib = get_osm2geojson()
+    if not tools or not osm2geojson_lib:
+        raise HTTPException(
+            status_code=503,
+            detail="OSMPythonTools or osm2geojson not installed.",
+        )
+    
+    # Calculate bounding box
+    # Roughly 1 degree lat = 111km
+    delta_lat = request.radius / 111000.0
+    delta_lon = request.radius / (111000.0 * math.cos(math.radians(request.lat)))
+    
+    bbox = [
+        request.lat - delta_lat,
+        request.lon - delta_lon,
+        request.lat + delta_lat,
+        request.lon + delta_lon
+    ]
+    
+    try:
+        # Build Overpass QL
+        query_str = f\"\"\"
+        [out:json][timeout:25];
+        (
+          way["building"]({bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]});
+          way["highway"]({bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]});
+        );
+        out body;
+        >;
+        out skel qt;
+        \"\"\"
+        
+        result = tools["Overpass"]().query(query_str)
+        # Convert raw JSON response to GeoJSON
+        geojson = osm2geojson_lib.json2geojson(result.toJSON())
+        
+        return geojson
+    except Exception as e:
+        logger.error(f"[osm-overpass] Context GeoJSON query failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+

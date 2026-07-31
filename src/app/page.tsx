@@ -316,7 +316,7 @@ function StatsBar() {
 
 function FeaturesSection() {
   return (
-    <section id="features" aria-labelledby="features-heading" className="py-24 md:py-32">
+    <section id="features" aria-labelledby="features-heading" className="py-32 md:py-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="text-center mb-16">
           <p className="text-[var(--accent)] text-sm font-semibold uppercase tracking-widest mb-4">
@@ -361,7 +361,7 @@ function FeaturesSection() {
 
 function WorkflowSection() {
   return (
-    <section id="workflow" aria-labelledby="workflow-heading" className="py-24 md:py-32 bg-[var(--bg-secondary)] border-y border-[var(--border-color)]">
+    <section id="workflow" aria-labelledby="workflow-heading" className="py-32 md:py-40 bg-[var(--bg-secondary)] border-y border-[var(--border-color)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="text-center mb-16">
           <p className="text-[var(--accent)] text-sm font-semibold uppercase tracking-widest mb-4">
@@ -403,7 +403,7 @@ function WorkflowSection() {
 
 function ToolsSection() {
   return (
-    <section aria-labelledby="tools-heading" className="py-24 md:py-32">
+    <section aria-labelledby="tools-heading" className="py-32 md:py-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="text-center mb-16">
           <p className="text-[var(--accent)] text-sm font-semibold uppercase tracking-widest mb-4">
@@ -456,7 +456,7 @@ function MPesaBadge() {
 
 function PricingSection({ annual, onToggleAnnual }: { annual: boolean; onToggleAnnual: (v: boolean) => void }) {
   return (
-    <section aria-labelledby="pricing-heading" className="py-24 md:py-32 bg-[var(--bg-secondary)] border-t border-[var(--border-color)]">
+    <section aria-labelledby="pricing-heading" className="py-32 md:py-40 bg-[var(--bg-secondary)] border-t border-[var(--border-color)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="text-center mb-10">
           <p className="text-[var(--accent)] text-sm font-semibold uppercase tracking-widest mb-4">
@@ -573,7 +573,7 @@ function PricingSection({ annual, onToggleAnnual }: { annual: boolean; onToggleA
 
 function FAQSection() {
   return (
-    <section aria-labelledby="faq-heading" className="py-24 md:py-32">
+    <section aria-labelledby="faq-heading" className="py-32 md:py-40">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="text-center mb-12">
           <p className="text-[var(--accent)] text-sm font-semibold uppercase tracking-widest mb-4">

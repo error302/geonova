@@ -11,8 +11,8 @@
  *   - Python worker running with Pyrosm installed
  *   - Kenya PBF file at data/kenya-latest.osm.pbf
  *
- * The layer fetches buildings on map move/end (debounced) and displays
- * them as semi-transparent orange polygons — matching METARDU's brand.
+ * The layer fetches context on map move/end (debounced) and displays
+ * them as semi-transparent cyan/orange polygons/lines — matching METARDU's brand.
  */
 
 import { useEffect, useRef, useState } from 'react'
@@ -133,15 +133,19 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
           }
         }
 
-        const params = new URLSearchParams({
-          minlon: String(minLon),
-          minlat: String(minLat),
-          maxlon: String(maxLon),
-          maxlat: String(maxLat),
-          types: 'buildings',
-        })
+        const params = {
+          lat: (minLat + maxLat) / 2,
+          lon: (minLon + maxLon) / 2,
+          radius: 500, // strict 500m radius to save performance
+        }
 
-        const res = await fetch(`/api/osm/features?${params}`)
+        const res = await fetch(`/api/osm/context-geojson`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        })
         if (!res.ok) {
           if (res.status === 503) {
             setError('Python worker offline')
@@ -152,12 +156,11 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
         const data = await res.json()
         if (cancelled) return
 
-        const buildings = data.features?.buildings
-        if (buildings && buildings.features) {
+        if (data && data.features) {
           // Clear and reload
           sourceRef.current.clear()
           const format = (layerRef.current as any).geoJSONFormat
-          const features = format.readFeatures(buildings, {
+          const features = format.readFeatures(data, {
             featureProjection: view.getProjection(),
             dataProjection: 'EPSG:4326',
           })
@@ -191,18 +194,18 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
   if (!visible) return null
 
   return (
-    <div className="absolute top-3 right-3 z-30 bg-[var(--bg-secondary)]/90 backdrop-blur-xl border border-[var(--border-color)]/[0.08] rounded-lg px-3 py-2 text-xs flex items-center gap-2 shadow-lg">
-      <Building2 className="w-3.5 h-3.5 text-[var(--accent)]" />
+    <div className="absolute top-3 right-3 z-30 bg-[#050505]/90 backdrop-blur-xl border border-[rgba(255,255,255,0.1)] rounded-xl px-3 py-2 text-xs flex items-center gap-2 shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
+      <Building2 className="w-3.5 h-3.5 text-cyan-400" />
       {loading ? (
         <>
           <Loader2 className="w-3 h-3 animate-spin text-[var(--text-muted)]" />
-          <span className="text-[var(--text-muted)]">Loading buildings…</span>
+          <span className="text-[var(--text-muted)]">Loading Context…</span>
         </>
       ) : error ? (
         <span className="text-[var(--error)]">{error}</span>
       ) : (
-        <span className="text-[var(--text-secondary)]">
-          {featureCount} buildings
+        <span className="text-[var(--text-secondary)] font-medium">
+          {featureCount} context features
         </span>
       )}
     </div>
