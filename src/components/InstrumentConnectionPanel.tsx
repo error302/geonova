@@ -82,6 +82,7 @@ export function InstrumentConnectionPanel({
     messagesParsed,
     errorCount,
     clearPoints,
+    sendCommand: hookSendCommand,
     error,
   } = useInstrumentConnection()
 
@@ -118,16 +119,12 @@ export function InstrumentConnectionPanel({
 
   // Send a brand-specific instrument command
   const sendCommand = useCallback(async (commandType: string, ...args: unknown[]) => {
-    const brand = getBrandFromPresetKey(selectedPreset)
     try {
-      const { getInstrumentCommand } = await import('@/lib/serial/instrumentCommands')
-      const cmd = getInstrumentCommand(brand, commandType as any, ...args)
-      // The serial connection needs to be accessed via the hook
-      // For now, we'll use the sendCommand method which is handled by the serial connection
+      await hookSendCommand(commandType, ...args)
     } catch (err) {
       console.error('Command failed:', err)
     }
-  }, [selectedPreset])
+  }, [hookSendCommand])
 
   const toggleTracking = useCallback(async () => {
     const commandType = isTracking ? 'stopTracking' : 'startTracking'

@@ -71,6 +71,8 @@ export interface UseInstrumentConnectionReturn {
   errorCount: number
   /** Clear all received points */
   clearPoints: () => void
+  /** Send an instrument command */
+  sendCommand: (commandType: string, ...args: unknown[]) => Promise<void>
   /** Error message if connection failed */
   error: string | null
 }
@@ -152,6 +154,54 @@ export function useInstrumentConnection(): UseInstrumentConnectionReturn {
             timestamp: new Date(),
             source: 'gsi',
             raw: gsi,
+          }
+        }
+      } else if (data.type === 'topcon') {
+        const topcon = data.data
+        if (topcon.easting !== undefined && topcon.northing !== undefined) {
+          point = {
+            id: `stream-${Date.now()}-${pointCounter++}`,
+            pointName: `TS-${topcon.pointNumber || pointCounter}`,
+            latitude: 0,
+            longitude: 0,
+            northing: topcon.northing,
+            easting: topcon.easting,
+            elevation: topcon.elevation || null,
+            timestamp: new Date(),
+            source: 'gsi', // Treat all total stations similarly in UI for now
+            raw: topcon,
+          }
+        }
+      } else if (data.type === 'trimble') {
+        const trimble = data.data
+        if (trimble.easting !== undefined && trimble.northing !== undefined) {
+          point = {
+            id: `stream-${Date.now()}-${pointCounter++}`,
+            pointName: `TS-${trimble.pointNumber || pointCounter}`,
+            latitude: 0,
+            longitude: 0,
+            northing: trimble.northing,
+            easting: trimble.easting,
+            elevation: trimble.elevation || null,
+            timestamp: new Date(),
+            source: 'gsi',
+            raw: trimble,
+          }
+        }
+      } else if (data.type === 'sokkia') {
+        const sokkia = data.data
+        if (sokkia.easting !== undefined && sokkia.northing !== undefined) {
+          point = {
+            id: `stream-${Date.now()}-${pointCounter++}`,
+            pointName: `TS-${sokkia.pointNumber || pointCounter}`,
+            latitude: 0,
+            longitude: 0,
+            northing: sokkia.northing,
+            easting: sokkia.easting,
+            elevation: sokkia.elevation || null,
+            timestamp: new Date(),
+            source: 'gsi',
+            raw: sokkia,
           }
         }
       }
@@ -238,6 +288,54 @@ export function useInstrumentConnection(): UseInstrumentConnectionReturn {
             raw: gsi,
           }
         }
+      } else if (data.type === 'topcon') {
+        const topcon = data.data
+        if (topcon.easting !== undefined && topcon.northing !== undefined) {
+          point = {
+            id: `stream-${Date.now()}-${pointCounter++}`,
+            pointName: `TS-${topcon.pointNumber || pointCounter}`,
+            latitude: 0,
+            longitude: 0,
+            northing: topcon.northing,
+            easting: topcon.easting,
+            elevation: topcon.elevation || null,
+            timestamp: new Date(),
+            source: 'gsi', // Treat all total stations similarly in UI for now
+            raw: topcon,
+          }
+        }
+      } else if (data.type === 'trimble') {
+        const trimble = data.data
+        if (trimble.easting !== undefined && trimble.northing !== undefined) {
+          point = {
+            id: `stream-${Date.now()}-${pointCounter++}`,
+            pointName: `TS-${trimble.pointNumber || pointCounter}`,
+            latitude: 0,
+            longitude: 0,
+            northing: trimble.northing,
+            easting: trimble.easting,
+            elevation: trimble.elevation || null,
+            timestamp: new Date(),
+            source: 'gsi',
+            raw: trimble,
+          }
+        }
+      } else if (data.type === 'sokkia') {
+        const sokkia = data.data
+        if (sokkia.easting !== undefined && sokkia.northing !== undefined) {
+          point = {
+            id: `stream-${Date.now()}-${pointCounter++}`,
+            pointName: `TS-${sokkia.pointNumber || pointCounter}`,
+            latitude: 0,
+            longitude: 0,
+            northing: sokkia.northing,
+            easting: sokkia.easting,
+            elevation: sokkia.elevation || null,
+            timestamp: new Date(),
+            source: 'gsi',
+            raw: sokkia,
+          }
+        }
       }
       if (point) {
         setLastPoint(point)
@@ -282,6 +380,18 @@ export function useInstrumentConnection(): UseInstrumentConnectionReturn {
     }
   }, [])
 
+  const sendCommand = useCallback(async (commandType: string, ...args: unknown[]) => {
+    if (!connectionRef.current) return
+    const brand = connectionRef.current.getCurrentBrand()
+    if (!brand) return
+    try {
+      await connectionRef.current.sendInstrumentCommand(brand, commandType, ...args)
+    } catch (err) {
+      console.error('Failed to send instrument command:', err)
+      setError(err instanceof Error ? err.message : 'Command failed')
+    }
+  }, [])
+
   return {
     connect,
     connectWithPreset,
@@ -296,6 +406,7 @@ export function useInstrumentConnection(): UseInstrumentConnectionReturn {
     messagesParsed,
     errorCount,
     clearPoints,
+    sendCommand,
     error,
   }
 }
