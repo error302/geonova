@@ -55,8 +55,12 @@ import logging
 from typing import Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from .spatial_cache import SpatialCache
 
 logger = logging.getLogger(__name__)
+
+# Initialize global spatial cache
+spatial_cache = SpatialCache()
 
 # ─── Lazy Imports ───────────────────────────────────────────────────────────
 
@@ -437,37 +441,56 @@ async def api_context_geojson(request: ContextGeoJSONRequest):
             detail="OSMPythonTools or osm2geojson not installed.",
         )
     
-    # Calculate bounding box
+    # Calculate requested bounding box
     # Roughly 1 degree lat = 111km
     delta_lat = request.radius / 111000.0
     delta_lon = request.radius / (111000.0 * math.cos(math.radians(request.lat)))
     
-    bbox = [
+    req_bbox = [
         request.lat - delta_lat,
         request.lon - delta_lon,
         request.lat + delta_lat,
         request.lon + delta_lon
     ]
     
+    # 1. Check Spatial Cache
+    cached_geojson = spatial_cache.get_cached_geojson(*req_bbox)
+    if cached_geojson:
+        return cached_geojson
+
+    # 2. Cache Miss: Fetch a larger area (2000m radius) to optimize future pans
+    fetch_radius = max(2000, request.radius)
+    f_delta_lat = fetch_radius / 111000.0
+    f_delta_lon = fetch_radius / (111000.0 * math.cos(math.radians(request.lat)))
+    
+    fetch_bbox = [
+        request.lat - f_delta_lat,
+        request.lon - f_delta_lon,
+        request.lat + f_delta_lat,
+        request.lon + f_delta_lon
+    ]
+    
     try:
         # Build Overpass QL
-        query_str = f\"\"\"
+        query_str = f"""
         [out:json][timeout:25];
         (
-          way["building"]({bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]});
-          way["highway"]({bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]});
+          way["building"]({fetch_bbox[0]},{fetch_bbox[1]},{fetch_bbox[2]},{fetch_bbox[3]});
+          way["highway"]({fetch_bbox[0]},{fetch_bbox[1]},{fetch_bbox[2]},{fetch_bbox[3]});
         );
         out body;
         >;
         out skel qt;
-        \"\"\"
+        """
         
         result = tools["Overpass"]().query(query_str)
         # Convert raw JSON response to GeoJSON
         geojson = osm2geojson_lib.json2geojson(result.toJSON())
         
+        # 3. Store in cache
+        spatial_cache.set_cached_geojson(*fetch_bbox, geojson)
+        
         return geojson
     except Exception as e:
         logger.error(f"[osm-overpass] Context GeoJSON query failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
