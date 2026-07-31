@@ -7,7 +7,15 @@ const { Client } = require('ssh2');
 const fs = require('fs');
 const path = require('path');
 
-const keyPath = path.join(require('os').homedir(), '.ssh', 'id_ed25519');
+function getSshKey() {
+  const sshDir = path.join(require('os').homedir(), '.ssh');
+  for (const name of ['oracle-metardu.key', 'id_rsa', 'id_ed25519']) {
+    const full = path.join(sshDir, name);
+    if (fs.existsSync(full)) return fs.readFileSync(full);
+  }
+  throw new Error('No valid SSH key found in ~/.ssh/');
+}
+
 const conn = new Client();
 
 conn.on('ready', () => {
@@ -18,10 +26,10 @@ conn.on('ready', () => {
     'git pull origin main 2>&1',
     'echo "=== GIT PULL DONE ==="',
     // Rebuild just the web container (fastest)
-    'docker compose build nextjs 2>&1 | tail -20',
+    'docker compose build metardu-app 2>&1 | tail -20',
     'echo "=== BUILD DONE ==="',
     // Restart the web container with the new code
-    'docker compose up -d nextjs 2>&1',
+    'docker compose up -d metardu-app 2>&1',
     'echo "=== RESTART DONE ==="',
     // Wait for health check
     'sleep 5',
@@ -42,10 +50,10 @@ conn.on('ready', () => {
   console.error('SSH connection error:', err.message);
   process.exit(1);
 }).connect({
-  host: '34.170.248.156',
+  host: '84.8.133.9',
   port: 22,
-  username: 'mohameddosho20',
-  privateKey: fs.readFileSync(keyPath),
+  username: 'opc',
+  privateKey: getSshKey(),
   readyTimeout: 60000,
   // Long timeout for build
   keepaliveInterval: 10000,

@@ -14,9 +14,9 @@ conn.on('ready', () => {
   
   const cmds = [
     'cd ~/metardu',
-    'docker compose build web 2>&1 | tail -30',
+    'docker compose build metardu-app 2>&1 | tail -30',
     'echo "=== BUILD DONE ==="',
-    'docker compose up -d web 2>&1',
+    'docker compose up -d metardu-app 2>&1',
     'echo "=== UP DONE ==="',
     'sleep 10',
     'docker ps 2>&1',
@@ -38,10 +38,10 @@ conn.on('ready', () => {
   console.error('SSH connection error:', err.message);
   process.exit(1);
 }).connect({
-  host: '34.170.248.156',
+  host: '84.8.133.9',
   port: 22,
-  username: 'mohameddosho20',
-  privateKey: fs.readFileSync(keyPath),
+  username: 'opc',
+  privateKey: fs.readFileSync(path.join(require('os').homedir(), '.ssh', 'oracle-metardu.key')),
   readyTimeout: 600000,
   keepaliveInterval: 10000,
 });

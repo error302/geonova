@@ -11,13 +11,15 @@ const cmd = process.argv.slice(2).join(' ') || 'echo hello';
 const conn = new Client();
 
 // Try key-based auth first, fall back to password
-const keyPath = path.join(require('os').homedir(), '.ssh', 'id_ed25519');
+const VM_HOST = '84.8.133.9';
+const VM_USER = 'opc';
+const keyPath = path.join(require('os').homedir(), '.ssh', 'oracle-metardu.key');
 const hasKey = fs.existsSync(keyPath);
 
 const config = {
-  host: '34.170.248.156',
+  host: VM_HOST,
   port: 22,
-  username: 'mohameddosho20',
+  username: VM_USER,
   readyTimeout: 30000,
 };
 

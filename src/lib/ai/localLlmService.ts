@@ -9,8 +9,8 @@
 import { CreateWebWorkerMLCEngine, type WebWorkerMLCEngine, type InitProgressReport } from '@mlc-ai/web-llm'
 import { CAP_299_KNOWLEDGE } from './knowledge/cap299'
 
-// Selected mobile-friendly 1B/3B parameter model
-export const DEFAULT_LOCAL_MODEL = 'Llama-3.2-1B-Instruct-q4f16_1-MLC'
+// Selected mobile-friendly 3B parameter model
+export const DEFAULT_LOCAL_MODEL = 'Phi-3-mini-4k-instruct-q4f16_1-MLC'
 
 export interface LocalChatOptions {
   messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>
