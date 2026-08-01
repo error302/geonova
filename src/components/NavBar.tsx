@@ -22,6 +22,7 @@ const signoutMutationSchema = z.object({}).passthrough()
 
 /* ── Search index: all navigable pages for Ctrl+K ────────────────── */
 const searchablePages = [
+  { category: 'AI', group: 'Assistant', href: '/assistant', labelKey: 'Survey Assistant (Cap 299)' },
   // Cadastral workflow
   { category: 'Cadastral', group: 'Workflow', href: '/cadastral-workflow', labelKey: 'Cadastral Workflow' },
   { category: 'Cadastral', group: 'Validation', href: '/tools/topology-check', labelKey: 'Topology Pre-flight' },
@@ -91,6 +92,7 @@ const searchablePages = [
   // Tools - Specialized (scope narrowing v1: mining + hydrographic removed)
   { category: 'Tools', group: 'Specialized', href: '/tools/drone', labelKey: 'tools.drone' },
   // Field
+  { category: 'AI', group: 'AI', href: '/assistant', labelKey: 'Survey Assistant' },
   { category: 'Field', group: 'Field', href: '/field', labelKey: 'field.fieldMode' },
   { category: 'Field', group: 'Field', href: '/fieldbook', labelKey: 'field.fieldBook' },
   { category: 'Field', group: 'Field', href: '/guide', labelKey: 'guides.title' },

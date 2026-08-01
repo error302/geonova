@@ -13,6 +13,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY main.py .
+COPY gnss_processor.py .
 
 # Non-root user for security
 RUN groupadd --system --gid 1001 worker && \

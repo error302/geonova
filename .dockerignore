@@ -19,3 +19,13 @@ graphify-out
 android
 ios
 tmp
+.freebuff
+.graphify
+.metardu-cache
+.playwright-mcp
+.claude
+.opencode
+agent-ctx
+competitor-analysis.json
+kenya-*-search.json
+e2e

@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { Sparkles } from 'lucide-react'
 import SubscriptionStatus from '@/components/SubscriptionStatus'
 import UpgradePrompt from '@/components/UpgradePrompt'
 import { getServerTranslator } from '@/lib/i18n/server'
@@ -14,6 +15,24 @@ import { ConnectivityIndicator } from '@/components/shared/ConnectivityIndicator
 import OnboardingWrapper from '@/components/shared/OnboardingWrapper'
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed'
 import DashboardSearch from '@/components/dashboard/DashboardSearch'
+
+function StepIcon({ name }: { name: string }) {
+  const cls = 'w-5 h-5 text-current'
+  switch (name) {
+    case 'search':
+      return <svg className={cls} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+    case 'ruler':
+      return <svg className={cls} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l-3-3m3 3l6-6m-6 6l3-3m-3 3l-3-3m3 3l3-3m-6-6l3-3m-3 3l-3-3m3 3l6-6m-6 6l3-3m-6 6l-3-3m3 3l3-3m-3-9l3-3m-3 3l-3-3m3 3l6-6m-6-3l3-3m-3 3l-3-3m3 3l3-3"/></svg>
+    case 'calculator':
+      return <svg className={cls} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z"/></svg>
+    case 'file-text':
+      return <svg className={cls} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+    case 'upload':
+      return <svg className={cls} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+    default:
+      return null
+  }
+}
 
 export default async function DashboardPage() {
   let t = (k: string) => k
@@ -157,32 +176,108 @@ export default async function DashboardPage() {
 
 
       {!projectsWithCounts?.length ? (
-        <div className="flex flex-col items-center justify-center py-24 rounded-2xl border border-dashed border-[var(--border-color)] text-center animate-in fade-in duration-700 slide-in-from-bottom-8">
-          <div className="w-16 h-16 rounded-[2rem] bg-[var(--accent)]/10 flex items-center justify-center mb-6">
-            <svg className="w-8 h-8 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"/>
-            </svg>
+        <div className="animate-in fade-in duration-700 space-y-8">
+          {/* Hero welcome */}
+          <div className="flex flex-col items-center text-center py-12 pb-6">
+            <div className="w-16 h-16 rounded-[2rem] bg-gradient-to-br from-amber-500/20 to-orange-600/20 flex items-center justify-center mb-5 ring-1 ring-amber-500/20">
+              <svg className="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"/>
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">Welcome to METARDU</h1>
+            <p className="text-[var(--text-secondary)] max-w-lg">Your complete cadastral survey platform. Create a project, record field observations, compute adjustments, and generate submission-ready plans.</p>
           </div>
-          
-          <h2 className="text-2xl font-bold font-display text-[var(--text-primary)] mb-2">Welcome to METARDU</h2>
-          <p className="text-[var(--text-secondary)] mb-10 max-w-md">Start your first project or jump straight into a tool.</p>
-          
-          <div className="flex flex-wrap gap-4 justify-center mb-10">
-            <Link href="/project/new" prefetch={false} className="btn btn-primary px-8 rounded-full">
-              + New Project
+
+          {/* Survey workflow steps */}
+          <div className="max-w-3xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+              {[
+                { step: '1', title: 'Primary Investigation', desc: 'Define project scope, location, and control points', icon: 'search', color: 'from-blue-500/20 to-cyan-500/20', link: '/project/new', cta: 'Create Project' },
+                { step: '2', title: 'Field Survey', desc: 'Record traverse/level observations in the field book', icon: 'ruler', color: 'from-emerald-500/20 to-teal-500/20', link: '/fieldbook', cta: 'Open Field Book' },
+                { step: '3', title: 'Compute & Adjust', desc: 'Run traverse adjustments, level loops, area calcs', icon: 'calculator', color: 'from-violet-500/20 to-purple-500/20', link: '/tools/traverse', cta: 'Open Calculator' },
+                { step: '4', title: 'Prepare Plan', desc: 'Generate deed plans, survey reports, beacon certs', icon: 'file-text', color: 'from-amber-500/20 to-orange-500/20', link: '/tools/survey-report-builder', cta: 'Build Report' },
+                { step: '5', title: 'Submit', desc: 'Export shapefiles, field books, PDF for Director', icon: 'upload', color: 'from-rose-500/20 to-pink-500/20', link: '/project/new', cta: 'Start Project' },
+              ].map((item) => (
+                <Link key={item.step} href={item.link} prefetch={false}
+                  className="group relative flex flex-col items-center text-center p-4 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-[var(--accent)]/40 hover:bg-[var(--bg-tertiary)] transition-all duration-200"
+                >
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-3 ring-1 ring-inset ring-white/5 group-hover:scale-110 transition-transform`}>
+                    <StepIcon name={item.icon} />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-amber-500 text-black text-[10px] font-bold flex items-center justify-center shadow-sm">
+                    {item.step}
+                  </div>
+                  <h3 className="text-xs font-semibold text-[var(--text-primary)] mb-1">{item.title}</h3>
+                  <p className="text-[10px] text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
+                  <span className="mt-2 text-[10px] font-medium text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity">
+                    {item.cta} →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick actions + AI assistant card */}
+          <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Left: Getting started checklist */}
+            <div className="p-5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)]">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-3">Getting Started</h3>
+              <ul className="space-y-2.5">
+                {[
+                  { done: false, text: 'Create your first project', href: '/project/new', label: 'Create' },
+                  { done: false, text: 'Learn the survey workflow', href: '/docs/first-plan', label: 'Read guide' },
+                  { done: false, text: 'Explore survey tools', href: '/tools', label: 'Browse tools' },
+                  { done: false, text: 'Try the AI Assistant', href: '/assistant', label: 'Ask AI' },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-md border-2 border-[var(--border-color)] flex items-center justify-center shrink-0">
+                      {item.done && (
+                        <svg className="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className="flex-1 text-xs text-[var(--text-secondary)]">{item.text}</span>
+                    <Link href={item.href} className="text-[10px] font-medium text-[var(--accent)] hover:underline shrink-0">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Right: AI Assistant card */}
+            <Link href="/assistant" className="group p-5 rounded-xl bg-gradient-to-br from-amber-500/5 via-orange-500/5 to-rose-500/5 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-200">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-[var(--text-primary)] group-hover:text-amber-500 transition-colors">Survey Assistant</h3>
+                  <p className="text-xs text-[var(--text-muted)] mt-1 leading-relaxed">
+                    Ask questions about Survey Act Cap 299, traverse tolerances, submission standards, or any cadastral procedure. Runs offline via WebGPU — no data leaves your device.
+                  </p>
+                  <span className="inline-block mt-2 text-xs font-medium text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Open Assistant →
+                  </span>
+                </div>
+              </div>
             </Link>
-            <Link href="/tools/traverse" className="btn btn-secondary px-8 rounded-full">
-              Open Traverse Tool
-            </Link>
-            <Link href="/process" prefetch={false} className="btn btn-secondary px-8 rounded-full">
+          </div>
+
+          {/* Bottom quick-links */}
+          <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-3 pt-4 border-t border-[var(--border-color)]">
+            <Link href="/process" prefetch={false} className="px-4 py-2 text-xs text-[var(--text-secondary)] bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg hover:border-[var(--accent)] transition-colors">
               Process Field Notes
             </Link>
-          </div>
-          
-          <div className="w-full max-w-sm border-t border-[var(--border-color)] pt-8 mt-4">
-            <p className="text-xs font-mono text-[var(--text-muted)] tracking-[0.1em] mb-4">NEW TO METARDU?</p>
-            <Link href="/docs/first-plan" className="text-sm text-[var(--accent)] hover:text-[var(--accent-dim)] transition-colors inline-flex items-center gap-1 font-medium">
-              View Survey Guide →
+            <Link href="/docs/first-plan" prefetch={false} className="px-4 py-2 text-xs text-[var(--text-secondary)] bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg hover:border-[var(--accent)] transition-colors">
+              Survey Guide
+            </Link>
+            <Link href="/pricing" prefetch={false} className="px-4 py-2 text-xs text-[var(--text-secondary)] bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg hover:border-[var(--accent)] transition-colors">
+              Pricing
+            </Link>
+            <Link href="/docs" prefetch={false} className="px-4 py-2 text-xs text-[var(--text-secondary)] bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg hover:border-[var(--accent)] transition-colors">
+              Knowledge Base
             </Link>
           </div>
         </div>
