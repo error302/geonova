@@ -12,7 +12,38 @@
 -- Adapted from the handoff doc's Supabase syntax to raw PostgreSQL
 -- (METARDU uses pg Pool, not Supabase client). RLS uses request.user_id
 -- via the AsyncLocalStorage pattern in src/lib/db.ts.
+--
+-- AUDIT FIX (2026-08-03): This migration previously FAILED on every boot.
+--   000_canonical_schema.sql creates a legacy `project_submissions` stub
+--   (id, project_id, submission_id, document_category, status, created_at)
+--   which is EMPTY (0 rows) and referenced by no FK, so `CREATE TABLE IF NOT
+--   EXISTS` silently no-op'd and the subsequent index on the missing
+--   `surveyor_profile_id` column aborted the whole migration run. The
+--   canonical schema therefore never landed and the submission feature
+--   (assembleSubmission / revisionNumber / api-client/projectSubmissions)
+--   was broken in production. The legacy stub is now dropped (guarded on
+--   the old schema) and the table definition is reconciled with the columns
+--   the live code actually reads/writes (user_id, revision_number,
+--   sequence_number, required_documents, …).
 -- ────────────────────────────────────────────────────────────────────────────
+
+-- ─── 0. Remove legacy stub table ───────────────────────────────────────────
+-- Only replaced when it still has the OLD 000 schema (no surveyor_profile_id
+-- column). Idempotent: on re-run the canonical table already has the new
+-- columns, so this block does nothing.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = 'project_submissions'
+  ) AND NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'project_submissions'
+      AND column_name = 'surveyor_profile_id'
+  ) THEN
+    DROP TABLE project_submissions;
+  END IF;
+END $$;
 
 -- ─── 1. project_submissions table ─────────────────────────────────────────
 -- Maps one project to one persistent submission record. The submission
@@ -22,13 +53,18 @@
 CREATE TABLE IF NOT EXISTS project_submissions (
     id                  UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     project_id          UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    user_id             UUID,                       -- owner (api-client filter/insert)
+    surveyor_profile_user_id UUID,                  -- api-client (surveyor identity)
     surveyor_profile_id UUID REFERENCES surveyor_profiles(id),
-    submission_number   TEXT NOT NULL,           -- e.g. "RS149_2025_002_R00"
+    submission_number   TEXT,                       -- e.g. "RS149_2025_002_R00"
     revision_code       TEXT NOT NULL DEFAULT 'R00',
+    revision_number     INTEGER NOT NULL DEFAULT 0, -- api-client ordering / revision
+    sequence_number     INTEGER,                    -- api-client (per-surveyor year seq)
     submission_year     INTEGER NOT NULL,
     package_status      TEXT NOT NULL DEFAULT 'draft'
                         CHECK (package_status IN ('draft', 'incomplete', 'ready', 'submitted')),
     required_sections   JSONB NOT NULL DEFAULT '[]'::jsonb,
+    required_documents  JSONB NOT NULL DEFAULT '[]'::jsonb, -- api-client
     generated_artifacts JSONB NOT NULL DEFAULT '{}'::jsonb,
     supporting_attachments JSONB NOT NULL DEFAULT '{}'::jsonb,
     validation_results  JSONB NOT NULL DEFAULT '{}'::jsonb,
@@ -46,6 +82,10 @@ CREATE INDEX IF NOT EXISTS idx_project_submissions_surveyor
 -- Index for lookup by submission number
 CREATE INDEX IF NOT EXISTS idx_project_submissions_number
     ON project_submissions(submission_number);
+
+-- Index for ownership lookups (api-client filters by user_id)
+CREATE INDEX IF NOT EXISTS idx_project_submissions_user
+    ON project_submissions(user_id);
 
 -- ─── 2. RLS for project_submissions ────────────────────────────────────────
 -- Access via the project's user_id, matching the existing RLS pattern.
