@@ -23,8 +23,15 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.VM_SSH_KEY }}
 
-      - name: Add VM to known hosts
-        run: ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+      # AUDIT FIX (2026-08-03): ssh-keyscan was a hard blocker — if the VM's
+      # SSH port is temporarily unreachable from GitHub runners, the whole
+      # deploy failed at this step even though the deploy command below uses
+      # `-o StrictHostKeyChecking=no` (which does not need known_hosts).
+      # Now best-effort with a timeout: warn but never block the deploy.
+      - name: Add VM to known hosts (best-effort)
+        run: |
+          ssh-keyscan -T 10 -H "${{ secrets.VM_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || \
+            echo "::warning::ssh-keyscan could not reach VM_HOST; deploy continues (StrictHostKeyChecking=no)"
 
       - name: Pull latest code and rebuild Docker
         run: |
