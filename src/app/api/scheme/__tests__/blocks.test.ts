@@ -26,6 +26,14 @@ jest.mock('@/lib/logger', () => ({
   auditLog: jest.fn(),
 }))
 
+// POST route enables apiHandler auditChain, which calls appendAuditEntry
+// AFTER the 2xx response. Without mocking this module, the real function
+// issues 2 extra db.query calls (chain tail SELECT + INSERT), breaking the
+// deterministic call-count assertions below.
+jest.mock('@/lib/audit/auditLog', () => ({
+  appendAuditEntry: jest.fn().mockResolvedValue({ id: 'audit-entry-1' }),
+}))
+
 import { POST, GET } from '../blocks/route'
 import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
