@@ -38,6 +38,7 @@ import { MapTab, type SvgElements } from './MapTab';
 import { ExportTab } from './ExportTab';
 import { BreaklineTab } from './BreaklineTab';
 import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { ComputeLimitNotice } from '@/components/tools/ComputeLimitNotice'
 
 // ─── Component ──────────────────────────────────────────────────────────────
 
@@ -370,6 +371,11 @@ export default function ContourGeneratorPage() {
           </p>
         </div>
       </div>
+
+      <ComputeLimitNotice
+        tool="Contour generation"
+        message="The web contour engine runs in a browser worker and is tuned for typical field datasets. For very large point clouds, dense contours, or batch terrain processing, the METARDU desktop app runs the full engine locally — no size limits, no uploads."
+      />
 
       {/* Tab bar */}
       <div className="flex gap-2 mt-6 mb-6 flex-wrap">

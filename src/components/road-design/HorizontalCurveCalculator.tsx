@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { horizontalCurveElements, type HorizontalCurveInput, type HorizontalCurveResult } from '@/lib/computations/roadDesignEngine'
+import { SimpleCurveDiagram } from '@/components/tools/SimpleCurveDiagram'
 
 type Tab = 'elements' | 'setout'
 
@@ -104,6 +105,21 @@ export default function HorizontalCurveCalculator() {
             </div>
           ))}
         </div>
+      )}
+
+      {tab === 'elements' && result && (
+        <SimpleCurveDiagram
+          radius={parseFloat(radius)}
+          deflectionDeg={result.delta * 180 / Math.PI}
+          tangentLength={result.tangentLength}
+          arcLength={result.curveLength}
+          longChord={result.longChord}
+          externalDistance={result.externalDistance}
+          midOrdinate={result.midOrdinate}
+          pcChainage={result.tcChainage}
+          piChainage={parseFloat(ipChainage)}
+          ptChainage={result.ctChainage}
+        />
       )}
 
       {tab === 'elements' && result && result.steps && (

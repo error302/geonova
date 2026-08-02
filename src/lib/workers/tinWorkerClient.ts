@@ -56,6 +56,9 @@ interface PendingHandler {
   reject: (err: Error) => void
   onProgress?: (p: number) => void
   timer: ReturnType<typeof setTimeout>
+  /** Original op + payload so onerror can re-run via sync fallback. */
+  op: string
+  payload: Record<string, unknown>
 }
 const pending = new Map<string, PendingHandler>()
 
@@ -110,14 +113,26 @@ function getWorker(): Worker | null {
       }
     }
     workerInstance.onerror = (err: ErrorEvent) => {
-      // Reject ALL pending requests — the worker is dead
-      for (const [id, handler] of pending) {
-        clearTimeout(handler.timer)
-        handler.reject(new Error(err.message || 'Worker crashed'))
-        pending.delete(id)
-      }
+      // Worker crashed — FALLBACK to sync engine for any in-flight calls
+      // instead of rejecting. The user gets their result, just on the
+      // main thread (slower but correct). Subsequent calls will skip the
+      // worker entirely until the page is reloaded.
+      const pendingEntries = Array.from(pending.entries())
+      pending.clear()
       workerInstance = null
       workerUnavailable = true
+      // Surface a console warning so devs can spot this in DevTools
+      console.warn('[tinWorkerClient] Web worker crashed; falling back to sync engine:', err.message || err)
+      for (const [, handler] of pendingEntries) {
+        clearTimeout(handler.timer)
+        try {
+          // Run the original request through the sync fallback so the
+          // caller's promise resolves with the same shape.
+          handler.resolve(syncFallback(handler.op, handler.payload))
+        } catch (e) {
+          handler.reject(e instanceof Error ? e : new Error(String(e)))
+        }
+      }
     }
     return workerInstance
   } catch {
@@ -160,6 +175,8 @@ function dispatch<T>(
       reject,
       onProgress: options.onProgress,
       timer,
+      op,
+      payload,
     })
 
     worker.postMessage({ id, op, ...payload })
@@ -262,11 +279,15 @@ export function _forceSyncModeForTests(): void {
     workerInstance.terminate()
     workerInstance = null
   }
-  for (const [id, handler] of pending) {
+  for (const [, handler] of pending) {
     clearTimeout(handler.timer)
-    handler.reject(new Error('Forced into sync mode'))
-    pending.delete(id)
+    try {
+      handler.resolve(syncFallback(handler.op, handler.payload))
+    } catch {
+      handler.reject(new Error('Forced into sync mode'))
+    }
   }
+  pending.clear()
 }
 
 /**

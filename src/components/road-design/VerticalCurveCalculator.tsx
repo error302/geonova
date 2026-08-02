@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { verticalCurve, type VerticalCurveInput, type VerticalCurveResult } from '@/lib/computations/roadDesignEngine'
+import { VerticalCurveProfile } from '@/components/tools/VerticalCurveProfile'
 
 export default function VerticalCurveCalculator() {
   const [result, setResult] = useState<VerticalCurveResult | null>(null)
@@ -120,6 +121,20 @@ export default function VerticalCurveCalculator() {
               </div>
             ))}
           </div>
+
+          <VerticalCurveProfile
+            rows={result.rows.map(r => ({ chainage: r.chainage, x: r.x, RL: r.rl, grade: 0 }))}
+            bvcChainage={result.bvcChainage}
+            evcChainage={result.evcChainage}
+            vpiChainage={parseFloat(vpiCh)}
+            bvcRL={result.bvcRL}
+            evcRL={result.evcRL}
+            vpiRL={parseFloat(vpiRL)}
+            g1={parseFloat(g1)}
+            g2={parseFloat(g2)}
+            isCrest={result.isCrest}
+            peakPoint={{ chainage: result.chainagePeak, RL: result.rlPeak }}
+          />
 
           <div className="overflow-x-auto">
             <table className="w-full text-xs font-mono border-collapse">

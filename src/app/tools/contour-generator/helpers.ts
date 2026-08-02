@@ -213,6 +213,48 @@ export function elevationToColor(elevation: number, minElev: number, maxElev: nu
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
+/**
+ * Discrete hypsometric tint bands for professional contour maps.
+ * Uses an even-step quantized elevation model (QEM) — each band spans
+ * `bandWidth` meters and gets a single color, so the map reads as a
+ * graded color relief (like USGS/National Map style) rather than a
+ * continuous gradient. Index contours (every 5th band) get a darker shade.
+ *
+ * @returns array of { fromElev, toElev, color, isIndex } bands covering
+ *          [minElev, maxElev]. Used by MapTab to render a tinted rectangle
+ *          per band as the relief background, and to render a discrete
+ *          legend with swatches.
+ */
+export interface HypsometricBand {
+  fromElev: number;
+  toElev: number;
+  color: string;
+  isIndex: boolean;
+}
+
+export function computeHypsometricBands(
+  minElev: number,
+  maxElev: number,
+  contourInterval: number,
+): HypsometricBand[] {
+  const bands: HypsometricBand[] = [];
+  if (maxElev <= minElev) {
+    return [{ fromElev: minElev, toElev: maxElev, color: elevationToColor(minElev, minElev, maxElev), isIndex: true }];
+  }
+  // Each band = one contour interval wide. Every 5th band is an "index" band.
+  let elev = minElev;
+  let idx = 0;
+  while (elev < maxElev) {
+    const to = Math.min(elev + contourInterval, maxElev);
+    const mid = (elev + to) / 2;
+    const color = elevationToColor(mid, minElev, maxElev);
+    bands.push({ fromElev: elev, toElev: to, color, isIndex: idx % 5 === 0 });
+    elev = to;
+    idx++;
+  }
+  return bands;
+}
+
 export function downloadBlob(content: string, filename: string, mime = 'text/plain') {
   const blob = new Blob([content], { type: mime });
   const url = URL.createObjectURL(blob);

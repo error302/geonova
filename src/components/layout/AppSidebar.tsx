@@ -8,7 +8,7 @@ import {
   LayoutDashboard, Users, ShieldCheck, CreditCard,
   Settings2, Activity, ChevronLeft, BarChart3,
   Map, Building2, HelpCircle, LayoutTemplate, Boxes,
-  RoadIcon, Mountain,
+  RoadIcon, Mountain, Sparkles,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { OutdoorModeToggle } from '@/components/shared/OutdoorModeToggle'
@@ -40,6 +40,7 @@ const userNavItems: NavItem[] = [
   { href: '/report-templates', label: 'Templates', icon: LayoutTemplate },
   { href: '/sectional', label: 'Sectional', icon: Building2 },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
+  { href: '/assistant', label: 'Assistant', icon: Sparkles },
   { href: '/help', label: 'Help', icon: HelpCircle },
 ]
 

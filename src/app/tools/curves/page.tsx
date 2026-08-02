@@ -9,6 +9,8 @@ import { PageHeader } from '@/components/shared/PageHeader'
 import { generatePDF, downloadCSV, toCSV } from '@/lib/export/helpers'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import { SpiralAlignmentTab } from '@/components/tools/SpiralAlignmentTab'
+import { SimpleCurveDiagram } from '@/components/tools/SimpleCurveDiagram'
+import { VerticalCurveProfile } from '@/components/tools/VerticalCurveProfile'
 
 type CurveType = 'simple' | 'compound' | 'reverse' | 'vertical' | 'spiral-alignment';
 
@@ -31,7 +33,7 @@ export default function CurvesCalculator() {
     r2_rev: '300',
     abDistance: '150'
   });
-  const [result, setResult] = useState<null | { type: CurveType; title?: string; steps: SolutionStep[]; stakePoints?: any[] }>(null);
+  const [result, setResult] = useState<null | { type: CurveType; title?: string; steps: SolutionStep[]; stakePoints?: any[]; stakeout?: any }>(null);
   const [rdmValidation, setRdmValidation] = useState<any>(null);
 
   const [vInput, setVInput] = useState({
@@ -128,6 +130,7 @@ export default function CurvesCalculator() {
     setVResult({
       steps,
       A, curveLen, BVC_chainage, EVC_chainage, BVC_RL, EVC_RL,
+      vpiChainage, vpiRL,
       arithmeticCheck, arithPass, peakPoint, tableRows, minK, kPass,
       K_computed: curveLen / Math.abs(A),
       isCrest,
@@ -143,7 +146,7 @@ export default function CurvesCalculator() {
       const deflectionDec = (parseFloat(input.defDeg) || 0) + (parseFloat(input.defMin) || 0) / 60 + (parseFloat(input.defSec) || 0) / 3600
       if (isNaN(R) || isNaN(deflectionDec) || isNaN(piChainage) || isNaN(interval)) return;
       const s = simpleCurveSolved({ radius: R, deflectionDeg: deflectionDec, piChainage, interval });
-      setResult({ type: 'simple', title: s.solution.title, steps: s.steps, stakePoints: s.result.points });
+      setResult({ type: 'simple', title: s.solution.title, steps: s.steps, stakePoints: s.result.points, stakeout: s.result });
     } else if (curveType === 'compound') {
       const R1 = parseFloat(input.r1);
       const R2 = parseFloat(input.r2);
@@ -354,6 +357,22 @@ export default function CurvesCalculator() {
         {result && curveType !== 'vertical' && (
           <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-6">
             <SolutionStepsRenderer title={result.title} steps={result.steps} />
+            {result.type === 'simple' && result.stakeout?.elements && (
+              <div className="mt-6">
+                <SimpleCurveDiagram
+                  radius={result.stakeout.elements.radius}
+                  deflectionDeg={result.stakeout.elements.deflectionAngle}
+                  tangentLength={result.stakeout.elements.tangentLength}
+                  arcLength={result.stakeout.elements.arcLength}
+                  longChord={result.stakeout.elements.longChord}
+                  externalDistance={result.stakeout.elements.externalDistance}
+                  midOrdinate={result.stakeout.elements.midOrdinate}
+                  pcChainage={result.stakeout.pcChainage}
+                  piChainage={result.stakeout.piChainage}
+                  ptChainage={result.stakeout.ptChainage}
+                />
+              </div>
+            )}
             {result.type === 'simple' && result.stakePoints && result.stakePoints.length > 0 ? (
               <div className="mt-6">
                 <h3 className="font-semibold text-[var(--text-primary)] mb-3">Stakeout Table</h3>
@@ -413,6 +432,22 @@ export default function CurvesCalculator() {
                 </div>
               ))}
             </div>
+
+            {vResult.tableRows && vResult.tableRows.length > 0 && (
+              <VerticalCurveProfile
+                rows={vResult.tableRows}
+                bvcChainage={vResult.BVC_chainage}
+                evcChainage={vResult.EVC_chainage}
+                vpiChainage={vResult.vpiChainage}
+                bvcRL={vResult.BVC_RL}
+                evcRL={vResult.EVC_RL}
+                vpiRL={vResult.vpiRL}
+                g1={parseFloat(vInput.g1) || 0}
+                g2={parseFloat(vInput.g2) || 0}
+                isCrest={vResult.isCrest}
+                peakPoint={vResult.peakPoint}
+              />
+            )}
 
             <div className="flex gap-3 flex-wrap">
               <div className="px-3 py-2 rounded border font-medium text-sm" style={{ backgroundColor: vResult.arithPass ? '#10b98120' : '#ef444420', borderColor: vResult.arithPass ? '#10b981' : '#ef4444', color: vResult.arithPass ? '#10b981' : '#ef4444' }}>

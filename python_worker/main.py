@@ -4,6 +4,10 @@ FastAPI service for heavy survey computations.
 Invoked by Next.js via callPythonCompute() from @/lib/pythonService.
 """
 
+import logging
+import time
+import uuid
+from logging.handlers import RotatingFileHandler
 from fastapi import FastAPI, HTTPException, Request, Response
 from pydantic import BaseModel
 from typing import Optional, Any
@@ -12,6 +16,52 @@ import hmac
 import math
 import json
 import os
+
+# ─── Structured Logging ──────────────────────────────────────────────────────
+# Emits JSON lines to stdout so `docker compose logs -f metardu-worker` is
+# machine-parseable (surveys observability: request IDs, latency, task names,
+# status codes). Also writes a rotating file inside the container for
+# long-term retention without unbounded disk growth.
+class JsonFormatter(logging.Formatter):
+    def format(self, record: logging.LogRecord) -> str:
+        entry = {
+            "ts": self.formatTime(record, "%Y-%m-%dT%H:%M:%S%z"),
+            "level": record.levelname,
+            "logger": record.name,
+            "msg": record.getMessage(),
+        }
+        for key in ("request_id", "task", "path", "method", "status", "latency_ms", "points"):
+            val = getattr(record, key, None)
+            if val is not None:
+                entry[key] = val
+        if record.exc_info:
+            entry["exc"] = self.formatException(record.exc_info)
+        return json.dumps(entry)
+
+
+def setup_logging() -> logging.Logger:
+    logger = logging.getLogger("metardu.worker")
+    if logger.handlers:
+        return logger
+    logger.setLevel(logging.INFO)
+
+    console = logging.StreamHandler()
+    console.setFormatter(JsonFormatter())
+    logger.addHandler(console)
+
+    try:
+        handler = RotatingFileHandler(
+            "/tmp/metardu-worker.log", maxBytes=5 * 1024 * 1024, backupCount=2, encoding="utf-8"
+        )
+        handler.setFormatter(JsonFormatter())
+        logger.addHandler(handler)
+    except OSError:
+        pass  # read-only FS — console only
+
+    return logger
+
+
+logger = setup_logging()
 
 # ─── OSM Feature Servers (Pyrosm, Pyosmium, OSMPythonTools) ────────────────
 # These routers add OSM data capabilities:
@@ -23,21 +73,21 @@ try:
     from osm_feature_server import router as osm_features_router
     app_osm_features = osm_features_router
 except ImportError as e:
-    print(f"[worker] OSM feature server not available: {e}")
+    logger.warning("OSM feature server not available", exc_info=e)
     app_osm_features = None
 
 try:
     from osm_streaming import stream_router as osm_stream_router
     app_osm_stream = osm_stream_router
 except ImportError as e:
-    print(f"[worker] OSM streaming not available: {e}")
+    logger.warning("OSM streaming not available", exc_info=e)
     app_osm_stream = None
 
 try:
     from osm_overpass import overpass_router as osm_overpass_router
-    app_osm_overpass = osm_overpass_router
+    app_osm_overpass = overpass_router
 except ImportError as e:
-    print(f"[worker] OSM Overpass not available: {e}")
+    logger.warning("OSM Overpass not available", exc_info=e)
     app_osm_overpass = None
 
 app = FastAPI(title="METARDU Compute Worker", version="0.1.0")
@@ -57,7 +107,7 @@ if not WORKER_SECRET:
     if os.environ.get("ENVIRONMENT", "production") == "development":
         WORKER_SECRET = "dev-worker-secret"
     else:
-        print("[worker] WARNING: WORKER_SECRET not set — all compute requests will be rejected")
+        logger.warning("WORKER_SECRET not set — all compute requests will be rejected")
 
 # --- Constants (Kenya Survey Regulations 1994) ---
 LEVELLING_TOLERANCE_MM_PER_SQRTKM = 10  # 10√K mm — RDM 1.1 (2025) Table 5.1
@@ -78,15 +128,39 @@ def register_task(name: str):
 # --- Auth Middleware ---
 @app.middleware("http")
 async def verify_worker_secret(request: Request, call_next):
-    if request.url.path == "/health":
-        return await call_next(request)
-    if not WORKER_SECRET:
-        return JSONResponse(status_code=503, content={"detail": "Worker secret not configured"})
-    secret = request.headers.get("X-Worker-Secret", "")
-    # Use constant-time comparison to prevent timing attacks
-    if not hmac.compare_digest(secret, WORKER_SECRET):
-        return JSONResponse(status_code=403, content={"detail": "Invalid worker secret"})
-    return await call_next(request)
+    request_id = request.headers.get("X-Request-Id") or uuid.uuid4().hex[:12]
+    start = time.perf_counter()
+    status_code = None
+    try:
+        if request.url.path == "/health":
+            return await call_next(request)
+        if not WORKER_SECRET:
+            status_code = 503
+            return JSONResponse(status_code=503, content={"detail": "Worker secret not configured"})
+        secret = request.headers.get("X-Worker-Secret", "")
+        # Use constant-time comparison to prevent timing attacks
+        if not hmac.compare_digest(secret, WORKER_SECRET):
+            logger.warning(
+                "auth_rejected",
+                extra={"request_id": request_id, "path": request.url.path, "method": request.method},
+            )
+            status_code = 403
+            return JSONResponse(status_code=403, content={"detail": "Invalid worker secret"})
+        response = await call_next(request)
+        status_code = response.status_code
+        return response
+    finally:
+        latency_ms = round((time.perf_counter() - start) * 1000, 2)
+        logger.info(
+            "request",
+            extra={
+                "request_id": request_id,
+                "path": request.url.path,
+                "method": request.method,
+                "status": status_code,
+                "latency_ms": latency_ms,
+            },
+        )
 
 # --- Models ---
 class ComputeRequest(BaseModel):
@@ -106,16 +180,35 @@ async def health():
 # --- Task Dispatcher ---
 @app.post("/compute")
 async def compute(request: ComputeRequest):
-    if request.task not in TASK_REGISTRY:
+    start = time.perf_counter()
+    task_name = request.task
+    if task_name not in TASK_REGISTRY:
         available = list(TASK_REGISTRY.keys())
+        logger.warning("unknown_task", extra={"task": task_name})
         return ComputeResponse(
             success=False,
             error=f"Unknown task: {request.task}. Available: {available}"
         )
     try:
-        result = await TASK_REGISTRY[request.task](request.params)
+        result = await TASK_REGISTRY[task_name](request.params)
+        latency_ms = round((time.perf_counter() - start) * 1000, 2)
+        points = None
+        if isinstance(result, dict):
+            points = result.get("pointCount") or result.get("points")
+            if isinstance(points, (list, dict)):
+                points = len(points) if isinstance(points, list) else None
+        logger.info(
+            "compute_ok",
+            extra={"task": task_name, "latency_ms": latency_ms, "points": points},
+        )
         return ComputeResponse(success=True, data=result)
     except Exception as e:
+        latency_ms = round((time.perf_counter() - start) * 1000, 2)
+        logger.error(
+            "compute_error",
+            exc_info=e,
+            extra={"task": task_name, "latency_ms": latency_ms},
+        )
         return ComputeResponse(success=False, error=str(e))
 
 # --- List Tasks ---

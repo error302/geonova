@@ -7,7 +7,7 @@
 import type { ContourLine, SpotHeight } from '@/lib/engine/contours';
 import type { Bounds } from './types';
 import { MARGIN, SVG_HEIGHT, SVG_WIDTH } from './constants';
-import { elevationToColor } from './helpers';
+import { elevationToColor, computeHypsometricBands } from './helpers';
 
 export interface SvgElements {
   usableW: number;
@@ -57,6 +57,46 @@ export function MapTab({
             stroke="#30363d"
             strokeWidth="1"
           />
+
+          {/* Hypsometric tint bands — discrete elevation relief background.
+              Each band is a rectangle spanning the full map width at the
+              northing range it covers. Gives a graded color relief like
+              USGS/National Map style. */}
+          {(() => {
+            const bands = computeHypsometricBands(
+              svgElements.minElev,
+              svgElements.maxElev,
+              contourInterval,
+            );
+            return bands.map((band, i) => {
+              const yTop = svgElements.toSvgY(
+                // Invert: northing increases upward; map elev->northing isn't 1:1
+                // but for a tint relief we just stack bands bottom→up.
+                // We map elevation to the northing axis by using the band's
+                // vertical position proportional to elevation range.
+                bounds.minN +
+                  (svgElements.rangeN * (band.toElev - svgElements.minElev)) /
+                    (svgElements.maxElev - svgElements.minElev),
+              );
+              const yBot = svgElements.toSvgY(
+                bounds.minN +
+                  (svgElements.rangeN * (band.fromElev - svgElements.minElev)) /
+                    (svgElements.maxElev - svgElements.minElev),
+              );
+              const h = Math.max(0, yBot - yTop);
+              return (
+                <rect
+                  key={`hb${i}`}
+                  x={MARGIN}
+                  y={yTop}
+                  width={svgElements.usableW}
+                  height={h}
+                  fill={band.color}
+                  opacity={band.isIndex ? 0.22 : 0.14}
+                />
+              );
+            });
+          })()}
 
           {/* Grid lines */}
           {(() => {
@@ -216,6 +256,47 @@ export function MapTab({
             Northing (m)
           </text>
 
+          {/* Corner coordinate annotations (full grid refs at each corner) */}
+          <g fill="#666" fontSize="8" fontFamily="monospace">
+            <text x={MARGIN + 3} y={MARGIN + 11} textAnchor="start">
+              {`N ${bounds.minN.toFixed(1)}  E ${bounds.minE.toFixed(1)}`}
+            </text>
+            <text x={MARGIN + svgElements.usableW - 3} y={MARGIN + 11} textAnchor="end">
+              {`N ${bounds.minN.toFixed(1)}  E ${bounds.maxE.toFixed(1)}`}
+            </text>
+            <text x={MARGIN + 3} y={MARGIN + svgElements.usableH - 4} textAnchor="start">
+              {`N ${bounds.maxN.toFixed(1)}  E ${bounds.minE.toFixed(1)}`}
+            </text>
+            <text x={MARGIN + svgElements.usableW - 3} y={MARGIN + svgElements.usableH - 4} textAnchor="end">
+              {`N ${bounds.maxN.toFixed(1)}  E ${bounds.maxE.toFixed(1)}`}
+            </text>
+          </g>
+
+          {/* Title block (top-right inside map frame) */}
+          <g>
+            <text
+              x={MARGIN + svgElements.usableW - 4}
+              y={MARGIN + 24}
+              fill="#ccc"
+              fontSize="12"
+              fontFamily="sans-serif"
+              fontWeight="600"
+              textAnchor="end"
+            >
+              CONTOUR MAP
+            </text>
+            <text
+              x={MARGIN + svgElements.usableW - 4}
+              y={MARGIN + 38}
+              fill="#888"
+              fontSize="9"
+              fontFamily="monospace"
+              textAnchor="end"
+            >
+              {`CI ${contourInterval.toFixed(1)}m · ${points.length} pts`}
+            </text>
+          </g>
+
           {/* North arrow */}
           <g transform={`translate(${SVG_WIDTH - 40}, ${MARGIN + 30})`}>
             <line x1="0" y1="20" x2="0" y2="0" stroke="#aaa" strokeWidth="1.5" />
@@ -248,19 +329,46 @@ export function MapTab({
           })()}
         </svg>
 
-        {/* Color legend */}
-        <div className="flex items-center gap-2 mt-4 justify-center">
-          <span className="text-xs text-zinc-500">Low ({svgElements.minElev.toFixed(1)}m)</span>
-          <div
-            className="w-48 h-3 rounded"
-            style={{
-              background: `linear-gradient(to right, ${[
-                0, 0.25, 0.5, 0.75, 1.0,
-              ].map(t => elevationToColor(svgElements.minElev + t * (svgElements.maxElev - svgElements.minElev), svgElements.minElev, svgElements.maxElev)).join(', ')})`,
-            }}
-          />
-          <span className="text-xs text-zinc-500">High ({svgElements.maxElev.toFixed(1)}m)</span>
-        </div>
+        {/* Color legend — discrete swatches (one per index contour band) */}
+        {(() => {
+          const bands = computeHypsometricBands(
+            svgElements.minElev,
+            svgElements.maxElev,
+            contourInterval,
+          );
+          // Show up to 9 legend entries; pick evenly across the bands.
+          const maxEntries = 9;
+          const step = Math.max(1, Math.ceil(bands.length / maxEntries));
+          const legendEntries = bands.filter((_, i) => i % step === 0);
+          return (
+            <div className="mt-4">
+              <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-1.5 text-center">
+                Elevation Legend (m)
+              </p>
+              <div className="flex items-center justify-center gap-1 flex-wrap">
+                {legendEntries.map((b, i) => (
+                  <div key={`leg${i}`} className="flex items-center gap-1">
+                    <div
+                      className="w-4 h-4 rounded-sm border border-[var(--border-color)]"
+                      style={{ background: b.color }}
+                      title={`${b.fromElev.toFixed(1)}–${b.toElev.toFixed(1)} m`}
+                    />
+                    <span className="text-[10px] font-mono text-[var(--text-secondary)] tabular-nums">
+                      {b.fromElev.toFixed(0)}
+                    </span>
+                    {i < legendEntries.length - 1 && (
+                      <span className="text-[10px] text-[var(--text-muted)] mx-0.5">·</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] text-[var(--text-muted)] text-center mt-1.5">
+                Range: {svgElements.minElev.toFixed(1)} m – {svgElements.maxElev.toFixed(1)} m
+                · Index every {(contourInterval * 5).toFixed(1)} m
+              </p>
+            </div>
+          );
+        })()}
 
         {/* Map statistics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">

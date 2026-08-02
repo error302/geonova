@@ -368,6 +368,8 @@ export default function AdminDashboardPage() {
 
   const userRole = (session?.user as { role?: string })?.role ?? ''
   const isSuperAdmin = userRole === 'super_admin'
+  const isAdminRole = userRole === 'admin' || userRole === 'super_admin'
+  const canOverridePlans = isAdminRole
 
   return (
     <div className="space-y-6">
@@ -765,8 +767,8 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Subscription Override (super_admin only) */}
-        {isSuperAdmin && (
+        {/* Subscription Override (admin/super_admin) */}
+        {canOverridePlans && (
           <div className="card">
             <div className="card-header">
               <div className="flex items-center gap-2">

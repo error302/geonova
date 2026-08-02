@@ -820,7 +820,7 @@ export default function AdminUsersPage() {
             Manage platform users, roles, and access
           </p>
         </div>
-        {currentRole === 'super_admin' && (
+        {(currentRole === 'admin' || currentRole === 'super_admin') && (
           <button
             onClick={() => setActiveModal({ type: 'plan', user: null })}
             className="btn btn-primary text-sm flex items-center gap-2 shrink-0 self-start sm:self-auto"
@@ -989,7 +989,7 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="table-cell text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {currentRole === 'super_admin' && (
+                        {(currentRole === 'admin' || currentRole === 'super_admin') && (
                           <button
                             onClick={() =>
                               setActiveModal({ type: 'plan', user })
@@ -1001,7 +1001,7 @@ export default function AdminUsersPage() {
                             Plan
                           </button>
                         )}
-                        {currentRole === 'super_admin' && (
+                        {(currentRole === 'admin' || currentRole === 'super_admin') && (
                           <button
                             onClick={() =>
                               setActiveModal({ type: 'role', user })

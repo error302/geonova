@@ -22,7 +22,6 @@ export const PRIMARY_NAV_ITEMS: PrimaryNavItem[] = [
   { href: '/fieldbook', label: 'Field Book' },
   { href: '/map', label: 'Map', icon: 'map' },
   { href: '/tools', label: 'Tools', icon: 'tools' },
-  { href: '/assistant', label: 'Assistant' },
   { href: '/reports', label: 'Reports', icon: 'reports' },
   { href: '/community', label: 'Community' },
 ]

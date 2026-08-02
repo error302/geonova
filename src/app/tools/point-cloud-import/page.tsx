@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { AlertTriangle } from 'lucide-react'
 import { PageHeader } from '@/components/shared/PageHeader';
+import { ComputeLimitNotice } from '@/components/tools/ComputeLimitNotice';
 import {
   analyzeSlopeFromPoints,
   computeCutFillDatum,
@@ -655,6 +656,12 @@ export default function PointCloudImportPage() {
       <PageHeader
         title={t('tools.pointCloudImport')}
         subtitle={t('tools.pointCloudImportDesc')}
+      />
+
+      <ComputeLimitNotice
+        maxPoints={MAX_POINTS}
+        tool="Point cloud import"
+        message="The web importer keeps the first 100,000 points for speed and stability. Large scans, dense TINs, and batch processing run best in the METARDU desktop app — full engine locally, no caps, no uploads."
       />
 
       {/* Tab bar */}

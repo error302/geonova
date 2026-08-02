@@ -5,7 +5,7 @@
 
 import type { ContourLine, SpotHeight } from '@/lib/engine/contours';
 import { MARGIN, SVG_HEIGHT, SVG_WIDTH } from './constants';
-import { elevationToColor, fmt } from './helpers';
+import { elevationToColor, computeHypsometricBands, fmt } from './helpers';
 
 type Bounds2D = { minE: number; maxE: number; minN: number; maxN: number };
 
@@ -109,6 +109,29 @@ export function generateSVGExport(
   svgLines.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SVG_WIDTH} ${SVG_HEIGHT}" width="${SVG_WIDTH}" height="${SVG_HEIGHT}">`);
   svgLines.push(`<rect width="${SVG_WIDTH}" height="${SVG_HEIGHT}" fill="#1a1a2e"/>`);
   svgLines.push(`<rect x="${MARGIN}" y="${MARGIN}" width="${usableW}" height="${usableH}" fill="#0d1117" stroke="#30363d" stroke-width="1"/>`);
+
+  // Hypsometric tint bands — discrete relief background.
+  {
+    const indexContours = contours.filter(c => c.isIndex).map(c => c.elevation).sort((a, b) => a - b);
+    let ci = 1;
+    if (indexContours.length >= 2) {
+      const gaps: number[] = [];
+      for (let i = 1; i < indexContours.length; i++) gaps.push(indexContours[i] - indexContours[i - 1]);
+      ci = gaps.reduce((s, v) => s + v, 0) / gaps.length;
+    } else {
+      const sorted = contours.map(c => c.elevation).sort((a, b) => a - b);
+      const gaps: number[] = [];
+      for (let i = 1; i < sorted.length; i++) gaps.push(sorted[i] - sorted[i - 1]);
+      ci = gaps.length ? gaps.reduce((s, v) => s + v, 0) / gaps.length : 1;
+    }
+    const bands = computeHypsometricBands(minElev, maxElev, ci);
+    for (const band of bands) {
+      const yTop = toSvgY(bounds.minN + (rangeN * (band.toElev - minElev)) / (maxElev - minElev || 1));
+      const yBot = toSvgY(bounds.minN + (rangeN * (band.fromElev - minElev)) / (maxElev - minElev || 1));
+      const h = Math.max(0, yBot - yTop);
+      svgLines.push(`<rect x="${MARGIN}" y="${yTop.toFixed(2)}" width="${usableW}" height="${h.toFixed(2)}" fill="${band.color}" opacity="${band.isIndex ? 0.22 : 0.14}"/>`);
+    }
+  }
 
   // Contour lines
   for (const contour of contours) {

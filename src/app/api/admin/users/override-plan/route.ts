@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic'
  *   days   (number, optional, default 30) — duration in days
  */
 export const PATCH = apiHandler(
-  { auth: true, roles: ['super_admin'] , rateLimit: { max: 60, windowMs: 60000 } },
+  { auth: true, roles: ['admin', 'super_admin'] , rateLimit: { max: 60, windowMs: 60000 } },
   async (req, ctx) => {
     const payload = ctx.body as Record<string, unknown>
     const email = String(payload.email || '').trim().toLowerCase()

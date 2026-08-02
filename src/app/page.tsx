@@ -226,7 +226,7 @@ function HeroSection() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--bg-tertiary)] border border-[var(--border-color)] mb-6">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs text-[var(--text-primary)]/70 font-mono tracking-wide">Built in Nairobi · Cassini · UTM 36S/37S · Arc 1960</span>
+              <span className="text-xs text-[var(--text-primary)]/70 font-mono tracking-wide">Survey Act Cap 299 compliant · Ready for production</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6">
