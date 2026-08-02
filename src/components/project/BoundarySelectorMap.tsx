@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -21,6 +20,21 @@ interface BoundarySelectorMapProps {
 export function BoundarySelectorMap({ onBoundaryChange, className = '' }: BoundarySelectorMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapObj, setMapObj] = useState<Map | null>(null);
+
+  // Inject OpenLayers CSS dynamically (a static `import 'ol/ol.css'` breaks
+  // Next.js static export — same pattern as src/components/field/MapViewer.tsx).
+  useEffect(() => {
+    if (!document.querySelector('link[href*="ol/ol.css"]')) {
+      try {
+        void import('ol/ol.css' as any)
+      } catch {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = 'https://cdn.jsdelivr.net/npm/ol@10.8.0/ol.css'
+        document.head.appendChild(link)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (!mapRef.current || mapObj) return;
