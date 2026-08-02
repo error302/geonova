@@ -187,12 +187,13 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
+      # AUDIT FIX (2026-08-03): The static export can only contain pages that
+      # are renderable without a server. API routes, dynamic web routes and
+      # server-backed pages (searchParams/cookies/db at render time) cannot be
+      # statically exported — they are stashed by scripts/mobile-build.mjs
+      # (same pattern as the existing api-stash) and restored afterwards.
       - name: Build static export (MOBILE_BUILD=true)
-        env:
-          MOBILE_BUILD: 'true'
-          NEXT_PUBLIC_SENTRY_DSN: ''
-          DISABLE_PWA: 'true'
-        run: npx next build
+        run: node scripts/mobile-build.mjs
       - name: Verify static export exists
         run: |
           test -d out && echo "✓ static export OK"
