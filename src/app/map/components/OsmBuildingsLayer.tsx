@@ -174,7 +174,7 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
   if (!visible) return null
 
   return (
-    <div className="absolute top-3 right-3 z-30 bg-[var(--bg-secondary)]/90 backdrop-blur-xl border border-[var(--border-color)]/[0.08] rounded-lg px-3 py-2 text-xs flex items-center gap-2 shadow-lg">
+    <div className="absolute top-3 right-3 z-30 bg-[var(--bg-secondary)]  border border-[var(--border-color)]/[0.08] rounded-lg px-3 py-2 text-xs flex items-center gap-2 shadow-lg">
       <Building2 className="w-3.5 h-3.5 text-[var(--accent)]" />
       {loading ? (
         <>

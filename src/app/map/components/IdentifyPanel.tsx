@@ -87,7 +87,7 @@ export function IdentifyPanel({ feature, onClose, onEdit, onDelete, onZoomTo }: 
   const StatusIcon = statusCfg?.icon
 
   return (
-    <div className="absolute top-[280px] right-3 z-30 w-80 max-h-[calc(100%-320px)] bg-[var(--bg-secondary)]/95 backdrop-blur-2xl border border-[var(--border-color)]/[0.08] rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in slide-in-from-right-2 duration-200">
+    <div className="absolute top-[280px] right-3 z-30 w-80 max-h-[calc(100%-320px)] bg-[var(--bg-secondary)]  border border-[var(--border-color)]/[0.08] rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in slide-in-from-right-2 duration-200">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-color)]/[0.06] bg-gradient-to-r from-[#D17B47]/5 to-transparent">
         <div className="flex items-center gap-2">

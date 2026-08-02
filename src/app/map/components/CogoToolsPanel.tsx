@@ -505,7 +505,7 @@ function CogoToolsPanelInner() {
           </div>
 
           {/* ── Footer hint ── */}
-          <div className="px-3 py-1.5 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
+          <div className="px-3 py-1.5 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
             <div className="text-[9px] text-[var(--text-secondary)]">
               Bearings: DDD.MMSS (e.g. 47.2314 = 47° 23' 14") or decimal degrees
             </div>

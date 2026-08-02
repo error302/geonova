@@ -155,7 +155,7 @@ export const GpsTrackPanel = memo(function GpsTrackPanel() {
   }
 
   return (
-    <div className="bg-[var(--bg-secondary)]/90 backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-lg w-56">
+    <div className="bg-[var(--bg-secondary)]  border border-[var(--border-color)]/[0.06] rounded-lg w-56">
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2">
         <div className="flex items-center gap-2">

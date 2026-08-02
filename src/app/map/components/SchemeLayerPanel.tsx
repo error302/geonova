@@ -13,7 +13,7 @@
  *  - Traverse-to-parcel preview/confirm/cancel workflow
  *
  * Positioned at the top-right of the map, styled to match the
- * existing dark glass-morphism UI (bg-[var(--bg-secondary)]/95, #D17B47 accents).
+ * existing dark glass-morphism UI (bg-[var(--bg-secondary)], #D17B47 accents).
  *
  * Now consumes all state and actions from MapReactContext via useMapContext().
  * Previously received 18 props from MapClient — now reads from context directly.
@@ -57,7 +57,7 @@ export const SchemeLayerPanel = memo(function SchemeLayerPanel() {
       role="region"
       aria-label="Scheme layer controls"
     >
-      <div className="bg-[var(--bg-secondary)]/95 border border-[var(--border-color)]/[0.08] rounded-xl shadow-2xl backdrop-blur-xl overflow-hidden">
+      <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)]/[0.08] rounded-xl shadow-2xl  overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-3 py-2.5 border-b border-[var(--border-color)]/[0.06]">
           <div className="flex items-center gap-2">

@@ -15,7 +15,7 @@ export const MapStatusBar = memo(function MapStatusBar() {
 
   return (
     <div className="absolute bottom-0 left-0 right-0 z-10" style={{ bottom: isMobile ? '64px' : '0px' }}>
-      <div className="mx-2 mb-2 h-8 bg-[var(--bg-secondary)]/95 backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-lg flex items-center justify-between px-2 md:px-3 overflow-x-auto">
+      <div className="mx-2 mb-2 h-8 bg-[var(--bg-secondary)]  border border-[var(--border-color)]/[0.06] rounded-lg flex items-center justify-between px-2 md:px-3 overflow-x-auto">
         {/* Coordinates */}
         <div className="flex items-center gap-1.5 md:gap-3 min-w-0">
           {mouseCoord ? (
@@ -41,7 +41,7 @@ export const MapStatusBar = memo(function MapStatusBar() {
       {/* Drag-drop hint */}
       {dragHint && (
         <div className="text-center mb-1 transition-opacity duration-1000">
-          <span className="text-[10px] text-[var(--text-secondary)] bg-[var(--bg-secondary)]/60 px-3 py-0.5 rounded-full backdrop-blur-sm">
+          <span className="text-[10px] text-[var(--text-secondary)] bg-[var(--bg-secondary)] px-3 py-0.5 rounded-full ">
             Drag &amp; drop GeoJSON, KML, or WKT files onto the map
           </span>
         </div>

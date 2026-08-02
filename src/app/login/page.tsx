@@ -243,7 +243,7 @@ function LoginForm() {
                     <h2 className="text-2xl sm:text-3xl font-bold text-white">
                       Welcome back
                     </h2>
-                    <p className="text-sm text-white/60 mt-1.5">
+                    <p className="text-sm text-white/90 mt-1.5">
                       Sign in to your METARDU account
                     </p>
                   </div>
@@ -285,7 +285,7 @@ function LoginForm() {
                       <div className="w-full border-t border-white/10" />
                     </div>
                     <div className="relative flex justify-center text-xs">
-                      <span className="px-3 bg-transparent text-white/40 uppercase tracking-wider">
+                      <span className="px-3 bg-transparent text-white/80 uppercase tracking-wider">
                         or sign in with email
                       </span>
                     </div>
@@ -301,7 +301,7 @@ function LoginForm() {
                     )}
 
                     <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
+                      <label className="block text-xs font-medium uppercase tracking-wider text-white/90 mb-2">
                         Email
                       </label>
                       <input
@@ -312,7 +312,7 @@ function LoginForm() {
                           setEmailTouched(true)
                           setEmailError(validateEmail(email))
                         }}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
+                        className="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-lg text-white placeholder-white/60 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
                         autoComplete="email"
                         autoFocus
                         aria-label="you@example.com" placeholder="you@example.com"
@@ -323,7 +323,7 @@ function LoginForm() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
+                      <label className="block text-xs font-medium uppercase tracking-wider text-white/90 mb-2">
                         Password
                       </label>
                       <div className="relative">
@@ -335,14 +335,14 @@ function LoginForm() {
                             setPasswordTouched(true)
                             setPasswordError(validatePassword(password))
                           }}
-                          className="w-full px-4 py-3 pr-11 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
+                          className="w-full px-4 py-3 pr-11 bg-white/10 border border-white/10 rounded-lg text-white placeholder-white/60 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
                           autoComplete="current-password"
                           aria-label="••••••••" placeholder="••••••••"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/80 transition-colors p-1"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-white/80 hover:text-white/80 transition-colors p-1"
                           aria-label={showPassword ? 'Hide password' : 'Show password'}
                         >
                           {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -359,9 +359,9 @@ function LoginForm() {
                           type="checkbox"
                           checked={rememberMe}
                           onChange={(e) => setRememberMe(e.target.checked)}
-                          className="w-4 h-4 rounded border-white/20 bg-white/5 text-[var(--accent)] focus:ring-[var(--accent)]/50"
+                          className="w-4 h-4 rounded border-white/20 bg-white/10 text-[var(--accent)] focus:ring-[var(--accent)]/50"
                         />
-                        <span className="text-sm text-white/70 group-hover:text-white/90 transition-colors">
+                        <span className="text-sm text-white/90 group-hover:text-white/90 transition-colors">
                           Remember me
                         </span>
                       </label>
@@ -389,7 +389,7 @@ function LoginForm() {
                     </button>
                   </form>
 
-                  <p className="text-center mt-6 text-white/60 text-sm">
+                  <p className="text-center mt-6 text-white/90 text-sm">
                     Don&apos;t have an account?{' '}
                     <a
                       href="/register"
@@ -407,14 +407,14 @@ function LoginForm() {
                     <h2 className="text-2xl sm:text-3xl font-bold text-white">
                       Reset your password
                     </h2>
-                    <p className="text-sm text-white/60 mt-1.5">
+                    <p className="text-sm text-white/90 mt-1.5">
                       Enter your email and we&apos;ll send you a reset link.
                     </p>
                   </div>
 
                   <form onSubmit={handleForgotPassword} className="space-y-5">
                     <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
+                      <label className="block text-xs font-medium uppercase tracking-wider text-white/90 mb-2">
                         Email
                       </label>
                       <input
@@ -425,7 +425,7 @@ function LoginForm() {
                           setEmailTouched(true)
                           setEmailError(validateEmail(email))
                         }}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
+                        className="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-lg text-white placeholder-white/60 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
                         autoComplete="email"
                         autoFocus
                         aria-label="you@example.com" placeholder="you@example.com"
@@ -469,7 +469,7 @@ function LoginForm() {
                     </svg>
                   </div>
                   <h2 className="text-2xl font-bold text-white mb-2">Check your email</h2>
-                  <p className="text-white/60 mb-1">We&apos;ve sent a password reset link to:</p>
+                  <p className="text-white/90 mb-1">We&apos;ve sent a password reset link to:</p>
                   <p className="text-white font-medium mb-6">{email}</p>
 
                   <button
@@ -489,7 +489,7 @@ function LoginForm() {
           </div>
 
           {/* Trust badges below the card — float over world map */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 px-2">
             {[
               { icon: CheckCircle2, text: 'Kenya Survey Compliant' },
               { icon: WifiOff, text: 'Works Offline' },
@@ -497,7 +497,7 @@ function LoginForm() {
             ].map((item) => (
               <div
                 key={item.text}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md text-xs text-white/75"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md text-[10px] sm:text-xs text-white/90"
               >
                 <item.icon className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
                 <span>{item.text}</span>

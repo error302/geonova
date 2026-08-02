@@ -182,7 +182,7 @@ const SurveyWorkflowBadge = memo(function SurveyWorkflowBadge({
       // T1.5g: top-center badge — managed by MapOverlaySlot in MapClient (order=2)
     >
       <div
-        className="flex items-center gap-2 px-3 py-1.5 rounded-full backdrop-blur-xl border border-[var(--border-color)]/[0.08] bg-[var(--bg-secondary)]/70"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-full  border border-[var(--border-color)]/[0.08] bg-[var(--bg-secondary)]"
         style={{ boxShadow: `0 0 16px ${accent}20` }}
       >
         <div
@@ -874,7 +874,7 @@ export const MapToolDock = memo(function MapToolDock() {
           <div
             className={`
               fixed inset-x-0 bottom-0 z-40
-              bg-[var(--bg-secondary)]/95 backdrop-blur-2xl
+              bg-[var(--bg-secondary)]
               border-t border-[var(--border-color)]/[0.08]
               rounded-t-2xl
               shadow-[0_-8px_40px_rgba(0,0,0,0.5)]
@@ -916,7 +916,7 @@ export const MapToolDock = memo(function MapToolDock() {
         )}
 
         {/* Bottom horizontal dock bar */}
-        <div className="fixed bottom-0 inset-x-0 z-50 flex items-center justify-center gap-1 px-2 py-2 bg-[var(--bg-secondary)]/90 backdrop-blur-2xl border-t border-[var(--border-color)]/[0.06]">
+        <div className="fixed bottom-0 inset-x-0 z-50 flex items-center justify-center gap-1 px-2 py-2 bg-[var(--bg-secondary)]  border-t border-[var(--border-color)]/[0.06]">
           {CATEGORIES.map(cat => {
             const Icon = cat.icon
             const active = isCategoryActive(cat.id)
@@ -970,7 +970,7 @@ export const MapToolDock = memo(function MapToolDock() {
           setDockVisible(!dockVisible)
           if (dockVisible) closeDrawer()
         }}
-        className="absolute top-3 left-3 z-30 w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-[var(--bg-secondary)]/60 backdrop-blur-xl border border-[var(--border-color)]/[0.08] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]/80 transition-all"
+        className="absolute top-3 left-3 z-30 w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-[var(--bg-secondary)]  border border-[var(--border-color)]/[0.08] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-all"
         title={dockVisible ? 'Hide tools (Esc)' : 'Show tools'}
         aria-label={dockVisible ? 'Hide map tools' : 'Show map tools'}
       >
@@ -995,12 +995,12 @@ export const MapToolDock = memo(function MapToolDock() {
                 w-10 h-10 lg:w-10 lg:h-10
                 min-w-[48px] min-h-[48px] lg:min-w-[40px] lg:min-h-[40px]
                 flex items-center justify-center rounded-full transition-all duration-200
-                backdrop-blur-xl
+
                 ${isOpen
                   ? `bg-[var(--bg-card)]/[0.10] border border-[var(--border-color)]/[0.15] text-[var(--text-primary)]`
                   : active
-                    ? 'bg-[var(--bg-secondary)]/60 border border-[var(--border-color)]/[0.08] text-[var(--text-primary)]/70 hover:bg-[var(--bg-secondary)]/80'
-                    : 'bg-[var(--bg-secondary)]/40 border border-[var(--border-color)]/[0.04] text-[var(--text-muted)] hover:bg-[var(--bg-secondary)]/60 hover:text-[var(--text-secondary)]'}
+                    ? 'bg-[var(--bg-secondary)] border border-[var(--border-color)]/[0.08] text-[var(--text-primary)]/70 hover:bg-[var(--bg-secondary)]'
+                    : 'bg-[var(--bg-secondary)] border border-[var(--border-color)]/[0.04] text-[var(--text-muted)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-secondary)]'}
               `}
               style={isOpen ? { boxShadow: `0 0 14px ${accent}30, inset 0 0 8px ${accent}10` } : undefined}
             >
@@ -1018,7 +1018,7 @@ export const MapToolDock = memo(function MapToolDock() {
             absolute top-3 left-14 z-20
             w-[260px] sm:w-[280px]
             max-h-[calc(100%-80px)]
-            bg-[var(--bg-secondary)]/90 backdrop-blur-2xl
+            bg-[var(--bg-secondary)]
             border border-[var(--border-color)]/[0.06]
             rounded-2xl
             shadow-[0_8px_40px_rgba(0,0,0,0.4)]

@@ -88,7 +88,7 @@ export const BookmarkPanel = memo(function BookmarkPanel() {
   }, [bookmarks])
 
   return (
-    <div className="bg-[var(--bg-secondary)]/90 backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-lg w-56">
+    <div className="bg-[var(--bg-secondary)]  border border-[var(--border-color)]/[0.06] rounded-lg w-56">
       {/* Header */}
       <div
         className="flex items-center justify-between px-3 py-2 cursor-pointer select-none"
@@ -112,7 +112,7 @@ export const BookmarkPanel = memo(function BookmarkPanel() {
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               aria-label="Bookmark name" placeholder="Bookmark name"
-              className="flex-1 h-7 px-2 text-[10px] bg-[var(--bg-card)]/5 border border-[var(--border-color)]/[0.08] rounded text-[var(--text-primary)] placeholder-gray-600 focus:outline-none focus:border-[var(--accent)]/40"
+              className="flex-1 h-7 px-2 text-[10px] bg-[var(--bg-card)] border border-[var(--border-color)]/[0.08] rounded text-[var(--text-primary)] placeholder-gray-600 focus:outline-none focus:border-[var(--accent)]/40"
               onKeyDown={(e) => { if (e.key === 'Enter') saveCurrentView() }}
             />
             <button

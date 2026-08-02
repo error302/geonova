@@ -18,8 +18,8 @@ export const MapLoadingOverlay = memo(function MapLoadingOverlay() {
   if (mapReady && !initError) return null
 
   return (
-    <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="text-center max-w-md px-6 bg-[var(--bg-secondary)]/90 rounded-xl py-5 shadow-2xl">
+    <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 ">
+      <div className="text-center max-w-md px-6 bg-[var(--bg-secondary)] rounded-xl py-5 shadow-2xl">
         {initError ? (
           <>
             <div className="text-[var(--error)] text-lg mb-2">Map Error</div>
@@ -27,7 +27,7 @@ export const MapLoadingOverlay = memo(function MapLoadingOverlay() {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={retryInit}
-                className="px-4 py-2 bg-[var(--bg-card)]/10 text-[var(--text-primary)] rounded-lg text-sm hover:bg-[var(--bg-card)]/20 transition-colors"
+                className="px-4 py-2 bg-[var(--bg-card)] text-[var(--text-primary)] rounded-lg text-sm hover:bg-[var(--bg-card)] transition-colors"
               >
                 Retry
               </button>
