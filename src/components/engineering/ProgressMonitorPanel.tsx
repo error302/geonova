@@ -895,7 +895,7 @@ function CheckpointListView({
                               type="text"
                               value={deviationInput[cp.id!] || ''}
                               onChange={e => setDeviationInput(prev => ({ ...prev, [cp.id!]: e.target.value }))}
-                              aria-label="Add deviation note..." placeholder="Add deviation note..."
+                              aria-label="Add deviation note..."
                               className="flex-1 bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-xs text-zinc-300 placeholder-zinc-600"
                               onKeyDown={e => {
                                 if (e.key === 'Enter' && deviationInput[cp.id!]?.trim()) {
@@ -995,7 +995,7 @@ function CheckpointListView({
                               ref={el => { photoInputRefs.current[cp.id!] = el }}
                               value={photoUrl}
                               onChange={e => setPhotoUrl(e.target.value)}
-                              aria-label="Photo URL or filename..." placeholder="Photo URL or filename..."
+                              aria-label="Photo URL or filename..."
                               className="flex-1 bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-xs text-zinc-300 placeholder-zinc-600"
                               onKeyDown={e => {
                                 if (e.key === 'Enter' && photoUrl.trim()) {
@@ -1142,33 +1142,33 @@ function AddCheckpointForm({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Chainage */}
         <div>
-          <label className="block text-xs text-zinc-400 mb-1">Chainage (m)</label>
-          <input
+          <label className="block text-xs text-zinc-400 mb-1" htmlFor="chainage-m">Chainage (m)</label>
+          <input id="chainage-m"
             type="number"
             step="1"
             value={form.chainage}
             onChange={e => setForm(prev => ({ ...prev, chainage: e.target.value }))}
-            aria-label="e.g. 200" placeholder="e.g. 200"
+ placeholder="e.g. 200"
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white font-mono placeholder-zinc-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
         {/* Grid Reference */}
         <div>
-          <label className="block text-xs text-zinc-400 mb-1">Grid Reference</label>
-          <input
+          <label className="block text-xs text-zinc-400 mb-1" htmlFor="grid-reference">Grid Reference</label>
+          <input id="grid-reference"
             type="text"
             value={form.gridRef}
             onChange={e => setForm(prev => ({ ...prev, gridRef: e.target.value }))}
-            aria-label="e.g. A3, B7" placeholder="e.g. A3, B7"
+ placeholder="e.g. A3, B7"
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white font-mono placeholder-zinc-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
         {/* Category */}
         <div>
-          <label className="block text-xs text-zinc-400 mb-1">Category</label>
-          <select
+          <label className="block text-xs text-zinc-400 mb-1" htmlFor="category">Category</label>
+          <select id="category"
             value={form.category}
             onChange={e => setForm(prev => ({ ...prev, category: e.target.value as InspectionCheckpoint['category'] }))}
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1181,20 +1181,20 @@ function AddCheckpointForm({
 
         {/* Description */}
         <div className="md:col-span-2 lg:col-span-2">
-          <label className="block text-xs text-zinc-400 mb-1">Description *</label>
-          <input
+          <label className="block text-xs text-zinc-400 mb-1" htmlFor="description">Description *</label>
+          <input id="description"
             type="text"
             value={form.description}
             onChange={e => setForm(prev => ({ ...prev, description: e.target.value }))}
-            aria-label="e.g. Column A3 concrete pour, Road at Ch 0+200 base course" placeholder="e.g. Column A3 concrete pour, Road at Ch 0+200 base course"
+ placeholder="e.g. Column A3 concrete pour, Road at Ch 0+200 base course"
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
         {/* Planned Date */}
         <div>
-          <label className="block text-xs text-zinc-400 mb-1">Planned Date</label>
-          <input aria-label="Planneddate"
+          <label className="block text-xs text-zinc-400 mb-1" htmlFor="planned-date">Planned Date</label>
+          <input id="planned-date" aria-label="Planneddate"
             type="date"
             value={form.plannedDate}
             onChange={e => setForm(prev => ({ ...prev, plannedDate: e.target.value }))}
@@ -1204,8 +1204,8 @@ function AddCheckpointForm({
 
         {/* Planned % */}
         <div>
-          <label className="block text-xs text-zinc-400 mb-1">Planned Completion %</label>
-          <input aria-label="Plannedpercentage"
+          <label className="block text-xs text-zinc-400 mb-1" htmlFor="planned-completion">Planned Completion %</label>
+          <input id="planned-completion" aria-label="Plannedpercentage"
             type="number"
             min={0}
             max={100}
@@ -1218,9 +1218,9 @@ function AddCheckpointForm({
 
         {/* Notes */}
         <div className="md:col-span-2 lg:col-span-3">
-          <label className="block text-xs text-zinc-400 mb-1">Notes</label>
+          <label className="block text-xs text-zinc-400 mb-1" htmlFor="notes">Notes</label>
           <textarea
-            value={form.notes}
+             id="notes" value={form.notes}
             onChange={e => setForm(prev => ({ ...prev, notes: e.target.value }))}
             placeholder="Optional notes..."
             rows={2}

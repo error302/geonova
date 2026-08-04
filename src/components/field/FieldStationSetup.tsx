@@ -49,10 +49,10 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
 
       {/* Station Name */}
       <div>
-        <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">
+        <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1" htmlFor="station-name">
           Station Name <span className="text-[var(--error)]">*</span>
         </label>
-        <input
+        <input id="station-name"
           type="text"
           value={setup.stationName}
           onChange={(e) => update('stationName', e.target.value)}
@@ -64,10 +64,10 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
       {/* Heights */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1 flex items-center gap-1">
+          <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1 flex items-center gap-1" htmlFor="instrument-height-m">
             <Ruler className="w-3 h-3" /> Instrument Height (m)
           </label>
-          <input
+          <input id="instrument-height-m"
             type="number"
             step="0.001"
             value={setup.instrumentHeight}
@@ -76,10 +76,10 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1 flex items-center gap-1">
+          <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1 flex items-center gap-1" htmlFor="target-height-m">
             <Ruler className="w-3 h-3" /> Target Height (m)
           </label>
-          <input
+          <input id="target-height-m"
             type="number"
             step="0.001"
             value={setup.targetHeight}
@@ -94,8 +94,8 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
         <p className="text-xs text-[var(--text-muted)] mb-2">Backsight (optional — for traverses)</p>
         <div className="grid grid-cols-4 gap-2">
           <div className="col-span-1">
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Station</label>
-            <input
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="station">Station</label>
+            <input id="station"
               type="text"
               value={setup.backsightStation || ''}
               onChange={(e) => update('backsightStation', e.target.value)}
@@ -104,8 +104,8 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Bearing °</label>
-            <input
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="bearing">Bearing °</label>
+            <input id="bearing"
               type="number"
               value={setup.backsightBearing?.deg || 0}
               onChange={(e) => update('backsightBearing', { ...setup.backsightBearing!, deg: parseInt(e.target.value) || 0, min: setup.backsightBearing?.min || 0, sec: setup.backsightBearing?.sec || 0 })}
@@ -113,8 +113,8 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">'</label>
-            <input
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="field">'</label>
+            <input id="field"
               type="number"
               min="0" max="59"
               value={setup.backsightBearing?.min || 0}
@@ -123,8 +123,8 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">"</label>
-            <input
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="field-2">"</label>
+            <input id="field-2"
               type="number"
               min="0" max="59"
               value={setup.backsightBearing?.sec || 0}
@@ -138,10 +138,10 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
       {/* Atmospheric corrections */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1 flex items-center gap-1">
+          <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1 flex items-center gap-1" htmlFor="temperature-c">
             <Thermometer className="w-3 h-3" /> Temperature (°C)
           </label>
-          <input
+          <input id="temperature-c"
             type="number"
             value={setup.temperature ?? ''}
             onChange={(e) => update('temperature', e.target.value ? parseFloat(e.target.value) : undefined)}
@@ -150,10 +150,10 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1 flex items-center gap-1">
+          <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1 flex items-center gap-1" htmlFor="pressure-hpa">
             <Gauge className="w-3 h-3" /> Pressure (hPa)
           </label>
-          <input
+          <input id="pressure-hpa"
             type="number"
             value={setup.pressure ?? ''}
             onChange={(e) => update('pressure', e.target.value ? parseFloat(e.target.value) : undefined)}
@@ -180,8 +180,8 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
       {setup.isControlPoint && (
         <div className="grid grid-cols-3 gap-2">
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Easting</label>
-            <input
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="easting">Easting</label>
+            <input id="easting"
               type="number"
               value={setup.easting ?? ''}
               onChange={(e) => update('easting', e.target.value ? parseFloat(e.target.value) : undefined)}
@@ -190,8 +190,8 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Northing</label>
-            <input
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="northing">Northing</label>
+            <input id="northing"
               type="number"
               value={setup.northing ?? ''}
               onChange={(e) => update('northing', e.target.value ? parseFloat(e.target.value) : undefined)}
@@ -200,9 +200,9 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Elevation</label>
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="elevation">Elevation</label>
             <input
-              type="number"
+               id="elevation" type="number"
               step="0.001"
               value={setup.elevation ?? ''}
               onChange={(e) => update('elevation', e.target.value ? parseFloat(e.target.value) : undefined)}

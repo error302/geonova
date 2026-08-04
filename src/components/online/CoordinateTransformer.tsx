@@ -111,8 +111,8 @@ export default function CoordinateTransformer() {
       {/* Datum Selectors */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-2">From Datum</label>
-          <select
+          <label className="block text-sm font-medium mb-2" htmlFor="from-datum">From Datum</label>
+          <select id="from-datum"
             value={fromDatum}
             onChange={e => setFromDatum(e.target.value as DatumCode)}
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg"
@@ -125,7 +125,7 @@ export default function CoordinateTransformer() {
             <div className="flex gap-2 mt-2">
               <input
                 type="number"
-                aria-label="Zone" placeholder="Zone"
+                aria-label="UTM Zone" placeholder="Zone"
                 value={fromZone}
                 onChange={e => setFromZone(e.target.value)}
                 className="w-20 px-2 py-1 bg-[var(--bg-tertiary)] border rounded text-sm"
@@ -143,8 +143,8 @@ export default function CoordinateTransformer() {
         </div>
         
         <div>
-          <label className="block text-sm font-medium mb-2">To Datum</label>
-          <select
+          <label className="block text-sm font-medium mb-2" htmlFor="to-datum">To Datum</label>
+          <select id="to-datum"
             value={toDatum}
             onChange={e => setToDatum(e.target.value as DatumCode)}
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg"
@@ -157,7 +157,7 @@ export default function CoordinateTransformer() {
             <div className="flex gap-2 mt-2">
               <input
                 type="number"
-                aria-label="Zone" placeholder="Zone"
+                aria-label="UTM Zone" placeholder="Zone"
                 value={toZone}
                 onChange={e => setToZone(e.target.value)}
                 className="w-20 px-2 py-1 bg-[var(--bg-tertiary)] border rounded text-sm"
@@ -179,41 +179,41 @@ export default function CoordinateTransformer() {
       {mode === 'single' ? (
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">X / Easting</label>
-            <input
+            <label className="block text-sm font-medium mb-2" htmlFor="x-easting">X / Easting</label>
+            <input id="x-easting"
               type="number"
               value={x}
               onChange={e => setX(e.target.value)}
-              aria-label="500000" placeholder="500000"
+ placeholder="500000"
               className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Y / Northing</label>
-            <input
+            <label className="block text-sm font-medium mb-2" htmlFor="y-northing">Y / Northing</label>
+            <input id="y-northing"
               type="number"
               value={y}
               onChange={e => setY(e.target.value)}
-              aria-label="9900000" placeholder="9900000"
+ placeholder="9900000"
               className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Z / Elev (opt)</label>
-            <input
+            <label className="block text-sm font-medium mb-2" htmlFor="z-elev-opt">Z / Elev (opt)</label>
+            <input id="z-elev-opt"
               type="number"
               value={z}
               onChange={e => setZ(e.target.value)}
-              aria-label="1500" placeholder="1500"
+ placeholder="1500"
               className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg"
             />
           </div>
         </div>
       ) : (
         <div>
-          <label className="block text-sm font-medium mb-2">Paste CSV (id,x,y,z per line)</label>
+          <label className="block text-sm font-medium mb-2" htmlFor="paste-csv-id-x-y-z-per-line">Paste CSV (id,x,y,z per line)</label>
           <textarea
-            value={batchInput}
+             id="paste-csv-id-x-y-z-per-line" value={batchInput}
             onChange={e => setBatchInput(e.target.value)}
             placeholder="1,500000,9900000,1500&#10;2,500100,9900100,1510"
             rows={6}

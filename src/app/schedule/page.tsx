@@ -99,41 +99,41 @@ function ScheduleFormModal({
             <div className="text-sm text-red-400 bg-red-900/20 border border-red-700/40 rounded-lg px-3 py-2">{error}</div>
           )}
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Job Title *</label>
-            <input value={form.title} onChange={e => f('title', e.target.value)}
-              aria-label="e.g. Boundary Survey - Karen Plot L.R. No. 123/456" placeholder="e.g. Boundary Survey - Karen Plot L.R. No. 123/456" className="input w-full" />
+            <label htmlFor="job-title" className="block text-xs text-[var(--text-muted)] mb-1">Job Title *</label>
+            <input id="job-title" value={form.title} onChange={e => f('title', e.target.value)}
+              placeholder="e.g. Boundary Survey - Karen Plot L.R. No. 123/456" className="input w-full" />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Description</label>
-            <textarea value={form.description ?? ''} onChange={e => f('description', e.target.value)} rows={2}
+            <label htmlFor="job-description" className="block text-xs text-[var(--text-muted)] mb-1">Description</label>
+            <textarea id="job-description" value={form.description ?? ''} onChange={e => f('description', e.target.value)} rows={2}
               placeholder="Brief description of the work..." className="input w-full resize-none" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Scheduled Date *</label>
-              <input aria-label="Scheduled date" type="date" min={TODAY} value={form.scheduled_date}
+              <label htmlFor="job-date" className="block text-xs text-[var(--text-muted)] mb-1">Scheduled Date *</label>
+              <input id="job-date" type="date" min={TODAY} value={form.scheduled_date}
                 onChange={e => f('scheduled_date', e.target.value)} className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Time</label>
-              <input aria-label="Scheduled time" type="time" value={form.scheduled_time || ''}
+              <label htmlFor="job-time" className="block text-xs text-[var(--text-muted)] mb-1">Time</label>
+              <input id="job-time" type="time" value={form.scheduled_time || ''}
                 onChange={e => f('scheduled_time', e.target.value || null)} className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Duration (hours)</label>
-              <input aria-label="Estimated duration hours" type="number" min={1} max={24} value={form.estimated_duration_hours}
+              <label htmlFor="job-duration" className="block text-xs text-[var(--text-muted)] mb-1">Duration (hours)</label>
+              <input id="job-duration" type="number" min={1} max={24} value={form.estimated_duration_hours}
                 onChange={e => f('estimated_duration_hours', parseInt(e.target.value) || 1)} className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Survey Type</label>
-              <select value={form.survey_type ?? ''} onChange={e => f('survey_type', e.target.value)} className="input w-full">
+              <label htmlFor="job-survey-type" className="block text-xs text-[var(--text-muted)] mb-1">Survey Type</label>
+              <select id="job-survey-type" value={form.survey_type ?? ''} onChange={e => f('survey_type', e.target.value)} className="input w-full">
                 <option value="">Select type...</option>
                 {SURVEY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Priority</label>
-              <select value={form.priority} onChange={e => f('priority', e.target.value as SchedulePriority)} className="input w-full">
+              <label htmlFor="job-priority" className="block text-xs text-[var(--text-muted)] mb-1">Priority</label>
+              <select id="job-priority" value={form.priority} onChange={e => f('priority', e.target.value as SchedulePriority)} className="input w-full">
                 <option value="low">Low</option>
                 <option value="normal">Normal</option>
                 <option value="high">High</option>
@@ -141,25 +141,25 @@ function ScheduleFormModal({
               </select>
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Location</label>
-              <input value={form.location ?? ''} onChange={e => f('location', e.target.value)}
-                aria-label="e.g. Karen, Nairobi" placeholder="e.g. Karen, Nairobi" className="input w-full" />
+              <label htmlFor="job-location" className="block text-xs text-[var(--text-muted)] mb-1">Location</label>
+              <input id="job-location" value={form.location ?? ''} onChange={e => f('location', e.target.value)}
+                placeholder="e.g. Karen, Nairobi" className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Client Name</label>
-              <input aria-label="Client name" value={form.client_name ?? ''} onChange={e => f('client_name', e.target.value)} className="input w-full" />
+              <label htmlFor="job-client-name" className="block text-xs text-[var(--text-muted)] mb-1">Client Name</label>
+              <input id="job-client-name" value={form.client_name ?? ''} onChange={e => f('client_name', e.target.value)} className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Client Contact</label>
-              <input aria-label="Client contact" value={form.client_contact ?? ''} onChange={e => f('client_contact', e.target.value)} className="input w-full" />
+              <label htmlFor="job-client-contact" className="block text-xs text-[var(--text-muted)] mb-1">Client Contact</label>
+              <input id="job-client-contact" value={form.client_contact ?? ''} onChange={e => f('client_contact', e.target.value)} className="input w-full" />
             </div>
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Equipment Needed</label>
+            <label htmlFor="equipment-input" className="block text-xs text-[var(--text-muted)] mb-1">Equipment Needed</label>
             <div className="flex gap-2 mb-2">
-              <input value={equipInput} onChange={e => setEquipInput(e.target.value)}
+              <input id="equipment-input" value={equipInput} onChange={e => setEquipInput(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addEquipment(equipInput) } }}
-                aria-label="Type + Enter" placeholder="Type + Enter" className="input flex-1 text-sm py-1.5" />
+                placeholder="Type + Enter" className="input flex-1 text-sm py-1.5" />
               <button onClick={() => addEquipment(equipInput)} className="btn btn-secondary text-sm py-1.5 px-3">Add</button>
             </div>
             <div className="flex flex-wrap gap-1.5 mb-2">
@@ -182,11 +182,11 @@ function ScheduleFormModal({
             )}
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Team Members</label>
+            <label htmlFor="member-input" className="block text-xs text-[var(--text-muted)] mb-1">Team Members</label>
             <div className="flex gap-2">
-              <input value={memberInput} onChange={e => setMemberInput(e.target.value)}
+              <input id="member-input" value={memberInput} onChange={e => setMemberInput(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addMember(memberInput) } }}
-                aria-label="Name + Enter" placeholder="Name + Enter" className="input flex-1 text-sm py-1.5" />
+                placeholder="Name + Enter" className="input flex-1 text-sm py-1.5" />
               <button onClick={() => addMember(memberInput)} className="btn btn-secondary text-sm py-1.5 px-3">Add</button>
             </div>
             {form.team_members.length > 0 && (
@@ -224,8 +224,8 @@ function ScheduleFormModal({
             )}
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Notes</label>
-            <textarea value={form.notes ?? ''} onChange={e => f('notes', e.target.value)} rows={2}
+            <label htmlFor="job-notes" className="block text-xs text-[var(--text-muted)] mb-1">Notes</label>
+            <textarea id="job-notes" value={form.notes ?? ''} onChange={e => f('notes', e.target.value)} rows={2}
               placeholder="Any additional notes..." className="input w-full resize-none" />
           </div>
         </div>
@@ -235,7 +235,7 @@ function ScheduleFormModal({
             Cancel
           </button>
           <button onClick={handleSubmit} disabled={saving}
-            className="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg bg-[var(--accent)] text-white hover:opacity-90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+            className="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg bg-[var(--accent)] text-black hover:opacity-90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
             {saving ? (
               <><svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Saving...</>
             ) : (initial?.id ? 'Update Schedule' : 'Schedule Job')}

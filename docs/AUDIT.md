@@ -324,7 +324,7 @@ These are committed to version control.
 ### H9. CPD UI uses stub instead of real implementation
 **Files:** `src/lib/cpd.ts` (real, writes to `cpd_records`), `src/lib/marketplace/cpdCertificates.ts` (stub, returns `[]`)
 
-The user-facing CPD page (`src/app/cpd/page.tsx`) imports the stub, not the real module. Users see "0 hours logged" no matter what they do. The stub also generates fake certificates with `verificationUrl: 'https://metardu.app/verify/cpd/...'` — wrong domain (production is `metardu.duckdns.org`).
+The user-facing CPD page (`src/app/cpd/page.tsx`) imports the stub, not the real module. Users see "0 hours logged" no matter what they do. The stub also generates fake certificates with `verificationUrl: 'https://metardu.app/verify/cpd/...'` — wrong domain (production is `metardu.space`).
 
 **Fix:** Switch the CPD page to import from `src/lib/cpd.ts`. Fix the verification URL. Wire certificate generation to the real `cpd_records` table.
 

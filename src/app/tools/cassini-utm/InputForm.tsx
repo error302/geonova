@@ -198,17 +198,18 @@ export function InputForm(props: InputFormProps) {
           {/* Search + Dropdown */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="label text-xs text-[var(--text-muted)]">Select Sheet</label>
+              <label className="label text-xs text-[var(--text-muted)]" htmlFor="cassini-sheet-select">Select Sheet</label>
               <span className="text-[10px] text-[var(--text-muted)]">{KENYA_TOPO_SHEETS.length} sheets loaded</span>
             </div>
             <input
-              type="text"
+               id="cassini-sheet-select" type="text"
               className="input mb-1.5 text-xs"
-              aria-label="Search sheets... (e.g. 148, Nairobi, zone 36)" placeholder="Search sheets... (e.g. 148, Nairobi, zone 36)"
+              aria-label="Search sheets" placeholder="Search sheets... (e.g. 148, Nairobi, zone 36)"
               value={sheetSearch}
               onChange={e => setSheetSearch(e.target.value)}
             />
             <select
+              aria-label="Cassini sheet"
               className="input"
               value={useCustomParams ? '__custom__' : selectedSheetId}
               onChange={e => {
@@ -248,6 +249,7 @@ export function InputForm(props: InputFormProps) {
                 )}
               </label>
               <select
+                aria-label="Sub-sheet"
                 className="input"
                 value={selectedSubSheetId}
                 onChange={e => {
@@ -285,8 +287,8 @@ export function InputForm(props: InputFormProps) {
           {/* Method selector */}
           {!useCustomParams && (
             <div>
-              <label className="label text-xs text-[var(--text-muted)] mb-1 block">Transform Method</label>
-              <select
+              <label className="label text-xs text-[var(--text-muted)] mb-1 block" htmlFor="transform-method">Transform Method</label>
+              <select id="transform-method"
                 className="input"
                 value={transformMethod}
                 onChange={e => setTransformMethod(e.target.value as TransformMethod | 'auto')}
@@ -302,20 +304,20 @@ export function InputForm(props: InputFormProps) {
           {!useCustomParams && !activeSubSheet && (
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="label text-xs text-[var(--text-muted)]">P (scale factor)</label>
-                <input aria-label="P" className="input font-mono text-xs opacity-75" value={activeSheet.P} readOnly />
+                <label className="label text-xs text-[var(--text-muted)]" htmlFor="p-scale-factor">P (scale factor)</label>
+                <input id="p-scale-factor" aria-label="P" className="input font-mono text-xs opacity-75" value={activeSheet.P} readOnly />
               </div>
               <div>
-                <label className="label text-xs text-[var(--text-muted)]">Q (rotation factor)</label>
-                <input aria-label="Q" className="input font-mono text-xs opacity-75" value={activeSheet.Q} readOnly />
+                <label className="label text-xs text-[var(--text-muted)]" htmlFor="q-rotation-factor">Q (rotation factor)</label>
+                <input id="q-rotation-factor" aria-label="Q" className="input font-mono text-xs opacity-75" value={activeSheet.Q} readOnly />
               </div>
               <div>
-                <label className="label text-xs text-[var(--text-muted)]">Cx (easting trans.)</label>
-                <input aria-label="Cx" className="input font-mono text-xs opacity-75" value={activeSheet.Cx} readOnly />
+                <label className="label text-xs text-[var(--text-muted)]" htmlFor="cx-easting-trans">Cx (easting trans.)</label>
+                <input id="cx-easting-trans" aria-label="Cx" className="input font-mono text-xs opacity-75" value={activeSheet.Cx} readOnly />
               </div>
               <div>
-                <label className="label text-xs text-[var(--text-muted)]">Cy (northing trans.)</label>
-                <input aria-label="Cy" className="input font-mono text-xs opacity-75" value={activeSheet.Cy} readOnly />
+                <label className="label text-xs text-[var(--text-muted)]" htmlFor="cy-northing-trans">Cy (northing trans.)</label>
+                <input id="cy-northing-trans" aria-label="Cy" className="input font-mono text-xs opacity-75" value={activeSheet.Cy} readOnly />
               </div>
             </div>
           )}
@@ -324,39 +326,39 @@ export function InputForm(props: InputFormProps) {
           {useCustomParams && (
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="label text-xs text-[var(--text-muted)]">P (scale factor)</label>
-                <input
+                <label className="label text-xs text-[var(--text-muted)]" htmlFor="p-scale-factor-2">P (scale factor)</label>
+                <input id="p-scale-factor-2"
                   className="input font-mono text-xs"
                   value={customP}
                   onChange={e => setCustomP(e.target.value)}
-                  aria-label="0.3048" placeholder="0.3048"
+ placeholder="0.3048"
                 />
               </div>
               <div>
-                <label className="label text-xs text-[var(--text-muted)]">Q (rotation factor)</label>
-                <input
+                <label className="label text-xs text-[var(--text-muted)]" htmlFor="q-rotation-factor-2">Q (rotation factor)</label>
+                <input id="q-rotation-factor-2"
                   className="input font-mono text-xs"
                   value={customQ}
                   onChange={e => setCustomQ(e.target.value)}
-                  aria-label="0" placeholder="0"
+ placeholder="0"
                 />
               </div>
               <div>
-                <label className="label text-xs text-[var(--text-muted)]">Cx (easting translation, m)</label>
-                <input
+                <label className="label text-xs text-[var(--text-muted)]" htmlFor="cx-easting-translation-m">Cx (easting translation, m)</label>
+                <input id="cx-easting-translation-m"
                   className="input font-mono text-xs"
                   value={customCx}
                   onChange={e => setCustomCx(e.target.value)}
-                  aria-label="277474.6" placeholder="277474.6"
+ placeholder="277474.6"
                 />
               </div>
               <div>
-                <label className="label text-xs text-[var(--text-muted)]">Cy (northing translation, m)</label>
-                <input
+                <label className="label text-xs text-[var(--text-muted)]" htmlFor="cy-northing-translation-m">Cy (northing translation, m)</label>
+                <input id="cy-northing-translation-m"
                   className="input font-mono text-xs"
                   value={customCy}
                   onChange={e => setCustomCy(e.target.value)}
-                  aria-label="10000198.4" placeholder="10000198.4"
+ placeholder="10000198.4"
                 />
               </div>
             </div>

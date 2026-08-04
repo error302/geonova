@@ -170,6 +170,7 @@ export default function VerticalCurveDesignerPage() {
                     >
                       <td className="py-2 pr-3">
                         <Input
+                          aria-label={`VIP ${i + 1} ID`}
                           value={vip.id}
                           onChange={e => updateVip(i, { id: e.target.value })}
                           className="font-mono text-xs h-8 w-24 bg-[var(--bg-secondary)] border-[var(--border-color)]"
@@ -179,6 +180,7 @@ export default function VerticalCurveDesignerPage() {
                         <Input
                           type="number"
                           step="0.001"
+                          aria-label={`VIP ${i + 1} chainage (m)`}
                           value={vip.chainage}
                           onChange={e => updateVip(i, { chainage: Number(e.target.value) })}
                           className="font-mono text-xs h-8 w-32 text-right bg-[var(--bg-secondary)] border-[var(--border-color)]"
@@ -188,6 +190,7 @@ export default function VerticalCurveDesignerPage() {
                         <Input
                           type="number"
                           step="0.001"
+                          aria-label={`VIP ${i + 1} reduced level (m)`}
                           value={vip.reducedLevel}
                           onChange={e =>
                             updateVip(i, { reducedLevel: Number(e.target.value) })
@@ -199,6 +202,7 @@ export default function VerticalCurveDesignerPage() {
                         <Input
                           type="number"
                           step="0.1"
+                          aria-label={`VIP ${i + 1} K override`}
                           value={vip.kOverride ?? ''}
                           placeholder="auto"
                           onChange={e =>
@@ -213,6 +217,7 @@ export default function VerticalCurveDesignerPage() {
                         <Input
                           type="number"
                           step="0.1"
+                          aria-label={`VIP ${i + 1} L override (m)`}
                           value={vip.lengthOverride ?? ''}
                           placeholder="auto"
                           onChange={e =>
@@ -260,7 +265,7 @@ export default function VerticalCurveDesignerPage() {
               value={String(designSpeed)}
               onValueChange={v => setDesignSpeed(Number(v))}
             >
-              <SelectTrigger className="mt-1 w-full bg-[var(--bg-secondary)] border-[var(--border-color)]">
+              <SelectTrigger aria-label="Design speed" className="mt-1 w-full bg-[var(--bg-secondary)] border-[var(--border-color)]">
                 <SelectValue placeholder="Pick speed" />
               </SelectTrigger>
               <SelectContent>
@@ -792,7 +797,7 @@ function StationTable({
     );
   }
   return (
-    <div className="overflow-x-auto max-h-96 overflow-y-auto">
+    <div className="overflow-x-auto max-h-96 overflow-y-auto" tabIndex={0} aria-label="Computation steps">
       <table className="w-full text-xs">
         <thead className="sticky top-0 bg-[var(--bg-card)]">
           <tr className="text-[var(--text-muted)] uppercase tracking-wide border-b border-[var(--border-color)]">

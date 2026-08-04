@@ -1,3 +1,4 @@
+import { createHash } from 'crypto'
 import { db } from '@/lib/db'
 import type { NLIMSParcel } from '@/types/nlims'
 
@@ -177,7 +178,6 @@ export async function deleteVaultEntry(parcelNumber: string, userId: string): Pr
  * by sorting all object keys alphabetically (Canonical JSON).
  */
 export function generateCanonicalParcelHash(obj: any): string {
-  const { createHash } = require('crypto')
 
   function stringifyCanonical(data: any): string {
     if (data === null || typeof data !== 'object') {

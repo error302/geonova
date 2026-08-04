@@ -41,7 +41,7 @@ This guide covers everything needed to switch from development/sandbox to produc
 
 5. **Verify webhook**
    - Go to https://developer.paypal.com/dashboard/webhooks
-   - Ensure webhook URL points to: `https://metardu.duckdns.org/api/webhooks/paypal`
+   - Ensure webhook URL points to: `https://metardu.space/api/webhooks/paypal`
    - Events to listen for:
      - `PAYMENT.CAPTURE.COMPLETED`
      - `PAYMENT.CAPTURE.REFUNDED`
@@ -58,10 +58,10 @@ If anything goes wrong, set `PAYPAL_MODE=sandbox` and restart.
 ### Check Current Certificate
 ```bash
 # Check certificate details
-openssl s_client -servername metardu.duckdns.org -connect metardu.duckdns.org:443 2>/dev/null | openssl x509 -noout -text
+openssl s_client -servername metardu.space -connect metardu.space:443 2>/dev/null | openssl x509 -noout -text
 
 # Check expiry date
-echo | openssl s_client -servername metardu.duckdns.org -connect metardu.duckdns.org:443 2>/dev/null | openssl x509 -noout -enddate
+echo | openssl s_client -servername metardu.space -connect metardu.space:443 2>/dev/null | openssl x509 -noout -enddate
 
 # Quick check via certbot
 sudo certbot certificates
@@ -93,10 +93,10 @@ Verify `/etc/nginx/sites-available/metardu` includes:
 ```nginx
 server {
     listen 443 ssl http2;
-    server_name metardu.duckdns.org;
+    server_name metardu.space;
 
-    ssl_certificate /etc/letsencrypt/live/metardu.duckdns.org/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/metardu.duckdns.org/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/metardu.space/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/metardu.space/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
@@ -119,7 +119,7 @@ server {
 
 server {
     listen 80;
-    server_name metardu.duckdns.org;
+    server_name metardu.space;
     return 301 https://$host$request_uri;
 }
 ```
@@ -156,8 +156,8 @@ server {
    ```
 
 4. **Register C2B URLs**
-   - Validation URL: `https://metardu.duckdns.org/api/payments/mpesa/validate`
-   - Confirmation URL: `https://metardu.duckdns.org/api/payments/mpesa/callback`
+   - Validation URL: `https://metardu.space/api/payments/mpesa/validate`
+   - Confirmation URL: `https://metardu.space/api/payments/mpesa/callback`
 
 5. **Test with KES 1 STK Push**
 
@@ -174,7 +174,7 @@ cat /home/mohameddosho20/metardu/.env.local
 # Required for paying customers:
 DATABASE_URL=postgresql://...           # ✅ Should be set
 NEXTAUTH_SECRET=...                     # ✅ Should be set
-NEXTAUTH_URL=https://metardu.duckdns.org  # ✅ Should be set
+NEXTAUTH_URL=https://metardu.space  # ✅ Should be set
 PAYPAL_CLIENT_ID=...                    # ✅ Sandbox set, needs LIVE
 PAYPAL_CLIENT_SECRET=...                # ✅ Sandbox set, needs LIVE
 PAYPAL_MODE=live                        # ❌ Currently sandbox
@@ -199,14 +199,14 @@ Run this checklist before announcing to paying customers:
 
 ```bash
 # 1. Health check
-curl https://metardu.duckdns.org/api/health
+curl https://metardu.space/api/health
 # Expected: {"status":"ok","db":"connected"}
 
 # 2. SSL check
-curl -vI https://metardu.duckdns.org 2>&1 | grep -E "subject:|expire|SSL"
+curl -vI https://metardu.space 2>&1 | grep -E "subject:|expire|SSL"
 
 # 3. Test login flow
-# Open https://metardu.duckdns.org/login and verify login works
+# Open https://metardu.space/login and verify login works
 
 # 4. Test subscription flow
 # Go through checkout with a test payment
@@ -225,7 +225,7 @@ chmod +x scripts/setup-operations.sh
 ./scripts/setup-operations.sh
 
 # 8. Run load test (from local machine)
-# k6 run --vus 10 --duration 30s -e BASE_URL=https://metardu.duckdns.org scripts/load-test.js
+# k6 run --vus 10 --duration 30s -e BASE_URL=https://metardu.space scripts/load-test.js
 ```
 
 ---

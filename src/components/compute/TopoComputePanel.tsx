@@ -123,11 +123,11 @@ export default function TopoComputePanel({ projectId }: { projectId: string }) {
         <h3 className="text-sm font-semibold"><Mountain className="w-4 h-4 inline mr-1" />Topographic Computations</h3>
         <div className="flex gap-2">
           <div className="text-xs">
-            <label className="text-zinc-500 mr-1">Grid:</label>
-            <input aria-label="Grid:" type="number" value={gridSize} onChange={e => setGridSize(Number(e.target.value))} className="w-14 bg-zinc-800 border border-zinc-700 rounded px-1 py-0.5 text-white text-xs" min={5} />m
+            <label className="text-zinc-500 mr-1" htmlFor="grid">Grid:</label>
+            <input id="grid" aria-label="Grid:" type="number" value={gridSize} onChange={e => setGridSize(Number(e.target.value))} className="w-14 bg-zinc-800 border border-zinc-700 rounded px-1 py-0.5 text-white text-xs" min={5} />m
           </div>
           <div className="text-xs">
-            <label className="text-zinc-500 mr-1">Contour:</label>
+            <label className="text-zinc-500 mr-1" htmlFor="contour">Contour:</label>
             <input aria-label="Contour:" type="number" step="0.5" value={contourInterval} onChange={e => setContourInterval(Number(e.target.value))} className="w-14 bg-zinc-800 border border-zinc-700 rounded px-1 py-0.5 text-white text-xs" min={0.1} />m
           </div>
         </div>
@@ -195,7 +195,7 @@ export default function TopoComputePanel({ projectId }: { projectId: string }) {
 
       <div className="flex gap-2">
         <button onClick={addPoint} className="px-2 py-1 text-xs bg-zinc-800 border border-zinc-700 rounded text-zinc-400 hover:text-white">+ Point</button>
-        <button onClick={handleSave} disabled={saved} className="inline-flex items-center gap-1 px-3 py-1 bg-[var(--accent)] text-white text-xs rounded hover:bg-[var(--accent-dim)] disabled:opacity-50">
+        <button onClick={handleSave} disabled={saved} className="inline-flex items-center gap-1 px-3 py-1 bg-[var(--accent)] text-black text-xs rounded hover:bg-[var(--accent-dim)] disabled:opacity-50">
           {saved ? <CheckCircle className="w-3 h-3" /> : <Save className="w-3 h-3" />}{saved ? 'Saved' : 'Save Results'}
         </button>
       </div>

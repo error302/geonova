@@ -48,12 +48,13 @@ function Field({ label, value, onChange, placeholder, type = 'text' }: {
   placeholder?: string
   type?: string
 }) {
+  const id = React.useId()
   return (
     <div className="flex items-center gap-2">
-      <label className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider w-12 shrink-0">
+      <label htmlFor={id} className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider w-12 shrink-0">
         {label}
       </label>
-      <input aria-label="{label}"
+      <input id={id}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}

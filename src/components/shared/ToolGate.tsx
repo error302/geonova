@@ -49,7 +49,7 @@ export function ToolGate({ toolPath, children }: ToolGateProps) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center space-y-3">
-          <div className="inline-block w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" aria-label="Loading" />
+          <div role="status" aria-label="Loading" className="inline-block w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
           <p className="text-sm text-[var(--text-muted)]">Checking your subscription…</p>
         </div>
       </div>

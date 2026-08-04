@@ -129,13 +129,13 @@ export default function PhotoUploader({ projectId, photos, onChange, maxPhotos =
                   <input
                     value={photo.caption || ''}
                     onChange={e => updatePhoto(i, 'caption', e.target.value)}
-                    aria-label="Caption" placeholder="Caption"
+                    aria-label="Caption"
                     className="w-full px-2 py-1 text-xs bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
                   />
                   <input
                     value={photo.orientation || ''}
                     onChange={e => updatePhoto(i, 'orientation', e.target.value)}
-                    aria-label="View direction (e.g. Looking North)" placeholder="View direction (e.g. Looking North)"
+                    aria-label="View direction (e.g. Looking North)"
                     className="w-full px-2 py-1 text-xs bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
                   />
                   <button

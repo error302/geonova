@@ -58,13 +58,13 @@ export default function SightDistanceChecker() {
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Design Speed (km/h)</label>
-          <input aria-label="Design Speed (km/h)" value={designSpeed} onChange={e => setDesignSpeed(e.target.value)} type="number" min="30" max="120"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="design-speed-km-h">Design Speed (km/h)</label>
+          <input id="design-speed-km-h" aria-label="Design Speed (km/h)" value={designSpeed} onChange={e => setDesignSpeed(e.target.value)} type="number" min="30" max="120"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Terrain</label>
-          <select value={terrain} onChange={e => setTerrain(e.target.value as typeof terrain)}
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="terrain">Terrain</label>
+          <select id="terrain" value={terrain} onChange={e => setTerrain(e.target.value as typeof terrain)}
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm">
             <option value="flat">Flat</option>
             <option value="rolling">Rolling</option>
@@ -72,20 +72,20 @@ export default function SightDistanceChecker() {
           </select>
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Gradient (%)</label>
-          <input aria-label="Gradient (%)" value={gradient} onChange={e => setGradient(e.target.value)} type="number" step="0.1"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="gradient">Gradient (%)</label>
+          <input id="gradient" aria-label="Gradient (%)" value={gradient} onChange={e => setGradient(e.target.value)} type="number" step="0.1"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
           <p className="text-[10px] text-[var(--text-muted)] mt-0.5">+ uphill, − downhill</p>
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Proposed SSD (m) — optional</label>
-          <input aria-label="Proposed SSD (m) — optional" value={proposedSSD} onChange={e => setProposedSSD(e.target.value)} type="number" min="0"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="proposed-ssd-m-optional">Proposed SSD (m) — optional</label>
+          <input id="proposed-ssd-m-optional" aria-label="Proposed SSD (m) — optional" value={proposedSSD} onChange={e => setProposedSSD(e.target.value)} type="number" min="0"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
       </div>
 
       <div className="flex gap-3">
-        <button onClick={computeSSD} className="px-5 py-2 bg-[var(--accent)] text-white rounded text-sm font-medium hover:opacity-90">
+        <button onClick={computeSSD} className="px-5 py-2 bg-[var(--accent)] text-black rounded text-sm font-medium hover:opacity-90">
           Check Sight Distance
         </button>
       </div>
@@ -130,8 +130,8 @@ export default function SightDistanceChecker() {
       <h3 className="text-sm font-semibold text-[var(--text-primary)]">Minimum Radius Compliance</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Proposed Radius R (m)</label>
-          <input aria-label="Proposed Radius R (m)" value={proposedRadius} onChange={e => setProposedRadius(e.target.value)} type="number" min="1"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="proposed-radius-r-m">Proposed Radius R (m)</label>
+          <input id="proposed-radius-r-m" aria-label="Proposed Radius R (m)" value={proposedRadius} onChange={e => setProposedRadius(e.target.value)} type="number" min="1"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
@@ -141,7 +141,7 @@ export default function SightDistanceChecker() {
           </div>
         </div>
         <div className="flex items-end">
-          <button onClick={computeRadius} className="px-5 py-2 bg-[var(--accent)] text-white rounded text-sm font-medium hover:opacity-90">
+          <button onClick={computeRadius} className="px-5 py-2 bg-[var(--accent)] text-black rounded text-sm font-medium hover:opacity-90">
             Check Compliance
           </button>
         </div>

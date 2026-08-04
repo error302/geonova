@@ -112,20 +112,20 @@ export default function SubmitBeaconPage() {
             
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Beacon Name *</label>
-                <input
+                <label className="block text-sm text-[var(--text-secondary)] mb-2" htmlFor="beacon-name">Beacon Name *</label>
+                <input id="beacon-name"
                   type="text"
                   required
                   value={form.name}
                   onChange={e => setForm({...form, name: e.target.value})}
-                  aria-label="KWL-102, TRIG-54" placeholder="KWL-102, TRIG-54"
+                  aria-label="Beacon name" placeholder="KWL-102, TRIG-54"
                   className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)]"
                 />
               </div>
               
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Beacon Type *</label>
-                <select
+                <label className="block text-sm text-[var(--text-secondary)] mb-2" htmlFor="beacon-type">Beacon Type *</label>
+                <select id="beacon-type"
                   value={form.beaconType}
                   onChange={e => setForm({...form, beaconType: e.target.value})}
                   className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)]"
@@ -141,8 +141,8 @@ export default function SubmitBeaconPage() {
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm text-[var(--text-secondary)] mb-2">Authority / Organization</label>
-              <select
+              <label className="block text-sm text-[var(--text-secondary)] mb-2" htmlFor="authority-organization">Authority / Organization</label>
+              <select id="authority-organization"
                 value={form.authority}
                 onChange={e => setForm({...form, authority: e.target.value})}
                 className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)]"
@@ -162,27 +162,27 @@ export default function SubmitBeaconPage() {
             
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Easting (m) *</label>
-                <input
+                <label className="block text-sm text-[var(--text-secondary)] mb-2" htmlFor="easting-m">Easting (m) *</label>
+                <input id="easting-m"
                   type="number"
                   step="0.0001"
                   required
                   value={form.easting}
                   onChange={e => setForm({...form, easting: e.target.value})}
-                  aria-label="500000.0000" placeholder="500000.0000"
+                  aria-label="Easting (m)" placeholder="500000.0000"
                   className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-mono"
                 />
               </div>
               
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Northing (m) *</label>
-                <input
+                <label className="block text-sm text-[var(--text-secondary)] mb-2" htmlFor="northing-m">Northing (m) *</label>
+                <input id="northing-m"
                   type="number"
                   step="0.0001"
                   required
                   value={form.northing}
                   onChange={e => setForm({...form, northing: e.target.value})}
-                  aria-label="4500000.0000" placeholder="4500000.0000"
+                  aria-label="Northing (m)" placeholder="4500000.0000"
                   className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-mono"
                 />
               </div>
@@ -190,20 +190,20 @@ export default function SubmitBeaconPage() {
 
             <div className="grid md:grid-cols-3 gap-4 mt-4">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Elevation (m)</label>
-                <input
+                <label className="block text-sm text-[var(--text-secondary)] mb-2" htmlFor="elevation-m">Elevation (m)</label>
+                <input id="elevation-m"
                   type="number"
                   step="0.001"
                   value={form.elevation}
                   onChange={e => setForm({...form, elevation: e.target.value})}
-                  aria-label="0.000" placeholder="0.000"
+                  aria-label="Elevation (m)" placeholder="0.000"
                   className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] font-mono"
                 />
               </div>
               
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">UTM Zone</label>
-                <select
+                <label className="block text-sm text-[var(--text-secondary)] mb-2" htmlFor="utm-zone">UTM Zone</label>
+                <select id="utm-zone"
                   value={form.utmZone}
                   onChange={e => setForm({...form, utmZone: e.target.value})}
                   className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)]"
@@ -215,8 +215,8 @@ export default function SubmitBeaconPage() {
               </div>
               
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Hemisphere</label>
-                <select
+                <label className="block text-sm text-[var(--text-secondary)] mb-2" htmlFor="hemisphere">Hemisphere</label>
+                <select id="hemisphere"
                   value={form.hemisphere}
                   onChange={e => setForm({...form, hemisphere: e.target.value})}
                   className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)]"
@@ -232,9 +232,9 @@ export default function SubmitBeaconPage() {
             <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Additional Information</h2>
             
             <div>
-              <label className="block text-sm text-[var(--text-secondary)] mb-2">Description / Notes</label>
+              <label className="block text-sm text-[var(--text-secondary)] mb-2" htmlFor="description-notes">Description / Notes</label>
               <textarea
-                value={form.description}
+                 id="description-notes" value={form.description}
                 onChange={e => setForm({...form, description: e.target.value})}
                 placeholder="Any additional details about this beacon..."
                 rows={4}

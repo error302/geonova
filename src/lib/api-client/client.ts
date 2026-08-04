@@ -96,6 +96,7 @@ class ClientQueryBuilder<T = any> {
   // ponytail: payload shapes are Record<string, unknown> (or array thereof for
   // bulk insert/upsert) — builder doesn't need to know column types
   private payload: Record<string, unknown> | Record<string, unknown>[] | null = null
+  private onConflict: string | null = null
 
   constructor(table: string) {
     this.table = table
@@ -111,7 +112,14 @@ class ClientQueryBuilder<T = any> {
 
   insert(data: Record<string, unknown> | Record<string, unknown>[]): this { this.operation = 'insert'; this.payload = data; return this }
   update(data: Record<string, unknown>): this { this.operation = 'update'; this.payload = data; return this }
-  upsert(data: Record<string, unknown> | Record<string, unknown>[], _options?: unknown): this { this.operation = 'upsert'; this.payload = data; return this }
+  upsert(data: Record<string, unknown> | Record<string, unknown>[], options?: { onConflict?: string }): this {
+    this.operation = 'upsert'
+    this.payload = data
+    // Forward the conflict target (e.g. 'project_id,row_index') to /api/db,
+    // which validates each comma-separated column via validateIdentifier.
+    if (options?.onConflict) this.onConflict = options.onConflict
+    return this
+  }
   delete(): this { this.operation = 'delete'; return this }
 
   eq(column: string, value: unknown): this { this.filters.push({ column, op: 'eq', value }); return this }
@@ -180,6 +188,7 @@ class ClientQueryBuilder<T = any> {
           count: this.countMode,
           head: this.headMode,
           payload: this.payload,
+          onConflict: this.onConflict ?? undefined,
         }),
       })
 

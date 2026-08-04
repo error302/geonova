@@ -18,8 +18,8 @@ export default function AdversePossessionPage() {
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <div><label className="block text-sm text-zinc-400 mb-2">Occupation Start Year</label><input type="number" value={startYear} onChange={e => setStartYear(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
-            <div><label className="block text-sm text-zinc-400 mb-2">Area (m²)</label><input type="number" value={area} onChange={e => setArea(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+            <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="occupation-start-year">Occupation Start Year</label><input id="occupation-start-year" type="number" value={startYear} onChange={e => setStartYear(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+            <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="area-m">Area (m²)</label><input id="area-m" type="number" value={area} onChange={e => setArea(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
           </div>
           <div className="space-y-2">
             {[['Open and notorious (visible to public)', isOpen, setIsOpen], ['Exclusive (not shared with others)', isExclusive, setIsExclusive], ['Hostile (without owner permission)', isHostile, setIsHostile], ['Continuous (no gaps in occupation)', isContinuous, setIsContinuous]].map(([label, val, set]) => (
@@ -44,7 +44,7 @@ export default function AdversePossessionPage() {
               ))}
             </div>
           </div>
-        ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-500">Enter data and click Evaluate.</div>}</div>
+        ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-400">Enter data and click Evaluate.</div>}</div>
       </div>
     </div>
   )

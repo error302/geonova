@@ -217,8 +217,8 @@ export function BreaklineTab({ points, breaklines, setBreaklines }: BreaklineTab
               <>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm text-[var(--text-secondary)] mb-1">Start point</label>
-                    <select
+                    <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="start-point">Start point</label>
+                    <select id="start-point"
                       value={startName}
                       onChange={e => setStartName(e.target.value)}
                       className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white"
@@ -232,8 +232,8 @@ export function BreaklineTab({ points, breaklines, setBreaklines }: BreaklineTab
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm text-[var(--text-secondary)] mb-1">End point</label>
-                    <select
+                    <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="end-point">End point</label>
+                    <select id="end-point"
                       value={endName}
                       onChange={e => setEndName(e.target.value)}
                       className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white"
@@ -264,40 +264,40 @@ export function BreaklineTab({ points, breaklines, setBreaklines }: BreaklineTab
           <div className="space-y-3">
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Start E</label>
-                <input type="number" step="0.001" value={startE} onChange={e => setStartE(e.target.value)}
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="start-e">Start E</label>
+                <input id="start-e" type="number" step="0.001" value={startE} onChange={e => setStartE(e.target.value)}
                   placeholder="254812.403"
                   className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Start N</label>
-                <input type="number" step="0.001" value={startN} onChange={e => setStartN(e.target.value)}
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="start-n">Start N</label>
+                <input id="start-n" type="number" step="0.001" value={startN} onChange={e => setStartN(e.target.value)}
                   placeholder="9856214.778"
                   className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Start Z (opt)</label>
-                <input type="number" step="0.01" value={startZ} onChange={e => setStartZ(e.target.value)}
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="start-z-opt">Start Z (opt)</label>
+                <input id="start-z-opt" type="number" step="0.01" value={startZ} onChange={e => setStartZ(e.target.value)}
                   placeholder="1560.12"
                   className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
               </div>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">End E</label>
-                <input type="number" step="0.001" value={endE} onChange={e => setEndE(e.target.value)}
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="end-e">End E</label>
+                <input id="end-e" type="number" step="0.001" value={endE} onChange={e => setEndE(e.target.value)}
                   placeholder="254937.125"
                   className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">End N</label>
-                <input type="number" step="0.001" value={endN} onChange={e => setEndN(e.target.value)}
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="end-n">End N</label>
+                <input id="end-n" type="number" step="0.001" value={endN} onChange={e => setEndN(e.target.value)}
                   placeholder="9856340.501"
                   className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">End Z (opt)</label>
-                <input type="number" step="0.01" value={endZ} onChange={e => setEndZ(e.target.value)}
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="end-z-opt">End Z (opt)</label>
+                <input  id="end-z-opt" type="number" step="0.01" value={endZ} onChange={e => setEndZ(e.target.value)}
                   placeholder="1561.08"
                   className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
               </div>

@@ -57,7 +57,7 @@ export default function CorridorPage() {
       </div>
 
       <div className="flex gap-4 items-end mb-4">
-        <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Cross-section interval (m)</label><input value={interval} onChange={e => setInterval(e.target.value)} className={inputCls + ' w-32'} /></div>
+        <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="cross-section-interval-m">Cross-section interval (m)</label><input id="cross-section-interval-m" value={interval} onChange={e => setInterval(e.target.value)} className={inputCls + ' w-32'} /></div>
         <button onClick={handleOrganize} className="px-4 py-2 bg-[var(--accent)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--accent-dim)]">Organize by Chainage</button>
       </div>
 

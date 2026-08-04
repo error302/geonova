@@ -46,26 +46,26 @@ export default function NLIMSLookup({ initialParcel = '', onParcelVerified }: NL
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row flex-wrap gap-4">
         <div className="flex-1">
-          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1" htmlFor="parcel-number">
             Parcel Number
           </label>
-          <input
+          <input id="parcel-number"
             type="text"
             value={parcelNumber}
             onChange={e => setParcelNumber(e.target.value.toUpperCase())}
-            aria-label="e.g., NAIROBI BLOCK 2/1234" placeholder="e.g., NAIROBI BLOCK 2/1234"
+ placeholder="e.g., NAIROBI BLOCK 2/1234"
             className="w-full p-2 border rounded-lg"
           />
         </div>
         <div className="w-full md:w-48">
-          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1" htmlFor="county">
             County
           </label>
-          <input
+          <input id="county"
             type="text"
             value={county}
             onChange={e => setCounty(e.target.value)}
-            aria-label="e.g., Nairobi" placeholder="e.g., Nairobi"
+ placeholder="e.g., Nairobi"
             className="w-full p-2 border rounded-lg"
           />
         </div>

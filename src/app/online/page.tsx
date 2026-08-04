@@ -159,8 +159,9 @@ export default function OnlineServicesPage() {
             <h2 className="text-xl font-semibold mb-4">Coordinate Transformation</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">From System</label>
+                <label htmlFor="from-system" className="block text-sm font-medium text-[var(--text-muted)] mb-1">From System</label>
                 <select
+                  id="from-system"
                   value={transformInput.fromSystem}
                   onChange={e => setTransformInput({ ...transformInput, fromSystem: e.target.value })}
                   className="w-full p-2 border rounded-lg"
@@ -174,24 +175,26 @@ export default function OnlineServicesPage() {
                   {transformInput.fromSystem === 'WGS84' ? (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Latitude</label>
+                        <label htmlFor="transform-latitude" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Latitude</label>
                         <input
+                          id="transform-latitude"
                           type="number"
                           step="any"
                           value={transformInput.latitude}
                           onChange={e => setTransformInput({ ...transformInput, latitude: e.target.value })}
-                          aria-label="e.g., -1.2921" placeholder="e.g., -1.2921"
+                          aria-label="Latitude" placeholder="e.g., -1.2921"
                           className="w-full p-2 border rounded-lg"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Longitude</label>
+                        <label htmlFor="transform-longitude" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Longitude</label>
                         <input
+                          id="transform-longitude"
                           type="number"
                           step="any"
                           value={transformInput.longitude}
                           onChange={e => setTransformInput({ ...transformInput, longitude: e.target.value })}
-                          aria-label="e.g., 36.8219" placeholder="e.g., 36.8219"
+                          aria-label="Longitude" placeholder="e.g., 36.8219"
                           className="w-full p-2 border rounded-lg"
                         />
                       </div>
@@ -199,41 +202,45 @@ export default function OnlineServicesPage() {
                   ) : (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Easting (m)</label>
+                        <label htmlFor="transform-easting" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Easting (m)</label>
                         <input
+                          id="transform-easting"
                           type="number"
                           step="any"
                           value={transformInput.easting}
                           onChange={e => setTransformInput({ ...transformInput, easting: e.target.value })}
-                          aria-label="e.g., 250000" placeholder="e.g., 250000"
+                          aria-label="Easting (m)" placeholder="e.g., 250000"
                           className="w-full p-2 border rounded-lg"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Northing (m)</label>
+                        <label htmlFor="transform-northing" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Northing (m)</label>
                         <input
+                          id="transform-northing"
                           type="number"
                           step="any"
                           value={transformInput.northing}
                           onChange={e => setTransformInput({ ...transformInput, northing: e.target.value })}
-                          aria-label="e.g., 9850000" placeholder="e.g., 9850000"
+                          aria-label="Northing (m)" placeholder="e.g., 9850000"
                           className="w-full p-2 border rounded-lg"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">UTM Zone</label>
+                          <label htmlFor="transform-zone" className="block text-sm font-medium text-[var(--text-muted)] mb-1">UTM Zone</label>
                           <input
+                            id="transform-zone"
                             type="number"
                             value={transformInput.zone}
                             onChange={e => setTransformInput({ ...transformInput, zone: e.target.value })}
-                            aria-label="e.g., 37" placeholder="e.g., 37"
+                            placeholder="e.g., 37"
                             className="w-full p-2 border rounded-lg"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Hemisphere</label>
+                          <label htmlFor="transform-hemisphere" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Hemisphere</label>
                           <select
+                            id="transform-hemisphere"
                             value={transformInput.hemisphere}
                             onChange={e => setTransformInput({ ...transformInput, hemisphere: e.target.value as 'N' | 'S' })}
                             className="w-full p-2 border rounded-lg"
@@ -249,8 +256,9 @@ export default function OnlineServicesPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">To System</label>
+                <label htmlFor="to-system" className="block text-sm font-medium text-[var(--text-muted)] mb-1">To System</label>
                 <select
+                  id="to-system"
                   value={transformInput.toSystem}
                   onChange={e => setTransformInput({ ...transformInput, toSystem: e.target.value })}
                   className="w-full p-2 border rounded-lg"
@@ -305,8 +313,9 @@ export default function OnlineServicesPage() {
             <h2 className="text-xl font-semibold mb-4">Benchmark Database Lookup</h2>
             <div className="grid md:grid-cols-3 gap-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Country</label>
+                <label htmlFor="benchmark-country" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Country</label>
                 <select
+                  id="benchmark-country"
                   value={benchmarkSearch.country}
                   onChange={e => setBenchmarkSearch({ ...benchmarkSearch, country: e.target.value })}
                   className="w-full p-2 border rounded-lg"
@@ -318,8 +327,9 @@ export default function OnlineServicesPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Type</label>
+                <label htmlFor="benchmark-type" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Type</label>
                 <select
+                  id="benchmark-type"
                   value={benchmarkSearch.type}
                   onChange={e => setBenchmarkSearch({ ...benchmarkSearch, type: e.target.value as any })}
                   className="w-full p-2 border rounded-lg"
@@ -398,8 +408,8 @@ export default function OnlineServicesPage() {
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Temperature (°C)</label>
-                  <input aria-label="Temperature"
+                  <label htmlFor="weather-temperature" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Temperature (°C)</label>
+                  <input id="weather-temperature"
                     type="number"
                     step="any"
                     value={weatherInput.temperature}
@@ -408,8 +418,8 @@ export default function OnlineServicesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Pressure (hPa)</label>
-                  <input aria-label="Pressure"
+                  <label htmlFor="weather-pressure" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Pressure (hPa)</label>
+                  <input id="weather-pressure"
                     type="number"
                     step="any"
                     value={weatherInput.pressure}
@@ -418,8 +428,8 @@ export default function OnlineServicesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Humidity (%)</label>
-                  <input aria-label="Humidity"
+                  <label htmlFor="weather-humidity" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Humidity (%)</label>
+                  <input id="weather-humidity"
                     type="number"
                     step="any"
                     value={weatherInput.humidity}
@@ -428,13 +438,14 @@ export default function OnlineServicesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Elevation (m) - Optional</label>
+                  <label htmlFor="weather-elevation" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Elevation (m) - Optional</label>
                   <input
+                    id="weather-elevation"
                     type="number"
                     step="any"
                     value={weatherInput.elevation}
                     onChange={e => setWeatherInput({ ...weatherInput, elevation: e.target.value })}
-                    aria-label="e.g., 1500" placeholder="e.g., 1500"
+                    aria-label="Elevation (m)" placeholder="e.g., 1500"
                     className="w-full p-2 border rounded-lg"
                   />
                 </div>

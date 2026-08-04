@@ -139,8 +139,8 @@ export default function SubdivisionGeneratorPage() {
                 {rows.map(row => (
                   <div key={row.id} className="grid grid-cols-[40px_1fr_1fr_32px] gap-2 items-center">
                     <span className="font-mono text-xs text-[var(--text-muted)]">{row.id}</span>
-                    <input className="input font-mono text-sm" value={row.easting} onChange={e => updateRow(row.id, 'easting', e.target.value)} aria-label="274812.403" placeholder="274812.403" />
-                    <input className="input font-mono text-sm" value={row.northing} onChange={e => updateRow(row.id, 'northing', e.target.value)} aria-label="9856214.778" placeholder="9856214.778" />
+                    <input className="input font-mono text-sm" value={row.easting} onChange={e => updateRow(row.id, 'easting', e.target.value)} aria-label="Easting (m)" placeholder="274812.403" />
+                    <input className="input font-mono text-sm" value={row.northing} onChange={e => updateRow(row.id, 'northing', e.target.value)} aria-label="Northing (m)" placeholder="9856214.778" />
                     <button onClick={() => removeRow(row.id)} className="text-[var(--text-muted)] hover:text-[var(--error)] transition-colors text-sm">×</button>
                   </div>
                 ))}
@@ -153,7 +153,7 @@ export default function SubdivisionGeneratorPage() {
           <div className="card">
             <div className="card-header"><span className="label">Target plot size</span></div>
             <div className="card-body">
-              <select value={plotPreset} onChange={e => setPlotPreset(parseInt(e.target.value))} className="input text-sm mb-3">
+              <select aria-label="Target plot size" value={plotPreset} onChange={e => setPlotPreset(parseInt(e.target.value))} className="input text-sm mb-3">
                 {KENYA_PLOT_PRESETS.map((opt, i) => (
                   <option key={opt.label} value={i}>{opt.label}</option>
                 ))}
@@ -161,12 +161,12 @@ export default function SubdivisionGeneratorPage() {
               {plotPreset === KENYA_PLOT_PRESETS.length - 1 && (
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase">Width (m)</label>
-                    <input aria-label="Width (m)" className="input font-mono text-sm" type="number" value={customWidth} onChange={e => setCustomWidth(e.target.value)} />
+                    <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase" htmlFor="width-m">Width (m)</label>
+                    <input id="width-m" aria-label="Width (m)" className="input font-mono text-sm" type="number" value={customWidth} onChange={e => setCustomWidth(e.target.value)} />
                   </div>
                   <div>
-                    <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase">Depth (m)</label>
-                    <input aria-label="Depth (m)" className="input font-mono text-sm" type="number" value={customDepth} onChange={e => setCustomDepth(e.target.value)} />
+                    <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase" htmlFor="depth-m">Depth (m)</label>
+                    <input id="depth-m" aria-label="Depth (m)" className="input font-mono text-sm" type="number" value={customDepth} onChange={e => setCustomDepth(e.target.value)} />
                   </div>
                 </div>
               )}
@@ -180,7 +180,7 @@ export default function SubdivisionGeneratorPage() {
           <div className="card">
             <div className="card-header"><span className="label">Road reserve</span></div>
             <div className="card-body">
-              <select value={roadPreset} onChange={e => setRoadPreset(parseInt(e.target.value))} className="input text-sm mb-3">
+              <select aria-label="Road reserve" value={roadPreset} onChange={e => setRoadPreset(parseInt(e.target.value))} className="input text-sm mb-3">
                 {KENYA_ROAD_PRESETS.map((opt, i) => (
                   <option key={opt.label} value={i}>{opt.label}</option>
                 ))}

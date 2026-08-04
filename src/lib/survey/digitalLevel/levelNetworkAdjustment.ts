@@ -349,7 +349,7 @@ function multiplyAtWA(A: number[][], W: number[], n: number): number[][] {
 }
 
 function multiplyAtWl(A: number[][], W: number[], l: number[], n: number): number[] {
-  let result = new Array(n).fill(0)
+  const result = new Array(n).fill(0)
   for (let i = 0; i < n; i++) {
     for (let k = 0; k < A.length; k++) {
       result[i] += A[k][i] * W[k] * l[k]
@@ -359,8 +359,8 @@ function multiplyAtWl(A: number[][], W: number[], l: number[], n: number): numbe
 }
 
 function solveLinearSystem(A: number[][], b: number[]): number[] {
-  let n = b.length
-  let M = A.map(function(row, i) { return row.concat([b[i]]) })
+  const n = b.length
+  const M = A.map(function(row, i) { return row.concat([b[i]]) })
 
   for (let col = 0; col < n; col++) {
     // Partial pivoting
@@ -368,15 +368,15 @@ function solveLinearSystem(A: number[][], b: number[]): number[] {
     for (let row = col + 1; row < n; row++) {
       if (Math.abs(M[row][col]) > Math.abs(M[maxRow][col])) maxRow = row
     }
-    let tmp = M[col]; M[col] = M[maxRow]; M[maxRow] = tmp
+    const tmp = M[col]; M[col] = M[maxRow]; M[maxRow] = tmp
 
-    let pivot = M[col][col]
+    const pivot = M[col][col]
     if (Math.abs(pivot) < 1e-12) {
       throw new Error('Singular normal equation matrix — check network geometry (possibly under-determined)')
     }
 
     for (let row2 = col + 1; row2 < n; row2++) {
-      let factor = M[row2][col] / pivot
+      const factor = M[row2][col] / pivot
       for (let k = col; k <= n; k++) {
         M[row2][k] -= factor * M[col][k]
       }
@@ -384,7 +384,7 @@ function solveLinearSystem(A: number[][], b: number[]): number[] {
   }
 
   // Back substitution
-  let x = new Array(n).fill(0)
+  const x = new Array(n).fill(0)
   for (let i = n - 1; i >= 0; i--) {
     x[i] = M[i][n]
     for (let j = i + 1; j < n; j++) {
@@ -396,8 +396,8 @@ function solveLinearSystem(A: number[][], b: number[]): number[] {
 }
 
 function invertMatrix(A: number[][], n: number): number[][] {
-  let M = A.map(function(row, i) {
-    let aug = row.slice()
+  const M = A.map(function(row, i) {
+    const aug = row.slice()
     for (let j = 0; j < n; j++) aug.push(0)
     aug[n + i] = 1
     return aug
@@ -408,9 +408,9 @@ function invertMatrix(A: number[][], n: number): number[][] {
     for (let row = col + 1; row < n; row++) {
       if (Math.abs(M[row][col]) > Math.abs(M[maxRow][col])) maxRow = row
     }
-    let tmp2 = M[col]; M[col] = M[maxRow]; M[maxRow] = tmp2
+    const tmp2 = M[col]; M[col] = M[maxRow]; M[maxRow] = tmp2
 
-    let pivot = M[col][col]
+    const pivot = M[col][col]
     if (Math.abs(pivot) < 1e-12) {
       return Array.from({ length: n }, function() { return new Array(n).fill(0) })
     }
@@ -420,7 +420,7 @@ function invertMatrix(A: number[][], n: number): number[][] {
     }
     for (let row3 = 0; row3 < n; row3++) {
       if (row3 === col) continue
-      let factor2 = M[row3][col]
+      const factor2 = M[row3][col]
       for (let k2 = 0; k2 < 2 * n; k2++) {
         M[row3][k2] -= factor2 * M[col][k2]
       }

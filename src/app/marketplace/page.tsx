@@ -99,8 +99,9 @@ function ImagePicker({
           {images.map((src, i) => (
             <div key={`${src}-${i}`} className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+              <img src={src} alt={`Listing preview ${i + 1}`} className="w-full h-full object-cover" loading="lazy" decoding="async" />
               <button
+                aria-label={`Remove photo ${i + 1}`}
                 onClick={() => remove(i)}
                 className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
                 title="Remove photo"
@@ -120,10 +121,14 @@ function ImagePicker({
       {/* Drop zone */}
       {images.length < MAX_IMAGES && (
         <div
+          role="button"
+          tabIndex={0}
+          aria-label="Add photos"
           onDragOver={e => { e.preventDefault(); setDragOver(true) }}
           onDragLeave={() => setDragOver(false)}
           onDrop={onDrop}
           onClick={() => inputRef.current?.click()}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inputRef.current?.click() } }}
           className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
             dragOver
               ? 'border-[var(--accent)] bg-[var(--accent)]/5'
@@ -169,6 +174,14 @@ function ImageGallery({ images }: { images: string[] }) {
   const [active, setActive] = useState(0)
   const [lightbox, setLightbox] = useState(false)
 
+  // Close the lightbox on Escape (document-level, works regardless of focus)
+  useEffect(() => {
+    if (!lightbox) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightbox(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [lightbox])
+
   if (images.length === 0) {
     return (
       <div className="h-52 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] flex items-center justify-center">
@@ -184,19 +197,25 @@ function ImageGallery({ images }: { images: string[] }) {
       {/* Main image */}
       <div
         className="relative h-56 rounded-xl overflow-hidden border border-[var(--border-color)] cursor-zoom-in bg-[var(--bg-secondary)]"
+        role="button"
+        tabIndex={0}
+        aria-label="Open image in full screen"
         onClick={() => setLightbox(true)}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLightbox(true) } }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={images[active]} alt="Listing photo" className="w-full h-full object-contain" loading="lazy" decoding="async" />
+        <img src={images[active]} alt="Listing preview" className="w-full h-full object-contain" loading="lazy" decoding="async" />
         {images.length > 1 && (
           <>
             <button
+              aria-label="Previous image"
               onClick={e => { e.stopPropagation(); setActive(a => (a - 1 + images.length) % images.length) }}
               className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
             </button>
             <button
+              aria-label="Next image"
               onClick={e => { e.stopPropagation(); setActive(a => (a + 1) % images.length) }}
               className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80"
             >
@@ -204,7 +223,7 @@ function ImageGallery({ images }: { images: string[] }) {
             </button>
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
               {images.map((_, i) => (
-                <button key={`${_}-${i}`} onClick={e => { e.stopPropagation(); setActive(i) }}
+                <button key={`${_}-${i}`} aria-label={`Show image ${i + 1}`} onClick={e => { e.stopPropagation(); setActive(i) }}
                   className={`w-1.5 h-1.5 rounded-full transition-colors ${i === active ? 'bg-white' : 'bg-white/40'}`} />
               ))}
             </div>
@@ -233,7 +252,10 @@ function ImageGallery({ images }: { images: string[] }) {
       {/* Lightbox */}
       {lightbox && (
         <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
-          onClick={() => setLightbox(false)}>
+          role="dialog"
+          aria-modal="true"
+          aria-label="Listing image">
+          <button type="button" aria-label="Close lightbox" tabIndex={-1} className="absolute inset-0 cursor-pointer border-0 p-0" onClick={() => setLightbox(false)} />
           <button aria-label="Close lightbox" onClick={() => setLightbox(false)} className="absolute top-4 right-4 text-white/60 hover:text-white p-2">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
@@ -250,7 +272,7 @@ function ImageGallery({ images }: { images: string[] }) {
             </>
           )}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={images[active]} alt="" className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg" loading="lazy" decoding="async" onClick={e => e.stopPropagation()} />
+          <img src={images[active]} alt="" className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg" loading="lazy" decoding="async" />
         </div>
       )}
     </>
@@ -368,7 +390,7 @@ function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListin
 
           {/* Listing type */}
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-2">Listing type *</label>
+            <div className="block text-xs text-[var(--text-muted)] mb-2">Listing type *</div>
             <div className="flex gap-2">
               {(['sale','rent','wanted'] as ListingType[]).map((t: any) => (
                 <button key={t} onClick={() => f('type', t)}
@@ -383,33 +405,33 @@ function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListin
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Category *</label>
-              <select value={form.category} onChange={e => f('category', e.target.value as InstrumentCategory)} className="input w-full">
+              <label htmlFor="listing-category" className="block text-xs text-[var(--text-muted)] mb-1">Category *</label>
+              <select id="listing-category" value={form.category} onChange={e => f('category', e.target.value as InstrumentCategory)} className="input w-full">
                 {CATEGORIES.map((c: any) => <option key={c.id} value={c.id}>{c.label}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Condition *</label>
-              <select value={form.condition} onChange={e => f('condition', e.target.value as Condition)} className="input w-full">
+              <label htmlFor="listing-condition" className="block text-xs text-[var(--text-muted)] mb-1">Condition *</label>
+              <select id="listing-condition" value={form.condition} onChange={e => f('condition', e.target.value as Condition)} className="input w-full">
                 {CONDITIONS.map((c: any) => <option key={c.id} value={c.id}>{c.label} — {c.desc}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Brand *</label>
-              <input value={form.brand} onChange={e => f('brand', e.target.value)} list="brand-list"
-                aria-label="Leica, Trimble…" placeholder="Leica, Trimble…" className="input w-full" />
+              <label htmlFor="listing-brand" className="block text-xs text-[var(--text-muted)] mb-1">Brand *</label>
+              <input id="listing-brand" value={form.brand} onChange={e => f('brand', e.target.value)} list="brand-list"
+                placeholder="Leica, Trimble…" className="input w-full" />
               <datalist id="brand-list">{BRANDS.map((b: any) => <option key={b} value={b} />)}</datalist>
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Model *</label>
-              <input value={form.model} onChange={e => f('model', e.target.value)}
-                aria-label="TS16, S9, DNA03…" placeholder="TS16, S9, DNA03…" className="input w-full" />
+              <label htmlFor="listing-model" className="block text-xs text-[var(--text-muted)] mb-1">Model *</label>
+              <input id="listing-model" value={form.model} onChange={e => f('model', e.target.value)}
+                placeholder="TS16, S9, DNA03…" className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Year of manufacture</label>
-              <input type="number" min={1990} max={new Date().getFullYear()}
+              <label htmlFor="listing-year" className="block text-xs text-[var(--text-muted)] mb-1">Year of manufacture</label>
+              <input id="listing-year" type="number" min={1990} max={new Date().getFullYear()}
                 value={form.year || ''} onChange={e => f('year', Number(e.target.value) || undefined)}
-                aria-label="e.g. 2019" placeholder="e.g. 2019" className="input w-full" />
+                placeholder="e.g. 2019" className="input w-full" />
             </div>
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1">
@@ -418,7 +440,7 @@ function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListin
               <div className="flex gap-2">
                 <input type="number" min={0} value={form.price || ''}
                   onChange={e => f('price', e.target.value)}
-                  aria-label="Amount" placeholder="Amount" className="input flex-1" />
+ placeholder="Amount" className="input flex-1" />
                 <select value={form.currency} onChange={e => f('currency', e.target.value as Currency)} className="input w-20">
                   {CURRENCIES.map((c: any) => <option key={c.id} value={c.id}>{c.id}</option>)}
                 </select>
@@ -428,8 +450,8 @@ function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListin
 
           {form.type === 'rent' && (
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Rent period</label>
-              <select value={form.rentPeriod || 'day'} onChange={e => f('rentPeriod', e.target.value)} className="input w-full">
+              <label htmlFor="listing-rent-period" className="block text-xs text-[var(--text-muted)] mb-1">Rent period</label>
+              <select id="listing-rent-period" value={form.rentPeriod || 'day'} onChange={e => f('rentPeriod', e.target.value)} className="input w-full">
                 <option value="day">Per day</option>
                 <option value="week">Per week</option>
                 <option value="month">Per month</option>
@@ -438,15 +460,15 @@ function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListin
           )}
 
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Listing title *</label>
-            <input value={form.title} onChange={e => f('title', e.target.value)}
-              aria-label="e.g. Leica TS16 Total Station — 2019, with tribrach and case" placeholder="e.g. Leica TS16 Total Station — 2019, with tribrach and case"
+            <label htmlFor="listing-title" className="block text-xs text-[var(--text-muted)] mb-1">Listing title *</label>
+            <input id="listing-title" value={form.title} onChange={e => f('title', e.target.value)}
+              placeholder="e.g. Leica TS16 Total Station — 2019, with tribrach and case"
               className="input w-full" />
           </div>
 
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Description *</label>
-            <textarea value={form.description} onChange={e => f('description', e.target.value)} rows={4}
+            <label htmlFor="listing-description" className="block text-xs text-[var(--text-muted)] mb-1">Description *</label>
+            <textarea id="listing-description" value={form.description} onChange={e => f('description', e.target.value)} rows={4}
               placeholder="Describe the instrument: accessories included (case, tribrach, cables, charger), reason for selling, calibration status, any faults, original box, etc."
               className="input w-full resize-none" />
           </div>
@@ -459,25 +481,25 @@ function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListin
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Location (town) *</label>
-              <input value={form.location} onChange={e => f('location', e.target.value)}
-                aria-label="Nairobi, Kampala…" placeholder="Nairobi, Kampala…" className="input w-full" />
+              <label htmlFor="listing-location" className="block text-xs text-[var(--text-muted)] mb-1">Location (town) *</label>
+              <input id="listing-location" value={form.location} onChange={e => f('location', e.target.value)}
+                placeholder="Nairobi, Kampala…" className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Country *</label>
-              <select value={form.country} onChange={e => f('country', e.target.value)} className="input w-full">
+              <label htmlFor="listing-country" className="block text-xs text-[var(--text-muted)] mb-1">Country *</label>
+              <select id="listing-country" value={form.country} onChange={e => f('country', e.target.value)} className="input w-full">
                 {COUNTRIES.map((c: any) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Your name *</label>
-              <input value={form.sellerName} onChange={e => f('sellerName', e.target.value)}
-                aria-label="Your name or company" placeholder="Your name or company" className="input w-full" />
+              <label htmlFor="listing-seller-name" className="block text-xs text-[var(--text-muted)] mb-1">Your name *</label>
+              <input id="listing-seller-name" value={form.sellerName} onChange={e => f('sellerName', e.target.value)}
+                placeholder="Your name or company" className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Contact (phone / email) *</label>
-              <input value={form.sellerContact} onChange={e => f('sellerContact', e.target.value)}
-                aria-label="+254712345678" placeholder="+254712345678" className="input w-full" />
+              <label htmlFor="listing-seller-contact" className="block text-xs text-[var(--text-muted)] mb-1">Contact (phone / email) *</label>
+              <input id="listing-seller-contact" value={form.sellerContact} onChange={e => f('sellerContact', e.target.value)}
+                placeholder="+254712345678" className="input w-full" />
             </div>
           </div>
         </div>
@@ -505,6 +527,13 @@ function ListingDetail({ listing, onClose, onRefresh }: {
   const [form, setForm] = useState({ buyerName: '', buyerContact: '', message: '' })
   const fq = (k: keyof typeof form, v: string) => setForm(p => ({ ...p, [k]: v }))
 
+  // Close the detail drawer on Escape (document-level, works regardless of focus)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [onClose])
+
   const catLabel  = CATEGORIES.find((c: any) => c.id === listing.category)?.label  ?? listing.category
   const condLabel = CONDITIONS.find((c: any) => c.id === listing.condition)?.label ?? listing.condition
 
@@ -518,11 +547,13 @@ function ListingDetail({ listing, onClose, onRefresh }: {
   }
 
   return (
-    <div role="button" tabIndex={0} aria-label="Close dialog" className="fixed inset-0 z-40 flex" onClick={onClose} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}>
-      <div className="flex-1" />
+    <div className="fixed inset-0 z-40 flex">
+      <button type="button" aria-label="Close dialog" tabIndex={-1} className="flex-1 cursor-pointer border-0 p-0" onClick={onClose} />
       <div
         className="w-full max-w-md bg-[var(--bg-card)] border-l border-[var(--border-color)] h-full overflow-y-auto shadow-2xl"
-        onClick={e => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label={listing.title}
       >
         {/* Sticky header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-color)] sticky top-0 bg-[var(--bg-card)] z-10">
@@ -607,18 +638,18 @@ function ListingDetail({ listing, onClose, onRefresh }: {
               </h3>
               {iqErr && <p className="text-xs text-red-400">{iqErr}</p>}
               <div>
-                <label className="block text-xs text-[var(--text-muted)] mb-1">Your name *</label>
-                <input value={form.buyerName} onChange={e => fq('buyerName', e.target.value)}
-                  aria-label="Your full name" placeholder="Your full name" className="input w-full text-sm py-1.5" />
+                <label htmlFor="inquiry-name" className="block text-xs text-[var(--text-muted)] mb-1">Your name *</label>
+                <input id="inquiry-name" value={form.buyerName} onChange={e => fq('buyerName', e.target.value)}
+                  placeholder="Your full name" className="input w-full text-sm py-1.5" />
               </div>
               <div>
-                <label className="block text-xs text-[var(--text-muted)] mb-1">Your contact *</label>
-                <input value={form.buyerContact} onChange={e => fq('buyerContact', e.target.value)}
-                  aria-label="+254712345678 or email" placeholder="+254712345678 or email" className="input w-full text-sm py-1.5" />
+                <label htmlFor="inquiry-contact" className="block text-xs text-[var(--text-muted)] mb-1">Your contact *</label>
+                <input id="inquiry-contact" value={form.buyerContact} onChange={e => fq('buyerContact', e.target.value)}
+                  placeholder="+254712345678 or email" className="input w-full text-sm py-1.5" />
               </div>
               <div>
-                <label className="block text-xs text-[var(--text-muted)] mb-1">Message *</label>
-                <textarea value={form.message} onChange={e => fq('message', e.target.value)} rows={3}
+                <label htmlFor="inquiry-message" className="block text-xs text-[var(--text-muted)] mb-1">Message *</label>
+                <textarea id="inquiry-message" value={form.message} onChange={e => fq('message', e.target.value)} rows={3}
                   placeholder={listing.type === 'wanted'
                     ? 'Describe your instrument — brand, model, condition, year, asking price…'
                     : 'Ask questions, propose a price, arrange to inspect the instrument…'}
@@ -813,7 +844,7 @@ export default function MarketplacePage() {
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-6">
           <input value={search} onChange={e => setSearch(e.target.value)}
-            aria-label="Search by brand, model, location…" placeholder="Search by brand, model, location…"
+            aria-label="Search by brand, model, location…"
             className="bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg px-3 py-2 text-sm flex-1 min-w-48 focus:outline-none focus:border-[var(--accent)]" />
           <select value={filterCat} onChange={e => setFilterCat(e.target.value as any)}
             className="bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] rounded-lg px-3 py-2 text-sm">

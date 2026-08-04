@@ -50,8 +50,8 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Mission Name *</label>
-        <input aria-label="Name"
+        <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="mission-name">Mission Name *</label>
+        <input id="mission-name" aria-label="Name"
           type="text"
           value={formData.name}
           onChange={(e) => setFormData({...formData, name: e.target.value})}
@@ -61,8 +61,8 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Client</label>
-        <input aria-label="Client"
+        <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="client">Client</label>
+        <input id="client" aria-label="Client"
           type="text"
           value={formData.client}
           onChange={(e) => setFormData({...formData, client: e.target.value})}
@@ -71,8 +71,8 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Survey Type *</label>
-        <select
+        <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="survey-type">Survey Type *</label>
+        <select id="survey-type"
           value={formData.survey_type}
           onChange={(e) => handleTypeChange(e.target.value)}
           className="w-full px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
@@ -92,7 +92,7 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
 
       {equipment.length > 0 && (
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Recommended Equipment</label>
+          <div className="block text-sm font-medium text-gray-300 mb-2">Recommended Equipment</div>
           <div className="bg-[var(--bg-tertiary)]/50 p-4 rounded-lg border border-[var(--border-color)]">
             <div className="flex flex-wrap gap-2">
               {equipment.map((item, idx) => (
@@ -107,7 +107,7 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
 
       {checklist.length > 0 && (
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Preparation Checklist</label>
+          <div className="block text-sm font-medium text-gray-300 mb-2">Preparation Checklist</div>
           <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700 space-y-2">
             {checklist.map((task, idx) => (
               <label key={`${task}-${idx}`} className="flex items-center gap-2 text-sm text-gray-300">
@@ -121,8 +121,8 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
 
       <div className="grid grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Crew Size</label>
-          <input aria-label="Crew size"
+          <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="crew-size">Crew Size</label>
+          <input id="crew-size" aria-label="Crew size"
             type="number"
             value={formData.crew_size}
             onChange={(e) => setFormData({...formData, crew_size: parseInt(e.target.value)})}
@@ -132,8 +132,8 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Scheduled Date</label>
-          <input aria-label="Scheduled date"
+          <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="scheduled-date">Scheduled Date</label>
+          <input id="scheduled-date" aria-label="Scheduled date"
             type="date"
             value={formData.scheduled_date}
             onChange={(e) => setFormData({...formData, scheduled_date: e.target.value})}
@@ -143,9 +143,9 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Notes</label>
+        <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="notes">Notes</label>
         <textarea
-          value={formData.notes}
+           id="notes" value={formData.notes}
           onChange={(e) => setFormData({...formData, notes: e.target.value})}
           rows={3}
           className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg focus:border-[#D17B47] focus:outline-none text-gray-100 resize-vertical"

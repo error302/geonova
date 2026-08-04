@@ -371,7 +371,7 @@ function estimateLongitudeFromEasting(easting: number, zone: UTMZone, latitude: 
   const R = rho;
   const D = (easting - zone.falseEasting) / (zone.k0 * N);
   
-  let lon = zone.centralMeridian * Math.PI / 180 + 
+  const lon = zone.centralMeridian * Math.PI / 180 + 
     (D - (1 + 2 * T + C) * D * D * D / 6 + 
      (5 - 2 * C + 28 * T - 3 * C * C + 8 * ePrime2 + 24 * T * T) * 
      D * D * D * D * D / 120) / Math.cos(phi);

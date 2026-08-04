@@ -170,6 +170,18 @@ export function OnboardingTour() {
     }
   }, [step, router])
 
+  // Close the tour with Escape regardless of focus location
+  // (handled at document level — the dialog element itself is not
+  // focusable, so a local onKeyDown would only fire from child buttons)
+  useEffect(() => {
+    if (!active) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleSkip()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [active, handleSkip])
+
   if (!active) return null
 
   const currentStep = TOUR_STEPS[step]
@@ -198,7 +210,6 @@ export function OnboardingTour() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="tour-title"
-        onKeyDown={(e) => { if (e.key === 'Escape') handleSkip() }}
       >
         <div className="bg-[#0d0d14]/95 backdrop-blur-2xl border border-[#D17B47]/30 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
           {/* Progress bar */}

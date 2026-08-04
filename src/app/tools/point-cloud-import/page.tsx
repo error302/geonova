@@ -675,7 +675,7 @@ export default function PointCloudImportPage() {
               tab.disabled
                 ? 'opacity-40 cursor-not-allowed bg-[var(--bg-tertiary)] text-[var(--text-muted)]'
                 : activeTab === tab.id
-                  ? 'bg-[var(--accent)] text-white'
+                  ? 'bg-[var(--accent)] text-black'
                   : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--accent)]'
             }`}
           >
@@ -974,21 +974,21 @@ export default function PointCloudImportPage() {
             </div>
             <div className="flex gap-4 items-end mb-4 flex-wrap">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Min Elevation</label>
-                <input
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="min-elevation">Min Elevation</label>
+                <input id="min-elevation"
                   className="input w-32 font-mono"
                   type="number"
-                  aria-label="min Z" placeholder="min Z"
+                  placeholder="min Z"
                   value={filterMinElev}
                   onChange={e => setFilterMinElev(e.target.value)}
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Max Elevation</label>
-                <input
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="max-elevation">Max Elevation</label>
+                <input id="max-elevation"
                   className="input w-32 font-mono"
                   type="number"
-                  aria-label="max Z" placeholder="max Z"
+                  placeholder="max Z"
                   value={filterMaxElev}
                   onChange={e => setFilterMaxElev(e.target.value)}
                 />
@@ -1062,13 +1062,13 @@ export default function PointCloudImportPage() {
             </p>
             <div className="flex gap-4 items-end flex-wrap">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Grid Resolution (m)</label>
-                <input
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="grid-resolution-m">Grid Resolution (m)</label>
+                <input id="grid-resolution-m"
                   className="input w-32 font-mono"
                   type="number"
                   step="0.5"
                   min="0.5"
-                  aria-label="auto" placeholder="auto"
+                  placeholder="auto"
                   value={slopeGridRes}
                   onChange={e => setSlopeGridRes(e.target.value)}
                 />
@@ -1303,12 +1303,12 @@ export default function PointCloudImportPage() {
             </p>
             <div className="flex gap-4 items-end flex-wrap">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Datum RL (m)</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="datum-rl-m">Datum RL (m)</label>
                 <input
                   className="input w-32 font-mono"
                   type="number"
                   step="0.1"
-                  aria-label="e.g. 1200" placeholder="e.g. 1200"
+                  placeholder="e.g. 1200"
                   value={datumRL}
                   onChange={e => setDatumRL(e.target.value)}
                 />

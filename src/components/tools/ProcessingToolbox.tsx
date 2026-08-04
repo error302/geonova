@@ -207,9 +207,8 @@ export function ProcessingToolbox({ compact = false }: { compact?: boolean }) {
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
-            aria-label="Search 60+ tools..." placeholder="Search 60+ tools..."
+            aria-label="Search 60+ tools..."
             className="w-full h-9 pl-9 pr-8 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
-            autoFocus
           />
           {query && (
             <button
@@ -250,7 +249,7 @@ export function ProcessingToolbox({ compact = false }: { compact?: boolean }) {
           <div className="p-3 border-b border-[var(--border-color)]">
             <div className="flex items-center gap-1.5 mb-2">
               <Clock className="w-3 h-3 text-gray-500" />
-              <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Recent</span>
+              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Recent</span>
             </div>
             <div className="space-y-1">
               {recentTools.slice(0, 4).map(tool => (
@@ -271,7 +270,7 @@ export function ProcessingToolbox({ compact = false }: { compact?: boolean }) {
           <div className="p-3 border-b border-[var(--border-color)]">
             <div className="flex items-center gap-1.5 mb-2">
               <Star className="w-3 h-3 text-amber-400" />
-              <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Favorites</span>
+              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Favorites</span>
             </div>
             <div className="space-y-1">
               {favoriteTools.map(tool => (
@@ -295,8 +294,8 @@ export function ProcessingToolbox({ compact = false }: { compact?: boolean }) {
                 const Icon = CATEGORY_ICONS[cat] || Calculator
                 return <Icon className="w-3 h-3 text-gray-500" />
               })()}
-              <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">{cat}</span>
-              <span className="text-[9px] text-gray-600">({tools.length})</span>
+              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">{cat}</span>
+              <span className="text-[9px] text-gray-400">({tools.length})</span>
             </div>
             <div className="space-y-1">
               {tools.map(tool => (
@@ -347,15 +346,16 @@ function ToolRow({
       </div>
       <div className="flex-1 min-w-0">
         <div className="text-xs font-medium text-[var(--text-primary)] truncate">{tool.name}</div>
-        <div className="text-[10px] text-gray-500 truncate">{tool.description}</div>
+        <div className="text-[10px] text-gray-400 truncate">{tool.description}</div>
       </div>
       <button
         onClick={(e) => { e.stopPropagation(); onToggleFavorite() }}
+        aria-label={isFavorite ? `Remove ${tool.name} from favorites` : `Add ${tool.name} to favorites`}
         className="shrink-0 w-6 h-6 flex items-center justify-center rounded opacity-0 group-hover:opacity-100 transition-opacity"
       >
-        <Star className={`w-3.5 h-3.5 ${isFavorite ? 'fill-amber-400 text-amber-400' : 'text-gray-500 hover:text-amber-400'}`} />
+        <Star className={`w-3.5 h-3.5 ${isFavorite ? 'fill-amber-400 text-amber-400' : 'text-gray-400 hover:text-amber-400'}`} />
       </button>
-      <ChevronRight className="w-3.5 h-3.5 text-gray-600 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+      <ChevronRight className="w-3.5 h-3.5 text-gray-400 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
     </div>
   )
 }

@@ -67,42 +67,42 @@ export default function TacheometryCalculator() {
           <div className="card-body space-y-4">
             <div>
               {/* h.i. = height of instrument above ground (not HPC — different context) */}
-              <label className="label">Instrument Height above Ground, h.i. (m)</label>
-              <input className="input" value={inputs.hi} onChange={e => setInputs({...inputs, hi: e.target.value})} aria-label="1.500" placeholder="1.500" />
+              <label className="label" htmlFor="instrument-height-above-ground-h-i-m">Instrument Height above Ground, h.i. (m)</label>
+              <input id="instrument-height-above-ground-h-i-m" className="input" value={inputs.hi} onChange={e => setInputs({...inputs, hi: e.target.value})} placeholder="1.500" />
             </div>
             <div>
-              <label className="label">Staff Readings (m)</label>
+              <div className="label">Staff Readings (m)</div>
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="label text-xs">Upper</label>
-                  <input className="input" value={inputs.upper} onChange={e => setInputs({...inputs, upper: e.target.value})} aria-label="1.850" placeholder="1.850" />
+                  <label className="label text-xs" htmlFor="upper">Upper</label>
+                  <input id="upper" className="input" value={inputs.upper} onChange={e => setInputs({...inputs, upper: e.target.value})} placeholder="1.850" />
                 </div>
                 <div>
-                  <label className="label text-xs">Middle</label>
-                  <input className="input" value={inputs.middle} onChange={e => setInputs({...inputs, middle: e.target.value})} aria-label="1.500" placeholder="1.500" />
+                  <label className="label text-xs" htmlFor="middle">Middle</label>
+                  <input id="middle" className="input" value={inputs.middle} onChange={e => setInputs({...inputs, middle: e.target.value})} placeholder="1.500" />
                 </div>
                 <div>
-                  <label className="label text-xs">Lower</label>
-                  <input className="input" value={inputs.lower} onChange={e => setInputs({...inputs, lower: e.target.value})} aria-label="1.150" placeholder="1.150" />
+                  <label className="label text-xs" htmlFor="lower">Lower</label>
+                  <input id="lower" className="input" value={inputs.lower} onChange={e => setInputs({...inputs, lower: e.target.value})} placeholder="1.150" />
                 </div>
               </div>
             </div>
             <div>
-              <label className="label">Vertical Angle (D° M&apos; S&quot;)</label>
+              <div className="label">Vertical Angle (D° M&apos; S&quot;)</div>
               <div className="flex gap-2">
-                <input className="input flex-1" value={inputs.vertDeg} onChange={e => setInputs({...inputs, vertDeg: e.target.value})} aria-label="05°" placeholder="05°" />
-                <input className="input flex-1" value={inputs.vertMin} onChange={e => setInputs({...inputs, vertMin: e.target.value})} aria-label="30'" placeholder="30'" />
-                <input className="input flex-1" value={inputs.vertSec} onChange={e => setInputs({...inputs, vertSec: e.target.value})} aria-label="00&quot;" placeholder="00&quot;" />
+                <input className="input flex-1" value={inputs.vertDeg} onChange={e => setInputs({...inputs, vertDeg: e.target.value})} placeholder="05°" />
+                <input className="input flex-1" value={inputs.vertMin} onChange={e => setInputs({...inputs, vertMin: e.target.value})} placeholder="30'" />
+                <input className="input flex-1" value={inputs.vertSec} onChange={e => setInputs({...inputs, vertSec: e.target.value})} placeholder="00&quot;" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="label">Multiplying Constant K</label>
-                <input className="input" value={inputs.k} onChange={e => setInputs({...inputs, k: e.target.value})} aria-label="100" placeholder="100" />
+                <label className="label" htmlFor="multiplying-constant-k">Multiplying Constant K</label>
+                <input id="multiplying-constant-k" className="input" value={inputs.k} onChange={e => setInputs({...inputs, k: e.target.value})} placeholder="100" />
               </div>
               <div>
-                <label className="label">Additive Constant C</label>
-                <input className="input" value={inputs.c} onChange={e => setInputs({...inputs, c: e.target.value})} aria-label="0" placeholder="0" />
+                <label className="label" htmlFor="additive-constant-c">Additive Constant C</label>
+                <input id="additive-constant-c" className="input" value={inputs.c} onChange={e => setInputs({...inputs, c: e.target.value})} placeholder="0" />
               </div>
             </div>
             {calcError && <div className="p-3 bg-red-900/30 border border-red-600 rounded text-red-400 text-sm">{calcError}</div>}

@@ -50,10 +50,10 @@ export function SettingsTab({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div>
-            <label className="block text-sm text-[var(--text-secondary)] mb-1">
+            <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="contour-interval-m">
               Contour Interval (m)
             </label>
-            <input aria-label="Contour Interval (m)"
+            <input id="contour-interval-m" aria-label="Contour Interval (m)"
               type="number"
               step="0.1"
               min="0.01"
@@ -64,10 +64,10 @@ export function SettingsTab({
             <p className="text-xs text-zinc-500 mt-1">Vertical spacing between contours</p>
           </div>
           <div>
-            <label className="block text-sm text-[var(--text-secondary)] mb-1">
+            <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="index-contour-multiplier">
               Index Contour Multiplier
             </label>
-            <input aria-label="Index Contour Multiplier"
+            <input id="index-contour-multiplier" aria-label="Index Contour Multiplier"
               type="number"
               step="1"
               min="1"
@@ -80,7 +80,7 @@ export function SettingsTab({
             </p>
           </div>
           <div className="flex flex-col">
-            <label className="block text-sm text-[var(--text-secondary)] mb-1">Points Available</label>
+            <div className="block text-sm text-[var(--text-secondary)] mb-1">Points Available</div>
             <div className="px-3 py-2 bg-[var(--bg-tertiary)] border border-zinc-700 rounded-lg text-sm text-zinc-300">
               {points.length.toLocaleString()} points
             </div>

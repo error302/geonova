@@ -148,9 +148,9 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
 
         <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-6 mb-8">
           <div className="flex items-center gap-4 mb-6 flex-wrap">
-            <label className="text-[var(--text-secondary)] text-sm">Contour interval</label>
+            <label className="text-[var(--text-secondary)] text-sm" htmlFor="contour-interval">Contour interval</label>
             <select
-              value={interval}
+               id="contour-interval" value={interval}
               onChange={e => setInterval(Number(e.target.value))}
               className="input w-32"
             >

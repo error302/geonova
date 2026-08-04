@@ -103,7 +103,7 @@ export function generateAlignmentLandXML(
 
   // Project info
   lines.push('  <Units>', '    <Metric linearUnit="meter" areaUnit="squareMeter" volumeUnit="cubicMeter" directionUnit="decimalDegrees" temperatureUnit="celsius" pressureUnit="milliBar" diameterUnit="millimeter" angularUnit="decimalDegrees" latitudeUnit="decimalDegrees"/>', '  </Units>')
-  lines.push(`  <Application name="METARDU" manufacturer="METARDU" version="1.0" manufacturerURL="https://metardu.duckdns.org" timeStamp="${now}"/>`)
+  lines.push(`  <Application name="METARDU" manufacturer="METARDU" version="1.0" manufacturerURL="https://metardu.space" timeStamp="${now}"/>`)
 
   // Alignments
   lines.push('  <Alignments name="' + projectName + '">')

@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   )
 
   // Fire-and-forget welcome email — don't block the response
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.duckdns.org'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space'
   const userEmail = (session.user as any).email
   const userName = (session.user as any).name
   if (userEmail) {

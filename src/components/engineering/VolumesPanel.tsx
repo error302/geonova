@@ -346,8 +346,8 @@ export function VolumesPanel({ projectId, projectData, surveyorProfile }: Volume
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Station Interval (m)</label>
-          <input aria-label="Station Interval (m)"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="station-interval-m">Station Interval (m)</label>
+          <input id="station-interval-m" aria-label="Station Interval (m)"
             type="number"
             min={5}
             max={100}
@@ -357,9 +357,9 @@ export function VolumesPanel({ projectId, projectData, surveyorProfile }: Volume
           />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Method</label>
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="method">Method</label>
           <select
-            value={method}
+             id="method" value={method}
             onChange={(e) => setMethod(e.target.value as 'prismoidal' | 'end-area')}
             className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-3 py-2 text-sm"
           >

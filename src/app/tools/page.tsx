@@ -441,7 +441,7 @@ export default function ToolsPage() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          aria-label="Search tools by name, category, or keyword..." placeholder="Search tools by name, category, or keyword..."
+          aria-label="Search tools" placeholder="Search tools by name, category, or keyword..."
           className="w-full h-10 pl-10 pr-10 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] transition-colors"
         />
         {searchQuery && (
@@ -594,7 +594,7 @@ function ToolLink({
         onClick={handleClick}
         className={`card-interactive p-4 transition-colors block relative rounded-xl border bg-[var(--bg-card)] ${
           isLocked
-            ? 'border-[var(--border-color)] opacity-70 cursor-not-allowed'
+            ? 'border-[var(--border-color)] cursor-not-allowed'
             : 'border-[var(--border-color)] hover:border-[var(--accent)]'
         }`}
       >
@@ -632,7 +632,7 @@ function ToolLink({
 
         {/* Upgrade prompt for locked tools */}
         {isLocked && gate && (
-          <p className="text-[10px] text-amber-400/80 mt-2 flex items-center gap-1">
+          <p className="text-[10px] text-amber-300 mt-2 flex items-center gap-1">
             <Lock className="h-3 w-3" />
             Requires {gate.minPlan.charAt(0).toUpperCase() + gate.minPlan.slice(1)} plan — {gate.label}
           </p>

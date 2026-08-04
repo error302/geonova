@@ -17,7 +17,7 @@ import {
 } from './components'
 import { trialEndingText, TrialEndingTextArgs } from './text'
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.duckdns.org'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space'
 
 export interface TrialEndingEmail {
   to: string

@@ -126,7 +126,7 @@ export default function GCPExportPage() {
                 Select project
               </h2>
               {projects.length === 0 ? (
-                <p className="text-sm text-[var(--text-muted)]">No projects found. <Link href="/project/new" className="text-[var(--accent)] hover:underline">Create one</Link> with control points marked.</p>
+                <p className="text-sm text-[var(--text-muted)]">No projects found. <Link href="/project/new" className="text-[var(--accent)] underline underline-offset-2">Create one</Link> with control points marked.</p>
               ) : (
                 <select value={selectedProject} onChange={e => setSelectedProject(e.target.value)} className="input w-full">
                   <option value="">— Choose project —</option>

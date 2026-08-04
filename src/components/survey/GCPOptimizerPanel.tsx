@@ -78,7 +78,7 @@ export function GCPOptimizerPanel() {
     <div className="space-y-4">
       {/* Area input */}
       <div className="card p-4">
-        <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Project Area (hectares)</label>
+        <div className="block text-[9px] text-gray-400 uppercase tracking-wider mb-1">Project Area (hectares)</div>
         <div className="flex items-center gap-2">
           <input
             type="number"
@@ -99,9 +99,9 @@ export function GCPOptimizerPanel() {
         </div>
         {/* UTM zone + hemisphere for export correctness (P0-1) */}
         <div className="flex items-center gap-2 mt-2">
-          <label className="text-[9px] text-gray-500 uppercase tracking-wider">UTM Zone</label>
+          <label className="text-[9px] text-gray-400 uppercase tracking-wider" htmlFor="utm-zone">UTM Zone</label>
           <input
-            type="number"
+             id="utm-zone" type="number"
             min={1}
             max={60}
             value={utmZone}
@@ -125,7 +125,7 @@ export function GCPOptimizerPanel() {
               </button>
             ))}
           </div>
-          <span className="text-[9px] text-gray-600">Used for Pix4D/WebODM WGS84 export</span>
+          <span className="text-[9px] text-gray-400">Used for Pix4D/WebODM WGS84 export</span>
         </div>
       </div>
 
@@ -136,15 +136,15 @@ export function GCPOptimizerPanel() {
           <div className="grid grid-cols-3 gap-2">
             <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
               <div className="text-lg font-bold text-[var(--accent)]">{plan.totalGCPs}</div>
-              <div className="text-[9px] text-gray-500 uppercase">GCPs</div>
+              <div className="text-[9px] text-gray-400 uppercase">GCPs</div>
             </div>
             <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
               <div className="text-lg font-bold text-emerald-400">±{plan.estimatedAccuracy}cm</div>
-              <div className="text-[9px] text-gray-500 uppercase">Est. Accuracy</div>
+              <div className="text-[9px] text-gray-400 uppercase">Est. Accuracy</div>
             </div>
             <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
               <div className="text-lg font-bold text-gray-300">{plan.coveragePercent.toFixed(0)}%</div>
-              <div className="text-[9px] text-gray-500 uppercase">Coverage</div>
+              <div className="text-[9px] text-gray-400 uppercase">Coverage</div>
             </div>
           </div>
 
@@ -175,7 +175,7 @@ export function GCPOptimizerPanel() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-mono text-[var(--text-primary)]">{gcp.name}</div>
-                    <div className="text-[9px] text-gray-500 font-mono">E:{gcp.easting.toFixed(1)} N:{gcp.northing.toFixed(1)}</div>
+                    <div className="text-[9px] text-gray-400 font-mono">E:{gcp.easting.toFixed(1)} N:{gcp.northing.toFixed(1)}</div>
                   </div>
                   <div className="flex items-center gap-1.5">
                     {gcp.rtkFixed && <CheckCircle2 className="w-3 h-3 text-emerald-400" />}
@@ -203,7 +203,7 @@ export function GCPOptimizerPanel() {
                     <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
                   )}
                   <span className={`flex-1 text-xs ${item.completed ? 'text-emerald-400' : 'text-gray-400'}`}>{item.item}</span>
-                  <span className="text-[9px] text-gray-500">{item.gcpsCompleted}/{item.totalGCPs}</span>
+                  <span className="text-[9px] text-gray-400">{item.gcpsCompleted}/{item.totalGCPs}</span>
                 </div>
               ))}
             </div>

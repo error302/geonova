@@ -428,7 +428,7 @@ export default function ProcessPage() {
               {!processed && (
                 <>
                   <div className="mt-6">
-                    <label className="block text-sm text-[var(--text-secondary)] mb-2">Tolerance Profile</label>
+                    <div className="block text-sm text-[var(--text-secondary)] mb-2">Tolerance Profile</div>
                     <div className="grid grid-cols-3 gap-3">
                       {getAllToleranceProfiles().map((profile: any) => (
                         <button

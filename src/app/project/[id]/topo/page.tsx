@@ -184,8 +184,8 @@ export default function TopoPage() {
 
       <div className="flex flex-wrap gap-4 items-end">
         <div>
-          <label className="text-xs text-[var(--text-muted)] block mb-1">Contour Interval (m)</label>
-          <select
+          <label className="text-xs text-[var(--text-muted)] block mb-1" htmlFor="contour-interval-m">Contour Interval (m)</label>
+          <select id="contour-interval-m"
             value={interval}
             onChange={(event) => setInterval(Number(event.target.value))}
             className="bg-[var(--bg-secondary)] border rounded px-3 py-1.5 text-sm"
@@ -199,9 +199,9 @@ export default function TopoPage() {
         </div>
 
         <div>
-          <label className="text-xs text-[var(--text-muted)] block mb-1">Grid Resolution (m)</label>
+          <label className="text-xs text-[var(--text-muted)] block mb-1" htmlFor="grid-resolution-m">Grid Resolution (m)</label>
           <select
-            value={resolution}
+             id="grid-resolution-m" value={resolution}
             onChange={(event) => setResolution(Number(event.target.value))}
             className="bg-[var(--bg-secondary)] border rounded px-3 py-1.5 text-sm"
           >

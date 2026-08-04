@@ -84,7 +84,7 @@ export function generateIFC43Alignment(opts: IFC43ExportOptions): string {
   const personOrg = id()
   lines.push(`${personOrg} = IFCPERSONANDORGANIZATION(${person},${org},$);`)
   const app = id()
-  lines.push(`${app} = IFCAPPLICATION(${org},'1.0','METARDU','https://metardu.duckdns.org');`)
+  lines.push(`${app} = IFCAPPLICATION(${org},'1.0','METARDU','https://metardu.space');`)
   const ownerHistory = id()
   lines.push(`${ownerHistory} = IFCOWNERHISTORY(${personOrg},${app},$,.ADDED.,$,'METARDU','METARDU',${now});`)
 

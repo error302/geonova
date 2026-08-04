@@ -1,0 +1,7 @@
+{
+  "name": "eslint-plugin-metardu",
+  "version": "1.0.0",
+  "description": "METARDU local ESLint rules — accessibility guards not covered by the stock jsx-a11y plugin",
+  "private": true,
+  "main": "index.js"
+}

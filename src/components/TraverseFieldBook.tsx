@@ -7,6 +7,9 @@ import { computeTraverse, type RawObservation, type TraverseComputationResult } 
 import { parseTraverseCSV } from '@/lib/parsers/totalStation'
 import { bearingToString } from '@/lib/engine/angles'
 import { usePrint, PrintButton, PrintHeader } from '@/hooks/usePrint'
+// XSS guard (2026-08-03): station names are user-entered and interpolated
+// into the print-window HTML — escape before document.write().
+import { escapeXml } from '@/lib/xml/escape'
 import { reduceEDMObservation, computeMeanAngleDMS as sharedMeanAngleDMS, processTraverseObservations, getAtmosphericDefaults, autoDetectUTMZone, findNearestPreset, findPresetByCounty, fetchRealtimeWeather, computeAtmosphericErrorImpact, validateAtmosphericDefaults, KENYA_LOCATION_PRESETS } from '@/lib/survey/adapter'
 import type { AdaptedEDMResult, ProcessedObservation, AtmosphericDefaults, KenyaLocationPreset } from '@/lib/survey/adapter'
 import { CorrectionAuditTrail } from '@/components/survey/CorrectionAuditTrail'
@@ -261,7 +264,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
 <table>
   <tr><th>STATION</th><th>Y(NORTHINGS)</th><th>-X(EASTINGS)</th><th>CLASS OF BEACON</th><th>DESCRIPTION</th></tr>
   ${coords.map(c => `<tr>
-    <td><b>${c.station}</b></td>
+    <td><b>${escapeXml(c.station)}</b></td>
     <td>${c.northing.toFixed(3)}</td>
     <td>${c.easting.toFixed(3)}</td>
     <td>New</td>
@@ -273,7 +276,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
 <table>
   <tr><th>LINE</th><th>BEARING</th><th>DISTANCE</th><th>ΔN (Lat)</th><th>ΔE (Dep)</th></tr>
   ${r.legs.map(l => `<tr>
-    <td>${l.from} - ${l.to}</td>
+    <td>${escapeXml(l.from)} - ${escapeXml(l.to)}</td>
     <td>${l.wcbDMS}</td>
     <td>${l.hd.toFixed(3)}</td>
     <td>${l.latitude.toFixed(3)}</td>
@@ -342,49 +345,49 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-4 p-4 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)]">
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Opening Station</label>
-              <input value={openingName} onChange={e => setOpeningName(e.target.value)} aria-label="CP1" placeholder="CP1"
+              <label htmlFor="tfb-opening-station" className="block text-xs text-[var(--text-muted)] mb-1">Opening Station</label>
+              <input id="tfb-opening-station" value={openingName} onChange={e => setOpeningName(e.target.value)} placeholder="CP1"
                 className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Opening Easting (m)</label>
-              <input aria-label="Opening Easting (m)" value={openingE} onChange={e => setOpeningE(e.target.value)} type="number" step="0.001"
+              <label htmlFor="tfb-opening-e" className="block text-xs text-[var(--text-muted)] mb-1">Opening Easting (m)</label>
+              <input id="tfb-opening-e" value={openingE} onChange={e => setOpeningE(e.target.value)} type="number" step="0.001"
                 className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Opening Northing (m)</label>
-              <input aria-label="Opening Northing (m)" value={openingN} onChange={e => setOpeningN(e.target.value)} type="number" step="0.001"
+              <label htmlFor="tfb-opening-n" className="block text-xs text-[var(--text-muted)] mb-1">Opening Northing (m)</label>
+              <input id="tfb-opening-n" value={openingN} onChange={e => setOpeningN(e.target.value)} type="number" step="0.001"
                 className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Opening RL (m)</label>
-              <input value={openingRL} onChange={e => setOpeningRL(e.target.value)} type="number" step="0.001" aria-label="Optional" placeholder="Optional"
+              <label htmlFor="tfb-opening-rl" className="block text-xs text-[var(--text-muted)] mb-1">Opening RL (m)</label>
+              <input id="tfb-opening-rl" value={openingRL} onChange={e => setOpeningRL(e.target.value)} type="number" step="0.001" placeholder="Optional"
                 className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
             </div>
             <div className="col-span-2">
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Backsight Bearing (DMS)</label>
+              <div className="block text-xs text-[var(--text-muted)] mb-1">Backsight Bearing (DMS)</div>
               <div className="flex gap-2">
-                <input value={bsDeg} onChange={e => setBsDeg(e.target.value)} type="number" aria-label="Deg" placeholder="Deg" min="0" max="359"
+                <input value={bsDeg} onChange={e => setBsDeg(e.target.value)} type="number" aria-label="Degrees" placeholder="Deg" min="0" max="359"
                   className="w-16 px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
-                <input value={bsMin} onChange={e => setBsMin(e.target.value)} type="number" aria-label="Min" placeholder="Min" min="0" max="59"
+                <input value={bsMin} onChange={e => setBsMin(e.target.value)} type="number" aria-label="Minutes" placeholder="Min" min="0" max="59"
                   className="w-14 px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
-                <input value={bsSec} onChange={e => setBsSec(e.target.value)} type="number" step="0.001" aria-label="Sec" placeholder="Sec"
+                <input value={bsSec} onChange={e => setBsSec(e.target.value)} type="number" step="0.001" aria-label="Seconds" placeholder="Sec"
                   className="flex-1 px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
               </div>
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Closing Station <span className="text-red-400 font-semibold">(Required)</span></label>
-              <input value={closingName} onChange={e => setClosingName(e.target.value)} aria-label="CP2" placeholder="CP2"
+              <label htmlFor="tfb-closing-station" className="block text-xs text-[var(--text-muted)] mb-1">Closing Station <span className="text-red-400 font-semibold">(Required)</span></label>
+              <input id="tfb-closing-station" value={closingName} onChange={e => setClosingName(e.target.value)} placeholder="CP2"
                 className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Closing Easting (m) <span className="text-red-400">*</span></label>
-              <input value={closingE} onChange={e => setClosingE(e.target.value)} type="number" step="0.001" aria-label="Required" placeholder="Required"
+              <label htmlFor="tfb-closing-e" className="block text-xs text-[var(--text-muted)] mb-1">Closing Easting (m) <span className="text-red-400">*</span></label>
+              <input id="tfb-closing-e" value={closingE} onChange={e => setClosingE(e.target.value)} type="number" step="0.001" placeholder="Required"
                 className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Closing Northing (m) <span className="text-red-400">*</span></label>
-              <input value={closingN} onChange={e => setClosingN(e.target.value)} type="number" step="0.001" aria-label="Required" placeholder="Required"
+              <label htmlFor="tfb-closing-n" className="block text-xs text-[var(--text-muted)] mb-1">Closing Northing (m) <span className="text-red-400">*</span></label>
+              <input id="tfb-closing-n" value={closingN} onChange={e => setClosingN(e.target.value)} type="number" step="0.001" placeholder="Required"
                 className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
             </div>
           </div>
@@ -410,9 +413,9 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
               <div className="space-y-3 p-4 bg-[var(--bg-tertiary)]/20">
                 {/* Location preset selector */}
                 <div>
-                  <label className="block text-xs text-[var(--text-muted)] mb-1">Location Preset (auto-fills all fields)</label>
+                  <label htmlFor="tfb-location-preset" className="block text-xs text-[var(--text-muted)] mb-1">Location Preset (auto-fills all fields)</label>
                   <div className="flex gap-2">
-                    <select onChange={(e) => {
+                    <select id="tfb-location-preset" onChange={(e) => {
                       const key = e.target.value;
                       if (!key) return;
                       const preset = KENYA_LOCATION_PRESETS[key];
@@ -459,28 +462,28 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
                 {/* Atmospheric input fields */}
                 <div className="grid grid-cols-5 gap-3">
                   <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">Temperature (&deg;C)</label>
-                    <input aria-label="Temperature (C)" value={temperature} onChange={e => { setTemperature(e.target.value); setAtmVerified(false); }} type="number" step="0.1"
+                    <label htmlFor="tfb-temp" className="block text-xs text-[var(--text-muted)] mb-1">Temperature (&deg;C)</label>
+                    <input id="tfb-temp" value={temperature} onChange={e => { setTemperature(e.target.value); setAtmVerified(false); }} type="number" step="0.1"
                       className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
                   </div>
                   <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">Pressure (hPa)</label>
-                    <input aria-label="Pressure (hPa)" value={pressure} onChange={e => { setPressure(e.target.value); setAtmVerified(false); }} type="number" step="0.1"
+                    <label htmlFor="tfb-pressure" className="block text-xs text-[var(--text-muted)] mb-1">Pressure (hPa)</label>
+                    <input id="tfb-pressure" value={pressure} onChange={e => { setPressure(e.target.value); setAtmVerified(false); }} type="number" step="0.1"
                       className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
                   </div>
                   <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">Humidity (%)</label>
-                    <input aria-label="Humidity (%)" value={humidity} onChange={e => { setHumidity(e.target.value); setAtmVerified(false); }} type="number" step="1" min="0" max="100"
+                    <label htmlFor="tfb-humidity" className="block text-xs text-[var(--text-muted)] mb-1">Humidity (%)</label>
+                    <input id="tfb-humidity" value={humidity} onChange={e => { setHumidity(e.target.value); setAtmVerified(false); }} type="number" step="1" min="0" max="100"
                       className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
                   </div>
                   <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">Mean Elevation (m)</label>
-                    <input aria-label="Mean Elevation (m)" value={meanElevation} onChange={e => { setMeanElevation(e.target.value); setAtmVerified(false); }} type="number" step="1"
+                    <label htmlFor="tfb-mean-elev" className="block text-xs text-[var(--text-muted)] mb-1">Mean Elevation (m)</label>
+                    <input id="tfb-mean-elev" value={meanElevation} onChange={e => { setMeanElevation(e.target.value); setAtmVerified(false); }} type="number" step="1"
                       className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
                   </div>
                   <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">UTM Zone</label>
-                    <select value={utmProjection} onChange={e => { setUtmProjection(e.target.value as 'UTM36S' | 'UTM37S'); setAtmVerified(false); }}
+                    <label htmlFor="tfb-utm-zone" className="block text-xs text-[var(--text-muted)] mb-1">UTM Zone</label>
+                    <select id="tfb-utm-zone" value={utmProjection} onChange={e => { setUtmProjection(e.target.value as 'UTM36S' | 'UTM37S'); setAtmVerified(false); }}
                       className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm">
                       <option value="UTM36S">UTM 36S (CM 33&deg;E)</option>
                       <option value="UTM37S">UTM 37S (CM 39&deg;E)</option>
@@ -557,7 +560,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
                   <tr key={obs.station} className="border-b border-[var(--border-color)]/30">
                     <td className="px-1.5 py-1 text-[var(--text-muted)]">{i + 1}</td>
                     <td className="px-1 py-1"><input value={obs.station} onChange={e => updateObs(i, 'station', e.target.value)}
-                      className="w-full px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" aria-label="T1" placeholder="T1" /></td>
+                      className="w-full px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" aria-label="Station" placeholder="T1" /></td>
                     <td className="px-1 py-1"><input aria-label="Bs" value={obs.bs} onChange={e => updateObs(i, 'bs', e.target.value)}
                       className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     <td className="px-1 py-1"><input aria-label="Fs" value={obs.fs} onChange={e => updateObs(i, 'fs', e.target.value)}
@@ -582,7 +585,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
                       type="number" step="0.001" className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     <td className="px-1 py-1"><input aria-label="Th" value={obs.th} onChange={e => updateObs(i, 'th', e.target.value)}
                       type="number" step="0.001" className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
-                    <td><button onClick={() => removeRow(i)} className="text-red-400 hover:text-red-300 text-lg leading-none">×</button></td>
+                    <td><button onClick={() => removeRow(i)} className="text-red-400 hover:text-red-300 text-lg leading-none inline-flex items-center justify-center min-w-6 min-h-6">×</button></td>
                   </tr>
                 ))}
               </tbody>

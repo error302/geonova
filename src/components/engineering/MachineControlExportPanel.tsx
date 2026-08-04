@@ -261,8 +261,8 @@ export default function MachineControlExportPanel() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           {/* Format selector */}
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Output Format</label>
-            <select
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="output-format">Output Format</label>
+            <select id="output-format"
               value={selectedFormat}
               onChange={(e) => setSelectedFormat(e.target.value as MachineControlFormat)}
               className="w-full rounded-md border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm font-mono text-zinc-200 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -277,25 +277,25 @@ export default function MachineControlExportPanel() {
 
           {/* Coordinate system */}
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Coordinate System</label>
-            <input
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="coordinate-system">Coordinate System</label>
+            <input id="coordinate-system"
               type="text"
               value={coordSystem}
               onChange={(e) => setCoordSystem(e.target.value)}
               className="w-full rounded-md border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm font-mono text-zinc-200 placeholder:text-zinc-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              aria-label="e.g. Arc 1960 / UTM Zone 37S" placeholder="e.g. Arc 1960 / UTM Zone 37S"
+              placeholder="e.g. Arc 1960 / UTM Zone 37S"
             />
           </div>
 
           {/* Project name */}
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Project Name</label>
-            <input
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="project-name">Project Name</label>
+            <input id="project-name"
               type="text"
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
               className="w-full rounded-md border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm font-mono text-zinc-200 placeholder:text-zinc-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              aria-label="e.g. Road_Alignment" placeholder="e.g. Road_Alignment"
+              placeholder="e.g. Road_Alignment"
             />
           </div>
         </div>

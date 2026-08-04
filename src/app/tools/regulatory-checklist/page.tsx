@@ -124,7 +124,7 @@ export default function RegulatoryChecklistPage() {
       <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
         <h2 className="text-sm font-semibold mb-2 flex items-center gap-2"><Scale className="w-4 h-4" /> Reg 89: Standard Plotting Scale</h2>
         <div className="flex gap-2 items-end mb-2">
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Area (ha)</label><input value={areaHa} onChange={e => setAreaHa(e.target.value)} className={inputCls + ' w-32'} placeholder="0.5" /></div>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="area-ha">Area (ha)</label><input id="area-ha" value={areaHa} onChange={e => setAreaHa(e.target.value)} className={inputCls + ' w-32'} placeholder="0.5" /></div>
           <button onClick={checkScale} className="px-4 py-2 bg-[var(--accent)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--accent-dim)]">Select Scale</button>
         </div>
         {scaleResult && (

@@ -85,7 +85,7 @@ echo "============================================================"
 pm2 list
 echo ""
 echo "  → App:  http://localhost:3000 (proxied via Nginx)"
-echo "  → HTTPS: https://metardu.duckdns.org"
+echo "  → HTTPS: https://metardu.space"
 echo "  → Worker: Running (polling every 5s)"
 echo ""
 echo "  API endpoints added:"

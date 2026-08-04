@@ -278,7 +278,7 @@ export function GNSSRoverConnection() {
       <div className="p-4 space-y-3">
         {/* Connection type selector */}
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5">Connection Method</label>
+          <div className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5">Connection Method</div>
           <div className="grid grid-cols-3 gap-2">
             <ConnTypeBtn
               active={connectionType === 'bluetooth'}

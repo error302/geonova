@@ -28,27 +28,27 @@ export default function SuperelevationCalculator() {
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Design Speed (km/h)</label>
-          <input aria-label="Design Speed (km/h)" value={designSpeed} onChange={e => setDesignSpeed(e.target.value)} type="number" min="30" max="120"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="design-speed-km-h">Design Speed (km/h)</label>
+          <input id="design-speed-km-h" aria-label="Design Speed (km/h)" value={designSpeed} onChange={e => setDesignSpeed(e.target.value)} type="number" min="30" max="120"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Curve Radius R (m)</label>
-          <input aria-label="Curve Radius R (m)" value={radius} onChange={e => setRadius(e.target.value)} type="number" min="1"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="curve-radius-r-m">Curve Radius R (m)</label>
+          <input id="curve-radius-r-m" aria-label="Curve Radius R (m)" value={radius} onChange={e => setRadius(e.target.value)} type="number" min="1"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Number of Lanes</label>
-          <input aria-label="Number of Lanes" value={numLanes} onChange={e => setNumLanes(e.target.value)} type="number" min="1" max="6"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="number-of-lanes">Number of Lanes</label>
+          <input id="number-of-lanes" aria-label="Number of Lanes" value={numLanes} onChange={e => setNumLanes(e.target.value)} type="number" min="1" max="6"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Lane Width (m)</label>
-          <input aria-label="Lane Width (m)" value={laneWidth} onChange={e => setLaneWidth(e.target.value)} type="number" step="0.01" min="2"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="lane-width-m">Lane Width (m)</label>
+          <input id="lane-width-m" aria-label="Lane Width (m)" value={laneWidth} onChange={e => setLaneWidth(e.target.value)} type="number" step="0.01" min="2"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Friction Factor f</label>
+          <div className="block text-xs text-[var(--text-muted)] mb-1">Friction Factor f</div>
           <div className="px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm font-mono h-[42px] flex items-center">
             {getFrictionFactor(parseInt(designSpeed) || 80).f.toFixed(2)}
           </div>
@@ -56,7 +56,7 @@ export default function SuperelevationCalculator() {
       </div>
 
       <div className="flex items-center gap-3">
-        <button onClick={compute} className="px-5 py-2 bg-[var(--accent)] text-white rounded text-sm font-medium hover:opacity-90">
+        <button onClick={compute} className="px-5 py-2 bg-[var(--accent)] text-black rounded text-sm font-medium hover:opacity-90">
           Compute Superelevation
         </button>
       </div>

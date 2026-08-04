@@ -73,27 +73,27 @@ export default function ControlPointVerificationPage() {
 
       {showForm && (
         <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4 grid grid-cols-2 gap-3">
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Point Type</label>
-            <select value={pointType} onChange={e => setPointType(e.target.value)} className={inputCls}>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="point-type">Point Type</label>
+            <select id="point-type" value={pointType} onChange={e => setPointType(e.target.value)} className={inputCls}>
               <option value="survey_point">Survey Point</option><option value="beacon">Beacon</option><option value="boundary_monument">Boundary Monument</option>
             </select></div>
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Point ID (UUID)</label><input value={pointId} onChange={e => setPointId(e.target.value)} className={inputCls} placeholder="UUID" /></div>
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Point Name</label><input value={pointName} onChange={e => setPointName(e.target.value)} className={inputCls} placeholder="CP1" /></div>
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Condition</label>
-            <select value={condition} onChange={e => setCondition(e.target.value)} className={inputCls}>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="point-id-uuid">Point ID (UUID)</label><input id="point-id-uuid" value={pointId} onChange={e => setPointId(e.target.value)} className={inputCls} placeholder="UUID" /></div>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="point-name">Point Name</label><input id="point-name" value={pointName} onChange={e => setPointName(e.target.value)} className={inputCls} placeholder="CP1" /></div>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="condition">Condition</label>
+            <select id="condition" value={condition} onChange={e => setCondition(e.target.value)} className={inputCls}>
               <option value="good">Good</option><option value="fair">Fair</option><option value="poor">Poor</option>
               <option value="disturbed">Disturbed</option><option value="destroyed">Destroyed</option><option value="missing">Missing</option>
             </select></div>
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Measured E</label><input value={measuredE} onChange={e => setMeasuredE(e.target.value)} className={inputCls} placeholder="264000.000" /></div>
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Measured N</label><input value={measuredN} onChange={e => setMeasuredN(e.target.value)} className={inputCls} placeholder="9861000.000" /></div>
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Published E</label><input value={publishedE} onChange={e => setPublishedE(e.target.value)} className={inputCls} /></div>
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Published N</label><input value={publishedN} onChange={e => setPublishedN(e.target.value)} className={inputCls} /></div>
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Method</label>
-            <select value={method} onChange={e => setMethod(e.target.value)} className={inputCls}>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="measured-e">Measured E</label><input id="measured-e" value={measuredE} onChange={e => setMeasuredE(e.target.value)} className={inputCls} placeholder="264000.000" /></div>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="measured-n">Measured N</label><input id="measured-n" value={measuredN} onChange={e => setMeasuredN(e.target.value)} className={inputCls} placeholder="9861000.000" /></div>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="published-e">Published E</label><input id="published-e" value={publishedE} onChange={e => setPublishedE(e.target.value)} className={inputCls} /></div>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="published-n">Published N</label><input id="published-n" value={publishedN} onChange={e => setPublishedN(e.target.value)} className={inputCls} /></div>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="method">Method</label>
+            <select id="method" value={method} onChange={e => setMethod(e.target.value)} className={inputCls}>
               <option value="gnss_static">GNSS Static</option><option value="gnss_rtk">GNSS RTK</option>
               <option value="total_station">Total Station</option><option value="level">Level</option>
             </select></div>
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Notes</label><input value={notes} onChange={e => setNotes(e.target.value)} className={inputCls} /></div>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="notes">Notes</label><input id="notes" value={notes} onChange={e => setNotes(e.target.value)} className={inputCls} /></div>
           <button onClick={handleSubmit} className="col-span-2 px-4 py-2 bg-[var(--accent)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--accent-dim)]">Submit Verification</button>
         </div>
       )}

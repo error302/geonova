@@ -160,43 +160,81 @@ export default function SchemeWorkspacePage() {
         if (failedEl) failedEl.textContent = String(summary.failed)
 
         // Render table
+        // VULN-002 FIX (security review 2026-08-03): block/parcel numbers and
+        // statuses are user-entered — build the table with createElement +
+        // textContent, never innerHTML (stored-XSS guard).
         const tableEl = document.getElementById('traverse-table')
         if (tableEl && data.length > 0) {
-          tableEl.innerHTML = `
-            <table class="w-full text-sm">
-              <thead>
-                <tr class="text-left text-gray-400 border-b border-gray-700">
-                  <th class="pb-2">Block</th>
-                  <th class="pb-2">Parcel</th>
-                  <th class="pb-2">Order</th>
-                  <th class="pb-2">Precision</th>
-                  <th class="pb-2">Area (ha)</th>
-                  <th class="pb-2">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${data.map((r: any) => {
-                  const colorMap: Record<string, string> = { pass: 'text-green-400', warning: 'text-yellow-400', fail: 'text-red-400', pending: 'text-gray-500' }
-                  const color = colorMap[r.accuracy_class] || 'text-gray-500'
-                  return `<tr class="border-b border-gray-800">
-                    <td class="py-2 text-white">${r.block_number}</td>
-                    <td class="py-2 text-white">${r.parcel_number}</td>
-                    <td class="py-2 ${color} font-medium">${r.accuracy_order || 'Not computed'}</td>
-                    <td class="py-2 text-gray-300">${r.precision_ratio ? '1:' + Number(r.precision_ratio).toLocaleString() : '-'}</td>
-                    <td class="py-2 text-gray-300">${r.computed_area_ha ? Number(r.computed_area_ha).toFixed(4) : '-'}</td>
-                    <td class="py-2"><span class="px-2 py-1 rounded text-xs ${r.status === 'computed' ? 'bg-green-900 text-green-300' : r.status === 'draft' ? 'bg-gray-700 text-gray-300' : 'bg-blue-900 text-blue-300'}">${r.status || 'draft'}</span></td>
-                  </tr>`
-                }).join('')}
-              </tbody>
-            </table>
-          `
+          tableEl.replaceChildren()
+
+          const table = document.createElement('table')
+          table.className = 'w-full text-sm'
+
+          const thead = document.createElement('thead')
+          const headRow = document.createElement('tr')
+          headRow.className = 'text-left text-gray-400 border-b border-gray-700'
+          for (const header of ['Block', 'Parcel', 'Order', 'Precision', 'Area (ha)', 'Status']) {
+            const th = document.createElement('th')
+            th.className = 'pb-2'
+            th.textContent = header
+            headRow.append(th)
+          }
+          thead.append(headRow)
+          table.append(thead)
+
+          const tbody = document.createElement('tbody')
+          const colorMap: Record<string, string> = { pass: 'text-green-400', warning: 'text-yellow-400', fail: 'text-red-400', pending: 'text-gray-500' }
+          for (const r of data) {
+            const color = colorMap[r.accuracy_class] || 'text-gray-500'
+            const tr = document.createElement('tr')
+            tr.className = 'border-b border-gray-800'
+
+            const td = (text: string, cls: string) => {
+              const cell = document.createElement('td')
+              cell.className = cls
+              cell.textContent = text
+              return cell
+            }
+
+            tr.append(td(String(r.block_number ?? ''), 'py-2 text-white'))
+            tr.append(td(String(r.parcel_number ?? ''), 'py-2 text-white'))
+            tr.append(td(String(r.accuracy_order || 'Not computed'), `py-2 ${color} font-medium`))
+            tr.append(td(r.precision_ratio ? '1:' + Number(r.precision_ratio).toLocaleString() : '-', 'py-2 text-gray-300'))
+            tr.append(td(r.computed_area_ha ? Number(r.computed_area_ha).toFixed(4) : '-', 'py-2 text-gray-300'))
+
+            const statusTd = document.createElement('td')
+            statusTd.className = 'py-2'
+            const badge = document.createElement('span')
+            badge.className = `px-2 py-1 rounded text-xs ${
+              r.status === 'computed' ? 'bg-green-900 text-green-300'
+                : r.status === 'draft' ? 'bg-gray-700 text-gray-300'
+                  : 'bg-blue-900 text-blue-300'
+            }`
+            badge.textContent = String(r.status || 'draft')
+            statusTd.append(badge)
+            tr.append(statusTd)
+
+            tbody.append(tr)
+          }
+          table.append(tbody)
+          tableEl.append(table)
         } else if (tableEl) {
-          tableEl.innerHTML = '<p class="text-gray-500 text-sm">No traverses computed yet</p>'
+          tableEl.replaceChildren()
+          const p = document.createElement('p')
+          p.className = 'text-gray-500 text-sm'
+          p.textContent = 'No traverses computed yet'
+          tableEl.append(p)
         }
       })
       .catch(() => {
         const tableEl = document.getElementById('traverse-table')
-        if (tableEl) tableEl.innerHTML = '<p class="text-red-400 text-sm">Failed to load traverse summary</p>'
+        if (tableEl) {
+          tableEl.replaceChildren()
+          const p = document.createElement('p')
+          p.className = 'text-red-400 text-sm'
+          p.textContent = 'Failed to load traverse summary'
+          tableEl.append(p)
+        }
       })
   }, [project?.id])
 

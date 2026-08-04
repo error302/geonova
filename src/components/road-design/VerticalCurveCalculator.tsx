@@ -42,54 +42,54 @@ export default function VerticalCurveCalculator() {
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">G₁ — Incoming Grade (%)</label>
-          <input aria-label="G₁ — Incoming Grade (%)" value={g1} onChange={e => setG1(e.target.value)} type="number" step="0.001"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="g-incoming-grade">G₁ — Incoming Grade (%)</label>
+          <input id="g-incoming-grade" aria-label="G₁ — Incoming Grade (%)" value={g1} onChange={e => setG1(e.target.value)} type="number" step="0.001"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">G₂ — Outgoing Grade (%)</label>
-          <input aria-label="G₂ — Outgoing Grade (%)" value={g2} onChange={e => setG2(e.target.value)} type="number" step="0.001"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="g-outgoing-grade">G₂ — Outgoing Grade (%)</label>
+          <input id="g-outgoing-grade" aria-label="G₂ — Outgoing Grade (%)" value={g2} onChange={e => setG2(e.target.value)} type="number" step="0.001"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">VPI Chainage (m)</label>
-          <input aria-label="VPI Chainage (m)" value={vpiCh} onChange={e => setVpiCh(e.target.value)} type="number" step="0.001"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="vpi-chainage-m">VPI Chainage (m)</label>
+          <input id="vpi-chainage-m" aria-label="VPI Chainage (m)" value={vpiCh} onChange={e => setVpiCh(e.target.value)} type="number" step="0.001"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">VPI Reduced Level (m)</label>
-          <input aria-label="VPI Reduced Level (m)" value={vpiRL} onChange={e => setVpiRL(e.target.value)} type="number" step="0.001"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="vpi-reduced-level-m">VPI Reduced Level (m)</label>
+          <input id="vpi-reduced-level-m" aria-label="VPI Reduced Level (m)" value={vpiRL} onChange={e => setVpiRL(e.target.value)} type="number" step="0.001"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Length Mode</label>
+          <div className="block text-xs text-[var(--text-muted)] mb-1">Length Mode</div>
           <div className="flex gap-1">
-            <button onClick={() => setLengthMode('L')} className={`flex-1 px-2 py-2 text-xs rounded ${lengthMode === 'L' ? 'bg-[var(--accent)] text-white' : 'bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-[var(--text-muted)]'}`}>L (m)</button>
-            <button onClick={() => setLengthMode('K')} className={`flex-1 px-2 py-2 text-xs rounded ${lengthMode === 'K' ? 'bg-[var(--accent)] text-white' : 'bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-[var(--text-muted)]'}`}>K</button>
+            <button onClick={() => setLengthMode('L')} className={`flex-1 px-2 py-2 text-xs rounded ${lengthMode === 'L' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-[var(--text-muted)]'}`}>L (m)</button>
+            <button onClick={() => setLengthMode('K')} className={`flex-1 px-2 py-2 text-xs rounded ${lengthMode === 'K' ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-[var(--text-muted)]'}`}>K</button>
           </div>
         </div>
         {lengthMode === 'L' ? (
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Curve Length L (m)</label>
-            <input aria-label="Curve Length L (m)" value={L} onChange={e => setL(e.target.value)} type="number" min="1"
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="curve-length-l-m">Curve Length L (m)</label>
+            <input id="curve-length-l-m" aria-label="Curve Length L (m)" value={L} onChange={e => setL(e.target.value)} type="number" min="1"
               className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
           </div>
         ) : (
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">K Value</label>
-            <input aria-label="K Value" value={K} onChange={e => setK(e.target.value)} type="number" min="1"
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="k-value">K Value</label>
+            <input id="k-value" aria-label="K Value" value={K} onChange={e => setK(e.target.value)} type="number" min="1"
               className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
           </div>
         )}
       </div>
 
       <div className="flex items-center gap-3">
-        <button onClick={compute} className="px-5 py-2 bg-[var(--accent)] text-white rounded text-sm font-medium hover:opacity-90">
+        <button onClick={compute} className="px-5 py-2 bg-[var(--accent)] text-black rounded text-sm font-medium hover:opacity-90">
           Compute
         </button>
         <div>
-          <label className="text-xs text-[var(--text-muted)] mr-1">RL Table Interval (m)</label>
-          <input aria-label="RL Table Interval (m)" value={interval} onChange={e => setInterval(e.target.value)} type="number" min="1"
+          <label className="text-xs text-[var(--text-muted)] mr-1" htmlFor="rl-table-interval-m">RL Table Interval (m)</label>
+          <input  id="rl-table-interval-m" aria-label="RL Table Interval (m)" value={interval} onChange={e => setInterval(e.target.value)} type="number" min="1"
             className="w-20 px-2 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         {result && (

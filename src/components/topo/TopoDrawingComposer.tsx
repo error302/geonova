@@ -955,7 +955,7 @@ export default function TopoDrawingComposer({ projectId }: TopoDrawingComposerPr
               <div className="px-4 pb-4 space-y-3 border-t border-zinc-800">
                 {/* Scale */}
                 <div className="pt-3">
-                  <label className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">Drawing Scale</label>
+                  <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">Drawing Scale</div>
                   <div className="flex gap-1 mt-1.5">
                     {SCALE_OPTIONS.map(s => (
                       <button
@@ -975,45 +975,50 @@ export default function TopoDrawingComposer({ projectId }: TopoDrawingComposerPr
 
                 {/* Checkboxes */}
                 <div className="space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
+                  <div className="flex items-center gap-2 cursor-pointer">
                     <Checkbox
+                      aria-label="Include spot height labels"
                       checked={settings.includeSpotHeights}
                       onCheckedChange={v => setSettings(prev => ({ ...prev, includeSpotHeights: !!v }))}
                       className="border-zinc-600"
                     />
                     <span className="text-xs text-zinc-300">Include spot height labels</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
+                  </div>
+                  <div className="flex items-center gap-2 cursor-pointer">
                     <Checkbox
+                      aria-label="Include title block"
                       checked={settings.includeTitleBlock}
                       onCheckedChange={v => setSettings(prev => ({ ...prev, includeTitleBlock: !!v }))}
                       className="border-zinc-600"
                     />
                     <span className="text-xs text-zinc-300">Include title block</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
+                  </div>
+                  <div className="flex items-center gap-2 cursor-pointer">
                     <Checkbox
+                      aria-label="Include point labels"
                       checked={settings.includeLabels}
                       onCheckedChange={v => setSettings(prev => ({ ...prev, includeLabels: !!v }))}
                       className="border-zinc-600"
                     />
                     <span className="text-xs text-zinc-300">Include point labels</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
+                  </div>
+                  <div className="flex items-center gap-2 cursor-pointer">
                     <Checkbox
+                      aria-label="Include legend"
                       checked={settings.includeLegend}
                       onCheckedChange={v => setSettings(prev => ({ ...prev, includeLegend: !!v }))}
                       className="border-zinc-600"
                     />
                     <span className="text-xs text-zinc-300">Include legend</span>
-                  </label>
+                  </div>
                 </div>
 
                 {/* Contour & Grid intervals */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">Contour Interval (m)</label>
+                    <label htmlFor="tdc-contour-interval" className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">Contour Interval (m)</label>
                     <Input
+                      id="tdc-contour-interval"
                       type="number"
                       step="0.5"
                       min="0.25"
@@ -1023,8 +1028,9 @@ export default function TopoDrawingComposer({ projectId }: TopoDrawingComposerPr
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">Grid Tick (m)</label>
+                    <label htmlFor="tdc-grid-tick" className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">Grid Tick (m)</label>
                     <Input
+                      id="tdc-grid-tick"
                       type="number"
                       step="10"
                       min="10"

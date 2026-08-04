@@ -123,7 +123,7 @@ fi
 
 # 8. Check SSL certificate expiry (if domain configured)
 log "Checking SSL..."
-DOMAIN="metardu.duckdns.org"
+DOMAIN="metardu.space"
 if command -v openssl &>/dev/null; then
   SSL_EXPIRY=$(echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN":443 2>/dev/null | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
   if [ -n "$SSL_EXPIRY" ]; then

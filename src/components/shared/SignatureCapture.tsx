@@ -217,22 +217,22 @@ export default function SignatureCapture({
             as correct and complete per Survey Act Cap 299 s.17
           </p>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-            <input
+            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="full-name">Full Name</label>
+            <input id="full-name"
               type="text"
               value={typedName}
               onChange={e => setTypedName(e.target.value)}
-              aria-label="Enter your full name" placeholder="Enter your full name"
+ placeholder="Enter your full name"
               className="w-full p-2 border rounded-lg"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">ISK Number</label>
-            <input
+            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="isk-number">ISK Number</label>
+            <input id="isk-number"
               type="text"
               value={typedIsk}
               onChange={e => setTypedIsk(e.target.value)}
-              aria-label="e.g., ISK/1234" placeholder="e.g., ISK/1234"
+ placeholder="e.g., ISK/1234"
               className="w-full p-2 border rounded-lg"
             />
           </div>

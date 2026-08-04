@@ -530,7 +530,7 @@ export default function DashboardSearch() {
           onFocus={() => {
             if (query.trim()) setIsOpen(true);
           }}
-          aria-label="Search projects, submissions, surveyors..." placeholder="Search projects, submissions, surveyors..."
+          aria-label="Search projects, submissions, surveyors..."
           className="flex-1 bg-transparent text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none min-w-0"
           autoComplete="off"
           spellCheck={false}

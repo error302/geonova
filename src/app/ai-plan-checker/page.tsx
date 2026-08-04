@@ -100,8 +100,8 @@ export default function AIPlanCheckerPage() {
       <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1.5">Project Name</label>
-            <input
+            <label className="block text-xs text-[var(--text-muted)] mb-1.5" htmlFor="project-name">Project Name</label>
+            <input id="project-name"
               type="text"
               value={projectName}
               onChange={e => setProjectName(e.target.value)}
@@ -110,8 +110,8 @@ export default function AIPlanCheckerPage() {
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1.5">Survey Type</label>
-            <select
+            <label className="block text-xs text-[var(--text-muted)] mb-1.5" htmlFor="survey-type">Survey Type</label>
+            <select id="survey-type"
               value={surveyType}
               onChange={e => setSurveyType(e.target.value as PlanCheckInput['surveyType'])}
               className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
@@ -124,8 +124,8 @@ export default function AIPlanCheckerPage() {
             </select>
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1.5">Country</label>
-            <select
+            <label className="block text-xs text-[var(--text-muted)] mb-1.5" htmlFor="country">Country</label>
+            <select id="country"
               value={country}
               onChange={e => setCountry(e.target.value as PlanCheckInput['country'])}
               className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
@@ -140,11 +140,11 @@ export default function AIPlanCheckerPage() {
         </div>
 
         <div className="mb-4">
-          <label className="block text-xs text-[var(--text-muted)] mb-1.5">
+          <label className="block text-xs text-[var(--text-muted)] mb-1.5" htmlFor="survey-points-csv-format-name-easting-northing-elevation">
             Survey Points (CSV format: name, easting, northing, elevation)
           </label>
           <textarea
-            value={csvText}
+             id="survey-points-csv-format-name-easting-northing-elevation" value={csvText}
             onChange={e => setCsvText(e.target.value)}
             placeholder="TS1, 274812.403, 9856214.778, 1895.250&#10;TS2, 274937.125, 9856340.501, 1897.100&#10;TS3, 275061.802, 9856466.234, 1899.550"
             rows={6}

@@ -185,7 +185,7 @@ function parseAngleField(raw: string): number {
     // If the number is large (>360) and looks like packed DMS or arcseconds
     if (asFloat > 360) {
       // Could be packed DMS (DDDMMSS) or arc-seconds
-      const absStr = s.replace(/[+\-]/g, '')
+      const absStr = s.replace(/[+-]/g, '')
       const len = absStr.length
 
       if (len === 6 || len === 7 || len === 8) {
@@ -448,7 +448,7 @@ export function reduceSDRObservations(
 
     th = obs.targetHeight ?? 1.400
 
-    let meanHz = obs.hzAngle ?? 0
+    const meanHz = obs.hzAngle ?? 0
     const hzDMS = decimalToDMS(meanHz)
 
     const va = obs.verticalAngle ?? 0

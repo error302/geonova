@@ -127,7 +127,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   }
 
   const safeName = (input.lrNumber || input.projectName || 'unknown')
-    .replace(/[^a-zA-Z0-9_\-]/g, '_')
+    .replace(/[^a-zA-Z0-9_-]/g, '_')
     .toLowerCase()
 
   return new NextResponse(pdfBuffer as unknown as BodyInit, {

@@ -394,6 +394,13 @@ export function ReportTemplateEditor() {
 
   const selectedElement = template.elements.find(e => e.id === selectedId)
 
+  // ─── Document-level Escape to deselect ──────────────────────────
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSelectedId(null) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
+
   return (
     <div className="flex flex-col lg:flex-row gap-4 h-full">
       {/* Left sidebar — element palette + presets */}
@@ -516,7 +523,6 @@ export function ReportTemplateEditor() {
         <div className="flex-1 overflow-auto bg-[var(--bg-primary)] rounded-xl border border-[var(--border-color)] p-8 flex items-start justify-center">
           <div
             ref={canvasRef}
-            onClick={() => setSelectedId(null)}
             className="relative bg-white shadow-2xl"
             style={{
               width: displayWidth,
@@ -607,6 +613,7 @@ function ElementRenderer({
       case 'text':
         return editing ? (
           <textarea
+            // eslint-disable-next-line jsx-a11y/no-autofocus -- focus into the inline editor (WCAG 2.4.3)
             autoFocus
             defaultValue={element.text}
             onBlur={(e) => { onEditText(e.target.value); setEditing(false) }}
@@ -686,7 +693,7 @@ function ElementRenderer({
       case 'logo':
         return (
           <div className="w-full h-full border-2 border-dashed border-gray-400 flex items-center justify-center bg-gray-50">
-            <Image className="w-4 h-4 text-gray-400" />
+            <Image className="w-4 h-4 text-gray-400" aria-label="Logo placeholder" />
           </div>
         )
 
@@ -707,7 +714,11 @@ function ElementRenderer({
   return (
     <div
       style={style}
+      role="button"
+      tabIndex={element.locked ? -1 : 0}
+      aria-label={`${element.type} element${element.text ? ': ' + element.text.slice(0, 40) : ''}`}
       onMouseDown={onMouseDown}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onMouseDown(e as unknown as React.MouseEvent); } }}
       className={isSelected && !isPreview ? 'ring-2 ring-blue-400' : ''}
     >
       {content()}
@@ -719,6 +730,9 @@ function ElementRenderer({
           {['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'].map(handle => (
             <div
               key={handle}
+              role="button"
+              tabIndex={-1}
+              aria-label={`Resize ${handle}`}
               onMouseDown={(e) => onResizeMouseDown(e, element.id, handle)}
               className="absolute w-2 h-2 bg-blue-400 border border-white"
               style={{
@@ -790,8 +804,8 @@ function PropertiesPanel({
       {/* Position */}
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase mb-0.5">X (mm)</label>
-          <input aria-label="X (mm)"
+          <label className="block text-[9px] text-gray-500 uppercase mb-0.5" htmlFor="x-mm">X (mm)</label>
+          <input id="x-mm" aria-label="X (mm)"
             type="number"
             value={Math.round(element.x)}
             onChange={e => onUpdate({ x: parseFloat(e.target.value) || 0 })}
@@ -799,8 +813,8 @@ function PropertiesPanel({
           />
         </div>
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase mb-0.5">Y (mm)</label>
-          <input aria-label="Y (mm)"
+          <label className="block text-[9px] text-gray-500 uppercase mb-0.5" htmlFor="y-mm">Y (mm)</label>
+          <input id="y-mm" aria-label="Y (mm)"
             type="number"
             value={Math.round(element.y)}
             onChange={e => onUpdate({ y: parseFloat(e.target.value) || 0 })}
@@ -812,8 +826,8 @@ function PropertiesPanel({
       {/* Size */}
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase mb-0.5">Width (mm)</label>
-          <input aria-label="Width (mm)"
+          <label className="block text-[9px] text-gray-500 uppercase mb-0.5" htmlFor="width-mm">Width (mm)</label>
+          <input id="width-mm" aria-label="Width (mm)"
             type="number"
             value={Math.round(element.width)}
             onChange={e => onUpdate({ width: parseFloat(e.target.value) || 10 })}
@@ -821,8 +835,8 @@ function PropertiesPanel({
           />
         </div>
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase mb-0.5">Height (mm)</label>
-          <input aria-label="Height (mm)"
+          <label className="block text-[9px] text-gray-500 uppercase mb-0.5" htmlFor="height-mm">Height (mm)</label>
+          <input id="height-mm" aria-label="Height (mm)"
             type="number"
             value={Math.round(element.height)}
             onChange={e => onUpdate({ height: parseFloat(e.target.value) || 10 })}
@@ -835,8 +849,8 @@ function PropertiesPanel({
       {element.type === 'text' && (
         <>
           <div>
-            <label className="block text-[9px] text-gray-500 uppercase mb-0.5">Text Content</label>
-            <textarea
+            <label className="block text-[9px] text-gray-500 uppercase mb-0.5" htmlFor="text-content">Text Content</label>
+            <textarea id="text-content"
               value={element.text || ''}
               onChange={e => onUpdate({ text: e.target.value })}
               rows={3}
@@ -845,8 +859,8 @@ function PropertiesPanel({
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-[9px] text-gray-500 uppercase mb-0.5">Font Size (mm)</label>
-              <input aria-label="Font Size (mm)"
+              <label className="block text-[9px] text-gray-500 uppercase mb-0.5" htmlFor="font-size-mm">Font Size (mm)</label>
+              <input id="font-size-mm" aria-label="Font Size (mm)"
                 type="number"
                 step="0.5"
                 value={element.fontSize || 4}
@@ -855,8 +869,8 @@ function PropertiesPanel({
               />
             </div>
             <div>
-              <label className="block text-[9px] text-gray-500 uppercase mb-0.5">Align</label>
-              <select
+              <label className="block text-[9px] text-gray-500 uppercase mb-0.5" htmlFor="align">Align</label>
+              <select id="align"
                 value={element.align || 'left'}
                 onChange={e => onUpdate({ align: e.target.value as 'left' | 'center' | 'right' })}
                 className="w-full h-7 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)]"
@@ -887,9 +901,9 @@ function PropertiesPanel({
       {/* Map-specific properties */}
       {element.type === 'map' && (
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase mb-0.5">Scale (1:N)</label>
+          <label className="block text-[9px] text-gray-500 uppercase mb-0.5" htmlFor="scale-1-n">Scale (1:N)</label>
           <select
-            value={element.scale || 2500}
+             id="scale-1-n" value={element.scale || 2500}
             onChange={e => onUpdate({ scale: parseInt(e.target.value) })}
             className="w-full h-7 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)]"
           >

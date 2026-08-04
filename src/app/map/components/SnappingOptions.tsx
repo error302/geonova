@@ -122,7 +122,7 @@ export function SnappingOptions({
 
         {/* Snap mode */}
         <div>
-          <label className="block text-[9px] text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Snap Mode</label>
+          <div className="block text-[9px] text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Snap Mode</div>
           <div className="grid grid-cols-3 gap-1">
             {(['vertex', 'segment', 'vertex_segment'] as SnapMode[]).map(m => (
               <button
@@ -144,10 +144,10 @@ export function SnappingOptions({
         {/* Tolerance */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-[9px] text-[var(--text-muted)] uppercase tracking-wider">Tolerance</label>
+            <label htmlFor="snap-tolerance" className="text-[9px] text-[var(--text-muted)] uppercase tracking-wider">Tolerance</label>
             <span className="text-[10px] text-[var(--text-secondary)] font-mono">{localTolerance.toFixed(2)} m</span>
           </div>
-          <input aria-label="Tolerance"
+          <input id="snap-tolerance"
             type="range"
             min="0.01"
             max="5"
@@ -166,7 +166,7 @@ export function SnappingOptions({
 
         {/* Snap to layers */}
         <div>
-          <label className="block text-[9px] text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Snap To</label>
+          <div className="block text-[9px] text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Snap To</div>
           <div className="space-y-1">
             {(['parcels', 'beacons', 'grid', 'osm'] as SnapType[]).map(type => (
               <label

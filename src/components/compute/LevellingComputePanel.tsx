@@ -123,8 +123,8 @@ export default function LevellingComputePanel({ projectId }: { projectId: string
         <h3 className="text-sm font-semibold"><Calculator className="w-4 h-4 inline mr-1" />Rise & Fall Levelling</h3>
         <div className="flex gap-2">
           <div className="text-xs">
-            <label className="text-zinc-500 mr-1">TBM RL:</label>
-            <input aria-label="TBM RL:" type="number" step="0.001" value={tbmRL} onChange={e => setTbmRL(Number(e.target.value))} className="w-24 bg-zinc-800 border border-zinc-700 rounded px-2 py-0.5 text-white text-xs" />
+            <label className="text-zinc-500 mr-1" htmlFor="tbm-rl">TBM RL:</label>
+            <input  id="tbm-rl" aria-label="TBM RL:" type="number" step="0.001" value={tbmRL} onChange={e => setTbmRL(Number(e.target.value))} className="w-24 bg-zinc-800 border border-zinc-700 rounded px-2 py-0.5 text-white text-xs" />
           </div>
           <button onClick={addRow} className="px-2 py-0.5 text-xs bg-zinc-800 border border-zinc-700 rounded text-zinc-400 hover:text-white">+ Row</button>
         </div>
@@ -186,7 +186,7 @@ export default function LevellingComputePanel({ projectId }: { projectId: string
       </div>
 
       <button onClick={handleSave} disabled={saved}
-        className="inline-flex items-center gap-1 px-3 py-1.5 bg-[var(--accent)] text-white text-xs rounded hover:bg-[var(--accent-dim)] disabled:opacity-50">
+        className="inline-flex items-center gap-1 px-3 py-1.5 bg-[var(--accent)] text-black text-xs rounded hover:bg-[var(--accent-dim)] disabled:opacity-50">
         {saved ? <CheckCircle className="w-3 h-3" /> : <Save className="w-3 h-3" />}
         {saved ? 'Saved' : 'Save Results'}
       </button>

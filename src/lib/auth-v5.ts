@@ -1,3 +1,5 @@
+// Staged NextAuth v5 migration: type-correctness comes with the swap.
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 /**
  * NextAuth v5 (Auth.js) — STAGED MIGRATION CONFIG

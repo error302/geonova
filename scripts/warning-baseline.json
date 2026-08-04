@@ -1,0 +1,13 @@
+{
+  "@typescript-eslint/no-unsafe-assignment": 3511,
+  "@typescript-eslint/no-explicit-any": 1674,
+  "no-console": 405,
+  "@typescript-eslint/no-unsafe-argument": 1153,
+  "@typescript-eslint/no-unsafe-member-access": 6579,
+  "@typescript-eslint/no-unsafe-call": 1698,
+  "@typescript-eslint/no-unused-vars": 1321,
+  "react-hooks/exhaustive-deps": 76,
+  "@typescript-eslint/no-non-null-assertion": 663,
+  "@typescript-eslint/no-unsafe-return": 429,
+  "no-restricted-syntax": 16
+}

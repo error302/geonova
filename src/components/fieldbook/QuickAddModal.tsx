@@ -108,71 +108,77 @@ export function QuickAddModal({ onAdd, onClose }: QuickAddModalProps) {
 
         <div className="flex-1 overflow-auto p-4 space-y-4">
           <div>
-            <label className={labelClass}>From Station</label>
+            <label htmlFor="qa-from-station" className={labelClass}>From Station</label>
             <input
+              id="qa-from-station"
               type="text"
               value={form.station_from}
               onChange={(e) => setForm({ ...form, station_from: e.target.value.toUpperCase() })}
               className={inputClass}
-              aria-label="A" placeholder="A"
+              placeholder="A"
+              // eslint-disable-next-line jsx-a11y/no-autofocus -- focus moves into the modal on open (WCAG 2.4.3)
               autoFocus
               autoComplete="off"
             />
           </div>
 
           <div>
-            <label className={labelClass}>To Station</label>
+            <label htmlFor="qa-to-station" className={labelClass}>To Station</label>
             <input
+              id="qa-to-station"
               type="text"
               value={form.station_to}
               onChange={(e) => setForm({ ...form, station_to: e.target.value.toUpperCase() })}
               className={inputClass}
-              aria-label="1" placeholder="1"
+              placeholder="1"
               autoComplete="off"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className={labelClass}>Horiz. Angle (°)</label>
+              <label htmlFor="qa-horiz-angle" className={labelClass}>Horiz. Angle (°)</label>
               <input
+                id="qa-horiz-angle"
                 type="number"
                 step="0.0001"
                 value={form.horizontal_angle}
                 onChange={(e) => setForm({ ...form, horizontal_angle: e.target.value })}
                 className={inputClass}
-                aria-label="45.1234" placeholder="45.1234"
+                placeholder="45.1234"
               />
             </div>
             <div>
-              <label className={labelClass}>Vert. Angle (°)</label>
+              <label htmlFor="qa-vert-angle" className={labelClass}>Vert. Angle (°)</label>
               <input
+                id="qa-vert-angle"
                 type="number"
                 step="0.0001"
                 value={form.vertical_angle}
                 onChange={(e) => setForm({ ...form, vertical_angle: e.target.value })}
                 className={inputClass}
-                aria-label="90.0000" placeholder="90.0000"
+                placeholder="90.0000"
               />
             </div>
           </div>
 
           <div>
-            <label className={labelClass}>Slope Distance (m)</label>
+            <label htmlFor="qa-slope-distance" className={labelClass}>Slope Distance (m)</label>
             <input
+              id="qa-slope-distance"
               type="number"
               step="0.001"
               value={form.slope_distance}
               onChange={(e) => setForm({ ...form, slope_distance: e.target.value })}
               className={inputClass}
-              aria-label="125.456" placeholder="125.456"
+              placeholder="125.456"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className={labelClass}>HI (m)</label>
-              <input aria-label="Instrument height"
+              <label htmlFor="qa-hi" className={labelClass}>HI (m)</label>
+              <input id="qa-hi"
                 type="number"
                 step="0.001"
                 value={form.instrument_height}
@@ -181,8 +187,8 @@ export function QuickAddModal({ onAdd, onClose }: QuickAddModalProps) {
               />
             </div>
             <div>
-              <label className={labelClass}>HT (m)</label>
-              <input aria-label="Target height"
+              <label htmlFor="qa-ht" className={labelClass}>HT (m)</label>
+              <input id="qa-ht"
                 type="number"
                 step="0.001"
                 value={form.target_height}
@@ -193,14 +199,15 @@ export function QuickAddModal({ onAdd, onClose }: QuickAddModalProps) {
           </div>
 
           <div>
-            <label className={labelClass}>Remarks</label>
+            <label htmlFor="qa-remarks" className={labelClass}>Remarks</label>
             <div className="flex items-start gap-2">
               <input
+                id="qa-remarks"
                 type="text"
                 value={form.remarks}
                 onChange={(e) => setForm({ ...form, remarks: e.target.value })}
                 className={inputClass + ' flex-1 min-w-0'}
-                aria-label="Concrete beacon, flush" placeholder="Concrete beacon, flush"
+                placeholder="Concrete beacon, flush"
               />
               <VoiceDictationButton
                 value={form.remarks}
@@ -211,7 +218,7 @@ export function QuickAddModal({ onAdd, onClose }: QuickAddModalProps) {
 
           {/* ─── Beacon photo capture with EXIF GPS ─── */}
           <div className="pt-2 border-t">
-            <label className={labelClass}>Beacon / Site Photos</label>
+            <div className={labelClass}>Beacon / Site Photos</div>
             <BeaconPhotoCapture photos={photos} onChange={setPhotos} maxPhotos={4} />
           </div>
         </div>

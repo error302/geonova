@@ -131,21 +131,20 @@ export default function RegisterPage() {
                 )}
 
                 <div>
-                  <label className="block text-sm text-[var(--text-primary)] mb-2">Full name</label>
-                  <input aria-label="Full name"
+                  <label htmlFor="register-name" className="block text-sm text-[var(--text-primary)] mb-2">Full name</label>
+                  <input id="register-name"
                     type="text"
                     value={fullName}
                     onChange={e => setFullName(e.target.value)}
                     className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
                     autoComplete="name"
                     required
-                    autoFocus
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm text-[var(--text-primary)] mb-2">Email</label>
-                  <input aria-label="Email"
+                  <label htmlFor="register-email" className="block text-sm text-[var(--text-primary)] mb-2">Email</label>
+                  <input id="register-email"
                     type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
@@ -156,9 +155,9 @@ export default function RegisterPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-[var(--text-primary)] mb-2">Password</label>
+                  <label htmlFor="register-password" className="block text-sm text-[var(--text-primary)] mb-2">Password</label>
                   <div className="relative">
-                    <input aria-label="Password"
+                    <input id="register-password"
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={e => setPassword(e.target.value)}
@@ -186,9 +185,9 @@ export default function RegisterPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-[var(--text-primary)] mb-2">Confirm password</label>
+                  <label htmlFor="register-confirm" className="block text-sm text-[var(--text-primary)] mb-2">Confirm password</label>
                   <div className="relative">
-                    <input aria-label="Confirm password"
+                    <input id="register-confirm"
                       type={showConfirm ? 'text' : 'password'}
                       value={confirmPassword}
                       onChange={e => setConfirmPassword(e.target.value)}

@@ -37,8 +37,8 @@ export function Step4CrossSection({
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Carriageway Width (m)</label>
-          <input aria-label="Carriagewaywidth"
+          <label htmlFor="carriagewayWidth" className="block text-sm text-zinc-400 mb-1">Carriageway Width (m)</label>
+          <input id="carriagewayWidth"
             type="number"
             step="0.1"
             value={template.carriagewayWidth}
@@ -47,8 +47,8 @@ export function Step4CrossSection({
           />
         </div>
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Shoulder Width (m)</label>
-          <input aria-label="Shoulderwidth"
+          <label htmlFor="shoulderWidth" className="block text-sm text-zinc-400 mb-1">Shoulder Width (m)</label>
+          <input id="shoulderWidth"
             type="number"
             step="0.1"
             value={template.shoulderWidth}
@@ -57,8 +57,8 @@ export function Step4CrossSection({
           />
         </div>
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Camber (%)</label>
-          <input aria-label="Camber"
+          <label htmlFor="camber" className="block text-sm text-zinc-400 mb-1">Camber (%)</label>
+          <input id="camber"
             type="number"
             step="0.5"
             value={template.camber}
@@ -67,28 +67,30 @@ export function Step4CrossSection({
           />
         </div>
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Cut Slope (H:V)</label>
+          <label htmlFor="cutSlope" className="block text-sm text-zinc-400 mb-1">Cut Slope (H:V)</label>
           <input
+            id="cutSlope"
             type="text"
             value={template.cutSlope}
             onChange={e => setTemplate({ ...template, cutSlope: e.target.value })}
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white"
-            aria-label="1:1" placeholder="1:1"
+            placeholder="1:1"
           />
         </div>
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Fill Slope (H:V)</label>
+          <label htmlFor="fillSlope" className="block text-sm text-zinc-400 mb-1">Fill Slope (H:V)</label>
           <input
+            id="fillSlope"
             type="text"
             value={template.fillSlope}
             onChange={e => setTemplate({ ...template, fillSlope: e.target.value })}
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white"
-            aria-label="1:1.5" placeholder="1:1.5"
+            placeholder="1:1.5"
           />
         </div>
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Subgrade Depth (m)</label>
-          <input aria-label="Subgradedepth"
+          <label htmlFor="subgradeDepth" className="block text-sm text-zinc-400 mb-1">Subgrade Depth (m)</label>
+          <input id="subgradeDepth"
             type="number"
             step="0.1"
             value={template.subgradeDepth}

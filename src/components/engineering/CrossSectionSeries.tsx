@@ -145,8 +145,8 @@ export function CrossSectionSeries({
     let maxFillArea = 0
 
     const computed = sections.map((section) => {
-      let cutArea = section.cutArea ?? 0
-      let fillArea = section.fillArea ?? 0
+      const cutArea = section.cutArea ?? 0
+      const fillArea = section.fillArea ?? 0
 
       // Determine section type from areas
       let sectionType: SectionSummary['sectionType'] = 'level'

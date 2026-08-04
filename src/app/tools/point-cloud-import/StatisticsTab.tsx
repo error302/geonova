@@ -144,21 +144,21 @@ export default function StatisticsTab({
         </div>
         <div className="flex gap-4 items-end mb-4 flex-wrap">
           <div>
-            <label className="block text-sm text-[var(--text-secondary)] mb-1">Min Elevation</label>
-            <input
+            <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="min-elevation">Min Elevation</label>
+            <input id="min-elevation"
               className="input w-32 font-mono"
               type="number"
-              aria-label="min Z" placeholder="min Z"
+              placeholder="min Z"
               value={filterMinElev}
               onChange={e => setFilterMinElev(e.target.value)}
             />
           </div>
           <div>
-            <label className="block text-sm text-[var(--text-secondary)] mb-1">Max Elevation</label>
+            <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="max-elevation">Max Elevation</label>
             <input
-              className="input w-32 font-mono"
+               id="max-elevation" className="input w-32 font-mono"
               type="number"
-              aria-label="max Z" placeholder="max Z"
+              placeholder="max Z"
               value={filterMaxElev}
               onChange={e => setFilterMaxElev(e.target.value)}
             />

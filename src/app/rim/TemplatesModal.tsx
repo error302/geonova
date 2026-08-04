@@ -56,7 +56,7 @@ export function TemplatesModal({ rim }: { rim: RimState }) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
             <input
               type="text"
-              aria-label="Search templates by name, category, or tag..." placeholder="Search templates by name, category, or tag..."
+              aria-label="Search templates" placeholder="Search templates by name, category, or tag..."
               value={templateSearch}
               onChange={(e) => setTemplateSearch(e.target.value)}
               className="input pl-9"

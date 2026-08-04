@@ -530,7 +530,7 @@ function buildDesignMatrix(
 
     // ─── Standard observations (1 row each) ─────────────────────────────────
     let computed = 0
-    let row: Array<{ col: number; value: number }> = []
+    const row: Array<{ col: number; value: number }> = []
 
     switch (obs.type) {
       case 'distance': {

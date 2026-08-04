@@ -71,24 +71,24 @@ export default function AdversePossessionCalc() {
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="parcel-id-lr-number">
               Parcel ID / LR Number
             </label>
-            <input
+            <input id="parcel-id-lr-number"
               type="text"
               value={parcelId}
               onChange={e => setParcelId(e.target.value)}
-              aria-label="e.g., NAIROBI BLOCK 2/1234" placeholder="e.g., NAIROBI BLOCK 2/1234"
+ placeholder="e.g., NAIROBI BLOCK 2/1234"
               className="w-full p-2 border rounded-lg"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="possession-start-date">
                 Possession Start Date
               </label>
-              <input aria-label="Possession Start Date"
+              <input id="possession-start-date" aria-label="Possession Start Date"
                 type="date"
                 value={startDate}
                 onChange={e => setStartDate(e.target.value)}
@@ -96,10 +96,10 @@ export default function AdversePossessionCalc() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="end-date-if-ended">
                 End Date (if ended)
               </label>
-              <input aria-label="End Date (if ended)"
+              <input id="end-date-if-ended" aria-label="End Date (if ended)"
                 type="date"
                 value={endDate}
                 onChange={e => setEndDate(e.target.value)}
@@ -110,9 +110,9 @@ export default function AdversePossessionCalc() {
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <div className="block text-sm font-medium text-gray-700">
                 Evidence Collection
-              </label>
+              </div>
               <span className="text-xs text-gray-500">Add evidence to strengthen your case</span>
             </div>
 
@@ -157,7 +157,7 @@ export default function AdversePossessionCalc() {
                       type="text"
                       value={ev.description}
                       onChange={e => updateEvidence(index, 'description', e.target.value)}
-                      aria-label="Description of evidence" placeholder="Description of evidence"
+                      aria-label="Description of evidence"
                       className="text-sm p-1 border rounded"
                     />
                   </div>

@@ -128,15 +128,40 @@ export default function SchemeMapPage() {
       const feature = map.forEachFeatureAtPixel(evt.pixel, f => f)
       if (feature && popupRef.current) {
         const props = feature.getProperties()
-        popupRef.current.innerHTML = `
-          <div style="font-size:12px;">
-            <strong>Block ${props.block_number} — Parcel ${props.parcel_number || ''}</strong><br/>
-            ${props.lr_number ? `LR: ${props.lr_number}<br/>` : ''}
-            ${props.area_ha ? `Area: ${Number(props.area_ha).toFixed(4)} ha<br/>` : ''}
-            Status: <span style="color:${STATUS_COLORS[props.status as string] || '#999'}">${props.status || 'pending'}</span>
-          </div>
-        `
-        popupRef.current.style.display = 'block'
+        // VULN-002 FIX (security review 2026-08-03): block/parcel numbers and
+        // LR numbers are user-entered — render with textContent, never innerHTML.
+        const el = popupRef.current
+        el.replaceChildren()
+
+        const wrap = document.createElement('div')
+        wrap.style.cssText = 'font-size:12px;'
+
+        const title = document.createElement('strong')
+        title.textContent = `Block ${String(props.block_number ?? '')} — Parcel ${String(props.parcel_number || '')}`
+        wrap.append(title)
+        wrap.append(document.createElement('br'))
+
+        if (props.lr_number) {
+          const lr = document.createElement('div')
+          lr.textContent = `LR: ${String(props.lr_number)}`
+          wrap.append(lr)
+        }
+        if (props.area_ha) {
+          const area = document.createElement('div')
+          area.textContent = `Area: ${Number(props.area_ha).toFixed(4)} ha`
+          wrap.append(area)
+        }
+
+        const statusRow = document.createElement('div')
+        const statusLabel = document.createTextNode('Status: ')
+        const statusSpan = document.createElement('span')
+        statusSpan.style.color = STATUS_COLORS[props.status as string] || '#999'
+        statusSpan.textContent = String(props.status || 'pending')
+        statusRow.append(statusLabel, statusSpan)
+        wrap.append(statusRow)
+
+        el.append(wrap)
+        el.style.display = 'block'
         overlay.setPosition(evt.coordinate)
       } else if (popupRef.current) {
         popupRef.current.style.display = 'none'

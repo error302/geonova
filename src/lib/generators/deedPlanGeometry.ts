@@ -264,7 +264,7 @@ export async function loadPreAdjustedFromDB(
     if (coordsRes.rows.length < 3) return null;
 
     // Also try to get beacon info from field book entries for richer metadata
-    let beaconLookup = new Map<string, { beaconNo: string; monument: string; markStatus: string }>();
+    const beaconLookup = new Map<string, { beaconNo: string; monument: string; markStatus: string }>();
     try {
       const fbRes = await db.query(
         'SELECT station, raw_data FROM project_fieldbook_entries WHERE project_id = $1 ORDER BY row_index ASC',

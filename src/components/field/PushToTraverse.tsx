@@ -37,9 +37,9 @@ export default function PushToTraverse({ beacons }: Props) {
     <div className="p-4 space-y-3">
       <h3 className="font-semibold text-sm">Push {beacons.length} beacons to Traverse</h3>
       <div>
-        <label className="text-xs text-gray-400 block mb-1">Target coordinate system</label>
+        <label className="text-xs text-gray-400 block mb-1" htmlFor="target-coordinate-system">Target coordinate system</label>
         <select
-          value={crs}
+           id="target-coordinate-system" value={crs}
           onChange={e => setCRS(e.target.value as 'EPSG:21036' | 'EPSG:21037')}
           className="bg-gray-700 text-sm px-3 py-1.5 rounded border border-gray-600 text-white w-full">
           <option value="EPSG:21037">Arc 1960 / UTM Zone 37S (East Kenya — Nairobi, Coast, Eastern)</option>

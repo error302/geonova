@@ -53,8 +53,8 @@ export function SubAreaPanel({ subAreas, beacons, onAdd, onUpdate, onRemove }: P
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-xs text-gray-500">Label</label>
-              <input aria-label="Label"
+              <label className="block text-xs text-gray-500" htmlFor="label">Label</label>
+              <input id="label" aria-label="Label"
                 type="text"
                 value={area.label}
                 onChange={(e) => onUpdate(area.id, { label: e.target.value })}
@@ -62,8 +62,8 @@ export function SubAreaPanel({ subAreas, beacons, onAdd, onUpdate, onRemove }: P
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-500">Area (Ha)</label>
-              <input aria-label="Areaha"
+              <label className="block text-xs text-gray-500" htmlFor="area-ha">Area (Ha)</label>
+              <input id="area-ha" aria-label="Areaha"
                 type="number"
                 step="0.0001"
                 value={area.areaHa}
@@ -77,8 +77,8 @@ export function SubAreaPanel({ subAreas, beacons, onAdd, onUpdate, onRemove }: P
           </div>
 
           <div>
-            <label className="block text-xs text-gray-500">Beacons (ordered)</label>
-            <select
+            <label className="block text-xs text-gray-500" htmlFor="beacons-ordered">Beacons (ordered)</label>
+            <select id="beacons-ordered"
               multiple
               value={area.beaconIds}
               onChange={(e) => {
@@ -96,8 +96,8 @@ export function SubAreaPanel({ subAreas, beacons, onAdd, onUpdate, onRemove }: P
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-xs text-gray-500">Fill Pattern</label>
-              <select
+              <label className="block text-xs text-gray-500" htmlFor="fill-pattern">Fill Pattern</label>
+              <select id="fill-pattern"
                 value={area.fillPattern}
                 onChange={(e) => onUpdate(area.id, { fillPattern: e.target.value as SubArea['fillPattern'] })}
                 className="w-full px-2 py-1 border rounded text-sm"
@@ -108,8 +108,8 @@ export function SubAreaPanel({ subAreas, beacons, onAdd, onUpdate, onRemove }: P
               </select>
             </div>
             <div>
-              <label className="block text-xs text-gray-500">Fill Color</label>
-              <input aria-label="Fillcolor"
+              <label className="block text-xs text-gray-500" htmlFor="fill-color">Fill Color</label>
+              <input  id="fill-color" aria-label="Fillcolor"
                 type="color"
                 value={area.fillColor}
                 onChange={(e) => onUpdate(area.id, { fillColor: e.target.value })}

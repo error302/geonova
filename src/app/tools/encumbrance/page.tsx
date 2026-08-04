@@ -34,13 +34,13 @@ export default function EncumbrancePage() {
       <PageHeader title="Encumbrance Registration" subtitle="Wayleaves, easements, restrictions on parcels" reference="Land Registration Act 2012" />
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-4">
-          <div><label className="block text-sm text-zinc-400 mb-2">Parcel Area (m²)</label><input type="number" value={parcelArea} onChange={e => setParcelArea(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="parcel-area-m">Parcel Area (m²)</label><input id="parcel-area-m" type="number" value={parcelArea} onChange={e => setParcelArea(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
           <div>
-            <div className="flex justify-between items-center mb-2"><label className="text-sm text-zinc-400">Encumbrances</label><button onClick={add} className="text-xs px-2 py-1 bg-[var(--accent)] text-black rounded">+ Add</button></div>
+            <div className="flex justify-between items-center mb-2"><div className="text-sm text-zinc-400">Encumbrances</div><button onClick={add} className="text-xs px-2 py-1 bg-[var(--accent)] text-black rounded">+ Add</button></div>
             <div className="space-y-3">{encumbrances.map((e, i) => (
               <div key={i} className="p-3 bg-zinc-900 rounded-lg border border-zinc-700 space-y-2">
                 <div className="flex gap-2">
-                  <select value={e.type} onChange={ev => { const v = [...encumbrances]; v[i].type = ev.target.value as EncumbranceType; setEncumbrances(v) }} className="bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-xs"><option value="wayleave">Wayleave</option><option value="easement">Easement</option><option value="restriction">Restriction</option><option value="caveat">Caveat</option><option value="lease">Lease</option><option value="charge">Charge</option></select>
+                  <select aria-label={`Encumbrance ${i + 1} type`} value={e.type} onChange={ev => { const v = [...encumbrances]; v[i].type = ev.target.value as EncumbranceType; setEncumbrances(v) }} className="bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-xs"><option value="wayleave">Wayleave</option><option value="easement">Easement</option><option value="restriction">Restriction</option><option value="caveat">Caveat</option><option value="lease">Lease</option><option value="charge">Charge</option></select>
                   <input value={e.description} onChange={ev => { const v = [...encumbrances]; v[i].description = ev.target.value; setEncumbrances(v) }} placeholder="Description" className="flex-1 bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-xs" />
                   <button onClick={() => remove(i)} className="text-red-400 text-xs px-1">×</button>
                 </div>
@@ -64,7 +64,7 @@ export default function EncumbrancePage() {
               <div className="p-4 bg-zinc-900 rounded-lg border border-zinc-700"><p className="text-sm text-zinc-300">{result.summary}</p></div>
               {result.restrictions.length > 0 && <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg"><p className="text-xs text-red-400 font-semibold">Development Restrictions: {result.restrictions.length}</p>{result.restrictions.map((r, i) => (<p key={i} className="text-xs text-zinc-400 mt-1">{r.type}: {r.description}</p>))}</div>}
             </div>
-          ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-500">Add encumbrances and click Analyze.</div>}
+          ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-400">Add encumbrances and click Analyze.</div>}
         </div>
       </div>
     </div>

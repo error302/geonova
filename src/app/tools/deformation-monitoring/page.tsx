@@ -43,8 +43,8 @@ export default function DeformationMonitoringPage() {
       </div>
 
       <div className="flex gap-4 items-end mb-4">
-        <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Tolerance H (m)</label><input value={tolH} onChange={e => setTolH(e.target.value)} className={inputCls + ' w-32'} /></div>
-        <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Tolerance V (m)</label><input value={tolV} onChange={e => setTolV(e.target.value)} className={inputCls + ' w-32'} /></div>
+        <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="tolerance-h-m">Tolerance H (m)</label><input id="tolerance-h-m" value={tolH} onChange={e => setTolH(e.target.value)} className={inputCls + ' w-32'} /></div>
+        <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="tolerance-v-m">Tolerance V (m)</label><input id="tolerance-v-m" value={tolV} onChange={e => setTolV(e.target.value)} className={inputCls + ' w-32'} /></div>
         <button onClick={handleCompare} className="px-4 py-2 bg-[var(--accent)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--accent-dim)]">Compare Epochs</button>
       </div>
 

@@ -114,17 +114,17 @@ export default function ChainageCalculator() {
             <h3 className="font-semibold text-[var(--text-primary)] mb-4">Starting Station</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="label">Easting (m)</label>
-                <input aria-label="Easting" className="input" value={startStation.easting} onChange={e => setStartStation({...startStation, easting: e.target.value})} />
+                <label className="label" htmlFor="easting-m">Easting (m)</label>
+                <input id="easting-m" aria-label="Easting" className="input" value={startStation.easting} onChange={e => setStartStation({...startStation, easting: e.target.value})} />
               </div>
               <div>
-                <label className="label">Northing (m)</label>
-                <input aria-label="Northing" className="input" value={startStation.northing} onChange={e => setStartStation({...startStation, northing: e.target.value})} />
+                <label className="label" htmlFor="northing-m">Northing (m)</label>
+                <input id="northing-m" aria-label="Northing" className="input" value={startStation.northing} onChange={e => setStartStation({...startStation, northing: e.target.value})} />
               </div>
             </div>
             <div className="mt-4">
-              <label className="label">Starting Chainage (m)</label>
-              <input className="input" value={startChainage} onChange={e => setStartChainage(e.target.value)} aria-label="0" placeholder="0" />
+              <label className="label" htmlFor="starting-chainage-m">Starting Chainage (m)</label>
+              <input id="starting-chainage-m" className="input" value={startChainage} onChange={e => setStartChainage(e.target.value)} placeholder="0" />
             </div>
           </div>
 
@@ -137,8 +137,8 @@ export default function ChainageCalculator() {
               {alignmentPoints.map((point, idx) => (
                 <div key={point.id} className="flex gap-2 items-center">
                   <input aria-label="Name" className="input w-16 text-center" value={point.name} onChange={e => updatePoint(point.id, 'name', e.target.value)} />
-                  <input className="input flex-1" value={point.easting} onChange={e => updatePoint(point.id, 'easting', e.target.value)} aria-label="Easting" placeholder="Easting" />
-                  <input className="input flex-1" value={point.northing} onChange={e => updatePoint(point.id, 'northing', e.target.value)} aria-label="Northing" placeholder="Northing" />
+                  <input className="input flex-1" value={point.easting} onChange={e => updatePoint(point.id, 'easting', e.target.value)} aria-label="Easting (m)" placeholder="Easting" />
+                  <input className="input flex-1" value={point.northing} onChange={e => updatePoint(point.id, 'northing', e.target.value)} aria-label="Northing (m)" placeholder="Northing" />
                   {alignmentPoints.length > 2 && (
                     <button onClick={() => removePoint(point.id)} className="text-red-400 hover:text-red-300 px-2">[x]</button>
                   )}
@@ -156,7 +156,7 @@ export default function ChainageCalculator() {
               <h3 className="font-semibold text-[var(--text-primary)] mb-4">Reverse Calculation</h3>
               <p className="text-xs text-[var(--text-muted)] mb-3">Find coordinates at a given chainage</p>
               <div className="flex gap-2">
-                <input className="input flex-1" value={reverseChainage} onChange={e => setReverseChainage(e.target.value)} aria-label="Chainage (m)" placeholder="Chainage (m)" />
+                <input className="input flex-1" value={reverseChainage} onChange={e => setReverseChainage(e.target.value)} aria-label="Chainage (m)" />
                 <button onClick={calculateReverse} className="px-4 py-2 bg-[var(--bg-tertiary)] text-[var(--text-primary)] rounded hover:bg-[var(--border-hover)]">Find</button>
               </div>
               {reverseResult && (

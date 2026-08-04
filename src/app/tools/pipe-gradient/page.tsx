@@ -54,8 +54,8 @@ export default function PipeGradientPage() {
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-zinc-400 mb-2">Invert Level In (m)</label>
-              <input aria-label="Invert Level In (m)"
+              <label className="block text-sm text-zinc-400 mb-2" htmlFor="invert-level-in-m">Invert Level In (m)</label>
+              <input id="invert-level-in-m" aria-label="Invert Level In (m)"
                 type="number"
                 step="0.001"
                 value={invertIn}
@@ -65,8 +65,8 @@ export default function PipeGradientPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-zinc-400 mb-2">Invert Level Out (m)</label>
-              <input aria-label="Invert Level Out (m)"
+              <label className="block text-sm text-zinc-400 mb-2" htmlFor="invert-level-out-m">Invert Level Out (m)</label>
+              <input id="invert-level-out-m" aria-label="Invert Level Out (m)"
                 type="number"
                 step="0.001"
                 value={invertOut}
@@ -79,8 +79,8 @@ export default function PipeGradientPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-zinc-400 mb-2">Pipe Length (m)</label>
-              <input aria-label="Pipe Length (m)"
+              <label className="block text-sm text-zinc-400 mb-2" htmlFor="pipe-length-m">Pipe Length (m)</label>
+              <input id="pipe-length-m" aria-label="Pipe Length (m)"
                 type="number"
                 value={length}
                 onChange={e => setLength(Number(e.target.value))}
@@ -89,8 +89,8 @@ export default function PipeGradientPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-zinc-400 mb-2">Diameter (mm)</label>
-              <select
+              <label className="block text-sm text-zinc-400 mb-2" htmlFor="diameter-mm">Diameter (mm)</label>
+              <select id="diameter-mm"
                 value={diameter}
                 onChange={e => setDiameter(Number(e.target.value))}
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white"
@@ -107,9 +107,9 @@ export default function PipeGradientPage() {
           </div>
 
           <div>
-            <label className="block text-sm text-zinc-400 mb-2">Pipe Material</label>
+            <label className="block text-sm text-zinc-400 mb-2" htmlFor="pipe-material">Pipe Material</label>
             <select
-              value={material}
+               id="pipe-material" value={material}
               onChange={e => setMaterial(e.target.value as any)}
               className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white"
             >
@@ -181,7 +181,7 @@ export default function PipeGradientPage() {
 
           {/* Empty state before first compute */}
           {!computed && (
-            <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-500">
+            <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-400">
               Click <span className="text-[var(--accent)] font-semibold">Compute Gradient & Flow</span> to calculate gradient, flow velocity (Manning's equation), and full-bore capacity.
             </div>
           )}
@@ -192,19 +192,19 @@ export default function PipeGradientPage() {
             <h3 className="font-medium text-white mb-3">Standards Reference</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-zinc-500">Min Gradient:</span>
+                <span className="text-zinc-400">Min Gradient:</span>
                 <span className="text-white">{DRAINAGE_STANDARDS.minGradient}%</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Max Gradient:</span>
+                <span className="text-zinc-400">Max Gradient:</span>
                 <span className="text-white">{DRAINAGE_STANDARDS.maxGradient}%</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Min Velocity:</span>
+                <span className="text-zinc-400">Min Velocity:</span>
                 <span className="text-white">{DRAINAGE_STANDARDS.minVelocity} m/s</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Max Velocity:</span>
+                <span className="text-zinc-400">Max Velocity:</span>
                 <span className="text-white">{DRAINAGE_STANDARDS.maxVelocity} m/s</span>
               </div>
             </div>
@@ -228,7 +228,7 @@ export default function PipeGradientPage() {
             <h3 className="font-medium text-white mb-3">Formula</h3>
             <p className="text-sm text-zinc-400 font-mono">
               V = (1/n) × R^(2/3) × S^(1/2)<br/>
-              <span className="text-zinc-500">Where: n=Manning's, R=hydraulic radius, S=gradient</span>
+              <span className="text-zinc-400">Where: n=Manning's, R=hydraulic radius, S=gradient</span>
             </p>
           </div>
         </div>

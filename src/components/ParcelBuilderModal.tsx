@@ -316,12 +316,12 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
           {!isSelecting && areaResult && (
             <div className="border-t border-[var(--border-color)] pt-6">
               <div className="max-w-md">
-                <label className="label">Parcel Name</label>
-                <input
+                <label className="label" htmlFor="parcel-name">Parcel Name</label>
+                <input id="parcel-name"
                   className="input"
                   value={parcelName}
                   onChange={e => setParcelName(e.target.value)}
-                  aria-label="e.g., Plot A, Parcel 1" placeholder="e.g., Plot A, Parcel 1"
+ placeholder="e.g., Plot A, Parcel 1"
                 />
               </div>
             </div>

@@ -229,7 +229,7 @@ export function CommandPalette() {
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            aria-label="Search projects, parcels, tools, pages..." placeholder="Search projects, parcels, tools, pages..."
+            aria-label="Search projects, parcels, tools, pages..."
             className="flex-1 bg-transparent text-white text-sm placeholder-gray-600 focus:outline-none"
           />
           <kbd className="hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/[0.06] border border-white/[0.1] text-[9px] text-gray-500 font-mono">

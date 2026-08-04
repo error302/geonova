@@ -89,7 +89,6 @@ export class TotalStationConnection {
     if (!TotalStationConnection.isSupported()) {
       throw new Error('Web Serial API is not supported. Use Chrome/Edge 89+ or the METARDU mobile app.')
     }
-    // @ts-ignore
     this.port = await navigator.serial.requestPort()
     await this.port.open({
       baudRate: this.config.baudRate,

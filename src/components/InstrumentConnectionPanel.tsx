@@ -482,10 +482,10 @@ export function InstrumentConnectionPanel({
         {transportMode === 'serial' && status === 'disconnected' && (
           <>
             <div>
-              <label className="text-xs text-gray-400 uppercase tracking-wider mb-1 block">
+              <label className="text-xs text-gray-400 uppercase tracking-wider mb-1 block" htmlFor="instrument-preset">
                 Instrument Preset
               </label>
-              <select
+              <select id="instrument-preset"
                 value={selectedPreset}
                 onChange={(e) => setSelectedPreset(e.target.value)}
                 className="w-full bg-black/30 border border-white/10 rounded-md px-3 py-2 text-xs focus:outline-none focus:border-blue-500/50"
@@ -511,9 +511,9 @@ export function InstrumentConnectionPanel({
             {showConfig && (
               <div className="space-y-2 p-2 rounded-md bg-black/20 border border-white/5">
                 <div>
-                  <label className="text-xs text-gray-400 mb-1 block">Baud Rate</label>
+                  <label className="text-xs text-gray-400 mb-1 block" htmlFor="baud-rate">Baud Rate</label>
                   <select
-                    value={customBaud}
+                     id="baud-rate" value={customBaud}
                     onChange={(e) => setCustomBaud(e.target.value)}
                     className="w-full bg-black/30 border border-white/10 rounded px-2 py-1 text-xs"
                   >

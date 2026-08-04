@@ -22,10 +22,10 @@ export default function MassHaulPage() {
       <PageHeader title="Mass Haul Optimization" subtitle="Free-haul, overhaul, borrow/spoil analysis" reference="Punmia Ch.11 | Kenya Road Specs" />
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-4">
-          <div><label className="block text-sm text-zinc-400 mb-2">Mass Haul Curve (chainage, cumulative_volume — one per line)</label><textarea value={csvInput} onChange={e => setCsvInput(e.target.value)} rows={8} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="mass-haul-curve-chainage-cumulative-volume-one-per-line">Mass Haul Curve (chainage, cumulative_volume — one per line)</label><textarea id="mass-haul-curve-chainage-cumulative-volume-one-per-line" value={csvInput} onChange={e => setCsvInput(e.target.value)} rows={8} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
           <div className="grid grid-cols-2 gap-4">
-            <div><label className="block text-sm text-zinc-400 mb-2">Free-Haul Limit (m)</label><input type="number" value={freeHaul} onChange={e => setFreeHaul(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
-            <div><label className="block text-sm text-zinc-400 mb-2">Overhaul Rate (KES/m³·m)</label><input type="number" value={overhaulRate} onChange={e => setOverhaulRate(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+            <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="free-haul-limit-m">Free-Haul Limit (m)</label><input id="free-haul-limit-m" type="number" value={freeHaul} onChange={e => setFreeHaul(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+            <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="overhaul-rate-kes-m-m">Overhaul Rate (KES/m³·m)</label><input id="overhaul-rate-kes-m-m" type="number" value={overhaulRate} onChange={e => setOverhaulRate(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
           </div>
           <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Optimize Mass Haul</button>
         </div>
@@ -45,7 +45,7 @@ export default function MassHaulPage() {
               </div>
               <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-zinc-500 border-b border-zinc-700"><th className="text-right py-2">From</th><th className="text-right py-2">To</th><th className="text-right py-2">Vol (m³)</th><th className="text-right py-2">Avg Haul (m)</th><th className="text-right py-2">Overhaul</th><th className="text-right py-2">Type</th></tr></thead><tbody>{result.segments.map((s, i) => (<tr key={i} className="border-b border-zinc-800"><td className="py-1.5 text-right font-mono text-white">{s.fromChainage.toFixed(0)}</td><td className="py-1.5 text-right font-mono text-white">{s.toChainage.toFixed(0)}</td><td className="py-1.5 text-right font-mono text-white">{s.volume.toFixed(1)}</td><td className="py-1.5 text-right font-mono text-white">{s.avgHaulDistance.toFixed(1)}</td><td className="py-1.5 text-right font-mono text-amber-400">{s.overhaul > 0 ? `${s.overhaulVolume.toFixed(1)} m³·m` : '—'}</td><td className="py-1.5 text-right text-zinc-400">{s.isBorrow ? 'Borrow' : s.isSpoil ? 'Spoil' : 'Haul'}</td></tr>))}</tbody></table></div>
             </div>
-          ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-500">Enter mass haul data and click Optimize.</div>}
+          ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-400">Enter mass haul data and click Optimize.</div>}
         </div>
       </div>
     </div>

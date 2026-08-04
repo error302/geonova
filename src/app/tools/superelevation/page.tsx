@@ -45,8 +45,8 @@ export default function SuperelevationPage() {
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-zinc-400 mb-2">Design Speed (km/h)</label>
-              <input aria-label="Design Speed (km/h)"
+              <label className="block text-sm text-zinc-400 mb-2" htmlFor="design-speed-km-h">Design Speed (km/h)</label>
+              <input id="design-speed-km-h" aria-label="Design Speed (km/h)"
                 type="number"
                 value={designSpeed}
                 onChange={e => setDesignSpeed(Number(e.target.value))}
@@ -56,8 +56,8 @@ export default function SuperelevationPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-zinc-400 mb-2">Curve Radius (m)</label>
-              <input aria-label="Curve Radius (m)"
+              <label className="block text-sm text-zinc-400 mb-2" htmlFor="curve-radius-m">Curve Radius (m)</label>
+              <input id="curve-radius-m" aria-label="Curve Radius (m)"
                 type="number"
                 value={radius}
                 onChange={e => setRadius(Number(e.target.value))}
@@ -70,8 +70,8 @@ export default function SuperelevationPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-zinc-400 mb-2">Number of Lanes</label>
-              <input aria-label="Number of Lanes"
+              <label className="block text-sm text-zinc-400 mb-2" htmlFor="number-of-lanes">Number of Lanes</label>
+              <input id="number-of-lanes" aria-label="Number of Lanes"
                 type="number"
                 value={numLanes}
                 onChange={e => setNumLanes(Number(e.target.value))}
@@ -81,8 +81,8 @@ export default function SuperelevationPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-zinc-400 mb-2">Lane Width (m)</label>
-              <input aria-label="Lane Width (m)"
+              <label className="block text-sm text-zinc-400 mb-2" htmlFor="lane-width-m">Lane Width (m)</label>
+              <input  id="lane-width-m" aria-label="Lane Width (m)"
                 type="number"
                 step="0.1"
                 value={laneWidth}
@@ -97,8 +97,7 @@ export default function SuperelevationPage() {
           {/* Results */}
           <div className="p-4 bg-zinc-900 rounded-lg border border-zinc-700">
             <div className="text-sm text-zinc-400 mb-1">Design Superelevation</div>
-            <div className="text-3xl font-bold text-amber-400">{(result.designE * 100).toFixed(2)}%</div>
-            <div className="text-xs text-zinc-500 mt-1">
+            <div className="text-3xl font-bold text-amber-400">{(result.designE * 100).toFixed(2)}%</div>              <div className="text-xs text-zinc-400 mt-1">
               Max allowable: 8% per RDM 1.3 (was 10% in old code)
             </div>
             {result.isCapped && (
@@ -111,8 +110,7 @@ export default function SuperelevationPage() {
           {/* Transition length */}
           <div className="p-4 bg-zinc-900 rounded-lg border border-zinc-700">
             <div className="text-sm text-zinc-400 mb-1">Transition Length (Ls)</div>
-            <div className="text-2xl font-bold text-blue-400">{result.transitionLength.toFixed(2)}m</div>
-            <div className="text-xs text-zinc-500 mt-1">
+            <div className="text-2xl font-bold text-blue-400">{result.transitionLength.toFixed(2)}m</div>              <div className="text-xs text-zinc-400 mt-1">
               Ls = e × w × V / (3.6 × p), where w = {laneWidth}×{numLanes} = {(laneWidth * numLanes).toFixed(1)}m
             </div>
           </div>
@@ -121,8 +119,7 @@ export default function SuperelevationPage() {
           <div className="p-4 bg-zinc-900 rounded-lg border border-zinc-700">
             <div className={`text-lg font-medium ${result.isCompliant ? 'text-green-400' : 'text-red-400'}`}>
               {result.isCompliant ? ' Compliant with RDM 1.3' : ' Non-compliant — radius too small for speed'}
-            </div>
-            <div className="text-xs text-zinc-500 mt-1">
+            </div>              <div className="text-xs text-zinc-400 mt-1">
               Rate of change p = {(result.rateOfChange * 100).toFixed(2)}%/m (1% per 2.4m per RDM 1.3)
             </div>
           </div>
@@ -135,7 +132,7 @@ export default function SuperelevationPage() {
                 {result.steps.map((step, i) => (
                   <div key={i} className="text-xs">
                     <div className="text-zinc-400">{step.description}</div>
-                    <div className="text-zinc-600 font-mono">{step.formula}</div>
+                    <div className="text-zinc-400 font-mono">{step.formula}</div>
                     <div className="text-white font-mono">→ {step.value}</div>
                   </div>
                 ))}
@@ -149,7 +146,7 @@ export default function SuperelevationPage() {
           <h3 className="font-medium text-white mb-4">Minimum Radius (RDM 1.3)</h3>
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-zinc-500 border-b border-zinc-700">
+              <tr className="text-zinc-400 border-b border-zinc-700">
                 <th className="text-left py-2">Speed (km/h)</th>
                 <th className="text-right py-2">Min Radius (m)</th>
                 <th className="text-right py-2">Max e (%)</th>
@@ -167,8 +164,7 @@ export default function SuperelevationPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
-          <p className="text-xs text-zinc-500 mt-3">
+          </table>            <p className="text-xs text-zinc-400 mt-3">
             Highlighted row matches current design speed. R = {radius}m
             {radius < 150 ? ' (below minimum for most speeds — increase radius)' : ' is adequate for current speed.'}
           </p>

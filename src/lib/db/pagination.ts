@@ -38,7 +38,7 @@ const MAX_LIMIT = 500
 export function parsePagination(url: string): PaginationParams {
   const { searchParams } = new URL(url)
 
-  let limit = Math.min(
+  const limit = Math.min(
     Math.max(parseInt(searchParams.get('limit') || String(DEFAULT_LIMIT)), 1),
     MAX_LIMIT
   )

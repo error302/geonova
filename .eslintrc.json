@@ -1,5 +1,7 @@
 {
+  "root": true,
   "extends": ["next/core-web-vitals", "next/typescript"],
+  "plugins": ["metardu"],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
@@ -29,7 +31,10 @@
     "no-unused-vars": "off",
     "no-console": "warn",
     "no-debugger": "warn",
-    "no-empty": "warn",
+    // allowEmptyCatch (2026-08-04): the 53 `catch {}` one-liners across the
+    // codebase are deliberate error-swallowing (best-effort fallbacks on
+    // optional reads / cleanups). Empty NON-catch blocks stay flagged.
+    "no-empty": ["warn", { "allowEmptyCatch": true }],
     "no-irregular-whitespace": "warn",
     "no-case-declarations": "off",
     "no-fallthrough": "warn",
@@ -52,7 +57,42 @@
         "selector": "CallExpression Literal[value=/^EPSG:3273\\d$/]",
         "message": "T1.5 (2026-07-09): Hardcoded EPSG:3273x in a function call — use currentUtmEpsg from MapReactContext instead."
       }
-    ]
+    ],
+
+    /* ── jsx-a11y (#A11Y) ───────────────────────────────────────────────────
+     * CI lint gate enforces --max-warnings 0 on changed files, so new a11y
+     * violations in touched code are caught before merge.
+     *
+     * These rules are at zero violations codebase-wide after the A11Y sweep
+     * (2026-08-03) — enforced as errors so regressions block CI:
+     */
+    "jsx-a11y/no-autofocus": "error",
+    "jsx-a11y/no-noninteractive-element-interactions": "error",
+    "jsx-a11y/anchor-has-content": "error",
+    "jsx-a11y/interactive-supports-focus": "error",
+    "jsx-a11y/no-redundant-roles": "error",
+    "jsx-a11y/img-redundant-alt": "error",
+    "jsx-a11y/role-has-required-aria-props": "error",
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      { "controlComponents": ["RadioGroupItem"] }
+    ],
+    "jsx-a11y/aria-proptypes": "error",
+    /* LOCAL RULE (2026-08-04): ESLint version of scripts/aria-label-gate.mjs —
+     * bans placeholder-like / junk aria-labels (empty, punctuation, generic
+     * phrases, crunched header text, or aria-label duplicating its own
+     * placeholder) so accessible names can't regress. Fires in the editor,
+     * `next lint`, and the changed-files lint ratchet, in addition to the
+     * whole-repo CI regex gate. Shipped via eslint-plugin-metardu (file: dep). */
+    "metardu/no-placeholder-as-aria-label": "error"
+    /* NOTE (2026-08-03): no-static-element-interactions,
+     * click-events-have-key-events, and mouse-events-have-key-events are
+     * STILL systemic across the codebase and are intentionally NOT enabled
+     * here. The CI lint gate lints whole changed files with --max-warnings 0,
+     * so any warn/error rule with existing codebase-wide violations would
+     * block every PR that touches a dirty file. They will be re-added (as
+     * errors) once the remaining interaction sweep drives them to zero
+     * codebase-wide. */
   },
   "overrides": [
     {
@@ -74,4 +114,4 @@
       }
     }
   ]
-}
+}

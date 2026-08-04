@@ -80,7 +80,7 @@ export function generateLongitudinalProfileSvg(points: LongitudinalProfilePoint[
     .sort((a: any, b: any) => a.chainage - b.chainage)
 
   if (clean.length < 2) {
-    return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="210mm" height="100mm" viewBox="0 0 210 100">\n<rect x=\"0\" y=\"0\" width=\"210\" height=\"100\" fill=\"#ffffff\"/>\n<text x=\"10\" y=\"50\" font-family=\"Arial\" font-size=\"12\" fill=\"#111\">Not enough points to generate profile.</text>\n</svg>\n`
+    return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="210mm" height="100mm" viewBox="0 0 210 100">\n<rect x="0" y="0" width="210" height="100" fill="#ffffff"/>\n<text x="10" y="50" font-family="Arial" font-size="12" fill="#111">Not enough points to generate profile.</text>\n</svg>\n`
   }
 
   const page = opts.page ?? 'A3'

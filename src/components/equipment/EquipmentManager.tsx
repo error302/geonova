@@ -358,20 +358,20 @@ function AddEquipmentForm({ onClose, onAdded }: { onClose: () => void; onAdded: 
       </div>
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Name</label>
-          <input type="text" value={name} onChange={e => setName(e.target.value)} aria-label="Leica TS07" placeholder="Leica TS07" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="name">Name</label>
+          <input id="name" type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Leica TS07" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
         </div>
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Type</label>
-          <select value={type} onChange={e => setType(e.target.value)} className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)]">
+          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="type">Type</label>
+          <select id="type" value={type} onChange={e => setType(e.target.value)} className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)]">
             {Object.entries(TYPE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
           </select>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-2">
-        <input type="text" value={manufacturer} onChange={e => setManufacturer(e.target.value)} aria-label="Manufacturer" placeholder="Manufacturer" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
-        <input type="text" value={model} onChange={e => setModel(e.target.value)} aria-label="Model" placeholder="Model" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
-        <input type="text" value={serialNumber} onChange={e => setSerialNumber(e.target.value)} aria-label="Serial No." placeholder="Serial No." className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+        <input type="text" value={manufacturer} onChange={e => setManufacturer(e.target.value)} placeholder="Manufacturer" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+        <input type="text" value={model} onChange={e => setModel(e.target.value)} placeholder="Model" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+        <input type="text" value={serialNumber} onChange={e => setSerialNumber(e.target.value)} placeholder="Serial No." className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
       </div>
       {error && <p className="text-xs text-red-400">{error}</p>}
       <div className="flex gap-2">
@@ -424,17 +424,17 @@ function AddCalibrationForm({ equipmentId, onClose, onAdded }: { equipmentId: st
       <div className="text-xs font-medium text-[var(--accent)]">Add Calibration Record</div>
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase mb-1">Calibration Date</label>
-          <input aria-label="Calibration Date" type="date" value={calDate} onChange={e => setCalDate(e.target.value)} className="w-full h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)]" />
+          <label className="block text-[9px] text-gray-500 uppercase mb-1" htmlFor="calibration-date">Calibration Date</label>
+          <input id="calibration-date" aria-label="Calibration Date" type="date" value={calDate} onChange={e => setCalDate(e.target.value)} className="w-full h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)]" />
         </div>
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase mb-1">Next Calibration</label>
-          <input aria-label="Next Calibration" type="date" value={nextDate} onChange={e => setNextDate(e.target.value)} className="w-full h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)]" />
+          <label className="block text-[9px] text-gray-500 uppercase mb-1" htmlFor="next-calibration">Next Calibration</label>
+          <input  id="next-calibration" aria-label="Next Calibration" type="date" value={nextDate} onChange={e => setNextDate(e.target.value)} className="w-full h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)]" />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <input type="text" value={lab} onChange={e => setLab(e.target.value)} aria-label="Calibration Lab" placeholder="Calibration Lab" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] placeholder-gray-600" />
-        <input type="text" value={certNumber} onChange={e => setCertNumber(e.target.value)} aria-label="Certificate No." placeholder="Certificate No." className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] font-mono placeholder-gray-600" />
+        <input type="text" value={lab} onChange={e => setLab(e.target.value)} placeholder="Calibration Lab" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] placeholder-gray-600" />
+        <input type="text" value={certNumber} onChange={e => setCertNumber(e.target.value)} placeholder="Certificate No." className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] font-mono placeholder-gray-600" />
       </div>
       <select value={results} onChange={e => setResults(e.target.value)} className="w-full h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)]">
         <option value="pass">Pass</option>

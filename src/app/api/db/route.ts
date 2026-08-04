@@ -50,6 +50,7 @@ interface DbRequestBody {
   count?: string
   head?: boolean
   payload?: Record<string, unknown> | Record<string, unknown>[]
+  onConflict?: string
 }
 
 // Tables that can be queried without authentication
@@ -133,7 +134,7 @@ function isAdmin(email: string | null | undefined): boolean {
 // and set RLS context ourselves when a session is found.
 export const POST = apiHandler({ auth: false, rateLimit: { max: 120, windowMs: 60000 } }, async (request, ctx) => {
   const body = ctx.body as DbRequestBody
-  const { table, operation, columns, filters, orFilters, order, limit, offset, single, maybeSingle, count, head, payload } = body
+  const { table, operation, columns, filters, orFilters, order, limit, offset, single, maybeSingle, count, head, payload, onConflict } = body
 
   // ─── Table validation ─────────────────────────────────────────
   if (!table || FORBIDDEN_TABLES.has(table as string)) {
@@ -219,7 +220,10 @@ export const POST = apiHandler({ auth: false, rateLimit: { max: 120, windowMs: 6
         upsertPayload.user_id = userId
       }
     }
-    qb = qb.upsert(upsertPayload)
+    // onConflict (e.g. 'user_id,parcel_number') is validated synchronously
+    // inside upsert() via validateIdentifier — each comma-separated column
+    // must match the strict identifier allowlist, so it cannot inject SQL.
+    qb = qb.upsert(upsertPayload, onConflict ? { onConflict } : undefined)
   }
 
   // ─── User-scoped row-level security ──────────────────────────

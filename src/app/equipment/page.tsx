@@ -79,52 +79,52 @@ function EquipmentForm({
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Instrument name *</label>
-              <input value={form.name} onChange={e => f('name', e.target.value)}
-                aria-label="e.g. Leica TS16 — Site A" placeholder="e.g. Leica TS16 — Site A"
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="instrument-name">Instrument name *</label>
+              <input id="instrument-name" value={form.name} onChange={e => f('name', e.target.value)}
+                placeholder="e.g. Leica TS16 — Site A"
                 className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Type *</label>
-              <select value={form.type} onChange={e => f('type', e.target.value as Equipment['type'])} className="input w-full">
-                {types.map((t: any) => <option key={t.id} value={t.id}>{t.label}</option>)}
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="type">Type *</label>
+              <select id="type" value={form.type} onChange={e => f('type', e.target.value as Equipment['type'])} className="input w-full">
+                {types.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Brand</label>
-              <input value={form.brand} onChange={e => f('brand', e.target.value)}
-                list="brands-list" aria-label="Leica, Trimble…" placeholder="Leica, Trimble…" className="input w-full" />
-              <datalist id="brands-list">{BRANDS.map((b: any) => <option key={b} value={b} />)}</datalist>
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="brand">Brand</label>
+              <input id="brand" value={form.brand} onChange={e => f('brand', e.target.value)}
+                list="brands-list" placeholder="Leica, Trimble…" className="input w-full" />
+              <datalist id="brands-list">{BRANDS.map((b) => <option key={b} value={b} />)}</datalist>
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Model</label>
-              <input value={form.model} onChange={e => f('model', e.target.value)} aria-label="TS16" placeholder="TS16" className="input w-full" />
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="model">Model</label>
+              <input id="model" value={form.model} onChange={e => f('model', e.target.value)} placeholder="TS16" className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Serial number</label>
-              <input value={form.serialNumber} onChange={e => f('serialNumber', e.target.value)} aria-label="1847293" placeholder="1847293" className="input w-full" />
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="serial-number">Serial number</label>
+              <input id="serial-number" value={form.serialNumber} onChange={e => f('serialNumber', e.target.value)} placeholder="1847293" className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Purchase date</label>
-              <input aria-label="Purchasedate" type="date" max={today} value={form.purchaseDate} onChange={e => f('purchaseDate', e.target.value)} className="input w-full" />
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="purchase-date">Purchase date</label>
+              <input id="purchase-date" type="date" max={today} value={form.purchaseDate} onChange={e => f('purchaseDate', e.target.value)} className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Last calibration date *</label>
-              <input aria-label="Lastcalibrationdate" type="date" max={today} value={form.lastCalibrationDate} onChange={e => f('lastCalibrationDate', e.target.value)} className="input w-full" />
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="last-calibration-date">Last calibration date *</label>
+              <input id="last-calibration-date" type="date" max={today} value={form.lastCalibrationDate} onChange={e => f('lastCalibrationDate', e.target.value)} className="input w-full" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Calibration interval *</label>
-              <select value={form.intervalDays} onChange={e => f('intervalDays', Number(e.target.value))} className="input w-full">
-                {INTERVALS.map((i: any) => <option key={i.days} value={i.days}>{i.label}</option>)}
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="calibration-interval">Calibration interval *</label>
+              <select id="calibration-interval" value={form.intervalDays} onChange={e => f('intervalDays', Number(e.target.value))} className="input w-full">
+                {INTERVALS.map((i) => <option key={i.days} value={i.days}>{i.label}</option>)}
               </select>
             </div>
             <div className="col-span-2">
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Location / Office</label>
-              <input value={form.location} onChange={e => f('location', e.target.value)} aria-label="Nairobi Office, Site B…" placeholder="Nairobi Office, Site B…" className="input w-full" />
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="location-office">Location / Office</label>
+              <input id="location-office" value={form.location} onChange={e => f('location', e.target.value)} placeholder="Nairobi Office, Site B…" className="input w-full" />
             </div>
             <div className="col-span-2">
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Notes</label>
-              <textarea value={form.notes} onChange={e => f('notes', e.target.value)} rows={2} placeholder="Any relevant notes…" className="input w-full resize-none" />
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="notes">Notes</label>
+              <textarea id="notes" value={form.notes} onChange={e => f('notes', e.target.value)} rows={2} placeholder="Any relevant notes…" className="input w-full resize-none" />
             </div>
           </div>
         </div>
@@ -170,13 +170,13 @@ function LogForm({ equipment, onSave, onCancel }: { equipment: EquipmentWithStat
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Calibration date *</label>
-            <input aria-label="Date" type="date" max={today} value={form.date} onChange={e => f('date', e.target.value)} className="input w-full" />
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="calibration-date">Calibration date *</label>
+            <input id="calibration-date" aria-label="Date" type="date" max={today} value={form.date} onChange={e => f('date', e.target.value)} className="input w-full" />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Result *</label>
+            <div className="block text-xs text-[var(--text-muted)] mb-1">Result *</div>
             <div className="flex gap-2">
-              {(['passed', 'adjusted', 'failed'] as const).map((r: any) => (
+              {(['passed', 'adjusted', 'failed'] as const).map((r) => (
                 <button key={r} onClick={() => f('result', r)}
                   className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${
                     form.result === r
@@ -191,16 +191,16 @@ function LogForm({ equipment, onSave, onCancel }: { equipment: EquipmentWithStat
             </div>
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Technician / Lab</label>
-            <input value={form.technician} onChange={e => f('technician', e.target.value)} aria-label="ABC Metrology Lab" placeholder="ABC Metrology Lab" className="input w-full" />
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="technician-lab">Technician / Lab</label>
+            <input id="technician-lab" value={form.technician} onChange={e => f('technician', e.target.value)} placeholder="ABC Metrology Lab" className="input w-full" />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Certificate number</label>
-            <input value={form.certificate} onChange={e => f('certificate', e.target.value)} aria-label="CERT-2024-001" placeholder="CERT-2024-001" className="input w-full" />
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="certificate-number">Certificate number</label>
+            <input id="certificate-number" value={form.certificate} onChange={e => f('certificate', e.target.value)} placeholder="CERT-2024-001" className="input w-full" />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Notes</label>
-            <textarea value={form.notes} onChange={e => f('notes', e.target.value)} rows={2} className="input w-full resize-none" placeholder="Adjustments made, etc." />
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="notes-2">Notes</label>
+            <textarea id="notes-2" value={form.notes} onChange={e => f('notes', e.target.value)} rows={2} className="input w-full resize-none" placeholder="Adjustments made, etc." />
           </div>
         </div>
         <div className="flex gap-3 px-6 pb-5">
@@ -228,11 +228,18 @@ function DetailDrawer({ equipment, onClose, onEdit, onLog, onDelete }: {
   onDelete: () => void
 }) {
   const logs = getLogsFor(equipment.id)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [onClose])
   return (
-    <div role="button" tabIndex={0} aria-label="Close dialog" className="fixed inset-0 z-40 flex" onClick={onClose} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}>
-      <div className="flex-1" />
+    <div className="fixed inset-0 z-40 flex">
+      <button type="button" aria-label="Close dialog" tabIndex={-1} className="flex-1 cursor-pointer border-0 p-0" onClick={onClose} />
       <div className="w-full max-w-md bg-[var(--bg-card)] border-l border-[var(--border-color)] h-full overflow-y-auto shadow-2xl"
-        onClick={e => e.stopPropagation()}>
+        role="dialog"
+        aria-modal="true"
+        aria-label={equipment.name}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-color)]">
           <h2 className="font-semibold text-[var(--text-primary)]">{equipment.name}</h2>
           <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-xl leading-none">×</button>
@@ -257,12 +264,12 @@ function DetailDrawer({ equipment, onClose, onEdit, onLog, onDelete }: {
           {/* Details */}
           <div className="grid grid-cols-2 gap-3 text-sm">
             {[
-              ['Type', getEquipmentTypes().find((t: any) => t.id === equipment.type)?.label || equipment.type],
+              ['Type', getEquipmentTypes().find((t) => t.id === equipment.type)?.label || equipment.type],
               ['Brand / Model', `${equipment.brand} ${equipment.model}`.trim() || '—'],
               ['Serial number', equipment.serialNumber || '—'],
               ['Location', equipment.location || '—'],
               ['Purchase date', equipment.purchaseDate ? fmtDate(equipment.purchaseDate) : '—'],
-              ['Interval', INTERVALS.find((i: any) => i.days === equipment.intervalDays)?.label || `${equipment.intervalDays} days`],
+              ['Interval', INTERVALS.find((i) => i.days === equipment.intervalDays)?.label || `${equipment.intervalDays} days`],
             ].map(([k, v]) => (
               <div key={k}>
                 <p className="text-[var(--text-muted)] text-xs">{k}</p>
@@ -290,7 +297,7 @@ function DetailDrawer({ equipment, onClose, onEdit, onLog, onDelete }: {
             <div>
               <h3 className="text-sm font-medium text-[var(--text-primary)] mb-3">Calibration history</h3>
               <div className="space-y-2">
-                {logs.map((log: any) => (
+                {logs.map((log) => (
                   <div key={log.id} className="bg-[var(--bg-secondary)] rounded-lg p-3 text-sm">
                     <div className="flex justify-between items-center mb-1">
                       <span className="font-medium">{fmtDate(log.date)}</span>
@@ -324,12 +331,12 @@ export default function EquipmentPage() {
   const reload = useCallback(() => setItems(getAll()), [])
   useEffect(() => { reload() }, [reload])
 
-  const filtered = view === 'all' ? items : items.filter((i: any) => i.status === view)
+  const filtered = view === 'all' ? items : items.filter((i) => i.status === view)
 
   const counts = {
-    overdue: items.filter((i: any) => i.status === 'overdue').length,
-    due_soon: items.filter((i: any) => i.status === 'due_soon').length,
-    ok: items.filter((i: any) => i.status === 'ok').length,
+    overdue: items.filter((i) => i.status === 'overdue').length,
+    due_soon: items.filter((i) => i.status === 'due_soon').length,
+    ok: items.filter((i) => i.status === 'ok').length,
   }
 
   return (
@@ -386,8 +393,10 @@ export default function EquipmentPage() {
                 No instruments with that status
               </div>
             )}
-            {filtered.map((eq: any) => (
+            {filtered.map((eq) => (
               <div key={eq.id}
+                role="button" tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setDetailItem(eq); } }}
                 className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-5 cursor-pointer hover:border-[var(--accent)]/40 transition-colors"
                 onClick={() => setDetailItem(eq)}>
                 <div className="flex items-start justify-between gap-4">
@@ -443,7 +452,7 @@ export default function EquipmentPage() {
       )}
       {detailItem && (
         <DetailDrawer
-          equipment={items.find((i: any) => i.id === detailItem.id) || detailItem}
+          equipment={items.find((i) => i.id === detailItem.id) || detailItem}
           onClose={() => setDetailItem(null)}
           onEdit={() => { setEditItem(detailItem); setDetailItem(null) }}
           onLog={() => { setLogItem(detailItem); setDetailItem(null) }}

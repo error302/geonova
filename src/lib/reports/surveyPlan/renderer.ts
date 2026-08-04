@@ -841,7 +841,7 @@ export class SurveyPlanRenderer {
   private drawReportHeader(leftPad: number, rightPad: number, panelInnerW: number): string {
     const p = this.data.project
     const hasMun = !!p.municipality
-    let y = this.margin + mmToPx(4)
+    const y = this.margin + mmToPx(4)
     let svg = ''
     const text = (content: string, yPos: number, size: number, weight = 'normal', color = C_BLACK) =>
       `<text x="${leftPad}" y="${yPos}" font-family="JetBrains Mono, Courier New" font-size="${size}" font-weight="${weight}" fill="${color}">${escapeXml(content)}</text>`

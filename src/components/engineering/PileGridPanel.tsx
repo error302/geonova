@@ -190,13 +190,14 @@ export default function PileGridPanel() {
                 value={gridDef.name}
                 onChange={(e) => setGridDef({ ...gridDef, name: e.target.value })}
                 className={inputClass}
-                aria-label="Block A – Pile Cap" placeholder="Block A – Pile Cap"
+                aria-label="Grid name" placeholder="Block A – Pile Cap"
               />
             </FormField>
 
             {/* Pile Type */}
             <FormField label="Pile / Element Type">
               <select
+                aria-label="Pile / Element Type"
                 value={gridDef.pileType}
                 onChange={(e) => setGridDef({ ...gridDef, pileType: e.target.value as PileGridDefinition['pileType'] })}
                 className={inputClass}
@@ -215,7 +216,7 @@ export default function PileGridPanel() {
                 value={gridDef.coordinateSystem}
                 onChange={(e) => setGridDef({ ...gridDef, coordinateSystem: e.target.value })}
                 className={inputClass}
-                aria-label="Arc 1960 / UTM Zone 37S" placeholder="Arc 1960 / UTM Zone 37S"
+                aria-label="Coordinate system" placeholder="Arc 1960 / UTM Zone 37S"
               />
             </FormField>
 
@@ -226,7 +227,7 @@ export default function PileGridPanel() {
                 value={gridDef.startLabel}
                 onChange={(e) => setGridDef({ ...gridDef, startLabel: e.target.value })}
                 className={inputClass}
-                aria-label="A1" placeholder="A1"
+                aria-label="Start label" placeholder="A1"
               />
             </FormField>
 
@@ -328,7 +329,7 @@ export default function PileGridPanel() {
                 <label className="flex items-center gap-1.5 text-xs text-zinc-300 cursor-pointer">
                   <input
                     type="radio"
-                    name="labelRowsAs" aria-label="Labelrowsas"
+                    name="labelRowsAs" aria-label="Label Rows As"
                     value="alpha"
                     checked={gridDef.labelRowsAs === 'alpha'}
                     onChange={() => setGridDef({ ...gridDef, labelRowsAs: 'alpha' })}
@@ -339,7 +340,7 @@ export default function PileGridPanel() {
                 <label className="flex items-center gap-1.5 text-xs text-zinc-300 cursor-pointer">
                   <input
                     type="radio"
-                    name="labelRowsAs" aria-label="Labelrowsas"
+                    name="labelRowsAs" aria-label="Label Rows As"
                     value="numeric"
                     checked={gridDef.labelRowsAs === 'numeric'}
                     onChange={() => setGridDef({ ...gridDef, labelRowsAs: 'numeric' })}
@@ -356,7 +357,7 @@ export default function PileGridPanel() {
                 <label className="flex items-center gap-1.5 text-xs text-zinc-300 cursor-pointer">
                   <input
                     type="radio"
-                    name="labelColumnsAs" aria-label="Labelcolumnsas"
+                    name="labelColumnsAs" aria-label="Label Columns As"
                     value="alpha"
                     checked={gridDef.labelColumnsAs === 'alpha'}
                     onChange={() => setGridDef({ ...gridDef, labelColumnsAs: 'alpha' })}
@@ -367,7 +368,7 @@ export default function PileGridPanel() {
                 <label className="flex items-center gap-1.5 text-xs text-zinc-300 cursor-pointer">
                   <input
                     type="radio"
-                    name="labelColumnsAs" aria-label="Labelcolumnsas"
+                    name="labelColumnsAs" aria-label="Label Columns As"
                     value="numeric"
                     checked={gridDef.labelColumnsAs === 'numeric'}
                     onChange={() => setGridDef({ ...gridDef, labelColumnsAs: 'numeric' })}
@@ -410,7 +411,7 @@ export default function PileGridPanel() {
             >
               Generate Grid
             </button>
-            <span className="text-xs text-zinc-500">
+            <span className="text-xs text-zinc-400">
               {gridDef.rows} x {gridDef.columns} = {gridDef.rows * gridDef.columns} {gridDef.pileType}{gridDef.rows * gridDef.columns !== 1 ? 's' : ''}
             </span>
           </div>
@@ -488,7 +489,7 @@ export default function PileGridPanel() {
                   <div className="px-6 py-4 border-b border-zinc-700 flex items-center justify-between">
                     <h3 className="text-sm font-semibold text-white">Pile Coordinates</h3>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-zinc-500">{gridResult.piles.length} rows</span>
+                      <span className="text-xs text-zinc-400">{gridResult.piles.length} rows</span>
                       <button
                         onClick={handleExportCSV}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-800 border border-zinc-600 text-zinc-300 rounded-lg text-xs font-medium hover:bg-zinc-700 hover:text-white transition-colors"
@@ -554,7 +555,7 @@ export default function PileGridPanel() {
                         value={stationE}
                         onChange={(e) => setStationE(e.target.value)}
                         className={inputClass}
-                        aria-label="372450.000" placeholder="372450.000"
+                        aria-label="Station easting (m)" placeholder="372450.000"
                       />
                     </FormField>
                     <FormField label="Station Northing (m)">
@@ -564,7 +565,7 @@ export default function PileGridPanel() {
                         value={stationN}
                         onChange={(e) => setStationN(e.target.value)}
                         className={inputClass}
-                        aria-label="9987648.000" placeholder="9987648.000"
+                        aria-label="Station northing (m)" placeholder="9987648.000"
                       />
                     </FormField>
                     <FormField label="Station RL (m)">
@@ -574,7 +575,7 @@ export default function PileGridPanel() {
                         value={stationRL}
                         onChange={(e) => setStationRL(e.target.value)}
                         className={inputClass}
-                        aria-label="1154.200" placeholder="1154.200"
+                        aria-label="Station RL (m)" placeholder="1154.200"
                       />
                     </FormField>
                     <FormField label="Height of Instrument (m)">
@@ -584,13 +585,13 @@ export default function PileGridPanel() {
                         value={stationHI}
                         onChange={(e) => setStationHI(e.target.value)}
                         className={inputClass}
-                        aria-label="1.550" placeholder="1.550"
+                        aria-label="Height of instrument (m)" placeholder="1.550"
                       />
                     </FormField>
                   </div>
                   <button
                     onClick={handleComputeSettingOut}
-                    className="mt-4 px-5 py-2.5 bg-amber-600 text-white rounded-lg text-sm font-semibold hover:bg-amber-700 transition-colors shadow-lg shadow-amber-600/20"
+                    className="mt-4 px-5 py-2.5 bg-amber-600 text-black rounded-lg text-sm font-semibold hover:bg-amber-700 transition-colors shadow-lg shadow-amber-600/20"
                   >
                     Compute Setting-Out Data
                   </button>
@@ -602,7 +603,7 @@ export default function PileGridPanel() {
                     <div className="px-6 py-4 border-b border-zinc-700 flex items-center justify-between">
                       <h3 className="text-sm font-semibold text-white">Setting-Out Data</h3>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-zinc-500">{settingOutData.length} points</span>
+                        <span className="text-xs text-zinc-400">{settingOutData.length} points</span>
                         <button
                           onClick={handleExportSettingOutCSV}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-800 border border-zinc-600 text-zinc-300 rounded-lg text-xs font-medium hover:bg-zinc-700 hover:text-white transition-colors"
@@ -642,7 +643,7 @@ export default function PileGridPanel() {
                     <svg className="w-12 h-12 mx-auto text-zinc-700 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                     </svg>
-                    <p className="text-sm text-zinc-500">
+                    <p className="text-sm text-zinc-400">
                       Enter instrument station coordinates and click <strong>Compute Setting-Out Data</strong> to generate bearing &amp; distance for each pile.
                     </p>
                   </div>
@@ -659,7 +660,7 @@ export default function PileGridPanel() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
             </svg>
             <h3 className="text-lg font-medium text-zinc-300 mb-1">No Grid Generated</h3>
-            <p className="text-sm text-zinc-500 max-w-md mx-auto">
+            <p className="text-sm text-zinc-400 max-w-md mx-auto">
               Define your pile grid parameters above and click <strong className="text-zinc-400">Generate Grid</strong>, or use <strong className="text-zinc-400">Load Demo Data</strong> to see an example.
             </p>
           </div>
@@ -669,7 +670,7 @@ export default function PileGridPanel() {
       {/* Footer */}
       <footer className="mt-auto border-t border-zinc-800 bg-zinc-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <p className="text-xs text-zinc-600 text-center">
+          <p className="text-xs text-zinc-400 text-center">
             Pile Grid Setting Out &middot; Ref: Basak &sect;8.5, Ghilani &amp; Wolf &sect;24.1
           </p>
         </div>
@@ -872,9 +873,9 @@ function SummaryCard({
 }) {
   return (
     <div className={`rounded-lg border p-4 ${colorClass}`}>
-      <div className="text-xs text-zinc-500 uppercase tracking-wider font-medium">{label}</div>
+      <div className="text-xs text-zinc-400 uppercase tracking-wider font-medium">{label}</div>
       <div className={`text-xl font-bold mt-1 ${valueClass}`}>{value}</div>
-      <div className="text-xs text-zinc-500 mt-0.5">{sub}</div>
+      <div className="text-xs text-zinc-400 mt-0.5">{sub}</div>
     </div>
   )
 }

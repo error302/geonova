@@ -55,8 +55,8 @@ export function LegacyUnitBadge({
           </select>
           
           <div className="flex items-center gap-2">
-            <label className="text-xs text-gray-500">Legacy:</label>
-            <input aria-label="Legacy:"
+            <label className="text-xs text-gray-500" htmlFor="legacy">Legacy:</label>
+            <input  id="legacy" aria-label="Legacy:"
               type="number"
               step="0.01"
               value={legacyDistance ?? autoCalculated}

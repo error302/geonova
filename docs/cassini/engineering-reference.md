@@ -3,7 +3,7 @@
 > **PERSISTENT CONTEXT DOCUMENT** — Re-send this file when AI context resets to resume work from exactly where you left off.
 >
 > **Repo**: `git@github.com:error302/metardu.git` | **Branch**: `main` | **Last commit**: `d0cb39a3`
-> **Deploy VM**: `34.170.248.156` (GCP) | **Domain**: `metardu.duckdns.org`
+> **Deploy VM**: `34.170.248.156` (GCP) | **Domain**: `metardu.space`
 > **Local path**: `/home/z/my-project/metardu-repo/`
 > **Output path**: `/home/z/my-project/download/`
 
@@ -679,7 +679,7 @@ GCP VM (34.170.248.156)
 - [ ] Delete old Docker images on VM: `docker images | grep metardu && docker rmi`
 - [ ] Build with `--no-cache`: `docker build --no-cache -t metardu:latest .`
 - [ ] Verify health check: `curl http://localhost:3000/api/public/health`
-- [ ] Verify HTTPS: `curl -I https://metardu.duckdns.org`
+- [ ] Verify HTTPS: `curl -I https://metardu.space`
 - [ ] Verify CSP headers present
 - [ ] Verify admin routes work: `/admin`, `/admin/users`, `/admin/payments`
 - [ ] Verify field map loads: `/field/map`

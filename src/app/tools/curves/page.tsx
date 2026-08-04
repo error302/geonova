@@ -206,68 +206,68 @@ export default function CurvesCalculator() {
             {curveType === 'simple' && (
               <>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label className="label">Radius (m)</label><input aria-label="Radius" className="input" value={input.radius} onChange={e => setInput({...input, radius: e.target.value})} /></div>
-                  <div><label className="label">Deflection (DMS)</label>
+                  <div><label htmlFor="cv-radius" className="label">Radius (m)</label><input id="cv-radius" className="input" value={input.radius} onChange={e => setInput({...input, radius: e.target.value})} /></div>
+                  <div><div className="label">Deflection (DMS)</div>
                     <div className="grid grid-cols-3 gap-1">
-                      <input aria-label="Defdeg" className="input" value={input.defDeg} onChange={e => setInput({...input, defDeg: e.target.value})} />
-                      <input aria-label="Defmin" className="input" value={input.defMin} onChange={e => setInput({...input, defMin: e.target.value})} />
-                      <input aria-label="Defsec" className="input" value={input.defSec} onChange={e => setInput({...input, defSec: e.target.value})} />
+                      <input aria-label="Deflection degrees" className="input" value={input.defDeg} onChange={e => setInput({...input, defDeg: e.target.value})} />
+                      <input aria-label="Deflection minutes" className="input" value={input.defMin} onChange={e => setInput({...input, defMin: e.target.value})} />
+                      <input aria-label="Deflection seconds" className="input" value={input.defSec} onChange={e => setInput({...input, defSec: e.target.value})} />
                     </div>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
-                  <div><label className="label">PI Chainage (m)</label><input aria-label="Pichain" className="input" value={input.piChain} onChange={e => setInput({...input, piChain: e.target.value})} /></div>
-                  <div><label className="label">Interval (m)</label><input aria-label="Interval" className="input" value={input.interval} onChange={e => setInput({...input, interval: e.target.value})} /></div>
+                  <div><label htmlFor="cv-pi-chain" className="label">PI Chainage (m)</label><input id="cv-pi-chain" className="input" value={input.piChain} onChange={e => setInput({...input, piChain: e.target.value})} /></div>
+                  <div><label htmlFor="cv-interval" className="label">Interval (m)</label><input id="cv-interval" className="input" value={input.interval} onChange={e => setInput({...input, interval: e.target.value})} /></div>
                 </div>
               </>
             )}
             {curveType === 'compound' && (
               <>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label className="label">Radius R1 (m)</label><input aria-label="Radius R1 (m)" className="input" value={input.r1} onChange={e => setInput({...input, r1: e.target.value})} /></div>
-                  <div><label className="label">Radius R2 (m)</label><input aria-label="Radius R2 (m)" className="input" value={input.r2} onChange={e => setInput({...input, r2: e.target.value})} /></div>
+                  <div><label htmlFor="cv-r1" className="label">Radius R1 (m)</label><input id="cv-r1" className="input" value={input.r1} onChange={e => setInput({...input, r1: e.target.value})} /></div>
+                  <div><label htmlFor="cv-r2" className="label">Radius R2 (m)</label><input id="cv-r2" className="input" value={input.r2} onChange={e => setInput({...input, r2: e.target.value})} /></div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
-                  <div><label className="label">Δ1 (degrees)</label><input aria-label="Δ1 (degrees)" className="input" value={input.delta1} onChange={e => setInput({...input, delta1: e.target.value})} /></div>
-                  <div><label className="label">Δ2 (degrees)</label><input aria-label="Δ2 (degrees)" className="input" value={input.delta2} onChange={e => setInput({...input, delta2: e.target.value})} /></div>
+                  <div><label htmlFor="cv-delta1" className="label">Δ1 (degrees)</label><input id="cv-delta1" className="input" value={input.delta1} onChange={e => setInput({...input, delta1: e.target.value})} /></div>
+                  <div><label htmlFor="cv-delta2" className="label">Δ2 (degrees)</label><input id="cv-delta2" className="input" value={input.delta2} onChange={e => setInput({...input, delta2: e.target.value})} /></div>
                 </div>
-                <div className="mt-4"><label className="label">Junction Chainage (m)</label><input aria-label="Commonchainage" className="input" value={input.commonChainage} onChange={e => setInput({...input, commonChainage: e.target.value})} /></div>
+                <div className="mt-4"><label htmlFor="cv-common-chain" className="label">Junction Chainage (m)</label><input id="cv-common-chain" className="input" value={input.commonChainage} onChange={e => setInput({...input, commonChainage: e.target.value})} /></div>
               </>
             )}
             {curveType === 'reverse' && (
               <>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label className="label">Radius R1 (m)</label><input aria-label="Radius R1 (m)" className="input" value={input.r1_rev} onChange={e => setInput({...input, r1_rev: e.target.value})} /></div>
-                  <div><label className="label">Radius R2 (m)</label><input aria-label="Radius R2 (m)" className="input" value={input.r2_rev} onChange={e => setInput({...input, r2_rev: e.target.value})} /></div>
+                  <div><label htmlFor="cv-r1-rev" className="label">Radius R1 (m)</label><input id="cv-r1-rev" className="input" value={input.r1_rev} onChange={e => setInput({...input, r1_rev: e.target.value})} /></div>
+                  <div><label htmlFor="cv-r2-rev" className="label">Radius R2 (m)</label><input id="cv-r2-rev" className="input" value={input.r2_rev} onChange={e => setInput({...input, r2_rev: e.target.value})} /></div>
                 </div>
-                <div className="mt-4"><label className="label">Distance AB (m)</label><input aria-label="Abdistance" className="input" value={input.abDistance} onChange={e => setInput({...input, abDistance: e.target.value})} /></div>
+                <div className="mt-4"><label htmlFor="cv-ab-dist" className="label">Distance AB (m)</label><input id="cv-ab-dist" className="input" value={input.abDistance} onChange={e => setInput({...input, abDistance: e.target.value})} /></div>
               </>
             )}
             {curveType === 'vertical' && (
               <>
                 <p className="text-xs text-[var(--text-muted)] mb-3">Source: RDM 1.3 Kenya August 2023, Section 5.4 | Ghilani &amp; Wolf, Elementary Surveying 16th Ed., Chapter 25</p>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label className="label">G1 — Entry Grade (%)</label><input aria-label="G1 — Entry Grade (%)" className="input" value={vInput.g1} onChange={e => setVInput({...vInput, g1: e.target.value})} /></div>
-                  <div><label className="label">G2 — Exit Grade (%)</label><input aria-label="G2 — Exit Grade (%)" className="input" value={vInput.g2} onChange={e => setVInput({...vInput, g2: e.target.value})} /></div>
+                  <div><label htmlFor="cv-g1" className="label">G1 — Entry Grade (%)</label><input id="cv-g1" className="input" value={vInput.g1} onChange={e => setVInput({...vInput, g1: e.target.value})} /></div>
+                  <div><label htmlFor="cv-g2" className="label">G2 — Exit Grade (%)</label><input id="cv-g2" className="input" value={vInput.g2} onChange={e => setVInput({...vInput, g2: e.target.value})} /></div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 mt-4">
-                  <div><label className="label">VPI km</label><input aria-label="Vpichainagekm" className="input" value={vInput.vpiChainageKm} onChange={e => setVInput({...vInput, vpiChainageKm: e.target.value})} /></div>
-                  <div><label className="label">VPI m</label><input aria-label="Vpichainagem" className="input" value={vInput.vpiChainageM} onChange={e => setVInput({...vInput, vpiChainageM: e.target.value})} /></div>
-                  <div><label className="label">VPI RL (m)</label><input aria-label="Vpirl" className="input" value={vInput.vpiRL} onChange={e => setVInput({...vInput, vpiRL: e.target.value})} /></div>
+                  <div><label htmlFor="cv-vpi-km" className="label">VPI km</label><input id="cv-vpi-km" className="input" value={vInput.vpiChainageKm} onChange={e => setVInput({...vInput, vpiChainageKm: e.target.value})} /></div>
+                  <div><label htmlFor="cv-vpi-m" className="label">VPI m</label><input id="cv-vpi-m" className="input" value={vInput.vpiChainageM} onChange={e => setVInput({...vInput, vpiChainageM: e.target.value})} /></div>
+                  <div><label htmlFor="cv-vpi-rl" className="label">VPI RL (m)</label><input id="cv-vpi-rl" className="input" value={vInput.vpiRL} onChange={e => setVInput({...vInput, vpiRL: e.target.value})} /></div>
                 </div>
                 <div className="mt-4">
                   <label className="flex items-center gap-2 text-sm cursor-pointer">
-                    <input aria-label="Uselength" type="checkbox" checked={vInput.useLength} onChange={e => setVInput({...vInput, useLength: e.target.checked})} className="accent-[var(--accent)]" />
+                    <input type="checkbox" checked={vInput.useLength} onChange={e => setVInput({...vInput, useLength: e.target.checked})} className="accent-[var(--accent)]" />
                     <span>Enter curve length directly</span>
                   </label>
                 </div>
                 {vInput.useLength ? (
-                  <div className="mt-2"><label className="label">Curve Length L (m)</label><input aria-label="Length" className="input" value={vInput.length} onChange={e => setVInput({...vInput, length: e.target.value})} /></div>
+                  <div className="mt-2"><label htmlFor="cv-length" className="label">Curve Length L (m)</label><input id="cv-length" className="input" value={vInput.length} onChange={e => setVInput({...vInput, length: e.target.value})} /></div>
                 ) : (
-                  <div className="mt-2"><label className="label">K-value (m/%)</label><input aria-label="Kvalue" className="input" value={vInput.kValue} onChange={e => setVInput({...vInput, kValue: e.target.value})} /></div>
+                  <div className="mt-2"><label htmlFor="cv-kvalue" className="label">K-value (m/%)</label><input id="cv-kvalue" className="input" value={vInput.kValue} onChange={e => setVInput({...vInput, kValue: e.target.value})} /></div>
                 )}
                 <div className="mt-4">
-                  <label className="label">Design Speed (km/h) — for K compliance</label>
+                  <div className="label">Design Speed (km/h) — for K compliance</div>
                   <div className="flex flex-wrap gap-2 mt-1">
                     {designSpeedOptions.map((s: any) => (
                       <button key={s} onClick={() => setDesignSpeed(s)}

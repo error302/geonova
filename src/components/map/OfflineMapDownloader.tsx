@@ -193,11 +193,11 @@ export function OfflineMapDownloader({ centerE, centerN, projectArea }: OfflineM
 
       {/* Zoom level input */}
       <div className="mb-3">
-        <label className="block text-[10px] text-[var(--text-muted)] uppercase font-semibold mb-1">
+        <label className="block text-[10px] text-[var(--text-muted)] uppercase font-semibold mb-1" htmlFor="zoom-levels-comma-separated-0-19">
           Zoom Levels (comma-separated, 0-19)
         </label>
         <input
-          type="text"
+           id="zoom-levels-comma-separated-0-19" type="text"
           value={zoomLevels}
           onChange={e => setZoomLevels(e.target.value)}
           placeholder="14,15,16,17"

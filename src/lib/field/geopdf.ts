@@ -49,8 +49,12 @@ export async function renderPDFPageToDataURL(
 // OL imports are done via require() since this function is only called
 // inside MapViewer's browser-only useEffect via dynamic import.
 export function buildOLGeoPDFLayer(layer: GeoPDFLayer) {
+  // Browser-only dynamic require (SSR-safe, see note above).
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { default: ImageLayer } = require('ol/layer/Image');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { default: ImageStatic } = require('ol/source/ImageStatic');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { transformExtent } = require('ol/proj');
 
   const lats = layer.gcps.map((g: any) => g.lat);

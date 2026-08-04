@@ -43,7 +43,7 @@ export default function MapPanel({
               onClick={() => setBasemapType('satellite')}
               className={`px-2.5 py-1 text-xs font-medium transition-colors ${
                 basemapType === 'satellite'
-                  ? 'bg-[var(--accent)] text-white'
+                  ? 'bg-[var(--accent)] text-black'
                   : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]'
               }`}
             >
@@ -53,7 +53,7 @@ export default function MapPanel({
               onClick={() => setBasemapType('osm')}
               className={`px-2.5 py-1 text-xs font-medium transition-colors ${
                 basemapType === 'osm'
-                  ? 'bg-[var(--accent)] text-white'
+                  ? 'bg-[var(--accent)] text-black'
                   : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]'
               }`}
             >

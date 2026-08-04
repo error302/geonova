@@ -110,7 +110,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   })
 
   const safeName = (project[0].lr_number || project[0].name || 'survey')
-    .replace(/[^a-zA-Z0-9_\-]/g, '_')
+    .replace(/[^a-zA-Z0-9_-]/g, '_')
     .toLowerCase()
 
   return new NextResponse(zip, {

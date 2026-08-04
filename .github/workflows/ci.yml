@@ -2,7 +2,7 @@
 # METARDU CI Pipeline
 #
 # Triggers on push / PR to main.
-# Jobs: typecheck → lint → build → test → security audit → i18n integrity → E2E.
+# Jobs: typecheck → lint → build → test → security audit → i18n integrity → E2E → axe sweep.
 # Build is now gated in CI so regressions like styled-jsx in Server
 # Components are caught BEFORE they reach the VM deploy.
 # ──────────────────────────────────────────────────────────────────────────────
@@ -36,7 +36,9 @@ jobs:
   lint:
     name: ESLint
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    # Two full eslint passes run here (a11y-audit + warning-ratchet) on top of
+    # the changed-files gate — 15 min gives both comfortable headroom.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -51,26 +53,42 @@ jobs:
       # Previous state: --max-warnings 1300 with continue-on-error: true
       # → effectively a no-op gate. New warnings were never caught.
       #
-      # New behavior:
+      # AUDIT FIX (2026-08-03): Replaced --max-warnings 0 on changed files
+      # with the lint-gate.mjs ratchet. --max-warnings 0 failed on any file
+      # carrying PRE-EXISTING warnings (legacy @typescript-eslint/no-unsafe-*
+      # etc.), so the gate could never pass on real PRs touching dirty files.
+      # The ratchet lints the changed files at the BASE ref and at HEAD and
+      # fails ONLY when HEAD adds warnings beyond the base — a true "no new
+      # warnings" gate that still runs fast (changed files only).
+      #
+      # Behavior:
       #   1. Run eslint on CHANGED files only (vs base branch) — fast & actionable.
-      #   2. Use --max-warnings 0 on changed files — no new warnings allowed.
+      #   2. Compare HEAD warning count vs the BASE ref — no NEW warnings allowed.
       #   3. If no files changed, the step is skipped (exit 0).
-      #   4. Whole-repo lint still runs with the 1300 baseline as a
-      #      non-blocking informational check (so we can track drift).
-      - name: Determine base branch
+      #   4. Whole-repo lint runs as the warning-ratchet step below — a
+      #      blocking per-rule baseline (see that step's comment).
+      - name: Determine base ref
         id: base
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "ref=origin/${{ github.base_ref }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            # Push event: diff from the previous commit on the branch, so
+            # multi-commit pushes lint ALL commits, not just the last one.
+            echo "ref=${{ github.event.before }}" >> "$GITHUB_OUTPUT"
           else
+            # First-ever push (no `before`): fall back to HEAD~1.
             echo "ref=HEAD~1" >> "$GITHUB_OUTPUT"
           fi
       - name: Lint changed files (blocking, zero new warnings)
         run: |
           BASE="${{ steps.base.outputs.ref }}"
           echo "Base ref: $BASE"
-          # Get .ts/.tsx files changed in this PR/push (including middleware.ts at root)
-          CHANGED=$(git diff --name-only --diff-filter=AM "$BASE"...HEAD -- 'middleware.ts' 'src/*.ts' 'src/*.tsx' 'src/**/*.ts' 'src/**/*.tsx' | grep -vE '\.(test|spec)\.(ts|tsx)$' || true)
+          # Get .ts/.tsx files changed in this PR/push (including middleware.ts at root).
+          # --diff-filter=ACMR covers Added/Copied/Modified/Renamed — AM alone would
+          # silently drop renamed files (status R), letting their new warnings bypass
+          # the gate.
+          CHANGED=$(git diff --name-only --diff-filter=ACMR "$BASE"...HEAD -- 'middleware.ts' 'src/*.ts' 'src/*.tsx' 'src/**/*.ts' 'src/**/*.tsx' | grep -vE '\.(test|spec)\.(ts|tsx)$' || true)
           if [ -z "$CHANGED" ]; then
             echo "No TS/TSX files changed — skipping lint gate."
             exit 0
@@ -78,10 +96,33 @@ jobs:
           echo "Linting changed files:"
           echo "$CHANGED"
           # shellcheck disable=SC2086
-          npx eslint $CHANGED --max-warnings 0
-      - name: Whole-repo lint (informational, non-blocking)
-        run: npx eslint middleware.ts src/ --ext .ts,.tsx --max-warnings 1300
-        continue-on-error: true
+          # lint-gate.mjs pins plugin resolution to the repo root (its ESLint
+          # API call sets resolvePluginsRelativeTo), avoiding the "couldn't
+          # determine the plugin uniquely" (duplicate-plugin) error seen in
+          # worktrees where nested copies of eslint-plugin-* exist. It also
+          # ratchets: fails only when HEAD adds warnings beyond the base ref.
+          node scripts/lint-gate.mjs "$BASE" $CHANGED
+      # A11Y GATE (2026-08-03): Bans placeholder-like / junk aria-labels
+      # codebase-wide (placeholder-equals-name, generic phrases, punctuation,
+      # crunched header text) so accessible names can't regress in tables.
+      # Pure-node regex scan over src/ — fast, no deps, blocks CI on any hit.
+      - name: Aria-label gate (blocking, bans junk accessible names)
+        run: node scripts/aria-label-gate.mjs
+      # A11Y GATE (2026-08-04): jsx-a11y per-rule ratchet. FAILS when any
+      # jsx-a11y rule count exceeds scripts/a11y-baseline.json — the static
+      # complement to the axe sweep (which needs a dev server + browser).
+      # Missing rules count as baseline 0, so a NEW jsx-a11y violation fails.
+      # --write-audit regenerates the committed evidence file (.a11y-audit.json)
+      # with repo-relative paths so the artifact is fresh on every push.
+      - name: A11y audit ratchet (blocking, per-rule jsx-a11y baseline)
+        run: node scripts/a11y-audit.mjs --write-audit
+      # WARNING RATCHET (2026-08-04): whole-repo lint as a per-rule baseline.
+      # Replaces the old `--max-warnings 20000` global ceiling (which could
+      # hide a big jump in one rule behind drops elsewhere) with a per-rule
+      # baseline in scripts/warning-baseline.json: FAILS when ANY rule count
+      # exceeds its baseline. Batches ratchet the baseline down toward 0.
+      - name: Warning ratchet (blocking, per-rule warning baseline)
+        run: node scripts/warning-ratchet.mjs
 
   build:
     name: Production Build
@@ -209,3 +250,69 @@ jobs:
       # vulnerabilities now block the build. Use `--omit=dev` to audit
       # only production deps (matches `--production` semantics).
       - run: npm audit --audit-level=critical --omit=dev
+
+  axe-sweep:
+    # A11Y GATE (2026-08-04): axe-core WCAG sweep across every /tools/* page.
+    # Blocks on ANY axe violation (--fail-on minor) and on any route that
+    # fails to hydrate/scan — a hard regression gate, not a ratchet. The
+    # sweep's own anti-flakiness re-scan suppresses transient violations.
+    #
+    # Bootstrap: the scan needs a headless Next.js dev server (AXE_SCAN_PORT,
+    # default 3100) plus a browser. channel:'chrome' is tried first; the
+    # bundled Playwright chromium (installed below) is the fallback.
+    #
+    # Protected routes (/fieldbook, /admin*) are EXCLUDED here: they need a
+    # seeded Postgres + login, which this job does not provision — including
+    # them would make them auth-failed and fail the gate every run. Wire a
+    # DB-backed job for them if/when a service container is added.
+    name: Axe-core WCAG Sweep
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+      - name: Start Next.js dev server (headless)
+        env:
+          NEXT_PUBLIC_SENTRY_DSN: ''
+          DISABLE_PWA: 'true'
+        run: |
+          # nohup+disown: the server must survive the step shell exiting,
+          # or the later scan step sees no listener. Teardown uses pkill on
+          # the real `next` process (killing the npx wrapper PID alone would
+          # orphan the server).
+          nohup npx next dev -p 3100 > /tmp/axe-dev.log 2>&1 &
+          disown || true
+          echo $! > /tmp/axe-dev.pid
+          # -m 20 caps a hung first compile so the poll can't burn the job budget.
+          for i in $(seq 1 60); do
+            if curl -sf -m 20 http://localhost:3100/tools > /dev/null 2>&1; then
+              echo "dev server ready after ${i} checks"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "dev server failed to start:"
+          cat /tmp/axe-dev.log
+          exit 1
+      - name: Run axe-core WCAG sweep (blocking — fails on any violation)
+        env:
+          AXE_SCAN_PORT: '3100'
+        run: node scripts/axe-gnss-scan.mjs --ci --fail-on minor --no-baseline --exclude fieldbook,admin --concurrency 6
+      - name: Upload axe report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axe-sweep-report
+          path: axe-sweep-report.md
+          retention-days: 7
+      - name: Stop dev server
+        if: always()
+        run: |
+          kill $(cat /tmp/axe-dev.pid) 2>/dev/null || true
+          pkill -f 'next dev -p 3100' 2>/dev/null || true

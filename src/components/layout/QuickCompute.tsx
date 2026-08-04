@@ -165,6 +165,7 @@ export function QuickCompute() {
               </div>
               <button
                 onClick={() => setOpen(false)}
+                aria-label="Close Quick Compute panel"
                 className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/[0.06] transition-colors"
               >
                 <XIcon className="w-4 h-4" />

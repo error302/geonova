@@ -98,11 +98,11 @@ export default function StakeOutSheet({ result }: Props) {
             <PrintMetaPanel meta={printMeta} onChange={setPrintMeta} />
 
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="job-description-instructions-to-contractor-optional">
                 Job Description / Instructions to Contractor <span className="text-[var(--text-muted)] font-normal">(optional)</span>
               </label>
               <textarea
-                className="input w-full resize-none"
+                 id="job-description-instructions-to-contractor-optional" className="input w-full resize-none"
                 rows={3}
                 value={jobDescription}
                 placeholder="e.g. All pegs to be 50×50mm timber, 600mm long driven 400mm into ground. Paint top red for cut, green for fill."

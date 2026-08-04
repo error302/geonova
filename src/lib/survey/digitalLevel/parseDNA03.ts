@@ -27,10 +27,10 @@ export function parseDNA03(content: string, filename?: string): LevelImportResul
   let dateStr = ''
   let staffA = ''
   let staffB = ''
-  let currentInstrumentHeight = 1.6 // default
+  const currentInstrumentHeight = 1.6 // default
 
   let inDataSection = false
-  let bsBuffer: LevelReading | null = null
+  const bsBuffer: LevelReading | null = null
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]

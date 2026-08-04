@@ -198,9 +198,9 @@ export default function AddPointModal({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div role="button" tabIndex={0} aria-label="Close" className="absolute inset-0 bg-black/70" onClick={onClose} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}></div>
-      <div className="relative bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg p-6 w-full max-w-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center" onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}>
+      <button type="button" aria-label="Close dialog" tabIndex={-1} className="absolute inset-0 bg-black/70 cursor-pointer border-0 p-0" onClick={onClose}></button>
+      <div className="relative bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg p-6 w-full max-w-md" role="dialog" aria-modal="true" aria-label={isEditMode ? 'Edit Survey Point' : 'Add Survey Point'}>
         <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">
           {isEditMode ? 'Edit Survey Point' : 'Add Survey Point'}
         </h2>
@@ -213,21 +213,22 @@ export default function AddPointModal({
           )}
 
           <div>
-            <label className="block text-sm text-[var(--text-primary)] mb-1">Point Name *</label>
+            <label className="block text-sm text-[var(--text-primary)] mb-1" htmlFor="point-name">Point Name *</label>
             <input
+              id="point-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)] font-mono"
-              aria-label="e.g., TP01, BM1" placeholder="e.g., TP01, BM1"
+              placeholder="e.g., TP01, BM1"
               required
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-[var(--text-primary)] mb-1">Easting (m) *</label>
-              <input aria-label="Easting (m)"
+              <label className="block text-sm text-[var(--text-primary)] mb-1" htmlFor="point-easting">Easting (m) *</label>
+              <input id="point-easting"
                 type="number"
                 step="0.0001"
                 value={easting}
@@ -237,8 +238,8 @@ export default function AddPointModal({
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--text-primary)] mb-1">Northing (m) *</label>
-              <input aria-label="Northing (m)"
+              <label className="block text-sm text-[var(--text-primary)] mb-1" htmlFor="point-northing">Northing (m) *</label>
+              <input id="point-northing"
                 type="number"
                 step="0.0001"
                 value={northing}
@@ -250,8 +251,8 @@ export default function AddPointModal({
           </div>
 
           <div>
-            <label className="block text-sm text-[var(--text-primary)] mb-1">Elevation (m)</label>
-            <input aria-label="Elevation (m)"
+            <label className="block text-sm text-[var(--text-primary)] mb-1" htmlFor="point-elevation">Elevation (m)</label>
+            <input id="point-elevation"
               type="number"
               step="0.001"
               value={elevation}
@@ -263,7 +264,7 @@ export default function AddPointModal({
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
-              id="isControl" aria-label="Iscontrol"
+              id="isControl"
               checked={isControl}
               onChange={(e) => setIsControl(e.target.checked)}
               className="w-4 h-4 rounded bg-[var(--bg-tertiary)] border-[var(--border-color)] text-[var(--accent)] focus:ring-[#D17B47]"
@@ -276,8 +277,8 @@ export default function AddPointModal({
           {isControl && (
             <div className="pl-6 space-y-3 border-l-2 border-[var(--border-color)]">
               <div>
-                <label className="block text-sm text-[var(--text-primary)] mb-1">Control Classification</label>
-                <select
+                <label className="block text-sm text-[var(--text-primary)] mb-1" htmlFor="control-classification">Control Classification</label>
+                <select id="control-classification"
                   value={controlOrder}
                   onChange={(e) => setControlOrder(e.target.value as any)}
                   className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
@@ -290,7 +291,7 @@ export default function AddPointModal({
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  id="locked" aria-label="Locked"
+                  id="locked"
                   checked={locked}
                   onChange={(e) => setLocked(e.target.checked)}
                   className="w-4 h-4 rounded bg-[var(--bg-tertiary)] border-[var(--border-color)] text-[var(--accent)] focus:ring-[#D17B47]"

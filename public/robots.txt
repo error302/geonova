@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://geonova-henna.vercel.app/sitemap.xml

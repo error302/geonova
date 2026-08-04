@@ -105,6 +105,10 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
         if (p.onIdentify) p.onIdentify(feature)
 
         // Show popup with basic info
+        // VULN-002 FIX (security review 2026-08-03): render the popup with
+        // textContent, never innerHTML — point/parcel names and codes are
+        // user-entered and would otherwise execute as stored XSS. Matches
+        // the safe renderSchemePopup() pattern in schemeLayer.ts.
         if (p.popupRef.current) {
           const el = p.popupRef.current
           const name = feature.get('pointName') || feature.get('parcelNumber') || feature.get('name') || feature.get('projectName') || ''
@@ -113,15 +117,21 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
           const isControl = feature.get('isControl')
           const type = feature.get('pointType') || feature.get('featureType') || ''
 
-          let html = ''
-          if (name) html += `<div style="font-weight:600;color:#E8E4DE;font-size:13px;margin-bottom:4px">${name}</div>`
-          if (code) html += `<div style="color:#A89E92;font-size:11px;font-family:monospace">Code: ${code}</div>`
-          if (elev != null) html += `<div style="color:#A89E92;font-size:11px;font-family:monospace">Elevation: ${elev.toFixed(3)} m</div>`
-          if (isControl) html += `<div style="color:#D17B47;font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:0.04em">Control point</div>`
-          if (type) html += `<div style="color:#787774;font-size:10px;font-family:monospace;text-transform:uppercase">${type}</div>`
-          if (!html) html = '<div style="color:#787774;font-size:11px">Feature (no attributes)</div>'
+          el.replaceChildren()
+          const addRow = (text: string, css: string) => {
+            const row = document.createElement('div')
+            row.style.cssText = css
+            row.textContent = text
+            el.append(row)
+          }
 
-          el.innerHTML = html
+          if (name) addRow(name, 'font-weight:600;color:#E8E4DE;font-size:13px;margin-bottom:4px')
+          if (code) addRow(`Code: ${code}`, 'color:#A89E92;font-size:11px;font-family:monospace')
+          if (elev != null) addRow(`Elevation: ${elev.toFixed(3)} m`, 'color:#A89E92;font-size:11px;font-family:monospace')
+          if (isControl) addRow('Control point', 'color:#D17B47;font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:0.04em')
+          if (type) addRow(type, 'color:#787774;font-size:10px;font-family:monospace;text-transform:uppercase')
+          if (el.childElementCount === 0) addRow('Feature (no attributes)', 'color:#787774;font-size:11px')
+
           el.className = 'ol-popup'
           el.style.cssText = `
             background: #1F1C19; border: 1px solid #332E29; border-radius: 6px;

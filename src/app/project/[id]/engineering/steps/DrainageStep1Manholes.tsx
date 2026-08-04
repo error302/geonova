@@ -71,8 +71,8 @@ export function DrainageStep1Manholes({
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Name</label>
-                  <input aria-label="Name"
+                  <label htmlFor={`mh-${idx}-name`} className="block text-xs text-zinc-500 mb-1">Name</label>
+                  <input id={`mh-${idx}-name`}
                     type="text"
                     value={mh.name}
                     onChange={e => updateManhole(idx, 'name', e.target.value)}
@@ -80,8 +80,8 @@ export function DrainageStep1Manholes({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Chainage (m)</label>
-                  <input aria-label="Chainage"
+                  <label htmlFor={`mh-${idx}-chainage`} className="block text-xs text-zinc-500 mb-1">Chainage (m)</label>
+                  <input id={`mh-${idx}-chainage`}
                     type="number"
                     value={mh.chainage}
                     onChange={e => updateManhole(idx, 'chainage', Number(e.target.value))}
@@ -89,8 +89,8 @@ export function DrainageStep1Manholes({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Cover Level (m)</label>
-                  <input aria-label="Coverlevel"
+                  <label htmlFor={`mh-${idx}-cover`} className="block text-xs text-zinc-500 mb-1">Cover Level (m)</label>
+                  <input id={`mh-${idx}-cover`}
                     type="number"
                     step="0.001"
                     value={mh.coverLevel}
@@ -99,8 +99,8 @@ export function DrainageStep1Manholes({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Invert Out (m)</label>
-                  <input aria-label="Invertlevelout"
+                  <label htmlFor={`mh-${idx}-invert`} className="block text-xs text-zinc-500 mb-1">Invert Out (m)</label>
+                  <input id={`mh-${idx}-invert`}
                     type="number"
                     step="0.001"
                     value={mh.invertLevelOut}
@@ -109,8 +109,8 @@ export function DrainageStep1Manholes({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Pipe Dia (mm)</label>
-                  <input aria-label="Pipediameterout"
+                  <label htmlFor={`mh-${idx}-pipeDia`} className="block text-xs text-zinc-500 mb-1">Pipe Dia (mm)</label>
+                  <input id={`mh-${idx}-pipeDia`}
                     type="number"
                     value={mh.pipeDiameterOut}
                     onChange={e => updateManhole(idx, 'pipeDiameterOut', Number(e.target.value))}
@@ -118,8 +118,9 @@ export function DrainageStep1Manholes({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Material</label>
+                  <label htmlFor={`mh-${idx}-material`} className="block text-xs text-zinc-500 mb-1">Material</label>
                   <select
+                    id={`mh-${idx}-material`}
                     value={mh.pipeMaterial}
                     onChange={e => updateManhole(idx, 'pipeMaterial', e.target.value)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-sm"
@@ -131,8 +132,8 @@ export function DrainageStep1Manholes({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Depth (m)</label>
-                  <input aria-label="Depth (m)"
+                  <label htmlFor={`mh-${idx}-depth`} className="block text-xs text-zinc-500 mb-1">Depth (m)</label>
+                  <input id={`mh-${idx}-depth`}
                     type="number"
                     step="0.01"
                     value={mh.coverLevel - mh.invertLevelOut}

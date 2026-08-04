@@ -272,6 +272,8 @@ export function adjustNetwork(
   let statisticalReport: AdjustmentResult['statisticalReport']
   if (dof > 0 && residuals.length > 0) {
     try {
+      // Lazy import keeps the LSA stats module out of the hot path.
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { computeStatisticalReport, computeQvvDiagonal } = require('./lsaStatisticalTesting')
 
       // Build observation labels for the w-test

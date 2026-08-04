@@ -56,7 +56,7 @@ export function generateClaForm5(data: ClaForm5Data): Uint8Array {
   function newPage(): number {
     doc.addPage()
     pageNum++
-    let y = 18
+    const y = 18
     return y
   }
 

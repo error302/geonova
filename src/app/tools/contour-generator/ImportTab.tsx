@@ -60,7 +60,7 @@ export function ImportTab({
           <p className="text-[var(--text-secondary)] mb-1">
             Drag &amp; drop a file here, or click to browse
           </p>
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-zinc-400">
             .csv .txt .xyz
           </p>
           <input

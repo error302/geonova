@@ -77,7 +77,7 @@ export function Step1Setup({
       )}
 
       <div className="border border-zinc-700 rounded-lg p-4">
-        <label className="block text-sm text-zinc-400 mb-2">Engineering Mode</label>
+        <div className="block text-sm text-zinc-400 mb-2">Engineering Mode</div>
         <div className="flex gap-3">
           <button
             type="button"
@@ -108,19 +108,20 @@ export function Step1Setup({
         <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Road Name</label>
+          <label htmlFor="roadName" className="block text-sm text-zinc-400 mb-1">Road Name</label>
           <input
+            id="roadName"
             type="text"
             value={roadName}
             onChange={e => setRoadName(e.target.value)}
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white"
-            aria-label="e.g. Nairobi-Mombasa Highway" placeholder="e.g. Nairobi-Mombasa Highway"
+            placeholder="e.g. Nairobi-Mombasa Highway"
           />
         </div>
 
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Start Chainage (m)</label>
-          <input aria-label="Start Chainage (m)"
+          <label htmlFor="startChainage" className="block text-sm text-zinc-400 mb-1">Start Chainage (m)</label>
+          <input id="startChainage"
             type="number"
             value={startChainage}
             onChange={e => setStartChainage(Number(e.target.value))}
@@ -129,8 +130,9 @@ export function Step1Setup({
         </div>
 
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Road Class (per {standard})</label>
+          <label htmlFor="roadClass" className="block text-sm text-zinc-400 mb-1">Road Class (per {standard})</label>
           <select
+            id="roadClass"
             value={roadClass}
             onChange={e => setRoadClass(e.target.value)}
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white"
@@ -142,8 +144,8 @@ export function Step1Setup({
         </div>
 
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Design Speed (km/h)</label>
-          <input aria-label="Design Speed (km/h)"
+          <label htmlFor="designSpeed" className="block text-sm text-zinc-400 mb-1">Design Speed (km/h)</label>
+          <input id="designSpeed"
             type="number"
             value={designSpeed}
             onChange={e => setDesignSpeed(Number(e.target.value))}
@@ -155,8 +157,9 @@ export function Step1Setup({
         </div>
 
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Standard</label>
+          <label htmlFor="standard" className="block text-sm text-zinc-400 mb-1">Standard</label>
           <select
+            id="standard"
             value={standard}
             onChange={e => setStandard(e.target.value as EngineeringStandard)}
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white"
@@ -167,8 +170,8 @@ export function Step1Setup({
         </div>
 
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Carriageway Width (m)</label>
-          <input aria-label="Carriageway Width (m)"
+          <label htmlFor="carriagewayWidth" className="block text-sm text-zinc-400 mb-1">Carriageway Width (m)</label>
+          <input id="carriagewayWidth"
             type="number"
             step="0.1"
             value={getCarriagewayWidth(standard, roadClass as any)}
@@ -178,8 +181,9 @@ export function Step1Setup({
         </div>
 
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Datum</label>
+          <label htmlFor="datum" className="block text-sm text-zinc-400 mb-1">Datum</label>
           <select
+            id="datum"
             value={datum}
             onChange={e => setDatum(e.target.value)}
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white"
@@ -190,8 +194,9 @@ export function Step1Setup({
         </div>
 
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Coordinate System</label>
+          <label htmlFor="coordSys" className="block text-sm text-zinc-400 mb-1">Coordinate System</label>
           <select
+            id="coordSys"
             value={coordSys}
             onChange={e => setCoordSys(e.target.value)}
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white"

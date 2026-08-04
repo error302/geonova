@@ -9,6 +9,9 @@ import {
 import { renderFormNo3 } from '@/lib/reports/surveyPlan/formNo3Renderer';
 import { shoelaceArea } from '@/lib/reports/surveyPlan/geometry';
 import { generateMutationPlanDXF } from '@/lib/generators/mutationPlanDXF';
+// XSS guard (2026-08-03): projectInfo.name is user-entered and lands in the
+// print document's <title> (RCDATA breakout) — escape before interpolation.
+import { escapeXml } from '@/lib/xml/escape';
 import type {
   MutationPlanData, MutationPlot, RoadCorridor,
   SurveyMonument, BearingScheduleEntry,
@@ -556,7 +559,7 @@ export default function MutationPlanGenerator({
     if (!win) return;
     win.document.write(`<!DOCTYPE html>
 <html><head>
-  <title>${projectInfo.name || 'Mutation Plan'}</title>
+  <title>${escapeXml(projectInfo.name || 'Mutation Plan')}</title>
   <style>
     @page { size: A1 landscape; margin: 10mm; }
     body { margin: 0; padding: 0; background: white; }
@@ -564,7 +567,7 @@ export default function MutationPlanGenerator({
   </style>
 </head><body>
   ${svgOutput}
-  <script>window.onload = () => window.print();<\/script>
+  <script>window.onload = () => window.print();</script>
 </body></html>`);
     win.document.close();
   };
@@ -794,10 +797,10 @@ export default function MutationPlanGenerator({
                 { key: 'registerNumber', label: 'Register Number' },
               ].map((f) => (
                 <div key={f.key}>
-                  <label className="block text-xs font-medium text-zinc-400 mb-1">
+                  <label htmlFor={`mp-${f.key}`} className="block text-xs font-medium text-zinc-400 mb-1">
                     {f.label} {f.required && <span className="text-red-400">*</span>}
                   </label>
-                  <input aria-label="Project info field"
+                  <input id={`mp-${f.key}`}
                     type="text"
                     value={(projectInfo as any)[f.key]}
                     onChange={(e) => setProjectInfo({ ...projectInfo, [f.key]: e.target.value })}
@@ -816,28 +819,31 @@ export default function MutationPlanGenerator({
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1">Surveyor Name <span className="text-red-400">*</span></label>
+                <label htmlFor="mp-surveyor-name" className="block text-xs font-medium text-zinc-400 mb-1">Surveyor Name <span className="text-red-400">*</span></label>
                 <input
+                  id="mp-surveyor-name"
                   type="text"
                   value={projectInfo.surveyor_name}
                   onChange={(e) => setProjectInfo({ ...projectInfo, surveyor_name: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-[var(--accent)]"
-                  aria-label="Licensed Surveyor" placeholder="Licensed Surveyor"
+                  placeholder="Licensed Surveyor"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1">ISK Licence Number</label>
+                <label htmlFor="mp-isk-licence" className="block text-xs font-medium text-zinc-400 mb-1">ISK Licence Number</label>
                 <input
+                  id="mp-isk-licence"
                   type="text"
                   value={projectInfo.surveyor_licence}
                   onChange={(e) => setProjectInfo({ ...projectInfo, surveyor_licence: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-[var(--accent)]"
-                  aria-label="ISK-0000" placeholder="ISK-0000"
+                  placeholder="ISK-0000"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1">Scale</label>
+                <label htmlFor="mp-scale" className="block text-xs font-medium text-zinc-400 mb-1">Scale</label>
                 <select
+                  id="mp-scale"
                   value={projectInfo.scale}
                   onChange={(e) => setProjectInfo({ ...projectInfo, scale: Number(e.target.value) })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white focus:outline-none focus:border-[var(--accent)]"
@@ -849,8 +855,9 @@ export default function MutationPlanGenerator({
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1">Datum</label>
+                <label htmlFor="mp-datum" className="block text-xs font-medium text-zinc-400 mb-1">Datum</label>
                 <select
+                  id="mp-datum"
                   value={projectInfo.datum}
                   onChange={(e) => setProjectInfo({ ...projectInfo, datum: e.target.value as any })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white focus:outline-none focus:border-[var(--accent)]"
@@ -860,8 +867,8 @@ export default function MutationPlanGenerator({
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1">Survey Date</label>
-                <input aria-label="Date"
+                <label htmlFor="mp-survey-date" className="block text-xs font-medium text-zinc-400 mb-1">Survey Date</label>
+                <input id="mp-survey-date"
                   type="date"
                   value={projectInfo.date}
                   onChange={(e) => setProjectInfo({ ...projectInfo, date: e.target.value })}
@@ -869,13 +876,14 @@ export default function MutationPlanGenerator({
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1">Transactions</label>
+                <label htmlFor="mp-transactions" className="block text-xs font-medium text-zinc-400 mb-1">Transactions</label>
                 <input
+                  id="mp-transactions"
                   type="text"
                   value={projectInfo.transactions || ''}
                   onChange={(e) => setProjectInfo({ ...projectInfo, transactions: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-[var(--accent)]"
-                  aria-label="Transaction reference" placeholder="Transaction reference"
+                  placeholder="Transaction reference"
                 />
               </div>
             </div>
@@ -988,14 +996,14 @@ export default function MutationPlanGenerator({
                                 value={pt.easting}
                                 onChange={(e) => updatePlotPoint(i, j, 'easting', parseFloat(e.target.value) || 0)}
                                 className="w-24 px-1 py-0.5 bg-zinc-900 border border-zinc-800 rounded text-xs text-white"
-                                aria-label="E" placeholder="E"
+                                aria-label="Easting" placeholder="E"
                               />
                               <input
                                 type="number"
                                 value={pt.northing}
                                 onChange={(e) => updatePlotPoint(i, j, 'northing', parseFloat(e.target.value) || 0)}
                                 className="w-24 px-1 py-0.5 bg-zinc-900 border border-zinc-800 rounded text-xs text-white"
-                                aria-label="N" placeholder="N"
+                                aria-label="Northing" placeholder="N"
                               />
                             </div>
                           ))}
@@ -1220,8 +1228,9 @@ export default function MutationPlanGenerator({
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-xs text-zinc-500 mb-0.5">Width (m)</label>
+                      <label htmlFor={`mp-road-width-${i}`} className="block text-xs text-zinc-500 mb-0.5">Width (m)</label>
                       <select
+                        id={`mp-road-width-${i}`}
                         value={road.width_m}
                         onChange={(e) => {
                           const w = Number(e.target.value);
@@ -1236,13 +1245,14 @@ export default function MutationPlanGenerator({
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs text-zinc-500 mb-0.5">Bearing</label>
+                      <label htmlFor={`mp-road-bearing-${i}`} className="block text-xs text-zinc-500 mb-0.5">Bearing</label>
                       <input
+                        id={`mp-road-bearing-${i}`}
                         type="text"
                         value={road.bearing_dms || ''}
                         onChange={(e) => updateRoad(i, 'bearing_dms', e.target.value)}
                         className="w-full px-2 py-1 bg-zinc-900 border border-zinc-700 rounded text-sm text-white"
-                        aria-label="12' 35&quot;" placeholder="12' 35&quot;"
+                        placeholder="12' 35&quot;"
                       />
                     </div>
                   </div>
@@ -1265,14 +1275,14 @@ export default function MutationPlanGenerator({
                           value={pt.easting}
                           onChange={(e) => updateRoadCenterlinePoint(i, j, 'easting', parseFloat(e.target.value) || 0)}
                           className="w-24 px-1 py-0.5 bg-zinc-900 border border-zinc-800 rounded text-xs text-white"
-                          aria-label="E" placeholder="E"
+                          aria-label="Easting" placeholder="E"
                         />
                         <input
                           type="number"
                           value={pt.northing}
                           onChange={(e) => updateRoadCenterlinePoint(i, j, 'northing', parseFloat(e.target.value) || 0)}
                           className="w-24 px-1 py-0.5 bg-zinc-900 border border-zinc-800 rounded text-xs text-white"
-                          aria-label="N" placeholder="N"
+                          aria-label="Northing" placeholder="N"
                         />
                         {road.centerline.length > 2 && (
                           <button

@@ -163,8 +163,8 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
 
         <div className="space-y-6">
           <div>
-            <label className="block text-sm text-[var(--text-primary)] mb-2">Project Name</label>
-            <input aria-label="Project Name"
+            <label htmlFor="projectName" className="block text-sm text-[var(--text-primary)] mb-2">Project Name</label>
+            <input id="projectName"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -173,8 +173,9 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
           </div>
 
           <div>
-            <label className="block text-sm text-[var(--text-primary)] mb-2">Location</label>
+            <label htmlFor="location" className="block text-sm text-[var(--text-primary)] mb-2">Location</label>
             <textarea
+              id="location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] h-24"
@@ -182,7 +183,7 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
           </div>
 
           <div className="bg-[var(--bg-secondary)] p-4 rounded border border-[var(--border-color)]">
-            <label className="block text-sm text-[var(--text-primary)] mb-3">UTM Zone</label>
+            <div className="block text-sm text-[var(--text-primary)] mb-3">UTM Zone</div>
             <UTMZonePicker
               value={utmZone}
               hemisphere={hemisphere}
@@ -194,8 +195,9 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
           </div>
 
           <div>
-            <label className="block text-sm text-[var(--text-primary)] mb-2">Datum</label>
+            <label htmlFor="datum" className="block text-sm text-[var(--text-primary)] mb-2">Datum</label>
             <select
+              id="datum"
               value={datum}
               onChange={(e) => setDatum(e.target.value as 'ARC1960' | 'WGS84' | 'WGS84Geographic')}
               className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
@@ -208,8 +210,9 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
           </div>
 
           <div>
-            <label className="block text-sm text-[var(--text-primary)] mb-2">Survey Type</label>
+            <label htmlFor="surveyType" className="block text-sm text-[var(--text-primary)] mb-2">Survey Type</label>
             <select
+              id="surveyType"
               value={surveyType}
               onChange={(e) => setSurveyType(e.target.value)}
               className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
@@ -225,8 +228,9 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
           </div>
 
           <div>
-            <label className="block text-sm text-[var(--text-primary)] mb-2">Road Classification (RDM 1.3)</label>
+            <label htmlFor="roadClass" className="block text-sm text-[var(--text-primary)] mb-2">Road Classification (RDM 1.3)</label>
             <select
+              id="roadClass"
               value={roadClass}
               onChange={(e) => setRoadClass(e.target.value)}
               className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
@@ -257,22 +261,24 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
           {roadClass && (
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-[var(--text-primary)] mb-2">Road Name</label>
+                <label htmlFor="roadName" className="block text-sm text-[var(--text-primary)] mb-2">Road Name</label>
                 <input
+                  id="roadName"
                   type="text"
                   value={roadName}
                   onChange={(e) => setRoadName(e.target.value)}
-                  aria-label="e.g. Nairobi–Mombasa Road" placeholder="e.g. Nairobi–Mombasa Road"
+                  placeholder="e.g. Nairobi–Mombasa Road"
                   className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-primary)] mb-2">Start Chainage (m)</label>
+                <label htmlFor="startChainage" className="block text-sm text-[var(--text-primary)] mb-2">Start Chainage (m)</label>
                 <input
+                  id="startChainage"
                   type="number"
                   value={startChainage}
                   onChange={(e) => setStartChainage(e.target.value)}
-                  aria-label="e.g. 0 or 5000" placeholder="e.g. 0 or 5000"
+                  placeholder="e.g. 0 or 5000"
                   className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
                 />
                 <p className="text-xs text-[var(--text-secondary)] mt-1">km+m format: 5000m = 5+000</p>
@@ -281,8 +287,9 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
           )}
 
           <div>
-            <label className="block text-sm text-[var(--text-primary)] mb-2">Terrain Type</label>
+            <label htmlFor="terrainType" className="block text-sm text-[var(--text-primary)] mb-2">Terrain Type</label>
             <select
+              id="terrainType"
               value={terrainType}
               onChange={(e) => setTerrainType(e.target.value)}
               className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
@@ -297,14 +304,15 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
           </div>
 
           <div>
-            <label className="block text-sm text-[var(--text-primary)] mb-2">Traverse Linear Closure Error (m)</label>
+            <label htmlFor="linearError" className="block text-sm text-[var(--text-primary)] mb-2">Traverse Linear Closure Error (m)</label>
             <input
+              id="linearError"
               type="number"
               step="0.001"
               value={linearError}
               onChange={(e) => setLinearError(e.target.value)}
               className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
-              aria-label="e.g. 0.001" placeholder="e.g. 0.001"
+              placeholder="e.g. 0.001"
             />
             <p className="text-xs text-[var(--text-secondary)] mt-1">Used to compute C=m√K accuracy classification per RDM 1.1</p>
             {linearError && (
@@ -321,8 +329,8 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-[var(--text-primary)] mb-2">Client Name</label>
-              <input aria-label="Client Name"
+              <label htmlFor="clientName" className="block text-sm text-[var(--text-primary)] mb-2">Client Name</label>
+              <input id="clientName"
                 type="text"
                 value={clientName}
                 onChange={(e) => setClientName(e.target.value)}
@@ -330,8 +338,8 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--text-primary)] mb-2">Surveyor Name</label>
-              <input aria-label="Surveyor Name"
+              <label htmlFor="surveyorName" className="block text-sm text-[var(--text-primary)] mb-2">Surveyor Name</label>
+              <input id="surveyorName"
                 type="text"
                 value={surveyorName}
                 onChange={(e) => setSurveyorName(e.target.value)}
@@ -347,63 +355,69 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
             
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm text-[var(--text-primary)] mb-2">LR Number</label>
+                <label htmlFor="lrNumber" className="block text-sm text-[var(--text-primary)] mb-2">LR Number</label>
                 <input
+                  id="lrNumber"
                   type="text"
                   value={lrNumber}
                   onChange={(e) => setLrNumber(e.target.value)}
                   className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
-                  aria-label="LR 12345" placeholder="LR 12345"
+                  placeholder="LR 12345"
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-primary)] mb-2">Folio Number</label>
+                <label htmlFor="folioNumber" className="block text-sm text-[var(--text-primary)] mb-2">Folio Number</label>
                 <input
+                  id="folioNumber"
                   type="text"
                   value={folioNumber}
                   onChange={(e) => setFolioNumber(e.target.value)}
                   className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
-                  aria-label="Folio/2024/001" placeholder="Folio/2024/001"
+                  placeholder="Folio/2024/001"
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-primary)] mb-2">Register Number</label>
+                <label htmlFor="registerNumber" className="block text-sm text-[var(--text-primary)] mb-2">Register Number</label>
                 <input
+                  id="registerNumber"
                   type="text"
                   value={registerNumber}
                   onChange={(e) => setRegisterNumber(e.target.value)}
                   className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
-                  aria-label="REG/001" placeholder="REG/001"
+                  placeholder="REG/001"
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-primary)] mb-2">Plot/Parcel Number</label>
+                <label htmlFor="plotParcelNumber" className="block text-sm text-[var(--text-primary)] mb-2">Plot/Parcel Number</label>
                 <input
+                  id="plotParcelNumber"
                   type="text"
                   value={plotParcelNumber}
                   onChange={(e) => setPlotParcelNumber(e.target.value)}
                   className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
-                  aria-label="Plot 45" placeholder="Plot 45"
+                  placeholder="Plot 45"
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-primary)] mb-2">Registration District</label>
+                <label htmlFor="registrationDistrict" className="block text-sm text-[var(--text-primary)] mb-2">Registration District</label>
                 <input
+                  id="registrationDistrict"
                   type="text"
                   value={registrationDistrict}
                   onChange={(e) => setRegistrationDistrict(e.target.value)}
                   className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
-                  aria-label="Nairobi" placeholder="Nairobi"
+                  placeholder="Nairobi"
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-primary)] mb-2">Locality</label>
+                <label htmlFor="locality" className="block text-sm text-[var(--text-primary)] mb-2">Locality</label>
                 <input
+                  id="locality"
                   type="text"
                   value={locality}
                   onChange={(e) => setLocality(e.target.value)}
                   className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
-                  aria-label="Karen" placeholder="Karen"
+                  placeholder="Karen"
                 />
               </div>
             </div>

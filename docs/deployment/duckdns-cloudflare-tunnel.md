@@ -1,13 +1,13 @@
 # DuckDNS + Cloudflare Tunnel Setup Guide
-## Host METARDU on metardu.duckdns.org — Free, HTTPS, No ngrok
+## Host METARDU on metardu.space — Free, HTTPS, No ngrok
 
 > **Canonical topology (P0-7, 2026-07-24):** This is the **production guide**
-> for hosting METARDU on `metardu.duckdns.org` (or any DuckDNS subdomain)
+> for hosting METARDU on `metardu.space` (or any DuckDNS subdomain)
 > via Cloudflare Tunnel + Nginx. For the Windows-dev alternative (Cloudflare
 > named tunnel without Nginx), see `../../CLOUDFLARE_TUNNEL_SETUP.md`. The
 > `bore.pub` tunnel has been removed (was redundant with Cloudflare).
 
-This guide walks you through setting up a free Cloudflare Tunnel (`cloudflared`) on your local Docker host and pointing your DuckDNS subdomain (`metardu.duckdns.org`) to it. The result: your locally-hosted METARDU app is accessible worldwide at `https://metardu.duckdns.org` with automatic HTTPS — no GCP, no ngrok, no port forwarding.
+This guide walks you through setting up a free Cloudflare Tunnel (`cloudflared`) on your local Docker host and pointing your DuckDNS subdomain (`metardu.space`) to it. The result: your locally-hosted METARDU app is accessible worldwide at `https://metardu.space` with automatic HTTPS — no GCP, no ngrok, no port forwarding.
 
 ---
 
@@ -16,7 +16,7 @@ This guide walks you through setting up a free Cloudflare Tunnel (`cloudflared`)
 ```
 Internet User
     ↓
-https://metardu.duckdns.org
+https://metardu.space
     ↓ (DNS CNAME → <tunnel-id>.cfargotunnel.com)
 Cloudflare Edge (HTTPS termination, DDoS protection)
     ↓ (cloudflared tunnel)
@@ -32,7 +32,7 @@ localhost:3000 → METARDU Next.js App
 1. Go to [https://www.duckdns.org/](https://www.duckdns.org/)
 2. Sign in with a social provider (Google, GitHub, Reddit, Twitter)
 3. In the dashboard, create a subdomain:
-   - Type: `metardu` → full domain becomes `metardu.duckdns.org`
+   - Type: `metardu` → full domain becomes `metardu.space`
 4. For now, leave the IP field blank (Cloudflare Tunnel will handle routing, not direct IP)
 5. Note your **DuckDNS token** (shown at the top of the dashboard)
 
@@ -67,7 +67,7 @@ This gives you a URL like `https://random-words.trycloudflare.com` — great for
 
 ### Option B: Named Tunnel with Custom Domain (Production)
 
-This is the recommended approach for a stable `metardu.duckdns.org` or custom domain.
+This is the recommended approach for a stable `metardu.space` or custom domain.
 
 ---
 
@@ -125,7 +125,7 @@ tunnel: metardu
 credentials-file: /root/.cloudflared/<TUNNEL_ID>.json
 
 ingress:
-  - hostname: metardu.duckdns.org
+  - hostname: metardu.space
     service: http://localhost:3000
   
   # Catch-all rule (required)
@@ -139,10 +139,10 @@ Replace `<TUNNEL_ID>` with your actual tunnel ID from Step 5.
 ## Step 7: Create DNS Route
 
 ```bash
-cloudflared tunnel route dns metardu metardu.duckdns.org
+cloudflared tunnel route dns metardu metardu.space
 ```
 
-This creates a CNAME record: `metardu.duckdns.org → <tunnel-id>.cfargotunnel.com`
+This creates a CNAME record: `metardu.space → <tunnel-id>.cfargotunnel.com`
 
 > **If duckdns.org zone isn't in your Cloudflare account**, you have two options:
 >
@@ -161,7 +161,7 @@ cloudflared tunnel run metardu
 cloudflared tunnel --config ~/.cloudflared/config.yml run metardu
 ```
 
-Your app should now be accessible at `https://metardu.duckdns.org`.
+Your app should now be accessible at `https://metardu.space`.
 
 ---
 
@@ -196,7 +196,7 @@ services:
       - "3000:3000"
     environment:
       - DATABASE_URL=postgresql://metardu:password@db:5432/metardu
-      - NEXTAUTH_URL=https://metardu.duckdns.org
+      - NEXTAUTH_URL=https://metardu.space
       - NEXTAUTH_SECRET=your-secret-here
     depends_on:
       - db
@@ -225,7 +225,7 @@ volumes:
   pgdata:
 ```
 
-> **Important:** Set `NEXTAUTH_URL=https://metardu.duckdns.org` so OAuth callbacks work correctly.
+> **Important:** Set `NEXTAUTH_URL=https://metardu.space` so OAuth callbacks work correctly.
 
 ---
 
@@ -234,7 +234,7 @@ volumes:
 | Problem | Solution |
 |---------|----------|
 | Tunnel not connecting | `cloudflared tunnel info metardu` then `curl http://localhost:3000` |
-| DNS not resolving | `dig metardu.duckdns.org CNAME` then re-run route command |
+| DNS not resolving | `dig metardu.space CNAME` then re-run route command |
 | OAuth redirect issues | Ensure `NEXTAUTH_URL` is set correctly, update Google/Azure redirect URIs |
 | Docker not accessible | `docker compose ps` then `docker compose logs app` |
 

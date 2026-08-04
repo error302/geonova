@@ -121,8 +121,8 @@ export function TunnelPanel({ projectId, subtype }: EngineeringPanelProps) {
           <div className="text-lg font-medium mb-3">Tunnel Geometry</div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-zinc-400">Excavated Width (m)</label>
-              <input aria-label="Excavated Width (m)"
+              <label className="text-sm text-zinc-400" htmlFor="excavated-width-m">Excavated Width (m)</label>
+              <input id="excavated-width-m" aria-label="Excavated Width (m)"
                 type="number"
                 value={excavatedWidthM}
                 onChange={(e) => setExcavatedWidthM(parseFloat(e.target.value) || 0)}
@@ -130,8 +130,8 @@ export function TunnelPanel({ projectId, subtype }: EngineeringPanelProps) {
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400">Excavated Height (m)</label>
-              <input aria-label="Excavated Height (m)"
+              <label className="text-sm text-zinc-400" htmlFor="excavated-height-m">Excavated Height (m)</label>
+              <input id="excavated-height-m" aria-label="Excavated Height (m)"
                 type="number"
                 value={excavatedHeightM}
                 onChange={(e) => setExcavatedHeightM(parseFloat(e.target.value) || 0)}
@@ -139,8 +139,8 @@ export function TunnelPanel({ projectId, subtype }: EngineeringPanelProps) {
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400">Gradient (%)</label>
-              <input aria-label="Gradient (%)"
+              <label className="text-sm text-zinc-400" htmlFor="gradient">Gradient (%)</label>
+              <input  id="gradient" aria-label="Gradient (%)"
                 type="number"
                 step={0.1}
                 value={gradientPercent}

@@ -21,8 +21,8 @@ export default function BoundaryDisputePage() {
       <PageHeader title="Boundary Dispute Analysis" subtitle="Overlay legal boundary vs physical occupation" reference="Cap. 299 | Land Registration Act 2012" />
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-4">
-          <div><label className="block text-sm text-zinc-400 mb-2">Legal Boundary (easting, northing — one per line)</label><textarea value={legalCsv} onChange={e => setLegalCsv(e.target.value)} rows={6} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
-          <div><label className="block text-sm text-zinc-400 mb-2">Occupied Boundary (fence/wall GPS — easting, northing)</label><textarea value={occupiedCsv} onChange={e => setOccupiedCsv(e.target.value)} rows={6} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="legal-boundary-easting-northing-one-per-line">Legal Boundary (easting, northing — one per line)</label><textarea id="legal-boundary-easting-northing-one-per-line" value={legalCsv} onChange={e => setLegalCsv(e.target.value)} rows={6} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="occupied-boundary-fence-wall-gps-easting-northing">Occupied Boundary (fence/wall GPS — easting, northing)</label><textarea id="occupied-boundary-fence-wall-gps-easting-northing" value={occupiedCsv} onChange={e => setOccupiedCsv(e.target.value)} rows={6} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
           <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Analyze Dispute</button>
         </div>
         <div>
@@ -39,7 +39,7 @@ export default function BoundaryDisputePage() {
                 <div className="p-3 bg-zinc-900 rounded-lg border border-zinc-700"><div className="text-xs text-zinc-400">Max Distance</div><div className="text-lg font-bold text-amber-400">{result.maxEncroachmentDistance.toFixed(3)} m</div></div>
               </div>
             </div>
-          ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-500">Enter boundary coordinates and click Analyze.</div>}
+          ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-400">Enter boundary coordinates and click Analyze.</div>}
         </div>
       </div>
     </div>

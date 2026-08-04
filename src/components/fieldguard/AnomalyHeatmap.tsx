@@ -111,14 +111,16 @@ export default function AnomalyHeatmap({ points, anomalies }: AnomalyHeatmapProp
               stroke: new Stroke({ color: strokeColor, width: strokeWidth }),
             }),
           }))
-          feature.set('popupText',
-            `<b>Point ${i}</b><br/>` +
-            `E: ${pt.easting.toFixed(3)}<br/>` +
-            `N: ${pt.northing.toFixed(3)}<br/>` +
-            `RL: ${pt.elevation?.toFixed(3) || 'N/A'}<br/>` +
-            `Status: ${pt.cleaned ? 'Clean' : 'Flagged'}<br/>` +
-            `Classification: ${pt.classification || 'N/A'}`
-          )
+          // VULN-002 FIX (security review 2026-08-03): store structured data
+          // instead of an HTML string; rendered with textContent below.
+          feature.set('popupData', {
+            index: i,
+            easting: pt.easting,
+            northing: pt.northing,
+            elevation: pt.elevation,
+            cleaned: pt.cleaned,
+            classification: pt.classification,
+          })
           feature.set('index', i)
           return feature
         })
@@ -145,8 +147,33 @@ export default function AnomalyHeatmap({ points, anomalies }: AnomalyHeatmapProp
           if (!overlay || !popupRef.current) return
 
           const feature = map.forEachFeatureAtPixel(evt.pixel, (f) => f as Feature)
-          if (feature && feature.get('popupText')) {
-            popupRef.current.innerHTML = feature.get('popupText') as string
+          const popupData = feature?.get('popupData') as
+            | { index: number; easting: number; northing: number; elevation?: number; cleaned: boolean; classification?: string }
+            | undefined
+          if (feature && popupData && popupRef.current) {
+            // VULN-002 FIX: render with textContent, never innerHTML.
+            const el = popupRef.current
+            el.replaceChildren()
+
+            const line = (text: string, bold = false) => {
+              const div = document.createElement('div')
+              if (bold) {
+                const b = document.createElement('b')
+                b.textContent = text
+                div.append(b)
+              } else {
+                div.textContent = text
+              }
+              el.append(div)
+            }
+
+            line(`Point ${popupData.index}`, true)
+            line(`E: ${popupData.easting.toFixed(3)}`)
+            line(`N: ${popupData.northing.toFixed(3)}`)
+            line(`RL: ${popupData.elevation != null ? popupData.elevation.toFixed(3) : 'N/A'}`)
+            line(`Status: ${popupData.cleaned ? 'Clean' : 'Flagged'}`)
+            line(`Classification: ${popupData.classification || 'N/A'}`)
+
             overlay.setPosition(evt.coordinate)
           } else {
             overlay.setPosition(undefined)

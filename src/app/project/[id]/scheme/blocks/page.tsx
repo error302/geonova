@@ -235,35 +235,39 @@ export default function BlocksPage() {
             </h3>
             <form onSubmit={handleCreate} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className={labelClass}>Block Number <span className="text-orange-400">*</span></label>
+                <label htmlFor="new-block-number" className={labelClass}>Block Number <span className="text-orange-400">*</span></label>
                 <input
+                  id="new-block-number"
                   type="text"
                   value={newBlock.block_number}
                   onChange={(e) => setNewBlock(prev => ({ ...prev, block_number: e.target.value }))}
                   className={inputClass}
-                  aria-label="e.g., A, B, 1, I" placeholder="e.g., A, B, 1, I"
+                  placeholder="e.g., A, B, 1, I"
+                  // eslint-disable-next-line jsx-a11y/no-autofocus -- focus into the revealed create form (WCAG 2.4.3)
                   autoFocus
                   required
                 />
               </div>
               <div>
-                <label className={labelClass}>Block Name</label>
+                <label htmlFor="new-block-name" className={labelClass}>Block Name</label>
                 <input
+                  id="new-block-name"
                   type="text"
                   value={newBlock.block_name}
                   onChange={(e) => setNewBlock(prev => ({ ...prev, block_name: e.target.value }))}
                   className={inputClass}
-                  aria-label="e.g., Northern Section" placeholder="e.g., Northern Section"
+                  placeholder="e.g., Northern Section"
                 />
               </div>
               <div>
-                <label className={labelClass}>Description</label>
+                <label htmlFor="new-block-desc" className={labelClass}>Description</label>
                 <input
+                  id="new-block-desc"
                   type="text"
                   value={newBlock.description}
                   onChange={(e) => setNewBlock(prev => ({ ...prev, description: e.target.value }))}
                   className={inputClass}
-                  aria-label="Optional description" placeholder="Optional description"
+                  placeholder="Optional description"
                 />
               </div>
             </form>
@@ -314,8 +318,8 @@ export default function BlocksPage() {
                   <form onSubmit={handleUpdate} className="space-y-3">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div>
-                        <label className={labelClass}>Block Number</label>
-                        <input aria-label="Block number"
+                        <label htmlFor="edit-block-number" className={labelClass}>Block Number</label>
+                        <input id="edit-block-number"
                           type="text"
                           value={editForm.block_number}
                           onChange={(e) => setEditForm(prev => ({ ...prev, block_number: e.target.value }))}
@@ -324,8 +328,8 @@ export default function BlocksPage() {
                         />
                       </div>
                       <div>
-                        <label className={labelClass}>Block Name</label>
-                        <input aria-label="Block name"
+                        <label htmlFor="edit-block-name" className={labelClass}>Block Name</label>
+                        <input id="edit-block-name"
                           type="text"
                           value={editForm.block_name}
                           onChange={(e) => setEditForm(prev => ({ ...prev, block_name: e.target.value }))}
@@ -333,8 +337,8 @@ export default function BlocksPage() {
                         />
                       </div>
                       <div>
-                        <label className={labelClass}>Description</label>
-                        <input aria-label="Description"
+                        <label htmlFor="edit-block-desc" className={labelClass}>Description</label>
+                        <input id="edit-block-desc"
                           type="text"
                           value={editForm.description}
                           onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}

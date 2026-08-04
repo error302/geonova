@@ -62,8 +62,8 @@ export default function SightDistancePage() {
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-zinc-400 mb-2">Design Speed (km/h)</label>
-              <input aria-label="Design Speed (km/h)"
+              <label className="block text-sm text-zinc-400 mb-2" htmlFor="design-speed-km-h">Design Speed (km/h)</label>
+              <input id="design-speed-km-h" aria-label="Design Speed (km/h)"
                 type="number"
                 value={designSpeed}
                 onChange={e => setDesignSpeed(Number(e.target.value))}
@@ -74,8 +74,8 @@ export default function SightDistancePage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-zinc-400 mb-2">Gradient (%)</label>
-              <input aria-label="Gradient (%)"
+              <label className="block text-sm text-zinc-400 mb-2" htmlFor="gradient">Gradient (%)</label>
+              <input id="gradient" aria-label="Gradient (%)"
                 type="number"
                 value={gradient}
                 onChange={e => setGradient(Number(e.target.value))}
@@ -89,8 +89,8 @@ export default function SightDistancePage() {
           </div>
 
           <div>
-            <label className="block text-sm text-zinc-400 mb-2">Terrain</label>
-            <select
+            <label className="block text-sm text-zinc-400 mb-2" htmlFor="terrain">Terrain</label>
+            <select id="terrain"
               value={terrain}
               onChange={e => setTerrain(e.target.value as 'flat' | 'rolling' | 'mountainous')}
               className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white"
@@ -103,8 +103,8 @@ export default function SightDistancePage() {
 
           {/* Curve radius input (used in the curve check) */}
           <div>
-            <label className="block text-sm text-zinc-400 mb-2">Curve Radius (m) — for curve sight check</label>
-            <input aria-label="Curve Radius (m)"
+            <label className="block text-sm text-zinc-400 mb-2" htmlFor="curve-radius-m-for-curve-sight-check">Curve Radius (m) — for curve sight check</label>
+            <input  id="curve-radius-m-for-curve-sight-check" aria-label="Curve Radius (m)"
               type="number"
               value={curveRadius}
               onChange={e => setCurveRadius(Number(e.target.value))}
@@ -184,7 +184,7 @@ export default function SightDistancePage() {
                     {result.steps.map((step, i) => (
                       <div key={i} className="text-xs">
                         <div className="text-zinc-400">{step.description}</div>
-                        <div className="text-zinc-600 font-mono">{step.formula}</div>
+                        <div className="text-zinc-400 font-mono">{step.formula}</div>
                         <div className="text-white font-mono">→ {step.value}</div>
                       </div>
                     ))}
@@ -196,7 +196,7 @@ export default function SightDistancePage() {
 
           {/* Empty state before first compute */}
           {!computed && (
-            <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-500">
+            <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-400">
               Click <span className="text-[var(--accent)] font-semibold">Compute Sight Distance</span> to calculate stopping sight distance, RDM 1.3 compliance, and curve radius adequacy.
             </div>
           )}
@@ -207,7 +207,7 @@ export default function SightDistancePage() {
           <h3 className="font-medium text-white mb-4">Minimum SSD (RDM 1.3 Table 3-5)</h3>
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-zinc-500 border-b border-zinc-700">
+              <tr className="text-zinc-400 border-b border-zinc-700">
                 <th className="text-left py-2">Speed (km/h)</th>
                 <th className="text-right py-2">Flat (m)</th>
                 <th className="text-right py-2">Rolling (m)</th>
@@ -224,10 +224,7 @@ export default function SightDistancePage() {
                 </tr>
               ))}
             </tbody>
-          </table>
-          <p className="text-xs text-zinc-500 mt-3">
-            Highlighted row matches the current design speed. Values are minimum
-            required SSD per RDM 1.3 — computed SSD must exceed these.
+          </table>            <p className="text-xs text-zinc-400 mt-3">Highlighted row matches the current design speed. Values are minimum required SSD per RDM 1.3 — computed SSD must exceed these.
           </p>
         </div>
       </div>

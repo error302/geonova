@@ -88,10 +88,10 @@ export function SubSheetGridPicker({
 
   return (
     <div>
-      <label className="label text-xs text-[var(--text-muted)] mb-1.5 block">
+      <div className="label text-xs text-[var(--text-muted)] mb-1.5 block">
         Sub-sheet Map
-        <span className="ml-1 text-[9px] opacity-60">Click to select · North = top</span>
-      </label>
+        <span className="ml-1 text-[9px] text-zinc-400">Click to select · North = top</span>
+      </div>
       <div className="grid grid-cols-5 gap-[2px]">
         {grid.map((row, ri) =>
           row.map((sub, ci) => {

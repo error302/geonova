@@ -279,7 +279,7 @@ function createShapeIndex(
   view.setInt32(32, header.shapeType, true)
   
   // Index records
-  let offset = 100
+  const offset = 100
   for (let i = 0; i < numRecords; i++) {
     const recordOffset = 100 + i * recordSize
     view.setInt32(100 + i * 8, recordOffset / 2, false) // Offset in 16-bit words

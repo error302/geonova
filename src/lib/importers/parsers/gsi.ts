@@ -411,7 +411,7 @@ function buildFacePairs(observations: GSIObservation[], angleUnit: 'gon' | 'deg'
       const fullCircle = 360; // already converted from gon
 
       // Mean horizontal angle: (Hz_FL + Hz_FR ± 180°) / 2
-      let frHzCorrected = fr.hzAngle >= 180 ? fr.hzAngle - 180 : fr.hzAngle + 180;
+      const frHzCorrected = fr.hzAngle >= 180 ? fr.hzAngle - 180 : fr.hzAngle + 180;
       let meanHz = (fl.hzAngle + frHzCorrected) / 2;
       if (meanHz >= 360) meanHz -= 360;
       if (meanHz < 0) meanHz += 360;

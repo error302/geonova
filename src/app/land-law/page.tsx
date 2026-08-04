@@ -58,7 +58,7 @@ export default function LandLawPage() {
                   onClick={() => setActiveTab(tab.id as Tab)}
                   className={`flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
                     activeTab === tab.id
-                      ? 'border-amber-500 text-amber-600 bg-amber-50'
+                      ? 'border-amber-500 text-amber-800 bg-amber-50'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                   }`}
                 >
@@ -124,7 +124,7 @@ export default function LandLawPage() {
                 Connect with experienced land law attorneys for complex disputes
               </p>
             </div>
-            <button className="flex items-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-600 rounded-lg font-medium">
+            <button className="flex items-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-black rounded-lg font-medium">
               Find an Attorney <ArrowRight className="w-4 h-4" />
             </button>
           </div>

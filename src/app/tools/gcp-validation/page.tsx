@@ -85,8 +85,8 @@ export default function GCPValidationPage() {
           <span className="label">Settings</span>
           <div className="flex flex-wrap gap-4 items-end">
             <div>
-              <label className="block text-sm text-[var(--text-secondary)] mb-1">UTM Zone</label>
-              <select
+              <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="utm-zone">UTM Zone</label>
+              <select id="utm-zone"
                 className="input w-24"
                 value={utmZone}
                 onChange={e => setUtmZone(parseInt(e.target.value))}
@@ -96,9 +96,9 @@ export default function GCPValidationPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[var(--text-secondary)] mb-1">Accuracy Class</label>
+              <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="accuracy-class">Accuracy Class</label>
               <select
-                className="input"
+                 id="accuracy-class" className="input"
                 value={selectedClass.name}
                 onChange={e => {
                   const cls = accuracyClasses.find(c => c.name === e.target.value);
@@ -166,7 +166,7 @@ export default function GCPValidationPage() {
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
               activeTab === tab.id
-                ? 'bg-[var(--accent)] text-white'
+                ? 'bg-[var(--accent)] text-black'
                 : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--accent)]'
             }`}
           >

@@ -51,7 +51,9 @@ export async function smartChat(options: SmartChatOptions): Promise<string> {
   })
 }
 
-export default {
+const smartAiService = {
   smartChat,
   localLlmService,
 }
+
+export default smartAiService

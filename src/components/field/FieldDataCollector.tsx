@@ -205,7 +205,7 @@ export function FieldDataCollector({
                     onClick={() => setActiveFeatureCode(code === activeFeatureCode ? '' : code)}
                     className={`shrink-0 px-4 py-2 rounded-full text-xs font-bold border transition-colors ${
                       activeFeatureCode === code
-                        ? 'bg-[var(--accent)] text-white border-[var(--accent)] shadow-md'
+                        ? 'bg-[var(--accent)] text-black border-[var(--accent)] shadow-md'
                         : isSunlightMode 
                           ? 'bg-white text-black border-black border-2 hover:bg-gray-100'
                           : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--accent)]'

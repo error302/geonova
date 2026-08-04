@@ -109,10 +109,10 @@ export function VolumeTab({ points }: VolumeTabProps) {
       {/* Parameters */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="base-elevation-m">
             Base Elevation (m)
           </label>
-          <input
+          <input id="base-elevation-m"
             type="number"
             step="0.1"
             value={baseElevation}
@@ -122,11 +122,11 @@ export function VolumeTab({ points }: VolumeTabProps) {
         </div>
         {mode === 'cutfill' && (
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="grid-cell-size-m">
               Grid Cell Size (m)
             </label>
             <input
-              type="number"
+               id="grid-cell-size-m" type="number"
               step="0.5"
               min="0.5"
               value={cellSize}

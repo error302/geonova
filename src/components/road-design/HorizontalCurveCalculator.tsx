@@ -41,40 +41,40 @@ export default function HorizontalCurveCalculator() {
   return (
     <div className="space-y-6">
       <div className="flex gap-2 border-b border-[var(--border-color)] pb-3">
-        <button onClick={() => setTab('elements')} className={`px-4 py-2 rounded-t text-sm font-medium ${tab === 'elements' ? 'bg-[var(--accent)] text-white' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`}>Curve Elements</button>
-        <button onClick={() => setTab('setout')} className={`px-4 py-2 rounded-t text-sm font-medium ${tab === 'setout' ? 'bg-[var(--accent)] text-white' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`}>Set-Out Table</button>
+        <button onClick={() => setTab('elements')} className={`px-4 py-2 rounded-t text-sm font-medium ${tab === 'elements' ? 'bg-[var(--accent)] text-black' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`}>Curve Elements</button>
+        <button onClick={() => setTab('setout')} className={`px-4 py-2 rounded-t text-sm font-medium ${tab === 'setout' ? 'bg-[var(--accent)] text-black' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`}>Set-Out Table</button>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Radius R (m)</label>
-          <input aria-label="Radius R (m)" value={radius} onChange={e => setRadius(e.target.value)} type="number" min="1"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="radius-r-m">Radius R (m)</label>
+          <input id="radius-r-m" aria-label="Radius R (m)" value={radius} onChange={e => setRadius(e.target.value)} type="number" min="1"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Δ Degrees</label>
-          <input aria-label="Δ Degrees" value={deltaD} onChange={e => setDeltaD(e.target.value)} type="number" min="1" max="180"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="degrees">Δ Degrees</label>
+          <input id="degrees" aria-label="Δ Degrees" value={deltaD} onChange={e => setDeltaD(e.target.value)} type="number" min="1" max="180"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Δ Minutes</label>
-          <input aria-label="Δ Minutes" value={deltaM} onChange={e => setDeltaM(e.target.value)} type="number" min="0" max="59"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="minutes">Δ Minutes</label>
+          <input id="minutes" aria-label="Δ Minutes" value={deltaM} onChange={e => setDeltaM(e.target.value)} type="number" min="0" max="59"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Δ Seconds</label>
-          <input aria-label="Δ Seconds" value={deltaS} onChange={e => setDeltaS(e.target.value)} type="number" step="0.001" min="0" max="59.999"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="seconds">Δ Seconds</label>
+          <input id="seconds" aria-label="Δ Seconds" value={deltaS} onChange={e => setDeltaS(e.target.value)} type="number" step="0.001" min="0" max="59.999"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">IP Chainage (m)</label>
-          <input aria-label="IP Chainage (m)" value={ipChainage} onChange={e => setIpChainage(e.target.value)} type="number" min="0"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="ip-chainage-m">IP Chainage (m)</label>
+          <input id="ip-chainage-m" aria-label="IP Chainage (m)" value={ipChainage} onChange={e => setIpChainage(e.target.value)} type="number" min="0"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
       </div>
 
       <div className="flex items-center gap-3">
-        <button onClick={computeElements} className="px-5 py-2 bg-[var(--accent)] text-white rounded text-sm font-medium hover:opacity-90">
+        <button onClick={computeElements} className="px-5 py-2 bg-[var(--accent)] text-black rounded text-sm font-medium hover:opacity-90">
           Compute
         </button>
         {result && (
@@ -150,8 +150,8 @@ export default function HorizontalCurveCalculator() {
 
       {tab === 'setout' && (
         <div className="mt-2">
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Peg Interval (m)</label>
-          <input aria-label="Peg Interval (m)" value={interval} onChange={e => setInterval(e.target.value)} type="number" min="1" max="100"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="peg-interval-m">Peg Interval (m)</label>
+          <input  id="peg-interval-m" aria-label="Peg Interval (m)" value={interval} onChange={e => setInterval(e.target.value)} type="number" min="1" max="100"
             className="w-24 px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
       )}

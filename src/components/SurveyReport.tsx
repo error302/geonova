@@ -170,14 +170,14 @@ export default function SurveyReport({
     </div>
   )
 
-  const FieldLabel = ({ children, required }: { children: React.ReactNode; required?: boolean }) => (
-    <label className="block text-sm font-medium text-gray-700 mb-1">
+  const FieldLabel = ({ children, required, htmlFor }: { children: React.ReactNode; required?: boolean; htmlFor?: string }) => (
+    <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 mb-1">
       {children}{required && <span className="text-red-500 ml-0.5">*</span>}
     </label>
   )
 
   const Input = ({ className = '', ...props }: React.InputHTMLAttributes<HTMLInputElement>) => (
-    <input aria-label="Text input"
+    <input
       className={`w-full border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
       {...props}
     />
@@ -244,12 +244,12 @@ export default function SurveyReport({
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <FieldLabel required>{t('surveyReport.jobNo')}</FieldLabel>
-              <Input value={jobNo} onChange={e => setJobNo(e.target.value)} placeholder="e.g. SD-2024-00123" />
+              <FieldLabel required htmlFor="sr-job-no">{t('surveyReport.jobNo')}</FieldLabel>
+              <Input id="sr-job-no" value={jobNo} onChange={e => setJobNo(e.target.value)} placeholder="e.g. SD-2024-00123" />
             </div>
             <div>
-              <FieldLabel required>{t('surveyReport.surveyor')}</FieldLabel>
-              <Input
+              <FieldLabel required htmlFor="sr-surveyor">{t('surveyReport.surveyor')}</FieldLabel>
+              <Input id="sr-surveyor"
                 value={surveyorName}
                 onChange={e => setSurveyorName(e.target.value.toUpperCase())}
                 placeholder="JOHN M. KARIUKI"
@@ -257,24 +257,24 @@ export default function SurveyReport({
               />
             </div>
             <div>
-              <FieldLabel required>{t('surveyReport.date')}</FieldLabel>
-              <Input type="date" value={date} onChange={e => setDate(e.target.value)} />
+              <FieldLabel required htmlFor="sr-date">{t('surveyReport.date')}</FieldLabel>
+              <Input id="sr-date" type="date" value={date} onChange={e => setDate(e.target.value)} />
             </div>
           </div>
 
           <SectionHeader>{t('surveyReport.parcelInfo')}</SectionHeader>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <FieldLabel>{t('surveyReport.parcelDesc')}</FieldLabel>
-              <Input
+              <FieldLabel htmlFor="sr-parcel-desc">{t('surveyReport.parcelDesc')}</FieldLabel>
+              <Input id="sr-parcel-desc"
                 value={parcelDescription}
                 onChange={e => setParcelDescription(e.target.value)}
                 placeholder="Urban residential plot, Block 12, Dagoretti"
               />
             </div>
             <div>
-              <FieldLabel>{t('surveyReport.environment')}</FieldLabel>
-              <Select value={initialEnv} disabled>
+              <FieldLabel htmlFor="sr-env">{t('surveyReport.environment')}</FieldLabel>
+              <Select id="sr-env" value={initialEnv} disabled>
                 <option value="urban">{t('surveyReport.envUrban')}</option>
                 <option value="rural">{t('surveyReport.envRural')}</option>
                 <option value="transmission_line">{t('surveyReport.envTransmission')}</option>
@@ -304,8 +304,8 @@ export default function SurveyReport({
 
           <SectionHeader>{t('surveyReport.boundarySection')}</SectionHeader>
           <div>
-            <FieldLabel required>{t('surveyReport.boundaryDesc')}</FieldLabel>
-            <Textarea
+            <FieldLabel required htmlFor="sr-boundary">{t('surveyReport.boundaryDesc')}</FieldLabel>
+            <Textarea id="sr-boundary"
               rows={3}
               value={boundaryDescription}
               onChange={e => setBoundaryDescription(e.target.value)}
@@ -339,6 +339,7 @@ export default function SurveyReport({
                       setFixedPoints(updated)
                     }}
                     placeholder={`Point ref (e.g. RM-001)`}
+                    aria-label="Fixed point reference"
                   />
                   <Input
                     value={fp.description}
@@ -348,6 +349,7 @@ export default function SurveyReport({
                       setFixedPoints(updated)
                     }}
                     placeholder="Description / condition"
+                    aria-label="Fixed point description"
                   />
                   <button
                     onClick={() => removeFixedPoint(fp.id)}
@@ -362,8 +364,8 @@ export default function SurveyReport({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <FieldLabel>{t('surveyReport.locationMethod')}</FieldLabel>
-              <Select value={locationMethod} onChange={e => setLocationMethod(e.target.value)}>
+              <FieldLabel htmlFor="sr-location-method">{t('surveyReport.locationMethod')}</FieldLabel>
+              <Select id="sr-location-method" value={locationMethod} onChange={e => setLocationMethod(e.target.value)}>
                 <option value="">{t('common.select')}</option>
                 <option value="polar">{t('surveyReport.methodPolar')}</option>
                 <option value="intersection">{t('surveyReport.methodIntersection')}</option>
@@ -373,8 +375,8 @@ export default function SurveyReport({
               </Select>
             </div>
             <div>
-              <FieldLabel>{t('surveyReport.areaMethod')}</FieldLabel>
-              <Select value={areaCalcMethod} onChange={e => setAreaCalcMethod(e.target.value)}>
+              <FieldLabel htmlFor="sr-area-method">{t('surveyReport.areaMethod')}</FieldLabel>
+              <Select id="sr-area-method" value={areaCalcMethod} onChange={e => setAreaCalcMethod(e.target.value)}>
                 <option value="coordinate">{t('surveyReport.areaCoord')}</option>
                 <option value="subdivision">{t('surveyReport.areaSubdiv')}</option>
                 <option value="decomposition">{t('surveyReport.areaDecomp')}</option>
@@ -404,8 +406,8 @@ export default function SurveyReport({
           </div>
 
           <div>
-            <FieldLabel>{t('surveyReport.equipment')}</FieldLabel>
-            <Input
+            <FieldLabel htmlFor="sr-equipment">{t('surveyReport.equipment')}</FieldLabel>
+            <Input id="sr-equipment"
               value={equipment}
               onChange={e => setEquipment(e.target.value)}
               placeholder="Leica TS16, Trimble R12i RTK GPS, 50m steel tape..."
@@ -442,8 +444,8 @@ export default function SurveyReport({
           )}
 
           <div>
-            <FieldLabel>{t('surveyReport.accuracyNotes')}</FieldLabel>
-            <Textarea
+            <FieldLabel htmlFor="sr-accuracy-notes">{t('surveyReport.accuracyNotes')}</FieldLabel>
+            <Textarea id="sr-accuracy-notes"
               rows={2}
               value={accuracyNotes}
               onChange={e => setAccuracyNotes(e.target.value)}
@@ -452,8 +454,8 @@ export default function SurveyReport({
           </div>
 
           <div>
-            <FieldLabel>{t('surveyReport.fieldChecks')}</FieldLabel>
-            <Textarea
+            <FieldLabel htmlFor="sr-field-checks">{t('surveyReport.fieldChecks')}</FieldLabel>
+            <Textarea id="sr-field-checks"
               rows={2}
               value={fieldChecks}
               onChange={e => setFieldChecks(e.target.value)}
@@ -506,8 +508,8 @@ export default function SurveyReport({
 
           <SectionHeader>{t('surveyReport.difficultiesSection')}</SectionHeader>
           <div>
-            <FieldLabel>{t('surveyReport.difficulties')}</FieldLabel>
-            <Textarea
+            <FieldLabel htmlFor="sr-difficulties">{t('surveyReport.difficulties')}</FieldLabel>
+            <Textarea id="sr-difficulties"
               rows={2}
               value={difficulties}
               onChange={e => setDifficulties(e.target.value)}
@@ -529,8 +531,8 @@ export default function SurveyReport({
               {discrepancies.map((d: any) => (
                 <div key={d.id} className="grid grid-cols-3 gap-2 p-3 bg-gray-50 rounded">
                   <div>
-                    <FieldLabel>{t('surveyReport.discType')}</FieldLabel>
-                    <Select
+                    <FieldLabel htmlFor={`sr-disc-type-${d.id}`}>{t('surveyReport.discType')}</FieldLabel>
+                    <Select id={`sr-disc-type-${d.id}`}
                       value={d.type}
                       onChange={e => {
                         const updated = discrepancies.map((x: any) => x.id === d.id ? { ...x, type: e.target.value as Discrepancy['type'] } : x)
@@ -543,8 +545,8 @@ export default function SurveyReport({
                     </Select>
                   </div>
                   <div className="col-span-2">
-                    <FieldLabel>{t('surveyReport.discDesc')}</FieldLabel>
-                    <Textarea
+                    <FieldLabel htmlFor={`sr-disc-desc-${d.id}`}>{t('surveyReport.discDesc')}</FieldLabel>
+                    <Textarea id={`sr-disc-desc-${d.id}`}
                       rows={2}
                       placeholder="Describe and suggest a resolution..."
                       value={d.description}
@@ -576,6 +578,7 @@ export default function SurveyReport({
           <div>
             <Textarea
               rows={3}
+              aria-label={t('surveyReport.certificate')}
               value={certificateText}
               onChange={e => setCertificateText(e.target.value)}
             />
@@ -590,8 +593,8 @@ export default function SurveyReport({
               <div className="text-xs text-gray-500 mt-1">{surveyorName}</div>
             </div>
             <div>
-              <FieldLabel>{t('surveyReport.supervisor')}</FieldLabel>
-              <Input
+              <FieldLabel htmlFor="sr-supervisor">{t('surveyReport.supervisor')}</FieldLabel>
+              <Input id="sr-supervisor"
                 value={supervisorName}
                 onChange={e => setSupervisorName(e.target.value.toUpperCase())}
                 placeholder="SUPERVISOR NAME"

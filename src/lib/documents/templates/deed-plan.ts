@@ -453,7 +453,7 @@ function drawDeedPlanTitleBlock(
   drawLine(doc, bx, by + rowHeight * 3 + 3, bx + tbWidth, by + rowHeight * 3 + 3, 0.3);
 
   // ─── Data rows (two columns) ─────────────────────────────────
-  let currentY = by + rowHeight * 3 + 3 + innerMargin;
+  const currentY = by + rowHeight * 3 + 3 + innerMargin;
   const col1X = bx + innerMargin;
   const col2X = bx + tbWidth / 2 + innerMargin;
   const labelWidth = 32;

@@ -139,7 +139,7 @@ function detectGSIFormat(firstLine: string): 'GSI-8' | 'GSI-16' | 'UNKNOWN' {
   const val16 = chunk16.substring(2, 16)
 
   const typeValid = (t: string) => /^\d{2}$/.test(t)
-  const valNumeric = (v: string) => /^[+\-]?\d+$/.test(v.trim())
+  const valNumeric = (v: string) => /^[+-]?\d+$/.test(v.trim())
 
   if (typeValid(type8) && valNumeric(val8) && afterFirst.length >= 16) {
     // If at position 8 there's a `*`, it's GSI-8
@@ -515,7 +515,7 @@ export function reduceGSIObservations(
     const hzDMS = decimalToDMS(meanHz)
 
     // ── Vertical angle (V) ─────────────────────────────────────────────────
-    let va = obs.verticalAngle ?? 0
+    const va = obs.verticalAngle ?? 0
     const vaDMS = decimalToDMS(Math.abs(va))
 
     // ── Slope distance ────────────────────────────────────────────────────

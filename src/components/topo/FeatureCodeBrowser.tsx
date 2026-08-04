@@ -184,6 +184,8 @@ export default function FeatureCodeBrowser({
         onKeyDown={handleKeyDown}
         role="listbox"
         aria-label="Feature code list"
+        aria-activedescendant={focusIndex >= 0 ? `fc-opt-${focusIndex}` : undefined}
+        tabIndex={0}
       >
         {/* Search input */}
         <div className="relative">
@@ -207,9 +209,11 @@ export default function FeatureCodeBrowser({
             return (
               <div
                 key={fc.code}
+                id={`fc-opt-${idx}`}
                 ref={el => { if (el) itemRefs.current.set(idx, el) }}
                 role="option"
                 aria-selected={isSelected}
+                tabIndex={-1}
                 onClick={() => onSelect(fc)}
                 className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-xs transition-colors ${
                   isSelected
@@ -242,6 +246,8 @@ export default function FeatureCodeBrowser({
       onKeyDown={handleKeyDown}
       role="listbox"
       aria-label="Feature code browser"
+      aria-activedescendant={focusIndex >= 0 ? `fc-opt-${focusIndex}` : undefined}
+      tabIndex={0}
     >
       {/* Header */}
       <div className="flex items-center gap-2">
@@ -366,9 +372,11 @@ function CodeRow({
 
   return (
     <div
+      id={`fc-opt-${flatIndex}`}
       ref={el => { if (el) itemRefs.current.set(flatIndex, el) }}
       role="option"
       aria-selected={isSelected}
+      tabIndex={-1}
       onClick={() => onSelect(fc)}
       className={`flex items-center gap-2 px-2.5 py-2 cursor-pointer rounded-sm transition-colors ${
         isSelected

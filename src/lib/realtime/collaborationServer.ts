@@ -25,7 +25,7 @@
 import { WebSocketServer, WebSocket } from 'ws'
 import { createServer, IncomingMessage } from 'http'
 import { parse } from 'url'
-import { createVerify } from 'crypto'
+import { createHmac, createVerify } from 'crypto'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -85,8 +85,7 @@ function verifyToken(token: string, secret: string): { userId?: string; email?: 
 
     // NextAuth uses HS256 (HMAC), not RSA
     // For HMAC verification, we need crypto.createHmac
-    const crypto = require('crypto')
-    const expectedSig = crypto.createHmac('sha256', secret)
+    const expectedSig = createHmac('sha256', secret)
       .update(signedContent)
       .digest('base64url')
 

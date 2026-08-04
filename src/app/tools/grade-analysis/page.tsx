@@ -15,7 +15,7 @@ export default function GradeAnalysisPage() {
       <PageHeader title="Grade Analysis" subtitle="Sustained grades, critical lengths, climbing lane warrants" reference="AASHTO Green Book | Kenya Road Standards" />
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-4">
-          <div><label className="block text-sm text-zinc-400 mb-2">Grade Profile (chainage, elevation — one per line)</label><textarea value={csv} onChange={e => setCsv(e.target.value)} rows={8} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="grade-profile-chainage-elevation-one-per-line">Grade Profile (chainage, elevation — one per line)</label><textarea id="grade-profile-chainage-elevation-one-per-line" value={csv} onChange={e => setCsv(e.target.value)} rows={8} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
           <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Analyze Grades</button>
         </div>
         <div>{result ? (
@@ -28,7 +28,7 @@ export default function GradeAnalysisPage() {
             </div>
             <div className="overflow-x-auto max-h-64"><table className="w-full text-sm"><thead><tr className="text-zinc-500 border-b border-zinc-700"><th className="text-right py-2">From</th><th className="text-right py-2">To</th><th className="text-right py-2">Length</th><th className="text-right py-2">Grade %</th><th className="text-center py-2">Flags</th></tr></thead><tbody>{result.segments.map((s, i) => (<tr key={i} className="border-b border-zinc-800"><td className="py-1.5 text-right font-mono text-white">{s.startChainage.toFixed(0)}</td><td className="py-1.5 text-right font-mono text-white">{s.endChainage.toFixed(0)}</td><td className="py-1.5 text-right font-mono text-white">{s.length.toFixed(0)}m</td><td className={`py-1.5 text-right font-mono ${s.isCritical ? 'text-red-400' : s.isSustained ? 'text-amber-400' : 'text-green-400'}`}>{s.grade.toFixed(2)}%</td><td className="py-1.5 text-center">{s.needsClimbingLane ? '' : s.isCritical ? '' : s.isSustained ? '' : ''}</td></tr>))}</tbody></table></div>
           </div>
-        ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-500">Enter profile and click Analyze.</div>}</div>
+        ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-400">Enter profile and click Analyze.</div>}</div>
       </div>
     </div>
   )

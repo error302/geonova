@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react'
+import { useState, useId } from 'react'
 import { Download , AlertTriangle } from 'lucide-react'
 import { inverseComputation, polarComputation, intersectionComputation, resectionComputation, areaComputation, joinComputation, distanceDistanceIntersection, bearingDistanceIntersection, arcByRadiusAndChord, type InverseStep, type DistDistResult, type BearingDistResult, type ArcResult } from '@/lib/computations/cogoEngine'
 import { downloadCSV, toCSV } from '@/lib/export/helpers'
@@ -12,15 +12,16 @@ interface Props {
 }
 
 function DMSField({ label, deg, min, sec, onChange }: { label: string; deg: string; min: string; sec: string; onChange: (f: 'd' | 'm' | 's', v: string) => void }) {
+  const degId = useId()
   return (
     <div>
-      <label className="block text-xs text-[var(--text-muted)] mb-1">{label}</label>
+      <label htmlFor={degId} className="block text-xs text-[var(--text-muted)] mb-1">{label}</label>
       <div className="flex gap-1">
-        <input value={deg} onChange={e => onChange('d', e.target.value)} type="number" min="0" max="359" aria-label="Deg" placeholder="Deg"
+        <input id={degId} value={deg} onChange={e => onChange('d', e.target.value)} type="number" min="0" max="359" placeholder="Deg"
           className="w-10 md:w-14 px-1 md:px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-xs md:text-sm" />
-        <input value={min} onChange={e => onChange('m', e.target.value)} type="number" min="0" max="59" aria-label="Min" placeholder="Min"
+        <input value={min} onChange={e => onChange('m', e.target.value)} type="number" min="0" max="59" aria-label={`${label} — minutes`} placeholder="Min"
           className="w-8 md:w-12 px-1 md:px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-xs md:text-sm" />
-        <input value={sec} onChange={e => onChange('s', e.target.value)} type="number" step="0.001" min="0" max="59.999" aria-label="Sec" placeholder="Sec"
+        <input value={sec} onChange={e => onChange('s', e.target.value)} type="number" step="0.001" min="0" max="59.999" aria-label={`${label} — seconds`} placeholder="Sec"
           className="flex-1 min-w-[50px] px-1 md:px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-xs md:text-sm" />
       </div>
     </div>
@@ -55,10 +56,11 @@ function StepsDisplay({ steps, title }: { steps: InverseStep[]; title?: string }
 }
 
 function CoordField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  const id = useId()
   return (
     <div>
-      <label className="block text-xs text-[var(--text-muted)] mb-1">{label}</label>
-      <input aria-label="{label}" value={value} onChange={e => onChange(e.target.value)} type="number" step="0.001"
+      <label htmlFor={id} className="block text-xs text-[var(--text-muted)] mb-1">{label}</label>
+      <input id={id} value={value} onChange={e => onChange(e.target.value)} type="number" step="0.001"
         className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
     </div>
   )
@@ -518,8 +520,8 @@ export default function COGOCalculator({ compact = false }: Props) {
                 <CoordField label="Point 1 Easting (m)" value={invE1} onChange={setInvE1} />
                 <CoordField label="Point 1 Northing (m)" value={invN1} onChange={setInvN1} />
                 <div>
-                  <label className="block text-xs text-[var(--text-muted)] mb-1">Point 1 Label</label>
-                  <input aria-label="Point 1 Label" value={invL1} onChange={e => setInvL1(e.target.value)}
+                  <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="point-1-label">Point 1 Label</label>
+                  <input id="point-1-label" value={invL1} onChange={e => setInvL1(e.target.value)}
                     className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
                 </div>
               </div>
@@ -527,8 +529,8 @@ export default function COGOCalculator({ compact = false }: Props) {
                 <CoordField label="Point 2 Easting (m)" value={invE2} onChange={setInvE2} />
                 <CoordField label="Point 2 Northing (m)" value={invN2} onChange={setInvN2} />
                 <div>
-                  <label className="block text-xs text-[var(--text-muted)] mb-1">Point 2 Label</label>
-                  <input aria-label="Point 2 Label" value={invL2} onChange={e => setInvL2(e.target.value)}
+                  <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="point-2-label">Point 2 Label</label>
+                  <input id="point-2-label" value={invL2} onChange={e => setInvL2(e.target.value)}
                     className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
                 </div>
               </div>
@@ -674,7 +676,7 @@ export default function COGOCalculator({ compact = false }: Props) {
               </div>
               <CoordField label="Radius (m)" value={arcR} onChange={setArcR} />
               <label className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
-                <input aria-label="Arccw" type="checkbox" checked={arcCW} onChange={e => setArcCW(e.target.checked)} /> Clockwise arc
+                <input type="checkbox" checked={arcCW} onChange={e => setArcCW(e.target.checked)} /> Clockwise arc
               </label>
               <button onClick={handleArcBoundary} className="btn btn-primary w-full">Compute Arc →</button>
             </div>
@@ -878,8 +880,8 @@ export default function COGOCalculator({ compact = false }: Props) {
               <StepsDisplay steps={ddResult.steps} />
               {ddResult.hasSolution && ddResult.solutions.length > 1 && (
                 <div className="flex gap-2">
-                  <button onClick={() => setDdSel(0)} className={`px-3 py-1.5 rounded text-sm ${ddSel === 0 ? 'bg-[var(--accent)] text-white' : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]'}`}>Solution 1</button>
-                  <button onClick={() => setDdSel(1)} className={`px-3 py-1.5 rounded text-sm ${ddSel === 1 ? 'bg-[var(--accent)] text-white' : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]'}`}>Solution 2</button>
+                  <button onClick={() => setDdSel(0)} className={`px-3 py-1.5 rounded text-sm ${ddSel === 0 ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]'}`}>Solution 1</button>
+                  <button onClick={() => setDdSel(1)} className={`px-3 py-1.5 rounded text-sm ${ddSel === 1 ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]'}`}>Solution 2</button>
                 </div>
               )}
               {ddResult.hasSolution && (
@@ -899,8 +901,8 @@ export default function COGOCalculator({ compact = false }: Props) {
               <StepsDisplay steps={bdResult.steps} />
               {bdResult.hasSolution && bdResult.solutions.length > 1 && (
                 <div className="flex gap-2">
-                  <button onClick={() => setBdSel(0)} className={`px-3 py-1.5 rounded text-sm ${bdSel === 0 ? 'bg-[var(--accent)] text-white' : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]'}`}>Solution 1</button>
-                  <button onClick={() => setBdSel(1)} className={`px-3 py-1.5 rounded text-sm ${bdSel === 1 ? 'bg-[var(--accent)] text-white' : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]'}`}>Solution 2</button>
+                  <button onClick={() => setBdSel(0)} className={`px-3 py-1.5 rounded text-sm ${bdSel === 0 ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]'}`}>Solution 1</button>
+                  <button onClick={() => setBdSel(1)} className={`px-3 py-1.5 rounded text-sm ${bdSel === 1 ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)]'}`}>Solution 2</button>
                 </div>
               )}
               {bdResult.hasSolution && (

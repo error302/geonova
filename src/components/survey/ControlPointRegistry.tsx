@@ -165,16 +165,16 @@ export function ControlPointRegistry() {
 
         <div className="grid grid-cols-3 gap-2">
           <div>
-            <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Easting (m)</label>
-            <input type="number" value={easting} onChange={e => setEasting(e.target.value)} aria-label="261518" placeholder="261518" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+            <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="easting-m">Easting (m)</label>
+            <input id="easting-m" type="number" value={easting} onChange={e => setEasting(e.target.value)} placeholder="261518" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
           </div>
           <div>
-            <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Northing (m)</label>
-            <input type="number" value={northing} onChange={e => setNorthing(e.target.value)} aria-label="9859340" placeholder="9859340" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+            <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="northing-m">Northing (m)</label>
+            <input id="northing-m" type="number" value={northing} onChange={e => setNorthing(e.target.value)} placeholder="9859340" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
           </div>
           <div>
-            <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Radius (m)</label>
-            <input aria-label="Radius (m)" type="number" value={radius} onChange={e => setRadius(e.target.value)} className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono focus:border-[var(--accent)]/30 focus:outline-none" />
+            <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="radius-m">Radius (m)</label>
+            <input id="radius-m" aria-label="Radius (m)" type="number" value={radius} onChange={e => setRadius(e.target.value)} className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono focus:border-[var(--accent)]/30 focus:outline-none" />
           </div>
         </div>
 

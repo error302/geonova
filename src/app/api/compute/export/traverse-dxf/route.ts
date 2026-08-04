@@ -201,7 +201,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   })
 
   // ── Build filename ──────────────────────────────────────────────────────
-  const safeName = (project.name || 'traverse').replace(/[^a-zA-Z0-9_\-]/g, '_')
+  const safeName = (project.name || 'traverse').replace(/[^a-zA-Z0-9_-]/g, '_')
   const date = new Date().toISOString().split('T')[0]
   const filename = `Traverse_${safeName}_${date}.dxf`
 

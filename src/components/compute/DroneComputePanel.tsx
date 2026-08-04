@@ -134,8 +134,8 @@ export default function DroneComputePanel({ projectId }: { projectId: string }) 
       {/* Volume Section */}
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
-          <label className="block text-xs text-zinc-500">Grid Points (X,Y,Z) — one per line</label>
-          <textarea value={gridPoints} onChange={e => setGridPoints(e.target.value)} rows={5} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-white text-xs font-mono" />
+          <label className="block text-xs text-zinc-500" htmlFor="grid-points-x-y-z-one-per-line">Grid Points (X,Y,Z) — one per line</label>
+          <textarea  id="grid-points-x-y-z-one-per-line" value={gridPoints} onChange={e => setGridPoints(e.target.value)} rows={5} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-white text-xs font-mono" />
           <div className="flex gap-2 text-xs">
             <span className="text-zinc-500">Ref Plane:</span>
             <input aria-label="Grid Points (X,Y,Z) — one per line" type="number" step="0.1" value={refPlane} onChange={e => setRefPlane(Number(e.target.value))} className="w-16 bg-zinc-800 border border-zinc-700 rounded px-1 py-0.5 text-white" />
@@ -147,7 +147,7 @@ export default function DroneComputePanel({ projectId }: { projectId: string }) 
         </div>
       </div>
 
-      <button onClick={handleSave} disabled={saved} className="inline-flex items-center gap-1 px-3 py-1 bg-[var(--accent)] text-white text-xs rounded hover:bg-[var(--accent-dim)] disabled:opacity-50">
+      <button onClick={handleSave} disabled={saved} className="inline-flex items-center gap-1 px-3 py-1 bg-[var(--accent)] text-black text-xs rounded hover:bg-[var(--accent-dim)] disabled:opacity-50">
         {saved ? <CheckCircle className="w-3 h-3" /> : <Save className="w-3 h-3" />}{saved ? 'Saved' : 'Save Results'}
       </button>
     </div>

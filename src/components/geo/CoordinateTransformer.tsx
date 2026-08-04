@@ -49,15 +49,15 @@ export default function CoordinateTransformer({ projectId }: { projectId?: strin
 
       <div className="flex gap-4">
         <div className="flex-1">
-          <label className="text-xs text-gray-500 mb-1 block">From</label>
-          <select value={fromCRS} onChange={(e) => setFromCRS(e.target.value as CoordSystem)}
+          <label className="text-xs text-gray-500 mb-1 block" htmlFor="from">From</label>
+          <select id="from" value={fromCRS} onChange={(e) => setFromCRS(e.target.value as CoordSystem)}
             className="w-full border rounded px-3 py-2 text-sm">
             {crsList.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
         <div className="flex-1">
-          <label className="text-xs text-gray-500 mb-1 block">To</label>
-          <select value={toCRS} onChange={(e) => setToCRS(e.target.value as CoordSystem)}
+          <label className="text-xs text-gray-500 mb-1 block" htmlFor="to">To</label>
+          <select  id="to" value={toCRS} onChange={(e) => setToCRS(e.target.value as CoordSystem)}
             className="w-full border rounded px-3 py-2 text-sm">
             {crsList.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
@@ -78,9 +78,9 @@ export default function CoordinateTransformer({ projectId }: { projectId?: strin
           {rows.map((row: any, idx: any) => (
             <tr key={`row-${row.id}-${idx}`}>
               <td className="border px-1"><input aria-label="Id" value={row.id} onChange={(e) => updateRow(idx, 'id', e.target.value)} className="w-full outline-none px-1" /></td>
-              <td className="border px-1"><input value={row.x} onChange={(e) => updateRow(idx, 'x', e.target.value)} className="w-full outline-none px-1" aria-label="0.000" placeholder="0.000" /></td>
-              <td className="border px-1"><input value={row.y} onChange={(e) => updateRow(idx, 'y', e.target.value)} className="w-full outline-none px-1" aria-label="0.000" placeholder="0.000" /></td>
-              <td className="border px-1"><input value={row.z} onChange={(e) => updateRow(idx, 'z', e.target.value)} className="w-full outline-none px-1" aria-label="optional" placeholder="optional" /></td>
+              <td className="border px-1"><input value={row.x} onChange={(e) => updateRow(idx, 'x', e.target.value)} className="w-full outline-none px-1" aria-label="X coordinate" placeholder="0.000" /></td>
+              <td className="border px-1"><input value={row.y} onChange={(e) => updateRow(idx, 'y', e.target.value)} className="w-full outline-none px-1" aria-label="Y coordinate" placeholder="0.000" /></td>
+              <td className="border px-1"><input value={row.z} onChange={(e) => updateRow(idx, 'z', e.target.value)} className="w-full outline-none px-1" aria-label="Z coordinate (optional)" placeholder="optional" /></td>
             </tr>
           ))}
         </tbody>

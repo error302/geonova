@@ -46,6 +46,19 @@ const FIELD_WIDTHS: Record<keyof MarkRow, string> = {
   witnessNotes: 'min-w-[360px]',
 }
 
+const FIELD_LABELS: Record<keyof MarkRow, string> = {
+  id: 'Mark ID',
+  type: 'Type',
+  order: 'Order',
+  easting: 'Easting (m)',
+  northing: 'Northing (m)',
+  elevation: 'Elevation (m)',
+  description: 'Description',
+  condition: 'Condition',
+  photoRef: 'Photo / Sketch Ref',
+  witnessNotes: 'Witness / Recovery Notes',
+}
+
 function esc(value: string) {
   return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
@@ -129,7 +142,7 @@ export default function ControlMarksRegisterPage() {
                 <tr key={`${row}-${index}`}>
                   {(Object.keys(row) as (keyof MarkRow)[]).map(field => (
                     <td key={field}>
-                      <input aria-label="{column}"
+                      <input aria-label={FIELD_LABELS[field]}
                         className={`input ${FIELD_WIDTHS[field]} text-xs`}
                         value={row[field]}
                         onChange={e => updateRow(index, field, e.target.value)}

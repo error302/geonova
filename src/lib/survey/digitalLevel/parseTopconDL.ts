@@ -27,7 +27,7 @@ export function parseTopconDL(content: string, filename?: string): LevelImportRe
   let instrument = 'Topcon-DL'
   let jobNumber = ''
   let dateStr = ''
-  let instrumentHeight = 1.6
+  const instrumentHeight = 1.6
 
   let inDataSection = false
 

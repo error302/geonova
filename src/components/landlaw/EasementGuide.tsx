@@ -57,7 +57,7 @@ export default function EasementGuide() {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSearch()}
-            aria-label="Search easement topics..." placeholder="Search easement topics..."
+            aria-label="Search easement topics..."
             className="flex-1 p-2 border rounded-lg"
           />
           <button

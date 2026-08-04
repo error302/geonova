@@ -131,7 +131,7 @@ export default function RimEditorPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
                 <input
                   type="text"
-                  aria-label="Search projects..." placeholder="Search projects..."
+                  aria-label="Search projects" placeholder="Search projects..."
                   value={projectSearch}
                   onChange={(e) => setProjectSearch(e.target.value)}
                   className="input pl-9"

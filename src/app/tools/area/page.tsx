@@ -114,8 +114,8 @@ export default function AreaCalculator() {
                     {points.map((p, i) => (
                       <tr key={p.id}>
                         <td className="text-left font-semibold">{String.fromCharCode(65 + i)}</td>
-                        <td><input className="input" value={p.n} onChange={e => updatePoint(p.id, 'n', e.target.value)} onFocus={e => e.target.select()} aria-label="e.g. 5000" placeholder="e.g. 5000" /></td>
-                        <td><input className="input" value={p.e} onChange={e => updatePoint(p.id, 'e', e.target.value)} onFocus={e => e.target.select()} aria-label="e.g. 3000" placeholder="e.g. 3000" /></td>
+                        <td><input className="input" value={p.n} onChange={e => updatePoint(p.id, 'n', e.target.value)} onFocus={e => e.target.select()} aria-label="Northing (m)" placeholder="e.g. 5000" /></td>
+                        <td><input className="input" value={p.e} onChange={e => updatePoint(p.id, 'e', e.target.value)} onFocus={e => e.target.select()} aria-label="Easting (m)" placeholder="e.g. 3000" /></td>
                         <td><button onClick={() => removePoint(p.id)} className="text-[var(--error)] p-2 hover:bg-[var(--error)]/10 rounded">×</button></td>
                       </tr>
                     ))}
@@ -129,12 +129,12 @@ export default function AreaCalculator() {
               <div className="card-header"><span className="label">Offset Method</span></div>
               <div className="card-body space-y-4">
                 <div>
-                  <label className="label">Ordinates (comma-separated, m)</label>
-                  <input className="input" value={offsets} onChange={e => setOffsets(e.target.value)} aria-label="10, 15, 18, 22, 20, 16" placeholder="10, 15, 18, 22, 20, 16" />
+                  <label className="label" htmlFor="ordinates-comma-separated-m">Ordinates (comma-separated, m)</label>
+                  <input id="ordinates-comma-separated-m" className="input" value={offsets} onChange={e => setOffsets(e.target.value)} placeholder="10, 15, 18, 22, 20, 16" />
                 </div>
                 <div>
-                  <label className="label">Interval (m)</label>
-                  <input className="input" value={interval} onChange={e => setInterval(e.target.value)} aria-label="20" placeholder="20" />
+                  <label className="label" htmlFor="interval-m">Interval (m)</label>
+                  <input id="interval-m" className="input" value={interval} onChange={e => setInterval(e.target.value)} placeholder="20" />
                 </div>
               </div>
             </div>

@@ -23,8 +23,8 @@ export default function TitleComparisonPage() {
       <PageHeader title="Title Dimension Check" subtitle="Compare surveyed vs title deed dimensions" reference="Survey Regulations 1994 | Cap. 299" />
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-4">
-          <div><label className="block text-sm text-zinc-400 mb-2">Title Deed Dimensions (label, bearing, distance)</label><textarea value={titleCsv} onChange={e => setTitleCsv(e.target.value)} rows={5} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
-          <div><label className="block text-sm text-zinc-400 mb-2">Surveyed Dimensions (label, bearing, distance)</label><textarea value={surveyedCsv} onChange={e => setSurveyedCsv(e.target.value)} rows={5} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="title-deed-dimensions-label-bearing-distance">Title Deed Dimensions (label, bearing, distance)</label><textarea id="title-deed-dimensions-label-bearing-distance" value={titleCsv} onChange={e => setTitleCsv(e.target.value)} rows={5} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="surveyed-dimensions-label-bearing-distance">Surveyed Dimensions (label, bearing, distance)</label><textarea id="surveyed-dimensions-label-bearing-distance" value={surveyedCsv} onChange={e => setSurveyedCsv(e.target.value)} rows={5} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
           <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Compare Dimensions</button>
         </div>
         <div>
@@ -36,7 +36,7 @@ export default function TitleComparisonPage() {
               </div>
               <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-zinc-500 border-b border-zinc-700"><th className="text-left py-2">Leg</th><th className="text-right py-2">Title Brg</th><th className="text-right py-2">Surv Brg</th><th className="text-right py-2">ΔBrg (")</th><th className="text-right py-2">Title Dist</th><th className="text-right py-2">Surv Dist</th><th className="text-right py-2">ΔDist (mm)</th><th className="text-center py-2">Status</th></tr></thead><tbody>{result.comparisons.map((c, i) => (<tr key={i} className="border-b border-zinc-800"><td className="py-2 font-mono text-amber-400">{c.label}</td><td className="py-2 text-right font-mono text-white">{c.titleBearing.toFixed(4)}°</td><td className="py-2 text-right font-mono text-white">{c.surveyedBearing.toFixed(4)}°</td><td className={`py-2 text-right font-mono ${c.bearingWithinTolerance ? 'text-green-400' : 'text-red-400'}`}>{c.bearingDifference.toFixed(1)}</td><td className="py-2 text-right font-mono text-white">{c.titleDistance.toFixed(3)}</td><td className="py-2 text-right font-mono text-white">{c.surveyedDistance.toFixed(3)}</td><td className={`py-2 text-right font-mono ${c.distanceWithinTolerance ? 'text-green-400' : 'text-red-400'}`}>{c.distanceDifference.toFixed(1)}</td><td className="py-2 text-center">{c.severity === 'ok' ? '' : c.severity === 'warn' ? '' : ''}</td></tr>))}</tbody></table></div>
             </div>
-          ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-500">Enter title and surveyed dimensions, then click Compare.</div>}
+          ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-400">Enter title and surveyed dimensions, then click Compare.</div>}
         </div>
       </div>
     </div>

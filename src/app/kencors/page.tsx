@@ -29,10 +29,10 @@ function StationCard({ station, distance, onSelect, selected }: {
   onSelect: () => void
   selected: boolean
 }) {
-  const net = NETWORKS[station.network]
   return (
     <div role="button" tabIndex={0} onClick={onSelect}
-      onKeyDown={(e) => { if (e.key === 'Enter') onSelect() }}
+      aria-pressed={selected}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }}
       className={`bg-[var(--bg-card)] border rounded-xl p-4 cursor-pointer transition-colors ${
         selected ? 'border-[var(--accent)]/50 bg-[var(--accent)]/5' : 'border-[var(--border-color)] hover:border-[var(--accent)]/30'
       }`}>
@@ -66,7 +66,7 @@ function StationCard({ station, distance, onSelect, selected }: {
 // ── Network card ──────────────────────────────────────────────────────────────
 
 function NetworkCard({ net }: { net: typeof NETWORKS[NetworkId] }) {
-  const stationCount = STATIONS.filter((s: any) => s.network === net.id).length
+  const stationCount = STATIONS.filter((s) => s.network === net.id).length
   return (
     <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-5">
       <div className="flex items-start justify-between mb-3">
@@ -148,7 +148,7 @@ export default function KenCORSPage() {
   }
 
   // Filtered stations for browse tab
-  const shownStations = STATIONS.filter((s: any) => {
+  const shownStations = STATIONS.filter((s) => {
     if (filterNetwork && s.network !== filterNetwork) return false
     if (filterCounty && s.county !== filterCounty) return false
     if (search) {
@@ -158,7 +158,7 @@ export default function KenCORSPage() {
     return true
   })
 
-  const selectedSt = selectedStation ? STATIONS.find((s: any) => s.id === selectedStation) : null
+  const selectedSt = selectedStation ? STATIONS.find((s) => s.id === selectedStation) : null
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
@@ -176,11 +176,11 @@ export default function KenCORSPage() {
         {/* Network summary */}
         <div className="grid grid-cols-4 gap-3 mb-6">
           {([
-            { id: 'MUYA',    label: 'Muya CORS',    count: STATIONS.filter((s: any) =>s.network==='MUYA').length,    color: 'text-blue-400' },
-            { id: 'AGL',     label: 'AGL CORS',     count: STATIONS.filter((s: any) =>s.network==='AGL').length,     color: 'text-green-400' },
-            { id: 'KENCORS', label: 'KenCORS (SoK)', count: STATIONS.filter((s: any) =>s.network==='KENCORS').length, color: 'text-[var(--accent)]' },
+            { id: 'MUYA',    label: 'Muya CORS',    count: STATIONS.filter((s) =>s.network==='MUYA').length,    color: 'text-blue-400' },
+            { id: 'AGL',     label: 'AGL CORS',     count: STATIONS.filter((s) =>s.network==='AGL').length,     color: 'text-green-400' },
+            { id: 'KENCORS', label: 'KenCORS (SoK)', count: STATIONS.filter((s) =>s.network==='KENCORS').length, color: 'text-[var(--accent)]' },
             { id: 'KPLC',    label: 'Kenya Power',  count: '15 pending',  color: 'text-purple-400' },
-          ] as const).map((n: any) => (
+          ] as const).map((n) => (
             <div key={n.id} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-3 text-center">
               <p className={`text-xl font-bold ${n.color}`}>{n.count}</p>
               <p className="text-[10px] text-[var(--text-muted)] mt-0.5">{n.label}</p>
@@ -194,7 +194,7 @@ export default function KenCORSPage() {
             { id: 'finder',   label: 'Find nearest station' },
             { id: 'networks', label: 'Network details' },
             { id: 'guide',    label: 'Setup guide' },
-          ] as const).map((t: any) => (
+          ] as const).map((t) => (
             <button key={t.id} onClick={() => setActiveTab(t.id)}
               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
                 activeTab === t.id
@@ -214,14 +214,14 @@ export default function KenCORSPage() {
                 <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Your position</h2>
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <div>
-                    <label className="text-xs text-[var(--text-muted)] block mb-1">Latitude (decimal °)</label>
-                    <input value={myLat} onChange={e => setMyLat(e.target.value)}
-                      aria-label="-1.2921" placeholder="-1.2921" className="input w-full text-sm font-mono" />
+                    <label htmlFor="kencors-lat" className="text-xs text-[var(--text-muted)] block mb-1">Latitude (decimal °)</label>
+                    <input id="kencors-lat" value={myLat} onChange={e => setMyLat(e.target.value)}
+                      placeholder="-1.2921" className="input w-full text-sm font-mono" />
                   </div>
                   <div>
-                    <label className="text-xs text-[var(--text-muted)] block mb-1">Longitude (decimal °)</label>
-                    <input value={myLon} onChange={e => setMyLon(e.target.value)}
-                      aria-label="36.8219" placeholder="36.8219" className="input w-full text-sm font-mono" />
+                    <label htmlFor="kencors-lon" className="text-xs text-[var(--text-muted)] block mb-1">Longitude (decimal °)</label>
+                    <input id="kencors-lon" value={myLon} onChange={e => setMyLon(e.target.value)}
+                      placeholder="36.8219" className="input w-full text-sm font-mono" />
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -237,7 +237,7 @@ export default function KenCORSPage() {
                     )}
                     Use my GPS
                   </button>
-                  <select value={filterNetwork} onChange={e => setFilterNetwork(e.target.value as any)}
+                  <select value={filterNetwork} onChange={e => setFilterNetwork(e.target.value as '' | NetworkId)}
                     className="input flex-1 text-sm">
                     <option value="">All networks</option>
                     <option value="MUYA">Muya CORS</option>
@@ -251,7 +251,7 @@ export default function KenCORSPage() {
               {nearestStations.length > 0 && (
                 <div className="space-y-2">
                   <p className="text-xs text-[var(--text-muted)] mb-2">Nearest stations to your position:</p>
-                  {nearestStations.map((s: any) => (
+                  {nearestStations.map((s) => (
                     <StationCard key={s.id} station={s} distance={s.distanceKm}
                       selected={selectedStation === s.id}
                       onSelect={() => setSelectedStation(selectedStation === s.id ? null : s.id)} />
@@ -263,15 +263,15 @@ export default function KenCORSPage() {
                 <div className="space-y-1">
                   <div className="flex flex-wrap gap-2 mb-3">
                     <input value={search} onChange={e => setSearch(e.target.value)}
-                      aria-label="Search stations…" placeholder="Search stations…"
+                      aria-label="Search stations…"
                       className="input flex-1 min-w-40 text-sm" />
                     <select value={filterCounty} onChange={e => setFilterCounty(e.target.value)}
                       className="input text-sm">
                       <option value="">All counties</option>
-                      {counties.map((c: any) => <option key={c} value={c}>{c}</option>)}
+                      {counties.map((c) => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
-                  {shownStations.slice(0, 8).map((s: any) => (
+                  {shownStations.slice(0, 8).map((s) => (
                     <StationCard key={s.id} station={s}
                       distance={myLat && myLon ? distanceKm(parseFloat(myLat), parseFloat(myLon), s.latitude, s.longitude) : undefined}
                       selected={selectedStation === s.id}
@@ -355,7 +355,7 @@ export default function KenCORSPage() {
         {/* ── NETWORKS TAB ── */}
         {activeTab === 'networks' && (
           <div className="grid md:grid-cols-2 gap-4">
-            {Object.values(NETWORKS).map((net: any) => <NetworkCard key={net.id} net={net} />)}
+            {Object.values(NETWORKS).map((net) => <NetworkCard key={net.id} net={net} />)}
           </div>
         )}
 

@@ -133,7 +133,7 @@ export default function GNSSProcessor({ projectId = '' }: { projectId?: string }
               </div>
               <input
                 type="text"
-                aria-label="Station label (e.g. BASE, ROVER1)" placeholder="Station label (e.g. BASE, ROVER1)"
+                aria-label="Station label" placeholder="e.g. BASE, ROVER1"
                 value={f.stationLabel}
                 onChange={e => updateStationLabel(i, e.target.value)}
                 className="px-3 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-sm w-48"

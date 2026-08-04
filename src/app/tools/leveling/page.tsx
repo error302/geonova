@@ -120,19 +120,19 @@ export default function LevelingCalculator() {
 
       <div className="grid md:grid-cols-3 gap-4 mb-6">
         <div className="card p-4">
-          <label className="label">Opening Benchmark (m)</label>
-          <input aria-label="Opening Benchmark (m)" className="input" value={bm} onChange={e => setBm(e.target.value)} />
+          <label className="label" htmlFor="opening-benchmark-m">Opening Benchmark (m)</label>
+          <input id="opening-benchmark-m" aria-label="Opening Benchmark (m)" className="input" value={bm} onChange={e => setBm(e.target.value)} />
         </div>
         <div className="card p-4">
-          <label className="label">Closing Benchmark (m)</label>
-          <input className="input" value={closingBm} onChange={e => setClosingBm(e.target.value)} aria-label="Optional" placeholder="Optional" />
+          <label className="label" htmlFor="closing-benchmark-m">Closing Benchmark (m)</label>
+          <input id="closing-benchmark-m" className="input" value={closingBm} onChange={e => setClosingBm(e.target.value)} placeholder="Optional" />
         </div>
         <div className="card p-4">
-          <label className="label">Distance (km) for allowable error</label>
-          <input className="input" value={distanceKm} onChange={e => setDistanceKm(e.target.value)} aria-label="1" placeholder="1" />
+          <label className="label" htmlFor="distance-km-for-allowable-error">Distance (km) for allowable error</label>
+          <input id="distance-km-for-allowable-error" className="input" value={distanceKm} onChange={e => setDistanceKm(e.target.value)} placeholder="1" />
         </div>
         <div className="card p-4">
-          <label className="label">Method</label>
+          <div className="label">Method</div>
           <div className="flex gap-2 mt-2">
             <button onClick={() => { setMethod('rf'); setResult(null); setSteps(null); setSolutionTitle(undefined); setCalcError(null); }} className={`flex-1 btn text-xs ${method === 'rf' ? 'btn-primary' : 'btn-secondary'}`}>
               Rise &amp; Fall
@@ -181,8 +181,8 @@ export default function LevelingCalculator() {
               {readings.map((r, i) => (
                 <tr key={r.id}>
                   <td className="text-left">{r.station}</td>
-                  <td><input className="input" value={r.bs} onChange={e => updateReading(r.id, 'bs', e.target.value)} aria-label="0.000" placeholder="0.000" /></td>
-                  <td><input className="input" value={r.fs} onChange={e => updateReading(r.id, 'fs', e.target.value)} aria-label="0.000" placeholder="0.000" /></td>
+                  <td><input className="input" value={r.bs} onChange={e => updateReading(r.id, 'bs', e.target.value)} aria-label="Backsight (m)" placeholder="0.000" /></td>
+                  <td><input className="input" value={r.fs} onChange={e => updateReading(r.id, 'fs', e.target.value)} aria-label="Foresight (m)" placeholder="0.000" /></td>
                   {result ? (
                     <>
                       <td className="font-mono">{result.readings[i + 1]?.rise?.toFixed(4) || '—'}</td>

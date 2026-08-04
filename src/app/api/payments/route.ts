@@ -117,14 +117,13 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
       return NextResponse.json({ kind: 'activated', planId })
     }
 
-    let paymentId: string
     const { rows } = await db.query(
       `INSERT INTO payment_history (user_id, amount, currency, status, payment_method, plan_id)
        VALUES ($1, $2, $3, 'pending', $4, $5) RETURNING id`,
       [userId, priced.amount, priced.currency, provider, planId]
     )
     if (!rows[0]?.id) throw new Error('No ID returned from payment_history insert')
-    paymentId = rows[0].id as string
+    const paymentId = rows[0].id as string
 
     const appUrl = getPublicAppUrl()
 

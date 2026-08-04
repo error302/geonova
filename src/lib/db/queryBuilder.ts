@@ -53,6 +53,9 @@ export class QueryBuilder<T = Record<string, unknown>> {
   private insertPayload: Record<string, unknown> | Record<string, unknown>[] | null = null
   private updatePayload: Record<string, unknown> | null = null
   private upsertConflict: string = 'id'
+  // SECURITY (2026-08-03): never set from any caller — always '*'. It is
+  // re-validated at execution time by buildReturningColumns() so a future
+  // setter can't introduce an interpolation hole.
   private returningColumns: string = '*'
 
   /**
@@ -110,7 +113,19 @@ export class QueryBuilder<T = Record<string, unknown>> {
   upsert(data: Record<string, unknown> | Record<string, unknown>[], options?: { onConflict?: string }): this {
     this.operation = 'upsert'
     this.insertPayload = data
-    if (options?.onConflict) this.upsertConflict = this.validateIdentifier(options.onConflict, 'column')
+    if (options?.onConflict) {
+      // ON CONFLICT supports comma-separated multi-column targets
+      // (e.g. 'user_id,parcel_number', 'project_id,row_index'). Validate
+      // EVERY identifier so an injection like `id"; DROP TABLE x; --` is
+      // still rejected synchronously, while legitimate multi-column
+      // conflict targets keep working. VULN-002 regression fix (2026-08-03):
+      // previously the whole string was run through validateIdentifier(),
+      // which rejected commas and threw on every multi-column conflict.
+      this.upsertConflict = options.onConflict
+        .split(',')
+        .map((c) => this.validateIdentifier(c.trim(), 'column'))
+        .join(',')
+    }
     return this
   }
 
@@ -189,6 +204,11 @@ export class QueryBuilder<T = Record<string, unknown>> {
     // NOTE: `filter` is a raw SQL fragment. Callers must not interpolate
     // user input into it. This is the one escape hatch for complex OR
     // conditions; use sparingly and never with untrusted column names.
+    //
+    // SECURITY (2026-08-03): parseOrFilter() validates every column name
+    // through validateIdentifier() and parameterizes every value before
+    // the fragment is emitted, so even attacker-supplied orFilters (e.g.
+    // from /api/db) cannot break out of the quoted identifiers.
     this.orFilters.push(filter)
     return this
   }
@@ -204,13 +224,13 @@ export class QueryBuilder<T = Record<string, unknown>> {
   }
 
   limit(count: number): this {
-    this.limitCount = count
+    this.limitCount = this.coerceNonNegativeInt(count, 'LIMIT')
     return this
   }
 
   range(from: number, to: number): this {
-    this.offsetCount = from
-    this.limitCount = to - from + 1
+    this.offsetCount = this.coerceNonNegativeInt(from, 'OFFSET')
+    this.limitCount = this.coerceNonNegativeInt(to - from + 1, 'LIMIT')
     return this
   }
 
@@ -277,7 +297,13 @@ export class QueryBuilder<T = Record<string, unknown>> {
     for (const part of parts) {
       const match = part.trim().match(/^(\w+)\.(\w+)\.(.+)$/)
       if (match) {
-        const [, col, op, val] = match
+        // SECURITY (2026-08-03): route the column through the same strict
+        // allowlist as every other identifier — the regex above already
+        // excludes quotes/spaces, but validateIdentifier() is defense-
+        // in-depth so future regex loosening can't silently open a hole.
+        const col = this.validateIdentifier(match[1], 'column')
+        const op = match[2]
+        const val = match[3]
         if (op === 'eq') {
           params.push(val === 'null' ? null : val)
           if (val === 'null') {
@@ -304,6 +330,95 @@ export class QueryBuilder<T = Record<string, unknown>> {
     return orParts.length > 0 ? orParts.join(' OR ') : null
   }
 
+  /**
+   * Build the SELECT column list from a comma-separated string, validating
+   * every identifier against the strict allowlist.
+   *
+   * VULN-001 FIX (security review 2026-08-03): Previously the columns were
+   * only wrapped in double quotes with no validation, so a payload like
+   * `id" FROM users; DROP TABLE projects; --` broke out of the quoted
+   * identifier and executed arbitrary SQL (simple query protocol allows
+   * multi-statement when no params are bound).
+   *
+   * Supported shapes (each identifier validated):
+   *   - `*`
+   *   - `col` (single-arg function calls like `count(*)`, `max(easting)` are
+   *     also accepted; multi-arg calls like `count(a, b)` are rejected since
+   *     no current caller needs them and splitting on commas is unsafe)
+   *   - `col AS alias` (used by TraverseModal)
+   *
+   * NOTE: the allowlist permits one dot ("schema.col"), but the emitted SQL
+   * quotes the whole token as a single identifier (`"public.id"`), so it is
+   * a literal column name — same as the pre-fix behavior.
+   *
+   * @throws {Error} on any invalid identifier
+   */
+  private buildSelectColumns(columns: string): string {
+    if (columns === '*') return '*'
+    return columns.split(',').map((c) => {
+      const trimmed = c.trim()
+      if (trimmed === '') throw new Error('Invalid column: empty column in select list')
+      if (trimmed === '*') return '*'
+
+      // Handle `col AS alias` (e.g. "point_name as name" in TraverseModal)
+      const asMatch = trimmed.match(/^([A-Za-z_][A-Za-z0-9_.]*)\s+AS\s+([A-Za-z_][A-Za-z0-9_]*)$/i)
+      if (asMatch) {
+        const col = this.validateIdentifier(asMatch[1].trim(), 'column')
+        const alias = this.validateIdentifier(asMatch[2].trim(), 'column')
+        return `"${col}" AS "${alias}"`
+      }
+
+      // Handle function calls: count(*), max(easting), etc.
+      if (trimmed.includes('(')) {
+        const fnMatch = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*\((.*)\)$/)
+        if (!fnMatch) {
+          throw new Error(`Invalid column "${trimmed}": malformed expression`)
+        }
+        const fnName = this.validateIdentifier(fnMatch[1].trim(), 'column')
+        const inner = fnMatch[2].trim()
+        if (inner === '') {
+          throw new Error(`Invalid column "${trimmed}": empty function arguments`)
+        }
+        const args = inner.split(',').map((a) => {
+          const arg = a.trim()
+          if (arg === '') throw new Error(`Invalid column "${trimmed}": empty argument`)
+          if (arg === '*') return '*'
+          return `"${this.validateIdentifier(arg, 'column')}"`
+        })
+        return `${fnName.toUpperCase()}(${args.join(', ')})`
+      }
+
+      return `"${this.validateIdentifier(trimmed, 'column')}"`
+    }).join(', ')
+  }
+
+  /**
+   * Validate the RETURNING column list at execution time (defense-in-depth).
+   * '*' (the only value ever assigned today) passes through untouched;
+   * anything else runs the same strict allowlist used for SELECT columns,
+   * so a future caller could not interpolate attacker SQL into RETURNING.
+   */
+  private buildReturningColumns(): string {
+    if (this.returningColumns === '*') return '*'
+    return this.buildSelectColumns(this.returningColumns)
+  }
+
+  /**
+   * VULN-001 FIX: coerce LIMIT/OFFSET values to a non-negative integer.
+   * The /api/db proxy typed these as `number` but the raw JSON body can
+   * carry anything (e.g. `"1; DROP TABLE users"` or `1.5`) — interpolating
+   * those raw would be SQL injection / invalid SQL.
+   *
+   * @throws {Error} if the value is not a non-negative integer
+   */
+  private coerceNonNegativeInt(value: unknown, label: 'LIMIT' | 'OFFSET'): number {
+    const n = typeof value === 'number' ? value : Number(value)
+    if (!Number.isFinite(n) || !Number.isInteger(n) || n < 0) {
+      throw new Error(`Invalid ${label}: must be a non-negative integer`)
+    }
+    return n
+  }
+
   private buildOrderClause(): string {
     if (this.orderClauses.length === 0) return ''
     const parts = this.orderClauses.map((o) => `"${o.column}" ${o.ascending ? 'ASC' : 'DESC'}`)
@@ -312,8 +427,10 @@ export class QueryBuilder<T = Record<string, unknown>> {
 
   private buildLimitOffset(): string {
     let sql = ''
-    if (this.limitCount !== null) sql += ` LIMIT ${this.limitCount}`
-    if (this.offsetCount !== null) sql += ` OFFSET ${this.offsetCount}`
+    // Defense-in-depth: re-validate even though the setters already coerce,
+    // so any future code path that writes limitCount/offsetCount is safe too.
+    if (this.limitCount !== null) sql += ` LIMIT ${this.coerceNonNegativeInt(this.limitCount, 'LIMIT')}`
+    if (this.offsetCount !== null) sql += ` OFFSET ${this.coerceNonNegativeInt(this.offsetCount, 'OFFSET')}`
     return sql
   }
 
@@ -345,18 +462,19 @@ export class QueryBuilder<T = Record<string, unknown>> {
     const params: unknown[] = []
 
     if (this.headOnly && this.countOnly) {
+      // NOTE: head+count (used by e.g. community.ts, optimization.ts) never
+      // touches selectColumns, so buildSelectColumns() is intentionally
+      // skipped here — nothing user-controlled is interpolated into SQL.
       const sql = `SELECT COUNT(*) as count FROM "${this.table}"${this.buildWhereClause(params)}`
       const result = await this.pool.query(sql, params as unknown[])
       const count = parseInt(result.rows[0]?.count ?? '0', 10)
       return { data: null, error: null, count }
     }
 
-    const columns = this.selectColumns === '*' ? '*' : this.selectColumns.split(',').map((c) => {
-      const trimmed = c.trim()
-      if (trimmed.includes('(')) return `"${trimmed.split('(')[0].trim()}"`
-      if (trimmed === 'id' || trimmed === '*') return trimmed
-      return `"${trimmed}"`
-    }).join(', ')
+    // VULN-001 FIX: validate every select column (throws → caught by execute()
+    // and returned as a structured { data: null, error } instead of executing
+    // attacker-controlled SQL).
+    const columns = this.buildSelectColumns(this.selectColumns)
 
     let sql = `SELECT ${columns} FROM "${this.table}"`
     sql += this.buildWhereClause(params)
@@ -418,7 +536,7 @@ export class QueryBuilder<T = Record<string, unknown>> {
     }
 
     const quotedColumns = columns.map((c) => `"${c}"`).join(', ')
-    const sql = `INSERT INTO "${this.table}" (${quotedColumns}) VALUES ${valuesList.join(', ')} RETURNING ${this.returningColumns}`
+    const sql = `INSERT INTO "${this.table}" (${quotedColumns}) VALUES ${valuesList.join(', ')} RETURNING ${this.buildReturningColumns()}`
 
     const result = await this.pool.query(sql, params as unknown[])
     const data = Array.isArray(this.insertPayload) ? result.rows : (result.rows[0] ?? null)
@@ -439,7 +557,7 @@ export class QueryBuilder<T = Record<string, unknown>> {
 
     let sql = `UPDATE "${this.table}" SET ${setClauses.join(', ')}`
     sql += this.buildWhereClause(params)
-    sql += ` RETURNING ${this.returningColumns}`
+    sql += ` RETURNING ${this.buildReturningColumns()}`
 
     const result = await this.pool.query(sql, params as unknown[])
 
@@ -453,7 +571,7 @@ export class QueryBuilder<T = Record<string, unknown>> {
     const params: unknown[] = []
     let sql = `DELETE FROM "${this.table}"`
     sql += this.buildWhereClause(params)
-    sql += ` RETURNING ${this.returningColumns}`
+    sql += ` RETURNING ${this.buildReturningColumns()}`
 
     const result = await this.pool.query(sql, params as unknown[])
     return { data: result.rows as T, error: null }
@@ -464,7 +582,12 @@ export class QueryBuilder<T = Record<string, unknown>> {
     const rows = Array.isArray(this.insertPayload) ? this.insertPayload : [this.insertPayload]
     if (rows.length === 0) return { data: null, error: null }
 
-    const columns = Object.keys(rows[0])
+    // VULN-002 hardening (upsert path): validate every payload column key —
+    // previously only insert()/update() validated, so a malicious key like
+    // `id" = "1" OR "owner_id` broke out of the quoted identifier in both the
+    // column list and the EXCLUDED.* update set. The onConflict column is
+    // already validated at the upsert() setter.
+    const columns = Object.keys(rows[0]).map((c) => this.validateIdentifier(c, 'column'))
     const params: unknown[] = []
     const valuesList: string[] = []
 
@@ -478,10 +601,19 @@ export class QueryBuilder<T = Record<string, unknown>> {
     }
 
     const quotedColumns = columns.map((c) => `"${c}"`).join(', ')
-    const updateCols = columns.filter((c) => c !== this.upsertConflict)
+    // The conflict target may be multi-column ('a,b') — split and quote each
+    // identifier separately so the emitted SQL is `ON CONFLICT ("a", "b")`
+    // rather than one quoted identifier containing commas.
+    const conflictCols = this.upsertConflict.split(',').map((c) => c.trim())
+    const quotedConflict = conflictCols.map((c) => `"${c}"`).join(', ')
+    const conflictSet = new Set(conflictCols)
+    const updateCols = columns.filter((c) => !conflictSet.has(c))
     const updateSet = updateCols.map((c) => `"${c}" = EXCLUDED."${c}"`).join(', ')
+    // Degenerate case: every payload column is a conflict column — DO NOTHING
+    // is valid SQL where `DO UPDATE SET ` (empty) would not be.
+    const conflictAction = updateSet ? `DO UPDATE SET ${updateSet}` : 'DO NOTHING'
 
-    const sql = `INSERT INTO "${this.table}" (${quotedColumns}) VALUES ${valuesList.join(', ')} ON CONFLICT ("${this.upsertConflict}") DO UPDATE SET ${updateSet} RETURNING ${this.returningColumns}`
+    const sql = `INSERT INTO "${this.table}" (${quotedColumns}) VALUES ${valuesList.join(', ')} ON CONFLICT (${quotedConflict}) ${conflictAction} RETURNING ${this.buildReturningColumns()}`
 
     const result = await this.pool.query(sql, params as unknown[])
     const data = Array.isArray(this.insertPayload) ? result.rows : (result.rows[0] ?? null)

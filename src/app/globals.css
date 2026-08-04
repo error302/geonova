@@ -44,7 +44,10 @@ h1, h2, h3 { text-wrap: balance; }
   /* --- Typography ------------------------------------------------------ */
   --text-primary: #FFFFFF;
   --text-secondary: #A0A0A0;
-  --text-muted: #666666;
+  /* #8A8A8A — WCAG 2.2 AA: 4.5:1+ against every dark surface (#050505/#080808/#111111).
+     Previously #666666 (3.28–3.54:1) failed axe color-contrast on labels, table
+     headers and footer text. Still clearly dimmer than --text-secondary #A0A0A0. */
+  --text-muted: #8A8A8A;
 
   /* --- Accent (Keep the surveyor orange, but adapt to deep dark) ----- */
   --accent: #FF7733;
@@ -138,7 +141,10 @@ html[data-theme="light"] {
 
   --text-primary: #1A1816;
   --text-secondary: #4A4540;
-  --text-muted: #8A8278;
+  /* #6E675A — WCAG 2.2 AA: 4.5:1+ against every light surface
+     (#FFFFFF / #FAFAF7 / #F2F1EC / #E8E6E0). Previously #8A8278 was
+     only 3.57:1 on #FAFAF7 and failed axe color-contrast. */
+  --text-muted: #6E675A;
 
   --accent: #B85C2E;
   --accent-dim: #8F4324;

@@ -252,8 +252,8 @@ export function LocalCalibrationPanel() {
         {registerInRegistry && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 ml-6">
             <div>
-              <label className="text-xs text-zinc-500">Surveyor Name</label>
-              <input
+              <label className="text-xs text-zinc-500" htmlFor="surveyor-name">Surveyor Name</label>
+              <input id="surveyor-name"
                 type="text"
                 value={surveyorName}
                 onChange={e => setSurveyorName(e.target.value)}
@@ -262,8 +262,8 @@ export function LocalCalibrationPanel() {
               />
             </div>
             <div>
-              <label className="text-xs text-zinc-500">Project Name</label>
-              <input
+              <label className="text-xs text-zinc-500" htmlFor="project-name">Project Name</label>
+              <input id="project-name"
                 type="text"
                 value={projectName}
                 onChange={e => setProjectName(e.target.value)}
@@ -272,9 +272,9 @@ export function LocalCalibrationPanel() {
               />
             </div>
             <div>
-              <label className="text-xs text-zinc-500">Area Description</label>
+              <label className="text-xs text-zinc-500" htmlFor="area-description">Area Description</label>
               <input
-                type="text"
+                 id="area-description" type="text"
                 value={area}
                 onChange={e => setArea(e.target.value)}
                 className="w-full bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-white text-sm"

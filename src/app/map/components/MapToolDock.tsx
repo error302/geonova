@@ -241,7 +241,7 @@ const ReconPanel = memo(function ReconPanel() {
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') handleSearch() }}
-          aria-label="Coord, beacon, or parcel…" placeholder="Coord, beacon, or parcel…"
+          aria-label="Coord, beacon, or parcel…"
           className="w-full h-8 bg-[var(--bg-card)]/[0.04] border border-[var(--border-color)]/[0.06] rounded-lg pl-8 pr-3 text-[11px] text-[var(--text-primary)] placeholder-gray-600 focus:outline-none focus:border-[#3B82F6]/40 transition-colors"
         />
       </div>
@@ -505,7 +505,7 @@ const CapturePanel = memo(function CapturePanel() {
             type="text"
             value={ctx.featureName}
             onChange={(e) => ctx.updateFeatureName(e.target.value)}
-            aria-label="Feature name…" placeholder="Feature name…"
+            aria-label="Feature name…"
             className="w-full h-7 bg-[var(--bg-card)]/[0.04] border border-[var(--border-color)]/[0.06] rounded-md px-2 text-[11px] text-[var(--text-primary)] placeholder-gray-600 focus:outline-none focus:border-[var(--accent)]/30 transition-colors"
           />
         </div>

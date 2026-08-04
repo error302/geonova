@@ -75,33 +75,33 @@ export default function NTRIPClientPage() {
             <h2 className="text-sm font-semibold text-white mb-4">Connection Settings</h2>
             <div className="space-y-3">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">CORS Network</label>
-                <select value={network} onChange={e => setNetwork(e.target.value)} className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white">
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="cors-network">CORS Network</label>
+                <select id="cors-network" value={network} onChange={e => setNetwork(e.target.value)} className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white">
                   {CORS_NETWORKS.map(n => <option key={n.id} value={n.id}>{n.name}</option>)}
                 </select>
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div className="col-span-2">
-                  <label className="block text-sm text-[var(--text-secondary)] mb-1">Caster Host</label>
-                  <input type="text" value={host} onChange={e => setHost(e.target.value)} className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
+                  <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="caster-host">Caster Host</label>
+                  <input id="caster-host" type="text" value={host} onChange={e => setHost(e.target.value)} className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
                 </div>
                 <div>
-                  <label className="block text-sm text-[var(--text-secondary)] mb-1">Port</label>
-                  <input type="number" value={port} onChange={e => setPort(parseInt(e.target.value) || 2101)} className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
+                  <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="port">Port</label>
+                  <input id="port" type="number" value={port} onChange={e => setPort(parseInt(e.target.value) || 2101)} className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Mountpoint</label>
-                <input type="text" value={mountpoint} onChange={e => setMountpoint(e.target.value)} placeholder="NBI0" className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="mountpoint">Mountpoint</label>
+                <input id="mountpoint" type="text" value={mountpoint} onChange={e => setMountpoint(e.target.value)} placeholder="NBI0" className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white font-mono" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm text-[var(--text-secondary)] mb-1">Username (optional)</label>
-                  <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white" />
+                  <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="username-optional">Username (optional)</label>
+                  <input id="username-optional" type="text" value={username} onChange={e => setUsername(e.target.value)} className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white" />
                 </div>
                 <div>
-                  <label className="block text-sm text-[var(--text-secondary)] mb-1">Password</label>
-                  <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white" />
+                  <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="password">Password</label>
+                  <input  id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-white" />
                 </div>
               </div>
               <div className="flex gap-2 pt-2">

@@ -80,7 +80,7 @@ export function generateTopoDXF(
     const rawCode = parts[0].toUpperCase()
     
     // Attempt to extract base code (e.g., RD from RD1)
-    const match = rawCode.match(/^([A-Z\-]+)(\d*)$/)
+    const match = rawCode.match(/^([A-Z-]+)(\d*)$/)
     const baseCode = match ? match[1] : rawCode
     const stringId = rawCode // unique identifier for the string, e.g., RD1
 
@@ -102,7 +102,7 @@ export function generateTopoDXF(
 
   // Draw Polylines
   for (const [stringId, pts] of Array.from(lineStrings.entries())) {
-    const match = stringId.match(/^([A-Z\-]+)(\d*)$/)
+    const match = stringId.match(/^([A-Z-]+)(\d*)$/)
     const baseCode = match ? match[1] : stringId
     const def = codeMap.get(baseCode)!
 

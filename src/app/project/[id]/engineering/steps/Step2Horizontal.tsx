@@ -68,8 +68,8 @@ export function Step2Horizontal({
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Name</label>
-                  <input aria-label="Name"
+                  <label htmlFor={`ip-${idx}-name`} className="block text-xs text-zinc-500 mb-1">Name</label>
+                  <input id={`ip-${idx}-name`}
                     type="text"
                     value={ip.name}
                     onChange={e => updateIP(idx, 'name', e.target.value)}
@@ -77,8 +77,8 @@ export function Step2Horizontal({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Easting (m)</label>
-                  <input aria-label="Easting"
+                  <label htmlFor={`ip-${idx}-easting`} className="block text-xs text-zinc-500 mb-1">Easting (m)</label>
+                  <input id={`ip-${idx}-easting`}
                     type="number"
                     value={ip.easting}
                     onChange={e => updateIP(idx, 'easting', Number(e.target.value))}
@@ -86,8 +86,8 @@ export function Step2Horizontal({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Northing (m)</label>
-                  <input aria-label="Northing"
+                  <label htmlFor={`ip-${idx}-northing`} className="block text-xs text-zinc-500 mb-1">Northing (m)</label>
+                  <input id={`ip-${idx}-northing`}
                     type="number"
                     value={ip.northing}
                     onChange={e => updateIP(idx, 'northing', Number(e.target.value))}
@@ -95,8 +95,8 @@ export function Step2Horizontal({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Radius (m)</label>
-                  <input aria-label="Radius"
+                  <label htmlFor={`ip-${idx}-radius`} className="block text-xs text-zinc-500 mb-1">Radius (m)</label>
+                  <input id={`ip-${idx}-radius`}
                     type="number"
                     value={ip.radius}
                     onChange={e => updateIP(idx, 'radius', Number(e.target.value))}
