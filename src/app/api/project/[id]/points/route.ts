@@ -64,7 +64,7 @@ export const GET = apiHandler(
 
     // Also return the project-level CRS so consumers can fall back to it
     // when a point-level CRS field is null.
-    const projectResult = await db.query(
+    const projectResult = await db.query<{ utm_zone?: number | null; hemisphere?: string | null; datum?: string | null }>(
       `SELECT utm_zone, hemisphere, datum
        FROM projects
        WHERE id = $1`,

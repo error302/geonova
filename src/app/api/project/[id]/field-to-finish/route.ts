@@ -31,7 +31,35 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { db } from '@/lib/db';
 import { fieldToFinish, type FieldObservation, type FieldToFinishInput } from '@/lib/survey/field-to-finish';
+import type { SurveyTypeKey } from '@/lib/engine/traverse';
 import { preSubmitCheck } from '@/lib/submission/pre-submit-check';
+
+interface FieldToFinishProjectRow {
+  close_easting?: string;
+  close_northing?: string;
+  survey_type?: string;
+  lr_number?: string;
+  parcel_number?: string;
+  county?: string;
+  sub_county?: string;
+  division?: string;
+  locality?: string;
+  client_name?: string;
+  area_m2?: number;
+  perimeter_m?: number;
+  precision_ratio?: string;
+  linear_misclosure?: number;
+  angular_misclosure?: number;
+  closing_error_e?: number;
+  closing_error_n?: number;
+}
+
+interface SurveyPointRow {
+  name?: string;
+  easting?: number;
+  northing?: number;
+  type?: string;
+}
 
 export async function POST(
   request: NextRequest,
@@ -47,7 +75,7 @@ export async function POST(
 
   try {
     // ── Load project data ──
-    const projectResult = await db.query(
+    const projectResult = await db.query<FieldToFinishProjectRow>(
       'SELECT * FROM projects WHERE id = $1',
       [projectId],
     );
@@ -59,7 +87,7 @@ export async function POST(
     const project = projectResult.rows[0];
 
     // ── Load survey points ──
-    const pointsResult = await db.query(
+    const pointsResult = await db.query<SurveyPointRow>(
       `SELECT * FROM survey_points
        WHERE project_id = $1
        ORDER BY name`,
@@ -94,16 +122,16 @@ export async function POST(
       observations: fieldObs,
       startStation: {
         name: surveyPoints[0]?.name || 'P1',
-        easting: parseFloat(surveyPoints[0]?.easting || 0),
-        northing: parseFloat(surveyPoints[0]?.northing || 0),
+        easting: parseFloat(String(surveyPoints[0]?.easting ?? 0)),
+        northing: parseFloat(String(surveyPoints[0]?.northing ?? 0)),
       },
       closeStation: project.close_easting ? {
         name: 'CLOSE',
         easting: parseFloat(project.close_easting),
-        northing: parseFloat(project.close_northing),
+        northing: parseFloat(project.close_northing ?? ''),
       } : undefined,
       mode: project.close_easting ? 'link' : 'closed',
-      surveyType: project.survey_type || 'cadastral',
+      surveyType: (project.survey_type || 'cadastral') as SurveyTypeKey,
       adjustmentMethod: 'bowditch',
       lrNumber: project.lr_number,
     };
@@ -116,11 +144,11 @@ export async function POST(
         ...project,
         survey_points: surveyPoints,
       },
-      surveyPoints.map((p: Record<string, unknown>) => ({
-        name: String(p.name),
-        easting: parseFloat(String(p.easting || 0)),
-        northing: parseFloat(String(p.northing || 0)),
-        type: p.type ? String(p.type) : undefined,
+      surveyPoints.map((p) => ({
+        name: String(p.name ?? ''),
+        easting: parseFloat(String(p.easting ?? 0)),
+        northing: parseFloat(String(p.northing ?? 0)),
+        type: p.type,
       })),
       pipelineResult.status !== 'failed'
         ? {

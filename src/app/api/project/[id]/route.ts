@@ -1,13 +1,13 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
 export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
   const { id } = ctx.params
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<Record<string, unknown>>(
     `SELECT p.*,
       sd.scheme_number, sd.county, sd.sub_county, sd.ward,
       sd.planned_parcels, sd.adjudication_section
@@ -41,7 +41,7 @@ export const DELETE = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6
   const { id } = ctx.params
 
   // ── Verify project exists and belongs to the authenticated user ──
-  const { rows: projectRows } = await db.query(
+  const { rows: projectRows } = await db.query<{ id: string; name: string }>(
     'SELECT id, name FROM projects WHERE id = $1 AND user_id = $2',
     [id, ctx.userId]
   )

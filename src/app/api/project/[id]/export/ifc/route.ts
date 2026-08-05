@@ -1,10 +1,21 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { apiHandler } from '@/lib/apiHandler';
 import { db } from '@/lib/db';
 import { generateIFC4 } from '@/lib/export/generateIFC';
 import type { IFCExportOptions, IFCParcel, IFCControlPoint, IFCTraverseLine, IFCEquipmentRecord } from '@/types/ifc';
+
+interface IFCProjectRow {
+  name: string;
+  utm_zone?: number | null;
+  hemisphere?: string | null;
+  datum?: string | null;
+  survey_type?: string | null;
+  client_name?: string | null;
+  surveyor_name?: string | null;
+  surveyor_license?: string | null;
+}
 
 /**
  * GET /api/project/[id]/export/ifc?format=ifc4
@@ -23,7 +34,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   const { id } = ctx.params;
 
   // ── Fetch project row ──────────────────────────────────────────────────
-  const { rows: projRows } = await db.query(
+  const { rows: projRows } = await db.query<IFCProjectRow>(
     `SELECT name, utm_zone, hemisphere, datum, survey_type,
             client_name, surveyor_name, surveyor_license
        FROM projects WHERE id = $1 AND user_id = $2`,

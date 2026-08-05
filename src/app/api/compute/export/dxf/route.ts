@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
   const { error } = await requireAuth()
   if (error) return error
 
-  const body = await request.json().catch(() => null)
+  const body: unknown = await request.json().catch(() => null)
   const parsed = requestSchema.safeParse(body)
   if (!parsed.success) {
     return NextResponse.json({ error: 'Invalid request.', issues: parsed.error.issues }, { status: 400 })
@@ -43,14 +43,14 @@ export async function POST(request: NextRequest) {
   const input = parsed.data
   const dxf = generateDXF({
     projectName: input.projectName,
-    points: input.points.map((p: any) => ({
+    points: input.points.map((p) => ({
       name: p.name,
       easting: p.easting,
       northing: p.northing,
       elevation: p.elevation,
       is_control: p.is_control,
     })),
-    traverseLegs: input.traverseLegs?.map((l: any) => ({ from: l.from, to: l.to, distance: l.distance, bearing: l.bearing })) ?? [],
+    traverseLegs: input.traverseLegs?.map((l) => ({ from: l.from, to: l.to, distance: l.distance, bearing: l.bearing })) ?? [],
     includeElevations: input.includeElevations,
   })
 

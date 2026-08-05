@@ -1,9 +1,27 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/api-client/server'
 import { getStripeService } from '@/lib/payments/stripe'
-import type { CurrencyCode } from '@/lib/subscription/catalog'
+
+interface StripeWebhookEvent {
+  type: string
+  data: {
+    object: {
+      id?: string
+      metadata?: Record<string, string | undefined>
+      customer?: string
+      status?: string
+      currency?: string
+      payment_intent?: string
+      last_payment_error?: { message?: string }
+    }
+  }
+}
+
+interface UserSubscriptionRow {
+  id: string
+  user_id: string
+}
 
 export async function POST(request: NextRequest) {
   const stripe = getStripeService()
@@ -18,12 +36,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Missing stripe-signature header' }, { status: 400 })
   }
 
-  let event: any
+  let event: StripeWebhookEvent
   try {
     if (!stripe.verifyWebhookSignature(payload, signature)) {
       return NextResponse.json({ error: 'Invalid webhook signature' }, { status: 400 })
     }
-    event = JSON.parse(payload)
+    event = JSON.parse(payload) as StripeWebhookEvent
   } catch (err: unknown) {
     console.error('Stripe webhook verification failed:', (err as Error).message)
     return NextResponse.json({ error: 'Invalid webhook signature' }, { status: 400 })
@@ -68,7 +86,7 @@ export async function POST(request: NextRequest) {
         [userId, planId, 'active', 'stripe', currency, now.toISOString(), periodEnd.toISOString()]
       ).catch(async () => {
         // Fallback: upsert may fail if no unique constraint on user_id
-        const { rows: existingRows2 } = await db.query(
+        const { rows: existingRows2 } = await db.query<Pick<UserSubscriptionRow, 'id'>>(
           'SELECT id FROM user_subscriptions WHERE user_id = $1 LIMIT 1',
           [userId]
         )
@@ -101,9 +119,8 @@ export async function POST(request: NextRequest) {
       const sub = event.data.object
       const customerId = sub.customer
       const status = sub.status
-      const planId = sub.metadata?.plan_id || 'free'
 
-      const { rows: userRows } = await db.query(
+      const { rows: userRows } = await db.query<Pick<UserSubscriptionRow, 'user_id'>>(
         'SELECT user_id FROM user_subscriptions WHERE user_id = $1 LIMIT 1',
         [sub.metadata?.user_id || '']
       )
@@ -135,9 +152,8 @@ export async function POST(request: NextRequest) {
 
     case 'invoice.payment_failed': {
       const invoice = event.data.object
-      const customerId = invoice.customer
 
-      const { rows: userSubRows } = await db.query(
+      const { rows: userSubRows } = await db.query<Pick<UserSubscriptionRow, 'user_id'>>(
         'SELECT user_id FROM user_subscriptions WHERE user_id = $1 LIMIT 1',
         [invoice.metadata?.user_id || '']
       )

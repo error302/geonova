@@ -1,8 +1,9 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { z } from 'zod'
+import type { LevelingInput } from '@/lib/engine/leveling'
 
 const levelingSchema = z.object({
   surveyType: z.enum(['engineering', 'mining', 'monitoring']),
@@ -20,14 +21,14 @@ const levelingSchema = z.object({
 export const POST = apiHandler(
   { auth: true, schema: levelingSchema, rateLimit: { max: 50, windowMs: 60000 } },
   async (req, ctx) => {
-    const { method, openingRL, closingRL, readings } = ctx.body as any
+    const { method, openingRL, closingRL, readings } = ctx.body as z.infer<typeof levelingSchema>
 
     const { riseAndFall, heightOfCollimation } = await import('@/lib/engine/leveling')
 
-    const totalStations = readings.filter((r: any) => r.bs !== undefined).length
+    const totalStations = readings.filter((r) => r.bs !== undefined).length
     const distanceKm = totalStations / 1000
 
-    const input = {
+    const input: LevelingInput = {
       readings,
       openingRL,
       closingRL,
@@ -36,8 +37,8 @@ export const POST = apiHandler(
     }
 
     const result = method === 'height_of_collimation'
-      ? heightOfCollimation(input as any)
-      : riseAndFall(input as any)
+      ? heightOfCollimation(input)
+      : riseAndFall(input)
 
     const misclosureMm = Math.abs(result.misclosure) * 1000
     const allowableMm = result.allowableMisclosure * 1000

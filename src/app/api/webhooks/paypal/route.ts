@@ -17,9 +17,31 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayPalService } from '@/lib/payments/paypal'
 import { db } from '@/lib/db'
-import type { PlanId, CurrencyCode } from '@/lib/subscription/catalog'
+import type { CurrencyCode } from '@/lib/subscription/catalog'
 import { createVerify, createPublicKey } from 'crypto'
 import { crc32 } from 'zlib'
+
+interface PayPalWebhookEvent {
+  event_type: string
+  resource?: {
+    id?: string
+    supplementary_data?: {
+      related_ids?: { order_id?: string }
+    }
+    amount?: { value?: string; currency_code?: string }
+  }
+}
+
+interface PaymentHistoryRow {
+  id: string
+  user_id: string
+  plan_id: string
+  status?: string
+}
+
+interface UserSubscriptionRow {
+  id: string
+}
 
 // PayPal webhook event types we handle
 const HANDLED_EVENTS = new Set([
@@ -112,16 +134,16 @@ export async function POST(request: NextRequest) {
           console.error('[PayPal Webhook] Signature verification FAILED — rejecting webhook')
           return NextResponse.json({ error: 'Invalid signature' }, { status: 403 })
         }
-      } catch (verifyError: any) {
-        console.error(`[PayPal Webhook] Signature verification error: ${verifyError.message}`)
+      } catch (verifyError: unknown) {
+        console.error(`[PayPal Webhook] Signature verification error: ${verifyError instanceof Error ? verifyError.message : String(verifyError)}`)
         // AUDIT FIX (CRITICAL 4): No sandbox bypass — reject always
         return NextResponse.json({ error: 'Signature verification failed' }, { status: 403 })
       }
     }
 
-    let event: any
+    let event: PayPalWebhookEvent
     try {
-      event = JSON.parse(body)
+      event = JSON.parse(body) as PayPalWebhookEvent
     } catch {
       return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
     }
@@ -149,15 +171,14 @@ export async function POST(request: NextRequest) {
 
       try {
         const capture = await paypal.captureOrder(orderId)
-        const captureStatus = (capture as any).status?.toLowerCase()
+        const captureStatus = capture.status?.toLowerCase()
 
         if (captureStatus === 'completed') {
-          const captureAmount = (capture as any).purchase_units?.[0]?.payments?.captures?.[0]?.amount
-          const amount = Number(captureAmount?.value ?? 0)
+          const captureAmount = capture.purchase_units?.[0]?.payments?.[0]?.captures?.[0]?.amount
           const currencyCode = (captureAmount?.currency_code ?? 'USD') as CurrencyCode
 
           // Try to find matching payment_history record by transaction_id
-          const { rows: payRows } = await db.query(
+          const { rows: payRows } = await db.query<PaymentHistoryRow>(
             'SELECT id, user_id, plan_id FROM payment_history WHERE transaction_id = $1 LIMIT 1',
             [orderId]
           )
@@ -170,7 +191,7 @@ export async function POST(request: NextRequest) {
             )
 
             // Activate subscription
-            const { rows: existing } = await db.query(
+            const { rows: existing } = await db.query<UserSubscriptionRow>(
               'SELECT id FROM user_subscriptions WHERE user_id = $1 LIMIT 1',
               [pay.user_id]
             )
@@ -198,8 +219,8 @@ export async function POST(request: NextRequest) {
             console.warn(`[PayPal Webhook] No payment_history record found for order ${orderId}`)
           }
         }
-      } catch (captureErr: any) {
-        console.error(`[PayPal Webhook] Capture failed: ${captureErr.message}`)
+      } catch (captureErr: unknown) {
+        console.error(`[PayPal Webhook] Capture failed: ${captureErr instanceof Error ? captureErr.message : String(captureErr)}`)
       }
     }
 
@@ -207,11 +228,9 @@ export async function POST(request: NextRequest) {
     if (eventType === 'PAYMENT.CAPTURE.COMPLETED') {
       const captureId = event.resource?.id
       const orderId = event.resource?.supplementary_data?.related_ids?.order_id
-      const amount = event.resource?.amount?.value
-      const currencyCode = event.resource?.amount?.currency_code
 
       if (orderId) {
-        const { rows: payRows } = await db.query(
+        const { rows: payRows } = await db.query<PaymentHistoryRow>(
           'SELECT id, user_id, plan_id, status FROM payment_history WHERE transaction_id = $1 LIMIT 1',
           [orderId]
         )
@@ -227,11 +246,10 @@ export async function POST(request: NextRequest) {
 
     // ─── Handle PAYMENT.CAPTURE.DENIED / REFUNDED ───────────────────
     if (eventType === 'PAYMENT.CAPTURE.DENIED') {
-      const captureId = event.resource?.id
       const orderId = event.resource?.supplementary_data?.related_ids?.order_id
 
       if (orderId) {
-        const { rows: payRows } = await db.query(
+        const { rows: payRows } = await db.query<PaymentHistoryRow>(
           'SELECT id, user_id FROM payment_history WHERE transaction_id = $1 LIMIT 1',
           [orderId]
         )
@@ -247,11 +265,10 @@ export async function POST(request: NextRequest) {
 
     // Handle refunds separately — 'refunded' is semantically different from 'failed'
     if (eventType === 'PAYMENT.CAPTURE.REFUNDED') {
-      const captureId = event.resource?.id
       const orderId = event.resource?.supplementary_data?.related_ids?.order_id
 
       if (orderId) {
-        const { rows: payRows } = await db.query(
+        const { rows: payRows } = await db.query<PaymentHistoryRow>(
           'SELECT id, user_id FROM payment_history WHERE transaction_id = $1 LIMIT 1',
           [orderId]
         )
@@ -270,7 +287,7 @@ export async function POST(request: NextRequest) {
       const subscriptionId = event.resource?.id
       if (subscriptionId) {
         // Look up user by PayPal subscription ID stored in payment_history
-        const { rows: payRows } = await db.query(
+        const { rows: payRows } = await db.query<Pick<PaymentHistoryRow, 'user_id'>>(
           `SELECT ph.user_id FROM payment_history ph WHERE ph.transaction_id = $1 LIMIT 1`,
           [subscriptionId]
         )
