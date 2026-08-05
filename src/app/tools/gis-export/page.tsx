@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/api-client/client'
 import { generateGeoJSON } from '@/lib/export/generateGeoJSON'
+import type { SurveyPoint } from '@/types/surveyPoint'
 import { generateLandXML } from '@/lib/export/generateLandXML'
 import { utmToGeographic } from '@/lib/geodesy/coordinates'
 import { PageHeader } from '@/components/shared/PageHeader'
@@ -39,9 +40,17 @@ function getPRJ(utmZone: number, hemisphere: 'N' | 'S'): string {
 }
 
 // ── MapInfo TAB-compatible CSV ───────────────────────────────────────────────
-function generateMapInfoCSV(points: any[], utmZone: number, hemisphere: 'N' | 'S', projectName: string): string {
+// ── Row types for the client-side queries below ───────────────────────────────
+interface ProjectRow {
+  id: string
+  name: string
+  utm_zone: number
+  hemisphere: 'N' | 'S'
+}
+
+function generateMapInfoCSV(points: SurveyPoint[], utmZone: number, hemisphere: 'N' | 'S', _projectName: string): string {
   const lines = [`"Name","Easting","Northing","Elevation","Type","Lat_WGS84","Lon_WGS84"`]
-  points.forEach((p: any) => {
+  points.forEach((p) => {
     const { lat, lon } = utmToGeographic(p.easting, p.northing, utmZone, hemisphere)
     lines.push(`"${p.name}",${p.easting.toFixed(4)},${p.northing.toFixed(4)},${(p.elevation||0).toFixed(4)},"${p.is_control?'Control':'Survey'}",${lat.toFixed(8)},${lon.toFixed(8)}`)
   })
@@ -49,8 +58,8 @@ function generateMapInfoCSV(points: any[], utmZone: number, hemisphere: 'N' | 'S
 }
 
 // ── KML for Google Earth / Maps ──────────────────────────────────────────────
-function generateKML(points: any[], utmZone: number, hemisphere: 'N' | 'S', projectName: string): string {
-  const placemarks = points.map((p: any) => {
+function generateKML(points: SurveyPoint[], utmZone: number, hemisphere: 'N' | 'S', projectName: string): string {
+  const placemarks = points.map((p) => {
     const { lat, lon } = utmToGeographic(p.easting, p.northing, utmZone, hemisphere)
     const color = p.is_control ? 'ff0080ff' : 'ff00ff80'
     return `  <Placemark>
@@ -72,9 +81,9 @@ ${placemarks}
 
 function GISExportPage() {
   const { t } = useLanguage()
-  const [projects, setProjects]   = useState<any[]>([])
+  const [projects, setProjects]   = useState<ProjectRow[]>([])
   const [projectId, setProjectId] = useState('')
-  const [points, setPoints]       = useState<any[]>([])
+  const [points, setPoints]       = useState<SurveyPoint[]>([])
   const [loading, setLoading]     = useState(false)
   const [exports, setExports]     = useState<Set<string>>(new Set())
 
@@ -84,7 +93,7 @@ function GISExportPage() {
       const user = session?.user
       if (!user) return
       sb.from('projects').select('id,name,utm_zone,hemisphere').eq('user_id', user.id)
-        .order('created_at', { ascending: false }).then(({ data }) => { if (data) setProjects(data) })
+        .order('created_at', { ascending: false }).then(({ data }) => { if (data) setProjects(data as ProjectRow[]) })
     })
   }, [])
 
@@ -92,13 +101,13 @@ function GISExportPage() {
     if (!projectId) { setPoints([]); return }
     setLoading(true)
     createClient().from('survey_points').select('*').eq('project_id', projectId)
-      .then(({ data }) => { if (data) setPoints(data); setLoading(false) })
+      .then(({ data }) => { if (data) setPoints(data as SurveyPoint[]); setLoading(false) })
   }, [projectId])
 
-  const project = projects.find((p: any) => p.id === projectId)
-  const ptsMapped = points.map((p: any) => ({
+  const project = projects.find((p) => p.id === projectId)
+  const ptsMapped = points.map((p) => ({
     name: p.name, easting: p.easting, northing: p.northing,
-    elevation: p.elevation ?? 0, is_control: p.is_control,
+    elevation: p.elevation ?? 0, is_control: p.is_control ?? false,
   }))
 
   const markExported = (key: string) => setExports(prev => { const s = new Set(Array.from(prev)); s.add(key); return s })
@@ -239,7 +248,7 @@ function GISExportPage() {
                 ? <p className="text-sm text-[var(--text-muted)]">No projects. <Link href="/project/new" className="text-[var(--accent)]">Create one →</Link></p>
                 : <select value={projectId} onChange={e => setProjectId(e.target.value)} className="input w-full">
                     <option value="">— Select project —</option>
-                    {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                    {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
               }
             </div>
@@ -260,7 +269,7 @@ function GISExportPage() {
 
         {/* Export grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {EXPORT_ITEMS.map((item: any) => {
+          {EXPORT_ITEMS.map((item) => {
             const done = exports.has(item.key)
             return (
               <div key={item.key}

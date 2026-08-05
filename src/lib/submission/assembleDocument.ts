@@ -1,6 +1,60 @@
 import { uploadFile, getSignedUrl } from '@/lib/storage';
 import { db } from '@/lib/db';
-import { loadPreAdjustedFromDB, type PreAdjustedCoordinate, type PreAdjustedClosure } from '../generators/deedPlanGeometry';
+import { loadPreAdjustedFromDB } from '../generators/deedPlanGeometry';
+
+// ── Row interfaces for the queries below (typed via db.query<T>) ──────────────
+interface ProjectOwnerRow {
+  user_id: string;
+  surveyor_name: string | null;
+  surveyor_license: string | null;
+}
+interface SurveyorProfileRow {
+  full_name: string | null;
+  isk_number: string | null;
+  firm_name: string | null;
+}
+interface ProjectDetailRow {
+  name: string | null;
+  lr_number: string | null;
+  parcel_number: string | null;
+  county: string | null;
+  division: string | null;
+  district: string | null;
+  locality: string | null;
+  survey_type: string | null;
+  survey_subtype: string | null;
+}
+interface ProjectNameRow {
+  name: string | null;
+  lr_number: string | null;
+}
+interface MutationProjectRow {
+  name: string | null;
+  lr_number: string | null;
+  county: string | null;
+  division: string | null;
+  district: string | null;
+  locality: string | null;
+  boundary_data: unknown;
+}
+interface MutationParcelRow {
+  parcel_number: string;
+  lr_number_proposed: string | null;
+  area_ha: number | null;
+}
+interface MutationBoundaryData {
+  parcelNumber?: string;
+  areaHa?: number;
+  registryMapSheet?: string;
+  adjustedStations?: Array<{
+    pointName?: string;
+    station?: string;
+    adjustedEasting?: number;
+    easting?: number;
+    adjustedNorthing?: number;
+    northing?: number;
+  }>;
+}
 
 // ── Helper: Fetch surveyor profile data from the project owner ────────────
 async function fetchSurveyorProfile(projectId: string): Promise<{
@@ -10,7 +64,7 @@ async function fetchSurveyorProfile(projectId: string): Promise<{
   referenceNumber: string;
 }> {
   try {
-    const projRes = await db.query(
+    const projRes = await db.query<ProjectOwnerRow>(
       'SELECT user_id, surveyor_name, surveyor_license FROM projects WHERE id = $1',
       [projectId]
     );
@@ -28,7 +82,7 @@ async function fetchSurveyorProfile(projectId: string): Promise<{
 
     // Fall back to surveyor profile (correct table: surveyor_profiles, not profiles)
     if (proj?.user_id) {
-      const userRes = await db.query(
+      const userRes = await db.query<SurveyorProfileRow>(
         'SELECT full_name, isk_number, firm_name FROM surveyor_profiles WHERE user_id = $1',
         [proj.user_id]
       );
@@ -88,7 +142,6 @@ function computeTraverseAdjustment(
   // Total misclosure (assumes Bowditch adjustment distributes proportionally)
   const closureE = (misclosureMm / 1000); // This is the linear misclosure magnitude
   // For Bowditch, correction is proportional to leg distance / perimeter
-  const ratio = perimeterM > 0 ? closureE / perimeterM : 0;
 
   let cumDist = 0;
   return stations.map((st, i) => {
@@ -319,7 +372,7 @@ export async function generateDocument(
       const { generateFormC22Pdf } = await import('../generators/formC22');
       const { computeDeedPlanGeometry } = await import('../generators/deedPlanGeometry');
       const [projectRes, surveyorProfile, preAdjusted] = await Promise.all([
-        db.query(
+        db.query<ProjectDetailRow>(
           'SELECT name, lr_number, parcel_number, county, division, district, locality, survey_type, survey_subtype FROM projects WHERE id = $1',
           [projectId]
         ),
@@ -331,7 +384,7 @@ export async function generateDocument(
         preAdjustedCoordinates: preAdjusted?.stations,
         preAdjustedClosure: preAdjusted?.closure,
       });
-      const perimeterM = geom.bearingSchedule.reduce((s: number, l: any) => s + parseFloat(l.distance), 0);
+      const perimeterM = geom.bearingSchedule.reduce((s: number, l) => s + parseFloat(l.distance), 0);
       const adjustedStations = computeTraverseAdjustment(
         geom.stations, geom.bearingSchedule, geom.misclosureMm, perimeterM
       );
@@ -366,7 +419,7 @@ export async function generateDocument(
       const { generateAreaComputationSheet } = await import('../generators/areaComputationSheet');
       const { computeDeedPlanGeometry } = await import('../generators/deedPlanGeometry');
       const [projectRes, surveyorProfile, preAdjusted] = await Promise.all([
-        db.query(
+        db.query<ProjectNameRow>(
           'SELECT name, lr_number FROM projects WHERE id = $1',
           [projectId]
         ),
@@ -385,13 +438,13 @@ export async function generateDocument(
         iskNumber: surveyorProfile.iskNumber,
         firmName: surveyorProfile.firmName,
         referenceNumber: surveyorProfile.referenceNumber,
-        stations: geom.stations.map((st: any) => ({
+        stations: geom.stations.map((st) => ({
           label: st.station,
           easting: st.easting,
           northing: st.northing,
         })),
         precisionRatio: geom.precisionRatio,
-        perimeterM: geom.bearingSchedule.reduce((s: number, l: any) => s + parseFloat(l.distance), 0),
+        perimeterM: geom.bearingSchedule.reduce((s: number, l) => s + parseFloat(l.distance), 0),
         adjustmentMethod: 'Bowditch (Compass Rule)',
       });
       fileName = `area-computation-${projectId}.pdf`;
@@ -402,7 +455,7 @@ export async function generateDocument(
       const { generateTraverseComputationSheet } = await import('../generators/traverseComputationSheet');
       const { computeDeedPlanGeometry } = await import('../generators/deedPlanGeometry');
       const [projectRes, surveyorProfile, preAdjusted] = await Promise.all([
-        db.query(
+        db.query<ProjectDetailRow>(
           'SELECT name, lr_number, parcel_number, county, division, district, locality, survey_type FROM projects WHERE id = $1',
           [projectId]
         ),
@@ -414,7 +467,7 @@ export async function generateDocument(
         preAdjustedCoordinates: preAdjusted?.stations,
         preAdjustedClosure: preAdjusted?.closure,
       });
-      const perimeterM = geom.bearingSchedule.reduce((s: number, l: any) => s + parseFloat(l.distance), 0);
+      const perimeterM = geom.bearingSchedule.reduce((s: number, l) => s + parseFloat(l.distance), 0);
       const adjustedStations = computeTraverseAdjustment(
         geom.stations, geom.bearingSchedule, geom.misclosureMm, perimeterM
       );
@@ -472,7 +525,7 @@ export async function generateDocument(
         revision: 'R00',
         observations,
         legs,
-        coordinates: geom.stations.map((st: any) => ({
+        coordinates: geom.stations.map((st) => ({
           station: st.station,
           easting: st.easting,
           northing: st.northing,
@@ -493,17 +546,17 @@ export async function generateDocument(
     case 'mutation-form': {
       const { generateMutationForm } = await import('./generators/mutationForm');
       const [projectRes, surveyorProfile] = await Promise.all([
-        db.query(
+        db.query<MutationProjectRow>(
           'SELECT name, lr_number, county, division, district, locality, boundary_data FROM projects WHERE id = $1',
           [projectId]
         ),
         fetchSurveyorProfile(projectId),
       ]);
       const proj = projectRes.rows[0];
-      const bd = proj?.boundary_data || {};
+      const bd = (proj?.boundary_data ?? {}) as MutationBoundaryData;
 
       // Get resulting parcels from scheme data if available
-      const { rows: parcels } = await db.query(
+      const { rows: parcels } = await db.query<MutationParcelRow>(
         'SELECT parcel_number, lr_number_proposed, area_ha FROM parcels p JOIN blocks b ON b.id = p.block_id WHERE b.project_id = $1 ORDER BY parcel_number',
         [projectId]
       );
@@ -512,7 +565,7 @@ export async function generateDocument(
         parentLRNumber: proj?.lr_number || '',
         parentParcelNumber: bd.parcelNumber || '',
         parentAreaHa: bd.areaHa || 0,
-        resultingParcels: parcels.map((p: any) => ({
+        resultingParcels: parcels.map((p) => ({
           parcelNumber: p.parcel_number,
           areaHa: p.area_ha || 0,
         })),
@@ -523,7 +576,7 @@ export async function generateDocument(
         registryMapSheet: bd.registryMapSheet || '',
         mutationType: 'subdivision',
         reasonForMutation: 'Subdivision of parent parcel',
-        affectedBeacons: (bd.adjustedStations || []).map((s: any) => ({
+        affectedBeacons: (bd.adjustedStations || []).map((s) => ({
           beaconId: s.pointName || s.station || '',
           action: 'adopted' as const,
           easting: s.adjustedEasting || s.easting || 0,
@@ -544,7 +597,7 @@ export async function generateDocument(
   }
 
   const storagePath = `submissions/${projectId}/${fileName}`;
-  const publicUrl = await uploadFile(buffer, fileName, mimeType, storagePath);
+  await uploadFile(buffer, fileName, mimeType, storagePath);
 
   const signedUrl = await getSignedUrl(storagePath, 60 * 60 * 24 * 7);
 

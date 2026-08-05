@@ -1,18 +1,11 @@
 'use client';
 
-import { useState, useEffect, useCallback, Suspense } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/api-client/client'
-import { getOrCreateProjectSubmission, updateProjectSubmission } from '@/lib/api-client/projectSubmissions'
-import {
-  detailsRecordToSurveyorProfile,
-  getOwnSurveyorDocumentProfile,
-  saveOwnSurveyorDocumentProfile,
-  surveyorProfileToDetailsRecord,
-} from '@/lib/api-client/surveyorProfiles'
 import { ProfessionalDisclaimer } from '@/components/shared/ProfessionalDisclaimer'
 import dynamic from 'next/dynamic'
 import {
-  getDocsForType, DocumentDef, SurveyDocType,
+  getDocsForType, SurveyDocType,
   generateCoverLetter, generateComputationSheet, generateAreaCertificate,
   generateFieldNotes, generateBeaconDescriptions, generateCompletionCertificate,
   generateMutationForm, generateLevelingSummary, generateControlSubmission,
@@ -28,7 +21,6 @@ import {
   distance,
 } from '@/lib/reports/surveyPlan/geometry'
 import { computeTraverseAccuracy, getAccuracyBadgeLabel, getAccuracyBadgeClass } from '@/lib/reports/traverseAccuracy'
-import type { ProjectSubmission } from '@/types/submission'
 import Link from 'next/link'
 import MobileDesktopNotice from '@/components/MobileDesktopNotice'
 import { useSubscription } from '@/lib/subscription/subscriptionContext'
@@ -44,6 +36,39 @@ const SurveyPlanExport = dynamic(() => import('@/components/SurveyPlanExport'), 
 const ShapefileExport = dynamic(() => import('@/components/ShapefileExport'), {
   ssr: false,
 })
+
+// ── Typed row interfaces for the client-side queries below ───────────────────
+interface SubmissionNumberRow {
+  submission_number: string | null;
+}
+interface AdjacentParcelRow {
+  id: string;
+  parcel_number: string | null;
+  lr_number_proposed: string | null;
+  boundary_geojson: unknown;
+}
+interface BoundaryGeojson {
+  features?: Array<{ geometry?: { coordinates?: unknown } }>;
+  geometry?: { coordinates?: unknown };
+  coordinates?: unknown;
+}
+interface FormNo4Fields {
+  lr_number?: string;
+  folio_number?: string;
+  register_number?: string;
+  plot_parcel_number?: string;
+  registration_district?: string;
+  locality?: string;
+}
+interface CreateSubmissionResponse {
+  success?: boolean;
+  submissionNumber?: string;
+  error?: string;
+}
+const ringCoords = (raw: unknown): number[][] => {
+  const r = raw as number[][][];
+  return r[0] || (r as unknown as number[][]);
+};
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -297,8 +322,8 @@ export default function DocumentsPage({ params }: PageProps) {
   const { plan } = useSubscription()
   const [project, setProject] = useState<ProjectData | null>(null)
   const [points, setPoints]   = useState<PointData[]>([])
-  const [traverse, setTraverse] = useState<TraverseData | undefined>()
-  const [area, setArea]         = useState<AreaData | undefined>()
+  const [traverse] = useState<TraverseData | undefined>()
+  const [area]         = useState<AreaData | undefined>()
   const [loading, setLoading]   = useState(true)
   const [surveyorDetails, setSurveyorDetails] = useState<Record<string,string>>({})
   const [activeTab, setActiveTab] = useState<'docs' | 'plan'>('docs')
@@ -317,16 +342,15 @@ export default function DocumentsPage({ params }: PageProps) {
       return
     }
 
-    const [{ data: proj }, { data: pts }, { data: parcels }] = await Promise.all([
-      dbClient.from('projects').select('*').eq('id', params.id).single(),
-      dbClient.from('survey_points').select('*').eq('project_id', params.id).order('created_at'),
-      dbClient.from('parcels').select('*').eq('project_id', params.id).limit(1).single(),
-    ])
+    const projRes = await dbClient.from('projects').select('*').eq('id', params.id).single()
+    const ptsRes = await dbClient.from('survey_points').select('*').eq('project_id', params.id).order('created_at')
+    const proj = (projRes as { data: ProjectData | null }).data
+    const pts = (ptsRes as { data: SurveyPoint[] | null }).data
 
     if (proj) setProject(proj)
-     if (pts) setPoints(pts.map((p: SurveyPoint) => ({
+    if (pts) setPoints(pts.map((p) => ({
        name: p.name, easting: p.easting, northing: p.northing,
-       elevation: p.elevation ?? undefined, is_control: p.is_control,
+       elevation: p.elevation ?? undefined, is_control: p.is_control ?? false,
      })))
     setLoading(false)
   }, [params.id])
@@ -343,8 +367,9 @@ export default function DocumentsPage({ params }: PageProps) {
         .order('created_at', { ascending: false })
         .limit(1)
         .then(({ data }) => {
-          if (data?.[0]?.submission_number) {
-            setSubmissionNumber(data[0].submission_number)
+          const rows = (data ?? []) as SubmissionNumberRow[]
+          if (rows[0]?.submission_number) {
+            setSubmissionNumber(rows[0].submission_number)
           }
         })
     }
@@ -359,24 +384,22 @@ export default function DocumentsPage({ params }: PageProps) {
       .select('id, parcel_number, lr_number_proposed, boundary_geojson')
       .eq('project_id', params.id)
       .then(({ data }) => {
-        if (data && data.length > 1) {
-          const adjLots = data.slice(0, 5).map((p: any) => {
+        const rows = (data ?? []) as AdjacentParcelRow[]
+        if (rows.length > 1) {
+          const adjLots = rows.slice(0, 5).map((p) => {
             // Parse boundary coordinates from GeoJSON if available
             let bdyPts: Array<{ easting: number; northing: number }> = []
             if (p.boundary_geojson) {
               try {
-                const geojson = typeof p.boundary_geojson === 'string'
+                const geojson = (typeof p.boundary_geojson === 'string'
                   ? JSON.parse(p.boundary_geojson)
-                  : p.boundary_geojson
+                  : p.boundary_geojson) as BoundaryGeojson
                 if (geojson?.features?.[0]?.geometry?.coordinates) {
-                  const coords = geojson.features[0].geometry.coordinates[0] || geojson.features[0].geometry.coordinates
-                  bdyPts = coords.map((c: number[]) => ({ easting: c[0], northing: c[1] }))
+                  bdyPts = ringCoords(geojson.features[0].geometry.coordinates).map((c) => ({ easting: c[0], northing: c[1] }))
                 } else if (geojson?.geometry?.coordinates) {
-                  const coords = geojson.geometry.coordinates[0] || geojson.geometry.coordinates
-                  bdyPts = coords.map((c: number[]) => ({ easting: c[0], northing: c[1] }))
+                  bdyPts = ringCoords(geojson.geometry.coordinates).map((c) => ({ easting: c[0], northing: c[1] }))
                 } else if (Array.isArray(geojson?.coordinates)) {
-                  const coords = geojson.coordinates[0] || geojson.coordinates
-                  bdyPts = coords.map((c: number[]) => ({ easting: c[0], northing: c[1] }))
+                  bdyPts = ringCoords(geojson.coordinates).map((c) => ({ easting: c[0], northing: c[1] }))
                 }
               } catch { /* ignore parse errors */ }
             }
@@ -386,7 +409,7 @@ export default function DocumentsPage({ params }: PageProps) {
               planReference: p.parcel_number || '',
               boundaryPoints: bdyPts,
             }
-          }).filter((lot: any) => lot.boundaryPoints.length >= 2)
+          }).filter((lot) => lot.boundaryPoints.length >= 2)
           setAdjacentParcels(adjLots)
         }
       })
@@ -486,7 +509,7 @@ export default function DocumentsPage({ params }: PageProps) {
     const traverseAccuracyResult = linearError != null
       ? computeTraverseAccuracy(linearError, perimeter_m)
       : null
-    const proj = project as any
+    const proj = project as ProjectData & FormNo4Fields
     return {
       project: {
         name: project.name,
@@ -552,7 +575,7 @@ export default function DocumentsPage({ params }: PageProps) {
         body: JSON.stringify({ projectId: params.id })
       })
       
-      const result = await response.json()
+      const result = (await response.json()) as CreateSubmissionResponse
       
       if (result.success && result.submissionNumber) {
         setSubmissionNumber(result.submissionNumber)
@@ -742,7 +765,7 @@ export default function DocumentsPage({ params }: PageProps) {
         {/* Info banner */}
         <div className="bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-xl p-4 mb-6 text-sm">
           <p className="text-[var(--text-secondary)]">
-            <strong className="text-[var(--text-primary)]">{docs.filter((d: any) =>d.required).length} required documents</strong> for a {(project.survey_type||'boundary').toLowerCase()} survey — pre-filled with your project data.
+            <strong className="text-[var(--text-primary)]">{docs.filter((d) => d.required).length} required documents</strong> for a {(project.survey_type||'boundary').toLowerCase()} survey — pre-filled with your project data.
             Fill in the extra fields for each document, then click <strong>Generate &amp; Print</strong>. Each opens in a new tab ready to print as PDF.
           </p>
         </div>
@@ -755,7 +778,7 @@ export default function DocumentsPage({ params }: PageProps) {
 
         {/* Document list */}
         <div className="space-y-3">
-          {docs.map((doc: any) => {
+          {docs.map((doc) => {
             const isActive = activeDoc === doc.id
             const isDone = generated.has(doc.id)
 
@@ -827,7 +850,7 @@ export default function DocumentsPage({ params }: PageProps) {
         </div>
 
         {/* Generate all button */}
-        {docs.filter((d: any) => !generated.has(d.id)).length > 0 && (
+        {docs.filter((d) => !generated.has(d.id)).length > 0 && (
           <div className="mt-6 pt-6 border-t border-[var(--border-color)]">
             <button onClick={() => docs.forEach((d, i) => setTimeout(() => generateDoc(d.id), i * 300))}
               className="btn btn-secondary w-full">
