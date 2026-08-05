@@ -15,18 +15,24 @@ import { useRef, useCallback } from 'react'
 import type { BasemapMode } from '@/app/map/mapTypes'
 
 interface UseMapBasemapsReturn {
-  basemapsRef: React.MutableRefObject<Record<string, any>>
-  createBasemaps: (olModules: any) => Record<string, any>
-  toggleBasemap: (mapInstance: React.MutableRefObject<any>, mode: BasemapMode, setBasemap: (m: BasemapMode) => void) => void
+  basemapsRef: React.MutableRefObject<Record<string, import('ol/layer/Tile').default>>
+  createBasemaps: (olModules: BasemapModules) => Record<string, import('ol/layer/Tile').default>
+  toggleBasemap: (mapInstance: React.MutableRefObject<import('ol/Map').default | null>, mode: BasemapMode, setBasemap: (m: BasemapMode) => void) => void
+}
+
+export interface BasemapModules {
+  TileLayer: typeof import('ol/layer/Tile').default
+  OSM: typeof import('ol/source/OSM').default
+  XYZ: typeof import('ol/source/XYZ').default
 }
 
 export function useMapBasemaps(): UseMapBasemapsReturn {
-  const basemapsRef = useRef<Record<string, any>>({})
+  const basemapsRef = useRef<Record<string, import('ol/layer/Tile').default>>({})
 
-  const createBasemaps = useCallback((olModules: any) => {
+  const createBasemaps = useCallback((olModules: BasemapModules) => {
     const { TileLayer, OSM, XYZ } = olModules
 
-    const basemaps: Record<string, any> = {
+    const basemaps: Record<string, import('ol/layer/Tile').default> = {
       osm: new TileLayer({
         source: new OSM({ crossOrigin: 'anonymous' }),
         visible: true,
@@ -64,8 +70,8 @@ export function useMapBasemaps(): UseMapBasemapsReturn {
           attributions: '\u00A9 OpenTopoMap (CC-BY-SA)',
           cacheSize: 2048,
           // Retry failed tiles
-          tileLoadFunction: (imageTile: any, src: string) => {
-            const img = imageTile.getImage()
+          tileLoadFunction: (imageTile: import('ol/Tile').default, src: string) => {
+            const img = (imageTile as import('ol/ImageTile').default).getImage() as HTMLImageElement
             img.onerror = () => {
               // Fallback to Esri terrain if OpenTopoMap is rate-limited
               const z = imageTile.getTileCoord()[0]
@@ -118,14 +124,14 @@ export function useMapBasemaps(): UseMapBasemapsReturn {
   }, [])
 
   const toggleBasemap = useCallback((
-    mapInstance: React.MutableRefObject<any>,
+    mapInstance: React.MutableRefObject<import('ol/Map').default | null>,
     mode: BasemapMode,
     setBasemap: (m: BasemapMode) => void
   ) => {
     if (!mapInstance.current) return
     const basemapIds = ['osm', 'satellite', 'dark', 'terrain']
     for (const layer of mapInstance.current.getLayers().getArray()) {
-      const id = layer.get('basemapId')
+      const id = layer.get('basemapId') as string | undefined
       if (id && basemapIds.includes(id)) {
         layer.setVisible(id === mode)
       }

@@ -23,6 +23,7 @@ import { useEffect } from 'react'
 import type { MapCleanupRefs } from '@/lib/map/olTypes'
 import type OLMapType from 'ol/Map'
 import type { SelectEvent } from 'ol/interaction/Select'
+import type { BasemapModules } from './useMapBasemaps'
 import type { DragAndDropEvent } from 'ol/interaction/DragAndDrop'
 
 interface UseMapInitParams {
@@ -33,7 +34,7 @@ interface UseMapInitParams {
   setMouseCoord: (v: { lon: number; lat: number; e: number; n: number } | null) => void
   setFeatureCount: (v: number) => void
   setImportMsg: (v: string) => void
-  setSelectedFeature: (v: any) => void
+  setSelectedFeature: (v: import('ol/Feature').default | null) => void
   setFeatureName: (v: string) => void
   mouseCoordThrottleRef: React.MutableRefObject<number>
   searchParams: URLSearchParams
@@ -46,8 +47,8 @@ interface UseMapInitParams {
   mapInstance: React.MutableRefObject<unknown>
   cleanupRef: React.MutableRefObject<MapCleanupRefs | null>
   popupRef: React.MutableRefObject<HTMLDivElement | null>
-  createBasemaps: (olModules: any) => Record<string, any>
-  onPopupRender: (popupElement: HTMLDivElement, data: any, hidePopup: () => void) => void
+  createBasemaps: (olModules: BasemapModules) => Record<string, import('ol/layer/Tile').default>
+  onPopupRender: (popupElement: HTMLDivElement, data: { coordinate?: import('ol/coordinate').Coordinate; projectName?: string; stationName?: string; geometryType?: string; projectId?: string }, hidePopup: () => void) => void
   /** T1.5 FIX (2026-07-09): UTM EPSG for mouse position coordinate display */
   currentUtmEpsg?: string
 }
@@ -192,7 +193,8 @@ export function useMapInit(params: UseMapInitParams) {
         if (cancelled || !mapRef.current) return
 
         // ── Basemap layers ──
-        const basemaps = createBasemaps(olModules)
+        // TileLayer/OSM/XYZ are assigned above — the cast is safe only after those assignments.
+        const basemaps = createBasemaps(olModules as BasemapModules)
 
         // ── Draw layer — using enhanced SoK-compliant styles ──
         const drawSource = new VectorSource()
@@ -400,7 +402,8 @@ export function useMapInit(params: UseMapInitParams) {
         try {
           const savedView = localStorage.getItem('metardu-map-view')
           if (savedView) {
-            const { center, zoom } = JSON.parse(savedView)
+            const parsed = JSON.parse(savedView) as { center?: [number, number]; zoom?: number }
+            const { center, zoom } = parsed
             if (center && zoom) {
               map.getView().setCenter(center)
               map.getView().setZoom(zoom)
@@ -414,7 +417,7 @@ export function useMapInit(params: UseMapInitParams) {
           if (savedFeatures) {
             const { default: GeoJSONFmt } = await import('ol/format/GeoJSON')
             const fmt = new GeoJSONFmt()
-            const parsed = JSON.parse(savedFeatures)
+            const parsed = JSON.parse(savedFeatures) as object
             const features = fmt.readFeatures(parsed, {
               dataProjection: 'EPSG:4326',
               featureProjection: 'EPSG:3857',

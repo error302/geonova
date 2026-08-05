@@ -7,12 +7,12 @@
  * VectorLayer with per-code styling.
  */
 
-import type { Feature as OLFeature, Map } from 'ol'
+import type { Map } from 'ol'
 import type { FeatureLike } from 'ol/Feature'
 
 export interface ProjectPointsLayerResult {
-  pointsLayer: any // VectorLayer
-  pointsSource: any // VectorSource
+  pointsLayer: import('ol/layer/Vector').default
+  pointsSource: import('ol/source/Vector').default
   cleanup: () => void
   pointCount: number
   controlPointCount: number
@@ -90,7 +90,7 @@ export async function createProjectPointsLayer(
   if (!res.ok) {
     throw new Error(`Failed to load project points (${res.status})`)
   }
-  const json = await res.json()
+  const json = (await res.json()) as { data?: SurveyPointRow[]; meta?: { project_crs?: ProjectCrs | null } }
   const points: SurveyPointRow[] = json.data || []
   // T1.5 FIX: Derive EPSG from the project's CRS metadata, not hardcoded.
   const projCode = epsgFromProjectCrs(json.meta?.project_crs ?? null)

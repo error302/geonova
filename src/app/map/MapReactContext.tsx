@@ -90,7 +90,7 @@ export interface MapContextValue {
   setOrientation: React.Dispatch<React.SetStateAction<Orientation>>
 
   // ── Offline map state ──
-  offlineMapExtent: any
+  offlineMapExtent: { minLat: number; minLon: number; maxLat: number; maxLon: number } | null
 
   // ── Init retry action ──
   retryInit: () => void

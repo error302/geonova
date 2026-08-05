@@ -112,7 +112,7 @@ import { useMapInit } from '@/app/map/hooks/useMapInit'
 import { useMapState } from '@/app/map/hooks/useMapState'
 import { useMapInteractions } from '@/app/map/hooks/useMapInteractions'
 import { useVertexEditing } from '@/hooks/useVertexEditing'
-import { usePrint } from '@/hooks/usePrint'
+import { usePrint, type PrintOptions } from '@/hooks/usePrint'
 import { MapProvider, type MapContextValue } from '@/app/map/MapReactContext'
 import { Target } from 'lucide-react'
 
@@ -284,7 +284,7 @@ export default function MapClient() {
   // ── Traverse-to-parcel state ──
   const [traverseParcelPreviewActive, setTraverseParcelPreviewActive] = useState(false)
   const [hasTraverse, setHasTraverse] = useState(false)
-  const traversePreviewLayerRef = useRef<any>(null)
+  const traversePreviewLayerRef = useRef<import('ol/layer/Vector').default | null>(null)
 
   // ── Vertex editing state (Tier 1: VertexEditToolbar) ──
   const [vertexEditingEnabled, setVertexEditingEnabled] = useState(false)
@@ -328,7 +328,7 @@ export default function MapClient() {
   } = usePrint({ printTarget: 'metardu-global-map' })
 
   // ── Map extent for offline tile dialog (async resolve) ──
-  const [offlineMapExtent, setOfflineMapExtent] = useState<any>(null)
+  const [offlineMapExtent, setOfflineMapExtent] = useState<{ minLat: number; minLon: number; maxLat: number; maxLon: number } | null>(null)
 
   // ── Map projection (Tier 2: Projection switching) ──
   const [activeProjection, setActiveProjection] = useState<string>('EPSG:3857')
@@ -436,7 +436,7 @@ export default function MapClient() {
     },
     onIdentify: (feature) => {
       setSelectedFeature(feature)
-      const name = feature?.get?.('pointName') || feature?.get?.('parcelNumber') || feature?.get?.('name')
+      const name = (feature?.get?.('pointName') || feature?.get?.('parcelNumber') || feature?.get?.('name')) as string | undefined
       if (name) setFeatureName(name)
     },
     hasFeature,
@@ -603,7 +603,7 @@ export default function MapClient() {
   }, [interactions])
 
   // ── Print handler: show sheet layout overlay then trigger browser print ──
-  const handlePrintMap = useCallback(async (overrides?: any) => {
+  const handlePrintMap = useCallback(async (overrides?: Partial<PrintOptions>) => {
     // Force the SheetLayout chunk to load BEFORE we show + print. Without this,
     // the dynamic import races the 500ms delay and the first print can come out
     // blank (overlay not yet mounted) on slow connections.
@@ -942,7 +942,7 @@ export default function MapClient() {
 
           // Remove originals, add merged
           if (!drawSource) return
-          selectedFeatures.forEach((f: any) => drawSource.removeFeature(f))
+          selectedFeatures.forEach((f) => drawSource.removeFeature(f))
           drawSource.addFeature(new Feature({ geometry: new Polygon([merged3857]), source: 'merge' }))
 
           setSaveMsg(`Merged ${selectedFeatures.length} polygons into 1`)
@@ -998,7 +998,7 @@ export default function MapClient() {
           const offset3857 = offset.map(([e, n]) => proj.transform([e, n], 'EPSG:21037', 'EPSG:3857'))
 
           const { default: Feature } = await import('ol/Feature')
-          let newFeature: any
+          let newFeature: import('ol/Feature').default
           if (isPolygon) {
             const { default: Polygon } = await import('ol/geom/Polygon')
             newFeature = new Feature({

@@ -1,13 +1,13 @@
 {
-  "@typescript-eslint/no-unsafe-assignment": 2909,
-  "@typescript-eslint/no-explicit-any": 1307,
+  "@typescript-eslint/no-unsafe-assignment": 2882,
+  "@typescript-eslint/no-explicit-any": 1286,
   "no-console": 405,
-  "@typescript-eslint/no-unsafe-argument": 1037,
-  "@typescript-eslint/no-unsafe-member-access": 5066,
-  "@typescript-eslint/no-unsafe-call": 992,
-  "@typescript-eslint/no-unused-vars": 1303,
+  "@typescript-eslint/no-unsafe-argument": 1023,
+  "@typescript-eslint/no-unsafe-member-access": 5043,
+  "@typescript-eslint/no-unsafe-call": 967,
+  "@typescript-eslint/no-unused-vars": 1302,
   "react-hooks/exhaustive-deps": 76,
   "@typescript-eslint/no-non-null-assertion": 665,
-  "@typescript-eslint/no-unsafe-return": 366,
+  "@typescript-eslint/no-unsafe-return": 365,
   "no-restricted-syntax": 16
 }
