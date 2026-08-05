@@ -1,8 +1,45 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 
 export const dynamic = 'force-dynamic'
+
+// ─── DB Row Interfaces ───────────────────────────────────────────────────────
+
+interface ParcelRow {
+  id: string
+  parcel_number: string
+  lr_number_proposed: string | null
+  area_ha: string | number | null
+  project_id: string
+  block_id: string
+  block_number: string
+  block_name: string | null
+  project_name: string
+  location: string | null
+  surveyor_name: string | null
+}
+
+interface TraverseRow {
+  traverse_id: string
+  opening_station: string | null
+  accuracy_order: string | null
+  total_perimeter: string | number | null
+  computed_area_ha: string | number | null
+}
+
+interface CoordRow {
+  station: string
+  easting: string | number
+  northing: string | number
+  rl: string | number | null
+}
+
+interface SchemeDetailsRow {
+  scheme_number?: string | null
+  county?: string | null
+  [key: string]: unknown
+}
 
 export const GET = apiHandler(
   { auth: true, audit: 'deed_plan_generated' , rateLimit: { max: 60, windowMs: 60000 } },
@@ -14,7 +51,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'parcel_id is required' }, { status: 400 })
     }
 
-    const parcelCheck = await db.query(
+    const parcelCheck = await db.query<ParcelRow>(
       `SELECT p.id, p.parcel_number, p.lr_number_proposed, p.area_ha, p.project_id, p.block_id,
       b.block_number, b.block_name,
       pr.name as project_name, pr.location, pr.surveyor_name
@@ -31,7 +68,7 @@ export const GET = apiHandler(
 
     const parcel = parcelCheck.rows[0]
 
-    const traverseCheck = await db.query(
+    const traverseCheck = await db.query<TraverseRow>(
       `SELECT pt.id as traverse_id, pt.opening_station, pt.accuracy_order,
       pt.total_perimeter, pt.computed_area_ha
       FROM parcel_traverses pt
@@ -46,7 +83,7 @@ export const GET = apiHandler(
     const traverse = traverseCheck.rows[0]
     const traverseId = traverse.traverse_id
 
-    const coordsResult = await db.query(
+    const coordsResult = await db.query<CoordRow>(
       `SELECT station, easting, northing, rl FROM traverse_coordinates WHERE traverse_id = $1 ORDER BY station`,
       [traverseId]
     )
@@ -55,10 +92,10 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'Not enough points for a deed plan (minimum 3 required)' }, { status: 400 })
     }
 
-    let schemeDetails: Record<string, unknown> = {}
+    let schemeDetails: Partial<SchemeDetailsRow> = {}
     try {
-      const sd = await db.query('SELECT * FROM scheme_details WHERE project_id = $1', [parcel.project_id])
-      if (sd.rows.length > 0) schemeDetails = sd.rows[0] as Record<string, unknown>
+      const sd = await db.query<SchemeDetailsRow>('SELECT * FROM scheme_details WHERE project_id = $1', [parcel.project_id])
+      if (sd.rows.length > 0) schemeDetails = sd.rows[0]
     } catch {}
 
     const { jsPDF } = await import('jspdf')
@@ -68,11 +105,11 @@ export const GET = apiHandler(
     const pageW = doc.internal.pageSize.getWidth()
     const pageH = doc.internal.pageSize.getHeight()
 
-    const stations = coordsResult.rows.map((c: Record<string, unknown>) => ({
-      station: c.station as string,
+    const stations = coordsResult.rows.map((c) => ({
+      station: c.station,
       easting: parseFloat(String(c.easting)),
       northing: parseFloat(String(c.northing)),
-      beaconNo: c.station as string,
+      beaconNo: c.station,
       monument: 'psc found',
     }))
 
@@ -107,7 +144,7 @@ export const GET = apiHandler(
     doc.setFontSize(9)
     doc.text('FORM NO. 4 \u2014 DEED PLAN', pageW / 2, 15, { align: 'center' })
 
-    renderBoundaryPlan(doc, geom as any, { x: 10, y: 20, width: pageW - 20, height: pageH - 75 })
+    renderBoundaryPlan(doc, geom as Parameters<typeof renderBoundaryPlan>[1], { x: 10, y: 20, width: pageW - 20, height: pageH - 75 })
 
     const tableY = pageH - 52
     doc.setDrawColor(0)
@@ -120,9 +157,9 @@ export const GET = apiHandler(
     const curY = tableY + 5
 
     const areaStr = parcel.area_ha
-      ? `${parseFloat(parcel.area_ha).toFixed(4)} Ha`
+      ? `${parseFloat(String(parcel.area_ha)).toFixed(4)} Ha`
       : traverse.computed_area_ha
-        ? `${parseFloat(traverse.computed_area_ha).toFixed(4)} Ha`
+        ? `${parseFloat(String(traverse.computed_area_ha)).toFixed(4)} Ha`
         : '\u2014'
 
     const infoPairs = [
@@ -134,7 +171,7 @@ export const GET = apiHandler(
       ['LOCATION:', parcel.location || schemeDetails.county || '\u2014'],
       ['SURVEYOR:', parcel.surveyor_name || '\u2014'],
       ['ACCURACY:', traverse.accuracy_order || '\u2014'],
-      ['PERIMETER:', traverse.total_perimeter ? `${parseFloat(traverse.total_perimeter).toFixed(3)} m` : '\u2014'],
+      ['PERIMETER:', traverse.total_perimeter ? `${parseFloat(String(traverse.total_perimeter)).toFixed(3)} m` : '\u2014'],
       ['DATE:', new Date().toLocaleDateString('en-GB')],
       ['DATUM:', 'ARC 1960'],
       ['PROJECTION:', 'UTM Zone 37S'],

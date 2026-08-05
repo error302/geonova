@@ -1,8 +1,36 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
+
+// ─── DB Row Interfaces ───────────────────────────────────────────────────────
+
+interface ProjectRow {
+  id: string
+  name: string
+}
+
+interface ParcelRow {
+  id: string
+  parcel_number: string
+  lr_number_proposed: string | null
+  area_ha: number | null
+  parcel_status: string
+  block_number: string
+  traverse_id: string | null
+  traverse_status: string | null
+  accuracy_order: string | null
+  computed_area_ha: number | null
+  has_closed_traverse: boolean | null
+}
+
+interface SchemeRow {
+  scheme_number: string | null
+  county: string | null
+  adjudication_section: string | null
+  status: string | null
+}
 
 export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (request, ctx) => {
   const projectId = request.nextUrl.searchParams.get('project_id')
@@ -12,7 +40,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   }
 
   // Verify ownership
-  const { rows: projects } = await db.query(
+  const { rows: projects } = await db.query<ProjectRow>(
     'SELECT id, name FROM projects WHERE id = $1 AND user_id = $2',
     [projectId, ctx.userId]
   )
@@ -21,7 +49,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   }
 
   // Get all parcels with their traverse status
-  const { rows: parcels } = await db.query(
+  const { rows: parcels } = await db.query<ParcelRow>(
     `SELECT 
       p.id, p.parcel_number, p.lr_number_proposed, p.area_ha, p.status as parcel_status,
       b.block_number,
@@ -37,7 +65,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   )
 
   // Evaluate readiness per parcel
-  const parcelChecks = parcels.map((p: any) => {
+  const parcelChecks = parcels.map((p) => {
     const checks: Record<string, { pass: boolean; label: string; detail: string }> = {
       traverse_computed: {
         pass: p.traverse_id !== null,
@@ -50,7 +78,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
         detail: p.has_closed_traverse ? 'Closing error within tolerance' : 'Traverse not closed or not computed',
       },
       accuracy_acceptable: {
-        pass: p.accuracy_order && ['1st order', '2nd order', '3rd order'].includes(p.accuracy_order),
+        pass: p.accuracy_order != null && ['1st order', '2nd order', '3rd order'].includes(p.accuracy_order),
         label: 'Accuracy Order',
         detail: p.accuracy_order ? `${p.accuracy_order} — ${p.accuracy_order === '3rd order' ? 'Minimum for cadastral' : 'Acceptable'}` : 'Not computed',
       },
@@ -89,7 +117,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   const overallReady = totalParcels > 0 && readyParcels === totalParcels
 
   // Check scheme-level requirements
-  const { rows: schemeRows } = await db.query(
+  const { rows: schemeRows } = await db.query<SchemeRow>(
     'SELECT scheme_number, county, adjudication_section, status FROM scheme_details WHERE project_id = $1',
     [projectId]
   )

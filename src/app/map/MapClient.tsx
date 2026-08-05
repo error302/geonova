@@ -113,6 +113,7 @@ import { useMapState } from '@/app/map/hooks/useMapState'
 import { useMapInteractions } from '@/app/map/hooks/useMapInteractions'
 import { useVertexEditing } from '@/hooks/useVertexEditing'
 import { usePrint, type PrintOptions } from '@/hooks/usePrint'
+import type { MapExtent } from './MapReactContext'
 import { MapProvider, type MapContextValue } from '@/app/map/MapReactContext'
 import { Target } from 'lucide-react'
 
@@ -328,7 +329,7 @@ export default function MapClient() {
   } = usePrint({ printTarget: 'metardu-global-map' })
 
   // ── Map extent for offline tile dialog (async resolve) ──
-  const [offlineMapExtent, setOfflineMapExtent] = useState<{ minLat: number; minLon: number; maxLat: number; maxLon: number } | null>(null)
+  const [offlineMapExtent, setOfflineMapExtent] = useState<MapExtent | null>(null)
 
   // ── Map projection (Tier 2: Projection switching) ──
   const [activeProjection, setActiveProjection] = useState<string>('EPSG:3857')

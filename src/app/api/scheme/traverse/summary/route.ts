@@ -1,8 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
+
+// ─── DB Row Interfaces ───────────────────────────────────────────────────────
+
+interface ProjectRow {
+  id: string
+}
+
+interface TraverseResultRow {
+  traverse_id: string
+  project_id: string
+  traverse_name: string | null
+  method: string | null
+  status: string | null
+  results: Record<string, unknown> | null
+  created_at: Date | string
+  updated_at: Date | string
+}
 
 export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
   const { searchParams } = new URL(req.url)
@@ -13,7 +30,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   }
 
   // Verify ownership
-  const { rows: projects } = await db.query(
+  const { rows: projects } = await db.query<ProjectRow>(
     'SELECT id FROM projects WHERE id = $1 AND user_id = $2',
     [projectId, ctx.userId]
   )
@@ -28,9 +45,9 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   // results in traverse_results (jsonb) keyed by project_id. Wrap the
   // broken query in a try/catch and fall back to an empty summary so the
   // project page can render even when traverses haven't been computed yet.
-  let classified: any[] = []
+  let classified: Array<Record<string, unknown>> = []
   try {
-    const { rows } = await db.query(
+    const { rows } = await db.query<TraverseResultRow>(
       `SELECT
         tr.id as traverse_id,
         tr.project_id,
@@ -46,8 +63,8 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
       [projectId]
     )
 
-    classified = rows.map((r: any) => {
-      const res = r.results ?? {}
+    classified = rows.map((r) => {
+      const res = (r.results ?? {}) as Record<string, unknown>
       return {
         ...r,
         is_closed: res.is_closed ?? null,
@@ -57,19 +74,20 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
         accuracy_order: res.accuracy_order ?? null,
         computed_area_ha: res.computed_area_ha ?? null,
         computed_at: r.updated_at,
-        accuracy_class: classifyAccuracy(res.accuracy_order, res.precision_ratio),
+        accuracy_class: classifyAccuracy(res.accuracy_order as string | null, (res.precision_ratio as number | null) ?? null),
       }
     })
   } catch (err) {
+    // eslint-disable-next-line no-console -- server-side fallback log, not user-facing
     console.error('[/api/scheme/traverse/summary] query failed:', err)
     classified = []
   }
 
   // Summary stats
   const total = classified.length
-  const computed = classified.filter((r: any) => r.status === 'computed' || r.status === 'approved').length
-  const passed = classified.filter((r: any) => r.accuracy_class === 'pass').length
-  const failed = classified.filter((r: any) => r.accuracy_class === 'fail').length
+  const computed = classified.filter((r) => r.status === 'computed' || r.status === 'approved').length
+  const passed = classified.filter((r) => r.accuracy_class === 'pass').length
+  const failed = classified.filter((r) => r.accuracy_class === 'fail').length
   const pending = total - computed
 
   return NextResponse.json({

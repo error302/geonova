@@ -3,6 +3,26 @@ import { db } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
 
+// ─── DB Row Interfaces ───────────────────────────────────────────────────────
+
+interface CountRow {
+  total: number
+}
+
+interface UserRow {
+  id: string
+  email: string | null
+  full_name: string | null
+  role: string | null
+  verified_isk: boolean | null
+  created_at: Date | string
+  updated_at: Date | string
+  is_suspended: boolean | null
+  suspension_reason: string | null
+  plan_id: string | null
+  subscription_status: string | null
+}
+
 /**
  * GET /api/admin/users
  *
@@ -18,7 +38,7 @@ export const dynamic = 'force-dynamic'
  */
 export const GET = apiHandler(
   { auth: true, roles: ['super_admin', 'admin', 'org_admin'] , rateLimit: { max: 60, windowMs: 60000 } },
-  async (req, ctx) => {
+  async (req, _ctx) => {
     const { searchParams } = new URL(req.url)
 
     const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10))
@@ -57,7 +77,7 @@ export const GET = apiHandler(
       conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : ''
 
     // Count query
-    const countResult = await db.query(
+    const countResult = await db.query<CountRow>(
       `SELECT COUNT(*)::int AS total
        FROM users u
        LEFT JOIN surveyor_profiles sp ON sp.user_id = u.id
@@ -67,7 +87,7 @@ export const GET = apiHandler(
     const total = countResult.rows[0]?.total ?? 0
 
     // Data query
-    const dataResult = await db.query(
+    const dataResult = await db.query<UserRow>(
       `SELECT
          u.id,
          u.email,

@@ -1,8 +1,47 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 
 export const dynamic = 'force-dynamic'
+
+// ─── DB Row Interfaces ───────────────────────────────────────────────────────
+
+interface ProjectRow {
+  id: string
+  name: string
+  location: string | null
+  project_type: string
+}
+
+interface SchemeDetailsRow {
+  scheme_number?: string | null
+  county?: string | null
+  sub_county?: string | null
+  ward?: string | null
+  [key: string]: unknown
+}
+
+interface BlockRow {
+  id: string
+  block_number: string
+  block_name: string | null
+}
+
+interface ParcelRow {
+  id: string
+  parcel_number: string
+  lr_number_proposed: string | null
+  area_ha: string | number | null
+  block_id: string
+  status: string
+  block_number: string
+}
+
+interface CoordRow {
+  station: string
+  easting: string | number
+  northing: string | number
+}
 
 export const GET = apiHandler(
   { auth: true, audit: 'rim_generated' , rateLimit: { max: 60, windowMs: 60000 } },
@@ -14,7 +53,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'project_id is required' }, { status: 400 })
     }
 
-    const projectCheck = await db.query(
+    const projectCheck = await db.query<ProjectRow>(
       'SELECT id, name, location, project_type FROM projects WHERE id = $1 AND user_id = $2',
       [projectId, ctx.userId]
     )
@@ -24,13 +63,13 @@ export const GET = apiHandler(
 
     const project = projectCheck.rows[0]
 
-    let scheme: any = {}
+    let scheme: Partial<SchemeDetailsRow> = {}
     try {
-      const sd = await db.query('SELECT * FROM scheme_details WHERE project_id = $1', [projectId])
+      const sd = await db.query<SchemeDetailsRow>('SELECT * FROM scheme_details WHERE project_id = $1', [projectId])
       if (sd.rows.length > 0) scheme = sd.rows[0]
     } catch {}
 
-    const blocksResult = await db.query(
+    const blocksResult = await db.query<BlockRow>(
       `SELECT b.id, b.block_number, b.block_name
       FROM blocks b WHERE b.project_id = $1 ORDER BY b.block_number`,
       [projectId]
@@ -40,7 +79,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'No blocks found' }, { status: 400 })
     }
 
-    const parcelsResult = await db.query(
+    const parcelsResult = await db.query<ParcelRow>(
       `SELECT p.id, p.parcel_number, p.lr_number_proposed, p.area_ha, p.block_id,
       p.status, b.block_number
       FROM parcels p
@@ -51,13 +90,13 @@ export const GET = apiHandler(
     )
 
     const parcelGeoms: Array<{
-      parcel_id: number; parcel_number: string; lr_number: string | null;
+      parcel_id: string; parcel_number: string; lr_number: string | null;
       block_number: string; area_ha: number | null; status: string;
       coordinates: Array<{ station: string; easting: number; northing: number }>
     }> = []
 
     for (const parcel of parcelsResult.rows) {
-      const coordCheck = await db.query(
+      const coordCheck = await db.query<CoordRow>(
         `SELECT tc.station, tc.easting, tc.northing
         FROM traverse_coordinates tc
         JOIN parcel_traverses pt ON pt.id = tc.traverse_id
@@ -71,10 +110,10 @@ export const GET = apiHandler(
           parcel_number: parcel.parcel_number,
           lr_number: parcel.lr_number_proposed,
           block_number: parcel.block_number,
-          area_ha: parcel.area_ha ? parseFloat(parcel.area_ha) : null,
+          area_ha: parcel.area_ha ? parseFloat(String(parcel.area_ha)) : null,
           status: parcel.status,
-          coordinates: coordCheck.rows.map((c: any) => ({
-            station: c.station, easting: parseFloat(c.easting), northing: parseFloat(c.northing),
+          coordinates: coordCheck.rows.map((c) => ({
+            station: c.station, easting: parseFloat(String(c.easting)), northing: parseFloat(String(c.northing)),
           })),
         })
       }

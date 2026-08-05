@@ -70,10 +70,10 @@ export function traverseToLSQ(
   const fixedPoints = stations
     .filter(function(s) { return s.isFixed && s.easting !== undefined && s.northing !== undefined })
     .map(function(s) {
-      const pt: any = {
+      const pt: { name: string; easting: number; northing: number; rl?: number } = {
         name: s.name,
-        easting: s.easting,
-        northing: s.northing,
+        easting: s.easting as number,
+        northing: s.northing as number,
       }
       if (dimension === '3D' && s.rl !== undefined) pt.rl = s.rl
       return pt
@@ -84,10 +84,10 @@ export function traverseToLSQ(
       return !s.isFixed && s.easting !== undefined && s.northing !== undefined
     })
     .map(function(s) {
-      const pt: any = {
+      const pt: { name: string; easting: number; northing: number; rl?: number } = {
         name: s.name,
-        easting: s.easting,
-        northing: s.northing,
+        easting: s.easting as number,
+        northing: s.northing as number,
       }
       if (dimension === '3D' && s.rl !== undefined) pt.rl = s.rl
       return pt
@@ -95,7 +95,7 @@ export function traverseToLSQ(
 
   // Convert traverse observations to LSQ Observation format
   const lsqObservations: Observation[] = observations.map(function(obs) {
-    const lsqObs: any = {
+    const lsqObs: Observation = {
       from: obs.from,
       to: obs.to,
     }
@@ -177,7 +177,7 @@ export function observationsToLSQ(
   }>
 ): Observation[] {
   return observations.map(function(obs) {
-    const lsqObs: any = {
+    const lsqObs: Observation = {
       from: obs.from,
       to: obs.to,
     }

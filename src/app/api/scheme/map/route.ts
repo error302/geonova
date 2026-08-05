@@ -62,17 +62,17 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   // IDOR protection — verify project ownership before returning
   // sensitive cadastral data (blocks, parcels, traverse coordinates)
-  const ownership = await requireProjectOwnership(projectId!, ctx.userId)
-  if (!ownership.ok) return ownership.error!
+  const ownership = await requireProjectOwnership(queryParsed.data.project_id, ctx.userId)
+  if (!ownership.ok) return ownership.error ?? NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   // Get all blocks for the project
-  const { rows: blocks } = await db.query(
+  const { rows: blocks } = await db.query<BlockRow>(
     'SELECT id, block_number, block_name, description FROM blocks WHERE project_id = $1 ORDER BY block_number',
     [projectId]
   )
 
   // Get all parcels with traverse coordinates
-  const { rows: parcels } = await db.query(
+  const { rows: parcels } = await db.query<ParcelRow>(
     `SELECT
       p.id as parcel_id, p.parcel_number, p.lr_number_proposed, p.area_ha, p.status as parcel_status,
       b.id as block_id, b.block_number,

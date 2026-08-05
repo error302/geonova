@@ -6,6 +6,12 @@ export const dynamic = 'force-dynamic'
 
 // ─── DB Row Interfaces ───────────────────────────────────────────────────────
 
+interface ProjectRow {
+  id: string
+  name: string
+  project_type: string
+}
+
 interface ParcelRow {
   id: string
   parcel_number: string
@@ -39,7 +45,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'project_id is required' }, { status: 400 })
     }
 
-    const projectCheck = await db.query(
+    const projectCheck = await db.query<ProjectRow>(
       'SELECT id, name, project_type FROM projects WHERE id = $1 AND user_id = $2',
       [projectId, ctx.userId]
     )
@@ -47,7 +53,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    const parcelsResult = await db.query(
+    const parcelsResult = await db.query<ParcelRow>(
       `SELECT p.id, p.parcel_number, p.lr_number_proposed, p.area_ha, p.status,
       b.block_number, b.block_name
       FROM parcels p
@@ -70,7 +76,7 @@ export const GET = apiHandler(
 
     for (const parcel of parcelsResult.rows) {
       try {
-        const traverseCheck = await db.query(
+        const traverseCheck = await db.query<TraverseRow>(
           `SELECT pt.id, pt.accuracy_order, pt.total_perimeter, pt.computed_area_ha
           FROM parcel_traverses pt WHERE pt.parcel_id = $1`,
           [parcel.id]
@@ -80,7 +86,7 @@ export const GET = apiHandler(
         const traverse = traverseCheck.rows[0]
         const traverseId = traverse.id
 
-        const coordsResult = await db.query(
+        const coordsResult = await db.query<CoordRow>(
           `SELECT station, easting, northing FROM traverse_coordinates WHERE traverse_id = $1 ORDER BY station`,
           [traverseId]
         )
@@ -182,6 +188,7 @@ export const GET = apiHandler(
         const safeLR = (parcel.lr_number_proposed || parcel.parcel_number).replace(/[/\\]/g, '-')
         pdfBuffers.push({ filename: `Block${parcel.block_number}_${safeLR}_DeedPlan.pdf`, buffer: pdfBuf })
       } catch (err) {
+        // eslint-disable-next-line no-console -- per-parcel batch failure log, not user-facing UI
         console.error(`Failed to generate deed plan for parcel ${parcel.id}:`, err)
       }
     }

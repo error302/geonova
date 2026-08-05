@@ -5,6 +5,42 @@ import { getAuthUser } from '@/lib/auth/session'
 
 export const dynamic = 'force-dynamic'
 
+// ─── DB Row Interfaces ───────────────────────────────────────────────────────
+
+interface ParcelRow {
+  id: string
+  parcel_number: string
+  area_ha: string | number | null
+  status: string | null
+  geojson: string | null
+}
+
+interface BeaconRow {
+  id: string
+  point_name: string | null
+  easting: string | number
+  northing: string | number
+}
+
+interface FieldRecordRow {
+  id: string
+  fr_number: string | null
+  easting: string | number
+  northing: string | number
+  county: string | null
+  locality: string | null
+  survey_year: string | number | null
+  surveyor_name: string | null
+  is_verified: boolean | null
+}
+
+interface ViewportFeature {
+  id: string
+  type: string
+  geometry: unknown
+  properties: Record<string, unknown>
+}
+
 /**
  * GET /api/spatial-index?west=&south=&east=&north=
  *
@@ -21,7 +57,7 @@ export const dynamic = 'force-dynamic'
  */
 export const GET = apiHandler(
   { auth: true, rateLimit: { max: 60, windowMs: 60000 } },
-  async (req, ctx) => {
+  async (req, _ctx) => {
     const user = await getAuthUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -37,7 +73,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'Invalid bounding box' }, { status: 400 })
     }
 
-    const features: any[] = []
+    const features: ViewportFeature[] = []
 
     // 1. Fetch parcels in viewport (join projects for ownership)
     // AUDIT FIX (2026-07-03): parcels.geometry → parcels.geom,
@@ -45,7 +81,7 @@ export const GET = apiHandler(
     // (parcels has no user_id), errors logged not swallowed.
     if (types.includes('parcel')) {
       try {
-        const result = await db.query(
+        const result = await db.query<ParcelRow>(
           `SELECT p.id, p.parcel_number, p.area_ha, p.status,
                   ST_AsGeoJSON(ST_Transform(p.geom, 4326)) as geojson
            FROM parcels p
@@ -65,13 +101,14 @@ export const GET = apiHandler(
               geometry: JSON.parse(row.geojson),
               properties: {
                 parcelNumber: row.parcel_number,
-                areaHa: row.area_ha ? parseFloat(row.area_ha) : null,
+                areaHa: row.area_ha ? parseFloat(String(row.area_ha)) : null,
                 status: row.status || 'pending',
               },
             })
           }
         }
       } catch (err) {
+        // eslint-disable-next-line no-console -- viewport query failure log, not user-facing
         console.error('[spatial-index] parcel query failed:', err)
       }
     }
@@ -80,7 +117,7 @@ export const GET = apiHandler(
     if (types.includes('beacon')) {
       try {
         // Transform WGS84 bbox to EPSG:21037 for beacon query
-        const result = await db.query(
+        const result = await db.query<BeaconRow>(
           `SELECT id, point_name, easting, northing
            FROM survey_points
            WHERE project_id IN (SELECT id FROM projects WHERE user_id = $1)
@@ -105,21 +142,22 @@ export const GET = apiHandler(
             type: 'beacon',
             geometry: {
               type: 'Point',
-              coordinates: [parseFloat(row.easting), parseFloat(row.northing)],
+              coordinates: [parseFloat(String(row.easting)), parseFloat(String(row.northing))],
             },
             properties: {
-              beaconNumber: row.point_name,
+              beaconNumber: row.point_name || '',
               beaconType: 'concrete',
             },
           })
         }
       } catch (err) {
+        // eslint-disable-next-line no-console -- viewport query failure log, not user-facing
         console.error('[spatial-index] beacon query failed:', err)
       }
     }
     if (types.includes('field_record')) {
       try {
-        const result = await db.query(
+        const result = await db.query<FieldRecordRow>(
           `SELECT id, fr_number, easting, northing, county, locality,
                   survey_year, surveyor_name, is_verified
            FROM field_records
@@ -141,7 +179,7 @@ export const GET = apiHandler(
             type: 'field_record',
             geometry: {
               type: 'Point',
-              coordinates: [parseFloat(row.easting), parseFloat(row.northing)],
+              coordinates: [parseFloat(String(row.easting)), parseFloat(String(row.northing))],
             },
             properties: {
               frNumber: row.fr_number,
@@ -154,6 +192,7 @@ export const GET = apiHandler(
           })
         }
       } catch (err) {
+        // eslint-disable-next-line no-console -- viewport query failure log, not user-facing
         console.error('[spatial-index] field_record query failed:', err)
       }
     }

@@ -25,6 +25,8 @@
 
 import type { Point2D } from '@/types/surveyPoint'
 
+import type proj4Type from 'proj4'
+
 /**
  * A survey point on the Kenya cadastral grid.
  *
@@ -38,8 +40,10 @@ export type SurveyPoint = Point2D
 // Lazy-loaded turf & proj4 singletons
 // ---------------------------------------------------------------------------
 
-let _turf: any = null;
-let _proj4: any = null;
+type TurfModule = typeof import('@turf/turf')
+
+let _turf: TurfModule | null = null;
+let _proj4: typeof proj4Type | null = null;
 
 /**
  * T1.5 FIX (2026-07-09): Proj4 definitions for all Kenya UTM zones.
@@ -60,18 +64,30 @@ const KENYA_UTM_DEFS: Record<string, string> = {
  * Idempotent — subsequent calls resolve instantly.
  */
 async function ensureLoaded(): Promise<void> {
-  if (!_turf) {
+  if (!_turf || !_proj4) {
     const [turfMod, proj4Mod] = await Promise.all([
       import('@turf/turf'),
       import('proj4'),
     ]);
-    _turf = turfMod;
-    _proj4 = proj4Mod.default ?? proj4Mod;
+    _turf = turfMod as TurfModule;
+    _proj4 = (proj4Mod.default ?? proj4Mod) as typeof proj4Type;
     // T1.5: Register ALL Kenya UTM zones, not just 21037
     for (const [code, def] of Object.entries(KENYA_UTM_DEFS)) {
-      _proj4.defs(code, def);
+      (_proj4 as typeof proj4Type).defs(code, def);
     }
   }
+}
+
+/** Narrow _turf after ensureLoaded. */
+async function getTurf(): Promise<TurfModule> {
+  await ensureLoaded();
+  return _turf as TurfModule
+}
+
+/** Narrow _proj4 after ensureLoaded. */
+async function getProj4(): Promise<typeof proj4Type> {
+  await ensureLoaded();
+  return _proj4 as typeof proj4Type
 }
 
 // ---------------------------------------------------------------------------
@@ -97,7 +113,9 @@ export async function toTurfCoord(
   epsg: string = 'EPSG:21037',
 ): Promise<[number, number]> {
   await ensureLoaded();
-  const [lon, lat] = _proj4(epsg, 'EPSG:4326', [easting, northing]);
+  // ensureLoaded() guarantees _proj4 is set
+  const p4 = _proj4 as typeof proj4Type
+  const [lon, lat] = p4(epsg, 'EPSG:4326', [easting, northing]);
   return [lon, lat];
 }
 
@@ -117,7 +135,7 @@ export async function fromTurfCoord(
   epsg: string = 'EPSG:21037',
 ): Promise<SurveyPoint> {
   await ensureLoaded();
-  const [easting, northing] = _proj4('EPSG:4326', epsg, coord);
+  const [easting, northing] = (await getProj4())('EPSG:4326', epsg, coord);
   return { easting, northing };
 }
 
@@ -135,8 +153,9 @@ export async function polygonToTurf(
   epsg: string = 'EPSG:21037',
 ): Promise<any> {
   await ensureLoaded();
+  const p4 = await getProj4();
   const ring = vertices.map((v) =>
-    _proj4(epsg, 'EPSG:4326', [v.easting, v.northing]),
+    p4(epsg, 'EPSG:4326', [v.easting, v.northing]),
   );
   // Ensure the ring is closed
   if (ring.length > 0) {
@@ -146,7 +165,7 @@ export async function polygonToTurf(
       ring.push([...first]);
     }
   }
-  return _turf.polygon([ring]);
+  return (await getTurf()).polygon([ring]);
 }
 
 /**
@@ -161,10 +180,11 @@ export async function lineStringToTurf(
   epsg: string = 'EPSG:21037',
 ): Promise<any> {
   await ensureLoaded();
+  const p4 = await getProj4();
   const coords = vertices.map((v) =>
-    _proj4(epsg, 'EPSG:4326', [v.easting, v.northing]),
+    p4(epsg, 'EPSG:4326', [v.easting, v.northing]),
   );
-  return _turf.lineString(coords);
+  return (await getTurf()).lineString(coords);
 }
 
 // ---------------------------------------------------------------------------
@@ -201,8 +221,9 @@ async function turfToVertices(geo: any, epsg: string = 'EPSG:21037'): Promise<Su
     );
   }
 
+  const p4 = await getProj4();
   return exteriorRing.map((c: number[]) => {
-    const [easting, northing] = _proj4('EPSG:4326', epsg, c);
+    const [easting, northing] = p4('EPSG:4326', epsg, c);
     return { easting, northing };
   });
 }
@@ -225,7 +246,7 @@ export async function calculateParcelAreaSqM(
 ): Promise<number> {
   if (vertices.length < 3) return 0;
   const poly = await polygonToTurf(vertices, epsg);
-  return _turf.area(poly);
+  return (await getTurf()).area(poly);
 }
 
 /**
@@ -242,7 +263,7 @@ export async function calculateParcelPerimeterM(
 ): Promise<number> {
   if (vertices.length < 2) return 0;
   const line = await lineStringToTurf(vertices, epsg);
-  return _turf.length(line, { units: 'meters' });
+  return (await getTurf()).length(line, { units: 'meters' });
 }
 
 /**
@@ -266,8 +287,8 @@ export async function bufferPoint(
 ): Promise<SurveyPoint[]> {
   await ensureLoaded();
   const [lon, lat] = await toTurfCoord(easting, northing, epsg);
-  const pt = _turf.point([lon, lat]);
-  const buffered = _turf.buffer(pt, radiusM, { units: 'meters', steps: 32 });
+  const pt = (await getTurf()).point([lon, lat]);
+  const buffered = (await getTurf()).buffer(pt, radiusM, { units: 'meters', steps: 32 });
   return turfToVertices(buffered, epsg);
 }
 
@@ -287,7 +308,7 @@ export async function bufferParcel(
   epsg: string = 'EPSG:21037',
 ): Promise<SurveyPoint[]> {
   const poly = await polygonToTurf(vertices, epsg);
-  const buffered = _turf.buffer(poly, distanceM, {
+  const buffered = (await getTurf()).buffer(poly, distanceM, {
     units: 'meters',
     steps: 32,
   });
@@ -312,22 +333,28 @@ export async function calculateIntersection(
     polygonToTurf(parcel1, epsg),
     polygonToTurf(parcel2, epsg),
   ]);
-  const intersection = _turf.intersect(poly1, poly2);
+  const turf = await getTurf();
+  const intersection = turf.intersect(turf.featureCollection([poly1, poly2]));
   if (!intersection) return null;
 
-  // intersect can return a GeometryCollection with no area
-  if (intersection.geometry && intersection.geometry.type === 'GeometryCollection') {
+  // intersect can return a GeometryCollection with no area (runtime reality
+  // despite turf's narrower TS types)
+  const interGeom = intersection.geometry as
+    | { type: 'GeometryCollection'; geometries: Array<{ type: 'Polygon' | 'MultiPolygon'; coordinates: number[][][][] | number[][][] }> }
+    | { type: 'Polygon' | 'MultiPolygon'; coordinates: unknown }
+  if (interGeom.type === 'GeometryCollection') {
     // Try to find a polygon inside the collection
-    const polys = intersection.geometry.geometries.filter(
-      (g: any) => g.type === 'Polygon' || g.type === 'MultiPolygon',
+    const polys = interGeom.geometries.filter(
+      (g): g is { type: 'Polygon'; coordinates: number[][][] } | { type: 'MultiPolygon'; coordinates: number[][][][] } =>
+        g.type === 'Polygon' || g.type === 'MultiPolygon',
     );
     if (polys.length === 0) return null;
     // Rebuild from the first valid polygon
     const first = polys[0];
     const rebuilt =
       first.type === 'MultiPolygon'
-        ? _turf.multiPolygon(first.coordinates)
-        : _turf.polygon(first.coordinates);
+        ? (await getTurf()).multiPolygon(first.coordinates)
+        : (await getTurf()).polygon(first.coordinates);
     return turfToVertices(rebuilt, epsg);
   }
 
@@ -351,7 +378,7 @@ export async function calculateUnion(
     polygonToTurf(parcel1, epsg),
     polygonToTurf(parcel2, epsg),
   ]);
-  const union = _turf.union(poly1, poly2);
+  const union = (await getTurf()).union(poly1, poly2);
   return turfToVertices(union, epsg);
 }
 
@@ -373,20 +400,26 @@ export async function calculateDifference(
     polygonToTurf(parcel1, epsg),
     polygonToTurf(parcel2, epsg),
   ]);
-  const diff = _turf.difference(poly1, poly2);
+  const turf = await getTurf();
+  const diff = turf.difference(turf.featureCollection([poly1, poly2]));
   if (!diff) return null;
 
   // difference can return a GeometryCollection when there's nothing left
-  if (diff.geometry && diff.geometry.type === 'GeometryCollection') {
-    const polys = diff.geometry.geometries.filter(
-      (g: any) => g.type === 'Polygon' || g.type === 'MultiPolygon',
+  // (runtime reality despite turf's narrower TS types)
+  const diffGeom = diff.geometry as
+    | { type: 'GeometryCollection'; geometries: Array<{ type: 'Polygon' | 'MultiPolygon'; coordinates: number[][][][] | number[][][] }> }
+    | { type: 'Polygon' | 'MultiPolygon'; coordinates: unknown }
+  if (diffGeom.type === 'GeometryCollection') {
+    const polys = diffGeom.geometries.filter(
+      (g): g is { type: 'Polygon'; coordinates: number[][][] } | { type: 'MultiPolygon'; coordinates: number[][][][] } =>
+        g.type === 'Polygon' || g.type === 'MultiPolygon',
     );
     if (polys.length === 0) return null;
     const first = polys[0];
     const rebuilt =
       first.type === 'MultiPolygon'
-        ? _turf.multiPolygon(first.coordinates)
-        : _turf.polygon(first.coordinates);
+        ? (await getTurf()).multiPolygon(first.coordinates)
+        : (await getTurf()).polygon(first.coordinates);
     return turfToVertices(rebuilt, epsg);
   }
 
@@ -413,9 +446,9 @@ export async function isPointInParcel(
 ): Promise<boolean> {
   if (parcelVertices.length < 3) return false;
   const [lon, lat] = await toTurfCoord(easting, northing, epsg);
-  const pt = _turf.point([lon, lat]);
+  const pt = (await getTurf()).point([lon, lat]);
   const poly = await polygonToTurf(parcelVertices, epsg);
-  return _turf.booleanPointInPolygon(pt, poly);
+  return (await getTurf()).booleanPointInPolygon(pt, poly);
 }
 
 /**
@@ -453,3 +486,4 @@ export async function calculateCompactness(
 
   return (4 * Math.PI * areaSqM) / (perimeterM * perimeterM);
 }
+

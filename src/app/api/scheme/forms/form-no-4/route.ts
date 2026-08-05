@@ -1,9 +1,32 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { jsPDF } from 'jspdf'
 
 export const dynamic = 'force-dynamic'
+
+// ─── DB Row Interfaces ───────────────────────────────────────────────────────
+
+interface ProjectForm4Row {
+  name: string
+  scheme_number: string | null
+  county: string | null
+  sub_county: string | null
+  ward: string | null
+  adjudication_section: string | null
+  planned_parcels: number | null
+  survey_type: string | null
+  datum: string | null
+  utm_zone: string | null
+}
+
+interface ParcelForm4Row {
+  parcel_number: string
+  lr_number_proposed: string | null
+  area_ha: string | number | null
+  status: string | null
+  block_number: string
+}
 
 export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
   const { searchParams } = new URL(req.url)
@@ -14,7 +37,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   }
 
   // Fetch project and scheme details
-  const { rows: projects } = await db.query(
+  const { rows: projects } = await db.query<ProjectForm4Row>(
     `SELECT p.*, sd.scheme_number, sd.county, sd.sub_county, sd.ward, 
             sd.adjudication_section, sd.planned_parcels
      FROM projects p
@@ -28,7 +51,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   }
 
   const project = projects[0]
-  const { rows: parcels } = await db.query(
+  const { rows: parcels } = await db.query<ParcelForm4Row>(
     `SELECT p.*, b.block_number
      FROM parcels p
      JOIN blocks b ON b.id = p.block_id
@@ -106,7 +129,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   // Data rows
   doc.setFont('helvetica', 'normal')
-  parcels.forEach((p: any) => {
+  parcels.forEach((p) => {
     if (y > pageHeight - 30) {
       doc.addPage()
       y = 20
@@ -147,9 +170,10 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   doc.text('Licensed Surveyor', margin + 20, y)
   doc.text('Date', margin + 180, y)
   y += 5
-  doc.text(`Name: ${ctx.session!.user.name || 'Surveyor'}`, margin + 20, y)
+  const sessionUser = ctx.session?.user as { name?: string; isk_number?: string } | undefined
+  doc.text(`Name: ${sessionUser?.name || 'Surveyor'}`, margin + 20, y)
   y += 5
-  doc.text(`ISK No: ${(ctx.session!.user as any).isk_number || '...................'}`, margin + 20, y)
+  doc.text(`ISK No: ${sessionUser?.isk_number || '...................'}`, margin + 20, y)
 
   const pdfBuffer = Buffer.from(doc.output('arraybuffer'))
   return new NextResponse(pdfBuffer, {

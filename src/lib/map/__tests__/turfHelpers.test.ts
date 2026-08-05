@@ -13,6 +13,8 @@ import {
   calculateParcelPerimeterM,
   isPointInParcel,
   calculateCompactness,
+  calculateIntersection,
+  calculateDifference,
 } from '../turfHelpers'
 
 // ---------------------------------------------------------------------------
@@ -29,6 +31,7 @@ const mockTurfIntersect = jest.fn()
 const mockTurfUnion = jest.fn()
 const mockTurfDifference = jest.fn()
 const mockTurfBooleanPointInPolygon = jest.fn()
+const mockTurfFeatureCollection = jest.fn()
 
 const turfMockObj = {
   area: mockTurfArea,
@@ -41,6 +44,7 @@ const turfMockObj = {
   union: mockTurfUnion,
   difference: mockTurfDifference,
   booleanPointInPolygon: mockTurfBooleanPointInPolygon,
+  featureCollection: mockTurfFeatureCollection,
 }
 
 jest.mock('@turf/turf', () => ({
@@ -242,6 +246,87 @@ describe('isPointInParcel', () => {
       { easting: 0, northing: 100 },
     ]
     expect(await isPointInParcel(50, 0, parcel)).toBe(true)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// calculateIntersection
+// ---------------------------------------------------------------------------
+
+describe('calculateIntersection', () => {
+  const rectA: SurveyPoint[] = [
+    { easting: 0, northing: 0 },
+    { easting: 100, northing: 0 },
+    { easting: 100, northing: 100 },
+    { easting: 0, northing: 100 },
+  ]
+  const rectB: SurveyPoint[] = [
+    { easting: 50, northing: 50 },
+    { easting: 150, northing: 50 },
+    { easting: 150, northing: 150 },
+    { easting: 50, northing: 150 },
+  ]
+
+  it('passes both parcels to turf.intersect as a single FeatureCollection', async () => {
+    mockTurfFeatureCollection.mockReturnValue({ type: 'FeatureCollection', features: [] })
+    mockTurfIntersect.mockReturnValue({
+      type: 'Feature',
+      geometry: { type: 'Polygon', coordinates: [[[50, 50], [100, 50], [100, 100], [50, 100], [50, 50]]] },
+    })
+    await calculateIntersection(rectA, rectB)
+    // FeatureCollection must receive BOTH polygons
+    expect(mockTurfFeatureCollection).toHaveBeenCalledWith([
+      expect.objectContaining({ type: 'Feature' }),
+      expect.objectContaining({ type: 'Feature' }),
+    ])
+    // intersect must receive the FeatureCollection (single arg), not two features
+    expect(mockTurfIntersect).toHaveBeenCalledTimes(1)
+    expect(mockTurfIntersect).toHaveBeenCalledWith(expect.objectContaining({ type: 'FeatureCollection' }))
+  })
+
+  it('returns null when the intersection has fewer than 3 vertices', async () => {
+    mockTurfFeatureCollection.mockReturnValue({ type: 'FeatureCollection', features: [] })
+    mockTurfIntersect.mockReturnValue(null)
+    expect(await calculateIntersection(rectA, rectB)).toBeNull()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// calculateDifference
+// ---------------------------------------------------------------------------
+
+describe('calculateDifference', () => {
+  const rectA: SurveyPoint[] = [
+    { easting: 0, northing: 0 },
+    { easting: 100, northing: 0 },
+    { easting: 100, northing: 100 },
+    { easting: 0, northing: 100 },
+  ]
+  const rectB: SurveyPoint[] = [
+    { easting: 50, northing: 50 },
+    { easting: 150, northing: 50 },
+    { easting: 150, northing: 150 },
+    { easting: 50, northing: 150 },
+  ]
+
+  it('passes both parcels to turf.difference as a single FeatureCollection', async () => {
+    mockTurfFeatureCollection.mockReturnValue({ type: 'FeatureCollection', features: [] })
+    mockTurfDifference.mockReturnValue({
+      type: 'Feature',
+      geometry: { type: 'Polygon', coordinates: [[[0, 0], [50, 0], [50, 50], [0, 50], [0, 0]]] },
+    })
+    await calculateDifference(rectA, rectB)
+    expect(mockTurfFeatureCollection).toHaveBeenCalledWith([
+      expect.objectContaining({ type: 'Feature' }),
+      expect.objectContaining({ type: 'Feature' }),
+    ])
+    expect(mockTurfDifference).toHaveBeenCalledWith(expect.objectContaining({ type: 'FeatureCollection' }))
+  })
+
+  it('returns null when the difference is empty', async () => {
+    mockTurfFeatureCollection.mockReturnValue({ type: 'FeatureCollection', features: [] })
+    mockTurfDifference.mockReturnValue(null)
+    expect(await calculateDifference(rectA, rectB)).toBeNull()
   })
 })
 
