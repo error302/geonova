@@ -25,7 +25,7 @@ import {
 import { securityAlertText, SecurityAlertTextArgs } from './text'
 import { formatDateTime } from './utils'
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.duckdns.org'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space'
 
 export interface SecurityAlertEmail {
   to: string

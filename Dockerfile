@@ -6,6 +6,11 @@ WORKDIR /app
 RUN apk add --no-cache python3 make g++ cairo-dev pango-dev libjpeg-turbo-dev giflib-dev
 COPY package.json package-lock.json* ./
 COPY scripts/ ./scripts/
+# Use the Node headers already shipped in node:20-alpine instead of letting
+# node-gyp download them from unofficial-builds.nodejs.org. Some build
+# networks (e.g. the Oracle Cloud VM) time out fetching those headers even
+# though the host can reach them, so we point node-gyp at /usr/local.
+ENV npm_config_nodedir=/usr/local
 RUN npm ci --legacy-peer-deps
 
 FROM node:20-alpine AS builder
@@ -20,8 +25,10 @@ ENV NODE_OPTIONS="--max-old-space-size=4096"
 # Build requires some env vars to be present (even if placeholder)
 ARG DATABASE_URL="postgresql://build:build@localhost/build"
 ARG AUTH_SECRET="build-placeholder-not-used-at-runtime"
+ARG NEXT_PUBLIC_APP_URL="https://metardu.space"
 ENV DATABASE_URL=$DATABASE_URL
 ENV AUTH_SECRET=$AUTH_SECRET
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 # AUDIT FIX (C10, 2026-07-02): Removed IGNORE_TYPE_ERRORS=true — TypeScript
 # errors now block production builds. tsc --noEmit passes clean as of
 # this commit. If type errors are reintroduced, fix them; do not re-enable.

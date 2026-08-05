@@ -132,7 +132,13 @@ const SheetLayout = dynamic(
  *  Renders feature popup as raw DOM (OL moves the overlay element out
  *  of React's tree, so we can't use React components here).
  * ══════════════════════════════════════════════════════════════════════ */
-function renderPopup(popupElement: HTMLDivElement, data: any, hidePopup: () => void) {
+function renderPopup(popupElement: HTMLDivElement, data: {
+  coordinate?: import('ol/coordinate').Coordinate
+  projectName?: string
+  stationName?: string
+  geometryType?: string
+  projectId?: string
+}, hidePopup: () => void) {
   popupElement.replaceChildren()
   popupElement.className = ''
 
@@ -198,24 +204,24 @@ function renderPopup(popupElement: HTMLDivElement, data: any, hidePopup: () => v
 export default function MapClient() {
   const isMobile = useIsMobile()
   const searchParams = useSearchParams()
-  const { hasFeature, isAdmin, plan } = useSubscription()
+  const { hasFeature } = useSubscription()
 
   // ── Map refs ──
   const mapRef = useRef<HTMLDivElement>(null)
-  const mapInstance = useRef<any>(null)
+  const mapInstance = useRef<import('ol/Map').default | null>(null)
   const popupRef = useRef<HTMLDivElement | null>(null)
   const mouseCoordThrottleRef = useRef(0)
 
   // ── OL layer/interaction refs ──
-  const drawSourceRef = useRef<any>(null)
-  const drawLayerRef = useRef<any>(null)
-  const drawInteractionRef = useRef<any>(null)
-  const selectInteractionRef = useRef<any>(null)
-  const modifyInteractionRef = useRef<any>(null)
-  const measureInteractionRef = useRef<any>(null)
-  const measureSourceRef = useRef<any>(null)
-  const measureLayerRef = useRef<any>(null)
-  const annotationLayerRef = useRef<any>(null)
+  const drawSourceRef = useRef<import('ol/source/Vector').default | null>(null)
+  const drawLayerRef = useRef<import('ol/layer/Vector').default | null>(null)
+  const drawInteractionRef = useRef<import('ol/interaction').Interaction | null>(null)
+  const selectInteractionRef = useRef<import('ol/interaction/Select').default | null>(null)
+  const modifyInteractionRef = useRef<import('ol/interaction').Interaction | null>(null)
+  const measureInteractionRef = useRef<import('ol/interaction').Interaction | null>(null)
+  const measureSourceRef = useRef<import('ol/source/Vector').default | null>(null)
+  const measureLayerRef = useRef<import('ol/layer/Vector').default | null>(null)
+  const annotationLayerRef = useRef<import('ol/layer/Vector').default | null>(null)
 
   // ── GPS toggle ref (allows interactions hook to call the real toggleGPS) ──
   const toggleGPSRef = useRef<() => void>(() => {})
@@ -242,7 +248,7 @@ export default function MapClient() {
   const [importMsg, setImportMsg] = useState('')
   const [panelOpen, setPanelOpen] = useState(false)
   const [dragHint, setDragHint] = useState(true)
-  const [selectedFeature, setSelectedFeature] = useState<any>(null)
+  const [selectedFeature, setSelectedFeature] = useState<import('ol/Feature').default | null>(null)
   const [featureName, setFeatureName] = useState('')
   const [measureResult, setMeasureResult] = useState('')
   const [layerOpacity, setLayerOpacity] = useState(100)
@@ -266,15 +272,14 @@ export default function MapClient() {
   const [showSchemeBlocks, setShowSchemeBlocks] = useState(true)
   const [showSchemeBeacons, setShowSchemeBeacons] = useState(true)
   const schemeCleanupRef = useRef<(() => void) | null>(null)
-  const schemeLayersRef = useRef<{ parcelLayer: any; blockLayer: any; beaconLayer: any; extent: number[] | null } | null>(null)
+  const schemeLayersRef = useRef<{ parcelLayer: import('ol/layer/Vector').default | null; blockLayer: import('ol/layer/Vector').default | null; beaconLayer: import('ol/layer/Vector').default | null; extent: number[] | null } | null>(null)
 
   // ── Project survey points state (the #1 map gap — show your field data) ──
   const [projectPointsCount, setProjectPointsCount] = useState(0)
-  const [projectControlCount, setProjectControlCount] = useState(0)
   const [projectPointsLoading, setProjectPointsLoading] = useState(false)
   const [showProjectPoints, setShowProjectPoints] = useState(true)
   const projectPointsCleanupRef = useRef<(() => void) | null>(null)
-  const projectPointsLayerRef = useRef<any>(null)
+  const projectPointsLayerRef = useRef<import('ol/layer/Vector').default | null>(null)
 
   // ── Traverse-to-parcel state ──
   const [traverseParcelPreviewActive, setTraverseParcelPreviewActive] = useState(false)
@@ -477,9 +482,10 @@ export default function MapClient() {
     } else {
       cleanupRef.current.geolocation.setTracking(true)
       setGpsTracking(true)
+      const mi = mapInstance.current
       cleanupRef.current.geolocation.once('change:position', () => {
         const pos = cleanupRef.current?.geolocation?.getPosition()
-        if (pos) mapInstance.current.getView().animate({ center: pos, zoom: 16, duration: 1000 })
+        if (pos && mi) mi.getView().animate({ center: pos, zoom: 16, duration: 1000 })
       })
     }
   }, [gpsTracking])
@@ -650,7 +656,7 @@ export default function MapClient() {
         schemeLayersRef.current = null
       }
 
-      const result = await createSchemeLayers(schemeProjectId, mapInstance.current, {
+      const result = await createSchemeLayers(schemeProjectId, mapInstance.current as unknown as import('@/lib/map/olTypes').OLMap, {
         autoZoom: true,
         showParcelLabels: true,
       })
@@ -664,7 +670,7 @@ export default function MapClient() {
       }
 
       // ── Add scheme parcel + beacon sources to the Snap interaction ──
-      const snapInteraction = (mapInstance.current as any)?._snapInteraction
+      const snapInteraction = (mapInstance.current as unknown as { _snapInteraction?: import('ol/interaction/Snap').default } | null)?._snapInteraction
       if (snapInteraction) {
         const parcelSource = result.parcelLayer?.getSource?.()
         const beaconSource = result.beaconLayer?.getSource?.()
@@ -673,13 +679,13 @@ export default function MapClient() {
           const { default: Snap } = await import('ol/interaction/Snap')
           const parcelSnap = new Snap({ source: parcelSource })
           mapInstance.current.addInteraction(parcelSnap)
-          ;(mapInstance.current as any)._parcelSnap = parcelSnap
+          ;(mapInstance.current as unknown as { _parcelSnap?: import('ol/interaction/Snap').default })._parcelSnap = parcelSnap
         }
         if (beaconSource) {
           const { default: Snap } = await import('ol/interaction/Snap')
           const beaconSnap = new Snap({ source: beaconSource })
           mapInstance.current.addInteraction(beaconSnap)
-          ;(mapInstance.current as any)._beaconSnap = beaconSnap
+          ;(mapInstance.current as unknown as { _beaconSnap?: import('ol/interaction/Snap').default })._beaconSnap = beaconSnap
         }
       }
 
@@ -694,10 +700,9 @@ export default function MapClient() {
       if (beaconSource) {
         const beaconFeatures = beaconSource.getFeatures()
         const beaconVertices = beaconFeatures
-          .map((f: any) => {
+          .map((f: import('ol/Feature').default) => {
             const geom = f.getGeometry()
             if (!geom || geom.getType() !== 'Point') return null
-            const coord = geom.getCoordinates()
             // Beacon coordinates are stored in EPSG:3857 (display projection)
             // We need to transform them back to EPSG:21037 for vertex editing
             return { easting: f.get('easting') as number, northing: f.get('northing') as number }
@@ -742,11 +747,9 @@ export default function MapClient() {
       projectPointsCleanupRef.current = result.cleanup
       projectPointsLayerRef.current = result.pointsLayer
       setProjectPointsCount(result.pointCount)
-      setProjectControlCount(result.controlPointCount)
     } catch (err) {
       console.error('[MapClient] Failed to load project points:', err)
       setProjectPointsCount(0)
-      setProjectControlCount(0)
     } finally {
       setProjectPointsLoading(false)
     }
@@ -761,7 +764,7 @@ export default function MapClient() {
   }, [schemeProjectId, mapReady])
 
   // Toggle points layer visibility
-  const toggleProjectPointsVisibility = useCallback(() => {
+  const _toggleProjectPointsVisibility = useCallback(() => {
     if (!projectPointsLayerRef.current) return
     const newVisible = !showProjectPoints
     projectPointsLayerRef.current.setVisible(newVisible)
@@ -769,7 +772,7 @@ export default function MapClient() {
   }, [showProjectPoints])
 
   // ── Digitizing tool: create OL interactions for split/merge/reshape/rotate/offset ──
-  const editingToolRef = useRef<any>(null) // current editing interaction
+  const editingToolRef = useRef<import('ol/interaction').Interaction | null>(null) // current editing interaction
 
   useEffect(() => {
     if (!mapInstance.current || !mapReady) return
@@ -805,12 +808,12 @@ export default function MapClient() {
             }),
           })
 
-          draw.on('drawend', async (e: any) => {
+          draw.on('drawend', async (e: import('ol/interaction/Draw').DrawEvent) => {
             const lineFeature = e.feature
             const lineGeom = lineFeature.getGeometry()
             if (!lineGeom || !drawSource) return
 
-            const lineCoords3857 = lineGeom.getCoordinates()
+            const lineCoords3857 = (lineGeom as import('ol/geom/LineString').default).getCoordinates()
             // Transform to UTM for geometry operations
             const proj = await import('ol/proj')
             const lineCoordsUTM = lineCoords3857.map((c: number[]) =>
@@ -819,7 +822,7 @@ export default function MapClient() {
 
             if (activeDigitizingTool === 'split') {
               // Find the first polygon in the draw source
-              const polygons = drawSource.getFeatures().filter((f: any) => {
+              const polygons = drawSource.getFeatures().filter((f: import('ol/Feature').default) => {
                 const g = f.getGeometry()
                 return g && g.getType() === 'Polygon'
               })
@@ -831,7 +834,7 @@ export default function MapClient() {
               }
 
               const targetPolygon = polygons[0]
-              const polyCoords3857 = targetPolygon.getGeometry().getCoordinates()[0]
+              const polyCoords3857 = (targetPolygon.getGeometry() as import('ol/geom/Polygon').default).getCoordinates()[0]
               const polyCoordsUTM = polyCoords3857.map((c: number[]) =>
                 proj.transform(c, 'EPSG:3857', 'EPSG:21037'),
               )
@@ -861,7 +864,7 @@ export default function MapClient() {
               setTimeout(() => setSaveMsg(''), 5000)
             } else if (activeDigitizingTool === 'reshape') {
               // Find the first polygon in the draw source to reshape
-              const polygons = drawSource.getFeatures().filter((f: any) => {
+              const polygons = drawSource.getFeatures().filter((f: import('ol/Feature').default) => {
                 const g = f.getGeometry()
                 return g && g.getType() === 'Polygon'
               })
@@ -873,7 +876,7 @@ export default function MapClient() {
               }
 
               const targetPolygon = polygons[0]
-              const polyCoords3857 = targetPolygon.getGeometry().getCoordinates()[0]
+              const polyCoords3857 = (targetPolygon.getGeometry() as import('ol/geom/Polygon').default).getCoordinates()[0]
               const polyCoordsUTM = polyCoords3857.map((c: number[]) =>
                 proj.transform(c, 'EPSG:3857', 'EPSG:21037'),
               )
@@ -908,7 +911,7 @@ export default function MapClient() {
         if (activeDigitizingTool === 'merge') {
           // Merge uses the selected features
           const { mergePolygons } = await import('@/lib/map/editingTools')
-          const selectedFeatures = drawSource?.getFeatures().filter((f: any) => {
+          const selectedFeatures = drawSource?.getFeatures().filter((f: import('ol/Feature').default) => {
             const g = f.getGeometry()
             return g && g.getType() === 'Polygon'
           }) || []
@@ -920,8 +923,8 @@ export default function MapClient() {
           }
 
           const proj = await import('ol/proj')
-          const polyCoordsUTM = selectedFeatures.map((f: any) => {
-            const coords3857 = f.getGeometry().getCoordinates()[0]
+          const polyCoordsUTM = selectedFeatures.map((f: import('ol/Feature').default) => {
+            const coords3857 = (f.getGeometry() as import('ol/geom/Polygon').default).getCoordinates()[0]
             return coords3857.map((c: number[]) => proj.transform(c, 'EPSG:3857', 'EPSG:21037'))
           })
 
@@ -938,6 +941,7 @@ export default function MapClient() {
           const { default: Polygon } = await import('ol/geom/Polygon')
 
           // Remove originals, add merged
+          if (!drawSource) return
           selectedFeatures.forEach((f: any) => drawSource.removeFeature(f))
           drawSource.addFeature(new Feature({ geometry: new Polygon([merged3857]), source: 'merge' }))
 
@@ -957,7 +961,7 @@ export default function MapClient() {
           }
 
           const proj = await import('ol/proj')
-          const coords3857 = geom.getCoordinates()[0]
+          const coords3857 = (geom as import('ol/geom/Polygon').default).getCoordinates()[0]
           const coordsUTM = coords3857.map((c: number[]) => proj.transform(c, 'EPSG:3857', 'EPSG:21037'))
 
           const rotated = rotatePolygon(coordsUTM as [number, number][], 15)
@@ -980,7 +984,7 @@ export default function MapClient() {
           }
 
           const isPolygon = geom.getType() === 'Polygon'
-          const coords3857 = isPolygon ? geom.getCoordinates()[0] : geom.getCoordinates()
+          const coords3857 = isPolygon ? (geom as import('ol/geom/Polygon').default).getCoordinates()[0] : (geom as import('ol/geom/LineString').default).getCoordinates()
           const proj = await import('ol/proj')
           const coordsUTM = coords3857.map((c: number[]) => proj.transform(c, 'EPSG:3857', 'EPSG:21037'))
 
@@ -1054,7 +1058,7 @@ export default function MapClient() {
   // ── Scheme layer: zoom to scheme extent ──
   const handleZoomToScheme = useCallback(() => {
     if (!mapInstance.current || !schemeLayersRef.current?.extent) return
-    zoomToSchemeExtent(mapInstance.current, schemeLayersRef.current.extent)
+    zoomToSchemeExtent(mapInstance.current as unknown as import('@/lib/map/olTypes').OLMap, schemeLayersRef.current.extent)
   }, [])
 
   // ── Scheme layer: remove all scheme layers ──
@@ -1088,7 +1092,7 @@ export default function MapClient() {
       try {
         const res = await fetch(`/api/scheme/traverse/summary?project_id=${schemeProjectId}`)
         if (res.ok) {
-          const data = await res.json()
+          const data = await res.json() as { data?: { hasTraverses?: boolean } }
           setHasTraverse(data.data?.hasTraverses ?? false)
         }
       } catch {
@@ -1107,7 +1111,7 @@ export default function MapClient() {
       // Fetch traverse data to get coordinates
       const res = await fetch(`/api/scheme/traverse/summary?project_id=${schemeProjectId}`)
       if (!res.ok) throw new Error('Failed to fetch traverse summary')
-      const summaryData = await res.json()
+      const summaryData = await res.json() as { data?: { parcels?: Array<{ id: string | number }> } }
 
       // Get the first parcel with a traverse
       const parcelId = summaryData.data?.parcels?.[0]?.id
@@ -1116,17 +1120,17 @@ export default function MapClient() {
       // Fetch the actual traverse coordinates
       const traverseRes = await fetch(`/api/scheme/traverse?parcel_id=${parcelId}`)
       if (!traverseRes.ok) throw new Error('Failed to fetch traverse coordinates')
-      const traverseData = await traverseRes.json()
+      const traverseData = await traverseRes.json() as { data?: { coordinates?: Array<{ easting: number; northing: number; station?: string }> } }
 
       const coordinates = traverseData.data?.coordinates
       if (!coordinates || coordinates.length < 3) {
         throw new Error('Traverse has fewer than 3 stations — cannot form a polygon')
       }
 
-      const traversePoints = coordinates.map((c: any) => ({
+      const traversePoints = coordinates.map((c) => ({
         easting: c.easting,
         northing: c.northing,
-        pointName: c.station,
+        pointName: c.station || '',
       }))
 
       // Create the preview layer
@@ -1158,12 +1162,12 @@ export default function MapClient() {
     try {
       // Get the first parcel with a traverse
       const summaryRes = await fetch(`/api/scheme/traverse/summary?project_id=${schemeProjectId}`)
-      const summaryData = await summaryRes.json()
+      const summaryData = await summaryRes.json() as { data?: { parcels?: Array<{ id: string | number }> } }
       const parcelId = summaryData.data?.parcels?.[0]?.id
 
       if (!parcelId) throw new Error('No parcel found for traverse')
 
-      const result = await createParcelFromTraverse(schemeProjectId, parcelId)
+      const result = await createParcelFromTraverse(schemeProjectId, String(parcelId))
 
       // Remove the preview layer
       removeTraversePolygonPreview(mapInstance.current, traversePreviewLayerRef.current)

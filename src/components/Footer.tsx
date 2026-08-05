@@ -5,32 +5,29 @@ import Link from 'next/link'
 /* ────────────────────────────────────────────────────────────── */
 
 const FOOTER_LINKS = {
-  Product: [
-    { label: 'Features', href: '/tools' },
-    { label: 'Pricing', href: '/pricing' },
-    { label: 'Tools', href: '/tools' },
-    { label: 'API Docs', href: '/docs' },
+  Apps: [
+    { label: 'METARDU Web & Desktop', href: '/tools' },
+    { label: 'METARDU Industrial (Mining/Marine)', href: '/industrial' },
+    { label: 'METARDU Access (Mobile)', href: '/fieldbook' },
+    { label: 'Pricing & Licensing', href: '/pricing' },
   ],
-  Resources: [
-    { label: 'Quick Start', href: '/docs/quick-start' },
+  Compliance: [
+    { label: 'Land Law & Survey Assistance', href: '/land-law' },
     { label: 'Survey Regulations', href: '/tools/survey-regulations' },
-    { label: 'Documentation', href: '/docs' },
-    { label: 'Kenya CORS', href: '/kencors' },
+    { label: 'Kenya CORS Network', href: '/kencors' },
+    { label: 'Survey Act Cap 299', href: '/docs/survey-act' },
   ],
-  Company: [
-    { label: 'About', href: '/docs' },
-    { label: 'Land Law', href: '/tools/land-law' },
-    { label: 'Field Tools', href: '/field' },
-    { label: 'Contact', href: 'mailto:hello@metardu.app' },
+  Developers: [
+    { label: 'Quick Start Guide', href: '/docs/quick-start' },
+    { label: 'Contact Support', href: 'mailto:hello@metardu.app' },
   ],
 } as const
 
 const LEGAL_LINKS = [
-  { label: 'Privacy', href: '/docs/privacy' },
-  { label: 'Terms', href: '/docs/terms' },
-  { label: 'Refunds', href: '/docs/refund' },
+  { label: 'Privacy Policy', href: '/docs/privacy' },
+  { label: 'Terms of Service', href: '/docs/terms' },
+  { label: 'Refund Policy', href: '/docs/refund' },
   { label: 'Data Protection', href: '/docs/data-protection' },
-  { label: 'Survey Act', href: '/docs/survey-act' },
 ] as const
 
 /* ────────────────────────────────────────────────────────────── */
@@ -62,7 +59,7 @@ export default function Footer() {
                   href="https://x.com/itsdosho"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors p-1"
+                  className="text-gray-400 hover:text-[var(--accent)] transition-colors p-1"
                   aria-label="Twitter / X"
                 >
                   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
@@ -73,7 +70,7 @@ export default function Footer() {
                   href="https://github.com/error302"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors p-1"
+                  className="text-gray-400 hover:text-[var(--accent)] transition-colors p-1"
                   aria-label="GitHub"
                 >
                   <svg viewBox="0 0 20 20" className="w-5 h-5" fill="currentColor">
@@ -82,7 +79,7 @@ export default function Footer() {
                 </a>
                 <a
                   href="mailto:hello@metardu.app"
-                  className="text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors p-1"
+                  className="text-gray-400 hover:text-[var(--accent)] transition-colors p-1"
                   aria-label="Email"
                 >
                   <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4">
@@ -106,7 +103,7 @@ export default function Footer() {
                       <Link
                         href={link.href}
                         prefetch={false}
-                        className="text-sm text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors"
+                        className="text-sm text-gray-300 hover:text-[var(--accent)] transition-colors font-medium"
                       >
                         {link.label}
                       </Link>
@@ -120,7 +117,7 @@ export default function Footer() {
 
         {/* Bottom bar — copyright */}
         <div className="py-6 sm:py-8 border-t border-[var(--border-color)] flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-          <p className="text-xs text-[var(--text-muted)] text-center sm:text-left">
+          <p className="text-xs text-gray-400 text-center sm:text-left">
             &copy; {year} METARDU. All rights reserved.
           </p>
         </div>
@@ -128,7 +125,7 @@ export default function Footer() {
 
       {/* ─── Legal disclaimer section ────────────────────────────── */}
       <div className="border-t border-[var(--border-color)] py-4 sm:py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-[var(--text-muted)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-gray-400">
           <div className="flex flex-wrap justify-center gap-x-1 gap-y-1">
             <span>METARDU v1.0 &mdash; Professional Surveying Platform &mdash; EPSG:21037 (Arc 1960 / UTM Zone 37S)</span>
             <span>&middot;</span>
@@ -141,14 +138,14 @@ export default function Footer() {
               </span>
             ))}
           </div>
-          <div className="mt-2 text-xs sm:text-xs text-[var(--text-muted)]/70 max-w-4xl mx-auto leading-relaxed px-2">
+          <div className="mt-2 text-xs sm:text-xs text-gray-400 max-w-4xl mx-auto leading-relaxed px-2">
             METARDU is a computation tool, not a substitute for professional surveyor judgment. All outputs
             (coordinates, areas, deed plans, mutation forms, reports) must be independently verified by a
             licensed surveyor registered with ISK/EBK before use for legal, construction, or registration
             purposes. No output constitutes a certified survey under the Survey Act Cap 299 unless separately
             authenticated by the Survey of Kenya.
           </div>
-          <div className="mt-1 sm:mt-2 text-xs text-[var(--text-muted)]/50">
+          <div className="mt-1 sm:mt-2 text-xs text-gray-400">
             SRID: EPSG:21037 Arc 1960 / UTM Zone 37S
           </div>
         </div>

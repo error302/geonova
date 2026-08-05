@@ -40,8 +40,10 @@ export async function awardCPDPoints(
     .select()
     .single()
 
-  if ((result as any).error) throw (result as any).error
-  return (result as any).data.id
+  if (result.error) throw result.error
+  const inserted = result.data as unknown as CPDRecord
+  if (!inserted) throw new Error('Failed to create CPD record')
+  return inserted.id
 }
 
 export async function getUserCPDForYear(userId: string, year: number): Promise<CPDRecord[]> {
@@ -57,8 +59,8 @@ export async function getUserCPDForYear(userId: string, year: number): Promise<C
     .lte('earned_at', endDate)
     .order('earned_at', { ascending: false })
 
-  if ((result as any).error) throw (result as any).error
-  return (result as any).data || []
+  if (result.error) throw result.error
+  return (result.data as unknown as CPDRecord[]) || []
 }
 
 export async function getTotalCPDForYear(userId: string, year: number): Promise<number> {
@@ -88,8 +90,8 @@ export async function generateCPDCertificate(
     .select()
     .single()
 
-  if ((result as any).error) throw (result as any).error
-  const data = (result as any).data
+  if (result.error) throw result.error
+  const data = result.data as { id: string; generated_at: string }
 
   return {
     id: data.id,
@@ -112,8 +114,8 @@ export async function verifyCPDCertificate(code: string): Promise<CPDCertificate
     .eq('verification_code', code.toUpperCase())
     .single()
 
-  if ((result as any).error || !(result as any).data) return null
-  const data = (result as any).data
+  if (result.error || !result.data) return null
+  const data = result.data as { id: string; user_id: string; year: number; total_points: number; generated_at: string; verification_code: string; pdf_path: string }
 
   // Fetch associated records and profile separately (no nested joins in QueryBuilder)
   const [recordsResult, profileResult] = await Promise.all([
@@ -121,8 +123,8 @@ export async function verifyCPDCertificate(code: string): Promise<CPDCertificate
     dbClient.from('profiles').select('full_name, isk_number').eq('id', data.user_id).single()
   ])
 
-  const records = (recordsResult as any).data || []
-  const profile = (profileResult as any).data
+  const records = (recordsResult.data as unknown as CPDRecord[]) || []
+  const profile = profileResult.data as { full_name: string | null; isk_number: string | null } | null
 
   return {
     id: data.id,

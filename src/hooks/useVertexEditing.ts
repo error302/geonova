@@ -110,10 +110,10 @@ export function useVertexEditing({
   });
 
   // --- Refs for OL objects ---
-  const sourceRef = useRef<any>(null);
-  const layerRef = useRef<any>(null);
-  const modifyRef = useRef<any>(null);
-  const snapRef = useRef<any>(null);
+  const sourceRef = useRef<import('ol/source/Vector').default | null>(null);
+  const layerRef = useRef<import('ol/layer/Vector').default | null>(null);
+  const modifyRef = useRef<import('ol/interaction/Modify').default | null>(null);
+  const snapRef = useRef<import('ol/interaction/Snap').default | null>(null);
   const featureRef = useRef<Feature<OlPolygon> | null>(null);
   const mapRef = useRef<Map | null>(null);
 
@@ -122,9 +122,9 @@ export function useVertexEditing({
   const verticesRef = useRef<VertexPoint[]>(vertices);
 
   // Event handler refs for cleanup
-  const dblClickRef = useRef<((evt: any) => void) | null>(null);
-  const contextMenuRef = useRef<((evt: any) => void) | null>(null);
-  const pointerMoveRef = useRef<((evt: any) => void) | null>(null);
+  const dblClickRef = useRef<((evt: import('ol/MapBrowserEvent').default) => void) | null>(null);
+  const contextMenuRef = useRef<((evt: import('ol/MapBrowserEvent').default) => void) | null>(null);
+  const pointerMoveRef = useRef<((evt: import('ol/MapBrowserEvent').default) => void) | null>(null);
 
   // --- Keep refs in sync ---
   useEffect(() => { mapRef.current = map; }, [map]);
@@ -172,7 +172,7 @@ export function useVertexEditing({
       dblClickRef.current = null;
     }
     if (contextMenuRef.current) {
-      (m as any).un('contextmenu', contextMenuRef.current);
+      (m as unknown as { un(type: string, listener: (e: import('ol/MapBrowserEvent').default) => void): void }).un('contextmenu', contextMenuRef.current);
       contextMenuRef.current = null;
     }
     if (pointerMoveRef.current) {
@@ -293,7 +293,7 @@ export function useVertexEditing({
       modifyRef.current = modify;
 
       // --- Snap interaction (magnetic snap to own vertices) ---
-      let snap: any = null;
+      let snap: import('ol/interaction/Snap').default | null = null;
       if (snapEnabled) {
         snap = new Snap({
           source,
@@ -304,13 +304,13 @@ export function useVertexEditing({
       }
 
       // --- Double-click: insert vertex on nearest edge ---
-      const handleDblClick = async (evt: any) => {
+      const handleDblClick = async (evt: import('ol/MapBrowserEvent').default) => {
         evt.stopPropagation();
         if (cancelled) return;
 
         const pixel = evt.pixel as [number, number];
         const coord = evt.coordinate as [number, number];
-        const geom = feature.getGeometry() as any;
+        const geom = feature.getGeometry() as OlPolygon;
         const ring = geom.getCoordinates()[0] as number[][];
 
         // Find nearest edge
@@ -353,13 +353,13 @@ export function useVertexEditing({
       map.on('dblclick', handleDblClick);
 
       // --- Right-click (contextmenu): remove vertex (min 3) ---
-      const handleContextMenu = async (evt: any) => {
+      const handleContextMenu = async (evt: import('ol/MapBrowserEvent').default) => {
         evt.preventDefault();
         evt.stopPropagation();
         if (cancelled) return;
 
         const coord = evt.coordinate as [number, number];
-        const geom = feature.getGeometry() as any;
+        const geom = feature.getGeometry() as OlPolygon;
         const ring = geom.getCoordinates()[0] as number[][];
 
         if (ring.length - 1 <= 3) return; // need at least 3 unique vertices
@@ -395,14 +395,14 @@ export function useVertexEditing({
       };
 
       contextMenuRef.current = handleContextMenu;
-      (map as any).on('contextmenu', handleContextMenu);
+      (map as unknown as { on(type: string, listener: (e: import('ol/MapBrowserEvent').default) => void): void }).on('contextmenu', handleContextMenu);
 
       // --- Pointer move: detect hovered vertex for coordinate display ---
-      const handlePointerMove = async (evt: any) => {
+      const handlePointerMove = async (evt: import('ol/MapBrowserEvent').default) => {
         if (cancelled) return;
 
         const coord = evt.coordinate as [number, number];
-        const geom = feature.getGeometry() as any;
+        const geom = feature.getGeometry() as OlPolygon;
         if (!geom) return;
 
         const ring = geom.getCoordinates()[0] as number[][];

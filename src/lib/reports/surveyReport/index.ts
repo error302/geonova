@@ -272,7 +272,7 @@ function methodologySection(doc: jsPDF, data: SurveyReportData): void {
 function controlNetworkSection(doc: jsPDF, data: SurveyReportData): void {
   sectionTitle(doc, 'Control Network', '3')
 
-  const controlPts = data.controlPoints.filter((p: any) => p.is_control)
+  const controlPts = data.controlPoints.filter((p: ReportPoint) => p.is_control)
   if (controlPts.length === 0) {
     bodyText(doc, 'No control points recorded for this survey.')
     return
@@ -281,7 +281,7 @@ function controlNetworkSection(doc: jsPDF, data: SurveyReportData): void {
   autoTable(doc, {
     startY: _yPos,
     head: [['Point', 'Easting (m)', 'Northing (m)', 'Elevation (m)', 'Type', 'Order']],
-    body: controlPts.map((p: any) => [
+    body: controlPts.map((p: ReportPoint) => [
       p.name,
       p.easting.toFixed(4),
       p.northing.toFixed(4),
@@ -295,7 +295,7 @@ function controlNetworkSection(doc: jsPDF, data: SurveyReportData): void {
     columnStyles: { 1: { halign: 'right' }, 2: { halign: 'right' }, 3: { halign: 'right' } },
     margin: { left: 15, right: 15 },
   })
-  _yPos = (doc as any).lastAutoTable.finalY + 8
+  _yPos = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 8
 
   if (data.traverse) {
     const acc = computeTraverseAccuracy(data.traverse.linearError, data.traverse.totalDistance)
@@ -326,7 +326,7 @@ function traverseComputationSection(doc: jsPDF, data: SurveyReportData): void {
   autoTable(doc, {
     startY: _yPos,
     head: [['Line', 'Dist (m)', 'Bearing', 'ΔN Raw', 'ΔE Raw', 'Adj ΔN', 'Adj ΔE']],
-    body: t.legs.map((l: any) => [
+    body: t.legs.map((l) => [
       `${l.fromName} → ${l.toName}`,
       l.distance.toFixed(3),
       bearingToString(l.adjustedBearing || l.rawBearing),
@@ -346,7 +346,7 @@ function traverseComputationSection(doc: jsPDF, data: SurveyReportData): void {
     },
     margin: { left: 15, right: 15 },
   })
-  _yPos = (doc as any).lastAutoTable.finalY + 8
+  _yPos = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 8
 
   doc.setFillColor(LIGHT_GRAY[0], LIGHT_GRAY[1], LIGHT_GRAY[2])
   doc.rect(15, _yPos, 180, 38, 'F')
@@ -402,21 +402,21 @@ function boundaryDescriptionSection(doc: jsPDF, data: SurveyReportData): void {
     autoTable(doc, {
       startY: _yPos,
       head: [['Line', 'Bearing', 'Distance (m)']],
-      body: data.bearingSchedule.map((b: any) => [b.from === b.to ? b.from : `${b.from} → ${b.to}`, b.bearing, b.distance.toFixed(3)]),
+      body: data.bearingSchedule.map((b) => [b.from === b.to ? b.from : `${b.from} → ${b.to}`, b.bearing, b.distance.toFixed(3)]),
       headStyles: { fillColor: DARK, textColor: AMBER, fontStyle: 'bold', fontSize: 8 },
       bodyStyles: { fontSize: 8, textColor: [30, 30, 30] },
       alternateRowStyles: { fillColor: LIGHT_GRAY },
       columnStyles: { 0: { fontStyle: 'bold' }, 1: { halign: 'center' }, 2: { halign: 'right' } },
       margin: { left: 15, right: 15 },
     })
-    _yPos = (doc as any).lastAutoTable.finalY + 8
+    _yPos = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 8
   }
 }
 
 function beaconDescriptionSection(doc: jsPDF, data: SurveyReportData): void {
   sectionTitle(doc, 'Beacon Description', '6')
 
-  const beacons: BeaconDescription[] = data.beaconDescriptions || data.controlPoints.filter((p: any) => p.is_control).map((p: any) => ({
+  const beacons: BeaconDescription[] = data.beaconDescriptions || data.controlPoints.filter((p: ReportPoint) => p.is_control).map((p: ReportPoint) => ({
     name: p.name,
     easting: p.easting,
     northing: p.northing,
@@ -434,7 +434,7 @@ function beaconDescriptionSection(doc: jsPDF, data: SurveyReportData): void {
   autoTable(doc, {
     startY: _yPos,
     head: [['Beacon', 'Easting (m)', 'Northing (m)', 'Elev. (m)', 'Monument', 'Condition', 'Description']],
-    body: beacons.map((b: any) => [
+    body: beacons.map((b: BeaconDescription) => [
       b.name,
       b.easting.toFixed(4),
       b.northing.toFixed(4),
@@ -452,7 +452,7 @@ function beaconDescriptionSection(doc: jsPDF, data: SurveyReportData): void {
     },
     margin: { left: 15, right: 15 },
   })
-  _yPos = (doc as any).lastAutoTable.finalY + 8
+  _yPos = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 8
   bodyText(doc, 'All beacons are in good condition unless otherwise noted.')
 }
 
@@ -469,14 +469,14 @@ function topographicFeaturesSection(doc: jsPDF, data: SurveyReportData): void {
   autoTable(doc, {
     startY: _yPos,
     head: [['Point', 'Easting (m)', 'Northing (m)', 'Elevation (m)']],
-    body: data.spotLevels.map((s: any) => [s.name, s.easting.toFixed(4), s.northing.toFixed(4), s.elevation.toFixed(3)]),
+    body: data.spotLevels.map((s: SpotLevel) => [s.name, s.easting.toFixed(4), s.northing.toFixed(4), s.elevation.toFixed(3)]),
     headStyles: { fillColor: DARK, textColor: AMBER, fontStyle: 'bold', fontSize: 8 },
     bodyStyles: { fontSize: 8, textColor: [30, 30, 30] },
     alternateRowStyles: { fillColor: LIGHT_GRAY },
     columnStyles: { 0: { fontStyle: 'bold' }, 1: { halign: 'right' }, 2: { halign: 'right' }, 3: { halign: 'right' } },
     margin: { left: 15, right: 15 },
   })
-  _yPos = (doc as any).lastAutoTable.finalY + 8
+  _yPos = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 8
 }
 
 function calculationMethodologySection(doc: jsPDF, data: SurveyReportData): void {
@@ -548,7 +548,7 @@ function appendicesSection(doc: jsPDF): void {
     columnStyles: { 0: { fontStyle: 'bold' } },
     margin: { left: 15, right: 15 },
   })
-  _yPos = (doc as any).lastAutoTable.finalY + 8
+  _yPos = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 8
 }
 
 function mobilisationSection(doc: jsPDF, m: MobilisationData): void {

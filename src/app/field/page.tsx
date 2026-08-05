@@ -19,10 +19,11 @@ import {
   Plus,
   CheckCircle2,
   Upload,
+  LucideIcon,
 } from 'lucide-react'
 import { FieldBookMobile } from '@/components/fieldbook/FieldBookMobile'
 import { ToleranceBadge } from '@/components/survey/ToleranceBadge'
-import { checkTolerance, type ToleranceCheckResult } from '@/lib/survey/liveToleranceChecker'
+import { checkTolerance, type ToleranceCheckResult, type SurveyType } from '@/lib/survey/liveToleranceChecker'
 import type { RawObservation } from '@/lib/computations/traverseEngine'
 
 type Tab = 'points' | 'traverse' | 'leveling' | 'radiation' | 'offline' | 'map'
@@ -30,22 +31,29 @@ type SyncStatus = 'synced' | 'pending' | 'offline'
 
 const STORAGE_KEY = 'metardu_pending_observations'
 
+interface FieldProject { id: string; name: string; survey_type?: string }
+interface FieldPoint { id?: string; name: string; easting: number; northing: number; is_control?: boolean }
+interface BatchResult { name: string; easting: number | string; northing: number | string; elevation?: number | null; is_control?: boolean }
+interface FieldTraverseLeg { id: string; fromStation: string; toStation: string; distance: number; bearing: { deg: number; min: number; sec: number } }
+interface LevelReading { id: string; station: string; bs?: number; is?: number; fs?: number }
+interface RadiationPoint { id: string; pointName: string; bearing: { deg: string; min: string; sec: string }; distance: number }
+
 export default function FieldPage() {
   const router = useRouter()
   const { t } = useLanguage()
   const [msg, setMsg] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<Tab>('traverse')
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('offline')
-  const [projects, setProjects] = useState<any[]>([])
+  const [projects, setProjects] = useState<FieldProject[]>([])
   const [selectedProject, setSelectedProject] = useState<string>('')
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<{ id: string } | null>(null)
   
   // Points state
-  const [points, setPoints] = useState<any[]>([])
+  const [points, setPoints] = useState<FieldPoint[]>([])
   const [showBatch, setShowBatch] = useState(false)
   const [batchCSV, setBatchCSV] = useState('')
-  const [batchParseResults, setBatchParseResults] = useState<any[]>([])
+  const [batchParseResults, setBatchParseResults] = useState<BatchResult[]>([])
   const [batchErrors, setBatchErrors] = useState<string[]>([])
 
   // Single point form
@@ -61,7 +69,7 @@ export default function FieldPage() {
   const [tDeg, setTDeg] = useState('')
   const [tMin, setTMin] = useState('')
   const [tSec, setTSec] = useState('')
-  const [tLegs, setTLegs] = useState<any[]>([])
+  const [tLegs, setTLegs] = useState<FieldTraverseLeg[]>([])
   const [tTotal, setTTotal] = useState(0)
 
   // Tolerance check state (Phase 1 — live field-side closure checking)
@@ -71,12 +79,12 @@ export default function FieldPage() {
   const [lStation, setLStation] = useState('')
   const [lReading, setLReading] = useState('')
   const [lType, setLType] = useState<'BS' | 'IS' | 'FS'>('BS')
-  const [lReadings, setLReadings] = useState<any[]>([])
+  const [lReadings, setLReadings] = useState<LevelReading[]>([])
 
   // Radiation state
   const [rStation, setRStation] = useState('')
   const [rInstH, setRInstH] = useState('1.500')
-  const [rPoints, setRPoints] = useState<any[]>([])
+  const [rPoints, setRPoints] = useState<RadiationPoint[]>([])
   const [rNewName, setRNewName] = useState('')
   const [rBearingDeg, setRBearingDeg] = useState('')
   const [rBearingMin, setRBearingMin] = useState('')
@@ -92,7 +100,7 @@ export default function FieldPage() {
       .select('id, name, survey_type')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
-    if (data) setProjects(data as unknown as any[])
+    if (data) setProjects(data as unknown as FieldProject[])
   }, [dbClient])
 
   const fetchProjectPoints = useCallback(async (projectId: string) => {
@@ -102,7 +110,7 @@ export default function FieldPage() {
       .select('*')
       .eq('project_id', projectId)
       .order('created_at', { ascending: false })
-    if (data) setPoints(data as unknown as any[])
+    if (data) setPoints(data as unknown as FieldPoint[])
   }, [dbClient])
 
   // Auth check
@@ -114,9 +122,9 @@ export default function FieldPage() {
         window.location.replace('/login?next=%2Ffield')
         return
       }
-      setUser(user)
+      setUser(user as { id: string })
       setLoading(false)
-      fetchProjects((user as Record<string, unknown>).id as string)
+      fetchProjects((user as { id: string }).id)
       fetchProjectPoints(selectedProject)
     }
     checkAuth()
@@ -130,7 +138,7 @@ export default function FieldPage() {
         setUser(null)
         window.location.replace('/login?next=%2Ffield')
       } else {
-        setUser((session as Record<string, unknown>).user)
+        setUser((session as Record<string, unknown>).user as { id: string } | null)
       }
     })
     return () => subscription.unsubscribe()
@@ -139,7 +147,7 @@ export default function FieldPage() {
   // Point batch parser
   const parseBatchCSV = () => {
     const lines = batchCSV.trim().split('\n')
-    const results: any[] = []
+    const results: BatchResult[] = []
     const errors: string[] = []
     let lineNum = 0
 
@@ -283,13 +291,13 @@ export default function FieldPage() {
 
       // Get project survey type
       const project = projects.find(p => p.id === selectedProject)
-      const surveyType = (project?.survey_type as any) || 'cadastral'
+      const surveyType = (project?.survey_type as string) || 'cadastral'
 
       // T1.5i FIX (2026-07-10): Use control points from the project for
       // opening/closing coordinates. Fall back to a loop traverse (same
       // opening = closing) if no control points are available — the closure
       // check still works, it just checks internal misclosure.
-      const controlPoints = points.filter((p: any) => p.is_control)
+      const controlPoints = points.filter((p) => p.is_control)
       const openingPoint = controlPoints[0]
       const closingPoint = controlPoints[controlPoints.length - 1] || controlPoints[0]
 
@@ -299,7 +307,7 @@ export default function FieldPage() {
       const closingN = closingPoint?.northing || openingN
 
       const result = checkTolerance({
-        surveyType,
+        surveyType: surveyType as SurveyType,
         observations,
         openingEasting: openingE,
         openingNorthing: openingN,
@@ -318,7 +326,7 @@ export default function FieldPage() {
     }
   }, [tLegs, selectedProject, projects, points])
 
-  const renderTabButton = (tab: Tab, Icon: any, label: string) => (
+  const renderTabButton = (tab: Tab, Icon: LucideIcon, label: string) => (
     <button
       onClick={() => setActiveTab(tab)}
       className={`flex-1 py-2 text-xs font-medium flex flex-col items-center gap-1 ${
@@ -330,7 +338,7 @@ export default function FieldPage() {
     </button>
   )
 
-  const renderOfflineTabButton = (tab: Tab, Icon: any, label: string) => (
+  const renderOfflineTabButton = (tab: Tab, Icon: LucideIcon, label: string) => (
     <button
       onClick={() => setActiveTab(tab)}
       className={`flex-1 py-2 text-xs font-medium flex flex-col items-center gap-1 ${
@@ -604,7 +612,7 @@ export default function FieldPage() {
             </div>
 
             <div className="grid grid-cols-3 gap-1.5">
-              {(['BS', 'IS', 'FS'] as const).map((type: any) => (
+              {(['BS', 'IS', 'FS'] as const).map((type) => (
                 <button
                   key={type}
                   onClick={() => setLType(type)}

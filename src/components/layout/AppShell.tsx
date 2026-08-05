@@ -5,7 +5,6 @@ import { ReactNode, useEffect, useState } from 'react'
 import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
 import FeedbackWidget from '@/components/FeedbackWidget'
-import { QuickCompute } from '@/components/layout/QuickCompute'
 import MobileNav from '@/components/MobileNav'
 import { HotkeyHelpOverlay } from '@/components/shared/HotkeyHelpOverlay'
 import { AppUpdateBanner } from '@/components/app/AppUpdateBanner'
@@ -91,7 +90,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
   //      checklist's dismissed state so it doesn't fire before the
   //      user has seen the checklist.
 
-  // Show branded loading screen only on very first app load
+  // Show branded loading screen on app initial load
   useEffect(() => {
     if (_hasShownLoadingScreen) {
       setInitialLoading(false)
@@ -100,9 +99,9 @@ export default function AppShell({ children }: { children: ReactNode }) {
     const timer = setTimeout(() => {
       setInitialLoading(false)
       _hasShownLoadingScreen = true
-    }, 1500)
+    }, 700)
     return () => clearTimeout(timer)
-  }, [])
+  }, [pathname])
 
   useEffect(() => {
     if (isAuthRoute(pathname)) return
@@ -220,8 +219,6 @@ export default function AppShell({ children }: { children: ReactNode }) {
             <Footer />
             {!hideGlobalOverlays && <FeedbackWidget />}
             <HotkeyHelpOverlay />
-            {/* Hide QuickCompute and FeedbackWidget on map + fieldbook pages — they overlap entry controls */}
-            {!hideGlobalOverlays && <QuickCompute />}
             {!dashboard && !hideGlobalOverlays && <MobileNav />}
             {!hideGlobalOverlays && <CommandPalette />}
             <NotificationToast />

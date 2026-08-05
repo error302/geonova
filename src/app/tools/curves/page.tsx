@@ -8,6 +8,30 @@ import { compoundCurveSolved, reverseCurveSolved, simpleCurveSolved } from '@/li
 import { PageHeader } from '@/components/shared/PageHeader'
 import { generatePDF, downloadCSV, toCSV } from '@/lib/export/helpers'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
+
+interface VerticalCurveTableRow { chainage: number; x: number; RL: number; grade: number }
+interface StakePoint { chainage: number; chordLength?: number; totalDeflection?: string; deflectionAngle?: string }
+interface VerticalCurveResult {
+  steps: SolutionStep[]
+  A: number
+  curveLen: number
+  BVC_chainage: number
+  EVC_chainage: number
+  BVC_RL: number
+  EVC_RL: number
+  vpiChainage: number
+  vpiRL: number
+  arithmeticCheck: number
+  arithPass: boolean
+  peakPoint: { chainage: number; RL: number } | null
+  tableRows: VerticalCurveTableRow[]
+  minK: number
+  kPass: boolean
+  K_computed: number
+  isCrest: boolean
+  designSpeed: number
+}
+interface RdmValidation { status: string; flags: string[] }
 import { SpiralAlignmentTab } from '@/components/tools/SpiralAlignmentTab'
 import { SimpleCurveDiagram } from '@/components/tools/SimpleCurveDiagram'
 import { VerticalCurveProfile } from '@/components/tools/VerticalCurveProfile'
@@ -33,8 +57,8 @@ export default function CurvesCalculator() {
     r2_rev: '300',
     abDistance: '150'
   });
-  const [result, setResult] = useState<null | { type: CurveType; title?: string; steps: SolutionStep[]; stakePoints?: any[]; stakeout?: any }>(null);
-  const [rdmValidation, setRdmValidation] = useState<any>(null);
+  const [result, setResult] = useState<null | { type: CurveType; title?: string; steps: SolutionStep[]; stakePoints?: StakePoint[]; stakeout?: import('@/lib/engine/types').CurveStakeoutResult }>(null);
+  const [rdmValidation, setRdmValidation] = useState<RdmValidation | null>(null);
 
   const [vInput, setVInput] = useState({
     g1: '-4.0',
@@ -46,7 +70,7 @@ export default function CurvesCalculator() {
     useLength: false,
     length: '200',
   });
-  const [vResult, setVResult] = useState<any>(null);
+  const [vResult, setVResult] = useState<VerticalCurveResult | null>(null);
   const [vError, setVError] = useState('');
 
   const MIN_K: Record<number, number> = {
@@ -153,7 +177,7 @@ export default function CurvesCalculator() {
       const delta1 = parseFloat(input.delta1);
       const delta2 = parseFloat(input.delta2);
       const commonChainage = parseFloat(input.commonChainage);
-      if ([R1, R2, delta1, delta2, commonChainage].some((n: any) => isNaN(n))) return;
+      if ([R1, R2, delta1, delta2, commonChainage].some((n) => isNaN(n))) return;
       const s = compoundCurveSolved({ R1, R2, delta1Deg: delta1, delta2Deg: delta2, junctionChainage: commonChainage });
       setResult({ type: 'compound', title: s.solution.title, steps: s.steps });
     } else if (curveType === 'reverse') {
@@ -176,7 +200,7 @@ export default function CurvesCalculator() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ radius, designSpeed: 80, terrain: 'rolling', gradient: 0 })
       });
-      const rdmData = await rdmRes.json();
+      const rdmData = await rdmRes.json() as RdmValidation;
       setRdmValidation(rdmData);
     } catch {}
   };
@@ -269,7 +293,7 @@ export default function CurvesCalculator() {
                 <div className="mt-4">
                   <label className="label">Design Speed (km/h) — for K compliance</label>
                   <div className="flex flex-wrap gap-2 mt-1">
-                    {designSpeedOptions.map((s: any) => (
+                    {designSpeedOptions.map((s) => (
                       <button key={s} onClick={() => setDesignSpeed(s)}
                         className={`px-2 py-1 text-xs rounded border ${designSpeed === s ? 'bg-[var(--accent)] text-black border-[var(--accent)]' : 'border-[var(--border-color)] text-[var(--text-secondary)]'}`}>
                         {s}
@@ -308,7 +332,7 @@ export default function CurvesCalculator() {
                           ]},
                         ],
                         [
-                          { title: 'RL Table — 20m Intervals', headers: ['Chainage (m)', 'x from BVC (m)', 'RL (m)', 'Grade (%)'], rows: vResult.tableRows.map((r: any) => [r.chainage.toFixed(3), r.x.toFixed(3), r.RL.toFixed(4), r.grade.toFixed(4)]) },
+                          { title: 'RL Table — 20m Intervals', headers: ['Chainage (m)', 'x from BVC (m)', 'RL (m)', 'Grade (%)'], rows: vResult.tableRows.map((r: VerticalCurveTableRow) => [r.chainage.toFixed(3), r.x.toFixed(3), r.RL.toFixed(4), r.grade.toFixed(4)]) },
                         ],
                       )
                     } else if (result && result.steps) {
@@ -318,7 +342,7 @@ export default function CurvesCalculator() {
                           { title: 'Computation Steps', rows: result.steps.map((s: SolutionStep) => ({ label: s.label, value: s.result || s.computation || '—' })) },
                         ],
                         result.stakePoints ? [
-                          { title: 'Stakeout Table', headers: ['Chainage', 'Chord (m)', 'Deflection'], rows: result.stakePoints.map((p: any) => [p.chainage.toFixed(3), p.chordLength?.toFixed(3) ?? '—', p.totalDeflection ?? p.deflectionAngle ?? '—']) },
+                          { title: 'Stakeout Table', headers: ['Chainage', 'Chord (m)', 'Deflection'], rows: result.stakePoints.map((p: StakePoint) => [p.chainage.toFixed(3), p.chordLength?.toFixed(3) ?? '—', p.totalDeflection ?? p.deflectionAngle ?? '—']) },
                         ] : [],
                       )
                     }
@@ -332,7 +356,7 @@ export default function CurvesCalculator() {
                     if (curveType === 'vertical' && vResult) {
                       const csv = toCSV(
                         ['Chainage (m)', 'x from BVC (m)', 'RL (m)', 'Grade (%)'],
-                        vResult.tableRows.map((r: any) => [r.chainage.toFixed(3), r.x.toFixed(3), r.RL.toFixed(4), r.grade.toFixed(4)]),
+                        vResult.tableRows.map((r: VerticalCurveTableRow) => [r.chainage.toFixed(3), r.x.toFixed(3), r.RL.toFixed(4), r.grade.toFixed(4)]),
                       )
                       downloadCSV(csv, 'vertical-curve-data')
                     } else if (result) {
@@ -386,7 +410,7 @@ export default function CurvesCalculator() {
                       </tr>
                     </thead>
                     <tbody>
-                      {result.stakePoints.map((p: any, i: number) => (
+                      {result.stakePoints.map((p: StakePoint, i: number) => (
                         <tr key={`item-${i}`} className="border-t border-[var(--border-color)]">
                           <td className="px-3 py-2 font-mono">{p.chainage.toFixed(3)}</td>
                           <td className="px-3 py-2 text-right font-mono">{p.chordLength?.toFixed?.(3) ?? '—'}</td>
@@ -483,7 +507,7 @@ export default function CurvesCalculator() {
                     </tr>
                   </thead>
                   <tbody>
-                    {vResult.tableRows.map((r: any, i: number) => {
+                    {vResult.tableRows.map((r: VerticalCurveTableRow, i: number) => {
                       const isBVC = i === 0;
                       const isEVC = i === vResult.tableRows.length - 1;
                       const isPeak = !!(vResult.peakPoint && Math.abs(r.chainage - vResult.peakPoint.chainage) < 1);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react'
-import { transformCoordinates, getSupportedSystems } from '@/lib/online/coordinates'
+import { transformCoordinates, getSupportedSystems, type CoordinateSystem, type TransformResult } from '@/lib/online/coordinates'
 import { calculateEDMCorrection } from '@/lib/online/weather'
 import { searchBenchmarks, getAvailableCountries, getBenchmarkTypes, Benchmark } from '@/lib/online/benchmarks'
 import GNSSProcessor from '@/components/online/GNSSProcessor'
@@ -10,9 +10,9 @@ import ImageryViewer from '@/components/online/ImageryViewer'
 
 export default function OnlineServicesPage() {
   const [activeTab, setActiveTab] = useState<'gnss' | 'transform' | 'edm' | 'benchmarks' | 'imagery'>('gnss')
-  const [transformResult, setTransformResult] = useState<any>(null)
+  const [transformResult, setTransformResult] = useState<TransformResult | null>(null)
   const [benchmarkResults, setBenchmarkResults] = useState<Benchmark[]>([])
-  const [weatherResult, setWeatherResult] = useState<any>(null)
+  const [weatherResult, setWeatherResult] = useState<ReturnType<typeof calculateEDMCorrection> | null>(null)
   const [loading, setLoading] = useState(false)
   const [onlineStatus, setOnlineStatus] = useState<'online' | 'offline'>('online')
 
@@ -41,7 +41,7 @@ export default function OnlineServicesPage() {
 
   const [benchmarkSearch, setBenchmarkSearch] = useState({
     country: '',
-    type: 'ALL' as const
+    type: 'ALL' as 'ALL' | 'BM' | 'CP' | 'TRIG' | 'TIDAL'
   })
 
   const [weatherInput, setWeatherInput] = useState({
@@ -67,8 +67,8 @@ export default function OnlineServicesPage() {
           zone: transformInput.zone ? parseInt(transformInput.zone) : undefined,
           hemisphere: transformInput.hemisphere
         },
-        transformInput.fromSystem as any,
-        transformInput.toSystem as any
+        transformInput.fromSystem as CoordinateSystem,
+        transformInput.toSystem as CoordinateSystem
       )
       setTransformResult(result)
     } catch (e) {
@@ -119,10 +119,10 @@ export default function OnlineServicesPage() {
             { id: 'edm', label: 'EDM Corrections' },
             { id: 'benchmarks', label: 'Benchmarks' },
             { id: 'imagery', label: 'Satellite Imagery' }
-          ].map((tab: any) => (
+          ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as 'gnss' | 'transform' | 'edm' | 'benchmarks' | 'imagery')}
               className={`px-4 py-2 rounded-lg font-medium transition ${
                 activeTab === tab.id
                   ? 'bg-sky-600 text-white'
@@ -165,7 +165,7 @@ export default function OnlineServicesPage() {
                   onChange={e => setTransformInput({ ...transformInput, fromSystem: e.target.value })}
                   className="w-full p-2 border rounded-lg"
                 >
-                  {systems.map((s: any) => (
+                  {systems.map((s) => (
                     <option key={s.id} value={s.id}>{s.name}</option>
                   ))}
                 </select>
@@ -255,7 +255,7 @@ export default function OnlineServicesPage() {
                   onChange={e => setTransformInput({ ...transformInput, toSystem: e.target.value })}
                   className="w-full p-2 border rounded-lg"
                 >
-                  {systems.map((s: any) => (
+                  {systems.map((s) => (
                     <option key={s.id} value={s.id}>{s.name}</option>
                   ))}
                 </select>
@@ -312,7 +312,7 @@ export default function OnlineServicesPage() {
                   className="w-full p-2 border rounded-lg"
                 >
                   <option value="">All Countries</option>
-                  {countries.map((c: any) => (
+                  {countries.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
@@ -321,11 +321,11 @@ export default function OnlineServicesPage() {
                 <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Type</label>
                 <select
                   value={benchmarkSearch.type}
-                  onChange={e => setBenchmarkSearch({ ...benchmarkSearch, type: e.target.value as any })}
+                  onChange={e => setBenchmarkSearch({ ...benchmarkSearch, type: e.target.value as 'ALL' | 'BM' | 'CP' | 'TRIG' | 'TIDAL' })}
                   className="w-full p-2 border rounded-lg"
                 >
                   <option value="ALL">All Types</option>
-                  {benchmarkTypes.map((t: any) => (
+                  {benchmarkTypes.map((t) => (
                     <option key={t.id} value={t.id}>{t.name}</option>
                   ))}
                 </select>
@@ -343,7 +343,7 @@ export default function OnlineServicesPage() {
 
             {benchmarkResults.length > 0 && (
               <div className="space-y-3">
-                {benchmarkResults.map((bm: any) => (
+                {benchmarkResults.map((bm) => (
                   <div key={bm.id} className="p-4 border rounded-lg hover:bg-[var(--bg-secondary)]">
                     <div className="flex justify-between items-start">
                       <div>

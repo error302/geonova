@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
  *
  * To activate:
  * 1. Go to PayPal Developer → My Apps & Sandboxes → Webhooks
- * 2. Add this URL: https://metardu.duckdns.org/api/webhooks/paypal
+ * 2. Add this URL: https://metardu.space/api/webhooks/paypal
  * 3. Subscribe to: CHECKOUT.ORDER.APPROVED, PAYMENT.CAPTURE.COMPLETED,
  *    BILLING.SUBSCRIPTION.ACTIVATED, BILLING.SUBSCRIPTION.CANCELLED
  * 4. Set PAYPAL_WEBHOOK_ID in your .env

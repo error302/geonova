@@ -122,6 +122,7 @@ export function QuickCompute() {
       {/* ── FAB Button ────────────────────────────────────────── */}
       <button
         onClick={() => setOpen(true)}
+        aria-label="Quick Compute tools"
         className="fixed right-4 z-[51] flex items-center gap-2.5
                    bg-gradient-to-r from-[#FFB84D] to-[#D17B47] text-white
                    px-5 py-3 rounded-2xl font-semibold text-sm
@@ -165,6 +166,7 @@ export function QuickCompute() {
               </div>
               <button
                 onClick={() => setOpen(false)}
+                aria-label="Close Quick Compute panel"
                 className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/[0.06] transition-colors"
               >
                 <XIcon className="w-4 h-4" />

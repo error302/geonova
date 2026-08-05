@@ -29,10 +29,10 @@ export default function LandLawPage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center gap-3 mb-2">
             <BookOpen className="w-8 h-8" />
-            <h1 className="text-3xl font-bold">Land Law Intelligence</h1>
+            <h1 className="text-3xl font-bold">Land Law &amp; Survey Assistance</h1>
           </div>
           <p className="text-amber-100 text-lg">
-            Kenyan boundary law, dispute resolution, and survey compliance tools
+            Kenyan boundary law, survey assistance, dispute resolution, and AI plan compliance tools
           </p>
           <div className="flex gap-3 mt-4">
             <span className="px-3 py-1 bg-white/20 rounded-full text-sm">

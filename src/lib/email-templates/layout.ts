@@ -28,7 +28,7 @@ const BRANDING: EmailBranding = {
   brandColor: '#D17B47',
   brandColorDim: '#c66e15',
   supportEmail: 'support@metardu.com',
-  appUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.duckdns.org',
+  appUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space',
   year: new Date().getFullYear(),
 }
 

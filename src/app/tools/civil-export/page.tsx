@@ -110,8 +110,8 @@ function CivilExportPage() {
                 <div className="flex gap-2 mb-3">
                   {([
                     { k:'all',     l:`All (${allPoints.length})` },
-                    { k:'control', l:`Control (${allPoints.filter((p: any) =>p.is_control).length})` },
-                    { k:'survey',  l:`Survey (${allPoints.filter((p: any) =>!p.is_control).length})` },
+                    { k:'control', l:`Control (${allPoints.filter((p) =>p.is_control).length})` },
+                    { k:'survey',  l:`Survey (${allPoints.filter((p) =>!p.is_control).length})` },
                   ] as const).map(({ k, l }) => (
                     <button key={k} onClick={() => setFilter(k)}
                       className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-colors ${filter === k ? 'bg-[var(--accent)] text-black border-[var(--accent)]' : 'bg-[var(--bg-secondary)] text-[var(--text-muted)] border-[var(--border-color)]'}`}>

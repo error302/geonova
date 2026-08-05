@@ -8,6 +8,7 @@ import { trackEvent } from '@/lib/analytics/events'
 import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
 import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
 import { bowditchAdjustmentSolvedFromResult, transitAdjustmentSolvedFromResult } from '@/lib/engine/solution/wrappers/traverse'
+import type { TraverseLeg, TraverseResult } from '@/lib/engine/types'
 import { computeTraverseAccuracy } from '@/lib/reports/traverseAccuracy'
 import { buildPrintDocument, openPrint } from '@/lib/print/buildPrintDocument'
 import { PrintMetaPanel, defaultPrintMeta, type PrintMeta } from '@/components/shared/PrintMetaPanel'
@@ -37,6 +38,20 @@ interface AzmResult {
   passes: boolean
   numCourses: number
   coursesWarning: boolean
+}
+
+interface ProjectPoint {
+  point_name: string
+  northing: number
+  easting: number
+  is_control?: boolean
+}
+
+interface MappedLeg extends TraverseLeg {
+  departure: number
+  latitude: number
+  correctedDeparture: number
+  correctedLatitude: number
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -88,7 +103,7 @@ export default function TraverseCalculator() {
     { id: 4, name: 'D', n: '5020', e: '3050', dist: '190.25', bearingD: '290', bearingM: '34', bearingS: '04' },
   ])
   const [method, setMethod]       = useState<'bowditch' | 'transit'>('bowditch')
-  const [result, setResult]       = useState<any>(null)
+  const [result, setResult]       = useState<(TraverseResult & { legs: MappedLeg[] }) | null>(null)
   const [steps,  setSteps]        = useState<SolutionStep[] | null>(null)
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined)
   const [calcError, setCalcError] = useState<string | null>(null)
@@ -114,13 +129,13 @@ export default function TraverseCalculator() {
       try {
         const res = await fetch(`/api/project/${projectId}/points`)
         if (!res.ok) return
-        const json = await res.json()
+        const json = await res.json() as { data?: ProjectPoint[] }
         const points = json.data || []
         if (points.length < 2 || cancelled) return
 
         // Convert survey points to traverse legs
         // First point gets known E/N, rest get empty (to be computed)
-        const projectLegs: Leg[] = points.map((p: any, i: number) => ({
+        const projectLegs: Leg[] = points.map((p: ProjectPoint, i: number) => ({
           id: i + 1,
           name: p.point_name || String.fromCharCode(65 + i),
           n: i === 0 ? String(p.northing) : '',
@@ -186,7 +201,7 @@ export default function TraverseCalculator() {
       // Map engine property names to display property names for compatibility
       const mappedResult = {
         ...r,
-        legs: r.legs.map((leg: any) => ({
+        legs: r.legs.map((leg: TraverseLeg) => ({
           ...leg,
           departure: leg.rawDeltaE,
           latitude: leg.rawDeltaN,
@@ -226,7 +241,7 @@ export default function TraverseCalculator() {
     if (!result) return
     const mLabel = method === 'bowditch' ? 'Bowditch Rule' : 'Transit Rule'
 
-    const table1Rows = result.legs.map((l: any) => `
+    const table1Rows = result.legs.map((l: MappedLeg) => `
 <tr>
   <td class="bold">${l.from} → ${l.to}</td>
   <td class="mono">${l.bearingDMS}</td>
@@ -235,7 +250,7 @@ export default function TraverseCalculator() {
   <td class="right mono">${l.latitude >= 0 ? '+' : ''}${l.latitude.toFixed(4)}</td>
 </tr>`).join('')
 
-    const table2Rows = result.legs.map((l: any) => `
+    const table2Rows = result.legs.map((l: MappedLeg) => `
 <tr>
   <td class="bold">${l.from} → ${l.to}</td>
   <td class="right mono">${l.distance.toFixed(4)}</td>
@@ -245,7 +260,7 @@ export default function TraverseCalculator() {
   <td class="right mono bold">${l.correctedLatitude.toFixed(4)}</td>
 </tr>`).join('')
 
-    const table3Rows = result.legs.map((l: any) => `
+    const table3Rows = result.legs.map((l: MappedLeg) => `
 <tr>
   <td class="bold">${l.to}</td>
   <td class="right mono bold">${l.adjEasting.toFixed(4)}</td>
@@ -282,8 +297,8 @@ export default function TraverseCalculator() {
   <tfoot>
     <tr>
       <td colspan="3" class="right">&#931;</td>
-      <td class="right mono">${result.legs.reduce((s: number, l: any) => s + l.departure, 0).toFixed(4)}</td>
-      <td class="right mono">${result.legs.reduce((s: number, l: any) => s + l.latitude,  0).toFixed(4)}</td>
+      <td class="right mono">${result.legs.reduce((s: number, l: MappedLeg) => s + l.departure, 0).toFixed(4)}</td>
+      <td class="right mono">${result.legs.reduce((s: number, l: MappedLeg) => s + l.latitude,  0).toFixed(4)}</td>
     </tr>
   </tfoot>
 </table>
@@ -315,8 +330,8 @@ export default function TraverseCalculator() {
   <h2 style="border:none;margin:0 0 8px">Linear Misclosure &amp; Accuracy — RDM 1.1 (2025) Table 5.1</h2>
   <div class="summary-row"><span class="summary-label">Method</span><span class="summary-value">${mLabel}</span></div>
   <div class="summary-row"><span class="summary-label">Total Distance (Perimeter)</span><span class="summary-value">${result.totalDistance.toFixed(4)} m</span></div>
-  <div class="summary-row"><span class="summary-label">&#931; Departures</span><span class="summary-value">${result.legs.reduce((s: number, l: any) => s + l.departure, 0).toFixed(4)} m</span></div>
-  <div class="summary-row"><span class="summary-label">&#931; Latitudes</span><span class="summary-value">${result.legs.reduce((s: number, l: any) => s + l.latitude,  0).toFixed(4)} m</span></div>
+  <div class="summary-row"><span class="summary-label">&#931; Departures</span><span class="summary-value">${result.legs.reduce((s: number, l: MappedLeg) => s + l.departure, 0).toFixed(4)} m</span></div>
+  <div class="summary-row"><span class="summary-label">&#931; Latitudes</span><span class="summary-value">${result.legs.reduce((s: number, l: MappedLeg) => s + l.latitude,  0).toFixed(4)} m</span></div>
   <div class="summary-row"><span class="summary-label">Linear Misclosure</span><span class="summary-value">${result.linearError.toFixed(6)} m</span></div>
   <div class="summary-row"><span class="summary-label">Precision Ratio</span><span class="summary-value">1 : ${Math.round(result.precisionRatio)}</span></div>
   <div class="summary-row"><span class="summary-label">Allowable (RDM 1.1 Table 5.1)</span><span class="summary-value">1 : 10 000</span></div>
@@ -500,8 +515,8 @@ ${azmSection}`
             <div className="card-body space-y-3">
               <ResultRow label="Method" value={method === 'bowditch' ? 'Bowditch Rule' : 'Transit Rule'} />
               <ResultRow label="Total Distance" value={`${result.totalDistance.toFixed(4)} m`} />
-              <ResultRow label="Σ Departures" value={`${result.legs.reduce((s: number, l: any) => s + l.departure, 0).toFixed(4)} m`} />
-              <ResultRow label="Σ Latitudes"  value={`${result.legs.reduce((s: number, l: any) => s + l.latitude,  0).toFixed(4)} m`} />
+              <ResultRow label="Σ Departures" value={`${result.legs.reduce((s: number, l: MappedLeg) => s + l.departure, 0).toFixed(4)} m`} />
+              <ResultRow label="Σ Latitudes"  value={`${result.legs.reduce((s: number, l: MappedLeg) => s + l.latitude,  0).toFixed(4)} m`} />
               <ResultRow label="Linear Misclosure" value={`${result.linearError.toFixed(6)} m`} />
               <ResultRow label="Precision Ratio"   value={`1 : ${Math.round(result.precisionRatio)}`} highlight />
             </div>
@@ -594,7 +609,7 @@ ${azmSection}`
                   </tr>
                 </thead>
                 <tbody>
-                  {result.legs.map((l: any, i: number) => (
+                  {result.legs.map((l: MappedLeg, i: number) => (
                     <tr key={`item-${i}`}>
                       <td className="font-semibold">{l.from} → {l.to}</td>
                       <td className="font-mono">{l.bearingDMS}</td>
@@ -607,8 +622,8 @@ ${azmSection}`
                 <tfoot>
                   <tr className="font-semibold bg-[var(--bg-tertiary)]">
                     <td colSpan={3} className="text-right">Σ</td>
-                    <td className="text-right font-mono">{result.legs.reduce((s: number, l: any) => s + l.departure, 0).toFixed(4)}</td>
-                    <td className="text-right font-mono">{result.legs.reduce((s: number, l: any) => s + l.latitude,  0).toFixed(4)}</td>
+                    <td className="text-right font-mono">{result.legs.reduce((s: number, l: MappedLeg) => s + l.departure, 0).toFixed(4)}</td>
+                    <td className="text-right font-mono">{result.legs.reduce((s: number, l: MappedLeg) => s + l.latitude,  0).toFixed(4)}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -633,7 +648,7 @@ ${azmSection}`
                   </tr>
                 </thead>
                 <tbody>
-                  {result.legs.map((l: any, i: number) => (
+                  {result.legs.map((l: MappedLeg, i: number) => (
                     <tr key={`item-${i}`}>
                       <td className="font-semibold">{l.from} → {l.to}</td>
                       <td className="text-right font-mono">{l.distance.toFixed(4)}</td>
@@ -663,7 +678,7 @@ ${azmSection}`
                   </tr>
                 </thead>
                 <tbody>
-                  {result.legs.map((l: any, i: number) => (
+                  {result.legs.map((l: MappedLeg, i: number) => (
                     <tr key={`item-${i}`}>
                       <td className="font-semibold">{l.to}</td>
                       <td className="text-right font-mono font-semibold text-[var(--accent)]">{l.adjEasting.toFixed(4)}</td>

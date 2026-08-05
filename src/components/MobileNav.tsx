@@ -69,13 +69,11 @@ export default function MobileNav() {
                 key={item.href}
                 href={item.href}
                 aria-current={isActive ? 'page' : undefined}
-                // AUDIT FIX (2026-07-05): min-h-[48px] + py-3 to meet Android
-                // Material Design tap target guideline (48dp minimum).
                 className={`flex flex-col items-center justify-center gap-0.5 px-2 min-h-[48px] py-2 text-[10px] font-medium tracking-wide transition-colors min-w-0 flex-1 ${
-                  isActive ? 'text-[var(--accent)]' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                  isActive ? 'text-[var(--accent)]' : 'text-gray-400 hover:text-white'
                 }`}
               >
-                <Icon className={`h-5 w-5 transition-colors ${isActive ? 'text-[var(--accent)]' : ''}`} strokeWidth={1.9} />
+                <Icon className={`h-5 w-5 transition-colors ${isActive ? 'text-[var(--accent)]' : 'text-gray-400'}`} strokeWidth={1.9} />
                 <span className="truncate">{item.label}</span>
               </Link>
             )
@@ -92,10 +90,10 @@ export default function MobileNav() {
                 href={reportsItem.href}
                 aria-current={isActive ? 'page' : undefined}
                 className={`flex flex-col items-center justify-center gap-0.5 px-2 min-h-[48px] py-2 text-[10px] font-medium tracking-wide transition-colors min-w-0 flex-1 ${
-                  isActive ? 'text-[var(--accent)]' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                  isActive ? 'text-[var(--accent)]' : 'text-gray-400 hover:text-white'
                 }`}
               >
-                <Icon className={`h-5 w-5 transition-colors ${isActive ? 'text-[var(--accent)]' : ''}`} strokeWidth={1.9} />
+                <Icon className={`h-5 w-5 transition-colors ${isActive ? 'text-[var(--accent)]' : 'text-gray-400'}`} strokeWidth={1.9} />
                 <span className="truncate">{reportsItem.label}</span>
               </Link>
             )
@@ -107,10 +105,10 @@ export default function MobileNav() {
             aria-label="Show more navigation options"
             aria-expanded={showMore}
             className={`flex flex-col items-center justify-center gap-0.5 px-2 min-h-[48px] py-2 text-[10px] font-medium tracking-wide transition-colors min-w-0 flex-1 ${
-              isMoreActive ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'
+              isMoreActive ? 'text-[var(--accent)]' : 'text-gray-400 hover:text-white'
             }`}
           >
-            <div className={`h-5 w-5 flex items-center justify-center ${isMoreActive ? 'text-[var(--accent)]' : ''}`}>
+            <div className={`h-5 w-5 flex items-center justify-center ${isMoreActive ? 'text-[var(--accent)]' : 'text-gray-400'}`}>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.9}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
               </svg>

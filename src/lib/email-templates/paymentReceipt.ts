@@ -17,7 +17,7 @@ import {
 import { paymentReceiptText, PaymentReceiptTextArgs } from './text'
 import { formatCurrency, formatDate } from './utils'
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.duckdns.org'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space'
 
 export interface PaymentReceiptEmail {
   to: string

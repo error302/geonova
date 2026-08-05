@@ -2,7 +2,7 @@
  * CORS helper for API routes.
  *
  * Supported origins:
- * - Hardcoded production origins (metardu.duckdns.org)
+ * - Hardcoded production origins (metardu.space)
  * - Environment variable CORS_ALLOWED_ORIGINS (comma-separated)
  * - Ionic/Capacitor: ionic://localhost, capacitor://localhost
  * - Playwright E2E testing: http://localhost:3099
@@ -16,7 +16,7 @@ import { NextResponse } from 'next/server'
 
 /** Hardcoded production origins */
 const PRODUCTION_ORIGINS = [
-  'https://metardu.duckdns.org',
+  'https://metardu.space',
   'capacitor://localhost',
   'ionic://localhost',
 ]

@@ -16,7 +16,7 @@ import {
 } from './components'
 import { projectSharedText, ProjectSharedTextArgs } from './text'
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.duckdns.org'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space'
 
 export interface ProjectSharedEmail {
   to: string

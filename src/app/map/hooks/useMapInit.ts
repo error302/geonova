@@ -19,9 +19,11 @@
  * - Tile cache size set to 2048 for better caching
  */
 
-import { useEffect, useRef } from 'react'
-import type { BasemapMode } from '@/hooks/useMapTypes'
+import { useEffect } from 'react'
 import type { MapCleanupRefs } from '@/lib/map/olTypes'
+import type OLMapType from 'ol/Map'
+import type { SelectEvent } from 'ol/interaction/Select'
+import type { DragAndDropEvent } from 'ol/interaction/DragAndDrop'
 
 interface UseMapInitParams {
   mapRef: React.RefObject<HTMLDivElement | null>
@@ -64,9 +66,30 @@ export function useMapInit(params: UseMapInitParams) {
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return
 
-    let map: any = null
+    let map: OLMapType | null = null
     let cancelled = false
-    const olModules: any = {}
+    const olModules: {
+      VectorSource?: typeof import('ol/source/Vector').default
+      VectorLayer?: typeof import('ol/layer/Vector').default
+      Feature?: typeof import('ol/Feature').default
+      Point?: typeof import('ol/geom/Point').default
+      Polygon?: typeof import('ol/geom/Polygon').default
+      LineString?: typeof import('ol/geom/LineString').default
+      CircleGeom?: typeof import('ol/geom/Circle').default
+      Style?: typeof import('ol/style/Style').default
+      Fill?: typeof import('ol/style/Fill').default
+      Stroke?: typeof import('ol/style/Stroke').default
+      CircleStyle?: typeof import('ol/style/Circle').default
+      Text?: typeof import('ol/style/Text').default
+      proj?: typeof import('ol/proj')
+      Draw?: typeof import('ol/interaction/Draw').default
+      Modify?: typeof import('ol/interaction/Modify').default
+      Snap?: typeof import('ol/interaction/Snap').default
+      TileLayer?: typeof import('ol/layer/Tile').default
+      OSM?: typeof import('ol/source/OSM').default
+      XYZ?: typeof import('ol/source/XYZ').default
+      Cluster?: typeof import('ol/source/Cluster').default
+    } = {}
 
     async function initMap() {
       try {
@@ -120,11 +143,30 @@ export function useMapInit(params: UseMapInitParams) {
         const [projModule] = await Promise.all([import('ol/proj')])
         const proj = projModule as typeof import('ol/proj')
 
-        const [Map, View, TileLayer, VectorLayer, LayerGroup, OSM, XYZ, VectorSource,
+        const [Map, View, TileLayer, VectorLayer, _LayerGroup, OSM, XYZ, VectorSource,
           Cluster, Feature, Point, Polygon, CircleGeom, LineString, Style, Fill, Stroke,
-          CircleStyle, Text, Icon, ScaleLine, Attribution, MousePosition,
+          CircleStyle, Text, _Icon, ScaleLine, Attribution, MousePosition,
           Draw, Select, Snap, Modify, DragAndDrop, DragRotate, PinchRotate, Overlay, Geolocation,
-          GeoJSONFormat, KMLFormat, WKTFormat] = imports.map(i => ('default' in i ? i.default : i)) as any[]
+          GeoJSONFormat, KMLFormat, WKTFormat] = imports.map(i => ('default' in i ? i.default : i)) as [
+          typeof import('ol/Map').default, typeof import('ol/View').default,
+          typeof import('ol/layer/Tile').default, typeof import('ol/layer/Vector').default,
+          typeof import('ol/layer/Group').default, typeof import('ol/source/OSM').default,
+          typeof import('ol/source/XYZ').default, typeof import('ol/source/Vector').default,
+          typeof import('ol/source/Cluster').default, typeof import('ol/Feature').default,
+          typeof import('ol/geom/Point').default, typeof import('ol/geom/Polygon').default,
+          typeof import('ol/geom/Circle').default, typeof import('ol/geom/LineString').default,
+          typeof import('ol/style/Style').default, typeof import('ol/style/Fill').default,
+          typeof import('ol/style/Stroke').default, typeof import('ol/style/Circle').default,
+          typeof import('ol/style/Text').default, typeof import('ol/style/Icon').default,
+          typeof import('ol/control/ScaleLine').default, typeof import('ol/control/Attribution').default,
+          typeof import('ol/control/MousePosition').default,
+          typeof import('ol/interaction/Draw').default, typeof import('ol/interaction/Select').default,
+          typeof import('ol/interaction/Snap').default, typeof import('ol/interaction/Modify').default,
+          typeof import('ol/interaction/DragAndDrop').default, typeof import('ol/interaction/DragRotate').default,
+          typeof import('ol/interaction/PinchRotate').default, typeof import('ol/Overlay').default,
+          typeof import('ol/Geolocation').default, typeof import('ol/format/GeoJSON').default,
+          typeof import('ol/format/KML').default, typeof import('ol/format/WKT').default
+        ]
 
         olModules.VectorSource = VectorSource
         olModules.VectorLayer = VectorLayer
@@ -162,11 +204,11 @@ export function useMapInit(params: UseMapInitParams) {
         const drawLayer = new VectorLayer({
           source: drawSource,
           // Use a style function that adapts to feature type + zoom
-          style: (feature: any, resolution: number) => {
+          style: (feature: import('ol/Feature').FeatureLike, resolution: number) => {
             // For drawn features, use the enhanced SoK style
             const geomType = feature.getGeometry()?.getType()
             if (geomType === 'Polygon') {
-              return getStyleForFeature(feature, resolution)
+              return getStyleForFeature(feature as InstanceType<typeof Feature>, resolution)
             }
             // Default style for points/lines being drawn
             return new Style({
@@ -202,8 +244,8 @@ export function useMapInit(params: UseMapInitParams) {
         })
         const clusterLayer = new VectorLayer({
           source: clusterSource,
-          style: (feature: any) => {
-            const size = feature.get('features')?.length || 1
+          style: (feature: import('ol/Feature').FeatureLike) => {
+            const size = (feature.get('features') as unknown[] | undefined)?.length || 1
             return new Style({
               image: new CircleStyle({
                 radius: size > 1 ? 12 + Math.min(size * 2, 20) : 8,
@@ -227,11 +269,19 @@ export function useMapInit(params: UseMapInitParams) {
           const { data: { session } } = await dbClient.auth.getSession()
 
           if (session?.user) {
-            const { data } = await dbClient
+            const { data } = (await dbClient
               .from('projects')
               .select('id, name, location, utm_zone, hemisphere, survey_type, boundary_data')
               .eq('user_id', session.user.id)
-              .order('created_at', { ascending: false })
+              .order('created_at', { ascending: false })) as { data: Array<{
+                id: string | number
+                name: string
+                location?: string | null
+                utm_zone?: number | null
+                hemisphere?: string | null
+                survey_type?: string | null
+                boundary_data?: { adjustedStations?: Array<{ easting?: string | number; E?: string | number; e?: string | number; northing?: string | number; N?: string | number; n?: string | number }>; stations?: Array<{ easting?: string | number; E?: string | number; e?: string | number; northing?: string | number; N?: string | number; n?: string | number }> } | null
+              }> | null } | { data: null }
 
             const projects = data || []
             setProjectCount(projects.length)
@@ -243,7 +293,7 @@ export function useMapInit(params: UseMapInitParams) {
 
               const projCode = 'EPSG:21037'
               const validCoords = adjustedStations
-                .map((s: any) => [parseFloat(s.easting || s.E || s.e), parseFloat(s.northing || s.N || s.n)])
+                .map((s) => [parseFloat(String(s.easting || s.E || s.e)), parseFloat(String(s.northing || s.N || s.n))])
                 .filter((c: number[]) => !isNaN(c[0]) && !isNaN(c[1]))
 
               if (validCoords.length === 0) continue
@@ -305,8 +355,8 @@ export function useMapInit(params: UseMapInitParams) {
             new ScaleLine({ units: 'metric' }),
             new Attribution({ collapsible: true }),
             new MousePosition({
-              coordinateFormat: (coord: number[]) => {
-                if (coord[0] == null || coord[1] == null || isNaN(coord[0]) || isNaN(coord[1])) return ''
+              coordinateFormat: (coord?: import('ol/coordinate').Coordinate) => {
+                if (!coord || coord[0] == null || coord[1] == null || isNaN(coord[0]) || isNaN(coord[1])) return ''
                 try {
                   const utmEpsg = params.currentUtmEpsg || 'EPSG:21037'
                   // T1.5b FIX (2026-07-10): Transform to BOTH geographic (EPSG:4326) and
@@ -344,6 +394,7 @@ export function useMapInit(params: UseMapInitParams) {
         })
 
         mapInstance.current = map
+        const mapNonNull = map
 
         // Restore saved map view state
         try {
@@ -386,7 +437,7 @@ export function useMapInit(params: UseMapInitParams) {
         selectInteractionRef.current = select
         map.addInteraction(select)
 
-        select.on('select', (evt: any) => {
+        select.on('select', (evt: SelectEvent) => {
           const selected = evt.selected
           if (selected.length > 0) {
             const feature = selected[0]
@@ -395,16 +446,16 @@ export function useMapInit(params: UseMapInitParams) {
             const geomType = geometry?.getType?.() || 'unknown'
             const props = feature.getProperties()
 
-            const clusterFeatures = feature.get('features')
+            const clusterFeatures = feature.get('features') as InstanceType<typeof Feature>[] | undefined
             if (clusterFeatures && clusterFeatures.length > 1) {
               const extent = feature.getGeometry()?.getExtent()
-              if (extent) map.getView().fit(extent, { padding: [100, 100, 100, 100], duration: 500, maxZoom: 15 })
+              if (extent) mapNonNull.getView().fit(extent, { padding: [100, 100, 100, 100], duration: 500, maxZoom: 15 })
               return
             }
 
-            const projectName = props.projectName || (clusterFeatures?.[0]?.get?.('projectName')) || ''
-            const stationName = props.stationName || props.label || props.name || ''
-            const projectId = props.projectId || (clusterFeatures?.[0]?.get?.('projectId')) || ''
+            const projectName = (props.projectName as string | undefined) || (clusterFeatures?.[0]?.get?.('projectName') as string | undefined) || ''
+            const stationName = (props.stationName as string | undefined) || (props.label as string | undefined) || (props.name as string | undefined) || ''
+            const projectId = (props.projectId as string | undefined) || (clusterFeatures?.[0]?.get?.('projectId') as string | undefined) || ''
 
             setSelectedFeature(feature)
             setFeatureName(stationName || projectName || geomType)
@@ -427,8 +478,6 @@ export function useMapInit(params: UseMapInitParams) {
         })
 
         // ── Snap interaction — snaps to drawn features AND scheme parcels/beacons ──
-        // Collect all vector sources for snapping (draw + scheme parcel + scheme beacon)
-        const snapSources: any[] = [drawSource]
         // Scheme layers are added later by MapClient; we use a dynamic approach:
         // The Snap interaction can be reconfigured when scheme layers load.
         // For now, snap to the draw source. MapClient will add scheme sources via
@@ -437,11 +486,11 @@ export function useMapInit(params: UseMapInitParams) {
         map.addInteraction(snap)
 
         // Store snap reference on the map for later source addition
-        ;(map as any)._snapInteraction = snap
+        ;(map as OLMapType & { _snapInteraction?: InstanceType<typeof Snap> })._snapInteraction = snap
 
         // ── DragRotate interaction (Alt + drag to rotate map) ──
         const dragRotate = new DragRotate({
-          condition: (mapBrowserEvent: any) => {
+          condition: (mapBrowserEvent) => {
             // Alt key (or Option on Mac) must be held
             const altKey = mapBrowserEvent.originalEvent?.altKey
             return !!altKey
@@ -461,16 +510,16 @@ export function useMapInit(params: UseMapInitParams) {
 
         // ── Drag & Drop ──
         const dragAndDrop = new DragAndDrop({
-          formatConstructors: [GeoJSONFormat, KMLFormat, WKTFormat],
+          formatConstructors: [GeoJSONFormat, KMLFormat, WKTFormat] as unknown as import('ol/format/Feature').default[],
         })
-        dragAndDrop.on('addfeatures', (evt: any) => {
+        dragAndDrop.on('addfeatures', (evt: DragAndDropEvent) => {
           const features = evt.features
           if (features && features.length > 0) {
-            drawSource.addFeatures(features)
+            drawSource.addFeatures(features as InstanceType<typeof Feature>[])
             setFeatureCount(drawSource.getFeatures().length)
             const extent = drawSource.getExtent()
-            if (extent[0] !== Infinity) {
-              map.getView().fit(extent, { padding: [80, 80, 80, 80], maxZoom: 18, duration: 500 })
+            if (extent && extent[0] !== Infinity) {
+              mapNonNull.getView().fit(extent, { padding: [80, 80, 80, 80], maxZoom: 18, duration: 500 })
             }
             setImportMsg(`Imported ${features.length} feature(s)`)
             setTimeout(() => setImportMsg(''), 3000)
@@ -491,7 +540,7 @@ export function useMapInit(params: UseMapInitParams) {
         if (projectSource.getFeatures().length > 0) {
           try {
             const extent = projectSource.getExtent()
-            if (extent[0] !== Infinity) {
+            if (extent && extent[0] !== Infinity) {
               map.getView().fit(extent, { padding: [80, 80, 80, 80], maxZoom: 18 })
             }
           } catch { /* keep default */ }
@@ -500,7 +549,7 @@ export function useMapInit(params: UseMapInitParams) {
         // Auto-load specific project from URL param
         const projectIdParam = searchParams.get('projectId')
         if (projectIdParam) {
-          const projectFeature = projectSource.getFeatures().find((f: any) => f.get('projectId') === projectIdParam)
+          const projectFeature = projectSource.getFeatures().find((f) => f.get('projectId') === projectIdParam)
           if (projectFeature) {
             const extent = projectFeature.getGeometry()?.getExtent()
             if (extent && extent[0] !== Infinity) {
@@ -510,7 +559,7 @@ export function useMapInit(params: UseMapInitParams) {
         }
 
         // Store cleanup refs in dedicated ref (not on map object)
-        cleanupRef.current = { geolocation, snap, dragAndDrop }
+        cleanupRef.current = { geolocation, snap, dragAndDrop } as unknown as MapCleanupRefs
 
         if (!cancelled) setMapReady(true)
       } catch (err: unknown) {

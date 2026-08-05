@@ -70,7 +70,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export function PWAInstallBanner() {
-  const { t } = useLanguage()
+  const { t, hydrated } = useLanguage()
   const [visible, setVisible] = useState(false)
   const [platform, setPlatform] = useState<Platform>('unsupported')
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
@@ -120,7 +120,7 @@ export function PWAInstallBanner() {
     setDeferredPrompt(null)
   }
 
-  if (!visible) return null
+  if (!visible || !hydrated) return null
 
   return (
     <>

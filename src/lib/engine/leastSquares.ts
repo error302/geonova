@@ -176,7 +176,7 @@ function matVecMul(A: number[][], v: number[]) {
   return out
 }
 
-function gaussianSolve(A: number[][], b: number[]) {
+function gaussianSolve(A: number[][], b: number[]): number[] {
   const n = A.length
   const M = A.map((row, i) => [...row, b[i]])
 
@@ -210,10 +210,10 @@ function gaussianSolve(A: number[][], b: number[]) {
     }
   }
 
-  return M.map((row: any) => row[n])
+  return M.map((row: number[]) => row[n])
 }
 
-function invertMatrix(A: number[][]) {
+function invertMatrix(A: number[][]): number[][] {
   const n = A.length
   const I = zeros(n, n)
   for (let i = 0; i < n; i++) I[i][i] = 1
@@ -221,7 +221,7 @@ function invertMatrix(A: number[][]) {
   // Solve A * X = I column-by-column
   const inv = zeros(n, n)
   for (let col = 0; col < n; col++) {
-    const e = I.map((row: any) => row[col])
+    const e = I.map((row: number[]) => row[col])
     const x = gaussianSolve(A.map((r) => [...r]), [...e])
     for (let i = 0; i < n; i++) inv[i][col] = x[i]
   }

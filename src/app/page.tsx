@@ -1,13 +1,11 @@
-'use client'
-
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
 import {
   Waypoints, FileBadge, Mountain, DraftingCompass,
   Satellite, FileChartColumn, MapPinned, Calculator,
   ShieldCheck, ChevronDown,
 } from 'lucide-react'
+import { PricingSection } from '@/components/landing/PricingSection'
 
 /* ────────────────────────────────────────────────────────────── */
 /*  Data                                                          */
@@ -93,42 +91,6 @@ const TOOLS = [
   { icon: ShieldCheck, title: 'Validation', description: 'NLIMS pre-flight checks' },
 ]
 
-const PRICING = [
-  {
-    tier: 'Free',
-    description: 'For students & occasional use',
-    priceMonthly: 0,
-    priceAnnual: 0,
-    period: '/month',
-    features: ['All quick calculation tools', '1 survey project', 'Up to 50 survey points', 'Basic PDF report', 'CSV import', 'Offline calculations'],
-    cta: 'Start Free',
-    href: '/register',
-    highlighted: false,
-  },
-  {
-    tier: 'Pro',
-    description: 'For licensed surveyors',
-    priceMonthly: 500,
-    priceAnnual: 5000,
-    period: '/month',
-    features: ['Everything in Free', 'Unlimited projects', 'Unlimited survey points', 'GNSS baseline processing', 'Deed plan generation', 'NLIMS exports', 'Priority support'],
-    cta: 'Start Pro',
-    href: '/checkout?plan=pro',
-    highlighted: true,
-  },
-  {
-    tier: 'Team',
-    description: 'For surveying firms',
-    priceMonthly: 2000,
-    priceAnnual: 20000,
-    period: '/month',
-    features: ['Everything in Pro', '5 team members', 'Real-time collaboration', 'Role-based access', 'Audit trail', 'Branded reports'],
-    cta: 'Start Team',
-    href: '/checkout?plan=team',
-    highlighted: false,
-  },
-]
-
 const FAQS = [
   {
     q: 'Does METARDU work offline?',
@@ -161,17 +123,13 @@ const FAQS = [
 /* ────────────────────────────────────────────────────────────── */
 
 export default function LandingPage() {
-  const [annual, setAnnual] = useState(false)
-
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-x-hidden">
       <HeroSection />
-      <TrustStrip />
-      <StatsBar />
       <FeaturesSection />
       <WorkflowSection />
       <ToolsSection />
-      <PricingSection annual={annual} onToggleAnnual={setAnnual} />
+      <PricingSection />
       <FAQSection />
       <script
         type="application/ld+json"
@@ -186,7 +144,7 @@ export default function LandingPage() {
               '@type': 'Offer',
               price: '500',
               priceCurrency: 'KES',
-              url: 'https://metardu.duckdns.org/checkout?plan=pro',
+              url: 'https://metardu.space/checkout?plan=pro',
             },
             areaServed: 'KE',
             knowsAbout: ['Survey Act Cap. 299', 'RDM 1.1', 'NLIMS', 'ArdhiSasa', 'EPSG:21037'],
@@ -209,12 +167,12 @@ function HeroSection() {
     >
       <div className="absolute inset-0">
         <Image
-          src="/landing/hero-topo.jpg"
-          alt=""
+          src="/landing/hero-topo.webp"
+          alt="METARDU Topographic Surveying Platform"
           fill
           priority
-          sizes="100vw"
-          quality={75}
+          sizes="(max-width: 768px) 100vw, 1920px"
+          quality={80}
           className="object-cover"
           style={{ filter: 'brightness(0.35) contrast(1.1)' }}
         />
@@ -224,10 +182,6 @@ function HeroSection() {
       <div className="relative z-10 flex-1 flex items-center pt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 lg:py-20 w-full">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--bg-tertiary)] border border-[var(--border-color)] mb-6">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs text-[var(--text-primary)]/70 font-mono tracking-wide">Survey Act Cap 299 compliant · Ready for production</span>
-            </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6">
               Surveying software
@@ -266,49 +220,7 @@ function HeroSection() {
   )
 }
 
-/* ============================================================= */
-/*  TRUST STRIP                                                  */
-/* ============================================================= */
 
-function TrustStrip() {
-  return (
-    <section aria-label="Regulatory compliance" className="border-b border-[var(--border-color)] bg-[var(--bg-secondary)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6">
-        <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center">
-          {TRUST_BADGES.map((badge, i) => (
-            <li key={i} className="flex flex-col items-center">
-              <span className="text-sm font-bold text-[var(--text-primary)]/85 tracking-wider">{badge.label}</span>
-              <span className="text-[10px] uppercase tracking-wider text-[var(--text-primary)]/65">{badge.sublabel}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  )
-}
-
-/* ============================================================= */
-/*  STATS BAR                                                    */
-/* ============================================================= */
-
-function StatsBar() {
-  return (
-    <section aria-label="Key facts" className="border-b border-[var(--border-color)] bg-[var(--bg-secondary)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
-        {STATS.map((stat, i) => (
-          <div key={i} className="text-center">
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[var(--text-primary)]">
-              {stat.value}{stat.suffix}
-            </div>
-            <div className="text-xs text-[var(--text-primary)]/65 mt-2 uppercase tracking-widest">
-              {stat.label}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  )
-}
 
 /* ============================================================= */
 /*  FEATURES                                                     */
@@ -316,8 +228,21 @@ function StatsBar() {
 
 function FeaturesSection() {
   return (
-    <section id="features" aria-labelledby="features-heading" className="py-32 md:py-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+    <section id="features" aria-labelledby="features-heading" className="relative py-32 md:py-40 overflow-hidden">
+      {/* Theodolite blueprint — bottom-anchored, blends with dark theme */}
+      <div className="absolute inset-0 pointer-events-none select-none" aria-hidden>
+        <Image
+          src="/landing/theodolite-blueprint.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+          style={{ opacity: 0.18, mixBlendMode: 'screen', filter: 'contrast(1.2) brightness(0.9)' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)] via-[var(--bg-primary)]/40 to-[var(--bg-primary)]" />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="text-center mb-16">
           <p className="text-[var(--accent)] text-sm font-semibold uppercase tracking-widest mb-4">
             Feature Suite
@@ -339,7 +264,7 @@ function FeaturesSection() {
             return (
               <li
                 key={i}
-                className="group p-8 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-[var(--accent)]/40 transition-all duration-300 hover:-translate-y-1"
+                className="group p-8 rounded-2xl bg-[var(--bg-secondary)]/80 backdrop-blur-sm border border-[var(--border-color)] hover:border-[var(--accent)]/40 transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="w-12 h-12 rounded-xl bg-[var(--accent)]/10 flex items-center justify-center mb-5 group-hover:bg-[var(--accent)]/20 transition-colors">
                   <Icon className="w-6 h-6 text-[var(--accent)]" aria-hidden />
@@ -443,129 +368,7 @@ function ToolsSection() {
 /*  PRICING                                                      */
 /* ============================================================= */
 
-function MPesaBadge() {
-  return (
-    <span
-      className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded bg-emerald-600 text-white uppercase tracking-wider"
-      title="Pay with M-Pesa"
-    >
-      M-Pesa
-    </span>
-  )
-}
 
-function PricingSection({ annual, onToggleAnnual }: { annual: boolean; onToggleAnnual: (v: boolean) => void }) {
-  return (
-    <section aria-labelledby="pricing-heading" className="py-32 md:py-40 bg-[var(--bg-secondary)] border-t border-[var(--border-color)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-        <div className="text-center mb-10">
-          <p className="text-[var(--accent)] text-sm font-semibold uppercase tracking-widest mb-4">
-            Pricing
-          </p>
-          <h2 id="pricing-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            Start free,{' '}
-            <span className="text-[var(--accent)]">scale as you grow</span>
-          </h2>
-          <p className="max-w-xl mx-auto text-[var(--text-primary)]/70 text-base lg:text-lg">
-            No hidden fees. Pay via M-Pesa, card, or PayPal.
-          </p>
-        </div>
-
-        {/* Billing interval toggle */}
-        <div className="flex justify-center mb-12">
-          <div
-            role="radiogroup"
-            aria-label="Billing interval"
-            className="inline-flex items-center bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-full p-1"
-          >
-            <button
-              type="button"
-              onClick={() => onToggleAnnual(false)}
-              className={`px-4 py-2 text-sm rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-[var(--accent)] ${
-                !annual ? 'bg-[var(--accent)] text-black font-semibold' : 'text-[var(--text-primary)]/70'
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              type="button"
-              onClick={() => onToggleAnnual(true)}
-              className={`px-4 py-2 text-sm rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-[var(--accent)] ${
-                annual ? 'bg-[var(--accent)] text-black font-semibold' : 'text-[var(--text-primary)]/70'
-              }`}
-            >
-              Annual <span className="text-xs opacity-80">· 2 months free</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-start max-w-5xl mx-auto">
-          {PRICING.map((plan, i) => {
-            const price = annual ? plan.priceAnnual : plan.priceMonthly
-            const periodLabel = annual ? '/year' : plan.period
-            return (
-              <div
-                key={i}
-                className={`relative p-8 rounded-2xl border transition-all ${
-                  plan.highlighted
-                    ? 'border-[var(--accent)]/50 bg-[var(--bg-primary)] shadow-[0_0_60px_-15px_rgba(209,123,71,0.2)] scale-[1.02]'
-                    : 'border-[var(--border-color)] bg-[var(--bg-primary)] hover:border-[var(--accent)]/40'
-                }`}
-              >
-                {plan.highlighted && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-[var(--accent)] text-black text-xs font-bold rounded-full uppercase tracking-wider">
-                    Most Popular
-                  </div>
-                )}
-
-                <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1">{plan.tier}</h3>
-                <p className="text-sm text-[var(--text-primary)]/70 mb-4">{plan.description}</p>
-                <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-4xl font-bold text-[var(--text-primary)]">
-                    KSh {price.toLocaleString()}
-                  </span>
-                  <span className="text-[var(--text-primary)]/70 text-sm">{periodLabel}</span>
-                </div>
-                <div className="mb-6">
-                  <MPesaBadge />
-                </div>
-
-                <ul className="space-y-3 mb-8 list-none p-0">
-                  {plan.features.map((feature, j) => (
-                    <li key={j} className="flex items-start gap-3 text-sm text-[var(--text-primary)]/85">
-                      <span className="mt-0.5 text-[var(--accent)]" aria-hidden>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M20 6 9 17l-5-5" />
-                        </svg>
-                      </span>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  href={plan.href}
-                  className={`block text-center py-3.5 min-h-[44px] rounded-xl font-semibold text-sm transition-all no-underline focus-visible:outline-2 focus-visible:outline-[var(--accent)] ${
-                    plan.highlighted
-                      ? 'bg-[var(--accent)] text-black hover:bg-[var(--accent-dim)]'
-                      : 'bg-[var(--bg-tertiary)] text-[var(--text-primary)] border border-[var(--border-color)] hover:bg-[var(--bg-tertiary)]'
-                  }`}
-                >
-                  {plan.cta}
-                </Link>
-              </div>
-            )
-          })}
-        </div>
-
-        <p className="text-center text-xs text-[var(--text-primary)]/65 mt-8">
-          Need 20+ seats, a white-label license, or on-premise deployment?{' '}
-          <Link href="/enterprise" className="text-[var(--accent)] no-underline hover:underline">Talk to us about Firm & Enterprise tiers.</Link>
-        </p>
-      </div>
-    </section>
-  )
-}
 
 /* ============================================================= */
 /*  FAQ                                                          */

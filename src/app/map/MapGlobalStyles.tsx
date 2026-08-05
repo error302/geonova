@@ -145,10 +145,16 @@ export default function MapGlobalStyles() {
         }
       }
 
-      /* ── Terrain tile loading indicator ── */
-      .ol-layer-loading {
-        opacity: 0.7;
-        transition: opacity 0.3s ease;
+      /* ── Slide in animation ── */
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
     `
     document.head.appendChild(style)

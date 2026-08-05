@@ -45,7 +45,7 @@ export default function GCPExportPage() {
     if (!selectedProject) { setPoints([]); return }
     setLoading(true)
     const dbClient = createClient()
-    const project = projects.find((p: any) => p.id === selectedProject)
+    const project = projects.find((p) => p.id === selectedProject)
     dbClient.from('survey_points').select('*')
       .eq('project_id', selectedProject)
       .eq('is_control', true)
@@ -76,7 +76,7 @@ export default function GCPExportPage() {
     } catch { setPreview('Error generating preview') }
   }, [points, selectedPoints, format])
 
-  const project = projects.find((p: any) => p.id === selectedProject)
+  const project = projects.find((p) => p.id === selectedProject)
   const selectedPts = points.filter((p: any) => selectedPoints.has(p.name))
 
   const handleExport = () => {

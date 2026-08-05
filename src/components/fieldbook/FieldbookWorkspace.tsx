@@ -35,9 +35,56 @@ import { bearingToString } from '@/lib/engine/angles';
 
 export type FieldbookType = 'leveling' | 'traverse' | 'control' | 'hydrographic' | 'mining';
 
+interface LiveReadingRow {
+  station: string
+  bs?: number | null
+  is?: number | null
+  fs?: number | null
+  rise?: number | null
+  fall?: number | null
+  reducedLevel?: number | null
+}
+interface LiveLegRow {
+  to: string
+  from?: string
+  easting?: number
+  northing?: number
+  adjEasting?: number
+  adjNorthing?: number
+  bearingDMS?: string
+}
+interface LiveComputedRow {
+  pointId?: string
+  soundingId?: string
+  bearingNum?: number
+  depth?: number
+  corrected?: number
+  computed?: { easting: number; northing: number; elevation?: number | null }
+}
+interface LiveComputed {
+  ok: boolean
+  errors?: string[]
+  mode?: 'open' | 'closed'
+  raw?: { legs: LiveLegRow[] }
+  adjusted?: {
+    legs: LiveLegRow[]
+    linearError: number
+    totalDistance: number
+    closingErrorE: number
+    closingErrorN: number
+  }
+  calc?: {
+    readings: LiveReadingRow[]
+    misclosure?: number
+    allowableMisclosure?: number
+    arithmeticCheck?: boolean
+  }
+  rows?: LiveComputedRow[]
+}
+
 interface LiveComputationPanelProps {
   surveyType: FieldbookType;
-  computed: any;
+  computed: LiveComputed;
   rows: Array<{ id: string; [key: string]: string }>;
   stationInfo?: { name: string; e: string; n: string; z: string };
 }
@@ -53,7 +100,7 @@ interface FieldbookWorkspaceProps {
   surveyType: FieldbookType;
 
   /** Computed results from the page */
-  computed: any;
+  computed: LiveComputed;
 
   /** Current rows */
   rows: Array<{ id: string; [key: string]: string }>;
@@ -71,7 +118,7 @@ function fmt(val: number | undefined | null, decimals = 4): string {
 
 // ─── Live Computation Panel Sections ────────────────────────────────────
 
-function LevelingLivePanel({ computed }: { computed: any }) {
+function LevelingLivePanel({ computed }: { computed: LiveComputed }) {
   if (!computed?.ok) {
     return (
       <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-lg text-xs text-red-400">
@@ -88,7 +135,7 @@ function LevelingLivePanel({ computed }: { computed: any }) {
 
   const calc = computed.calc;
   const lastReading = calc?.readings?.[calc.readings.length - 1];
-  const setups = calc?.readings?.filter((r: any) => r.station !== 'BM').length ?? 0;
+  const setups = calc?.readings?.filter((r: LiveReadingRow) => r.station !== 'BM').length ?? 0;
 
   return (
     <div className="space-y-3">
@@ -138,19 +185,19 @@ function LevelingLivePanel({ computed }: { computed: any }) {
       </div>
 
       {/* RL History Mini-Chart */}
-      {calc?.readings?.length > 1 && (
+      {calc && calc.readings.length > 1 && (
         <div className="p-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
           <div className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold mb-2">
             RL Profile
           </div>
           <div className="flex items-end gap-0.5 h-16">
             {calc.readings
-              .filter((r: any) => r.station !== 'BM')
-              .map((r: any, i: number) => {
+              .filter((r: LiveReadingRow) => r.station !== 'BM')
+              .map((r: LiveReadingRow, i: number) => {
                 const rl = r.reducedLevel ?? 0;
                 const allRLs = calc.readings
-                  .filter((rr: any) => rr.station !== 'BM')
-                  .map((rr: any) => rr.reducedLevel ?? 0);
+                  .filter((rr: LiveReadingRow) => rr.station !== 'BM')
+                  .map((rr: LiveReadingRow) => rr.reducedLevel ?? 0);
                 const min = Math.min(...allRLs);
                 const max = Math.max(...allRLs);
                 const range = max - min || 1;
@@ -171,7 +218,7 @@ function LevelingLivePanel({ computed }: { computed: any }) {
   );
 }
 
-function TraverseLivePanel({ computed }: { computed: any }) {
+function TraverseLivePanel({ computed }: { computed: LiveComputed }) {
   if (!computed?.ok) {
     return (
       <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-lg text-xs text-red-400">
@@ -266,13 +313,13 @@ function TraverseLivePanel({ computed }: { computed: any }) {
       )}
 
       {/* Coordinate table */}
-      {legs?.length > 0 && (
+      {legs && legs.length > 0 && (
         <div className="p-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
           <div className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold mb-2">
             All Points
           </div>
           <div className="max-h-48 overflow-y-auto custom-scrollbar space-y-1">
-            {legs.map((leg: any, i: number) => (
+            {legs.map((leg: LiveLegRow, i: number) => (
               <div key={i} className="flex items-center gap-2 text-[10px] py-1 border-b border-[var(--border-color)]/50 last:border-0">
                 <span className="w-16 text-[var(--text-primary)] font-semibold truncate">{leg.to || '—'}</span>
                 <span className="flex-1 font-mono text-[var(--accent)]">{fmt(leg.easting ?? leg.adjEasting)}</span>
@@ -286,7 +333,7 @@ function TraverseLivePanel({ computed }: { computed: any }) {
   );
 }
 
-function ControlLivePanel({ computed, stationInfo }: { computed: any; stationInfo?: { name: string; e: string; n: string; z: string } }) {
+function ControlLivePanel({ computed, stationInfo }: { computed: LiveComputed; stationInfo?: { name: string; e: string; n: string; z: string } }) {
   if (!computed?.ok) {
     return (
       <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-lg text-xs text-red-400">
@@ -327,7 +374,7 @@ function ControlLivePanel({ computed, stationInfo }: { computed: any; stationInf
           Radiated Points
         </div>
         <div className="max-h-64 overflow-y-auto custom-scrollbar space-y-2">
-          {computed.rows?.map((row: any, i: number) => (
+          {computed.rows?.map((row: LiveComputedRow, i: number) => (
             <div
               key={i}
               className="p-2 rounded-lg bg-[var(--bg-primary)]/50 border border-[var(--border-color)]/50"
@@ -366,7 +413,7 @@ function ControlLivePanel({ computed, stationInfo }: { computed: any; stationInf
   );
 }
 
-function HydroLivePanel({ computed }: { computed: any }) {
+function HydroLivePanel({ computed }: { computed: LiveComputed }) {
   if (!computed?.ok) {
     return (
       <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-lg text-xs text-red-400">
@@ -393,7 +440,7 @@ function HydroLivePanel({ computed }: { computed: any }) {
           Reduced Depths (Tide Corrected)
         </div>
         <div className="max-h-64 overflow-y-auto custom-scrollbar space-y-1">
-          {computed.rows?.map((row: any, i: number) => (
+          {computed.rows?.map((row: LiveComputedRow, i: number) => (
             <div key={i} className="flex items-center justify-between text-xs py-1 border-b border-[var(--border-color)]/50 last:border-0">
               <span className="text-[var(--text-primary)] font-semibold">{row.soundingId || `S${i + 1}`}</span>
               <div className="flex items-center gap-3">
@@ -410,7 +457,7 @@ function HydroLivePanel({ computed }: { computed: any }) {
   );
 }
 
-function MiningLivePanel({ computed, stationInfo }: { computed: any; stationInfo?: { name: string; e: string; n: string; z: string } }) {
+function MiningLivePanel({ computed, stationInfo }: { computed: LiveComputed; stationInfo?: { name: string; e: string; n: string; z: string } }) {
   if (!computed?.ok) {
     return (
       <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-lg text-xs text-red-400">
@@ -449,7 +496,7 @@ function MiningLivePanel({ computed, stationInfo }: { computed: any; stationInfo
           Computed Points
         </div>
         <div className="max-h-64 overflow-y-auto custom-scrollbar space-y-2">
-          {computed.rows?.map((row: any, i: number) => (
+          {computed.rows?.map((row: LiveComputedRow, i: number) => (
             <div
               key={i}
               className="p-2 rounded-lg bg-[var(--bg-primary)]/50 border border-[var(--border-color)]/50"

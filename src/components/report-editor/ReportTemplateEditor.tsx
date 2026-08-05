@@ -686,7 +686,9 @@ function ElementRenderer({
       case 'logo':
         return (
           <div className="w-full h-full border-2 border-dashed border-gray-400 flex items-center justify-center bg-gray-50">
-            <Image className="w-4 h-4 text-gray-400" />
+            {/* lucide-react icon (decorative) — hidden from AT; rule targets next/image components */}
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+            <Image aria-hidden="true" className="w-4 h-4 text-gray-400" />
           </div>
         )
 

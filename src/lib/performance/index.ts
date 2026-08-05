@@ -27,7 +27,7 @@
  * const debouncedSearch = debounce((query) => fetchResults(query), 300)
  * input.addEventListener('input', (e) => debouncedSearch(e.target.value))
  */
-export function debounce<T extends (...args: any[]) => void>(
+export function debounce<T extends (...args: never[]) => void>(
   fn: T,
   delay: number = 300,
 ): (...args: Parameters<T>) => void {
@@ -46,19 +46,19 @@ export function debounce<T extends (...args: any[]) => void>(
  * const debouncedFetch = debounceAsync((q) => fetch(`/api/search?q=${q}`).then(r => r.json()), 300)
  * const results = await debouncedFetch(query)
  */
-export function debounceAsync<T extends (...args: any[]) => Promise<any>>(
+export function debounceAsync<T extends (...args: never[]) => Promise<unknown>>(
   fn: T,
   delay: number = 300,
 ): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>> {
   let timer: ReturnType<typeof setTimeout> | null = null
-  let resolveRef: ((value: any) => void) | null = null
+  let resolveRef: ((value: unknown) => void) | null = null
 
   return (...args: Parameters<T>) => {
     return new Promise((resolve) => {
       if (timer) clearTimeout(timer)
       if (resolveRef) resolveRef(undefined) // resolve previous with undefined
 
-      resolveRef = resolve
+      resolveRef = resolve as (value: unknown) => void
       timer = setTimeout(async () => {
         const result = await fn(...args)
         resolveRef?.(result)
@@ -80,7 +80,7 @@ export function debounceAsync<T extends (...args: any[]) => Promise<any>>(
  * @example
  * const throttledPan = throttle((coord) => updateMap(coord), 16) // 60fps
  */
-export function throttle<T extends (...args: any[]) => void>(
+export function throttle<T extends (...args: never[]) => void>(
   fn: T,
   limit: number = 16, // 16ms = 60fps
 ): (...args: Parameters<T>) => void {
@@ -111,7 +111,7 @@ export function throttle<T extends (...args: any[]) => void>(
  *
  * Use for: map cursor, drawing, canvas rendering.
  */
-export function rafThrottle<T extends (...args: any[]) => void>(
+export function rafThrottle<T extends (...args: never[]) => void>(
   fn: T,
 ): (...args: Parameters<T>) => void {
   let ticking = false
@@ -143,16 +143,16 @@ export function rafThrottle<T extends (...args: any[]) => void>(
  * memoizedArea(vertices) // computed
  * memoizedArea(vertices) // cached (same vertices reference)
  */
-export function memoize<T extends (...args: any[]) => any>(
+export function memoize<T extends (...args: never[]) => unknown>(
   fn: T,
   options?: {
     maxSize?: number       // max cache entries (default: 100)
     keyFn?: (...args: Parameters<T>) => string  // custom key function
   },
 ): T {
-  const cache = new Map<string, any>()
+  const cache = new Map<string, unknown>()
   const maxSize = options?.maxSize ?? 100
-  const keyFn = options?.keyFn ?? ((...args: any[]) => JSON.stringify(args))
+  const keyFn = options?.keyFn ?? ((...args: never[]) => JSON.stringify(args))
 
   const memoized = (...args: Parameters<T>) => {
     const key = keyFn(...args)
@@ -181,13 +181,13 @@ export function memoize<T extends (...args: any[]) => any>(
  *
  * Use for: API responses, coordinate transforms that might change.
  */
-export function memoizeTTL<T extends (...args: any[]) => any>(
+export function memoizeTTL<T extends (...args: never[]) => unknown>(
   fn: T,
   ttl: number = 60000, // 1 minute default
   keyFn?: (...args: Parameters<T>) => string,
 ): T {
-  const cache = new Map<string, { value: any; expires: number }>()
-  const getKey = keyFn ?? ((...args: any[]) => JSON.stringify(args))
+  const cache = new Map<string, { value: unknown; expires: number }>()
+  const getKey = keyFn ?? ((...args: never[]) => JSON.stringify(args))
 
   return ((...args: Parameters<T>) => {
     const key = getKey(...args)
@@ -446,7 +446,7 @@ export function useDebounceValue<T>(value: T, delay: number = 300): T {
 /**
  * useDebouncedCallback — React hook for debounced function calls.
  */
-export function useDebouncedCallback<T extends (...args: any[]) => void>(
+export function useDebouncedCallback<T extends (...args: never[]) => void>(
   callback: T,
   delay: number = 300,
 ): (...args: Parameters<T>) => void {
@@ -472,7 +472,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => void>(
 /**
  * useThrottledCallback — React hook for throttled function calls.
  */
-export function useThrottledCallback<T extends (...args: any[]) => void>(
+export function useThrottledCallback<T extends (...args: never[]) => void>(
   callback: T,
   limit: number = 16,
 ): (...args: Parameters<T>) => void {

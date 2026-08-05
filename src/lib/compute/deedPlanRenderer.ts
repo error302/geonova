@@ -58,11 +58,11 @@ export function renderDeedPlanSVG(
   const { boundaryPoints, scale, utmZone, hemisphere } = input
 
   // ---- Coordinate projection ----
-  const coords = boundaryPoints.map((p: any) => ({ x: p.easting, y: p.northing }))
-  const minX = Math.min(...coords.map((c: any) => c.x))
-  const maxX = Math.max(...coords.map((c: any) => c.x))
-  const minY = Math.min(...coords.map((c: any) => c.y))
-  const maxY = Math.max(...coords.map((c: any) => c.y))
+  const coords = boundaryPoints.map((p) => ({ x: p.easting, y: p.northing }))
+  const minX = Math.min(...coords.map((c) => c.x))
+  const maxX = Math.max(...coords.map((c) => c.x))
+  const minY = Math.min(...coords.map((c) => c.y))
+  const maxY = Math.max(...coords.map((c) => c.y))
 
   const rangeX = maxX - minX || 1
   const rangeY = maxY - minY || 1
@@ -82,7 +82,7 @@ export function renderDeedPlanSVG(
   const toY = (n: number) => effTop + effH / 2 - (n - cY) * plotScale
 
   // Polygon string
-  const poly = boundaryPoints.map((p: any) =>
+  const poly = boundaryPoints.map((p) =>
     `${toX(p.easting).toFixed(2)},${toY(p.northing).toFixed(2)}`
   ).join(' ')
 
@@ -484,8 +484,10 @@ function buildRightPanel(
   y += 9
   s += hr(le, y, re); y += 2
   for (const p of pts) {
-    const eVal = typeof (p as any).easting === 'number' ? (p as any).easting : 0
-    const nVal = typeof (p as any).northing === 'number' ? (p as any).northing : 0
+    const eRaw = (p as { easting?: number }).easting
+    const nRaw = (p as { northing?: number }).northing
+    const eVal = typeof eRaw === 'number' ? eRaw : 0
+    const nVal = typeof nRaw === 'number' ? nRaw : 0
     s += `<text x="${le+5}" y="${y}" class="tt">${p.id}</text>\n`
     s += `<text x="${le+30}" y="${y}" class="tt">${p.markType}</text>\n`
     s += `<text x="${le+100}" y="${y}" class="tt">${eVal.toFixed(4)}</text>\n`

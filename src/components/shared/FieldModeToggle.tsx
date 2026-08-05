@@ -246,6 +246,7 @@ export default function FieldModeToggle() {
                   onClick={toggleSensor}
                   role="switch"
                   aria-checked={sensorEnabled}
+                  aria-label="Auto-detect sunlight"
                   tabIndex={0}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSensor() } }}
                 >
@@ -256,7 +257,7 @@ export default function FieldModeToggle() {
                     `}
                   />
                 </div>
-                <span className="text-[11px] text-[var(--text-muted)] leading-tight">
+                <span className="text-[11px] text-gray-300 font-medium leading-tight">
                   {t('fieldMode.autoDetectSunlight')}
                 </span>
               </label>

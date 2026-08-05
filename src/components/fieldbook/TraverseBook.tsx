@@ -78,8 +78,8 @@ export function TraverseBook({
   setTravRows: Dispatch<SetStateAction<TravRow[]>>
   computed:
     | { ok: false; errors: string[] }
-    | { ok: true; mode: 'open'; raw: any }
-    | { ok: true; mode: 'closed' | 'link'; adjusted: any }
+    | { ok: true; mode: 'open'; raw: { legs: Array<{ deltaN: number; deltaE: number; easting: number; northing: number }> } }
+    | { ok: true; mode: 'closed' | 'link'; adjusted: { legs: Array<{ adjDeltaN: number; adjDeltaE: number; adjEasting: number; adjNorthing: number }>; closingErrorE: number; closingErrorN: number; linearError: number; totalDistance: number } }
 }) {
   const [edmOpen, setEdmOpen] = useState(false)
 
@@ -233,10 +233,10 @@ export function TraverseBook({
             <tbody>
               {travRows.map((r, idx) => {
                 const out = computed.ok ? (computed.mode === 'open' ? computed.raw.legs[idx] : computed.adjusted.legs[idx]) : null
-                const lat = out ? (computed.ok && computed.mode === 'open' ? (out as any).deltaN : (out as any).adjDeltaN) : null
-                const dep = out ? (computed.ok && computed.mode === 'open' ? (out as any).deltaE : (out as any).adjDeltaE) : null
-                const ee = out ? (computed.ok && computed.mode === 'open' ? (out as any).easting : (out as any).adjEasting) : null
-                const nn = out ? (computed.ok && computed.mode === 'open' ? (out as any).northing : (out as any).adjNorthing) : null
+                const lat = out ? (computed.ok && computed.mode === 'open' ? (out as { deltaN: number }).deltaN : (out as { adjDeltaN: number }).adjDeltaN) : null
+                const dep = out ? (computed.ok && computed.mode === 'open' ? (out as { deltaE: number }).deltaE : (out as { adjDeltaE: number }).adjDeltaE) : null
+                const ee = out ? (computed.ok && computed.mode === 'open' ? (out as { easting: number }).easting : (out as { adjEasting: number }).adjEasting) : null
+                const nn = out ? (computed.ok && computed.mode === 'open' ? (out as { northing: number }).northing : (out as { adjNorthing: number }).adjNorthing) : null
 
                 const meanStr = computeMeanAngleDMS(r)
 
@@ -315,8 +315,8 @@ export function TraverseBook({
                         <td className="px-2 py-1.5 text-right font-mono">{row.sd.toFixed(3)}</td>
                         <td className="px-2 py-1.5 text-right font-mono">{row.hd.toFixed(3)}</td>
                         <td className="px-2 py-1.5 text-right font-mono">{row.crCorr.toFixed(1)}</td>
-                        <td className="px-2 py-1.5 text-right font-mono text-blue-400">{(row as any).atmPPM?.toFixed(1) ?? '—'}</td>
-                        <td className="px-2 py-1.5 text-right font-mono text-cyan-400">{(row as any).sf?.toFixed(6) ?? '—'}</td>
+                        <td className="px-2 py-1.5 text-right font-mono text-blue-400">{(row as { atmPPM?: number }).atmPPM?.toFixed(1) ?? '—'}</td>
+                        <td className="px-2 py-1.5 text-right font-mono text-cyan-400">{(row as { sf?: number }).sf?.toFixed(6) ?? '—'}</td>
                         <td className="px-2 py-1.5 text-right font-mono text-amber-400">{row.gridDist.toFixed(3)}</td>
                       </tr>
                     ))}

@@ -112,7 +112,7 @@ export default function SurveyReport({
 
   if (!isOpen) return null
 
-  const rimData = { district: '', location: '', parcels: [] as any[] }
+  const rimData = { district: '', location: '', parcels: [] as Array<{ value: string }> }
 
   const areaResult = parcelAreaSqM > 0 ? formatAreaByCountry(country, parcelAreaSqM) : null
 
@@ -122,15 +122,15 @@ export default function SurveyReport({
 
   function toggleCondition(c: string) {
     setFieldConditions(prev =>
-      prev.some((x: any) => x.value === c)
-        ? prev.filter((x: any) => x.value !== c)
+      prev.some((x) => x.value === c)
+        ? prev.filter((x) => x.value !== c)
         : [...prev, { id: crypto.randomUUID(), value: c }]
     )
   }
 
   function toggleMethod(m: string) {
     setSurveyMethods(prev =>
-      prev.includes(m) ? prev.filter((x: any) => x !== m) : [...prev, m]
+      prev.includes(m) ? prev.filter((x) => x !== m) : [...prev, m]
     )
   }
 
@@ -139,7 +139,7 @@ export default function SurveyReport({
   }
 
   function removeFixedPoint(id: string) {
-    setFixedPoints(prev => prev.filter((p: any) => p.id !== id))
+    setFixedPoints(prev => prev.filter((p) => p.id !== id))
   }
 
   function addDiscrepancy() {
@@ -147,7 +147,7 @@ export default function SurveyReport({
   }
 
   function removeDiscrepancy(id: string) {
-    setDiscrepancies(prev => prev.filter((d: any) => d.id !== id))
+    setDiscrepancies(prev => prev.filter((d) => d.id !== id))
   }
 
   function validateReport(): string[] {
@@ -286,12 +286,12 @@ export default function SurveyReport({
           <div>
             <FieldLabel>{t('surveyReport.fieldConditions')}</FieldLabel>
             <div className="flex flex-wrap gap-2">
-              {FIELD_CONDITIONS.map((c: any) => (
+              {FIELD_CONDITIONS.map((c) => (
                 <button
                   key={c}
                   onClick={() => toggleCondition(c)}
                   className={`px-3 py-1 text-xs rounded-full border transition-colors ${
-                    fieldConditions.some((x: any) => x.value === c)
+                    fieldConditions.some((x) => x.value === c)
                       ? 'bg-blue-600 text-white border-blue-600'
                       : 'border-gray-300 text-gray-700 hover:border-blue-400'
                   }`}
@@ -387,7 +387,7 @@ export default function SurveyReport({
           <div>
             <FieldLabel required>{t('surveyReport.surveyMethods')}</FieldLabel>
             <div className="flex flex-wrap gap-2">
-              {SURVEY_METHODS.map((m: any) => (
+              {SURVEY_METHODS.map((m) => (
                 <button
                   key={m}
                   onClick={() => toggleMethod(m)}
@@ -526,18 +526,18 @@ export default function SurveyReport({
               </button>
             </div>
             <div className="space-y-3">
-              {discrepancies.map((d: any) => (
+              {discrepancies.map((d) => (
                 <div key={d.id} className="grid grid-cols-3 gap-2 p-3 bg-gray-50 rounded">
                   <div>
                     <FieldLabel>{t('surveyReport.discType')}</FieldLabel>
                     <Select
                       value={d.type}
                       onChange={e => {
-                        const updated = discrepancies.map((x: any) => x.id === d.id ? { ...x, type: e.target.value as Discrepancy['type'] } : x)
+                        const updated = discrepancies.map((x) => x.id === d.id ? { ...x, type: e.target.value as Discrepancy['type'] } : x)
                         setDiscrepancies(updated)
                       }}
                     >
-                      {DISCREPANCY_TYPES.map((t: any) => (
+                      {DISCREPANCY_TYPES.map((t) => (
                         <option key={t.value} value={t.value}>{t.label}</option>
                       ))}
                     </Select>

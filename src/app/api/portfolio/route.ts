@@ -25,6 +25,25 @@ import { db } from '@/lib/db'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
+interface ProjectRow {
+  id: string
+  name: string
+  survey_type: string
+  location: string | null
+  area_ha: number | null
+  created_at: string
+  control_point_count: string
+  deed_plan_count: string
+  parcel_count: string
+}
+
+interface ProfileRow {
+  email: string
+  full_name: string
+  firm_name: string | null
+  license_number: string | null
+}
+
 export interface PortfolioRequirement {
   id: string
   category: string
@@ -61,7 +80,7 @@ export const GET = apiHandler(
     const userId = ctx.userId!
 
     // Fetch the user's projects grouped by survey type
-    const { rows: projects } = await db.query(
+    const { rows: projects } = (await db.query(
       `SELECT id, name, survey_type, location, area_ha, created_at,
               (SELECT COUNT(*) FROM survey_points WHERE project_id = projects.id AND is_control = true) as control_point_count,
               (SELECT COUNT(*) FROM deed_plans WHERE project_id = projects.id) as deed_plan_count,
@@ -70,26 +89,26 @@ export const GET = apiHandler(
        WHERE user_id = $1
        ORDER BY created_at DESC`,
       [userId],
-    )
+    )) as { rows: ProjectRow[] }
 
     // Get user profile for declaration forms
-    const { rows: profile } = await db.query(
+    const { rows: profile } = (await db.query(
       `SELECT u.email, u.full_name, sp.firm_name, sp.license_number
        FROM users u
        LEFT JOIN surveyor_profiles sp ON sp.user_id = u.id
        WHERE u.id = $1`,
       [userId],
-    )
+    )) as { rows: ProfileRow[] }
 
     const user = profile[0] || { email: '', full_name: 'Unknown', firm_name: '', license_number: '' }
 
     // ─── Check each requirement ───
 
     // 1. Scheme Cadastral: min 10 plots in 1-3 schemes
-    const cadastralProjects = projects.filter((p: any) =>
+    const cadastralProjects = projects.filter((p) =>
       p.survey_type === 'cadastral' || p.survey_type === 'Cadastral'
     )
-    const totalParcels = cadastralProjects.reduce((sum: number, p: any) => sum + parseInt(p.parcel_count || '0', 10), 0)
+    const totalParcels = cadastralProjects.reduce((sum: number, p) => sum + parseInt(p.parcel_count || '0', 10), 0)
     const cadastralReq: PortfolioRequirement = {
       id: 'cadastral',
       category: 'Scheme Cadastral Survey',
@@ -97,7 +116,7 @@ export const GET = apiHandler(
       minimumRequired: '≥ 10 plots in 1-3 schemes',
       userHas: `${totalParcels} plots in ${cadastralProjects.length} scheme(s)`,
       met: totalParcels >= 10 && cadastralProjects.length <= 3 && cadastralProjects.length >= 1,
-      projects: cadastralProjects.map((p: any) => ({
+      projects: cadastralProjects.map((p) => ({
         id: p.id, name: p.name, survey_type: p.survey_type,
         created_at: p.created_at,
         details: `${p.parcel_count || 0} plots`,
@@ -105,10 +124,10 @@ export const GET = apiHandler(
     }
 
     // 2. Topographical: 2-10 ha depending on density
-    const topoProjects = projects.filter((p: any) =>
+    const topoProjects = projects.filter((p) =>
       p.survey_type === 'topographic' || p.survey_type === 'Topographic'
     )
-    const totalTopoArea = topoProjects.reduce((sum: number, p: any) => sum + (p.area_ha || 0), 0)
+    const totalTopoArea = topoProjects.reduce((sum: number, p) => sum + (p.area_ha || 0), 0)
     const topoReq: PortfolioRequirement = {
       id: 'topographic',
       category: 'Topographical Survey',
@@ -116,7 +135,7 @@ export const GET = apiHandler(
       minimumRequired: '≥ 2 ha (high density) / 4 ha (medium) / 10 ha (low)',
       userHas: `${totalTopoArea.toFixed(2)} ha in ${topoProjects.length} survey(s)`,
       met: totalTopoArea >= 2 && topoProjects.length >= 1,
-      projects: topoProjects.map((p: any) => ({
+      projects: topoProjects.map((p) => ({
         id: p.id, name: p.name, survey_type: p.survey_type,
         created_at: p.created_at,
         details: `${(p.area_ha || 0).toFixed(2)} ha`,
@@ -124,11 +143,11 @@ export const GET = apiHandler(
     }
 
     // 3. Control Survey: GNSS (3 pts in 20km²) or theodolite (4+ pts)
-    const controlProjects = projects.filter((p: any) =>
+    const controlProjects = projects.filter((p) =>
       p.survey_type === 'control' || p.survey_type === 'Control' ||
       parseInt(p.control_point_count || '0', 10) >= 3
     )
-    const totalControlPoints = controlProjects.reduce((sum: number, p: any) => sum + parseInt(p.control_point_count || '0', 10), 0)
+    const totalControlPoints = controlProjects.reduce((sum: number, p) => sum + parseInt(p.control_point_count || '0', 10), 0)
     const controlReq: PortfolioRequirement = {
       id: 'control',
       category: 'Control Survey',
@@ -136,7 +155,7 @@ export const GET = apiHandler(
       minimumRequired: '≥ 3 GNSS points (20km²) OR ≥ 4 theodolite points',
       userHas: `${totalControlPoints} control points in ${controlProjects.length} survey(s)`,
       met: totalControlPoints >= 3 && controlProjects.length >= 1,
-      projects: controlProjects.map((p: any) => ({
+      projects: controlProjects.map((p) => ({
         id: p.id, name: p.name, survey_type: p.survey_type,
         created_at: p.created_at,
         details: `${p.control_point_count || 0} control points`,
@@ -144,9 +163,9 @@ export const GET = apiHandler(
     }
 
     // 4. Electives (select one)
-    const sectionalProjects = projects.filter((p: any) => p.survey_type === 'sectional')
-    const perimeterProjects = projects.filter((p: any) => p.survey_type === 'perimeter' || (p.area_ha >= 4 && p.survey_type === 'cadastral'))
-    const settingOutProjects = projects.filter((p: any) => p.survey_type === 'engineering' || p.survey_type === 'construction')
+    const sectionalProjects = projects.filter((p) => p.survey_type === 'sectional')
+    const perimeterProjects = projects.filter((p) => p.survey_type === 'perimeter' || ((p.area_ha || 0) >= 4 && p.survey_type === 'cadastral'))
+    const settingOutProjects = projects.filter((p) => p.survey_type === 'engineering' || p.survey_type === 'construction')
 
     const electives: PortfolioRequirement[] = [
       {
@@ -163,9 +182,9 @@ export const GET = apiHandler(
         category: 'Perimeter (Farm) Survey',
         description: 'New perimeter survey beacons of a new parcel. Minimum 4 ha (production) or 5 ha (supervised). Must be georeferenced.',
         minimumRequired: '≥ 4 ha, georeferenced',
-        userHas: `${perimeterProjects.length} project(s), ${(perimeterProjects.reduce((s: number, p: any) => s + (p.area_ha || 0), 0)).toFixed(2)} ha`,
-        met: perimeterProjects.length >= 1 && perimeterProjects.reduce((s: number, p: any) => s + (p.area_ha || 0), 0) >= 4,
-        projects: perimeterProjects.map((p: any) => ({
+        userHas: `${perimeterProjects.length} project(s), ${(perimeterProjects.reduce((s: number, p) => s + (p.area_ha || 0), 0)).toFixed(2)} ha`,
+        met: perimeterProjects.length >= 1 && perimeterProjects.reduce((s: number, p) => s + (p.area_ha || 0), 0) >= 4,
+        projects: perimeterProjects.map((p) => ({
           id: p.id, name: p.name, survey_type: p.survey_type, created_at: p.created_at,
           details: `${(p.area_ha || 0).toFixed(2)} ha`,
         })),
@@ -177,7 +196,7 @@ export const GET = apiHandler(
         minimumRequired: '≥ 1km linear OR ≥ 0.1 ha buildings',
         userHas: `${settingOutProjects.length} project(s)`,
         met: settingOutProjects.length >= 1,
-        projects: settingOutProjects.map((p: any) => ({
+        projects: settingOutProjects.map((p) => ({
           id: p.id, name: p.name, survey_type: p.survey_type, created_at: p.created_at,
           details: p.location || '',
         })),
@@ -227,7 +246,7 @@ export const GET = apiHandler(
 /**
  * Generate Form A (Declaration of employment/supervision) per Third Schedule.
  */
-function generateFormA(user: any, projects: any[]): string {
+function generateFormA(user: ProfileRow, projects: ProjectRow[]): string {
   const surveyorName = user.full_name || '___________________________'
   const firmName = user.firm_name || '___________________________'
   const licenseNumber = user.license_number || '___________________________'
@@ -258,7 +277,7 @@ the candidate's work. The Director of Surveys may verify any of the declared wor
 /**
  * Generate Form B (Declaration of qualifications) per Third Schedule.
  */
-function generateFormB(user: any): string {
+function generateFormB(user: Pick<ProfileRow, 'full_name'>): string {
   const surveyorName = user.full_name || '___________________________'
 
   return `FORM B (r. 14)

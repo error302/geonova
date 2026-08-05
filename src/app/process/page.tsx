@@ -9,7 +9,9 @@ import { bowditchAdjustmentSolvedFromResult } from '@/lib/engine/solution/wrappe
 import { levelingSolved } from '@/lib/engine/solution/wrappers/leveling'
 import { radiationSolved } from '@/lib/engine/solution/wrappers/radiation'
 import { 
-  detectSurveyType, 
+  detectSurveyType,
+  SurveyDataset,
+  SurveyObservation, 
   runWorkflow, 
   TraverseWorkflowData, 
   LevelingWorkflowData,
@@ -23,6 +25,38 @@ import {
   getAllToleranceProfiles,
   ToleranceCheckResult 
 } from '@/lib/validation/toleranceEngine'
+interface ProjectRow { id: string; name: string }
+interface TraverseLegLike {
+  from: string
+  to: string
+  distance?: number
+  bearingDMS?: string
+  adjEasting: number
+  adjNorthing: number
+  adjDeltaE: number
+  adjDeltaN: number
+}
+interface RadiationPoint { name: string; easting: number; northing: number }
+interface LevelingReading {
+  station: string
+  bs?: number
+  is?: number
+  fs?: number
+  rise?: number
+  fall?: number
+  reducedLevel?: number
+}
+type SurveyPointRow = {
+  project_id: string
+  name: string
+  easting: number
+  northing: number
+  elevation: null
+  is_control: boolean
+  control_order?: string
+  locked?: boolean
+}
+
 import Link from 'next/link'
 import { createClient } from '@/lib/api-client/client'
 
@@ -38,7 +72,7 @@ export default function ProcessPage() {
   const [workflowResult, setWorkflowResult] = useState<WorkflowResult | null>(null)
   const [workflowSolutions, setWorkflowSolutions] = useState<Array<{ title?: string; steps: SolutionStep[] }>>([])
   const [toleranceResult, setToleranceResult] = useState<ToleranceCheckResult | null>(null)
-  const [projects, setProjects] = useState<any[]>([])
+  const [projects, setProjects] = useState<ProjectRow[]>([])
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const [saveLoading, setSaveLoading] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
@@ -107,11 +141,11 @@ export default function ProcessPage() {
     }
   }
 
-  const detectSurveyTypeFromDataset = (dataset: any): string => {
+  const detectSurveyTypeFromDataset = (dataset: SurveyDataset): string => {
     if (dataset?.surveyType && dataset.surveyType !== 'unknown') return dataset.surveyType
     if (!dataset?.observations) return 'unknown'
     const obs = dataset.observations
-    const types = new Set(obs.map((o: any) => o.type))
+    const types = new Set(obs.map((o: SurveyObservation) => o.type))
     
     if (types.has('BS') || types.has('IS') || types.has('FS')) return 'leveling'
     if (types.has('BEARING') && types.has('DISTANCE')) return 'traverse'
@@ -143,7 +177,7 @@ export default function ProcessPage() {
 
       if (surveyType === 'traverse') {
         const traverseData: TraverseWorkflowData = {
-          legs: dataset.observations.map((obs: any, i: number) => ({
+          legs: dataset.observations.map((obs: SurveyObservation, i: number) => ({
             fromStation: obs.station,
             toStation: dataset.observations[i + 1]?.station || `P${i + 2}`,
             bearing: obs.value1 || 0,
@@ -151,8 +185,8 @@ export default function ProcessPage() {
           })),
           openingPoint: {
             name: dataset.observations[0]?.station || 'A',
-            easting: (dataset.metadata as any)?.openingEasting || 500000,
-            northing: (dataset.metadata as any)?.openingNorthing || 4500000
+            easting: (dataset.metadata as { openingEasting?: number })?.openingEasting || 500000,
+            northing: (dataset.metadata as { openingNorthing?: number })?.openingNorthing || 4500000
           }
         }
         result = runWorkflow('traverse', traverseData)
@@ -164,13 +198,13 @@ export default function ProcessPage() {
         }
       } else if (surveyType === 'leveling') {
         const levelingData: LevelingWorkflowData = {
-          readings: dataset.observations.map((obs: any) => ({
+          readings: dataset.observations.map((obs: SurveyObservation) => ({
             station: obs.station,
             bs: obs.type === 'BS' ? obs.value1 : undefined,
             is: obs.type === 'IS' ? obs.value1 : undefined,
             fs: obs.type === 'FS' ? obs.value1 : undefined
           })),
-          openingRL: (dataset.metadata as any)?.openingRL || 100
+          openingRL: (dataset.metadata as { openingRL?: number })?.openingRL || 100
         }
         result = runWorkflow('leveling', levelingData)
         if (result.success && result.results?.readings) {
@@ -185,11 +219,11 @@ export default function ProcessPage() {
       } else if (surveyType === 'radiation') {
         const radiationData: RadiationWorkflowData = {
           station: {
-            name: (dataset.metadata as any)?.stationName || 'STN1',
-            easting: (dataset.metadata as any)?.stationEasting || 500000,
-            northing: (dataset.metadata as any)?.stationNorthing || 4500000
+            name: (dataset.metadata as { stationName?: string })?.stationName || 'STN1',
+            easting: (dataset.metadata as { stationEasting?: number })?.stationEasting || 500000,
+            northing: (dataset.metadata as { stationNorthing?: number })?.stationNorthing || 4500000
           },
-          observations: dataset.observations.map((obs: any) => ({
+          observations: dataset.observations.map((obs: SurveyObservation) => ({
             pointName: obs.station,
             bearing: obs.value1 || 0,
             distance: obs.value2 || 0
@@ -266,8 +300,9 @@ export default function ProcessPage() {
     setSaveLoading(true)
 
     try {
-      if (workflowResult.surveyType === 'traverse' && workflowResult.results.legs) {
-        const points = workflowResult.results.legs.map((leg: any) => ({
+      const res = workflowResult.results as { legs?: TraverseLegLike[]; points?: RadiationPoint[] }
+      if (workflowResult.surveyType === 'traverse' && res.legs) {
+        const points: SurveyPointRow[] = res.legs.map((leg: TraverseLegLike) => ({
           project_id: selectedProjectId,
           name: leg.to,
           easting: leg.adjEasting,
@@ -276,12 +311,12 @@ export default function ProcessPage() {
           is_control: false
         }))
 
-        if (workflowResult.results.legs[0]) {
+        if (res.legs[0]) {
           points.unshift({
             project_id: selectedProjectId,
-            name: workflowResult.results.legs[0].from,
-            easting: workflowResult.results.legs[0].adjEasting - workflowResult.results.legs[0].adjDeltaE,
-            northing: workflowResult.results.legs[0].adjNorthing - workflowResult.results.legs[0].adjDeltaN,
+            name: res.legs[0].from,
+            easting: res.legs[0].adjEasting - res.legs[0].adjDeltaE,
+            northing: res.legs[0].adjNorthing - res.legs[0].adjDeltaN,
             elevation: null,
             is_control: true,
             control_order: 'primary',
@@ -294,8 +329,8 @@ export default function ProcessPage() {
           throw new Error(`Failed to save points: ${insertError.message}`)
         }
       } 
-      else if (workflowResult.surveyType === 'radiation' && workflowResult.results.points) {
-        const points = workflowResult.results.points.map((pt: any) => ({
+      else if (workflowResult.surveyType === 'radiation' && res.points) {
+        const points = res.points.map((pt: RadiationPoint) => ({
           project_id: selectedProjectId,
           name: pt.name,
           easting: pt.easting,
@@ -406,7 +441,7 @@ export default function ProcessPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {interpretResult.dataset!.observations.slice(0, 5).map((obs: any, i: number) => (
+                    {interpretResult.dataset!.observations.slice(0, 5).map((obs: SurveyObservation, i: number) => (
                       <tr key={obs.station || i} className="border-t border-[var(--border-color)]">
                         <td className="px-2 py-1">{obs.station}</td>
                         <td className="px-2 py-1 text-[var(--accent)]">{obs.type}</td>
@@ -430,7 +465,7 @@ export default function ProcessPage() {
                   <div className="mt-6">
                     <label className="block text-sm text-[var(--text-secondary)] mb-2">Tolerance Profile</label>
                     <div className="grid grid-cols-3 gap-3">
-                      {getAllToleranceProfiles().map((profile: any) => (
+                      {getAllToleranceProfiles().map((profile) => (
                         <button
                           key={profile}
                           onClick={() => setSelectedProfile(profile)}
@@ -532,7 +567,7 @@ export default function ProcessPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {workflowResult.results.legs.map((leg: any, i: number) => (
+                        {workflowResult.results.legs.map((leg: TraverseLegLike, i: number) => (
                           <tr key={`leg-${leg.from}-${leg.to}-${i}`} className="border-b border-[var(--border-color)]">
                             <td className="px-2 py-2">{leg.from}</td>
                             <td className="px-2 py-2">{leg.to}</td>
@@ -567,7 +602,7 @@ export default function ProcessPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {workflowResult.results.readings.map((r: any, i: number) => (
+                        {workflowResult.results.readings.map((r: LevelingReading, i: number) => (
                           <tr key={`reading-${r.station}-${i}`} className="border-b border-[var(--border-color)]">
                             <td className="px-2 py-2">{r.station}</td>
                             <td className="px-2 py-2 text-right font-mono">{r.bs?.toFixed(3) || '—'}</td>

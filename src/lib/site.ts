@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = 'https://metardu.duckdns.org'
+const DEFAULT_SITE_URL = 'https://metardu.space'
 
 function normalizeUrl(value?: string | null): string | null {
   if (!value) return null

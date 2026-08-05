@@ -4,6 +4,8 @@ import { bearingToString } from '../engine/angles'
 import type { Solution } from '@/lib/solution/schema'
 import { appendSolutionToPdf } from '@/lib/reports/solutionToPdf'
 
+type jsPDFWithAutoTable = jsPDF & { lastAutoTable?: { finalY: number } }
+
 interface ReportOptions {
   project: {
     name: string
@@ -148,7 +150,7 @@ export function generateSurveyReport(options: ReportOptions, onBlob?: (blob: Blo
     margin: { left: 15, right: 15 }
   })
 
-  yPos = (doc as any).lastAutoTable.finalY + 12
+  yPos = ((doc as jsPDFWithAutoTable).lastAutoTable?.finalY ?? 20) + 12
 
   if (traverse) {
     if (yPos > 230) { doc.addPage(); yPos = 20 }
@@ -188,7 +190,7 @@ export function generateSurveyReport(options: ReportOptions, onBlob?: (blob: Blo
       margin: { left: 15, right: 15 }
     })
 
-    yPos = (doc as any).lastAutoTable.finalY + 8
+    yPos = ((doc as jsPDFWithAutoTable).lastAutoTable?.finalY ?? 20) + 8
 
     doc.setFillColor(245, 245, 245)
     doc.rect(15, yPos, 180, 32, 'F')
@@ -460,7 +462,7 @@ export function generateSurveyPlan(options: SurveyPlanOptions, onBlob?: (blob: B
   })
 
   if (parcel && parcel.boundary_points.length > 0) {
-    yPos = (doc as any).lastAutoTable.finalY + 10
+    yPos = ((doc as jsPDFWithAutoTable).lastAutoTable?.finalY ?? 20) + 10
     
     if (yPos > 160) {
       doc.addPage()
@@ -508,7 +510,7 @@ export function generateSurveyPlan(options: SurveyPlanOptions, onBlob?: (blob: B
       theme: 'grid'
     })
 
-    yPos = (doc as any).lastAutoTable.finalY + 8
+    yPos = ((doc as jsPDFWithAutoTable).lastAutoTable?.finalY ?? 20) + 8
     doc.setFillColor(248, 248, 248)
     doc.rect(10, yPos, 277, 20, 'F')
     doc.setDrawColor(...amber)

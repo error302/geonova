@@ -64,14 +64,14 @@ if (CHECK_ONLY) {
 
 // ─── Step 2: Build static export (skip if --sync) ────────────────────────────
 if (!SYNC_ONLY) {
-  if (!hasStaticExport) {
-    log('\nBuilding Next.js static export (MOBILE_BUILD=true)...')
-    run('MOBILE_BUILD=true NEXT_PUBLIC_SENTRY_DSN= DISABLE_PWA=true npx next build', {
-      env: { ...process.env, MOBILE_BUILD: 'true', NEXT_PUBLIC_SENTRY_DSN: '', DISABLE_PWA: 'true' },
-    })
-  } else {
-    log('\nStatic export already present. (Run with --sync after rebuilding to refresh.)')
+  log(`\nBuilding Next.js static export (MOBILE_BUILD=true)...`)
+  const env = {
+    ...process.env,
+    MOBILE_BUILD: 'true',
+    NEXT_PUBLIC_SENTRY_DSN: '',
+    DISABLE_PWA: 'true'
   }
+  run('npx next build', { env })
 }
 
 // ─── Step 3: Add Android platform if missing ─────────────────────────────────

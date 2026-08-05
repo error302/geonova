@@ -26,7 +26,7 @@ With Pro you can:
   - Connect to RTK GNSS receivers via Bluetooth
 
 Get started:
-  ${process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.duckdns.org'}/dashboard
+  ${process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space'}/dashboard
 
 Questions? Reply to this email or write to support@metardu.com.
 
@@ -45,7 +45,7 @@ export function trialEndingText({ name, trialEndsAt, planPriceNote }: TrialEndin
 After the trial you'll move to the Free plan (1 project, 50 survey points, basic PDF reports).
 
 Keep your Pro features (${planPriceNote}):
-  ${process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.duckdns.org'}/pricing
+  ${process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space'}/pricing
 
 Questions? Reply to this email or write to support@metardu.com.
 
@@ -96,7 +96,7 @@ export function paymentReceiptText(args: PaymentReceiptTextArgs): string {
   lines.push(
     '',
     'You can manage your subscription from your account settings:',
-    `  ${process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.duckdns.org'}/settings/profile`,
+    `  ${process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space'}/settings/profile`,
     '',
     '— METARDU',
   )

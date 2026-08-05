@@ -268,10 +268,10 @@ export default function MutationPlanGenerator({
       ...monuments.map((m) => ({ easting: m.easting, northing: m.northing })),
     ];
     if (allPts.length < 2) return grid;
-    const minE = Math.min(...allPts.map((p: any) => p.easting));
-    const maxE = Math.max(...allPts.map((p: any) => p.easting));
-    const minN = Math.min(...allPts.map((p: any) => p.northing));
-    const maxN = Math.max(...allPts.map((p: any) => p.northing));
+    const minE = Math.min(...allPts.map((p) => p.easting));
+    const maxE = Math.max(...allPts.map((p) => p.easting));
+    const minN = Math.min(...allPts.map((p) => p.northing));
+    const maxN = Math.max(...allPts.map((p) => p.northing));
     const rangeE = maxE - minE || 200;
     const rangeN = maxN - minN || 200;
     const intE = rangeE > 1000 ? 200 : rangeE > 400 ? 100 : 50;
@@ -570,27 +570,27 @@ export default function MutationPlanGenerator({
   };
 
   // ── Update helpers ──
-  const updatePlot = (index: number, field: keyof MutationPlot, value: any) => {
+  const updatePlot = (index: number, field: keyof MutationPlot, value: string | number | boolean) => {
     const updated = [...plots];
-    (updated[index] as any)[field] = value;
+    (updated[index] as unknown as Record<keyof MutationPlot, string | number | boolean>)[field] = value;
     setPlots(updated);
   };
 
   const updatePlotPoint = (plotIdx: number, ptIdx: number, axis: 'easting' | 'northing', value: number) => {
     const updated = [...plots];
-    (updated[plotIdx].boundaryPoints[ptIdx] as any)[axis] = value;
+    (updated[plotIdx].boundaryPoints[ptIdx] as Record<string, string | number | boolean>)[axis] = value;
     setPlots(updated);
   };
 
-  const updateRoad = (index: number, field: keyof RoadCorridor, value: any) => {
+  const updateRoad = (index: number, field: keyof RoadCorridor, value: string | number) => {
     const updated = [...roads];
-    (updated[index] as any)[field] = value;
+    (updated[index] as unknown as Record<keyof RoadCorridor, string | number | boolean>)[field] = value;
     setRoads(updated);
   };
 
   const updateRoadCenterlinePoint = (roadIdx: number, ptIdx: number, axis: 'easting' | 'northing', value: number) => {
     const updated = [...roads];
-    (updated[roadIdx].centerline[ptIdx] as any)[axis] = value;
+    (updated[roadIdx].centerline[ptIdx] as Record<string, string | number | boolean>)[axis] = value;
     setRoads(updated);
   };
 
@@ -609,9 +609,9 @@ export default function MutationPlanGenerator({
     setRoads(updated);
   };
 
-  const updateMonument = (index: number, field: keyof SurveyMonument, value: any) => {
+  const updateMonument = (index: number, field: keyof SurveyMonument, value: string | number) => {
     const updated = [...monuments];
-    (updated[index] as any)[field] = value;
+    (updated[index] as unknown as Record<keyof SurveyMonument, string | number | boolean>)[field] = value;
     setMonuments(updated);
   };
 
@@ -799,7 +799,7 @@ export default function MutationPlanGenerator({
                   </label>
                   <input aria-label="Project info field"
                     type="text"
-                    value={(projectInfo as any)[f.key]}
+                    value={(projectInfo as Record<string, string | number>)[f.key]}
                     onChange={(e) => setProjectInfo({ ...projectInfo, [f.key]: e.target.value })}
                     className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-[var(--accent)]"
                     placeholder={f.label}
@@ -852,7 +852,7 @@ export default function MutationPlanGenerator({
                 <label className="block text-xs font-medium text-zinc-400 mb-1">Datum</label>
                 <select
                   value={projectInfo.datum}
-                  onChange={(e) => setProjectInfo({ ...projectInfo, datum: e.target.value as any })}
+                  onChange={(e) => setProjectInfo({ ...projectInfo, datum: e.target.value as 'ARC1960' })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white focus:outline-none focus:border-[var(--accent)]"
                 >
                   <option value="ARC1960">ARC 1960</option>

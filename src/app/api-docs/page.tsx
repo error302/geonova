@@ -124,7 +124,7 @@ export default function APIDocsPage() {
         <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">METARDU API Reference</h1>
         <p className="text-[var(--text-muted)] mb-8">
           Internal API routes for the METARDU web application. All routes are served from the same domain
-          as the web app (e.g., <code className="text-xs bg-[var(--bg-tertiary)] px-1 rounded">metardu.duckdns.org/api/...</code>).
+          as the web app (e.g., <code className="text-xs bg-[var(--bg-tertiary)] px-1 rounded">metardu.space/api/...</code>).
         </p>
 
         <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6 mb-8">
