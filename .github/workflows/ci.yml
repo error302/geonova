@@ -80,28 +80,15 @@ jobs:
             # First-ever push (no `before`): fall back to HEAD~1.
             echo "ref=HEAD~1" >> "$GITHUB_OUTPUT"
           fi
+      # The changed-files gate computes its own file list via
+      # --paths-from-changed (same pathspec + test exclusion as the inline
+      # $CHANGED it replaces — the single source of truth now lives in the
+      # script). Pins plugin resolution to the repo root (no duplicate-plugin
+      # conflict) and ratchets: fails only when HEAD adds warnings beyond the
+      # base ref, including the per-family floors (member-access, assignment,
+      # explicit-any).
       - name: Lint changed files (blocking, zero new warnings)
-        run: |
-          BASE="${{ steps.base.outputs.ref }}"
-          echo "Base ref: $BASE"
-          # Get .ts/.tsx files changed in this PR/push (including middleware.ts at root).
-          # --diff-filter=ACMR covers Added/Copied/Modified/Renamed — AM alone would
-          # silently drop renamed files (status R), letting their new warnings bypass
-          # the gate.
-          CHANGED=$(git diff --name-only --diff-filter=ACMR "$BASE"...HEAD -- 'middleware.ts' 'src/*.ts' 'src/*.tsx' 'src/**/*.ts' 'src/**/*.tsx' | grep -vE '\.(test|spec)\.(ts|tsx)$' || true)
-          if [ -z "$CHANGED" ]; then
-            echo "No TS/TSX files changed — skipping lint gate."
-            exit 0
-          fi
-          echo "Linting changed files:"
-          echo "$CHANGED"
-          # shellcheck disable=SC2086
-          # lint-gate.mjs pins plugin resolution to the repo root (its ESLint
-          # API call sets resolvePluginsRelativeTo), avoiding the "couldn't
-          # determine the plugin uniquely" (duplicate-plugin) error seen in
-          # worktrees where nested copies of eslint-plugin-* exist. It also
-          # ratchets: fails only when HEAD adds warnings beyond the base ref.
-          node scripts/lint-gate.mjs "$BASE" $CHANGED
+        run: node scripts/lint-gate.mjs --paths-from-changed "${{ steps.base.outputs.ref }}"
       # A11Y GATE (2026-08-03): Bans placeholder-like / junk aria-labels
       # codebase-wide (placeholder-equals-name, generic phrases, punctuation,
       # crunched header text) so accessible names can't regress in tables.
