@@ -167,7 +167,7 @@ function matMul(A: number[][], B: number[][]) {
 function matVecMul(A: number[][], v: number[]) {
   const r = A.length
   const c = A[0]?.length ?? 0
-  const out = new Array(r).fill(0)
+  const out = new Array<number>(r).fill(0)
   for (let i = 0; i < r; i++) {
     let s = 0
     for (let j = 0; j < c; j++) s += A[i][j] * v[j]
@@ -358,7 +358,7 @@ export function leastSquaresAdjustment(
   const fixed = new Map<string, Point>()
   fixedPoints.forEach((p) => fixed.set(p.name, { easting: p.easting, northing: p.northing }))
 
-  const x: number[] = new Array(unknownPoints.length * 2)
+  const x: number[] = new Array<number>(unknownPoints.length * 2)
   for (let i = 0; i < unknownPoints.length; i++) {
     x[2 * i] = unknownPoints[i].eastingApprox
     x[2 * i + 1] = unknownPoints[i].northingApprox
@@ -397,8 +397,8 @@ export function leastSquaresAdjustment(
 
   for (let iter = 0; iter < maxIterations; iter++) {
     A = zeros(m, n)
-    w = new Array(m).fill(0)
-    Pdiag = new Array(m).fill(0)
+    w = new Array<number>(m).fill(0)
+    Pdiag = new Array<number>(m).fill(0)
     computedResiduals = []
 
     for (let i = 0; i < m; i++) {
@@ -426,7 +426,7 @@ export function leastSquaresAdjustment(
       const fromUnknown = unknownIndex.get(obs.from)
       const toUnknown = unknownIndex.get(obs.to)
 
-      const row = new Array(n).fill(0)
+      const row = new Array<number>(n).fill(0)
       let residual = 0
 
       if (obs.distance !== undefined) {
@@ -523,7 +523,7 @@ export function leastSquaresAdjustment(
     const At = transpose(A)
 
     const PA = zeros(m, n)
-    const Pw = new Array(m).fill(0)
+    const Pw = new Array<number>(m).fill(0)
     for (let i = 0; i < m; i++) {
       const p = Pdiag[i]
       Pw[i] = p * w[i]
@@ -575,8 +575,8 @@ export function leastSquaresAdjustment(
 
   // Rebuild design matrix at final estimates (for covariance + residual tests).
   A = zeros(m, n)
-  w = new Array(m).fill(0)
-  Pdiag = new Array(m).fill(0)
+  w = new Array<number>(m).fill(0)
+  Pdiag = new Array<number>(m).fill(0)
   computedResiduals = []
 
   for (let i = 0; i < m; i++) {
@@ -604,7 +604,7 @@ export function leastSquaresAdjustment(
     const fromUnknown = unknownIndex.get(obs.from)
     const toUnknown = unknownIndex.get(obs.to)
 
-    const row = new Array(n).fill(0)
+    const row = new Array<number>(n).fill(0)
     let residual = 0
 
     if (obs.distance !== undefined) {
@@ -690,12 +690,15 @@ export function leastSquaresAdjustment(
 
   // Compute final residuals:
   // w_final = l - f(x̂); v = -w_final.
-  const v = new Array(m).fill(0)
-  const obsLabel: string[] = new Array(m).fill('')
+  const v = new Array<number>(m).fill(0)
+  const obsLabel: string[] = new Array<string>(m).fill('')
   for (let i = 0; i < m; i++) {
     const obs = activeObservations[i]
-    const from = getPoint(obs.from)!
-    const to = getPoint(obs.to)!
+    const from = getPoint(obs.from)
+    const to = getPoint(obs.to)
+    // Unreachable: the iteration loop above already returns an error result for
+    // any observation referencing an unknown point, so all points exist here.
+    if (!from || !to) continue
     const dE = to.easting - from.easting
     const dN = to.northing - from.northing
     const r2 = dE * dE + dN * dN
@@ -819,7 +822,7 @@ export function adjustNetwork(input: LSAdjustmentInput): LSAdjustmentResult {
   // Working coordinate array: per unknown point, [E, N, (RL)]
   const nPts = input.adjustablePoints.length
   const nUnknowns = nPts * dim
-  const x = new Array(nUnknowns).fill(0)
+  const x = new Array<number>(nUnknowns).fill(0)
   for (let i = 0; i < nPts; i++) {
     x[dim * i] = input.adjustablePoints[i].easting
     x[dim * i + 1] = input.adjustablePoints[i].northing
@@ -853,16 +856,12 @@ export function adjustNetwork(input: LSAdjustmentInput): LSAdjustmentResult {
   // It keeps adjusted values close to their initial approximations for unconstrained params.
 
   let lastDxMax = Infinity
-  let finalA: number[][] = zeros(m, nUnknowns)
-  let finalW: number[] = new Array(m).fill(0)
-  let finalP: number[] = new Array(m).fill(0)
-  const finalLabels: string[] = new Array(m).fill('')
-  let finalObsList: unknown[] = []
+  const finalLabels: string[] = new Array<string>(m).fill('')
 
   for (let iter = 0; iter < maxIter; iter++) {
     const A = zeros(m, nUnknowns)
-    const w = new Array(m).fill(0)
-    const P = new Array(m).fill(0)
+    const w = new Array<number>(m).fill(0)
+    const P = new Array<number>(m).fill(0)
     let hasNaN = false
 
     for (let i = 0; i < m; i++) {
@@ -880,7 +879,7 @@ export function adjustNetwork(input: LSAdjustmentInput): LSAdjustmentResult {
     // Normal equations: N = A^T P A, u = A^T P w
     const At = transpose(A)
     const PA = zeros(m, nUnknowns)
-    const Pw = new Array(m).fill(0)
+    const Pw = new Array<number>(m).fill(0)
     for (let i = 0; i < m; i++) {
       Pw[i] = P[i] * w[i]
       for (let j = 0; j < nUnknowns; j++) PA[i][j] = P[i] * A[i][j]
@@ -913,10 +912,6 @@ export function adjustNetwork(input: LSAdjustmentInput): LSAdjustmentResult {
     if (!isFinite(dxMax)) break
 
     // Save final iteration data
-    finalA = A
-    finalW = w
-    finalP = P
-    finalObsList = active
     for (let i = 0; i < m; i++) {
       const obs = active[i]
       finalLabels[i] = obsLabel(obs)
@@ -929,8 +924,8 @@ export function adjustNetwork(input: LSAdjustmentInput): LSAdjustmentResult {
 
   // Rebuild at final estimates for residuals and covariance
   const A = zeros(m, nUnknowns)
-  const w = new Array(m).fill(0)
-  const P = new Array(m).fill(0)
+  const w = new Array<number>(m).fill(0)
+  const P = new Array<number>(m).fill(0)
 
   for (let i = 0; i < m; i++) {
     const obs = active[i]
@@ -965,7 +960,7 @@ export function adjustNetwork(input: LSAdjustmentInput): LSAdjustmentResult {
   const adjustedPoints = input.adjustablePoints.map((p, i) => {
     const varE = refVar * (Ninv[dim * i]?.[dim * i] ?? 0)
     const varN = refVar * (Ninv[dim * i + 1]?.[dim * i + 1] ?? 0)
-    const pt: any = {
+    const pt: LSAdjustmentResult['adjustedPoints'][number] = {
       name: p.name,
       easting: x[dim * i],
       northing: x[dim * i + 1],
@@ -1111,14 +1106,14 @@ interface ObsRowResult {
 }
 
 function buildObservationRow(
-  obs: any,
+  obs: Observation,
   getCoord: (name: string) => { e: number; n: number; h: number } | null,
   unknownIdx: Map<string, number>,
   dim: number,
   is3D: boolean,
 ): ObsRowResult | null {
   const type = obs.type
-  const row = new Array(unknownIdx.size * dim).fill(0)
+  const row = new Array<number>(unknownIdx.size * dim).fill(0)
   let residual = 0
   let weight = 1
 
@@ -1151,7 +1146,7 @@ function buildObservationRow(
       if (is3D) row[dim * toU + 2] = dH / SD
     }
 
-    residual = obs.slopeDistance - SD
+    residual = (obs.slopeDistance ?? 0) - SD
     if (typeof obs.slopeDistanceSigma === 'number' && obs.slopeDistanceSigma > 0) {
       weight = 1 / (obs.slopeDistanceSigma * obs.slopeDistanceSigma)
     }
@@ -1172,7 +1167,7 @@ function buildObservationRow(
 
     // Zenith angle from vertical: Z = atan2(horiz, dH) (radians)
     const Z = Math.atan2(horiz, dH)
-    const obsZ = toRadians(obs.zenithAngle)
+    const obsZ = toRadians(obs.zenithAngle ?? 0)
     residual = wrapAngleRad(obsZ - Z)
 
     // Partials of Z w.r.t. dE, dN, dH
@@ -1213,7 +1208,7 @@ function buildObservationRow(
     if (!from || !to) return null
 
     const dH = to.h - from.h
-    residual = obs.heightDifference - dH
+    residual = (obs.heightDifference ?? 0) - dH
 
     const fromU = unknownIdx.get(obs.from)
     const toU = unknownIdx.get(obs.to)
@@ -1301,14 +1296,16 @@ function buildObservationRow(
 }
 
 function buildAngleRow(
-  obs: any,
+  obs: Observation,
   getCoord: (name: string) => { e: number; n: number; h: number } | null,
   unknownIdx: Map<string, number>,
   dim: number,
 ): ObsRowResult | null {
-  const occ = getCoord(obs.occupied)
-  const bs = getCoord(obs.backsight)
-  const fs = getCoord(obs.foresight)
+  const { occupied, backsight, foresight, angle } = obs
+  if (!occupied || !backsight || !foresight || typeof angle !== 'number') return null
+  const occ = getCoord(occupied)
+  const bs = getCoord(backsight)
+  const fs = getCoord(foresight)
   if (!occ || !bs || !fs) return null
 
   // Direction vectors
@@ -1326,10 +1323,10 @@ function buildAngleRow(
   const theta_OF = Math.atan2(dE_OF, dN_OF)
   const theta_OB = Math.atan2(dE_OB, dN_OB)
   const computedAngle = wrapAngleRad(theta_OF - theta_OB)
-  const obsAngle = toRadians(obs.angle)
+  const obsAngle = toRadians(angle)
   const residual = wrapAngleRad(obsAngle - computedAngle)
 
-  const row = new Array(unknownIdx.size * dim).fill(0)
+  const row = new Array<number>(unknownIdx.size * dim).fill(0)
 
   // Direction partials: ∂θ_OP/∂E_P = dN / r², ∂θ_OP/∂N_P = -dE / r²
   // ∂θ_OP/∂E_O = -dN / r², ∂θ_OP/∂N_O = dE / r²
@@ -1346,9 +1343,9 @@ function buildAngleRow(
   // ∂angle/∂E_fs = dtdE_OF (affects only foresight)
   // ∂angle/∂N_fs = dtdN_OF
 
-  const occU = unknownIdx.get(obs.occupied)
-  const bsU = unknownIdx.get(obs.backsight)
-  const fsU = unknownIdx.get(obs.foresight)
+  const occU = unknownIdx.get(occupied)
+  const bsU = unknownIdx.get(backsight)
+  const fsU = unknownIdx.get(foresight)
 
   if (occU !== undefined) {
     row[dim * occU] = -dtdE_OF + dtdE_OB
@@ -1372,7 +1369,7 @@ function buildAngleRow(
   return { row, residual, weight }
 }
 
-function obsLabel(obs: any): string {
+function obsLabel(obs: Observation): string {
   const t = obs.type
   if (t === 'angle') return `${obs.occupied}: ${obs.backsight}→${obs.foresight} angle`
   if (t === 'slope_distance') return `${obs.from}→${obs.to} slope_dist`

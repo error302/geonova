@@ -5,7 +5,7 @@ import { Download } from 'lucide-react';
 import { riseAndFall, heightOfCollimation } from '@/lib/engine/leveling';
 import { trackEvent } from '@/lib/analytics/events';
 import type { LevelingInput } from '@/lib/engine/leveling'
-import type { LevelingReading } from '@/lib/engine/types';
+import type { LevelingReading, LevelingResult } from '@/lib/engine/types';
 import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
 import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
 import { levelingSolved } from '@/lib/engine/solution/wrappers/leveling'
@@ -32,7 +32,7 @@ export default function LevelingCalculator() {
     { id: 3, station: '3', bs: '', fs: '1.456' },
     { id: 4, station: '4', bs: '', fs: '1.789' },
   ]);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<LevelingResult | null>(null);
   const [steps, setSteps] = useState<SolutionStep[] | null>(null)
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined)
   const [showProfile, setShowProfile] = useState(false);
@@ -45,7 +45,7 @@ export default function LevelingCalculator() {
   };
 
   const updateReading = (id: number, field: 'bs' | 'fs', value: string) => {
-    setReadings(readings.map((r: any) => r.id === id ? { ...r, [field]: value } : r));
+    setReadings(readings.map((r: Reading) => r.id === id ? { ...r, [field]: value } : r));
   };
 
   // method label helper — HPC = Height of Plane of Collimation (British/East African convention)
@@ -60,7 +60,7 @@ export default function LevelingCalculator() {
       `Allowable (10√K mm, K=${distanceKm} km): ±${(result.allowableMisclosure * 1000).toFixed(3)} mm`,
       `Check: ${result.isAcceptable ? 'PASS' : 'FAIL'}`,
       '',
-      ...result.readings.map((r: any) =>
+      ...result.readings.map((r: LevelingReading) =>
         `${r.station.padEnd(8)} ${r.reducedLevel !== undefined ? r.reducedLevel.toFixed(4) : '      '}${r.adjustedRL !== undefined ? ` (adj ${r.adjustedRL.toFixed(4)})` : ''}`
       ),
     ]
@@ -76,7 +76,7 @@ export default function LevelingCalculator() {
     const closing = closingBm ? parseFloat(closingBm) : undefined;
     if (isNaN(openingRL)) { setCalculating(false); return; }
 
-    const obs = readings.map((r: any) => ({
+    const obs = readings.map((r: Reading) => ({
       station: r.station,
       bs: r.bs ? parseFloat(r.bs) : undefined,
       fs: r.fs ? parseFloat(r.fs) : undefined
@@ -227,7 +227,7 @@ export default function LevelingCalculator() {
                     ]},
                   ],
                   [
-                    { title: 'Level Book Observations', headers: ['Station', 'BS (m)', 'FS (m)', 'Rise (m)', 'Fall (m)', 'RL (m)', 'Adj RL (m)'], rows: result.readings.map((r: any) => [
+                    { title: 'Level Book Observations', headers: ['Station', 'BS (m)', 'FS (m)', 'Rise (m)', 'Fall (m)', 'RL (m)', 'Adj RL (m)'], rows: result.readings.map((r: LevelingReading) => [
                       r.station || '—', r.bs?.toFixed(4) || '—', r.fs?.toFixed(4) || '—',
                       r.rise?.toFixed(4) || '—', r.fall?.toFixed(4) || '—',
                       r.reducedLevel?.toFixed(4) || '—', r.adjustedRL?.toFixed(4) || '—',
@@ -244,7 +244,7 @@ export default function LevelingCalculator() {
                 if (!result) return
                 const csv = toCSV(
                   ['Station', 'BS (m)', 'FS (m)', 'Rise (m)', 'Fall (m)', 'RL (m)', 'Adj RL (m)', 'Remarks'],
-                  result.readings.map((r: any) => [
+                  result.readings.map((r: LevelingReading) => [
                     r.station || '', r.bs?.toFixed(4) || '', r.fs?.toFixed(4) || '',
                     r.rise?.toFixed(4) || '', r.fall?.toFixed(4) || '',
                     r.reducedLevel?.toFixed(4) || '', r.adjustedRL?.toFixed(4) || '', '',
@@ -355,15 +355,15 @@ function ResultRow({ label, value, highlight }: { label: string; value: string; 
   );
 }
 
-function LevelingProfile({ readings }: { readings: any[] }) {
+function LevelingProfile({ readings }: { readings: LevelingReading[] }) {
   const width = 600;
   const height = 250;
   const padding = 50;
 
-  const validReadings = readings.filter((r: any) => r.reducedLevel !== undefined);
+  const validReadings = readings.filter((r): r is LevelingReading & { reducedLevel: number } => r.reducedLevel !== undefined);
   if (validReadings.length === 0) return null;
 
-  const rls = validReadings.map((r: any) => r.adjustedRL || r.reducedLevel);
+  const rls = validReadings.map((r) => (r.adjustedRL !== undefined ? r.adjustedRL : r.reducedLevel));
   const minRL = Math.min(...rls) - 0.5;
   const maxRL = Math.max(...rls) + 0.5;
   const maxIdx = validReadings.length - 1;
