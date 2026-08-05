@@ -36,7 +36,7 @@ jobs:
   lint:
     name: ESLint
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -79,9 +79,11 @@ jobs:
           echo "$CHANGED"
           # shellcheck disable=SC2086
           npx eslint $CHANGED --max-warnings 0
-      - name: Whole-repo lint (informational, non-blocking)
-        run: npx eslint middleware.ts src/ --ext .ts,.tsx --max-warnings 1300
-        continue-on-error: true
+      # Per-rule ratchets (warning-baseline.json + a11y-baseline.json) in ONE
+      # eslint pass — blocks on ANY rule exceeding its baseline. A rule absent
+      # from a baseline counts as 0, so brand-new violations fail CI.
+      - name: Whole-repo lint ratchets (blocking)
+        run: node scripts/lint-ratchets.mjs --write-audit
 
   build:
     name: Production Build

@@ -1,0 +1,20 @@
+{
+  "@typescript-eslint/no-unused-vars": 1314,
+  "@typescript-eslint/no-unsafe-assignment": 3010,
+  "@typescript-eslint/no-explicit-any": 1320,
+  "no-console": 405,
+  "@typescript-eslint/no-unsafe-argument": 1040,
+  "@typescript-eslint/no-unsafe-member-access": 5459,
+  "@typescript-eslint/no-unsafe-call": 1194,
+  "react-hooks/exhaustive-deps": 76,
+  "@typescript-eslint/no-non-null-assertion": 665,
+  "@typescript-eslint/no-unsafe-return": 369,
+  "prefer-const": 172,
+  "no-useless-escape": 32,
+  "no-restricted-syntax": 16,
+  "no-empty": 3,
+  "@typescript-eslint/no-require-imports": 21,
+  "no-unreachable": 3,
+  "import/no-anonymous-default-export": 1,
+  "@typescript-eslint/ban-ts-comment": 3
+}

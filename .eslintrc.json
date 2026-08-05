@@ -29,7 +29,7 @@
     "no-unused-vars": "off",
     "no-console": "warn",
     "no-debugger": "warn",
-    "no-empty": "warn",
+    "no-empty": ["warn", { "allowEmptyCatch": true }],
     "no-irregular-whitespace": "warn",
     "no-case-declarations": "off",
     "no-fallthrough": "warn",

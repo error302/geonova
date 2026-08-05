@@ -9,7 +9,7 @@ jobs:
   check:
     name: Type Check, Lint, Build & Test
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
@@ -27,13 +27,12 @@ jobs:
       - name: TypeScript check
         run: npx tsc --noEmit
 
-      - name: ESLint (ratchet — warning count must not increase)
-        # AUDIT FIX (2026-07-05): Mirror the CI workflow's lint approach:
-        # block on changed files (--max-warnings 0), informational on the
-        # whole repo. Also include middleware.ts (which lives at the repo
-        # root, not under src/).
-        run: npx eslint middleware.ts src/ --ext .ts,.tsx --max-warnings 1300
-        continue-on-error: true
+      - name: ESLint (per-rule ratchets — one pass, both baselines)
+        # AUDIT FIX (2026-08-04): Single blocking lint pass. lint-ratchets.mjs
+        # runs eslint once over middleware.ts + src/ and fails if ANY rule in
+        # warning-baseline.json or a11y-baseline.json is exceeded. A rule
+        # absent from a baseline counts as 0, so new violations fail CI.
+        run: node scripts/lint-ratchets.mjs --write-audit
 
       - name: i18n integrity check
         run: node scripts/i18n-sync.mjs --check
