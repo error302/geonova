@@ -31,8 +31,12 @@ jobs:
       # runs eslint once over middleware.ts + src/ and fails if ANY rule in
       # warning-baseline.json or a11y-baseline.json is exceeded. A rule
       # absent from a baseline counts as 0, so new violations fail CI.
-      - name: ESLint (per-rule ratchets — one pass, both baselines)
-        run: node scripts/lint-ratchets.mjs --write-audit
+      #
+      # --report prints per-rule drift tables (committed-at-HEAD vs baseline vs
+      # live count, Δ since last commit) to the Actions log on every PR, so
+      # per-family lint movement is visible without a manual run.
+      - name: ESLint (per-rule ratchets — one pass, both baselines, prints drift tables)
+        run: node scripts/lint-ratchets.mjs --write-audit --report
 
       - name: Aria-label gate (blocking, bans junk accessible names)
         # A11Y GATE (2026-08-03): bans placeholder-like / junk aria-labels
