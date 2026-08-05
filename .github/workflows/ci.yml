@@ -36,8 +36,9 @@ jobs:
   lint:
     name: ESLint
     runs-on: ubuntu-latest
-    # Two full eslint passes run here (a11y-audit + warning-ratchet) on top of
-    # the changed-files gate — 15 min gives both comfortable headroom.
+    # One full eslint pass runs here via lint-ratchets.mjs (checks BOTH the
+    # warning and jsx-a11y baselines) on top of the changed-files gate —
+    # 15 min gives it comfortable headroom.
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
