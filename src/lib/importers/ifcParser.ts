@@ -366,7 +366,7 @@ function emptyHeader(): IFCHeader {
  */
 export function resolveRef<T extends IFCEntity = IFCEntity>(
   model: IFCModel,
-  arg: StepArg
+  arg: StepArg | null
 ): T | null {
   if (isRef(arg)) {
     return (model.entities.get(arg.id) as T) ?? null
@@ -377,7 +377,7 @@ export function resolveRef<T extends IFCEntity = IFCEntity>(
 /**
  * Check if a StepArg is an entity reference.
  */
-export function isRef(arg: StepArg): arg is StepRef {
+export function isRef(arg: StepArg | null): arg is StepRef {
   return (
     typeof arg === 'object' &&
     arg !== null &&
@@ -420,9 +420,6 @@ export function allOfType<T extends IFCEntity = IFCEntity>(
  */
 export function extractBuildingGeometry(model: IFCModel): BuildingGeometry {
   const buildings: BuildingGeometry['buildings'] = []
-
-  // Find IFCPROJECT to get sites
-  const projects = allOfType(model, 'IFCPROJECT')
 
   // Collect all sites from project or standalone
   const sites = allOfType(model, 'IFCSITE')
@@ -807,10 +804,10 @@ export function extractProjectMetadata(model: IFCModel): IFCProjectInfo {
 
 // ─── Helper Functions ────────────────────────────────────────────────────────
 
-function getArgValue(args: unknown[], index: number): any {
+function getArgValue(args: unknown[], index: number): StepArg | null {
   if (index < 0 || index >= args.length) return null
   const val = args[index]
-  return val === null || val === undefined ? null : val
+  return val === null || val === undefined ? null : (val as StepArg)
 }
 
 function getEntityName(model: IFCModel, entity: IFCEntity): string {

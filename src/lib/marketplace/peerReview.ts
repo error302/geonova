@@ -33,6 +33,37 @@ export interface ReviewComment {
   postedAt: string
 }
 
+// ── DB row shapes for the peer_reviews / peer_review_comments tables ────────
+interface PeerReviewRow {
+  id: string
+  project_name: string
+  survey_type: string
+  description: string
+  country: string
+  submitter_name: string
+  submitter_contact: string
+  attachment_note: string | null
+  status: string
+  posted_at: string
+  payment_status: string | null
+  peer_review_comments: Array<{
+    id: string
+    request_id: string
+    reviewer_name: string
+    reviewer_title: string
+    comment: string
+    category: string
+    rating: number
+    posted_at: string
+  }> | null
+}
+
+interface PeerReviewCommentRow {
+  id: string
+  request_id: string
+  posted_at: string
+}
+
 import { createClient } from '../api-client/client'
 
 export async function getRequests(status?: ReviewStatus): Promise<ReviewRequest[]> {
@@ -47,10 +78,11 @@ export async function getRequests(status?: ReviewStatus): Promise<ReviewRequest[
   
   if (status) q = q.eq('status', status)
     
-  const { data } = await q
+  const qRes = await q
+  const data = (qRes as { data: PeerReviewRow[] | null }).data
   if (!data) return []
   
-  return data.map((r: any) => ({
+  return data.map((r) => ({
     id: r.id,
     projectName: r.project_name,
     surveyType: r.survey_type as SurveyTypeOption,
@@ -58,18 +90,18 @@ export async function getRequests(status?: ReviewStatus): Promise<ReviewRequest[
     country: r.country,
     submitterName: r.submitter_name,
     submitterContact: r.submitter_contact,
-    attachmentNote: r.attachment_note,
+    attachmentNote: r.attachment_note || '',
     status: r.status as ReviewStatus,
-    paymentStatus: r.payment_status,
+    paymentStatus: r.payment_status || undefined,
     postedAt: r.posted_at,
-    comments: (r.peer_review_comments || []).map((c: any) => ({
+    comments: (r.peer_review_comments || []).map((c) => ({
       id: c.id,
       requestId: c.request_id,
       reviewerName: c.reviewer_name,
       reviewerTitle: c.reviewer_title,
       comment: c.comment,
-      category: c.category,
-      rating: c.rating,
+      category: c.category as ReviewComment['category'],
+      rating: c.rating as ReviewComment['rating'],
       postedAt: c.posted_at
     }))
   }))
@@ -81,7 +113,7 @@ export async function postRequest(data: Omit<ReviewRequest, 'id' | 'postedAt' | 
   const { data: { session } } = await dbClient.auth.getSession()
   const user = session?.user ?? null
 
-  const { data: ret, error } = await dbClient.from('peer_reviews').insert({
+  const res = await dbClient.from('peer_reviews').insert({
     user_id: user?.id || null,
     project_name: data.projectName,
     survey_type: data.surveyType,
@@ -93,18 +125,21 @@ export async function postRequest(data: Omit<ReviewRequest, 'id' | 'postedAt' | 
     status: 'open',
     payment_status: 'pending'
   }).select().single()
+  const { error } = res
+  const ret = res.data as PeerReviewRow | null
   
   if (error) throw new Error(error.message)
   
+  const row = (ret ?? {}) as PeerReviewRow
   return {
-    ...data, id: ret.id, postedAt: ret.posted_at, status: 'open', comments: [], paymentStatus: 'pending'
+    ...data, id: row.id, postedAt: row.posted_at, status: 'open', comments: [], paymentStatus: 'pending'
   }
 }
 
 export async function postComment(data: Omit<ReviewComment, 'id' | 'postedAt'>): Promise<ReviewComment> {
   const dbClient = createClient()
   
-  const { data: ret, error } = await dbClient.from('peer_review_comments').insert({
+  const res = await dbClient.from('peer_review_comments').insert({
     request_id: data.requestId,
     reviewer_name: data.reviewerName,
     reviewer_title: data.reviewerTitle,
@@ -112,13 +147,16 @@ export async function postComment(data: Omit<ReviewComment, 'id' | 'postedAt'>):
     category: data.category,
     rating: data.rating
   }).select().single()
+  const { error } = res
+  const ret = res.data as PeerReviewCommentRow | null
   
   if (error) throw new Error(error.message)
   
   // Mark review as requested and bump updated_at
   await dbClient.from('peer_reviews').update({ status: 'reviewed', updated_at: new Date().toISOString() }).eq('id', data.requestId)
   
-  return { ...data, id: ret.id, postedAt: ret.posted_at }
+  const row = (ret ?? {}) as PeerReviewCommentRow
+  return { ...data, id: row.id, postedAt: row.posted_at }
 }
 
 export async function closeRequest(id: string) {

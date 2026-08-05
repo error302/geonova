@@ -309,6 +309,55 @@ interface TokenStore {
 const globalTokenStore: TokenStore = { accessToken: null, tokenExpiry: 0 };
 
 // ---------------------------------------------------------------------------
+// Raw JSON shapes returned by the ARDHISASA API (typed for fetch responses)
+// ---------------------------------------------------------------------------
+
+interface OAuthTokenResponse {
+  access_token?: string
+  accessToken?: string
+  token?: string
+  expires_in?: number
+  expiresIn?: number
+}
+
+interface SubmissionApiResponse {
+  submissionId?: string
+  id?: string
+  trackingNumber?: string
+  referenceNumber?: string
+  status?: SubmissionResult['status']
+  submittedAt?: string
+  estimatedProcessingDays?: number
+  remarks?: string
+  errors?: string[]
+  success?: boolean
+}
+
+interface RecordSearchApiResponse {
+  records?: Array<Record<string, unknown>>
+  totalResults?: number
+  page?: number
+  pageSize?: number
+}
+
+interface CountiesApiResponse {
+  counties?: unknown
+  data?: unknown
+}
+
+interface PlanTypesApiResponse {
+  planTypes?: unknown
+  data?: unknown
+}
+
+interface RequirementsApiResponse {
+  requiredDocuments?: string[]
+  requiredFields?: string[]
+  feeEstimate?: number
+  processingTime?: string
+}
+
+// ---------------------------------------------------------------------------
 // Client implementation
 // ---------------------------------------------------------------------------
 
@@ -347,8 +396,9 @@ export class ArdhisasaClient {
    */
   private async authenticate(): Promise<string> {
     // Only re-authenticate when the current token is missing or expired.
-    if (!this.isTokenExpired()) {
-      return this.tokenStore.accessToken!;
+    const cached = this.tokenStore.accessToken
+    if (cached && !this.isTokenExpired()) {
+      return cached;
     }
 
     const url = `${this.config.baseUrl}/oauth/token`;
@@ -383,7 +433,7 @@ export class ArdhisasaClient {
       );
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as OAuthTokenResponse;
 
     // Handle both standard OAuth2 and ARDHISASA-specific response shapes.
     const accessToken: string | undefined =
@@ -464,14 +514,14 @@ export class ArdhisasaClient {
     let body: string;
     try {
       body = await response.text();
-    } catch (_e) {
+    } catch {
       body = '';
     }
 
     let parsed: Record<string, unknown> | null = null;
     try {
-      parsed = JSON.parse(body);
-    } catch (_e) {
+      parsed = JSON.parse(body) as Record<string, unknown> | null;
+    } catch {
       // non-JSON body - continue
     }
 
@@ -534,7 +584,7 @@ export class ArdhisasaClient {
       await this.handleError(response, 'submitPlan');
     }
 
-    const result = await response.json();
+    const result = (await response.json()) as SubmissionApiResponse;
 
     const processingInfo = PLAN_PROCESSING[data.planType] ?? { days: 21 };
 
@@ -586,7 +636,7 @@ export class ArdhisasaClient {
       await this.handleError(response, 'searchRecords');
     }
 
-    const body = await response.json();
+    const body = (await response.json()) as RecordSearchApiResponse;
 
     return {
       records: (body.records ?? []).map((r: Record<string, unknown>) => ({
@@ -635,7 +685,7 @@ export class ArdhisasaClient {
       await this.handleError(response, 'getSubmissionStatus');
     }
 
-    const result = await response.json();
+    const result = (await response.json()) as SubmissionApiResponse;
 
     return {
       success: result.success ?? true,
@@ -856,13 +906,13 @@ export class ArdhisasaClient {
       const response = await this.fetchWithTimeout(url, { method: 'GET', headers });
 
       if (response.ok) {
-        const body = await response.json();
+        const body = (await response.json()) as CountiesApiResponse;
         if (Array.isArray(body.counties ?? body.data ?? body)) {
           return (body.counties ?? body.data ?? body) as CountyInfo[];
         }
       }
       // Non-critical: fall through to static list
-    } catch (_e) {
+    } catch {
       // Swallow and fall back
     }
 
@@ -882,12 +932,12 @@ export class ArdhisasaClient {
       const response = await this.fetchWithTimeout(url, { method: 'GET', headers });
 
       if (response.ok) {
-        const body = await response.json();
+        const body = (await response.json()) as PlanTypesApiResponse;
         if (Array.isArray(body.planTypes ?? body.data ?? body)) {
           return (body.planTypes ?? body.data ?? body) as PlanTypeInfo[];
         }
       }
-    } catch (_e) {
+    } catch {
       // Swallow and fall back
     }
 
@@ -909,7 +959,7 @@ export class ArdhisasaClient {
       const response = await this.fetchWithTimeout(url, { method: 'GET', headers });
 
       if (response.ok) {
-        const body = await response.json();
+        const body = (await response.json()) as RequirementsApiResponse;
         return {
           requiredDocuments: body.requiredDocuments ?? [],
           requiredFields: body.requiredFields ?? [],
@@ -917,7 +967,7 @@ export class ArdhisasaClient {
           processingTime: body.processingTime ?? '',
         };
       }
-    } catch (_e) {
+    } catch {
       // Swallow and fall back
     }
 

@@ -137,7 +137,7 @@ export function useRimState() {
       try {
         setProjectsLoading(true);
         const data = await apiGet('/api/projects', projectsListSchema, { ttlMs: 30_000 })
-        setProjects(data.data || []);
+        setProjects((data.data || []) as Project[]);
       } catch (err) {
         showToast(err instanceof ApiError ? (err as Error).message : 'Failed to load projects', 'error');
       } finally {
@@ -155,7 +155,7 @@ export function useRimState() {
     try {
       setSectionsLoading(true);
       const data = await apiGet(`/api/rim?projectId=${projectId}`, rimListSchema, { ttlMs: 0 })
-      setSections(data.data || []);
+      setSections((data.data || []) as RimSection[]);
     } catch (err) {
       showToast(err instanceof ApiError ? (err as Error).message : 'Failed to load RIM sections', 'error');
     } finally {
@@ -172,7 +172,7 @@ export function useRimState() {
     try {
       setTemplatesLoading(true);
       const data = await apiGet('/api/rim-templates', rimTemplatesListSchema, { ttlMs: 300_000 })
-      setTemplates(data.data || []);
+      setTemplates((data.data || []) as RimTemplate[]);
     } catch (err) {
       showToast(err instanceof ApiError ? (err as Error).message : 'Failed to load templates', 'error');
     } finally {
@@ -242,7 +242,7 @@ export function useRimState() {
         },
       );
       apiInvalidate(`/api/rim?projectId=${selectedProjectId}`)
-      const newSection = result.data;
+      const newSection = result.data as RimSection;
       showToast('RIM section created', 'success');
       await loadSections(selectedProjectId);
       handleSelectSection(newSection);
@@ -261,7 +261,12 @@ export function useRimState() {
         rimTemplateApplySchema,
         { templateId, customizations: {} },
       );
-      const tpl = tplData.data;
+      const tpl = tplData.data as {
+        section?: { section_name?: string }
+        defaults?: { registry?: string; scale?: string; datum?: string; projection?: string }
+        sampleParcels?: Array<{ parcelNumber?: string; area?: number; landUse?: string; ownerName?: string }>
+        sampleBeacons?: Array<{ beaconNumber?: string; easting?: number; northing?: number; description?: string; type?: string }>
+      }
 
       // Create the section with template defaults
       const result = await apiPost(
@@ -281,7 +286,7 @@ export function useRimState() {
           },
         },
       );
-      const newSection = result.data;
+      const newSection = result.data as RimSection;
 
       // Add sample parcels
       if (tpl.sampleParcels?.length) {
@@ -362,7 +367,7 @@ export function useRimState() {
         },
       );
       apiInvalidate(`/api/rim?projectId=${selectedProjectId}`)
-      setActiveSection(result.data);
+      setActiveSection(result.data as RimSection);
       showToast('Section updated', 'success');
       await loadSections(selectedProjectId);
     } catch (err: unknown) {
@@ -421,7 +426,7 @@ export function useRimState() {
         },
       );
       apiInvalidate(`/api/rim?projectId=${selectedProjectId}`)
-      setParcels((prev) => [...prev, result.data]);
+      setParcels((prev) => [...prev, result.data as RimParcel]);
       setNewParcel({ parcel_number: '', area: '', land_use: '', owner_name: '', beacon_count: '' });
       setShowAddParcel(false);
       showToast('Parcel added', 'success');
@@ -455,7 +460,7 @@ export function useRimState() {
         },
       );
       apiInvalidate(`/api/rim?projectId=${selectedProjectId}`)
-      setBeacons((prev) => [...prev, result.data]);
+      setBeacons((prev) => [...prev, result.data as RimBeacon]);
       setNewBeacon({
         beacon_number: '',
         easting: '',
@@ -487,7 +492,7 @@ export function useRimState() {
         }),
       });
       if (!res.ok) {
-        const data = await res.json();
+        const data = (await res.json()) as { error?: { message?: string } };
         throw new Error(data.error?.message || 'Failed to generate PDF');
       }
       const blob = await res.blob();
