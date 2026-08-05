@@ -372,7 +372,7 @@ function drawTopoTitleBlock(
   drawLine(doc, x, y + rowHeight * 3, x + TITLE_BLOCK_WIDTH, y + rowHeight * 3, 0.3);
 
   // Data rows
-  let currentY = y + rowHeight * 3 + innerMargin;
+  const currentY = y + rowHeight * 3 + innerMargin;
   const col1X = x + innerMargin;
   const col2X = x + TITLE_BLOCK_WIDTH / 2 + innerMargin;
   const labelWidth = 30;

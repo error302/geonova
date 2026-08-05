@@ -281,10 +281,10 @@ export default function PlanPromotionPanel() {
       <div className="p-5 space-y-6">
         {/* ── User Lookup ──────────────────────────────────────────────── */}
         <section>
-          <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+          <div className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
             <Search className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
             User Lookup
-          </label>
+          </div>
           <div className="relative">
             <Input
               type="email"
@@ -379,10 +379,10 @@ export default function PlanPromotionPanel() {
         {/* ── Plan Selection ───────────────────────────────────────────── */}
         {user && (
           <section>
-            <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+            <div className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
               <ShieldCheck className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
               New Plan
-            </label>
+            </div>
             <RadioGroup
               value={selectedPlan}
               onValueChange={(v) => setSelectedPlan(v as PlanTier)}
@@ -391,6 +391,7 @@ export default function PlanPromotionPanel() {
               {(['free', 'pro', 'enterprise'] as PlanTier[]).map((plan) => (
                 <label
                   key={plan}
+                  aria-label={PLAN_LABELS[plan]}
                   className={`flex items-center gap-2.5 rounded-lg border p-3 cursor-pointer transition-colors ${
                     selectedPlan === plan
                       ? 'border-[var(--accent)] bg-[var(--accent)]/10'
@@ -419,10 +420,10 @@ export default function PlanPromotionPanel() {
         {/* ── Duration ─────────────────────────────────────────────────── */}
         {user && (
           <section>
-            <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+            <div className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
               <Clock className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
               Duration
-            </label>
+            </div>
             <RadioGroup
               value={durationOption}
               onValueChange={(v) => setDurationOption(v as DurationOption)}
@@ -471,11 +472,11 @@ export default function PlanPromotionPanel() {
         {/* ── Reason / Note ────────────────────────────────────────────── */}
         {user && (
           <section>
-            <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+            <div className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
               <FileText className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
               Reason / Note
               <span className="normal-case font-normal text-[var(--text-muted)] ml-1">(audit trail)</span>
-            </label>
+            </div>
             <Textarea
               placeholder="e.g. Promotional upgrade for partner onboarding…"
               value={reason}
@@ -515,7 +516,7 @@ export default function PlanPromotionPanel() {
           <button
             onClick={handleSubmit}
             disabled={!canSubmit}
-            className="w-full flex items-center justify-center gap-2 rounded-lg bg-[var(--accent)] text-white font-medium text-sm py-2.5 transition-colors hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 rounded-lg bg-[var(--accent)] text-black font-medium text-sm py-2.5 transition-colors hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {submitting ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -659,7 +660,7 @@ export default function PlanPromotionPanel() {
             <button
               onClick={confirmAndApply}
               disabled={submitting}
-              className="px-4 py-2 text-sm rounded-lg bg-[var(--accent)] text-white font-medium hover:opacity-90 transition-colors disabled:opacity-50 flex items-center gap-2"
+              className="px-4 py-2 text-sm rounded-lg bg-[var(--accent)] text-black font-medium hover:opacity-90 transition-colors disabled:opacity-50 flex items-center gap-2"
             >
               {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               Confirm Override

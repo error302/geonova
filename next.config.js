@@ -274,7 +274,7 @@ const nextConfig = {
   async headers() {
     const isProd = process.env.NODE_ENV === 'production'
     // Allow the CSP to work with any domain (production, staging, dev)
-    // instead of hardcoding metardu.duckdns.org which breaks other environments
+    // instead of hardcoding metardu.space which breaks other environments
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || ''
     const siteHost = siteUrl ? new URL(siteUrl).hostname : ''
     const wssHost = siteHost ? `wss://${siteHost}` : ''

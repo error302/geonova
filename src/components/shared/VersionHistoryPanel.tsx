@@ -479,7 +479,7 @@ export function VersionHistoryPanel({
             <Button
               onClick={handleRestore}
               disabled={restoring}
-              className="bg-[var(--accent)] text-white hover:bg-[var(--accent-dim)]"
+              className="bg-[var(--accent)] text-black hover:bg-[var(--accent-dim)]"
             >
               {restoring && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
               <RotateCcw className="h-4 w-4 mr-2" />

@@ -95,8 +95,8 @@ export default function AccountPage() {
           <Section title="Profile">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Email</label>
-                <input aria-label="Email"
+                <label htmlFor="account-email" className="block text-sm text-[var(--text-secondary)] mb-1">Email</label>
+                <input id="account-email"
                   type="email"
                   value={user?.email || ''}
                   disabled
@@ -117,8 +117,8 @@ export default function AccountPage() {
               className="space-y-4"
             >
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">New Password</label>
-                <input aria-label="Newpassword"
+                <label htmlFor="account-new-password" className="block text-sm text-[var(--text-secondary)] mb-1">New Password</label>
+                <input id="account-new-password"
                   name="newPassword"
                   type="password"
                   required

@@ -59,18 +59,18 @@ export default function GNSSRinexPage() {
       <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-[10px] text-[var(--text-muted)] block mb-1">RINEX Observation File (*.rnx, *.obs)</label>
-            <input type="file" accept=".rnx,.obs,.RNX,.O" onChange={handleObsFile} className="w-full text-xs text-[var(--text-secondary)]" />
+            <label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="rinex-observation-file-rnx-obs">RINEX Observation File (*.rnx, *.obs)</label>
+            <input id="rinex-observation-file-rnx-obs" type="file" accept=".rnx,.obs,.RNX,.O" onChange={handleObsFile} className="w-full text-xs text-[var(--text-secondary)]" />
             {obsFile && <div className="mt-1 text-[10px] text-green-400 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> {obsFile.name}</div>}
           </div>
           <div>
-            <label className="text-[10px] text-[var(--text-muted)] block mb-1">RINEX Navigation File (optional)</label>
-            <input type="file" accept=".nav,.rnx,.N" onChange={handleNavFile} className="w-full text-xs text-[var(--text-secondary)]" />
+            <label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="rinex-navigation-file-optional">RINEX Navigation File (optional)</label>
+            <input id="rinex-navigation-file-optional" type="file" accept=".nav,.rnx,.N" onChange={handleNavFile} className="w-full text-xs text-[var(--text-secondary)]" />
             {navFile && <div className="mt-1 text-[10px] text-green-400 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> {navFile.name}</div>}
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4 mt-3">
-          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Station Name</label><input value={stationName} onChange={e => setStationName(e.target.value)} className={inputCls} placeholder="NALR" /></div>
+          <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="station-name">Station Name</label><input id="station-name" value={stationName} onChange={e => setStationName(e.target.value)} className={inputCls} placeholder="NALR" /></div>
           <div className="flex items-end">
             <label className="flex items-center gap-2 text-xs text-[var(--text-secondary)] cursor-pointer">
               <input type="checkbox" checked={usePrecise} onChange={e => setUsePrecise(e.target.checked)} className="w-4 h-4" />

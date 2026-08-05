@@ -115,7 +115,7 @@ export default function BeaconReferencePage() {
               <div className="text-xs text-[var(--text-muted)]">Blue symbols on plans</div>
             </div>
             <div>
-              <div className="font-medium text-black">Boundary Marks</div>
+              <div className="font-medium text-zinc-100">Boundary Marks</div>
               <div className="text-xs text-[var(--text-muted)]">Black symbols on plans</div>
             </div>
             <div>
@@ -123,7 +123,7 @@ export default function BeaconReferencePage() {
               <div className="text-xs text-[var(--text-muted)]">Green symbols on plans</div>
             </div>
             <div>
-              <div className="font-medium text-red-600">Destroyed</div>
+              <div className="font-medium text-red-400">Destroyed</div>
               <div className="text-xs text-[var(--text-muted)]">Red cross through symbol</div>
             </div>
           </div>

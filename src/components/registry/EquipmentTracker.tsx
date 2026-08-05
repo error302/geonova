@@ -327,18 +327,20 @@ function AddEquipmentModal({ onClose, onAdd }: { onClose: () => void; onAdd: () 
         <h3 className="text-lg font-semibold mb-4">Add Equipment</h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Equipment Name</label>
+            <label htmlFor="eq-name" className="block text-sm font-medium mb-1">Equipment Name</label>
             <input
+              id="eq-name"
               type="text"
               value={form.name}
               onChange={e => setForm({ ...form, name: e.target.value })}
-              aria-label="e.g., Leica TS06 Plus" placeholder="e.g., Leica TS06 Plus"
+              placeholder="e.g., Leica TS06 Plus"
               className="w-full p-2 border rounded-lg"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Type</label>
+            <label htmlFor="eq-type" className="block text-sm font-medium mb-1">Type</label>
             <select
+              id="eq-type"
               value={form.type}
               onChange={e => setForm({ ...form, type: e.target.value as EquipmentType })}
               className="w-full p-2 border rounded-lg"
@@ -350,29 +352,31 @@ function AddEquipmentModal({ onClose, onAdd }: { onClose: () => void; onAdd: () 
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Make</label>
+              <label htmlFor="eq-make" className="block text-sm font-medium mb-1">Make</label>
               <input
+                id="eq-make"
                 type="text"
                 value={form.make}
                 onChange={e => setForm({ ...form, make: e.target.value })}
-                aria-label="e.g., Leica" placeholder="e.g., Leica"
+                placeholder="e.g., Leica"
                 className="w-full p-2 border rounded-lg"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Model</label>
+              <label htmlFor="eq-model" className="block text-sm font-medium mb-1">Model</label>
               <input
+                id="eq-model"
                 type="text"
                 value={form.model}
                 onChange={e => setForm({ ...form, model: e.target.value })}
-                aria-label="e.g., TS06 Plus" placeholder="e.g., TS06 Plus"
+                placeholder="e.g., TS06 Plus"
                 className="w-full p-2 border rounded-lg"
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Serial Number</label>
-            <input aria-label="Serialnumber"
+            <label htmlFor="eq-serial" className="block text-sm font-medium mb-1">Serial Number</label>
+            <input id="eq-serial"
               type="text"
               value={form.serialNumber}
               onChange={e => setForm({ ...form, serialNumber: e.target.value })}
@@ -381,8 +385,8 @@ function AddEquipmentModal({ onClose, onAdd }: { onClose: () => void; onAdd: () 
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Last Calibration</label>
-              <input aria-label="Lastcalibrationdate"
+              <label htmlFor="eq-last-cal" className="block text-sm font-medium mb-1">Last Calibration</label>
+              <input id="eq-last-cal"
                 type="date"
                 value={form.lastCalibrationDate}
                 onChange={e => setForm({ ...form, lastCalibrationDate: e.target.value })}
@@ -390,8 +394,8 @@ function AddEquipmentModal({ onClose, onAdd }: { onClose: () => void; onAdd: () 
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Certificate No.</label>
-              <input aria-label="Calibrationcertnumber"
+              <label htmlFor="eq-cert-no" className="block text-sm font-medium mb-1">Certificate No.</label>
+              <input id="eq-cert-no"
                 type="text"
                 value={form.calibrationCertNumber}
                 onChange={e => setForm({ ...form, calibrationCertNumber: e.target.value })}
@@ -400,8 +404,8 @@ function AddEquipmentModal({ onClose, onAdd }: { onClose: () => void; onAdd: () 
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Calibration Lab</label>
-            <input aria-label="Calibrationlab"
+            <label htmlFor="eq-cal-lab" className="block text-sm font-medium mb-1">Calibration Lab</label>
+            <input id="eq-cal-lab"
               type="text"
               value={form.calibrationLab}
               onChange={e => setForm({ ...form, calibrationLab: e.target.value })}
@@ -467,8 +471,8 @@ function AddCalibrationModal({
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Date</label>
-              <input aria-label="Date"
+              <label htmlFor="eqc-date" className="block text-sm font-medium mb-1">Date</label>
+              <input id="eqc-date"
                 type="date"
                 value={form.date}
                 onChange={e => setForm({ ...form, date: e.target.value })}
@@ -476,8 +480,8 @@ function AddCalibrationModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Certificate No.</label>
-              <input aria-label="Certnumber"
+              <label htmlFor="eqc-cert" className="block text-sm font-medium mb-1">Certificate No.</label>
+              <input id="eqc-cert"
                 type="text"
                 value={form.certNumber}
                 onChange={e => setForm({ ...form, certNumber: e.target.value })}
@@ -487,8 +491,8 @@ function AddCalibrationModal({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Lab</label>
-              <input aria-label="Lab"
+              <label htmlFor="eqc-lab" className="block text-sm font-medium mb-1">Lab</label>
+              <input id="eqc-lab"
                 type="text"
                 value={form.lab}
                 onChange={e => setForm({ ...form, lab: e.target.value })}
@@ -496,8 +500,8 @@ function AddCalibrationModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Technician</label>
-              <input aria-label="Technician"
+              <label htmlFor="eqc-technician" className="block text-sm font-medium mb-1">Technician</label>
+              <input id="eqc-technician"
                 type="text"
                 value={form.technician}
                 onChange={e => setForm({ ...form, technician: e.target.value })}
@@ -506,8 +510,9 @@ function AddCalibrationModal({
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Result</label>
+            <label htmlFor="eqc-result" className="block text-sm font-medium mb-1">Result</label>
             <select
+              id="eqc-result"
               value={form.result}
               onChange={e => setForm({ ...form, result: e.target.value as 'PASS' | 'FAIL' | 'CONDITIONAL' })}
               className="w-full p-2 border rounded-lg"
@@ -518,8 +523,9 @@ function AddCalibrationModal({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Findings</label>
+            <label htmlFor="eqc-findings" className="block text-sm font-medium mb-1">Findings</label>
             <textarea
+              id="eqc-findings"
               value={form.findings}
               onChange={e => setForm({ ...form, findings: e.target.value })}
               rows={2}
@@ -527,8 +533,8 @@ function AddCalibrationModal({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Next Due Date</label>
-            <input aria-label="Nextduedate"
+            <label htmlFor="eqc-next-due" className="block text-sm font-medium mb-1">Next Due Date</label>
+            <input id="eqc-next-due"
               type="date"
               value={form.nextDueDate}
               onChange={e => setForm({ ...form, nextDueDate: e.target.value })}

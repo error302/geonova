@@ -426,7 +426,7 @@ export function leastSquaresAdjustment(
       const fromUnknown = unknownIndex.get(obs.from)
       const toUnknown = unknownIndex.get(obs.to)
 
-      let row = new Array(n).fill(0)
+      const row = new Array(n).fill(0)
       let residual = 0
 
       if (obs.distance !== undefined) {
@@ -604,7 +604,7 @@ export function leastSquaresAdjustment(
     const fromUnknown = unknownIndex.get(obs.from)
     const toUnknown = unknownIndex.get(obs.to)
 
-    let row = new Array(n).fill(0)
+    const row = new Array(n).fill(0)
     let residual = 0
 
     if (obs.distance !== undefined) {
@@ -856,7 +856,7 @@ export function adjustNetwork(input: LSAdjustmentInput): LSAdjustmentResult {
   let finalA: number[][] = zeros(m, nUnknowns)
   let finalW: number[] = new Array(m).fill(0)
   let finalP: number[] = new Array(m).fill(0)
-  let finalLabels: string[] = new Array(m).fill('')
+  const finalLabels: string[] = new Array(m).fill('')
   let finalObsList: unknown[] = []
 
   for (let iter = 0; iter < maxIter; iter++) {

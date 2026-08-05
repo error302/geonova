@@ -155,7 +155,7 @@ else
 fi
 
 # External check
-EXTERNAL=$(curl -sf -o /dev/null -w "%{http_code}" https://metardu.duckdns.org/ --max-time 15 2>/dev/null || echo "000")
+EXTERNAL=$(curl -sf -o /dev/null -w "%{http_code}" https://metardu.space/ --max-time 15 2>/dev/null || echo "000")
 if [ "$EXTERNAL" = "200" ]; then
   log "External site: HTTP 200"
 else
@@ -191,9 +191,9 @@ echo "════════════════════════�
 echo "  Phase 5 Deployment Complete!"
 echo "═══════════════════════════════════════════════════════"
 echo ""
-echo "  Site:      https://metardu.duckdns.org"
-echo "  Health:    https://metardu.duckdns.org/api/public/health"
-echo "  AI status: https://metardu.duckdns.org/api/ai/chat (GET)"
+echo "  Site:      https://metardu.space"
+echo "  Health:    https://metardu.space/api/public/health"
+echo "  AI status: https://metardu.space/api/ai/chat (GET)"
 echo ""
 echo "  Next steps:"
 echo "  - Set up Sentry DSN in .env.local for error monitoring"

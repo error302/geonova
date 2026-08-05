@@ -96,7 +96,7 @@ export function GcpTab({
                         className="input w-28 font-mono"
                         value={g.name}
                         onChange={e => updateGCP(g.id, 'name', e.target.value)}
-                        aria-label="GCP-01" placeholder="GCP-01"
+                        aria-label="GCP name" placeholder="GCP-01"
                       />
                     </td>
                     <td>
@@ -104,7 +104,7 @@ export function GcpTab({
                         className="input w-36 font-mono"
                         value={g.easting}
                         onChange={e => updateGCP(g.id, 'easting', e.target.value)}
-                        aria-label="484500.0000" placeholder="484500.0000"
+                        aria-label="Easting (m)" placeholder="484500.0000"
                       />
                     </td>
                     <td>
@@ -112,7 +112,7 @@ export function GcpTab({
                         className="input w-36 font-mono"
                         value={g.northing}
                         onChange={e => updateGCP(g.id, 'northing', e.target.value)}
-                        aria-label="9863100.0000" placeholder="9863100.0000"
+                        aria-label="Northing (m)" placeholder="9863100.0000"
                       />
                     </td>
                     <td>
@@ -120,14 +120,15 @@ export function GcpTab({
                         className="input w-32 font-mono"
                         value={g.elevation}
                         onChange={e => updateGCP(g.id, 'elevation', e.target.value)}
-                        aria-label="120.5000" placeholder="120.5000"
+                        aria-label="Elevation (m)" placeholder="120.5000"
                       />
                     </td>
                     <td>
                       <button
                         onClick={() => removeGCP(g.id)}
-                        className="text-red-400 hover:text-red-300 text-sm"
+                        className="text-red-400 hover:text-red-300 text-sm inline-flex items-center justify-center min-w-6 min-h-6 px-1"
                         title="Remove"
+                        aria-label={`Remove GCP ${g.id}`}
                       >
                         [x]
                       </button>

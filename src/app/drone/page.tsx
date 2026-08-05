@@ -100,8 +100,9 @@ function UploadSection({ onTaskCreated }: { onTaskCreated: (taskId: string) => v
       <div className="space-y-4">
         {/* Task name */}
         <div>
-          <label className="block text-sm text-[var(--text-muted)] mb-2">Survey Name</label>
+          <label htmlFor="drone-survey-name" className="block text-sm text-[var(--text-muted)] mb-2">Survey Name</label>
           <input
+            id="drone-survey-name"
             type="text"
             value={taskName}
             onChange={e => setTaskName(e.target.value)}
@@ -111,7 +112,7 @@ function UploadSection({ onTaskCreated }: { onTaskCreated: (taskId: string) => v
 
         {/* File input */}
         <div>
-          <label className="block text-sm text-[var(--text-muted)] mb-2">Photos (JPG, PNG, or TIFF — max 25MB each, max 200 photos)</label>
+          <label htmlFor="drone-photos" className="block text-sm text-[var(--text-muted)] mb-2">Photos (JPG, PNG, or TIFF — max 25MB each, max 200 photos)</label>
           <div
             onClick={() => fileInputRef.current?.click()}
             className="border-2 border-dashed border-[var(--border-color)] rounded-lg p-8 text-center cursor-pointer hover:border-[var(--accent)] transition-colors"
@@ -125,6 +126,7 @@ function UploadSection({ onTaskCreated }: { onTaskCreated: (taskId: string) => v
           </div>
           <input
             ref={fileInputRef}
+            id="drone-photos"
             type="file"
             multiple
             accept=".jpg,.jpeg,.png,.tif,.tiff"

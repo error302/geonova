@@ -286,18 +286,19 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
             <h2 className="text-xl font-semibold mb-4">Project Information</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Survey Number</label>
+                <label htmlFor="dpg-survey-number" className="block text-sm font-medium mb-1">Survey Number</label>
                 <input
+                  id="dpg-survey-number"
                   type="text"
                   value={input.surveyNumber}
                   onChange={(e) => setInput({ ...input, surveyNumber: e.target.value })}
                   className="input w-full text-sm"
-                  aria-label="ISK/2024/001" placeholder="ISK/2024/001"
+                  placeholder="ISK/2024/001"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Drawing Number</label>
-                <input aria-label="Drawingnumber"
+                <label htmlFor="dpg-drawing-number" className="block text-sm font-medium mb-1">Drawing Number</label>
+                <input id="dpg-drawing-number"
                   type="text"
                   value={input.drawingNumber}
                   onChange={(e) => setInput({ ...input, drawingNumber: e.target.value })}
@@ -305,18 +306,19 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Parcel Number</label>
+                <label htmlFor="dpg-parcel-number" className="block text-sm font-medium mb-1">Parcel Number</label>
                 <input
+                  id="dpg-parcel-number"
                   type="text"
                   value={input.parcelNumber}
                   onChange={(e) => setInput({ ...input, parcelNumber: e.target.value })}
                   className="input w-full text-sm"
-                  aria-label="LOT 1234/NAIROBI" placeholder="LOT 1234/NAIROBI"
+                  placeholder="LOT 1234/NAIROBI"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Locality</label>
-                <input aria-label="Locality"
+                <label htmlFor="dpg-locality" className="block text-sm font-medium mb-1">Locality</label>
+                <input id="dpg-locality"
                   type="text"
                   value={input.locality}
                   onChange={(e) => setInput({ ...input, locality: e.target.value })}
@@ -324,8 +326,8 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Registration Section</label>
-                <input aria-label="Registrationsection"
+                <label htmlFor="dpg-registration-section" className="block text-sm font-medium mb-1">Registration Section</label>
+                <input id="dpg-registration-section"
                   type="text"
                   value={input.registrationSection}
                   onChange={(e) => setInput({ ...input, registrationSection: e.target.value })}
@@ -333,8 +335,8 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">County</label>
-                <input aria-label="County"
+                <label htmlFor="dpg-county" className="block text-sm font-medium mb-1">County</label>
+                <input id="dpg-county"
                   type="text"
                   value={input.county}
                   onChange={(e) => setInput({ ...input, county: e.target.value })}
@@ -342,8 +344,9 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Scale</label>
+                <label htmlFor="dpg-scale" className="block text-sm font-medium mb-1">Scale</label>
                 <select
+                  id="dpg-scale"
                   value={input.scale}
                   onChange={(e) => setInput({ ...input, scale: Number(e.target.value) as 500 | 1000 | 2500 | 5000 })}
                   className="input w-full text-sm"
@@ -354,8 +357,9 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Datum</label>
+                <label htmlFor="dpg-datum" className="block text-sm font-medium mb-1">Datum</label>
                 <select
+                  id="dpg-datum"
                   value={input.datum}
                   onChange={(e) => setInput({ ...input, datum: e.target.value as 'ARC1960' | 'WGS84' })}
                   className="input w-full text-sm"
@@ -368,8 +372,9 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 <p className="text-xs font-semibold mb-2 text-[var(--text-secondary)] uppercase tracking-wide">SRVY2025-1 & Grid Corrections</p>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-xs font-medium mb-1">Submission Number (SRVY2025-1)</label>
+                    <label htmlFor="dpg-submission-number" className="block text-xs font-medium mb-1">Submission Number (SRVY2025-1)</label>
                     <input
+                      id="dpg-submission-number"
                       type="text"
                       value={input.submissionNumber || ''}
                       onChange={(e) => setInput({ ...input, submissionNumber: e.target.value })}
@@ -380,8 +385,9 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-medium mb-1">Sheet No.</label>
+                      <label htmlFor="dpg-sheet-number" className="block text-xs font-medium mb-1">Sheet No.</label>
                       <input
+                        id="dpg-sheet-number"
                         type="number"
                         min="1"
                         value={input.sheetNumber || ''}
@@ -391,8 +397,9 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium mb-1">Total Sheets</label>
+                      <label htmlFor="dpg-total-sheets" className="block text-xs font-medium mb-1">Total Sheets</label>
                       <input
+                        id="dpg-total-sheets"
                         type="number"
                         min="1"
                         value={input.totalSheets || ''}
@@ -404,8 +411,9 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-medium mb-1">Scale Factor (SF)</label>
+                      <label htmlFor="dpg-scale-factor" className="block text-xs font-medium mb-1">Scale Factor (SF)</label>
                       <input
+                        id="dpg-scale-factor"
                         type="number"
                         step="0.000001"
                         value={input.scaleFactor || ''}
@@ -416,8 +424,9 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                       <p className="text-xs text-[var(--text-muted)] mt-1">Grid-to-Ground correction</p>
                     </div>
                     <div>
-                      <label className="block text-xs font-medium mb-1">Mean Elevation (m)</label>
+                      <label htmlFor="dpg-mean-elevation" className="block text-xs font-medium mb-1">Mean Elevation (m)</label>
                       <input
+                        id="dpg-mean-elevation"
                         type="number"
                         step="0.1"
                         value={input.meanElevation ?? ''}
@@ -428,8 +437,9 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium mb-1">Grid Area (m²)</label>
+                    <label htmlFor="dpg-grid-area" className="block text-xs font-medium mb-1">Grid Area (m²)</label>
                     <input
+                      id="dpg-grid-area"
                       type="number"
                       step="0.01"
                       value={input.gridArea || ''}
@@ -440,8 +450,9 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                     <p className="text-xs text-[var(--text-muted)] mt-1">Area from UTM coordinates before SF correction</p>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium mb-1">Control Class</label>
+                    <label htmlFor="dpg-control-class" className="block text-xs font-medium mb-1">Control Class</label>
                     <select
+                      id="dpg-control-class"
                       value={input.controlClass || ''}
                       onChange={(e) => setInput({ ...input, controlClass: e.target.value as 'FIRST' | 'SECOND' | 'THIRD' | 'FOURTH' | undefined })}
                       className="input w-full text-sm"
@@ -463,18 +474,19 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
             <h2 className="text-xl font-semibold mb-4">Surveyor's Certificate</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Client Name</label>
+                <label htmlFor="dpg-client-name" className="block text-sm font-medium mb-1">Client Name</label>
                 <input
+                  id="dpg-client-name"
                   type="text"
                   value={input.clientName || ''}
                   onChange={(e) => setInput({ ...input, clientName: e.target.value })}
                   className="input w-full text-sm"
-                  aria-label="Name of the client/owner" placeholder="Name of the client/owner"
+                  placeholder="Name of the client/owner"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Surveyor Name</label>
-                <input aria-label="Surveyorname"
+                <label htmlFor="dpg-surveyor-name" className="block text-sm font-medium mb-1">Surveyor Name</label>
+                <input id="dpg-surveyor-name"
                   type="text"
                   value={input.surveyorName}
                   onChange={(e) => setInput({ ...input, surveyorName: e.target.value })}
@@ -482,8 +494,8 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">ISK Number</label>
-                <input aria-label="Isknumber"
+                <label htmlFor="dpg-isk-number" className="block text-sm font-medium mb-1">ISK Number</label>
+                <input id="dpg-isk-number"
                   type="text"
                   value={input.iskNumber}
                   onChange={(e) => setInput({ ...input, iskNumber: e.target.value })}
@@ -491,18 +503,19 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Title Deed Number</label>
+                <label htmlFor="dpg-title-deed-number" className="block text-sm font-medium mb-1">Title Deed Number</label>
                 <input
+                  id="dpg-title-deed-number"
                   type="text"
                   value={input.titleDeedNumber || ''}
                   onChange={(e) => setInput({ ...input, titleDeedNumber: e.target.value })}
                   className="input w-full text-sm"
-                  aria-label="e.g. FR No. 583/83" placeholder="e.g. FR No. 583/83"
+                  placeholder="e.g. FR No. 583/83"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Firm Name</label>
-                <input aria-label="Firmname"
+                <label htmlFor="dpg-firm-name" className="block text-sm font-medium mb-1">Firm Name</label>
+                <input id="dpg-firm-name"
                   type="text"
                   value={input.firmName}
                   onChange={(e) => setInput({ ...input, firmName: e.target.value })}
@@ -510,8 +523,8 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Survey Date</label>
-                <input aria-label="Surveydate"
+                <label htmlFor="dpg-survey-date" className="block text-sm font-medium mb-1">Survey Date</label>
+                <input id="dpg-survey-date"
                   type="date"
                   value={input.surveyDate}
                   onChange={(e) => setInput({ ...input, surveyDate: e.target.value })}
@@ -523,8 +536,8 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
             <h3 className="text-lg font-semibold mt-6 mb-4">Abuttals</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1">North</label>
-                <input aria-label="Abuttalnorth"
+                <label htmlFor="dpg-abuttal-north" className="block text-sm font-medium mb-1">North</label>
+                <input id="dpg-abuttal-north"
                   type="text"
                   value={input.abuttalNorth}
                   onChange={(e) => setInput({ ...input, abuttalNorth: e.target.value })}
@@ -532,8 +545,8 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">South</label>
-                <input aria-label="Abuttalsouth"
+                <label htmlFor="dpg-abuttal-south" className="block text-sm font-medium mb-1">South</label>
+                <input id="dpg-abuttal-south"
                   type="text"
                   value={input.abuttalSouth}
                   onChange={(e) => setInput({ ...input, abuttalSouth: e.target.value })}
@@ -541,8 +554,8 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">East</label>
-                <input aria-label="Abuttaleast"
+                <label htmlFor="dpg-abuttal-east" className="block text-sm font-medium mb-1">East</label>
+                <input id="dpg-abuttal-east"
                   type="text"
                   value={input.abuttalEast}
                   onChange={(e) => setInput({ ...input, abuttalEast: e.target.value })}
@@ -550,8 +563,8 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">West</label>
-                <input aria-label="Abuttalwest"
+                <label htmlFor="dpg-abuttal-west" className="block text-sm font-medium mb-1">West</label>
+                <input id="dpg-abuttal-west"
                   type="text"
                   value={input.abuttalWest}
                   onChange={(e) => setInput({ ...input, abuttalWest: e.target.value })}
@@ -676,7 +689,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                             setInput({ ...input, boundaryPoints: newPoints })
                           }}
                           className="w-48 px-2 py-1 border rounded"
-                          aria-label="Beacon description" placeholder="Beacon description"
+                          aria-label="Beacon description"
                         />
                       </td>
                       <td className="py-2 text-right">

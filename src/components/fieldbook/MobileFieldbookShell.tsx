@@ -319,8 +319,8 @@ export function MobileFieldbookShell({
                     </button>
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Opening RL (m)</label>
-                    <input aria-label="Opening RL (m)"
+                    <label htmlFor="mfs-opening-rl" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Opening RL (m)</label>
+                    <input id="mfs-opening-rl"
                       type="number"
                       inputMode="decimal"
                       className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
@@ -329,19 +329,20 @@ export function MobileFieldbookShell({
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Closing RL (m)</label>
+                    <label htmlFor="mfs-closing-rl" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Closing RL (m)</label>
                     <input
+                      id="mfs-closing-rl"
                       type="number"
                       inputMode="decimal"
                       className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
                       value={closingRL}
-                      aria-label="Optional" placeholder="Optional"
+                      placeholder="Optional"
                       onChange={(e) => setClosingRL(e.target.value)}
                     />
                   </div>
                   <div className="col-span-2">
-                    <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Distance (km)</label>
-                    <input aria-label="Distance (km)"
+                    <label htmlFor="mfs-distance-km" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Distance (km)</label>
+                    <input id="mfs-distance-km"
                       type="number"
                       inputMode="decimal"
                       className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
@@ -369,8 +370,8 @@ export function MobileFieldbookShell({
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     <div>
-                      <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Start Stn</label>
-                      <input aria-label="Start Stn"
+                      <label htmlFor="mfs-start-stn" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Start Stn</label>
+                      <input id="mfs-start-stn"
                         type="text"
                         className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] uppercase focus:outline-none focus:border-[var(--accent)]"
                         value={startStation}
@@ -378,8 +379,8 @@ export function MobileFieldbookShell({
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Start E (m)</label>
-                      <input aria-label="Start E (m)"
+                      <label htmlFor="mfs-start-e" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Start E (m)</label>
+                      <input id="mfs-start-e"
                         type="number"
                         inputMode="decimal"
                         className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
@@ -388,8 +389,8 @@ export function MobileFieldbookShell({
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Start N (m)</label>
-                      <input aria-label="Start N (m)"
+                      <label htmlFor="mfs-start-n" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Start N (m)</label>
+                      <input id="mfs-start-n"
                         type="number"
                         inputMode="decimal"
                         className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
@@ -401,8 +402,8 @@ export function MobileFieldbookShell({
                   {travMode === 'link' && (
                     <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-color)]/50">
                       <div>
-                        <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Close E (m) *</label>
-                        <input aria-label="Close E (m)"
+                        <label htmlFor="mfs-close-e" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Close E (m) *</label>
+                        <input id="mfs-close-e"
                           type="number"
                           inputMode="decimal"
                           className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
@@ -411,8 +412,8 @@ export function MobileFieldbookShell({
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Close N (m) *</label>
-                        <input aria-label="Close N (m)"
+                        <label htmlFor="mfs-close-n" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Close N (m) *</label>
+                        <input id="mfs-close-n"
                           type="number"
                           inputMode="decimal"
                           className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
@@ -466,8 +467,8 @@ export function MobileFieldbookShell({
 
                   <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-color)]/50">
                     <div className="col-span-2">
-                      <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Station Name</label>
-                      <input aria-label="Name"
+                      <label htmlFor="mfs-station-name" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Station Name</label>
+                      <input id="mfs-station-name"
                         type="text"
                         className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] uppercase focus:outline-none focus:border-[var(--accent)]"
                         value={controlStation.name}
@@ -475,8 +476,8 @@ export function MobileFieldbookShell({
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Station E (m)</label>
-                      <input aria-label="E"
+                      <label htmlFor="mfs-station-e" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Station E (m)</label>
+                      <input id="mfs-station-e"
                         type="number"
                         inputMode="decimal"
                         className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
@@ -485,8 +486,8 @@ export function MobileFieldbookShell({
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Station N (m)</label>
-                      <input aria-label="N"
+                      <label htmlFor="mfs-station-n" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Station N (m)</label>
+                      <input id="mfs-station-n"
                         type="number"
                         inputMode="decimal"
                         className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
@@ -495,8 +496,8 @@ export function MobileFieldbookShell({
                       />
                     </div>
                     <div className="col-span-2">
-                      <label className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Elevation Z (m)</label>
-                      <input aria-label="Z"
+                      <label htmlFor="mfs-station-z" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Elevation Z (m)</label>
+                      <input id="mfs-station-z"
                         type="number"
                         inputMode="decimal"
                         className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"

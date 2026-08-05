@@ -125,6 +125,7 @@ export function validateFieldBook(
         const is = parseNumber(row.is);
         const fs = parseNumber(row.fs);
         if (bs !== null && fs !== null && bs !== 0 && fs !== 0) {
+          // Reserved for a future BS+FS coherence check; handled below for IS.
         }
         if (bs !== null && is !== null && bs !== 0 && is !== 0) {
           warnings.push({ rowIndex: idx, column: 'bs', message: 'BS and IS in same row', severity: 'warning' });

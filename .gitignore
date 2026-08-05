@@ -183,6 +183,12 @@ data/cassini-source/_scratch/
 # Auto-generated audit outputs
 scripts/*_audit.json
 
+# Local a11y sweep scratch artifacts (never commit)
+.a11y-audit.err
+.a11y-audit.json
+.changed-files.txt
+submission-numbering-before-after.excalidraw
+
 # Temp Agent Files
 .freebuff/
 .playwright-mcp/
@@ -190,3 +196,7 @@ scripts/*_audit.json
 tunnel-log*.txt
 tunnel-url.txt
 fix-roles.sql
+
+# Axe sweep artifacts
+axe-sweep-report.md
+.axe-baseline.json

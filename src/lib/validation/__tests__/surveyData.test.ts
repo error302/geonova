@@ -13,6 +13,8 @@ import {
   LevellingObservationSchema,
   validateCoordinates,
 } from '../surveyData'
+import fs from 'fs'
+import path from 'path'
 
 describe('CoordinateSchema', () => {
   const validCoord = {
@@ -224,8 +226,6 @@ describe('RDM 1.1 levelling closure tolerance invariant', () => {
     // Read the module's source as text and assert no "12√K" or
     // "12 * Math.sqrt" or "12*Math.sqrt" pattern appears.
     // This catches accidental regression to the old standard.
-    const fs = require('fs')
-    const path = require('path')
     const src = fs.readFileSync(
       path.join(__dirname, '..', 'surveyData.ts'),
       'utf8',

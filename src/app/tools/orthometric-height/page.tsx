@@ -117,17 +117,17 @@ export default function OrthometricHeightPage() {
               <div className="card-body space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase">Latitude (°)</label>
-                    <input className="input font-mono text-sm" value={latitude} onChange={e => setLatitude(e.target.value)} aria-label="-1.2864" placeholder="-1.2864" />
+                    <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase" htmlFor="latitude">Latitude (°)</label>
+                    <input id="latitude" className="input font-mono text-sm" value={latitude} onChange={e => setLatitude(e.target.value)} placeholder="-1.2864" />
                   </div>
                   <div>
-                    <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase">Longitude (°)</label>
-                    <input className="input font-mono text-sm" value={longitude} onChange={e => setLongitude(e.target.value)} aria-label="36.8172" placeholder="36.8172" />
+                    <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase" htmlFor="longitude">Longitude (°)</label>
+                    <input id="longitude" className="input font-mono text-sm" value={longitude} onChange={e => setLongitude(e.target.value)} placeholder="36.8172" />
                   </div>
                 </div>
                 <div>
-                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase">Ellipsoidal height h (m)</label>
-                  <input className="input font-mono text-sm" value={ellHeight} onChange={e => setEllHeight(e.target.value)} aria-label="1798.500" placeholder="1798.500" />
+                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase" htmlFor="ellipsoidal-height-h-m">Ellipsoidal height h (m)</label>
+                  <input id="ellipsoidal-height-h-m" className="input font-mono text-sm" value={ellHeight} onChange={e => setEllHeight(e.target.value)} placeholder="1798.500" />
                   <p className="font-mono text-[10px] text-[var(--text-muted)] mt-1">From GNSS / RTK rover output</p>
                 </div>
                 <button onClick={computeSingle} className="btn btn-primary w-full">Convert to orthometric</button>
@@ -233,10 +233,10 @@ export default function OrthometricHeightPage() {
                   </div>
                   {batchRows.map(r => (
                     <div key={r.id} className="grid grid-cols-[80px_1fr_1fr_1fr_28px] gap-2 items-center">
-                      <input className="input font-mono text-xs px-2 py-1" value={r.name} onChange={e => updateBatchRow(r.id, 'name', e.target.value)} aria-label="CP1" placeholder="CP1" />
-                      <input className="input font-mono text-xs px-2 py-1" value={r.lat} onChange={e => updateBatchRow(r.id, 'lat', e.target.value)} aria-label="-1.2864" placeholder="-1.2864" />
-                      <input className="input font-mono text-xs px-2 py-1" value={r.lon} onChange={e => updateBatchRow(r.id, 'lon', e.target.value)} aria-label="36.8172" placeholder="36.8172" />
-                      <input className="input font-mono text-xs px-2 py-1" value={r.h} onChange={e => updateBatchRow(r.id, 'h', e.target.value)} aria-label="1798.500" placeholder="1798.500" />
+                      <input className="input font-mono text-xs px-2 py-1" value={r.name} onChange={e => updateBatchRow(r.id, 'name', e.target.value)} aria-label="Point name" placeholder="CP1" />
+                      <input className="input font-mono text-xs px-2 py-1" value={r.lat} onChange={e => updateBatchRow(r.id, 'lat', e.target.value)} aria-label="Latitude (deg)" placeholder="-1.2864" />
+                      <input className="input font-mono text-xs px-2 py-1" value={r.lon} onChange={e => updateBatchRow(r.id, 'lon', e.target.value)} aria-label="Longitude (deg)" placeholder="36.8172" />
+                      <input className="input font-mono text-xs px-2 py-1" value={r.h} onChange={e => updateBatchRow(r.id, 'h', e.target.value)} aria-label="Ellipsoidal height (m)" placeholder="1798.500" />
                       <button onClick={() => removeBatchRow(r.id)} className="text-[var(--text-muted)] hover:text-[var(--error)] text-sm">×</button>
                     </div>
                   ))}

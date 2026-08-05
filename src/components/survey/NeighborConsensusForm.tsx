@@ -279,50 +279,50 @@ export function NeighborConsensusForm({
         {/* Neighbor info */}
         <div className="space-y-2">
           <div>
-            <label className="flex items-center gap-1 text-[9px] text-gray-500 uppercase tracking-wider mb-1">
+            <label className="flex items-center gap-1 text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="neighbor-name">
               <User className="w-3 h-3" />
               Neighbor Name *
             </label>
-            <input
+            <input id="neighbor-name"
               type="text"
               value={neighborName}
               onChange={e => setNeighborName(e.target.value)}
-              aria-label="John Doe" placeholder="John Doe"
+              placeholder="John Doe"
               className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">National ID *</label>
-              <input
+              <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="national-id">National ID *</label>
+              <input id="national-id"
                 type="text"
                 value={neighborNationalId}
                 onChange={e => setNeighborNationalId(e.target.value)}
-                aria-label="12345678" placeholder="12345678"
+                placeholder="12345678"
                 className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
               />
             </div>
             <div>
-              <label className="flex items-center gap-1 text-[9px] text-gray-500 uppercase tracking-wider mb-1">
+              <label className="flex items-center gap-1 text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="phone">
                 <Phone className="w-3 h-3" />
                 Phone
               </label>
-              <input
+              <input id="phone"
                 type="tel"
                 value={neighborPhone}
                 onChange={e => setNeighborPhone(e.target.value)}
-                aria-label="0712 345 678" placeholder="0712 345 678"
+                placeholder="0712 345 678"
                 className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
               />
             </div>
           </div>
           <div>
-            <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Neighbor Parcel No.</label>
-            <input
+            <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="neighbor-parcel-no">Neighbor Parcel No.</label>
+            <input id="neighbor-parcel-no"
               type="text"
               value={neighborParcelNumber}
               onChange={e => setNeighborParcelNumber(e.target.value)}
-              aria-label="LR/12345/679" placeholder="LR/12345/679"
+              placeholder="LR/12345/679"
               className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
             />
           </div>
@@ -330,10 +330,10 @@ export function NeighborConsensusForm({
 
         {/* Signature pad */}
         <div>
-          <label className="flex items-center gap-1 text-[9px] text-gray-500 uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-1 text-[9px] text-gray-500 uppercase tracking-wider mb-1">
             <PenTool className="w-3 h-3" />
             Signature *
-          </label>
+          </div>
           <div className={`relative ${!geofenceValid ? 'opacity-40 pointer-events-none' : ''}`}>
             <canvas
               ref={canvasRef}

@@ -306,7 +306,7 @@ interface TokenStore {
   tokenExpiry: number;
 }
 
-let globalTokenStore: TokenStore = { accessToken: null, tokenExpiry: 0 };
+const globalTokenStore: TokenStore = { accessToken: null, tokenExpiry: 0 };
 
 // ---------------------------------------------------------------------------
 // Client implementation

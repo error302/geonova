@@ -11,7 +11,7 @@
 | Field | Value |
 |-------|-------|
 | Name | METARDU -- Professional Survey Computation Platform |
-| URL | https://metardu.duckdns.org |
+| URL | https://metardu.space |
 | GitHub | git@github.com:error302/metardu.git |
 | VM Host | 34.170.248.156 (user: mohameddosho20@metardu) |
 | Version | 1.0.1 |
@@ -442,7 +442,7 @@ docker compose build
 docker compose up -d
 
 # 7. Verify deployment
-curl -s -o /dev/null -w "%{http_code}" https://metardu.duckdns.org
+curl -s -o /dev/null -w "%{http_code}" https://metardu.space
 # Expected: 200
 
 # 8. Check container health
@@ -606,7 +606,7 @@ docker compose up -d
 |------|--------|
 | Developer | mohameddosho20@metardu via SSH |
 | Repository | git@github.com:error302/metardu.git |
-| Live Site | https://metardu.duckdns.org |
+| Live Site | https://metardu.space |
 | VM IP | 34.170.248.156 |
 
 ---

@@ -228,7 +228,7 @@ export function detectRedundantObservationDiscrepancies(
         // Bearing check
         if (obs1.bearing != null && obs2.bearing != null) {
           // For reverse directions, add 180°
-          let b1 = obs1.bearing
+          const b1 = obs1.bearing
           let b2 = obs2.bearing
           if (obs1.fromStation !== obs2.fromStation) {
             b2 = (b2 + 180) % 360 // reverse the second bearing

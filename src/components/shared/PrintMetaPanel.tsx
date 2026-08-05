@@ -96,10 +96,10 @@ export function PrintMetaPanel({ meta, onChange }: PrintMetaPanelProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {FIELDS.map(({ key, label, placeholder, type }) => (
               <div key={key}>
-                <label className="block text-xs text-[var(--text-muted)] mb-1 font-medium">
+                <label className="block text-xs text-[var(--text-muted)] mb-1 font-medium" htmlFor={`pmp-${key}`}>
                   {label}
                 </label>
-                <input aria-label="{label}"
+                <input id={`pmp-${key}`}
                   className="input w-full text-sm"
                   type={type || 'text'}
                   value={meta[key]}

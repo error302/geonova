@@ -234,7 +234,7 @@ export default function NewProjectPage() {
 
           {/* Project Scale Toggle */}
           <div>
-            <label className={labelClass}>Project Scale <span className="text-[var(--accent)]">*</span></label>
+            <div className={labelClass}>Project Scale <span className="text-[var(--accent)]">*</span></div>
             <div className="grid grid-cols-2 gap-0 rounded-lg border border-[var(--border-color)] overflow-hidden">
               <button type="button" onClick={() => setProjectType('small')}
                 className={`py-3.5 px-4 text-sm font-medium transition-all flex flex-col items-center gap-1 ${
@@ -270,15 +270,15 @@ export default function NewProjectPage() {
 
           {/* Project Name */}
           <div>
-            <label className={labelClass}>Project Name <span className="text-[var(--accent)]">*</span></label>
-            <input aria-label="Project name" type="text" value={name} onChange={e => setName(e.target.value)}
-              className={inputClass} required autoFocus
+            <label htmlFor="project-name" className={labelClass}>Project Name <span className="text-[var(--accent)]">*</span></label>
+            <input id="project-name" type="text" value={name} onChange={e => setName(e.target.value)}
+              className={inputClass} required
               placeholder={projectType === 'scheme' ? 'e.g., Mwavumbo Ward Cadastral Subdivision' : 'e.g., Karen Estate Boundary Survey'} />
           </div>
 
           {/* Interactive Boundary Selector */}
           <div>
-            <label className={labelClass}>Project Boundary Map</label>
+            <div className={labelClass}>Project Boundary Map</div>
             <BoundarySelectorMap 
               className="w-full h-64 mb-2"
               onBoundaryChange={(coords, area, center) => {
@@ -299,8 +299,8 @@ export default function NewProjectPage() {
 
           {/* Location */}
           <div>
-            <label className={labelClass}>Location / Description</label>
-            <textarea value={location} onChange={e => setLocation(e.target.value)}
+            <label htmlFor="project-location" className={labelClass}>Location / Description</label>
+            <textarea id="project-location" value={location} onChange={e => setLocation(e.target.value)}
               className={`${inputClass} h-20 resize-none`}
               placeholder={projectType === 'scheme' ? 'e.g., Mariakani, Kilifi County' : 'e.g., Mombasa, along Diani Beach Road'} />
           </div>
@@ -311,48 +311,48 @@ export default function NewProjectPage() {
               <h3 className="text-sm font-semibold text-[var(--text-primary)]">Scheme Details</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Scheme Number</label>
-                  <input type="text" value={schemeNumber} onChange={e => setSchemeNumber(e.target.value)}
-                    className={inputClass} aria-label="e.g., CRS/MWK/001/2026" placeholder="e.g., CRS/MWK/001/2026" />
+                  <label htmlFor="scheme-number" className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Scheme Number</label>
+                  <input id="scheme-number" type="text" value={schemeNumber} onChange={e => setSchemeNumber(e.target.value)}
+                    className={inputClass} placeholder="e.g., CRS/MWK/001/2026" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Adjudication Section</label>
-                  <input type="text" value={adjudicationSection} onChange={e => setAdjudicationSection(e.target.value)}
-                    className={inputClass} aria-label="e.g., Mwavumbo Section" placeholder="e.g., Mwavumbo Section" />
+                  <label htmlFor="adjudication-section" className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Adjudication Section</label>
+                  <input id="adjudication-section" type="text" value={adjudicationSection} onChange={e => setAdjudicationSection(e.target.value)}
+                    className={inputClass} placeholder="e.g., Mwavumbo Section" />
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">County</label>
-                  <select value={schemeCounty} onChange={e => setSchemeCounty(e.target.value)} className={inputClass}>
+                  <label htmlFor="scheme-county" className="block text-xs font-medium text-[var(--text-secondary)] mb-1">County</label>
+                  <select id="scheme-county" value={schemeCounty} onChange={e => setSchemeCounty(e.target.value)} className={inputClass}>
                     <option value="">Select county</option>
                     {kenyaCounties.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Sub-County</label>
-                  <input type="text" value={schemeSubCounty} onChange={e => setSchemeSubCounty(e.target.value)}
-                    className={inputClass} aria-label="e.g., Mariakani" placeholder="e.g., Mariakani" />
+                  <label htmlFor="scheme-sub-county" className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Sub-County</label>
+                  <input id="scheme-sub-county" type="text" value={schemeSubCounty} onChange={e => setSchemeSubCounty(e.target.value)}
+                    className={inputClass} placeholder="e.g., Mariakani" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Ward</label>
-                  <input type="text" value={schemeWard} onChange={e => setSchemeWard(e.target.value)}
-                    className={inputClass} aria-label="e.g., Mwavumbo" placeholder="e.g., Mwavumbo" />
+                  <label htmlFor="scheme-ward" className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Ward</label>
+                  <input id="scheme-ward" type="text" value={schemeWard} onChange={e => setSchemeWard(e.target.value)}
+                    className={inputClass} placeholder="e.g., Mwavumbo" />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Planned Parcels</label>
-                <input type="number" value={plannedParcels} onChange={e => setPlannedParcels(e.target.value)}
-                  className={inputClass} min={1} aria-label="e.g., 250" placeholder="e.g., 250" />
+                <label htmlFor="planned-parcels" className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Planned Parcels</label>
+                <input id="planned-parcels" type="number" value={plannedParcels} onChange={e => setPlannedParcels(e.target.value)}
+                  className={inputClass} min={1} placeholder="e.g., 250" />
               </div>
             </div>
           )}
 
           {/* UTM Zone */}
           <div>
-            <label className={labelClass}>UTM Zone (1–60)</label>
+            <label htmlFor="utm-zone" className={labelClass}>UTM Zone (1–60)</label>
             <div className="grid grid-cols-2 gap-4">
-              <input aria-label="UTM Zone (1–60)" type="number" value={utmZone} onChange={e => setUtmZone(e.target.value)}
+              <input id="utm-zone" type="number" value={utmZone} onChange={e => setUtmZone(e.target.value)}
                 className={inputClass} min={1} max={60} required />
               <div className="flex rounded-lg border border-[var(--border-color)] overflow-hidden">
                 {(['N', 'S'] as const).map(h => (
@@ -377,8 +377,8 @@ export default function NewProjectPage() {
 
           {/* Country */}
           <div>
-            <label className={labelClass}>Country / Jurisdiction</label>
-            <select value={selectedCountry} onChange={e => handleCountryChange(e.target.value as SurveyingCountry)} className={inputClass}>
+            <label htmlFor="country" className={labelClass}>Country / Jurisdiction</label>
+            <select id="country" value={selectedCountry} onChange={e => handleCountryChange(e.target.value as SurveyingCountry)} className={inputClass}>
               {ALL_COUNTRIES.map((c: any) => (
                 <option key={c.id} value={c.id}>{c.flag} {c.name}</option>
               ))}
@@ -392,8 +392,8 @@ export default function NewProjectPage() {
 
           {/* Survey Type */}
           <div>
-            <label className={labelClass}>Survey Type</label>
-            <select value={surveyType} onChange={e => setSurveyType(e.target.value as SurveyType)} className={inputClass}>
+            <label htmlFor="survey-type" className={labelClass}>Survey Type</label>
+            <select id="survey-type" value={surveyType} onChange={e => setSurveyType(e.target.value as SurveyType)} className={inputClass}>
               {(Object.entries(SURVEY_TYPE_LABELS) as [SurveyType, string][]).map(([val, label]) => (
                 <option key={val} value={val}>{label}</option>
               ))}
@@ -403,14 +403,14 @@ export default function NewProjectPage() {
           {/* Client + Surveyor */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelClass}>Client Name</label>
-              <input type="text" value={clientName} onChange={e => setClientName(e.target.value)}
-                className={inputClass} aria-label="e.g., Kilifi County Government" placeholder="e.g., Kilifi County Government" />
+              <label htmlFor="client-name" className={labelClass}>Client Name</label>
+              <input id="client-name" type="text" value={clientName} onChange={e => setClientName(e.target.value)}
+                className={inputClass} placeholder="e.g., Kilifi County Government" />
             </div>
             <div>
-              <label className={labelClass}>Surveyor Name</label>
-              <input type="text" value={surveyorName} onChange={e => setSurveyorName(e.target.value)}
-                className={inputClass} aria-label="Your name or company" placeholder="Your name or company" />
+              <label htmlFor="surveyor-name" className={labelClass}>Surveyor Name</label>
+              <input id="surveyor-name" type="text" value={surveyorName} onChange={e => setSurveyorName(e.target.value)}
+                className={inputClass} placeholder="Your name or company" />
             </div>
           </div>
 

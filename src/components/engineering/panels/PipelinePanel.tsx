@@ -86,8 +86,8 @@ export function PipelinePanel({ projectId, subtype }: EngineeringPanelProps) {
           <div className="text-lg font-medium mb-3">Pipeline Data</div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-zinc-400">Diameter (mm)</label>
-              <input aria-label="Diameter (mm)"
+              <label className="text-sm text-zinc-400" htmlFor="diameter-mm">Diameter (mm)</label>
+              <input id="diameter-mm" aria-label="Diameter (mm)"
                 type="number"
                 value={pipelineDiameterMM}
                 onChange={(e) => setPipelineDiameterMM(parseFloat(e.target.value) || 0)}
@@ -95,8 +95,8 @@ export function PipelinePanel({ projectId, subtype }: EngineeringPanelProps) {
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400">Design Pressure (kPa)</label>
-              <input aria-label="Design Pressure (kPa)"
+              <label className="text-sm text-zinc-400" htmlFor="design-pressure-kpa">Design Pressure (kPa)</label>
+              <input id="design-pressure-kpa" aria-label="Design Pressure (kPa)"
                 type="number"
                 value={designPressureKPa}
                 onChange={(e) => setDesignPressureKPa(parseFloat(e.target.value) || 0)}
@@ -104,8 +104,8 @@ export function PipelinePanel({ projectId, subtype }: EngineeringPanelProps) {
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400">Min Depth of Cover (m)</label>
-              <input aria-label="Min Depth of Cover (m)"
+              <label className="text-sm text-zinc-400" htmlFor="min-depth-of-cover-m">Min Depth of Cover (m)</label>
+              <input id="min-depth-of-cover-m" aria-label="Min Depth of Cover (m)"
                 type="number"
                 step={0.1}
                 value={depthOfCoverM}
@@ -114,9 +114,9 @@ export function PipelinePanel({ projectId, subtype }: EngineeringPanelProps) {
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400">Material</label>
+              <label className="text-sm text-zinc-400" htmlFor="material">Material</label>
               <select
-                value={material}
+                 id="material" value={material}
                 onChange={(e) => setMaterial(e.target.value)}
                 className="w-full mt-1 px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm"
               >

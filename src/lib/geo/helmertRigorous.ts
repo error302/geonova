@@ -197,7 +197,7 @@ export function computeHelmertTransformationRigorous(
     tgtCx += p.targetX; tgtCy += p.targetY; tgtCz += p.targetZ
   }
   const np = points.length
-  let params: HelmertParameters = {
+  const params: HelmertParameters = {
     tx: (tgtCx - srcCx) / np,
     ty: (tgtCy - srcCy) / np,
     tz: (tgtCz - srcCz) / np,

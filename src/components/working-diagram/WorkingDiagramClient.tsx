@@ -175,36 +175,36 @@ export default function WorkingDiagramClient() {
           {activeTab === 'title' && (
             <div className="space-y-3">
               <div>
-                <label className="block text-xs text-gray-500">Drawing Title</label>
-                <input aria-label="Drawingtitle" type="text" value={diagram.titleBlock.drawingTitle} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, drawingTitle: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
+                <label className="block text-xs text-gray-500" htmlFor="drawing-title">Drawing Title</label>
+                <input id="drawing-title" type="text" value={diagram.titleBlock.drawingTitle} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, drawingTitle: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
               </div>
               <div>
-                <label className="block text-xs text-gray-500">Surveyor Name</label>
-                <input aria-label="Surveyorname" type="text" value={diagram.titleBlock.surveyorName} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, surveyorName: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
+                <label className="block text-xs text-gray-500" htmlFor="surveyor-name">Surveyor Name</label>
+                <input id="surveyor-name" type="text" value={diagram.titleBlock.surveyorName} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, surveyorName: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
               </div>
               <div>
-                <label className="block text-xs text-gray-500">Reg No.</label>
-                <input aria-label="Surveyorregno" type="text" value={diagram.titleBlock.surveyorRegNo} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, surveyorRegNo: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
+                <label className="block text-xs text-gray-500" htmlFor="reg-no">Reg No.</label>
+                <input id="reg-no" type="text" value={diagram.titleBlock.surveyorRegNo} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, surveyorRegNo: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
               </div>
               <div>
-                <label className="block text-xs text-gray-500">Parcel Ref</label>
-                <input aria-label="Parcel Ref" type="text" value={diagram.titleBlock.parcelRef || ''} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, parcelRef: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
+                <label className="block text-xs text-gray-500" htmlFor="parcel-ref">Parcel Ref</label>
+                <input id="parcel-ref" aria-label="Parcel Ref" type="text" value={diagram.titleBlock.parcelRef || ''} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, parcelRef: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
               </div>
               <div>
-                <label className="block text-xs text-gray-500">County</label>
-                <input aria-label="County" type="text" value={diagram.titleBlock.county} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, county: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
+                <label className="block text-xs text-gray-500" htmlFor="county">County</label>
+                <input id="county" aria-label="County" type="text" value={diagram.titleBlock.county} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, county: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
               </div>
               <div>
-                <label className="block text-xs text-gray-500">Subcounty</label>
-                <input aria-label="Subcounty" type="text" value={diagram.titleBlock.subcounty || ''} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, subcounty: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
+                <label className="block text-xs text-gray-500" htmlFor="subcounty">Subcounty</label>
+                <input id="subcounty" aria-label="Subcounty" type="text" value={diagram.titleBlock.subcounty || ''} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, subcounty: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
               </div>
               <div>
-                <label className="block text-xs text-gray-500">UTM Zone</label>
-                <input aria-label="Utmzone" type="text" value={diagram.titleBlock.utmZone} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, utmZone: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
+                <label className="block text-xs text-gray-500" htmlFor="utm-zone">UTM Zone</label>
+                <input id="utm-zone" aria-label="Utmzone" type="text" value={diagram.titleBlock.utmZone} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, utmZone: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
               </div>
               <div>
-                <label className="block text-xs text-gray-500">Date</label>
-                <input aria-label="Date" type="date" value={diagram.titleBlock.date} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, date: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
+                <label className="block text-xs text-gray-500" htmlFor="date">Date</label>
+                <input id="date" aria-label="Date" type="date" value={diagram.titleBlock.date} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, date: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" />
               </div>
             </div>
           )}
@@ -218,7 +218,7 @@ export default function WorkingDiagramClient() {
                     <span className="font-medium text-sm">{beacon.id}</span>
                     <button onClick={() => removeBeacon(beacon.id)} className="text-red-500 text-xs">Remove</button>
                   </div>
-                  <input type="text" value={beacon.label} onChange={e => updateBeacon(beacon.id, { label: e.target.value })} aria-label="Label" placeholder="Label" className="w-full px-2 py-1 border rounded text-sm" />
+                  <input type="text" value={beacon.label} onChange={e => updateBeacon(beacon.id, { label: e.target.value })} aria-label="Beacon label" placeholder="Label" className="w-full px-2 py-1 border rounded text-sm" />
                   <select value={beacon.symbol} onChange={e => updateBeacon(beacon.id, { symbol: e.target.value as BeaconPoint['symbol'] })} className="w-full px-2 py-1 border rounded text-sm">
                     <option value="concrete_beacon">Concrete Beacon</option>
                     <option value="iron_peg">Iron Peg</option>
@@ -229,8 +229,8 @@ export default function WorkingDiagramClient() {
                     <option value="none">None</option>
                   </select>
                   <div className="grid grid-cols-2 gap-2">
-                    <input type="number" value={beacon.easting || ''} onChange={e => updateBeacon(beacon.id, { easting: parseFloat(e.target.value) })} aria-label="Easting" placeholder="Easting" className="w-full px-2 py-1 border rounded text-sm" />
-                    <input type="number" value={beacon.northing || ''} onChange={e => updateBeacon(beacon.id, { northing: parseFloat(e.target.value) })} aria-label="Northing" placeholder="Northing" className="w-full px-2 py-1 border rounded text-sm" />
+                    <input type="number" value={beacon.easting || ''} onChange={e => updateBeacon(beacon.id, { easting: parseFloat(e.target.value) })} aria-label="Beacon easting (m)" placeholder="Easting" className="w-full px-2 py-1 border rounded text-sm" />
+                    <input type="number" value={beacon.northing || ''} onChange={e => updateBeacon(beacon.id, { northing: parseFloat(e.target.value) })} aria-label="Beacon northing (m)" placeholder="Northing" className="w-full px-2 py-1 border rounded text-sm" />
                   </div>
                 </div>
               ))}
@@ -254,8 +254,8 @@ export default function WorkingDiagramClient() {
                       {diagram.beacons.map((b: any) => <option key={b.id} value={b.id}>{b.label}</option>)}
                     </select>
                   </div>
-                  <input type="text" value={boundary.bearingDMS} onChange={e => updateBoundary(boundary.id, { bearingDMS: e.target.value })} aria-label="0° 00' 00''" placeholder="0° 00' 00''" className="w-full px-2 py-1 border rounded text-sm" />
-                  <input type="number" step="0.01" value={boundary.distanceMeters} onChange={e => updateBoundary(boundary.id, { distanceMeters: parseFloat(e.target.value) })} aria-label="Distance (m)" placeholder="Distance (m)" className="w-full px-2 py-1 border rounded text-sm" />
+                  <input type="text" value={boundary.bearingDMS} onChange={e => updateBoundary(boundary.id, { bearingDMS: e.target.value })} aria-label="Boundary bearing (DMS)" placeholder="0° 00' 00''" className="w-full px-2 py-1 border rounded text-sm" />
+                  <input type="number" step="0.01" value={boundary.distanceMeters} onChange={e => updateBoundary(boundary.id, { distanceMeters: parseFloat(e.target.value) })} aria-label="Boundary distance (m)" placeholder="Distance (m)" className="w-full px-2 py-1 border rounded text-sm" />
                   <RoadBoundarySelector value={boundary.boundaryType} onChange={v => updateBoundary(boundary.id, { boundaryType: v })} roadLabel={boundary.roadLabel} onRoadLabelChange={v => updateBoundary(boundary.id, { roadLabel: v })} />
                   <LegacyUnitBadge showLegacy={boundary.showLegacy} onShowLegacyChange={v => updateBoundary(boundary.id, { showLegacy: v })} legacyUnit={boundary.legacyUnit} onLegacyUnitChange={v => updateBoundary(boundary.id, { legacyUnit: v, legacyDistance: metersToLegacy(boundary.distanceMeters, v) })} distanceMeters={boundary.distanceMeters} legacyDistance={boundary.legacyDistance} onLegacyDistanceChange={v => updateBoundary(boundary.id, { legacyDistance: v })} />
                 </div>
@@ -270,20 +270,20 @@ export default function WorkingDiagramClient() {
           {activeTab === 'north' && (
             <div className="space-y-3">
               <div>
-                <label className="block text-xs text-gray-500">North Bearing</label>
-                <input type="text" value={diagram.north.bearing} onChange={e => setDiagram(d => ({ ...d, north: { ...d.north, bearing: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" aria-label="0° 00' 00''" placeholder="0° 00' 00''" />
+                <label className="block text-xs text-gray-500" htmlFor="north-bearing">North Bearing</label>
+                <input id="north-bearing" type="text" value={diagram.north.bearing} onChange={e => setDiagram(d => ({ ...d, north: { ...d.north, bearing: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm" placeholder="0° 00' 00''" />
               </div>
               <div>
-                <label className="block text-xs text-gray-500">North Type</label>
-                <select value={diagram.north.type} onChange={e => setDiagram(d => ({ ...d, north: { ...d.north, type: e.target.value as 'grid' | 'true' | 'magnetic' } }))} className="w-full px-2 py-1 border rounded text-sm">
+                <label className="block text-xs text-gray-500" htmlFor="north-type">North Type</label>
+                <select id="north-type" value={diagram.north.type} onChange={e => setDiagram(d => ({ ...d, north: { ...d.north, type: e.target.value as 'grid' | 'true' | 'magnetic' } }))} className="w-full px-2 py-1 border rounded text-sm">
                   <option value="grid">Grid North</option>
                   <option value="true">True North</option>
                   <option value="magnetic">Magnetic North</option>
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-gray-500">Scale Note</label>
-                <select value={diagram.titleBlock.scaleNote} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, scaleNote: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm">
+                <label className="block text-xs text-gray-500" htmlFor="scale-note">Scale Note</label>
+                <select id="scale-note" value={diagram.titleBlock.scaleNote} onChange={e => setDiagram(d => ({ ...d, titleBlock: { ...d.titleBlock, scaleNote: e.target.value } }))} className="w-full px-2 py-1 border rounded text-sm">
                   <option value="Dimensions in Metres">Dimensions in Metres</option>
                   <option value="Dimensions in Metres and Perches">Dimensions in Metres and Perches</option>
                   <option value="Dimensions in Metres and Links">Dimensions in Metres and Links</option>

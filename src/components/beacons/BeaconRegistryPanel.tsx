@@ -147,35 +147,35 @@ export function BeaconRegistryPanel() {
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && search()}
-              aria-label="Enter beacon number (e.g., KP/12/345, MB/001)..." placeholder="Enter beacon number (e.g., KP/12/345, MB/001)..."
+              aria-label="Enter beacon number (e.g., KP/12/345, MB/001)..."
               className="w-full h-10 pl-9 pr-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
             />
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-2">
             <div>
-              <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Easting</label>
-              <input
+              <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="easting">Easting</label>
+              <input id="easting"
                 type="number"
                 value={easting}
                 onChange={e => setEasting(e.target.value)}
-                aria-label="257412" placeholder="257412"
+ placeholder="257412"
                 className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Northing</label>
-              <input
+              <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="northing">Northing</label>
+              <input id="northing"
                 type="number"
                 value={northing}
                 onChange={e => setNorthing(e.target.value)}
-                aria-label="9857641" placeholder="9857641"
+ placeholder="9857641"
                 className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Radius (m)</label>
-              <input aria-label="Radius (m)"
+              <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="radius-m">Radius (m)</label>
+              <input id="radius-m" aria-label="Radius (m)"
                 type="number"
                 value={radius}
                 onChange={e => setRadius(e.target.value)}
@@ -191,7 +191,7 @@ export function BeaconRegistryPanel() {
             type="text"
             value={county}
             onChange={e => setCounty(e.target.value)}
-            aria-label="County (optional)" placeholder="County (optional)"
+            aria-label="County (optional)"
             className="h-9 px-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
           />
           <select
@@ -364,12 +364,12 @@ function AddBeaconForm({ onClose, onAdded }: { onClose: () => void; onAdded: () 
 
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Beacon Number</label>
-          <input type="text" value={beaconNumber} onChange={e => setBeaconNumber(e.target.value)} aria-label="KP/12/345" placeholder="KP/12/345" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="beacon-number">Beacon Number</label>
+          <input id="beacon-number" type="text" value={beaconNumber} onChange={e => setBeaconNumber(e.target.value)} placeholder="KP/12/345" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
         </div>
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Type</label>
-          <select value={beaconType} onChange={e => setBeaconType(e.target.value)} className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)]">
+          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="type">Type</label>
+          <select id="type" value={beaconType} onChange={e => setBeaconType(e.target.value)} className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)]">
             <option value="concrete">Concrete</option>
             <option value="iron_pin">Iron Pin</option>
             <option value="stone">Stone</option>
@@ -381,17 +381,17 @@ function AddBeaconForm({ onClose, onAdded }: { onClose: () => void; onAdded: () 
 
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Easting (m)</label>
-          <input type="number" step="0.001" value={easting} onChange={e => setEasting(e.target.value)} aria-label="257412.800" placeholder="257412.800" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="easting-m">Easting (m)</label>
+          <input id="easting-m" type="number" step="0.001" value={easting} onChange={e => setEasting(e.target.value)} placeholder="257412.800" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
         </div>
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1">Northing (m)</label>
-          <input type="number" step="0.001" value={northing} onChange={e => setNorthing(e.target.value)} aria-label="9857641.200" placeholder="9857641.200" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="northing-m">Northing (m)</label>
+          <input id="northing-m" type="number" step="0.001" value={northing} onChange={e => setNorthing(e.target.value)} placeholder="9857641.200" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <input type="text" value={county} onChange={e => setCounty(e.target.value)} aria-label="County" placeholder="County" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+        <input type="text" value={county} onChange={e => setCounty(e.target.value)} placeholder="County" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
         <select value={condition} onChange={e => setCondition(e.target.value)} className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)]">
           <option value="good">Good Condition</option>
           <option value="disturbed">Disturbed</option>

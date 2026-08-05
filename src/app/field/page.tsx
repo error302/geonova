@@ -452,8 +452,9 @@ export default function FieldPage() {
             {showBatch && (
               <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded p-3 space-y-2">
                 <div>
-                  <label className="text-[10px] text-[var(--text-muted)]">CSV: Name, Easting, Northing, Elevation (optional)</label>
+                  <label htmlFor="field-batch-csv" className="text-[10px] text-[var(--text-muted)]">CSV: Name, Easting, Northing, Elevation (optional)</label>
                   <textarea
+                    id="field-batch-csv"
                     value={batchCSV}
                     onChange={(e) => setBatchCSV(e.target.value)}
                     placeholder="PT1,500000,4500000,100&#10;PT2,500100,4500100,101"
@@ -484,20 +485,20 @@ export default function FieldPage() {
             {/* Single point form */}
             <div className="grid grid-cols-2 gap-2">
               <div>
-<label className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('field.name')}</label>
-              <input value={pName} onChange={e => setPName(e.target.value)} aria-label="P1" placeholder="P1" className={inputNumberClass} />
+<label htmlFor="field-point-name" className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('field.name')}</label>
+              <input id="field-point-name" value={pName} onChange={e => setPName(e.target.value)} placeholder="P1" className={inputNumberClass} />
             </div>
             <div>
-              <label className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('common.easting')}</label>
-              <input value={pE} onChange={e => setPE(e.target.value)} aria-label="500000" placeholder="500000" className={inputNumberClass} />
+              <label htmlFor="field-point-easting" className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('common.easting')}</label>
+              <input id="field-point-easting" value={pE} onChange={e => setPE(e.target.value)} placeholder="500000" className={inputNumberClass} />
             </div>
             <div>
-              <label className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('common.northing')}</label>
-              <input value={pN} onChange={e => setPN(e.target.value)} aria-label="4500000" placeholder="4500000" className={inputNumberClass} />
+              <label htmlFor="field-point-northing" className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('common.northing')}</label>
+              <input id="field-point-northing" value={pN} onChange={e => setPN(e.target.value)} placeholder="4500000" className={inputNumberClass} />
             </div>
             <div>
-              <label className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('common.elevation')}</label>
-              <input value={pZ} onChange={e => setPZ(e.target.value)} aria-label="0" placeholder="0" className={inputNumberClass} />
+              <label htmlFor="field-point-elevation" className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('common.elevation')}</label>
+              <input id="field-point-elevation" value={pZ} onChange={e => setPZ(e.target.value)} placeholder="0" className={inputNumberClass} />
             </div>
           </div>
 
@@ -549,12 +550,12 @@ export default function FieldPage() {
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('field.traverse')} →</label>
-                <input value={tStation} onChange={e => setTStation(e.target.value)} aria-label="B" placeholder="B" className={inputClass} />
+                <label htmlFor="traverse-station" className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('field.traverse')} →</label>
+                <input id="traverse-station" value={tStation} onChange={e => setTStation(e.target.value)} placeholder="B" className={inputClass} />
               </div>
               <div>
-                <label className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('field.distance')}</label>
-                <input value={tDist} onChange={e => setTDist(e.target.value)} aria-label="100.00" placeholder="100.00" className={inputNumberClass} />
+                <label htmlFor="traverse-distance" className="text-[10px] text-[var(--text-muted)] mb-1 block">{t('field.distance')}</label>
+                <input id="traverse-distance" value={tDist} onChange={e => setTDist(e.target.value)} placeholder="100.00" className={inputNumberClass} />
               </div>
             </div>
 
@@ -564,19 +565,19 @@ export default function FieldPage() {
                 <input 
                   value={tDeg} 
                   onChange={e => setTDeg(e.target.value)} 
-                  aria-label="000" placeholder="000" 
+                  aria-label="Bearing degrees" placeholder="000" 
                   className={`${inputClass} text-center text-sm`} 
                 />
                 <input 
                   value={tMin} 
                   onChange={e => setTMin(e.target.value)} 
-                  aria-label="00" placeholder="00" 
+                  aria-label="Bearing minutes" placeholder="00" 
                   className={`${inputClass} text-center text-sm`} 
                 />
                 <input 
                   value={tSec} 
                   onChange={e => setTSec(e.target.value)} 
-                  aria-label="00.0" placeholder="00.0" 
+                  aria-label="Bearing seconds" placeholder="00.0" 
                   className={`${inputClass} text-center font-mono text-sm`} 
                 />
               </div>
@@ -607,8 +608,8 @@ export default function FieldPage() {
             <h2 className="text-xs font-semibold text-white uppercase tracking-wide">Leveling</h2>
             
             <div>
-              <label className="text-[10px] text-[var(--text-muted)] mb-1 block">Station</label>
-              <input value={lStation} onChange={e => setLStation(e.target.value)} aria-label="TP1" placeholder="TP1" className={inputClass} />
+              <label htmlFor="level-station" className="text-[10px] text-[var(--text-muted)] mb-1 block">Station</label>
+              <input id="level-station" value={lStation} onChange={e => setLStation(e.target.value)} placeholder="TP1" className={inputClass} />
             </div>
 
             <div className="grid grid-cols-3 gap-1.5">
@@ -630,7 +631,7 @@ export default function FieldPage() {
                 <input
                   value={lReading}
                   onChange={e => setLReading(e.target.value)}
-                  aria-label="Reading" placeholder="Reading"
+                  aria-label="Level staff reading" placeholder="Reading"
                   className={inputNumberClass}
                 />
                 <button onClick={() => {
@@ -687,31 +688,31 @@ export default function FieldPage() {
             <h2 className="text-xs font-semibold text-white uppercase tracking-wide">Radiation</h2>
             
             <div>
-              <label className="text-[10px] text-[var(--text-muted)] mb-1 block">Instrument Station</label>
-              <select value={rStation} onChange={e => setRStation(e.target.value)} className={inputClass}>
+              <label htmlFor="rad-station" className="text-[10px] text-[var(--text-muted)] mb-1 block">Instrument Station</label>
+              <select id="rad-station" value={rStation} onChange={e => setRStation(e.target.value)} className={inputClass}>
                 <option value="">Select...</option>
                 {points.map((p) => <option key={p.id} value={p.name}>{p.name}</option>)}
               </select>
             </div>
 
             <div>
-              <label className="text-[10px] text-[var(--text-muted)] mb-1 block">Instrument Height (m)</label>
-              <input value={rInstH} onChange={e => setRInstH(e.target.value)} aria-label="1.500" placeholder="1.500" className={inputNumberClass} />
+              <label htmlFor="rad-inst-height" className="text-[10px] text-[var(--text-muted)] mb-1 block">Instrument Height (m)</label>
+              <input id="rad-inst-height" value={rInstH} onChange={e => setRInstH(e.target.value)} placeholder="1.500" className={inputNumberClass} />
             </div>
 
             <div className="border-t border-[var(--border-color)] pt-3 mt-3">
-              <label className="text-[10px] text-[var(--text-muted)] mb-1 block">Point Name</label>
-              <input value={rNewName} onChange={e => setRNewName(e.target.value)} aria-label="P1" placeholder="P1" className={inputClass} />
+              <label htmlFor="rad-point-name" className="text-[10px] text-[var(--text-muted)] mb-1 block">Point Name</label>
+              <input id="rad-point-name" value={rNewName} onChange={e => setRNewName(e.target.value)} placeholder="P1" className={inputClass} />
 
-              <label className="text-[10px] text-[var(--text-muted)] mb-1 block mt-2">Bearing</label>
+              <div className="text-[10px] text-[var(--text-muted)] mb-1 block mt-2">Bearing</div>
               <div className="grid grid-cols-3 gap-1.5 mb-2">
-                <input value={rBearingDeg} onChange={e => setRBearingDeg(e.target.value)} aria-label="000" placeholder="000" className={`${inputClass} text-center text-sm`} />
-                <input value={rBearingMin} onChange={e => setRBearingMin(e.target.value)} aria-label="00" placeholder="00" className={`${inputClass} text-center text-sm`} />
-                <input value={rBearingSec} onChange={e => setRBearingSec(e.target.value)} aria-label="00.0" placeholder="00.0" className={`${inputClass} text-center font-mono text-sm`} />
+                <input value={rBearingDeg} onChange={e => setRBearingDeg(e.target.value)} aria-label="Bearing degrees" placeholder="000" className={`${inputClass} text-center text-sm`} />
+                <input value={rBearingMin} onChange={e => setRBearingMin(e.target.value)} aria-label="Bearing minutes" placeholder="00" className={`${inputClass} text-center text-sm`} />
+                <input value={rBearingSec} onChange={e => setRBearingSec(e.target.value)} aria-label="Bearing seconds" placeholder="00.0" className={`${inputClass} text-center font-mono text-sm`} />
               </div>
 
-              <label className="text-[10px] text-[var(--text-muted)] mb-1 block">Distance (m)</label>
-              <input value={rDist} onChange={e => setRDist(e.target.value)} aria-label="50.00" placeholder="50.00" className={inputNumberClass} />
+              <label htmlFor="rad-distance" className="text-[10px] text-[var(--text-muted)] mb-1 block">Distance (m)</label>
+              <input id="rad-distance" value={rDist} onChange={e => setRDist(e.target.value)} placeholder="50.00" className={inputNumberClass} />
 
               <button
                 onClick={() => {

@@ -188,8 +188,8 @@ export function HorizontalCurvePanel({ projectId, projectData, surveyorProfile, 
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Radius R (m)</label>
-          <input aria-label="Radius R (m)"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="radius-r-m">Radius R (m)</label>
+          <input id="radius-r-m" aria-label="Radius R (m)"
             type="number"
             min={30}
             max={2000}
@@ -200,8 +200,8 @@ export function HorizontalCurvePanel({ projectId, projectData, surveyorProfile, 
           <p className="text-xs text-[var(--text-muted)] mt-0.5">Min: {minRadius}m for {designSpeed}km/h</p>
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Deflection Angle Δ (°)</label>
-          <input aria-label="Deflection Angle Δ (°)"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="deflection-angle">Deflection Angle Δ (°)</label>
+          <input id="deflection-angle" aria-label="Deflection Angle Δ (°)"
             type="number"
             min={1}
             max={180}
@@ -211,8 +211,8 @@ export function HorizontalCurvePanel({ projectId, projectData, surveyorProfile, 
           />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Chainage at IP (m)</label>
-          <input aria-label="Chainage at IP (m)"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="chainage-at-ip-m">Chainage at IP (m)</label>
+          <input  id="chainage-at-ip-m" aria-label="Chainage at IP (m)"
             type="number"
             min={0}
             value={chainageStart}

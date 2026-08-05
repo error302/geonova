@@ -167,26 +167,26 @@ export function TraverseBook({
       <div className="card-body space-y-4">
         <div className="grid md:grid-cols-4 gap-3">
           <div>
-            <label className="label">{t('common.startStation')}</label>
-            <input aria-label="{t('common.startStation')}" className="input input-sm" value={startStation} onChange={(e) => setStartStation(e.target.value)} />
+            <label className="label" htmlFor="trav-start-station">{t('common.startStation')}</label>
+            <input id="trav-start-station" aria-label={t('common.startStation')} className="input input-sm" value={startStation} onChange={(e) => setStartStation(e.target.value)} />
           </div>
           <div>
-            <label className="label">{t('common.startEasting')}</label>
-            <input aria-label="{t('common.startEasting')}" inputMode="decimal" className="input input-sm" value={startE} onChange={(e) => setStartE(e.target.value)} />
+            <label className="label" htmlFor="trav-start-e">{t('common.startEasting')}</label>
+            <input id="trav-start-e" aria-label={t('common.startEasting')} inputMode="decimal" className="input input-sm" value={startE} onChange={(e) => setStartE(e.target.value)} />
           </div>
           <div>
-            <label className="label">{t('common.startNorthing')}</label>
-            <input aria-label="{t('common.startNorthing')}" inputMode="decimal" className="input input-sm" value={startN} onChange={(e) => setStartN(e.target.value)} />
+            <label className="label" htmlFor="trav-start-n">{t('common.startNorthing')}</label>
+            <input id="trav-start-n" aria-label={t('common.startNorthing')} inputMode="decimal" className="input input-sm" value={startN} onChange={(e) => setStartN(e.target.value)} />
           </div>
           {travMode === 'link' ? (
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="label">{t('traverse.closeE')} <span className="text-red-400">*</span></label>
-                <input aria-label="{t('common.startNorthing')}" inputMode="decimal" className="input input-sm" value={closeE} onChange={(e) => setCloseE(e.target.value)} />
+                <label className="label" htmlFor="trav-close-e">{t('traverse.closeE')} <span className="text-red-400">*</span></label>
+                <input id="trav-close-e" aria-label={t('traverse.closeE')} inputMode="decimal" className="input input-sm" value={closeE} onChange={(e) => setCloseE(e.target.value)} />
               </div>
               <div>
-                <label className="label">{t('traverse.closeN')} <span className="text-red-400">*</span></label>
-                <input aria-label="Closing northing" inputMode="decimal" className="input input-sm" value={closeN} onChange={(e) => setCloseN(e.target.value)} />
+                <label className="label" htmlFor="trav-close-n">{t('traverse.closeN')} <span className="text-red-400">*</span></label>
+                <input id="trav-close-n" aria-label={t('traverse.closeN')} inputMode="decimal" className="input input-sm" value={closeN} onChange={(e) => setCloseN(e.target.value)} />
               </div>
             </div>
           ) : (
@@ -247,24 +247,24 @@ export function TraverseBook({
                   <tr key={r.id}>
                     <td className="text-left"><input aria-label="Station" className="input input-sm" value={r.station} onChange={(e) => upd({ station: e.target.value })} /></td>
                     {/* HCL */}
-                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.hclDeg} onChange={(e) => upd({ hclDeg: e.target.value })} aria-label="Deg" placeholder="Deg" /></td>
-                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.hclMin} onChange={(e) => upd({ hclMin: e.target.value })} aria-label="Min" placeholder="Min" /></td>
-                    <td className="text-center"><input type="number" step="0.1" className="input input-sm font-mono w-16 text-center" value={r.hclSec} onChange={(e) => upd({ hclSec: e.target.value })} aria-label="Sec" placeholder="Sec" /></td>
+                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.hclDeg} onChange={(e) => upd({ hclDeg: e.target.value })} aria-label="HCL (Face Left) — Deg" placeholder="Deg" /></td>
+                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.hclMin} onChange={(e) => upd({ hclMin: e.target.value })} aria-label="HCL (Face Left) — Min" placeholder="Min" /></td>
+                    <td className="text-center"><input type="number" step="0.1" className="input input-sm font-mono w-16 text-center" value={r.hclSec} onChange={(e) => upd({ hclSec: e.target.value })} aria-label="HCL (Face Left) — Sec" placeholder="Sec" /></td>
                     {/* HCR */}
-                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.hcrDeg} onChange={(e) => upd({ hcrDeg: e.target.value })} aria-label="Deg" placeholder="Deg" /></td>
-                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.hcrMin} onChange={(e) => upd({ hcrMin: e.target.value })} aria-label="Min" placeholder="Min" /></td>
-                    <td className="text-center"><input type="number" step="0.1" className="input input-sm font-mono w-16 text-center" value={r.hcrSec} onChange={(e) => upd({ hcrSec: e.target.value })} aria-label="Sec" placeholder="Sec" /></td>
+                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.hcrDeg} onChange={(e) => upd({ hcrDeg: e.target.value })} aria-label="HCR (Face Right) — Deg" placeholder="Deg" /></td>
+                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.hcrMin} onChange={(e) => upd({ hcrMin: e.target.value })} aria-label="HCR (Face Right) — Min" placeholder="Min" /></td>
+                    <td className="text-center"><input type="number" step="0.1" className="input input-sm font-mono w-16 text-center" value={r.hcrSec} onChange={(e) => upd({ hcrSec: e.target.value })} aria-label="HCR (Face Right) — Sec" placeholder="Sec" /></td>
                     {/* Mean Bearing */}
                     <td className="text-center font-mono text-xs text-amber-400 whitespace-nowrap">{meanStr}</td>
                     {/* Slope Distance */}
-                    <td className="text-right"><input inputMode="decimal" className="input input-sm font-mono w-20 text-right" value={r.slopeDist} onChange={(e) => upd({ slopeDist: e.target.value })} aria-label="100.000" placeholder="100.000" /></td>
+                    <td className="text-right"><input inputMode="decimal" className="input input-sm font-mono w-20 text-right" value={r.slopeDist} onChange={(e) => upd({ slopeDist: e.target.value })} aria-label="SD (m)" placeholder="100.000" /></td>
                     {/* VA */}
-                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.vaDeg} onChange={(e) => upd({ vaDeg: e.target.value })} aria-label="Deg" placeholder="Deg" /></td>
-                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.vaMin} onChange={(e) => upd({ vaMin: e.target.value })} aria-label="Min" placeholder="Min" /></td>
-                    <td className="text-center"><input type="number" step="0.1" className="input input-sm font-mono w-16 text-center" value={r.vaSec} onChange={(e) => upd({ vaSec: e.target.value })} aria-label="Sec" placeholder="Sec" /></td>
+                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.vaDeg} onChange={(e) => upd({ vaDeg: e.target.value })} aria-label="VA (DMS) — Deg" placeholder="Deg" /></td>
+                    <td className="text-center"><input type="number" className="input input-sm font-mono w-14 text-center" value={r.vaMin} onChange={(e) => upd({ vaMin: e.target.value })} aria-label="VA (DMS) — Min" placeholder="Min" /></td>
+                    <td className="text-center"><input type="number" step="0.1" className="input input-sm font-mono w-16 text-center" value={r.vaSec} onChange={(e) => upd({ vaSec: e.target.value })} aria-label="VA (DMS) — Sec" placeholder="Sec" /></td>
                     {/* IH / TH */}
-                    <td className="text-right"><input aria-label="Ih" inputMode="decimal" step="0.001" className="input input-sm font-mono w-14 text-right" value={r.ih} onChange={(e) => upd({ ih: e.target.value })} /></td>
-                    <td className="text-right"><input aria-label="Th" inputMode="decimal" step="0.001" className="input input-sm font-mono w-14 text-right" value={r.th} onChange={(e) => upd({ th: e.target.value })} /></td>
+                    <td className="text-right"><input aria-label="IH (m)" inputMode="decimal" step="0.001" className="input input-sm font-mono w-14 text-right" value={r.ih} onChange={(e) => upd({ ih: e.target.value })} /></td>
+                    <td className="text-right"><input aria-label="TH (m)" inputMode="decimal" step="0.001" className="input input-sm font-mono w-14 text-right" value={r.th} onChange={(e) => upd({ th: e.target.value })} /></td>
                     {/* Computed columns */}
                     <td className="font-mono text-right text-xs">{lat !== null ? Number(lat).toFixed(4) : '—'}</td>
                     <td className="font-mono text-right text-xs">{dep !== null ? Number(dep).toFixed(4) : '—'}</td>

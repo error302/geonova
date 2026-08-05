@@ -32,7 +32,6 @@ export default function DigitalSignaturePage() {
   const handleSign = async () => {
     if (!signForm.documentId || !signForm.content || !signForm.signerId || !signForm.secret) {
       setValidationMsg('Please fill all required fields.'); return
-      return
     }
     const signed = await signDocument(
       signForm.documentId,
@@ -47,7 +46,6 @@ export default function DigitalSignaturePage() {
   const handleVerify = async () => {
     if (!verifyForm.qrPayload || !verifyForm.originalContent || !verifyForm.secret) {
       setValidationMsg('Please fill all required fields.'); return
-      return
     }
     const parsed = parseQRPayload(verifyForm.qrPayload)
     if (!parsed) {
@@ -65,7 +63,6 @@ export default function DigitalSignaturePage() {
   const handleSurveySign = async () => {
     if (!signForm.signerId || !signForm.secret) {
       setValidationMsg('Please enter your signer ID and secret key.'); return
-      return
     }
     const measurements: Record<string, number> = {
       pointA_Easting: 500000.00,
@@ -120,22 +117,24 @@ export default function DigitalSignaturePage() {
             
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+                <label htmlFor="sig-document-id" className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                   Document ID
                 </label>
                 <input
+                  id="sig-document-id"
                   type="text"
                   value={signForm.documentId}
                   onChange={e => setSignForm({...signForm, documentId: e.target.value})}
-                  aria-label="e.g., SURVEY-2024-001" placeholder="e.g., SURVEY-2024-001"
+                  aria-label="Document ID" placeholder="e.g., SURVEY-2024-001"
                   className="w-full p-2 border rounded-lg"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+                <label htmlFor="sig-content" className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                   Document Content
                 </label>
                 <textarea
+                  id="sig-content"
                   value={signForm.content}
                   onChange={e => setSignForm({...signForm, content: e.target.value})}
                   placeholder="Enter document content to sign..."
@@ -144,26 +143,28 @@ export default function DigitalSignaturePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+                <label htmlFor="sig-signer-id" className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                   Signer ID (License Number)
                 </label>
                 <input
+                  id="sig-signer-id"
                   type="text"
                   value={signForm.signerId}
                   onChange={e => setSignForm({...signForm, signerId: e.target.value})}
-                  aria-label="e.g., LS/2024/1234" placeholder="e.g., LS/2024/1234"
+                  aria-label="Signer ID (License Number)" placeholder="e.g., LS/2024/1234"
                   className="w-full p-2 border rounded-lg"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+                <label htmlFor="sig-secret" className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                   Secret Key
                 </label>
                 <input
+                  id="sig-secret"
                   type="password"
                   value={signForm.secret}
                   onChange={e => setSignForm({...signForm, secret: e.target.value})}
-                  aria-label="Enter signing secret" placeholder="Enter signing secret"
+                  aria-label="Secret key" placeholder="Enter signing secret"
                   className="w-full p-2 border rounded-lg"
                 />
               </div>
@@ -217,10 +218,11 @@ export default function DigitalSignaturePage() {
             
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+                <label htmlFor="verify-qr" className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                   QR Payload (Base64)
                 </label>
                 <textarea
+                  id="verify-qr"
                   value={verifyForm.qrPayload}
                   onChange={e => setVerifyForm({...verifyForm, qrPayload: e.target.value})}
                   placeholder="Paste QR payload from signed document..."
@@ -229,10 +231,11 @@ export default function DigitalSignaturePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+                <label htmlFor="verify-original" className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                   Original Document Content
                 </label>
                 <textarea
+                  id="verify-original"
                   value={verifyForm.originalContent}
                   onChange={e => setVerifyForm({...verifyForm, originalContent: e.target.value})}
                   placeholder="Enter original document content..."
@@ -241,14 +244,15 @@ export default function DigitalSignaturePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
+                <label htmlFor="verify-secret" className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                   Secret Key
                 </label>
                 <input
+                  id="verify-secret"
                   type="password"
                   value={verifyForm.secret}
                   onChange={e => setVerifyForm({...verifyForm, secret: e.target.value})}
-                  aria-label="Enter signing secret" placeholder="Enter signing secret"
+                  aria-label="Secret key" placeholder="Enter signing secret"
                   className="w-full p-2 border rounded-lg"
                 />
               </div>

@@ -71,6 +71,14 @@ export default function ProfilesPage({ params }: PageProps) {
   const [svgHScale, setSvgHScale] = useState<number>(1000);
   const [svgVScale, setSvgVScale] = useState<number>(100);
 
+  // Close the SVG preview on Escape (document-level, works regardless of focus)
+  useEffect(() => {
+    if (!svgModalOpen) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSvgModalOpen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [svgModalOpen])
+
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
@@ -267,12 +275,12 @@ export default function ProfilesPage({ params }: PageProps) {
               <h2 className="text-lg font-semibold mb-4">Create New Alignment</h2>
               <div className="grid md:grid-cols-3 gap-4">
                 <div>
-                  <label className="label">Alignment Name</label>
-                  <input
+                  <label className="label" htmlFor="alignment-name">Alignment Name</label>
+                  <input id="alignment-name"
                     className="input"
                     value={newAlignmentName}
                     onChange={e => setNewAlignmentName(e.target.value)}
-                    aria-label="e.g., Main Road Centerline" placeholder="e.g., Main Road Centerline"
+ placeholder="e.g., Main Road Centerline"
                   />
                 </div>
                 <div className="md:col-span-2 flex items-end">
@@ -364,8 +372,9 @@ export default function ProfilesPage({ params }: PageProps) {
                   <ProfileChart points={chainagePoints} />
 
                   {svgModalOpen && (
-                    <div role="button" tabIndex={0} aria-label="Close preview" className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={() => setSvgModalOpen(false)} onKeyDown={(e) => { if (e.key === 'Escape') setSvgModalOpen(false) }}>
-                      <div className="w-full max-w-2xl rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-5 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                    <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+                      <button type="button" aria-label="Close preview" tabIndex={-1} className="absolute inset-0 cursor-pointer border-0 p-0" onClick={() => setSvgModalOpen(false)} />
+                      <div className="relative w-full max-w-2xl rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] p-5 shadow-2xl" role="dialog" aria-modal="true" aria-label="Export profile SVG">
                         <div className="flex items-center justify-between mb-4">
                           <div className="text-lg font-semibold text-[var(--text-primary)]">Export profile SVG (to-scale)</div>
                           <button onClick={() => setSvgModalOpen(false)} className="px-3 py-1 rounded bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)]">

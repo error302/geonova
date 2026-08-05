@@ -129,7 +129,7 @@ export function validateLevelingClosure(input: LevelingClosureInput): LevelingCl
   const std = getCountryStandard(country)
   const warnings: string[] = []
 
-  let requiredOrder = environment
+  const requiredOrder = environment
   let allowable = getAllowableMisclosure(distanceKm, environment)
   let requiredOrderObj = LEVELING_ORDERS.find((o: any) => o.order === requiredOrder)
 

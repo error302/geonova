@@ -239,8 +239,8 @@ export function NTRIPClientPanel() {
       <div className="p-4 space-y-3">
         {/* Preset selector */}
         <div>
-          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5">CORS Network</label>
-          <select
+          <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5" htmlFor="cors-network">CORS Network</label>
+          <select id="cors-network"
             value={selectedPreset}
             onChange={e => handlePresetChange(e.target.value)}
             disabled={isConnected}
@@ -269,8 +269,8 @@ export function NTRIPClientPanel() {
           <div className="space-y-2 p-3 rounded-lg bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)]">
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-[8px] text-gray-500 uppercase mb-0.5">Host</label>
-                <input aria-label="Host"
+                <label className="block text-[8px] text-gray-500 uppercase mb-0.5" htmlFor="host">Host</label>
+                <input id="host" aria-label="Host"
                   type="text"
                   value={config.host}
                   onChange={e => setConfig(prev => ({ ...prev, host: e.target.value }))}
@@ -279,8 +279,8 @@ export function NTRIPClientPanel() {
                 />
               </div>
               <div>
-                <label className="block text-[8px] text-gray-500 uppercase mb-0.5">Port</label>
-                <input aria-label="Port"
+                <label className="block text-[8px] text-gray-500 uppercase mb-0.5" htmlFor="port">Port</label>
+                <input id="port" aria-label="Port"
                   type="number"
                   value={config.port}
                   onChange={e => setConfig(prev => ({ ...prev, port: parseInt(e.target.value) || 2101 }))}
@@ -290,8 +290,8 @@ export function NTRIPClientPanel() {
               </div>
             </div>
             <div>
-              <label className="block text-[8px] text-gray-500 uppercase mb-0.5">Mountpoint</label>
-              <input aria-label="Mountpoint"
+              <label className="block text-[8px] text-gray-500 uppercase mb-0.5" htmlFor="mountpoint">Mountpoint</label>
+              <input id="mountpoint" aria-label="Mountpoint"
                 type="text"
                 value={config.mountpoint}
                 onChange={e => setConfig(prev => ({ ...prev, mountpoint: e.target.value }))}
@@ -301,8 +301,8 @@ export function NTRIPClientPanel() {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-[8px] text-gray-500 uppercase mb-0.5">Username</label>
-                <input aria-label="Username"
+                <label className="block text-[8px] text-gray-500 uppercase mb-0.5" htmlFor="username">Username</label>
+                <input id="username" aria-label="Username"
                   type="text"
                   value={config.username}
                   onChange={e => setConfig(prev => ({ ...prev, username: e.target.value }))}
@@ -311,8 +311,8 @@ export function NTRIPClientPanel() {
                 />
               </div>
               <div>
-                <label className="block text-[8px] text-gray-500 uppercase mb-0.5">Password</label>
-                <input aria-label="Password"
+                <label className="block text-[8px] text-gray-500 uppercase mb-0.5" htmlFor="password">Password</label>
+                <input  id="password" aria-label="Password"
                   type="password"
                   value={config.password}
                   onChange={e => setConfig(prev => ({ ...prev, password: e.target.value }))}

@@ -17,6 +17,7 @@ import {
   validateEpoch,
   SOMALI_PLATE_OMEGA,
 } from '../epochManager'
+import { propagateToEpochRigorous } from '../epochManagerRigorous'
 
 // ─── ECEF Conversions ───────────────────────────────────────────────────────
 
@@ -211,7 +212,6 @@ describe('compareCoordinates', () => {
     // The 2025 observation is of the SAME monument, so its lat/lon reflects
     // 10 years of plate motion. Compute this with the rigorous propagator.
     // We need to import it here to construct the test data.
-    const { propagateToEpochRigorous } = require('../epochManagerRigorous')
     const propagated = propagateToEpochRigorous(coord2015, 2025.0)
 
     const coord2025 = {

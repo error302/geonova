@@ -192,8 +192,8 @@ export default function SuperelevationPanel({
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Curve Radius R (m)</label>
-          <input aria-label="Curve Radius R (m)"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="curve-radius-r-m">Curve Radius R (m)</label>
+          <input id="curve-radius-r-m" aria-label="Curve Radius R (m)"
             type="number"
             min={30}
             max={2000}
@@ -204,8 +204,8 @@ export default function SuperelevationPanel({
           <p className="text-xs text-[var(--text-muted)] mt-0.5">e required: {ePercent.toFixed(1)}%</p>
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Design Speed V (km/h)</label>
-          <input aria-label="Design Speed V (km/h)"
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="design-speed-v-km-h">Design Speed V (km/h)</label>
+          <input id="design-speed-v-km-h" aria-label="Design Speed V (km/h)"
             type="number"
             min={20}
             max={120}
@@ -215,9 +215,9 @@ export default function SuperelevationPanel({
           />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-muted)] mb-1">Max Superelevation e<sub>max</sub></label>
+          <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="max-superelevation-e-max">Max Superelevation e<sub>max</sub></label>
           <select
-            value={eMax}
+             id="max-superelevation-e-max" value={eMax}
             onChange={(e) => setEmax(Number(e.target.value))}
             className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-3 py-2 text-sm font-mono"
           >

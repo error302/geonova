@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useId } from 'react'
 import { Download } from 'lucide-react'
 import { printBeaconCertificate } from '@/lib/print/beaconCertificate'
 import type { BeaconEntry, BeaconCondition, MonumentType } from '@/lib/print/beaconCertificate'
@@ -60,6 +60,7 @@ function makeBeacon(): BeaconEntry {
 // ── Component ──────────────────────────────────────────────────────────────
 
 export default function BeaconCertificateBuilder() {
+  const uid = useId()
   const [beacons, setBeacons]       = useState<BeaconEntry[]>([makeBeacon(), makeBeacon(), makeBeacon()])
   const [expandedId, setExpandedId] = useState<string | null>(beacons[0]?.id ?? null)
   const [printMeta, setPrintMeta]   = useState<PrintMeta>(defaultPrintMeta)
@@ -127,8 +128,8 @@ export default function BeaconCertificateBuilder() {
             ['subLocation', 'Sub-Location',      'e.g. Mweiga East'],
           ] as [keyof typeof location, string, string][]).map(([key, label, ph]) => (
             <div key={key}>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">{label}</label>
-              <input aria-label="{label}"
+              <label htmlFor={`${uid}-loc-${key}`} className="block text-xs text-[var(--text-muted)] mb-1">{label}</label>
+              <input id={`${uid}-loc-${key}`}
                 className="input w-full"
                 value={location[key]}
                 placeholder={ph}
@@ -207,17 +208,17 @@ export default function BeaconCertificateBuilder() {
                   {/* Row 1 — ID, type, condition */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-xs text-[var(--text-muted)] mb-1">Beacon ID / Name <span className="text-red-400">*</span></label>
-                      <input
+                      <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="beacon-id-name">Beacon ID / Name <span className="text-red-400">*</span></label>
+                      <input id="beacon-id-name"
                         className="input w-full font-mono"
                         value={beacon.name}
-                        aria-label="e.g. P1 / A / BM1" placeholder="e.g. P1 / A / BM1"
+                        placeholder="e.g. P1 / A / BM1"
                         onChange={e => updateBeacon(beacon.id, 'name', e.target.value)}
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-[var(--text-muted)] mb-1">Monument Type</label>
-                      <select
+                      <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="monument-type">Monument Type</label>
+                      <select id="monument-type"
                         className="input w-full"
                         value={beacon.monumentType}
                         onChange={e => updateBeacon(beacon.id, 'monumentType', e.target.value as MonumentType)}
@@ -228,7 +229,7 @@ export default function BeaconCertificateBuilder() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs text-[var(--text-muted)] mb-1">Condition</label>
+                      <div className="block text-xs text-[var(--text-muted)] mb-1">Condition</div>
                       <div className="flex flex-wrap gap-1.5">
                         {CONDITIONS.map(c => (
                           <button
@@ -250,35 +251,35 @@ export default function BeaconCertificateBuilder() {
                   {/* Row 2 — Coordinates */}
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-xs text-[var(--text-muted)] mb-1">Easting (m)</label>
-                      <input
+                      <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="easting-m">Easting (m)</label>
+                      <input id="easting-m"
                         className="input w-full font-mono"
                         type="number"
                         step="0.001"
                         value={beacon.easting}
-                        aria-label="e.g. 250000.000" placeholder="e.g. 250000.000"
+                        placeholder="e.g. 250000.000"
                         onChange={e => updateBeacon(beacon.id, 'easting', e.target.value)}
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-[var(--text-muted)] mb-1">Northing (m)</label>
-                      <input
+                      <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="northing-m">Northing (m)</label>
+                      <input id="northing-m"
                         className="input w-full font-mono"
                         type="number"
                         step="0.001"
                         value={beacon.northing}
-                        aria-label="e.g. 9945000.000" placeholder="e.g. 9945000.000"
+                        placeholder="e.g. 9945000.000"
                         onChange={e => updateBeacon(beacon.id, 'northing', e.target.value)}
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-[var(--text-muted)] mb-1">Reduced Level / RL (m)</label>
-                      <input
+                      <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="reduced-level-rl-m">Reduced Level / RL (m)</label>
+                      <input id="reduced-level-rl-m"
                         className="input w-full font-mono"
                         type="number"
                         step="0.001"
                         value={beacon.elevation}
-                        aria-label="Optional" placeholder="Optional"
+                        placeholder="Optional"
                         onChange={e => updateBeacon(beacon.id, 'elevation', e.target.value)}
                       />
                     </div>
@@ -286,10 +287,10 @@ export default function BeaconCertificateBuilder() {
 
                   {/* Row 3 — Description */}
                   <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">
+                    <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="beacon-description-type-size-finish-setting">
                       Beacon Description <span className="text-[var(--text-muted)] font-normal">(type, size, finish, setting)</span>
                     </label>
-                    <textarea
+                    <textarea id="beacon-description-type-size-finish-setting"
                       className="input w-full resize-none"
                       rows={2}
                       value={beacon.description}
@@ -300,11 +301,11 @@ export default function BeaconCertificateBuilder() {
 
                   {/* Row 4 — Adjacent features */}
                   <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">
+                    <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="adjacent-features-for-identification-on-site">
                       Adjacent Features <span className="text-[var(--text-muted)] font-normal">(for identification on site)</span>
                     </label>
                     <textarea
-                      className="input w-full resize-none"
+                       id="adjacent-features-for-identification-on-site" className="input w-full resize-none"
                       rows={2}
                       value={beacon.adjacentFeatures}
                       placeholder={`e.g. 0.45m west of existing concrete fence post. 1.2m south of gate post on northern boundary.`}

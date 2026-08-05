@@ -40,22 +40,22 @@ export default function MissingLineCalculator() {
           <div className="card-body space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="label">Point A Easting (m)</label>
-                <input className="input" value={pointA.e} onChange={e => setPointA({...pointA, e: e.target.value})} aria-label="500000.0000" placeholder="500000.0000" />
+                <label className="label" htmlFor="point-a-easting-m">Point A Easting (m)</label>
+                <input id="point-a-easting-m" className="input" value={pointA.e} onChange={e => setPointA({...pointA, e: e.target.value})} placeholder="500000.0000" />
               </div>
               <div>
-                <label className="label">Point A Northing (m)</label>
-                <input className="input" value={pointA.n} onChange={e => setPointA({...pointA, n: e.target.value})} aria-label="9500000.0000" placeholder="9500000.0000" />
+                <label className="label" htmlFor="point-a-northing-m">Point A Northing (m)</label>
+                <input id="point-a-northing-m" className="input" value={pointA.n} onChange={e => setPointA({...pointA, n: e.target.value})} placeholder="9500000.0000" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="label">Point B Easting (m)</label>
-                <input className="input" value={pointB.e} onChange={e => setPointB({...pointB, e: e.target.value})} aria-label="500050.0000" placeholder="500050.0000" />
+                <label className="label" htmlFor="point-b-easting-m">Point B Easting (m)</label>
+                <input id="point-b-easting-m" className="input" value={pointB.e} onChange={e => setPointB({...pointB, e: e.target.value})} placeholder="500050.0000" />
               </div>
               <div>
-                <label className="label">Point B Northing (m)</label>
-                <input className="input" value={pointB.n} onChange={e => setPointB({...pointB, n: e.target.value})} aria-label="9500030.0000" placeholder="9500030.0000" />
+                <label className="label" htmlFor="point-b-northing-m">Point B Northing (m)</label>
+                <input id="point-b-northing-m" className="input" value={pointB.n} onChange={e => setPointB({...pointB, n: e.target.value})} placeholder="9500030.0000" />
               </div>
             </div>
             <button onClick={calculate} className="btn btn-primary w-full">Calculate Missing Line</button>

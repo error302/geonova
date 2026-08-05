@@ -301,10 +301,11 @@ function LoginForm() {
                     )}
 
                     <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
+                      <label htmlFor="login-email" className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
                         Email
                       </label>
                       <input
+                        id="login-email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -314,8 +315,7 @@ function LoginForm() {
                         }}
                         className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
                         autoComplete="email"
-                        autoFocus
-                        aria-label="you@example.com" placeholder="you@example.com"
+                        placeholder="you@example.com"
                       />
                       {emailTouched && emailError && (
                         <p className="text-red-300 text-xs mt-1.5">{emailError}</p>
@@ -323,11 +323,12 @@ function LoginForm() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
+                      <label htmlFor="login-password" className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
                         Password
                       </label>
                       <div className="relative">
                         <input
+                          id="login-password"
                           type={showPassword ? 'text' : 'password'}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
@@ -337,7 +338,7 @@ function LoginForm() {
                           }}
                           className="w-full px-4 py-3 pr-11 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
                           autoComplete="current-password"
-                          aria-label="••••••••" placeholder="••••••••"
+                          placeholder="••••••••"
                         />
                         <button
                           type="button"
@@ -414,10 +415,11 @@ function LoginForm() {
 
                   <form onSubmit={handleForgotPassword} className="space-y-5">
                     <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
+                      <label htmlFor="forgot-email" className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
                         Email
                       </label>
                       <input
+                        id="forgot-email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -427,8 +429,7 @@ function LoginForm() {
                         }}
                         className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
                         autoComplete="email"
-                        autoFocus
-                        aria-label="you@example.com" placeholder="you@example.com"
+                        placeholder="you@example.com"
                       />
                       {emailTouched && emailError && (
                         <p className="text-red-300 text-xs mt-1.5">{emailError}</p>

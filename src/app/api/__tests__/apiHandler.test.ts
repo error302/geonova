@@ -4,10 +4,10 @@
  */
 
 import { describe, it, expect } from '@jest/globals'
+import { ApiError } from '@/lib/api/client'
 
 describe('ApiError', () => {
   it('ApiError is constructable with status, code, message', () => {
-    const { ApiError } = require('@/lib/api/client')
     const err = new ApiError(401, 'UNAUTHORIZED', 'Not authenticated')
     expect(err.status).toBe(401)
     expect(err.code).toBe('UNAUTHORIZED')
@@ -19,7 +19,6 @@ describe('ApiError', () => {
   })
 
   it('isForbidden returns true for 403 and PERMISSION_DENIED', () => {
-    const { ApiError } = require('@/lib/api/client')
     const err = new ApiError(403, 'FORBIDDEN', 'Forbidden')
     expect(err.isForbidden).toBe(true)
     const err2 = new ApiError(403, 'PERMISSION_DENIED', 'Denied')
@@ -27,22 +26,19 @@ describe('ApiError', () => {
   })
 
   it('isValidation returns true for VALIDATION_ERROR', () => {
-    const { ApiError } = require('@/lib/api/client')
     const err = new ApiError(400, 'VALIDATION_ERROR', 'Bad request', {
-      issues: [{ path: ['name'], message: 'Required' }],
+      issues: [{ code: 'custom', path: ['name'], message: 'Required' }],
     })
     expect(err.isValidation).toBe(true)
     expect(err.issues).toHaveLength(1)
   })
 
   it('isNotFound returns true for 404 and NOT_FOUND', () => {
-    const { ApiError } = require('@/lib/api/client')
     const err = new ApiError(404, 'NOT_FOUND', 'Not found')
     expect(err.isNotFound).toBe(true)
   })
 
   it('isRateLimited returns true for 429', () => {
-    const { ApiError } = require('@/lib/api/client')
     const err = new ApiError(429, 'RATE_LIMITED', 'Too many requests')
     expect(err.isRateLimited).toBe(true)
   })

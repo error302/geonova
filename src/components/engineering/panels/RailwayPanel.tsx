@@ -65,8 +65,8 @@ export function RailwayPanel({ projectId, subtype }: EngineeringPanelProps) {
           <div className="text-lg font-medium mb-3">Alignment Points</div>
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
-              <label className="text-sm text-zinc-400">Track Gauge (mm)</label>
-              <select
+              <label className="text-sm text-zinc-400" htmlFor="track-gauge-mm">Track Gauge (mm)</label>
+              <select id="track-gauge-mm"
                 value={trackGaugeMM}
                 onChange={(e) => setTrackGaugeMM(parseInt(e.target.value))}
                 className="w-full mt-1 px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm"
@@ -77,8 +77,8 @@ export function RailwayPanel({ projectId, subtype }: EngineeringPanelProps) {
               </select>
             </div>
             <div>
-              <label className="text-sm text-zinc-400">Design Speed (km/h)</label>
-              <input aria-label="Design Speed (km/h)"
+              <label className="text-sm text-zinc-400" htmlFor="design-speed-km-h">Design Speed (km/h)</label>
+              <input id="design-speed-km-h" aria-label="Design Speed (km/h)"
                 type="number"
                 value={designSpeedKmh}
                 onChange={(e) => setDesignSpeedKmh(parseInt(e.target.value) || 0)}
@@ -86,8 +86,8 @@ export function RailwayPanel({ projectId, subtype }: EngineeringPanelProps) {
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400">Max Gradient (%)</label>
-              <input aria-label="Max Gradient (%)"
+              <label className="text-sm text-zinc-400" htmlFor="max-gradient">Max Gradient (%)</label>
+              <input  id="max-gradient" aria-label="Max Gradient (%)"
                 type="number"
                 step={0.1}
                 value={maxGradientPercent}

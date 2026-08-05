@@ -144,7 +144,7 @@ export default function HelpPage() {
           type="text"
           value={query}
           onChange={e => setQuery(e.target.value)}
-          aria-label="Search for help..." placeholder="Search for help..."
+          aria-label="Search for help..."
           className="w-full h-12 pl-10 pr-4 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-xl text-sm text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
         />
       </div>

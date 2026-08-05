@@ -22,7 +22,7 @@ import {
  * Convert DMS components (degrees, minutes, seconds) to decimal degrees.
  */
 function dmsToDecimal(deg: number, min: number, sec: number): number {
-  let sign = deg < 0 ? -1 : 1
+  const sign = deg < 0 ? -1 : 1
   return sign * (Math.abs(deg) + min / 60 + sec / 3600)
 }
 
@@ -49,8 +49,8 @@ export function adaptSouth(content: string): UnifiedImportResult {
   // ── Observations ────────────────────────────────────────────────────
 
   const observations: UnifiedObservation[] = parsed.observations.map(function (obs) {
-    let hz = dmsToDecimal(obs.hclDeg, obs.hclMin, obs.hclSec)
-    let va = dmsToDecimal(obs.vaDeg, obs.vaMin, obs.vaSec)
+    const hz = dmsToDecimal(obs.hclDeg, obs.hclMin, obs.hclSec)
+    const va = dmsToDecimal(obs.vaDeg, obs.vaMin, obs.vaSec)
 
     return {
       stationId: obs.station,
@@ -85,7 +85,7 @@ export function adaptSouth(content: string): UnifiedImportResult {
 
   let stationCoords: UnifiedImportResult['stationCoords'] = undefined
   if (stationName) {
-    let match = rawPoints.find(function (p) { return p.id === stationName })
+    const match = rawPoints.find(function (p) { return p.id === stationName })
     if (match) {
       stationCoords = {
         easting: match.easting,

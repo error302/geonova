@@ -14,8 +14,10 @@ export async function uploadMBTiles(file: File): Promise<MBTilesSession> {
 // buildOLMBTilesLayer is only called inside MapViewer useEffect (browser-only)
 // so the OL imports are safe here — this function is dynamically imported
 export function buildOLMBTilesLayer(session: MBTilesSession) {
-  // Dynamic require to keep top-level clean for SSR
+  // Browser-only dynamic require (SSR-safe, see note above).
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { default: XYZ } = require('ol/source/XYZ');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { default: TileLayer } = require('ol/layer/Tile');
   
   return new TileLayer({

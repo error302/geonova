@@ -107,18 +107,18 @@ export default function SettingOutPage() {
         <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-3">1. Import Design from DXF</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-[10px] text-[var(--text-muted)] block mb-1">DXF File</label>
-            <input type="file" accept=".dxf" onChange={handleFileUpload}
+            <label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="dxf-file">DXF File</label>
+            <input id="dxf-file" type="file" accept=".dxf" onChange={handleFileUpload}
               className="w-full text-xs text-[var(--text-secondary)]" />
             {dxfContent && <CheckCircle2 className="w-4 h-4 text-green-500 inline ml-2" />}
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Station E</label><input value={stationE} onChange={e => setStationE(e.target.value)} className={inputCls} placeholder="264000" /></div>
-            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Station N</label><input value={stationN} onChange={e => setStationN(e.target.value)} className={inputCls} placeholder="9861000" /></div>
-            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Station RL</label><input value={stationRL} onChange={e => setStationRL(e.target.value)} className={inputCls} /></div>
-            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">IH</label><input defaultValue="1.5" className={inputCls} /></div>
-            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Backsight E</label><input value={backsightE} onChange={e => setBacksightE(e.target.value)} className={inputCls} /></div>
-            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Backsight N</label><input value={backsightN} onChange={e => setBacksightN(e.target.value)} className={inputCls} /></div>
+            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="station-e">Station E</label><input id="station-e" value={stationE} onChange={e => setStationE(e.target.value)} className={inputCls} placeholder="264000" /></div>
+            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="station-n">Station N</label><input id="station-n" value={stationN} onChange={e => setStationN(e.target.value)} className={inputCls} placeholder="9861000" /></div>
+            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="station-rl">Station RL</label><input id="station-rl" value={stationRL} onChange={e => setStationRL(e.target.value)} className={inputCls} /></div>
+            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="ih">IH</label><input id="ih" defaultValue="1.5" className={inputCls} /></div>
+            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="backsight-e">Backsight E</label><input id="backsight-e" value={backsightE} onChange={e => setBacksightE(e.target.value)} className={inputCls} /></div>
+            <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="backsight-n">Backsight N</label><input id="backsight-n" value={backsightN} onChange={e => setBacksightN(e.target.value)} className={inputCls} /></div>
           </div>
         </div>
         <button onClick={handleImport} disabled={loading} className="mt-3 px-4 py-2 bg-[var(--accent)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--accent-dim)] disabled:opacity-50">

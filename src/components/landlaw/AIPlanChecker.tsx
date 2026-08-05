@@ -145,22 +145,22 @@ export default function AIPlanChecker() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Plan ID</label>
-              <input
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="plan-id">Plan ID</label>
+              <input id="plan-id"
                 type="text"
                 value={planData.planId || ''}
                 onChange={e => setPlanData({ ...planData, planId: e.target.value })}
-                aria-label="Plan number" placeholder="Plan number"
+ placeholder="Plan number"
                 className="w-full p-2 border rounded-lg"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Parcel Number</label>
-              <input
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="parcel-number">Parcel Number</label>
+              <input id="parcel-number"
                 type="text"
                 value={planData.parcelNumber || ''}
                 onChange={e => setPlanData({ ...planData, parcelNumber: e.target.value })}
-                aria-label="LR Number" placeholder="LR Number"
+ placeholder="LR Number"
                 className="w-full p-2 border rounded-lg"
               />
             </div>
@@ -168,8 +168,8 @@ export default function AIPlanChecker() {
 
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">CRS</label>
-              <select
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="crs">CRS</label>
+              <select id="crs"
                 value={planData.coordinatesSystem || ''}
                 onChange={e => setPlanData({ ...planData, coordinatesSystem: e.target.value })}
                 className="w-full p-2 border rounded-lg"
@@ -180,8 +180,8 @@ export default function AIPlanChecker() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Scale</label>
-              <select
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="scale">Scale</label>
+              <select id="scale"
                 value={planData.scale || ''}
                 onChange={e => setPlanData({ ...planData, scale: Number(e.target.value) })}
                 className="w-full p-2 border rounded-lg"
@@ -195,8 +195,8 @@ export default function AIPlanChecker() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Area (m²)</label>
-              <input aria-label="Area (m²)"
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="area-m">Area (m²)</label>
+              <input id="area-m" aria-label="Area (m²)"
                 type="number"
                 value={planData.area || ''}
                 onChange={e => setPlanData({ ...planData, area: Number(e.target.value) })}
@@ -228,7 +228,7 @@ export default function AIPlanChecker() {
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-gray-700">Boundary Coordinates</label>
+              <div className="block text-sm font-medium text-gray-700">Boundary Coordinates</div>
               <button
                 onClick={addCoordinate}
                 className="text-sm text-blue-600 hover:text-blue-700"
@@ -244,21 +244,21 @@ export default function AIPlanChecker() {
                     type="number"
                     value={coord.easting}
                     onChange={e => updateCoordinate(index, 'easting', Number(e.target.value))}
-                    aria-label="Easting" placeholder="Easting"
+                    aria-label="Easting"
                     className="w-24 p-1 text-sm border rounded"
                   />
                   <input
                     type="number"
                     value={coord.northing}
                     onChange={e => updateCoordinate(index, 'northing', Number(e.target.value))}
-                    aria-label="Northing" placeholder="Northing"
+                    aria-label="Northing"
                     className="w-24 p-1 text-sm border rounded"
                   />
                   <input
                     type="text"
                     value={coord.description}
                     onChange={e => updateCoordinate(index, 'description', e.target.value)}
-                    aria-label="Desc" placeholder="Desc"
+                    aria-label="Desc"
                     className="flex-1 p-1 text-sm border rounded"
                   />
                   <button

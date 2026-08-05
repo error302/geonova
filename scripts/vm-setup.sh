@@ -53,7 +53,7 @@ if [ ! -f $APP_DIR/.env.local ]; then
 else
     # Automatically add missing required NextAuth vars if not present
     if ! grep -q "NEXTAUTH_URL=" $APP_DIR/.env.local; then
-        echo "NEXTAUTH_URL=https://metardu.duckdns.org" >> $APP_DIR/.env.local
+        echo "NEXTAUTH_URL=https://metardu.space" >> $APP_DIR/.env.local
     fi
     if ! grep -q "AUTH_TRUST_HOST=" $APP_DIR/.env.local; then
         echo "AUTH_TRUST_HOST=true" >> $APP_DIR/.env.local

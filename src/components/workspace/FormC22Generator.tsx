@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useId } from 'react';
 import {
   FileText,
   Loader2,
@@ -428,9 +428,10 @@ interface FormFieldProps {
 }
 
 function FormField({ label, value, onChange, disabled }: FormFieldProps) {
+  const id = useId()
   return (
     <div className="space-y-1">
-      <label className="block text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider">
+      <label htmlFor={id} className="block text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider">
         {label}
       </label>
       {disabled ? (
@@ -438,7 +439,7 @@ function FormField({ label, value, onChange, disabled }: FormFieldProps) {
           {value || '—'}
         </div>
       ) : (
-        <input aria-label="{label}"
+        <input id={id}
           type="text"
           value={value}
           onChange={(e) => onChange?.(e.target.value)}

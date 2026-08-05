@@ -97,40 +97,40 @@ export default function ObservationsPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '10px' }}>
             <div>
-              <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>From Station</label>
-              <input className="input-field" value={obs.fromStationId} onChange={e => updateObs(i, 'fromStationId', e.target.value)} aria-label="A" placeholder="A" />
+              <label htmlFor={`obs-${i}-from`} style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>From Station</label>
+              <input id={`obs-${i}-from`} className="input-field" value={obs.fromStationId} onChange={e => updateObs(i, 'fromStationId', e.target.value)} placeholder="A" />
             </div>
             <div>
-              <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>To Station</label>
-              <input className="input-field" value={obs.toStationId} onChange={e => updateObs(i, 'toStationId', e.target.value)} aria-label="B" placeholder="B" />
+              <label htmlFor={`obs-${i}-to`} style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>To Station</label>
+              <input id={`obs-${i}-to`} className="input-field" value={obs.toStationId} onChange={e => updateObs(i, 'toStationId', e.target.value)} placeholder="B" />
             </div>
             <div>
-              <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Slope Distance (m)</label>
-              <input aria-label="Rawslopedistance" className="input-field" type="number" step="0.001" value={obs.rawSlopeDistance} onChange={e => updateObs(i, 'rawSlopeDistance', parseFloat(e.target.value) || 0)} />
+              <label htmlFor={`obs-${i}-slope`} style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Slope Distance (m)</label>
+              <input id={`obs-${i}-slope`} className="input-field" type="number" step="0.001" value={obs.rawSlopeDistance} onChange={e => updateObs(i, 'rawSlopeDistance', parseFloat(e.target.value) || 0)} />
             </div>
             <div>
-              <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Vertical Angle (deg)</label>
-              <input aria-label="Rawverticalangle" className="input-field" type="number" step="0.0001" value={obs.rawVerticalAngle} onChange={e => updateObs(i, 'rawVerticalAngle', parseFloat(e.target.value))} />
+              <label htmlFor={`obs-${i}-vert`} style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Vertical Angle (deg)</label>
+              <input id={`obs-${i}-vert`} className="input-field" type="number" step="0.0001" value={obs.rawVerticalAngle} onChange={e => updateObs(i, 'rawVerticalAngle', parseFloat(e.target.value))} />
             </div>
             <div>
-              <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Temp (C)</label>
-              <input className="input-field" type="number" value={obs.temperature ?? ''} onChange={e => updateObs(i, 'temperature', parseFloat(e.target.value))} aria-label="22" placeholder="22" />
+              <label htmlFor={`obs-${i}-temp`} style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Temp (C)</label>
+              <input id={`obs-${i}-temp`} className="input-field" type="number" value={obs.temperature ?? ''} onChange={e => updateObs(i, 'temperature', parseFloat(e.target.value))} placeholder="22" />
             </div>
             <div>
-              <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Pressure (hPa)</label>
-              <input className="input-field" type="number" value={obs.pressure ?? ''} onChange={e => updateObs(i, 'pressure', parseFloat(e.target.value))} aria-label="840" placeholder="840" />
+              <label htmlFor={`obs-${i}-press`} style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Pressure (hPa)</label>
+              <input id={`obs-${i}-press`} className="input-field" type="number" value={obs.pressure ?? ''} onChange={e => updateObs(i, 'pressure', parseFloat(e.target.value))} placeholder="840" />
             </div>
             <div>
-              <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Humidity (%)</label>
-              <input className="input-field" type="number" value={obs.humidity ?? ''} onChange={e => updateObs(i, 'humidity', parseFloat(e.target.value))} aria-label="60" placeholder="60" />
+              <label htmlFor={`obs-${i}-hum`} style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Humidity (%)</label>
+              <input id={`obs-${i}-hum`} className="input-field" type="number" value={obs.humidity ?? ''} onChange={e => updateObs(i, 'humidity', parseFloat(e.target.value))} placeholder="60" />
             </div>
             <div>
-              <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Inst. Height (m)</label>
-              <input className="input-field" type="number" step="0.01" value={obs.instrumentHeight ?? ''} onChange={e => updateObs(i, 'instrumentHeight', parseFloat(e.target.value))} aria-label="1.55" placeholder="1.55" />
+              <label htmlFor={`obs-${i}-inst`} style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Inst. Height (m)</label>
+              <input id={`obs-${i}-inst`} className="input-field" type="number" step="0.01" value={obs.instrumentHeight ?? ''} onChange={e => updateObs(i, 'instrumentHeight', parseFloat(e.target.value))} placeholder="1.55" />
             </div>
             <div>
-              <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Target Height (m)</label>
-              <input className="input-field" type="number" step="0.01" value={obs.targetHeight ?? ''} onChange={e => updateObs(i, 'targetHeight', parseFloat(e.target.value))} aria-label="1.60" placeholder="1.60" />
+              <label htmlFor={`obs-${i}-target`} style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>Target Height (m)</label>
+              <input id={`obs-${i}-target`} className="input-field" type="number" step="0.01" value={obs.targetHeight ?? ''} onChange={e => updateObs(i, 'targetHeight', parseFloat(e.target.value))} placeholder="1.60" />
             </div>
           </div>
         </div>

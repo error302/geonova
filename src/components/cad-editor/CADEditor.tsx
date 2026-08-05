@@ -555,20 +555,21 @@ export default function CADEditor({
         <div className="space-y-3">
           <h3 className="text-xs font-semibold text-gray-400 uppercase">Beacon Properties</h3>
           <div>
-            <label className="text-xs text-gray-500">Label</label>
+            <label htmlFor="cade-label" className="text-xs text-gray-500">Label</label>
             <Input
+              id="cade-label"
               value={selectedBeacon.label}
               onChange={(e) => updateBeaconLabel(selectedBeacon.id, e.target.value)}
               className="h-7 text-xs mt-1"
             />
           </div>
           <div>
-            <label className="text-xs text-gray-500">Easting (UTM)</label>
-            <Input value={selectedBeacon.easting?.toFixed(3) ?? '—'} disabled className="h-7 text-xs mt-1 font-mono" />
+            <label htmlFor="cade-easting" className="text-xs text-gray-500">Easting (UTM)</label>
+            <Input id="cade-easting" value={selectedBeacon.easting?.toFixed(3) ?? '—'} disabled className="h-7 text-xs mt-1 font-mono" />
           </div>
           <div>
-            <label className="text-xs text-gray-500">Northing (UTM)</label>
-            <Input value={selectedBeacon.northing?.toFixed(3) ?? '—'} disabled className="h-7 text-xs mt-1 font-mono" />
+            <label htmlFor="cade-northing" className="text-xs text-gray-500">Northing (UTM)</label>
+            <Input id="cade-northing" value={selectedBeacon.northing?.toFixed(3) ?? '—'} disabled className="h-7 text-xs mt-1 font-mono" />
           </div>
           <Button
             variant="outline"
@@ -588,8 +589,9 @@ export default function CADEditor({
         <div className="space-y-3">
           <h3 className="text-xs font-semibold text-gray-400 uppercase">Text Annotation</h3>
           <div>
-            <label className="text-xs text-gray-500">Text</label>
+            <label htmlFor="cade-text" className="text-xs text-gray-500">Text</label>
             <Input
+              id="cade-text"
               value={selectedAnnotation.text ?? ''}
               onChange={(e) => updateAnnotationText(selectedAnnotation.id, e.target.value)}
               className="h-7 text-xs mt-1"

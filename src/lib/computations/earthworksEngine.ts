@@ -606,7 +606,7 @@ export function parseEarthworkCSV(csv: string): CrossSectionInput[] {
 
     // Columns 4-11: L4_offset, L4_rl, L3_offset, L3_rl, L2_offset, L2_rl, L1_offset, L1_rl
     // Columns 12-19: R1_offset, R1_rl, R2_offset, R2_rl, R3_offset, R3_rl, R4_offset, R4_rl
-    let col = 4
+    const col = 4
 
     // Left shots (outer to inner: L4, L3, L2, L1)
     const leftPairs = [[4, 5], [6, 7], [8, 9], [10, 11]]

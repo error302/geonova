@@ -214,8 +214,8 @@ export default function ImportPage() {
               </div>
 
               <div className="mt-8">
-                <label className="block">
-                  <div className="border-2 border-dashed border-[var(--border-hover)] rounded-lg p-12 text-center cursor-pointer hover:border-[var(--accent)] transition-colors">
+                <label htmlFor="import-file" className="block">
+                  <div aria-label="Drop your file here or click to browse" className="border-2 border-dashed border-[var(--border-hover)] rounded-lg p-12 text-center cursor-pointer hover:border-[var(--accent)] transition-colors">
                     <div className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.1em] uppercase mb-4">
                       {file ? file.name : 'Drop your file here or click to browse'}
                     </div>
@@ -224,6 +224,7 @@ export default function ImportPage() {
                     </p>
                   </div>
                   <input
+                    id="import-file"
                     type="file"
                     accept=".gsi,.job,.jxl,.rw5,.sdr,.gtl,.raw,.dat,.csv,.txt,.dxf,.geojson,.json,.kml,.xyz,.las,.laz,.rnx,.obs,.p4d,.ply,.xml"
                     onChange={handleFileChange}
@@ -296,10 +297,11 @@ export default function ImportPage() {
                 </div>
 
                 <div className="mb-6">
-                  <label className="block text-sm text-[var(--text-secondary)] mb-2">
+                  <label htmlFor="import-project" className="block text-sm text-[var(--text-secondary)] mb-2">
                     Import to project:
                   </label>
                   <select
+                    id="import-project"
                     value={selectedProject}
                     onChange={(e) => setSelectedProject(e.target.value)}
                     className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-4 py-2 text-[var(--text-primary)]"

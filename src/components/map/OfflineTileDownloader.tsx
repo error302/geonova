@@ -273,10 +273,10 @@ export function OfflineTileDownloader() {
         <div className="space-y-6 py-2">
           {/* ─── Tile Source ─────────────────────────────────────────── */}
           <section>
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+            <div className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
               <Layers className="w-4 h-4 inline mr-1.5" />
               Tile Source
-            </label>
+            </div>
             <Select value={sourceType} onValueChange={setSourceType} disabled={isDownloading}>
               <SelectTrigger className="w-full bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-primary)]">
                 <SelectValue placeholder="Select tile source" />
@@ -314,10 +314,10 @@ export function OfflineTileDownloader() {
           {/* ─── Bounding Box ────────────────────────────────────────── */}
           <section>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-[var(--text-secondary)]">
+              <div className="text-sm font-medium text-[var(--text-secondary)]">
                 <MapPin className="w-4 h-4 inline mr-1.5" />
                 Bounding Box (WGS84)
-              </label>
+              </div>
               {mapExtent && (
                 <Button
                   variant="outline"
@@ -332,8 +332,9 @@ export function OfflineTileDownloader() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-[var(--text-muted)] mb-1">Min Latitude</label>
+                <label htmlFor="otd-min-lat" className="block text-xs text-[var(--text-muted)] mb-1">Min Latitude</label>
                 <Input
+                  id="otd-min-lat"
                   type="number"
                   step="0.000001"
                   value={minLat}
@@ -343,8 +344,9 @@ export function OfflineTileDownloader() {
                 />
               </div>
               <div>
-                <label className="block text-xs text-[var(--text-muted)] mb-1">Max Latitude</label>
+                <label htmlFor="otd-max-lat" className="block text-xs text-[var(--text-muted)] mb-1">Max Latitude</label>
                 <Input
+                  id="otd-max-lat"
                   type="number"
                   step="0.000001"
                   value={maxLat}
@@ -354,8 +356,9 @@ export function OfflineTileDownloader() {
                 />
               </div>
               <div>
-                <label className="block text-xs text-[var(--text-muted)] mb-1">Min Longitude</label>
+                <label htmlFor="otd-min-lon" className="block text-xs text-[var(--text-muted)] mb-1">Min Longitude</label>
                 <Input
+                  id="otd-min-lon"
                   type="number"
                   step="0.000001"
                   value={minLon}
@@ -365,8 +368,9 @@ export function OfflineTileDownloader() {
                 />
               </div>
               <div>
-                <label className="block text-xs text-[var(--text-muted)] mb-1">Max Longitude</label>
+                <label htmlFor="otd-max-lon" className="block text-xs text-[var(--text-muted)] mb-1">Max Longitude</label>
                 <Input
+                  id="otd-max-lon"
                   type="number"
                   step="0.000001"
                   value={maxLon}
@@ -380,10 +384,10 @@ export function OfflineTileDownloader() {
 
           {/* ─── Zoom Range ──────────────────────────────────────────── */}
           <section>
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+            <div className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
               <ZoomIn className="w-4 h-4 inline mr-1.5" />
               Zoom Range: {zoomRange[0]} – {zoomRange[1]}
-            </label>
+            </div>
             <Slider
               value={zoomRange}
               onValueChange={setZoomRange}

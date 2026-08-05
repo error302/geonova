@@ -183,7 +183,7 @@ export default function TopographicSurveyPage() {
               className={inputCls + ' pl-7'} />
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-1 max-h-32 overflow-y-auto">
+        <div tabIndex={0} role="region" aria-label="Survey grid" className="grid grid-cols-4 gap-1 max-h-32 overflow-y-auto">
           {filteredCodes.map(def => (
             <div key={def.code} className="text-[10px] px-2 py-1 rounded bg-[var(--bg-tertiary)] border border-[var(--border-color)]/30">
               <span className="font-mono font-bold text-[var(--accent)]">{def.code}</span>
@@ -199,8 +199,8 @@ export default function TopographicSurveyPage() {
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-semibold">3. Contour Generation</h2>
           <div className="flex gap-2 items-center">
-            <label className="text-[10px] text-[var(--text-muted)]">Interval (m):</label>
-            <input value={contourInterval} onChange={e => setContourInterval(e.target.value)} className={inputCls + ' w-20'} />
+            <label className="text-[10px] text-[var(--text-muted)]" htmlFor="interval-m">Interval (m):</label>
+            <input  id="interval-m" value={contourInterval} onChange={e => setContourInterval(e.target.value)} className={inputCls + ' w-20'} />
             <button onClick={handleGenerateContours} disabled={loading || points.length < 3}
               className="px-4 py-2 bg-[var(--accent)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--accent-dim)] disabled:opacity-50">
               {loading ? 'Generating...' : 'Generate Contours'}

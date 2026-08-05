@@ -129,13 +129,13 @@ export default function TopologyCheckPage() {
                       className="input font-mono text-sm"
                       value={row.easting}
                       onChange={(e) => updateRow(row.id, 'easting', e.target.value)}
-                      aria-label="274812.403" placeholder="274812.403"
+                      aria-label="Easting (m)" placeholder="274812.403"
                     />
                     <input
                       className="input font-mono text-sm"
                       value={row.northing}
                       onChange={(e) => updateRow(row.id, 'northing', e.target.value)}
-                      aria-label="9856214.778" placeholder="9856214.778"
+                      aria-label="Northing (m)" placeholder="9856214.778"
                     />
                     <button
                       onClick={() => removeRow(row.id)}
@@ -163,6 +163,7 @@ export default function TopologyCheckPage() {
             </div>
             <div className="card-body">
               <select
+                aria-label="Minimum statutory area"
                 value={minAreaSelection}
                 onChange={(e) => setMinAreaSelection(parseInt(e.target.value))}
                 className="input text-sm mb-2"
@@ -179,7 +180,7 @@ export default function TopologyCheckPage() {
                   type="number"
                   value={customArea}
                   onChange={(e) => setCustomArea(e.target.value)}
-                  aria-label="100" placeholder="100"
+                  aria-label="Custom minimum area (m²)" placeholder="100"
                 />
               )}
             </div>

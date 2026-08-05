@@ -56,22 +56,22 @@ export default function BearingCalculator() {
               <div className="card-body space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="label">Point A Northing (m)</label>
-                    <input aria-label="Point A Northing (m)" className="input" value={p1.n} onChange={e => setP1({...p1, n: e.target.value})} />
+                    <label className="label" htmlFor="point-a-northing-m">Point A Northing (m)</label>
+                    <input id="point-a-northing-m" aria-label="Point A Northing (m)" className="input" value={p1.n} onChange={e => setP1({...p1, n: e.target.value})} />
                   </div>
                   <div>
-                    <label className="label">Point A Easting (m)</label>
-                    <input aria-label="Point A Easting (m)" className="input" value={p1.e} onChange={e => setP1({...p1, e: e.target.value})} />
+                    <label className="label" htmlFor="point-a-easting-m">Point A Easting (m)</label>
+                    <input id="point-a-easting-m" aria-label="Point A Easting (m)" className="input" value={p1.e} onChange={e => setP1({...p1, e: e.target.value})} />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="label">Point B Northing (m)</label>
-                    <input aria-label="Point B Northing (m)" className="input" value={p2.n} onChange={e => setP2({...p2, n: e.target.value})} />
+                    <label className="label" htmlFor="point-b-northing-m">Point B Northing (m)</label>
+                    <input id="point-b-northing-m" aria-label="Point B Northing (m)" className="input" value={p2.n} onChange={e => setP2({...p2, n: e.target.value})} />
                   </div>
                   <div>
-                    <label className="label">Point B Easting (m)</label>
-                    <input aria-label="Point B Easting (m)" className="input" value={p2.e} onChange={e => setP2({...p2, e: e.target.value})} />
+                    <label className="label" htmlFor="point-b-easting-m">Point B Easting (m)</label>
+                    <input id="point-b-easting-m" aria-label="Point B Easting (m)" className="input" value={p2.e} onChange={e => setP2({...p2, e: e.target.value})} />
                   </div>
                 </div>
               </div>
@@ -81,8 +81,8 @@ export default function BearingCalculator() {
               <div className="card-header"><span className="label">Back Bearing Calculation</span></div>
               <div className="card-body space-y-4">
                 <div>
-                  <label className="label">Forward Bearing (WCB — degrees or DMS)</label>
-                  <input className="input" value={forward} onChange={e => setForward(e.target.value)} aria-label="45° 30' 22.5&quot; or 45.5" placeholder="45° 30' 22.5&quot; or 45.5" />
+                  <label className="label" htmlFor="forward-bearing-wcb-degrees-or-dms">Forward Bearing (WCB — degrees or DMS)</label>
+                  <input id="forward-bearing-wcb-degrees-or-dms" className="input" value={forward} onChange={e => setForward(e.target.value)} placeholder="45° 30' 22.5&quot; or 45.5" />
                   <p className="text-xs text-[var(--text-muted)] mt-2">Accepts: 45.5 &nbsp;|&nbsp; 45°30&apos;22.5&quot; &nbsp;|&nbsp; 45 30 22.5</p>
                 </div>
               </div>

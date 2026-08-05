@@ -385,7 +385,7 @@ export function generateCadastralPlanDXF(
   })
 
   // ── Optionally add the sheet layout using dxfSheetLayout ──
-  let dxfString = drawing.toDxfString()
+  const dxfString = drawing.toDxfString()
 
   if (opts.includeSheetLayout) {
     const sheetOptions: SheetLayoutOptions = {

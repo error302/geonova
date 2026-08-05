@@ -143,8 +143,9 @@ export default function ParcelSearchPage() {
 
             <div className="grid md:grid-cols-3 gap-4 mb-6">
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Parcel Number</label>
+                <label htmlFor="parcel-number" className="block text-sm font-medium text-[var(--text-muted)] mb-1">Parcel Number</label>
                 <input
+                  id="parcel-number"
                   type="text"
                   value={parcelNumber}
                   onChange={e => setParcelNumber(e.target.value)}
@@ -154,8 +155,9 @@ export default function ParcelSearchPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">County (optional)</label>
+                <label htmlFor="parcel-county" className="block text-sm font-medium text-[var(--text-muted)] mb-1">County (optional)</label>
                 <input
+                  id="parcel-county"
                   type="text"
                   value={county}
                   onChange={e => setCounty(e.target.value)}

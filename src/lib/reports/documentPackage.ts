@@ -260,7 +260,7 @@ export function generateComputationSheet(
     </tr></thead>
     <tbody>
       ${points.map((p: PointData) => `<tr>
-        <td><strong>${p.name}</strong></td>
+        <td><strong>${esc(p.name)}</strong></td>
         <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
         <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
         <td style="font-family:monospace">${p.elevation != null ? p.elevation.toFixed(3) : '—'}</td>
@@ -405,7 +405,7 @@ export function generateFieldNotes(
     <tbody>
       ${controlPts.length > 0
         ? controlPts.map((p: PointData) => `<tr>
-            <td><strong>${p.name}</strong></td>
+            <td><strong>${esc(p.name)}</strong></td>
             <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
             <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
             <td>${esc(extraFields[`beacon_${p.name}`] || 'Existing beacon — found and used')}</td>
@@ -420,7 +420,7 @@ export function generateFieldNotes(
     <tbody>
       ${detailPts.length > 0
         ? detailPts.map((p: PointData) => `<tr>
-            <td>${p.name}</td>
+            <td>${esc(p.name)}</td>
             <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
             <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
             <td style="font-family:monospace">${p.elevation != null ? p.elevation.toFixed(3) : '—'}</td>
@@ -454,7 +454,7 @@ export function generateBeaconDescriptions(
     : beacons.map((pt, i) => `
   <div class="box" style="margin:12px 0;page-break-inside:avoid;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-      <strong style="font-size:14px;">Beacon ${pt.name}</strong>
+      <strong style="font-size:14px;">Beacon ${esc(pt.name)}</strong>
       <span style="font-size:11px;color:#555;">Point ${i+1} of ${beacons.length}</span>
     </div>
     <div class="grid2">
@@ -574,7 +574,7 @@ export function generateMutationForm(
     <thead><tr><th>Beacon No.</th><th>Easting (m)</th><th>Northing (m)</th><th>Beacon Description</th></tr></thead>
     <tbody>
       ${beacons.map((p: PointData) => `<tr>
-        <td><strong>${p.name}</strong></td>
+        <td><strong>${esc(p.name)}</strong></td>
         <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
         <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
         <td>${ex[`beacon_desc_${p.name}`] || ''}</td>
@@ -640,7 +640,7 @@ export function generateLevelingSummary(
     <thead><tr><th>Station</th><th>Easting (m)</th><th>Northing (m)</th><th>Reduced Level (m)</th><th>Adjusted RL (m)</th><th>Remarks</th></tr></thead>
     <tbody>
       ${elevationPoints.map((p: PointData) => `<tr>
-        <td><strong>${p.name}</strong></td>
+        <td><strong>${esc(p.name)}</strong></td>
         <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
         <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
         <td style="font-family:monospace">${p.elevation!.toFixed(4)}</td>
@@ -710,7 +710,7 @@ export function generateControlSubmission(
     </tr></thead>
     <tbody>
       ${controlPts.map((p: PointData) => `<tr>
-        <td><strong>${p.name}</strong></td>
+        <td><strong>${esc(p.name)}</strong></td>
         <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
         <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
         <td style="font-family:monospace">${p.elevation != null ? p.elevation.toFixed(3) : '—'}</td>

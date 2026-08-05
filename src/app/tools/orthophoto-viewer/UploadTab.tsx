@@ -43,7 +43,7 @@ export default function UploadTab({
               file:mr-4 file:py-2 file:px-4
               file:rounded-lg file:border-0
               file:text-sm file:font-medium
-              file:bg-[var(--accent)] file:text-white
+              file:bg-[var(--accent)] file:text-black
               hover:file:bg-[var(--accent-dim)]
               file:cursor-pointer file:transition-colors
               bg-[var(--bg-tertiary)] rounded-lg p-1"
@@ -118,19 +118,19 @@ export default function UploadTab({
         </div>
         <div className="space-y-3 text-sm text-[var(--text-secondary)]">
           <div className="flex gap-3">
-            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--accent)] text-white text-xs flex items-center justify-center font-bold">1</span>
+            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--accent)] text-black text-xs flex items-center justify-center font-bold">1</span>
             <span>Upload your orthophoto GeoTIFF file</span>
           </div>
           <div className="flex gap-3">
-            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--accent)] text-white text-xs flex items-center justify-center font-bold">2</span>
+            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--accent)] text-black text-xs flex items-center justify-center font-bold">2</span>
             <span>Adjust opacity to see the satellite basemap underneath</span>
           </div>
           <div className="flex gap-3">
-            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--accent)] text-white text-xs flex items-center justify-center font-bold">3</span>
+            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--accent)] text-black text-xs flex items-center justify-center font-bold">3</span>
             <span>Switch to Trace Boundaries tab to draw polygons</span>
           </div>
           <div className="flex gap-3">
-            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--accent)] text-white text-xs flex items-center justify-center font-bold">4</span>
+            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--accent)] text-black text-xs flex items-center justify-center font-bold">4</span>
             <span>Export traced parcels as DXF, KML, GeoJSON, or CSV</span>
           </div>
         </div>

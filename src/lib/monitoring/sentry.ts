@@ -59,6 +59,7 @@ export function captureMessage(message: string, level: Sentry.SeverityLevel = 'i
   if (isProduction()) {
     Sentry.captureMessage(message, level)
   } else {
+    // Dev/staging: Sentry is disabled — nothing to capture.
   }
 }
 

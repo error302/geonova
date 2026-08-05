@@ -389,6 +389,17 @@ export function progressToCSV(checkpoints: InspectionCheckpoint[]): string {
 
 // ─── INSPECTION REPORT GENERATION ──────────────────────────────────────────────
 
+// XSS guard (2026-08-03): project/checkpoint fields are user-entered and
+// interpolated into the report HTML — escape before document.write().
+function escHtml(value: string | number | undefined | null): string {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 export function generateInspectionReport(
   checkpoints: InspectionCheckpoint[],
   summary: ProgressSummary,
@@ -410,8 +421,8 @@ export function generateInspectionReport(
   const checkpointRows = checkpoints.map((c, i) => `
     <tr style="background:${i % 2 === 0 ? '#f9fafb' : '#fff'}">
       <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #e5e7eb">${c.chainage ?? '—'}</td>
-      <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #e5e7eb">${c.gridRef ?? '—'}</td>
-      <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #e5e7eb;max-width:200px">${c.description}</td>
+      <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #e5e7eb">${escHtml(c.gridRef ?? '—')}</td>
+      <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #e5e7eb;max-width:200px">${escHtml(c.description)}</td>
       <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #e5e7eb">${categoryLabel(c.category)}</td>
       <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #e5e7eb">${c.plannedDate}</td>
       <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #e5e7eb;text-align:center">${c.plannedPercentage}%</td>
@@ -423,10 +434,10 @@ export function generateInspectionReport(
   const criticalRows = summary.criticalItems.map((c, i) => `
     <tr style="background:${i % 2 === 0 ? '#fef2f2' : '#fff'}">
       <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #fecaca">${c.chainage ?? '—'}</td>
-      <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #fecaca">${c.description}</td>
+      <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #fecaca">${escHtml(c.description)}</td>
       <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #fecaca;text-align:center">${statusBadge(c.status)}</td>
-      <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #fecaca">${c.deviations?.join(', ') || '—'}</td>
-      <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #fecaca">${c.notes || '—'}</td>
+      <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #fecaca">${escHtml(c.deviations?.join(', ') || '—')}</td>
+      <td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #fecaca">${escHtml(c.notes || '—')}</td>
     </tr>`).join('');
 
   const varianceColor = summary.variance >= 0 ? '#16a34a' : '#dc2626';
@@ -436,7 +447,7 @@ export function generateInspectionReport(
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Construction Progress Report — ${projectInfo.name}</title>
+  <title>Construction Progress Report — ${escHtml(projectInfo.name)}</title>
   <style>
     @page { size: A4 landscape; margin: 15mm; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 24px; color: #1f2937; }
@@ -457,13 +468,13 @@ export function generateInspectionReport(
   <div class="header">
     <div>
       <h1>Construction Progress Report</h1>
-      <div style="font-size:14px;color:#3b82f6;font-weight:600;margin-bottom:6px">${projectInfo.name}</div>
+      <div style="font-size:14px;color:#3b82f6;font-weight:600;margin-bottom:6px">${escHtml(projectInfo.name)}</div>
       <div class="meta">Generated: ${now}</div>
     </div>
     <div style="text-align:right;font-size:12px;color:#6b7280;line-height:1.8">
-      <div><strong>Client:</strong> ${projectInfo.client}</div>
-      <div><strong>Contractor:</strong> ${projectInfo.contractor}</div>
-      <div><strong>Resident Surveyor:</strong> ${projectInfo.surveyor}</div>
+      <div><strong>Client:</strong> ${escHtml(projectInfo.client)}</div>
+      <div><strong>Contractor:</strong> ${escHtml(projectInfo.contractor)}</div>
+      <div><strong>Resident Surveyor:</strong> ${escHtml(projectInfo.surveyor)}</div>
     </div>
   </div>
 
@@ -547,7 +558,7 @@ export function generateInspectionReport(
   ` : ''}
 
   <div class="footer">
-    METARDU Construction Progress Monitoring Report &middot; ${projectInfo.name} &middot; ${now}
+    METARDU Construction Progress Monitoring Report &middot; ${escHtml(projectInfo.name)} &middot; ${now}
   </div>
 </body>
 </html>`;

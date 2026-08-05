@@ -1,10 +1,8 @@
-import type { Metadata, Viewport } from 'next'
-import Link from 'next/link'
+﻿import type { Metadata, Viewport } from 'next'
 
 import './globals.css'
 import AuthProvider from '@/components/AuthProvider'
 import { ThemeProvider } from 'next-themes'
-import { ProjectionInit } from '@/components/layout/ProjectionInit'
 import AppShell from '@/components/layout/AppShell'
 import QueryProvider from '@/lib/api/QueryProvider'
 import { getPublicAppUrl } from '@/lib/site'
@@ -113,9 +111,34 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/metardu-icon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Fonts are loaded non-blocking so the render-blocking stylesheet
+            no longer delays first paint (big FCP win on mobile). The sheet
+            starts with media="print" (non-blocking), then a tiny inline
+            script flips it to all — React 18 can't use the onLoad="..."
+            string trick (that's React 19), and the CSP allows unsafe-inline
+            for scripts. display=swap in the URL keeps text visible in a
+            fallback while fonts arrive. */}
+        <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
           rel="stylesheet"
+          media="print"
+          data-font-stylesheet
+        />
+        <noscript>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
+          />
+        </noscript>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "!function(){var l=document.querySelector('link[data-font-stylesheet]');if(l){l.media='all';}}();",
+          }}
         />
       </head>
       <body className="antialiased" suppressHydrationWarning>

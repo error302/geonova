@@ -19,8 +19,8 @@ const BOUNDARY_OPTIONS: { value: BoundaryType; label: string; preview: string }[
 export function RoadBoundarySelector({ value, onChange, roadLabel, onRoadLabelChange }: Props) {
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">Boundary Type</label>
-      <select
+      <label className="block text-sm font-medium text-gray-700" htmlFor="boundary-type">Boundary Type</label>
+      <select id="boundary-type"
         value={value}
         onChange={(e) => onChange(e.target.value as BoundaryType)}
         className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
@@ -42,8 +42,8 @@ export function RoadBoundarySelector({ value, onChange, roadLabel, onRoadLabelCh
       </div>
       {(value === 'surveyed_road' || value === 'unsurveyed_road') && (
         <div className="mt-2">
-          <label className="block text-xs text-gray-500">Road Label</label>
-          <input aria-label="Road Label"
+          <label className="block text-xs text-gray-500" htmlFor="road-label">Road Label</label>
+          <input  id="road-label" aria-label="Road Label"
             type="text"
             value={roadLabel || ''}
             onChange={(e) => onRoadLabelChange?.(e.target.value)}

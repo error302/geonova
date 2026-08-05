@@ -313,9 +313,10 @@ function transformViaProj4(lon: number, lat: number, targetProjDef: string): [nu
   // We use the global proj4 instance that's already registered with defs.
   // This is safe because registerProjections() is called on map init.
   // For server-side use, the caller must ensure proj4 is loaded.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const proj4 = (typeof window !== 'undefined')
     ? (window as any).proj4
+    // CJS interop fallback for server-side proj4 loading.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     : require('proj4').default || require('proj4')
 
   // Register the target projection temporarily

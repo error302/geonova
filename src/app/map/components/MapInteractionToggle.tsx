@@ -55,8 +55,19 @@ export function MapInteractionToggle({ mapInstance }: { mapInstance: React.Mutab
         if (interaction instanceof DragPan) dragPan = interaction
       })
       if (!dragPan) return
+      // OL 10.x dropped the public setCondition() method — the pan condition is
+      // a private `condition_` field assigned in the constructor. Assign it
+      // directly (the field is read on every pointer event), while still
+      // supporting the older setCondition() API for other OL versions.
+      const applyCondition = (fn: any) => {
+        if (typeof (dragPan as any).setCondition === 'function') {
+          ;(dragPan as any).setCondition(fn)
+        } else {
+          ;(dragPan as any).condition_ = fn
+        }
+      }
       if (locked) {
-        dragPan.setCondition((event: any) => {
+        applyCondition((event: any) => {
           if (event.originalEvent && event.originalEvent.touches) {
             return event.originalEvent.touches.length >= 2
           }
@@ -65,7 +76,7 @@ export function MapInteractionToggle({ mapInstance }: { mapInstance: React.Mutab
           return false
         })
       } else {
-        dragPan.setCondition(platformModifierKeyOnly)
+        applyCondition(platformModifierKeyOnly)
       }
     } catch (err) {
       console.warn('[MapInteractionToggle] Failed to apply lock:', err)

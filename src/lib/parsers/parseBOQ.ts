@@ -76,7 +76,7 @@ export async function parseBOQSpreadsheet(file: File): Promise<ParsedInput> {
 
     const items: BOQItem[] = []
     let subtotal = 0
-    let currency = 'KES'
+    const currency = 'KES'
 
     for (let i = 1; i < jsonData.length; i++) {
       const row = jsonData[i]

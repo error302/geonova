@@ -65,8 +65,8 @@ export default function AnalysisTab({
         <h3 className="text-lg font-semibold mb-4">Computation Settings</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
           <div>
-            <label className="block text-sm text-[var(--text-secondary)] mb-2">Grid Spacing (m)</label>
-            <input aria-label="Grid Spacing (m)"
+            <label className="block text-sm text-[var(--text-secondary)] mb-2" htmlFor="grid-spacing-m">Grid Spacing (m)</label>
+            <input id="grid-spacing-m" aria-label="Grid Spacing (m)"
               type="number"
               min={0.1}
               max={5.0}
@@ -78,7 +78,7 @@ export default function AnalysisTab({
             <p className="text-xs text-[var(--text-muted)] mt-1">Range: 0.1 — 5.0 m (default: 1.0)</p>
           </div>
           <div>
-            <label className="block text-sm text-[var(--text-secondary)] mb-2">Method</label>
+            <div className="block text-sm text-[var(--text-secondary)] mb-2">Method</div>
             <div className="flex gap-2">
               <button
                 onClick={() => setMethod('tin')}

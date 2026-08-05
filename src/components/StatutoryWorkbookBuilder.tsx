@@ -333,7 +333,7 @@ export default function StatutoryWorkbookBuilder() {
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                aria-label="Search regulations, sections, keywords..." placeholder="Search regulations, sections, keywords..."
+                aria-label="Search regulations, sections, keywords..."
                 className="w-full pl-9 pr-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm"
               />
             </div>
@@ -436,7 +436,7 @@ function Field({
   return (
     <label className="block">
       <span className="block text-xs text-[var(--text-muted)] mb-1">{label}</span>
-      <input aria-label="Field value"
+      <input
         className="input w-full text-sm"
         type={type}
         value={value}

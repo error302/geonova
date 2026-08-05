@@ -7,7 +7,7 @@
 # by Next.js middleware (middleware.ts) — NOT here. This avoids
 # duplicate headers which confuse some CDNs and browsers.
 
-{$DOMAIN:metardu.duckdns.org} {
+{$DOMAIN:metardu.space} {
 	# Reverse proxy to Next.js app
 	reverse_proxy web:3000
 
@@ -37,6 +37,6 @@
 }
 
 # HTTP → HTTPS redirect (Caddy handles this automatically, but explicit for clarity)
-http://{$DOMAIN:metardu.duckdns.org} {
+http://{$DOMAIN:metardu.space} {
 	redir https://{host}{uri} permanent
 }

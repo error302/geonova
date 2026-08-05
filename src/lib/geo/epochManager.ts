@@ -364,7 +364,8 @@ export function compareCoordinates(
 ): CoordinateComparison {
   // Lazy-import the rigorous propagator to avoid a circular dependency at
   // module load time.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // Lazy import avoids a circular dependency at module load.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { propagateToEpochRigorous } = require('./epochManagerRigorous')
 
   // Propagate both to the later epoch (or coord2's epoch)

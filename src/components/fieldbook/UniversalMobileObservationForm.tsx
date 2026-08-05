@@ -238,12 +238,12 @@ export function UniversalMobileObservationForm({
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 overscroll-contain">
           {fields.map((field) => (
             <div key={field.key}>
-              <label className={labelClass}>
+              <label htmlFor={`umo-${field.key}`} className={labelClass}>
                 {field.label}
                 {field.required && <span className="text-[var(--accent)] ml-1">*</span>}
               </label>
               <div className={field.key === 'remarks' ? 'flex items-start gap-2' : undefined}>
-                <input aria-label="Field value"
+                <input id={`umo-${field.key}`}
                   type={field.inputMode === 'decimal' || field.inputMode === 'numeric' ? 'number' : 'text'}
                   inputMode={field.inputMode}
                   step={field.step}
@@ -251,6 +251,7 @@ export function UniversalMobileObservationForm({
                   onChange={(e) => handleChange(field.key, e.target.value, field)}
                   className={field.key === 'remarks' ? inputClass + ' flex-1 min-w-0' : inputClass}
                   placeholder={field.placeholder}
+                  // eslint-disable-next-line jsx-a11y/no-autofocus -- focus moves into the dialog on open (WCAG 2.4.3)
                   autoFocus={field === fields[0]}
                   autoComplete="off"
                   autoCapitalize={field.station ? 'characters' : 'off'}
@@ -303,7 +304,7 @@ export function UniversalMobileObservationForm({
           {/* Photo capture — universal across all survey types, with
               EXIF GPS extraction for evidence chains. */}
           <div className="pt-3 border-t border-[var(--border-color)]">
-            <label className={labelClass}>Beacon / Site Photos</label>
+            <div className={labelClass}>Beacon / Site Photos</div>
             <BeaconPhotoCapture photos={photos} onChange={setPhotos} maxPhotos={4} />
           </div>
         </div>

@@ -58,12 +58,12 @@ export default function TwoPegTestCalculator() {
               <div className="text-sm text-[var(--text-secondary)] mb-3">Instrument Position 1</div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="label">Staff at A (m)</label>
-                  <input className="input" value={inputs.a1} onChange={e => setInputs({...inputs, a1: e.target.value})} aria-label="1.525" placeholder="1.525" />
+                  <label className="label" htmlFor="staff-at-a-m">Staff at A (m)</label>
+                  <input id="staff-at-a-m" className="input" value={inputs.a1} onChange={e => setInputs({...inputs, a1: e.target.value})} placeholder="1.525" />
                 </div>
                 <div>
-                  <label className="label">Staff at B (m)</label>
-                  <input className="input" value={inputs.b1} onChange={e => setInputs({...inputs, b1: e.target.value})} aria-label="1.415" placeholder="1.415" />
+                  <label className="label" htmlFor="staff-at-b-m">Staff at B (m)</label>
+                  <input id="staff-at-b-m" className="input" value={inputs.b1} onChange={e => setInputs({...inputs, b1: e.target.value})} placeholder="1.415" />
                 </div>
               </div>
             </div>
@@ -71,12 +71,12 @@ export default function TwoPegTestCalculator() {
               <div className="text-sm text-[var(--text-secondary)] mb-3">Instrument Position 2</div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="label">Staff at A (m)</label>
-                  <input className="input" value={inputs.a2} onChange={e => setInputs({...inputs, a2: e.target.value})} aria-label="1.530" placeholder="1.530" />
+                  <label className="label" htmlFor="staff-at-a-m-2">Staff at A (m)</label>
+                  <input id="staff-at-a-m-2" className="input" value={inputs.a2} onChange={e => setInputs({...inputs, a2: e.target.value})} placeholder="1.530" />
                 </div>
                 <div>
-                  <label className="label">Staff at B (m)</label>
-                  <input className="input" value={inputs.b2} onChange={e => setInputs({...inputs, b2: e.target.value})} aria-label="1.420" placeholder="1.420" />
+                  <label className="label" htmlFor="staff-at-b-m-2">Staff at B (m)</label>
+                  <input id="staff-at-b-m-2" className="input" value={inputs.b2} onChange={e => setInputs({...inputs, b2: e.target.value})} placeholder="1.420" />
                 </div>
               </div>
             </div>
@@ -85,12 +85,12 @@ export default function TwoPegTestCalculator() {
               <div className="text-sm text-[var(--text-secondary)] mb-3">Setup Parameters</div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="label">Baseline A–B distance (m)</label>
-                  <input className="input" value={inputs.baseline} onChange={e => setInputs({...inputs, baseline: e.target.value})} aria-label="100" placeholder="100" type="number" />
+                  <label className="label" htmlFor="baseline-a-b-distance-m">Baseline A–B distance (m)</label>
+                  <input id="baseline-a-b-distance-m" className="input" value={inputs.baseline} onChange={e => setInputs({...inputs, baseline: e.target.value})} placeholder="100" type="number" />
                 </div>
                 <div>
-                  <label className="label">Allowable error (mm/100m)</label>
-                  <input className="input" value={inputs.allowable} onChange={e => setInputs({...inputs, allowable: e.target.value})} aria-label="10" placeholder="10" type="number" />
+                  <label className="label" htmlFor="allowable-error-mm-100m">Allowable error (mm/100m)</label>
+                  <input id="allowable-error-mm-100m" className="input" value={inputs.allowable} onChange={e => setInputs({...inputs, allowable: e.target.value})} placeholder="10" type="number" />
                 </div>
               </div>
               <p className="text-xs text-[var(--text-muted)] mt-2">

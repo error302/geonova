@@ -75,12 +75,12 @@ export default function CutFillPage() {
         <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
           <h2 className="text-sm font-semibold mb-2">Surface Points (Easting, Northing, RL)</h2>
           <textarea value={surfaceInput} onChange={e => setSurfaceInput(e.target.value)} className={inputCls + ' h-40 font-mono'} placeholder="0,0,12&#10;100,0,12&#10;0,100,12&#10;100,100,12" />
-          <div className="mt-2"><label className="text-[10px] text-[var(--text-muted)] block mb-1">Datum RL (reference level)</label><input value={datumRL} onChange={e => setDatumRL(e.target.value)} className={inputCls + ' w-32'} /></div>
+          <div className="mt-2"><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="datum-rl-reference-level">Datum RL (reference level)</label><input id="datum-rl-reference-level" value={datumRL} onChange={e => setDatumRL(e.target.value)} className={inputCls + ' w-32'} /></div>
         </div>
       )}
 
       <div className="flex gap-4 items-end mb-4">
-        <div><label className="text-[10px] text-[var(--text-muted)] block mb-1">Grid Spacing (m)</label><input value={gridSpacing} onChange={e => setGridSpacing(e.target.value)} className={inputCls + ' w-32'} /></div>
+        <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="grid-spacing-m">Grid Spacing (m)</label><input id="grid-spacing-m" value={gridSpacing} onChange={e => setGridSpacing(e.target.value)} className={inputCls + ' w-32'} /></div>
         <button onClick={handleCompute} className="px-4 py-2 bg-[var(--accent)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--accent-dim)]">Compute Volume</button>
       </div>
 

@@ -11,19 +11,6 @@
 
 import { useCallback, useRef, useEffect } from 'react'
 import type { DrawMode, MeasureMode } from '@/app/map/mapTypes'
-import type Map from 'ol/Map'
-import type VectorSource from 'ol/source/Vector'
-import type VectorLayer from 'ol/layer/Vector'
-import type { Interaction as RealInteraction } from 'ol/interaction'
-import type Select from 'ol/interaction/Select'
-import type Feature from 'ol/Feature'
-import type Point from 'ol/geom/Point'
-import type Polygon from 'ol/geom/Polygon'
-import type LineString from 'ol/geom/LineString'
-import type { MapBrowserEvent } from 'ol'
-import type { DrawEvent } from 'ol/interaction/Draw'
-import type { ModifyEvent } from 'ol/interaction/Modify'
-import type { FeatureLike } from 'ol/Feature'
 import { downloadDXF, type SurveyPoint } from '@/lib/export/generateDXF'
 import { downloadLandXML, type LandXMLProject, type LandXMLPoint } from '@/lib/export/generateLandXML'
 import {
@@ -40,16 +27,16 @@ import {
 } from '@/lib/map/stakeout'
 
 interface UseMapInteractionsParams {
-  mapInstance: React.MutableRefObject<Map | null>
-  drawSourceRef: React.MutableRefObject<VectorSource | null>
-  drawLayerRef: React.MutableRefObject<VectorLayer | null>
-  drawInteractionRef: React.MutableRefObject<RealInteraction | null>
-  selectInteractionRef: React.MutableRefObject<Select | null>
-  modifyInteractionRef: React.MutableRefObject<RealInteraction | null>
-  measureInteractionRef: React.MutableRefObject<RealInteraction | null>
-  measureSourceRef: React.MutableRefObject<VectorSource | null>
-  measureLayerRef: React.MutableRefObject<VectorLayer | null>
-  annotationLayerRef: React.MutableRefObject<VectorLayer | null>
+  mapInstance: React.MutableRefObject<any>
+  drawSourceRef: React.MutableRefObject<any>
+  drawLayerRef: React.MutableRefObject<any>
+  drawInteractionRef: React.MutableRefObject<any>
+  selectInteractionRef: React.MutableRefObject<any>
+  modifyInteractionRef: React.MutableRefObject<any>
+  measureInteractionRef: React.MutableRefObject<any>
+  measureSourceRef: React.MutableRefObject<any>
+  measureLayerRef: React.MutableRefObject<any>
+  annotationLayerRef: React.MutableRefObject<any>
   cleanupRef: React.MutableRefObject<import('@/lib/map/olTypes').MapCleanupRefs | null>
   drawMode: DrawMode
   editMode: boolean
@@ -67,7 +54,7 @@ interface UseMapInteractionsParams {
   setMeasureMode: (m: MeasureMode) => void
   setMeasureResult: (s: string) => void
   setFeatureCount: (n: number) => void
-  setSelectedFeature: (f: Feature | null) => void
+  setSelectedFeature: (f: any) => void
   setFeatureName: (s: string) => void
   setGpsTracking: (v: boolean) => void
   setGpsPos: (v: { lon: number; lat: number; accuracy: number } | null) => void
@@ -83,7 +70,7 @@ interface UseMapInteractionsParams {
   /** Called when a feature is drawn — used to compute live area/perimeter */
   onDrawEnd?: (areaSqM: number, perimeterM: number, featureType: string) => void
   /** Called when a feature is identified by single-click */
-  onIdentify?: (feature: Feature | null) => void
+  onIdentify?: (feature: any) => void
   pushHistory: () => void
   clearHistory: () => void
   popupRef: React.MutableRefObject<HTMLDivElement | null>
@@ -101,12 +88,12 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     if (!p.mapInstance.current) return
     const map = p.mapInstance.current
 
-    const handleClick = (evt: MapBrowserEvent) => {
+    const handleClick = (evt: any) => {
       // Don't interfere when drawing or measuring
       if (p.drawMode !== 'none' || p.measureMode !== 'none') return
 
-      const features: FeatureLike[] = []
-      map.forEachFeatureAtPixel(evt.pixel, (f: FeatureLike) => {
+      const features: any[] = []
+      map.forEachFeatureAtPixel(evt.pixel, (f: any) => {
         features.push(f)
         return false // collect all
       }, {
@@ -114,32 +101,37 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       })
 
       if (features.length > 0) {
-        const feature = features[0] as Feature
+        const feature = features[0]
         if (p.onIdentify) p.onIdentify(feature)
 
         // Show popup with basic info
+        // VULN-002 FIX (security review 2026-08-03): render the popup with
+        // textContent, never innerHTML — point/parcel names and codes are
+        // user-entered and would otherwise execute as stored XSS. Matches
+        // the safe renderSchemePopup() pattern in schemeLayer.ts.
         if (p.popupRef.current) {
           const el = p.popupRef.current
-          const name = (feature.get('pointName') as string | undefined) || (feature.get('parcelNumber') as string | undefined) || (feature.get('name') as string | undefined) || (feature.get('projectName') as string | undefined) || ''
-          const code = (feature.get('code') as string | undefined) || ''
-          const elev = feature.get('elevation') as number | undefined
-          const isControl = feature.get('isControl') as boolean | undefined
-          const type = (feature.get('pointType') as string | undefined) || (feature.get('featureType') as string | undefined) || ''
+          const name = feature.get('pointName') || feature.get('parcelNumber') || feature.get('name') || feature.get('projectName') || ''
+          const code = feature.get('code') || ''
+          const elev = feature.get('elevation')
+          const isControl = feature.get('isControl')
+          const type = feature.get('pointType') || feature.get('featureType') || ''
 
           el.replaceChildren()
-          const build = (tag: string, text: string, css: string) => {
-            const node = document.createElement(tag)
-            node.textContent = text
-            node.style.cssText = css
-            el.append(node)
+          const addRow = (text: string, css: string) => {
+            const row = document.createElement('div')
+            row.style.cssText = css
+            row.textContent = text
+            el.append(row)
           }
-          let hasContent = false
-          if (name) { build('div', name, 'font-weight:600;color:#E8E4DE;font-size:13px;margin-bottom:4px'); hasContent = true }
-          if (code) { build('div', `Code: ${code}`, 'color:#A89E92;font-size:11px;font-family:monospace'); hasContent = true }
-          if (elev != null) { build('div', `Elevation: ${elev.toFixed(3)} m`, 'color:#A89E92;font-size:11px;font-family:monospace'); hasContent = true }
-          if (isControl) { build('div', 'Control point', 'color:#D17B47;font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:0.04em'); hasContent = true }
-          if (type) { build('div', type, 'color:#787774;font-size:10px;font-family:monospace;text-transform:uppercase'); hasContent = true }
-          if (!hasContent) build('div', 'Feature (no attributes)', 'color:#787774;font-size:11px')
+
+          if (name) addRow(name, 'font-weight:600;color:#E8E4DE;font-size:13px;margin-bottom:4px')
+          if (code) addRow(`Code: ${code}`, 'color:#A89E92;font-size:11px;font-family:monospace')
+          if (elev != null) addRow(`Elevation: ${elev.toFixed(3)} m`, 'color:#A89E92;font-size:11px;font-family:monospace')
+          if (isControl) addRow('Control point', 'color:#D17B47;font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:0.04em')
+          if (type) addRow(type, 'color:#787774;font-size:10px;font-family:monospace;text-transform:uppercase')
+          if (el.childElementCount === 0) addRow('Feature (no attributes)', 'color:#787774;font-size:11px')
+
           el.className = 'ol-popup'
           el.style.cssText = `
             background: #1F1C19; border: 1px solid #332E29; border-radius: 6px;
@@ -161,11 +153,11 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
   }, [p.drawMode, p.measureMode, p.onIdentify, p.popupRef])
 
   // ── Stakeout overlay refs (persist across renders) ──
-  const stakeoutOverlayRef = useRef<import('ol/Overlay').default | null>(null)
-  const stakeoutTargetSourceRef = useRef<VectorSource | null>(null)
-  const stakeoutTargetLayerRef = useRef<VectorLayer | null>(null)
-  const stakeoutDirectionSourceRef = useRef<VectorSource | null>(null)
-  const stakeoutDirectionLayerRef = useRef<VectorLayer | null>(null)
+  const stakeoutOverlayRef = useRef<any>(null)         // OL Overlay
+  const stakeoutTargetSourceRef = useRef<any>(null)     // Vector source for target marker
+  const stakeoutTargetLayerRef = useRef<any>(null)      // Vector layer for target marker
+  const stakeoutDirectionSourceRef = useRef<any>(null)  // Vector source for direction line
+  const stakeoutDirectionLayerRef = useRef<any>(null)   // Vector layer for direction line
   const stakeoutCleanupDone = useRef(false)
 
   // ── DRAW ──
@@ -218,15 +210,15 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       }),
     })
 
-    draw.on('drawend', (e: DrawEvent) => {
+    draw.on('drawend', (e: any) => {
       // Compute live area/perimeter for the drawn feature
       if (p.onDrawEnd && e.feature) {
         const geom = e.feature.getGeometry()
         if (geom) {
           const type = geom.getType()
           if (type === 'Polygon' || type === 'MultiPolygon') {
-            const area = Math.abs((geom as Polygon).getArea())
-            const coords = (type === 'Polygon' ? (geom as Polygon).getCoordinates()[0] : (geom as Polygon).getCoordinates()[0][0]) as number[][]
+            const area = Math.abs(geom.getArea())
+            const coords = type === 'Polygon' ? geom.getCoordinates()[0] : geom.getCoordinates()[0][0]
             const perimeter = coords ? coords.reduce((sum: number, c: number[], i: number, arr: number[][]) => {
               if (i === 0) return 0
               const prev = arr[i - 1]
@@ -234,7 +226,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
             }, 0) : 0
             p.onDrawEnd(area, perimeter, 'Polygon')
           } else if (type === 'LineString') {
-            p.onDrawEnd(0, (geom as LineString).getLength(), 'LineString')
+            p.onDrawEnd(0, geom.getLength(), 'LineString')
           } else if (type === 'Point') {
             p.onDrawEnd(0, 0, 'Point')
           }
@@ -283,17 +275,19 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     if (!source) return
 
     const modify = new Modify({ source })
-    modify.on('modifyend', async (e: ModifyEvent) => {
+    modify.on('modifyend', async (e: any) => {
       setTimeout(p.pushHistory, 100)
 
       // ── Vertex editing persistence: save modified geometry to project ──
       if (p.projectId && e.features) {
         try {
-          const features = e.features.getArray()
+          const features = e.features.getArray?.() || []
           for (const feature of features) {
             const geom = feature.getGeometry()
             if (!geom) continue
 
+            const type = geom.getType()
+            const { transform } = await import('ol/proj')
             const { default: GeoJSONFormat } = await import('ol/format/GeoJSON')
             const fmt = new GeoJSONFormat()
 
@@ -306,17 +300,18 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
             // Update the project's boundary_data with the modified feature
             const { createClient } = await import('@/lib/api-client/client')
             const dbClient = createClient()
-            const projRow = (await dbClient
+            const { data: projData } = await dbClient
               .from('projects')
               .select('boundary_data')
               .eq('id', p.projectId)
-              .single()) as { data: { boundary_data?: { drawnFeatures?: { features?: unknown[] } } } | null }
-            const bd = projRow.data?.boundary_data || {}
-            const drawnFeatures: import('ol/format/GeoJSON').GeoJSONFeature[] = (bd.drawnFeatures?.features as import('ol/format/GeoJSON').GeoJSONFeature[] | undefined) || []
+              .single()
+
+            const bd: Record<string, unknown> = (projData as any)?.boundary_data || {}
+            const drawnFeatures: any[] = ((bd as any).drawnFeatures)?.features || []
 
             // Find and replace the modified feature (by id if available)
-            const featureId = feature.getId?.() || (feature.get('ol_uid') as string | number | undefined) || String(Date.now())
-            const idx = drawnFeatures.findIndex((f) =>
+            const featureId = feature.getId?.() || feature.get('ol_uid') || String(Date.now())
+            const idx = drawnFeatures.findIndex((f: any) =>
               f.id === featureId || f.properties?.ol_uid === featureId
             )
 
@@ -356,9 +351,8 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
   // ── DELETE SELECTED ──
   const deleteSelected = useCallback(() => {
     if (!p.selectInteractionRef.current || !p.drawSourceRef.current) return
-    const drawSource = p.drawSourceRef.current
     const features = p.selectInteractionRef.current.getFeatures().getArray()
-    features.forEach((f: Feature) => drawSource.removeFeature(f))
+    features.forEach((f: any) => p.drawSourceRef.current.removeFeature(f))
     p.selectInteractionRef.current.getFeatures().clear()
     p.setSelectedFeature(null)
     p.pushHistory()
@@ -417,12 +411,11 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       p.setMeasureResult('')
     })
 
-    draw.on('drawend', async (evt: DrawEvent) => {
+    draw.on('drawend', async (evt: any) => {
       const geom = evt.feature.getGeometry()
-      if (!geom) return
       if (mode === 'distance') {
-        const length = (geom as LineString).getLength()
-        const coords = (geom as LineString).getCoordinates()
+        const length = geom.getLength()
+        const coords = geom.getCoordinates()
         let bearingStr = ''
         if (coords.length >= 2) {
           try {
@@ -442,7 +435,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
           p.setMeasureResult(`Distance: ${length.toFixed(2)} m${bearingStr}`)
         }
       } else {
-        const area = (geom as Polygon).getArea()
+        const area = geom.getArea()
         if (area > 1000000) {
           p.setMeasureResult(`Area: ${(area / 1000000).toFixed(4)} km\u00B2`)
         } else {
@@ -472,10 +465,10 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
         if (!geom) continue
         const geomType = geom.getType()
         if (geomType === 'Point') {
-          const coord = (geom as Point).getCoordinates()
+          const coord = geom.getCoordinates()
           try {
-            const [e, n] = transform(coord, 'EPSG:3857', epsg) as [number, number]
-            points.push({ name: (f.get('name') as string | undefined) || (f.get('label') as string | undefined) || `P${points.length + 1}`, easting: e, northing: n, is_control: false })
+            const [e, n] = transform(coord, 'EPSG:3857', epsg)
+            points.push({ name: f.get('name') || f.get('label') || `P${points.length + 1}`, easting: e, northing: n, is_control: false })
           } catch { /* skip */ }
         }
       }
@@ -485,8 +478,8 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
           if (!geom) continue
           const geomType = geom.getType()
           let coords: number[][] = []
-          if (geomType === 'LineString') coords = (geom as LineString).getCoordinates()
-          else if (geomType === 'Polygon') coords = (geom as Polygon).getCoordinates()[0] || []
+          if (geomType === 'LineString') coords = geom.getCoordinates()
+          else if (geomType === 'Polygon') coords = geom.getCoordinates()[0] || []
           for (const coord of coords) {
             try {
               const [e, n] = transform(coord, 'EPSG:3857', epsg)
@@ -509,13 +502,13 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
         if (!geom) continue
         const geomType = geom.getType()
         if (geomType === 'Point') {
-          const coord = (geom as Point).getCoordinates()
+          const coord = geom.getCoordinates()
           try {
-            const [e, n] = transform(coord, 'EPSG:3857', epsg) as [number, number]
-            points.push({ name: (f.get('name') as string | undefined) || (f.get('label') as string | undefined) || `P${points.length + 1}`, easting: e, northing: n, is_control: false })
+            const [e, n] = transform(coord, 'EPSG:3857', epsg)
+            points.push({ name: f.get('name') || f.get('label') || `P${points.length + 1}`, easting: e, northing: n, is_control: false })
           } catch { /* skip */ }
         } else if (geomType === 'LineString' || geomType === 'Polygon') {
-          const coords = geomType === 'Polygon' ? ((geom as Polygon).getCoordinates()[0] || []) : (geom as LineString).getCoordinates()
+          const coords = geomType === 'Polygon' ? (geom.getCoordinates()[0] || []) : geom.getCoordinates()
           for (const coord of coords) {
             try {
               const [e, n] = transform(coord, 'EPSG:3857', epsg)
@@ -553,7 +546,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       const { default: WKTFormat } = await import('ol/format/WKT')
       const fmt = new WKTFormat()
       const features = p.drawSourceRef.current.getFeatures()
-      output = features.map((f: Feature) => fmt.writeGeometry(f.getGeometry() as import('ol/geom/Geometry').default, {
+      output = features.map((f: any) => fmt.writeGeometry(f.getGeometry(), {
         dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857', rightHanded: true,
       })).join('\n')
       filename = 'metardu-export.wkt'
@@ -578,7 +571,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     if (p.measureSourceRef.current) p.measureSourceRef.current.clear()
     p.setSelectedFeature(null)
     if (p.popupRef.current && p.mapInstance.current) {
-      p.mapInstance.current.getOverlays().forEach((o) => o.setPosition(undefined))
+      p.mapInstance.current.getOverlays().forEach((o: any) => o.setPosition(undefined))
     }
     p.clearHistory()
   }, [])
@@ -595,10 +588,9 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     } else {
       p.cleanupRef.current.geolocation.setTracking(true)
       p.setGpsTracking(true)
-      const mapInstance = p.mapInstance.current
       p.cleanupRef.current.geolocation.once('change:position', () => {
         const pos = p.cleanupRef.current?.geolocation?.getPosition()
-        if (pos && mapInstance) mapInstance.getView().animate({ center: pos, zoom: 16, duration: 1000 })
+        if (pos) p.mapInstance.current.getView().animate({ center: pos, zoom: 16, duration: 1000 })
       })
     }
   }, [p.gpsTracking])
@@ -758,12 +750,10 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       )
 
       // Update target marker proximity color
-      if (stakeoutTargetSourceRef.current) {
-        await updateTargetProximityStyle(
-          stakeoutTargetSourceRef.current,
-          state.proximityColor
-        )
-      }
+      await updateTargetProximityStyle(
+        stakeoutTargetSourceRef.current,
+        state.proximityColor
+      )
 
       // Update state for the panel
       p.setStakeoutState(state)
@@ -817,6 +807,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     }
 
     try {
+      const { transform } = await import('ol/proj')
       const { createClient } = await import('@/lib/api-client/client')
       const dbClient = createClient()
       const { data: { session } } = await dbClient.auth.getSession()
@@ -833,7 +824,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
         featureProjection: 'EPSG:3857',
         dataProjection: 'EPSG:4326',
       })
-      const featuresJson = JSON.parse(geojson) as { features?: import('ol/format/GeoJSON').GeoJSONFeature[] }
+      const featuresJson = JSON.parse(geojson)
 
       // Compute total area and perimeter for polygons
       let totalArea = 0
@@ -844,31 +835,30 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
         const type = geom.getType()
         if (type === 'Polygon' || type === 'MultiPolygon') {
           try {
-            const area = Math.abs((geom as Polygon).getArea())
+            const area = Math.abs(geom.getArea())
             totalArea += area
             const perimeter = type === 'Polygon'
-              ? new (await import('ol/geom/LineString')).default((geom as Polygon).getCoordinates()[0]).getLength()
+              ? new (await import('ol/geom/LineString')).default(geom.getCoordinates()[0]).getLength()
               : 0
             totalPerimeter += perimeter
           } catch { /* skip */ }
         } else if (type === 'LineString') {
-          totalPerimeter += (geom as LineString).getLength()
+          totalPerimeter += geom.getLength()
         }
       }
 
       if (p.projectId) {
         // ── Save to current project ──
         // Fetch existing boundary_data to merge
-        const existingRow = (await dbClient
+        const { data: existing } = await dbClient
           .from('projects')
           .select('name, boundary_data')
           .eq('id', p.projectId)
-          .single()) as { data: { name?: string; boundary_data?: { drawnFeatures?: { features?: unknown[] } } } | null }
-        const existing = existingRow.data
+          .single()
 
-        const existingBd: { drawnFeatures?: { features?: unknown[] } } = existing?.boundary_data || {}
-        const existingDrawn: unknown[] = existingBd.drawnFeatures?.features || []
-        const newFeatures: unknown[] = featuresJson.features || []
+        const existingBd = existing?.boundary_data || {}
+        const existingDrawn = existingBd.drawnFeatures?.features || []
+        const newFeatures = featuresJson.features || []
 
         const { error } = await dbClient
           .from('projects')
@@ -902,7 +892,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
           return
         }
 
-        const newProjectRow = (await dbClient
+        const { data: newProject, error } = await dbClient
           .from('projects')
           .insert({
             user_id: session.user.id,
@@ -920,9 +910,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
             },
           })
           .select('id, name')
-          .single()) as { data: { name?: string } | null; error: { message: string } | null }
-        const newProject = newProjectRow.data
-        const { error } = newProjectRow
+          .single()
 
         if (error) {
           p.setSaveMsg(`Error: ${error.message}`)
@@ -944,7 +932,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
 
     if (p.annotationLayerRef.current) {
       // Remove ALL annotation layers (not just the first one)
-      const allLayers = (p.annotationLayerRef.current as import('ol/layer/Vector').default & { _allAnnotationLayers?: import('ol/layer/Vector').default[] })._allAnnotationLayers
+      const allLayers = (p.annotationLayerRef.current as any)._allAnnotationLayers as import('ol/layer/Vector').default[] | undefined
       if (allLayers && p.mapInstance.current) {
         for (const layer of allLayers) {
           try { p.mapInstance.current.removeLayer(layer) } catch { /* already removed */ }
@@ -977,9 +965,9 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
 
         let coords: Array<[number, number]>
         if (type === 'LineString') {
-          coords = (geom as LineString).getCoordinates() as Array<[number, number]>
+          coords = geom.getCoordinates()
         } else {
-          coords = (geom as Polygon).getCoordinates()[0] as Array<[number, number]> || []
+          coords = geom.getCoordinates()[0] || []
         }
 
         if (coords.length < 2) continue
@@ -1011,7 +999,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       // and track all layers via a closure
       p.annotationLayerRef.current = allAnnotationLayers[0]
       // Store all layers on the ref for complete cleanup
-      ;(p.annotationLayerRef.current as import('ol/layer/Vector').default & { _allAnnotationLayers?: import('ol/layer/Vector').default[] })._allAnnotationLayers = allAnnotationLayers
+      ;(p.annotationLayerRef.current as any)._allAnnotationLayers = allAnnotationLayers
 
       p.setShowAnnotations(true)
     } catch (err) {
@@ -1060,16 +1048,14 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
   const fitToDrawn = useCallback(() => {
     if (!p.mapInstance.current || !p.drawSourceRef.current) return
     const extent = p.drawSourceRef.current.getExtent()
-    if (extent && extent[0] !== Infinity) {
+    if (extent[0] !== Infinity) {
       p.mapInstance.current.getView().fit(extent, { padding: [80, 80, 80, 80], duration: 400 })
     }
   }, [])
 
   const resetToKenya = useCallback(() => {
     if (!p.mapInstance.current) return
-    // Kenya bounds in EPSG:3857 (matches the View extent option). getExtent() is not a
-    // real OL View method, so use the Kenya box directly.
-    const KENYA_EXTENT: import('ol/extent').Extent = [-2.2e7, -1.2e7, 2.2e7, 1.5e7]
+    const KENYA_EXTENT = p.mapInstance.current.getView().getExtent()
     p.mapInstance.current.getView().fit(KENYA_EXTENT, { duration: 400, padding: [0, 0, 0, 0] })
   }, [])
 
@@ -1092,7 +1078,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     await handleCoordSearch(searchInput, p.mapInstance, epsg)
   }, [epsg])
 
-  const updateFeatureName = useCallback((name: string, selectedFeature: Feature | null) => {
+  const updateFeatureName = useCallback((name: string, selectedFeature: any) => {
     if (selectedFeature) {
       selectedFeature.set('name', name)
       selectedFeature.set('label', name)

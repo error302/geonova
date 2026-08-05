@@ -68,8 +68,8 @@ function GNSSBaselinePage() {
             <h3 className="font-semibold text-[var(--text-primary)] mb-3">Base Station Coordinates</h3>
             <div className="space-y-3">
               <div>
-                <label className="block text-sm text-[var(--text-muted)] mb-1">Easting (m)</label>
-                <input aria-label="Easting"
+                <label className="block text-sm text-[var(--text-muted)] mb-1" htmlFor="easting-m">Easting (m)</label>
+                <input id="easting-m" aria-label="Easting"
                   type="number"
                   value={baseCoords.easting}
                   onChange={(e) => setBaseCoords({...baseCoords, easting: Number(e.target.value)})}
@@ -77,8 +77,8 @@ function GNSSBaselinePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-muted)] mb-1">Northing (m)</label>
-                <input aria-label="Northing"
+                <label className="block text-sm text-[var(--text-muted)] mb-1" htmlFor="northing-m">Northing (m)</label>
+                <input id="northing-m" aria-label="Northing"
                   type="number"
                   value={baseCoords.northing}
                   onChange={(e) => setBaseCoords({...baseCoords, northing: Number(e.target.value)})}
@@ -86,8 +86,8 @@ function GNSSBaselinePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-muted)] mb-1">Elevation (m)</label>
-                <input aria-label="Elevation"
+                <label className="block text-sm text-[var(--text-muted)] mb-1" htmlFor="elevation-m">Elevation (m)</label>
+                <input  id="elevation-m" aria-label="Elevation"
                   type="number"
                   value={baseCoords.elevation}
                   onChange={(e) => setBaseCoords({...baseCoords, elevation: Number(e.target.value)})}

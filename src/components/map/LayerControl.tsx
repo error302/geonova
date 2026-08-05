@@ -455,10 +455,10 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
           {/* ─── Basemap Selector ──────────────────────────────────────── */}
           {!hideBasemap && (
           <div className="p-3">
-            <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
+            <div className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
               <MapIcon className="w-3 h-3 inline mr-1" />
               Basemap
-            </label>
+            </div>
             <div className="grid grid-cols-3 gap-1.5">
               {basemapOptions.map((opt) => (
                 <button
@@ -480,10 +480,10 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
 
           {/* ─── Grid Overlay ──────────────────────────────────────────── */}
           <div className="p-3">
-            <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
+            <div className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
               <Grid3X3 className="w-3 h-3 inline mr-1" />
               Kenya Grid Overlay
-            </label>
+            </div>
 
             <div className="flex items-center justify-between mb-2">
               <button
@@ -521,15 +521,15 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
 
           {/* ─── Custom XYZ / Orthophoto ───────────────────────────────── */}
           <div className="p-3">
-            <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
+            <div className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
               <Link2 className="w-3 h-3 inline mr-1" />
               Custom Orthophoto / XYZ Tiles
-            </label>
+            </div>
 
             <div className="space-y-2">
               <input
                 type="text"
-                aria-label="https://.../{z}/{x}/{y}.png" placeholder="https://.../{z}/{x}/{y}.png"
+                aria-label="Tile URL (XYZ template)" placeholder="https://.../{z}/{x}/{y}.png"
                 value={customUrl}
                 onChange={(e) => {
                   setCustomUrl(e.target.value);
@@ -542,7 +542,7 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
               />
               <input
                 type="text"
-                aria-label="Layer label (optional)" placeholder="Layer label (optional)"
+                aria-label="Layer label" placeholder="Layer label (optional)"
                 value={customLabel}
                 onChange={(e) => setCustomLabel(e.target.value)}
                 className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#1B3A5C] focus:border-[#1B3A5C] outline-none"
@@ -574,15 +574,15 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
 
           {/* ─── WMS / GeoServer Overlay ───────────────────────────────── */}
           <div className="p-3">
-            <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
+            <div className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
               <Link2 className="w-3 h-3 inline mr-1" />
               WMS / GeoServer Overlay
-            </label>
+            </div>
 
             <div className="space-y-2">
               <input
                 type="text"
-                aria-label="WMS URL (e.g. https://geoserver.example.com/wms)" placeholder="WMS URL (e.g. https://geoserver.example.com/wms)"
+                aria-label="WMS URL" placeholder="e.g. https://geoserver.example.com/wms"
                 value={wmsUrl}
                 onChange={(e) => {
                   setWmsUrl(e.target.value);
@@ -595,7 +595,7 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
               />
               <input
                 type="text"
-                aria-label="Layer name (e.g. workspace:parcels)" placeholder="Layer name (e.g. workspace:parcels)"
+                aria-label="WMS layer name" placeholder="e.g. workspace:parcels"
                 value={wmsLayerName}
                 onChange={(e) => {
                   setWmsLayerName(e.target.value);
@@ -608,7 +608,7 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
               />
               <input
                 type="text"
-                aria-label="Label (optional)" placeholder="Label (optional)"
+                aria-label="WMS layer label" placeholder="Label (optional)"
                 value={wmsLabel}
                 onChange={(e) => setWmsLabel(e.target.value)}
                 className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded-md focus:ring-1 focus:ring-[#1B3A5C] focus:border-[#1B3A5C] outline-none"
@@ -643,12 +643,12 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
 
           {/* ─── Opacity Control ───────────────────────────────────────── */}
           <div className="px-3 py-2.5">
-            <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 flex items-center gap-1">
+            <label htmlFor="lc-opacity" className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 flex items-center gap-1">
               <SlidersHorizontal className="w-3 h-3" />
               Overlay Opacity
             </label>
             <div className="flex items-center gap-2">
-              <input aria-label="Slider"
+              <input id="lc-opacity"
                 type="range"
                 min={0}
                 max={100}
@@ -664,9 +664,9 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
 
           {/* ─── Active Layers List ────────────────────────────────────── */}
           <div className="px-3 pb-3">
-            <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
+            <div className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
               Active Layers
-            </label>
+            </div>
 
             <div className="space-y-1">
               {/* Basemap entry */}

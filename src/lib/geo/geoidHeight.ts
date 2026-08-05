@@ -249,7 +249,7 @@ export const KENYA_GEOID_REFERENCE = [
 //   4. convertEllipsoidalToOrthometric() will automatically use EGM2008
 //      when the grid is loaded, falling back to EGM96 otherwise.
 
-let egm2008Grid: Float64Array | null = null
+const egm2008Grid: Float64Array | null = null
 const EGM2008_GRID_RESOLUTION = 2.5 / 60  // 2.5 arc-minutes in degrees
 const EGM2008_GRID_COLS = Math.round(360 / EGM2008_GRID_RESOLUTION)  // 8640
 const EGM2008_GRID_ROWS = Math.round(180 / EGM2008_GRID_RESOLUTION)  // 4320

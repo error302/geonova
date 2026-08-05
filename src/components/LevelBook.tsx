@@ -121,20 +121,20 @@ export default function LevelBook({ projectId }: LevelBookProps) {
           {/* Setup fields */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 md:p-4 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)]">
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Opening BM RL (m)</label>
-              <input aria-label="Opening BM RL (m)" value={openingRL} onChange={e => setOpeningRL(e.target.value)}
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="opening-bm-rl-m">Opening BM RL (m)</label>
+              <input id="opening-bm-rl-m" aria-label="Opening BM RL (m)" value={openingRL} onChange={e => setOpeningRL(e.target.value)}
                 type="number" step="0.001"
                 className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Closing BM RL (m)</label>
-              <input value={closingRL} onChange={e => setClosingRL(e.target.value)}
-                type="number" step="0.001" aria-label="Optional" placeholder="Optional"
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="closing-bm-rl-m">Closing BM RL (m)</label>
+              <input id="closing-bm-rl-m" value={closingRL} onChange={e => setClosingRL(e.target.value)}
+                type="number" step="0.001" placeholder="Optional"
                 className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
             </div>
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Total Distance (km)</label>
-              <input aria-label="Total Distance (km)" value={distanceKm} onChange={e => setDistanceKm(e.target.value)}
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="total-distance-km">Total Distance (km)</label>
+              <input  id="total-distance-km" aria-label="Total Distance (km)" value={distanceKm} onChange={e => setDistanceKm(e.target.value)}
                 type="number" step="0.001"
                 className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
             </div>
@@ -161,32 +161,32 @@ export default function LevelBook({ projectId }: LevelBookProps) {
                     <td className="px-1.5 py-1 text-[var(--text-muted)]">{i + 1}</td>
                     <td className="px-1 py-1">
                       <input value={row.station} onChange={e => updateRow(i, 'station', e.target.value)}
-                        aria-label="BM1" placeholder="BM1"
+                        aria-label="Station" placeholder="BM1"
                         className="w-full px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
                     </td>
                     <td className="px-1 py-1">
                       <input value={row.bs} onChange={e => updateRow(i, 'bs', e.target.value)}
-                        type="number" step="0.001" aria-label="0.000" placeholder="0.000"
+                        type="number" step="0.001" aria-label="Backsight (m)" placeholder="0.000"
                         className="w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
                     </td>
                     <td className="px-1 py-1">
                       <input value={row.is} onChange={e => updateRow(i, 'is', e.target.value)}
-                        type="number" step="0.001" aria-label="0.000" placeholder="0.000"
+                        type="number" step="0.001" aria-label="Intermediate sight (m)" placeholder="0.000"
                         className="w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
                     </td>
                     <td className="px-1 py-1">
                       <input value={row.fs} onChange={e => updateRow(i, 'fs', e.target.value)}
-                        type="number" step="0.001" aria-label="0.000" placeholder="0.000"
+                        type="number" step="0.001" aria-label="Foresight (m)" placeholder="0.000"
                         className="w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
                     </td>
                     <td className="px-1 py-1">
                       <input value={row.distance} onChange={e => updateRow(i, 'distance', e.target.value)}
-                        type="number" step="0.01" aria-label="0.00" placeholder="0.00"
+                        type="number" step="0.01" aria-label="Distance (m)" placeholder="0.00"
                         className="w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
                     </td>
                     <td className="px-1 py-1">
                       <input value={row.remarks} onChange={e => updateRow(i, 'remarks', e.target.value)}
-                        aria-label="IS / BM / CP" placeholder="IS / BM / CP"
+                        aria-label="Remarks" placeholder="IS / BM / CP"
                         className="w-full px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
                     </td>
                     <td>

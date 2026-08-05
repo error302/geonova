@@ -281,6 +281,7 @@ export async function POST(request: NextRequest) {
             [newStatus, payRows[0].user_id]
           )
         } else {
+          // No status change to apply — subscription stays as-is.
         }
       }
     }

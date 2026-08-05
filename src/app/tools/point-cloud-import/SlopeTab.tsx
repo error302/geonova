@@ -38,13 +38,13 @@ export default function SlopeTab({
         </p>
         <div className="flex gap-4 items-end flex-wrap">
           <div>
-            <label className="block text-sm text-[var(--text-secondary)] mb-1">Grid Resolution (m)</label>
+            <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="grid-resolution-m">Grid Resolution (m)</label>
             <input
-              className="input w-32 font-mono"
+               id="grid-resolution-m" className="input w-32 font-mono"
               type="number"
               step="0.5"
               min="0.5"
-              aria-label="auto" placeholder="auto"
+              aria-label="Grid Resolution (m)" placeholder="auto"
               value={slopeGridRes}
               onChange={e => setSlopeGridRes(e.target.value)}
             />

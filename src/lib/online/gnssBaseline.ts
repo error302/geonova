@@ -86,8 +86,8 @@ export function parseRINEXBaseline(content: string): BaselineResult {
   let refStation = ''
   let roverStation = ''
   let solutionType: BaselineResult['solutionType'] = 'autonomous'
-  let pdop = 0
-  let rms = 0
+  const pdop = 0
+  const rms = 0
   
   for (const line of lines) {
     if (line.includes('REFERENCE POINT')) {
@@ -144,11 +144,11 @@ export function parseProprietaryBaseline(
   format: 'topcon' | 'trimble' | 'leica'
 ): BaselineResult {
   const vectors: BaselineVector[] = []
-  let refStation = 'REF'
-  let roverStation = 'ROVER'
-  let solutionType: BaselineResult['solutionType'] = 'fix'
-  let pdop = 1.5
-  let rms = 0.02
+  const refStation = 'REF'
+  const roverStation = 'ROVER'
+  const solutionType: BaselineResult['solutionType'] = 'fix'
+  const pdop = 1.5
+  const rms = 0.02
   
   const lines = content.split('\n')
   

@@ -66,8 +66,8 @@ export function Step3Vertical({
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Chainage (m)</label>
-                  <input aria-label="Chainage"
+                  <label htmlFor={`vip-${idx}-chainage`} className="block text-xs text-zinc-500 mb-1">Chainage (m)</label>
+                  <input id={`vip-${idx}-chainage`}
                     type="number"
                     value={vip.chainage}
                     onChange={e => updateVIP(idx, 'chainage', Number(e.target.value))}
@@ -75,8 +75,8 @@ export function Step3Vertical({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Reduced Level (m)</label>
-                  <input aria-label="Reducedlevel"
+                  <label htmlFor={`vip-${idx}-rl`} className="block text-xs text-zinc-500 mb-1">Reduced Level (m)</label>
+                  <input id={`vip-${idx}-rl`}
                     type="number"
                     step="0.001"
                     value={vip.reducedLevel}
@@ -85,14 +85,15 @@ export function Step3Vertical({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">K Value (optional)</label>
+                  <label htmlFor={`vip-${idx}-k`} className="block text-xs text-zinc-500 mb-1">K Value (optional)</label>
                   <input
+                    id={`vip-${idx}-k`}
                     type="number"
                     step="0.1"
                     value={vip.kValue || ''}
                     onChange={e => updateVIP(idx, 'kValue', e.target.value ? Number(e.target.value) : undefined)}
                     className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-sm"
-                    aria-label="auto" placeholder="auto"
+                    placeholder="auto"
                   />
                 </div>
               </div>

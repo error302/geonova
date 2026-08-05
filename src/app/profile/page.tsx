@@ -166,18 +166,20 @@ export default function ProfilePage() {
             <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Personal Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Full Name</label>
+                <label htmlFor="profile-full-name" className="block text-sm text-[var(--text-secondary)] mb-2">Full Name</label>
                 <input
+                  id="profile-full-name"
                   type="text"
                   value={profile.full_name}
                   onChange={e => setProfile({ ...profile, full_name: e.target.value })}
                   className="input w-full"
-                  aria-label="Enter your full name" placeholder="Enter your full name"
+ placeholder="Enter your full name"
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Country</label>
+                <label htmlFor="profile-country" className="block text-sm text-[var(--text-secondary)] mb-2">Country</label>
                 <select
+                  id="profile-country"
                   value={profile.country}
                   onChange={e => setProfile({ ...profile, country: e.target.value })}
                   className="input w-full"
@@ -189,23 +191,25 @@ export default function ProfilePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">License Number</label>
+                <label htmlFor="profile-license" className="block text-sm text-[var(--text-secondary)] mb-2">License Number</label>
                 <input
+                  id="profile-license"
                   type="text"
                   value={profile.license_number}
                   onChange={e => setProfile({ ...profile, license_number: e.target.value })}
                   className="input w-full"
-                  aria-label="e.g., LS/12345" placeholder="e.g., LS/12345"
+ placeholder="e.g., LS/12345"
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Firm/Company Name</label>
+                <label htmlFor="profile-firm" className="block text-sm text-[var(--text-secondary)] mb-2">Firm/Company Name</label>
                 <input
+                  id="profile-firm"
                   type="text"
                   value={profile.firm_name}
                   onChange={e => setProfile({ ...profile, firm_name: e.target.value })}
                   className="input w-full"
-                  aria-label="Survey Associates Ltd" placeholder="Survey Associates Ltd"
+ placeholder="Survey Associates Ltd"
                 />
               </div>
             </div>
@@ -234,8 +238,8 @@ export default function ProfilePage() {
             <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Default Settings</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Default UTM Zone</label>
-                <input aria-label="Default utm zone"
+                <label htmlFor="profile-utm" className="block text-sm text-[var(--text-secondary)] mb-2">Default UTM Zone</label>
+                <input id="profile-utm"
                   type="number"
                   min={1}
                   max={60}
@@ -245,8 +249,9 @@ export default function ProfilePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Hemisphere</label>
+                <label htmlFor="profile-hemisphere" className="block text-sm text-[var(--text-secondary)] mb-2">Hemisphere</label>
                 <select
+                  id="profile-hemisphere"
                   value={profile.default_hemisphere}
                   onChange={e => setProfile({ ...profile, default_hemisphere: e.target.value })}
                   className="input w-full"
@@ -256,8 +261,9 @@ export default function ProfilePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-2">Language</label>
+                <label htmlFor="profile-language" className="block text-sm text-[var(--text-secondary)] mb-2">Language</label>
                 <select
+                  id="profile-language"
                   value={profile.preferred_language}
                   onChange={e => setProfile({ ...profile, preferred_language: e.target.value })}
                   className="input w-full"

@@ -500,9 +500,9 @@ export function PrintButton({
       {showOptions && (
         <div className="absolute right-0 top-full mt-1 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg shadow-xl p-3 z-50 min-w-[180px] space-y-3">
           <div>
-            <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide mb-1.5">
+            <div className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide mb-1.5">
               Paper Size
-            </label>
+            </div>
             <div className="flex gap-1">
               {(['a4', 'a3', 'a1'] as PaperSize[]).map((size) => (
                 <button
@@ -521,9 +521,9 @@ export function PrintButton({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide mb-1.5">
+            <div className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide mb-1.5">
               Orientation
-            </label>
+            </div>
             <div className="flex gap-1">
               {(['portrait', 'landscape'] as Orientation[]).map((orient) => (
                 <button

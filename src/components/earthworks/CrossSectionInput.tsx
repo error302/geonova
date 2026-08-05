@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, Fragment } from 'react'
+import { useState, useRef, Fragment, useId } from 'react'
 import { computeCrossSection, computeEarthwork, parseEarthworkCSV, type CrossSectionInput, type CrossSectionComputed, type RoadTemplate, type EarthworkResult, type GroundShot } from '@/lib/computations/earthworksEngine'
 import CrossSectionDrawing from './CrossSectionDrawing'
 import EarthworkQuantitiesTable from './EarthworkQuantitiesTable'
@@ -37,6 +37,7 @@ const EMPTY_ROW = (): SectionRow => ({
 })
 
 export default function EarthworksCalculator() {
+  const uid = useId()
   const [sections, setSections] = useState<SectionRow[]>([EMPTY_ROW()])
   const [template, setTemplate] = useState<RoadTemplate>(DEFAULT_TEMPLATE)
   const [shrinkage, setShrinkage] = useState('0.85')
@@ -165,8 +166,8 @@ export default function EarthworksCalculator() {
             { label: 'Fill Slope H:V', key: 'fillSlopeH' as keyof RoadTemplate },
           ].map(({ label, key }) => (
             <div key={key}>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">{label}</label>
-              <input aria-label="{label}"
+              <label htmlFor={`${uid}-tpl-${key}`} className="block text-xs text-[var(--text-muted)] mb-1">{label}</label>
+              <input id={`${uid}-tpl-${key}`}
                 type="number"
                 step="0.01"
                 value={template[key] as number}
@@ -176,8 +177,8 @@ export default function EarthworksCalculator() {
             </div>
           ))}
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Shrinkage Factor</label>
-            <input aria-label="Shrinkage Factor" type="number" step="0.01" value={shrinkage} onChange={e => setShrinkage(e.target.value)}
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="shrinkage-factor">Shrinkage Factor</label>
+            <input id="shrinkage-factor" type="number" step="0.01" value={shrinkage} onChange={e => setShrinkage(e.target.value)}
               className="w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
           </div>
         </div>
@@ -192,14 +193,14 @@ export default function EarthworksCalculator() {
             <button onClick={() => fileRef.current?.click()} className="px-3 py-1.5 text-xs border border-[var(--border-color)] rounded hover:bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
               Import CSV
             </button>
-            <button onClick={addRow} className="px-3 py-1.5 text-xs bg-[var(--accent)] text-white rounded hover:opacity-90">
+            <button onClick={addRow} className="px-3 py-1.5 text-xs bg-[var(--accent)] text-black rounded hover:opacity-90">
               + Add Section
             </button>
-            <button onClick={compute} className="px-4 py-1.5 text-xs bg-[var(--accent)] text-white rounded font-medium hover:opacity-90">
+            <button onClick={compute} className="px-4 py-1.5 text-xs bg-[var(--accent)] text-black rounded font-medium hover:opacity-90">
               Compute All
             </button>
             {earthworkResult && (
-              <button onClick={handlePrintBoQ} className="px-4 py-1.5 text-xs bg-amber-600 text-white rounded font-medium hover:bg-amber-700">
+              <button onClick={handlePrintBoQ} className="px-4 py-1.5 text-xs bg-amber-600 text-black rounded font-medium hover:bg-amber-700">
                  Print BoQ
               </button>
             )}
@@ -234,20 +235,20 @@ export default function EarthworksCalculator() {
           <tbody>
             {sections.map((row) => (
               <tr key={row.id} className="hover:bg-[var(--bg-tertiary)]/30">
-                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="Chainagekm" value={row.chainageKm} onChange={e => updateRow(row.id, 'chainageKm', e.target.value)} type="number" min="0" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
-                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="Chainagem" value={row.chainageM} onChange={e => updateRow(row.id, 'chainageM', e.target.value)} type="number" min="0" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
-                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="Clrl" value={row.clRL} onChange={e => updateRow(row.id, 'clRL', e.target.value)} type="number" step="0.001" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
-                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="Formrl" value={row.formRL} onChange={e => updateRow(row.id, 'formRL', e.target.value)} type="number" step="0.001" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="Ch km" value={row.chainageKm} onChange={e => updateRow(row.id, 'chainageKm', e.target.value)} type="number" min="0" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="Ch m" value={row.chainageM} onChange={e => updateRow(row.id, 'chainageM', e.target.value)} type="number" min="0" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="CL RL" value={row.clRL} onChange={e => updateRow(row.id, 'clRL', e.target.value)} type="number" step="0.001" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="Form RL" value={row.formRL} onChange={e => updateRow(row.id, 'formRL', e.target.value)} type="number" step="0.001" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
                 {[0, 1, 2, 3].map((i) => (
                   <Fragment key={'ls' + i}>
-                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.leftShots[i]?.off || ''} onChange={e => updateShot(row.id, 'left', i, 'off', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Off" placeholder="Off" /></td>
-                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.leftShots[i]?.rl || ''} onChange={e => updateShot(row.id, 'left', i, 'rl', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="RL" placeholder="RL" /></td>
+                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.leftShots[i]?.off || ''} onChange={e => updateShot(row.id, 'left', i, 'off', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Left offset (m)" placeholder="Off" /></td>
+                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.leftShots[i]?.rl || ''} onChange={e => updateShot(row.id, 'left', i, 'rl', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Left RL (m)" placeholder="RL" /></td>
                   </Fragment>
                 ))}
                 {[0, 1, 2, 3].map((i) => (
                   <Fragment key={'rs' + i}>
-                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.rightShots[i]?.off || ''} onChange={e => updateShot(row.id, 'right', i, 'off', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Off" placeholder="Off" /></td>
-                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.rightShots[i]?.rl || ''} onChange={e => updateShot(row.id, 'right', i, 'rl', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="RL" placeholder="RL" /></td>
+                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.rightShots[i]?.off || ''} onChange={e => updateShot(row.id, 'right', i, 'off', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Right offset (m)" placeholder="Off" /></td>
+                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.rightShots[i]?.rl || ''} onChange={e => updateShot(row.id, 'right', i, 'rl', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Right RL (m)" placeholder="RL" /></td>
                   </Fragment>
                 ))}
                 <td className="px-1 py-1 border border-[var(--border-color)]/50">
@@ -282,13 +283,13 @@ export default function EarthworksCalculator() {
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <div className="flex-1">
-                <label className="block text-xs text-[var(--text-muted)] mb-1">Road Name / Description</label>
-                <input value={roadName} onChange={e => setRoadName(e.target.value)}
+                <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="road-name-description">Road Name / Description</label>
+                <input id="road-name-description" value={roadName} onChange={e => setRoadName(e.target.value)}
                   className="w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm"
-                  aria-label="e.g. Kitengela Access Road — A104" placeholder="e.g. Kitengela Access Road — A104" />
+ placeholder="e.g. Kitengela Access Road — A104" />
               </div>
               <button onClick={handlePrintBoQ}
-                className="px-5 py-2 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 text-sm whitespace-nowrap mt-5">
+                className="px-5 py-2 bg-amber-600 text-black rounded-lg font-medium hover:bg-amber-700 text-sm whitespace-nowrap mt-5">
                  Print Earthworks BoQ
               </button>
             </div>
@@ -301,7 +302,7 @@ export default function EarthworksCalculator() {
               <div className="flex gap-2 mb-3 overflow-x-auto pb-1">
                 {computedSections.map((s, i) => (
                   <button key={`${s}-${i}`} onClick={() => setActiveSection(i)}
-                    className={`px-3 py-1.5 text-xs rounded whitespace-nowrap ${i === activeSection ? 'bg-[var(--accent)] text-white' : 'border border-[var(--border-color)] text-[var(--text-muted)]'}`}>
+                    className={`px-3 py-1.5 text-xs rounded whitespace-nowrap ${i === activeSection ? 'bg-[var(--accent)] text-black' : 'border border-[var(--border-color)] text-[var(--text-muted)]'}`}>
                     {fmtCh(s.chainage)}
                   </button>
                 ))}

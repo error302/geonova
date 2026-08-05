@@ -120,9 +120,9 @@ export default function MobileNav() {
 
       {/* More Drawer */}
       {showMore && (
-        <div role="button" tabIndex={0} aria-label="Close menu" className="fixed inset-0 z-[60] flex md:hidden" onClick={() => setShowMore(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowMore(false) }}>
+        <div className="fixed inset-0 z-[60] flex md:hidden" onKeyDown={(e) => { if (e.key === 'Escape') setShowMore(false) }}>
           {/* Backdrop */}
-          <div className="flex-1 bg-black/60 backdrop-blur-sm" />
+          <button type="button" aria-label="Close menu" tabIndex={-1} className="flex-1 bg-black/60 backdrop-blur-sm cursor-pointer border-0 p-0" onClick={() => setShowMore(false)} />
 
           {/* Panel slides up from bottom */}
           <div

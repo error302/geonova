@@ -28,7 +28,7 @@ export const MapCoordSearch = memo(function MapCoordSearch() {
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') handleSearch() }}
-          aria-label="Search coord, beacon, or parcel" placeholder="Search coord, beacon, or parcel"
+          aria-label="Search coord, beacon, or parcel"
           className="h-8 bg-[var(--bg-secondary)]/90 backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-lg pl-7 pr-3 text-[11px] text-[var(--text-primary)] placeholder-gray-600 focus:outline-none focus:border-[var(--accent)]/30 transition-colors w-[160px] sm:w-[200px] md:w-[280px]"
         />
         <button

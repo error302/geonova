@@ -400,18 +400,18 @@ ${azmSection}`
                   <tr key={l.id}>
                     <td className="text-left font-semibold">{l.name}</td>
                     <td>
-                      <input className="input" value={l.dist} aria-label="e.g. 250.00" placeholder="e.g. 250.00"
+                      <input className="input" value={l.dist} aria-label="Distance" placeholder="e.g. 250.00"
                         onChange={e => updateLeg(l.id, 'dist', e.target.value)} />
                     </td>
                     <td>
                       <div className="flex items-center gap-0.5 md:gap-1">
-                        <input className="input w-10 md:w-12 text-center text-xs md:text-sm" value={l.bearingD} aria-label="DDD" placeholder="DDD" maxLength={3}
+                        <input className="input w-10 md:w-12 text-center text-xs md:text-sm" value={l.bearingD} aria-label="Bearing (Deg)" placeholder="DDD" maxLength={3}
                           onChange={e => updateLeg(l.id, 'bearingD', e.target.value)} />
                         <span className="text-[var(--text-muted)] text-xs">°</span>
-                        <input className="input w-8 md:w-10 text-center text-xs md:text-sm" value={l.bearingM} aria-label="MM" placeholder="MM" maxLength={2}
+                        <input className="input w-8 md:w-10 text-center text-xs md:text-sm" value={l.bearingM} aria-label="Bearing (Min)" placeholder="MM" maxLength={2}
                           onChange={e => updateLeg(l.id, 'bearingM', e.target.value)} />
                         <span className="text-[var(--text-muted)] text-xs">&apos;</span>
-                        <input className="input w-10 md:w-12 text-center text-xs md:text-sm" value={l.bearingS} aria-label="SS" placeholder="SS" maxLength={5}
+                        <input className="input w-10 md:w-12 text-center text-xs md:text-sm" value={l.bearingS} aria-label="Bearing (Sec)" placeholder="SS" maxLength={5}
                           onChange={e => updateLeg(l.id, 'bearingS', e.target.value)} />
                         <span className="text-[var(--text-muted)] text-xs">&quot;</span>
                       </div>
@@ -448,13 +448,13 @@ ${azmSection}`
               <div key={label}>
                 <label className="block text-xs text-[var(--text-muted)] mb-1.5">{label}</label>
                 <div className="flex items-center gap-1">
-                  <input className="input w-12 text-center text-xs" aria-label="DDD" placeholder="DDD" value={val.d}
+                  <input className="input w-12 text-center text-xs" aria-label="Bearing (Deg)" placeholder="DDD" value={val.d}
                     onChange={e => setVal(p => ({ ...p, d: e.target.value }))} />
                   <span className="text-[var(--text-muted)] text-xs">°</span>
-                  <input className="input w-10 text-center text-xs" aria-label="MM" placeholder="MM" value={val.m}
+                  <input className="input w-10 text-center text-xs" aria-label="Bearing (Min)" placeholder="MM" value={val.m}
                     onChange={e => setVal(p => ({ ...p, m: e.target.value }))} />
                   <span className="text-[var(--text-muted)] text-xs">&apos;</span>
-                  <input className="input w-14 text-center text-xs" aria-label="SS.ss" placeholder="SS.ss" value={val.s}
+                  <input className="input w-14 text-center text-xs" aria-label="Bearing (Sec)" placeholder="SS.ss" value={val.s}
                     onChange={e => setVal(p => ({ ...p, s: e.target.value }))} />
                   <span className="text-[var(--text-muted)] text-xs">&quot;</span>
                 </div>

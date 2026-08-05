@@ -34,7 +34,7 @@ export default function BeaconPicker({ value, status, onChange, disabled }: Beac
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium mb-2">Mark Type</label>
+        <div className="block text-sm font-medium mb-2">Mark Type</div>
         <div className="grid grid-cols-4 gap-2">
           {ALL_TYPES.map(type => {
             const def = BEACON_DEFINITIONS[type]
@@ -79,7 +79,7 @@ export default function BeaconPicker({ value, status, onChange, disabled }: Beac
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">Status</label>
+        <div className="block text-sm font-medium mb-2">Status</div>
         <div className="flex gap-2 flex-wrap">
           {STATUSES.map(s => (
             <button

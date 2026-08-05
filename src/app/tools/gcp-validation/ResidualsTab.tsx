@@ -69,9 +69,9 @@ export function ResidualsTab({
 
         {/* Format Selector */}
         <div className="mb-4 flex flex-wrap items-center gap-3">
-          <label className="text-sm text-[var(--text-secondary)]">Format:</label>
+          <label className="text-sm text-[var(--text-secondary)]" htmlFor="format">Format:</label>
           <select
-            className="input w-48"
+             id="format" className="input w-48"
             value={residualFormat}
             onChange={e => setResidualFormat(e.target.value as ResidualFormat)}
           >

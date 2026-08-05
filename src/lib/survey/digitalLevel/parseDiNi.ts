@@ -33,7 +33,7 @@ export function parseDiNi(content: string, filename?: string): LevelImportResult
   let dateStr = ''
   let staffA = ''
   let staffB = ''
-  let instrumentHeight = 1.6
+  const instrumentHeight = 1.6
 
   // Detect format: pipe-delimited (RAW) vs comma-delimited (DAT)
   const firstDataLine = lines.find(l => {

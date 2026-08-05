@@ -52,28 +52,28 @@ export default function HeightOfObjectCalculator() {
           <div className="card-header"><span className="label">Measurements</span></div>
           <div className="card-body space-y-4">
             <div>
-              <label className="label">Horizontal Distance to Base (m)</label>
-              <input className="input" value={inputs.distance} onChange={e => setInputs({...inputs, distance: e.target.value})} aria-label="50.000" placeholder="50.000" />
+              <label className="label" htmlFor="horizontal-distance-to-base-m">Horizontal Distance to Base (m)</label>
+              <input id="horizontal-distance-to-base-m" className="input" value={inputs.distance} onChange={e => setInputs({...inputs, distance: e.target.value})} placeholder="50.000" />
             </div>
             <div>
-              <label className="label">Vertical Angle to Top (D° M&apos; S&quot;)</label>
+              <div className="label">Vertical Angle to Top (D° M&apos; S&quot;)</div>
               <div className="flex gap-2">
-                <input className="input flex-1" value={inputs.angleTop.d} onChange={e => setInputs({...inputs, angleTop: {...inputs.angleTop, d: e.target.value}})} aria-label="30°" placeholder="30°" />
-                <input className="input flex-1" value={inputs.angleTop.m} onChange={e => setInputs({...inputs, angleTop: {...inputs.angleTop, m: e.target.value}})} aria-label="15'" placeholder="15'" />
-                <input className="input flex-1" value={inputs.angleTop.s} onChange={e => setInputs({...inputs, angleTop: {...inputs.angleTop, s: e.target.value}})} aria-label="00&quot;" placeholder="00&quot;" />
+                <input className="input flex-1" value={inputs.angleTop.d} onChange={e => setInputs({...inputs, angleTop: {...inputs.angleTop, d: e.target.value}})} placeholder="30°" />
+                <input className="input flex-1" value={inputs.angleTop.m} onChange={e => setInputs({...inputs, angleTop: {...inputs.angleTop, m: e.target.value}})} placeholder="15'" />
+                <input className="input flex-1" value={inputs.angleTop.s} onChange={e => setInputs({...inputs, angleTop: {...inputs.angleTop, s: e.target.value}})} placeholder="00&quot;" />
               </div>
             </div>
             <div>
-              <label className="label">Vertical Angle to Base (D° M&apos; S&quot;)</label>
+              <div className="label">Vertical Angle to Base (D° M&apos; S&quot;)</div>
               <div className="flex gap-2">
-                <input className="input flex-1" value={inputs.angleBase.d} onChange={e => setInputs({...inputs, angleBase: {...inputs.angleBase, d: e.target.value}})} aria-label="02°" placeholder="02°" />
-                <input className="input flex-1" value={inputs.angleBase.m} onChange={e => setInputs({...inputs, angleBase: {...inputs.angleBase, m: e.target.value}})} aria-label="30'" placeholder="30'" />
-                <input className="input flex-1" value={inputs.angleBase.s} onChange={e => setInputs({...inputs, angleBase: {...inputs.angleBase, s: e.target.value}})} aria-label="00&quot;" placeholder="00&quot;" />
+                <input className="input flex-1" value={inputs.angleBase.d} onChange={e => setInputs({...inputs, angleBase: {...inputs.angleBase, d: e.target.value}})} aria-label="Angle to base (deg)" placeholder="02°" />
+                <input className="input flex-1" value={inputs.angleBase.m} onChange={e => setInputs({...inputs, angleBase: {...inputs.angleBase, m: e.target.value}})} aria-label="Angle to base (min)" placeholder="30'" />
+                <input className="input flex-1" value={inputs.angleBase.s} onChange={e => setInputs({...inputs, angleBase: {...inputs.angleBase, s: e.target.value}})} aria-label="Angle to base (sec)" placeholder="00&quot;" />
               </div>
             </div>
             <div>
-              <label className="label">Height of Instrument above Ground, h.i. (m)</label>
-              <input className="input" value={inputs.hi} onChange={e => setInputs({...inputs, hi: e.target.value})} aria-label="1.500" placeholder="1.500" />
+              <label className="label" htmlFor="height-of-instrument-above-ground-h-i-m">Height of Instrument above Ground, h.i. (m)</label>
+              <input id="height-of-instrument-above-ground-h-i-m" className="input" value={inputs.hi} onChange={e => setInputs({...inputs, hi: e.target.value})} placeholder="1.500" />
             </div>
             <button onClick={calculate} className="btn btn-primary w-full">Calculate Height</button>
           </div>

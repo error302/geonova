@@ -111,7 +111,7 @@ export const BookmarkPanel = memo(function BookmarkPanel() {
               type="text"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
-              aria-label="Bookmark name" placeholder="Bookmark name"
+              aria-label="Bookmark name"
               className="flex-1 h-7 px-2 text-[10px] bg-[var(--bg-card)]/5 border border-[var(--border-color)]/[0.08] rounded text-[var(--text-primary)] placeholder-gray-600 focus:outline-none focus:border-[var(--accent)]/40"
               onKeyDown={(e) => { if (e.key === 'Enter') saveCurrentView() }}
             />

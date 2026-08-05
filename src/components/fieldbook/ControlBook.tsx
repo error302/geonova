@@ -90,12 +90,12 @@ export function ControlBook({
                 const out = outRows[idx]
                 return (
                   <tr key={r.id}>
-                    <td className="text-left"><input aria-label="Pointid" className="input input-sm" value={r.pointId} onChange={(e) => setRows((p) => p.map((x) => (x.id === r.id ? { ...x, pointId: e.target.value } : x)))} /></td>
-                    <td><input aria-label="Instrumentheight" inputMode="decimal" className="input input-sm" value={r.instrumentHeight} onChange={(e) => setRows((p) => p.map((x) => (x.id === r.id ? { ...x, instrumentHeight: e.target.value } : x)))} /></td>
-                    <td><input aria-label="Targetheight" inputMode="decimal" className="input input-sm" value={r.targetHeight} onChange={(e) => setRows((p) => p.map((x) => (x.id === r.id ? { ...x, targetHeight: e.target.value } : x)))} /></td>
+                    <td className="text-left"><input aria-label="Point ID" className="input input-sm" value={r.pointId} onChange={(e) => setRows((p) => p.map((x) => (x.id === r.id ? { ...x, pointId: e.target.value } : x)))} /></td>
+                    <td><input aria-label="Instrument Height" inputMode="decimal" className="input input-sm" value={r.instrumentHeight} onChange={(e) => setRows((p) => p.map((x) => (x.id === r.id ? { ...x, instrumentHeight: e.target.value } : x)))} /></td>
+                    <td><input aria-label="Target Height" inputMode="decimal" className="input input-sm" value={r.targetHeight} onChange={(e) => setRows((p) => p.map((x) => (x.id === r.id ? { ...x, targetHeight: e.target.value } : x)))} /></td>
                     <td className="text-left"><input aria-label="Bearing" className="input input-sm font-mono" value={r.bearing} onChange={(e) => setRows((p) => p.map((x) => (x.id === r.id ? { ...x, bearing: e.target.value } : x)))} /></td>
-                    <td><input aria-label="Verticalangle" inputMode="decimal" className="input input-sm font-mono" value={r.verticalAngle} onChange={(e) => setRows((p) => p.map((x) => (x.id === r.id ? { ...x, verticalAngle: e.target.value } : x)))} /></td>
-                    <td><input aria-label="Slopedistance" inputMode="decimal" className="input input-sm font-mono" value={r.slopeDistance} onChange={(e) => setRows((p) => p.map((x) => (x.id === r.id ? { ...x, slopeDistance: e.target.value } : x)))} /></td>
+                    <td><input aria-label="Vertical Angle" inputMode="decimal" className="input input-sm font-mono" value={r.verticalAngle} onChange={(e) => setRows((p) => p.map((x) => (x.id === r.id ? { ...x, verticalAngle: e.target.value } : x)))} /></td>
+                    <td><input aria-label="Slope Distance" inputMode="decimal" className="input input-sm font-mono" value={r.slopeDistance} onChange={(e) => setRows((p) => p.map((x) => (x.id === r.id ? { ...x, slopeDistance: e.target.value } : x)))} /></td>
                     <td className="font-mono text-right">{out?.computed ? Number(out.computed.easting).toFixed(4) : '—'}</td>
                     <td className="font-mono text-right">{out?.computed ? Number(out.computed.northing).toFixed(4) : '—'}</td>
                     <td className="font-mono text-right">{out?.computed ? Number(out.computed.elevation).toFixed(4) : '—'}</td>

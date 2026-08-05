@@ -117,8 +117,8 @@ export function NLIMSExportPanel({ projectId }: NLIMSExportPanelProps) {
         <div className="border-t border-[var(--border-color)] p-4 space-y-4">
           {/* Submission type */}
           <div>
-            <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5">Submission Type</label>
-            <select
+            <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5" htmlFor="submission-type">Submission Type</label>
+            <select id="submission-type"
               value={submissionType}
               onChange={e => setSubmissionType(e.target.value as typeof submissionType)}
               className="input h-10 text-sm"
@@ -134,35 +134,35 @@ export function NLIMSExportPanel({ projectId }: NLIMSExportPanelProps) {
           {/* Registry info */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5">Registry</label>
-              <input
+              <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5" htmlFor="registry">Registry</label>
+              <input id="registry"
                 type="text"
                 value={registry}
                 onChange={e => setRegistry(e.target.value)}
                 className="input h-10 text-sm"
-                aria-label="Nairobi" placeholder="Nairobi"
+ placeholder="Nairobi"
               />
             </div>
             <div>
-              <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5">County</label>
-              <input
+              <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5" htmlFor="county">County</label>
+              <input id="county"
                 type="text"
                 value={county}
                 onChange={e => setCounty(e.target.value)}
                 className="input h-10 text-sm"
-                aria-label="Nairobi" placeholder="Nairobi"
+ placeholder="Nairobi"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5">Sub-County</label>
-            <input
+            <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5" htmlFor="sub-county">Sub-County</label>
+            <input id="sub-county"
               type="text"
               value={subCounty}
               onChange={e => setSubCounty(e.target.value)}
               className="input h-10 text-sm"
-              aria-label="Westlands" placeholder="Westlands"
+ placeholder="Westlands"
             />
           </div>
 
@@ -174,34 +174,34 @@ export function NLIMSExportPanel({ projectId }: NLIMSExportPanelProps) {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5">Name</label>
-                <input
+                <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5" htmlFor="name">Name</label>
+                <input id="name"
                   type="text"
                   value={surveyorName}
                   onChange={e => setSurveyorName(e.target.value)}
                   className="input h-10 text-sm"
-                  aria-label="John Doe" placeholder="John Doe"
+ placeholder="John Doe"
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5">License No.</label>
-                <input
+                <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5" htmlFor="license-no">License No.</label>
+                <input id="license-no"
                   type="text"
                   value={licenseNumber}
                   onChange={e => setLicenseNumber(e.target.value)}
                   className="input h-10 text-sm font-mono"
-                  aria-label="ISK/LS/2021/0452" placeholder="ISK/LS/2021/0452"
+ placeholder="ISK/LS/2021/0452"
                 />
               </div>
             </div>
             <div className="mt-2">
-              <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5">Firm (optional)</label>
-              <input
+              <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1.5" htmlFor="firm-optional">Firm (optional)</label>
+              <input id="firm-optional"
                 type="text"
                 value={firm}
                 onChange={e => setFirm(e.target.value)}
                 className="input h-10 text-sm"
-                aria-label="Doe Surveyors Ltd" placeholder="Doe Surveyors Ltd"
+ placeholder="Doe Surveyors Ltd"
               />
             </div>
           </div>

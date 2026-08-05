@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { Sparkles, X, Copy, Check, Loader2, ChevronDown } from 'lucide-react';
 import { SurveyType } from '@/types/project';
 
@@ -39,6 +39,7 @@ const REPORT_SECTIONS: Record<string, string[]> = {
 };
 
 export default function GenerateReportModal({ isOpen, onClose, surveyType, projectId }: Props) {
+  const reportSectionId = useId();
   const [sectionType, setSectionType] = useState<string>('');
   const [customInstructions, setCustomInstructions] = useState('');
   const [loading, setLoading] = useState(false);
@@ -141,9 +142,10 @@ export default function GenerateReportModal({ isOpen, onClose, surveyType, proje
           {/* Left Panel: Controls */}
           <div className="w-full md:w-1/3 p-5 border-r border-gray-100 bg-white flex flex-col gap-4 overflow-y-auto">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Report Section</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor={reportSectionId}>Report Section</label>
               <div className="relative">
                 <select
+                  id={reportSectionId}
                   value={activeSection}
                   onChange={(e) => setSectionType(e.target.value)}
                   className="w-full appearance-none rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -159,11 +161,11 @@ export default function GenerateReportModal({ isOpen, onClose, surveyType, proje
             </div>
 
             <div className="flex-1 min-h-[140px]">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="custom-instructions-optional">
                 Custom Instructions <span className="text-gray-400 font-normal">(Optional)</span>
               </label>
               <textarea
-                value={customInstructions}
+                 id="custom-instructions-optional" value={customInstructions}
                 onChange={(e) => setCustomInstructions(e.target.value)}
                 placeholder="e.g., Focus specifically on the secondary points established using the TS16..."
                 className="w-full h-full min-h-[140px] resize-none rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"

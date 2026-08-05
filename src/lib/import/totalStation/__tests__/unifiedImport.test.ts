@@ -331,7 +331,7 @@ describe('Unified Total Station Import', () => {
 
   describe('Cross-format consistency', () => {
     it('all adapters return stationName as a string', () => {
-      let results = [
+      const results = [
         adaptGSI(GSI_SAMPLE),
         adaptSDR(SDR_SAMPLE),
         adaptSouth(SOUTH_COORD_SAMPLE),
@@ -344,7 +344,7 @@ describe('Unified Total Station Import', () => {
     })
 
     it('all adapters have non-null errors and warnings arrays', () => {
-      let results = [
+      const results = [
         adaptGSI(GSI_SAMPLE),
         adaptSDR(SDR_SAMPLE),
         adaptSouth(SOUTH_COORD_SAMPLE),

@@ -228,10 +228,11 @@ function RoleAssignModal({
           )}
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label htmlFor="user-role" className="block text-sm font-medium text-[var(--text-primary)] mb-2">
               Role
             </label>
             <select
+              id="user-role"
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
               disabled={!isSuperAdmin || submitting}
@@ -346,10 +347,11 @@ function SuspendModal({
 
           {isSuspend && (
             <div>
-              <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+              <label htmlFor="suspend-reason" className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                 Reason for suspension
               </label>
               <textarea
+                id="suspend-reason"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 placeholder="Enter reason..."
@@ -512,10 +514,10 @@ function PlanOverrideModal({
 
           {/* Target plan selection */}
           <div>
-            <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+            <div className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
               <ShieldCheck className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
               Target Plan
-            </label>
+            </div>
             <div className="grid grid-cols-3 gap-3">
               {(['free', 'pro', 'enterprise'] as PlanTier[]).map((plan) => (
                 <button
@@ -541,10 +543,10 @@ function PlanOverrideModal({
 
           {/* Duration selection */}
           <div>
-            <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+            <div className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
               <Clock className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
               Duration
-            </label>
+            </div>
             <div className="grid grid-cols-3 gap-2">
               {DURATION_OPTIONS.map((opt) => (
                 <button
@@ -568,10 +570,10 @@ function PlanOverrideModal({
             {/* Custom days input */}
             {durationOption === 'custom' && (
               <div className="mt-3">
-                <label className="block text-xs text-[var(--text-muted)] mb-1.5">
+                <label htmlFor="override-days" className="block text-xs text-[var(--text-muted)] mb-1.5">
                   Number of days
                 </label>
-                <input aria-label="Number of days"
+                <input id="override-days"
                   type="number"
                   min={1}
                   max={3650}
@@ -585,10 +587,11 @@ function PlanOverrideModal({
 
           {/* Reason */}
           <div>
-            <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+            <label htmlFor="override-reason" className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
               Reason (optional)
             </label>
             <textarea
+              id="override-reason"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="Reason for plan override..."
@@ -687,7 +690,7 @@ function PlanOverrideModal({
                 <button
                   onClick={handleApply}
                   disabled={submitting}
-                  className="btn text-sm bg-amber-500/90 hover:bg-amber-600 text-white flex items-center gap-2"
+                  className="btn text-sm bg-amber-500/90 hover:bg-amber-600 text-black flex items-center gap-2"
                 >
                   {submitting ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -838,7 +841,7 @@ export default function AdminUsersPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
             <input
               type="text"
-              aria-label="Search by email or name..." placeholder="Search by email or name..."
+              aria-label="Search users" placeholder="Search by email or name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="input pl-9"

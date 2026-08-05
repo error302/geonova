@@ -243,7 +243,7 @@ export function formatBearingDMS(degrees: number): string {
   if (totalDeg < 0) totalDeg += 360;
 
   const deg = Math.floor(totalDeg);
-  let remMin = (totalDeg - deg) * 60;
+  const remMin = (totalDeg - deg) * 60;
   const min = Math.floor(remMin);
   const sec = (remMin - min) * 60;
 

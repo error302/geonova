@@ -61,11 +61,6 @@ export async function middleware(request: NextRequest) {
   )
 
   // ─── API routes: let them handle auth themselves ───
-  // Exception: public API endpoints (no auth needed)
-  const publicApiPaths = ['/api/public/health', '/api/webhooks/']
-  const isPublicApi = publicApiPaths.some(path =>
-    request.nextUrl.pathname.startsWith(path)
-  )
 
   // Redirect unauthenticated users from protected pages (skip public pages)
   if (isProtected && !isAuthenticated && !isPublicPage) {

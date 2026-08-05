@@ -79,9 +79,9 @@ export default function EngineeringComputePanel({ projectId }: { projectId: stri
       {activeTab === 'curves' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-3">
-            <div><label className="block text-xs text-zinc-500 mb-1">Radius (m)</label><input aria-label="Radius (m)" type="number" value={radius} onChange={e => setRadius(Number(e.target.value))} className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-white text-sm" /></div>
-            <div><label className="block text-xs text-zinc-500 mb-1">Deflection Angle (°)</label><input aria-label="Deflection Angle (°)" type="number" value={deflection} onChange={e => setDeflection(Number(e.target.value))} className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-white text-sm" /></div>
-            <div><label className="block text-xs text-zinc-500 mb-1">Design Speed (km/h)</label><input aria-label="Design Speed (km/h)" type="number" value={designSpeed} onChange={e => setDesignSpeed(Number(e.target.value))} className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-white text-sm" /></div>
+            <div><label className="block text-xs text-zinc-500 mb-1" htmlFor="radius-m">Radius (m)</label><input id="radius-m" aria-label="Radius (m)" type="number" value={radius} onChange={e => setRadius(Number(e.target.value))} className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-white text-sm" /></div>
+            <div><label className="block text-xs text-zinc-500 mb-1" htmlFor="deflection-angle">Deflection Angle (°)</label><input id="deflection-angle" aria-label="Deflection Angle (°)" type="number" value={deflection} onChange={e => setDeflection(Number(e.target.value))} className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-white text-sm" /></div>
+            <div><label className="block text-xs text-zinc-500 mb-1" htmlFor="design-speed-km-h">Design Speed (km/h)</label><input id="design-speed-km-h" aria-label="Design Speed (km/h)" type="number" value={designSpeed} onChange={e => setDesignSpeed(Number(e.target.value))} className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-white text-sm" /></div>
           </div>
           <div className="p-4 bg-zinc-900 rounded border border-zinc-700">
             <h4 className="text-xs font-semibold text-zinc-400 mb-3">Curve Parameters</h4>
@@ -98,8 +98,8 @@ export default function EngineeringComputePanel({ projectId }: { projectId: stri
       {activeTab === 'superelev' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-3">
-            <div><label className="block text-xs text-zinc-500 mb-1">Curve Radius (m)</label><input aria-label="Curve Radius (m)" type="number" value={curveRadius} onChange={e => setCurveRadius(Number(e.target.value))} className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-white text-sm" /></div>
-            <div><label className="block text-xs text-zinc-500 mb-1">Speed (km/h)</label><div className="bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-white text-sm">{speed}</div></div>
+            <div><label className="block text-xs text-zinc-500 mb-1" htmlFor="curve-radius-m">Curve Radius (m)</label><input id="curve-radius-m" aria-label="Curve Radius (m)" type="number" value={curveRadius} onChange={e => setCurveRadius(Number(e.target.value))} className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-white text-sm" /></div>
+            <div><div className="block text-xs text-zinc-500 mb-1">Speed (km/h)</div><div className="bg-zinc-800 border border-zinc-700 rounded px-3 py-1.5 text-white text-sm">{speed}</div></div>
           </div>
           <div className="p-4 bg-zinc-900 rounded border border-zinc-700">
             <h4 className="text-xs font-semibold text-zinc-400 mb-3">Superelevation</h4>
@@ -116,8 +116,8 @@ export default function EngineeringComputePanel({ projectId }: { projectId: stri
       {activeTab === 'volumes' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-zinc-500 mb-1">Section Data (chainage, cut, fill, existing)</label>
-            <textarea value={earthworkPoints} onChange={e => setEarthworkPoints(e.target.value)} rows={6} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-white text-xs font-mono" />
+            <label className="block text-xs text-zinc-500 mb-1" htmlFor="section-data-chainage-cut-fill-existing">Section Data (chainage, cut, fill, existing)</label>
+            <textarea  id="section-data-chainage-cut-fill-existing" value={earthworkPoints} onChange={e => setEarthworkPoints(e.target.value)} rows={6} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-white text-xs font-mono" />
           </div>
           <div className="p-4 bg-zinc-900 rounded border border-zinc-700 h-fit">
             <h4 className="text-xs font-semibold text-zinc-400 mb-3">Earthwork Summary</h4>
@@ -132,7 +132,7 @@ export default function EngineeringComputePanel({ projectId }: { projectId: stri
         </div>
       )}
 
-      <button onClick={handleSave} disabled={saved} className="inline-flex items-center gap-1 px-3 py-1 bg-[var(--accent)] text-white text-xs rounded hover:bg-[var(--accent-dim)] disabled:opacity-50">
+      <button onClick={handleSave} disabled={saved} className="inline-flex items-center gap-1 px-3 py-1 bg-[var(--accent)] text-black text-xs rounded hover:bg-[var(--accent-dim)] disabled:opacity-50">
         {saved ? <CheckCircle className="w-3 h-3" /> : <Save className="w-3 h-3" />}{saved ? 'Saved' : 'Save'}
       </button>
     </div>

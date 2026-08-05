@@ -122,12 +122,12 @@ function utmToLatLon(
   const C1 = e2 * Math.cos(phi1) * Math.cos(phi1) / (1 - e2)
   const R1 = a * (1 - e2) / Math.pow(1 - e2 * Math.sin(phi1) * Math.sin(phi1), 1.5)
   const D = x / (N1 * k0)
-  let lat = phi1 - (N1 * Math.tan(phi1) / R1)
+  const lat = phi1 - (N1 * Math.tan(phi1) / R1)
     * (D * D / 2 - (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * e2)
       * D * D * D * D / 24 + (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1
         - 252 * e2 - 3 * C1 * C1) * D * D * D * D * D * D / 720)
   const lon0 = ((zone - 1) * 6 - 180 + 3) * Math.PI / 180
-  let lon = lon0 + (D - (1 + 2 * T1 + C1) * D * D * D / 6
+  const lon = lon0 + (D - (1 + 2 * T1 + C1) * D * D * D / 6
     + (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * e2 + 24 * T1 * T1)
     * D * D * D * D * D / 120) / Math.cos(phi1)
   return { lat: lat * 180 / Math.PI, lon: lon * 180 / Math.PI }

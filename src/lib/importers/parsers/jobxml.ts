@@ -17,7 +17,7 @@ registerParser({
     while ((match = pointRegex.exec(content)) !== null) {
       const block = match[1];
       const get = (tag: string) => {
-        const m = block.match(new RegExp(`<${tag}>([^<]*)<\/${tag}>`));
+        const m = block.match(new RegExp(`<${tag}>([^<]*)</${tag}>`));
         return m ? m[1].trim() : undefined;
       };
 

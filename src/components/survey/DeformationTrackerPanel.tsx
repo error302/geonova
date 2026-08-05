@@ -202,19 +202,19 @@ export function DeformationTrackerPanel() {
       <div className="grid grid-cols-4 gap-2">
         <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
           <div className="text-lg font-bold text-gray-300">{stations.length}</div>
-          <div className="text-[9px] text-gray-500 uppercase">Stations</div>
+          <div className="text-[9px] text-gray-400 uppercase">Stations</div>
         </div>
         <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
           <div className="text-lg font-bold text-gray-300">{currentEpoch}</div>
-          <div className="text-[9px] text-gray-500 uppercase">Epochs</div>
+          <div className="text-[9px] text-gray-400 uppercase">Epochs</div>
         </div>
         <div className="p-2 rounded-lg bg-amber-500/5 border border-amber-500/20 text-center">
           <div className="text-lg font-bold text-amber-400">{flaggedCount}</div>
-          <div className="text-[9px] text-gray-500 uppercase">Warnings</div>
+          <div className="text-[9px] text-gray-400 uppercase">Warnings</div>
         </div>
         <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
           <div className="text-lg font-bold text-gray-300">{readings.length}</div>
-          <div className="text-[9px] text-gray-500 uppercase">Readings</div>
+          <div className="text-[9px] text-gray-400 uppercase">Readings</div>
         </div>
       </div>
 
@@ -225,11 +225,11 @@ export function DeformationTrackerPanel() {
             <span className="text-xs font-medium text-[var(--text-primary)]">Add Monitoring Station</span>
             <button onClick={() => setShowAddStation(false)} className="text-gray-400"><X className="w-3.5 h-3.5" /></button>
           </div>
-          <input type="text" value={newStation.name} onChange={e => setNewStation(prev => ({ ...prev, name: e.target.value }))} aria-label="Station name (e.g., Prism_A1)" placeholder="Station name (e.g., Prism_A1)" className="w-full h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white" />
+          <input type="text" value={newStation.name} onChange={e => setNewStation(prev => ({ ...prev, name: e.target.value }))} aria-label="Station name (e.g., Prism_A1)" className="w-full h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white" />
           <div className="grid grid-cols-3 gap-2">
-            <input type="number" value={newStation.x} onChange={e => setNewStation(prev => ({ ...prev, x: e.target.value }))} aria-label="Base X" placeholder="Base X" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
-            <input type="number" value={newStation.y} onChange={e => setNewStation(prev => ({ ...prev, y: e.target.value }))} aria-label="Base Y" placeholder="Base Y" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
-            <input type="number" value={newStation.z} onChange={e => setNewStation(prev => ({ ...prev, z: e.target.value }))} aria-label="Base Z" placeholder="Base Z" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
+            <input type="number" value={newStation.x} onChange={e => setNewStation(prev => ({ ...prev, x: e.target.value }))} aria-label="Base X" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
+            <input type="number" value={newStation.y} onChange={e => setNewStation(prev => ({ ...prev, y: e.target.value }))} aria-label="Base Y" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
+            <input type="number" value={newStation.z} onChange={e => setNewStation(prev => ({ ...prev, z: e.target.value }))} aria-label="Base Z" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
           </div>
           <button onClick={addStation} disabled={!newStation.name} className="w-full h-8 rounded bg-[var(--accent)] text-black text-xs font-semibold disabled:opacity-40">Add Station</button>
         </div>
@@ -248,9 +248,9 @@ export function DeformationTrackerPanel() {
             {stations.map(s => <option key={s.id} value={s.id}>{s.stationName}</option>)}
           </select>
           <div className="grid grid-cols-3 gap-2">
-            <input type="number" value={epochInput.x} onChange={e => setEpochInput(prev => ({ ...prev, x: e.target.value }))} aria-label="Current X" placeholder="Current X" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
-            <input type="number" value={epochInput.y} onChange={e => setEpochInput(prev => ({ ...prev, y: e.target.value }))} aria-label="Current Y" placeholder="Current Y" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
-            <input type="number" value={epochInput.z} onChange={e => setEpochInput(prev => ({ ...prev, z: e.target.value }))} aria-label="Current Z" placeholder="Current Z" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
+            <input type="number" value={epochInput.x} onChange={e => setEpochInput(prev => ({ ...prev, x: e.target.value }))} aria-label="Current X" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
+            <input type="number" value={epochInput.y} onChange={e => setEpochInput(prev => ({ ...prev, y: e.target.value }))} aria-label="Current Y" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
+            <input type="number" value={epochInput.z} onChange={e => setEpochInput(prev => ({ ...prev, z: e.target.value }))} aria-label="Current Z" className="h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-white font-mono" />
           </div>
           <button onClick={addEpochReading} disabled={!epochInput.stationId} className="w-full h-8 rounded bg-[var(--accent)] text-black text-xs font-semibold disabled:opacity-40">Record Reading</button>
         </div>
@@ -264,14 +264,14 @@ export function DeformationTrackerPanel() {
             <table className="w-full">
               <thead className="sticky top-0 bg-[var(--bg-card)]">
                 <tr className="border-b border-[var(--border-color)]">
-                  <th className="px-2 py-1.5 text-left text-[9px] text-gray-500 uppercase">Station</th>
-                  <th className="px-2 py-1.5 text-center text-[9px] text-gray-500 uppercase">Epoch</th>
-                  <th className="px-2 py-1.5 text-right text-[9px] text-gray-500 uppercase">ΔX (mm)</th>
-                  <th className="px-2 py-1.5 text-right text-[9px] text-gray-500 uppercase">ΔY (mm)</th>
-                  <th className="px-2 py-1.5 text-right text-[9px] text-gray-500 uppercase">ΔZ (mm)</th>
-                  <th className="px-2 py-1.5 text-right text-[9px] text-gray-500 uppercase">Total (mm)</th>
-                  <th className="px-2 py-1.5 text-right text-[9px] text-gray-500 uppercase">Vel (mm/wk)</th>
-                  <th className="px-2 py-1.5 text-center text-[9px] text-gray-500 uppercase">Status</th>
+                  <th className="px-2 py-1.5 text-left text-[9px] text-gray-400 uppercase">Station</th>
+                  <th className="px-2 py-1.5 text-center text-[9px] text-gray-400 uppercase">Epoch</th>
+                  <th className="px-2 py-1.5 text-right text-[9px] text-gray-400 uppercase">ΔX (mm)</th>
+                  <th className="px-2 py-1.5 text-right text-[9px] text-gray-400 uppercase">ΔY (mm)</th>
+                  <th className="px-2 py-1.5 text-right text-[9px] text-gray-400 uppercase">ΔZ (mm)</th>
+                  <th className="px-2 py-1.5 text-right text-[9px] text-gray-400 uppercase">Total (mm)</th>
+                  <th className="px-2 py-1.5 text-right text-[9px] text-gray-400 uppercase">Vel (mm/wk)</th>
+                  <th className="px-2 py-1.5 text-center text-[9px] text-gray-400 uppercase">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -313,7 +313,7 @@ export function DeformationTrackerPanel() {
       {/* Thresholds info */}
       <div className="flex items-start gap-2 p-2.5 rounded-lg bg-blue-500/5 border border-blue-500/10">
         <Activity className="w-3 h-3 text-blue-400 shrink-0 mt-0.5" />
-        <div className="text-[10px] text-blue-400/70">
+        <div className="text-[10px] text-blue-300">
           <p>Warning: {DEFAULT_THRESHOLDS.warningDisplacement}mm displacement or {DEFAULT_THRESHOLDS.warningVelocity}mm/week velocity</p>
           <p>Critical: {DEFAULT_THRESHOLDS.criticalDisplacement}mm displacement or {DEFAULT_THRESHOLDS.criticalVelocity}mm/week velocity</p>
         </div>
@@ -324,16 +324,16 @@ export function DeformationTrackerPanel() {
         <div className="flex items-center gap-2">
           <TrendingUp className="w-3.5 h-3.5 text-purple-400" />
           <span className="text-xs font-semibold text-[var(--text-primary)]">Pelzer Congruence Test</span>
-          <span className="text-[9px] text-gray-500 ml-auto">Statistical significance (95% confidence)</span>
+          <span className="text-[9px] text-gray-400 ml-auto">Statistical significance (95% confidence)</span>
         </div>
         <div className="text-[10px] text-gray-400">
           Tests whether the observed deformation is statistically significant or can be explained by measurement noise.
           Requires ≥2 epochs of data for at least one station.
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-[10px] text-gray-400 whitespace-nowrap">Coord σ (mm):</label>
+          <label className="text-[10px] text-gray-400 whitespace-nowrap" htmlFor="coord-mm">Coord σ (mm):</label>
           <input
-            type="number"
+             id="coord-mm" type="number"
             value={coordSigmaMm}
             onChange={e => setCoordSigmaMm(parseFloat(e.target.value) || 2.0)}
             step="0.5"
@@ -374,7 +374,7 @@ export function DeformationTrackerPanel() {
         {/* Per-station confidence ellipses (AUDIT FIX 2026-07-03) */}
         {ellipses.length > 0 && (
           <div className="mt-2 space-y-1">
-            <div className="text-[10px] text-gray-500 font-medium mb-1">Per-Station 95% Confidence Ellipses</div>
+            <div className="text-[10px] text-gray-400 font-medium mb-1">Per-Station 95% Confidence Ellipses</div>
             {ellipses.map((el, i) => {
               const station = stations.find(s => s.id === el.stationId)
               return (
@@ -387,9 +387,9 @@ export function DeformationTrackerPanel() {
                     ? <AlertTriangle className="w-2.5 h-2.5 text-red-400 shrink-0" />
                     : <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400 shrink-0" />}
                   <span className="font-mono text-gray-300 shrink-0">{station?.stationName || el.stationId}</span>
-                  <span className="text-gray-500">a={el.semiMajor.toFixed(2)}mm</span>
-                  <span className="text-gray-500">b={el.semiMinor.toFixed(2)}mm</span>
-                  <span className="text-gray-500">θ={el.orientation.toFixed(0)}°</span>
+                  <span className="text-gray-400">a={el.semiMajor.toFixed(2)}mm</span>
+                  <span className="text-gray-400">b={el.semiMinor.toFixed(2)}mm</span>
+                  <span className="text-gray-400">θ={el.orientation.toFixed(0)}°</span>
                   <span className={`ml-auto ${el.significant ? 'text-red-400' : 'text-emerald-400'}`}>
                     {el.significant ? 'SIGNIFICANT' : 'stable'}
                   </span>

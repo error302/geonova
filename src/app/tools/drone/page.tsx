@@ -223,7 +223,7 @@ function DroneSurveyPage() {
             onClick={() => setActiveTab(tab.id as any)}
             className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
               activeTab === tab.id 
-                ? 'bg-[var(--accent)] text-white' 
+                ? 'bg-[var(--accent)] text-black' 
                 : 'bg-[var(--card-bg)] text-[var(--text-secondary)] hover:text-[var(--accent)]'
             }`}
           >
@@ -243,8 +243,8 @@ function DroneSurveyPage() {
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Min Easting</label>
-                <input aria-label="Mine" 
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="min-easting">Min Easting</label>
+                <input id="min-easting" aria-label="Mine" 
                   className="input" 
                   type="number"
                   value={surveyArea.minE}
@@ -252,8 +252,8 @@ function DroneSurveyPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Max Easting</label>
-                <input aria-label="Maxe" 
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="max-easting">Max Easting</label>
+                <input id="max-easting" aria-label="Maxe" 
                   className="input" 
                   type="number"
                   value={surveyArea.maxE}
@@ -261,8 +261,8 @@ function DroneSurveyPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Min Northing</label>
-                <input aria-label="Minn" 
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="min-northing">Min Northing</label>
+                <input id="min-northing" aria-label="Minn" 
                   className="input" 
                   type="number"
                   value={surveyArea.minN}
@@ -270,8 +270,8 @@ function DroneSurveyPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Max Northing</label>
-                <input aria-label="Maxn" 
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="max-northing">Max Northing</label>
+                <input id="max-northing" aria-label="Maxn" 
                   className="input" 
                   type="number"
                   value={surveyArea.maxN}
@@ -287,8 +287,8 @@ function DroneSurveyPage() {
             </div>
             <div className="flex gap-4 items-end mb-4">
               <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">Number of GCPs (min 5)</label>
-                <input aria-label="Number of GCPs (min 5)" 
+                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="number-of-gcps-min-5">Number of GCPs (min 5)</label>
+                <input id="number-of-gcps-min-5" aria-label="Number of GCPs (min 5)" 
                   className="input w-32" 
                   type="number"
                   min="5"
@@ -323,7 +323,7 @@ function DroneSurveyPage() {
                         <td className="font-semibold">{g.name}</td>
                         <td><input aria-label="Easting" className="input w-32 font-mono" value={g.easting} onChange={e => updateGCP(g.id, 'easting', e.target.value)} /></td>
                         <td><input aria-label="Northing" className="input w-32 font-mono" value={g.northing} onChange={e => updateGCP(g.id, 'northing', e.target.value)} /></td>
-                        <td><input className="input w-24 font-mono" value={g.elevation} onChange={e => updateGCP(g.id, 'elevation', e.target.value)} aria-label="RL" placeholder="RL" /></td>
+                        <td><input className="input w-24 font-mono" value={g.elevation} onChange={e => updateGCP(g.id, 'elevation', e.target.value)} aria-label="Elevation RL (m)" placeholder="RL" /></td>
                         <td>
                           <select 
                             className="input w-28" 
@@ -469,7 +469,7 @@ function DroneSurveyPage() {
                   onClick={() => { setSelectedClass(c); setAccuracyResults(null); }}
                   className={`px-4 py-2 rounded text-sm ${
                     selectedClass.name === c.name 
-                      ? 'bg-[var(--accent)] text-white' 
+                      ? 'bg-[var(--accent)] text-black' 
                       : 'bg-[var(--bg-tertiary)]'
                   }`}
                 >
@@ -615,20 +615,20 @@ function DroneSurveyPage() {
                 <h4 className="font-semibold mb-2">3. Flight Parameters</h4>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
-                    <label className="block text-[var(--text-secondary)] mb-1">Flying Height (m)</label>
-                    <input className="input" type="number" aria-label="120" placeholder="120" value={flightParams.height} onChange={e => setFlightParams({...flightParams, height: e.target.value})} />
+                    <label className="block text-[var(--text-secondary)] mb-1" htmlFor="flying-height-m">Flying Height (m)</label>
+                    <input id="flying-height-m" className="input" type="number" placeholder="120" value={flightParams.height} onChange={e => setFlightParams({...flightParams, height: e.target.value})} />
                   </div>
                   <div>
-                    <label className="block text-[var(--text-secondary)] mb-1">GSD (cm/px)</label>
-                    <input className="input" type="number" aria-label="3.0" placeholder="3.0" value={flightParams.gsd} onChange={e => setFlightParams({...flightParams, gsd: e.target.value})} />
+                    <label className="block text-[var(--text-secondary)] mb-1" htmlFor="gsd-cm-px">GSD (cm/px)</label>
+                    <input id="gsd-cm-px" className="input" type="number" placeholder="3.0" value={flightParams.gsd} onChange={e => setFlightParams({...flightParams, gsd: e.target.value})} />
                   </div>
                   <div>
-                    <label className="block text-[var(--text-secondary)] mb-1">Overlap Front (%)</label>
-                    <input className="input" type="number" aria-label="80" placeholder="80" value={flightParams.overlapFront} onChange={e => setFlightParams({...flightParams, overlapFront: e.target.value})} />
+                    <label className="block text-[var(--text-secondary)] mb-1" htmlFor="overlap-front">Overlap Front (%)</label>
+                    <input id="overlap-front" className="input" type="number" placeholder="80" value={flightParams.overlapFront} onChange={e => setFlightParams({...flightParams, overlapFront: e.target.value})} />
                   </div>
                   <div>
-                    <label className="block text-[var(--text-secondary)] mb-1">Overlap Side (%)</label>
-                    <input className="input" type="number" aria-label="70" placeholder="70" value={flightParams.overlapSide} onChange={e => setFlightParams({...flightParams, overlapSide: e.target.value})} />
+                    <label className="block text-[var(--text-secondary)] mb-1" htmlFor="overlap-side">Overlap Side (%)</label>
+                    <input  id="overlap-side" className="input" type="number" placeholder="70" value={flightParams.overlapSide} onChange={e => setFlightParams({...flightParams, overlapSide: e.target.value})} />
                   </div>
                 </div>
               </div>

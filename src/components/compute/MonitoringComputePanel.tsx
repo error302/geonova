@@ -101,19 +101,19 @@ export default function MonitoringComputePanel({ projectId }: { projectId: strin
       {/* Controls */}
       <div className="flex gap-4 items-end flex-wrap">
         <div>
-          <label className="block text-xs text-zinc-500 mb-1">Base Epoch</label>
-          <select value={compareIndex1} onChange={e => setCompareIndex1(Number(e.target.value))} className="bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-white text-xs">
+          <label className="block text-xs text-zinc-500 mb-1" htmlFor="base-epoch">Base Epoch</label>
+          <select id="base-epoch" value={compareIndex1} onChange={e => setCompareIndex1(Number(e.target.value))} className="bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-white text-xs">
             {epochs.map((ep, i) => <option key={`${ep}-${i}`} value={i}>{ep.epochName} ({ep.date})</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-xs text-zinc-500 mb-1">Latest Epoch</label>
-          <select value={compareIndex2} onChange={e => setCompareIndex2(Number(e.target.value))} className="bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-white text-xs">
+          <label className="block text-xs text-zinc-500 mb-1" htmlFor="latest-epoch">Latest Epoch</label>
+          <select id="latest-epoch" value={compareIndex2} onChange={e => setCompareIndex2(Number(e.target.value))} className="bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-white text-xs">
             {epochs.map((ep, i) => <option key={`${ep}-${i}`} value={i}>{ep.epochName} ({ep.date})</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-xs text-zinc-500 mb-1">Alert Threshold (m)</label>
+          <label className="block text-xs text-zinc-500 mb-1" htmlFor="alert-threshold-m">Alert Threshold (m)</label>
           <input aria-label="Alert Threshold (m)" type="number" step="0.001" value={threshold} onChange={e => setThreshold(Number(e.target.value))} className="w-24 bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-white text-xs" />
         </div>
       </div>
@@ -181,7 +181,7 @@ export default function MonitoringComputePanel({ projectId }: { projectId: strin
       </div>
 
       <button onClick={handleSave} disabled={saved}
-        className="inline-flex items-center gap-1 px-3 py-1.5 bg-[var(--accent)] text-white text-xs rounded hover:bg-[var(--accent-dim)] disabled:opacity-50">
+        className="inline-flex items-center gap-1 px-3 py-1.5 bg-[var(--accent)] text-black text-xs rounded hover:bg-[var(--accent-dim)] disabled:opacity-50">
         {saved ? <CheckCircle className="w-3 h-3" /> : <Save className="w-3 h-3" />}
         {saved ? 'Saved' : 'Save Results'}
       </button>

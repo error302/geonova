@@ -273,8 +273,8 @@ function computeTraverseAdjustment(input: TraverseAdjustInput) {
   if (legs.length === 0) return { adjustedLegs: [], misclosure: { linear: 0, angular: 0, bearing: 0, ratio: '0:1' } }
 
   let currentBearing = startBearing
-  let currentNorthing = startCoordinates.northing
-  let currentEasting = startCoordinates.easting
+  const currentNorthing = startCoordinates.northing
+  const currentEasting = startCoordinates.easting
   let totalLatitude = 0
   let totalDeparture = 0
 

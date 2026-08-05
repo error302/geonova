@@ -41,18 +41,18 @@ export default function SectionalPropertiesPage() {
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <div><label className="block text-sm text-zinc-400 mb-2">Building Name</label><input value={buildingName} onChange={e => setBuildingName(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
-            <div><label className="block text-sm text-zinc-400 mb-2">LR Number</label><input value={lrNumber} onChange={e => setLrNumber(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+            <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="building-name">Building Name</label><input id="building-name" value={buildingName} onChange={e => setBuildingName(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+            <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="lr-number">LR Number</label><input id="lr-number" value={lrNumber} onChange={e => setLrNumber(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
           </div>
           <div>
-            <div className="flex justify-between items-center mb-2"><label className="text-sm text-zinc-400">Units</label><button onClick={addUnit} className="text-xs px-2 py-1 bg-[var(--accent)] text-black rounded">+ Add Unit</button></div>
+            <div className="flex justify-between items-center mb-2"><div className="text-sm text-zinc-400">Units</div><button onClick={addUnit} className="text-xs px-2 py-1 bg-[var(--accent)] text-black rounded">+ Add Unit</button></div>
             <div className="space-y-2 max-h-64 overflow-y-auto">{units.map((u, i) => (
               <div key={i} className="flex gap-2 items-center">
-                <input value={u.unitNumber} onChange={e => { const v = [...units]; v[i].unitNumber = e.target.value; setUnits(v) }} className="w-16 bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-xs" />
-                <input type="number" value={u.floor} onChange={e => { const v = [...units]; v[i].floor = +e.target.value; setUnits(v) }} className="w-16 bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-xs" />
-                <select value={u.type} onChange={e => { const v = [...units]; v[i].type = e.target.value as SectionalUnit['type']; setUnits(v) }} className="bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-xs"><option value="residential">Residential</option><option value="commercial">Commercial</option><option value="parking">Parking</option><option value="common">Common</option></select>
-                <input type="number" value={u.area} onChange={e => { const v = [...units]; v[i].area = +e.target.value; setUnits(v) }} className="w-16 bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-xs" />
-                <button onClick={() => removeUnit(i)} className="text-red-400 text-xs px-1">×</button>
+                <input aria-label={`Unit ${i + 1} number`} value={u.unitNumber} onChange={e => { const v = [...units]; v[i].unitNumber = e.target.value; setUnits(v) }} className="w-16 bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-xs" />
+                <input aria-label={`Unit ${i + 1} floor`} type="number" value={u.floor} onChange={e => { const v = [...units]; v[i].floor = +e.target.value; setUnits(v) }} className="w-16 bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-xs" />
+                <select aria-label={`Unit ${i + 1} type`} value={u.type} onChange={e => { const v = [...units]; v[i].type = e.target.value as SectionalUnit['type']; setUnits(v) }} className="bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-xs"><option value="residential">Residential</option><option value="commercial">Commercial</option><option value="parking">Parking</option><option value="common">Common</option></select>
+                <input aria-label={`Unit ${i + 1} area (m²)`} type="number" value={u.area} onChange={e => { const v = [...units]; v[i].area = +e.target.value; setUnits(v) }} className="w-16 bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-xs" />
+                <button aria-label={`Remove unit ${i + 1}`} onClick={() => removeUnit(i)} className="text-red-400 text-xs px-1">×</button>
               </div>
             ))}</div>
           </div>
@@ -68,7 +68,7 @@ export default function SectionalPropertiesPage() {
               </div>
               <div className="overflow-x-auto"><h3 className="text-sm font-semibold text-white mb-2">Participation Quotas</h3><table className="w-full text-sm"><thead><tr className="text-zinc-500 border-b border-zinc-700"><th className="text-left py-2">Unit</th><th className="text-right py-2">Quota (%)</th></tr></thead><tbody>{plan.participationQuotas.map((q, i) => (<tr key={i} className="border-b border-zinc-800"><td className="py-1.5 font-mono text-amber-400">{q.unitNumber}</td><td className="py-1.5 text-right font-mono text-white">{q.quota.toFixed(4)}%</td></tr>))}</tbody></table></div>
             </div>
-          ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-500">Add units and click Generate.</div>}
+          ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-400">Add units and click Generate.</div>}
         </div>
       </div>
     </div>

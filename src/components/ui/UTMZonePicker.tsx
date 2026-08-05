@@ -47,8 +47,8 @@ export default function UTMZonePicker({
     <div className="space-y-4">
       <div className="flex gap-4 items-end">
         <div>
-          <label className="block text-sm text-[var(--text-secondary)] mb-1">UTM Zone</label>
-          <input aria-label="UTM Zone"
+          <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="utm-zone">UTM Zone</label>
+          <input id="utm-zone"
             type="number"
             min={1}
             max={60}
@@ -58,8 +58,8 @@ export default function UTMZonePicker({
           />
         </div>
         <div>
-          <label className="block text-sm text-[var(--text-secondary)] mb-1">Hemisphere</label>
-          <select
+          <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="hemisphere">Hemisphere</label>
+          <select id="hemisphere"
             value={hemisphere}
             onChange={e => onChange(value, e.target.value as 'N' | 'S')}
             className="bg-[var(--bg-tertiary)] text-white px-3 py-2 rounded border border-[var(--border-color)]"
@@ -69,7 +69,7 @@ export default function UTMZonePicker({
           </select>
         </div>
         <div className="flex-1">
-          <label className="block text-sm text-[var(--text-secondary)] mb-1">Coverage</label>
+          <div className="block text-sm text-[var(--text-secondary)] mb-1">Coverage</div>
           <p className="text-amber-500 text-sm">
             Zone {value}{hemisphere} — {(value - 1) * 6 - 180}° to {value * 6 - 180}°
           </p>

@@ -100,7 +100,7 @@ export class GNSSBleConnection {
       )
     }
 
-    // @ts-ignore
+    // @ts-expect-error — Web Bluetooth API is not in the DOM lib types.
     this.device = await navigator.bluetooth.requestDevice({
       filters: [
         { services: [BLE_SERVICE_NMEA] },

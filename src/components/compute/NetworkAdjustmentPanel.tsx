@@ -353,21 +353,21 @@ export function NetworkAdjustmentPanel({ projectId, projectData, surveyorProfile
             <div key={s.id} className="grid grid-cols-7 gap-2 items-center bg-zinc-800 p-3 rounded-lg">
               <input
                 className="col-span-1 bg-zinc-700 border border-zinc-600 rounded px-2 py-1 text-sm text-white"
-                aria-label="Name" placeholder="Name"
+                aria-label="Name" placeholder="e.g. TBM1"
                 value={s.name}
                 onChange={e => updateStation(s.id, 'name', e.target.value)}
               />
               <input
                 type="number" step="0.001"
                 className="col-span-2 bg-zinc-700 border border-zinc-600 rounded px-2 py-1 text-sm text-white"
-                aria-label="Easting (m)" placeholder="Easting (m)"
+                aria-label="Easting (m)" placeholder="e.g. 500000.000"
                 value={s.easting || ''}
                 onChange={e => updateStation(s.id, 'easting', parseFloat(e.target.value) || 0)}
               />
               <input
                 type="number" step="0.001"
                 className="col-span-2 bg-zinc-700 border border-zinc-600 rounded px-2 py-1 text-sm text-white"
-                aria-label="Northing (m)" placeholder="Northing (m)"
+                aria-label="Northing (m)" placeholder="e.g. 9900000.000"
                 value={s.northing || ''}
                 onChange={e => updateStation(s.id, 'northing', parseFloat(e.target.value) || 0)}
               />
@@ -426,28 +426,28 @@ export function NetworkAdjustmentPanel({ projectId, projectData, surveyorProfile
               <input
                 type="number" step="0.001"
                 className="bg-zinc-700 border border-zinc-600 rounded px-2 py-1 text-sm text-white"
-                aria-label="ΔE (m)" placeholder="ΔE (m)"
+                aria-label="ΔE (m)" placeholder="e.g. 0.002"
                 value={obs.deltaE || ''}
                 onChange={e => updateObservation(idx, 'deltaE', parseFloat(e.target.value) || 0)}
               />
               <input
                 type="number" step="0.001"
                 className="bg-zinc-700 border border-zinc-600 rounded px-2 py-1 text-sm text-white"
-                aria-label="ΔN (m)" placeholder="ΔN (m)"
+                aria-label="ΔN (m)" placeholder="e.g. 0.003"
                 value={obs.deltaN || ''}
                 onChange={e => updateObservation(idx, 'deltaN', parseFloat(e.target.value) || 0)}
               />
               <input
                 type="number" step="0.001"
                 className="bg-zinc-700 border border-zinc-600 rounded px-2 py-1 text-sm text-white"
-                aria-label="ΔH (m)" placeholder="ΔH (m)"
+                aria-label="ΔH (m)" placeholder="e.g. 0.001"
                 value={obs.deltaH || ''}
                 onChange={e => updateObservation(idx, 'deltaH', parseFloat(e.target.value) || 0)}
               />
               <input
                 type="number" step="0.0001"
                 className="bg-zinc-700 border border-zinc-600 rounded px-2 py-1 text-sm text-white"
-                aria-label="σ (m)" placeholder="σ (m)"
+                aria-label="σ (m)" placeholder="e.g. 0.005"
                 value={obs.stdDevE || ''}
                 onChange={e => {
                   const v = parseFloat(e.target.value) || 0.005
@@ -491,9 +491,9 @@ export function NetworkAdjustmentPanel({ projectId, projectData, surveyorProfile
         </div>
         {robustMode && (
           <div className="flex items-center gap-4 text-sm">
-            <label className="text-zinc-400">Weight Function:</label>
+            <label className="text-zinc-400" htmlFor="weight-function">Weight Function:</label>
             <select
-              value={weightFunction}
+               id="weight-function" value={weightFunction}
               onChange={e => setWeightFunction(e.target.value as WeightFunction)}
               className="bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-white"
             >

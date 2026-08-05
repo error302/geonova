@@ -124,15 +124,15 @@ export default function ParcelNumberInput({
             onChange={e => handleFreeTextChange(e.target.value)}
             disabled={disabled}
             required={required}
-            aria-label="e.g. NAIROBI BLOCK 2/1234 or KIAMBU/456" placeholder="e.g. NAIROBI BLOCK 2/1234 or KIAMBU/456"
+            aria-label="e.g. NAIROBI BLOCK 2/1234 or KIAMBU/456"
             className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm"
           />
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">County</label>
-            <select
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="county">County</label>
+            <select id="county"
               value={selectedCounty}
               onChange={e => {
                 setSelectedCounty(e.target.value)
@@ -149,8 +149,8 @@ export default function ParcelNumberInput({
           </div>
           
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Section</label>
-            <select
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="section">Section</label>
+            <select id="section"
               value={selectedSection}
               onChange={e => {
                 setSelectedSection(e.target.value)
@@ -168,8 +168,8 @@ export default function ParcelNumberInput({
           
           {currentSection?.hasBlocks && (
             <div>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">Block</label>
-              <input
+              <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="block">Block</label>
+              <input id="block"
                 type="number"
                 value={blockNumber}
                 onChange={e => {
@@ -177,15 +177,15 @@ export default function ParcelNumberInput({
                   handleStructuredChange()
                 }}
                 disabled={disabled}
-                aria-label="1" placeholder="1"
+ placeholder="1"
                 className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-sm"
               />
             </div>
           )}
           
           <div>
-            <label className="block text-xs text-[var(--text-muted)] mb-1">Parcel No.</label>
-            <input
+            <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="parcel-no">Parcel No.</label>
+            <input id="parcel-no"
               type="number"
               value={parcelNumber}
               onChange={e => {
@@ -194,7 +194,7 @@ export default function ParcelNumberInput({
               }}
               disabled={disabled}
               required={required}
-              aria-label="1234" placeholder="1234"
+ placeholder="1234"
               className="w-full px-2 py-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-sm"
             />
           </div>

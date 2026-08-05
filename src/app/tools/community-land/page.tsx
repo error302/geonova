@@ -22,15 +22,15 @@ export default function CommunityLandPage() {
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <div><label className="block text-sm text-zinc-400 mb-2">Community Name</label><input value={name} onChange={e => setName(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
-            <div><label className="block text-sm text-zinc-400 mb-2">County</label><input value={county} onChange={e => setCounty(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+            <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="community-name">Community Name</label><input id="community-name" value={name} onChange={e => setName(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+            <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="county">County</label><input id="county" value={county} onChange={e => setCounty(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
           </div>
-          <div><label className="block text-sm text-zinc-400 mb-2">Number of Households</label><input type="number" value={households} onChange={e => setHouseholds(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
-          <div><label className="block text-sm text-zinc-400 mb-2">Boundary (easting, northing — one per line)</label><textarea value={csv} onChange={e => setCsv(e.target.value)} rows={5} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="number-of-households">Number of Households</label><input id="number-of-households" type="number" value={households} onChange={e => setHouseholds(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="boundary-easting-northing-one-per-line">Boundary (easting, northing — one per line)</label><textarea id="boundary-easting-northing-one-per-line" value={csv} onChange={e => setCsv(e.target.value)} rows={5} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
           <div className="grid grid-cols-3 gap-3">
-            <div><label className="block text-xs text-zinc-400 mb-1">Grazing %</label><input type="number" value={grazing} onChange={e => setGrazing(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-sm" /></div>
-            <div><label className="block text-xs text-zinc-400 mb-1">Farming %</label><input type="number" value={farming} onChange={e => setFarming(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-sm" /></div>
-            <div><label className="block text-xs text-zinc-400 mb-1">Settlement %</label><input type="number" value={settlement} onChange={e => setSettlement(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-sm" /></div>
+            <div><label className="block text-xs text-zinc-400 mb-1" htmlFor="grazing">Grazing %</label><input id="grazing" type="number" value={grazing} onChange={e => setGrazing(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-sm" /></div>
+            <div><label className="block text-xs text-zinc-400 mb-1" htmlFor="farming">Farming %</label><input id="farming" type="number" value={farming} onChange={e => setFarming(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-sm" /></div>
+            <div><label className="block text-xs text-zinc-400 mb-1" htmlFor="settlement">Settlement %</label><input id="settlement" type="number" value={settlement} onChange={e => setSettlement(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-sm" /></div>
           </div>
           <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Compute Community Land</button>
         </div>
@@ -46,7 +46,7 @@ export default function CommunityLandPage() {
               <div className="p-3 bg-zinc-900 rounded-lg border border-zinc-700"><div className="text-xs text-zinc-400">Per Household</div><div className="text-lg font-bold text-[var(--accent)]">{result.householdQuota.toFixed(0)} m²</div></div>
             </div>
           </div>
-        ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-500">Enter data and click Compute.</div>}</div>
+        ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-400">Enter data and click Compute.</div>}</div>
       </div>
     </div>
   )

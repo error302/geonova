@@ -108,7 +108,7 @@ export function parseRinexHeader(content: string): RinexHeader {
       header.version = padded.substring(0, 9).trim()
       // RINEX 2/3: file type character (O/N/M/G/R/E) appears after version number
       // Use regex to find the first valid file type char after the version
-      let ftMatch = padded.substring(0, 40).match(/\d+\.\d+\s+([ONMGRE])/)
+      const ftMatch = padded.substring(0, 40).match(/\d+\.\d+\s+([ONMGRE])/)
       if (ftMatch) {
         header.fileType = ftMatch[1]
       }

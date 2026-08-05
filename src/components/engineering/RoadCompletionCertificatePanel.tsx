@@ -4,6 +4,9 @@ import React, { useState, useEffect, useRef } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { generateCertificate, CERTIFICATION_ITEMS, generateDefectSchedule } from '@/lib/generators/roadCompletionCertificate'
 import type { RoadCompletionData, DefectItem } from '@/lib/generators/roadCompletionCertificate'
+// XSS guard (2026-08-03): certificate fields are user-entered and interpolated
+// into the print-window HTML — escape before document.write().
+import { escapeXml } from '@/lib/xml/escape'
 
 interface RoadCompletionCertificatePanelProps {
   projectId?: string
@@ -106,7 +109,7 @@ export default function RoadCompletionCertificatePanel({
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Road Completion Certificate — ${certificate.certificateNumber}</title>
+  <title>Road Completion Certificate — ${escapeXml(certificate.certificateNumber)}</title>
   <style>
     @page {
       size: A4;
@@ -161,9 +164,9 @@ export default function RoadCompletionCertificatePanel({
 
   <div class="header">
     <h1>Republic of Kenya</h1>
-    <h2>${certificate.title}</h2>
+    <h2>${escapeXml(certificate.title)}</h2>
     <div class="meta">Kenya Roads Act, Cap 407 &bull; RDM 1.3 &bull; Survey Act Cap 299</div>
-    <div class="meta">Certificate No: <strong>${certificate.certificateNumber}</strong> &bull; Date: ${certificate.issueDate}</div>
+    <div class="meta">Certificate No: <strong>${escapeXml(certificate.certificateNumber)}</strong> &bull; Date: ${escapeXml(certificate.issueDate)}</div>
   </div>
 
   <div class="status ${certificate.isComplete ? 'pass' : 'pending'}">
@@ -171,9 +174,9 @@ export default function RoadCompletionCertificatePanel({
   </div>
 
   ${certificate.sections.map(section => `
-    <div class="section-title">${section.title}</div>
+    <div class="section-title">${escapeXml(section.title)}</div>
     <table>
-      ${section.rows.map(row => `<tr><td class="label">${row.label}</td><td class="value">${row.value}</td></tr>`).join('')}
+      ${section.rows.map(row => `<tr><td class="label">${escapeXml(row.label)}</td><td class="value">${escapeXml(row.value)}</td></tr>`).join('')}
     </table>
   `).join('')}
 
@@ -181,7 +184,7 @@ export default function RoadCompletionCertificatePanel({
   <div class="checklist">
     ${certificate.certificationChecklist.map(item => `
       <div class="check-item ${item.certified ? 'certified' : 'not-certified'}">
-        ${item.certified ? '&#10003;' : '&#10007;'} ${item.item}
+        ${item.certified ? '&#10003;' : '&#10007;'} ${escapeXml(item.item)}
       </div>
     `).join('')}
   </div>
@@ -189,21 +192,21 @@ export default function RoadCompletionCertificatePanel({
   ${certificate.complianceNotes.length > 0 ? `
     <div class="compliance-notes">
       <h4>Compliance Notes</h4>
-      ${certificate.complianceNotes.map(note => `<p>&bull; ${note}</p>`).join('')}
+      ${certificate.complianceNotes.map(note => `<p>&bull; ${escapeXml(note)}</p>`).join('')}
     </div>
   ` : ''}
 
   <div class="section-title">Declaration</div>
-  <div class="declaration">${certificate.declaration}</div>
+  <div class="declaration">${escapeXml(certificate.declaration)}</div>
 
   <div class="signature-block">
     <div class="signature-line"></div>
     <div class="signature-info">
-      <div class="name">${certificate.signatureBlock.surveyorName}</div>
-      <div>${certificate.signatureBlock.surveyorRegistration}</div>
-      <div>${certificate.signatureBlock.surveyorFirm}</div>
-      <div>License: ${certificate.signatureBlock.licenseNumber}</div>
-      <div>Date: ${certificate.signatureBlock.date}</div>
+      <div class="name">${escapeXml(certificate.signatureBlock.surveyorName)}</div>
+      <div>${escapeXml(certificate.signatureBlock.surveyorRegistration)}</div>
+      <div>${escapeXml(certificate.signatureBlock.surveyorFirm)}</div>
+      <div>License: ${escapeXml(certificate.signatureBlock.licenseNumber)}</div>
+      <div>Date: ${escapeXml(certificate.signatureBlock.date)}</div>
     </div>
   </div>
 </body>
@@ -261,13 +264,13 @@ export default function RoadCompletionCertificatePanel({
                 </div>
               ))}
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">Chainage Start</label>
-                <input aria-label="Chainagestart" type="number" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <label className="block text-xs text-zinc-400 mb-1" htmlFor="chainage-start">Chainage Start</label>
+                <input id="chainage-start" aria-label="Chainagestart" type="number" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={data.chainageStart} onChange={e => update('chainageStart', parseFloat(e.target.value) || 0)} />
               </div>
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">Chainage End</label>
-                <input aria-label="Chainageend" type="number" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <label className="block text-xs text-zinc-400 mb-1" htmlFor="chainage-end">Chainage End</label>
+                <input id="chainage-end" aria-label="Chainageend" type="number" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={data.chainageEnd} onChange={e => update('chainageEnd', parseFloat(e.target.value) || 0)} />
               </div>
             </div>
@@ -278,23 +281,23 @@ export default function RoadCompletionCertificatePanel({
             <h4 className="font-medium text-white text-sm mb-3">Construction Details</h4>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">Contractor</label>
-                <input aria-label="Contractorname" type="text" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <label className="block text-xs text-zinc-400 mb-1" htmlFor="contractor">Contractor</label>
+                <input id="contractor" aria-label="Contractorname" type="text" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={data.contractorName} onChange={e => update('contractorName', e.target.value)} />
               </div>
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">Client</label>
-                <input aria-label="Clientname" type="text" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <label className="block text-xs text-zinc-400 mb-1" htmlFor="client">Client</label>
+                <input id="client" aria-label="Clientname" type="text" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={data.clientName} onChange={e => update('clientName', e.target.value)} />
               </div>
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">Completion Date</label>
-                <input aria-label="Completiondate" type="date" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <label className="block text-xs text-zinc-400 mb-1" htmlFor="completion-date">Completion Date</label>
+                <input id="completion-date" aria-label="Completiondate" type="date" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={data.completionDate} onChange={e => update('completionDate', e.target.value)} />
               </div>
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">Design Speed (km/h)</label>
-                <input aria-label="Designspeed" type="number" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <label className="block text-xs text-zinc-400 mb-1" htmlFor="design-speed-km-h">Design Speed (km/h)</label>
+                <input id="design-speed-km-h" aria-label="Designspeed" type="number" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={data.designSpeed} onChange={e => update('designSpeed', parseInt(e.target.value) || 0)} />
               </div>
             </div>
@@ -305,31 +308,31 @@ export default function RoadCompletionCertificatePanel({
             <h4 className="font-medium text-white text-sm mb-3">Surveyor Details</h4>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">
+                <label className="block text-xs text-zinc-400 mb-1" htmlFor="name">
                   Name<span className="text-red-400 ml-0.5">*</span>
                 </label>
-                <input aria-label="Surveyorname" type="text"
+                <input id="name" type="text"
                   className={`w-full border rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     validationErrors.some(e => e.includes('Surveyor')) ? 'border-red-500' : 'border-zinc-600'
                   }`}
                   value={data.surveyorName} onChange={e => update('surveyorName', e.target.value)} />
               </div>
               <div>
-                <label className="block text-xs text-zinc-400 mb-1">ISK Registration</label>
-                <input aria-label="Surveyorregistration" type="text" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <label className="block text-xs text-zinc-400 mb-1" htmlFor="isk-registration">ISK Registration</label>
+                <input id="isk-registration" type="text" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={data.surveyorRegistration} onChange={e => update('surveyorRegistration', e.target.value)} />
               </div>
               <div className="col-span-2">
-                <label className="block text-xs text-zinc-400 mb-1">Firm</label>
-                <input aria-label="Surveyorfirm" type="text" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <label className="block text-xs text-zinc-400 mb-1" htmlFor="firm">Firm</label>
+                <input id="firm" type="text" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={data.surveyorFirm} onChange={e => update('surveyorFirm', e.target.value)} />
               </div>
               {/* FIX #5: Survey Method input */}
               <div className="col-span-2">
-                <label className="block text-xs text-zinc-400 mb-1">Survey Method / Instrument</label>
-                <input type="text" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <label className="block text-xs text-zinc-400 mb-1" htmlFor="survey-method-instrument">Survey Method / Instrument</label>
+                <input id="survey-method-instrument" type="text" className="w-full border border-zinc-600 rounded-lg px-3 py-1.5 text-sm bg-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={surveyMethod} onChange={e => setSurveyMethod(e.target.value)}
-                  aria-label="e.g. RTK GNSS, Total Station, LiDAR Scanner" placeholder="e.g. RTK GNSS, Total Station, LiDAR Scanner" />
+ placeholder="e.g. RTK GNSS, Total Station, LiDAR Scanner" />
               </div>
             </div>
           </div>
@@ -360,9 +363,9 @@ export default function RoadCompletionCertificatePanel({
                   onChange={e => { const nd = [...defects]; nd[i] = { ...d, severity: e.target.value as 'minor' | 'major' | 'critical' }; setDefects(nd) }}>
                   <option value="minor">Minor</option><option value="major">Major</option><option value="critical">Critical</option>
                 </select>
-                <input type="number" className="w-20 border border-zinc-600 rounded px-2 py-1 text-xs bg-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Chainage" placeholder="Chainage"
+                <input type="number" className="w-20 border border-zinc-600 rounded px-2 py-1 text-xs bg-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Chainage" placeholder="e.g. 1+250"
                   value={d.chainage} onChange={e => { const nd = [...defects]; nd[i] = { ...d, chainage: parseFloat(e.target.value) || 0 }; setDefects(nd) }} />
-                <input type="text" className="flex-1 border border-zinc-600 rounded px-2 py-1 text-xs bg-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Description" placeholder="Description"
+                <input type="text" className="flex-1 border border-zinc-600 rounded px-2 py-1 text-xs bg-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Description" placeholder="e.g. Pavement crack"
                   value={d.description} onChange={e => { const nd = [...defects]; nd[i] = { ...d, description: e.target.value }; setDefects(nd) }} />
                 <button onClick={() => setDefects(defects.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-300 text-xs">[x]</button>
               </div>

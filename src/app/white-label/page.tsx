@@ -305,7 +305,7 @@ export default function WhiteLabelPage() {
                   type="text"
                   value={config.organizationName}
                   onChange={(e) => setConfig({ ...config, organizationName: e.target.value })}
-                  aria-label="METARDU" placeholder="METARDU"
+                  aria-label="Organization name" placeholder="METARDU"
                   className="input-base"
                 />
               </FieldGroup>
@@ -443,7 +443,7 @@ export default function WhiteLabelPage() {
                     type="text"
                     value={config.primaryColor}
                     onChange={(e) => setConfig({ ...config, primaryColor: e.target.value })}
-                    aria-label="#0EA5E9" placeholder="#0EA5E9"
+                    aria-label="Primary color (hex)" placeholder="#0EA5E9"
                     className="input-base flex-1 font-mono"
                   />
                 </div>
@@ -469,7 +469,7 @@ export default function WhiteLabelPage() {
                   type="text"
                   value={config.customDomain ?? ''}
                   onChange={(e) => setConfig({ ...config, customDomain: e.target.value || null })}
-                  aria-label="survey.yourcompany.com" placeholder="survey.yourcompany.com"
+                  aria-label="Custom domain" placeholder="survey.yourcompany.com"
                   className="input-base"
                 />
               </FieldGroup>
@@ -552,7 +552,12 @@ export default function WhiteLabelPage() {
           color: var(--text-primary);
           font-size: 0.875rem;
           outline: none;
-          transition: border-color 0.15s;
+          transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .input-base:focus-visible {
+          outline: 2px solid var(--accent);
+          outline-offset: 2px;
+          border-color: var(--accent);
         }
         .input-base:focus {
           border-color: var(--accent);

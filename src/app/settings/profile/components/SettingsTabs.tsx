@@ -92,7 +92,7 @@ export default function SettingsTabs({ initialProfile, sessionEmail }: SettingsT
   return (
     <div className="space-y-6">
       {/* Tabs */}
-      <nav
+      <div
         role="tablist"
         aria-label="Settings sections"
         className="flex gap-1 sm:gap-2 border-b border-[var(--border-color)] overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0"
@@ -120,7 +120,7 @@ export default function SettingsTabs({ initialProfile, sessionEmail }: SettingsT
             </button>
           )
         })}
-      </nav>
+      </div>
 
       {/* Save status banner */}
       {saveState.status !== 'idle' && (

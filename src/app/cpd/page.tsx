@@ -99,8 +99,9 @@ export default function CPDPage() {
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-medium text-[var(--text-muted)] mb-2">Select Country</label>
+          <label htmlFor="cpd-country" className="block text-sm font-medium text-[var(--text-muted)] mb-2">Select Country</label>
           <select
+            id="cpd-country"
             value={country}
             onChange={(e) => setCountry(e.target.value)}
             className="p-2 border rounded-lg w-64"

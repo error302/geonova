@@ -145,14 +145,14 @@ function PipeSizingTab() {
         <div className="bg-zinc-900 rounded-xl border border-zinc-700 p-6 space-y-4">
           <h4 className="font-medium text-white">Pipe Sizing</h4>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Peak Flow (m³/s)</label>
-            <input aria-label="Peak Flow (m³/s)" type="number" step="0.01" className={`${inputCls} ${errors.peakFlow ? 'border-red-500' : ''}`}
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="peak-flow-m-s">Peak Flow (m³/s)</label>
+            <input id="peak-flow-m-s" aria-label="Peak Flow (m³/s)" type="number" step="0.01" className={`${inputCls} ${errors.peakFlow ? 'border-red-500' : ''}`}
               value={peakFlow} onChange={e => { setPeakFlow(parseFloat(e.target.value) || 0); setShowResult(false) }} />
             <FieldError message={errors.peakFlow} />
           </div>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Pipe Slope (%)</label>
-            <input aria-label="Pipe Slope (%)" type="number" step="0.1" className={`${inputCls} ${errors.slope ? 'border-red-500' : ''}`}
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="pipe-slope">Pipe Slope (%)</label>
+            <input id="pipe-slope" aria-label="Pipe Slope (%)" type="number" step="0.1" className={`${inputCls} ${errors.slope ? 'border-red-500' : ''}`}
               value={slope} onChange={e => { setSlope(parseFloat(e.target.value) || 0); setShowResult(false) }} />
             <FieldError message={errors.slope} />
           </div>
@@ -182,8 +182,8 @@ function PipeSizingTab() {
             </button>
           </div>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Diameter (mm)</label>
-            <select className={selectCls}
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="diameter-mm">Diameter (mm)</label>
+            <select id="diameter-mm" className={selectCls}
               value={customDiameter} onChange={e => setCustomDiameter(parseInt(e.target.value))}>
               {STANDARD_PIPE_SIZES.map(d => <option key={d} value={d}>{d} mm</option>)}
             </select>
@@ -313,8 +313,8 @@ function CatchmentTab() {
         <div className="space-y-4">
           <h4 className="font-medium text-white">Catchment Analysis (Rational Method)</h4>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Catchment Area (hectares)</label>
-            <input aria-label="Catchment Area (hectares)" type="number" step="0.1" className={`${inputCls} ${errors.area ? 'border-red-500' : ''}`}
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="catchment-area-hectares">Catchment Area (hectares)</label>
+            <input id="catchment-area-hectares" aria-label="Catchment Area (hectares)" type="number" step="0.1" className={`${inputCls} ${errors.area ? 'border-red-500' : ''}`}
               value={area} onChange={e => setArea(parseFloat(e.target.value) || 0)} />
             <FieldError message={errors.area} />
           </div>
@@ -327,8 +327,8 @@ function CatchmentTab() {
             </select>
           </div>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Rainfall Intensity (mm/hr)</label>
-            <input aria-label="Rainfall Intensity (mm/hr)" type="number" step="1" className={`${inputCls} ${errors.intensity ? 'border-red-500' : ''}`}
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="rainfall-intensity-mm-hr">Rainfall Intensity (mm/hr)</label>
+            <input id="rainfall-intensity-mm-hr" aria-label="Rainfall Intensity (mm/hr)" type="number" step="1" className={`${inputCls} ${errors.intensity ? 'border-red-500' : ''}`}
               value={intensity} onChange={e => setIntensity(parseFloat(e.target.value) || 0)} />
             <FieldError message={errors.intensity} />
           </div>
@@ -441,31 +441,31 @@ function ChannelTab() {
         <div className="bg-zinc-900 rounded-xl border border-zinc-700 p-6 space-y-4">
           <h4 className="font-medium text-white">Trapezoidal Channel Design</h4>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Bed Width (m)</label>
-            <input aria-label="Bed Width (m)" type="number" step="0.1" className={`${inputCls} ${errors.bedWidth ? 'border-red-500' : ''}`}
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="bed-width-m">Bed Width (m)</label>
+            <input id="bed-width-m" aria-label="Bed Width (m)" type="number" step="0.1" className={`${inputCls} ${errors.bedWidth ? 'border-red-500' : ''}`}
               value={bedWidth} onChange={e => setBedWidth(parseFloat(e.target.value) || 0)} />
             <FieldError message={errors.bedWidth} />
           </div>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Side Slope (H:V)</label>
-            <input aria-label="Side Slope (H:V)" type="number" step="0.1" className={inputCls}
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="side-slope-h-v">Side Slope (H:V)</label>
+            <input id="side-slope-h-v" aria-label="Side Slope (H:V)" type="number" step="0.1" className={inputCls}
               value={sideSlope} onChange={e => setSideSlope(parseFloat(e.target.value) || 0)} />
           </div>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Manning&apos;s n</label>
-            <input aria-label="Mannings n" type="number" step="0.001" className={`${inputCls} ${errors.manningN ? 'border-red-500' : ''}`}
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="manning-apos-s-n">Manning&apos;s n</label>
+            <input id="manning-apos-s-n" aria-label="Mannings n" type="number" step="0.001" className={`${inputCls} ${errors.manningN ? 'border-red-500' : ''}`}
               value={manningN} onChange={e => setManningN(parseFloat(e.target.value) || 0)} />
             <FieldError message={errors.manningN} />
           </div>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Slope (%)</label>
-            <input aria-label="Slope (%)" type="number" step="0.1" className={`${inputCls} ${errors.slope ? 'border-red-500' : ''}`}
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="slope">Slope (%)</label>
+            <input id="slope" aria-label="Slope (%)" type="number" step="0.1" className={`${inputCls} ${errors.slope ? 'border-red-500' : ''}`}
               value={slope} onChange={e => setSlope(parseFloat(e.target.value) || 0)} />
             <FieldError message={errors.slope} />
           </div>
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Flow Depth (m)</label>
-            <input aria-label="Flow Depth (m)" type="number" step="0.1" className={`${inputCls} ${errors.flowDepth ? 'border-red-500' : ''}`}
+            <label className="block text-xs text-zinc-400 mb-1" htmlFor="flow-depth-m">Flow Depth (m)</label>
+            <input  id="flow-depth-m" aria-label="Flow Depth (m)" type="number" step="0.1" className={`${inputCls} ${errors.flowDepth ? 'border-red-500' : ''}`}
               value={flowDepth} onChange={e => setFlowDepth(parseFloat(e.target.value) || 0)} />
             <FieldError message={errors.flowDepth} />
           </div>

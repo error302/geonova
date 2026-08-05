@@ -61,8 +61,8 @@ export default function GeometryValidationPanel() {
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs text-[var(--text-secondary)] mb-1">Road Class</label>
-          <select value={roadClass} onChange={e => setRoadClass(e.target.value)} className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]">
+          <label className="block text-xs text-[var(--text-secondary)] mb-1" htmlFor="road-class">Road Class</label>
+          <select id="road-class" value={roadClass} onChange={e => setRoadClass(e.target.value)} className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]">
             <option value="DR1">DR1 — Motorway</option>
             <option value="DR2">DR2 — Arterial</option>
             <option value="DR3">DR3 — Collector</option>
@@ -76,8 +76,8 @@ export default function GeometryValidationPanel() {
           </select>
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-secondary)] mb-1">Terrain</label>
-          <select value={terrain} onChange={e => setTerrain(e.target.value)} className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]">
+          <label className="block text-xs text-[var(--text-secondary)] mb-1" htmlFor="terrain">Terrain</label>
+          <select id="terrain" value={terrain} onChange={e => setTerrain(e.target.value)} className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]">
             <option value="flat">Flat</option>
             <option value="rolling">Rolling</option>
             <option value="mountainous">Mountainous</option>
@@ -85,20 +85,20 @@ export default function GeometryValidationPanel() {
           </select>
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-secondary)] mb-1">Design Speed (km/h)</label>
-          <input aria-label="Design Speed (km/h)" type="number" value={designSpeed} onChange={e => setDesignSpeed(Number(e.target.value))} className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
+          <label className="block text-xs text-[var(--text-secondary)] mb-1" htmlFor="design-speed-km-h">Design Speed (km/h)</label>
+          <input id="design-speed-km-h" aria-label="Design Speed (km/h)" type="number" value={designSpeed} onChange={e => setDesignSpeed(Number(e.target.value))} className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-secondary)] mb-1">Proposed Gradient (%)</label>
-          <input aria-label="Proposed Gradient (%)" type="number" value={gradient} onChange={e => setGradient(Number(e.target.value))} step="0.1" className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
+          <label className="block text-xs text-[var(--text-secondary)] mb-1" htmlFor="proposed-gradient">Proposed Gradient (%)</label>
+          <input id="proposed-gradient" aria-label="Proposed Gradient (%)" type="number" value={gradient} onChange={e => setGradient(Number(e.target.value))} step="0.1" className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-secondary)] mb-1">Proposed Radius (m)</label>
-          <input aria-label="Proposed Radius (m)" type="number" value={radius} onChange={e => setRadius(Number(e.target.value))} className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
+          <label className="block text-xs text-[var(--text-secondary)] mb-1" htmlFor="proposed-radius-m">Proposed Radius (m)</label>
+          <input id="proposed-radius-m" aria-label="Proposed Radius (m)" type="number" value={radius} onChange={e => setRadius(Number(e.target.value))} className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
         </div>
         <div>
-          <label className="block text-xs text-[var(--text-secondary)] mb-1">Stop Sight Dist. (m, opt.)</label>
-          <input aria-label="Stop Sight Dist. (m, opt.)" type="number" value={ssd} onChange={e => setSsd(e.target.value !== '' ? Number(e.target.value) : '')} className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
+          <label className="block text-xs text-[var(--text-secondary)] mb-1" htmlFor="stop-sight-dist-m-opt">Stop Sight Dist. (m, opt.)</label>
+          <input  id="stop-sight-dist-m-opt" aria-label="Stop Sight Dist. (m, opt.)" type="number" value={ssd} onChange={e => setSsd(e.target.value !== '' ? Number(e.target.value) : '')} className="w-full px-2 py-1.5 text-xs bg-[var(--bg-primary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" />
         </div>
       </div>
 

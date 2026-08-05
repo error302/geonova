@@ -130,8 +130,9 @@ function CheckoutContent() {
             <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">1) Select Plan</h2>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">Country</label>
+              <label htmlFor="checkout-country" className="block text-sm font-medium text-[var(--text-primary)] mb-2">Country</label>
               <select
+                id="checkout-country"
                 value={country}
                 onChange={(e) => {
                   const c = e.target.value
@@ -192,22 +193,24 @@ function CheckoutContent() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">Email</label>
+                <label htmlFor="checkout-email" className="block text-sm font-medium text-[var(--text-primary)] mb-2">Email</label>
                 <input
+                  id="checkout-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  aria-label="you@example.com" placeholder="you@example.com"
+                  placeholder="you@example.com"
                   className="w-full p-3 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] min-h-[44px]"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">Phone (M-Pesa only)</label>
+                <label htmlFor="checkout-phone" className="block text-sm font-medium text-[var(--text-primary)] mb-2">Phone (M-Pesa only)</label>
                 <input
+                  id="checkout-phone"
                   type="tel"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  aria-label="e.g. 254712345678" placeholder="e.g. 254712345678"
+                  placeholder="e.g. 254712345678"
                   className="w-full p-3 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] min-h-[44px]"
                 />
                 <p className="text-xs text-[var(--text-muted)] mt-2">Required only for M-Pesa STK Push.</p>
@@ -215,7 +218,7 @@ function CheckoutContent() {
             </div>
 
             <div className="mt-6">
-              <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">Payment Method</label>
+              <div className="block text-sm font-medium text-[var(--text-primary)] mb-2">Payment Method</div>
               <div className="space-y-2">
                 {paymentMethods.map((pm) => (
                   <label

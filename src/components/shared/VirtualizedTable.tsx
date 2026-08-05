@@ -146,6 +146,13 @@ function FallbackTable<T>({
                 `}
                 style={{ height: rowHeight }}
                 onClick={() => onRowClick?.(row, idx)}
+                onKeyDown={(e) => {
+                  if (onRowClick && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault()
+                    onRowClick(row, idx)
+                  }
+                }}
+                tabIndex={onRowClick ? 0 : undefined}
               >
                 {selectable && (
                   <td className="px-3 py-2 w-12" onClick={(e) => e.stopPropagation()}>
@@ -272,6 +279,13 @@ function VirtualizedTableInner<T>(props: VirtualizedTableProps<T>) {
             ${onRowClick ? 'hover:bg-[var(--accent-subtle)]' : ''}
           `}
           onClick={() => onRowClick?.(row, index)}
+          onKeyDown={(e) => {
+            if (onRowClick && (e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault()
+              onRowClick(row, index)
+            }
+          }}
+          tabIndex={onRowClick ? 0 : undefined}
           role="row"
         >
           {selectable && (

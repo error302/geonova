@@ -125,8 +125,8 @@ export default function PavementDesignPanel({
           <div className="space-y-3">
             {/* AADT */}
             <div>
-              <label className={labelCls}>AADT (veh/day)</label>
-              <input aria-label="Aadt"
+              <label className={labelCls} htmlFor="aadt-veh-day">AADT (veh/day)</label>
+              <input id="aadt-veh-day" aria-label="Aadt"
                 type="number"
                 step="any"
                 className={`${inputCls}${errors.aadt ? ' border-red-500' : ''}`}
@@ -138,8 +138,8 @@ export default function PavementDesignPanel({
 
             {/* Heavy Vehicle % */}
             <div>
-              <label className={labelCls}>Heavy Vehicles (%)</label>
-              <input aria-label="Heavyvehiclepercentage"
+              <label className={labelCls} htmlFor="heavy-vehicles">Heavy Vehicles (%)</label>
+              <input id="heavy-vehicles" aria-label="Heavyvehiclepercentage"
                 type="number"
                 step="any"
                 className={`${inputCls}${errors.heavyVehiclePercentage ? ' border-red-500' : ''}`}
@@ -151,8 +151,8 @@ export default function PavementDesignPanel({
 
             {/* Growth Rate */}
             <div>
-              <label className={labelCls}>Growth Rate (%/yr)</label>
-              <input aria-label="Growthrate"
+              <label className={labelCls} htmlFor="growth-rate-yr">Growth Rate (%/yr)</label>
+              <input id="growth-rate-yr" aria-label="Growthrate"
                 type="number"
                 step="any"
                 className={`${inputCls}${errors.growthRate ? ' border-red-500' : ''}`}
@@ -164,8 +164,8 @@ export default function PavementDesignPanel({
 
             {/* Design Period */}
             <div>
-              <label className={labelCls}>Design Period (years)</label>
-              <input aria-label="Designperiod"
+              <label className={labelCls} htmlFor="design-period-years">Design Period (years)</label>
+              <input id="design-period-years" aria-label="Designperiod"
                 type="number"
                 step="any"
                 className={`${inputCls}${errors.designPeriod ? ' border-red-500' : ''}`}
@@ -177,8 +177,8 @@ export default function PavementDesignPanel({
 
             {/* Directional Split */}
             <div>
-              <label className={labelCls}>Directional Split</label>
-              <input aria-label="Directionalsplit"
+              <label className={labelCls} htmlFor="directional-split">Directional Split</label>
+              <input id="directional-split" aria-label="Directionalsplit"
                 type="number"
                 step="any"
                 className={inputCls}
@@ -189,8 +189,8 @@ export default function PavementDesignPanel({
 
             {/* Lane Factor */}
             <div>
-              <label className={labelCls}>Lane Factor</label>
-              <input aria-label="Lanefactor"
+              <label className={labelCls} htmlFor="lane-factor">Lane Factor</label>
+              <input id="lane-factor" aria-label="Lanefactor"
                 type="number"
                 step="any"
                 className={inputCls}
@@ -201,8 +201,8 @@ export default function PavementDesignPanel({
 
             {/* Number of Lanes */}
             <div>
-              <label className={labelCls}>No. of Lanes</label>
-              <input aria-label="Numberoflanes"
+              <label className={labelCls} htmlFor="no-of-lanes">No. of Lanes</label>
+              <input id="no-of-lanes" aria-label="Numberoflanes"
                 type="number"
                 step="any"
                 className={inputCls}
@@ -213,8 +213,8 @@ export default function PavementDesignPanel({
 
             {/* Vehicle Damage Factor */}
             <div>
-              <label className={labelCls}>Vehicle Damage Factor</label>
-              <input aria-label="Vehicle Damage Factor"
+              <label className={labelCls} htmlFor="vehicle-damage-factor">Vehicle Damage Factor</label>
+              <input id="vehicle-damage-factor" aria-label="Vehicle Damage Factor"
                 type="number"
                 step="any"
                 className={inputCls}
@@ -250,8 +250,8 @@ export default function PavementDesignPanel({
 
             {/* Soil Type */}
             <div>
-              <label className={labelCls}>Soil Type</label>
-              <select
+              <label className={labelCls} htmlFor="soil-type">Soil Type</label>
+              <select id="soil-type"
                 className={`${inputCls}${errors.cbr ? ' border-red-500' : ''}`}
                 value={subgrade.soilType || ''}
                 onChange={e => setSubgrade({ ...subgrade, soilType: e.target.value })}
@@ -267,8 +267,8 @@ export default function PavementDesignPanel({
 
             {/* Road Length — now editable */}
             <div>
-              <label className={labelCls}>Road Length (m)</label>
-              <input aria-label="Road Length (m)"
+              <label className={labelCls} htmlFor="road-length-m">Road Length (m)</label>
+              <input  id="road-length-m" aria-label="Road Length (m)"
                 type="number"
                 className={`${inputCls}${errors.roadLength ? ' border-red-500' : ''}`}
                 value={roadLength}

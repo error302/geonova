@@ -56,14 +56,14 @@ export default function BoundaryLawSearch() {
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSearch()}
-              aria-label="Search boundary law topics, cases, statutes..." placeholder="Search boundary law topics, cases, statutes..."
+              aria-label="Search boundary law topics, cases, statutes..."
               className="w-full pl-10 pr-4 py-2 border rounded-lg"
             />
           </div>
         </div>
         <button
           onClick={handleSearch}
-          className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700"
+          className="px-4 py-2 bg-amber-600 text-black rounded-lg hover:bg-amber-700"
         >
           Search
         </button>
@@ -110,7 +110,7 @@ export default function BoundaryLawSearch() {
             >
               <div className="flex items-start gap-3">
                 <div className="p-2 bg-amber-100 rounded-lg">
-                  <Gavel className="w-4 h-4 text-amber-600" />
+                  <Gavel className="w-4 h-4 text-amber-700" />
                 </div>
                 <div>
                   <h5 className="font-medium text-gray-900">{entry.title}</h5>

@@ -566,7 +566,7 @@ function drawMinorGrid(
   doc.setLineWidth(0.08)
 
   // Chainage minor grid (skip lines that coincide with major)
-  let cStart = Math.ceil(cMin / cMinor) * cMinor
+  const cStart = Math.ceil(cMin / cMinor) * cMinor
   for (let c = cStart; c <= cMax; c += cMinor) {
     if (cMajor > 0 && Math.abs(c % cMajor) < 0.001) continue
     const x = cToX(c)
@@ -575,7 +575,7 @@ function drawMinorGrid(
   }
 
   // Elevation minor grid
-  let eStart = Math.ceil(eEffMin / eMinInt) * eMinInt
+  const eStart = Math.ceil(eEffMin / eMinInt) * eMinInt
   for (let e = eStart; e <= eEffMax; e += eMinInt) {
     if (eMajInt > 0 && Math.abs(e % eMajInt) < 0.0001) continue
     const y = eToY(e)
@@ -608,7 +608,7 @@ function drawMajorGrid(
   const prec = elevPrecision(eMajInt)
 
   // Chainage major grid + labels
-  let cStart = Math.ceil(cMin / cMajor) * cMajor
+  const cStart = Math.ceil(cMin / cMajor) * cMajor
   for (let c = cStart; c <= cMax; c += cMajor) {
     const x = cToX(c)
     if (x < DA.l || x > DA.l + DA.w) continue
@@ -641,7 +641,7 @@ function drawMajorGrid(
   // Elevation major grid + labels
   doc.setDrawColor(...GRAY)
   doc.setLineWidth(0.2)
-  let eStart = Math.ceil(eEffMin / eMajInt) * eMajInt
+  const eStart = Math.ceil(eEffMin / eMajInt) * eMajInt
   for (let e = eStart; e <= eEffMax; e += eMajInt) {
     const y = eToY(e)
     if (y < DA.t || y > DA.t + DA.h) continue

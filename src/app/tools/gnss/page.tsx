@@ -128,20 +128,20 @@ export default function GNSSProcessor() {
             <h3 className="font-semibold mb-4">Base Station</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm mb-1">Name</label>
-                <input aria-label="Name" type="text" value={baseStation.name} onChange={e => setBaseStation({...baseStation, name: e.target.value})} className="input w-full" />
+                <label className="block text-sm mb-1" htmlFor="name">Name</label>
+                <input id="name" aria-label="Name" type="text" value={baseStation.name} onChange={e => setBaseStation({...baseStation, name: e.target.value})} className="input w-full" />
               </div>
               <div>
-                <label className="block text-sm mb-1">Ellipsoidal Height (m)</label>
-                <input aria-label="H" type="text" value={baseStation.h} onChange={e => setBaseStation({...baseStation, h: e.target.value})} className="input w-full" />
+                <label className="block text-sm mb-1" htmlFor="ellipsoidal-height-m">Ellipsoidal Height (m)</label>
+                <input id="ellipsoidal-height-m" aria-label="H" type="text" value={baseStation.h} onChange={e => setBaseStation({...baseStation, h: e.target.value})} className="input w-full" />
               </div>
               <div>
-                <label className="block text-sm mb-1">Latitude (decimal °)</label>
-                <input type="text" value={baseStation.lat} onChange={e => setBaseStation({...baseStation, lat: e.target.value})} className="input w-full" aria-label="-1.2921" placeholder="-1.2921" />
+                <label className="block text-sm mb-1" htmlFor="latitude-decimal">Latitude (decimal °)</label>
+                <input id="latitude-decimal" type="text" value={baseStation.lat} onChange={e => setBaseStation({...baseStation, lat: e.target.value})} className="input w-full" placeholder="-1.2921" />
               </div>
               <div>
-                <label className="block text-sm mb-1">Longitude (decimal °)</label>
-                <input type="text" value={baseStation.lon} onChange={e => setBaseStation({...baseStation, lon: e.target.value})} className="input w-full" aria-label="36.8219" placeholder="36.8219" />
+                <label className="block text-sm mb-1" htmlFor="longitude-decimal">Longitude (decimal °)</label>
+                <input id="longitude-decimal" type="text" value={baseStation.lon} onChange={e => setBaseStation({...baseStation, lon: e.target.value})} className="input w-full" placeholder="36.8219" />
               </div>
             </div>
           </div>
@@ -150,12 +150,12 @@ export default function GNSSProcessor() {
             <h3 className="font-semibold mb-4">Local Origin (for ENU)</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm mb-1">Latitude</label>
-                <input aria-label="Lat" type="text" value={origin.lat} onChange={e => setOrigin({...origin, lat: e.target.value})} className="input w-full" />
+                <label className="block text-sm mb-1" htmlFor="latitude">Latitude</label>
+                <input id="latitude" aria-label="Lat" type="text" value={origin.lat} onChange={e => setOrigin({...origin, lat: e.target.value})} className="input w-full" />
               </div>
               <div>
-                <label className="block text-sm mb-1">Longitude</label>
-                <input aria-label="Lon" type="text" value={origin.lon} onChange={e => setOrigin({...origin, lon: e.target.value})} className="input w-full" />
+                <label className="block text-sm mb-1" htmlFor="longitude">Longitude</label>
+                <input id="longitude" aria-label="Lon" type="text" value={origin.lon} onChange={e => setOrigin({...origin, lon: e.target.value})} className="input w-full" />
               </div>
             </div>
           </div>
@@ -169,24 +169,24 @@ export default function GNSSProcessor() {
               {observations.map((obs: any) => (
                 <div key={obs.id} className="grid grid-cols-6 gap-2 items-end">
                   <div className="col-span-1">
-                    <label className="block text-xs mb-1">Name</label>
-                    <input aria-label="Name" type="text" value={obs.name} onChange={e => updateObservation(obs.id, 'name', e.target.value)} className="input w-full text-sm" />
+                    <label className="block text-xs mb-1" htmlFor="name-2">Name</label>
+                    <input id="name-2" aria-label="Name" type="text" value={obs.name} onChange={e => updateObservation(obs.id, 'name', e.target.value)} className="input w-full text-sm" />
                   </div>
                   <div className="col-span-1">
-                    <label className="block text-xs mb-1">Lat</label>
-                    <input aria-label="Lat" type="text" value={obs.lat} onChange={e => updateObservation(obs.id, 'lat', e.target.value)} className="input w-full text-sm" />
+                    <label className="block text-xs mb-1" htmlFor="lat">Lat</label>
+                    <input id="lat" aria-label="Lat" type="text" value={obs.lat} onChange={e => updateObservation(obs.id, 'lat', e.target.value)} className="input w-full text-sm" />
                   </div>
                   <div className="col-span-1">
-                    <label className="block text-xs mb-1">Lon</label>
-                    <input aria-label="Lon" type="text" value={obs.lon} onChange={e => updateObservation(obs.id, 'lon', e.target.value)} className="input w-full text-sm" />
+                    <label className="block text-xs mb-1" htmlFor="lon">Lon</label>
+                    <input id="lon" aria-label="Lon" type="text" value={obs.lon} onChange={e => updateObservation(obs.id, 'lon', e.target.value)} className="input w-full text-sm" />
                   </div>
                   <div className="col-span-1">
-                    <label className="block text-xs mb-1">Ht (m)</label>
-                    <input aria-label="H" type="text" value={obs.h} onChange={e => updateObservation(obs.id, 'h', e.target.value)} className="input w-full text-sm" />
+                    <label className="block text-xs mb-1" htmlFor="ht-m">Ht (m)</label>
+                    <input id="ht-m" aria-label="H" type="text" value={obs.h} onChange={e => updateObservation(obs.id, 'h', e.target.value)} className="input w-full text-sm" />
                   </div>
                   <div className="col-span-1">
-                    <label className="block text-xs mb-1">σ (m)</label>
-                    <input aria-label="Sigma" type="text" value={obs.sigma} onChange={e => updateObservation(obs.id, 'sigma', e.target.value)} className="input w-full text-sm" />
+                    <label className="block text-xs mb-1" htmlFor="m">σ (m)</label>
+                    <input  id="m" aria-label="Sigma" type="text" value={obs.sigma} onChange={e => updateObservation(obs.id, 'sigma', e.target.value)} className="input w-full text-sm" />
                   </div>
                   <button onClick={() => removeObservation(obs.id)} className="text-red-500 text-sm mb-1">[x]</button>
                 </div>

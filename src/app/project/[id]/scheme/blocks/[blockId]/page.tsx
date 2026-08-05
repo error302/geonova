@@ -273,46 +273,50 @@ export default function BlockDetailPage() {
             </h3>
             <form onSubmit={handleCreateParcel} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
-                <label className={labelClass}>Parcel Number <span className="text-orange-400">*</span></label>
-                <input aria-label="Parcel number"
+                <label htmlFor="new-parcel-number" className={labelClass}>Parcel Number <span className="text-orange-400">*</span></label>
+                <input id="new-parcel-number"
                   type="text"
                   value={newParcel.parcel_number}
                   onChange={e => setNewParcel(prev => ({ ...prev, parcel_number: e.target.value }))}
                   className={inputClass}
                   placeholder={nextParcelSuggestion}
+                  // eslint-disable-next-line jsx-a11y/no-autofocus -- focus into the revealed create form (WCAG 2.4.3)
                   autoFocus
                   required
                 />
               </div>
               <div>
-                <label className={labelClass}>Proposed LR No.</label>
+                <label htmlFor="new-parcel-lr" className={labelClass}>Proposed LR No.</label>
                 <input
+                  id="new-parcel-lr"
                   type="text"
                   value={newParcel.lr_number_proposed}
                   onChange={e => setNewParcel(prev => ({ ...prev, lr_number_proposed: e.target.value }))}
                   className={inputClass}
-                  aria-label="e.g., MN/III/1234" placeholder="e.g., MN/III/1234"
+                  placeholder="e.g., MN/III/1234"
                 />
               </div>
               <div>
-                <label className={labelClass}>Area (ha)</label>
+                <label htmlFor="new-parcel-area" className={labelClass}>Area (ha)</label>
                 <input
+                  id="new-parcel-area"
                   type="number"
                   step="0.0001"
                   value={newParcel.area_ha}
                   onChange={e => setNewParcel(prev => ({ ...prev, area_ha: e.target.value }))}
                   className={inputClass}
-                  aria-label="e.g., 0.0625" placeholder="e.g., 0.0625"
+                  placeholder="e.g., 0.0625"
                 />
               </div>
               <div>
-                <label className={labelClass}>Notes</label>
+                <label htmlFor="new-parcel-notes" className={labelClass}>Notes</label>
                 <input
+                  id="new-parcel-notes"
                   type="text"
                   value={newParcel.notes}
                   onChange={e => setNewParcel(prev => ({ ...prev, notes: e.target.value }))}
                   className={inputClass}
-                  aria-label="Optional" placeholder="Optional"
+                  placeholder="Optional"
                 />
               </div>
             </form>

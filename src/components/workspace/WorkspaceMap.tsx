@@ -243,10 +243,28 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
                   if (now - throttleRef.current > 100) {
                     throttleRef.current = now;
                     const bar = coordBarRef.current;
-                    if (bar) bar.innerHTML =
-                      '<span class="text-gray-500">E</span> <span class="text-[#D17B47] font-mono">' + e.toFixed(1) + '</span>' +
-                      ' <span class="text-gray-500">N</span> <span class="text-[#D17B47] font-mono">' + n.toFixed(1) + '</span>' +
-                      ' <span class="text-gray-600 text-[9px]">EPSG:21037</span>';
+                    if (bar) {
+                      // VULN-002 FIX: numbers only here, but use textContent
+                      // so no markup is ever parsed into the DOM.
+                      bar.replaceChildren();
+                      const span = (text: string, cls: string) => {
+                        const s = document.createElement('span');
+                        s.className = cls;
+                        s.textContent = text;
+                        return s;
+                      };
+                      bar.append(
+                        span('E', 'text-gray-500'),
+                        document.createTextNode(' '),
+                        span(e.toFixed(1), 'text-[#D17B47] font-mono'),
+                        document.createTextNode(' '),
+                        span('N', 'text-gray-500'),
+                        document.createTextNode(' '),
+                        span(n.toFixed(1), 'text-[#D17B47] font-mono'),
+                        document.createTextNode(' '),
+                        span('EPSG:21037', 'text-gray-600 text-[9px]')
+                      );
+                    }
                   }
                   return 'E: ' + e.toFixed(1) + '  N: ' + n.toFixed(1);
                 } catch {
@@ -274,9 +292,19 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
             const f = evt.selected[0];
             const coord = f.getGeometry()?.getClosestPoint(evt.mapBrowserEvent.coordinate);
             const name = f.get('name') || 'Station';
-            popupEl.innerHTML = '<div style="background:rgba(20,20,30,0.95);border:1px solid rgba(209, 123, 71,0.3);border-radius:10px;padding:10px 14px;font-size:12px;color:#fff;min-width:160px;">' +
-              '<div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px;">Station</div>' +
-              '<div style="color:#D17B47;font-weight:600;">' + name + '</div></div>';
+            // VULN-002 FIX (security review 2026-08-03): station names are
+            // user-entered — render with textContent, never innerHTML.
+            popupEl.replaceChildren();
+            const card = document.createElement('div');
+            card.style.cssText = 'background:rgba(20,20,30,0.95);border:1px solid rgba(209, 123, 71,0.3);border-radius:10px;padding:10px 14px;font-size:12px;color:#fff;min-width:160px;';
+            const label = document.createElement('div');
+            label.style.cssText = 'font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px;';
+            label.textContent = 'Station';
+            const value = document.createElement('div');
+            value.style.cssText = 'color:#D17B47;font-weight:600;';
+            value.textContent = name;
+            card.append(label, value);
+            popupEl.append(card);
             popupEl.className = '';
             if (coord) popup.setPosition(coord);
           } else {

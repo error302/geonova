@@ -5,6 +5,8 @@
 export function sanitizeHtml(dirty: string): string {
   // DOMPurify requires `window` — use synchronous client-side loading
   if (typeof window !== 'undefined') {
+    // DOMPurify requires window; guarded client-side load.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const createDOMPurify = require('dompurify');
     const DOMPurify = createDOMPurify.default || createDOMPurify;
     return DOMPurify.sanitize(dirty, {

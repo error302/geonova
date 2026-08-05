@@ -155,8 +155,55 @@ export default function BeaconsPage() {
           if (!overlay || !popupRef.current) return
 
           const feature = map.forEachFeatureAtPixel(evt.pixel, (f) => f as Feature)
-          if (feature && feature.get('popupHtml')) {
-            popupRef.current.innerHTML = feature.get('popupHtml') as string
+          const popupData = feature?.get('popupData') as
+            | { color: string; icon: string; name: string; authority?: string; beacon_type: string; easting: number; northing: number; elevation?: number; utm_zone: number; hemisphere: string }
+            | undefined
+          if (feature && popupData && popupRef.current) {
+            // VULN-002 FIX: render with textContent, never innerHTML.
+            const el = popupRef.current
+            el.replaceChildren()
+
+            const wrap = document.createElement('div')
+            wrap.className = 'text-sm min-w-[200px]'
+            wrap.style.color = 'var(--text-primary)'
+
+            const title = document.createElement('div')
+            title.style.cssText = 'font-weight:bold;font-size:1.1rem;color:' + popupData.color
+            title.textContent = `${popupData.icon} ${popupData.name}`
+            wrap.append(title)
+
+            if (popupData.authority) {
+              const authority = document.createElement('div')
+              authority.style.cssText = 'color:var(--text-muted);margin-top:4px'
+              authority.textContent = `Authority: ${popupData.authority}`
+              wrap.append(authority)
+            }
+
+            const typeRow = document.createElement('div')
+            typeRow.style.cssText = 'color:var(--text-muted);text-transform:capitalize'
+            typeRow.textContent = `Type: ${popupData.beacon_type}`
+            wrap.append(typeRow)
+
+            const coords = document.createElement('div')
+            // white-space:pre-line preserves the \n line break (textContent
+            // would otherwise collapse it to a space, unlike the old <br/>).
+            coords.style.cssText = 'font-family:monospace;margin-top:8px;white-space:pre-line'
+            coords.textContent = `E: ${popupData.easting.toFixed(4)}\nN: ${popupData.northing.toFixed(4)}`
+            wrap.append(coords)
+
+            if (popupData.elevation) {
+              const elev = document.createElement('div')
+              elev.style.cssText = 'color:var(--text-muted)'
+              elev.textContent = `Elev: ${popupData.elevation.toFixed(3)} m`
+              wrap.append(elev)
+            }
+
+            const utm = document.createElement('div')
+            utm.style.cssText = 'color:var(--text-muted);font-size:0.75rem;margin-top:4px'
+            utm.textContent = `UTM Zone ${popupData.utm_zone}${popupData.hemisphere}`
+            wrap.append(utm)
+
+            el.append(wrap)
             overlay.setPosition(evt.coordinate)
           } else {
             overlay.setPosition(undefined)
@@ -215,16 +262,22 @@ export default function BeaconsPage() {
           }),
           text: new Text({ text: icon, font: '12px sans-serif', fill: new Fill({ color: '#fff' }) }),
         }))
-        feature.set('popupHtml',
-          `<div class="text-sm min-w-[200px]" style="color:var(--text-primary)">` +
-          `<div style="font-weight:bold;font-size:1.1rem;color:${color}">${icon} ${beacon.name}</div>` +
-          (beacon.authority ? `<div style="color:var(--text-muted);margin-top:4px">Authority: ${beacon.authority}</div>` : '') +
-          `<div style="color:var(--text-muted);text-transform:capitalize">Type: ${beacon.beacon_type}</div>` +
-          `<div style="font-family:monospace;margin-top:8px">E: ${beacon.easting.toFixed(4)}<br/>N: ${beacon.northing.toFixed(4)}</div>` +
-          (beacon.elevation ? `<div style="color:var(--text-muted)">Elev: ${beacon.elevation.toFixed(3)} m</div>` : '') +
-          `<div style="color:var(--text-muted);font-size:0.75rem;margin-top:4px">UTM Zone ${beacon.utm_zone}${beacon.hemisphere}</div>` +
-          `</div>`
-        )
+        // VULN-002 FIX (security review 2026-08-03): store structured data
+        // instead of an HTML string — beacon names/authorities are
+        // user-entered and would otherwise execute as stored XSS. The popup
+        // is rendered with textContent in the click handler below.
+        feature.set('popupData', {
+          color,
+          icon,
+          name: beacon.name,
+          authority: beacon.authority,
+          beacon_type: beacon.beacon_type,
+          easting: beacon.easting,
+          northing: beacon.northing,
+          elevation: beacon.elevation,
+          utm_zone: beacon.utm_zone,
+          hemisphere: beacon.hemisphere,
+        })
         feature.set('beaconId', beacon.id)
         vectorSource.addFeature(feature)
       })
@@ -356,8 +409,9 @@ export default function BeaconsPage() {
             </p>
             
             <div className="mb-4">
-              <label className="block text-sm text-[var(--text-secondary)] mb-2">Select Project</label>
+              <label htmlFor="beacon-project" className="block text-sm text-[var(--text-secondary)] mb-2">Select Project</label>
               <select
+                id="beacon-project"
                 value={importProject}
                 onChange={e => setImportProject(e.target.value)}
                 className="w-full px-4 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"

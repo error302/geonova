@@ -138,7 +138,7 @@ const cases = [
             name: 'LR 209/45 Boundary',
             status: 'active',
             newObservations: 12,
-            projectUrl: 'https://metardu.duckdns.org/projects/abc',
+            projectUrl: 'https://metardu.space/projects/abc',
           },
         ],
       }),

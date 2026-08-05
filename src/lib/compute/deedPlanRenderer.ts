@@ -16,7 +16,9 @@ import { getBeaconSymbol } from './beaconSymbols'
 // `</text><script>fetch('/api/db',{method:'POST',body:...})</script><text>`
 // as a parcel number would execute arbitrary JS in every viewer's browser
 // (stored XSS via deed plan SVG rendered with dangerouslySetInnerHTML).
-function escapeXml(s: string): string {
+function escapeXml(s: string | number | null | undefined): string {
+  // Numbers (sheetNumber, totalSheets) are safe to coerce — SVG text.
+  if (typeof s === 'number') return String(s)
   if (typeof s !== 'string') return ''
   return s
     .replace(/&/g, '&amp;')
@@ -100,7 +102,6 @@ export function renderDeedPlanSVG(
 
   const areaHa = input.area / 10000
   const areaAc = input.area / 4046.8564224
-  const prec = closureCheck.precisionRatio.replace('\u221e', '&#8734;')
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VB_W} ${VB_H}" width="${VB_W}" height="${VB_H}" font-family="Arial, Helvetica, sans-serif">
@@ -188,7 +189,7 @@ function buildTitleBlock(input: DeedPlanInput): string {
     ? `<text x="${x+10}" y="${y+8}" class="st">Submission Ref: <tspan font-weight="bold">${escapeXml(input.submissionNumber)}</tspan></text>`
     : ''
   const sheetLine = (input.sheetNumber && input.totalSheets)
-    ? `<text x="${x+w-10}" y="${y+8}" class="st" text-anchor="end">Sheet <tspan font-weight="bold">${input.sheetNumber}</tspan> of <tspan font-weight="bold">${input.totalSheets}</tspan></text>`
+    ? `<text x="${x+w-10}" y="${y+8}" class="st" text-anchor="end">Sheet <tspan font-weight="bold">${escapeXml(input.sheetNumber)}</tspan> of <tspan font-weight="bold">${escapeXml(input.totalSheets)}</tspan></text>`
     : ''
   return `
   <rect x="${x}" y="${y}" width="${w}" height="${TITLE_H}" fill="#F5F5F5" stroke="black" stroke-width="0.5"/>
@@ -198,11 +199,11 @@ function buildTitleBlock(input: DeedPlanInput): string {
   <line x1="${x + w/2 - 85}" y1="${y + 24}" x2="${x + w/2 + 85}" y2="${y + 24}" stroke="black" stroke-width="0.6"/>
   ${subLine}
   <text x="${x+10}" y="${y+12}" class="st">Survey No: <tspan font-weight="bold">${escapeXml(input.surveyNumber)}</tspan></text>
-  <text x="${x+10}" y="${y+22}" class="st">Drawing No: <tspan font-weight="bold">${input.drawingNumber}</tspan></text>
+  <text x="${x+10}" y="${y+22}" class="st">Drawing No: <tspan font-weight="bold">${escapeXml(input.drawingNumber)}</tspan></text>
   <text x="${x+10}" y="${y+31}" class="st">Parcel No: <tspan font-weight="bold">${escapeXml(input.parcelNumber)}</tspan></text>
   <text x="${x+w-10}" y="${y+12}" class="st" text-anchor="end">County: <tspan font-weight="bold">${escapeXml(input.county)}</tspan></text>
   <text x="${x+w-10}" y="${y+22}" class="st" text-anchor="end">Locality: <tspan font-weight="bold">${escapeXml(input.locality)}</tspan></text>
-  <text x="${x+w-10}" y="${y+31}" class="st" text-anchor="end">Date: <tspan font-weight="bold">${input.surveyDate}</tspan></text>
+  <text x="${x+w-10}" y="${y+31}" class="st" text-anchor="end">Date: <tspan font-weight="bold">${escapeXml(input.surveyDate)}</tspan></text>
   ${sheetLine}`
 }
 
@@ -320,7 +321,7 @@ function buildBoundaryLabels(
     const off = 7
     const lx = (mx + perpX*off).toFixed(2), ly = (my + perpY*off).toFixed(2)
     return `<g transform="translate(${lx},${ly}) rotate(${tAng.toFixed(2)})">
-      <text x="0" y="-3" font-size="4pt" text-anchor="middle" font-family="Arial" font-weight="bold">${leg.bearing}</text>
+      <text x="0" y="-3" font-size="4pt" text-anchor="middle" font-family="Arial" font-weight="bold">${escapeXml(leg.bearing)}</text>
       <text x="0" y="4" font-size="3.5pt" text-anchor="middle" font-family="Arial">${leg.distance.toFixed(2)}m</text>
     </g>`
   }).join('\n')
@@ -372,7 +373,7 @@ function buildPointLabels(pts: BoundaryPoint[], toX:(e:number)=>number, toY:(n:n
   return pts.map((p:any) => {
     const sx = (toX(p.easting)+5).toFixed(2)
     const sy = (toY(p.northing)-5).toFixed(2)
-    return `<text x="${sx}" y="${sy}" class="bi">${p.id}</text>`
+    return `<text x="${sx}" y="${sy}" class="bi">${escapeXml(p.id)}</text>`
   }).join('\n')
 }
 
@@ -419,12 +420,12 @@ function buildRightPanel(
   // --- PARCEL INFORMATION ---
   s += secHdr(le, y, 'PARCEL INFORMATION'); y += 12
   s += row(le, y, 'Parcel No:', escapeXml(input.parcelNumber)); y += 10
-  s += row(le, y, 'Reg. Section:', input.registrationSection); y += 10
+  s += row(le, y, 'Reg. Section:', escapeXml(input.registrationSection)); y += 10
   s += row(le, y, 'Locality:', escapeXml(input.locality)); y += 10
   s += row(le, y, 'County:', escapeXml(input.county)); y += 10
-  if (input.titleDeedNumber) { s += row(le, y, 'Title Deed:', input.titleDeedNumber); y += 10 }
-  if (input.firNumber) { s += row(le, y, 'FIR No:', input.firNumber); y += 10 }
-  if (input.registryMapSheet) { s += row(le, y, 'Map Sheet:', input.registryMapSheet); y += 10 }
+  if (input.titleDeedNumber) { s += row(le, y, 'Title Deed:', escapeXml(input.titleDeedNumber)); y += 10 }
+  if (input.firNumber) { s += row(le, y, 'FIR No:', escapeXml(input.firNumber)); y += 10 }
+  if (input.registryMapSheet) { s += row(le, y, 'Map Sheet:', escapeXml(input.registryMapSheet)); y += 10 }
   s += hr(le, y, re); y += 7
 
   // --- ABUTTALS ---
@@ -453,15 +454,15 @@ function buildRightPanel(
 
   // --- DATUM & PROJECTION ---
   s += secHdr(le, y, 'DATUM & PROJECTION'); y += 11
-  s += row(le, y, 'Datum:', input.datum); y += 9
-  s += row(le, y, 'Projection:', input.projectionType); y += 9
+  s += row(le, y, 'Datum:', escapeXml(input.datum)); y += 9
+  s += row(le, y, 'Projection:', escapeXml(input.projectionType)); y += 9
   s += row(le, y, 'Zone:', `UTM ${input.utmZone}${input.hemisphere}`); y += 9
   s += row(le, y, 'Scale:', `1 : ${input.scale}`); y += 9
   if (input.meanElevation !== undefined) {
     s += row(le, y, 'Mean Elev.:', `${input.meanElevation.toFixed(1)}m`); y += 9
   }
   if (input.controlClass) {
-    s += row(le, y, 'Class:', `${input.controlClass} ORDER`); y += 9
+    s += row(le, y, 'Class:', escapeXml(`${input.controlClass} ORDER`)); y += 9
   }
   s += hr(le, y, re); y += 6
 
@@ -488,8 +489,8 @@ function buildRightPanel(
     const nRaw = (p as { northing?: number }).northing
     const eVal = typeof eRaw === 'number' ? eRaw : 0
     const nVal = typeof nRaw === 'number' ? nRaw : 0
-    s += `<text x="${le+5}" y="${y}" class="tt">${p.id}</text>\n`
-    s += `<text x="${le+30}" y="${y}" class="tt">${p.markType}</text>\n`
+    s += `<text x="${le+5}" y="${y}" class="tt">${escapeXml(p.id)}</text>\n`
+    s += `<text x="${le+30}" y="${y}" class="tt">${escapeXml(p.markType)}</text>\n`
     s += `<text x="${le+100}" y="${y}" class="tt">${eVal.toFixed(4)}</text>\n`
     s += `<text x="${le+170}" y="${y}" class="tt">${nVal.toFixed(4)}</text>\n`
     y += 8
@@ -507,9 +508,9 @@ function buildRightPanel(
   s += hr(le, y, re); y += 2
   legs.forEach((l, i) => {
     s += `<text x="${le+5}" y="${y}" class="tt">${i+1}</text>\n`
-    s += `<text x="${le+30}" y="${y}" class="tt">${l.fromPoint}</text>\n`
-    s += `<text x="${le+60}" y="${y}" class="tt">${l.toPoint}</text>\n`
-    s += `<text x="${le+95}" y="${y}" class="tt">${l.bearing}</text>\n`
+    s += `<text x="${le+30}" y="${y}" class="tt">${escapeXml(l.fromPoint)}</text>\n`
+    s += `<text x="${le+60}" y="${y}" class="tt">${escapeXml(l.toPoint)}</text>\n`
+    s += `<text x="${le+95}" y="${y}" class="tt">${escapeXml(l.bearing)}</text>\n`
     s += `<text x="${le+185}" y="${y}" class="tt">${l.distance.toFixed(2)}</text>\n`
     y += 8
   })
@@ -520,9 +521,9 @@ function buildRightPanel(
   s += row(le, y, 'Name:', escapeXml(input.surveyorName)); y += 9
   s += row(le, y, 'ISK No:', escapeXml(input.iskNumber)); y += 9
   s += row(le, y, 'Firm:', escapeXml(input.firmName)); y += 9
-  if (input.firmAddress) { s += row(le, y, 'Address:', input.firmAddress); y += 9 }
-  if (input.drawnBy) { s += row(le, y, 'Drawn By:', input.drawnBy); y += 9 }
-  if (input.checkedBy) { s += row(le, y, 'Checked By:', input.checkedBy); y += 9 }
+  if (input.firmAddress) { s += row(le, y, 'Address:', escapeXml(input.firmAddress)); y += 9 }
+  if (input.drawnBy) { s += row(le, y, 'Drawn By:', escapeXml(input.drawnBy)); y += 9 }
+  if (input.checkedBy) { s += row(le, y, 'Checked By:', escapeXml(input.checkedBy)); y += 9 }
   s += hr(le, y, re); y += 7
 
   // --- SURVEYOR'S CERTIFICATE & SIGNATURE ---
@@ -533,7 +534,7 @@ function buildRightPanel(
   s += `<text x="${le}" y="${y}" class="st">of my knowledge and belief.</text>\n`; y += 14
   s += `<line x1="${le}" y1="${y}" x2="${re-30}" y2="${y}" stroke="black" stroke-width="0.5"/>\n`; y += 7
   s += `<text x="${le}" y="${y}" class="st">Signature</text>\n`; y += 6
-  s += `<text x="${le}" y="${y}" class="st">Date: ${input.signatureDate}</text>\n`
+  s += `<text x="${le}" y="${y}" class="st">Date: ${escapeXml(input.signatureDate)}</text>\n`
 
   return s
 }

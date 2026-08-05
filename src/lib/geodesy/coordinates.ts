@@ -63,7 +63,7 @@ export function geographicToUTM(lat: number, lon: number, zone?: number): UTMCoo
   )
 
   // Source: EPSG Guidance Note 7-2 — Easting coordinate E = k₀N(A + ...)
-  let easting = k0 * N * (
+  const easting = k0 * N * (
     A
     + ((1 - T + C) * Math.pow(A, 3)) / 6
     + ((5 - 18 * T + T * T + 72 * C - 58 * WGS84_EP2) * Math.pow(A, 5)) / 120

@@ -480,11 +480,15 @@ export function renderSchemePopup(
     if (value == null || value === '') return
     const wrap = document.createElement('div')
     wrap.className = 'mb-1'
-    wrap.innerHTML = `<span class="text-[10px] text-gray-600 uppercase tracking-wider">${label}</span>`
+    // XSS guard (2026-08-03): labels are constant here, but build with
+    // textContent so no markup is ever parsed into the popup.
+    const lbl = document.createElement('span')
+    lbl.className = 'text-[10px] text-gray-600 uppercase tracking-wider'
+    lbl.textContent = label
     const val = document.createElement('p')
     val.className = `text-sm font-semibold ${color || 'text-white'}`
     val.textContent = String(value)
-    wrap.append(val)
+    wrap.append(lbl, val)
     card.append(wrap)
   }
 

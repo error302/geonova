@@ -16,28 +16,28 @@ export default function ImageryViewer() {
     <div className="space-y-6">
       <div className="grid md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Center Latitude</label>
-          <input
+          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1" htmlFor="center-latitude">Center Latitude</label>
+          <input id="center-latitude"
             type="text"
             value={centerLat}
             onChange={e => setCenterLat(e.target.value)}
-            aria-label="-1.2921" placeholder="-1.2921"
+ placeholder="-1.2921"
             className="w-full p-2 border rounded-lg"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Center Longitude</label>
-          <input
+          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1" htmlFor="center-longitude">Center Longitude</label>
+          <input id="center-longitude"
             type="text"
             value={centerLon}
             onChange={e => setCenterLon(e.target.value)}
-            aria-label="36.8219" placeholder="36.8219"
+ placeholder="36.8219"
             className="w-full p-2 border rounded-lg"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Zoom Level</label>
-          <select
+          <label className="block text-sm font-medium text-[var(--text-muted)] mb-1" htmlFor="zoom-level">Zoom Level</label>
+          <select id="zoom-level"
             value={zoom}
             onChange={e => setZoom(e.target.value)}
             className="w-full p-2 border rounded-lg"
@@ -52,7 +52,7 @@ export default function ImageryViewer() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-[var(--text-muted)] mb-2">Imagery Layer</label>
+        <div className="block text-sm font-medium text-[var(--text-muted)] mb-2">Imagery Layer</div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {layers.map((layer: any) => (
             <button

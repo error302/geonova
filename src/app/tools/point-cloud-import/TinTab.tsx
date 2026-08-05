@@ -161,12 +161,12 @@ export default function TinTab({
         </p>
         <div className="flex gap-4 items-end flex-wrap">
           <div>
-            <label className="block text-sm text-[var(--text-secondary)] mb-1">Datum RL (m)</label>
+            <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="datum-rl-m">Datum RL (m)</label>
             <input
-              className="input w-32 font-mono"
+               id="datum-rl-m" className="input w-32 font-mono"
               type="number"
               step="0.1"
-              aria-label="e.g. 1200" placeholder="e.g. 1200"
+              aria-label="Datum RL (m)" placeholder="e.g. 1200"
               value={datumRL}
               onChange={e => setDatumRL(e.target.value)}
             />

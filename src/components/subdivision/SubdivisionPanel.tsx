@@ -177,9 +177,9 @@ export default function SubdivisionPanel({
           {/* ─── Road Reserve Section ──────────────────────────────────── */}
           <div className="p-3">
             <div className="flex items-center justify-between mb-2">
-              <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">
+              <div className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">
                 Road Reserve
-              </label>
+              </div>
               <button
                 onClick={(e) => { e.stopPropagation(); setRoadReserveEnabled(!roadReserveEnabled); if (roadReserveEnabled) clearRoadReservePreview() }}
                 className={`relative w-9 h-5 rounded-full transition-colors ${
@@ -196,8 +196,8 @@ export default function SubdivisionPanel({
               <div className="space-y-2.5 mt-2">
                 {/* Width input */}
                 <div>
-                  <label className="text-[10px] text-gray-500 block mb-1">Width (m)</label>
-                  <input aria-label="Width (m)"
+                  <label className="text-[10px] text-gray-500 block mb-1" htmlFor="width-m">Width (m)</label>
+                  <input id="width-m" aria-label="Width (m)"
                     type="number"
                     min={1}
                     max={100}
@@ -213,7 +213,7 @@ export default function SubdivisionPanel({
 
                 {/* Edge selector */}
                 <div>
-                  <label className="text-[10px] text-gray-500 block mb-1">Edge Selection</label>
+                  <div className="text-[10px] text-gray-500 block mb-1">Edge Selection</div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setRoadReserveAuto(true)}
@@ -311,9 +311,9 @@ export default function SubdivisionPanel({
 
           {/* ─── Method Selector ──────────────────────────────────────── */}
           <div className="p-3">
-            <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
+            <div className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
               Method
-            </label>
+            </div>
             <div className="grid grid-cols-2 gap-1.5">
               {METHODS.map((m) => (
                 <button
@@ -336,16 +336,16 @@ export default function SubdivisionPanel({
           {/* ─── Parameters Form ──────────────────────────────────────── */}
           {method && (
             <div className="p-3 bg-gray-50/50">
-              <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
+              <div className="text-[10px] text-gray-500 uppercase tracking-wider font-medium mb-2 block">
                 Parameters
-              </label>
+              </div>
 
               {/* Grid params */}
               {method === 'grid' && (
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[10px] text-gray-500 block mb-1">Rows</label>
-                    <input aria-label="Rows"
+                    <label className="text-[10px] text-gray-500 block mb-1" htmlFor="rows">Rows</label>
+                    <input id="rows" aria-label="Rows"
                       type="number"
                       min={1}
                       max={20}
@@ -355,8 +355,8 @@ export default function SubdivisionPanel({
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] text-gray-500 block mb-1">Columns</label>
-                    <input aria-label="Columns"
+                    <label className="text-[10px] text-gray-500 block mb-1" htmlFor="columns">Columns</label>
+                    <input id="columns" aria-label="Columns"
                       type="number"
                       min={1}
                       max={20}
@@ -375,8 +375,8 @@ export default function SubdivisionPanel({
               {method === 'radial' && (
                 <div className="space-y-3">
                   <div>
-                    <label className="text-[10px] text-gray-500 block mb-1">Number of Lots</label>
-                    <input aria-label="Number of Lots"
+                    <label className="text-[10px] text-gray-500 block mb-1" htmlFor="number-of-lots">Number of Lots</label>
+                    <input id="number-of-lots" aria-label="Number of Lots"
                       type="number"
                       min={2}
                       max={36}
@@ -386,7 +386,7 @@ export default function SubdivisionPanel({
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] text-gray-500 block mb-1">Center Point</label>
+                    <div className="text-[10px] text-gray-500 block mb-1">Center Point</div>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => pickCenterPoint()}
@@ -409,8 +409,8 @@ export default function SubdivisionPanel({
               {method === 'area' && (
                 <div className="space-y-3">
                   <div>
-                    <label className="text-[10px] text-gray-500 block mb-1">Target Area (ha)</label>
-                    <input aria-label="Target Area (ha)"
+                    <label className="text-[10px] text-gray-500 block mb-1" htmlFor="target-area-ha">Target Area (ha)</label>
+                    <input id="target-area-ha" aria-label="Target Area (ha)"
                       type="number"
                       min={0.001}
                       step={0.01}
@@ -423,13 +423,13 @@ export default function SubdivisionPanel({
                     </div>
                   </div>
                   <div>
-                    <label className="text-[10px] text-gray-500 block mb-1">Preferred Cut Bearing (°)</label>
-                    <input
+                    <label className="text-[10px] text-gray-500 block mb-1" htmlFor="preferred-cut-bearing">Preferred Cut Bearing (°)</label>
+                    <input id="preferred-cut-bearing"
                       type="number"
                       min={0}
                       max={360}
                       step={1}
-                      aria-label="Auto (perpendicular)" placeholder="Auto (perpendicular)"
+                      aria-label="Preferred Cut Bearing (°)" placeholder="Auto (perpendicular)"
                       value={params.preferredBearing ?? ''}
                       onChange={(e) => {
                         const v = parseFloat(e.target.value)

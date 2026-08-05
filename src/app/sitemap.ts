@@ -1,8 +1,11 @@
 import type { MetadataRoute } from 'next'
+import { getPublicAppUrl } from '@/lib/site'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space'
+  const baseUrl = getPublicAppUrl()
 
+  // NOTE: keep this list aligned with app/robots.ts — any route listed here
+  // must NOT be disallowed there (Google ignores them, but it's inconsistent).
   const routes = [
     '',
     '/login',
@@ -10,8 +13,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/pricing',
     '/community',
     '/help',
-    '/map',
-    '/fieldbook',
     '/cadastral-workflow',
     '/tools/topology-check',
     '/tools/subdivision-generator',
@@ -47,10 +48,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/distance',
     '/tools/bearing',
     '/tools/curves',
-    '/tools/cut-fill',
     '/tools/deformation',
     '/tools/gcp-optimizer',
-    '/tools/lsa',
     '/field-records',
     '/report-templates',
     '/sectional',
@@ -62,7 +61,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/docs/first-plan',
   ]
 
-  return routes.map((route) => ({
+  const seen = new Set<string>()
+  const uniqueRoutes = routes.filter(route => {
+    if (seen.has(route)) return false
+    seen.add(route)
+    return true
+  })
+
+  return uniqueRoutes.map(route => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === '' ? 'daily' : 'weekly',

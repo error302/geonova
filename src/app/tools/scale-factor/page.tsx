@@ -116,23 +116,23 @@ export default function ScaleFactorPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase">Latitude (°)</label>
-                  <input className="input font-mono text-sm" value={latitude} onChange={e => setLatitude(e.target.value)} aria-label="-1.2864" placeholder="-1.2864" />
+                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase" htmlFor="latitude">Latitude (°)</label>
+                  <input id="latitude" className="input font-mono text-sm" value={latitude} onChange={e => setLatitude(e.target.value)} placeholder="-1.2864" />
                 </div>
                 <div>
-                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase">Longitude (°)</label>
-                  <input className="input font-mono text-sm" value={longitude} onChange={e => setLongitude(e.target.value)} aria-label="36.8172" placeholder="36.8172" />
+                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase" htmlFor="longitude">Longitude (°)</label>
+                  <input id="longitude" className="input font-mono text-sm" value={longitude} onChange={e => setLongitude(e.target.value)} placeholder="36.8172" />
                 </div>
                 <div>
-                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase">UTM Zone</label>
-                  <select className="input text-sm" value={utmZone} onChange={e => setUtmZone(e.target.value)}>
+                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase" htmlFor="utm-zone">UTM Zone</label>
+                  <select id="utm-zone" className="input text-sm" value={utmZone} onChange={e => setUtmZone(e.target.value)}>
                     <option value="36">36S (western Kenya)</option>
                     <option value="37">37S (eastern Kenya)</option>
                   </select>
                 </div>
                 <div>
-                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase">Ellipsoidal height (m)</label>
-                  <input className="input font-mono text-sm" value={elevation} onChange={e => setElevation(e.target.value)} aria-label="1798" placeholder="1798" />
+                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase" htmlFor="ellipsoidal-height-m">Ellipsoidal height (m)</label>
+                  <input id="ellipsoidal-height-m" className="input font-mono text-sm" value={elevation} onChange={e => setElevation(e.target.value)} placeholder="1798" />
                 </div>
               </div>
 
@@ -157,8 +157,8 @@ export default function ScaleFactorPage() {
 
               {mode === 'simple' ? (
                 <div>
-                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase">Grid area (m²)</label>
-                  <input className="input font-mono text-sm" value={gridArea} onChange={e => setGridArea(e.target.value)} aria-label="100000" placeholder="100000" />
+                  <label className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.06em] uppercase" htmlFor="grid-area-m">Grid area (m²)</label>
+                  <input id="grid-area-m" className="input font-mono text-sm" value={gridArea} onChange={e => setGridArea(e.target.value)} placeholder="100000" />
                   <p className="font-mono text-[10px] text-[var(--text-muted)] mt-1">This is the area from the shoelace formula on UTM coordinates.</p>
                 </div>
               ) : (
@@ -167,8 +167,8 @@ export default function ScaleFactorPage() {
                     {coords.map(c => (
                       <div key={c.id} className="grid grid-cols-[28px_1fr_1fr_28px] gap-1 items-center">
                         <span className="font-mono text-xs text-[var(--text-muted)]">{c.id}</span>
-                        <input className="input font-mono text-xs px-2 py-1" value={c.easting} onChange={e => updateCoord(c.id, 'easting', e.target.value)} aria-label="Easting" placeholder="Easting" />
-                        <input className="input font-mono text-xs px-2 py-1" value={c.northing} onChange={e => updateCoord(c.id, 'northing', e.target.value)} aria-label="Northing" placeholder="Northing" />
+                        <input className="input font-mono text-xs px-2 py-1" value={c.easting} onChange={e => updateCoord(c.id, 'easting', e.target.value)} placeholder="Easting" />
+                        <input className="input font-mono text-xs px-2 py-1" value={c.northing} onChange={e => updateCoord(c.id, 'northing', e.target.value)} placeholder="Northing" />
                         <button onClick={() => removeCoord(c.id)} className="text-[var(--text-muted)] hover:text-[var(--error)] text-sm">×</button>
                       </div>
                     ))}

@@ -63,15 +63,15 @@ export default function ComputePage() {
 
       <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', alignItems: 'center' }}>
         <div>
-          <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Adjustment Method</label>
-          <select className="input-field" value={method} onChange={e => setMethod(e.target.value as any)} style={{ width: '200px' }}>
+          <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }} htmlFor="adjustment-method">Adjustment Method</label>
+          <select id="adjustment-method" className="input-field" value={method} onChange={e => setMethod(e.target.value as any)} style={{ width: '200px' }}>
             <option value="bowditch">Bowditch (3rd/4th Order)</option>
             <option value="least_squares">Least Squares (1st/2nd Order)</option>
           </select>
         </div>
         <div>
-          <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Accuracy Order</label>
-          <select className="input-field" value={order} onChange={e => setOrder(parseInt(e.target.value))} style={{ width: '200px' }}>
+          <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }} htmlFor="accuracy-order">Accuracy Order</label>
+          <select  id="accuracy-order" className="input-field" value={order} onChange={e => setOrder(parseInt(e.target.value))} style={{ width: '200px' }}>
             <option value={1}>1st Order (1:100,000)</option>
             <option value={2}>2nd Order (1:20,000)</option>
             <option value={3}>3rd Order (1:10,000)</option>

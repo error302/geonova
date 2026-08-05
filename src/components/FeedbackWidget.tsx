@@ -225,7 +225,7 @@ export default function FeedbackWidget() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 aria-label="Email (optional — for follow-up)"
-                placeholder="Email (optional — for follow-up)"
+
                 className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-[var(--text-primary)] text-sm focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 outline-none transition-all"
               />
             </div>

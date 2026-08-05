@@ -502,7 +502,7 @@ export function adjustNetworkIterative(
   // Build adjusted stations with error estimates
   const adjustedStations = stationsInput.map(s => {
     const c = coords.get(s.id)!
-    let residualE = 0, residualN = 0, residualH = 0
+    const residualE = 0, residualN = 0, residualH = 0
     let sigmaE = 0, sigmaN = 0, sigmaH = 0
     let semiMajor = 0, semiMinor = 0, orientation = 0
 

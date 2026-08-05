@@ -27,12 +27,18 @@ jobs:
       - name: TypeScript check
         run: npx tsc --noEmit
 
+      # AUDIT FIX (2026-08-04): Single blocking lint pass. lint-ratchets.mjs
+      # runs eslint once over middleware.ts + src/ and fails if ANY rule in
+      # warning-baseline.json or a11y-baseline.json is exceeded. A rule
+      # absent from a baseline counts as 0, so new violations fail CI.
       - name: ESLint (per-rule ratchets — one pass, both baselines)
-        # AUDIT FIX (2026-08-04): Single blocking lint pass. lint-ratchets.mjs
-        # runs eslint once over middleware.ts + src/ and fails if ANY rule in
-        # warning-baseline.json or a11y-baseline.json is exceeded. A rule
-        # absent from a baseline counts as 0, so new violations fail CI.
         run: node scripts/lint-ratchets.mjs --write-audit
+
+      - name: Aria-label gate (blocking, bans junk accessible names)
+        # A11Y GATE (2026-08-03): bans placeholder-like / junk aria-labels
+        # codebase-wide (placeholder-equals-name, generic phrases, punctuation,
+        # crunched header text). Pure-node regex scan over src/ — no deps.
+        run: node scripts/aria-label-gate.mjs
 
       - name: i18n integrity check
         run: node scripts/i18n-sync.mjs --check
@@ -58,3 +64,68 @@ jobs:
         run: |
           npx next build
           test -d out && echo "✓ mobile static export OK"
+
+  axe-sweep:
+    # A11Y GATE (2026-08-04): axe-core WCAG sweep across every /tools/* page.
+    # Mirrors the ci.yml job of the same name. Blocks on ANY axe violation
+    # (--fail-on minor) and on any route that fails to hydrate/scan.
+    # Protected routes (/fieldbook, /admin*) are excluded — they need a
+    # seeded Postgres + login which this job does not provision.
+    name: Axe-core WCAG Sweep
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # fetch-depth 0 so origin/main exists locally: the sweep diffs against it
+      # to scan only routes touched by this PR (~30s vs ~5min for the full 90).
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+      - name: Start Next.js dev server (headless)
+        env:
+          NEXT_PUBLIC_SENTRY_DSN: ''
+          DISABLE_PWA: 'true'
+        run: |
+          # nohup+disown: the server must survive the step shell exiting,
+          # or the later scan step sees no listener. Teardown uses pkill on
+          # the real `next` process (killing the npx wrapper PID alone would
+          # orphan the server).
+          nohup npx next dev -p 3100 > /tmp/axe-dev.log 2>&1 &
+          disown || true
+          echo $! > /tmp/axe-dev.pid
+          # -m 20 caps a hung first compile so the poll can't burn the job budget.
+          for i in $(seq 1 60); do
+            if curl -sf -m 20 http://localhost:3100/tools > /dev/null 2>&1; then
+              echo "dev server ready after ${i} checks"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "dev server failed to start:"
+          cat /tmp/axe-dev.log
+          exit 1
+      # PR fast path: only routes touched by changed files. Falls back to the
+      # full sweep when a PR touches global files (globals.css / layouts /
+      # shared components with no page importer) — the gate never skips pages.
+      - name: Run axe-core WCAG sweep (blocking — fails on any violation)
+        env:
+          AXE_SCAN_PORT: '3100'
+        run: node scripts/axe-gnss-scan.mjs --ci --fail-on minor --no-baseline --paths-from-changed origin/main --exclude fieldbook,admin --concurrency 6
+      - name: Upload axe report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axe-sweep-report
+          path: axe-sweep-report.md
+          retention-days: 7
+      - name: Stop dev server
+        if: always()
+        run: |
+          kill $(cat /tmp/axe-dev.pid) 2>/dev/null || true
+          pkill -f 'next dev -p 3100' 2>/dev/null || true

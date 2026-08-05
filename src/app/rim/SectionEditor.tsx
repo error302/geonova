@@ -120,13 +120,13 @@ export function SectionEditor({ rim }: { rim: RimState }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Section Name */}
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">
+            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5" htmlFor="section-name">
               Section Name
             </label>
-            <input
+            <input id="section-name"
               type="text"
               className="input"
-              aria-label="e.g. LR 123/456 Section II" placeholder="e.g. LR 123/456 Section II"
+              placeholder="e.g. LR 123/456 Section II"
               value={sectionForm.section_name || ''}
               onChange={(e) => setSectionForm((prev) => ({ ...prev, section_name: e.target.value }))}
             />
@@ -134,13 +134,13 @@ export function SectionEditor({ rim }: { rim: RimState }) {
 
           {/* Registry */}
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">
+            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5" htmlFor="registry">
               Registry
             </label>
-            <input
+            <input id="registry"
               type="text"
               className="input"
-              aria-label="e.g. Machakos" placeholder="e.g. Machakos"
+              placeholder="e.g. Machakos"
               value={sectionForm.registry || ''}
               onChange={(e) => setSectionForm((prev) => ({ ...prev, registry: e.target.value }))}
             />
@@ -148,13 +148,13 @@ export function SectionEditor({ rim }: { rim: RimState }) {
 
           {/* District */}
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">
+            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5" htmlFor="district-county">
               District / County
             </label>
-            <input
+            <input id="district-county"
               type="text"
               className="input"
-              aria-label="e.g. Machakos County" placeholder="e.g. Machakos County"
+              placeholder="e.g. Machakos County"
               value={sectionForm.district || ''}
               onChange={(e) => setSectionForm((prev) => ({ ...prev, district: e.target.value }))}
             />
@@ -162,13 +162,13 @@ export function SectionEditor({ rim }: { rim: RimState }) {
 
           {/* Map Sheet Number */}
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">
+            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5" htmlFor="map-sheet-number">
               Map Sheet Number
             </label>
-            <input
+            <input id="map-sheet-number"
               type="text"
               className="input"
-              aria-label="e.g. MS 1234" placeholder="e.g. MS 1234"
+              placeholder="e.g. MS 1234"
               value={sectionForm.map_sheet_number || ''}
               onChange={(e) => setSectionForm((prev) => ({ ...prev, map_sheet_number: e.target.value }))}
             />
@@ -176,10 +176,10 @@ export function SectionEditor({ rim }: { rim: RimState }) {
 
           {/* Scale */}
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">
+            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5" htmlFor="scale">
               Scale
             </label>
-            <select
+            <select id="scale"
               className="input"
               value={sectionForm.scale || '1:2500'}
               onChange={(e) => setSectionForm((prev) => ({ ...prev, scale: e.target.value }))}
@@ -196,10 +196,10 @@ export function SectionEditor({ rim }: { rim: RimState }) {
 
           {/* Datum */}
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">
+            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5" htmlFor="datum">
               Datum
             </label>
-            <select
+            <select id="datum"
               className="input"
               value={sectionForm.datum || 'Arc 1960'}
               onChange={(e) => setSectionForm((prev) => ({ ...prev, datum: e.target.value }))}
@@ -216,10 +216,10 @@ export function SectionEditor({ rim }: { rim: RimState }) {
 
           {/* Projection */}
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">
+            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5" htmlFor="projection">
               Projection
             </label>
-            <select
+            <select id="projection"
               className="input"
               value={sectionForm.projection || 'UTM Zone 37S'}
               onChange={(e) => setSectionForm((prev) => ({ ...prev, projection: e.target.value }))}
@@ -245,14 +245,14 @@ export function SectionEditor({ rim }: { rim: RimState }) {
 
           {/* Total Area */}
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">
+            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5" htmlFor="total-area-ha">
               Total Area (Ha)
             </label>
-            <input
+            <input id="total-area-ha"
               type="number"
               step="0.0001"
               className="input"
-              aria-label="0.0000" placeholder="0.0000"
+              placeholder="0.0000"
               value={sectionForm.total_area || ''}
               onChange={(e) =>
                 setSectionForm((prev) => ({
@@ -265,10 +265,10 @@ export function SectionEditor({ rim }: { rim: RimState }) {
 
           {/* Status */}
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">
+            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5" htmlFor="status">
               Status
             </label>
-            <select
+            <select id="status"
               className="input"
               value={sectionForm.status || 'draft'}
               onChange={(e) =>
@@ -287,11 +287,11 @@ export function SectionEditor({ rim }: { rim: RimState }) {
 
         {/* Notes */}
         <div className="mt-4">
-          <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">
+          <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5" htmlFor="notes">
             Notes
           </label>
           <textarea
-            className="input min-h-[72px] resize-y"
+             id="notes" className="input min-h-[72px] resize-y"
             placeholder="Additional notes, surveyor remarks, or references..."
             value={sectionForm.notes || ''}
             onChange={(e) => setSectionForm((prev) => ({ ...prev, notes: e.target.value }))}
@@ -343,7 +343,7 @@ export function SectionEditor({ rim }: { rim: RimState }) {
                 <input
                   type="text"
                   className="input text-xs"
-                  aria-label="Parcel No. *" placeholder="Parcel No. *"
+                  aria-label="Parcel Number" placeholder="e.g. LR 123/456"
                   value={newParcel.parcel_number}
                   onChange={(e) => setNewParcel((prev) => ({ ...prev, parcel_number: e.target.value }))}
                 />
@@ -351,21 +351,21 @@ export function SectionEditor({ rim }: { rim: RimState }) {
                   type="number"
                   step="0.0001"
                   className="input text-xs"
-                  aria-label="Area (Ha)" placeholder="Area (Ha)"
+                  aria-label="Area (Ha)" placeholder="e.g. 0.5"
                   value={newParcel.area}
                   onChange={(e) => setNewParcel((prev) => ({ ...prev, area: e.target.value }))}
                 />
                 <input
                   type="text"
                   className="input text-xs"
-                  aria-label="Land Use" placeholder="Land Use"
+                  aria-label="Land Use" placeholder="e.g. Residential"
                   value={newParcel.land_use}
                   onChange={(e) => setNewParcel((prev) => ({ ...prev, land_use: e.target.value }))}
                 />
                 <input
                   type="number"
                   className="input text-xs"
-                  aria-label="Beacon Count" placeholder="Beacon Count"
+                  aria-label="Beacon Count" placeholder="e.g. 4"
                   value={newParcel.beacon_count}
                   onChange={(e) => setNewParcel((prev) => ({ ...prev, beacon_count: e.target.value }))}
                 />
@@ -373,7 +373,7 @@ export function SectionEditor({ rim }: { rim: RimState }) {
               <input
                 type="text"
                 className="input text-xs"
-                aria-label="Owner Name" placeholder="Owner Name"
+                aria-label="Owner Name" placeholder="e.g. John Doe"
                 value={newParcel.owner_name}
                 onChange={(e) => setNewParcel((prev) => ({ ...prev, owner_name: e.target.value }))}
               />
@@ -498,7 +498,7 @@ export function SectionEditor({ rim }: { rim: RimState }) {
                 <input
                   type="text"
                   className="input text-xs"
-                  aria-label="Beacon No. *" placeholder="Beacon No. *"
+                  aria-label="Beacon Number" placeholder="e.g. B1"
                   value={newBeacon.beacon_number}
                   onChange={(e) => setNewBeacon((prev) => ({ ...prev, beacon_number: e.target.value }))}
                 />
@@ -517,7 +517,7 @@ export function SectionEditor({ rim }: { rim: RimState }) {
                   type="number"
                   step="0.001"
                   className="input text-xs"
-                  aria-label="Easting" placeholder="Easting"
+                  aria-label="Easting" placeholder="e.g. 500000.000"
                   value={newBeacon.easting}
                   onChange={(e) => setNewBeacon((prev) => ({ ...prev, easting: e.target.value }))}
                 />
@@ -525,7 +525,7 @@ export function SectionEditor({ rim }: { rim: RimState }) {
                   type="number"
                   step="0.001"
                   className="input text-xs"
-                  aria-label="Northing" placeholder="Northing"
+                  aria-label="Northing" placeholder="e.g. 9900000.000"
                   value={newBeacon.northing}
                   onChange={(e) => setNewBeacon((prev) => ({ ...prev, northing: e.target.value }))}
                 />
@@ -544,7 +544,7 @@ export function SectionEditor({ rim }: { rim: RimState }) {
               <input
                 type="text"
                 className="input text-xs"
-                aria-label="Description" placeholder="Description"
+                aria-label="Description" placeholder="e.g. Corner pillar"
                 value={newBeacon.description}
                 onChange={(e) => setNewBeacon((prev) => ({ ...prev, description: e.target.value }))}
               />

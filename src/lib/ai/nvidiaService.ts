@@ -487,7 +487,7 @@ The survey data uses EPSG:21037 (Arc 1960 / UTM Zone 37S) for Kenya.
 Return this exact JSON structure:
 {
   "observations": [
-    {"from": "STATION", "to": "STATION", "bearing": "DDD°MM'SS\"", "distance": 0.000, "bs": 0.000, "fs": 0.000, "notes": ""}
+    {"from": "STATION", "to": "STATION", "bearing": "DDD°MM'SS", "distance": 0.000, "bs": 0.000, "fs": 0.000, "notes": ""}
   ],
   "surveyType": "traverse" | "leveling" | "topographic" | "cadastral" | "unknown",
   "warnings": ["Any issues reading the image or uncertain values"]

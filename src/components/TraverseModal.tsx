@@ -810,8 +810,8 @@ export default function TraverseModal({
                 <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Radial Survey</h3>
                 
                 <div className="mb-4">
-                  <label className="block text-sm text-[var(--text-secondary)] mb-2">Instrument Station</label>
-                  <select
+                  <label className="block text-sm text-[var(--text-secondary)] mb-2" htmlFor="instrument-station">Instrument Station</label>
+                  <select id="instrument-station"
                     value={radialStationId}
                     onChange={(e) => setRadialStationId(e.target.value)}
                     className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]"
@@ -827,8 +827,8 @@ export default function TraverseModal({
                   {radialObservations.map((obs, idx) => (
                     <div key={obs.id} className="grid grid-cols-5 gap-2 items-end">
                       <div>
-                        <label className="block text-xs text-[var(--text-muted)] mb-1">Point</label>
-                        <input
+                        <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor={`rad-point-${idx}`}>Point</label>
+                        <input id={`rad-point-${idx}`}
                           type="text"
                           value={obs.pointName}
                           onChange={(e) => {
@@ -837,12 +837,12 @@ export default function TraverseModal({
                             setRadialObservations(updated)
                           }}
                           className="w-full px-2 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm"
-                          aria-label="P1" placeholder="P1"
+                          placeholder="P1"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs text-[var(--text-muted)] mb-1">Deg</label>
-                        <input
+                        <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor={`rad-deg-${idx}`}>Deg</label>
+                        <input id={`rad-deg-${idx}`}
                           type="number"
                           value={obs.bearingDeg}
                           onChange={(e) => {
@@ -851,12 +851,12 @@ export default function TraverseModal({
                             setRadialObservations(updated)
                           }}
                           className="w-full px-2 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm"
-                          aria-label="000" placeholder="000"
+                          placeholder="000"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs text-[var(--text-muted)] mb-1">Min</label>
-                        <input
+                        <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor={`rad-min-${idx}`}>Min</label>
+                        <input id={`rad-min-${idx}`}
                           type="number"
                           value={obs.bearingMin}
                           onChange={(e) => {
@@ -865,12 +865,12 @@ export default function TraverseModal({
                             setRadialObservations(updated)
                           }}
                           className="w-full px-2 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm"
-                          aria-label="00" placeholder="00"
+                          placeholder="00"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs text-[var(--text-muted)] mb-1">Sec</label>
-                        <input
+                        <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor={`rad-sec-${idx}`}>Sec</label>
+                        <input id={`rad-sec-${idx}`}
                           type="number"
                           value={obs.bearingSec}
                           onChange={(e) => {
@@ -879,11 +879,11 @@ export default function TraverseModal({
                             setRadialObservations(updated)
                           }}
                           className="w-full px-2 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm"
-                          aria-label="00" placeholder="00"
+                          placeholder="00"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs text-[var(--text-muted)] mb-1">Dist (m)</label>
+                        <div className="block text-xs text-[var(--text-muted)] mb-1">Dist (m)</div>
                         <div className="flex gap-1">
                           <input
                             type="number"
@@ -894,7 +894,7 @@ export default function TraverseModal({
                               setRadialObservations(updated)
                             }}
                             className="flex-1 px-2 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm"
-                            aria-label="0.000" placeholder="0.000"
+                            aria-label="Distance (m)" placeholder="0.000"
                           />
                           {radialObservations.length > 1 && (
                             <button
@@ -979,21 +979,21 @@ export default function TraverseModal({
                 <div className="grid grid-cols-3 gap-3">
                   <input
                     type="text"
-                    aria-label="Point Name" placeholder="Point Name"
+                    aria-label="Point Name" placeholder="e.g. TP01"
                     value={openingName}
                     onChange={(e) => setOpeningName(e.target.value)}
                     className="px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] font-mono"
                   />
                   <input
                     type="number"
-                    aria-label="Easting" placeholder="Easting"
+                    aria-label="Easting" placeholder="e.g. 500000.000"
                     value={openingEasting}
                     onChange={(e) => setOpeningEasting(e.target.value)}
                     className="px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] font-mono"
                   />
                   <input
                     type="number"
-                    aria-label="Northing" placeholder="Northing"
+                    aria-label="Northing" placeholder="e.g. 9900000.000"
                     value={openingNorthing}
                     onChange={(e) => setOpeningNorthing(e.target.value)}
                     className="px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] font-mono"
@@ -1026,12 +1026,12 @@ export default function TraverseModal({
                             type="text"
                             value={leg.stationName}
                             onChange={(e) => updateLeg(leg.id, 'stationName', e.target.value)}
-                            aria-label="TP01" placeholder="TP01"
+                            aria-label="Station" placeholder="TP01"
                             className="w-full px-2 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] font-mono"
                           />
                         </td>
                         <td className="px-2 py-2">
-                          <input aria-label="Distance"
+                          <input aria-label="Distance (m)"
                             type="number"
                             step="0.001"
                             value={leg.distance}
@@ -1042,7 +1042,7 @@ export default function TraverseModal({
                         <td className="px-1 py-2">
                           <input
                             type="number"
-                            aria-label="D" placeholder="D"
+                            aria-label="Bearing (DMS) — Deg" placeholder="D"
                             value={leg.bearingDeg}
                             onChange={(e) => updateLeg(leg.id, 'bearingDeg', e.target.value)}
                             className="w-14 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] font-mono"
@@ -1051,7 +1051,7 @@ export default function TraverseModal({
                         <td className="px-1 py-2">
                           <input
                             type="number"
-                            aria-label="M" placeholder="M"
+                            aria-label="Bearing (DMS) — Min" placeholder="M"
                             value={leg.bearingMin}
                             onChange={(e) => updateLeg(leg.id, 'bearingMin', e.target.value)}
                             className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] font-mono"
@@ -1060,7 +1060,7 @@ export default function TraverseModal({
                         <td className="px-1 py-2">
                           <input
                             type="number"
-                            aria-label="S" placeholder="S"
+                            aria-label="Bearing (DMS) — Sec" placeholder="S"
                             value={leg.bearingSec}
                             onChange={(e) => updateLeg(leg.id, 'bearingSec', e.target.value)}
                             className="w-14 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] font-mono"
@@ -1140,21 +1140,21 @@ export default function TraverseModal({
                     <div className="grid grid-cols-3 gap-3">
                       <input
                         type="text"
-                        aria-label="Point Name" placeholder="Point Name"
+                        aria-label="Point Name" placeholder="e.g. TP01"
                         value={closingName}
                         onChange={(e) => setClosingName(e.target.value)}
                         className="px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] font-mono"
                       />
                       <input
                         type="number"
-                        aria-label="Easting" placeholder="Easting"
+                        aria-label="Easting" placeholder="e.g. 500000.000"
                         value={closingEasting}
                         onChange={(e) => setClosingEasting(e.target.value)}
                         className="px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] font-mono"
                       />
                       <input
                         type="number"
-                        aria-label="Northing" placeholder="Northing"
+                        aria-label="Northing" placeholder="e.g. 9900000.000"
                         value={closingNorthing}
                         onChange={(e) => setClosingNorthing(e.target.value)}
                         className="px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] font-mono"

@@ -29,10 +29,10 @@ function StationCard({ station, distance, onSelect, selected }: {
   onSelect: () => void
   selected: boolean
 }) {
-  const net = NETWORKS[station.network]
   return (
     <div role="button" tabIndex={0} onClick={onSelect}
-      onKeyDown={(e) => { if (e.key === 'Enter') onSelect() }}
+      aria-pressed={selected}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }}
       className={`bg-[var(--bg-card)] border rounded-xl p-4 cursor-pointer transition-colors ${
         selected ? 'border-[var(--accent)]/50 bg-[var(--accent)]/5' : 'border-[var(--border-color)] hover:border-[var(--accent)]/30'
       }`}>
@@ -214,14 +214,14 @@ export default function KenCORSPage() {
                 <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Your position</h2>
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <div>
-                    <label className="text-xs text-[var(--text-muted)] block mb-1">Latitude (decimal °)</label>
-                    <input value={myLat} onChange={e => setMyLat(e.target.value)}
-                      aria-label="-1.2921" placeholder="-1.2921" className="input w-full text-sm font-mono" />
+                    <label htmlFor="kencors-lat" className="text-xs text-[var(--text-muted)] block mb-1">Latitude (decimal °)</label>
+                    <input id="kencors-lat" value={myLat} onChange={e => setMyLat(e.target.value)}
+                      placeholder="-1.2921" className="input w-full text-sm font-mono" />
                   </div>
                   <div>
-                    <label className="text-xs text-[var(--text-muted)] block mb-1">Longitude (decimal °)</label>
-                    <input value={myLon} onChange={e => setMyLon(e.target.value)}
-                      aria-label="36.8219" placeholder="36.8219" className="input w-full text-sm font-mono" />
+                    <label htmlFor="kencors-lon" className="text-xs text-[var(--text-muted)] block mb-1">Longitude (decimal °)</label>
+                    <input id="kencors-lon" value={myLon} onChange={e => setMyLon(e.target.value)}
+                      placeholder="36.8219" className="input w-full text-sm font-mono" />
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -263,7 +263,7 @@ export default function KenCORSPage() {
                 <div className="space-y-1">
                   <div className="flex flex-wrap gap-2 mb-3">
                     <input value={search} onChange={e => setSearch(e.target.value)}
-                      aria-label="Search stations…" placeholder="Search stations…"
+                      aria-label="Search stations…"
                       className="input flex-1 min-w-40 text-sm" />
                     <select value={filterCounty} onChange={e => setFilterCounty(e.target.value)}
                       className="input text-sm">

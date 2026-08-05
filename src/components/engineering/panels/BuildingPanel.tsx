@@ -110,22 +110,22 @@ export function BuildingPanel({ projectId, subtype }: EngineeringPanelProps) {
           <div className="flex flex-wrap gap-2 mt-3">
             <input
               type="text"
-              aria-label="Label (A, B, C...)" placeholder="Label (A, B, C...)"
+              aria-label="Corner Label" placeholder="Label (A, B, C...)"
               className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm w-24"
             />
             <input
               type="number"
-              aria-label="Easting" placeholder="Easting"
+              aria-label="Easting" placeholder="e.g. 500000.000"
               className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm w-28"
             />
             <input
               type="number"
-              aria-label="Northing" placeholder="Northing"
+              aria-label="Northing" placeholder="e.g. 9900000.000"
               className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm w-28"
             />
             <input
               type="number"
-              aria-label="Elevation" placeholder="Elevation"
+              aria-label="Elevation" placeholder="e.g. 1580.00"
               className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm w-24"
             />
             <button
@@ -172,8 +172,8 @@ export function BuildingPanel({ projectId, subtype }: EngineeringPanelProps) {
           <div className="text-lg font-medium mb-3">Floor Layout</div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-zinc-400">Number of Floors</label>
-              <input aria-label="Number of Floors"
+              <label className="text-sm text-zinc-400" htmlFor="number-of-floors">Number of Floors</label>
+              <input id="number-of-floors" aria-label="Number of Floors"
                 type="number"
                 min={1}
                 value={floorCount}
@@ -182,8 +182,8 @@ export function BuildingPanel({ projectId, subtype }: EngineeringPanelProps) {
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400">Floor Height (m)</label>
-              <input aria-label="Floor Height (m)"
+              <label className="text-sm text-zinc-400" htmlFor="floor-height-m">Floor Height (m)</label>
+              <input  id="floor-height-m" aria-label="Floor Height (m)"
                 type="number"
                 step={0.1}
                 value={floorHeightM}

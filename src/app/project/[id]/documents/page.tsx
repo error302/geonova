@@ -47,6 +47,10 @@ const ShapefileExport = dynamic(() => import('@/components/ShapefileExport'), {
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
+// Point names are user-supplied — keep label htmlFor ids safe even if a name
+// contains spaces/symbols (ids with whitespace break getElementById/label matching).
+const slugify = (s: string) => s.replace(/[^A-Za-z0-9_-]/g, '-')
+
 function openPrint(html: string, filename: string) {
   const win = window.open('', '_blank')
   if (!win) return
@@ -110,8 +114,8 @@ function SurveyorDetailsPanel({
             { k:'address', label:'Office address',         ph:'Nairobi, Kenya', span: true },
           ].map(({ k, label, ph, span }) => (
             <div key={k} className={span ? 'col-span-2' : ''}>
-              <label className="block text-xs text-[var(--text-muted)] mb-1">{label}</label>
-              <input aria-label="{label}" value={local[k] || ''} onChange={e => f(k, e.target.value)}
+              <label htmlFor={`sd-${k}`} className="block text-xs text-[var(--text-muted)] mb-1">{label}</label>
+              <input id={`sd-${k}`} value={local[k] || ''} onChange={e => f(k, e.target.value)}
                 placeholder={ph} className="input w-full text-sm" />
             </div>
           ))}
@@ -130,12 +134,12 @@ function ExtraFieldsForm({
 
   if (docId === 'cover_letter') return (
     <div className="space-y-3">
-      <div><label className="text-xs text-[var(--text-muted)] block mb-1">Client address</label>
-        <textarea value={extraFields.clientAddress||''} onChange={e=>f('clientAddress',e.target.value)} rows={2} className="input w-full resize-none text-sm" placeholder="P.O. Box 12345, Nairobi" /></div>
-      <div><label className="text-xs text-[var(--text-muted)] block mb-1">Documents enclosed (one per line)</label>
-        <textarea value={extraFields.enclosures||'Survey plan\nField notes\nComputation sheet\nArea certificate'} onChange={e=>f('enclosures',e.target.value)} rows={4} className="input w-full resize-none text-sm" /></div>
-      <div><label className="text-xs text-[var(--text-muted)] block mb-1">Closure/precision note (optional)</label>
-        <input value={extraFields.closureNote||''} onChange={e=>f('closureNote',e.target.value)} className="input w-full text-sm" aria-label="The traverse closed to a precision of 1:12,500." placeholder="The traverse closed to a precision of 1:12,500." /></div>
+      <div><label htmlFor="clientAddress" className="text-xs text-[var(--text-muted)] block mb-1">Client address</label>
+        <textarea id="clientAddress" value={extraFields.clientAddress||''} onChange={e=>f('clientAddress',e.target.value)} rows={2} className="input w-full resize-none text-sm" placeholder="P.O. Box 12345, Nairobi" /></div>
+      <div><label htmlFor="enclosures" className="text-xs text-[var(--text-muted)] block mb-1">Documents enclosed (one per line)</label>
+        <textarea id="enclosures" value={extraFields.enclosures||'Survey plan\nField notes\nComputation sheet\nArea certificate'} onChange={e=>f('enclosures',e.target.value)} rows={4} className="input w-full resize-none text-sm" /></div>
+      <div><label htmlFor="closureNote" className="text-xs text-[var(--text-muted)] block mb-1">Closure/precision note (optional)</label>
+        <input id="closureNote" value={extraFields.closureNote||''} onChange={e=>f('closureNote',e.target.value)} className="input w-full text-sm" placeholder="The traverse closed to a precision of 1:12,500." /></div>
     </div>
   )
 
@@ -151,13 +155,13 @@ function ExtraFieldsForm({
           {k:'team',       label:'Team members',  ph:'J. Kamau, M. Otieno'},
         ].map(({k,label,ph}) => (
           <div key={k}>
-            <label className="text-xs text-[var(--text-muted)] block mb-1">{label}</label>
-            <input aria-label="{label}" value={extraFields[k]||''} onChange={e=>f(k,e.target.value)} placeholder={ph} className="input w-full text-sm" />
+            <label htmlFor={`fn-${k}`} className="text-xs text-[var(--text-muted)] block mb-1">{label}</label>
+            <input id={`fn-${k}`} value={extraFields[k]||''} onChange={e=>f(k,e.target.value)} placeholder={ph} className="input w-full text-sm" />
           </div>
         ))}
       </div>
-      <div><label className="text-xs text-[var(--text-muted)] block mb-1">General observations / remarks</label>
-        <textarea value={extraFields.observations||''} onChange={e=>f('observations',e.target.value)} rows={3} className="input w-full resize-none text-sm" placeholder="Site conditions, obstructions encountered, any deviations from standard procedure..." /></div>
+      <div><label htmlFor="fn-observations" className="text-xs text-[var(--text-muted)] block mb-1">General observations / remarks</label>
+        <textarea id="fn-observations" value={extraFields.observations||''} onChange={e=>f('observations',e.target.value)} rows={3} className="input w-full resize-none text-sm" placeholder="Site conditions, obstructions encountered, any deviations from standard procedure..." /></div>
     </div>
   )
 
@@ -169,12 +173,12 @@ function ExtraFieldsForm({
            <p className="text-sm font-semibold text-[var(--text-primary)] mb-2">Beacon {pt.name}</p>
            <div className="space-y-2">
              <div>
-               <label className="text-xs text-[var(--text-muted)] block mb-0.5">Beacon type and condition</label>
-               <input value={extraFields[`beacon_type_${pt.name}`]||''} onChange={e=>f(`beacon_type_${pt.name}`,e.target.value)} className="input w-full text-sm" aria-label="Concrete beacon with iron pin — Good condition" placeholder="Concrete beacon with iron pin — Good condition" />
+               <label htmlFor={`beacon-type-${slugify(pt.name)}`} className="text-xs text-[var(--text-muted)] block mb-0.5">Beacon type and condition</label>
+               <input id={`beacon-type-${slugify(pt.name)}`} value={extraFields[`beacon_type_${pt.name}`]||''} onChange={e=>f(`beacon_type_${pt.name}`,e.target.value)} className="input w-full text-sm" placeholder="Concrete beacon with iron pin — Good condition" />
              </div>
              <div>
-               <label className="text-xs text-[var(--text-muted)] block mb-0.5">Physical description and location</label>
-               <textarea value={extraFields[`beacon_desc_${pt.name}`]||''} onChange={e=>f(`beacon_desc_${pt.name}`,e.target.value)} rows={2} className="input w-full resize-none text-sm" placeholder="Located at the NE corner of the plot, 2m from the road fence..." />
+               <label htmlFor={`beacon-desc-${slugify(pt.name)}`} className="text-xs text-[var(--text-muted)] block mb-0.5">Physical description and location</label>
+               <textarea id={`beacon-desc-${slugify(pt.name)}`} value={extraFields[`beacon_desc_${pt.name}`]||''} onChange={e=>f(`beacon_desc_${pt.name}`,e.target.value)} rows={2} className="input w-full resize-none text-sm" placeholder="Located at the NE corner of the plot, 2m from the road fence..." />
              </div>
            </div>
          </div>
@@ -188,8 +192,8 @@ function ExtraFieldsForm({
   if (docId === 'area_certificate') return (
     <div className="space-y-3">
       <div>
-        <label className="text-xs text-[var(--text-muted)] block mb-1">Parcel reference (LR No., plot number, etc.)</label>
-        <input value={extraFields.parcelRef||''} onChange={e=>f('parcelRef',e.target.value)} className="input w-full text-sm" aria-label="LR No. 123/456 or Plot 789" placeholder="LR No. 123/456 or Plot 789" />
+        <label htmlFor="parcelRef" className="text-xs text-[var(--text-muted)] block mb-1">Parcel reference (LR No., plot number, etc.)</label>
+        <input id="parcelRef" value={extraFields.parcelRef||''} onChange={e=>f('parcelRef',e.target.value)} className="input w-full text-sm" placeholder="LR No. 123/456 or Plot 789" />
       </div>
     </div>
   )
@@ -197,16 +201,16 @@ function ExtraFieldsForm({
   if (docId === 'completion_certificate') return (
     <div className="space-y-3">
       <div>
-        <label className="text-xs text-[var(--text-muted)] block mb-1">Field / completion date</label>
-        <input value={extraFields.fieldDate||''} onChange={e=>f('fieldDate',e.target.value)} className="input w-full text-sm" aria-label="15 March 2025" placeholder="15 March 2025" />
+        <label htmlFor="fieldDate" className="text-xs text-[var(--text-muted)] block mb-1">Field / completion date</label>
+        <input id="fieldDate" value={extraFields.fieldDate||''} onChange={e=>f('fieldDate',e.target.value)} className="input w-full text-sm" placeholder="15 March 2025" />
       </div>
       <div>
-        <label className="text-xs text-[var(--text-muted)] block mb-1">Completion items (one per line)</label>
-        <textarea value={extraFields.completionItems||'All survey points established and recorded\nField observations independently checked\nComputations verified and within acceptable limits\nSurvey documents prepared and certified'} onChange={e=>f('completionItems',e.target.value)} rows={4} className="input w-full resize-none text-sm" />
+        <label htmlFor="completionItems" className="text-xs text-[var(--text-muted)] block mb-1">Completion items (one per line)</label>
+        <textarea id="completionItems" value={extraFields.completionItems||'All survey points established and recorded\nField observations independently checked\nComputations verified and within acceptable limits\nSurvey documents prepared and certified'} onChange={e=>f('completionItems',e.target.value)} rows={4} className="input w-full resize-none text-sm" />
       </div>
       <div>
-        <label className="text-xs text-[var(--text-muted)] block mb-1">Additional notes</label>
-        <textarea value={extraFields.notes||''} onChange={e=>f('notes',e.target.value)} rows={2} className="input w-full resize-none text-sm" placeholder="Any limitations, recommendations, or special notes..." />
+        <label htmlFor="notes" className="text-xs text-[var(--text-muted)] block mb-1">Additional notes</label>
+        <textarea id="notes" value={extraFields.notes||''} onChange={e=>f('notes',e.target.value)} rows={2} className="input w-full resize-none text-sm" placeholder="Any limitations, recommendations, or special notes..." />
       </div>
     </div>
   )
@@ -218,19 +222,18 @@ function ExtraFieldsForm({
           {k:'originalLR',   label:'Original LR No. / Plot No.',      ph:'LR 123/456'},
           {k:'regSection',   label:'Registration Section',             ph:'Nairobi Block 123'},
           {k:'mutationType', label:'Nature of mutation',               ph:'Subdivision'},
-          {k:'county',       label:'County',                           ph:'Nairobi'},
-          {k:'clientId',     label:'Landowner ID / Passport No.',      ph:'12345678'},
+          {k:'county',       label:'County',                           ph:'Nairobi'},          {k:'clientId',     label:'Landowner ID / Passport No.',      ph:'12345678' },
         ].map(({k,label,ph}) => (
           <div key={k}>
-            <label className="text-xs text-[var(--text-muted)] block mb-1">{label}</label>
-            <input aria-label="{label}" value={extraFields[k]||''} onChange={e=>onChange({...extraFields,[k]:e.target.value})} placeholder={ph} className="input w-full text-sm" />
+            <label htmlFor={`mf-${k}`} className="text-xs text-[var(--text-muted)] block mb-1">{label}</label>
+            <input id={`mf-${k}`} value={extraFields[k]||''} onChange={e=>onChange({...extraFields,[k]:e.target.value})} placeholder={ph} className="input w-full text-sm" />
           </div>
         ))}
       </div>
        {points.filter((p: PointData) => p.is_control).map((pt: PointData) => (
         <div key={pt.name}>
-          <label className="text-xs text-[var(--text-muted)] block mb-1">Beacon {pt.name} — description</label>
-          <input value={extraFields[`beacon_desc_${pt.name}`]||''} onChange={e=>onChange({...extraFields,[`beacon_desc_${pt.name}`]:e.target.value})} className="input w-full text-sm" aria-label="Concrete beacon at NE corner..." placeholder="Concrete beacon at NE corner..." />
+          <label htmlFor={`mutation-beacon-${slugify(pt.name)}`} className="text-xs text-[var(--text-muted)] block mb-1">Beacon {pt.name} — description</label>
+          <input id={`mutation-beacon-${slugify(pt.name)}`} value={extraFields[`beacon_desc_${pt.name}`]||''} onChange={e=>onChange({...extraFields,[`beacon_desc_${pt.name}`]:e.target.value})} className="input w-full text-sm" placeholder="Concrete beacon at NE corner..." />
         </div>
       ))}
     </div>
@@ -249,12 +252,11 @@ function ExtraFieldsForm({
           {k:'distanceKm',    label:'Total distance (km)',          ph:'2.4'},
           {k:'allowable',     label:'Allowable misclosure (m)',     ph:'0.019'},
           {k:'sumBS',         label:'ΣBS (m)',                      ph:'4.521'},
-          {k:'sumFS',         label:'ΣFS (m)',                      ph:'2.068'},
-          {k:'rlDiff',        label:'Last RL − First RL (m)',       ph:'2.453'},
+          {k:'sumFS',         label:'ΣFS (m)',                      ph:'2.068'},          {k:'rlDiff',        label:'Last RL − First RL (m)',       ph:'2.453' },
         ].map(({k,label,ph}) => (
           <div key={k}>
-            <label className="text-xs text-[var(--text-muted)] block mb-1">{label}</label>
-            <input aria-label="{label}" value={extraFields[k]||''} onChange={e=>onChange({...extraFields,[k]:e.target.value})} placeholder={ph} className="input w-full text-sm" />
+            <label htmlFor={`ls-${k}`} className="text-xs text-[var(--text-muted)] block mb-1">{label}</label>
+            <input id={`ls-${k}`} value={extraFields[k]||''} onChange={e=>onChange({...extraFields,[k]:e.target.value})} placeholder={ph} className="input w-full text-sm" />
           </div>
         ))}
       </div>
@@ -273,12 +275,11 @@ function ExtraFieldsForm({
           {k:'instrument',  label:'Instrument',              ph:'Leica TS16'},
           {k:'serial',      label:'Serial number',           ph:'1847293'},
           {k:'calibDate',   label:'Calibration date',        ph:'January 2025'},
-          {k:'rounds',      label:'No. of rounds',           ph:'3'},
-          {k:'accuracy',    label:'Default accuracy (±m)',   ph:'0.05'},
+          {k:'rounds',      label:'No. of rounds',           ph:'3'},          {k:'accuracy',    label:'Default accuracy (±m)',   ph:'0.05' },
         ].map(({k,label,ph}) => (
           <div key={k}>
-            <label className="text-xs text-[var(--text-muted)] block mb-1">{label}</label>
-            <input aria-label="{label}" value={extraFields[k]||''} onChange={e=>onChange({...extraFields,[k]:e.target.value})} placeholder={ph} className="input w-full text-sm" />
+            <label htmlFor={`cs-${k}`} className="text-xs text-[var(--text-muted)] block mb-1">{label}</label>
+            <input id={`cs-${k}`} value={extraFields[k]||''} onChange={e=>onChange({...extraFields,[k]:e.target.value})} placeholder={ph} className="input w-full text-sm" />
           </div>
         ))}
       </div>

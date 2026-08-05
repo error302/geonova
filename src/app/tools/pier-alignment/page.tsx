@@ -18,10 +18,10 @@ export default function PierAlignmentPage() {
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-4">
           {[['Centerline Bearing (°)', bearing, setBearing], ['Start Easting', startE, setStartE], ['Start Northing', startN, setStartN]].map(([l, v, s]) => (
-            <div key={l as string}><label className="block text-sm text-zinc-400 mb-2">{l as string}</label><input type="number" step="0.1" value={v as number} onChange={e => (s as (n: number) => void)(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+            <div key={l as string}><label className="block text-sm text-zinc-400 mb-2">{l as string}<input type="number" step="0.1" value={v as number} onChange={e => (s as (n: number) => void)(+e.target.value)} className="mt-2 w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></label></div>
           ))}
-          <div><label className="block text-sm text-zinc-400 mb-2">Pier Chainages (comma-sep, m)</label><input value={chainages} onChange={e => setChainages(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
-          <div><label className="block text-sm text-zinc-400 mb-2">Offset Distances (comma-sep, m)</label><input value={offsets} onChange={e => setOffsets(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="pier-chainages-comma-sep-m">Pier Chainages (comma-sep, m)</label><input id="pier-chainages-comma-sep-m" value={chainages} onChange={e => setChainages(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="offset-distances-comma-sep-m">Offset Distances (comma-sep, m)</label><input id="offset-distances-comma-sep-m" value={offsets} onChange={e => setOffsets(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
           <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Compute Pier Alignment</button>
         </div>
         <div>{result ? (
@@ -34,7 +34,7 @@ export default function PierAlignmentPage() {
               </div>
             ))}
           </div>
-        ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-500">Enter data and click Compute.</div>}</div>
+        ) : <div className="p-6 bg-zinc-900 rounded-lg border border-zinc-700 text-center text-sm text-zinc-400">Enter data and click Compute.</div>}</div>
       </div>
     </div>
   )

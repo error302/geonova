@@ -1,6 +1,10 @@
 import { ImageResponse } from 'next/og'
 import { getPublicAppHost } from '@/lib/site'
 
+// force-dynamic: the social-preview image must not be prerendered at build
+// time (next/og's ImageResponse cannot run during static generation). The
+// mobile static export stashes this file entirely (see scripts/mobile-build.mjs),
+// so this directive does not conflict with output:'export'.
 export const dynamic = 'force-dynamic'
 
 export const alt = 'METARDU — Professional Surveying Platform'

@@ -9,7 +9,7 @@ import { chromium } from 'playwright'
 import * as fs from 'fs'
 import * as path from 'path'
 
-const BASE_URL = process.env.BASE_URL || 'https://metardu.duckdns.org'
+const BASE_URL = process.env.BASE_URL || 'https://metardu.space'
 const RESULTS_DIR = path.join(__dirname, '../live-test-results')
 const TEST_EMAIL = process.env.TEST_EMAIL || 'mohameddosho20@gmail.com'
 const TEST_PASSWORD = process.env.TEST_PASSWORD || ''

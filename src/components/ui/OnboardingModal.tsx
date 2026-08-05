@@ -20,7 +20,7 @@ export default function OnboardingModal({
     },
     {
       title: 'Create Your First Project',
-      description: 'Start a new survey project by clicking the \"+ New Project\" button on the dashboard.',
+      description: 'Start a new survey project by clicking the "+ New Project" button on the dashboard.',
     },
     {
       title: 'Collect Field Data',

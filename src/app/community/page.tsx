@@ -606,7 +606,7 @@ export default function CommunityPage() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href="/community/directory"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity shadow-lg shadow-[var(--accent)]/20"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-[var(--accent)] text-black hover:opacity-90 transition-opacity shadow-lg shadow-[var(--accent)]/20"
                 >
                   <Search className="w-4 h-4" /> Find Surveyor
                 </Link>
@@ -961,7 +961,7 @@ export default function CommunityPage() {
                   </p>
                   <Link
                     href="/login?next=/community"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-[var(--accent)] text-black hover:opacity-90 transition-opacity"
                   >
                     Sign in to track CPD
                   </Link>

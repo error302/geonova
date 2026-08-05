@@ -47,7 +47,7 @@ function Field({
   return (
     <label className="block">
       <span className="block text-xs text-[var(--text-muted)] mb-1">{label}</span>
-      <input aria-label="Document value"
+      <input
         className={inputClass('text-sm')}
         type={type}
         value={value}
@@ -211,7 +211,7 @@ export default function BillableDocumentsBuilder() {
             }`}
           >
             <span>{tab.label}</span>
-            <span className="ml-2 text-[10px] opacity-70">{tab.tier}</span>
+            <span className={`ml-2 text-[10px] ${active === tab.id ? 'text-black' : 'text-zinc-400'}`}>{tab.tier}</span>
           </button>
         ))}
       </div>

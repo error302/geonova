@@ -220,9 +220,9 @@ export default function LeastSquaresPage() {
                 </div>
                 {stations.map(s => (
                   <div key={s.id} className="grid grid-cols-[1fr_1fr_1fr_50px_28px] gap-1 items-center">
-                    <input className="input font-mono text-xs px-2 py-1" value={s.name} onChange={e => updateStation(s.id, 'name', e.target.value)} aria-label="T1" placeholder="T1" />
-                    <input className="input font-mono text-xs px-2 py-1" value={s.easting} onChange={e => updateStation(s.id, 'easting', e.target.value)} aria-label="5000.000" placeholder="5000.000" disabled={s.isControl} />
-                    <input className="input font-mono text-xs px-2 py-1" value={s.northing} onChange={e => updateStation(s.id, 'northing', e.target.value)} aria-label="10000.000" placeholder="10000.000" disabled={s.isControl} />
+                    <input className="input font-mono text-xs px-2 py-1" value={s.name} onChange={e => updateStation(s.id, 'name', e.target.value)} aria-label="Station name" placeholder="T1" />
+                    <input className="input font-mono text-xs px-2 py-1" value={s.easting} onChange={e => updateStation(s.id, 'easting', e.target.value)} aria-label="Easting (m)" placeholder="5000.000" disabled={s.isControl} />
+                    <input className="input font-mono text-xs px-2 py-1" value={s.northing} onChange={e => updateStation(s.id, 'northing', e.target.value)} aria-label="Northing (m)" placeholder="10000.000" disabled={s.isControl} />
                     <input type="checkbox" checked={s.isControl} onChange={e => updateStation(s.id, 'isControl', e.target.checked)} className="w-4 h-4" title="Control point (known coordinates)" aria-label="Control point (known coordinates)" />
                     <button onClick={() => removeStation(s.id)} className="text-[var(--text-muted)] hover:text-[var(--error)] text-sm">×</button>
                   </div>
@@ -242,13 +242,13 @@ export default function LeastSquaresPage() {
                 </div>
                 {angles.map(a => (
                   <div key={a.id} className="grid grid-cols-[1fr_1fr_1fr_40px_30px_30px_50px_28px] gap-1 items-center min-w-[500px]">
-                    <input className="input font-mono text-xs px-1 py-1" value={a.fromStation} onChange={e => updateAngle(a.id, 'fromStation', e.target.value)} aria-label="CP1" placeholder="CP1" />
-                    <input className="input font-mono text-xs px-1 py-1" value={a.atStation} onChange={e => updateAngle(a.id, 'atStation', e.target.value)} aria-label="T1" placeholder="T1" />
-                    <input className="input font-mono text-xs px-1 py-1" value={a.toStation} onChange={e => updateAngle(a.id, 'toStation', e.target.value)} aria-label="T2" placeholder="T2" />
-                    <input className="input font-mono text-xs px-1 py-1" value={a.angleDeg} onChange={e => updateAngle(a.id, 'angleDeg', e.target.value)} aria-label="120" placeholder="120" />
-                    <input className="input font-mono text-xs px-1 py-1" value={a.angleMin} onChange={e => updateAngle(a.id, 'angleMin', e.target.value)} aria-label="30" placeholder="30" />
-                    <input className="input font-mono text-xs px-1 py-1" value={a.angleSec} onChange={e => updateAngle(a.id, 'angleSec', e.target.value)} aria-label="15" placeholder="15" />
-                    <input className="input font-mono text-xs px-1 py-1" value={a.stdDev} onChange={e => updateAngle(a.id, 'stdDev', e.target.value)} aria-label="5" placeholder="5" />
+                    <input className="input font-mono text-xs px-1 py-1" value={a.fromStation} onChange={e => updateAngle(a.id, 'fromStation', e.target.value)} aria-label="From station" placeholder="CP1" />
+                    <input className="input font-mono text-xs px-1 py-1" value={a.atStation} onChange={e => updateAngle(a.id, 'atStation', e.target.value)} aria-label="At station" placeholder="T1" />
+                    <input className="input font-mono text-xs px-1 py-1" value={a.toStation} onChange={e => updateAngle(a.id, 'toStation', e.target.value)} aria-label="To station" placeholder="T2" />
+                    <input className="input font-mono text-xs px-1 py-1" value={a.angleDeg} onChange={e => updateAngle(a.id, 'angleDeg', e.target.value)} aria-label="Angle (deg)" placeholder="120" />
+                    <input className="input font-mono text-xs px-1 py-1" value={a.angleMin} onChange={e => updateAngle(a.id, 'angleMin', e.target.value)} aria-label="Angle (min)" placeholder="30" />
+                    <input className="input font-mono text-xs px-1 py-1" value={a.angleSec} onChange={e => updateAngle(a.id, 'angleSec', e.target.value)} aria-label="Angle (sec)" placeholder="15" />
+                    <input className="input font-mono text-xs px-1 py-1" value={a.stdDev} onChange={e => updateAngle(a.id, 'stdDev', e.target.value)} aria-label="Std dev (arcsec)" placeholder="5" />
                     <button onClick={() => removeAngle(a.id)} className="text-[var(--text-muted)] hover:text-[var(--error)] text-sm">×</button>
                   </div>
                 ))}
@@ -267,10 +267,10 @@ export default function LeastSquaresPage() {
                 </div>
                 {distances.map(d => (
                   <div key={d.id} className="grid grid-cols-[1fr_1fr_1fr_1fr_28px] gap-1 items-center">
-                    <input className="input font-mono text-xs px-2 py-1" value={d.fromStation} onChange={e => updateDist(d.id, 'fromStation', e.target.value)} aria-label="CP1" placeholder="CP1" />
-                    <input className="input font-mono text-xs px-2 py-1" value={d.toStation} onChange={e => updateDist(d.id, 'toStation', e.target.value)} aria-label="T1" placeholder="T1" />
-                    <input className="input font-mono text-xs px-2 py-1" value={d.distance} onChange={e => updateDist(d.id, 'distance', e.target.value)} aria-label="85.234" placeholder="85.234" />
-                    <input className="input font-mono text-xs px-2 py-1" value={d.stdDev} onChange={e => updateDist(d.id, 'stdDev', e.target.value)} aria-label="0.003" placeholder="0.003" />
+                    <input className="input font-mono text-xs px-2 py-1" value={d.fromStation} onChange={e => updateDist(d.id, 'fromStation', e.target.value)} aria-label="From station" placeholder="CP1" />
+                    <input className="input font-mono text-xs px-2 py-1" value={d.toStation} onChange={e => updateDist(d.id, 'toStation', e.target.value)} aria-label="To station" placeholder="T1" />
+                    <input className="input font-mono text-xs px-2 py-1" value={d.distance} onChange={e => updateDist(d.id, 'distance', e.target.value)} aria-label="Distance (m)" placeholder="85.234" />
+                    <input className="input font-mono text-xs px-2 py-1" value={d.stdDev} onChange={e => updateDist(d.id, 'stdDev', e.target.value)} aria-label="Std dev (m)" placeholder="0.003" />
                     <button onClick={() => removeDist(d.id)} className="text-[var(--text-muted)] hover:text-[var(--error)] text-sm">×</button>
                   </div>
                 ))}

@@ -221,7 +221,7 @@ function drawRoadTruncationLines(
 
       // Rotate label to align with road segment direction
       const angle = Math.atan2(dyMm, dxMm) * (180 / Math.PI);
-      let textAngle = -(angle > 90 || angle < -90 ? angle + 180 : angle);
+      const textAngle = -(angle > 90 || angle < -90 ? angle + 180 : angle);
 
       doc.setFontSize(4.5);
       doc.setFont('helvetica', 'bold');

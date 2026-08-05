@@ -72,8 +72,8 @@ export default function SidePanel({
         </div>
 
         <div>
-          <label className="label">{t('field.fieldBookName')}</label>
-          <input aria-label="{t('field.fieldBookName')}" className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder={t('field.fieldBookNamePlaceholder')} />
+          <label className="label" htmlFor="fieldbook-name">{t('field.fieldBookName')}</label>
+          <input id="fieldbook-name" className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder={t('field.fieldBookNamePlaceholder')} />
         </div>
 
         <div className="grid grid-cols-2 gap-2">

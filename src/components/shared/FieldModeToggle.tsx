@@ -195,7 +195,7 @@ export default function FieldModeToggle() {
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)]
           group
           ${isField
-            ? 'bg-[var(--accent)] text-white shadow-lg shadow-[var(--accent)]/25'
+            ? 'bg-[var(--accent)] text-black shadow-lg shadow-[var(--accent)]/25'
             : 'bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent)]/40'
           }
         `}
@@ -246,7 +246,7 @@ export default function FieldModeToggle() {
                   onClick={toggleSensor}
                   role="switch"
                   aria-checked={sensorEnabled}
-                  aria-label="Auto-detect sunlight"
+                  aria-label={t('fieldMode.autoDetectSunlight')}
                   tabIndex={0}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSensor() } }}
                 >
@@ -257,7 +257,7 @@ export default function FieldModeToggle() {
                     `}
                   />
                 </div>
-                <span className="text-[11px] text-gray-300 font-medium leading-tight">
+                <span className="text-[11px] text-[var(--text-muted)] leading-tight">
                   {t('fieldMode.autoDetectSunlight')}
                 </span>
               </label>
@@ -271,7 +271,7 @@ export default function FieldModeToggle() {
 
       {/* Click-away to dismiss tooltip */}
       {showTooltip && (
-        <div role="button" tabIndex={0} aria-label="Dismiss" className="fixed inset-0 z-40" onClick={dismissTooltip} onKeyDown={(e) => { if (e.key === 'Escape') dismissTooltip() }} />
+        <button type="button" aria-label="Dismiss tooltip" tabIndex={-1} className="fixed inset-0 z-40 cursor-pointer border-0 p-0" onClick={dismissTooltip} />
       )}
     </div>
   )

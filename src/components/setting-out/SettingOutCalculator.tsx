@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect, useId } from 'react'
 import { Download } from 'lucide-react'
 import { computeSettingOut, checkCoordinate, parseSettingOutCSV, type InstrumentStation, type Backsight, type DesignPoint, type ReObservation, type SettingOutResult } from '@/lib/computations/settingOutEngine'
 import SettingOutTable from './SettingOutTable'
@@ -31,6 +31,14 @@ export default function SettingOutCalculator() {
   const [csvError, setCsvError] = useState('')
   const [showStakeOutSheet, setShowStakeOutSheet] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+
+  // Close the stake-out sheet on Escape (document-level, works regardless of focus)
+  useEffect(() => {
+    if (!showStakeOutSheet) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowStakeOutSheet(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [showStakeOutSheet])
 
   function compute() {
     const stationVal: InstrumentStation = {
@@ -141,7 +149,7 @@ export default function SettingOutCalculator() {
           <div className="flex gap-2">
             <input ref={fileRef} type="file" accept=".csv" onChange={handleCSV} className="hidden" />
             <button onClick={() => fileRef.current?.click()} className="px-3 py-1.5 text-xs border border-[var(--border-color)] rounded text-[var(--text-muted)]">Import CSV</button>
-            <button onClick={addPoint} className="px-3 py-1.5 text-xs bg-[var(--accent)] text-white rounded">+ Add Point</button>
+            <button onClick={addPoint} className="px-3 py-1.5 text-xs bg-[var(--accent)] text-black rounded">+ Add Point</button>
           </div>
         </div>
         {csvError && <p className="text-xs text-red-400 mb-2">{csvError}</p>}
@@ -160,7 +168,7 @@ export default function SettingOutCalculator() {
                   <tr key={`${p}-${i}`} className="hover:bg-[var(--bg-tertiary)]/30">
                     {pointFields.map(f => (
                       <td key={f} className="px-1 py-1 border border-[var(--border-color)]/50">
-                        <input aria-label="{h}" value={p[f]} onChange={e => updatePoint(i, f, e.target.value)}
+                        <input aria-label={pointHeaders[pointFields.indexOf(f)] ?? f} value={p[f]} onChange={e => updatePoint(i, f, e.target.value)}
                           className="w-full px-2 py-1 bg-transparent text-[var(--text-primary)]" />
                     </td>
                   ))}
@@ -176,7 +184,7 @@ export default function SettingOutCalculator() {
 
       {/* Compute */}
       <div className="flex flex-wrap gap-3">
-        <button onClick={compute} className="px-6 py-2 bg-[var(--accent)] text-white rounded font-medium hover:opacity-90">
+        <button onClick={compute} className="px-6 py-2 bg-[var(--accent)] text-black rounded font-medium hover:opacity-90">
           Compute Setting Out
         </button>
         {result && (
@@ -254,8 +262,8 @@ export default function SettingOutCalculator() {
           <p className="text-xs text-[var(--text-muted)]">Source: RDM 1.1 Table 5.2 — Construction tolerance: ±25mm horizontal, ±15mm vertical</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div>
-              <label className="text-xs text-[var(--text-muted)] mb-1 block">Point ID</label>
-              <select value={checkResults.pointId} onChange={e => setCheckResults(r => ({ ...r, pointId: e.target.value }))}
+              <label className="text-xs text-[var(--text-muted)] mb-1 block" htmlFor="point-id">Point ID</label>
+              <select id="point-id" value={checkResults.pointId} onChange={e => setCheckResults(r => ({ ...r, pointId: e.target.value }))}
                 className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm">
                 <option value="">Select point</option>
                 {result.rows.map((r: any) => <option key={r.id} value={r.id}>{r.id} — {r.designE.toFixed(3)}/{r.designN.toFixed(3)}</option>)}
@@ -265,7 +273,7 @@ export default function SettingOutCalculator() {
             <Field label="Observed HD (m)" value={checkResults.obsHD} onChange={v => setCheckResults(r => ({ ...r, obsHD: v }))} />
             <Field label="Observed RL (m)" value={checkResults.obsRL} onChange={v => setCheckResults(r => ({ ...r, obsRL: v }))} />
           </div>
-          <button onClick={runCheck} className="px-5 py-2 bg-[var(--accent)] text-white rounded text-sm font-medium">Check</button>
+          <button onClick={runCheck} className="px-5 py-2 bg-[var(--accent)] text-black rounded text-sm font-medium">Check</button>
 
           {checkResult && (
             <div className={`border rounded-lg p-4 ${checkResult.isCompliant ? 'border-green-800 bg-green-900/20' : 'border-red-800 bg-red-900/20'}`}>
@@ -290,8 +298,9 @@ export default function SettingOutCalculator() {
 
       {/* Stake Out Sheet Modal */}
       {showStakeOutSheet && result && (
-        <div role="button" tabIndex={0} aria-label="Close" className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" onClick={() => setShowStakeOutSheet(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowStakeOutSheet(false) }}>
-          <div className="bg-[var(--bg-primary)] max-w-2xl w-full rounded-lg overflow-hidden max-h-[90vh] overflow-y-auto border border-[var(--border-color)]" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <button type="button" aria-label="Close dialog" tabIndex={-1} className="absolute inset-0 cursor-pointer border-0 p-0" onClick={() => setShowStakeOutSheet(false)} />
+          <div className="relative bg-[var(--bg-primary)] max-w-2xl w-full rounded-lg overflow-hidden max-h-[90vh] overflow-y-auto border border-[var(--border-color)]" role="dialog" aria-modal="true" aria-label="Setting Out Schedule">
             <div className="p-4 border-b border-[var(--border-color)] flex justify-between items-center">
               <h2 className="font-bold text-[var(--text-primary)]">Setting Out Schedule</h2>
               <button onClick={() => setShowStakeOutSheet(false)} className="text-gray-500 hover:text-black">[x] Close</button>
@@ -307,10 +316,11 @@ export default function SettingOutCalculator() {
 }
 
 function Field({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  const id = useId()
   return (
     <div>
-      <label className="text-xs text-[var(--text-muted)] mb-1 block">{label}</label>
-      <input aria-label="{label}" value={value} onChange={e => onChange(e.target.value)} type="number" step="0.001"
+      <label htmlFor={id} className="text-xs text-[var(--text-muted)] mb-1 block">{label}</label>
+      <input id={id} value={value} onChange={e => onChange(e.target.value)} type="number" step="0.001"
         className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
     </div>
   )

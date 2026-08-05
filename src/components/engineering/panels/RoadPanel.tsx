@@ -130,7 +130,7 @@ export function RoadPanel({ projectId, subtype }: EngineeringPanelProps) {
           <div className="flex gap-2 mt-3">
             <input
               type="number"
-              aria-label="Radius (m)" placeholder="Radius (m)"
+              aria-label="Radius (m)" placeholder="e.g. 250"
               value={horizontalCurves[horizontalCurves.length - 1]?.radius || ''}
               onChange={(e) => {
                 const newCurves = [...horizontalCurves];
@@ -142,7 +142,7 @@ export function RoadPanel({ projectId, subtype }: EngineeringPanelProps) {
             />
             <input
               type="number"
-              aria-label="Delta (°)" placeholder="Delta (°)"
+              aria-label="Delta (°)" placeholder="e.g. 12.5"
               value={horizontalCurves[horizontalCurves.length - 1]?.delta || ''}
               onChange={(e) => {
                 const newCurves = [...horizontalCurves];
@@ -154,7 +154,7 @@ export function RoadPanel({ projectId, subtype }: EngineeringPanelProps) {
             />
             <input
               type="number"
-              aria-label="PI Chainage" placeholder="PI Chainage"
+              aria-label="PI Chainage" placeholder="e.g. 1+250"
               value={horizontalCurves[horizontalCurves.length - 1]?.piChainage || ''}
               onChange={(e) => {
                 const newCurves = [...horizontalCurves];
@@ -198,27 +198,27 @@ export function RoadPanel({ projectId, subtype }: EngineeringPanelProps) {
           <div className="flex gap-2 mt-3">
             <input
               type="number"
-              aria-label="PVI Chainage" placeholder="PVI Chainage"
+              aria-label="PVI Chainage" placeholder="e.g. 1+250"
               className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm w-32"
             />
             <input
               type="number"
-              aria-label="PVI Elev" placeholder="PVI Elev"
+              aria-label="PVI Elev" placeholder="e.g. 1580.00"
               className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm w-32"
             />
             <input
               type="number"
-              aria-label="Grade In %" placeholder="Grade In %"
+              aria-label="Grade In %" placeholder="e.g. -3.5"
               className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm w-24"
             />
             <input
               type="number"
-              aria-label="Grade Out %" placeholder="Grade Out %"
+              aria-label="Grade Out %" placeholder="e.g. 2.5"
               className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm w-24"
             />
             <input
               type="number"
-              aria-label="Length" placeholder="Length"
+              aria-label="Length" placeholder="e.g. 120"
               className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-sm w-24"
             />
             <button
@@ -290,27 +290,27 @@ export function RoadPanel({ projectId, subtype }: EngineeringPanelProps) {
             <div className="flex gap-2">
               <input
                 type="number"
-                aria-label="PC Easting" placeholder="PC Easting"
+                aria-label="PC Easting" placeholder="e.g. 500000"
                 className="px-2 py-1.5 bg-zinc-700 border border-zinc-600 rounded text-sm w-28"
               />
               <input
                 type="number"
-                aria-label="PC Northing" placeholder="PC Northing"
+                aria-label="PC Northing" placeholder="e.g. 9900000"
                 className="px-2 py-1.5 bg-zinc-700 border border-zinc-600 rounded text-sm w-28"
               />
               <input
                 type="number"
-                aria-label="Initial Bearing" placeholder="Initial Bearing"
+                aria-label="Initial Bearing" placeholder="e.g. 45°"
                 className="px-2 py-1.5 bg-zinc-700 border border-zinc-600 rounded text-sm w-28"
               />
               <input
                 type="number"
-                aria-label="Radius" placeholder="Radius"
+                aria-label="Radius" placeholder="e.g. 250"
                 className="px-2 py-1.5 bg-zinc-700 border border-zinc-600 rounded text-sm w-24"
               />
               <input
                 type="number"
-                aria-label="Chainage" placeholder="Chainage"
+                aria-label="Chainage" placeholder="e.g. 1+250"
                 className="px-2 py-1.5 bg-zinc-700 border border-zinc-600 rounded text-sm w-24"
               />
               <select className="px-2 py-1.5 bg-zinc-700 border border-zinc-600 rounded text-sm">

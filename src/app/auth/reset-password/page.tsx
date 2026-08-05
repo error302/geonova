@@ -115,15 +115,14 @@ function ResetPasswordContent() {
           )}
 
           <div>
-            <label className="block text-sm text-[var(--text-primary)] mb-2">New password</label>
+            <label htmlFor="reset-password" className="block text-sm text-[var(--text-primary)] mb-2">New password</label>
             <div className="relative">
-              <input aria-label="New password"
+              <input id="reset-password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)] pr-10"
                 autoComplete="new-password"
-                autoFocus
               />
               <button
                 type="button"
@@ -144,9 +143,9 @@ function ResetPasswordContent() {
           </div>
 
           <div>
-            <label className="block text-sm text-[var(--text-primary)] mb-2">Confirm password</label>
+            <label htmlFor="reset-confirm" className="block text-sm text-[var(--text-primary)] mb-2">Confirm password</label>
             <div className="relative">
-              <input aria-label="Confirm password"
+              <input id="reset-confirm"
                 type={showConfirm ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
