@@ -19,7 +19,6 @@
 import {
   polygonToTurf,
   lineStringToTurf,
-  toTurfCoord,
   type SurveyPoint,
 } from '@/lib/map/turfHelpers'
 
@@ -74,9 +73,10 @@ export interface RoadReserve {
 // Lazy turf accessor
 // ---------------------------------------------------------------------------
 
-let _turf: any = null
+type TurfModule = typeof import('@turf/turf')
+let _turf: TurfModule | null = null
 
-async function getTurf(): Promise<any> {
+async function getTurf(): Promise<TurfModule> {
   if (!_turf) {
     const mod = await import('@turf/turf')
     _turf = mod
@@ -119,7 +119,9 @@ export async function checkSelfIntersection(
   const { fromTurfCoord } = await import('@/lib/map/turfHelpers')
   const intersections: SurveyPoint[] = []
   for (const feature of kinks.features) {
-    const [lon, lat] = feature.geometry.coordinates
+    const geom = feature.geometry
+    if (!geom) continue
+    const [lon, lat] = geom.coordinates as [number, number]
     const pt = await fromTurfCoord([lon, lat])
     intersections.push(pt)
   }
@@ -152,7 +154,7 @@ export async function checkParcelOverlap(
 
     try {
       const existingPoly = await polygonToTurf(existing.vertices)
-      const intersection = turf.intersect(newPoly, existingPoly)
+      const intersection = turf.intersect(turf.featureCollection([newPoly, existingPoly]))
 
       if (intersection) {
         const overlapArea = turf.area(intersection)
@@ -168,7 +170,7 @@ export async function checkParcelOverlap(
           })
         }
       }
-    } catch (err) {
+    } catch {
       // Skip malformed parcels
       continue
     }
@@ -210,8 +212,9 @@ export async function checkSliverPolygons(
 
       // Check if the buffered new parcel overlaps the existing parcel
       // but the original doesn't (this indicates a gap < thresholdM)
-      const bufferedIntersection = turf.intersect(bufferedNew, existingPoly)
-      const directIntersection = turf.intersect(newPoly, existingPoly)
+      if (!bufferedNew) continue
+      const bufferedIntersection = turf.intersect(turf.featureCollection([bufferedNew, existingPoly]))
+      const directIntersection = turf.intersect(turf.featureCollection([newPoly, existingPoly]))
 
       if (bufferedIntersection && !directIntersection) {
         // There's a gap between the parcels that's smaller than thresholdM
@@ -228,7 +231,7 @@ export async function checkSliverPolygons(
           })
         }
       }
-    } catch (err) {
+    } catch {
       continue
     }
   }
@@ -268,7 +271,7 @@ export async function checkRoadReserveEncroachment(
       if (!reservePoly) continue
 
       // Check intersection
-      const intersection = turf.intersect(newPoly, reservePoly)
+      const intersection = turf.intersect(turf.featureCollection([newPoly, reservePoly]))
 
       if (intersection) {
         const encroachmentArea = turf.area(intersection)
@@ -284,7 +287,7 @@ export async function checkRoadReserveEncroachment(
           })
         }
       }
-    } catch (err) {
+    } catch {
       continue
     }
   }
@@ -430,3 +433,4 @@ export async function runTopologyCheck(params: {
 
   return { issues, isValid, hasErrors, hasWarnings }
 }
+

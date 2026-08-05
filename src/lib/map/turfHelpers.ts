@@ -25,6 +25,8 @@
 
 import type { Point2D } from '@/types/surveyPoint'
 
+import type { Feature, LineString, MultiPolygon, Polygon } from 'geojson'
+
 import type proj4Type from 'proj4'
 
 /**
@@ -151,7 +153,7 @@ export async function fromTurfCoord(
 export async function polygonToTurf(
   vertices: SurveyPoint[],
   epsg: string = 'EPSG:21037',
-): Promise<any> {
+): Promise<Feature<Polygon>> {
   await ensureLoaded();
   const p4 = await getProj4();
   const ring = vertices.map((v) =>
@@ -178,7 +180,7 @@ export async function polygonToTurf(
 export async function lineStringToTurf(
   vertices: SurveyPoint[],
   epsg: string = 'EPSG:21037',
-): Promise<any> {
+): Promise<Feature<LineString>> {
   await ensureLoaded();
   const p4 = await getProj4();
   const coords = vertices.map((v) =>
@@ -202,24 +204,30 @@ export async function lineStringToTurf(
  * @param epsg - Target EPSG code (default 'EPSG:21037').
  * @returns Array of `{easting, northing}` vertices (ring is **not** closed).
  */
-async function turfToVertices(geo: any, epsg: string = 'EPSG:21037'): Promise<SurveyPoint[]> {
+type TurfPolygonGeom =
+  | { type: 'Polygon'; coordinates: number[][][] }
+  | { type: 'MultiPolygon'; coordinates: number[][][][] }
+
+async function turfToVertices(
+  geo: Feature<Polygon | MultiPolygon> | TurfPolygonGeom,
+  epsg: string = 'EPSG:21037',
+): Promise<SurveyPoint[]> {
   await ensureLoaded();
 
-  let exteriorRing: number[][];
-
-  if (geo.geometry) {
-    geo = geo.geometry;
-  }
-
-  if (geo.type === 'Polygon') {
-    exteriorRing = geo.coordinates[0];
-  } else if (geo.type === 'MultiPolygon') {
-    exteriorRing = geo.coordinates[0][0];
+  let g: TurfPolygonGeom;
+  if ('geometry' in geo && geo.geometry) {
+    g = geo.geometry;
+  } else if (geo.type === 'Polygon' || geo.type === 'MultiPolygon') {
+    g = geo;
   } else {
-    throw new Error(
-      `turfToVertices: unsupported geometry type "${geo.type}"`,
-    );
+    const t = typeof geo === 'object' && geo !== null ? String((geo as { type?: unknown }).type ?? 'unknown') : 'unknown'
+    throw new Error(`turfToVertices: unsupported geometry type "${t}"`);
   }
+
+  if (g.type !== 'Polygon' && g.type !== 'MultiPolygon') {
+    throw new Error(`turfToVertices: unsupported geometry type "${String((g as { type?: unknown }).type)}"`);
+  }
+  const exteriorRing: number[][] = g.type === 'Polygon' ? g.coordinates[0] : g.coordinates[0][0];
 
   const p4 = await getProj4();
   return exteriorRing.map((c: number[]) => {
@@ -289,6 +297,7 @@ export async function bufferPoint(
   const [lon, lat] = await toTurfCoord(easting, northing, epsg);
   const pt = (await getTurf()).point([lon, lat]);
   const buffered = (await getTurf()).buffer(pt, radiusM, { units: 'meters', steps: 32 });
+  if (!buffered) return [];
   return turfToVertices(buffered, epsg);
 }
 
@@ -312,6 +321,7 @@ export async function bufferParcel(
     units: 'meters',
     steps: 32,
   });
+  if (!buffered) return [];
   return turfToVertices(buffered, epsg);
 }
 
@@ -378,7 +388,9 @@ export async function calculateUnion(
     polygonToTurf(parcel1, epsg),
     polygonToTurf(parcel2, epsg),
   ]);
-  const union = (await getTurf()).union(poly1, poly2);
+  const turf = await getTurf();
+  const union = turf.union(turf.featureCollection([poly1, poly2]));
+  if (!union) return [];
   return turfToVertices(union, epsg);
 }
 

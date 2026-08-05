@@ -81,6 +81,8 @@ export interface GenericObservation {
   stdDevZenith?: number    // radians (zenith_angle)
 }
 
+type Coord3 = { e: number; n: number; h: number }
+
 export interface NetworkStation {
   id: string
   name: string
@@ -176,10 +178,19 @@ export function adjustNetworkIterative(
   const n = free.length * 3  // number of unknowns
 
   // Current coordinate estimates (will be updated each iteration)
-  const coords = new Map<string, { e: number; n: number; h: number }>()
+  const coords = new Map<string, Coord3>()
   for (const s of stationsInput) {
     coords.set(s.id, { e: s.easting, n: s.northing, h: s.elevation })
   }
+
+  // Typed lookup helpers — replace non-null assertions on Map.get().
+  const coordOf = (id: string | undefined): Coord3 => {
+    const c = coords.get(id ?? '')
+    if (!c) throw new Error(`adjustNetworkIterative: unknown station "${id}"`)
+    return c
+  }
+  const idxOf = (id: string | undefined): number | undefined =>
+    id === undefined ? undefined : stationIndex.get(id)
 
   // Count observations and build observation metadata
   const obsRows: Array<{
@@ -270,40 +281,39 @@ export function adjustNetworkIterative(
     const W: number[] = []
     const l: number[] = []
 
-    let obsRowIdx = 0
     for (const obs of observations) {
       if (obs.type === 'coordinate_diff') {
-        const fromCoord = coords.get(obs.from!)!
-        const toCoord = coords.get(obs.to!)!
+        const fromCoord = coordOf(obs.from)
+        const toCoord = coordOf(obs.to)
 
         // E component: observed deltaE - predicted (toE - fromE)
-        const rowE = new Array(n).fill(0)
-        if (stationIndex.has(obs.to!)) rowE[stationIndex.get(obs.to!)! * 3] = 1
-        if (stationIndex.has(obs.from!)) rowE[stationIndex.get(obs.from!)! * 3] = -1
+        const rowE = zeros(n)
+        const toIdx = idxOf(obs.to)
+        const fromIdx = idxOf(obs.from)
+        if (toIdx !== undefined) rowE[toIdx * 3] = 1
+        if (fromIdx !== undefined) rowE[fromIdx * 3] = -1
         A.push(rowE)
         W.push(1 / ((obs.stdDevE ?? 0.005) ** 2))
-        l.push(obs.deltaE! - (toCoord.e - fromCoord.e))
+        l.push(Number(obs.deltaE) - (toCoord.e - fromCoord.e))
 
         // N component
-        const rowN = new Array(n).fill(0)
-        if (stationIndex.has(obs.to!)) rowN[stationIndex.get(obs.to!)! * 3 + 1] = 1
-        if (stationIndex.has(obs.from!)) rowN[stationIndex.get(obs.from!)! * 3 + 1] = -1
+        const rowN = zeros(n)
+        if (toIdx !== undefined) rowN[toIdx * 3 + 1] = 1
+        if (fromIdx !== undefined) rowN[fromIdx * 3 + 1] = -1
         A.push(rowN)
         W.push(1 / ((obs.stdDevN ?? 0.005) ** 2))
-        l.push(obs.deltaN! - (toCoord.n - fromCoord.n))
+        l.push(Number(obs.deltaN) - (toCoord.n - fromCoord.n))
 
         // H component
-        const rowH = new Array(n).fill(0)
-        if (stationIndex.has(obs.to!)) rowH[stationIndex.get(obs.to!)! * 3 + 2] = 1
-        if (stationIndex.has(obs.from!)) rowH[stationIndex.get(obs.from!)! * 3 + 2] = -1
+        const rowH = zeros(n)
+        if (toIdx !== undefined) rowH[toIdx * 3 + 2] = 1
+        if (fromIdx !== undefined) rowH[fromIdx * 3 + 2] = -1
         A.push(rowH)
         W.push(1 / ((obs.stdDevH ?? 0.010) ** 2))
-        l.push(obs.deltaH! - (toCoord.h - fromCoord.h))
-
-        obsRowIdx += 3
+        l.push(Number(obs.deltaH) - (toCoord.h - fromCoord.h))
       } else if (obs.type === 'slope_distance') {
-        const fromCoord = coords.get(obs.from!)!
-        const toCoord = coords.get(obs.to!)!
+        const fromCoord = coordOf(obs.from)
+        const toCoord = coordOf(obs.to)
 
         // Predicted distance: d = √(ΔE² + ΔN² + ΔH²)
         const dE = toCoord.e - fromCoord.e
@@ -314,16 +324,18 @@ export function adjustNetworkIterative(
         // Partial derivatives:
         //   ∂d/∂E_to = dE/d,  ∂d/∂N_to = dN/d,  ∂d/∂H_to = dH/d
         //   ∂d/∂E_from = -dE/d, etc.
-        const row = new Array(n).fill(0)
+        const row = zeros(n)
         if (d > 0) {
-          if (stationIndex.has(obs.to!)) {
-            const idx = stationIndex.get(obs.to!)! * 3
+          const toIdx = idxOf(obs.to)
+          if (toIdx !== undefined) {
+            const idx = toIdx * 3
             row[idx] = dE / d
             row[idx + 1] = dN / d
             row[idx + 2] = dH / d
           }
-          if (stationIndex.has(obs.from!)) {
-            const idx = stationIndex.get(obs.from!)! * 3
+          const fromIdx = idxOf(obs.from)
+          if (fromIdx !== undefined) {
+            const idx = fromIdx * 3
             row[idx] = -dE / d
             row[idx + 1] = -dN / d
             row[idx + 2] = -dH / d
@@ -331,12 +343,10 @@ export function adjustNetworkIterative(
         }
         A.push(row)
         W.push(1 / ((obs.stdDevDistance ?? 0.003) ** 2))
-        l.push(obs.distance! - d)
-
-        obsRowIdx++
+        l.push(Number(obs.distance) - d)
       } else if (obs.type === 'horizontal_direction') {
-        const fromCoord = coords.get(obs.from!)!
-        const toCoord = coords.get(obs.to!)!
+        const fromCoord = coordOf(obs.from)
+        const toCoord = coordOf(obs.to)
 
         // Predicted direction: atan2(dE, dN) (measured from North, clockwise)
         const dE = toCoord.e - fromCoord.e
@@ -349,28 +359,28 @@ export function adjustNetworkIterative(
         //   ∂dir/∂E_from = -dN / (dE² + dN²)
         //   ∂dir/∂N_from = dE / (dE² + dN²)
         // (no H dependency)
-        const row = new Array(n).fill(0)
+        const row = zeros(n)
         const denom = dE * dE + dN * dN
         if (denom > 0) {
-          if (stationIndex.has(obs.to!)) {
-            const idx = stationIndex.get(obs.to!)! * 3
+          const toIdx = idxOf(obs.to)
+          if (toIdx !== undefined) {
+            const idx = toIdx * 3
             row[idx] = dN / denom
             row[idx + 1] = -dE / denom
           }
-          if (stationIndex.has(obs.from!)) {
-            const idx = stationIndex.get(obs.from!)! * 3
+          const fromIdx = idxOf(obs.from)
+          if (fromIdx !== undefined) {
+            const idx = fromIdx * 3
             row[idx] = -dN / denom
             row[idx + 1] = dE / denom
           }
         }
         A.push(row)
         W.push(1 / ((obs.stdDevDirection ?? 5e-6) ** 2))
-        l.push(obs.direction! - dir)
-
-        obsRowIdx++
+        l.push(Number(obs.direction) - dir)
       } else if (obs.type === 'zenith_angle') {
-        const fromCoord = coords.get(obs.from!)!
-        const toCoord = coords.get(obs.to!)!
+        const fromCoord = coordOf(obs.from)
+        const toCoord = coordOf(obs.to)
 
         // Predicted zenith: atan2(√(dE² + dN²), dH)
         const dE = toCoord.e - fromCoord.e
@@ -383,17 +393,19 @@ export function adjustNetworkIterative(
         // ∂z/∂H_to = -horizontal / (horizontal² + dH²)
         // ∂z/∂E_to = (dE * dH) / (horizontal * (horizontal² + dH²))
         // ∂z/∂N_to = (dN * dH) / (horizontal * (horizontal² + dH²))
-        const row = new Array(n).fill(0)
+        const row = zeros(n)
         const denom = horizontal * horizontal + dH * dH
         if (denom > 0 && horizontal > 0) {
-          if (stationIndex.has(obs.to!)) {
-            const idx = stationIndex.get(obs.to!)! * 3
+          const toIdx = idxOf(obs.to)
+          if (toIdx !== undefined) {
+            const idx = toIdx * 3
             row[idx] = (dE * dH) / (horizontal * denom)
             row[idx + 1] = (dN * dH) / (horizontal * denom)
             row[idx + 2] = -horizontal / denom
           }
-          if (stationIndex.has(obs.from!)) {
-            const idx = stationIndex.get(obs.from!)! * 3
+          const fromIdx = idxOf(obs.from)
+          if (fromIdx !== undefined) {
+            const idx = fromIdx * 3
             row[idx] = -(dE * dH) / (horizontal * denom)
             row[idx + 1] = -(dN * dH) / (horizontal * denom)
             row[idx + 2] = horizontal / denom
@@ -401,21 +413,19 @@ export function adjustNetworkIterative(
         }
         A.push(row)
         W.push(1 / ((obs.stdDevZenith ?? 5e-6) ** 2))
-        l.push(obs.zenith! - z)
-
-        obsRowIdx++
+        l.push(Number(obs.zenith) - z)
       } else if (obs.type === 'height_difference') {
-        const fromCoord = coords.get(obs.from!)!
-        const toCoord = coords.get(obs.to!)!
+        const fromCoord = coordOf(obs.from)
+        const toCoord = coordOf(obs.to)
 
-        const rowH = new Array(n).fill(0)
-        if (stationIndex.has(obs.to!)) rowH[stationIndex.get(obs.to!)! * 3 + 2] = 1
-        if (stationIndex.has(obs.from!)) rowH[stationIndex.get(obs.from!)! * 3 + 2] = -1
+        const rowH = zeros(n)
+        const toIdx = idxOf(obs.to)
+        const fromIdx = idxOf(obs.from)
+        if (toIdx !== undefined) rowH[toIdx * 3 + 2] = 1
+        if (fromIdx !== undefined) rowH[fromIdx * 3 + 2] = -1
         A.push(rowH)
         W.push(1 / ((obs.stdDevH ?? 0.002) ** 2))
-        l.push(obs.deltaH! - (toCoord.h - fromCoord.h))
-
-        obsRowIdx++
+        l.push(Number(obs.deltaH) - (toCoord.h - fromCoord.h))
       }
     }
 
@@ -432,7 +442,7 @@ export function adjustNetworkIterative(
 
     // Update free station coordinates
     free.forEach((s, i) => {
-      const c = coords.get(s.id)!
+      const c = coordOf(s.id)
       coords.set(s.id, {
         e: c.e + deltaX[i * 3],
         n: c.n + deltaX[i * 3 + 1],
@@ -466,8 +476,6 @@ export function adjustNetworkIterative(
   for (let i = 0; i < lastA.length; i++) {
     // For the final iteration, residual v = A·x_correction - l
     // But we want observed - predicted. Recompute from scratch:
-    let ax = 0
-    for (let j = 0; j < n; j++) ax += lastA[i][j] * 0  // x_correction was applied
     finalResiduals.push(lastResiduals[i])
   }
 
@@ -501,13 +509,16 @@ export function adjustNetworkIterative(
 
   // Build adjusted stations with error estimates
   const adjustedStations = stationsInput.map(s => {
-    const c = coords.get(s.id)!
+    const c = coordOf(s.id)
     const residualE = 0, residualN = 0, residualH = 0
     let sigmaE = 0, sigmaN = 0, sigmaH = 0
     let semiMajor = 0, semiMinor = 0, orientation = 0
 
     if (!s.isFixed) {
-      const i = stationIndex.get(s.id)!
+      const i = stationIndex.get(s.id)
+      if (i === undefined) {
+        throw new Error(`adjustNetworkIterative: missing index for free station "${s.id}"`)
+      }
       const qEE = Qxx[i * 3][i * 3]
       const qNN = Qxx[i * 3 + 1][i * 3 + 1]
       const qHH = Qxx[i * 3 + 2][i * 3 + 2]
@@ -594,8 +605,13 @@ export function adjustNetworkIterative(
 
 // ─── Matrix Helpers (mirroring networkAdjustment.ts) ────────────────────────
 
+/** Typed zero vector — avoids the `any[]` that `new Array(n).fill(0)` infers. */
+function zeros(n: number): number[] {
+  return Array.from({ length: n }, () => 0)
+}
+
 function multiplyAtWA(A: number[][], W: number[], n: number): number[][] {
-  const result = Array.from({ length: n }, () => new Array(n).fill(0))
+  const result = Array.from({ length: n }, () => zeros(n))
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
       for (let k = 0; k < A.length; k++) {
@@ -607,7 +623,7 @@ function multiplyAtWA(A: number[][], W: number[], n: number): number[][] {
 }
 
 function multiplyAtWl(A: number[][], W: number[], l: number[], n: number): number[] {
-  const result = new Array(n).fill(0)
+  const result = zeros(n)
   for (let i = 0; i < n; i++) {
     for (let k = 0; k < A.length; k++) {
       result[i] += A[k][i] * W[k] * l[k]
@@ -635,7 +651,7 @@ function solveLinearSystem(A: number[][], b: number[], n: number): number[] {
     }
   }
 
-  const x = new Array(n).fill(0)
+  const x = zeros(n)
   for (let i = n - 1; i >= 0; i--) {
     x[i] = M[i][n]
     for (let j = i + 1; j < n; j++) x[i] -= M[i][j] * x[j]
@@ -645,9 +661,9 @@ function solveLinearSystem(A: number[][], b: number[], n: number): number[] {
 }
 
 function invertMatrix(A: number[][], n: number): number[][] {
-  if (A.length === 0) return Array.from({ length: n }, () => new Array(n).fill(0))
+  if (A.length === 0) return Array.from({ length: n }, () => zeros(n))
   const M = A.map((row, i) => {
-    const aug = [...row, ...new Array(n).fill(0)]
+    const aug = [...row, ...zeros(n)]
     aug[n + i] = 1
     return aug
   })
@@ -660,7 +676,7 @@ function invertMatrix(A: number[][], n: number): number[][] {
     ;[M[col], M[maxRow]] = [M[maxRow], M[col]]
 
     const pivot = M[col][col]
-    if (Math.abs(pivot) < 1e-12) return Array.from({ length: n }, () => new Array(n).fill(0))
+    if (Math.abs(pivot) < 1e-12) return Array.from({ length: n }, () => zeros(n))
 
     for (let k = 0; k < 2 * n; k++) M[col][k] /= pivot
     for (let row = 0; row < n; row++) {
