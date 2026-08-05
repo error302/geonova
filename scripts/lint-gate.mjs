@@ -12,16 +12,18 @@
  * warnings). Pre-existing warnings pass through, exactly as the ratchet
  * intent ("no new warnings allowed") describes.
  *
- * MEMBER-ACCESS FLOOR: the fast changed-files analogue of the whole-repo
- * member-access ratchet in lint-ratchets.mjs. The changed files must not
- * ADD @typescript-eslint/no-unsafe-member-access warnings (head > base in
- * the member-access family fails the gate) — so a PR gets a ~30s regression
- * check before the slow whole-repo ratchet runs. --member-floor N raises the
- * ceiling to max(baseMember, N), mirroring --max-warnings.
+ * FAMILY FLOORS: the fast changed-files analogue of the whole-repo per-rule
+ * ratchets in lint-ratchets.mjs. A changed file must not ADD warnings in a
+ * gated family (head > base in that family fails the gate) — so a PR gets a
+ * ~30s regression check before the slow whole-repo ratchet runs. Currently
+ * gated: no-unsafe-member-access (--member-floor), no-unsafe-assignment
+ * (--floor-assignment), no-explicit-any (--floor-explicit-any). Each
+ * --*-floor N raises that family's ceiling to max(baseFamily, N), mirroring
+ * --max-warnings.
  *
  * Usage (mirrors CI):
- *   node scripts/lint-gate.mjs <base-ref> <file>... [--max-warnings N] [--member-floor N]
- *   node scripts/lint-gate.mjs --paths-from-changed [base-ref] [--max-warnings N] [--member-floor N]
+ *   node scripts/lint-gate.mjs <base-ref> <file>... [--max-warnings N] [--member-floor N] [--floor-assignment N] [--floor-explicit-any N]
+ *   node scripts/lint-gate.mjs --paths-from-changed [base-ref] [--max-warnings N] [--member-floor N] [--floor-assignment N] [--floor-explicit-any N]
  *   exit 0 = pass, 1 = fail, 2 = usage error
  *
  * --paths-from-changed computes the changed TS/TSX files via
@@ -45,6 +47,8 @@ import { pathToFileURL } from 'node:url'
 import path from 'node:path'
 
 const MEMBER_RULE = '@typescript-eslint/no-unsafe-member-access'
+const ASSIGNMENT_RULE = '@typescript-eslint/no-unsafe-assignment'
+const EXPLICIT_ANY_RULE = '@typescript-eslint/no-explicit-any'
 
 const args = process.argv.slice(2)
 
@@ -53,19 +57,23 @@ const args = process.argv.slice(2)
 let PFC = false
 let maxWarnings = null
 let memberFloor = null
+let assignmentFloor = null
+let explicitAnyFloor = null
 const positional = []
 for (let i = 0; i < args.length; i++) {
   const a = args[i]
   if (a === '--paths-from-changed') {
     PFC = true
-  } else if (a === '--max-warnings' || a === '--member-floor') {
+  } else if (a === '--max-warnings' || a === '--member-floor' || a === '--floor-assignment' || a === '--floor-explicit-any') {
     const v = Number(args[++i])
     if (!Number.isFinite(v)) {
       console.error(`[lint-gate] ${a} requires a numeric value (got "${args[i]}").`)
       process.exit(2)
     }
     if (a === '--max-warnings') maxWarnings = v
-    else memberFloor = v
+    else if (a === '--member-floor') memberFloor = v
+    else if (a === '--floor-assignment') assignmentFloor = v
+    else explicitAnyFloor = v
   } else if (a.startsWith('--')) {
     console.error(`[lint-gate] unknown flag: ${a}`)
     process.exit(2)
@@ -109,8 +117,8 @@ if (PFC) {
 }
 
 if (!baseRef || !files || files.length === 0) {
-  console.error('usage: node scripts/lint-gate.mjs <base-ref> <file>... [--max-warnings N] [--member-floor N]')
-  console.error('   or: node scripts/lint-gate.mjs --paths-from-changed [base-ref] [--max-warnings N] [--member-floor N]')
+  console.error('usage: node scripts/lint-gate.mjs <base-ref> <file>... [--max-warnings N] [--member-floor N] [--floor-assignment N] [--floor-explicit-any N]')
+  console.error('   or: node scripts/lint-gate.mjs --paths-from-changed [base-ref] [--max-warnings N] [--member-floor N] [--floor-assignment N] [--floor-explicit-any N]')
   process.exit(2)
 }
 
@@ -128,28 +136,44 @@ const eslint = new ESLint({
 function countWarnings(messages) {
   let total = 0
   let member = 0
+  let assignment = 0
+  let explicitAny = 0
   for (const m of messages) {
     if (m.severity === 1) {
       total++
       if (m.ruleId === MEMBER_RULE) member++
+      else if (m.ruleId === ASSIGNMENT_RULE) assignment++
+      else if (m.ruleId === EXPLICIT_ANY_RULE) explicitAny++
     }
   }
-  return { total, member }
+  return { total, member, assignment, explicitAny }
 }
 
-// Committed whole-repo member-access floor — informational context only. The
+// Committed whole-repo family floors — informational context only. The
 // changed-files gate is a regression check (head > base), not the repo floor.
-let committedFloor = null
+// Member-access lives in its own decoupled baseline file; the other families
+// use the shared warning baseline. Each load is isolated so a malformed file
+// only drops that family's context.
+const committedFloors = {}
 try {
   if (existsSync('scripts/member-access-baseline.json')) {
     const b = JSON.parse(readFileSync('scripts/member-access-baseline.json', 'utf8'))
-    committedFloor = b[MEMBER_RULE] ?? null
+    committedFloors[MEMBER_RULE] = b[MEMBER_RULE] ?? null
+  }
+} catch { /* informational only */ }
+try {
+  if (existsSync('scripts/warning-baseline.json')) {
+    const b = JSON.parse(readFileSync('scripts/warning-baseline.json', 'utf8'))
+    committedFloors[ASSIGNMENT_RULE] = b[ASSIGNMENT_RULE] ?? null
+    committedFloors[EXPLICIT_ANY_RULE] = b[EXPLICIT_ANY_RULE] ?? null
   }
 } catch { /* informational only */ }
 
 // 1. Baseline: warnings in the changed files at the base ref.
 let baseWarnings = 0
 let baseMember = 0
+let baseAssignment = 0
+let baseExplicitAny = 0
 for (const f of files) {
   let content
   try {
@@ -167,6 +191,8 @@ for (const f of files) {
     const c = countWarnings(res.flatMap((r) => r.messages))
     baseWarnings += c.total
     baseMember += c.member
+    baseAssignment += c.assignment
+    baseExplicitAny += c.explicitAny
   } catch (err) {
     console.error(`[lint-gate] could not lint base version of ${f}: ${err.message}`)
     process.exit(2)
@@ -178,17 +204,23 @@ const results = await eslint.lintFiles(files)
 const headErrors = results.reduce((n, r) => n + (r.errorCount || 0), 0)
 let headWarnings = 0
 let headMember = 0
+let headAssignment = 0
+let headExplicitAny = 0
 for (const r of results) {
   for (const m of r.messages) {
     if (m.severity === 1) {
       headWarnings++
       if (m.ruleId === MEMBER_RULE) headMember++
+      else if (m.ruleId === ASSIGNMENT_RULE) headAssignment++
+      else if (m.ruleId === EXPLICIT_ANY_RULE) headExplicitAny++
     }
   }
 }
 
 const limit = maxWarnings === null ? baseWarnings : Math.max(baseWarnings, maxWarnings)
 const memberLimit = memberFloor === null ? baseMember : Math.max(baseMember, memberFloor)
+const assignmentLimit = assignmentFloor === null ? baseAssignment : Math.max(baseAssignment, assignmentFloor)
+const explicitAnyLimit = explicitAnyFloor === null ? baseExplicitAny : Math.max(baseExplicitAny, explicitAnyFloor)
 
 if (headErrors > 0) {
   for (const r of results) {
@@ -216,21 +248,37 @@ if (headWarnings > limit) {
   process.exit(1)
 }
 
-if (headMember > memberLimit) {
+// Family-floor checks: fail when a gated family grows beyond its limit.
+// Shared helper keeps the three (member-access, assignment, explicit-any)
+// checks identical — only the rule/counts differ.
+const familyFail = (rule, head, base, limit) => {
+  if (head <= limit) return
   for (const r of results) {
-    for (const m of r.messages.filter((x) => x.severity === 1 && x.ruleId === MEMBER_RULE)) {
+    for (const m of r.messages.filter((x) => x.severity === 1 && x.ruleId === rule)) {
       console.error(`  ${r.filePath}:${m.line}:${m.column}  ${m.message}  ${m.ruleId}`)
     }
   }
+  const repoFloor = committedFloors[rule]
   console.error(
-    `[lint-gate] FAIL: ${MEMBER_RULE} warnings increased in changed files (base ${baseMember} → head ${headMember}, limit ${memberLimit}).` +
-    (committedFloor !== null ? ` (whole-repo member-access floor: ${committedFloor})` : '')
+    `[lint-gate] FAIL: ${rule} warnings increased in changed files (base ${base} → head ${head}, limit ${limit}).` +
+    (repoFloor !== undefined && repoFloor !== null ? ` (whole-repo floor: ${repoFloor})` : '')
   )
   process.exit(1)
 }
+familyFail(MEMBER_RULE, headMember, baseMember, memberLimit)
+familyFail(ASSIGNMENT_RULE, headAssignment, baseAssignment, assignmentLimit)
+familyFail(EXPLICIT_ANY_RULE, headExplicitAny, baseExplicitAny, explicitAnyLimit)
 
-const floorNote = committedFloor !== null ? `, member-access ${headMember} (base ${baseMember}, repo floor ${committedFloor})` : `, member-access ${headMember} (base ${baseMember})`
+const familyStats = [
+  { rule: MEMBER_RULE, label: 'member-access', head: headMember, base: baseMember },
+  { rule: ASSIGNMENT_RULE, label: 'assignment', head: headAssignment, base: baseAssignment },
+  { rule: EXPLICIT_ANY_RULE, label: 'explicit-any', head: headExplicitAny, base: baseExplicitAny },
+]
+const familyNotes = familyStats.map(({ rule, label, head, base }) => {
+  const repoFloor = committedFloors[rule]
+  return `${label} ${head} (base ${base}${repoFloor !== undefined && repoFloor !== null ? `, repo floor ${repoFloor}` : ''})`
+})
 console.log(
-  `[lint-gate] OK: ${headWarnings} warnings (base ${baseWarnings}), 0 errors across ${files.length} file(s)${floorNote}.`
+  `[lint-gate] OK: ${headWarnings} warnings (base ${baseWarnings}), 0 errors across ${files.length} file(s), ${familyNotes.join(', ')}.`
 )
 process.exit(0)
