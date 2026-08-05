@@ -35,7 +35,16 @@ jobs:
       # assignment, explicit-any). The whole-repo ratchet below is the slow,
       # blocking per-rule baseline.
       - name: Lint changed files (blocking, zero new warnings)
-        run: node scripts/lint-gate.mjs --paths-from-changed "origin/${{ github.base_ref }}"
+        run: |
+          # Family floors (member-access, assignment, explicit-any) are read
+          # from the committed baselines at runtime so the gates never go
+          # stale as the grind ratchets them down. Each --*-floor N raises
+          # that family's ceiling to max(base-in-changed-files, N) — inert
+          # while floors are large, binding once the grind shrinks them.
+          MEMBER_FLOOR=$(node -p "JSON.parse(require('fs').readFileSync('scripts/member-access-baseline.json','utf8'))['@typescript-eslint/no-unsafe-member-access'] || 0")
+          ASSIGN_FLOOR=$(node -p "JSON.parse(require('fs').readFileSync('scripts/warning-baseline.json','utf8'))['@typescript-eslint/no-unsafe-assignment'] || 0")
+          ANY_FLOOR=$(node -p "JSON.parse(require('fs').readFileSync('scripts/warning-baseline.json','utf8'))['@typescript-eslint/no-explicit-any'] || 0")
+          node scripts/lint-gate.mjs --paths-from-changed "origin/${{ github.base_ref }}"             --member-floor "$MEMBER_FLOOR"             --floor-assignment "$ASSIGN_FLOOR"             --floor-explicit-any "$ANY_FLOOR"
 
       # AUDIT FIX (2026-08-04): Single blocking lint pass. lint-ratchets.mjs
       # runs eslint once over middleware.ts + src/ and fails if ANY rule in

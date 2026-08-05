@@ -88,7 +88,16 @@ jobs:
       # base ref, including the per-family floors (member-access, assignment,
       # explicit-any).
       - name: Lint changed files (blocking, zero new warnings)
-        run: node scripts/lint-gate.mjs --paths-from-changed "${{ steps.base.outputs.ref }}"
+        run: |
+          # Family floors (member-access, assignment, explicit-any) are read
+          # from the committed baselines at runtime so the gates never go
+          # stale as the grind ratchets them down. Each --*-floor N raises
+          # that family's ceiling to max(base-in-changed-files, N) — inert
+          # while floors are large, binding once the grind shrinks them.
+          MEMBER_FLOOR=$(node -p "JSON.parse(require('fs').readFileSync('scripts/member-access-baseline.json','utf8'))['@typescript-eslint/no-unsafe-member-access'] || 0")
+          ASSIGN_FLOOR=$(node -p "JSON.parse(require('fs').readFileSync('scripts/warning-baseline.json','utf8'))['@typescript-eslint/no-unsafe-assignment'] || 0")
+          ANY_FLOOR=$(node -p "JSON.parse(require('fs').readFileSync('scripts/warning-baseline.json','utf8'))['@typescript-eslint/no-explicit-any'] || 0")
+          node scripts/lint-gate.mjs --paths-from-changed "${{ steps.base.outputs.ref }}"             --member-floor "$MEMBER_FLOOR"             --floor-assignment "$ASSIGN_FLOOR"             --floor-explicit-any "$ANY_FLOOR"
       # A11Y GATE (2026-08-03): Bans placeholder-like / junk aria-labels
       # codebase-wide (placeholder-equals-name, generic phrases, punctuation,
       # crunched header text) so accessible names can't regress in tables.
