@@ -44,7 +44,10 @@ export const MapOverlays = memo(function MapOverlays() {
       {/* Zoom controls - top right */}
       <div className="absolute top-3 right-3 z-[1000] flex flex-col gap-1" role="group" aria-label="Map zoom controls">
         <button
-          onClick={() => mapInstance.current?.getView().animate({ zoom: mapInstance.current.getView().getZoom() + 1 }, { duration: 200 })}
+          onClick={() => {
+            const view = mapInstance.current?.getView()
+            view?.animate({ zoom: (view.getZoom() ?? 0) + 1 }, { duration: 200 })
+          }}
           className="w-10 h-10 bg-[var(--bg-secondary)]/90 backdrop-blur-sm border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] flex items-center justify-center hover:bg-[var(--accent)]/20 transition-colors"
           title="Zoom In"
           aria-label="Zoom in"
@@ -52,7 +55,10 @@ export const MapOverlays = memo(function MapOverlays() {
           +
         </button>
         <button
-          onClick={() => mapInstance.current?.getView().animate({ zoom: Math.max(6, mapInstance.current.getView().getZoom() - 1) }, { duration: 200 })}
+          onClick={() => {
+            const view = mapInstance.current?.getView()
+            view?.animate({ zoom: Math.max(6, (view.getZoom() ?? 0) - 1) }, { duration: 200 })
+          }}
           className="w-10 h-10 bg-[var(--bg-secondary)]/90 backdrop-blur-sm border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] flex items-center justify-center hover:bg-[var(--accent)]/20 transition-colors"
           title="Zoom Out"
           aria-label="Zoom out"

@@ -37420,254 +37420,12 @@
         "messageId": "unsafeReturn",
         "endLine": 27,
         "endColumn": 38
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 51,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 51,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 51,
-        "column": 18,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 51,
-        "endColumn": 45
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getView on an `any` value.",
-        "line": 51,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 51,
-        "endColumn": 45
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 52,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 52,
-        "endColumn": 36
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 52,
-        "column": 20,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 52,
-        "endColumn": 34
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getCenter on an `any` value.",
-        "line": 52,
-        "column": 25,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 52,
-        "endColumn": 34
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 53,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 53,
-        "endColumn": 32
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 53,
-        "column": 18,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 53,
-        "endColumn": 30
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getZoom on an `any` value.",
-        "line": 53,
-        "column": 23,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 53,
-        "endColumn": 30
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 54,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 54,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 54,
-        "column": 22,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 54,
-        "endColumn": 38
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getRotation on an `any` value.",
-        "line": 54,
-        "column": 27,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 54,
-        "endColumn": 38
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of type `[any, any]` to a variable of type `[number, number]`.",
-        "line": 61,
-        "column": 7,
-        "nodeType": "Property",
-        "messageId": "unsafeAssignment",
-        "endLine": 61,
-        "endColumn": 37
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access [0] on an `any` value.",
-        "line": 61,
-        "column": 23,
-        "nodeType": "Literal",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 61,
-        "endColumn": 24
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access [1] on an `any` value.",
-        "line": 61,
-        "column": 34,
-        "nodeType": "Literal",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 61,
-        "endColumn": 35
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 62,
-        "column": 7,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 62,
-        "endColumn": 11
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 63,
-        "column": 7,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 63,
-        "endColumn": 30
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 75,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 75,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 75,
-        "column": 18,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 75,
-        "endColumn": 45
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getView on an `any` value.",
-        "line": 75,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 75,
-        "endColumn": 45
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 76,
-        "column": 5,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 76,
-        "endColumn": 17
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .animate on an `any` value.",
-        "line": 76,
-        "column": 10,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 76,
-        "endColumn": 17
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 23,
+    "warningCount": 1,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
     "source": "'use client'\r\n/**\r\n * BookmarkPanel — Save and restore map view presets\r\n *\r\n * Saves current center, zoom, and rotation to localStorage.\r\n * Lists saved bookmarks with click-to-navigate and delete buttons.\r\n */\r\n\r\nimport React, { memo, useState, useCallback, useEffect } from 'react'\r\nimport { Bookmark, Trash2, Navigation, ChevronDown } from 'lucide-react'\r\nimport { useMapContext } from '@/app/map/MapReactContext'\r\n\r\nconst STORAGE_KEY = 'metardu-bookmarks'\r\n\r\ninterface BookmarkEntry {\r\n  id: string\r\n  label: string\r\n  center: [number, number]\r\n  zoom: number\r\n  rotation: number\r\n  createdAt: string\r\n}\r\n\r\nfunction loadBookmarks(): BookmarkEntry[] {\r\n  try {\r\n    const raw = localStorage.getItem(STORAGE_KEY)\r\n    return raw ? JSON.parse(raw) : []\r\n  } catch {\r\n    return []\r\n  }\r\n}\r\n\r\nfunction saveBookmarks(entries: BookmarkEntry[]) {\r\n  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries))\r\n}\r\n\r\nexport const BookmarkPanel = memo(function BookmarkPanel() {\r\n  const { mapInstance } = useMapContext()\r\n  const [bookmarks, setBookmarks] = useState<BookmarkEntry[]>([])\r\n  const [label, setLabel] = useState('')\r\n  const [collapsed, setCollapsed] = useState(false)\r\n\r\n  // Load bookmarks on mount\r\n  useEffect(() => {\r\n    setBookmarks(loadBookmarks())\r\n  }, [])\r\n\r\n  const saveCurrentView = useCallback(() => {\r\n    if (!mapInstance.current) return\r\n\r\n    const view = mapInstance.current.getView()\r\n    const center = view.getCenter()\r\n    const zoom = view.getZoom()\r\n    const rotation = view.getRotation()\r\n\r\n    if (!center || zoom == null) return\r\n\r\n    const entry: BookmarkEntry = {\r\n      id: `bm-${Date.now()}`,\r\n      label: label.trim() || `View ${bookmarks.length + 1}`,\r\n      center: [center[0], center[1]],\r\n      zoom,\r\n      rotation: rotation || 0,\r\n      createdAt: new Date().toISOString(),\r\n    }\r\n\r\n    const updated = [...bookmarks, entry]\r\n    setBookmarks(updated)\r\n    saveBookmarks(updated)\r\n    setLabel('')\r\n  }, [mapInstance, label, bookmarks])\r\n\r\n  const navigateToBookmark = useCallback((entry: BookmarkEntry) => {\r\n    if (!mapInstance.current) return\r\n    const view = mapInstance.current.getView()\r\n    view.animate({\r\n      center: entry.center,\r\n      zoom: entry.zoom,\r\n      rotation: entry.rotation,\r\n      duration: 600,\r\n    })\r\n  }, [mapInstance])\r\n\r\n  const deleteBookmark = useCallback((id: string) => {\r\n    const updated = bookmarks.filter(b => b.id !== id)\r\n    setBookmarks(updated)\r\n    saveBookmarks(updated)\r\n  }, [bookmarks])\r\n\r\n  return (\r\n    <div className=\"bg-[var(--bg-secondary)]/90 backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-lg w-56\">\r\n      {/* Header */}\r\n      <div\r\n        className=\"flex items-center justify-between px-3 py-2 cursor-pointer select-none\"\r\n        onClick={() => setCollapsed(!collapsed)}\r\n      >\r\n        <div className=\"flex items-center gap-2\">\r\n          <Bookmark className=\"w-3.5 h-3.5 text-[var(--accent)]\" />\r\n          <span className=\"text-[10px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold\">\r\n            Bookmarks\r\n          </span>\r\n        </div>\r\n        <ChevronDown className={`w-3 h-3 text-[var(--text-muted)] transition-transform ${collapsed ? '-rotate-90' : ''}`} />\r\n      </div>\r\n\r\n      {!collapsed && (\r\n        <div className=\"px-3 pb-3 space-y-2\">\r\n          {/* Save current view */}\r\n          <div className=\"flex gap-1.5\">\r\n            <input\r\n              type=\"text\"\r\n              value={label}\r\n              onChange={(e) => setLabel(e.target.value)}\r\n              aria-label=\"Bookmark name\"\r\n              className=\"flex-1 h-7 px-2 text-[10px] bg-[var(--bg-card)]/5 border border-[var(--border-color)]/[0.08] rounded text-[var(--text-primary)] placeholder-gray-600 focus:outline-none focus:border-[var(--accent)]/40\"\r\n              onKeyDown={(e) => { if (e.key === 'Enter') saveCurrentView() }}\r\n            />\r\n            <button\r\n              onClick={saveCurrentView}\r\n              className=\"h-7 px-2 text-[10px] bg-[var(--accent)]/20 text-[var(--accent)] border border-[var(--accent)]/30 rounded hover:bg-[var(--accent)]/30 transition-colors\"\r\n              title=\"Save current view\"\r\n            >\r\n              Save\r\n            </button>\r\n          </div>\r\n\r\n          {/* Bookmark list */}\r\n          {bookmarks.length === 0 ? (\r\n            <div className=\"text-[9px] text-[var(--text-muted)] text-center py-1\">\r\n              No saved views\r\n            </div>\r\n          ) : (\r\n            <div className=\"space-y-1 max-h-32 overflow-y-auto\">\r\n              {bookmarks.map((entry) => (\r\n                <div\r\n                  key={entry.id}\r\n                  className=\"flex items-center justify-between px-2 py-1 bg-[var(--bg-card)]/[0.03] rounded group hover:bg-[var(--bg-card)]/[0.06] transition-colors\"\r\n                >\r\n                  <button\r\n                    onClick={() => navigateToBookmark(entry)}\r\n                    className=\"flex items-center gap-1.5 flex-1 min-w-0 text-left\"\r\n                  >\r\n                    <Navigation className=\"w-3 h-3 text-[var(--text-muted)] flex-shrink-0\" />\r\n                    <span className=\"text-[10px] text-[var(--text-secondary)] truncate\">{entry.label}</span>\r\n                  </button>\r\n                  <button\r\n                    onClick={() => deleteBookmark(entry.id)}\r\n                    className=\"p-0.5 text-[var(--text-muted)] hover:text-[var(--error)] opacity-0 group-hover:opacity-100 transition-opacity\"\r\n                    title=\"Delete bookmark\"\r\n                  >\r\n                    <Trash2 className=\"w-3 h-3\" />\r\n                  </button>\r\n                </div>\r\n              ))}\r\n            </div>\r\n          )}\r\n        </div>\r\n      )}\r\n    </div>\r\n  )\r\n})\r\n",
@@ -37754,17 +37512,6 @@
         ]
       },
       {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 401,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 401,
-        "endColumn": 36
-      },
-      {
         "ruleId": "@typescript-eslint/no-unused-vars",
         "severity": 1,
         "message": "'to21037' is assigned a value but never used. Allowed unused vars must match /^_/u.",
@@ -37774,94 +37521,6 @@
         "messageId": "unusedVar",
         "endLine": 414,
         "endColumn": 22
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 427,
-        "column": 13,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 427,
-        "endColumn": 48
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 427,
-        "column": 22,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 427,
-        "endColumn": 46
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 427,
-        "column": 22,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 427,
-        "endColumn": 35
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getLayers on an `any` value.",
-        "line": 427,
-        "column": 26,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 427,
-        "endColumn": 35
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getArray on an `any` value.",
-        "line": 427,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 427,
-        "endColumn": 46
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 428,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 428,
-        "endColumn": 77
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 428,
-        "column": 23,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 428,
-        "endColumn": 34
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .find on an `any` value.",
-        "line": 428,
-        "column": 30,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 428,
-        "endColumn": 34
       },
       {
         "ruleId": "@typescript-eslint/no-explicit-any",
@@ -38038,28 +37697,6 @@
         "ruleId": "@typescript-eslint/no-unsafe-call",
         "severity": 1,
         "message": "Unsafe call of an `any` typed value.",
-        "line": 444,
-        "column": 9,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 444,
-        "endColumn": 21
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .addLayer on an `any` value.",
-        "line": 444,
-        "column": 13,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 444,
-        "endColumn": 21
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
         "line": 446,
         "column": 10,
         "nodeType": "MemberExpression",
@@ -38136,50 +37773,6 @@
         "endColumn": 51
       },
       {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 450,
-        "column": 7,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 450,
-        "endColumn": 28
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 450,
-        "column": 7,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 450,
-        "endColumn": 18
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getView on an `any` value.",
-        "line": 450,
-        "column": 11,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 450,
-        "endColumn": 18
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .animate on an `any` value.",
-        "line": 450,
-        "column": 21,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 450,
-        "endColumn": 28
-      },
-      {
         "ruleId": "no-console",
         "severity": 1,
         "message": "Unexpected console statement.",
@@ -38210,7 +37803,7 @@
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 32,
+    "warningCount": 17,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
     "source": "'use client'\r\n/**\r\n * CogoToolsPanel — Interactive COGO computation tools for surveyors\r\n *\r\n * Provides four SoK-compliant computation methods:\r\n * 1. Radiation — compute point from station + bearing + distance\r\n * 2. Bearing Intersection — intersect two rays from known stations\r\n * 3. Distance Intersection — intersect two circles (trilateration)\r\n * 4. Resection (Tienstra) — compute position from 3 known points + angles\r\n *\r\n * All inputs accept bearings in DDD.MMSS (Kenya field book convention)\r\n * or decimal degrees. Results displayed in DMS with SoK formatting.\r\n * Computed points can be added to the map as features.\r\n *\r\n * Reads mapInstance from MapReactContext for adding result features.\r\n */\r\n\r\nimport React, { useState, useCallback, memo } from 'react'\r\nimport { Crosshair, Circle, Triangle, Target, Plus, RotateCcw } from 'lucide-react'\r\nimport { useMapContext } from '@/app/map/MapReactContext'\r\nimport { radiation } from '@/lib/engine/cogo'\r\nimport { bearingIntersection } from '@/lib/engine/cogo'\r\nimport { distanceIntersection } from '@/lib/engine/cogo'\r\nimport { tienstraResection } from '@/lib/engine/cogo'\r\nimport { distanceBearing } from '@/lib/engine/distance'\r\nimport { bearingToString, parseFieldAngle } from '@/lib/engine/angles'\r\nimport type { Point2D } from '@/lib/engine/types'\r\n\r\n// ─── Shared Helpers ──────────────────────────────────────────────────────\r\n\r\n/** Parse bearing input — accepts DDD.MMSS, decimal degrees, or DMS string */\r\nfunction parseBearing(input: string): number | null {\r\n  const trimmed = input.trim()\r\n  if (!trimmed) return null\r\n  return parseFieldAngle(trimmed)\r\n}\r\n\r\n/** Format a computed point for display */\r\nfunction formatPoint(p: Point2D): string {\r\n  return `E ${p.easting.toFixed(3)}  N ${p.northing.toFixed(3)}`\r\n}\r\n\r\n/** Input field with label */\r\nfunction Field({ label, value, onChange, placeholder, type = 'text' }: {\r\n  label: string\r\n  value: string\r\n  onChange: (v: string) => void\r\n  placeholder?: string\r\n  type?: string\r\n}) {\r\n  const id = React.useId()\r\n  return (\r\n    <div className=\"flex items-center gap-2\">\r\n      <label htmlFor={id} className=\"text-[10px] text-[var(--text-muted)] uppercase tracking-wider w-12 shrink-0\">\r\n        {label}\r\n      </label>\r\n      <input id={id}\r\n        type={type}\r\n        value={value}\r\n        onChange={(e) => onChange(e.target.value)}\r\n        placeholder={placeholder}\r\n        className=\"flex-1 px-2 py-1 text-xs font-mono bg-[var(--bg-card)] border border-[var(--border-color)] rounded\r\n                   focus:border-[#1B3A5C] focus:outline-none focus:ring-1 focus:ring-[#1B3A5C]/30\r\n                   transition-colors\"\r\n      />\r\n    </div>\r\n  )\r\n}\r\n\r\n/** Compute button */\r\nfunction ComputeButton({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) {\r\n  return (\r\n    <button\r\n      onClick={onClick}\r\n      disabled={disabled}\r\n      className=\"w-full py-1.5 text-xs font-semibold rounded-lg transition-colors\r\n                 bg-[#1B3A5C] text-[var(--text-primary)] hover:bg-[#142d49]\r\n                 disabled:bg-gray-300 disabled:text-[var(--text-muted)] disabled:cursor-not-allowed\"\r\n    >\r\n      Compute\r\n    </button>\r\n  )\r\n}\r\n\r\n/** Result display */\r\nfunction ResultDisplay({ children }: { children: React.ReactNode }) {\r\n  return (\r\n    <div className=\"bg-[var(--primary-blue)]/10 border border-blue-100 rounded-lg px-3 py-2 space-y-1\">\r\n      {children}\r\n    </div>\r\n  )\r\n}\r\n\r\n// ─── Tab Definitions ─────────────────────────────────────────────────────\r\n\r\ntype TabId = 'radiation' | 'bearing-int' | 'distance-int' | 'resection'\r\n\r\nconst TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [\r\n  { id: 'radiation', label: 'Radiation', icon: <Crosshair className=\"w-3.5 h-3.5\" /> },\r\n  { id: 'bearing-int', label: 'Bearing Int', icon: <Target className=\"w-3.5 h-3.5\" /> },\r\n  { id: 'distance-int', label: 'Dist Int', icon: <Circle className=\"w-3.5 h-3.5\" /> },\r\n  { id: 'resection', label: 'Resection', icon: <Triangle className=\"w-3.5 h-3.5\" /> },\r\n]\r\n\r\n// ─── Radiation Panel ─────────────────────────────────────────────────────\r\n\r\nfunction RadiationPanel({ onAddPoint }: { onAddPoint: (p: Point2D, label: string) => void }) {\r\n  const [easting, setEasting] = useState('')\r\n  const [northing, setNorthing] = useState('')\r\n  const [bearing, setBearing] = useState('')\r\n  const [distance, setDistance] = useState('')\r\n  const [result, setResult] = useState<{ point: Point2D; bearing: number; distance: number } | null>(null)\r\n  const [error, setError] = useState('')\r\n\r\n  const compute = useCallback(() => {\r\n    setError('')\r\n    setResult(null)\r\n    const e = parseFloat(easting)\r\n    const n = parseFloat(northing)\r\n    const b = parseBearing(bearing)\r\n    const d = parseFloat(distance)\r\n\r\n    if (isNaN(e) || isNaN(n)) { setError('Invalid station coordinates'); return }\r\n    if (b === null) { setError('Invalid bearing (use DDD.MMSS or decimal)'); return }\r\n    if (isNaN(d) || d <= 0) { setError('Distance must be positive'); return }\r\n\r\n    const res = radiation({ easting: e, northing: n }, b, d)\r\n    setResult({ point: res.point, bearing: res.bearing, distance: res.distance })\r\n  }, [easting, northing, bearing, distance])\r\n\r\n  return (\r\n    <div className=\"space-y-2.5\">\r\n      <div className=\"text-[10px] text-[var(--text-secondary)] leading-relaxed\">\r\n        Compute a new point from a known station, bearing (WCB), and distance.\r\n      </div>\r\n      <div className=\"space-y-1.5\">\r\n        <div className=\"text-[9px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold\">Station</div>\r\n        <Field label=\"E\" value={easting} onChange={setEasting} placeholder=\"e.g. 512345.678\" />\r\n        <Field label=\"N\" value={northing} onChange={setNorthing} placeholder=\"e.g. 9834567.890\" />\r\n        <div className=\"text-[9px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold pt-1\">Observation</div>\r\n        <Field label=\"Brg\" value={bearing} onChange={setBearing} placeholder=\"e.g. 47.2314 or 47.3861\" />\r\n        <Field label=\"Dist\" value={distance} onChange={setDistance} placeholder=\"e.g. 125.450\" type=\"number\" />\r\n      </div>\r\n      <ComputeButton onClick={compute} />\r\n      {error && <div className=\"text-[10px] text-[var(--error)]\">{error}</div>}\r\n      {result && (\r\n        <ResultDisplay>\r\n          <div className=\"text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-semibold\">Computed Point</div>\r\n          <div className=\"text-xs font-mono text-[#1B3A5C]\">{formatPoint(result.point)}</div>\r\n          <div className=\"text-[10px] text-[var(--text-muted)]\">\r\n            Bearing: {bearingToString(result.bearing)} &middot; Dist: {result.distance.toFixed(3)} m\r\n          </div>\r\n          <button\r\n            onClick={() => onAddPoint(result.point, 'Rad')}\r\n            className=\"flex items-center gap-1 mt-1 px-2 py-0.5 text-[10px] font-semibold\r\n                       bg-[#1B3A5C] text-[var(--text-primary)] rounded hover:bg-[#142d49] transition-colors\"\r\n          >\r\n            <Plus className=\"w-3 h-3\" /> Add to Map\r\n          </button>\r\n        </ResultDisplay>\r\n      )}\r\n    </div>\r\n  )\r\n}\r\n\r\n// ─── Bearing Intersection Panel ──────────────────────────────────────────\r\n\r\nfunction BearingIntersectionPanel({ onAddPoint }: { onAddPoint: (p: Point2D, label: string) => void }) {\r\n  const [eA, setEA] = useState('')\r\n  const [nA, setNA] = useState('')\r\n  const [brgA, setBrgA] = useState('')\r\n  const [eB, setEB] = useState('')\r\n  const [nB, setNB] = useState('')\r\n  const [brgB, setBrgB] = useState('')\r\n  const [result, setResult] = useState<{ point: Point2D; distA: number; distB: number } | null>(null)\r\n  const [error, setError] = useState('')\r\n\r\n  const compute = useCallback(() => {\r\n    setError('')\r\n    setResult(null)\r\n    const ea = parseFloat(eA), na = parseFloat(nA), ba = parseBearing(brgA)\r\n    const eb = parseFloat(eB), nb = parseFloat(nB), bb = parseBearing(brgB)\r\n\r\n    if ([ea, na, eb, nb].some(isNaN)) { setError('Invalid station coordinates'); return }\r\n    if (ba === null || bb === null) { setError('Invalid bearing (use DDD.MMSS or decimal)'); return }\r\n\r\n    const res = bearingIntersection(\r\n      { easting: ea, northing: na }, ba,\r\n      { easting: eb, northing: nb }, bb,\r\n    )\r\n    if (!res) { setError('Bearings are parallel — no intersection'); return }\r\n    setResult({ point: res.point, distA: res.distanceFromA, distB: res.distanceFromB })\r\n  }, [eA, nA, brgA, eB, nB, brgB])\r\n\r\n  return (\r\n    <div className=\"space-y-2.5\">\r\n      <div className=\"text-[10px] text-[var(--text-secondary)] leading-relaxed\">\r\n        Intersect two rays defined by station + bearing (WCB). Returns the intersection point.\r\n      </div>\r\n      <div className=\"space-y-1.5\">\r\n        <div className=\"text-[9px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold\">Station A</div>\r\n        <Field label=\"E\" value={eA} onChange={setEA} placeholder=\"512345.678\" />\r\n        <Field label=\"N\" value={nA} onChange={setNA} placeholder=\"9834567.890\" />\r\n        <Field label=\"Brg\" value={brgA} onChange={setBrgA} placeholder=\"47.2314\" />\r\n        <div className=\"text-[9px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold pt-1\">Station B</div>\r\n        <Field label=\"E\" value={eB} onChange={setEB} placeholder=\"512500.000\" />\r\n        <Field label=\"N\" value={nB} onChange={setNB} placeholder=\"9834600.000\" />\r\n        <Field label=\"Brg\" value={brgB} onChange={setBrgB} placeholder=\"312.1500\" />\r\n      </div>\r\n      <ComputeButton onClick={compute} />\r\n      {error && <div className=\"text-[10px] text-[var(--error)]\">{error}</div>}\r\n      {result && (\r\n        <ResultDisplay>\r\n          <div className=\"text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-semibold\">Intersection</div>\r\n          <div className=\"text-xs font-mono text-[#1B3A5C]\">{formatPoint(result.point)}</div>\r\n          <div className=\"text-[10px] text-[var(--text-muted)]\">\r\n            Dist from A: {result.distA.toFixed(3)} m &middot; Dist from B: {result.distB.toFixed(3)} m\r\n          </div>\r\n          <button\r\n            onClick={() => onAddPoint(result.point, 'Int')}\r\n            className=\"flex items-center gap-1 mt-1 px-2 py-0.5 text-[10px] font-semibold\r\n                       bg-[#1B3A5C] text-[var(--text-primary)] rounded hover:bg-[#142d49] transition-colors\"\r\n          >\r\n            <Plus className=\"w-3 h-3\" /> Add to Map\r\n          </button>\r\n        </ResultDisplay>\r\n      )}\r\n    </div>\r\n  )\r\n}\r\n\r\n// ─── Distance Intersection Panel ─────────────────────────────────────────\r\n\r\nfunction DistanceIntersectionPanel({ onAddPoint }: { onAddPoint: (p: Point2D, label: string) => void }) {\r\n  const [eA, setEA] = useState('')\r\n  const [nA, setNA] = useState('')\r\n  const [distA, setDistA] = useState('')\r\n  const [eB, setEB] = useState('')\r\n  const [nB, setNB] = useState('')\r\n  const [distB, setDistB] = useState('')\r\n  const [result, setResult] = useState<[Point2D, Point2D] | null>(null)\r\n  const [selectedIdx, setSelectedIdx] = useState<0 | 1>(0)\r\n  const [error, setError] = useState('')\r\n\r\n  const compute = useCallback(() => {\r\n    setError('')\r\n    setResult(null)\r\n    const ea = parseFloat(eA), na = parseFloat(nA), da = parseFloat(distA)\r\n    const eb = parseFloat(eB), nb = parseFloat(nB), db = parseFloat(distB)\r\n\r\n    if ([ea, na, da, eb, nb, db].some(isNaN)) { setError('Invalid inputs'); return }\r\n    if (da <= 0 || db <= 0) { setError('Distances must be positive'); return }\r\n\r\n    const res = distanceIntersection(\r\n      { easting: ea, northing: na }, da,\r\n      { easting: eb, northing: nb }, db,\r\n    )\r\n    if (!res) { setError('Circles do not intersect'); return }\r\n    setResult(res)\r\n  }, [eA, nA, distA, eB, nB, distB])\r\n\r\n  const selected = result ? result[selectedIdx] : null\r\n\r\n  return (\r\n    <div className=\"space-y-2.5\">\r\n      <div className=\"text-[10px] text-[var(--text-secondary)] leading-relaxed\">\r\n        Intersect two circles (trilateration). Returns two possible points — select the correct one.\r\n      </div>\r\n      <div className=\"space-y-1.5\">\r\n        <div className=\"text-[9px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold\">Station A</div>\r\n        <Field label=\"E\" value={eA} onChange={setEA} placeholder=\"512345.678\" />\r\n        <Field label=\"N\" value={nA} onChange={setNA} placeholder=\"9834567.890\" />\r\n        <Field label=\"Dist\" value={distA} onChange={setDistA} placeholder=\"125.450\" type=\"number\" />\r\n        <div className=\"text-[9px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold pt-1\">Station B</div>\r\n        <Field label=\"E\" value={eB} onChange={setEB} placeholder=\"512500.000\" />\r\n        <Field label=\"N\" value={nB} onChange={setNB} placeholder=\"9834600.000\" />\r\n        <Field label=\"Dist\" value={distB} onChange={setDistB} placeholder=\"98.760\" type=\"number\" />\r\n      </div>\r\n      <ComputeButton onClick={compute} />\r\n      {error && <div className=\"text-[10px] text-[var(--error)]\">{error}</div>}\r\n      {result && (\r\n        <ResultDisplay>\r\n          <div className=\"text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-semibold\">Two Solutions</div>\r\n          <div className=\"flex gap-2\">\r\n            {([0, 1] as const).map((idx) => (\r\n              <button\r\n                key={`btn-${idx}`}\r\n                onClick={() => setSelectedIdx(idx)}\r\n                className={`flex-1 px-2 py-1 text-[10px] font-mono rounded border transition-colors ${\r\n                  selectedIdx === idx\r\n                    ? 'border-[#1B3A5C] bg-[#1B3A5C] text-[var(--text-primary)]'\r\n                    : 'border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-muted)] hover:border-gray-300'\r\n                }`}\r\n              >\r\n                P{idx + 1}: {formatPoint(result[idx])}\r\n              </button>\r\n            ))}\r\n          </div>\r\n          {selected && (\r\n            <button\r\n              onClick={() => onAddPoint(selected, 'DistInt')}\r\n              className=\"flex items-center gap-1 mt-1 px-2 py-0.5 text-[10px] font-semibold\r\n                         bg-[#1B3A5C] text-[var(--text-primary)] rounded hover:bg-[#142d49] transition-colors\"\r\n            >\r\n              <Plus className=\"w-3 h-3\" /> Add P{selectedIdx + 1} to Map\r\n            </button>\r\n          )}\r\n        </ResultDisplay>\r\n      )}\r\n    </div>\r\n  )\r\n}\r\n\r\n// ─── Resection Panel ─────────────────────────────────────────────────────\r\n\r\nfunction ResectionPanel({ onAddPoint }: { onAddPoint: (p: Point2D, label: string) => void }) {\r\n  const [e1, setE1] = useState(''), [n1, setN1] = useState('')\r\n  const [e2, setE2] = useState(''), [n2, setN2] = useState('')\r\n  const [e3, setE3] = useState(''), [n3, setN3] = useState('')\r\n  const [a12, setA12] = useState(''), [a23, setA23] = useState('')\r\n  const [result, setResult] = useState<{ point: Point2D; d1: number; d2: number; d3: number } | null>(null)\r\n  const [error, setError] = useState('')\r\n\r\n  const compute = useCallback(() => {\r\n    setError('')\r\n    setResult(null)\r\n    const pe1 = parseFloat(e1), pn1 = parseFloat(n1)\r\n    const pe2 = parseFloat(e2), pn2 = parseFloat(n2)\r\n    const pe3 = parseFloat(e3), pn3 = parseFloat(n3)\r\n    const ang12 = parseFloat(a12), ang23 = parseFloat(a23)\r\n\r\n    if ([pe1, pn1, pe2, pn2, pe3, pn3, ang12, ang23].some(isNaN)) {\r\n      setError('Invalid inputs'); return\r\n    }\r\n    if (ang12 <= 0 || ang23 <= 0 || (ang12 + ang23) >= 360) {\r\n      setError('Angles must be positive and sum < 360°'); return\r\n    }\r\n\r\n    const res = tienstraResection(\r\n      { easting: pe1, northing: pn1 },\r\n      { easting: pe2, northing: pn2 },\r\n      { easting: pe3, northing: pn3 },\r\n      ang12, ang23,\r\n    )\r\n    if (!res) { setError('Resection failed — check geometry'); return }\r\n    setResult({ point: res.point, d1: res.distanceToP1, d2: res.distanceToP2, d3: res.distanceToP3 })\r\n  }, [e1, n1, e2, n2, e3, n3, a12, a23])\r\n\r\n  return (\r\n    <div className=\"space-y-2.5\">\r\n      <div className=\"text-[10px] text-[var(--text-secondary)] leading-relaxed\">\r\n        Tienstra three-point resection. Angles measured at unknown station between rays to control points.\r\n      </div>\r\n      <div className=\"space-y-1.5\">\r\n        <div className=\"text-[9px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold\">Control P1</div>\r\n        <Field label=\"E\" value={e1} onChange={setE1} placeholder=\"512345.678\" />\r\n        <Field label=\"N\" value={n1} onChange={setN1} placeholder=\"9834567.890\" />\r\n        <div className=\"text-[9px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold pt-1\">Control P2</div>\r\n        <Field label=\"E\" value={e2} onChange={setE2} placeholder=\"512500.000\" />\r\n        <Field label=\"N\" value={n2} onChange={setN2} placeholder=\"9834600.000\" />\r\n        <div className=\"text-[9px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold pt-1\">Control P3</div>\r\n        <Field label=\"E\" value={e3} onChange={setE3} placeholder=\"512600.000\" />\r\n        <Field label=\"N\" value={n3} onChange={setN3} placeholder=\"9834700.000\" />\r\n        <div className=\"text-[9px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold pt-1\">Observed Angles</div>\r\n        <Field label=\"∠12\" value={a12} onChange={setA12} placeholder=\"e.g. 45.5000 (45°30')\" />\r\n        <Field label=\"∠23\" value={a23} onChange={setA23} placeholder=\"e.g. 52.1500 (52°15')\" />\r\n      </div>\r\n      <ComputeButton onClick={compute} />\r\n      {error && <div className=\"text-[10px] text-[var(--error)]\">{error}</div>}\r\n      {result && (\r\n        <ResultDisplay>\r\n          <div className=\"text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-semibold\">Resection Point</div>\r\n          <div className=\"text-xs font-mono text-[#1B3A5C]\">{formatPoint(result.point)}</div>\r\n          <div className=\"text-[10px] text-[var(--text-muted)] space-y-0.5\">\r\n            <div>Dist to P1: {result.d1.toFixed(3)} m</div>\r\n            <div>Dist to P2: {result.d2.toFixed(3)} m</div>\r\n            <div>Dist to P3: {result.d3.toFixed(3)} m</div>\r\n          </div>\r\n          <button\r\n            onClick={() => onAddPoint(result.point, 'Res')}\r\n            className=\"flex items-center gap-1 mt-1 px-2 py-0.5 text-[10px] font-semibold\r\n                       bg-[#1B3A5C] text-[var(--text-primary)] rounded hover:bg-[#142d49] transition-colors\"\r\n          >\r\n            <Plus className=\"w-3 h-3\" /> Add to Map\r\n          </button>\r\n        </ResultDisplay>\r\n      )}\r\n    </div>\r\n  )\r\n}\r\n\r\n// ─── Main CogoToolsPanel ─────────────────────────────────────────────────\r\n\r\nfunction CogoToolsPanelInner() {\r\n  const { mapInstance } = useMapContext()\r\n  const [activeTab, setActiveTab] = useState<TabId>('radiation')\r\n  const [expanded, setExpanded] = useState(true)\r\n\r\n  // ── Add computed point to map as a vector feature ──\r\n  const handleAddPoint = useCallback(async (point: Point2D, labelPrefix: string) => {\r\n    const map = mapInstance.current\r\n    if (!map) return\r\n\r\n    try {\r\n      const { default: Feature } = await import('ol/Feature')\r\n      const { default: Point } = await import('ol/geom/Point')\r\n      const { default: VectorSource } = await import('ol/source/Vector')\r\n      const { default: VectorLayer } = await import('ol/layer/Vector')\r\n      const { default: Style } = await import('ol/style/Style')\r\n      const { default: Circle } = await import('ol/style/Circle')\r\n      const { default: Fill } = await import('ol/style/Fill')\r\n      const { default: Stroke } = await import('ol/style/Stroke')\r\n      const { transform } = await import('ol/proj')\r\n      const { to21037, SRID_21037, SRID_3857 } = await import('@/lib/map/projection')\r\n\r\n      // Transform from EPSG:21037 to map projection (3857)\r\n      const coord3857 = transform([point.easting, point.northing], SRID_21037, SRID_3857)\r\n\r\n      const feature = new Feature({\r\n        geometry: new Point(coord3857),\r\n        name: `${labelPrefix} ${point.easting.toFixed(1)}/${point.northing.toFixed(1)}`,\r\n        easting: point.easting,\r\n        northing: point.northing,\r\n      })\r\n\r\n      // Check if COGO results layer already exists\r\n      const layers = map.getLayers().getArray()\r\n      let cogoLayer = layers.find((l: any) => l.get('cogoResults') === true)\r\n\r\n      if (!cogoLayer) {\r\n        const source = new VectorSource({ features: [feature] })\r\n        cogoLayer = new VectorLayer({\r\n          source,\r\n          style: new Style({\r\n            image: new Circle({\r\n              radius: 6,\r\n              fill: new Fill({ color: '#D17B47' }),\r\n              stroke: new Stroke({ color: '#fff', width: 2 }),\r\n            }),\r\n          }),\r\n        })\r\n        ;(cogoLayer as any).set('cogoResults', true)\r\n        ;(cogoLayer as any).set('name', 'COGO Results')\r\n        map.addLayer(cogoLayer)\r\n      } else {\r\n        ;(cogoLayer as any).getSource().addFeature(feature)\r\n      }\r\n\r\n      // Zoom to the new point\r\n      map.getView().animate({ center: coord3857, zoom: 17, duration: 500 })\r\n    } catch (err) {\r\n      console.error('[CogoToolsPanel] Failed to add point to map:', err)\r\n    }\r\n  }, [mapInstance])\r\n\r\n  return (\r\n    <div\r\n      className=\"bg-[var(--bg-card)] rounded-lg shadow-lg border border-[var(--border-color)] select-none\"\r\n      style={{ fontFamily: 'Calibri, sans-serif', width: 300 }}\r\n    >\r\n      {/* ── Header ── */}\r\n      <div className=\"flex items-center justify-between px-3 py-2 border-b border-[var(--border-color)]\">\r\n        <div className=\"flex items-center gap-2\">\r\n          <Crosshair className=\"w-4 h-4 text-[#1B3A5C]\" />\r\n          <span className=\"text-sm font-semibold text-[#1B3A5C]\">\r\n            COGO Tools\r\n          </span>\r\n        </div>\r\n        <button\r\n          onClick={() => setExpanded(v => !v)}\r\n          className=\"p-1 hover:bg-[var(--bg-secondary)] rounded transition-colors text-[var(--text-muted)]\"\r\n          title={expanded ? 'Collapse' : 'Expand'}\r\n        >\r\n          <RotateCcw className={`w-3.5 h-3.5 transition-transform ${expanded ? 'rotate-180' : ''}`} />\r\n        </button>\r\n      </div>\r\n\r\n      {expanded && (\r\n        <>\r\n          {/* ── Tab bar ── */}\r\n          <div className=\"flex border-b border-[var(--border-color)]\">\r\n            {TABS.map((tab) => (\r\n              <button\r\n                key={tab.id}\r\n                onClick={() => setActiveTab(tab.id)}\r\n                className={`flex-1 flex items-center justify-center gap-1 px-1 py-1.5 text-[9px] font-semibold\r\n                           transition-colors border-b-2 ${\r\n                             activeTab === tab.id\r\n                               ? 'text-[#1B3A5C] border-[#1B3A5C] bg-[var(--primary-blue)]/10/50'\r\n                               : 'text-[var(--text-secondary)] border-transparent hover:text-[var(--text-muted)] hover:bg-[var(--bg-secondary)]'\r\n                           }`}\r\n                title={tab.label}\r\n              >\r\n                {tab.icon}\r\n                <span className=\"hidden sm:inline\">{tab.label}</span>\r\n              </button>\r\n            ))}\r\n          </div>\r\n\r\n          {/* ── Tab content ── */}\r\n          <div className=\"px-3 py-2.5 max-h-[60vh] overflow-y-auto\">\r\n            {activeTab === 'radiation' && <RadiationPanel onAddPoint={handleAddPoint} />}\r\n            {activeTab === 'bearing-int' && <BearingIntersectionPanel onAddPoint={handleAddPoint} />}\r\n            {activeTab === 'distance-int' && <DistanceIntersectionPanel onAddPoint={handleAddPoint} />}\r\n            {activeTab === 'resection' && <ResectionPanel onAddPoint={handleAddPoint} />}\r\n          </div>\r\n\r\n          {/* ── Footer hint ── */}\r\n          <div className=\"px-3 py-1.5 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/50\">\r\n            <div className=\"text-[9px] text-[var(--text-secondary)]\">\r\n              Bearings: DDD.MMSS (e.g. 47.2314 = 47° 23' 14\") or decimal degrees\r\n            </div>\r\n          </div>\r\n        </>\r\n      )}\r\n    </div>\r\n  )\r\n}\r\n\r\nexport const CogoToolsPanel = memo(CogoToolsPanelInner)\r\n",
@@ -38287,48 +37880,15 @@
         ]
       },
       {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
+        "ruleId": "@typescript-eslint/no-unsafe-argument",
         "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
+        "message": "Unsafe argument of type `any` assigned to a parameter of type `BaseLayer<{ [x: string]: any; }>`.",
         "line": 103,
-        "column": 9,
+        "column": 41,
         "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
+        "messageId": "unsafeArgument",
         "endLine": 103,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .removeLayer on an `any` value.",
-        "line": 103,
-        "column": 29,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 103,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 118,
-        "column": 7,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 118,
-        "endColumn": 35
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .addLayer on an `any` value.",
-        "line": 118,
-        "column": 27,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 118,
-        "endColumn": 35
+        "endColumn": 62
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-assignment",
@@ -38427,7 +37987,7 @@
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 13,
+    "warningCount": 10,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
     "source": "'use client'\r\n/**\r\n * GpsTrackPanel — GPS track logging panel\r\n *\r\n * Start/Stop GPS track logging. When started, accumulates GPS positions from\r\n * context. When stopped, creates a LineString feature from the accumulated\r\n * positions and adds it to the map as a vector layer (orange line, 3px).\r\n * Shows total track distance and point count.\r\n */\r\n\r\nimport React, { memo, useState, useCallback, useRef, useEffect } from 'react'\r\nimport { Play, Square, MapPin, ChevronDown } from 'lucide-react'\r\nimport { useMapContext } from '@/app/map/MapReactContext'\r\n\r\nexport const GpsTrackPanel = memo(function GpsTrackPanel() {\r\n  const { mapInstance, gpsPos, gpsTracking } = useMapContext()\r\n  const [isTracking, setIsTracking] = useState(false)\r\n  const [trackPoints, setTrackPoints] = useState<Array<[number, number]>>([])\r\n  const [pointCount, setPointCount] = useState(0)\r\n  const [totalDistance, setTotalDistance] = useState(0)\r\n  const trackLayerRef = useRef<any>(null)\r\n\r\n  // Accumulate GPS positions when tracking is active\r\n  useEffect(() => {\r\n    if (!isTracking || !gpsPos || !mapInstance.current) return\r\n\r\n    // Capture current GPS position for the async closure\r\n    const currentGpsPos = gpsPos\r\n    let cancelled = false\r\n\r\n    async function addTrackPoint() {\r\n      if (cancelled) return\r\n      try {\r\n        const { fromLonLat } = await import('ol/proj')\r\n        const coord = fromLonLat([currentGpsPos.lon, currentGpsPos.lat]) as [number, number]\r\n\r\n        setTrackPoints((prev) => {\r\n          const updated = [...prev, coord]\r\n\r\n          // Calculate distance increment\r\n          if (updated.length >= 2) {\r\n            const last = updated[updated.length - 2]\r\n            const dx = coord[0] - last[0]\r\n            const dy = coord[1] - last[1]\r\n            const dist = Math.sqrt(dx * dx + dy * dy)\r\n            // Convert from meters (EPSG:3857 units at equator) — approximate\r\n            const distMeters = dist * Math.cos((currentGpsPos.lat * Math.PI) / 180)\r\n            setTotalDistance((d) => d + Math.abs(distMeters))\r\n          }\r\n\r\n          setPointCount(updated.length)\r\n          return updated\r\n        })\r\n      } catch {\r\n        // Skip this point\r\n      }\r\n    }\r\n\r\n    addTrackPoint()\r\n    return () => { cancelled = true }\r\n  }, [isTracking, gpsPos, mapInstance])\r\n\r\n  const startTracking = useCallback(() => {\r\n    setTrackPoints([])\r\n    setPointCount(0)\r\n    setTotalDistance(0)\r\n    setIsTracking(true)\r\n  }, [])\r\n\r\n  const stopTracking = useCallback(async () => {\r\n    setIsTracking(false)\r\n\r\n    if (trackPoints.length < 2 || !mapInstance.current) return\r\n\r\n    try {\r\n      const [\r\n        { default: VectorSource },\r\n        { default: VectorLayer },\r\n        { default: LineString },\r\n        { default: Feature },\r\n        { default: Style },\r\n        { default: Stroke },\r\n        { default: GeoJSONFormat },\r\n      ] = await Promise.all([\r\n        import('ol/source/Vector'),\r\n        import('ol/layer/Vector'),\r\n        import('ol/geom/LineString'),\r\n        import('ol/Feature'),\r\n        import('ol/style/Style'),\r\n        import('ol/style/Stroke'),\r\n        import('ol/format/GeoJSON'),\r\n      ])\r\n\r\n      const geometry = new LineString(trackPoints)\r\n      const feature = new Feature({ geometry })\r\n      const trackDate = new Date().toISOString()\r\n      feature.set('trackLog', true)\r\n      feature.set('trackDate', trackDate)\r\n      feature.set('trackPointCount', trackPoints.length)\r\n\r\n      // Remove previous track layer if it exists\r\n      if (trackLayerRef.current) {\r\n        mapInstance.current.removeLayer(trackLayerRef.current)\r\n      }\r\n\r\n      const source = new VectorSource({ features: [feature] })\r\n      const layer = new VectorLayer({\r\n        source,\r\n        style: new Style({\r\n          stroke: new Stroke({\r\n            color: '#D17B47',\r\n            width: 3,\r\n          }),\r\n        }),\r\n        zIndex: 60,\r\n      })\r\n\r\n      mapInstance.current.addLayer(layer)\r\n      trackLayerRef.current = layer\r\n\r\n      // ── Persist track to localStorage (survives reload) ──\r\n      try {\r\n        const fmt = new GeoJSONFormat()\r\n        const geojson = fmt.writeFeatureObject(feature, {\r\n          featureProjection: 'EPSG:3857',\r\n          dataProjection: 'EPSG:4326',\r\n        })\r\n        const trackKey = `metardu:gps-track:${trackDate}`\r\n        const trackData = {\r\n          date: trackDate,\r\n          pointCount: trackPoints.length,\r\n          geojson,\r\n          totalDistance: totalDistance.toFixed(1),\r\n        }\r\n        // Store in a list of tracks\r\n        const existingTracks = JSON.parse(localStorage.getItem('metardu:gps-tracks') || '[]')\r\n        existingTracks.push(trackData)\r\n        // Keep last 50 tracks\r\n        if (existingTracks.length > 50) existingTracks.shift()\r\n        localStorage.setItem('metardu:gps-tracks', JSON.stringify(existingTracks))\r\n        localStorage.setItem(trackKey, JSON.stringify(trackData))\r\n      } catch {\r\n        // localStorage might be full — track still visible on map\r\n      }\r\n    } catch (err) {\r\n      console.error('[GpsTrackPanel] Failed to create track layer:', err)\r\n    }\r\n  }, [trackPoints, mapInstance, totalDistance])\r\n\r\n  const formatDistance = (meters: number): string => {\r\n    if (meters >= 1000) {\r\n      return `${(meters / 1000).toFixed(2)} km`\r\n    }\r\n    return `${meters.toFixed(0)} m`\r\n  }\r\n\r\n  return (\r\n    <div className=\"bg-[var(--bg-secondary)]/90 backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-lg w-56\">\r\n      {/* Header */}\r\n      <div className=\"flex items-center justify-between px-3 py-2\">\r\n        <div className=\"flex items-center gap-2\">\r\n          <MapPin className=\"w-3.5 h-3.5 text-[var(--accent)]\" />\r\n          <span className=\"text-[10px] text-[var(--text-secondary)] uppercase tracking-wider font-semibold\">\r\n            GPS Track\r\n          </span>\r\n        </div>\r\n      </div>\r\n\r\n      <div className=\"px-3 pb-3 space-y-2\">\r\n        {/* Start/Stop buttons */}\r\n        <div className=\"flex gap-2\">\r\n          {!isTracking ? (\r\n            <button\r\n              onClick={startTracking}\r\n              disabled={!gpsTracking}\r\n              className=\"flex-1 h-7 flex items-center justify-center gap-1.5 text-[10px] bg-[var(--accent)]/20 text-[var(--accent)] border border-[var(--accent)]/30 rounded hover:bg-[var(--accent)]/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed\"\r\n              title={gpsTracking ? 'Start track logging' : 'Enable GPS first'}\r\n            >\r\n              <Play className=\"w-3 h-3\" />\r\n              Start\r\n            </button>\r\n          ) : (\r\n            <button\r\n              onClick={stopTracking}\r\n              className=\"flex-1 h-7 flex items-center justify-center gap-1.5 text-[10px] bg-[var(--error)]/20 text-[var(--error)] border border-red-500/30 rounded hover:bg-[var(--error)]/30 transition-colors\"\r\n              title=\"Stop track logging and save\"\r\n            >\r\n              <Square className=\"w-3 h-3\" />\r\n              Stop &amp; Save\r\n            </button>\r\n          )}\r\n        </div>\r\n\r\n        {/* Stats */}\r\n        {isTracking && (\r\n          <div className=\"flex items-center justify-between px-2 py-1.5 bg-[var(--bg-card)]/[0.03] rounded\">\r\n            <div className=\"flex items-center gap-1\">\r\n              <div className=\"w-1.5 h-1.5 rounded-full bg-[var(--error)] animate-pulse\" />\r\n              <span className=\"text-[10px] text-[var(--text-secondary)]\">Recording</span>\r\n            </div>\r\n            <span className=\"text-[10px] text-[var(--text-secondary)] font-mono\">{pointCount} pts</span>\r\n          </div>\r\n        )}\r\n\r\n        {(pointCount > 0 || totalDistance > 0) && (\r\n          <div className=\"flex items-center justify-between px-2 py-1.5 bg-[var(--bg-card)]/[0.03] rounded\">\r\n            <span className=\"text-[10px] text-[var(--text-secondary)]\">Distance</span>\r\n            <span className=\"text-[10px] text-[var(--text-secondary)] font-mono\">{formatDistance(totalDistance)}</span>\r\n          </div>\r\n        )}\r\n\r\n        {!gpsTracking && !isTracking && (\r\n          <div className=\"text-[9px] text-[var(--text-muted)] text-center py-0.5\">\r\n            Enable GPS tracking to log tracks\r\n          </div>\r\n        )}\r\n      </div>\r\n    </div>\r\n  )\r\n})\r\n",
@@ -39117,224 +38677,13 @@
   },
   {
     "filePath": "src/app/map/components/MapOverlays.tsx",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-return",
-        "severity": 1,
-        "message": "Unsafe return of a value of type `any`.",
-        "line": 47,
-        "column": 26,
-        "nodeType": "ChainExpression",
-        "messageId": "unsafeReturn",
-        "endLine": 47,
-        "endColumn": 138
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 47,
-        "column": 26,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 47,
-        "endColumn": 64
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 47,
-        "column": 26,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 47,
-        "endColumn": 54
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getView on an `any` value.",
-        "line": 47,
-        "column": 47,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 47,
-        "endColumn": 54
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .animate on an `any` value.",
-        "line": 47,
-        "column": 57,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 47,
-        "endColumn": 64
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 47,
-        "column": 67,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 47,
-        "endColumn": 116
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 47,
-        "column": 73,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 47,
-        "endColumn": 110
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 47,
-        "column": 73,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 47,
-        "endColumn": 100
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getView on an `any` value.",
-        "line": 47,
-        "column": 93,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 47,
-        "endColumn": 100
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getZoom on an `any` value.",
-        "line": 47,
-        "column": 103,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 47,
-        "endColumn": 110
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-return",
-        "severity": 1,
-        "message": "Unsafe return of a value of type `any`.",
-        "line": 55,
-        "column": 26,
-        "nodeType": "ChainExpression",
-        "messageId": "unsafeReturn",
-        "endLine": 55,
-        "endColumn": 151
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 55,
-        "column": 26,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 55,
-        "endColumn": 64
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 55,
-        "column": 26,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 55,
-        "endColumn": 54
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getView on an `any` value.",
-        "line": 55,
-        "column": 47,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 55,
-        "endColumn": 54
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .animate on an `any` value.",
-        "line": 55,
-        "column": 57,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 55,
-        "endColumn": 64
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 55,
-        "column": 85,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 55,
-        "endColumn": 122
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 55,
-        "column": 85,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 55,
-        "endColumn": 112
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getView on an `any` value.",
-        "line": 55,
-        "column": 105,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 55,
-        "endColumn": 112
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getZoom on an `any` value.",
-        "line": 55,
-        "column": 115,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 55,
-        "endColumn": 122
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 19,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client'\r\n/**\r\n * MapOverlays — Floating map UI overlays (zoom controls, GPS badge, stakeout HUD, project count)\r\n *\r\n * Now reads state from MapReactContext via useMapContext().\r\n * Memoized to prevent re-renders from unrelated state changes.\r\n * All overlays are absolutely positioned within the map container.\r\n * Mobile-responsive: adjusts sizes and positions for small screens.\r\n */\r\n\r\nimport React, { memo } from 'react'\r\nimport { useMapContext } from '@/app/map/MapReactContext'\r\n\r\nexport const MapOverlays = memo(function MapOverlays() {\r\n  const {\r\n    mapInstance,\r\n    panelOpen,\r\n    setPanelOpen,\r\n    gpsTracking,\r\n    gpsPos,\r\n    stakeoutActive,\r\n    stakeoutTarget,\r\n    stakeoutInfo,\r\n    toggleStakeout,\r\n    toggleGPS,\r\n    projectCount,\r\n    isMobile,\r\n  } = useMapContext()\r\n\r\n  return (\r\n    <>\r\n      {/* Hamburger toggle when panel is open */}\r\n      {panelOpen && (\r\n        <button\r\n          onClick={() => setPanelOpen(false)}\r\n          className=\"absolute top-3 z-30 w-8 h-8 flex items-center justify-center rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)]/[0.06] transition-colors\"\r\n          style={{ left: isMobile ? '0px' : '260px' }}\r\n          title=\"Collapse panel\"\r\n        >\r\n          <span className=\"text-sm\">{'\\u2039'}</span>\r\n        </button>\r\n      )}\r\n\r\n      {/* Zoom controls - top right */}\r\n      <div className=\"absolute top-3 right-3 z-[1000] flex flex-col gap-1\" role=\"group\" aria-label=\"Map zoom controls\">\r\n        <button\r\n          onClick={() => mapInstance.current?.getView().animate({ zoom: mapInstance.current.getView().getZoom() + 1 }, { duration: 200 })}\r\n          className=\"w-10 h-10 bg-[var(--bg-secondary)]/90 backdrop-blur-sm border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] flex items-center justify-center hover:bg-[var(--accent)]/20 transition-colors\"\r\n          title=\"Zoom In\"\r\n          aria-label=\"Zoom in\"\r\n        >\r\n          +\r\n        </button>\r\n        <button\r\n          onClick={() => mapInstance.current?.getView().animate({ zoom: Math.max(6, mapInstance.current.getView().getZoom() - 1) }, { duration: 200 })}\r\n          className=\"w-10 h-10 bg-[var(--bg-secondary)]/90 backdrop-blur-sm border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] flex items-center justify-center hover:bg-[var(--accent)]/20 transition-colors\"\r\n          title=\"Zoom Out\"\r\n          aria-label=\"Zoom out\"\r\n        >\r\n          {'\\u2212'}\r\n        </button>\r\n      </div>\r\n\r\n      {/* GPS status badge - bottom left */}\r\n      {gpsTracking && gpsPos && (\r\n        <div\r\n          className=\"absolute z-[1000] bg-[var(--bg-secondary)]/90 backdrop-blur-sm border border-green-500/30 rounded-lg px-3 py-1.5 text-xs text-[var(--success)] font-mono\"\r\n          style={{ bottom: `calc(${isMobile ? '64px' : '0px'} + 56px)`, left: '16px' }}\r\n        >\r\n          GPS {'\\u00B1'}{Math.round(gpsPos.accuracy)}m\r\n        </div>\r\n      )}\r\n\r\n      {/* Stakeout HUD (simplified — full panel is in StakeoutPanel component) */}\r\n      {stakeoutActive && stakeoutTarget && (() => {\r\n        const info = stakeoutInfo()\r\n        return (\r\n          <div\r\n            className=\"absolute z-[1000] bg-[var(--bg-secondary)]/95 backdrop-blur-xl border border-[var(--accent)]/30 rounded-xl px-4 py-3 shadow-2xl\"\r\n            style={{ bottom: `calc(${isMobile ? '64px' : '0px'} + 56px)`, right: '16px', width: isMobile ? '180px' : '220px' }}\r\n          >\r\n            <div className=\"flex items-center justify-between mb-2\">\r\n              <span className=\"text-[10px] text-[var(--accent)] uppercase tracking-[0.15em] font-bold\">Stakeout</span>\r\n              <button onClick={toggleStakeout} className=\"text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors\">Stop</button>\r\n            </div>\r\n            <div className=\"text-[10px] text-[var(--text-muted)] mb-1\">Target</div>\r\n            <div className=\"text-[11px] text-[var(--text-primary)] font-mono mb-2\">E: {stakeoutTarget.e.toFixed(1)} N: {stakeoutTarget.n.toFixed(1)}</div>\r\n            {info ? (\r\n              <>\r\n                <div className=\"text-[10px] text-[var(--text-muted)] mb-1\">Distance / Bearing</div>\r\n                <div className=\"text-lg font-bold text-[var(--accent)] font-mono\">{info.distance.toFixed(1)} m</div>\r\n                <div className=\"text-sm text-[var(--primary-blue)] font-mono\">{info.bearing.toFixed(2)}{'\\u00B0'}</div>\r\n                <div className=\"mt-1.5 text-[10px] text-[var(--text-muted)]\">\r\n                  dE: {info.dE.toFixed(1)} | dN: {info.dN.toFixed(1)}\r\n                </div>\r\n              </>\r\n            ) : (\r\n              <div className=\"text-[10px] text-[var(--text-muted)]\">Waiting for GPS position...</div>\r\n            )}\r\n            {!gpsTracking && (\r\n              <button\r\n                onClick={toggleGPS}\r\n                className=\"mt-2 w-full py-1.5 rounded-lg bg-[var(--success)]/20 border border-green-500/30 text-[var(--success)] text-[10px] font-medium hover:bg-[var(--success)]/30 transition-colors\"\r\n              >\r\n                Enable GPS\r\n              </button>\r\n            )}\r\n          </div>\r\n        )\r\n      })()}\r\n\r\n      {/* Project count - top center */}\r\n      {projectCount > 0 && (\r\n        <div className=\"absolute top-3 left-1/2 -translate-x-1/2 z-20\">\r\n          <div className=\"bg-[var(--bg-secondary)]/90 backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-full px-3 py-1 shadow-lg\">\r\n            <span className=\"text-[11px] text-[var(--accent)] font-semibold\">{projectCount} project{projectCount > 1 ? 's' : ''}</span>\r\n          </div>\r\n        </div>\r\n      )}\r\n    </>\r\n  )\r\n})\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -41113,235 +40462,13 @@
   },
   {
     "filePath": "src/app/map/components/RotationControl.tsx",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 22,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 22,
-        "endColumn": 36
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 25,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 25,
-        "endColumn": 31
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 25,
-        "column": 18,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 25,
-        "endColumn": 29
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getView on an `any` value.",
-        "line": 25,
-        "column": 22,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 25,
-        "endColumn": 29
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-argument",
-        "severity": 1,
-        "message": "Unsafe argument of type `any` assigned to a parameter of type `SetStateAction<number>`.",
-        "line": 29,
-        "column": 17,
-        "nodeType": "LogicalExpression",
-        "messageId": "unsafeArgument",
-        "endLine": 29,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 29,
-        "column": 17,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 29,
-        "endColumn": 33
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getRotation on an `any` value.",
-        "line": 29,
-        "column": 22,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 29,
-        "endColumn": 33
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-argument",
-        "severity": 1,
-        "message": "Unsafe argument of type `any` assigned to a parameter of type `SetStateAction<number>`.",
-        "line": 33,
-        "column": 19,
-        "nodeType": "LogicalExpression",
-        "messageId": "unsafeArgument",
-        "endLine": 33,
-        "endColumn": 42
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 33,
-        "column": 19,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 33,
-        "endColumn": 35
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getRotation on an `any` value.",
-        "line": 33,
-        "column": 24,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 33,
-        "endColumn": 35
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 36,
-        "column": 5,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 36,
-        "endColumn": 12
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .on on an `any` value.",
-        "line": 36,
-        "column": 10,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 36,
-        "endColumn": 12
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 39,
-        "column": 7,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 39,
-        "endColumn": 14
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .un on an `any` value.",
-        "line": 39,
-        "column": 12,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 39,
-        "endColumn": 14
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 45,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 45,
-        "endColumn": 36
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 48,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 48,
-        "endColumn": 31
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 48,
-        "column": 18,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 48,
-        "endColumn": 29
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getView on an `any` value.",
-        "line": 48,
-        "column": 22,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 48,
-        "endColumn": 29
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 51,
-        "column": 5,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 51,
-        "endColumn": 17
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .animate on an `any` value.",
-        "line": 51,
-        "column": 10,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 51,
-        "endColumn": 17
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 20,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client'\r\n/**\r\n * RotationControl — Map rotation indicator & north-reset button\r\n *\r\n * Shows the current map rotation angle and provides a one-click\r\n * \"reset to north\" button. The compass needle rotates in sync with\r\n * the map so surveyors always know their orientation.\r\n *\r\n * Reads map instance from MapReactContext.\r\n * Uses OL view.animate() for smooth reset.\r\n */\r\n\r\nimport React, { useState, useEffect, useCallback, memo } from 'react'\r\nimport { useMapContext } from '@/app/map/MapReactContext'\r\n\r\nfunction RotationControlInner() {\r\n  const { mapInstance } = useMapContext()\r\n  const [rotation, setRotation] = useState(0)\r\n\r\n  // ── Track rotation changes from the map view ──\r\n  useEffect(() => {\r\n    const map = mapInstance.current\r\n    if (!map) return\r\n\r\n    const view = map.getView()\r\n    if (!view) return\r\n\r\n    // Initial value\r\n    setRotation(view.getRotation() || 0)\r\n\r\n    // Listen for rotation changes\r\n    const onRotationChange = () => {\r\n      setRotation(view.getRotation() || 0)\r\n    }\r\n\r\n    view.on('change:rotation', onRotationChange)\r\n\r\n    return () => {\r\n      view.un('change:rotation', onRotationChange)\r\n    }\r\n  }, [mapInstance])\r\n\r\n  // ── Reset rotation to north (0) ──\r\n  const handleResetNorth = useCallback(() => {\r\n    const map = mapInstance.current\r\n    if (!map) return\r\n\r\n    const view = map.getView()\r\n    if (!view) return\r\n\r\n    view.animate({\r\n      rotation: 0,\r\n      duration: 300,\r\n    })\r\n  }, [mapInstance])\r\n\r\n  // Convert radians to degrees for display\r\n  const rotationDeg = Math.round((rotation * 180) / Math.PI)\r\n  const isRotated = Math.abs(rotation) > 0.001\r\n\r\n  // Don't render if map not available\r\n  if (!mapInstance.current) return null\r\n\r\n  return (\r\n    <button\r\n      onClick={handleResetNorth}\r\n      className={[\r\n        'relative w-10 h-10 rounded-lg border bg-[var(--bg-card)] shadow-sm transition-all',\r\n        'flex items-center justify-center',\r\n        isRotated\r\n          ? 'border-[#1B3A5C] hover:bg-[var(--primary-blue)]/10 cursor-pointer'\r\n          : 'border-[var(--border-color)] cursor-default opacity-50',\r\n      ].join(' ')}\r\n      title={isRotated ? `Reset North (rotated ${rotationDeg}°)` : 'North (0°)'}\r\n      disabled={!isRotated}\r\n      style={{ fontFamily: 'Calibri, sans-serif' }}\r\n    >\r\n      {/* Compass needle — rotates with map */}\r\n      <svg\r\n        className=\"w-6 h-6 transition-transform\"\r\n        style={{\r\n          transform: `rotate(${rotationDeg}deg)`,\r\n          transformOrigin: 'center',\r\n        }}\r\n        viewBox=\"0 0 24 24\"\r\n        fill=\"none\"\r\n      >\r\n        {/* North needle (red) */}\r\n        <path\r\n          d=\"M12 2 L14 12 L12 10 L10 12 Z\"\r\n          fill={isRotated ? '#c0392b' : '#999'}\r\n        />\r\n        {/* South needle (dark) */}\r\n        <path\r\n          d=\"M12 22 L14 12 L12 14 L10 12 Z\"\r\n          fill={isRotated ? '#1B3A5C' : '#bbb'}\r\n        />\r\n        {/* Center dot */}\r\n        <circle cx=\"12\" cy=\"12\" r=\"1.5\" fill=\"#1B3A5C\" />\r\n      </svg>\r\n\r\n      {/* Rotation badge */}\r\n      {isRotated && (\r\n        <span className=\"absolute -top-1 -right-1 bg-[#1B3A5C] text-[var(--text-primary)] text-[8px] font-bold px-1 py-0.5 rounded-full leading-none\">\r\n          {rotationDeg}°\r\n        </span>\r\n      )}\r\n    </button>\r\n  )\r\n}\r\n\r\nexport const RotationControl = memo(RotationControlInner)\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -43246,155 +42373,13 @@
   },
   {
     "filePath": "src/app/map/MapReactContext.tsx",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 21,
-        "column": 39,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 21,
-        "endColumn": 42,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                797,
-                800
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                797,
-                800
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 39,
-        "column": 20,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 39,
-        "endColumn": 23,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                1315,
-                1318
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                1315,
-                1318
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 174,
-        "column": 31,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 174,
-        "endColumn": 34,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                6770,
-                6773
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                6770,
-                6773
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 191,
-        "column": 26,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 191,
-        "endColumn": 29,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                7289,
-                7292
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                7289,
-                7292
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 4,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client'\r\n/**\r\n * MapReactContext — React Context for the METARDU map page\r\n *\r\n * Eliminates prop drilling: MapClient provides the context,\r\n * and any child component (MapToolbar, MapOverlays, MapStatusBar, etc.)\r\n * can consume what it needs via useMapContext().\r\n *\r\n * Previously, MapToolbar alone received 40+ props. Now it reads from context.\r\n */\r\n\r\nimport React, { createContext, useContext } from 'react'\r\nimport type { BasemapMode, DrawMode, MeasureMode } from '@/hooks/useMapTypes'\r\nimport type { StakeoutState } from '@/lib/map/stakeout'\r\nimport type { PaperSize, Orientation } from '@/hooks/usePrint'\r\n\r\n// ─── Context Value Type ──────────────────────────────────────────────────\r\n\r\nexport interface MapContextValue {\r\n  // ── Map refs ──\r\n  mapInstance: React.MutableRefObject<any>\r\n  popupRef: React.MutableRefObject<HTMLDivElement | null>\r\n\r\n  // ── UI state ──\r\n  mapReady: boolean\r\n  initError: string\r\n  projectCount: number\r\n  basemap: BasemapMode\r\n  drawMode: DrawMode\r\n  measureMode: MeasureMode\r\n  editMode: boolean\r\n  mouseCoord: { lon: number; lat: number; e: number; n: number } | null\r\n  gpsTracking: boolean\r\n  gpsPos: { lon: number; lat: number; accuracy: number } | null\r\n  featureCount: number\r\n  importMsg: string\r\n  panelOpen: boolean\r\n  dragHint: boolean\r\n  selectedFeature: any\r\n  featureName: string\r\n  measureResult: string\r\n  layerOpacity: number\r\n  stakeoutTarget: { e: number; n: number } | null\r\n  stakeoutActive: boolean\r\n  stakeoutState: StakeoutState | null\r\n  audioMuted: boolean\r\n  saveMsg: string\r\n  offlineDialogOpen: boolean\r\n  showAnnotations: boolean\r\n  projectSearch: string\r\n  isMobile: boolean\r\n\r\n  // ── Scheme layer state ──\r\n  schemeLoading: boolean\r\n  schemeError: string\r\n  schemeLoaded: boolean\r\n  schemeParcelCount: number\r\n  schemeBlockCount: number\r\n  schemeBeaconCount: number\r\n  showSchemeParcels: boolean\r\n  showSchemeBlocks: boolean\r\n  showSchemeBeacons: boolean\r\n  hasTraverse: boolean\r\n  traverseParcelPreviewActive: boolean\r\n  hasProjectId: boolean\r\n\r\n  // ── Vertex editing state (Tier 1) ──\r\n  vertexEditingEnabled: boolean\r\n  snapEnabled: boolean\r\n  snapTolerance: number\r\n  vertexEditState: {\r\n    vertexCount: number\r\n    hoveredVertex: { easting: number; northing: number; index: number } | null\r\n    lastEditedVertex: { easting: number; northing: number; index: number } | null\r\n  }\r\n  vertexEditingVertices: Array<{ easting: number; northing: number }>\r\n\r\n  // ── GPS in EPSG:21037 (for StakeoutPanel) ──\r\n  gpsPos21037: { easting: number; northing: number; accuracy: number } | null\r\n\r\n  // ── Projection state (Tier 2) ──\r\n  activeProjection: string\r\n\r\n  // ── Print state (Tier 1) ──\r\n  showSheetLayout: boolean\r\n  isPrinting: boolean\r\n  paperSize: PaperSize\r\n  orientation: Orientation\r\n  setPaperSize: React.Dispatch<React.SetStateAction<PaperSize>>\r\n  setOrientation: React.Dispatch<React.SetStateAction<Orientation>>\r\n\r\n  // ── Offline map state ──\r\n  offlineMapExtent: { minLat: number; minLon: number; maxLat: number; maxLon: number } | null\r\n\r\n  // ── Init retry action ──\r\n  retryInit: () => void\r\n\r\n  // ── Scheme project ID ──\r\n  schemeProjectId: string | null\r\n\r\n  // ── Feature flags ──\r\n  hasFeature: (feature: string) => boolean\r\n\r\n  // ── History ──\r\n  canUndo: boolean\r\n  canRedo: boolean\r\n\r\n  // ── Advanced digitizing tools (Split / Merge / Reshape / Rotate / Offset) ──\r\n  // AUDIT FIX (2026-07-05): Previously these were local state in MapClient and\r\n  // passed only to the floating DigitizingToolbar. Now exposed via context so\r\n  // the CapturePanel inside MapToolDock can render them inline (cleaner UI,\r\n  // removes the cluttered bottom-center floating bar).\r\n  //\r\n  // T0.8 FIX (2026-07-09): Internally, MapClient splits this into `activeDrawTool`\r\n  // (split/reshape — needs an OL Draw interaction) and `activeOneShotTool`\r\n  // (merge/rotate/offset — fires immediately on Apply). The context still\r\n  // exposes a single `activeDigitizingTool` for backwards-compat with the UI.\r\n  activeDigitizingTool: 'draw' | 'split' | 'merge' | 'reshape' | 'rotate' | 'offset' | null\r\n  setActiveDigitizingTool: (tool: 'draw' | 'split' | 'merge' | 'reshape' | 'rotate' | 'offset' | null) => void\r\n  offsetDistance: number\r\n  setOffsetDistance: (d: number) => void\r\n  // AUDIT FIX (2026-07-05): Rotate angle — was hardcoded to 15° with no\r\n  // user control. Now exposed via context so the MapToolDock can show a\r\n  // slider (0-360°) that lets the user pick the rotation angle.\r\n  // T0.2 FIX (2026-07-09): The slider now ACTUALLY controls rotation —\r\n  // the handler reads rotateAngle instead of a hardcoded 15.\r\n  rotateAngle: number\r\n  setRotateAngle: (a: number) => void\r\n  // T0.3 + T0.8 FIX (2026-07-09): One-shot tools (Merge/Rotate/Offset) now\r\n  // require an explicit Apply click. This prevents the Offset slider from\r\n  // spawning a duplicate feature on every drag tick, and lets the user\r\n  // rotate the same polygon multiple times without re-activating the tool.\r\n  applyOneShotTool: () => void\r\n  // T0.5 FIX (2026-07-09): The active UTM EPSG code (e.g. 'EPSG:21037') used\r\n  // for geometry math. Derived from activeProjection. Panels can display this\r\n  // so users know which CRS their digitizing operations are happening in.\r\n  currentUtmEpsg: string\r\n  snappingEnabled: boolean\r\n  setSnappingEnabled: (v: boolean) => void\r\n  showSnappingOptions: boolean\r\n  setShowSnappingOptions: (v: boolean) => void\r\n\r\n  // ── Setters ──\r\n  setPanelOpen: (v: boolean) => void\r\n  setProjectSearch: (v: string) => void\r\n  setAudioMuted: React.Dispatch<React.SetStateAction<boolean>>\r\n  setOfflineDialogOpen: React.Dispatch<React.SetStateAction<boolean>>\r\n  setVertexEditingEnabled: React.Dispatch<React.SetStateAction<boolean>>\r\n  setSnapEnabled: React.Dispatch<React.SetStateAction<boolean>>\r\n  setSnapTolerance: React.Dispatch<React.SetStateAction<number>>\r\n  setShowSheetLayout: React.Dispatch<React.SetStateAction<boolean>>\r\n\r\n  // ── Actions ──\r\n  toggleDraw: (mode: DrawMode) => void\r\n  toggleEdit: () => void\r\n  toggleMeasure: (mode: MeasureMode) => void\r\n  toggleAnnotations: () => void\r\n  toggleBasemap: (mode: BasemapMode) => void\r\n  toggleGPS: () => void\r\n  toggleStakeout: () => void\r\n  deleteSelected: () => void\r\n  undo: () => void\r\n  redo: () => void\r\n  fitToKenya: () => void\r\n  fitToDrawn: () => void\r\n  saveToProject: () => void\r\n  exportFeatures: (format: 'GeoJSON' | 'KML' | 'WKT' | 'DXF' | 'LandXML') => void\r\n  clearDrawn: () => void\r\n  updateFeatureName: (name: string) => void\r\n  handleOpacityChange: (val: number) => void\r\n  handleCoordSearch: (input: string) => Promise<void>\r\n  stakeoutInfo: () => { distance: number; bearing: number; dE: number; dN: number } | null\r\n  deactivateStakeout: () => void\r\n  getMapExtent: () => Promise<any>\r\n\r\n  // ── Scheme actions ──\r\n  loadSchemeData: () => void\r\n  toggleSchemeParcelVisibility: () => void\r\n  toggleSchemeBlockVisibility: () => void\r\n  toggleSchemeBeaconVisibility: () => void\r\n  zoomToScheme: () => void\r\n  removeScheme: () => void\r\n  createParcelFromTraverse: () => void\r\n  confirmTraverseParcel: () => void\r\n  cancelTraverseParcel: () => void\r\n\r\n  // ── Projection actions (Tier 2) ──\r\n  switchProjection: (projection: string) => void\r\n\r\n  // ── Print actions (Tier 1) ──\r\n  printMap: (overrides?: any) => Promise<void>\r\n\r\n  // ── Offline tile actions ──\r\n  toggleOfflineDialog: (open: boolean) => Promise<void>\r\n}\r\n\r\n// ─── Context Creation ────────────────────────────────────────────────────\r\n\r\nconst MapReactContext = createContext<MapContextValue | null>(null)\r\n\r\n// ─── Provider Component ──────────────────────────────────────────────────\r\n\r\nexport function MapProvider({\r\n  value,\r\n  children,\r\n}: {\r\n  value: MapContextValue\r\n  children: React.ReactNode\r\n}) {\r\n  return (\r\n    <MapReactContext.Provider value={value}>\r\n      {children}\r\n    </MapReactContext.Provider>\r\n  )\r\n}\r\n\r\n// ─── Consumer Hook ───────────────────────────────────────────────────────\r\n\r\n/**\r\n * useMapContext — Access the map state and actions from any child component.\r\n *\r\n * Must be used within a <MapProvider>.\r\n *\r\n * @example\r\n * ```tsx\r\n * function MyMapWidget() {\r\n *   const { drawMode, featureCount, toggleDraw } = useMapContext()\r\n *   return <button onClick={() => toggleDraw('Point')}>Draw Point ({featureCount})</button>\r\n * }\r\n * ```\r\n */\r\nexport function useMapContext(): MapContextValue {\r\n  const ctx = useContext(MapReactContext)\r\n  if (!ctx) {\r\n    throw new Error('useMapContext must be used within a <MapProvider>')\r\n  }\r\n  return ctx\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -43404,96 +42389,13 @@
   },
   {
     "filePath": "src/app/map/MapSubContexts.tsx",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 99,
-        "column": 20,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 99,
-        "endColumn": 23,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                3507,
-                3510
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                3507,
-                3510
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 128,
-        "column": 5,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 128,
-        "endColumn": 41
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 169,
-        "column": 26,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 169,
-        "endColumn": 29,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                5674,
-                5677
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                5674,
-                5677
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 3,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client'\r\n/**\r\n * MapSubContexts — Performance-optimized context slices\r\n *\r\n * Splits the monolithic MapReactContext into sub-contexts so components\r\n * only re-render when the slice they consume changes.\r\n *\r\n * Sub-contexts:\r\n *  - MapSchemeContext — Scheme layer state & actions\r\n *  - MapDrawContext   — Draw/edit/measure state & actions\r\n *  - MapPrintContext  — Print state & actions\r\n *\r\n * Each sub-context reads from the parent MapReactContext (no state duplication).\r\n * The main MapReactContext remains unchanged for backward compatibility.\r\n */\r\n\r\nimport React, { createContext, useContext } from 'react'\r\nimport { useMapContext } from '@/app/map/MapReactContext'\r\nimport type { DrawMode, MeasureMode } from '@/hooks/useMapTypes'\r\nimport type { PaperSize, Orientation } from '@/hooks/usePrint'\r\n\r\n// ─── Scheme Sub-Context ──────────────────────────────────────────────────\r\n\r\ninterface MapSchemeContextValue {\r\n  schemeLoading: boolean\r\n  schemeError: string\r\n  schemeLoaded: boolean\r\n  schemeParcelCount: number\r\n  schemeBlockCount: number\r\n  schemeBeaconCount: number\r\n  showSchemeParcels: boolean\r\n  showSchemeBlocks: boolean\r\n  showSchemeBeacons: boolean\r\n  hasTraverse: boolean\r\n  traverseParcelPreviewActive: boolean\r\n  hasProjectId: boolean\r\n  schemeProjectId: string | null\r\n  loadSchemeData: () => void\r\n  toggleSchemeParcelVisibility: () => void\r\n  toggleSchemeBlockVisibility: () => void\r\n  toggleSchemeBeaconVisibility: () => void\r\n  zoomToScheme: () => void\r\n  removeScheme: () => void\r\n  createParcelFromTraverse: () => void\r\n  confirmTraverseParcel: () => void\r\n  cancelTraverseParcel: () => void\r\n}\r\n\r\nconst MapSchemeContext = createContext<MapSchemeContextValue | null>(null)\r\n\r\nexport function MapSchemeProvider({ children }: { children: React.ReactNode }) {\r\n  const ctx = useMapContext()\r\n\r\n  const value: MapSchemeContextValue = {\r\n    schemeLoading: ctx.schemeLoading,\r\n    schemeError: ctx.schemeError,\r\n    schemeLoaded: ctx.schemeLoaded,\r\n    schemeParcelCount: ctx.schemeParcelCount,\r\n    schemeBlockCount: ctx.schemeBlockCount,\r\n    schemeBeaconCount: ctx.schemeBeaconCount,\r\n    showSchemeParcels: ctx.showSchemeParcels,\r\n    showSchemeBlocks: ctx.showSchemeBlocks,\r\n    showSchemeBeacons: ctx.showSchemeBeacons,\r\n    hasTraverse: ctx.hasTraverse,\r\n    traverseParcelPreviewActive: ctx.traverseParcelPreviewActive,\r\n    hasProjectId: ctx.hasProjectId,\r\n    schemeProjectId: ctx.schemeProjectId,\r\n    loadSchemeData: ctx.loadSchemeData,\r\n    toggleSchemeParcelVisibility: ctx.toggleSchemeParcelVisibility,\r\n    toggleSchemeBlockVisibility: ctx.toggleSchemeBlockVisibility,\r\n    toggleSchemeBeaconVisibility: ctx.toggleSchemeBeaconVisibility,\r\n    zoomToScheme: ctx.zoomToScheme,\r\n    removeScheme: ctx.removeScheme,\r\n    createParcelFromTraverse: ctx.createParcelFromTraverse,\r\n    confirmTraverseParcel: ctx.confirmTraverseParcel,\r\n    cancelTraverseParcel: ctx.cancelTraverseParcel,\r\n  }\r\n\r\n  return (\r\n    <MapSchemeContext.Provider value={value}>\r\n      {children}\r\n    </MapSchemeContext.Provider>\r\n  )\r\n}\r\n\r\nexport function useMapSchemeContext(): MapSchemeContextValue {\r\n  const ctx = useContext(MapSchemeContext)\r\n  if (!ctx) throw new Error('useMapSchemeContext must be used within a <MapSchemeProvider>')\r\n  return ctx\r\n}\r\n\r\n// ─── Draw Sub-Context ────────────────────────────────────────────────────\r\n\r\ninterface MapDrawContextValue {\r\n  drawMode: DrawMode\r\n  editMode: boolean\r\n  measureMode: MeasureMode\r\n  featureCount: number\r\n  selectedFeature: any\r\n  featureName: string\r\n  measureResult: string\r\n  layerOpacity: number\r\n  showAnnotations: boolean\r\n  toggleDraw: (mode: DrawMode) => void\r\n  toggleEdit: () => void\r\n  toggleMeasure: (mode: MeasureMode) => void\r\n  toggleAnnotations: () => void\r\n  deleteSelected: () => void\r\n  undo: () => void\r\n  redo: () => void\r\n  updateFeatureName: (name: string) => void\r\n  handleOpacityChange: (val: number) => void\r\n  clearDrawn: () => void\r\n  canUndo: boolean\r\n  canRedo: boolean\r\n}\r\n\r\nconst MapDrawContext = createContext<MapDrawContextValue | null>(null)\r\n\r\nexport function MapDrawProvider({ children }: { children: React.ReactNode }) {\r\n  const ctx = useMapContext()\r\n\r\n  const value: MapDrawContextValue = {\r\n    drawMode: ctx.drawMode,\r\n    editMode: ctx.editMode,\r\n    measureMode: ctx.measureMode,\r\n    featureCount: ctx.featureCount,\r\n    selectedFeature: ctx.selectedFeature,\r\n    featureName: ctx.featureName,\r\n    measureResult: ctx.measureResult,\r\n    layerOpacity: ctx.layerOpacity,\r\n    showAnnotations: ctx.showAnnotations,\r\n    toggleDraw: ctx.toggleDraw,\r\n    toggleEdit: ctx.toggleEdit,\r\n    toggleMeasure: ctx.toggleMeasure,\r\n    toggleAnnotations: ctx.toggleAnnotations,\r\n    deleteSelected: ctx.deleteSelected,\r\n    undo: ctx.undo,\r\n    redo: ctx.redo,\r\n    updateFeatureName: ctx.updateFeatureName,\r\n    handleOpacityChange: ctx.handleOpacityChange,\r\n    clearDrawn: ctx.clearDrawn,\r\n    canUndo: ctx.canUndo,\r\n    canRedo: ctx.canRedo,\r\n  }\r\n\r\n  return (\r\n    <MapDrawContext.Provider value={value}>\r\n      {children}\r\n    </MapDrawContext.Provider>\r\n  )\r\n}\r\n\r\nexport function useMapDrawContext(): MapDrawContextValue {\r\n  const ctx = useContext(MapDrawContext)\r\n  if (!ctx) throw new Error('useMapDrawContext must be used within a <MapDrawProvider>')\r\n  return ctx\r\n}\r\n\r\n// ─── Print Sub-Context ───────────────────────────────────────────────────\r\n\r\ninterface MapPrintContextValue {\r\n  showSheetLayout: boolean\r\n  isPrinting: boolean\r\n  paperSize: PaperSize\r\n  orientation: Orientation\r\n  setPaperSize: React.Dispatch<React.SetStateAction<PaperSize>>\r\n  setOrientation: React.Dispatch<React.SetStateAction<Orientation>>\r\n  printMap: (overrides?: any) => Promise<void>\r\n}\r\n\r\nconst MapPrintContext = createContext<MapPrintContextValue | null>(null)\r\n\r\nexport function MapPrintProvider({ children }: { children: React.ReactNode }) {\r\n  const ctx = useMapContext()\r\n\r\n  const value: MapPrintContextValue = {\r\n    showSheetLayout: ctx.showSheetLayout,\r\n    isPrinting: ctx.isPrinting,\r\n    paperSize: ctx.paperSize,\r\n    orientation: ctx.orientation,\r\n    setPaperSize: ctx.setPaperSize,\r\n    setOrientation: ctx.setOrientation,\r\n    printMap: ctx.printMap,\r\n  }\r\n\r\n  return (\r\n    <MapPrintContext.Provider value={value}>\r\n      {children}\r\n    </MapPrintContext.Provider>\r\n  )\r\n}\r\n\r\nexport function useMapPrintContext(): MapPrintContextValue {\r\n  const ctx = useContext(MapPrintContext)\r\n  if (!ctx) throw new Error('useMapPrintContext must be used within a <MapPrintProvider>')\r\n  return ctx\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -187530,11 +186432,11 @@
         "ruleId": "no-console",
         "severity": 1,
         "message": "Unexpected console statement.",
-        "line": 123,
+        "line": 84,
         "column": 9,
         "nodeType": "MemberExpression",
         "messageId": "unexpected",
-        "endLine": 123,
+        "endLine": 84,
         "endColumn": 22,
         "suggestions": [
           {
@@ -187544,8 +186446,8 @@
             },
             "fix": {
               "range": [
-                2932,
-                2992
+                2397,
+                2457
               ],
               "text": ""
             },

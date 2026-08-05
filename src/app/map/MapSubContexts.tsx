@@ -17,7 +17,7 @@
 import React, { createContext, useContext } from 'react'
 import { useMapContext } from '@/app/map/MapReactContext'
 import type { DrawMode, MeasureMode } from '@/hooks/useMapTypes'
-import type { PaperSize, Orientation } from '@/hooks/usePrint'
+import type { PaperSize, Orientation, PrintOptions } from '@/hooks/usePrint'
 
 // ─── Scheme Sub-Context ──────────────────────────────────────────────────
 
@@ -96,7 +96,7 @@ interface MapDrawContextValue {
   editMode: boolean
   measureMode: MeasureMode
   featureCount: number
-  selectedFeature: any
+  selectedFeature: import('ol/Feature').default | null
   featureName: string
   measureResult: string
   layerOpacity: number
@@ -166,7 +166,7 @@ interface MapPrintContextValue {
   orientation: Orientation
   setPaperSize: React.Dispatch<React.SetStateAction<PaperSize>>
   setOrientation: React.Dispatch<React.SetStateAction<Orientation>>
-  printMap: (overrides?: any) => Promise<void>
+  printMap: (overrides?: Partial<PrintOptions>) => Promise<void>
 }
 
 const MapPrintContext = createContext<MapPrintContextValue | null>(null)

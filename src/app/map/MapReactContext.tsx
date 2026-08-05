@@ -12,13 +12,22 @@
 import React, { createContext, useContext } from 'react'
 import type { BasemapMode, DrawMode, MeasureMode } from '@/hooks/useMapTypes'
 import type { StakeoutState } from '@/lib/map/stakeout'
-import type { PaperSize, Orientation } from '@/hooks/usePrint'
+import type { PaperSize, Orientation, PrintOptions } from '@/hooks/usePrint'
 
 // ─── Context Value Type ──────────────────────────────────────────────────
 
+// Geographic bounding box shared by offline-map extent and getMapExtent()
+// so the two can't drift apart.
+export interface MapExtent {
+  minLat: number
+  minLon: number
+  maxLat: number
+  maxLon: number
+}
+
 export interface MapContextValue {
   // ── Map refs ──
-  mapInstance: React.MutableRefObject<any>
+  mapInstance: React.MutableRefObject<import('ol/Map').default | null>
   popupRef: React.MutableRefObject<HTMLDivElement | null>
 
   // ── UI state ──
@@ -36,7 +45,7 @@ export interface MapContextValue {
   importMsg: string
   panelOpen: boolean
   dragHint: boolean
-  selectedFeature: any
+  selectedFeature: import('ol/Feature').default | null
   featureName: string
   measureResult: string
   layerOpacity: number
@@ -90,7 +99,7 @@ export interface MapContextValue {
   setOrientation: React.Dispatch<React.SetStateAction<Orientation>>
 
   // ── Offline map state ──
-  offlineMapExtent: { minLat: number; minLon: number; maxLat: number; maxLon: number } | null
+  offlineMapExtent: MapExtent | null
 
   // ── Init retry action ──
   retryInit: () => void
@@ -171,7 +180,7 @@ export interface MapContextValue {
   handleCoordSearch: (input: string) => Promise<void>
   stakeoutInfo: () => { distance: number; bearing: number; dE: number; dN: number } | null
   deactivateStakeout: () => void
-  getMapExtent: () => Promise<any>
+  getMapExtent: () => Promise<MapExtent | null>
 
   // ── Scheme actions ──
   loadSchemeData: () => void
@@ -188,7 +197,7 @@ export interface MapContextValue {
   switchProjection: (projection: string) => void
 
   // ── Print actions (Tier 1) ──
-  printMap: (overrides?: any) => Promise<void>
+  printMap: (overrides?: Partial<PrintOptions>) => Promise<void>
 
   // ── Offline tile actions ──
   toggleOfflineDialog: (open: boolean) => Promise<void>
