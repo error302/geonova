@@ -5,9 +5,49 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { generateAllSections } from '@/lib/compute/surveyReportSections'
 import { computeReportCompleteness } from '@/lib/compute/reportCompleteness'
-import { riseAndFall } from '@/lib/engine/leveling'
 import { buildSubmissionNumber, normaliseRegistrationNo, validateSubmissionNumber } from '@/lib/submission/format'
-import type { SurveyReportInput, SectionContent, ControlPoint, LevellingRun } from '@/types/surveyReport'
+import type { SurveyReportInput, ControlPoint, LevellingRun } from '@/types/surveyReport'
+
+interface ProjectRow {
+  name: string | null
+  client_name: string | null
+  client_address: string | null
+  surveyor_name: string | null
+  surveyor_registration_number: string | null
+  submission_number: string | null
+  location: string | null
+  start_date: string | null
+  end_date: string | null
+  utm_zone: number | null
+  hemisphere: string | null
+}
+
+interface SurveyPointRow {
+  id: string
+  name: string | null
+  control_order: string | null
+  easting: string | number
+  northing: string | number
+  elevation: string | number | null
+  source: string | null
+  description: string | null
+  mark_type: string | null
+}
+
+interface LevellingRunRow {
+  run_id: string | null
+  id: string
+  from_bm: string | null
+  to_bm: string | null
+  distance: string | number | null
+  misclosure: string | number | null
+  allowable: string | number | null
+  passes: boolean | null
+}
+
+interface TraverseRow {
+  precision_ratio: string | number | null
+}
 
 export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
   const { projectId, input } = ctx.body as { projectId?: string; input?: Partial<SurveyReportInput> }
@@ -16,7 +56,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     return NextResponse.json({ error: 'Project ID required' }, { status: 400 })
   }
 
-  const { rows: projectRows } = await db.query(
+  const { rows: projectRows } = await db.query<ProjectRow>(
     'SELECT * FROM projects WHERE id = $1 LIMIT 1',
     [projectId]
   )
@@ -26,41 +66,41 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   }
   const project = projectRows[0]
 
-  const { rows: points } = await db.query(
+  const { rows: points } = await db.query<SurveyPointRow>(
     'SELECT * FROM survey_points WHERE project_id = $1 AND is_control = true',
     [projectId]
   )
 
-  const controlPoints: ControlPoint[] = (points || []).map((p: any) => ({
+  const controlPoints: ControlPoint[] = (points || []).map((p) => ({
     id: p.name || p.id,
     order: (p.control_order as 'PRIMARY' | 'SECONDARY' | 'TERTIARY') || 'TERTIARY',
-    easting: p.easting,
-    northing: p.northing,
-    elevation: p.elevation || 0,
+    easting: Number(p.easting),
+    northing: Number(p.northing),
+    elevation: Number(p.elevation || 0),
     source: (p.source as 'GNSS' | 'TOTAL_STATION' | 'EXISTING') || 'GNSS',
     description: p.description || '',
     markType: p.mark_type || 'Concrete Beacon'
   }))
 
-  const benchmarks = controlPoints.filter((cp: any) =>
+  const benchmarks = controlPoints.filter((cp) =>
     cp.markType.toLowerCase().includes('bm') ||
     cp.markType.toLowerCase().includes('benchmark')
   )
 
   let levellingRuns: LevellingRun[] = []
   try {
-    const { rows: levelingRunsData } = await db.query(
+    const { rows: levelingRunsData } = await db.query<LevellingRunRow>(
       'SELECT * FROM leveling_runs WHERE project_id = $1',
       [projectId]
     )
 
-    levellingRuns = (levelingRunsData || []).map((run: any) => ({
+    levellingRuns = (levelingRunsData || []).map((run) => ({
       runId: run.run_id || run.id,
       fromBM: run.from_bm || 'BM1',
       toBM: run.to_bm || 'BM2',
-      distance: run.distance || 0,
-      misclosure: run.misclosure || 0,
-      allowable: run.allowable || 10,
+      distance: Number(run.distance || 0),
+      misclosure: Number(run.misclosure || 0),
+      allowable: Number(run.allowable || 10),
       passes: run.passes ?? true
     }))
   } catch {
@@ -69,13 +109,13 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
 
   let traversePrecision: number | undefined
   try {
-    const { rows: traverseData } = await db.query(
+    const { rows: traverseData } = await db.query<TraverseRow>(
       'SELECT precision_ratio FROM traverse_results WHERE project_id = $1 ORDER BY created_at DESC LIMIT 1',
       [projectId]
     )
 
     if (traverseData.length > 0 && traverseData[0].precision_ratio) {
-      traversePrecision = traverseData[0].precision_ratio
+      traversePrecision = Number(traverseData[0].precision_ratio)
     }
   } catch {
     // No traverse data yet
@@ -87,6 +127,10 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   const fallbackSubmissionNo = registrationNo
     ? buildSubmissionNumber({ registrationNo, year: new Date().getFullYear(), sequence: 1, revision: 0 })
     : ''
+  const inputSubmissionNumber = input?.submissionNumber || ''
+  const submissionNumber = validateSubmissionNumber(inputSubmissionNumber)
+    ? inputSubmissionNumber
+    : (project.submission_number || fallbackSubmissionNo)
 
   const defaultInput: SurveyReportInput = {
     projectId,
@@ -102,9 +146,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     surveyorRegistrationNumber: registrationNo,
     surveyorIskNumber: input?.surveyorIskNumber || '',
     reportDate: input?.reportDate || new Date().toISOString().split('T')[0],
-    submissionNumber: validateSubmissionNumber(input?.submissionNumber || '')
-      ? input!.submissionNumber
-      : (project.submission_number || fallbackSubmissionNo),
+    submissionNumber,
     projectLocation: input?.projectLocation || project.location || '',
     county: input?.county || '',
     projectPurpose: input?.projectPurpose || '',

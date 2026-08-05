@@ -1,6 +1,46 @@
 import { apiHandler, apiSuccess } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
+interface CountRow {
+  count: number
+}
+
+interface StatusCountRow {
+  status: string | null
+  count: number
+}
+
+interface TotalRow {
+  total: number
+}
+
+interface MonthTotalRow {
+  month: string
+  total: number
+}
+
+interface SignupRow {
+  id: string
+  email: string
+  full_name: string | null
+  role: string
+  created_at: string | Date
+  plan_id: string | null
+}
+
+interface PlanCountRow {
+  plan_id: string | null
+  count: number
+}
+
+interface IskQueueRow {
+  id: string
+  email: string
+  full_name: string | null
+  isk_number: string | null
+  created_at: string | Date
+}
+
 export const dynamic = 'force-dynamic'
 
 /**
@@ -11,17 +51,17 @@ export const dynamic = 'force-dynamic'
  */
 export const GET = apiHandler(
   { auth: true, roles: ['super_admin', 'admin', 'org_admin'] , rateLimit: { max: 60, windowMs: 60000 } },
-  async (req, ctx) => {
+  async () => {
     const startTime = Date.now()
 
     // ── User stats ──
     const [totalUsersRes, newUsersRes, activeUsersRes] = await Promise.all([
-      db.query('SELECT COUNT(*)::int AS count FROM users'),
-      db.query(
+      db.query<CountRow>('SELECT COUNT(*)::int AS count FROM users'),
+      db.query<CountRow>(
         `SELECT COUNT(*)::int AS count FROM users
          WHERE created_at >= date_trunc('month', CURRENT_DATE)`,
       ),
-      db.query(
+      db.query<CountRow>(
         `SELECT COUNT(*)::int AS count FROM users
          WHERE updated_at >= NOW() - INTERVAL '30 days'`,
       ),
@@ -33,8 +73,8 @@ export const GET = apiHandler(
 
     // ── Project stats ──
     const [totalProjectsRes, projectsByStatusRes] = await Promise.all([
-      db.query('SELECT COUNT(*)::int AS count FROM projects'),
-      db.query(
+      db.query<CountRow>('SELECT COUNT(*)::int AS count FROM projects'),
+      db.query<StatusCountRow>(
         `SELECT status, COUNT(*)::int AS count FROM projects GROUP BY status`,
       ),
     ])
@@ -50,8 +90,8 @@ export const GET = apiHandler(
     // uses `public_beacons` and `rim_beacons`. Use UNION ALL so the count
     // reflects all beacons regardless of subtype.
     const [totalParcelsRes, totalBeaconsRes] = await Promise.all([
-      db.query('SELECT COUNT(*)::int AS count FROM parcels'),
-      db.query(
+      db.query<CountRow>('SELECT COUNT(*)::int AS count FROM parcels'),
+      db.query<CountRow>(
         'SELECT (SELECT COUNT(*) FROM public_beacons) + (SELECT COUNT(*) FROM rim_beacons) AS count'
       ),
     ])
@@ -61,10 +101,10 @@ export const GET = apiHandler(
 
     // ── Revenue stats ──
     const [totalRevenueRes, revenueByMonthRes] = await Promise.all([
-      db.query(
+      db.query<TotalRow>(
         `SELECT COALESCE(SUM(amount), 0)::float AS total FROM payment_history WHERE status = 'completed'`,
       ),
-      db.query(
+      db.query<MonthTotalRow>(
         `SELECT TO_CHAR(created_at, 'YYYY-MM') AS month, COALESCE(SUM(amount), 0)::float AS total
          FROM payment_history
          WHERE status = 'completed'
@@ -81,7 +121,7 @@ export const GET = apiHandler(
     }))
 
     // ── Recent signups (last 10) ──
-    const recentSignupsRes = await db.query(
+    const recentSignupsRes = await db.query<SignupRow>(
       `SELECT u.id, u.email, u.full_name, u.role, u.created_at,
               us.plan_id
        FROM users u
@@ -100,13 +140,13 @@ export const GET = apiHandler(
     }))
 
     // ── ISK Verification Queue ──
-    const iskPendingRes = await db.query(
+    const iskPendingRes = await db.query<CountRow>(
       `SELECT COUNT(*)::int AS count FROM users WHERE verified_isk = false AND isk_number IS NOT NULL`,
     )
     const iskPendingCount = iskPendingRes.rows[0]?.count ?? 0
 
     // ── Subscription breakdown ──
-    const subCountsRes = await db.query(
+    const subCountsRes = await db.query<PlanCountRow>(
       `SELECT plan_id, COUNT(*)::int AS count FROM user_subscriptions GROUP BY plan_id`,
     )
     const activeSubscriptions: Record<string, number> = { free: 0, pro: 0, enterprise: 0 }
@@ -116,13 +156,13 @@ export const GET = apiHandler(
     }
 
     // ── Submissions this month ──
-    const submissionsRes = await db.query(
+    const submissionsRes = await db.query<CountRow>(
       `SELECT COUNT(*)::int AS count FROM submissions WHERE created_at >= date_trunc('month', CURRENT_DATE)`,
     )
     const submissionsThisMonth = submissionsRes.rows[0]?.count ?? 0
 
     // ── ISK pending users (for queue display) ──
-    const iskQueueRes = await db.query(
+    const iskQueueRes = await db.query<IskQueueRow>(
       `SELECT id, email, full_name, isk_number, created_at
        FROM users
        WHERE verified_isk = false AND isk_number IS NOT NULL

@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { z } from 'zod'
 
@@ -27,7 +27,7 @@ const traverseSchema = z.object({
 export const POST = apiHandler(
   { auth: true, schema: traverseSchema, rateLimit: { max: 50, windowMs: 60000 } },
   async (req, ctx) => {
-    const { task, method, surveyType, startPoint, legs, closingPoint } = ctx.body as any
+    const { task, method, surveyType, startPoint, legs, closingPoint } = ctx.body as z.infer<typeof traverseSchema>
 
     // Validate: cadastral and control traverses require closing control point per Survey Regulations Reg 60 & 67
     const requiresClosingControl = ['cadastral', 'control', 'boundary', 'engineering', 'mining'].includes(surveyType)
@@ -54,16 +54,16 @@ export const POST = apiHandler(
     const { forwardTraverse, bowditchAdjustment, transitAdjustment, evaluateTraverseClosure, TRAVERSE_PRECISION_STANDARDS } = await import('@/lib/engine/traverse')
     const { coordinateArea } = await import('@/lib/engine/area')
 
-    const distances = legs.map((l: any) => l.distance)
-    const bearings = legs.map((l: any) => l.bearing)
+    const distances = legs.map((l) => l.distance)
+    const bearings = legs.map((l) => l.bearing)
 
     if (task === 'forward') {
       const result = forwardTraverse({
         start: startPoint,
-        stations: legs.map((l: any) => l.station),
+        stations: legs.map((l) => l.station),
         distances,
         bearings,
-      } as any)
+      })
 
       return NextResponse.json({
         task: 'traverse_forward',
@@ -73,7 +73,7 @@ export const POST = apiHandler(
       })
     }
 
-    const points = legs.map((l: any) => ({ name: l.station, easting: 0, northing: 0 }))
+    const points = legs.map((l) => ({ name: l.station, easting: 0, northing: 0 }))
     const traverseInput = {
       points: [startPoint, ...points],
       distances,
@@ -82,8 +82,8 @@ export const POST = apiHandler(
     }
 
     const adjusted = method === 'transit'
-      ? transitAdjustment(traverseInput as any)
-      : bowditchAdjustment(traverseInput as any)
+      ? transitAdjustment(traverseInput)
+      : bowditchAdjustment(traverseInput)
 
     const validSurveyTypes = Object.keys(TRAVERSE_PRECISION_STANDARDS) as string[]
     const validatedSurveyType = validSurveyTypes.includes(surveyType) ? surveyType : 'cadastral'
@@ -91,10 +91,10 @@ export const POST = apiHandler(
     const closure = evaluateTraverseClosure(
       adjusted.linearError,
       adjusted.totalDistance,
-      validatedSurveyType as any
+      validatedSurveyType as import('@/lib/engine/traverse').SurveyTypeKey
     )
 
-    const coordinates = adjusted.legs.map((leg: any) => ({
+    const coordinates = adjusted.legs.map((leg) => ({
       easting: leg.adjEasting,
       northing: leg.adjNorthing,
     }))

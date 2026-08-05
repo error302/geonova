@@ -7,6 +7,35 @@ import { db } from '@/lib/db'
 import { getActiveSurveyorProfile } from '@/lib/submission/surveyorProfile'
 import { generateSubmissionRef } from '@/lib/submission/revisionNumber'
 
+interface SurveyPointRow {
+  id: string
+  name: string | null
+  easting: string | number | null
+  northing: string | number | null
+  adjusted_easting: string | number | null
+  adjusted_northing: string | number | null
+  observed_bearing: string | number | null
+  observed_distance: string | number | null
+}
+
+interface ProjectRow {
+  id: string
+  survey_type: string | null
+  lr_number: string | null
+  county: string | null
+  district: string | null
+  locality: string | null
+  area_m2: string | number | null
+  perimeter_m: string | number | null
+  angular_misclosure: string | number | null
+  linear_misclosure: string | number | null
+  precision_ratio: string | null
+  closing_error_e: string | number | null
+  closing_error_n: string | number | null
+  survey_points?: SurveyPointRow[]
+  supporting_documents?: unknown[]
+}
+
 export async function GET(req: NextRequest) {
   const { session, error } = await requireAuth()
   if (error) return error
@@ -32,9 +61,11 @@ export async function GET(req: NextRequest) {
     // full project data (survey points, traverse, parcel info)
     const userId = (session?.user as { id?: string })?.id
     const ownership = await requireProjectOwnership(projectId, userId)
-    if (!ownership.ok) return ownership.error!
+    if (!ownership.ok) {
+      return ownership.error ?? NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
 
-    const { rows: projectRows } = await db.query(
+    const { rows: projectRows } = await db.query<ProjectRow>(
       'SELECT * FROM projects WHERE id = $1 LIMIT 1',
       [projectId]
     )
@@ -43,10 +74,10 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    const project = projectRows[0]
+    const project = projectRows[0] as ProjectRow
 
     // Simulate joined relations for survey_points (supporting_docs doesn't exist on projects table usually, mock if needed)
-    const { rows: pointsRows } = await db.query(
+    const { rows: pointsRows } = await db.query<SurveyPointRow>(
       'SELECT * FROM survey_points WHERE project_id = $1',
       [projectId]
     )
@@ -73,7 +104,7 @@ export async function GET(req: NextRequest) {
         perimeterM: project.perimeter_m || 0
       },
       traverse: {
-        points: (project.survey_points || []).map((pt: any) => ({
+        points: (project.survey_points || []).map((pt) => ({
           pointName: pt.name || `P${pt.id}`,
           easting: pt.easting || 0,
           northing: pt.northing || 0,

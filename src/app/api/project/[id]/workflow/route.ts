@@ -9,6 +9,26 @@ import {
   type ProjectWorkflowData,
 } from '@/lib/workflows/projectWorkflowEngine'
 
+interface ProjectRow {
+  id: string
+  name: string | null
+  survey_type: string | null
+  location: string | null
+  utm_zone: number | null
+  hemisphere: string | null
+  workflow_step: number | null
+  workflow_max_unlocked: number | null
+}
+
+interface CntRow {
+  cnt: number
+}
+
+interface QcRow {
+  passed: boolean
+  acknowledged: boolean
+}
+
 /**
  * GET /api/project/[id]/workflow
  * Returns the full workflow status for a project.
@@ -17,7 +37,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   const { id } = ctx.params
 
   // Fetch project data
-  const { rows } = await db.query(
+  const { rows } = await db.query<ProjectRow>(
     `SELECT p.id, p.name, p.survey_type, p.location, p.utm_zone, p.hemisphere,
             p.workflow_step, p.workflow_max_unlocked
      FROM projects p
@@ -33,11 +53,11 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   // Fetch related counts
   const [pointsRes, fieldbookRes, computationsRes, deedPlanRes, submissionRes] = await Promise.all([
-    db.query('SELECT COUNT(*)::int AS cnt FROM survey_points WHERE project_id = $1', [id]),
-    db.query('SELECT COUNT(*)::int AS cnt FROM fieldbook_entries WHERE project_id = $1 AND deleted_at IS NULL', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
-    db.query("SELECT COUNT(*)::int AS cnt FROM computations WHERE project_id = $1 AND status = 'completed'", [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
-    db.query('SELECT COUNT(*)::int AS cnt FROM deed_plans WHERE project_id = $1', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
-    db.query('SELECT COUNT(*)::int AS cnt FROM submissions WHERE project_id = $1', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
+    db.query<CntRow>('SELECT COUNT(*)::int AS cnt FROM survey_points WHERE project_id = $1', [id]),
+    db.query<CntRow>('SELECT COUNT(*)::int AS cnt FROM fieldbook_entries WHERE project_id = $1 AND deleted_at IS NULL', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
+    db.query<CntRow>("SELECT COUNT(*)::int AS cnt FROM computations WHERE project_id = $1 AND status = 'completed'", [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
+    db.query<CntRow>('SELECT COUNT(*)::int AS cnt FROM deed_plans WHERE project_id = $1', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
+    db.query<CntRow>('SELECT COUNT(*)::int AS cnt FROM submissions WHERE project_id = $1', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
   ])
 
   const pointCount = pointsRes.rows[0]?.cnt ?? 0
@@ -50,7 +70,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   let toleranceCheckPassed: boolean | null = null
   let toleranceAcknowledged = false
   try {
-    const qcRes = await db.query(
+    const qcRes = await db.query<QcRow>(
       'SELECT passed, acknowledged FROM quality_checks WHERE project_id = $1 ORDER BY created_at DESC LIMIT 1',
       [id]
     )
@@ -95,7 +115,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 600
   const body = ctx.body as { acknowledgeTolerance?: boolean } | undefined
 
   // Fetch project data
-  const { rows } = await db.query(
+  const { rows } = await db.query<ProjectRow>(
     `SELECT p.id, p.name, p.survey_type, p.location, p.utm_zone, p.hemisphere,
             p.workflow_step, p.workflow_max_unlocked
      FROM projects p
@@ -125,17 +145,17 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 600
 
   // Fetch related counts
   const [pointsRes, fieldbookRes, computationsRes, deedPlanRes, submissionRes] = await Promise.all([
-    db.query('SELECT COUNT(*)::int AS cnt FROM survey_points WHERE project_id = $1', [id]),
-    db.query('SELECT COUNT(*)::int AS cnt FROM fieldbook_entries WHERE project_id = $1 AND deleted_at IS NULL', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
-    db.query("SELECT COUNT(*)::int AS cnt FROM computations WHERE project_id = $1 AND status = 'completed'", [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
-    db.query('SELECT COUNT(*)::int AS cnt FROM deed_plans WHERE project_id = $1', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
-    db.query('SELECT COUNT(*)::int AS cnt FROM submissions WHERE project_id = $1', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
+    db.query<CntRow>('SELECT COUNT(*)::int AS cnt FROM survey_points WHERE project_id = $1', [id]),
+    db.query<CntRow>('SELECT COUNT(*)::int AS cnt FROM fieldbook_entries WHERE project_id = $1 AND deleted_at IS NULL', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
+    db.query<CntRow>("SELECT COUNT(*)::int AS cnt FROM computations WHERE project_id = $1 AND status = 'completed'", [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
+    db.query<CntRow>('SELECT COUNT(*)::int AS cnt FROM deed_plans WHERE project_id = $1', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
+    db.query<CntRow>('SELECT COUNT(*)::int AS cnt FROM submissions WHERE project_id = $1', [id]).catch(() => ({ rows: [{ cnt: 0 }] })),
   ])
 
   let toleranceCheckPassed: boolean | null = null
   let toleranceAcknowledged = !!body?.acknowledgeTolerance
   try {
-    const qcRes = await db.query(
+    const qcRes = await db.query<QcRow>(
       'SELECT passed, acknowledged FROM quality_checks WHERE project_id = $1 ORDER BY created_at DESC LIMIT 1',
       [id]
     )

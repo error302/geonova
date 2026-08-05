@@ -113,7 +113,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   const { projectId } = parsed.data
 
   // ── Load project data ──
-  const { rows: projectRows } = await db.query(
+  const { rows: projectRows } = await db.query<ProjectRow>(
     `SELECT id, name, location, municipality, utm_zone, hemisphere, datum,
             client_name, surveyor_name, surveyor_licence, firm_name, firm_address,
             firm_phone, firm_email, drawing_no, reference, plan_title, area_sqm,
@@ -134,7 +134,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   const project = projectRows[0]
 
   // ── Load boundary points ──
-  const { rows: boundaryRows } = await db.query(
+  const { rows: boundaryRows } = await db.query<BoundaryPointRow>(
     `SELECT name, easting, northing, elevation, monument_type, beacon_description
      FROM boundary_points WHERE project_id = $1 ORDER BY sequence`,
     [projectId],
@@ -148,25 +148,25 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   }
 
   // ── Load adjacent lots ──
-  const { rows: adjacentRows } = await db.query(
+  const { rows: adjacentRows } = await db.query<AdjacentLotRow>(
     `SELECT id, boundary_points, plan_reference FROM adjacent_lots WHERE project_id = $1`,
     [projectId],
   )
 
   // ── Load fence offsets ──
-  const { rows: fenceRows } = await db.query(
+  const { rows: fenceRows } = await db.query<FenceOffsetRow>(
     `SELECT segment_index, type, offset_metres, callout_text FROM fence_offsets WHERE project_id = $1`,
     [projectId],
   )
 
   // ── Load buildings ──
-  const { rows: buildingRows } = await db.query(
+  const { rows: buildingRows } = await db.query<BuildingRow>(
     `SELECT easting, northing, width_m, height_m, rotation_deg, label FROM buildings WHERE project_id = $1`,
     [projectId],
   )
 
   // ── Load surveyor profile ──
-  const { rows: profileResult } = await db.query(
+  const { rows: profileResult } = await db.query<ProfileRow>(
     'SELECT full_name, isk_number, firm_name FROM profiles WHERE id = $1 LIMIT 1',
     [ctx.userId],
   )
@@ -263,7 +263,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     })
 
     // ── Store signature record in database ──
-    const { rows: sigRows } = await db.query(
+    const { rows: sigRows } = await db.query<{ id: string; signed_at: Date }>(
       `INSERT INTO signatures (user_id, project_id, signature_data, signer_name, isk_number)
        VALUES ($1, $2, $3, $4, $5)
        RETURNING id, signed_at`,

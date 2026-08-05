@@ -1,4 +1,4 @@
-import { Pool, type PoolClient, type QueryResult } from 'pg'
+import { Pool, type PoolClient, type QueryResult, type QueryResultRow } from 'pg'
 import { env } from '@/lib/env'
 
 let pool: Pool | null = null
@@ -182,7 +182,7 @@ export async function setRlsContext(client: PoolClient | Pool) {
 
 /** Convenient query helper — acquires and releases a client per call */
 export const db = {
-  query: async (text: string, params?: unknown[]): Promise<QueryResult> => {
+  query: async <T extends QueryResultRow = any>(text: string, params?: unknown[]): Promise<QueryResult<T>> => {
     const client = await getPool().connect()
     const start = Date.now()
     try {

@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { log } from '@/lib/logger'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 // ---------------------------------------------------------------------------
@@ -20,6 +21,44 @@ interface SearchHit {
   score: number
   /** Extra columns that vary per entity type */
   meta?: Record<string, unknown>
+}
+
+interface ProjectSearchRow {
+  id: string
+  name: string | null
+  description: string | null
+  survey_type: string | null
+  location: string | null
+  created_at: string | Date
+  score: string | number
+}
+
+interface SubmissionSearchRow {
+  id: string
+  title: string | null
+  status: string | null
+  survey_type: string | null
+  created_at: string | Date
+  score: string | number
+}
+
+interface SurveyorSearchRow {
+  id: string
+  user_id: string | null
+  full_name: string | null
+  isk_number: string | null
+  firm_name: string | null
+  specialization: string | null
+  county: string | null
+  score: string | number
+}
+
+interface UserSearchRow {
+  id: string
+  email: string | null
+  full_name: string | null
+  role: string | null
+  score: string | number
 }
 
 interface SearchResultGroup {
@@ -69,7 +108,7 @@ async function searchProjects(
   ilikeParam: string,
   limit: number
 ): Promise<SearchHit[]> {
-  const { rows } = await db.query(
+  const { rows } = await db.query<ProjectSearchRow>(
     `SELECT
        p.id,
        p.name,
@@ -108,10 +147,10 @@ async function searchProjects(
   return rows.map((r) => ({
     id: String(r.id),
     type: 'projects',
-    title: r.name,
+    title: r.name ?? 'Untitled Project',
     subtitle: r.survey_type ?? undefined,
     snippet: r.description
-      ? (r.description as string).slice(0, 200)
+      ? r.description.slice(0, 200)
       : undefined,
     score: Number(r.score),
     meta: {
@@ -126,7 +165,7 @@ async function searchSubmissions(
   ilikeParam: string,
   limit: number
 ): Promise<SearchHit[]> {
-  const { rows } = await db.query(
+  const { rows } = await db.query<SubmissionSearchRow>(
     `SELECT
        s.id,
        s.title,
@@ -157,7 +196,7 @@ async function searchSubmissions(
   return rows.map((r) => ({
     id: String(r.id),
     type: 'submissions',
-    title: r.title,
+    title: r.title ?? 'Untitled Submission',
     subtitle: r.status ?? undefined,
     snippet: r.survey_type ?? undefined,
     score: Number(r.score),
@@ -174,7 +213,7 @@ async function searchSurveyors(
   ilikeParam: string,
   limit: number
 ): Promise<SearchHit[]> {
-  const { rows } = await db.query(
+  const { rows } = await db.query<SurveyorSearchRow>(
     `SELECT
        sp.id,
        sp.user_id,
@@ -236,7 +275,7 @@ async function searchUsers(
   limit: number
 ): Promise<SearchHit[]> {
   // Users table — limited fields for privacy (only id, email, full_name, role)
-  const { rows } = await db.query(
+  const { rows } = await db.query<UserSearchRow>(
     `SELECT
        u.id,
        u.email,
@@ -282,7 +321,7 @@ async function searchUsers(
 
 export const GET = apiHandler(
   { auth: true, rateLimit: { max: 30, windowMs: 60000 } },
-  async (req, ctx) => {
+  async (req, _ctx) => {
     const url = new URL(req.url)
     const rawQuery = (url.searchParams.get('q') ?? '').trim()
     const rawType = url.searchParams.get('type') ?? 'all'
@@ -351,7 +390,7 @@ export const GET = apiHandler(
         grandTotal += hits.length
       } else {
         // Graceful degradation – include empty group rather than failing the whole request
-        console.error(`[search] ${label} search failed:`, outcome.reason)
+        log({ level: 'error', message: `[search] ${label} search failed`, metadata: { reason: String(outcome.reason) } })
         results.push({ type: label, total: 0, hits: [] })
       }
     }

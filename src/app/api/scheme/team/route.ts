@@ -46,6 +46,26 @@ interface BlockRow {
   block_name: string
 }
 
+interface ProjectOwnerRow {
+  id: string
+  email: string
+  full_name: string
+  role: string
+  owner_since: string
+}
+
+interface ProjectUserIdRow {
+  user_id: string
+}
+
+interface UserIdRow {
+  id: string
+}
+
+interface ExistingAssignmentRow {
+  id: string
+}
+
 interface TeamMember {
   user: { id: string; email: string; full_name: string; role: string }
   blocks: Array<{
@@ -71,7 +91,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   }
 
   // Get project owner
-  const { rows: projects } = await db.query(
+  const { rows: projects } = await db.query<ProjectOwnerRow>(
     'SELECT u.id, u.email, u.name as full_name, u.role, p.created_at as owner_since FROM projects p JOIN users u ON u.id = p.user_id WHERE p.id = $1',
     [projectId]
   )
@@ -81,7 +101,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   }
 
   // Get assigned surveyors
-  const { rows: assignments } = await db.query(
+  const { rows: assignments } = await db.query<AssignmentRow>(
     `SELECT
       ba.block_id, b.block_number, b.block_name,
       ba.assigned_to, u.email, u.name as full_name, u.role,
@@ -95,7 +115,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   )
 
   // Get block stats per assignee
-  const { rows: blockStats } = await db.query(
+  const { rows: blockStats } = await db.query<BlockStatsRow>(
     `SELECT
       b.id as block_id, b.block_number,
       COUNT(p.id) as total_parcels,
@@ -138,7 +158,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   // Get unassigned blocks
   const assignedBlockIds = new Set(assignments.map((a) => a.block_id))
-  const { rows: allBlocks } = await db.query(
+  const { rows: allBlocks } = await db.query<BlockRow>(
     'SELECT id, block_number, block_name FROM blocks WHERE project_id = $1 ORDER BY block_number',
     [projectId]
   )
@@ -179,7 +199,7 @@ export const POST = apiHandler(
     }
 
     // Verify project exists
-    const { rows: projects } = await db.query(
+    const { rows: projects } = await db.query<ProjectUserIdRow>(
       'SELECT user_id FROM projects WHERE id = $1',
       [projectId]
     )
@@ -193,7 +213,7 @@ export const POST = apiHandler(
     }
 
     // Verify target user exists
-    const { rows: users } = await db.query(
+    const { rows: users } = await db.query<UserIdRow>(
       'SELECT id FROM users WHERE id = $1',
       [targetUserId]
     )
@@ -203,7 +223,7 @@ export const POST = apiHandler(
 
     if (action === 'assign') {
       // Check if already assigned
-      const { rows: existing } = await db.query(
+      const { rows: existing } = await db.query<ExistingAssignmentRow>(
         'SELECT id FROM block_assignments WHERE assigned_to = $1 AND block_id IN (SELECT id FROM blocks WHERE project_id = $2) LIMIT 1',
         [targetUserId, projectId]
       )

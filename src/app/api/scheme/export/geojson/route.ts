@@ -1,17 +1,69 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
 
-export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
+interface SchemeParcelRow {
+  id: string
+  parcel_number: string | null
+  lr_number_proposed: string | null
+  area_ha: string | number | null
+  status: string | null
+  revision_number: string | null
+  block_id: string
+  block_number: string | null
+  block_name: string | null
+  is_closed: boolean | null
+  perimeter: string | number | null
+  linear_error: string | number | null
+  precision_ratio: string | number | null
+  accuracy_order: string | null
+  computed_area_ha: string | number | null
+  station_name: string | null
+  easting: string | number | null
+  northing: string | number | null
+  elevation: string | number | null
+}
+
+interface ParcelCoord {
+  station: string | null
+  easting: number
+  northing: number
+  elevation: number | null
+}
+
+interface ParcelAgg {
+  id: string
+  parcel_number: string | null
+  lr_number_proposed: string | null
+  block_number: string | null
+  block_name: string | null
+  area_ha: string | number | null
+  status: string | null
+  revision_number: string | null
+  is_closed: boolean | null
+  perimeter: string | number | null
+  linear_error: string | number | null
+  precision_ratio: string | number | null
+  accuracy_order: string | null
+  computed_area_ha: string | number | null
+  coordinates: ParcelCoord[]
+}
+
+type GeoGeometry =
+  | { type: 'Polygon'; coordinates: number[][][] }
+  | { type: 'MultiPoint'; coordinates: number[][] }
+  | null
+
+export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, _ctx) => {
   const { searchParams } = new URL(req.url)
   const projectId = searchParams.get('project_id')
   if (!projectId) {
     return NextResponse.json({ error: 'project_id is required' }, { status: 400 })
   }
 
-  const { rows: parcels } = await db.query(
+  const { rows: parcels } = await db.query<SchemeParcelRow>(
     `SELECT
       p.id, p.parcel_number, p.lr_number_proposed, p.area_ha, p.status,
       p.revision_number,
@@ -29,34 +81,49 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   )
 
   // Group by parcel
-  const parcelMap = new Map<string, any>()
-  parcels.forEach((row: any) => {
-    if (!parcelMap.has(row.id)) {
-      parcelMap.set(row.id, {
-        ...row,
+  const parcelMap = new Map<string, ParcelAgg>()
+  for (const row of parcels) {
+    let agg = parcelMap.get(row.id)
+    if (!agg) {
+      agg = {
+        id: row.id,
+        parcel_number: row.parcel_number,
+        lr_number_proposed: row.lr_number_proposed,
+        block_number: row.block_number,
+        block_name: row.block_name,
+        area_ha: row.area_ha,
+        status: row.status,
+        revision_number: row.revision_number,
+        is_closed: row.is_closed,
+        perimeter: row.perimeter,
+        linear_error: row.linear_error,
+        precision_ratio: row.precision_ratio,
+        accuracy_order: row.accuracy_order,
+        computed_area_ha: row.computed_area_ha,
         coordinates: [],
-      })
+      }
+      parcelMap.set(row.id, agg)
     }
     if (row.easting !== null && row.northing !== null) {
-      parcelMap.get(row.id).coordinates.push({
+      agg.coordinates.push({
         station: row.station_name,
         easting: Number(row.easting),
         northing: Number(row.northing),
         elevation: row.elevation ? Number(row.elevation) : null,
       })
     }
-  })
+  }
 
   const features = Array.from(parcelMap.values()).map(p => {
     const coords = p.coordinates
-    let geometry: any
+    let geometry: GeoGeometry
 
     if (coords.length >= 3) {
-      const ring = coords.map((c: any) => [c.easting, c.northing])
+      const ring = coords.map((c) => [c.easting, c.northing])
       ring.push(ring[0]) // close
       geometry = { type: 'Polygon', coordinates: [ring] }
     } else if (coords.length > 0) {
-      geometry = { type: 'MultiPoint', coordinates: coords.map((c: any) => [c.easting, c.northing]) }
+      geometry = { type: 'MultiPoint', coordinates: coords.map((c) => [c.easting, c.northing]) }
     } else {
       geometry = null
     }

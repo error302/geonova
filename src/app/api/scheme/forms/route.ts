@@ -1,8 +1,31 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 
 export const dynamic = 'force-dynamic'
+
+interface ParcelRow {
+  id: string
+  parcel_number: string | null
+  lr_number_proposed: string | null
+  area_ha: string | number | null
+  project_id: string
+  block_id: string
+  block_number: string | null
+  block_name: string | null
+  project_name: string | null
+  location: string | null
+  surveyor_name: string | null
+  county: string | null
+}
+
+interface SchemeRow {
+  scheme_number: string | null
+  county: string | null
+  sub_county: string | null
+  ward: string | null
+  adjudication_section: string | null
+}
 
 export const GET = apiHandler(
   { auth: true, audit: 'form_generated' , rateLimit: { max: 60, windowMs: 60000 } },
@@ -19,7 +42,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'type must be ppa2 or mutation' }, { status: 400 })
     }
 
-    const parcelCheck = await db.query(
+    const parcelCheck = await db.query<ParcelRow>(
       `SELECT p.id, p.parcel_number, p.lr_number_proposed, p.area_ha, p.project_id, p.block_id,
       b.block_number, b.block_name,
       pr.name as project_name, pr.location, pr.surveyor_name, pr.county
@@ -36,9 +59,9 @@ export const GET = apiHandler(
 
     const parcel = parcelCheck.rows[0]
 
-    let scheme: any = {}
+    let scheme: Partial<SchemeRow> = {}
     try {
-      const sd = await db.query('SELECT * FROM scheme_details WHERE project_id = $1', [parcel.project_id])
+      const sd = await db.query<SchemeRow>('SELECT * FROM scheme_details WHERE project_id = $1', [parcel.project_id])
       if (sd.rows.length > 0) scheme = sd.rows[0]
     } catch {}
 
@@ -50,14 +73,14 @@ export const GET = apiHandler(
   }
 )
 
-async function generatePPA2(parcel: any, scheme: any) {
+async function generatePPA2(parcel: ParcelRow, scheme: Partial<SchemeRow>) {
   const { generatePPA2Form } = await import('@/lib/submission/generators/ppa2Form')
 
-  const area = parcel.area_ha ? parseFloat(parcel.area_ha) : 0
+  const area = parcel.area_ha ? parseFloat(String(parcel.area_ha)) : 0
 
   const pdfBuffer = generatePPA2Form({
     lrNumber: parcel.lr_number_proposed || `Proposed - ${parcel.parcel_number}`,
-    parcelNumber: parcel.parcel_number,
+    parcelNumber: parcel.parcel_number || '',
     county: scheme.county || parcel.county || '',
     division: scheme.sub_county || '',
     district: scheme.ward || parcel.location || '',
@@ -83,13 +106,13 @@ async function generatePPA2(parcel: any, scheme: any) {
   })
 }
 
-async function generateMutationForm(parcel: any, scheme: any) {
+async function generateMutationForm(parcel: ParcelRow, scheme: Partial<SchemeRow>) {
   const jsPDF = (await import('jspdf')).default
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
   const W = 210
   const margin = 20
 
-  const area = parcel.area_ha ? parseFloat(parcel.area_ha) : 0
+  const area = parcel.area_ha ? parseFloat(String(parcel.area_ha)) : 0
 
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(13)
@@ -131,7 +154,7 @@ async function generateMutationForm(parcel: any, scheme: any) {
   y += 12
 
   field('LR Number:', parcel.lr_number_proposed || 'Pending')
-  field('Parcel Number:', parcel.parcel_number)
+  field('Parcel Number:', parcel.parcel_number || '')
   field('Block:', `${parcel.block_number} \u2014 ${parcel.block_name || 'N/A'}`)
   field('County:', scheme.county || parcel.county || '')
   field('Sub-County:', scheme.sub_county || '')
