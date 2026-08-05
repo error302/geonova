@@ -10,18 +10,25 @@
  *      against scripts/warning-baseline.json.
  *   2. A11Y ratchet     — per-rule counts of jsx-a11y/* messages (any
  *      severity) compared against scripts/a11y-baseline.json.
+ *   3. MEMBER-ACCESS floor — @typescript-eslint/no-unsafe-member-access
+ *      against scripts/member-access-baseline.json. This floor is DECOUPLED
+ *      from the general warning baseline: --update never touches it, so the
+ *      grind's constant re-baselining cannot silently absorb growth in this
+ *      family. It moves ONLY via --update-member-access, meaning any growth
+ *      fails CI until the batch work genuinely lowers the count.
  *
  * A rule absent from a baseline counts as baseline 0 — so a brand-new
  * violation (or newly enabled rule) fails the gate. This is the blocking
  * whole-repo lint step in ci.yml / pr-checks.yml.
  *
  * Usage:
- *   node scripts/lint-ratchets.mjs                     # verify both ratchets
+ *   node scripts/lint-ratchets.mjs                     # verify all ratchets
  *   node scripts/lint-ratchets.mjs --write-audit       # verify + regenerate .a11y-audit.json
- *   node scripts/lint-ratchets.mjs --update            # snapshot current counts as both baselines
+ *   node scripts/lint-ratchets.mjs --update            # snapshot current counts as baselines (NOT the member-access floor)
+ *   node scripts/lint-ratchets.mjs --update-member-access  # ratchet ONLY the member-access floor
  *   node scripts/lint-ratchets.mjs --report            # print per-rule tables (verify still runs)
  *   node scripts/lint-ratchets.mjs --scope a,b         # lint only these paths (testing)
- *   node scripts/lint-ratchets.mjs --baseline-warnings p.json --baseline-a11y p.json
+ *   node scripts/lint-ratchets.mjs --baseline-warnings p.json --baseline-a11y p.json --baseline-member-access p.json
  *   exit 0 = pass, 1 = ratchet exceeded, 2 = usage/run error
  *
  * The a11y evidence file (.a11y-audit.json) is written ONLY with --write-audit
@@ -44,6 +51,18 @@ const wIdx = args.indexOf('--baseline-warnings')
 const WARN_BASELINE = wIdx >= 0 && args[wIdx + 1] ? args[wIdx + 1] : 'scripts/warning-baseline.json'
 const aIdx = args.indexOf('--baseline-a11y')
 const A11Y_BASELINE = aIdx >= 0 && args[aIdx + 1] ? args[aIdx + 1] : 'scripts/a11y-baseline.json'
+// Dedicated no-unsafe-member-access floor — decoupled from the general
+// warning baseline (see header). Moved ONLY by --update-member-access.
+const MEMBER_RULE = '@typescript-eslint/no-unsafe-member-access'
+const mIdx = args.indexOf('--baseline-member-access')
+const MEMBER_BASELINE = mIdx >= 0 && args[mIdx + 1] ? args[mIdx + 1] : 'scripts/member-access-baseline.json'
+const UPDATE_MEMBER = args.includes('--update-member-access')
+// These two write DIFFERENT baselines and would silently drop the other's
+// update — refuse to combine them instead of surprising the caller.
+if (UPDATE && UPDATE_MEMBER) {
+  console.error('[lint-ratchets] cannot combine --update and --update-member-access — they ratchet different baselines. Run them separately.')
+  process.exit(2)
+}
 const scopeIdx = args.indexOf('--scope')
 const SCOPE = scopeIdx >= 0 && args[scopeIdx + 1] ? args[scopeIdx + 1].split(',') : ['middleware.ts', 'src/']
 
@@ -122,6 +141,21 @@ if (UPDATE) {
   console.error(
     `[lint-ratchets] baselines written → ${WARN_BASELINE} (${Object.keys(warningCounts).length} rules, ${warnTotal} warnings), ${A11Y_BASELINE} (${Object.keys(a11yCounts).length} rules, ${a11yTotal} a11y findings)`
   )
+  console.error(
+    `[lint-ratchets] note: --update does NOT move the ${MEMBER_RULE} floor — use --update-member-access for that.`
+  )
+  process.exit(0)
+}
+
+// The member-access floor is a separate, deliberately-slow-moving gate. The
+// general --update above intentionally leaves it alone so that re-baselining
+// after unrelated batch work can't mask growth in this family.
+if (UPDATE_MEMBER) {
+  const memberNow = warningCounts[MEMBER_RULE] || 0
+  writeFileSync(MEMBER_BASELINE, JSON.stringify({ [MEMBER_RULE]: memberNow }, null, 2) + '\n')
+  console.error(
+    `[lint-ratchets] member-access floor written → ${MEMBER_BASELINE} (${MEMBER_RULE}: ${memberNow} warnings)`
+  )
   process.exit(0)
 }
 
@@ -164,12 +198,27 @@ function checkOne(label, counts, total, baselinePath) {
 const warnRegressions = checkOne('warnings', warningCounts, warnTotal, WARN_BASELINE)
 const a11yRegressions = checkOne('jsx-a11y findings', a11yCounts, a11yTotal, A11Y_BASELINE)
 
-if (warnRegressions.length || a11yRegressions.length) {
-  console.error(`\n[lint-ratchets] FAIL: ${warnRegressions.length} warning rule(s) + ${a11yRegressions.length} a11y rule(s) exceeded baselines. Fix, or run --update to ratchet deliberately.`)
+// Dedicated floor for the member-access family (see header). Independent of
+// the general warning baseline so the batch grind can't absorb growth in it.
+const memberNow = warningCounts[MEMBER_RULE] || 0
+const memberBase = loadBaseline(MEMBER_BASELINE)
+const memberPrev = memberBase[MEMBER_RULE] || 0
+const memberOver = memberNow > memberPrev
+if (REPORT || memberOver) {
+  console.error(
+    `\n[lint-ratchets] ${MEMBER_RULE} floor: ${memberNow} (floor ${memberPrev})${memberOver ? '  ⚠ EXCEEDS' : ''}`
+  )
+}
+
+if (warnRegressions.length || a11yRegressions.length || memberOver) {
+  console.error(
+    `\n[lint-ratchets] FAIL: ${warnRegressions.length} warning rule(s) + ${a11yRegressions.length} a11y rule(s) exceeded baselines${memberOver ? `, and ${MEMBER_RULE} exceeded its dedicated floor` : ''}. Fix, or ratchet deliberately (--update for warnings/a11y, --update-member-access for the member-access floor).`
+  )
   for (const r of warnRegressions) console.error(`  ❌ [warn] ${r.rule}: ${r.prev} → ${r.now}`)
   for (const r of a11yRegressions) console.error(`  ❌ [a11y] ${r.rule}: ${r.prev} → ${r.now}`)
+  if (memberOver) console.error(`  ❌ [member-access] ${MEMBER_RULE}: ${memberPrev} → ${memberNow}`)
   process.exit(1)
 }
 
-console.error(`[lint-ratchets] OK: ${warnTotal} warnings + ${a11yTotal} a11y findings, all rules at/below baseline.`)
+console.error(`[lint-ratchets] OK: ${warnTotal} warnings + ${a11yTotal} a11y findings, all rules at/below baseline (${MEMBER_RULE} within its ${memberPrev}-warning floor).`)
 process.exit(0)
