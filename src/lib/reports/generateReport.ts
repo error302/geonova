@@ -613,7 +613,7 @@ function createPlanTransform(bounds: Bounds, frame: PlanFrame): PlanTransform {
   }
 }
 
-function drawFrame(doc: any, frame: PlanFrame, amber: [number, number, number]) {
+function drawFrame(doc: jsPDF, frame: PlanFrame, amber: [number, number, number]) {
   doc.setDrawColor(...amber)
   doc.setLineWidth(0.6)
   doc.rect(frame.x, frame.y, frame.w, frame.h, 'S')
@@ -634,7 +634,7 @@ function pickGridSpacingM(mmPerM: number) {
 }
 
 function drawGrid(
-  doc: any,
+  doc: jsPDF,
   frame: PlanFrame,
   transform: PlanTransform,
   gray: [number, number, number],
@@ -681,7 +681,7 @@ function drawGrid(
   }
 }
 
-function drawNorthArrow(doc: any, x: number, y: number, amber: [number, number, number]) {
+function drawNorthArrow(doc: jsPDF, x: number, y: number, amber: [number, number, number]) {
   doc.setDrawColor(...amber)
   doc.setFillColor(...amber)
   doc.setTextColor(...amber)
@@ -705,7 +705,7 @@ function pickScaleBarLengthM(mmPerM: number) {
 }
 
 function drawScaleBar(
-  doc: any,
+  doc: jsPDF,
   x: number,
   y: number,
   transform: PlanTransform,
@@ -737,7 +737,7 @@ function drawScaleBar(
 }
 
 function drawTitleBlock(
-  doc: any,
+  doc: jsPDF,
   args: {
     x: number
     y: number
@@ -844,7 +844,7 @@ function drawTitleBlock(
 }
 
 function drawPoints(
-  doc: any,
+  doc: jsPDF,
   points: { name: string; easting: number; northing: number; is_control: boolean }[],
   frame: PlanFrame,
   transform: PlanTransform,
@@ -872,7 +872,7 @@ function drawPoints(
   }
 }
 
-function drawParcelBoundary(doc: any, boundaryPoints: { name: string; easting: number; northing: number }[], transform: PlanTransform, amber: [number, number, number]) {
+function drawParcelBoundary(doc: jsPDF, boundaryPoints: { name: string; easting: number; northing: number }[], transform: PlanTransform, amber: [number, number, number]) {
   doc.setDrawColor(...amber)
   doc.setLineWidth(0.7)
 
@@ -884,7 +884,7 @@ function drawParcelBoundary(doc: any, boundaryPoints: { name: string; easting: n
 }
 
 function drawParcelLabels(
-  doc: any,
+  doc: jsPDF,
   boundaryPoints: { name: string; easting: number; northing: number }[],
   transform: PlanTransform,
   gray: [number, number, number]
@@ -914,7 +914,7 @@ function drawParcelLabels(
 }
 
 function drawTraverseLines(
-  doc: any,
+  doc: jsPDF,
   legs: { fromName: string; toName: string; distance: number; bearing: number }[],
   pointMap: Map<string, { easting: number; northing: number }>,
   transform: PlanTransform,

@@ -3,6 +3,50 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { generateTraverseDXF } from '@/lib/export/traverseDXF'
 
+interface TraverseProjectRow {
+  id: string
+  name: string
+  location: string
+  project_type: string
+  surveyor_name: string
+  scheme_number: string | null
+  datum: string | null
+  county: string | null
+}
+
+interface TraverseRow {
+  traverse_id: string
+  parcel_id: string
+  is_closed: boolean
+  linear_error: number | string | null
+  precision_ratio: number | string | null
+  total_perimeter: number | string | null
+  accuracy_order: string | null
+  parcel_number: string
+  lr_number_proposed: string | null
+  block_number: string
+}
+
+interface TraverseCoordRow {
+  station: string
+  easting: number | string
+  northing: number | string
+  rl: number | string | null
+}
+
+interface TraverseObservationRow {
+  station: string
+  bs: string
+  fs: string
+  hcl_deg: number | string | null
+  hcl_min: number | string | null
+  hcl_sec: number | string | null
+  hcr_deg: number | string | null
+  hcr_min: number | string | null
+  hcr_sec: number | string | null
+  slope_dist: number | string | null
+}
+
 export const dynamic = 'force-dynamic'
 
 /**
@@ -48,7 +92,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     )
   }
 
-  const project = projects[0]
+  const project = projects[0] as TraverseProjectRow
 
   // ── Fetch traverse data for all parcels in this project ─────────────────
   const { rows: traverses } = await db.query(
@@ -101,7 +145,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   // Track station names to avoid duplicates across parcels
   const seenStations = new Set<string>()
 
-  for (const traverse of traverses) {
+  for (const traverse of traverses as TraverseRow[]) {
     // Fetch coordinates for this traverse
     const { rows: coords } = await db.query(
       `SELECT station, easting, northing, rl
@@ -124,7 +168,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     )
 
     // Build station entries (unique by name)
-    for (const c of coords) {
+    for (const c of coords as TraverseCoordRow[]) {
       const stationName = `${c.station}`
       // Prefix with block-parcel to avoid name collisions across parcels
       const uniqueKey = `${traverse.block_number}-${traverse.parcel_number}-${c.station}`
@@ -142,13 +186,15 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
 
     // Build leg entries from observations
     for (let i = 0; i < observations.length; i++) {
-      const obs = observations[i]
+      const obs = observations[i] as TraverseObservationRow
       const fromStation = obs.station
       const toStation = obs.fs
 
       // Compute forward bearing from horizontal circle readings (CR - CL)
-      const clTotal = (obs.hcl_deg || 0) + (obs.hcl_min || 0) / 60 + (obs.hcl_sec || 0) / 3600
-      const crTotal = (obs.hcr_deg || 0) + (obs.hcr_min || 0) / 60 + (obs.hcr_sec || 0) / 3600
+      // Number() coercion is intentional: pg numeric columns arrive as strings and
+      // raw `+` would string-concatenate (e.g. "45" + 0.5 → "450.5").
+      const clTotal = Number(obs.hcl_deg || 0) + Number(obs.hcl_min || 0) / 60 + Number(obs.hcl_sec || 0) / 3600
+      const crTotal = Number(obs.hcr_deg || 0) + Number(obs.hcr_min || 0) / 60 + Number(obs.hcr_sec || 0) / 3600
       let bearing = crTotal - clTotal
       if (bearing < 0) bearing += 360
 

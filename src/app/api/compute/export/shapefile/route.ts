@@ -3,6 +3,21 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { generateShapefileZip } from '@/lib/export/shapefile'
 
+interface AdjustedStation {
+  pointName?: string
+  adjustedEasting?: number
+  adjustedNorthing?: number
+}
+
+interface SurveyPointRow {
+  point_name: string
+  easting: number | string
+  northing: number | string
+  elevation: number | string | null
+  point_type: string | null
+  description: string | null
+}
+
 export const dynamic = 'force-dynamic'
 
 /**
@@ -35,10 +50,19 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     [projectId]
   )
 
-  const boundary = project[0].boundary_data || {}
-  const adjustedStations = boundary.adjustedStations || []
+  const proj = project[0] as {
+    boundary_data?: { adjustedStations?: AdjustedStation[] }
+    lr_number?: string
+    name?: string
+    area_ha?: number | string
+    utm_zone?: number
+    hemisphere?: string
+    datum?: string
+  }
+  const boundary = proj.boundary_data || {}
+  const adjustedStations: AdjustedStation[] = boundary.adjustedStations || []
 
-  const beacons = points.map(p => ({
+  const beacons = points.map((p: SurveyPointRow) => ({
     station: p.point_name,
     easting: Number(p.easting),
     northing: Number(p.northing),
@@ -87,11 +111,11 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   }
 
   const parcels = adjustedStations.length >= 3 ? [{
-    id: project[0].lr_number || 'PARCEL_001',
-    lr_number: project[0].lr_number,
-    area_sqm: project[0].area_ha ? project[0].area_ha * 10000 : 0,
-    area_ha: project[0].area_ha || 0,
-    coordinates: adjustedStations.map((s: any) => [
+    id: proj.lr_number || 'PARCEL_001',
+    lr_number: proj.lr_number,
+    area_sqm: proj.area_ha ? Number(proj.area_ha) * 10000 : 0,
+    area_ha: proj.area_ha ? Number(proj.area_ha) : 0,
+    coordinates: adjustedStations.map((s: AdjustedStation) => [
       s.adjustedEasting || 0,
       s.adjustedNorthing || 0,
     ] as [number, number]),
@@ -102,14 +126,14 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     boundaries,
     parcels,
     projection: {
-      zone: project[0].utm_zone || 37,
-      hemisphere: (project[0].hemisphere || 'S') as 'N' | 'S',
-      datum: project[0].datum || 'Arc 1960',
-      ellipsoid: project[0].datum === 'Arc 1960' ? 'Clarke 1880 (RGS)' : 'WGS 84',
+      zone: proj.utm_zone || 37,
+      hemisphere: (proj.hemisphere || 'S') as 'N' | 'S',
+      datum: proj.datum || 'Arc 1960',
+      ellipsoid: proj.datum === 'Arc 1960' ? 'Clarke 1880 (RGS)' : 'WGS 84',
     },
   })
 
-  const safeName = (project[0].lr_number || project[0].name || 'survey')
+  const safeName = (proj.lr_number || proj.name || 'survey')
     .replace(/[^a-zA-Z0-9_-]/g, '_')
     .toLowerCase()
 

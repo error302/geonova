@@ -50,12 +50,36 @@ interface ProfileRecord {
 }
 
 interface ImageResolution {
-  image: any | null;
+  image: unknown | null;
   sourceLabel: string;
   fitted: boolean;
 }
 
-type DrawContext = any;
+interface DrawContext {
+  save(): void
+  restore(): void
+  globalAlpha: number
+  fillStyle: string | CanvasGradient | CanvasPattern
+  strokeStyle: string | CanvasGradient | CanvasPattern
+  lineWidth: number
+  lineJoin: string
+  lineCap: string
+  font: string
+  drawImage(image: unknown, dx: number, dy: number, dw: number, dh: number): void
+  createLinearGradient(x0: number, y0: number, x1: number, y1: number): CanvasGradient
+  fillRect(x: number, y: number, w: number, h: number): void
+  strokeRect(x: number, y: number, w: number, h: number): void
+  beginPath(): void
+  moveTo(x: number, y: number): void
+  lineTo(x: number, y: number): void
+  stroke(): void
+  fill(): void
+  arc(x: number, y: number, r: number, start: number, end: number): void
+  translate(x: number, y: number): void
+  rotate(angle: number): void
+  fillText(text: string, x: number, y: number): void
+  strokeText(text: string, x: number, y: number): void
+}
 
 const PAGE_W = 420;
 const PAGE_H = 297;
@@ -331,7 +355,7 @@ function drawBackground(
   if (imageResolution.image) {
     ctx.save();
     ctx.globalAlpha = imageResolution.fitted ? 0.98 : 0.92;
-    ctx.drawImage(imageResolution.image, frame.x, frame.y, frame.w, frame.h);
+    ctx.drawImage(imageResolution.image as CanvasImageSource, frame.x, frame.y, frame.w, frame.h);
     ctx.restore();
     return;
   }

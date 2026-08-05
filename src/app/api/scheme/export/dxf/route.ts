@@ -2,6 +2,25 @@ import { NextRequest, NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
+interface SchemeParcelRow {
+  parcel_number: string
+  lr_number_proposed: string | null
+  area_ha: number | string | null
+  status: string | null
+  block_number: string
+  station_name: string | null
+  easting: number | string | null
+  northing: number | string | null
+  elevation: number | string | null
+}
+
+interface SchemeCoord {
+  station: string | null
+  x: number
+  y: number
+  z: number
+}
+
 export const dynamic = 'force-dynamic'
 
 export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
@@ -28,8 +47,8 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   )
 
   // Group coordinates by parcel
-  const parcelData = new Map<string, { info: any; coords: any[] }>()
-  parcels.forEach((row: any) => {
+  const parcelData = new Map<string, { info: SchemeParcelRow; coords: SchemeCoord[] }>()
+  parcels.forEach((row: SchemeParcelRow) => {
     const key = `${row.block_number}-${row.parcel_number}`
     if (!parcelData.has(key)) {
       parcelData.set(key, {
@@ -123,7 +142,8 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   const dxfContent = dxfLines.join('\n')
   const project = await db.query('SELECT name, scheme_number FROM projects p LEFT JOIN scheme_details sd ON sd.project_id = p.id WHERE p.id = $1', [projectId])
-  const fileName = `Scheme_${project.rows[0]?.scheme_number || project.rows[0]?.name || projectId}.dxf`
+  const projRow = project.rows[0] as { name?: string; scheme_number?: string } | undefined
+  const fileName = `Scheme_${projRow?.scheme_number || projRow?.name || projectId}.dxf`
 
   return new NextResponse(dxfContent, {
     headers: {

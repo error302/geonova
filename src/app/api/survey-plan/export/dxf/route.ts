@@ -119,7 +119,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
     )
   }
 
-  const project = projectRows[0]
+  const project = projectRows[0] as ProjectRow
 
   // ── Load boundary points ──
   const { rows: boundaryRows } = await db.query(
@@ -192,7 +192,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
       locality: project.locality || undefined,
     },
     parcel: {
-      boundaryPoints: boundaryRows.map((row) => ({
+      boundaryPoints: boundaryRows.map((row: BoundaryPointRow) => ({
         name: row.name,
         easting: parseFloat(String(row.easting)),
         northing: parseFloat(String(row.northing)),
@@ -200,7 +200,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
       area_sqm: parseFloat(String(project.area_sqm)) || 0,
       perimeter_m: computePerimeter(boundaryRows),
     },
-    controlPoints: boundaryRows.map((row): ControlPoint => ({
+    controlPoints: boundaryRows.map((row: BoundaryPointRow): ControlPoint => ({
       name: row.name,
       easting: parseFloat(String(row.easting)),
       northing: parseFloat(String(row.northing)),
@@ -208,20 +208,20 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
       monumentType: (row.monument_type || 'found') as MonumentType,
       beaconDescription: row.beacon_description || undefined,
     })),
-    adjacentLots: adjacentRows.map((row): AdjacentLot => ({
+    adjacentLots: adjacentRows.map((row: AdjacentLotRow): AdjacentLot => ({
       id: row.id,
       boundaryPoints: (typeof row.boundary_points === 'string'
         ? JSON.parse(row.boundary_points)
         : row.boundary_points || []) as AdjacentLot['boundaryPoints'],
       planReference: row.plan_reference || undefined,
     })),
-    fenceOffsets: fenceRows.map((row): FenceOffset => ({
+    fenceOffsets: fenceRows.map((row: FenceOffsetRow): FenceOffset => ({
       segmentIndex: parseInt(String(row.segment_index), 10),
       type: (row.type || 'fence_on_boundary') as FenceOffset['type'],
       offsetMetres: parseFloat(String(row.offset_metres)) || 0,
       calloutText: row.callout_text || undefined,
     })),
-    buildings: buildingRows.map((row) => ({
+    buildings: buildingRows.map((row: BuildingRow) => ({
       easting: parseFloat(String(row.easting)),
       northing: parseFloat(String(row.northing)),
       width_m: parseFloat(String(row.width_m)) || 10,

@@ -226,7 +226,18 @@ function generatePolygonShapefile(
 /**
  * Create Shapefile Header
  */
-function createShapefileHeader(type: number, numRecords: number) {
+interface ShapefileHeader {
+  fileCode: number
+  fileLength: number
+  version: number
+  shapeType: number
+  xMin: number
+  xMax: number
+  yMin: number
+  yMax: number
+}
+
+function createShapefileHeader(type: number, numRecords: number): ShapefileHeader {
   return {
     fileCode: 9994,
     fileLength: 100 + numRecords * 100, // Approximate
@@ -241,7 +252,7 @@ function createShapefileHeader(type: number, numRecords: number) {
  */
 function writeShapefileHeader(
   view: DataView,
-  header: any,
+  header: ShapefileHeader,
   shapeType: number,
   numRecords: number
 ) {
@@ -265,7 +276,7 @@ function writeShapefileHeader(
  * Create Shape Index (SHX) file
  */
 function createShapeIndex(
-  header: any,
+  header: ShapefileHeader,
   numRecords: number,
   recordSize: number
 ): ArrayBuffer {
