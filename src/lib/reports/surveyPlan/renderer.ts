@@ -4,14 +4,14 @@ import { getRoadReserveWidth } from './types'
 import { generateBearingScheduleCSV } from '../bearingScheduleCSV'
 import { computeTraverseAccuracy } from '../traverseAccuracy'
 import {
-  DPI, PX_PER_MM, PX_PER_M,
+  PX_PER_M,
   PAGE_WIDTH_MM, PAGE_HEIGHT_MM,
-  STANDARD_SCALES, mmToPx, mToPx,
-  bearingFromDelta, bearingToDMS, distance, midpoint,
-  segmentAngle, textAngleForSegment, offsetFromMidpoint,
-  centroid, boundingBox, selectScale, calcScaleLabel, calcScaleBarMetres,
+  STANDARD_SCALES, mmToPx,
+  bearingFromDelta, distance,
+  segmentAngle, offsetFromMidpoint,
+  centroid, boundingBox, calcScaleLabel, calcScaleBarMetres,
   formatBearingDegMinSec,
-  offsetPointPerpendicular, computeFenceBoundary, rotatePoints,
+  offsetPointPerpendicular, rotatePoints,
   formatChainage, computeChainageAlongAlignment,
 } from './geometry'
 import {
@@ -77,7 +77,7 @@ export class SurveyPlanRenderer {
     } else {
       const actualPxPerM = Math.min(drawW / bb.rangeE, drawH / bb.rangeN)
       const rawScale = PX_PER_M / actualPxPerM
-      this.scale = STANDARD_SCALES.find((s: any) => s >= rawScale) || 500
+      this.scale = STANDARD_SCALES.find((s: number) => s >= rawScale) || 500
     }
     
     const pxPerM = PX_PER_M / this.scale
@@ -436,7 +436,7 @@ export class SurveyPlanRenderer {
     return svgScaleBar(x, y, scaleBarPx, segmentMetres, 4)
   }
 
-  private drawDatumNote(leftPad: number, panelInnerW: number): string {
+  private drawDatumNote(leftPad: number, _panelInnerW: number): string {
     const p = this.data.project
     const datum = p.datum || 'ARC1960'
     const zone = `${p.utm_zone || 37}${p.hemisphere || 'S'}`
@@ -483,7 +483,7 @@ export class SurveyPlanRenderer {
     return svg
   }
 
-  private drawMetricNote(leftPad: number, rightPad: number): string {
+  private drawMetricNote(leftPad: number, _rightPad: number): string {
     const y = this.margin + mmToPx(30)
     return `<text x="${leftPad}" y="${y}" font-family="JetBrains Mono, Courier New" font-size="7" font-style="italic" fill="#555">Distances in metres. Divide by 0.3048 for feet.</text>`
   }
@@ -577,11 +577,9 @@ export class SurveyPlanRenderer {
     const p = this.data.project
     const surveyor = p.surveyor_name || ''
     const lsNo = p.surveyor_licence || ''
-    const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })
 
     const certY = afterRevisions
     let svg = ''
-    const panelRight = leftPad + panelInnerW
 
     svg += `<rect x="${leftPad}" y="${certY}" width="${panelInnerW}" height="${mmToPx(2)}" fill="none" stroke="${C_BLACK}" stroke-width="0.5"/>`
     svg += `<text x="${leftPad}" y="${certY + mmToPx(4)}" font-family="JetBrains Mono, Courier New" font-size="5.5" font-weight="bold" fill="${C_BLACK}">CERTIFICATE</text>`
@@ -763,7 +761,6 @@ export class SurveyPlanRenderer {
     if (pts.length < 2) return ''
     let svg = ''
     const renderedTypes = new Set<string>()
-    const ptsRaw = this.data.parcel.boundaryPoints
 
     for (const fo of fenceOffsets) {
       if (fo.segmentIndex < 0 || fo.segmentIndex >= pts.length) continue
@@ -816,7 +813,6 @@ export class SurveyPlanRenderer {
   }
 
   private drawRightPanel(): string {
-    const p = this.data.project
     const leftPad = this.panelX + mmToPx(3)
     const rightPad = this.panelX + this.panelW - mmToPx(3)
     const panelInnerW = this.panelW - mmToPx(6)
@@ -838,7 +834,7 @@ export class SurveyPlanRenderer {
     return svgParts.join('')
   }
 
-  private drawReportHeader(leftPad: number, rightPad: number, panelInnerW: number): string {
+  private drawReportHeader(leftPad: number, rightPad: number, _panelInnerW: number): string {
     const p = this.data.project
     const hasMun = !!p.municipality
     const y = this.margin + mmToPx(4)
@@ -849,7 +845,7 @@ export class SurveyPlanRenderer {
       `<line x1="${leftPad}" y1="${y1}" x2="${rightPad}" y2="${y1}" stroke="${C_BLACK}" stroke-width="0.5"/>`
     svg += text('SURVEYOR\'S REAL PROPERTY REPORT', y, 5)
     svg += text(p.plan_title || 'BOUNDARY IDENTIFICATION PLAN', y + mmToPx(6), 9, 'bold')
-    if (hasMun) svg += text(p.municipality!, y + mmToPx(11), 16, 'bold')
+    if (p.municipality) svg += text(p.municipality, y + mmToPx(11), 16, 'bold')
     svg += text(`SCALE ${calcScaleLabel(this.scale)}`, y + mmToPx(hasMun ? 18 : 12), 8, 'bold')
     svg += hline(y + mmToPx(hasMun ? 21 : 15))
     svg += text(p.firm_name || '', y + mmToPx(hasMun ? 25 : 19), 8, 'bold')
@@ -1310,7 +1306,6 @@ export class SurveyPlanRenderer {
 
   private drawChainageMarkers(): string {
     const roadCenter = this.data.project.roadCenterLine
-    const roadClass = this.data.project.road_class
     if (!roadCenter || roadCenter.length < 2) return ''
 
     const startCh = this.data.project.startChainage ?? 0

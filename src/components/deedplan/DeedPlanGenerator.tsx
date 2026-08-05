@@ -204,7 +204,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
         alert('Failed to render SVG. Try downloading as SVG instead.')
       }
       img.src = url
-    } catch (err) {
+    } catch {
       alert('PNG download failed. Try downloading as SVG instead.')
     }
   }
@@ -351,7 +351,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                   onChange={(e) => setInput({ ...input, scale: Number(e.target.value) as 500 | 1000 | 2500 | 5000 })}
                   className="input w-full text-sm"
                 >
-                  {SCALES.map((s: any) => (
+                  {SCALES.map((s) => (
                     <option key={s} value={s}>1 : {s}</option>
                   ))}
                 </select>
@@ -659,7 +659,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                           }}
                           className="px-2 py-1 border rounded"
                         >
-                          {MARK_TYPES.map((t: any) => (
+                          {MARK_TYPES.map((t) => (
                             <option key={t} value={t}>{t}</option>
                           ))}
                         </select>
@@ -674,7 +674,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
                           }}
                           className="px-2 py-1 border rounded"
                         >
-                          {MARK_STATUSES.map((s: any) => (
+                          {MARK_STATUSES.map((s) => (
                             <option key={s} value={s}>{s}</option>
                           ))}
                         </select>

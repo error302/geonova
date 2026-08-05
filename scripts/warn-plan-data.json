@@ -1,14 +1,14 @@
 {
  "byRule": {
-  "@typescript-eslint/no-unsafe-return": 365,
-  "@typescript-eslint/no-unsafe-assignment": 2882,
-  "@typescript-eslint/no-unsafe-argument": 1023,
-  "@typescript-eslint/no-non-null-assertion": 665,
-  "@typescript-eslint/no-unused-vars": 1302,
-  "@typescript-eslint/no-explicit-any": 1286,
-  "@typescript-eslint/no-unsafe-member-access": 5043,
-  "no-console": 405,
-  "@typescript-eslint/no-unsafe-call": 967,
+  "@typescript-eslint/no-unsafe-return": 358,
+  "@typescript-eslint/no-unsafe-assignment": 2652,
+  "@typescript-eslint/no-unsafe-argument": 997,
+  "@typescript-eslint/no-non-null-assertion": 663,
+  "@typescript-eslint/no-unused-vars": 1283,
+  "@typescript-eslint/no-explicit-any": 1263,
+  "@typescript-eslint/no-unsafe-member-access": 4691,
+  "no-console": 404,
+  "@typescript-eslint/no-unsafe-call": 951,
   "no-restricted-syntax": 16
  },
  "files": [
@@ -48,17 +48,6 @@
     "@typescript-eslint/no-unsafe-return": 24,
     "@typescript-eslint/no-unsafe-member-access": 47,
     "@typescript-eslint/no-unsafe-call": 19
-   }
-  },
-  {
-   "file": "src/app/api/sign-plan/route.ts",
-   "total": 126,
-   "rules": {
-    "@typescript-eslint/no-unused-vars": 6,
-    "@typescript-eslint/no-unsafe-assignment": 42,
-    "@typescript-eslint/no-unsafe-member-access": 75,
-    "@typescript-eslint/no-unsafe-argument": 2,
-    "@typescript-eslint/no-unsafe-call": 1
    }
   },
   {
@@ -356,29 +345,6 @@
    }
   },
   {
-   "file": "src/app/api/admin/dashboard/route.ts",
-   "total": 71,
-   "rules": {
-    "@typescript-eslint/no-unused-vars": 2,
-    "@typescript-eslint/no-unsafe-assignment": 34,
-    "@typescript-eslint/no-unsafe-member-access": 33,
-    "@typescript-eslint/no-unsafe-call": 2
-   }
-  },
-  {
-   "file": "src/app/api/scheme/export/geojson/route.ts",
-   "total": 70,
-   "rules": {
-    "@typescript-eslint/no-unused-vars": 2,
-    "@typescript-eslint/no-explicit-any": 5,
-    "@typescript-eslint/no-unsafe-argument": 3,
-    "@typescript-eslint/no-unsafe-member-access": 36,
-    "@typescript-eslint/no-unsafe-call": 4,
-    "@typescript-eslint/no-unsafe-assignment": 18,
-    "@typescript-eslint/no-unsafe-return": 2
-   }
-  },
-  {
    "file": "src/app/project/[id]/engineering/page.tsx",
    "total": 70,
    "rules": {
@@ -416,19 +382,6 @@
    }
   },
   {
-   "file": "src/app/api/survey-report/generate/route.ts",
-   "total": 67,
-   "rules": {
-    "@typescript-eslint/no-unused-vars": 2,
-    "@typescript-eslint/no-unsafe-assignment": 22,
-    "@typescript-eslint/no-explicit-any": 3,
-    "@typescript-eslint/no-unsafe-member-access": 34,
-    "@typescript-eslint/no-unsafe-call": 4,
-    "@typescript-eslint/no-unsafe-argument": 1,
-    "@typescript-eslint/no-non-null-assertion": 1
-   }
-  },
-  {
    "file": "src/app/tools/regulatory-checklist/page.tsx",
    "total": 66,
    "rules": {
@@ -451,17 +404,6 @@
     "@typescript-eslint/no-unsafe-assignment": 9,
     "@typescript-eslint/no-unsafe-argument": 2,
     "@typescript-eslint/no-unsafe-return": 7
-   }
-  },
-  {
-   "file": "src/app/api/scheme/forms/route.ts",
-   "total": 65,
-   "rules": {
-    "@typescript-eslint/no-unused-vars": 1,
-    "@typescript-eslint/no-unsafe-assignment": 10,
-    "@typescript-eslint/no-explicit-any": 5,
-    "@typescript-eslint/no-unsafe-member-access": 38,
-    "@typescript-eslint/no-unsafe-argument": 11
    }
   },
   {
@@ -504,14 +446,6 @@
    }
   },
   {
-   "file": "src/app/api/project/[id]/workflow/route.ts",
-   "total": 57,
-   "rules": {
-    "@typescript-eslint/no-unsafe-assignment": 27,
-    "@typescript-eslint/no-unsafe-member-access": 30
-   }
-  },
-  {
    "file": "src/lib/marketplace/index.ts",
    "total": 57,
    "rules": {
@@ -542,40 +476,6 @@
     "@typescript-eslint/no-unsafe-call": 12,
     "@typescript-eslint/no-unsafe-member-access": 16,
     "@typescript-eslint/no-unsafe-argument": 1
-   }
-  },
-  {
-   "file": "src/app/api/compute/traverse/route.ts",
-   "total": 56,
-   "rules": {
-    "@typescript-eslint/no-unused-vars": 1,
-    "@typescript-eslint/no-unsafe-assignment": 18,
-    "@typescript-eslint/no-explicit-any": 10,
-    "@typescript-eslint/no-unsafe-argument": 6,
-    "@typescript-eslint/no-unsafe-member-access": 14,
-    "@typescript-eslint/no-unsafe-call": 4,
-    "@typescript-eslint/no-unsafe-return": 3
-   }
-  },
-  {
-   "file": "src/app/api/search/route.ts",
-   "total": 56,
-   "rules": {
-    "@typescript-eslint/no-unused-vars": 2,
-    "@typescript-eslint/no-unsafe-member-access": 33,
-    "@typescript-eslint/no-unsafe-assignment": 20,
-    "no-console": 1
-   }
-  },
-  {
-   "file": "src/app/api/submission/preview/route.ts",
-   "total": 56,
-   "rules": {
-    "@typescript-eslint/no-non-null-assertion": 1,
-    "@typescript-eslint/no-unsafe-assignment": 24,
-    "@typescript-eslint/no-unsafe-member-access": 29,
-    "@typescript-eslint/no-unsafe-call": 1,
-    "@typescript-eslint/no-explicit-any": 1
    }
   },
   {
@@ -611,17 +511,6 @@
     "@typescript-eslint/no-unsafe-member-access": 22,
     "@typescript-eslint/no-unsafe-return": 1,
     "no-console": 1
-   }
-  },
-  {
-   "file": "src/app/api/scheme/team/route.ts",
-   "total": 53,
-   "rules": {
-    "@typescript-eslint/no-unused-vars": 3,
-    "@typescript-eslint/no-unsafe-assignment": 15,
-    "@typescript-eslint/no-unsafe-argument": 3,
-    "@typescript-eslint/no-unsafe-member-access": 30,
-    "@typescript-eslint/no-unsafe-return": 2
    }
   },
   {
@@ -6256,6 +6145,14 @@
    }
   },
   {
+   "file": "src/lib/db.ts",
+   "total": 4,
+   "rules": {
+    "no-console": 3,
+    "@typescript-eslint/no-explicit-any": 1
+   }
+  },
+  {
    "file": "src/lib/engine/edm-corrections.ts",
    "total": 4,
    "rules": {
@@ -6958,13 +6855,6 @@
    "total": 3,
    "rules": {
     "@typescript-eslint/no-unused-vars": 3
-   }
-  },
-  {
-   "file": "src/lib/db.ts",
-   "total": 3,
-   "rules": {
-    "no-console": 3
    }
   },
   {

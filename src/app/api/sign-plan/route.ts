@@ -25,6 +25,7 @@ import { z } from 'zod'
 
 const SignPlanBodySchema = z.object({
   projectId: z.string().uuid({ message: 'projectId must be a valid UUID' }),
+  verificationUrlBase: z.string().url().optional(),
 })
 
 // ─── DB Row Interfaces ───────────────────────────────────────────────────────
@@ -260,6 +261,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
       firmName,
       signatureMethod: 'CERTIFICATE',
       documentId: project.drawing_no || projectId,
+      verificationUrlBase: parsed.data.verificationUrlBase ?? new URL(req.url).origin,
     })
 
     // ── Store signature record in database ──

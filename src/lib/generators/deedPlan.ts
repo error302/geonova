@@ -1,9 +1,46 @@
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import db from '@/lib/db';
-import { computeDeedPlanGeometry, loadPreAdjustedFromDB, type PreAdjustedCoordinate, type PreAdjustedClosure } from './deedPlanGeometry';
+import { computeDeedPlanGeometry, loadPreAdjustedFromDB } from './deedPlanGeometry';
 import { renderBoundaryPlan, drawRevisionHistory, type RoadSegment } from './deedPlanRenderer';
 import { addPageFooter } from './pdfTitleBlock';
+
+interface ProjectRow {
+  name: string | null
+  survey_type: string | null
+  lr_number: string | null
+  folio_number: string | null
+  register_number: string | null
+  fir_number: string | null
+  registration_block: string | null
+  registration_district: string | null
+  locality: string | null
+  computations_no: string | null
+  field_book_no: string | null
+  file_reference: string | null
+  client_name: string | null
+  survey_date: string | null
+  area_ha: string | number | null
+  utm_zone: number | null
+  hemisphere: string | null
+  user_id: string
+  created_at: string | Date
+}
+
+interface ProfileRow {
+  full_name: string | null
+  isk_number: string | null
+  firm_name: string | null
+}
+
+interface RoadRow {
+  road_class: string | null
+  street: string | null
+}
+
+interface RevisionsRow {
+  revisions: Array<{ rev: string; date: string; description: string; by: string }> | null
+}
 
 const A3_W = 420;
 const A3_H = 297;
@@ -52,7 +89,7 @@ function getBeaconDescription(monument: string): { type: string; material: strin
 export async function generateDeedPlan(
   projectId: string
 ): Promise<Buffer> {
-  const projectRes = await db.query(
+  const projectRes = await db.query<ProjectRow>(
     `SELECT
       name, survey_type, lr_number, folio_number, register_number,
       fir_number, registration_block, registration_district,
@@ -66,7 +103,7 @@ export async function generateDeedPlan(
 
   if (!project) throw new Error('Project not found');
 
-  const profileRes = await db.query(
+  const profileRes = await db.query<ProfileRow>(
     'SELECT full_name, isk_number, firm_name FROM profiles WHERE id = $1',
     [project.user_id]
   );
@@ -106,7 +143,7 @@ export async function generateDeedPlan(
 
   // ── Phase 2: Road segments for truncation lines ──
   // Check if the project has road-related data for road truncation ticks
-  const roadRes = await db.query(
+  const roadRes = await db.query<RoadRow>(
     `SELECT road_class, street FROM projects WHERE id = $1`,
     [projectId]
   );
@@ -134,9 +171,9 @@ export async function generateDeedPlan(
     height: A3_H - MARGIN * 2,
   }, {
     roadSegments,
-    surveyorName: profile?.full_name,
-    surveyorLicence: profile?.isk_number,
-    firmName: profile?.firm_name,
+    surveyorName: profile?.full_name ?? undefined,
+    surveyorLicence: profile?.isk_number ?? undefined,
+    firmName: profile?.firm_name ?? undefined,
   });
 
   let ry = MARGIN + 4;
@@ -317,12 +354,12 @@ export async function generateDeedPlan(
 
   // ── Phase 2: Revision History ──
   // Per Survey Act Cap. 299, every amendment must be recorded
-  const revisionsRes = await db.query(
+  const revisionsRes = await db.query<RevisionsRow>(
     `SELECT revisions FROM projects WHERE id = $1`,
     [projectId]
   );
-  const savedRevisions = (revisionsRes.rows[0]?.revisions as Array<{ rev: string; date: string; description: string; by: string }>) || [];
-  const revisionH = drawRevisionHistory(doc, SCHEDULE_X, ry, SCHEDULE_W, savedRevisions, profile?.full_name);
+  const savedRevisions = revisionsRes.rows[0]?.revisions || [];
+  const revisionH = drawRevisionHistory(doc, SCHEDULE_X, ry, SCHEDULE_W, savedRevisions, profile?.full_name ?? undefined);
   ry += revisionH + 4;
 
   const certY = ry;

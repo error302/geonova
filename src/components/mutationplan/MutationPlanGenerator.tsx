@@ -225,7 +225,7 @@ export default function MutationPlanGenerator({
   const [plots, setPlots] = useState<MutationPlot[]>(initialPlots ?? []);
   const [roads, setRoads] = useState<RoadCorridor[]>([]);
   const [monuments, setMonuments] = useState<SurveyMonument[]>([]);
-  const [bearingSchedule, setBearingSchedule] = useState<BearingScheduleEntry[]>([]);
+  const [, setBearingSchedule] = useState<BearingScheduleEntry[]>([]);
   const [schemeBoundary, setSchemeBoundary] = useState<MutationPlanData['schemeBoundary']>([]);
   const [grid, setGrid] = useState<MutationPlanData['grid']>({ minE: 0, maxE: 1000, minN: 0, maxN: 1000, intervalE: 200, intervalN: 200 });
   const [svgOutput, setSvgOutput] = useState('');
@@ -280,6 +280,7 @@ export default function MutationPlanGenerator({
     const intE = rangeE > 1000 ? 200 : rangeE > 400 ? 100 : 50;
     const intN = rangeN > 1000 ? 200 : rangeN > 400 ? 100 : 50;
     return { minE, maxE, minN, maxN, intervalE: intE, intervalN: intN };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- grid is stable-by-construction; memoizing on its identity would recompute every render
   }, [schemeBoundary, plots, monuments]);
 
   // ── Auto-computed plot areas from boundary points (Shoelace formula) ──
@@ -311,6 +312,7 @@ export default function MutationPlanGenerator({
       setSvgOutput(svg);
       setStep(4);
     } catch (err) {
+      // eslint-disable-next-line no-console -- client error surface
       console.error('Render error:', err);
     }
   };
@@ -493,7 +495,6 @@ export default function MutationPlanGenerator({
     try {
       const children = plots.map((plot) => {
         const pts = plot.boundaryPoints;
-        const computedAreaSqm = shoelaceArea(pts);
         return {
           id: plot.id,
           label: plot.id.toUpperCase(),
@@ -548,6 +549,7 @@ export default function MutationPlanGenerator({
       a.click();
       URL.revokeObjectURL(url);
     } catch (err) {
+      // eslint-disable-next-line no-console -- client error surface
       console.error('DXF generation error:', err);
     }
   };
@@ -619,18 +621,6 @@ export default function MutationPlanGenerator({
   };
 
   const totalArea = plots.reduce((sum, p) => sum + p.area_ha, 0);
-
-  // ── Series breakdown for reconciliation ──
-  const seriesBreakdown = useMemo(() => {
-    const map = new Map<string, number>();
-    plots.forEach((p) => {
-      map.set(p.seriesLabel, (map.get(p.seriesLabel) || 0) + 1);
-    });
-    return Array.from(map.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([series, count]) => `Series ${series.toUpperCase()}: ${count} plot${count > 1 ? 's' : ''}`)
-      .join(', ');
-  }, [plots]);
 
   // ── Series color map for SVG mini map ──
   const SERIES_COLORS: Record<string, { fill: string; stroke: string }> = {
@@ -735,6 +725,7 @@ export default function MutationPlanGenerator({
       plotsExceed,
       seriesEntries: Array.from(seriesMap.entries()).sort(([a], [b]) => a.localeCompare(b)),
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- computedSchemeBoundary is a stable-by-construction helper recreated each render; memoizing on its identity would recompute every render
   }, [plots, computedPlotAreas, roadAreaHa, schemeBoundary]);
 
   // ── Step navigation ──
@@ -1020,14 +1011,14 @@ export default function MutationPlanGenerator({
                           />
                           {computedPlotAreas.has(plot.id) && (
                             <span
-                              title={`Computed: ${computedPlotAreas.get(plot.id)!.toFixed(4)} Ha`}
+                              title={`Computed: ${(computedPlotAreas.get(plot.id) ?? 0).toFixed(4)} Ha`}
                               className={`text-[9px] px-1 py-0.5 rounded font-mono ${
-                                Math.abs(plot.area_ha - computedPlotAreas.get(plot.id)!) < 0.0001
+                                Math.abs(plot.area_ha - (computedPlotAreas.get(plot.id) ?? 0)) < 0.0001
                                   ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                                   : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
                               }`}
                             >
-                              {Math.abs(plot.area_ha - computedPlotAreas.get(plot.id)!) < 0.0001 ? 'auto' : `${computedPlotAreas.get(plot.id)!.toFixed(3)}`}
+                              {Math.abs(plot.area_ha - (computedPlotAreas.get(plot.id) ?? 0)) < 0.0001 ? 'auto' : `${(computedPlotAreas.get(plot.id) ?? 0).toFixed(3)}`}
                             </span>
                           )}
                         </div>

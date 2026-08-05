@@ -3,11 +3,13 @@
 import { useState } from 'react'
 import type { SurveyPlanData, PlanOptions } from '@/lib/reports/surveyPlan/types'
 import { SurveyPlanRenderer } from '@/lib/reports/surveyPlan/renderer'
-import QRCode from 'qrcode'
 import type { PlanId } from '@/lib/subscription/catalog'
-// XSS guard (2026-08-03): sigData.signerName / iskNumber come from the user's
-// surveyor profile and are interpolated into the SVG before container.innerHTML.
-import { escapeXml } from '@/lib/xml/escape'
+
+type JsPdf = import('jspdf').jsPDF
+
+interface JsPdfWithSvg extends JsPdf {
+  addSvg(element: SVGElement, x: number, y: number, options: { width: number; height: number }): Promise<void>
+}
 
 interface SurveyPlanExportProps {
   data: SurveyPlanData
@@ -35,19 +37,20 @@ export default function SurveyPlanExport({ data, options, projectId, plan = 'fre
       const svgEl = container.querySelector('svg')
       if (!svgEl) throw new Error('SVG element not found')
 
-      const [{ default: Svg2Pdf }, { jsPDF }] = await Promise.all([
+      const [, { jsPDF }] = await Promise.all([
         import('svg2pdf.js'),
         import('jspdf'),
       ])
 
-      const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a3' }) as any
-      await (pdf as any).addSvg(svgEl, 0, 0, { width: 420, height: 297 })
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a3' }) as JsPdfWithSvg
+      await pdf.addSvg(svgEl, 0, 0, { width: 420, height: 297 })
 
       const date = new Date().toISOString().slice(0, 10)
       const filename = `${data.project.name.replace(/\s+/g, '_')}_Survey_Plan_${date}.pdf`
       pdf.save(filename)
     } catch (err) {
       // AUDIT FIX (M15, 2026-07-02): Actionable error message.
+      // eslint-disable-next-line no-console -- client error surface, no server logger here
       console.error('PDF export error:', err)
       const msg = err instanceof Error ? err.message : String(err)
       alert(`Could not export the survey plan as PDF. ${msg}. Common causes: the SVG element is not rendered yet (wait for the page to load), the browser blocked the download (check popup blocker settings), or the PDF library ran out of memory on very large plans. Try refreshing the page and exporting again.`)
@@ -60,61 +63,39 @@ export default function SurveyPlanExport({ data, options, projectId, plan = 'fre
     if (!projectId) { alert('Project ID missing'); return }
     setSigning(true)
     try {
-      let svgString = buildSvgString()
+      const svgString = buildSvgString()
       
       // Hash SVG
       const encoder = new TextEncoder()
       const dataBuf = encoder.encode(svgString)
       const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuf)
       const hashArray = Array.from(new Uint8Array(hashBuffer))
-      const hashHex = hashArray.map((b: any) => b.toString(16).padStart(2, '0')).join('')
+      const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
 
       // Create signature record
       const res = await fetch('/api/sign-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projectId, hash: hashHex })
+        body: JSON.stringify({ projectId, hash: hashHex, verificationUrlBase: window.location.origin })
       })
-      const sigData = await res.json()
-      if (!res.ok) throw new Error(sigData.error || 'Failed to sign plan')
+      if (!res.ok) {
+        const errData = (await res.json().catch(() => null)) as { error?: string } | null
+        throw new Error(errData?.error ?? 'Failed to sign plan')
+      }
 
-      const verifyUrl = `https://metardu.com/verify/${sigData.id}`
-      const qrSvg = await QRCode.toString(verifyUrl, { type: 'svg', margin: 0, color: { dark: '#000000', light: '#ffffff' } })
-
-      // Inject QR code and Digital Signature block into SVG
-      const qrBlock = `
-        <g transform="translate(1005, 785)">
-          <rect x="0" y="0" width="160" height="40" fill="white" stroke="black" stroke-width="0.5"/>
-          <text x="5" y="10" font-family="JetBrains Mono, Courier New" font-size="6" font-weight="bold" fill="black">DIGITAL SIGNATURE</text>
-          <text x="5" y="18" font-family="JetBrains Mono, Courier New" font-size="5" fill="#333">Signed by: ${escapeXml(sigData.signerName)}</text>
-          <text x="5" y="24" font-family="JetBrains Mono, Courier New" font-size="5" fill="#333">LS: LS/${escapeXml(sigData.iskNumber)}</text>
-          <text x="5" y="30" font-family="JetBrains Mono, Courier New" font-size="5" fill="#333">Date: ${new Date(sigData.signedAt).toLocaleDateString()}</text>
-          <text x="5" y="36" font-family="JetBrains Mono, Courier New" font-size="4" fill="#666">Verify: ${verifyUrl.replace('https://', '')}</text>
-          <g transform="translate(120, 2) scale(0.9)">
-            ${qrSvg.replace(/<\/?svg[^>]*>/g, '')}
-          </g>
-        </g>
-      `
-      
-      svgString = svgString.replace('</svg>', qrBlock + '</svg>')
-
-      const container = document.createElement('div')
-      container.innerHTML = svgString
-      const svgEl = container.querySelector('svg')
-      if (!svgEl) throw new Error('SVG element not found')
-
-      const [{ default: Svg2Pdf }, { jsPDF }] = await Promise.all([
-        import('svg2pdf.js'),
-        import('jspdf'),
-      ])
-
-      const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a3' }) as any
-      await (pdf as any).addSvg(svgEl, 0, 0, { width: 420, height: 297 })
-
+      // The route returns the signed PDF (signature block embedded server-side)
+      // with the verification token in a header — download it directly.
+      const blob = await res.blob()
       const date = new Date().toISOString().slice(0, 10)
       const filename = `${data.project.name.replace(/\s+/g, '_')}_Signed_Plan_${date}.pdf`
-      pdf.save(filename)
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = filename
+      link.click()
+      URL.revokeObjectURL(url)
     } catch (err: unknown) {
+      // eslint-disable-next-line no-console -- client error surface, no server logger here
       console.error('Signing error:', err)
       alert((err as Error).message || 'Failed to sign and export PDF. Please try again.')
     } finally {

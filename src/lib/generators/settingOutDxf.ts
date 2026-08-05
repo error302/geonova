@@ -4,7 +4,7 @@ import { computeDeedPlanGeometry, loadPreAdjustedFromDB } from './deedPlanGeomet
 export async function generateSettingOutDxf(
   projectId: string
 ): Promise<Buffer> {
-  const projectRes = await db.query(
+  const projectRes = await db.query<{ name: string | null }>(
     'SELECT name FROM projects WHERE id = $1',
     [projectId]
   );
@@ -19,7 +19,7 @@ export async function generateSettingOutDxf(
     preAdjustedClosure: preAdjusted?.closure,
   });
 
-  const beacons = geom.stations.map((s: any) => ({
+  const beacons = geom.stations.map((s) => ({
     name: s.station,
     e: s.easting,
     n: s.northing,

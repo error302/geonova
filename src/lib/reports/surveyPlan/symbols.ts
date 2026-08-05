@@ -125,7 +125,7 @@ export function svgFenceLine(
   type: 'fence_on_boundary' | 'chain_link' | 'board_fence' | 'iron_fence' | 'galv_iron' | 'no_fence' | 'end_of_fence' | 'end_of_bf'
 ): string {
   if (points.length < 2) return ''
-  const coords: string[] = points.map((p: any) => `${toSvgX(p.easting)},${toSvgY(p.northing)}`)
+  const coords: string[] = points.map((p) => `${toSvgX(p.easting)},${toSvgY(p.northing)}`)
   coords.push(`${toSvgX(points[0].easting)},${toSvgY(points[0].northing)}`)
   const polyline = `<polyline points="${coords.join(' ')}" fill="none" stroke="#666666"/>`
   switch (type) {
@@ -221,12 +221,9 @@ export function svgIndicatoryBeacon(cx: number, cy: number): string {
 export function svgIndicatoryBeaconCallout(
   cx: number, cy: number,
   cornerX: number, cornerY: number,
-  scale: number
+  _scale: number
 ): string {
   const note = 'CORNER REFERENCED BY INDICATORY BEACON \u2014 CAP. 299 REG. 45'
-  const tickLen = 5
-  const midX = (cx + cornerX) / 2
-  const midY = (cy + cornerY) / 2
   const leaderLine = `<line x1="${cornerX}" y1="${cornerY}" x2="${cx}" y2="${cy}" stroke="${C_GREEN}" stroke-width="0.5" stroke-dasharray="2,2"/>`
   const tw = note.length * 4.2 + 4
   const th = 10
