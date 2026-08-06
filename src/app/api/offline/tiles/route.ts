@@ -1,8 +1,9 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { z } from 'zod'
+import { mapExtentSchema, type MapExtent } from '@/lib/validation/mapExtent'
 
 // ─── Tile count calculation (server-side) ─────────────────────────────────
 // This is the server-side counterpart that validates input and calculates
@@ -33,19 +34,15 @@ const tileCountRequestSchema = z.object({
     url: z.string().min(1),
     label: z.string().min(1),
   })).min(1),
-  bounds: z.object({
-    minLat: z.number().min(-90).max(90),
-    minLon: z.number().min(-180).max(180),
-    maxLat: z.number().min(-90).max(90),
-    maxLon: z.number().min(-180).max(180),
-  }).refine(b => b.minLat < b.maxLat, { message: 'minLat must be less than maxLat' })
-    .refine(b => b.minLon < b.maxLon, { message: 'minLon must be less than maxLon' }),
+  // Shared with the client: MapExtent type + validation both derive from
+  // mapExtentSchema in @/lib/validation/mapExtent, so this can't drift.
+  bounds: mapExtentSchema,
   minZoom: z.number().int().min(0).max(22),
   maxZoom: z.number().int().min(0).max(22),
 }).refine(d => d.minZoom <= d.maxZoom, { message: 'minZoom must be <= maxZoom' })
 
 function calculateTilesForBounds(
-  bounds: { minLat: number; minLon: number; maxLat: number; maxLon: number },
+  bounds: MapExtent,
   minZoom: number,
   maxZoom: number,
 ): { total: number; breakdown: ZoomBreakdown[] } {

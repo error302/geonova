@@ -16,14 +16,12 @@ import type { PaperSize, Orientation, PrintOptions } from '@/hooks/usePrint'
 
 // ─── Context Value Type ──────────────────────────────────────────────────
 
-// Geographic bounding box shared by offline-map extent and getMapExtent()
-// so the two can't drift apart.
-export interface MapExtent {
-  minLat: number
-  minLon: number
-  maxLat: number
-  maxLon: number
-}
+// Geographic bounding box shared by offline-map extent and getMapExtent().
+// Type and server-side validation both derive from the single mapExtentSchema
+// in @/lib/validation/mapExtent so the two can't drift apart.
+import type { MapExtent } from '@/lib/validation/mapExtent'
+
+export type { MapExtent }
 
 export interface MapContextValue {
   // ── Map refs ──
