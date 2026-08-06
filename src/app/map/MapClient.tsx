@@ -610,7 +610,9 @@ export default function MapClient() {
     // blank (overlay not yet mounted) on slow connections.
     try { await import('@/components/map/SheetLayout') } catch {}
     // Derive plan geometry from the largest drawn polygon so the sheet shows a
-    // real scale / area / perimeter instead of "As Noted".
+    // real scale / area / perimeter instead of "As Noted". The state is
+    // cleared first so the sheet can never mount with a previous run's value.
+    setPrintPlanGeometry(null)
     try {
       const { derivePlanGeometryFromDrawSource } = await import('./utils/derivePlanGeometry')
       const geom = await derivePlanGeometryFromDrawSource(drawSourceRef.current, currentUtmEpsg)
@@ -626,9 +628,15 @@ export default function MapClient() {
     // closes the print dialog — a reliable signal instead of a fixed timeout.
   }, [printMap, currentUtmEpsg])
 
-  // Hide the sheet-layout overlay when the print dialog closes.
+  // Hide the sheet-layout overlay when the print dialog closes. Also drop the
+  // derived geometry so a future sheet-open can never render the previous
+  // print's stale scale label — the sheet only ever shows a value derived in
+  // the same tick it was opened.
   useEffect(() => {
-    const onAfterPrint = () => setShowSheetLayout(false)
+    const onAfterPrint = () => {
+      setShowSheetLayout(false)
+      setPrintPlanGeometry(null)
+    }
     window.addEventListener('afterprint', onAfterPrint)
     return () => window.removeEventListener('afterprint', onAfterPrint)
   }, [])
