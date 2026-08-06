@@ -15,12 +15,18 @@ export function useMapHistory(ctx: MapContext) {
 
   // ── Push current state to history ──
   const pushHistory = useCallback(() => {
-    if (!ctx.drawSourceRef.current) return
+    const drawSource = ctx.drawSourceRef.current
+    if (!drawSource) return
     const json = JSON.stringify(
-      ctx.drawSourceRef.current.getFeatures().map((f: any) => ({
-        geometry: f.getGeometry()?.toJSON(),
-        properties: f.getProperties(),
-      }))
+      drawSource.getFeatures().map((f) => {
+        // toJSON() exists on OL geometry instances but isn't on the base
+        // Geometry type — cast minimally for serialization.
+        const geom = f.getGeometry() as { toJSON?: () => unknown } | undefined
+        return {
+          geometry: geom?.toJSON?.(),
+          properties: f.getProperties(),
+        }
+      })
     )
     const newHistory = historyRef.current.slice(0, historyIndexRef.current + 1)
     newHistory.push({ featuresJson: json })
@@ -34,13 +40,17 @@ export function useMapHistory(ctx: MapContext) {
 
   // ── Restore features from a history entry ──
   const restoreEntry = useCallback(async (entry: HistoryEntry) => {
+    // Guard: the draw source is lazily created during map init and can be
+    // null before the map is ready — never deref it without a check.
+    const drawSource = ctx.drawSourceRef.current
+    if (!drawSource) return
     const features = JSON.parse(entry.featuresJson)
-    ctx.drawSourceRef.current.clear()
+    drawSource.clear()
     for (const f of features) {
       if (f.geometry) {
         const { default: Feature } = await import('ol/Feature')
         const geomType = f.geometry.type
-        let geom: any = null
+        let geom: import('ol/geom/Geometry').default | null = null
         if (geomType === 'Point') {
           const { default: Point } = await import('ol/geom/Point')
           geom = new Point(f.geometry.coordinates)
@@ -61,11 +71,11 @@ export function useMapHistory(ctx: MapContext) {
               if (k !== 'geometry') feature.set(k, v)
             })
           }
-          ctx.drawSourceRef.current.addFeature(feature)
+          drawSource.addFeature(feature)
         }
       }
     }
-    ctx.setFeatureCount(ctx.drawSourceRef.current.getFeatures().length)
+    ctx.setFeatureCount(drawSource.getFeatures().length)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

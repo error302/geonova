@@ -1,4 +1,5 @@
 import type { MutableRefObject } from 'react'
+import type Map from 'ol/Map'
 
 /**
  * Navigates the map to coordinates parsed from a search string.
@@ -121,7 +122,7 @@ function tryParseDMS(input: string): { lat: number; lon: number } | null {
  * Flash a feature on the map by briefly toggling its style.
  * Creates a highlight overlay that fades after a short duration.
  */
-async function flashFeature(mapInstance: MutableRefObject<any>, feature: any): Promise<void> {
+async function flashFeature(mapInstance: MutableRefObject<Map | null>, feature: any): Promise<void> {
   try {
     const [{ default: Style }, { default: Stroke }, { default: Fill }, { default: CircleStyle }] =
       await Promise.all([
@@ -156,14 +157,15 @@ async function flashFeature(mapInstance: MutableRefObject<any>, feature: any): P
  * matches the given search term.
  */
 async function searchFeatureOnMap(
-  mapInstance: MutableRefObject<any>,
+  mapInstance: MutableRefObject<Map | null>,
   searchTerm: string,
   options: { parcelOnly?: boolean; beaconOnly?: boolean } = {},
 ): Promise<any | null> {
   if (!mapInstance.current) return null
+  const map = mapInstance.current
 
   const { default: VectorLayer } = await import('ol/layer/Vector')
-  const layers = mapInstance.current.getLayers().getArray()
+  const layers = map.getLayers().getArray()
   const term = searchTerm.toLowerCase().trim()
 
   for (const layer of layers) {
@@ -223,10 +225,11 @@ function looksLikeParcelNumber(input: string): boolean {
 
 export async function handleCoordSearch(
   searchInput: string,
-  mapInstance: MutableRefObject<any>,
+  mapInstance: MutableRefObject<Map | null>,
   epsg: string = 'EPSG:21037',
 ): Promise<void> {
   if (!mapInstance.current || !searchInput.trim()) return
+  const map = mapInstance.current
 
   // ── Try beacon name search ──
   if (looksLikeBeaconName(searchInput)) {
@@ -236,8 +239,8 @@ export async function handleCoordSearch(
       if (geom) {
         const coord = geom.getType() === 'Point'
           ? geom.getCoordinates()
-          : geom.getClosestPoint(mapInstance.current.getView().getCenter())
-        mapInstance.current.getView().animate({ center: coord, zoom: 18, duration: 600 })
+          : geom.getClosestPoint(map.getView().getCenter() ?? [0, 0])
+        map.getView().animate({ center: coord, zoom: 18, duration: 600 })
         flashFeature(mapInstance, feature)
         return
       }
@@ -252,7 +255,7 @@ export async function handleCoordSearch(
       if (geom) {
         const extent = geom.getExtent()
         if (extent && extent[0] !== Infinity) {
-          mapInstance.current.getView().fit(extent, { padding: [100, 100, 100, 100], maxZoom: 18, duration: 600 })
+          map.getView().fit(extent, { padding: [100, 100, 100, 100], maxZoom: 18, duration: 600 })
         }
         flashFeature(mapInstance, feature)
         return
@@ -265,7 +268,7 @@ export async function handleCoordSearch(
   if (dmsResult) {
     const { fromLonLat } = await import('ol/proj')
     const center = fromLonLat([dmsResult.lon, dmsResult.lat])
-    mapInstance.current.getView().animate({ center, zoom: 16, duration: 600 })
+    map.getView().animate({ center, zoom: 16, duration: 600 })
     return
   }
 
@@ -282,13 +285,13 @@ export async function handleCoordSearch(
       try {
         const { transform } = await import('ol/proj')
         const [x, y] = transform([parts[0], parts[1]], epsg, 'EPSG:3857')
-        mapInstance.current.getView().animate({ center: [x, y], zoom: 16, duration: 600 })
+        map.getView().animate({ center: [x, y], zoom: 16, duration: 600 })
       } catch { /* fallback */ }
     } else {
       if (lon > lat) { [lon, lat] = [lat, lon] } // common swap
       const { fromLonLat } = await import('ol/proj')
       const center = fromLonLat([lon, lat])
-      mapInstance.current.getView().animate({ center, zoom: 16, duration: 600 })
+      map.getView().animate({ center, zoom: 16, duration: 600 })
     }
   }
 }

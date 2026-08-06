@@ -10,6 +10,7 @@
  */
 
 import { MutableRefObject, Dispatch, SetStateAction } from 'react'
+import type Map from 'ol/Map'
 
 // ─── Mode types ────────────────────────────────────────────────────────
 export type BasemapMode = 'osm' | 'satellite' | 'dark' | 'terrain'
@@ -51,19 +52,21 @@ export interface GpsPos {
  */
 export interface MapContext {
   /** The OpenLayers Map instance ref */
-  mapInstance: MutableRefObject<any>
+  mapInstance: MutableRefObject<Map | null>
 
   // ── Source & layer refs ──
-  drawSourceRef: MutableRefObject<any>
-  drawLayerRef: MutableRefObject<any>
-  measureSourceRef: MutableRefObject<any>
-  measureLayerRef: MutableRefObject<any>
+  // Typed with the same OL types MapClient declares (useRef<… | null>),
+  // so no consumer can treat these as `any` anymore.
+  drawSourceRef: MutableRefObject<import('ol/source/Vector').default | null>
+  drawLayerRef: MutableRefObject<import('ol/layer/Vector').default | null>
+  measureSourceRef: MutableRefObject<import('ol/source/Vector').default | null>
+  measureLayerRef: MutableRefObject<import('ol/layer/Vector').default | null>
 
   // ── Interaction refs ──
-  drawInteractionRef: MutableRefObject<any>
-  selectInteractionRef: MutableRefObject<any>
-  modifyInteractionRef: MutableRefObject<any>
-  measureInteractionRef: MutableRefObject<any>
+  drawInteractionRef: MutableRefObject<import('ol/interaction').Interaction | null>
+  selectInteractionRef: MutableRefObject<import('ol/interaction/Select').default | null>
+  modifyInteractionRef: MutableRefObject<import('ol/interaction').Interaction | null>
+  measureInteractionRef: MutableRefObject<import('ol/interaction').Interaction | null>
 
   // ── Popup ref ──
   popupRef: MutableRefObject<HTMLDivElement | null>
@@ -74,7 +77,7 @@ export interface MapContext {
   setMeasureMode: Dispatch<SetStateAction<MeasureMode>>
   setMeasureResult: Dispatch<SetStateAction<string>>
   setFeatureCount: Dispatch<SetStateAction<number>>
-  setSelectedFeature: Dispatch<SetStateAction<any>>
+  setSelectedFeature: Dispatch<SetStateAction<import('ol/Feature').default | null>>
   setFeatureName: Dispatch<SetStateAction<string>>
 
   // ── History hook callback ──

@@ -39,12 +39,12 @@ interface UseMapInitParams {
   mouseCoordThrottleRef: React.MutableRefObject<number>
   searchParams: URLSearchParams
   pushHistory: () => void
-  drawSourceRef: React.MutableRefObject<unknown>
-  drawLayerRef: React.MutableRefObject<unknown>
-  measureSourceRef: React.MutableRefObject<unknown>
-  measureLayerRef: React.MutableRefObject<unknown>
-  selectInteractionRef: React.MutableRefObject<unknown>
-  mapInstance: React.MutableRefObject<unknown>
+  drawSourceRef: React.MutableRefObject<import('ol/source/Vector').default | null>
+  drawLayerRef: React.MutableRefObject<import('ol/layer/Vector').default | null>
+  measureSourceRef: React.MutableRefObject<import('ol/source/Vector').default | null>
+  measureLayerRef: React.MutableRefObject<import('ol/layer/Vector').default | null>
+  selectInteractionRef: React.MutableRefObject<import('ol/interaction/Select').default | null>
+  mapInstance: React.MutableRefObject<import('ol/Map').default | null>
   cleanupRef: React.MutableRefObject<MapCleanupRefs | null>
   popupRef: React.MutableRefObject<HTMLDivElement | null>
   createBasemaps: (olModules: BasemapModules) => Record<string, import('ol/layer/Tile').default>
@@ -336,10 +336,8 @@ export function useMapInit(params: UseMapInitParams) {
           popupElement.className = 'hidden'
           popupElement.replaceChildren()
           setSelectedFeature(null)
-          // ponytail: selectInteractionRef.current is unknown (was any); cast minimally
-          const si = selectInteractionRef.current as { getFeatures?: () => { clear?: () => void } } | null
-          const features = si?.getFeatures?.()
-          features?.clear?.()
+          // The select interaction is typed now — no cast needed.
+          selectInteractionRef.current?.getFeatures().clear()
         }
 
         // ── Create the map ──

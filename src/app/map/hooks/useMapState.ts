@@ -13,10 +13,11 @@
  */
 
 import { useEffect } from 'react'
+import type Map from 'ol/Map'
 
 export function useMapState(
-  mapInstance: React.MutableRefObject<any>,
-  drawSourceRef: React.MutableRefObject<any>,
+  mapInstance: React.MutableRefObject<Map | null>,
+  drawSourceRef: React.MutableRefObject<import('ol/source/Vector').default | null>,
   mapReady: boolean
 ) {
   useEffect(() => {

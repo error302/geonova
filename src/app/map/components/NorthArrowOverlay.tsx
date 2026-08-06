@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import type Map from 'ol/Map'
 
 /**
  * NorthArrowOverlay — always-on north arrow that rotates inversely to map rotation.
@@ -14,7 +15,7 @@ import { useEffect, useState, useRef } from 'react'
 
 interface NorthArrowOverlayProps {
   /** Ref to the OpenLayers map instance */
-  mapInstance: React.MutableRefObject<any>
+  mapInstance: React.MutableRefObject<Map | null>
 }
 
 export function NorthArrowOverlay({ mapInstance }: NorthArrowOverlayProps) {
