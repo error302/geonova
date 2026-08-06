@@ -66,6 +66,15 @@ jobs:
       # inline bash.
       - name: Lint changed files (blocking, zero new warnings)
         run: node scripts/lint-gate.mjs --paths-from-changed
+      # API ROW-TYPING GATE (2026-08-06): api-row-sweep --check blocks any
+      # PR/push that touches a route.ts file containing an untyped
+      # db.query/client.query (the any-rows pattern the row-typing grind has
+      # been removing). Base ref resolves from CI env exactly like lint-gate:
+      # pull_request -> origin/<base>, push -> event.before, else HEAD~1. It is
+      # a pure git-diff + route-file scan (no eslint pass), so it runs in
+      # seconds alongside the changed-files gate.
+      - name: API row-typing gate (blocking, no untyped queries in touched routes)
+        run: node scripts/api-row-sweep.mjs --check
       # A11Y GATE (2026-08-03): Bans placeholder-like / junk aria-labels
       # codebase-wide (placeholder-equals-name, generic phrases, punctuation,
       # crunched header text) so accessible names can't regress in tables.
