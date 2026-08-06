@@ -5,6 +5,36 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { requireProjectOwnership } from '@/lib/auth/ownership'
 
+interface SurveyPointFullRow {
+  id: string
+  point_name: string
+  easting: number | null
+  northing: number | null
+  elevation: number | null
+  code: string | null
+  description: string | null
+  is_control: boolean
+  datum: string | null
+  projection: string | null
+  utm_zone: string | null
+  hemisphere: string | null
+  epoch_year: number | null
+  std_dev_e: number | null
+  std_dev_n: number | null
+  std_dev_z: number | null
+  error_ellipse_major: number | null
+  error_ellipse_minor: number | null
+  error_ellipse_orient: number | null
+  confidence_level: string | null
+  source: string | null
+  instrument_id: string | null
+  observer_id: string | null
+  import_session_id: string | null
+  observation_date: Date | null
+  created_at: Date
+  updated_at: Date
+}
+
 /**
  * GET /api/project/[id]/points
  *
@@ -40,7 +70,7 @@ export const GET = apiHandler(
     const ownership = await requireProjectOwnership(id, ctx.userId)
     if (!ownership.ok) return ownership.error!
 
-    const { rows } = await db.query(
+    const { rows } = await db.query<SurveyPointFullRow>(
       `SELECT
          -- Identity
          id, point_name, easting, northing, elevation,

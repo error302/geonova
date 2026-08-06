@@ -53,7 +53,7 @@ export const DELETE = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6
 
   // ── Audit log before deletion (non-blocking — never fail the delete if audit fails) ──
   try {
-    await db.query(
+    await db.query<never>(
       `INSERT INTO audit_logs (action, table_name, record_id, user_id, details)
        VALUES ($1, $2, $3, $4, $5)`,
       [
@@ -69,7 +69,7 @@ export const DELETE = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6
   }
 
   // ── Single DELETE — CASCADE handles all child tables automatically ──
-  const { rowCount } = await db.query(
+  const { rowCount } = await db.query<never>(
     'DELETE FROM projects WHERE id = $1 AND user_id = $2',
     [id, ctx.userId]
   )

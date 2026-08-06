@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       if (session.metadata?.type === 'peer_review') {
         const reviewReqId = session.metadata.review_request_id
         if (reviewReqId) {
-          await db.query(
+          await db.query<never>(
             'UPDATE peer_reviews SET payment_status = $1, stripe_payment_intent_id = $2 WHERE id = $3',
             ['paid', session.payment_intent, reviewReqId]
           )
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       const periodEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
       const currency = (session.currency || 'USD').toUpperCase()
 
-      await db.query(
+      await db.query<never>(
         `INSERT INTO user_subscriptions (user_id, plan_id, status, payment_method, currency, current_period_start, current_period_end)
          VALUES ($1, $2, $3, $4, $5, $6, $7)
          ON CONFLICT (user_id) DO UPDATE SET
@@ -92,14 +92,14 @@ export async function POST(request: NextRequest) {
         )
         const existing2 = existingRows2[0]
         if (existing2?.id) {
-          await db.query(
+          await db.query<never>(
             `UPDATE user_subscriptions
              SET plan_id = $1, status = $2, payment_method = $3, currency = $4, current_period_start = $5, current_period_end = $6
              WHERE id = $7`,
             [planId, 'active', 'stripe', currency, now.toISOString(), periodEnd.toISOString(), existing2.id]
           )
         } else {
-          await db.query(
+          await db.query<never>(
             `INSERT INTO user_subscriptions (user_id, plan_id, status, payment_method, currency, current_period_start, current_period_end)
              VALUES ($1, $2, $3, $4, $5, $6, $7)`,
             [userId, planId, 'active', 'stripe', currency, now.toISOString(), periodEnd.toISOString()]
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
         }
       })
 
-      await db.query(
+      await db.query<never>(
         'UPDATE payment_history SET status = $1, transaction_id = $2 WHERE id = $3 AND user_id = $4',
         ['completed', session.id, paymentId, userId]
       )
@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
       if (user) {
         const newStatus = status === 'active' ? 'active' : status === 'past_due' ? 'past_due' : 'cancelled'
         // AUDIT FIX (MED 13, 2026-07-02): Also store stripe IDs for sync
-        await db.query(
+        await db.query<never>(
           'UPDATE user_subscriptions SET status = $1, stripe_customer_id = $2, stripe_subscription_id = $3 WHERE user_id = $4',
           [newStatus, customerId, sub.id, user.user_id]
         )
@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
       const userId = sub.metadata?.user_id
 
       if (userId) {
-        await db.query(
+        await db.query<never>(
           'UPDATE user_subscriptions SET status = $1, cancelled_at = NOW(), stripe_subscription_id = $2 WHERE user_id = $3',
           ['cancelled', sub.id, userId]
         )
@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
       const userSub = userSubRows[0]
 
       if (userSub) {
-        await db.query(
+        await db.query<never>(
           'UPDATE user_subscriptions SET status = $1 WHERE user_id = $2',
           ['expired', userSub.user_id]
         )
@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
       const session = event.data.object
       const paymentId = session.metadata?.payment_id
       if (paymentId) {
-        await db.query(
+        await db.query<never>(
           'UPDATE payment_history SET status = $1 WHERE id = $2 AND status = $3',
           ['expired', paymentId, 'pending']
         )
@@ -188,14 +188,14 @@ export async function POST(request: NextRequest) {
       const charge = event.data.object
       const paymentIntentId = charge.payment_intent
       if (paymentIntentId) {
-        await db.query(
+        await db.query<never>(
           'UPDATE payment_history SET status = $1 WHERE transaction_id = $2',
           ['refunded', paymentIntentId]
         )
         // If this was a subscription payment, cancel it
         const userId = charge.metadata?.user_id
         if (userId) {
-          await db.query(
+          await db.query<never>(
             "UPDATE user_subscriptions SET status = $1 WHERE user_id = $2 AND status = 'active'",
             ['cancelled', userId]
           )
@@ -211,7 +211,7 @@ export async function POST(request: NextRequest) {
       if (userId) {
         const now = new Date()
         const periodEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
-        await db.query(
+        await db.query<never>(
           `UPDATE user_subscriptions
            SET status = 'active', current_period_start = $1, current_period_end = $2
            WHERE user_id = $3`,

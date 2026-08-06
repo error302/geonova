@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
 
           if (payRows.length > 0) {
             const pay = payRows[0]
-            await db.query(
+            await db.query<never>(
               `UPDATE payment_history SET status = 'completed', transaction_id = $1 WHERE id = $2`,
               [orderId, pay.id]
             )
@@ -199,7 +199,7 @@ export async function POST(request: NextRequest) {
             const periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
 
             if (existing.length > 0) {
-              await db.query(
+              await db.query<never>(
                 `UPDATE user_subscriptions
                  SET plan_id = $1, status = 'active', payment_method = 'paypal', currency = $2,
                      current_period_start = $3, current_period_end = $4
@@ -207,7 +207,7 @@ export async function POST(request: NextRequest) {
                 [pay.plan_id, currencyCode, now, periodEnd, existing[0].id]
               )
             } else {
-              await db.query(
+              await db.query<never>(
                 `INSERT INTO user_subscriptions
                  (user_id, plan_id, status, payment_method, currency, current_period_start, current_period_end)
                  VALUES ($1, $2, 'active', 'paypal', $3, $4, $5)`,
@@ -236,7 +236,7 @@ export async function POST(request: NextRequest) {
         )
 
         if (payRows.length > 0 && payRows[0].status !== 'completed') {
-          await db.query(
+          await db.query<never>(
             `UPDATE payment_history SET status = 'completed', transaction_id = $1 WHERE id = $2`,
             [captureId, payRows[0].id]
           )
@@ -255,7 +255,7 @@ export async function POST(request: NextRequest) {
         )
 
         if (payRows.length > 0) {
-          await db.query(
+          await db.query<never>(
             `UPDATE payment_history SET status = 'failed' WHERE id = $1`,
             [payRows[0].id]
           )
@@ -274,7 +274,7 @@ export async function POST(request: NextRequest) {
         )
 
         if (payRows.length > 0) {
-          await db.query(
+          await db.query<never>(
             `UPDATE payment_history SET status = 'refunded' WHERE id = $1`,
             [payRows[0].id]
           )
@@ -293,7 +293,7 @@ export async function POST(request: NextRequest) {
         )
         if (payRows.length > 0) {
           const newStatus = eventType.includes('CANCELLED') ? 'cancelled' : eventType.includes('EXPIRED') ? 'expired' : 'suspended'
-          await db.query(
+          await db.query<never>(
             `UPDATE user_subscriptions SET status = $1 WHERE user_id = $2`,
             [newStatus, payRows[0].user_id]
           )

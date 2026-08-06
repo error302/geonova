@@ -34,6 +34,25 @@ import { fieldToFinish, type FieldObservation, type FieldToFinishInput } from '@
 import type { SurveyTypeKey } from '@/lib/engine/traverse';
 import { preSubmitCheck } from '@/lib/submission/pre-submit-check';
 
+interface FieldBookEntryRow {
+  id: string
+  project_id: string
+  from_station: string | null
+  to_station: string | null
+  station_from: string | null
+  station_to: string | null
+  bearing: number | null
+  slope_distance: number | null
+  slope_distance_m: number | null
+  vertical_angle: number | null
+  instrument_height: number | null
+  target_height: number | null
+  temperature: number | null
+  pressure: number | null
+  humidity: number | null
+  created_at: Date
+}
+
 interface FieldToFinishProjectRow {
   close_easting?: string;
   close_northing?: string;
@@ -97,14 +116,14 @@ export async function POST(
     const surveyPoints = pointsResult.rows;
 
     // ── Load field book observations ──
-    const obsResult = await db.query(
+    const obsResult = await db.query<FieldBookEntryRow>(
       `SELECT * FROM field_book_entries
        WHERE project_id = $1
        ORDER BY created_at`,
       [projectId],
     );
 
-    const fieldObs: FieldObservation[] = obsResult.rows.map((row: Record<string, unknown>) => ({
+    const fieldObs: FieldObservation[] = obsResult.rows.map((row) => ({
       fromStation: String(row.from_station || row.station_from || ''),
       toStation: String(row.to_station || row.station_to || ''),
       bearing: row.bearing != null ? parseFloat(String(row.bearing)) : undefined,
@@ -162,7 +181,7 @@ export async function POST(
 
     // ── Save computed results back to project ──
     if (pipelineResult.status !== 'failed') {
-      await db.query(
+      await db.query<never>(
         `UPDATE projects SET
            precision_ratio = $1,
            linear_misclosure = $2,

@@ -6,6 +6,38 @@ import { db } from '@/lib/db';
 import { generateIFC4 } from '@/lib/export/generateIFC';
 import type { IFCExportOptions, IFCParcel, IFCControlPoint, IFCTraverseLine, IFCEquipmentRecord } from '@/types/ifc';
 
+interface ControlPointRow {
+  id: string
+  label: string
+  easting: number
+  northing: number
+  elevation: number | null
+  beacon_type: string | null
+  description: string | null
+}
+
+interface ParcelGeoRow {
+  id: string
+  label: string
+  parcel_number: string | null
+  area_m2: number | null
+  vertices: unknown
+}
+
+interface TraverseLineRow {
+  from_point: string
+  to_point: string
+  distance: number
+}
+
+interface EquipmentRow {
+  id: string
+  make: string
+  model: string
+  serial_number: string | null
+  last_calibration_date: Date | null
+}
+
 interface IFCProjectRow {
   name: string;
   utm_zone?: number | null;
@@ -48,7 +80,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   const proj = projRows[0];
 
   // ── Fetch survey control points ────────────────────────────────────────
-  const { rows: cpRows } = await db.query(
+  const { rows: cpRows } = await db.query<ControlPointRow>(
     `SELECT id, name AS label, easting, northing, elevation,
             beacon_type, description
        FROM survey_points
@@ -58,7 +90,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   );
 
   // ── Fetch parcel polygons ──────────────────────────────────────────────
-  const { rows: parcelRows } = await db.query(
+  const { rows: parcelRows } = await db.query<ParcelGeoRow>(
     `SELECT p.id, p.label, p.parcel_number, p.area_m2,
             (
               SELECT jsonb_agg(
@@ -74,7 +106,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   );
 
   // ── Fetch traverse lines ───────────────────────────────────────────────
-  const { rows: traverseRows } = await db.query(
+  const { rows: traverseRows } = await db.query<TraverseLineRow>(
     `SELECT ts.from_point, ts.to_point, ts.distance
        FROM traverse_stations ts
       WHERE ts.project_id = $1
@@ -83,7 +115,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   );
 
   // ── Fetch equipment records ────────────────────────────────────────────
-  const { rows: equipRows } = await db.query(
+  const { rows: equipRows } = await db.query<EquipmentRow>(
     `SELECT id, make, model, serial_number, last_calibration_date
        FROM equipment
       WHERE user_id = $1
@@ -98,7 +130,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   const hemisphere = (proj.hemisphere ?? 'S').toUpperCase();
   const epsgCode = hemisphere === 'N' ? 32600 + utmZone : 32700 + utmZone;
 
-  const parcels: IFCParcel[] = (parcelRows ?? []).map((r: Record<string, unknown>) => ({
+  const parcels: IFCParcel[] = (parcelRows ?? []).map((r) => ({
     id: r.id as string,
     label: (r.label as string) ?? r.parcel_number ?? 'Unnamed',
     vertices: (Array.isArray(r.vertices) ? r.vertices : []) as IFCParcel['vertices'],
@@ -106,9 +138,9 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
     parcelNumber: (r.parcel_number as string) ?? undefined,
   }));
 
-  const controlPoints: IFCControlPoint[] = (cpRows ?? []).map((r: Record<string, unknown>) => ({
+  const controlPoints: IFCControlPoint[] = (cpRows ?? []).map((r) => ({
     id: r.id as string,
-    label: (r.label as string) ?? (r.name as string) ?? '',
+    label: (r.label as string) ?? '',
     easting: r.easting as number,
     northing: r.northing as number,
     elevation: (r.elevation as number) ?? undefined,
@@ -116,18 +148,18 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
     description: (r.description as string) ?? undefined,
   }));
 
-  const traverseLines: IFCTraverseLine[] = (traverseRows ?? []).map((r: Record<string, unknown>) => ({
+  const traverseLines: IFCTraverseLine[] = (traverseRows ?? []).map((r) => ({
     fromPoint: (r.from_point as string) ?? '',
     toPoint: (r.to_point as string) ?? '',
     distance: (r.distance as number) ?? undefined,
   }));
 
-  const equipment: IFCEquipmentRecord[] = (equipRows ?? []).map((r: Record<string, unknown>) => ({
+  const equipment: IFCEquipmentRecord[] = (equipRows ?? []).map((r) => ({
     id: r.id as string,
     make: (r.make as string) ?? '',
     model: (r.model as string) ?? '',
     serialNumber: (r.serial_number as string) ?? undefined,
-    lastCalibration: (r.last_calibration_date as string) ?? undefined,
+    lastCalibration: r.last_calibration_date ? r.last_calibration_date.toISOString() : undefined,
   }));
 
   const ifcOpts: IFCExportOptions = {

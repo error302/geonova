@@ -6,6 +6,18 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { WEBHOOK_SECRET_PREFIX } from '@/lib/webhooks/types'
 
+interface WebhookRow {
+  id: string
+  url: string
+  events: unknown
+  secret: string
+  name: string | null
+  user_id: string
+  active: boolean
+  created_at: Date
+  updated_at: Date
+}
+
 export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
   const { url, events, name } = ctx.body as { url?: string; events?: unknown[]; name?: string }
 
@@ -24,7 +36,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
 
   const secret = `${WEBHOOK_SECRET_PREFIX}${crypto.randomBytes(24).toString('hex')}`
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<WebhookRow>(
     `INSERT INTO webhooks (url, events, secret, name, user_id, active)
      VALUES ($1, $2, $3, $4, $5, true)
      RETURNING *`,
@@ -35,7 +47,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     return NextResponse.json({ error: 'Failed to create webhook' }, { status: 500 })
   }
 
-  const data = rows[0] as Record<string, unknown>
+  const data = rows[0]
   return NextResponse.json({
     id: data.id,
     url: data.url,
@@ -47,7 +59,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
 })
 
 export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
-  const { rows } = await db.query(
+  const { rows } = await db.query<WebhookRow>(
     'SELECT * FROM webhooks WHERE user_id = $1 ORDER BY created_at DESC',
     [ctx.userId]
   )
