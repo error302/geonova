@@ -10,12 +10,14 @@
  *      against scripts/warning-baseline.json.
  *   2. A11Y ratchet     — per-rule counts of jsx-a11y/* messages (any
  *      severity) compared against scripts/a11y-baseline.json.
- *   3. MEMBER-ACCESS floor — @typescript-eslint/no-unsafe-member-access
- *      against scripts/member-access-baseline.json. This floor is DECOUPLED
- *      from the general warning baseline: --update never touches it, so the
- *      grind's constant re-baselining cannot silently absorb growth in this
- *      family. It moves ONLY via --update-member-access, meaning any growth
- *      fails CI until the batch work genuinely lowers the count.
+ *   3. FAMILY FLOORS — @typescript-eslint/no-unsafe-member-access
+ *      (scripts/member-access-baseline.json), no-unsafe-assignment
+ *      (scripts/assignment-baseline.json), no-explicit-any
+ *      (scripts/explicit-any-baseline.json). Each floor is DECOUPLED from
+ *      the general warning baseline: --update never touches them, so the
+ *      grind's constant re-baselining cannot silently absorb growth in these
+ *      families. Each moves ONLY via its own --update-<family> flag, meaning
+ *      any growth fails CI until the batch work genuinely lowers the count.
  *
  * A rule absent from a baseline counts as baseline 0 — so a brand-new
  * violation (or newly enabled rule) fails the gate. This is the blocking
@@ -24,11 +26,13 @@
  * Usage:
  *   node scripts/lint-ratchets.mjs                     # verify all ratchets
  *   node scripts/lint-ratchets.mjs --write-audit       # verify + regenerate .a11y-audit.json
- *   node scripts/lint-ratchets.mjs --update            # snapshot current counts as baselines (NOT the member-access floor)
+ *   node scripts/lint-ratchets.mjs --update            # snapshot current counts as baselines (NOT the family floors)
  *   node scripts/lint-ratchets.mjs --update-member-access  # ratchet ONLY the member-access floor
+ *   node scripts/lint-ratchets.mjs --update-assignment     # ratchet ONLY the no-unsafe-assignment floor
+ *   node scripts/lint-ratchets.mjs --update-explicit-any   # ratchet ONLY the no-explicit-any floor
  *   node scripts/lint-ratchets.mjs --report            # print drift tables vs last commit (verify still runs)
  *   node scripts/lint-ratchets.mjs --scope a,b         # lint only these paths (testing)
- *   node scripts/lint-ratchets.mjs --baseline-warnings p.json --baseline-a11y p.json --baseline-member-access p.json
+ *   node scripts/lint-ratchets.mjs --baseline-warnings p.json --baseline-a11y p.json --baseline-member-access p.json --baseline-assignment p.json --baseline-explicit-any p.json
  *   exit 0 = pass, 1 = ratchet exceeded, 2 = usage/run error
  *
  * The a11y evidence file (.a11y-audit.json) is written ONLY with --write-audit
@@ -52,16 +56,32 @@ const wIdx = args.indexOf('--baseline-warnings')
 const WARN_BASELINE = wIdx >= 0 && args[wIdx + 1] ? args[wIdx + 1] : 'scripts/warning-baseline.json'
 const aIdx = args.indexOf('--baseline-a11y')
 const A11Y_BASELINE = aIdx >= 0 && args[aIdx + 1] ? args[aIdx + 1] : 'scripts/a11y-baseline.json'
-// Dedicated no-unsafe-member-access floor — decoupled from the general
-// warning baseline (see header). Moved ONLY by --update-member-access.
+// Dedicated per-family floors — each decoupled from the general warning
+// baseline (see header). Moved ONLY by their own --update-<family> flag.
 const MEMBER_RULE = '@typescript-eslint/no-unsafe-member-access'
+const ASSIGNMENT_RULE = '@typescript-eslint/no-unsafe-assignment'
+const EXPLICIT_ANY_RULE = '@typescript-eslint/no-explicit-any'
 const mIdx = args.indexOf('--baseline-member-access')
 const MEMBER_BASELINE = mIdx >= 0 && args[mIdx + 1] ? args[mIdx + 1] : 'scripts/member-access-baseline.json'
+const assignIdx = args.indexOf('--baseline-assignment')
+const ASSIGNMENT_BASELINE = assignIdx >= 0 && args[assignIdx + 1] ? args[assignIdx + 1] : 'scripts/assignment-baseline.json'
+const anyIdx = args.indexOf('--baseline-explicit-any')
+const EXPLICIT_ANY_BASELINE = anyIdx >= 0 && args[anyIdx + 1] ? args[anyIdx + 1] : 'scripts/explicit-any-baseline.json'
 const UPDATE_MEMBER = args.includes('--update-member-access')
-// These two write DIFFERENT baselines and would silently drop the other's
-// update — refuse to combine them instead of surprising the caller.
-if (UPDATE && UPDATE_MEMBER) {
-  console.error('[lint-ratchets] cannot combine --update and --update-member-access — they ratchet different baselines. Run them separately.')
+const UPDATE_ASSIGNMENT = args.includes('--update-assignment')
+const UPDATE_EXPLICIT_ANY = args.includes('--update-explicit-any')
+// Each --update-* (and plain --update) writes a DIFFERENT baseline and would
+// silently drop the others' updates — refuse to combine any of them.
+const updateFlags = [
+  ['--update', UPDATE],
+  ['--update-member-access', UPDATE_MEMBER],
+  ['--update-assignment', UPDATE_ASSIGNMENT],
+  ['--update-explicit-any', UPDATE_EXPLICIT_ANY],
+].filter(([, on]) => on)
+if (updateFlags.length > 1) {
+  console.error(
+    `[lint-ratchets] cannot combine ${updateFlags.map(([f]) => f).join(' and ')} — they ratchet different baselines. Run them separately.`
+  )
   process.exit(2)
 }
 const scopeIdx = args.indexOf('--scope')
@@ -143,22 +163,24 @@ if (UPDATE) {
     `[lint-ratchets] baselines written → ${WARN_BASELINE} (${Object.keys(warningCounts).length} rules, ${warnTotal} warnings), ${A11Y_BASELINE} (${Object.keys(a11yCounts).length} rules, ${a11yTotal} a11y findings)`
   )
   console.error(
-    `[lint-ratchets] note: --update does NOT move the ${MEMBER_RULE} floor — use --update-member-access for that.`
+    `[lint-ratchets] note: --update does NOT move the family floors (${MEMBER_RULE}, ${ASSIGNMENT_RULE}, ${EXPLICIT_ANY_RULE}) — use --update-member-access / --update-assignment / --update-explicit-any for those.`
   )
   process.exit(0)
 }
 
-// The member-access floor is a separate, deliberately-slow-moving gate. The
-// general --update above intentionally leaves it alone so that re-baselining
-// after unrelated batch work can't mask growth in this family.
-if (UPDATE_MEMBER) {
-  const memberNow = warningCounts[MEMBER_RULE] || 0
-  writeFileSync(MEMBER_BASELINE, JSON.stringify({ [MEMBER_RULE]: memberNow }, null, 2) + '\n')
-  console.error(
-    `[lint-ratchets] member-access floor written → ${MEMBER_BASELINE} (${MEMBER_RULE}: ${memberNow} warnings)`
-  )
+// Family floors are separate, deliberately-slow-moving gates. The general
+// --update above intentionally leaves them alone so that re-baselining after
+// unrelated batch work can't mask growth in these families.
+function writeFloor(rule, baselinePath, label) {
+  const now = warningCounts[rule] || 0
+  writeFileSync(baselinePath, JSON.stringify({ [rule]: now }, null, 2) + '\n')
+  console.error(`[lint-ratchets] ${label} floor written → ${baselinePath} (${rule}: ${now} warnings)`)
   process.exit(0)
 }
+
+if (UPDATE_MEMBER) writeFloor(MEMBER_RULE, MEMBER_BASELINE, 'member-access')
+if (UPDATE_ASSIGNMENT) writeFloor(ASSIGNMENT_RULE, ASSIGNMENT_BASELINE, 'assignment')
+if (UPDATE_EXPLICIT_ANY) writeFloor(EXPLICIT_ANY_RULE, EXPLICIT_ANY_BASELINE, 'explicit-any')
 
 // ── Verify helpers ──────────────────────────────────────────────────────────
 function loadBaseline(p) {
@@ -244,30 +266,44 @@ function checkOne(label, counts, total, baselinePath) {
 const warnRegressions = checkOne('warnings', warningCounts, warnTotal, WARN_BASELINE)
 const a11yRegressions = checkOne('jsx-a11y findings', a11yCounts, a11yTotal, A11Y_BASELINE)
 
-// Dedicated floor for the member-access family (see header). Independent of
-// the general warning baseline so the batch grind can't absorb growth in it.
-const memberNow = warningCounts[MEMBER_RULE] || 0
-const memberBase = loadBaseline(MEMBER_BASELINE)
-const memberPrev = memberBase[MEMBER_RULE] || 0
-const memberHead = loadHeadBaseline(MEMBER_BASELINE)?.[MEMBER_RULE] ?? null
-const memberOver = memberNow > memberPrev
-if (REPORT || memberOver) {
-  const headStr = memberHead === null ? 'n/a' : String(memberHead)
-  const deltaStr = memberHead === null ? '' : memberNow - memberHead === 0 ? ' (Δ 0)' : ` (Δ ${memberNow - memberHead > 0 ? '+' : ''}${memberNow - memberHead})`
-  console.error(
-    `\n[lint-ratchets] ${MEMBER_RULE} floor: ${memberNow} (committed ${headStr}, baseline ${memberPrev})${deltaStr}${memberOver ? '  ⚠ EXCEEDS' : ''}`
-  )
+// Dedicated family floors (see header). Each is independent of the general
+// warning baseline so the batch grind can't absorb growth in them.
+function checkFloor(rule, baselinePath, label) {
+  const now = warningCounts[rule] || 0
+  const base = loadBaseline(baselinePath)
+  const prev = base[rule] || 0
+  const head = loadHeadBaseline(baselinePath)?.[rule] ?? null
+  const over = now > prev
+  if (REPORT || over) {
+    const headStr = head === null ? 'n/a' : String(head)
+    const deltaStr = head === null ? '' : now - head === 0 ? ' (Δ 0)' : ` (Δ ${now - head > 0 ? '+' : ''}${now - head})`
+    console.error(
+      `\n[lint-ratchets] ${label} floor (${rule}): ${now} (committed ${headStr}, baseline ${prev})${deltaStr}${over ? '  ⚠ EXCEEDS' : ''}`
+    )
+  }
+  return { rule, prev, now, over, label }
 }
 
-if (warnRegressions.length || a11yRegressions.length || memberOver) {
+const floorChecks = [
+  checkFloor(MEMBER_RULE, MEMBER_BASELINE, 'member-access'),
+  checkFloor(ASSIGNMENT_RULE, ASSIGNMENT_BASELINE, 'assignment'),
+  checkFloor(EXPLICIT_ANY_RULE, EXPLICIT_ANY_BASELINE, 'explicit-any'),
+]
+const floorOver = floorChecks.filter((f) => f.over)
+
+if (warnRegressions.length || a11yRegressions.length || floorOver.length) {
+  const overNote = floorOver.length
+    ? `, and ${floorOver.map((f) => `${f.rule} exceeded its dedicated floor`).join(', and ')}`
+    : ''
   console.error(
-    `\n[lint-ratchets] FAIL: ${warnRegressions.length} warning rule(s) + ${a11yRegressions.length} a11y rule(s) exceeded baselines${memberOver ? `, and ${MEMBER_RULE} exceeded its dedicated floor` : ''}. Fix, or ratchet deliberately (--update for warnings/a11y, --update-member-access for the member-access floor).`
+    `\n[lint-ratchets] FAIL: ${warnRegressions.length} warning rule(s) + ${a11yRegressions.length} a11y rule(s) exceeded baselines${overNote}. Fix, or ratchet deliberately (--update for warnings/a11y, --update-member-access / --update-assignment / --update-explicit-any for the family floors).`
   )
   for (const r of warnRegressions) console.error(`  ❌ [warn] ${r.rule}: ${r.prev} → ${r.now}`)
   for (const r of a11yRegressions) console.error(`  ❌ [a11y] ${r.rule}: ${r.prev} → ${r.now}`)
-  if (memberOver) console.error(`  ❌ [member-access] ${MEMBER_RULE}: ${memberPrev} → ${memberNow}`)
+  for (const f of floorOver) console.error(`  ❌ [${f.label}] ${f.rule}: ${f.prev} → ${f.now}`)
   process.exit(1)
 }
 
-console.error(`[lint-ratchets] OK: ${warnTotal} warnings + ${a11yTotal} a11y findings, all rules at/below baseline (${MEMBER_RULE} within its ${memberPrev}-warning floor).`)
+const floorNote = floorChecks.map((f) => `${f.label} within its ${f.prev}-warning floor`).join(', ')
+console.error(`[lint-ratchets] OK: ${warnTotal} warnings + ${a11yTotal} a11y findings, all rules at/below baseline (${floorNote}).`)
 process.exit(0)

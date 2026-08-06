@@ -151,23 +151,22 @@ function countWarnings(messages) {
 
 // Committed whole-repo family floors — informational context only. The
 // changed-files gate is a regression check (head > base), not the repo floor.
-// Member-access lives in its own decoupled baseline file; the other families
-// use the shared warning baseline. Each load is isolated so a malformed file
-// only drops that family's context.
+// Every family lives in its own decoupled baseline file (written by
+// lint-ratchets --update-<family>). Each load is isolated so a malformed or
+// missing file only drops that family's context.
 const committedFloors = {}
-try {
-  if (existsSync('scripts/member-access-baseline.json')) {
-    const b = JSON.parse(readFileSync('scripts/member-access-baseline.json', 'utf8'))
-    committedFloors[MEMBER_RULE] = b[MEMBER_RULE] ?? null
-  }
-} catch { /* informational only */ }
-try {
-  if (existsSync('scripts/warning-baseline.json')) {
-    const b = JSON.parse(readFileSync('scripts/warning-baseline.json', 'utf8'))
-    committedFloors[ASSIGNMENT_RULE] = b[ASSIGNMENT_RULE] ?? null
-    committedFloors[EXPLICIT_ANY_RULE] = b[EXPLICIT_ANY_RULE] ?? null
-  }
-} catch { /* informational only */ }
+for (const [rule, file] of [
+  [MEMBER_RULE, 'scripts/member-access-baseline.json'],
+  [ASSIGNMENT_RULE, 'scripts/assignment-baseline.json'],
+  [EXPLICIT_ANY_RULE, 'scripts/explicit-any-baseline.json'],
+]) {
+  try {
+    if (existsSync(file)) {
+      const b = JSON.parse(readFileSync(file, 'utf8'))
+      committedFloors[rule] = b[rule] ?? null
+    }
+  } catch { /* informational only */ }
+}
 
 // 1. Baseline: warnings in the changed files at the base ref.
 let baseWarnings = 0
