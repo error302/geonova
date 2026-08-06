@@ -19,7 +19,19 @@
  * gated: no-unsafe-member-access (--member-floor), no-unsafe-assignment
  * (--floor-assignment), no-explicit-any (--floor-explicit-any). Each
  * --*-floor N raises that family's ceiling to max(baseFamily, N), mirroring
- * --max-warnings.
+ * --max-warnings; when a floor flag is omitted, the committed whole-repo
+ * floor is auto-loaded from its dedicated baseline file instead (for ALL
+ * runs, not just CI) — inert while the repo is within its floor, binding
+ * once the grind shrinks it. CI therefore needs no inline floor reads.
+ *
+ * BASE-REF RESOLUTION (--paths-from-changed with no base-ref positional):
+ * mirrors the workflow 'Determine base ref' step this script replaces —
+ * pull_request events diff against origin/<base> (GITHUB_BASE_REF, fallback
+ * origin/main), push events diff against the previous commit
+ * (github.event.before read from the GITHUB_EVENT_PATH payload; an all-zero
+ * 'first push' falls back to HEAD~1), and anything else (local runs,
+ * workflow_dispatch) falls back to HEAD~1. CI is now a single flag call
+ * with no inline bash.
  *
  * Usage (mirrors CI):
  *   node scripts/lint-gate.mjs <base-ref> <file>... [--max-warnings N] [--member-floor N] [--floor-assignment N] [--floor-explicit-any N]
@@ -82,11 +94,39 @@ for (let i = 0; i < args.length; i++) {
   }
 }
 
+// Resolve the base ref for --paths-from-changed when CI passes no positional.
+// Mirrors the 'Determine base ref' workflow step this script replaces: PRs
+// diff against the merge target, pushes against the previous commit, and
+// anything else falls back to HEAD~1 (first push, local runs).
+function resolveBaseRefFromEnv() {
+  const eventName = process.env.GITHUB_EVENT_NAME
+  if (eventName === 'pull_request') {
+    const base = process.env.GITHUB_BASE_REF
+    return base ? `origin/${base}` : 'origin/main'
+  }
+  if (eventName === 'push') {
+    const eventPath = process.env.GITHUB_EVENT_PATH
+    if (eventPath) {
+      try {
+        const payload = JSON.parse(readFileSync(eventPath, 'utf8'))
+        if (payload.before && !/^0+$/.test(payload.before)) return payload.before
+      } catch { /* unreadable payload → HEAD~1 fallback */ }
+    }
+  }
+  return 'HEAD~1'
+}
+
 let baseRef
 let files
 if (PFC) {
-  // Base ref is the first positional if it's a real ref, else default HEAD.
-  baseRef = positional[0] && positional[0] !== 'HEAD' ? positional.shift() : 'HEAD'
+  // An explicit base-ref positional always wins; otherwise resolve it from
+  // the CI event context (PR → origin/<base>, push → event.before, HEAD~1).
+  if (positional.length > 0) {
+    baseRef = positional.shift()
+  } else {
+    baseRef = resolveBaseRefFromEnv()
+    console.log(`[lint-gate] no base ref given — resolved: ${baseRef}`)
+  }
   files = null // computed below from git diff
 } else {
   baseRef = positional.shift()
@@ -217,9 +257,17 @@ for (const r of results) {
 }
 
 const limit = maxWarnings === null ? baseWarnings : Math.max(baseWarnings, maxWarnings)
-const memberLimit = memberFloor === null ? baseMember : Math.max(baseMember, memberFloor)
-const assignmentLimit = assignmentFloor === null ? baseAssignment : Math.max(baseAssignment, assignmentFloor)
-const explicitAnyLimit = explicitAnyFloor === null ? baseExplicitAny : Math.max(baseExplicitAny, explicitAnyFloor)
+// Family ceilings default to the committed whole-repo floors (auto-loaded
+// from the dedicated baseline files by the committedFloors block above) so
+// CI needs no inline floor reads; an explicit --*-floor N still overrides.
+// Each ceiling is max(base-in-changed-files, N) — inert while floors are
+// large, binding once the grind shrinks them.
+const memberFloorN = memberFloor !== null ? memberFloor : (committedFloors[MEMBER_RULE] ?? null)
+const assignmentFloorN = assignmentFloor !== null ? assignmentFloor : (committedFloors[ASSIGNMENT_RULE] ?? null)
+const explicitAnyFloorN = explicitAnyFloor !== null ? explicitAnyFloor : (committedFloors[EXPLICIT_ANY_RULE] ?? null)
+const memberLimit = memberFloorN === null ? baseMember : Math.max(baseMember, memberFloorN)
+const assignmentLimit = assignmentFloorN === null ? baseAssignment : Math.max(baseAssignment, assignmentFloorN)
+const explicitAnyLimit = explicitAnyFloorN === null ? baseExplicitAny : Math.max(baseExplicitAny, explicitAnyFloorN)
 
 if (headErrors > 0) {
   for (const r of results) {

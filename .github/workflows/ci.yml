@@ -57,47 +57,15 @@ jobs:
       # with the lint-gate.mjs ratchet. --max-warnings 0 failed on any file
       # carrying PRE-EXISTING warnings (legacy @typescript-eslint/no-unsafe-*
       # etc.), so the gate could never pass on real PRs touching dirty files.
-      # The ratchet lints the changed files at the BASE ref and at HEAD and
-      # fails ONLY when HEAD adds warnings beyond the base — a true "no new
-      # warnings" gate that still runs fast (changed files only).
-      #
-      # Behavior:
-      #   1. Run eslint on CHANGED files only (vs base branch) — fast & actionable.
-      #   2. Compare HEAD warning count vs the BASE ref — no NEW warnings allowed.
-      #   3. If no files changed, the step is skipped (exit 0).
-      #   4. Whole-repo lint runs as the warning-ratchet step below — a
-      #      blocking per-rule baseline (see that step's comment).
-      - name: Determine base ref
-        id: base
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "ref=origin/${{ github.base_ref }}" >> "$GITHUB_OUTPUT"
-          elif [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
-            # Push event: diff from the previous commit on the branch, so
-            # multi-commit pushes lint ALL commits, not just the last one.
-            echo "ref=${{ github.event.before }}" >> "$GITHUB_OUTPUT"
-          else
-            # First-ever push (no `before`): fall back to HEAD~1.
-            echo "ref=HEAD~1" >> "$GITHUB_OUTPUT"
-          fi
-      # The changed-files gate computes its own file list via
-      # --paths-from-changed (same pathspec + test exclusion as the inline
-      # $CHANGED it replaces — the single source of truth now lives in the
-      # script). Pins plugin resolution to the repo root (no duplicate-plugin
-      # conflict) and ratchets: fails only when HEAD adds warnings beyond the
-      # base ref, including the per-family floors (member-access, assignment,
-      # explicit-any).
+      # The changed-files gate is a true "no new warnings" ratchet: it lints
+      # the files changed vs the resolved base ref at that ref and at HEAD,
+      # and fails ONLY when HEAD adds warnings — fast (changed files only).
+      # The base ref is resolved inside the script (PR → origin/<base>, push
+      # → event.before, fallback HEAD~1) and the per-family floors are
+      # auto-loaded from the committed baselines — a single flag call, no
+      # inline bash.
       - name: Lint changed files (blocking, zero new warnings)
-        run: |
-          # Family floors (member-access, assignment, explicit-any) are read
-          # from the committed baselines at runtime so the gates never go
-          # stale as the grind ratchets them down. Each --*-floor N raises
-          # that family's ceiling to max(base-in-changed-files, N) — inert
-          # while floors are large, binding once the grind shrinks them.
-          MEMBER_FLOOR=$(node -p "JSON.parse(require('fs').readFileSync('scripts/member-access-baseline.json','utf8'))['@typescript-eslint/no-unsafe-member-access'] || 0")
-          ASSIGN_FLOOR=$(node -p "JSON.parse(require('fs').readFileSync('scripts/assignment-baseline.json','utf8'))['@typescript-eslint/no-unsafe-assignment'] || 0")
-          ANY_FLOOR=$(node -p "JSON.parse(require('fs').readFileSync('scripts/explicit-any-baseline.json','utf8'))['@typescript-eslint/no-explicit-any'] || 0")
-          node scripts/lint-gate.mjs --paths-from-changed "${{ steps.base.outputs.ref }}"             --member-floor "$MEMBER_FLOOR"             --floor-assignment "$ASSIGN_FLOOR"             --floor-explicit-any "$ANY_FLOOR"
+        run: node scripts/lint-gate.mjs --paths-from-changed
       # A11Y GATE (2026-08-03): Bans placeholder-like / junk aria-labels
       # codebase-wide (placeholder-equals-name, generic phrases, punctuation,
       # crunched header text) so accessible names can't regress in tables.
