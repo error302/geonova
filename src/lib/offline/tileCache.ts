@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import type { MapExtent } from '@/app/map/MapReactContext'
 
 interface TileCacheStats {
   cached: number
@@ -215,9 +216,9 @@ export function calculateTileBounds(
 }
 
 /** Count the total tiles for a bounding box across a zoom range.
- *  Accepts the component's Bounds shape (minLat, maxLat, minLon, maxLon). */
+ *  Accepts the shared MapExtent shape (minLat, maxLat, minLon, maxLon). */
 export function calculateTileCount(
-  bounds: { minLat: number; maxLat: number; minLon: number; maxLon: number },
+  bounds: MapExtent,
   minZoom: number,
   maxZoom: number
 ): { total: number } {
@@ -248,7 +249,7 @@ export interface DownloadProgress {
 }
 
 /** Download tiles for a bounding box range.
- *  Accepts the component's Bounds shape (minLat, maxLat, minLon, maxLon).
+ *  Accepts the shared MapExtent shape (minLat, maxLat, minLon, maxLon).
  *  Returns a DownloadProgress-shaped result so callers can feed it directly to setState.
  *
  *  Real implementation: fetches tiles from the tile server, stores as blobs in IndexedDB.
@@ -256,7 +257,7 @@ export interface DownloadProgress {
 export async function downloadTilesForBounds(
   sourceId: string,
   url: string,
-  bounds: { minLat: number; maxLat: number; minLon: number; maxLon: number },
+  bounds: MapExtent,
   minZoom: number,
   maxZoom: number,
   _type: string,

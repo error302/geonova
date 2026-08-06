@@ -16,6 +16,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useDebouncedCallback } from '@/lib/performance'
+import type { MapExtent } from '@/app/map/MapReactContext'
+import type Map from 'ol/Map'
 
 export interface ViewportFeature {
   id: string
@@ -28,7 +30,7 @@ export interface ViewportFeature {
 }
 
 interface UseViewportQueryOptions {
-  mapInstance: React.MutableRefObject<any>
+  mapInstance: React.MutableRefObject<Map | null>
   mapReady: boolean
   enabled?: boolean
   debounceMs?: number
@@ -67,15 +69,17 @@ export function useViewportQuery({
       const { transformExtent } = await import('ol/proj')
       const wgs84Extent = transformExtent(extent, 'EPSG:3857', 'EPSG:4326')
       const [minLng, minLat, maxLng, maxLat] = wgs84Extent
+      // Enforce the shared MapExtent shape at the viewport-query boundary.
+      const viewportExtent: MapExtent = { minLat, minLon: minLng, maxLat, maxLon: maxLng }
 
       setIsLoading(true)
 
       // Fetch spatial features in viewport
       const params = new URLSearchParams({
-        west: minLng.toFixed(6),
-        south: minLat.toFixed(6),
-        east: maxLng.toFixed(6),
-        north: maxLat.toFixed(6),
+        west: viewportExtent.minLon.toFixed(6),
+        south: viewportExtent.minLat.toFixed(6),
+        east: viewportExtent.maxLon.toFixed(6),
+        north: viewportExtent.maxLat.toFixed(6),
         limit: '200',
       })
 

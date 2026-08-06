@@ -11,6 +11,7 @@
 
 import { useCallback, useRef, useEffect } from 'react'
 import type { DrawMode, MeasureMode } from '@/app/map/mapTypes'
+import type { MapExtent } from '@/app/map/MapReactContext'
 import type Map from 'ol/Map'
 import type VectorSource from 'ol/source/Vector'
 import type VectorLayer from 'ol/layer/Vector'
@@ -1073,7 +1074,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     p.mapInstance.current.getView().fit(KENYA_EXTENT, { duration: 400, padding: [0, 0, 0, 0] })
   }, [])
 
-  const getMapExtent = useCallback(async () => {
+  const getMapExtent = useCallback(async (): Promise<MapExtent | null> => {
     if (!p.mapInstance.current) return null
     try {
       const view = p.mapInstance.current.getView()

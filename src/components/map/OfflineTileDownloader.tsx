@@ -12,7 +12,7 @@ import {
   ZoomIn,
   HardDrive,
 } from 'lucide-react'
-import { useMapContext } from '@/app/map/MapReactContext'
+import { useMapContext, type MapExtent } from '@/app/map/MapReactContext'
 import {
   Dialog,
   DialogContent,
@@ -57,20 +57,6 @@ const TILE_SOURCES = [
 ] as const
 
 type SourceType = 'osm' | 'satellite' | 'custom'
-
-interface Bounds {
-  minLat: number
-  minLon: number
-  maxLat: number
-  maxLon: number
-}
-
-interface OfflineTileDownloaderProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  /** Current map extent, if available — lets users use the current view as bounds */
-  mapExtent?: Bounds | null
-}
 
 type DownloadState = 'idle' | 'estimating' | 'downloading' | 'complete' | 'error'
 
@@ -154,7 +140,7 @@ export function OfflineTileDownloader() {
 
   // Estimate tiles
   const estimateTiles = useCallback(() => {
-    const bounds: Bounds = {
+    const bounds: MapExtent = {
       minLat: parseFloat(minLat),
       maxLat: parseFloat(maxLat),
       minLon: parseFloat(minLon),
@@ -187,7 +173,7 @@ export function OfflineTileDownloader() {
 
   // Start download
   const startDownload = useCallback(async () => {
-    const bounds: Bounds = {
+    const bounds: MapExtent = {
       minLat: parseFloat(minLat),
       maxLat: parseFloat(maxLat),
       minLon: parseFloat(minLon),
