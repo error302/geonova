@@ -20,7 +20,28 @@ import {
   getAuditStats,
   verifyAuditChain,
 } from '@/lib/survey/audit-store';
-import { AuditTrail, type AuditEntry } from '@/lib/survey/audit-trail';
+import {
+  AuditTrail,
+  type AuditEntry,
+  type AuditOperation,
+  type CorrectionRecord,
+  type AccuracyCheckResult,
+} from '@/lib/survey/audit-trail';
+
+interface AuditEntryBody {
+  surveyId: string
+  projectId: string
+  userId: string
+  operation: AuditOperation
+  inputs: Record<string, unknown>
+  outputs: Record<string, unknown>
+  correctionsApplied?: CorrectionRecord[]
+  formula: string
+  reference: string
+  durationMs?: number
+  accuracyCheck?: AccuracyCheckResult | null
+  [key: string]: unknown
+}
 
 // ─── GET Handler ─────────────────────────────────────────────────────────
 
@@ -154,7 +175,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json();
+    const body = (await request.json()) as AuditEntryBody;
 
     // Validate required fields
     const required = ['surveyId', 'projectId', 'userId', 'operation', 'inputs', 'outputs', 'formula', 'reference'];

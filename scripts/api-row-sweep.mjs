@@ -25,11 +25,40 @@
  *   node scripts/api-row-sweep.mjs --json               # machine-readable JSON
  *   node scripts/api-row-sweep.mjs --no-member-scan     # skip eslint (faster)
  *   node scripts/api-row-sweep.mjs --routes 'scheme|rim'# only matching paths
+ *   node scripts/api-row-sweep.mjs --check [base-ref]   # CI regression gate (see below)
+ *   node scripts/api-row-sweep.mjs --apply <route-file> # auto-type one route (see below)
+ *
+ * --check: the row-typing regression gate. Computes the changed route files
+ * via `git diff --name-only --diff-filter=ACMR <base>...HEAD` filtered to
+ * route.ts paths under src/ (same base-ref resolution as lint-gate.mjs: pull_request -> origin/<base>,
+ * push -> github.event.before, anything else -> HEAD~1; an explicit base-ref
+ * positional always wins), then fails (exit 1) if ANY changed route file
+ * contains an untyped `db.query` / `client.query` call. This stops PRs from
+ * re-adding the `any`-rows pattern the grind has been removing — every route
+ * file a PR touches must keep all its queries typed. Exit 0 = pass, 1 = fail,
+ * 2 = usage/git error.
+ *
+ * --apply <route-file>: mechanical one-file typing. For each untyped
+ * db.query/client.query with resolvable output columns (a SELECT column list,
+ * or INSERT/UPDATE/DELETE ... RETURNING), it wraps the call as
+ * db.query<Row>(...), synthesises a suggested row interface (column names
+ * parsed from the SQL, best-effort types — REVIEW them: pg returns
+ * bigint/numeric as string and timestamptz as Date, nullable columns need
+ * `| null`), and reuses an already-declared interface when one exists.
+ * Queries whose columns can't be resolved (SELECT *, dynamic SQL, INSERT
+ * without RETURNING) are left untyped and listed as manual. After applying,
+ * the review step is: verify/adjust column types (esp. `| null`, pg string
+ * bigint/numeric), complete missing columns for `RETURNING *` (only the
+ * INSERT column list is synthesised — id/created_at etc. need adding), and
+ * remove now-redundant `rows[0] as Record<string, unknown>` casts (they
+ * conflict with a concrete row interface). Edits in place (CRLF preserved);
+ * exactly one route file per invocation.
  *
  * Output: per-file sections sorted by query count (desc), each listing the
  * queries, then the interfaces already declared.
  */
-import { readFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
 import path from 'node:path'
 import { createRequire } from 'node:module'
@@ -45,6 +74,22 @@ const asJson = args.includes('--json')
 const skipMember = args.includes('--no-member-scan')
 const routesIdx = args.indexOf('--routes')
 const ROUTES_RE = routesIdx >= 0 ? new RegExp(args[routesIdx + 1]) : null
+const checkMode = args.includes('--check')
+
+// In --check mode the token immediately after --check (if not a flag) is the
+// base ref; otherwise it is resolved from the CI event env, mirroring
+// lint-gate.mjs. Lookup is gated to that slot so value-taking flags like
+// `--top 40` can't be misread as a base ref.
+const checkIdx = args.indexOf('--check')
+const CHECK_BASE = checkMode && args[checkIdx + 1] && !args[checkIdx + 1].startsWith('--')
+  ? args[checkIdx + 1]
+  : null
+const applyIdx = args.indexOf('--apply')
+const APPLY_FILE = applyIdx >= 0 ? args[applyIdx + 1] : null
+if (applyIdx >= 0 && (!APPLY_FILE || APPLY_FILE.startsWith('--'))) {
+  console.error('[api-row-sweep] --apply requires a route file argument (e.g. --apply src/app/api/x/route.ts).')
+  process.exit(2)
+}
 
 // ---------------------------------------------------------------------------
 // Route discovery — every Next.js route handler
@@ -105,7 +150,7 @@ function extractQueries(source) {
       if (v) dynamicVar = v[1]
       // Resolve `const sql = \`...\`` / `let sql = '...'` defined above the call
       if (dynamicVar) {
-        // const sql = '...' / \"...\" / `...` — char-class quote avoids backticks in the literal
+        // const sql = '...' / "..." / `...` — char-class quote avoids backticks in the literal
         const decl = new RegExp('(?:const|let|var)\\s+' + dynamicVar + '\\s*=\\s*([\'"`])((?:\\\\.|(?!\\1)[\\s\\S])*)\\1', 'gs')
         let dm
         while ((dm = decl.exec(source)) && dm.index < m.index) {
@@ -119,6 +164,7 @@ function extractQueries(source) {
       line,
       typed: !!typeArg,
       typeArg,
+      raw: sql, // full (normalised) SQL — used by --apply for column extraction
       sql: sql
         ? sql.replace(/\s+/g, ' ').trim().slice(0, 140)
         : dynamicVar
@@ -154,6 +200,134 @@ function suggestedRowName(sql, table) {
   // Don't suggest a name for SELECT 1 health checks
   if (/^select\s+1\b/i.test(sql)) return null
   return name
+}
+
+// ---------------------------------------------------------------------------
+// --apply: column extraction + interface synthesis for a single route file
+// ---------------------------------------------------------------------------
+
+/** Split a SQL list on top-level commas (ignores parens and quoted strings). */
+function splitTopLevel(list) {
+  const out = []
+  let depth = 0
+  let quote = null
+  let start = 0
+  for (let i = 0; i < list.length; i++) {
+    const c = list[i]
+    if (quote) {
+      if (c === quote) quote = null
+      else if (c === '\\') i++
+    } else if (c === "'" || c === '"' || c === '`') {
+      quote = c
+    } else if (c === '(') {
+      depth++
+    } else if (c === ')') {
+      depth--
+    } else if (c === ',' && depth === 0) {
+      out.push(list.slice(start, i))
+      start = i + 1
+    }
+  }
+  out.push(list.slice(start))
+  return out
+}
+
+/** Column name from one select-list item (`p.id` -> id, `x AS y` -> y, else null). */
+function columnNameFromItem(item) {
+  const t = item.trim()
+  if (!t) return null
+  const as = /\s+AS\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*$/i.exec(t)
+  if (as) return as[1]
+  let last = t.split('.').pop().trim()
+  // Strip a `::type` cast suffix so `p.area_ha::float8` -> `area_ha`.
+  last = last.split('::')[0].trim()
+  if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(last)) return last
+  return null
+}
+
+/**
+ * Output column names for a query's SQL, or null when they can't be resolved
+ * (SELECT * / t.*, dynamic SQL, INSERT without RETURNING). Also returns
+ * `complete: false` when some items couldn't be named (e.g. `p.*`).
+ */
+function columnsFromSql(sql) {
+  if (!sql) return null
+  const s = sql.replace(/\s+/g, ' ').trim()
+  let list = null
+  const sel = /^SELECT\s+(.+)$/i.exec(s)
+  if (sel) {
+    const head = sel[1]
+    list = selectListUntilClause(head)
+    if (/^\s*(?:\*|[A-Za-z_][A-Za-z0-9_]*\.\*)\s*$/.test(list)) return null // SELECT * / t.*
+  } else {
+    const ret = /\bRETURNING\s+(.+)$/i.exec(s)
+    if (!ret) return null
+    list = ret[1]
+    // `RETURNING *` on an INSERT: the output columns are exactly the INSERT
+    // column list (`INSERT INTO t (c1, c2, ...) VALUES ...`), so we can
+    // synthesise the row from those instead of giving up.
+    if (/^\*\s*$/.test(list.trim())) {
+      const ins = /\bINSERT\s+INTO\s+[A-Za-z_][A-Za-z0-9_]*\s*\(([^)]*)\)/i.exec(s)
+      if (ins) {
+        const cols = ins[1].split(',').map((c) => c.trim()).filter(Boolean)
+        if (cols.length) return { names: cols, complete: true }
+      }
+      return null
+    }
+  }
+  const names = []
+  let complete = true
+  for (const item of splitTopLevel(list)) {
+    const name = columnNameFromItem(item)
+    if (name) names.push(name)
+    else complete = false
+  }
+  if (!names.length) return null
+  return { names, complete }
+}
+
+/**
+ * The SELECT column list, cut at the first top-level clause keyword
+ * (FROM/JOIN/WHERE/...), ignoring keywords nested inside subquery parens so
+ * `(SELECT count(*) FROM pg_index i) AS index_count, name` keeps the whole
+ * list. Returns the list slice; trailing columns after a parenthesised
+ * subquery are preserved.
+ */
+function selectListUntilClause(head) {
+  const re = /\s+(?:FROM|INTO|WHERE|GROUP\s+BY|ORDER\s+BY|HAVING|LIMIT|OFFSET|FOR\s+UPDATE|UNION(?:\s+ALL)?|RETURNING)\b/i
+  let depth = 0
+  let quote = null
+  for (let i = 0; i < head.length; i++) {
+    const c = head[i]
+    if (quote) {
+      if (c === quote) quote = null
+      else if (c === '\\') i++
+    } else if (c === "'" || c === '"' || c === '`') {
+      quote = c
+    } else if (c === '(') {
+      depth++
+    } else if (c === ')') {
+      depth--
+    } else if (depth === 0) {
+      re.lastIndex = i
+      const mm = re.exec(head.slice(i))
+      if (mm && mm.index === 0) return head.slice(0, i)
+    }
+  }
+  return head
+}
+
+/** Best-effort column type by name — REVIEW these after --apply. */
+function guessColumnType(name) {
+  const n = name.toLowerCase()
+  if (n === 'id' || n.endsWith('_id')) return 'string'
+  if (n.endsWith('_at') || n.endsWith('_on') || n.endsWith('_date') || n === 'date') return 'Date'
+  if (n === 'count' || n.endsWith('_count') || n.endsWith('_num') || n.endsWith('_no') || n.endsWith('_qty')) return 'number'
+  if (/easting|northing|latitude|longitude|elevation|altitude|bearing|angle|distance|perimeter|area|_deg|_min|_sec|_ms|ratio|percent|_ha|_m2|\brl\b/.test(n)) return 'number'
+  if (/price|amount|cost|fee|total|size|bytes|weight|priority|retry|limit|offset/.test(n)) return 'number'
+  if (n.startsWith('is_') || n.startsWith('has_') || n.endsWith('_flag') || n === 'active' || n === 'enabled') return 'boolean'
+  if (['details', 'payload', 'result', 'snapshot', 'metadata', 'documents', 'template', 'data', 'config', 'settings', 'permissions', 'json'].includes(n) || n.endsWith('_json') || n.endsWith('_jsonb')) return 'unknown'
+  return 'string'
 }
 
 // ---------------------------------------------------------------------------
@@ -193,10 +367,241 @@ async function memberCounts() {
 }
 
 // ---------------------------------------------------------------------------
+// --check: base-ref resolution + changed route files (CI regression gate)
+// ---------------------------------------------------------------------------
+
+// Mirrors lint-gate.mjs resolveBaseRefFromEnv(): pull_request -> origin/<base>,
+// push -> github.event.before (all-zero "first push" -> HEAD~1), else HEAD~1.
+function resolveBaseRefFromEnv() {
+  const eventName = process.env.GITHUB_EVENT_NAME
+  if (eventName === 'pull_request') {
+    const base = process.env.GITHUB_BASE_REF
+    return base ? `origin/${base}` : 'origin/main'
+  }
+  if (eventName === 'push') {
+    const eventPath = process.env.GITHUB_EVENT_PATH
+    if (eventPath) {
+      try {
+        const payload = JSON.parse(readFileSync(eventPath, 'utf8'))
+        if (payload.before && !/^0+$/.test(payload.before)) return payload.before
+      } catch { /* unreadable payload → HEAD~1 fallback */ }
+    }
+  }
+  return 'HEAD~1'
+}
+
+/** Changed route files vs base (ACMR filter — added/copied/modified/renamed). */
+function changedRouteFiles(baseRef) {
+  const diffRef = baseRef === 'HEAD' ? 'HEAD' : `${baseRef}...HEAD`
+  const raw = execFileSync(
+    'git',
+    ['diff', '--name-only', '--diff-filter=ACMR', diffRef, '--', 'src/**/route.ts'],
+    { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
+  )
+  return raw
+    .split('\n')
+    .map((s) => s.trim())
+    .filter((s) => s && s.endsWith('/route.ts') && !s.includes('/__tests__/'))
+    .sort()
+}
+
+/** The gate: any changed route file with an untyped db.query/client.query fails. */
+function runCheck() {
+  const baseRef = CHECK_BASE || resolveBaseRefFromEnv()
+  if (!CHECK_BASE) console.log(`[api-row-sweep] no base ref given — resolved: ${baseRef}`)
+
+  let changed
+  try {
+    changed = changedRouteFiles(baseRef)
+  } catch (e) {
+    console.error(`[api-row-sweep] git diff failed (${e.message.split('\n')[0]}) — cannot compute changed files.`)
+    process.exitCode = 2
+    return
+  }
+
+  if (!changed.length) {
+    console.log(`[api-row-sweep] OK: no changed route files vs ${baseRef}...HEAD.`)
+    process.exitCode = 0
+    return
+  }
+
+  const offenders = []
+  for (const rel of changed) {
+    let source
+    try {
+      source = readFileSync(path.join(process.cwd(), rel), 'utf8')
+    } catch {
+      // Deleted between diff and read (race) — nothing to scan.
+      continue
+    }
+    const untyped = extractQueries(source).filter((q) => !q.typed)
+    if (untyped.length) offenders.push({ rel, untyped })
+  }
+
+  if (offenders.length) {
+    console.error(`[api-row-sweep] FAIL: ${offenders.length} changed route file(s) contain untyped db.query/client.query call(s):`)
+    for (const { rel, untyped } of offenders) {
+      console.error(`  ${rel}`)
+      for (const q of untyped) {
+        const sug = q.suggested ? ` → suggest ${q.suggested}` : ''
+        console.error(`    L${q.line}  ${q.sql}${sug}`)
+      }
+    }
+    console.error('[api-row-sweep] FAIL: every route file a PR touches must keep all its db.query calls typed (<RowType> generic).')
+    process.exitCode = 1
+    return
+  }
+
+  const typed = changed.map((rel) => {
+    const source = readFileSync(path.join(process.cwd(), rel), 'utf8')
+    const qs = extractQueries(source)
+    return `${rel} (${qs.filter((q) => q.typed).length}/${qs.length} queries typed)`
+  })
+  console.log(`[api-row-sweep] OK: ${changed.length} changed route file(s), all db.query/client.query calls typed:`)
+  for (const t of typed) console.log(`  ${t}`)
+  process.exitCode = 0
+}
+
+/**
+ * --apply <route-file>: mechanically type one route file. For every untyped
+ * db.query/client.query call whose output columns are resolvable from SQL:
+ *   - wrap the call as db.query<SuggestedRow>(...),
+ *   - insert a suggested interface (columns parsed from the SQL, best-effort
+ *     types — the caller reviews them) once per row name, unless the file
+ *     already declares it,
+ * and print a review checklist of what was wrapped / added / reused / skipped.
+ * Queries with unresolvable columns (SELECT *, dynamic SQL, INSERT without
+ * RETURNING) stay untyped and are listed as manual. Edits in place, CRLF
+ * preserved.
+ */
+function runApply(fileArg) {
+  const rel = fileArg.split(/[\\/]/).join('/')
+  if (!rel.startsWith('src/') || !rel.endsWith('/route.ts')) {
+    console.error(`[api-row-sweep] --apply requires one route file under src/ ending in /route.ts (got "${fileArg}").`)
+    process.exitCode = 2
+    return
+  }
+  const full = path.join(process.cwd(), rel)
+  let source
+  try {
+    source = readFileSync(full, 'utf8')
+  } catch (e) {
+    console.error(`[api-row-sweep] cannot read ${rel}: ${e.message}`)
+    process.exitCode = 2
+    return
+  }
+  const crlf = source.includes('\r\n')
+  let text = source.replace(/\r\n/g, '\n')
+
+  const queries = extractQueries(text)
+  const declared = new Set(extractInterfaces(text).map((i) => i.name))
+  const interfaces = new Map() // row name -> ordered column names
+  const incomplete = new Set() // row names with unresolvable columns
+  const edits = [] // { pos, text } — insert `<Name>` right before the `(`
+  const wrapped = []
+  const reused = []
+  const skipped = []
+
+  QUERY_RE.lastIndex = 0
+  let qidx = 0
+  let m
+  while ((m = QUERY_RE.exec(text))) {
+    const q = queries[qidx++]
+    if (!q || q.typed) continue
+    const name = q.suggested
+    if (!name) {
+      skipped.push(`L${q.line}: ${q.sql}`)
+      continue
+    }
+    const cols = columnsFromSql(q.raw || q.sql)
+    if (!cols) {
+      skipped.push(`L${q.line}: ${q.sql} — no resolvable output columns (manual)`)
+      continue
+    }
+    if (!interfaces.has(name)) {
+      interfaces.set(name, [...cols.names])
+    } else {
+      for (const c of cols.names) {
+        if (!interfaces.get(name).includes(c)) interfaces.get(name).push(c)
+      }
+    }
+    if (!cols.complete) incomplete.add(name)
+    if (declared.has(name)) reused.push(`L${q.line} <${name}> (reuses existing interface)`)
+    else wrapped.push(`L${q.line} <${name}>`)
+    edits.push({ pos: m.index + m[0].length - 1, text: `<${name}>` })
+  }
+
+  // Apply wraps (positions refer to the original text; descending keeps them valid).
+  edits.sort((a, b) => b.pos - a.pos)
+  for (const e of edits) text = text.slice(0, e.pos) + e.text + text.slice(e.pos)
+
+  // Insert new interface blocks after the last import line.
+  const newNames = [...interfaces.keys()].filter((n) => !declared.has(n))
+  if (newNames.length) {
+    const blocks = newNames.map((name) => {
+      const lines = [
+        '// AUTO-GENERATED by api-row-sweep --apply — REVIEW these column types.',
+        '// pg returns bigint/numeric as string, timestamptz as Date; add `| null` where nullable.',
+        `interface ${name} {`,
+        ...interfaces.get(name).map((c) => `  ${c}: ${guessColumnType(c)}`),
+        '}',
+      ]
+      return lines.join('\n')
+    })
+    const importRe = /^import\s[^\n]*\n/gm
+    let lastImportEnd = 0
+    let im
+    while ((im = importRe.exec(text))) lastImportEnd = im.index + im[0].length
+    const insertAt = lastImportEnd || (text.startsWith('\uFEFF') ? 1 : 0)
+    text = text.slice(0, insertAt) + '\n' + blocks.join('\n\n') + '\n' + text.slice(insertAt)
+  }
+
+  const out = crlf ? text.replace(/\n/g, '\r\n') : text
+  writeFileSync(full, out, 'utf8')
+
+  // Report.
+  console.log(`[api-row-sweep] --apply ${rel}`)
+  if (wrapped.length) {
+    console.log(`  wrapped ${wrapped.length} untyped call(s):`)
+    for (const w of wrapped) console.log(`    ${w}`)
+  }
+  if (reused.length) {
+    console.log(`  reused ${reused.length} existing interface(s):`)
+    for (const r of reused) console.log(`    ${r}`)
+  }
+  if (newNames.length) {
+    console.log(`  added ${newNames.length} interface(s) — REVIEW the column types:`)
+    for (const n of newNames) {
+      const cols = interfaces.get(n)
+      console.log(`    ${n} { ${cols.join(', ')} }${incomplete.has(n) ? '  (some columns unresolvable — fill by hand)' : ''}`)
+    }
+  }
+  if (skipped.length) {
+    console.log(`  left ${skipped.length} untyped (manual):`)
+    for (const s of skipped) console.log(`    ${s}`)
+  }
+  if (!wrapped.length && !newNames.length && !reused.length) {
+    console.log('  nothing to apply — no untyped queries with resolvable columns.')
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Report
 // ---------------------------------------------------------------------------
 
 async function main() {
+  // --check is a pure gate: no report, no member scan — fail fast and cheap.
+  if (checkMode) {
+    runCheck()
+    return
+  }
+
+  // --apply is a single-file mechanical edit; report mode handles the rest.
+  if (APPLY_FILE) {
+    runApply(APPLY_FILE)
+    return
+  }
+
   const routes = findRoutes()
   const counts = skipMember ? new Map() : await memberCounts()
   const files = routes.map((rel) => {

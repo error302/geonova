@@ -3,6 +3,33 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import type { NLIMSSearchResult, NLIMSParcel } from '@/types/nlims'
 
+// ─── DB Row Interfaces ───────────────────────────────────────────────────
+interface ParcelVaultRow {
+  parcel_number: string
+  user_id: string
+  parsed_data: unknown
+  freshness: string | null
+  certificate_date: string | null
+}
+
+interface ParcelVaultSharedRow {
+  parcel_number: string
+  registration_section: string | null
+  county: string
+  area_sqm: number | null
+  title_deed_number: string | null
+  certificate_date: string | null
+  status: string | null
+  freshness: string | null
+}
+
+interface NlimsCacheRow {
+  parcel_number: string
+  county: string
+  data: unknown
+  fetched_at: string
+}
+
 export const dynamic = 'force-dynamic'
 
 // NLIMS integration is pending — generateMockParcel removed.
@@ -25,7 +52,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 6000
   const userId = ctx.userId
 
   // 1. Check personal vault
-  const personalVault = await db.query(
+  const personalVault = await db.query<ParcelVaultRow>(
     'SELECT * FROM parcel_vault WHERE parcel_number = $1 AND user_id = $2',
     [sanitizedParcel, userId]
   )
@@ -37,13 +64,13 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 6000
       parcel: vault.parsed_data as NLIMSParcel,
       isMockData: false,
       source: 'VAULT_PERSONAL',
-      freshness: vault.freshness,
-      certificateDate: vault.certificate_date
+      freshness: vault.freshness ?? undefined,
+      certificateDate: vault.certificate_date ?? undefined
     } as NLIMSSearchResult & { source?: string; freshness?: string; certificateDate?: string })
   }
 
   // 2. Check shared vault
-  const sharedVault = await db.query(
+  const sharedVault = await db.query<ParcelVaultSharedRow>(
     'SELECT * FROM parcel_vault_shared WHERE parcel_number = $1',
     [sanitizedParcel]
   )
@@ -59,10 +86,10 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 6000
       ownerName: '[Community Shared - Owner Hidden]',
       ownerType: 'INDIVIDUAL',
       titleDeedNumber: sv.title_deed_number || '',
-      titleDeedDate: sv.certificate_date,
+      titleDeedDate: sv.certificate_date || '',
       encumbrances: [],
-      status: (sv.status as 'REGISTERED' | 'PENDING' | 'DISPUTED' | 'CANCELLED') || 'REGISTERED',
-      lastTransactionDate: sv.certificate_date,
+      status: (sv.status as 'REGISTERED' | 'PENDING' | 'DISPUTED' | 'CANCELLED' | null) || 'REGISTERED',
+      lastTransactionDate: sv.certificate_date || '',
       lastTransactionType: 'SEARCH',
       source: 'VAULT_SHARED',
       fetchedAt: new Date().toISOString()
@@ -72,13 +99,13 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 6000
       parcel: mockFromVault,
       isMockData: true,
       source: 'VAULT_SHARED',
-      freshness: sv.freshness,
-      certificateDate: sv.certificate_date
+      freshness: sv.freshness ?? undefined,
+      certificateDate: sv.certificate_date ?? undefined
     } as NLIMSSearchResult & { source?: string; freshness?: string; certificateDate?: string })
   }
 
   // 3. Check NLIMS cache (24h freshness)
-  const cached = await db.query(
+  const cached = await db.query<NlimsCacheRow>(
     'SELECT data, fetched_at FROM nlims_cache WHERE parcel_number = $1 AND county = $2',
     [sanitizedParcel, county || '']
   )
@@ -92,7 +119,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 6000
       return NextResponse.json({
         found: true,
         parcel: row.data as NLIMSParcel,
-        isMockData: row.data?.source === 'NLIMS_CACHED'
+        isMockData: ((row.data as { source?: string } | null)?.source) === 'NLIMS_CACHED'
       } as NLIMSSearchResult)
     }
   }

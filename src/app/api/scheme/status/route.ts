@@ -15,6 +15,11 @@ export const dynamic = 'force-dynamic'
  * Any status can go back to 'planning' (reset).
  */
 
+interface SchemeStatusRow {
+  status: string
+  updated_at: Date
+}
+
 const VALID_TRANSITIONS: Record<string, string[]> = {
   planning: ['in_progress'],
   in_progress: ['review', 'planning'],
@@ -29,7 +34,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
     return NextResponse.json({ error: 'project_id is required' }, { status: 400 })
   }
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<SchemeStatusRow>(
     'SELECT status, updated_at FROM scheme_details WHERE project_id = $1',
     [projectId]
   )
@@ -72,7 +77,7 @@ export const POST = apiHandler({
   const { project_id, new_status, reason } = ctx.body as z.infer<typeof UpdateSchemeStatusSchema>
 
   // Get current status
-  const { rows: current } = await db.query(
+  const { rows: current } = await db.query<SchemeStatusRow>(
     'SELECT status FROM scheme_details WHERE project_id = $1',
     [project_id]
   )
@@ -90,7 +95,7 @@ export const POST = apiHandler({
   }
 
   // Update status
-  const { rows } = await db.query(
+  const { rows } = await db.query<SchemeStatusRow>(
     'UPDATE scheme_details SET status = $1, updated_at = NOW() WHERE project_id = $2 RETURNING status, updated_at',
     [new_status, project_id]
   )

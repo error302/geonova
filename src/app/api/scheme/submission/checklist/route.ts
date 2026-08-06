@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
+interface ChecklistParcelRow {
+  id: string
+  parcel_number: string
+  status: string
+  traverse_id: string | null
+  traverse_status: string | null
+}
+
 export const dynamic = 'force-dynamic'
 
 /**
@@ -34,7 +42,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   }
 
   // Check which documents have been generated
-  const { rows: parcels } = await db.query(
+  const { rows: parcels } = await db.query<ChecklistParcelRow>(
     `SELECT p.id, p.parcel_number, p.status,
       pt.id as traverse_id, pt.status as traverse_status
      FROM parcels p
@@ -44,7 +52,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
     [projectId]
   )
 
-  const computedParcels = parcels.filter((p: any) =>
+  const computedParcels = parcels.filter((p) =>
     p.traverse_status === 'computed' || p.traverse_status === 'approved'
   )
 

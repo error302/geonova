@@ -3,6 +3,28 @@ import { db } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
 
+// ─── DB Row Interfaces ───────────────────────────────────────────────────
+interface PaymentRow {
+  id: string
+  user_id: string
+  user_email: string
+  user_name: string
+  amount: string
+  currency: string | null
+  status: string | null
+  method: string | null
+  plan_id: string | null
+  created_at: Date | string
+}
+
+interface CountRow {
+  count: number
+}
+
+interface TotalRow {
+  total: number
+}
+
 /**
  * GET /api/admin/payments
  *
@@ -19,7 +41,7 @@ export const GET = apiHandler(
 
     // ── Fetch payments with user info ──
     const [paymentsRes, countRes] = await Promise.all([
-      db.query(
+      db.query<PaymentRow>(
         `SELECT ph.id, ph.user_id, u.email AS user_email,
                 COALESCE(u.full_name, SPLIT_PART(u.email, '@', 1)) AS user_name,
                 ph.amount, ph.currency, ph.status, ph.payment_method AS method, ph.plan_id, ph.created_at
@@ -29,7 +51,7 @@ export const GET = apiHandler(
          LIMIT $1 OFFSET $2`,
         [limit, offset],
       ),
-      db.query('SELECT COUNT(*)::int AS count FROM payment_history'),
+      db.query<CountRow>('SELECT COUNT(*)::int AS count FROM payment_history'),
     ])
 
     const payments = paymentsRes.rows.map((row) => ({
@@ -50,18 +72,18 @@ export const GET = apiHandler(
 
     // ── Summary stats ──
     const [totalRevenueRes, thisMonthRes, pendingRes] = await Promise.all([
-      db.query(
+      db.query<TotalRow>(
         `SELECT COALESCE(SUM(amount), 0)::float AS total
          FROM payment_history
          WHERE status = 'completed'`,
       ),
-      db.query(
+      db.query<TotalRow>(
         `SELECT COALESCE(SUM(amount), 0)::float AS total
          FROM payment_history
          WHERE status = 'completed'
            AND created_at >= date_trunc('month', CURRENT_DATE)`,
       ),
-      db.query(
+      db.query<TotalRow>(
         `SELECT COALESCE(SUM(amount), 0)::float AS total
          FROM payment_history
          WHERE status = 'pending'`,

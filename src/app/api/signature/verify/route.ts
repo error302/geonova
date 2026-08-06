@@ -3,6 +3,19 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import type { VerifySignatureResponse } from '@/types/signature'
 
+// ─── DB Row interface ────────────────────────────────────────────────────
+interface SignatureRow {
+  verification_token: string
+  valid: boolean
+  surveyor_name: string | null
+  isk_number: string | null
+  firm_name: string | null
+  signed_at: string | null
+  document_type: string | null
+  revoked_at: string | null
+  revoked_reason: string | null
+}
+
 export const dynamic = 'force-dynamic'
 
 /**
@@ -29,7 +42,7 @@ export const GET = apiHandler(
       )
     }
 
-    const result = await db.query(
+    const result = await db.query<SignatureRow>(
       'SELECT * FROM document_signatures WHERE verification_token = $1',
       [token.toUpperCase()],
     )
@@ -46,11 +59,11 @@ export const GET = apiHandler(
     if (!signature.valid) {
       return NextResponse.json({
         valid: false,
-        surveyorName: signature.surveyor_name,
-        iskNumber: signature.isk_number,
-        firmName: signature.firm_name,
-        signedAt: signature.signed_at,
-        documentType: signature.document_type,
+        surveyorName: signature.surveyor_name ?? undefined,
+        iskNumber: signature.isk_number ?? undefined,
+        firmName: signature.firm_name ?? undefined,
+        signedAt: signature.signed_at ?? undefined,
+        documentType: (signature.document_type ?? undefined) as VerifySignatureResponse['documentType'],
         status: 'REVOKED',
         revokedAt: signature.revoked_at || undefined,
         revokedReason: signature.revoked_reason || undefined,
@@ -59,11 +72,11 @@ export const GET = apiHandler(
 
     return NextResponse.json({
       valid: true,
-      surveyorName: signature.surveyor_name,
-      iskNumber: signature.isk_number,
-      firmName: signature.firm_name,
-      signedAt: signature.signed_at,
-      documentType: signature.document_type,
+      surveyorName: signature.surveyor_name ?? undefined,
+      iskNumber: signature.isk_number ?? undefined,
+      firmName: signature.firm_name ?? undefined,
+      signedAt: signature.signed_at ?? undefined,
+      documentType: (signature.document_type ?? undefined) as VerifySignatureResponse['documentType'],
       status: 'VALID',
     } as VerifySignatureResponse)
   },

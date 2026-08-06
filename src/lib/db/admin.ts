@@ -54,10 +54,10 @@ export interface TableStats {
   seqTupRead: number
   idxScanCount: number
   idxTupFetch: number
-  lastVacuum: string | null
-  lastAnalyze: string | null
-  lastAutoVacuum: string | null
-  lastAutoAnalyze: string | null
+  lastVacuum: Date | null
+  lastAnalyze: Date | null
+  lastAutoVacuum: Date | null
+  lastAutoAnalyze: Date | null
   nDeadTup: number
   nLiveTup: number
   deadTupleRatio: number
@@ -93,11 +93,85 @@ export interface SlowQuery {
   database: string
 }
 
+// ── Raw pg row shapes (typed via db.query<T>()) ──────────────────────────
+interface SchemaRow {
+  name: string
+  row_estimate: string
+  size_bytes: string
+  index_size_bytes: string
+  index_count: string
+  has_rls: boolean
+}
+
+interface MissingIndexRow {
+  table_name: string
+  column_name: string
+  references_table: string
+}
+
+interface TableStatsRow {
+  name: string
+  n_live_tup: string
+  n_dead_tup: string
+  seq_scan: string
+  seq_tup_read: string
+  idx_scan: string
+  idx_tup_fetch: string
+  last_vacuum: Date | null
+  last_autovacuum: Date | null
+  last_analyze: Date | null
+  last_autoanalyze: Date | null
+  total_size: string
+  index_size: string
+  toast_size: string
+}
+
+interface MaxConnRow {
+  max_connections: string
+}
+
+interface ActivityRow {
+  state: string
+  count: string
+}
+
+interface DatabaseRow {
+  database: string
+  connections: string
+}
+
+interface UserRow {
+  user: string
+  connections: string
+}
+
+interface OldestRow {
+  oldest_seconds: number
+}
+
+interface BufferStatsRow {
+  blocks_read: string
+  blocks_hit: string
+}
+
+interface SettingRow {
+  setting: string
+  unit: string
+}
+
+interface SlowQueryRow {
+  query: string
+  calls: string
+  total_ms: string
+  mean_ms: string
+  rows: string
+}
+
 /**
  * Get a high-level overview of the database schema.
  */
 export async function getSchemaOverview(): Promise<SchemaOverview> {
-  const result = await db.query(`
+  const result = await db.query<SchemaRow>(`
     SELECT
       c.relname AS name,
       c.reltuples::bigint AS row_estimate,
@@ -114,7 +188,7 @@ export async function getSchemaOverview(): Promise<SchemaOverview> {
     ORDER BY pg_total_relation_size(c.oid) DESC
   `)
 
-  const tables: TableSummary[] = result.rows.map((r: any) => ({
+  const tables: TableSummary[] = result.rows.map((r: SchemaRow) => ({
     name: r.name,
     rowEstimate: parseInt(r.row_estimate, 10) || 0,
     sizeMb: parseFloat(r.size_bytes) / (1024 * 1024),
@@ -141,7 +215,7 @@ export async function getSchemaOverview(): Promise<SchemaOverview> {
  * This is a critical performance issue in PostgreSQL.
  */
 export async function getMissingIndexes(): Promise<MissingIndex[]> {
-  const result = await db.query(`
+  const result = await db.query<MissingIndexRow>(`
     SELECT
       c.conrelid::regclass AS table_name,
       a.attname AS column_name,
@@ -160,7 +234,7 @@ export async function getMissingIndexes(): Promise<MissingIndex[]> {
       AND c.conrelid::regclass::text NOT LIKE 'auth%'
   `)
 
-  return result.rows.map((r: any) => ({
+  return result.rows.map((r: MissingIndexRow) => ({
     table: r.table_name,
     column: r.column_name,
     references: r.references_table,
@@ -178,7 +252,7 @@ export async function getTableStats(tableName: string): Promise<TableStats | nul
     throw new Error('Invalid table name')
   }
 
-  const result = await db.query(`
+  const result = await db.query<TableStatsRow>(`
     SELECT
       relname AS name,
       n_live_tup,
@@ -201,7 +275,7 @@ export async function getTableStats(tableName: string): Promise<TableStats | nul
 
   if (result.rows.length === 0) return null
 
-  const r = result.rows[0] as any
+  const r = result.rows[0]
   const totalSize = parseFloat(r.total_size) || 0
   const indexSize = parseFloat(r.index_size) || 0
   const toastSize = parseFloat(r.toast_size) || 0
@@ -233,28 +307,28 @@ export async function getTableStats(tableName: string): Promise<TableStats | nul
  */
 export async function getConnectionPoolStats(): Promise<ConnectionPoolStats> {
   const [maxConnResult, activityResult, byDbResult, byUserResult, oldestResult] = await Promise.all([
-    db.query(`SHOW max_connections`),
-    db.query(`
+    db.query<MaxConnRow>(`SHOW max_connections`),
+    db.query<ActivityRow>(`
       SELECT state, count(*) AS count
       FROM pg_stat_activity
       WHERE datname IS NOT NULL
       GROUP BY state
     `),
-    db.query(`
+    db.query<DatabaseRow>(`
       SELECT datname AS database, count(*) AS connections
       FROM pg_stat_activity
       WHERE datname IS NOT NULL
       GROUP BY datname
       ORDER BY connections DESC
     `),
-    db.query(`
+    db.query<UserRow>(`
       SELECT usename AS user, count(*) AS connections
       FROM pg_stat_activity
       WHERE datname IS NOT NULL
       GROUP BY usename
       ORDER BY connections DESC
     `),
-    db.query(`
+    db.query<OldestRow>(`
       SELECT COALESCE(MAX(EXTRACT(EPOCH FROM (NOW() - xact_start))), 0)::int AS oldest_seconds
       FROM pg_stat_activity
       WHERE xact_start IS NOT NULL
@@ -273,11 +347,11 @@ export async function getConnectionPoolStats(): Promise<ConnectionPoolStats> {
     idleConnections: byState.get('idle') || 0,
     idleInTransaction: byState.get('idle in transaction') || 0,
     waitingConnections: byState.get('waiting') || 0,
-    byDatabase: byDbResult.rows.map((r: any) => ({
+    byDatabase: byDbResult.rows.map((r: DatabaseRow) => ({
       database: r.database,
       connections: parseInt(r.connections, 10),
     })),
-    byUser: byUserResult.rows.map((r: any) => ({
+    byUser: byUserResult.rows.map((r: UserRow) => ({
       user: r.user,
       connections: parseInt(r.connections, 10),
     })),
@@ -293,14 +367,14 @@ export async function getConnectionPoolStats(): Promise<ConnectionPoolStats> {
  */
 export async function getBufferPoolStats(): Promise<BufferPoolStats> {
   const [stattableResult, settingsResult] = await Promise.all([
-    db.query(`
+    db.query<BufferStatsRow>(`
       SELECT
         sum(blks_read) AS blocks_read,
         sum(blks_hit) AS blocks_hit
       FROM pg_stat_database
       WHERE datname = current_database()
     `),
-    db.query(`
+    db.query<SettingRow>(`
       SELECT setting, unit
       FROM pg_settings
       WHERE name = 'shared_buffers'
@@ -344,7 +418,7 @@ export async function getBufferPoolStats(): Promise<BufferPoolStats> {
  */
 export async function getSlowQueries(limit = 20): Promise<SlowQuery[]> {
   try {
-    const result = await db.query(`
+    const result = await db.query<SlowQueryRow>(`
       SELECT
         query,
         calls,
@@ -358,7 +432,7 @@ export async function getSlowQueries(limit = 20): Promise<SlowQuery[]> {
       LIMIT $1
     `, [limit])
 
-    return result.rows.map((r: any) => ({
+    return result.rows.map((r: SlowQueryRow) => ({
       query: r.query.substring(0, 500),
       calls: parseInt(r.calls, 10),
       totalExecMs: parseFloat(r.total_ms),

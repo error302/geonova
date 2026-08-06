@@ -16,6 +16,21 @@ import { NextRequest, NextResponse } from 'next/server'
 import { apiHandler, apiSuccess } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
+interface JobDetailRow {
+  id: string
+  job_type: string
+  status: string
+  payload: unknown
+  result: unknown
+  error_message: string | null
+  priority: number
+  retry_count: number
+  created_at: Date
+  started_at: Date | null
+  completed_at: Date | null
+  duration_ms: number | null
+}
+
 export const GET = apiHandler(
   { auth: true, rateLimit: { max: 120, windowMs: 60_000 } },
   async (req, ctx) => {
@@ -26,7 +41,7 @@ export const GET = apiHandler(
     }
 
     // Use parameterized query — jobId is a UUID, never interpolated
-    const { rows } = await db.query(
+    const { rows } = await db.query<JobDetailRow>(
       `SELECT id, job_type, status, payload, result, error_message,
               priority, retry_count, created_at, started_at, completed_at, duration_ms
          FROM background_jobs

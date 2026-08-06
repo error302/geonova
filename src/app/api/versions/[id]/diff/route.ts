@@ -14,6 +14,16 @@ import { db } from '@/lib/db'
 import { requireVersionOwnership } from '@/lib/auth/ownership'
 import { z } from 'zod'
 
+interface EntityVersionRow {
+  id: string
+  entity_type: string
+  entity_id: string
+  version: number
+  snapshot: unknown
+  created_at: Date
+  updated_at: Date
+}
+
 const DiffQuerySchema = z.object({
   compare_with: z.coerce.number().int().min(1, 'compare_with must be a positive version number'),
 })
@@ -42,7 +52,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   const { compare_with } = parsed.data
 
   // Get the target version
-  const { rows: targetRows } = await db.query(
+  const { rows: targetRows } = await db.query<EntityVersionRow>(
     `SELECT * FROM entity_versions WHERE id = $1`,
     [id]
   )
@@ -57,7 +67,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   const target = targetRows[0]
 
   // Get the comparison version
-  const { rows: compareRows } = await db.query(
+  const { rows: compareRows } = await db.query<EntityVersionRow>(
     `SELECT * FROM entity_versions
      WHERE entity_type = $1 AND entity_id = $2 AND version = $3`,
     [target.entity_type, target.entity_id, compare_with]

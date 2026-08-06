@@ -3,6 +3,13 @@ import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 import { UpdateBlockSchema } from '@/lib/validation/apiSchemas'
 
+interface BlockCheckRow {
+  id: string
+  project_id: string
+  block_number?: string
+  updated_at?: Date
+}
+
 export const dynamic = 'force-dynamic'
 
 export const PATCH = apiHandler(
@@ -26,7 +33,7 @@ export const PATCH = apiHandler(
       block_number?: string; block_name?: string; description?: string; updated_at?: string
     }
 
-    const check = await db.query(
+    const check = await db.query<BlockCheckRow>(
       `SELECT b.id, b.project_id, b.updated_at FROM blocks b
       JOIN projects p ON p.id = b.project_id
       WHERE b.id = $1 AND p.user_id = $2`,
@@ -106,7 +113,7 @@ export const DELETE = apiHandler(
   async (req, ctx) => {
     const blockId = ctx.params.id
 
-    const check = await db.query(
+    const check = await db.query<BlockCheckRow>(
       `SELECT b.id, b.project_id, b.block_number FROM blocks b
       JOIN projects p ON p.id = b.project_id
       WHERE b.id = $1 AND p.user_id = $2`,

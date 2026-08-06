@@ -3,6 +3,11 @@ import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 import { CreateBlockSchema } from '@/lib/validation/apiSchemas'
 
+interface ProjectTypeRow {
+  id: string
+  project_type: string
+}
+
 export const dynamic = 'force-dynamic'
 
 export const POST = apiHandler(
@@ -25,7 +30,7 @@ export const POST = apiHandler(
       project_id: string; block_number: string; block_name?: string; description?: string
     }
 
-    const projectCheck = await db.query(
+    const projectCheck = await db.query<ProjectTypeRow>(
       'SELECT id, project_type FROM projects WHERE id = $1 AND user_id = $2',
       [project_id, ctx.userId]
     )

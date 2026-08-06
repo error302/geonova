@@ -17,6 +17,23 @@ import { NextRequest, NextResponse } from 'next/server'
 import { apiHandler, apiSuccess } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
+// ─── Row interface ───────────────────────────────────────────────────────
+interface JobRow {
+  id: string
+  job_type: string
+  status: string
+  payload: string | Record<string, unknown> | null
+  retry_count: number | null
+  priority: number | null
+  created_at: Date | string
+  scheduled_at: Date | string | null
+  started_at: Date | string | null
+  completed_at: Date | string | null
+  duration_ms: number | null
+  error_message: string | null
+  result: unknown
+}
+
 const JOB_TIMEOUT_MS = 55_000 // stay within Vercel 60s limit
 
 export const POST = apiHandler(
@@ -33,7 +50,7 @@ export const POST = apiHandler(
          ORDER BY priority DESC, created_at ASC LIMIT $1`
 
     const params = body.jobId ? [body.jobId] : [limit]
-    const { rows: jobs } = await db.query(fetchQuery, params)
+    const { rows: jobs } = await db.query<JobRow>(fetchQuery, params)
 
     const results: Array<{ jobId: string; status: string; error?: string; durationMs: number; retries?: number; nextRetryIn?: string }> = []
 

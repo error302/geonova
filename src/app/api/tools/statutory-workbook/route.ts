@@ -7,6 +7,28 @@ import { db, setCurrentUserId } from '@/lib/db'
 import { generateStatutoryWorkbook, type WorkbookInput } from '@/lib/submission/workbook/statutoryWorkbook'
 import { StatutoryWorkbookSchema } from '@/lib/validation/apiSchemas'
 
+interface WorkbookProjectRow {
+  id: string
+  name: string
+  lr_number: string | null
+  locality: string | null
+  survey_type: string | null
+  datum: string | null
+  utm_zone: string | null
+  hemisphere: string | null
+  client_name: string | null
+  surveyor_name: string | null
+  surveyor_licence: string | null
+  firm_name: string | null
+  area_ha: number | null
+}
+
+interface SurveyorProfileRow {
+  full_name: string | null
+  isk_number: string | null
+  firm_name: string | null
+}
+
 interface RequestBody {
   projectId?: string
   projectName?: string
@@ -41,7 +63,7 @@ async function buildWorkbookInput(body: RequestBody, userId: string): Promise<Wo
   if (body.projectId) {
     try {
       // Load project
-      const { rows: projRows } = await db.query(
+      const { rows: projRows } = await db.query<WorkbookProjectRow>(
         `SELECT id, name, lr_number, locality, survey_type, datum, utm_zone,
                 hemisphere, client_name, surveyor_name, surveyor_licence,
                 firm_name, area_ha
@@ -75,7 +97,7 @@ async function buildWorkbookInput(body: RequestBody, userId: string): Promise<Wo
       )
 
       // Load surveyor profile
-      const { rows: profileRows } = await db.query(
+      const { rows: profileRows } = await db.query<SurveyorProfileRow>(
         `SELECT full_name, isk_number, firm_name FROM surveyor_profiles WHERE user_id = $1`,
         [userId]
       )

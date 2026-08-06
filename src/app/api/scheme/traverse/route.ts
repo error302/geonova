@@ -3,6 +3,20 @@ import { db } from '@/lib/db'
 import { apiHandler, ValidationError, NotFoundError } from '@/lib/api/handler'
 import { CreateTraverseObservationSchema } from '@/lib/validation/apiSchemas'
 
+interface ParcelOwnerRow {
+  id: string
+  project_id: string
+}
+
+interface TraverseRow {
+  id: string
+  project_id: string
+}
+
+interface TraverseCheckRow {
+  id: string
+}
+
 export const dynamic = 'force-dynamic'
 
 export const POST = apiHandler({
@@ -34,7 +48,7 @@ export const POST = apiHandler({
       )
     }
 
-    const parcelCheck = await db.query(
+    const parcelCheck = await db.query<ParcelOwnerRow>(
       `SELECT p.id, p.project_id FROM parcels p
       JOIN projects pr ON pr.id = p.project_id
       WHERE p.id = $1 AND pr.user_id = $2`,
@@ -51,7 +65,7 @@ export const POST = apiHandler({
       (config.backsight_bearing_min || 0) / 60 +
       (config.backsight_bearing_sec || 0) / 3600
 
-    const upsertResult = await db.query(
+    const upsertResult = await db.query<TraverseRow>(
       `INSERT INTO parcel_traverses (
         parcel_id, project_id, opening_station, closing_station,
         opening_easting, opening_northing, opening_rl,
@@ -194,7 +208,7 @@ export const GET = apiHandler({
       throw new ValidationError('parcel_id is required')
     }
 
-    const check = await db.query(
+    const check = await db.query<TraverseCheckRow>(
       `SELECT pt.id FROM parcel_traverses pt
       JOIN parcels p ON p.id = pt.parcel_id
       JOIN projects pr ON pr.id = p.project_id

@@ -6,6 +6,22 @@ import { generateDeedPlan } from '@/lib/generators/deedPlan'
 import JSZip from 'jszip'
 import { BatchDeedPlanSchema } from '@/lib/validation/apiSchemas'
 
+interface ProjectRow {
+  id: string
+  name: string
+  project_type: string
+}
+
+interface SchemeParcelRow {
+  id: string
+  parcel_number: string
+  lr_number_proposed: string | null
+  area_ha: number
+  status: string
+  block_number: string
+  block_name: string
+}
+
 export const dynamic = 'force-dynamic'
 
 /**
@@ -34,7 +50,7 @@ export const POST = apiHandler(
     const { projectId } = ctx.body as z.infer<typeof BatchDeedPlanSchema>
 
     // Verify project belongs to user
-    const projectCheck = await db.query(
+    const projectCheck = await db.query<ProjectRow>(
       'SELECT id, name, project_type FROM projects WHERE id = $1 AND user_id = $2',
       [projectId, ctx.userId],
     )
@@ -43,8 +59,8 @@ export const POST = apiHandler(
     }
 
     // Get all parcels with their block info
-    const parcelsResult = await db.query(
-      `SELECT p.id, p.parcel_number, p.lr_number_proposed, p.area_ha, p.status,
+    const parcelsResult = await db.query<SchemeParcelRow>(
+      `SELECT p.id, p.parcel_number, p.lr_number_proposed, p.area_ha::float8, p.status,
               b.block_number, b.block_name
        FROM parcels p
        JOIN blocks b ON b.id = p.block_id
@@ -82,7 +98,7 @@ export const POST = apiHandler(
           zip.file(result.value.filename, result.value.buffer)
           generated++
         } else {
-          errors.push(result.reason?.message || 'Unknown error')
+          errors.push((result.reason as Error)?.message || 'Unknown error')
         }
       }
     }

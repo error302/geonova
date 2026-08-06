@@ -26,6 +26,39 @@ import {
   type WebODMTaskOptions,
 } from '@/lib/integrations/webOdm'
 
+// ─── Row & body types ────────────────────────────────────────────────────
+interface DroneTaskRow {
+  id: string
+  user_id: string
+  name: string | null
+  photo_count: number
+  photos_dir: string | null
+  status: string
+  options: Record<string, unknown> | null
+  webodm_task_id: string | null
+  webodm_url: string | null
+  progress: number | null
+  error_message: string | null
+  orthophoto_path: string | null
+  pointcloud_path: string | null
+  dsm_path: string | null
+  dtm_path: string | null
+  contour_path: string | null
+  processing_started_at: Date | string | null
+  processing_completed_at: Date | string | null
+  created_at: Date | string
+  updated_at: Date | string
+}
+
+interface StartTaskBody {
+  taskId?: string
+  demResolution?: number
+  orthophotoResolution?: number
+  dsm?: boolean
+  dtm?: boolean
+  contourResolution?: number
+}
+
 const STORAGE_ROOT = process.env.STORAGE_ROOT || path.join(process.cwd(), 'uploads')
 
 // ── POST: Start processing ──
@@ -33,7 +66,7 @@ const STORAGE_ROOT = process.env.STORAGE_ROOT || path.join(process.cwd(), 'uploa
 export const POST = apiHandler(
   { auth: true, rateLimit: { max: 5, windowMs: 60_000 } },
   async (req: NextRequest, ctx) => {
-    const body = await req.json().catch(() => ({}))
+    const body = (await req.json().catch(() => ({}))) as StartTaskBody
     const taskId = body.taskId as string
 
     if (!taskId) {
@@ -41,7 +74,7 @@ export const POST = apiHandler(
     }
 
     // Fetch the task
-    const { rows } = await db.query(
+    const { rows } = await db.query<DroneTaskRow>(
       'SELECT * FROM drone_processing_tasks WHERE id = $1 AND user_id = $2',
       [taskId, ctx.userId]
     )
@@ -93,17 +126,17 @@ export const POST = apiHandler(
     // ── WebODM is configured — start processing ──
     try {
       // Get all photo file paths
-      const photoFiles = await fs.readdir(task.photos_dir)
+      const photoFiles = await fs.readdir(task.photos_dir ?? '')
       const photoPaths = photoFiles
         .filter(f => /\.(jpg|jpeg|png|tif|tiff)$/i.test(f))
-        .map(f => path.join(task.photos_dir, f))
+        .map(f => path.join(task.photos_dir ?? '', f))
 
       if (photoPaths.length === 0) {
         return NextResponse.json({ error: 'No valid photo files found', code: 'NO_PHOTOS' }, { status: 400 })
       }
 
       // Create WebODM task
-      const webodmTaskId = await createWebODMTask(photoPaths, task.name, options)
+      const webodmTaskId = await createWebODMTask(photoPaths, task.name ?? 'drone-task', options)
 
       // Update task with WebODM ID + status
       await db.query(
@@ -155,7 +188,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'taskId is required', code: 'MISSING_TASK' }, { status: 400 })
     }
 
-    const { rows } = await db.query(
+    const { rows } = await db.query<DroneTaskRow>(
       'SELECT * FROM drone_processing_tasks WHERE id = $1 AND user_id = $2',
       [taskId, ctx.userId]
     )
@@ -219,7 +252,7 @@ export const GET = apiHandler(
           )
 
           // Re-fetch the updated task
-          const updated = await db.query(
+          const updated = await db.query<DroneTaskRow>(
             'SELECT * FROM drone_processing_tasks WHERE id = $1',
             [taskId]
           )
@@ -244,7 +277,7 @@ export const GET = apiHandler(
         }
 
         // Re-fetch updated task
-        const refreshed = await db.query(
+        const refreshed = await db.query<DroneTaskRow>(
           'SELECT * FROM drone_processing_tasks WHERE id = $1',
           [taskId]
         )

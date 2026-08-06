@@ -3,6 +3,11 @@ import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 import { CreateParcelSchema } from '@/lib/validation/apiSchemas'
 
+interface BlockOwnerRow {
+  id: string
+  project_id: string
+}
+
 export const dynamic = 'force-dynamic'
 
 export const POST = apiHandler(
@@ -13,7 +18,7 @@ export const POST = apiHandler(
       area_ha?: number; notes?: string
     }
 
-    const blockCheck = await db.query(
+    const blockCheck = await db.query<BlockOwnerRow>(
       `SELECT b.id, b.project_id FROM blocks b
       JOIN projects p ON p.id = b.project_id
       WHERE b.id = $1 AND p.user_id = $2`,

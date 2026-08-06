@@ -3,6 +3,14 @@ import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 import { UpdateParcelSchema } from '@/lib/validation/apiSchemas'
 
+interface ParcelCheckRow {
+  id: string
+  project_id: string
+  block_id: string
+  parcel_number?: string
+  updated_at?: Date
+}
+
 export const dynamic = 'force-dynamic'
 
 export const PATCH = apiHandler(
@@ -17,7 +25,7 @@ export const PATCH = apiHandler(
       updated_at?: string
     }
 
-    const check = await db.query(
+    const check = await db.query<ParcelCheckRow>(
       `SELECT p.id, p.project_id, p.block_id, p.updated_at FROM parcels p
       JOIN projects pr ON pr.id = p.project_id
       WHERE p.id = $1 AND pr.user_id = $2`,
@@ -97,7 +105,7 @@ export const DELETE = apiHandler(
   async (req, ctx) => {
     const parcelId = ctx.params.id
 
-    const check = await db.query(
+    const check = await db.query<ParcelCheckRow>(
       `SELECT p.id, p.parcel_number FROM parcels p
       JOIN projects pr ON pr.id = p.project_id
       WHERE p.id = $1 AND pr.user_id = $2`,

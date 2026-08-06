@@ -3,6 +3,11 @@ import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 import { AssignSurveyorSchema } from '@/lib/validation/apiSchemas'
 
+interface AssignmentCheckRow {
+  id: string
+  project_id: string
+}
+
 export const dynamic = 'force-dynamic'
 
 export const POST = apiHandler(
@@ -57,7 +62,7 @@ export const DELETE = apiHandler(
       return NextResponse.json({ error: 'block_id is required' }, { status: 400 })
     }
 
-    const check = await db.query(
+    const check = await db.query<AssignmentCheckRow>(
       `SELECT ba.id, ba.project_id FROM block_assignments ba
       JOIN projects p ON p.id = ba.project_id
       WHERE ba.block_id = $1 AND p.user_id = $2`,
