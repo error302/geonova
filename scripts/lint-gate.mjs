@@ -38,6 +38,16 @@
  *   node scripts/lint-gate.mjs --paths-from-changed [base-ref] [--max-warnings N] [--member-floor N] [--floor-assignment N] [--floor-explicit-any N]
  *   exit 0 = pass, 1 = fail, 2 = usage error
  *
+ * BASE PASS ISOLATION (--base-only, internal): the base pass lints `git show`
+ * text via lintText, and @typescript-eslint's TS-program cache is MODULE-LEVEL
+ * — shared by every ESLint instance in one process. Running the base pass in
+ * the same process as the head pass therefore poisons the cached program, and
+ * the head pass reports spurious "type cannot be resolved" warnings on fully
+ * typed files (observed on the CI runner; the earlier two-instance isolation
+ * did NOT fix it because the cache ignores instance count). The parent spawns
+ * a fresh `node` process with --base-only so the head pass always lints
+ * against a clean program cache.
+ *
  * --paths-from-changed computes the changed TS/TSX files via
  * `git diff --name-only --diff-filter=ACMR <base>...HEAD` (same filter as
  * the CI step; tests excluded), so CI can collapse its two git calls into
@@ -53,7 +63,7 @@
  * gate more lenient — never more strict — so it is a safe direction. src/ is
  * not ignored today, so this is theoretical.
  */
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { readFileSync, existsSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import path from 'node:path'
@@ -67,6 +77,7 @@ const args = process.argv.slice(2)
 // Single pass: pull out known flags + their values; everything else is
 // positional (base ref + file list). Flag order is irrelevant.
 let PFC = false
+let BASE_ONLY = false
 let maxWarnings = null
 let memberFloor = null
 let assignmentFloor = null
@@ -76,6 +87,8 @@ for (let i = 0; i < args.length; i++) {
   const a = args[i]
   if (a === '--paths-from-changed') {
     PFC = true
+  } else if (a === '--base-only') {
+    BASE_ONLY = true
   } else if (a === '--max-warnings' || a === '--member-floor' || a === '--floor-assignment' || a === '--floor-explicit-any') {
     const v = Number(args[++i])
     if (!Number.isFinite(v)) {
@@ -163,12 +176,16 @@ if (!baseRef || !files || files.length === 0) {
 }
 
 // Load the project's ESLint (8.x, legacy .eslintrc.json) via its Node API.
-// TWO instances, not one: ESLint 8 caches @typescript-eslint parser services
-// per Linter, and the base pass lints `git show` text whose content differs
-// from the on-disk HEAD files. Reusing one instance lets the base pass
-// poison the cached TS program that the HEAD pass then lints against,
-// producing spurious "type cannot be resolved" warnings on large diffs
-// (observed on the CI runner). Isolating the passes keeps each cache clean.
+// The BASE pass runs in a CHILD PROCESS (--base-only), NOT a second instance:
+// @typescript-eslint's TS-program cache is MODULE-LEVEL, so every ESLint
+// instance inside one process shares it. The base pass lints `git show` text
+// whose content differs from the on-disk HEAD files; sharing a process with
+// the head pass lets it poison the cached program, and the head pass then
+// reports spurious "type cannot be resolved" warnings on fully-typed files
+// (observed on the CI runner — the earlier two-instance isolation did NOT
+// fix it, because the cache is shared regardless of instance count). A fresh
+// process gets a fresh module state, guaranteeing the head pass always lints
+// against a clean program.
 const { ESLint } = await import(
   pathToFileURL(path.resolve(process.cwd(), 'node_modules/eslint/lib/api.js')).href
 )
@@ -178,8 +195,6 @@ const eslintOptions = {
   resolvePluginsRelativeTo: process.cwd(),
   useEslintrc: true,
 }
-const eslintBase = new ESLint(eslintOptions)
-const eslintHead = new ESLint(eslintOptions)
 
 function countWarnings(messages) {
   let total = 0
@@ -196,6 +211,45 @@ function countWarnings(messages) {
   }
   return { total, member, assignment, explicitAny }
 }
+
+// CHILD MODE (internal): compute the base warnings only and emit a single
+// JSON line to stdout (diagnostics stay on stderr). Invoked by the parent via
+// spawnSync so it runs in a fresh process with a clean TS-program cache.
+if (BASE_ONLY) {
+  const eslintBase = new ESLint(eslintOptions)
+  let baseWarnings = 0
+  let baseMember = 0
+  let baseAssignment = 0
+  let baseExplicitAny = 0
+  for (const f of files) {
+    let content
+    try {
+      content = execFileSync('git', ['show', `${baseRef}:${f}`], {
+        encoding: 'utf8',
+        stdio: ['pipe', 'pipe', 'ignore'], // no fatal stderr noise for new files
+        maxBuffer: 64 * 1024 * 1024,
+      })
+    } catch {
+      // File did not exist at base (brand new file) → baseline 0.
+      continue
+    }
+    try {
+      const res = await eslintBase.lintText(content, { filePath: path.resolve(process.cwd(), f) })
+      const c = countWarnings(res.flatMap((r) => r.messages))
+      baseWarnings += c.total
+      baseMember += c.member
+      baseAssignment += c.assignment
+      baseExplicitAny += c.explicitAny
+    } catch (err) {
+      console.error(`[lint-gate] could not lint base version of ${f}: ${err.message}`)
+      process.exit(2)
+    }
+  }
+  console.log(JSON.stringify({ total: baseWarnings, member: baseMember, assignment: baseAssignment, explicitAny: baseExplicitAny }))
+  process.exit(0)
+}
+
+const eslintHead = new ESLint(eslintOptions)
 
 // Committed whole-repo family floors — informational context only. The
 // changed-files gate is a regression check (head > base), not the repo floor.
@@ -216,35 +270,35 @@ for (const [rule, file] of [
   } catch { /* informational only */ }
 }
 
-// 1. Baseline: warnings in the changed files at the base ref.
-let baseWarnings = 0
-let baseMember = 0
-let baseAssignment = 0
-let baseExplicitAny = 0
-for (const f of files) {
-  let content
-  try {
-    content = execFileSync('git', ['show', `${baseRef}:${f}`], {
-      encoding: 'utf8',
-      stdio: ['pipe', 'pipe', 'ignore'], // no fatal stderr noise for new files
-      maxBuffer: 64 * 1024 * 1024,
-    })
-  } catch {
-    // File did not exist at base (brand new file) → baseline 0.
-    continue
+// 1. Baseline: warnings in the changed files at the base ref — computed in a
+// child process (--base-only) so its TS-program cache can never leak into
+// the head pass below.
+const child = spawnSync(
+  process.execPath,
+  [path.resolve(process.argv[1]), '--base-only', baseRef, ...files],
+  {
+    encoding: 'utf8',
+    cwd: process.cwd(),
+    maxBuffer: 16 * 1024 * 1024,
+    stdio: ['ignore', 'pipe', 'pipe'],
   }
-  try {
-    const res = await eslintBase.lintText(content, { filePath: path.resolve(process.cwd(), f) })
-    const c = countWarnings(res.flatMap((r) => r.messages))
-    baseWarnings += c.total
-    baseMember += c.member
-    baseAssignment += c.assignment
-    baseExplicitAny += c.explicitAny
-  } catch (err) {
-    console.error(`[lint-gate] could not lint base version of ${f}: ${err.message}`)
-    process.exit(2)
-  }
+)
+if (child.status !== 0) {
+  console.error(`[lint-gate] base pass failed:` + (child.stderr ? `\n${child.stderr.trim()}` : ` exit ${child.status}`))
+  process.exit(2)
 }
+let baseCounts
+const stdoutLines = child.stdout.trim().split('\n')
+try {
+  baseCounts = JSON.parse(stdoutLines[stdoutLines.length - 1])
+} catch {
+  console.error(`[lint-gate] base pass produced unparseable output: ${child.stdout.slice(0, 200)}`)
+  process.exit(2)
+}
+const baseWarnings = baseCounts.total
+const baseMember = baseCounts.member
+const baseAssignment = baseCounts.assignment
+const baseExplicitAny = baseCounts.explicitAny
 
 // 2. Head: lint the working-tree/committed changed files.
 const results = await eslintHead.lintFiles(files)
