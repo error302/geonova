@@ -6,6 +6,19 @@ import db from '@/lib/db'
 import { getMpesaService } from '@/lib/payments/mpesa'
 import { getPlan } from '@/lib/subscription/catalog'
 
+interface PaymentIntentRow {
+  id: string
+  user_id: string
+  plan_id: string
+  amount: number
+  currency: string
+  status: string
+}
+
+interface SubscriptionRow {
+  id: string
+}
+
 // Safaricom IP whitelist for M-Pesa callbacks.
 // AUDIT FIX (HIGH 5, 2026-07-02): Now configurable via env var
 // MPESA_CALLBACK_IP_WHITELIST (comma-separated). Falls back to the
@@ -82,7 +95,7 @@ export async function POST(request: NextRequest) {
   let paymentRow: { id: string; user_id: string; plan_id: string; amount: number; currency: string; status: string } | null = null
 
   if (paymentIdParam && z.string().uuid().safeParse(paymentIdParam).success) {
-    const result = await db.query(
+    const result = await db.query<PaymentIntentRow>(
       `SELECT id, user_id, plan_id, amount, currency, status
        FROM payment_intents
        WHERE id = $1 AND payment_method = 'mpesa'`,
@@ -93,7 +106,7 @@ export async function POST(request: NextRequest) {
 
   if (!paymentRow) {
     // Fallback: look up by CheckoutRequestID
-    const result = await db.query(
+    const result = await db.query<PaymentIntentRow>(
       `SELECT id, user_id, plan_id, amount, currency, status
        FROM payment_intents
        WHERE checkout_request_id = $1 AND payment_method = 'mpesa'`,
@@ -196,7 +209,7 @@ export async function POST(request: NextRequest) {
   )
 
   // 10. Activate or upgrade the user's subscription
-  const existingSub = await db.query(
+  const existingSub = await db.query<SubscriptionRow>(
     'SELECT id FROM user_subscriptions WHERE user_id = $1',
     [paymentRow.user_id]
   )

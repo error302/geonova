@@ -21,6 +21,40 @@ import { createHash } from 'crypto'
 import { getRoleFromProfile, canApproveAndLock } from '@/lib/rbac'
 import { notifyProjectLocked } from '@/lib/notifications/africasTalking'
 
+interface SurveyorProfileRow {
+  role: string | null
+  verified_isk: boolean | null
+  phone: string | null
+}
+
+interface ApprovalProjectRow {
+  id: string
+  status: string
+  name: string | null
+  lr_number: string | null
+}
+
+interface LockedProjectRow {
+  id: string
+  status: string
+  cryptographic_seal: string | null
+  updated_at: Date | string
+}
+
+interface SurveyPointRow {
+  point_name: string
+  easting: number
+  northing: number
+  elevation: number | null
+  description: string | null
+}
+
+interface ApprovalParcelRow {
+  parcel_number: string
+  area_ha: number | null
+  status: string
+}
+
 export const POST = apiHandler({ auth: true, audit: 'project:approve_lock', rateLimit: { max: 60, windowMs: 60000 },
   auditChain: { entityType: 'parcel', action: 'lock', entityIdParam: 'id' } }, async (_req, ctx) => {
   const projectId = ctx.params.id
@@ -41,7 +75,7 @@ export const POST = apiHandler({ auth: true, audit: 'project:approve_lock', rate
     )
   }
 
-  const { rows: profileRows } = await db.query(
+  const { rows: profileRows } = await db.query<SurveyorProfileRow>(
     `SELECT role, verified_isk, phone
      FROM surveyor_profiles
      WHERE email = $1
@@ -69,7 +103,7 @@ export const POST = apiHandler({ auth: true, audit: 'project:approve_lock', rate
   }
 
   // ── 3. Verify project exists and is not already locked ──────────────
-  const { rows: projectRows } = await db.query(
+  const { rows: projectRows } = await db.query<ApprovalProjectRow>(
     `SELECT id, status, name, lr_number FROM projects WHERE id = $1`,
     [projectId]
   )
@@ -94,14 +128,14 @@ export const POST = apiHandler({ auth: true, audit: 'project:approve_lock', rate
   // parcels.area_sqm → area_ha. Removed non-existent geometry_type/
   // description columns.
   const [pointsResult, parcelsResult] = await Promise.all([
-    db.query(
+    db.query<SurveyPointRow>(
       `SELECT point_name, easting, northing, elevation, description
        FROM survey_points
        WHERE project_id = $1 AND is_control = true
        ORDER BY point_name ASC`,
       [projectId]
     ),
-    db.query(
+    db.query<ApprovalParcelRow>(
       `SELECT parcel_number, area_ha, status
        FROM parcels
        WHERE project_id = $1
@@ -121,7 +155,7 @@ export const POST = apiHandler({ auth: true, audit: 'project:approve_lock', rate
   const seal = createHash('sha256').update(canonicalJson).digest('hex')
 
   // ── 6. Lock the project with the cryptographic seal ──────────────────
-  const { rows: updatedRows } = await db.query(
+  const { rows: updatedRows } = await db.query<LockedProjectRow>(
     `UPDATE projects
      SET status = 'LOCKED',
          cryptographic_seal = $1,

@@ -14,6 +14,18 @@ import { z } from 'zod'
 /** Entity types that support versioning — moved to shared module to avoid Next.js route type inference */
 import { VERSIONED_ENTITY_TYPES, type VersionedEntityType } from '@/lib/validation/versionedEntities'
 
+interface EntityVersionRow {
+  id: string
+  entity_type: string
+  entity_id: string
+  version: number
+  snapshot: Record<string, unknown> | null
+  delta: Record<string, unknown> | null
+  change_summary: string | null
+  created_by: string | null
+  created_at: Date | string
+}
+
 const ListVersionsSchema = z.object({
   entity_type: z.enum(VERSIONED_ENTITY_TYPES),
   entity_id: z.string().uuid(),
@@ -41,7 +53,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   const { entity_type, entity_id, limit, offset } = parsed.data
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<EntityVersionRow>(
     `SELECT id, entity_type, entity_id, version, snapshot, delta, change_summary, created_by, created_at
      FROM entity_versions
      WHERE entity_type = $1 AND entity_id = $2
@@ -50,7 +62,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
     [entity_type, entity_id, limit, offset]
   )
 
-  const { rows: countRows } = await db.query(
+  const { rows: countRows } = await db.query<{ total: string }>(
     `SELECT COUNT(*) as total FROM entity_versions WHERE entity_type = $1 AND entity_id = $2`,
     [entity_type, entity_id]
   )
@@ -73,7 +85,7 @@ export const POST = apiHandler({ auth: true, schema: CreateSnapshotSchema }, asy
   const { entity_type, entity_id, change_summary } = ctx.body as z.infer<typeof CreateSnapshotSchema>
 
   // Get current state from the source table
-  const { rows: entityRows } = await db.query(
+  const { rows: entityRows } = await db.query<Record<string, unknown>>(
     `SELECT * FROM ${entity_type} WHERE id = $1`,
     [entity_id]
   )
@@ -86,7 +98,7 @@ export const POST = apiHandler({ auth: true, schema: CreateSnapshotSchema }, asy
   }
 
   // Get next version number
-  const { rows: versionRows } = await db.query(
+  const { rows: versionRows } = await db.query<{ next_version: number }>(
     `SELECT COALESCE(MAX(version), 0) + 1 as next_version
      FROM entity_versions WHERE entity_type = $1 AND entity_id = $2`,
     [entity_type, entity_id]
@@ -95,7 +107,7 @@ export const POST = apiHandler({ auth: true, schema: CreateSnapshotSchema }, asy
   const nextVersion = versionRows[0]?.next_version || 1
 
   // Insert snapshot
-  const { rows } = await db.query(
+  const { rows } = await db.query<EntityVersionRow>(
     `INSERT INTO entity_versions (entity_type, entity_id, version, snapshot, change_summary, created_by)
      VALUES ($1, $2, $3, $4, $5, $6)
      RETURNING *`,

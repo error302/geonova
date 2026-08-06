@@ -4,6 +4,32 @@ import { NextRequest, NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { z } from 'zod'
 
+interface BatchPointInput {
+  latitude?: number
+  longitude?: number
+  easting?: number
+  northing?: number
+  zone?: number
+  hemisphere?: 'N' | 'S'
+  id?: string
+  name?: string
+  elevation?: number
+}
+
+interface BatchResultItem {
+  id?: string
+  name?: string
+  latitude?: number
+  longitude?: number
+  easting?: number
+  northing?: number
+  zone?: number
+  hemisphere?: string
+  elevation?: number
+  success: boolean
+  error?: string
+}
+
 const transformBatchSchema = z.object({
   points: z.array(z.object({
     latitude: z.number().optional(),
@@ -23,11 +49,15 @@ const transformBatchSchema = z.object({
 export const POST = apiHandler(
   { auth: true, schema: transformBatchSchema, rateLimit: { max: 10, windowMs: 60000 } },
   async (req, ctx) => {
-    const { points, fromSystem, toSystem } = ctx.body as any
-
     const { transformCoordinates } = await import('@/lib/online/coordinates')
 
-    const results: any[] = []
+    const { points, fromSystem, toSystem } = ctx.body as {
+      points: BatchPointInput[]
+      fromSystem: Parameters<typeof transformCoordinates>[1]
+      toSystem: Parameters<typeof transformCoordinates>[1]
+    }
+
+    const results: BatchResultItem[] = []
     let successCount = 0
     let errorCount = 0
 

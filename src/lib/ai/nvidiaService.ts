@@ -41,6 +41,43 @@ export interface StreamOptions extends ChatOptions {
   onToken?: (token: string) => void
 }
 
+// ─── Raw API response shapes ──────────────────────────────────────────────────
+
+interface ChatCompletionResponse {
+  choices?: Array<{ message?: { content?: string } }>
+}
+
+interface ChatCompletionChunk {
+  choices?: Array<{ delta?: { content?: string } }>
+}
+
+interface ExtractCoordinatesPayload {
+  coordinates?: Array<{ point: string; easting: number; northing: number; elevation?: number }>
+  warnings?: string[]
+}
+
+interface ValidateSurveyPayload {
+  aiAssessment?: 'likely_pass' | 'likely_fail' | 'needs_review'
+  confidence?: 'low' | 'medium' | 'high'
+  findings?: string[]
+  recommendations?: string[]
+}
+
+interface FieldPhotoPayload {
+  observations?: Array<{
+    from: string
+    to: string
+    bearing: string
+    distance: number
+    bs?: number
+    is?: number
+    fs?: number
+    notes?: string
+  }>
+  surveyType?: string
+  warnings?: string[]
+}
+
 // ─── Non-streaming chat ──────────────────────────────────────────────────────
 
 export async function chat(options: ChatOptions): Promise<string> {
@@ -73,7 +110,7 @@ export async function chat(options: ChatOptions): Promise<string> {
     throw new Error(`NVIDIA API error: ${response.status} ${error}`)
   }
 
-  const data = await response.json()
+  const data = (await response.json()) as ChatCompletionResponse
   return data.choices?.[0]?.message?.content || ''
 }
 
@@ -112,7 +149,7 @@ export async function chatStream(options: StreamOptions): Promise<string> {
 
   // If streaming not supported, fall back to non-streaming
   if (!response.headers.get('content-type')?.includes('text/event-stream')) {
-    const data = await response.json()
+    const data = (await response.json()) as ChatCompletionResponse
     const content = data.choices?.[0]?.message?.content || ''
     onToken?.(content)
     return content
@@ -146,7 +183,7 @@ export async function chatStream(options: StreamOptions): Promise<string> {
       if (!trimmed.startsWith('data: ')) continue
 
       try {
-        const parsed = JSON.parse(trimmed.slice(6))
+        const parsed = JSON.parse(trimmed.slice(6)) as ChatCompletionChunk
         const token = parsed.choices?.[0]?.delta?.content || ''
         if (token) {
           fullText += token
@@ -253,7 +290,7 @@ If no valid coordinates found, return empty arrays.`
       }
     }
 
-    const parsed = JSON.parse(jsonStr)
+    const parsed = JSON.parse(jsonStr) as ExtractCoordinatesPayload
     return {
       coordinates: parsed.coordinates || [],
       warnings: parsed.warnings || [],
@@ -383,7 +420,7 @@ Return ONLY raw JSON with no other text, markdown, or code:
       }
     }
 
-    const parsed = JSON.parse(jsonStr)
+    const parsed = JSON.parse(jsonStr) as ValidateSurveyPayload
     return {
       aiAssessment: parsed.aiAssessment || 'needs_review',
       confidence: parsed.confidence || 'low',
@@ -443,7 +480,7 @@ export async function visionChat(options: ChatOptions): Promise<string> {
     throw new Error(`NVIDIA Vision API error: ${response.status} ${error}`)
   }
 
-  const data = await response.json()
+  const data = (await response.json()) as ChatCompletionResponse
   return data.choices?.[0]?.message?.content || ''
 }
 
@@ -531,7 +568,7 @@ Rules:
       }
     }
 
-    const parsed = JSON.parse(jsonStr)
+    const parsed = JSON.parse(jsonStr) as FieldPhotoPayload
     return {
       observations: parsed.observations || [],
       surveyType: parsed.surveyType || 'unknown',

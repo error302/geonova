@@ -4,6 +4,19 @@ import { db } from '@/lib/db'
 import { getAuthUser } from '@/lib/auth/session'
 import { validateBody, notificationSchema } from '@/lib/validation/apiValidation'
 
+interface NotificationRow {
+  id: string
+  type: string
+  category: string | null
+  title: string
+  message: string | null
+  action_url: string | null
+  action_label: string | null
+  metadata: Record<string, unknown> | null
+  read_at: Date | string | null
+  created_at: Date | string
+}
+
 export const dynamic = 'force-dynamic'
 
 /**
@@ -34,7 +47,7 @@ export const GET = apiHandler(
       whereClause += ' AND read_at IS NULL'
     }
 
-    const result = await db.query(
+    const result = await db.query<NotificationRow>(
       `SELECT id, type, category, title, message, action_url, action_label, metadata, read_at, created_at
        FROM notifications
        ${whereClause}
@@ -43,7 +56,7 @@ export const GET = apiHandler(
       params,
     )
 
-    const unreadResult = await db.query(
+    const unreadResult = await db.query<{ count: string }>(
       `SELECT COUNT(*) as count FROM notifications WHERE user_id = $1 AND read_at IS NULL`,
       [user.id],
     )
@@ -82,7 +95,7 @@ export const POST = apiHandler(
       return NextResponse.json({ error: 'title and message are required' }, { status: 400 })
     }
 
-    const result = await db.query(
+    const result = await db.query<Pick<NotificationRow, 'id' | 'created_at'>>(
       `INSERT INTO notifications (user_id, type, category, title, message, action_url, action_label)
        VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING id, created_at`,
@@ -111,7 +124,7 @@ export const PATCH = apiHandler(
     const markAll = body.all === true
 
     if (markAll) {
-      const result = await db.query(
+      const result = await db.query<Pick<NotificationRow, 'id'>>(
         `UPDATE notifications SET read_at = NOW()
          WHERE user_id = $1 AND read_at IS NULL RETURNING id`,
         [user.id],

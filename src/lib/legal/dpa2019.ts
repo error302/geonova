@@ -52,6 +52,30 @@ export interface DataRetentionPolicy {
   autoDelete: boolean;
 }
 
+// ─── Row types ──────────────────────────────────────────────────────────────
+
+interface DSARRow {
+  id: string;
+  user_id: string;
+  type: DSARType;
+  status: DSARStatus;
+  description: string;
+  requested_at: Date;
+  acknowledged_at: Date | null;
+  completed_at: Date | null;
+  response: string | null;
+  rejection_reason: string | null;
+}
+
+interface UserConsentRow {
+  user_id: string;
+  consent_type: ConsentType;
+  granted: boolean;
+  granted_at: Date;
+  revoked_at: Date | null;
+  version: string;
+}
+
 // ─── Data Retention Policies (Kenya DPA 2019) ──────────────────────────
 
 export const DATA_RETENTION_POLICIES: DataRetentionPolicy[] = [
@@ -143,7 +167,7 @@ export async function createDSAR(
  * Get all DSARs for a user
  */
 export async function getUserDSARs(userId: string): Promise<DataSubjectRequest[]> {
-  const result = await db.query(
+  const result = await db.query<DSARRow>(
     `SELECT * FROM data_subject_requests WHERE user_id = $1 ORDER BY requested_at DESC`,
     [userId]
   );
@@ -225,16 +249,16 @@ export async function revokeConsent(
  * Get all consents for a user
  */
 export async function getUserConsents(userId: string): Promise<UserConsent[]> {
-  const result = await db.query(
+  const result = await db.query<UserConsentRow>(
     `SELECT * FROM user_consents WHERE user_id = $1 ORDER BY consent_type`,
     [userId]
   );
-  return result.rows.map((row: any) => ({
+  return result.rows.map((row) => ({
     userId: row.user_id,
     consentType: row.consent_type,
     granted: row.granted,
     grantedAt: row.granted_at,
-    revokedAt: row.revoked_at,
+    revokedAt: row.revoked_at ?? undefined,
     version: row.version,
   }));
 }
@@ -246,7 +270,7 @@ export async function hasConsent(
   userId: string,
   consentType: ConsentType
 ): Promise<boolean> {
-  const result = await db.query(
+  const result = await db.query<{ granted: boolean }>(
     `SELECT granted FROM user_consents WHERE user_id = $1 AND consent_type = $2`,
     [userId, consentType]
   );
@@ -317,7 +341,7 @@ export async function recordBreachNotification(params: {
 
 // ─── Helper ────────────────────────────────────────────────────────────
 
-function mapDSARRow(row: any): DataSubjectRequest {
+function mapDSARRow(row: DSARRow): DataSubjectRequest {
   return {
     id: row.id,
     userId: row.user_id,
@@ -325,9 +349,9 @@ function mapDSARRow(row: any): DataSubjectRequest {
     status: row.status,
     description: row.description,
     requestedAt: row.requested_at,
-    acknowledgedAt: row.acknowledged_at,
-    completedAt: row.completed_at,
-    response: row.response,
-    rejectionReason: row.rejection_reason,
+    acknowledgedAt: row.acknowledged_at ?? undefined,
+    completedAt: row.completed_at ?? undefined,
+    response: row.response ?? undefined,
+    rejectionReason: row.rejection_reason ?? undefined,
   };
 }

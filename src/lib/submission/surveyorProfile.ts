@@ -13,6 +13,16 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import type { SurveyorProfile } from '@/types/submission'
 
+interface SurveyorProfileRow {
+  id: string
+  user_id: string
+  full_name: string
+  registration_number: string
+  firm_name: string | null
+  seal_url: string | null
+  signature_url: string | null
+}
+
 /**
  * Get the active surveyor profile for the current user.
  *
@@ -44,7 +54,7 @@ export async function getActiveSurveyorProfile(userId?: string): Promise<Surveyo
     userId = sessionUserId
   }
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<SurveyorProfileRow>(
     `SELECT
        id, user_id, full_name, registration_number,
        firm_name, seal_url, signature_url
@@ -72,7 +82,7 @@ export async function getActiveSurveyorProfile(userId?: string): Promise<Surveyo
  * Get the surveyor profile by profile ID (for submission record lookup).
  */
 export async function getSurveyorProfileById(profileId: string): Promise<SurveyorProfile | null> {
-  const { rows } = await db.query(
+  const { rows } = await db.query<SurveyorProfileRow>(
     `SELECT
        id, user_id, full_name, registration_number,
        firm_name, seal_url, signature_url

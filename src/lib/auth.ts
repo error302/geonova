@@ -9,6 +9,27 @@ import { checkLoginAllowed, recordFailedLogin, recordSuccessfulLogin, getFailedA
 /** Sentinel password hash for OAuth-only users (no password login possible) */
 const OAUTH_NO_PASSWORD = 'OAUTH_NO_PASSWORD'
 
+// ─── Row types ───────────────────────────────────────────────────────────────
+interface AuthUserRow {
+  id: string
+  email: string
+  password_hash: string
+  full_name: string | null
+  isk_number: string | null
+  verified_isk: boolean
+  role: string | null
+  provider: string | null
+  oauth_avatar_url: string | null
+}
+
+interface NewUserRow {
+  id: string
+  email: string
+  full_name: string | null
+  role: string
+  provider: string | null
+}
+
 /**
  * Find or create a user record when they sign in via OAuth for the first time.
  *
@@ -37,7 +58,7 @@ async function findOrCreateOAuthUser(params: {
   const normalisedEmail = email.toLowerCase().trim()
 
   // Try to find existing user by email
-  const { rows } = await db.query(
+  const { rows } = await db.query<AuthUserRow>(
     'SELECT id, email, password_hash, full_name, isk_number, verified_isk, role, provider, oauth_avatar_url FROM users WHERE email = $1 LIMIT 1',
     [normalisedEmail]
   )
@@ -99,7 +120,7 @@ async function findOrCreateOAuthUser(params: {
 
   // ── New user — create record ──
   const displayName = name || normalisedEmail.split('@')[0]
-  const insertResult = await db.query(
+  const insertResult = await db.query<NewUserRow>(
     `INSERT INTO users (email, password_hash, full_name, role, provider, oauth_provider_id, oauth_avatar_url)
      VALUES ($1, $2, $3, 'user', $4, $5, $6)
      RETURNING id, email, full_name, role, provider`,
@@ -180,7 +201,7 @@ export const authOptions: AuthOptions = {
         }
 
         try {
-          const { rows } = await db.query(
+          const { rows } = await db.query<Omit<AuthUserRow, 'oauth_avatar_url'>>(
             'SELECT id, email, password_hash, full_name, isk_number, verified_isk, role, provider FROM users WHERE email = $1 LIMIT 1',
             [credentials.email.toLowerCase().trim()]
           )
@@ -211,7 +232,7 @@ export const authOptions: AuthOptions = {
 
           // Check if account is suspended
           try {
-            const { rows: profileRows } = await db.query(
+            const { rows: profileRows } = await db.query<{ is_suspended: boolean; suspension_reason: string | null }>(
               'SELECT is_suspended, suspension_reason FROM surveyor_profiles WHERE user_id = $1 LIMIT 1',
               [user.id]
             )
@@ -242,7 +263,7 @@ export const authOptions: AuthOptions = {
           } else if (!role || role === 'user') {
             // Fallback: check surveyor_profiles table
             try {
-              const { rows: profileRows } = await db.query(
+              const { rows: profileRows } = await db.query<{ role: string | null }>(
                 'SELECT role FROM surveyor_profiles WHERE user_id = $1 LIMIT 1',
                 [user.id]
               )
@@ -352,7 +373,7 @@ export const authOptions: AuthOptions = {
 
           // Check if account is suspended
           try {
-            const { rows: profileRows } = await db.query(
+            const { rows: profileRows } = await db.query<{ is_suspended: boolean }>(
               'SELECT is_suspended FROM surveyor_profiles WHERE user_id = $1 LIMIT 1',
               [oauthUser.id]
             )

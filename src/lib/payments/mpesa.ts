@@ -31,6 +31,32 @@ export interface MpesaTransaction {
   timestamp: string
 }
 
+// ─── Daraja / Airtel API response shapes ───────────────────────────────────
+interface DarajaTokenResponse {
+  access_token: string
+}
+
+interface DarajaErrorResponse {
+  errorMessage?: string
+}
+
+interface StkPushResponse {
+  CheckoutRequestID: string
+  ResponseCode: string
+}
+
+interface StkQueryResponse {
+  ResultCode?: number
+  Amount?: string
+  PhoneNumber?: string
+  ResultDesc?: string
+}
+
+interface AirtelPaymentResponse {
+  data?: { transaction?: { id?: string } }
+  message?: string
+}
+
 export class MpesaService {
   private consumerKey: string
   private consumerSecret: string
@@ -75,7 +101,7 @@ export class MpesaService {
       )
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as DarajaTokenResponse
     return data.access_token
   }
 
@@ -107,7 +133,7 @@ export class MpesaService {
     }))
 
     if (!response.ok) {
-      const error = await response.json()
+      const error = (await response.json()) as DarajaErrorResponse
       // AUDIT FIX (M15, 2026-07-02): Translate Safaricom internal error codes.
       const safaricomErrors: Record<string, string> = {
         'DS090.301.BF00002': 'Invalid phone number — the phone must be a registered M-Pesa number in the format 2547XXXXXXXX',
@@ -121,7 +147,7 @@ export class MpesaService {
       throw new Error(translated)
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as StkPushResponse
     return {
       checkoutRequestId: data.CheckoutRequestID,
       responseCode: data.ResponseCode
@@ -157,7 +183,7 @@ export class MpesaService {
       )
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as StkQueryResponse
     // AUDIT FIX (CRITICAL 2, 2026-07-02): Check ResultCode, not ResponseCode.
     // ResponseCode === '0' means the *query API call* succeeded — it does NOT
     // mean the payment was completed. The actual payment status is in
@@ -255,11 +281,11 @@ export class AirtelMoneyService {
     })
 
     if (!response.ok) {
-      const error = await response.json()
+      const error = (await response.json()) as AirtelPaymentResponse
       throw new Error(error.message || 'Airtel payment failed')
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as AirtelPaymentResponse
     return {
       transactionId: data.data?.transaction?.id || ''
     }

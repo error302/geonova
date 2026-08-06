@@ -5,6 +5,47 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { z } from 'zod'
 
+interface CorridorNetworkRow {
+  id: string
+  name: string
+  description: string | null
+  corridor_name: string | null
+  start_chainage: number | null
+  end_chainage: number | null
+  version: number
+  parent_version_id: string | null
+  is_active: boolean
+  utm_zone: number | null
+  hemisphere: string | null
+  datum: string | null
+  epsg_code: number | null
+  established_by: string | null
+  status: string | null
+  created_by: string | null
+  created_at: Date | string
+  updated_at: Date | string
+  control_points?: CorridorPointRow[]
+}
+
+interface CorridorPointRow {
+  id: string
+  network_id: string
+  point_name: string
+  point_type: string | null
+  easting: number
+  northing: number
+  elevation: number | null
+  chainage: number | null
+  offset: number | null
+  sigma_e: number | null
+  sigma_n: number | null
+  sigma_h: number | null
+  order: number | null
+  epoch_year: number | null
+  observation_date: Date | string | null
+  description: string | null
+}
+
 /**
  * GET /api/corridor-networks
  *   ?corridor_name=A8    — filter by corridor
@@ -36,12 +77,12 @@ export const GET = apiHandler(
     }
     sql += ` ORDER BY corridor_name, version DESC`
 
-    const { rows: networks } = await db.query(sql, params)
+    const { rows: networks } = await db.query<CorridorNetworkRow>(sql, params)
 
     // Optionally load control points for each network
     if (withPoints && networks.length > 0) {
       const networkIds = networks.map(n => n.id)
-      const { rows: points } = await db.query(
+      const { rows: points } = await db.query<CorridorPointRow>(
         `SELECT * FROM corridor_control_points WHERE network_id = ANY($1::uuid[]) ORDER BY chainage`,
         [networkIds],
       )
@@ -107,7 +148,7 @@ export const POST = apiHandler(
     const body = ctx.body as z.infer<typeof createSchema>
 
     // Check if a network with this name already exists → create new version
-    const { rows: existing } = await db.query(
+    const { rows: existing } = await db.query<Pick<CorridorNetworkRow, 'id' | 'version'>>(
       `SELECT id, version FROM corridor_control_networks WHERE name = $1 ORDER BY version DESC LIMIT 1`,
       [body.name],
     )
@@ -124,7 +165,7 @@ export const POST = apiHandler(
     }
 
     // Create new network
-    const { rows: networkRows } = await db.query(
+    const { rows: networkRows } = await db.query<CorridorNetworkRow>(
       `INSERT INTO corridor_control_networks
         (name, description, corridor_name, start_chainage, end_chainage,
          version, parent_version_id, is_active,

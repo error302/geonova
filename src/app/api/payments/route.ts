@@ -11,6 +11,20 @@ import { db } from '@/lib/db'
 import type { CurrencyCode, PlanId } from '@/lib/subscription/catalog'
 import { getPlan } from '@/lib/subscription/catalog'
 
+// ─── Row types ────────────────────────────────────────────────────────────
+interface SubscriptionRow {
+  id: string
+}
+
+interface PaymentHistoryRow {
+  id: string
+  plan_id: string | null
+  currency: string | null
+  amount: number | null
+  transaction_id: string | null
+  status: string | null
+}
+
 // PayPal capture response — library types don't expose purchase_units
 interface PayPalCapture {
   status?: string
@@ -61,7 +75,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
     paymentId?: string
   }) => {
     if (input.status === 'completed') {
-      const { rows: existing } = await db.query(
+      const { rows: existing } = await db.query<SubscriptionRow>(
         'SELECT id FROM user_subscriptions WHERE user_id = $1 LIMIT 1',
         [userId]
       )
@@ -117,7 +131,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
       return NextResponse.json({ kind: 'activated', planId })
     }
 
-    const { rows } = await db.query(
+    const { rows } = await db.query<Pick<PaymentHistoryRow, 'id'>>(
       `INSERT INTO payment_history (user_id, amount, currency, status, payment_method, plan_id)
        VALUES ($1, $2, $3, 'pending', $4, $5) RETURNING id`,
       [userId, priced.amount, priced.currency, provider, planId]
@@ -239,11 +253,11 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
           }).safeParse(params)
           if (!s.success) return NextResponse.json({ error: 'Invalid request.' }, { status: 400 })
 
-          const { rows: payRows } = await db.query(
+          const { rows: payRows } = await db.query<PaymentHistoryRow>(
             'SELECT id, plan_id, currency, amount, transaction_id, status FROM payment_history WHERE id = $1 AND user_id = $2 LIMIT 1',
             [s.data.paymentId, userId]
           )
-          const pay = (payRows[0] as Record<string, unknown>) ?? null
+          const pay = payRows[0] ?? null
           if (!pay) return NextResponse.json({ error: 'Payment not found.' }, { status: 404 })
           if (pay.plan_id !== s.data.planId) return NextResponse.json({ error: 'Plan mismatch.' }, { status: 400 })
           if (pay.transaction_id && pay.transaction_id !== s.data.sessionId) return NextResponse.json({ error: 'Transaction mismatch.' }, { status: 400 })
@@ -285,11 +299,11 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
           }).safeParse(params)
           if (!s.success) return NextResponse.json({ error: 'Invalid request.' }, { status: 400 })
 
-          const { rows: payRows } = await db.query(
+          const { rows: payRows } = await db.query<PaymentHistoryRow>(
             'SELECT id, plan_id, currency, amount, transaction_id, status FROM payment_history WHERE id = $1 AND user_id = $2 LIMIT 1',
             [s.data.paymentId, userId]
           )
-          const pay = (payRows[0] as Record<string, unknown>) ?? null
+          const pay = payRows[0] ?? null
           if (!pay) return NextResponse.json({ error: 'Payment not found.' }, { status: 404 })
           if (pay.plan_id !== s.data.planId) return NextResponse.json({ error: 'Plan mismatch.' }, { status: 400 })
           if (pay.transaction_id && pay.transaction_id !== s.data.orderId) return NextResponse.json({ error: 'Transaction mismatch.' }, { status: 400 })
@@ -309,7 +323,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
             if (errMsg.includes('ORDER_ALREADY_CAPTURED') || errMsg.includes('ORDER_ALREADY_PAID')) {
               // Order was already captured by the webhook — treat as success
               // Verify the payment_history row was already marked completed
-              const { rows: recheck } = await db.query(
+              const { rows: recheck } = await db.query<Pick<PaymentHistoryRow, 'status'>>(
                 'SELECT status FROM payment_history WHERE id = $1',
                 [s.data.paymentId]
               )
@@ -359,11 +373,11 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
           }).safeParse(params)
           if (!s.success) return NextResponse.json({ error: 'Invalid request.' }, { status: 400 })
 
-          const { rows: payRows } = await db.query(
+          const { rows: payRows } = await db.query<Pick<PaymentHistoryRow, 'id' | 'plan_id' | 'currency' | 'amount' | 'status'>>(
             'SELECT id, plan_id, currency, amount, status FROM payment_history WHERE id = $1 AND user_id = $2 LIMIT 1',
             [s.data.paymentId, userId]
           )
-          const pay = (payRows[0] as Record<string, unknown>) ?? null
+          const pay = payRows[0] ?? null
           if (!pay) return NextResponse.json({ error: 'Payment not found.' }, { status: 404 })
           if (pay.status === 'completed') return NextResponse.json({ status: 'completed' })
           if (pay.status === 'failed') return NextResponse.json({ status: 'failed' })

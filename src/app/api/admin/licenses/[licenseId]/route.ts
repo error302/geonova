@@ -16,6 +16,22 @@ import {
 } from '@/lib/enterprise/governmentLicensing'
 import { z } from 'zod'
 
+interface GovernmentLicenseRow {
+  id: string
+  department_name: string | null
+  country: string | null
+  license_key: string | null
+  max_seats: number | null
+  used_seats: number | null
+  active: boolean
+  issued_at: Date | string | null
+  expires_at: Date | string | null
+  features: string[] | null
+  contact_email: string | null
+  contact_name: string | null
+  tier: string | null
+}
+
 const updateLicenseSchema = z.object({
   departmentName: z.string().min(1).optional(),
   country: z.string().min(1).optional(),
@@ -99,7 +115,7 @@ export const PUT = apiHandler(
     }
 
     values.push(licenseId)
-    const result = await db.query(
+    const result = await db.query<GovernmentLicenseRow>(
       `UPDATE government_licenses SET ${setClauses.join(', ')}
        WHERE id = $${paramIdx} RETURNING *`,
       values

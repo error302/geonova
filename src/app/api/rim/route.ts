@@ -16,6 +16,11 @@ import { apiSuccess, apiError } from '@/lib/api/response'
 import { generateRimPdf } from '@/lib/rim'
 import type { RimSection, RimParcel, RimBeacon } from '@/lib/rim'
 
+interface RimSectionWithCounts extends RimSection {
+  parcel_count?: number
+  beacon_count?: number
+}
+
 export const dynamic = 'force-dynamic'
 
 // ────────────────────────────────────────────────────────────
@@ -28,7 +33,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
     return NextResponse.json(apiError('projectId is required'), { status: 400 })
   }
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<RimSectionWithCounts>(
     `SELECT
        rs.*,
        (SELECT COUNT(*)::int FROM rim_parcels WHERE rim_section_id = rs.id) AS parcel_count,
@@ -61,7 +66,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
       return NextResponse.json(apiError('project_id is required'), { status: 400 })
     }
 
-    const { rows } = await db.query(
+    const { rows } = await db.query<RimSection>(
       `INSERT INTO rim_sections (
          user_id, project_id, section_name, registry, district,
          map_sheet_number, scale, datum, projection,
@@ -96,7 +101,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
       return NextResponse.json(apiError('rimSectionId is required'), { status: 400 })
     }
 
-    const { rows } = await db.query(
+    const { rows } = await db.query<RimParcel>(
       `INSERT INTO rim_parcels (
          rim_section_id, parcel_number, area, land_use,
          owner_name, beacon_count, northings, eastings, is_landmark
@@ -135,7 +140,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
       return NextResponse.json(apiError('rimSectionId is required'), { status: 400 })
     }
 
-    const { rows } = await db.query(
+    const { rows } = await db.query<RimBeacon>(
       `INSERT INTO rim_beacons (
          rim_section_id, beacon_number, easting, northing,
          description, type, survey_status
@@ -164,7 +169,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     }
 
     // Fetch section
-    const sectionResult = await db.query(
+    const sectionResult = await db.query<RimSection>(
       'SELECT * FROM rim_sections WHERE id = $1 AND user_id = $2',
       [rimSectionId, ctx.userId],
     )
@@ -174,14 +179,14 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     const section: RimSection = sectionResult.rows[0]
 
     // Fetch parcels
-    const parcelsResult = await db.query(
+    const parcelsResult = await db.query<RimParcel>(
       'SELECT * FROM rim_parcels WHERE rim_section_id = $1 ORDER BY parcel_number',
       [rimSectionId],
     )
     const parcels: RimParcel[] = parcelsResult.rows
 
     // Fetch beacons
-    const beaconsResult = await db.query(
+    const beaconsResult = await db.query<RimBeacon>(
       'SELECT * FROM rim_beacons WHERE rim_section_id = $1 ORDER BY beacon_number',
       [rimSectionId],
     )
@@ -254,7 +259,7 @@ export const PUT = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
                  WHERE id = $${paramIdx} AND user_id = $${paramIdx + 1}
                  RETURNING *`
 
-    const { rows } = await db.query(sql, [...values, id, ctx.userId])
+    const { rows } = await db.query<RimSection>(sql, [...values, id, ctx.userId])
 
     if (rows.length === 0) {
       return NextResponse.json(apiError('RIM section not found'), { status: 404 })
@@ -280,7 +285,7 @@ export const DELETE = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6
   }
 
   // CASCADE deletes parcels and beacons automatically via FK ON DELETE CASCADE
-  const { rows } = await db.query(
+  const { rows } = await db.query<Pick<RimSection, 'id'>>(
     `DELETE FROM rim_sections
      WHERE id = $1 AND user_id = $2
      RETURNING id`,

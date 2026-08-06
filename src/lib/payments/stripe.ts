@@ -47,6 +47,32 @@ export interface StripeCheckoutSession {
 
 const STRIPE_API_VERSION = '2023-10-16'
 
+// ─── Raw Stripe API response shapes ───────────────────────────────────────
+interface StripeApiError {
+  error?: { message?: string }
+}
+
+interface StripePaymentIntentResponse {
+  id: string
+  client_secret: string
+  amount: number
+  currency: string
+  status: string
+}
+
+interface StripeSubscriptionResponse {
+  id: string
+  latest_invoice?: { payment_intent?: { client_secret?: string } }
+}
+
+interface StripeCheckoutSessionResponse {
+  id: string
+  url: string
+  payment_status: string
+  amount_total?: number
+  currency: string
+}
+
 export class StripeService {
   private secretKey: string
 
@@ -101,11 +127,11 @@ export class StripeService {
     }))
 
     if (!response.ok) {
-      const error = await response.json()
+      const error = (await response.json()) as StripeApiError
       throw new Error(error.error?.message || 'Payment failed')
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as StripePaymentIntentResponse
     return {
       id: data.id,
       clientSecret: data.client_secret,
@@ -125,7 +151,7 @@ export class StripeService {
     })
 
     if (!response.ok) return false
-    const data = await response.json()
+    const data = (await response.json()) as { status?: string }
     return data.status === 'succeeded'
   }
 
@@ -144,11 +170,11 @@ export class StripeService {
     })
 
     if (!response.ok) {
-      const error = await response.json()
+      const error = (await response.json()) as StripeApiError
       throw new Error(error.error?.message || 'Customer creation failed')
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as { id: string }
     return data.id
   }
 
@@ -191,16 +217,16 @@ export class StripeService {
     }))
 
     if (!response.ok) {
-      const error = await response.json()
+      const error = (await response.json()) as StripeApiError
       throw new Error(error.error?.message || 'Subscription creation failed')
     }
 
-    const data = await response.json()
-    const invoice = data.latest_invoice as { payment_intent?: { client_secret?: string } }
+    const data = (await response.json()) as StripeSubscriptionResponse
+    const invoice = data.latest_invoice
 
     return {
       subscriptionId: data.id,
-      clientSecret: invoice.payment_intent?.client_secret || ''
+      clientSecret: invoice?.payment_intent?.client_secret || ''
     }
   }
 
@@ -264,11 +290,11 @@ export class StripeService {
     })
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}))
+      const error = (await response.json().catch(() => ({}))) as StripeApiError
       throw new Error(error?.error?.message || 'Stripe checkout session failed')
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as StripeCheckoutSessionResponse
     return { id: data.id, url: data.url }
   }
 
@@ -282,11 +308,11 @@ export class StripeService {
     })
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}))
+      const error = (await response.json().catch(() => ({}))) as StripeApiError
       throw new Error(error?.error?.message || 'Failed to fetch Stripe session')
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as StripeCheckoutSessionResponse
     return {
       id: data.id,
       paymentStatus: data.payment_status,

@@ -12,6 +12,11 @@ export interface ConversionResult {
   error?: string
 }
 
+interface ConvertDatumResponse {
+  data?: Array<{ id?: string; easting: number; northing: number; datum?: string }>
+  error?: string
+}
+
 export async function convertToArc1960(
   coordinates: Array<{ id?: string; easting: number; northing: number }>
 ): Promise<ConversionResult> {
@@ -25,9 +30,9 @@ export async function convertToArc1960(
         toDatum: 'ARC1960'
       })
     })
-    const data = await response.json()
+    const data = (await response.json()) as ConvertDatumResponse
     if (response.ok && data.data) {
-      const coords = data.data.map((c: any) => ({
+      const coords = data.data.map((c) => ({
         id: c.id,
         easting: c.easting,
         northing: c.northing,
@@ -55,9 +60,9 @@ export async function convertFromArc1960(
         toDatum: 'WGS84'
       })
     })
-    const data = await response.json()
+    const data = (await response.json()) as ConvertDatumResponse
     if (response.ok && data.data) {
-      const coords = data.data.map((c: any) => ({
+      const coords = data.data.map((c) => ({
         id: c.id,
         easting: c.easting,
         northing: c.northing,
