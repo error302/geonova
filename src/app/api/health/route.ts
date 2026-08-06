@@ -54,7 +54,7 @@ function formatBytes(bytes: number): string {
 async function checkDb(): Promise<{ status: string; latencyMs?: number; error?: string }> {
   const start = Date.now()
   try {
-    await db.query('SELECT 1 AS health_check')
+    await db.query<{ health_check: number }>('SELECT 1 AS health_check')
     return { status: 'connected', latencyMs: Date.now() - start }
   } catch (error) {
     return { status: 'error', latencyMs: Date.now() - start, error: String(error) }
