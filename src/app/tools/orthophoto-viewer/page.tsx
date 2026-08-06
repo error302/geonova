@@ -283,7 +283,7 @@ export default function OrthophotoViewerPage() {
 
   // Map state
   const mapRef = useRef<HTMLDivElement>(null);
-  const olMapRef = useRef<any>(null);
+  const olMapRef = useRef<import('ol/Map').default | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const [geoTIFFLoaded, setGeoTIFFLoaded] = useState(false);
 
@@ -302,11 +302,11 @@ export default function OrthophotoViewerPage() {
   const [orthoOpacity, setOrthoOpacity] = useState(80);
 
   // OL layer references
-  const drawInteractionRef = useRef<any>(null);
-  const vectorSourceRef = useRef<any>(null);
-  const vectorLayerRef = useRef<any>(null);
-  const orthoLayerRef = useRef<any>(null);
-  const basemapLayersRef = useRef<Record<string, any>>({});
+  const drawInteractionRef = useRef<import('ol/interaction/Draw').default | null>(null);
+  const vectorSourceRef = useRef<import('ol/source/Vector').default | null>(null);
+  const vectorLayerRef = useRef<import('ol/layer/Vector').default | null>(null);
+  const orthoLayerRef = useRef<import('ol/layer/Tile').default | null>(null);
+  const basemapLayersRef = useRef<Record<string, import('ol/layer/Tile').default>>({});
 
   /* ════════════════════════════════════════════════════════════════════
    *  INITIALIZE MAP
@@ -437,6 +437,7 @@ export default function OrthophotoViewerPage() {
 
       if (!olMapRef.current) {
         await initMap();
+        if (!olMapRef.current) throw new Error('Map failed to initialize');
       }
 
       const [
@@ -483,7 +484,7 @@ export default function OrthophotoViewerPage() {
       try {
         await waitForReady();
         // Use the layer extent to fit the view
-        const layerExtent = (layer.getSource() as any)?.getExtent?.();
+        const layerExtent = (layer.getSource() as { getExtent?: () => number[] | undefined } | null)?.getExtent?.();
         if (layerExtent) {
           const view = olMapRef.current.getView();
           const proj = source.getProjection();
@@ -546,9 +547,9 @@ export default function OrthophotoViewerPage() {
       }),
     });
 
-    draw.on('drawend', (event: any) => {
+    draw.on('drawend', (event: import('ol/interaction/Draw').DrawEvent) => {
       const feature = event.feature;
-      const geom = feature.getGeometry();
+      const geom = feature.getGeometry() as import('ol/geom/SimpleGeometry').default | null;
       if (!geom) return;
 
       // Get flat coordinates [lon0, lat0, lon1, lat1, ...]
@@ -623,7 +624,7 @@ export default function OrthophotoViewerPage() {
     // Remove from OL features
     if (vectorSourceRef.current) {
       const features = vectorSourceRef.current.getFeatures();
-      const feature = features.find((f: any) => f.get('polygonId') === id);
+      const feature = features.find((f) => f.get('polygonId') === id);
       if (feature) {
         vectorSourceRef.current.removeFeature(feature);
       }
@@ -642,7 +643,7 @@ export default function OrthophotoViewerPage() {
         // Toggle OL feature visibility
         if (vectorSourceRef.current) {
           const features = vectorSourceRef.current.getFeatures();
-          const feature = features.find((f: any) => f.get('polygonId') === id);
+          const feature = features.find((f) => f.get('polygonId') === id);
           if (feature) {
             // Currently visible → hide with transparent style
             if (p.visible) {
@@ -1182,7 +1183,7 @@ export default function OrthophotoViewerPage() {
                         icon: '≡',
                         action: exportCSV,
                       },
-                    ].map((item: any) => (
+                    ].map((item) => (
                       <div
                         key={item.key}
                         className="p-3 bg-[var(--bg-tertiary)] rounded border border-[var(--border-color)] flex items-start justify-between gap-3"

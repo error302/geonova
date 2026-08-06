@@ -3,8 +3,29 @@
 import { useState, useEffect } from 'react'
 import { GraduationCap, CheckCircle2, AlertCircle, Download, FileText } from 'lucide-react'
 
+interface PortfolioRequirement {
+  id: string
+  category: string
+  met: boolean
+  minimumRequired: string | number
+  userHas: string | number
+  description: string
+  projects: { name: string }[]
+}
+
+interface PortfolioReport {
+  allMandatoryMet: boolean
+  atLeastOneElectiveMet: boolean
+  summary: string
+  requirements: PortfolioRequirement[]
+  electives: PortfolioRequirement[]
+  missingItems: string[]
+  declarationFormA: string
+  declarationFormB: string
+}
+
 export default function PortfolioPage() {
-  const [report, setReport] = useState<any>(null)
+  const [report, setReport] = useState<PortfolioReport | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => { loadPortfolio() }, [])
@@ -13,7 +34,7 @@ export default function PortfolioPage() {
     setLoading(true)
     try {
       const res = await fetch('/api/portfolio')
-      if (res.ok) { const data = await res.json(); setReport(data.data) }
+      if (res.ok) { const data = (await res.json()) as { data: PortfolioReport }; setReport(data.data) }
     } catch {} finally { setLoading(false) }
   }
 
@@ -45,7 +66,7 @@ export default function PortfolioPage() {
       {/* Mandatory requirements */}
       <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-3">Mandatory Requirements</h2>
       <div className="space-y-3 mb-6">
-        {report.requirements.map((req: any) => (
+        {report.requirements.map((req) => (
           <div key={req.id} className={`p-4 rounded-xl border ${req.met ? 'bg-green-500/5 border-green-500/15' : 'bg-red-500/5 border-red-500/15'}`}>
             <div className="flex justify-between items-start mb-1">
               <div>
@@ -60,7 +81,7 @@ export default function PortfolioPage() {
             <p className="text-[10px] text-[var(--text-muted)] mb-2">{req.description}</p>
             {req.projects.length > 0 && (
               <div className="text-[10px] text-[var(--text-secondary)]">
-                Projects: {req.projects.map((p: any) => p.name).join(', ')}
+                Projects: {req.projects.map((p) => p.name).join(', ')}
               </div>
             )}
           </div>
@@ -70,7 +91,7 @@ export default function PortfolioPage() {
       {/* Electives */}
       <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-3">Elective (select one)</h2>
       <div className="space-y-3 mb-6">
-        {report.electives.map((req: any) => (
+        {report.electives.map((req) => (
           <div key={req.id} className={`p-4 rounded-xl border ${req.met ? 'bg-green-500/5 border-green-500/15' : 'bg-[var(--bg-secondary)]/50 border-[var(--border-color)]'}`}>
             <div className="flex justify-between items-start mb-1">
               <div>

@@ -11,6 +11,7 @@ import {
   processGNSSNetwork,
   utmToGeodetic
 } from '@/lib/geodesy/gnss';
+import type { BaselineResult, GNSSBaseStation, GNSSNetworkResult } from '@/lib/geodesy/gnss';
 
 interface Observation {
   id: number;
@@ -19,6 +20,15 @@ interface Observation {
   lon: string;
   h: string;
   sigma: string;
+}
+
+interface GNSSResult {
+  baseline?: BaselineResult
+  enu?: { easting: number; northing: number; up: number }
+  baseECEF?: GNSSBaseStation
+  obsECEF?: GNSSBaseStation
+  points?: GNSSNetworkResult['points']
+  adjustmentStats?: GNSSNetworkResult['adjustmentStats']
 }
 
 export default function GNSSProcessor() {
@@ -40,7 +50,7 @@ export default function GNSSProcessor() {
     { id: 2, name: 'ROVER2', lat: '-1.2930', lon: '36.8210', h: '1795.8', sigma: '0.018' },
   ]);
   
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<GNSSResult | null>(null);
   const [mode, setMode] = useState<'baseline' | 'network'>('baseline');
 
   const addObservation = () => {
@@ -51,11 +61,11 @@ export default function GNSSProcessor() {
   };
 
   const updateObservation = (id: number, field: keyof Observation, value: string) => {
-    setObservations(observations.map((o: any) => o.id === id ? { ...o, [field]: value } : o));
+    setObservations(observations.map((o) => o.id === id ? { ...o, [field]: value } : o));
   };
 
   const removeObservation = (id: number) => {
-    setObservations(observations.filter((o: any) => o.id !== id));
+    setObservations(observations.filter((o) => o.id !== id));
   };
 
   const calculate = () => {
@@ -83,7 +93,7 @@ export default function GNSSProcessor() {
         const enu = ecefToENU(obsECEF.x, obsECEF.y, obsECEF.z, parseFloat(origin.lat), parseFloat(origin.lon), 0);
         setResult({ baseline, enu, baseECEF, obsECEF });
       } else {
-        const obsData = observations.map((o: any) => ({
+        const obsData = observations.map((o) => ({
           pointName: o.name,
           x: 0, y: 0, z: 0,
           sigmaX: parseFloat(o.sigma)
@@ -96,7 +106,7 @@ export default function GNSSProcessor() {
           return { ...o, x: ecef.x, y: ecef.y, z: ecef.z };
         });
         const network = processGNSSNetwork(
-          baseECEF as any,
+          baseECEF,
           obsData,
           parseFloat(origin.lat),
           parseFloat(origin.lon),
@@ -166,7 +176,7 @@ export default function GNSSProcessor() {
               <button onClick={addObservation} className="btn btn-secondary text-sm">{t('toolUI.addPoint')}</button>
             </div>
             <div className="space-y-3">
-              {observations.map((obs: any) => (
+              {observations.map((obs) => (
                 <div key={obs.id} className="grid grid-cols-6 gap-2 items-end">
                   <div className="col-span-1">
                     <label className="block text-xs mb-1" htmlFor="name-2">Name</label>
@@ -204,7 +214,7 @@ export default function GNSSProcessor() {
             <div className="bg-[var(--card)] border border-[var(--border)] rounded-lg p-4">
               <h3 className="font-semibold mb-4">Results</h3>
               
-              {mode === 'baseline' && result.baseline && (
+              {mode === 'baseline' && result.baseline && result.enu && result.obsECEF && (
                 <div className="space-y-4">
                   <div className="bg-[var(--bg)] p-3 rounded">
                     <h4 className="text-sm font-medium mb-2">Baseline Vector</h4>
@@ -240,7 +250,7 @@ export default function GNSSProcessor() {
                 </div>
               )}
 
-              {mode === 'network' && result.points && (
+              {mode === 'network' && result.points && result.adjustmentStats && (
                 <div className="space-y-4">
                   <div className="bg-[var(--bg)] p-3 rounded">
                     <h4 className="text-sm font-medium mb-2">Adjusted Points</h4>
@@ -255,7 +265,7 @@ export default function GNSSProcessor() {
                         </tr>
                       </thead>
                       <tbody>
-                        {result.points.map((p: any, i: number) => (
+                        {result.points.map((p, i: number) => (
                           <tr key={`item-${i}`} className="border-t border-[var(--border)]">
                             <td className="py-2">{p.name}</td>
                             <td>{p.easting.toFixed(4)}</td>

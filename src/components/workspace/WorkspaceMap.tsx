@@ -64,7 +64,7 @@ function extractCoord(s: StationCoord): [number, number] | null {
 
 export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:21037' }: WorkspaceMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<any>(null);
+  const mapRef = useRef<import('ol/Map').default | null>(null);
   const coordBarRef = useRef<HTMLDivElement>(null);
   const throttleRef = useRef(0);
   const [ready, setReady] = useState(false);
@@ -84,8 +84,8 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
     const zoom = view.getZoom();
     const rotation = view.getRotation();
     setViewport({
-      center: [center[0], center[1]],
-      zoom,
+      center: center ? [center[0], center[1]] : [0, 0],
+      zoom: zoom ?? 0,
       rotation,
       projection: 'EPSG:3857',
     });
@@ -99,7 +99,7 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
-    let map: any = null;
+    let map: import('ol/Map').default | null = null;
     let cancelled = false;
 
     async function init() {
@@ -187,8 +187,8 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
 
         const stationLayer = new VectorLayer({
           source: stationSource,
-          style: (feature: any) => {
-            const name = feature.get('name') || '';
+          style: (feature: import('ol/Feature').FeatureLike) => {
+            const name = (feature.get('name') as string | undefined) || '';
             return new Style({
               image: new CircleStyle({
                 radius: 7,
@@ -235,7 +235,7 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
           controls: [
             new ScaleLine({ units: 'metric' }),
             new MousePosition({
-              coordinateFormat: (coord: any) => {
+              coordinateFormat: (coord) => {
                 if (!coord) return '';
                 try {
                   const [e, n] = proj.transform(coord, 'EPSG:3857', epsg);
@@ -287,11 +287,11 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
           }),
           hitTolerance: 8, layers: [stationLayer],
         });
-        select.on('select', (evt: any) => {
+        select.on('select', (evt: import('ol/interaction/Select').SelectEvent) => {
           if (evt.selected.length > 0) {
             const f = evt.selected[0];
             const coord = f.getGeometry()?.getClosestPoint(evt.mapBrowserEvent.coordinate);
-            const name = f.get('name') || 'Station';
+            const name = (f.get('name') as string | undefined) || 'Station';
             // VULN-002 FIX (security review 2026-08-03): station names are
             // user-entered — render with textContent, never innerHTML.
             popupEl.replaceChildren();
@@ -315,7 +315,7 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
         map.addInteraction(select);
 
         // ── Click on map to select ──
-        map.on('click', (evt: any) => { /* popup handled by select */ });
+        map.on('click', () => { /* popup handled by select */ });
 
         // ── Fit to project extent ──
         if (validCoords.length > 0) {
@@ -328,7 +328,7 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
         }
 
         // ── Expose toggleBasemap ──
-        ;(map as any)._wsMeta = { projectName };
+        ;(map as unknown as { _wsMeta: { projectName: string } })._wsMeta = { projectName };
 
         if (!cancelled) setReady(true);
       } catch (err: unknown) {
@@ -353,7 +353,7 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
   const toggleBasemap = (mode: 'osm' | 'satellite') => {
     if (!mapRef.current) return;
     for (const layer of mapRef.current.getLayers().getArray()) {
-      const id = layer.get('basemapId');
+      const id = layer.get('basemapId') as string | undefined;
       if (id) layer.setVisible(id === mode);
     }
   };
@@ -362,6 +362,12 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
   const fitProject = () => {
     if (!mapRef.current) return;
     mapRef.current.getView().animate({ center: mapRef.current.getView().getCenter(), zoom: 16, duration: 400 });
+  };
+
+  const zoomBy = (delta: number) => {
+    const view = mapRef.current?.getView();
+    if (!view) return;
+    view.setZoom((view.getZoom() ?? 0) + delta);
   };
 
   const BTN = 'w-7 h-7 flex items-center justify-center rounded-md bg-[#14141e]/90 border border-white/[0.08] hover:bg-[#14141e] text-gray-400 hover:text-white transition-colors';
@@ -389,12 +395,12 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                 </svg>
               </button>
-              <button onClick={() => mapRef.current?.getView().setZoom(mapRef.current.getView().getZoom() + 1)} title="Zoom in" className={BTN}>
+              <button onClick={() => zoomBy(1)} title="Zoom in" className={BTN}>
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
                 </svg>
               </button>
-              <button onClick={() => mapRef.current?.getView().setZoom(mapRef.current.getView().getZoom() - 1)} title="Zoom out" className={BTN}>
+              <button onClick={() => zoomBy(-1)} title="Zoom out" className={BTN}>
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" />
                 </svg>

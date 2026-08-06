@@ -54,6 +54,78 @@ const alignmentMutationSchema = z.object({
 // The three sub-resource POSTs return various shapes — accept any object payload.
 const subResourceMutationSchema = z.record(z.any())
 
+interface CrossSectionTemplateRow {
+  carriageway_width?: number | string | null
+  carriagewayWidth?: number | string | null
+  shoulder_width?: number | string | null
+  shoulderWidth?: number | string | null
+  cut_slope?: string | null
+  cutSlope?: string | null
+  fill_slope?: string | null
+  fillSlope?: string | null
+  camber?: number | string | null
+  subgrade_depth?: number | string | null
+  subgradeDepth?: number | string | null
+}
+
+interface EngineeringIpRow {
+  id: string | number
+  name: string | null
+  easting: number | string | null
+  northing: number | string | null
+  radius: number | string | null
+  deflection_angle?: number | string | null
+  tangent_length?: number | string | null
+  arc_length?: number | string | null
+  chainage_tc?: number | string | null
+  chainage_mc?: number | string | null
+  chainage_ct?: number | string | null
+  sort_order?: number | string | null
+}
+
+interface EngineeringVipRow {
+  id: string | number
+  chainage: number | string | null
+  reduced_level: number | string | null
+  k_value?: number | string | null
+}
+
+interface EngineeringStationRow {
+  chainage: number | string | null
+  ground_level: number | string | null
+}
+
+interface EngineeringAlignmentRow {
+  id: string | number
+  road_name?: string | null
+  start_chainage?: number | string | null
+  datum?: string | null
+  coordinate_system?: string | null
+  design_speed?: number | string | null
+  road_class?: string | null
+  standard?: string | null
+  cross_section_template?: CrossSectionTemplateRow | null
+  ips?: EngineeringIpRow[]
+  vips?: EngineeringVipRow[]
+  stations?: EngineeringStationRow[]
+}
+
+interface ProjectDbRow {
+  id: string
+  user_id?: string | null
+  engineering_data?: unknown
+  [key: string]: unknown
+}
+
+interface SurveyorProfileDbRow {
+  isk_number?: string | null
+  verified_isk?: boolean | null
+  full_name?: string | null
+  name?: string | null
+  firm_name?: string | null
+  company?: string | null
+}
+
 export default function EngineeringWorkspacePage() {
   const params = useParams<{ id: string }>()
   const router = useRouter()
@@ -81,7 +153,7 @@ export default function EngineeringWorkspacePage() {
         alignmentResponseSchema,
         { ttlMs: 0 },
       )
-      const dbData = result.data
+      const dbData = result.data as EngineeringAlignmentRow | null
 
       if (!dbData) {
         // No alignment row yet — nothing to hydrate
@@ -104,7 +176,7 @@ export default function EngineeringWorkspacePage() {
           }
         : undefined
 
-      const ips: IntersectionPoint[] = (dbData.ips || []).map((row: any) => ({
+      const ips: IntersectionPoint[] = (dbData.ips || []).map((row) => ({
         id: String(row.id),
         name: String(row.name),
         easting: Number(row.easting),
@@ -119,14 +191,14 @@ export default function EngineeringWorkspacePage() {
         sortOrder: row.sort_order != null ? Number(row.sort_order) : undefined,
       }))
 
-      const vips: VerticalIP[] = (dbData.vips || []).map((row: any) => ({
+      const vips: VerticalIP[] = (dbData.vips || []).map((row) => ({
         id: String(row.id),
         chainage: Number(row.chainage),
         reducedLevel: Number(row.reduced_level),
         kValue: row.k_value != null ? Number(row.k_value) : undefined,
       }))
 
-      const stations: StationData[] = (dbData.stations || []).map((row: any) => ({
+      const stations: StationData[] = (dbData.stations || []).map((row) => ({
         chainage: Number(row.chainage),
         groundLevel: Number(row.ground_level),
       }))
@@ -138,7 +210,7 @@ export default function EngineeringWorkspacePage() {
         datum: String(dbData.datum || 'Arc 1960'),
         coordinateSystem: String(dbData.coordinate_system || 'UTM Zone 37S'),
         designSpeed: Number(dbData.design_speed ?? 60),
-        roadClass: String(dbData.road_class || 'C') as any,
+        roadClass: String(dbData.road_class || 'C') as RoadDesignData['roadClass'],
         standard: (dbData.standard || 'KRDM2017') as EngineeringStandard,
         ips,
         vips,
@@ -179,25 +251,27 @@ export default function EngineeringWorkspacePage() {
 
   const fetchProject = useCallback(async () => {
     setLoading(true)
-    const { data, error } = await dbClient
+    const projectResult = (await dbClient
       .from('projects')
       .select('*')
       .eq('id', params.id)
-      .single()
+      .single()) as { data: ProjectDbRow | null; error: { message: string } | null }
+    const { data, error } = projectResult
 
     if (error || !data) {
       setLoading(false)
       return
     }
 
-    const engData = (data as any).engineering_data as EngineeringData | null
+    const engData = (data?.engineering_data ?? null) as EngineeringData | null
     setProject({ ...data, engineering_data: engData } as EngineeringProject)
 
-    const { data: profile } = await dbClient
+    const profileResult = (await dbClient
       .from('surveyor_profiles')
       .select('isk_number, verified_isk, full_name, name, firm_name, company')
-      .eq('user_id', (data as any).user_id)
-      .single()
+      .eq('user_id', data.user_id)
+      .single()) as { data: SurveyorProfileDbRow | null }
+    const profile = profileResult.data
 
     if (profile) {
       setSurveyorProfile({
