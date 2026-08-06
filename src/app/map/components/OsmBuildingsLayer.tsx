@@ -19,13 +19,14 @@ import { useEffect, useRef, useState } from 'react'
 import { Loader2, Building2 } from 'lucide-react'
 
 interface OsmBuildingsLayerProps {
-  map: any  // OpenLayers Map
+  map: import('ol/Map').default | null  // OpenLayers Map
   visible: boolean
 }
 
 export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
-  const layerRef = useRef<any>(null)
-  const sourceRef = useRef<any>(null)
+  const layerRef = useRef<import('ol/layer/Vector').default | null>(null)
+  const sourceRef = useRef<import('ol/source/Vector').default | null>(null)
+  const formatRef = useRef<import('ol/format/GeoJSON').default | null>(null)
   const [loading, setLoading] = useState(false)
   const [featureCount, setFeatureCount] = useState(0)
   const [error, setError] = useState<string | null>(null)
@@ -65,7 +66,7 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
         sourceRef.current = source
         layerRef.current = layer
         // Store GeoJSON format for later use
-        ;(layerRef.current as any).geoJSONFormat = new GeoJSON()
+        formatRef.current = new GeoJSON()
       } catch (err) {
         if (!cancelled) {
           console.error('[osm-buildings] Failed to init layer:', err)
@@ -94,7 +95,8 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
   useEffect(() => {
     if (!map || !visible || !sourceRef.current) return
 
-    let timeoutId: any
+    const source = sourceRef.current
+    let timeoutId: ReturnType<typeof setTimeout> | undefined
     let cancelled = false
 
     const fetchBuildings = async () => {
@@ -107,7 +109,7 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
         const extent = view.calculateExtent(map.getSize())
 
         // Transform extent from map projection to WGS84
-        const proj4 = (window as any).proj4
+        const proj4 = (window as unknown as { proj4?: (from: string, to: string, coords: number[]) => number[] }).proj4
         const fromProj = view.getProjection().getCode()
         let minLon: number, minLat: number, maxLon: number, maxLat: number
 
@@ -153,18 +155,19 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
           return
         }
 
-        const data = await res.json()
+        const data = (await res.json()) as { features?: unknown[] }
         if (cancelled) return
 
         if (data && data.features) {
+          const format = formatRef.current
+          if (!format) return
           // Clear and reload
-          sourceRef.current.clear()
-          const format = (layerRef.current as any).geoJSONFormat
+          source.clear()
           const features = format.readFeatures(data, {
             featureProjection: view.getProjection(),
             dataProjection: 'EPSG:4326',
           })
-          sourceRef.current.addFeatures(features)
+          source.addFeatures(features)
           setFeatureCount(features.length)
         }
       } catch (err) {

@@ -4,16 +4,28 @@ import { createClient } from '@/lib/api-client/server'
 import { getPublicAppHost } from '@/lib/site'
 import type { VerifySignatureResponse } from '@/types/signature'
 
+interface DocumentSignatureRow {
+  valid: boolean
+  surveyor_name: string
+  isk_number: string
+  firm_name: string
+  signed_at: string
+  document_type: 'DEED_PLAN' | 'SURVEY_REPORT' | 'TRAVERSE_COMPUTATION'
+  revoked_at: string | null
+  revoked_reason: string | null
+  verification_token: string
+}
+
 async function getVerification(token: string): Promise<VerifySignatureResponse> {
   const dbClient = await createClient()
-  const result = await dbClient
+  const { data, error } = (await dbClient
     .from('document_signatures')
     .select('*')
     .eq('verification_token', token.toUpperCase())
-    .single()
-
-  const data = (result as any).data
-  const error = (result as any).error
+    .single()) as unknown as {
+      data: DocumentSignatureRow | null
+      error: { message: string } | null
+    }
 
   if (error || !data) {
     return { status: 'NOT_FOUND', valid: false }

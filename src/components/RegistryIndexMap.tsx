@@ -111,11 +111,11 @@ export default function RegistryIndexMap({ isOpen, onClose, initialData }: Regis
   }
 
   const updateParcel = (id: string, updates: Partial<RIMParcel>) => {
-    setParcels(prev => prev.map((p: any) => p.id === id ? { ...p, ...updates } : p))
+    setParcels(prev => prev.map((p) => p.id === id ? { ...p, ...updates } : p))
   }
 
   const removeParcel = (id: string) => {
-    setParcels(prev => prev.filter((p: any) => p.id !== id))
+    setParcels(prev => prev.filter((p) => p.id !== id))
     setSelectedParcel(null)
   }
 
@@ -135,7 +135,7 @@ export default function RegistryIndexMap({ isOpen, onClose, initialData }: Regis
   }
 
   const updateAmendment = (id: string, updates: Partial<RIMAmendment>) => {
-    setAmendments(prev => prev.map((a: any) => a.id === id ? { ...a, ...updates } : a))
+    setAmendments(prev => prev.map((a) => a.id === id ? { ...a, ...updates } : a))
   }
 
   const handlePrint = () => {
@@ -366,7 +366,7 @@ export default function RegistryIndexMap({ isOpen, onClose, initialData }: Regis
                     </button>
                   </div>
                   <div className="space-y-1 max-h-48 overflow-y-auto">
-                    {parcels.map((p: any) => (
+                    {parcels.map((p) => (
                       <div key={p.id}
                         className={`flex items-center gap-1 p-1 rounded border cursor-pointer text-xs ${selectedParcel === p.id ? 'bg-blue-50 border-blue-400' : 'border-gray-200 hover:bg-gray-50'}`}
                         onClick={() => setSelectedParcel(p.id)}
@@ -393,7 +393,7 @@ export default function RegistryIndexMap({ isOpen, onClose, initialData }: Regis
                     </button>
                   </div>
                   <div className="space-y-2">
-                    {amendments.map((a: any) => (
+                    {amendments.map((a) => (
                       <div key={a.id} className="border rounded p-2 bg-white text-xs space-y-1">
                         <div className="grid grid-cols-2 gap-1">
                           <input value={a.date} onChange={e => updateAmendment(a.id, {date: e.target.value})}
@@ -407,7 +407,7 @@ export default function RegistryIndexMap({ isOpen, onClose, initialData }: Regis
                           className="w-full px-1 border rounded" aria-label="Description (e.g. SUBDIV 904 INTO 3054-3061)" />
                         <input value={a.affectedPlots} onChange={e => updateAmendment(a.id, {affectedPlots: e.target.value})}
                           className="w-full px-1 border rounded" aria-label="Affected parcels" />
-                        <button onClick={() => setAmendments(prev => prev.filter((x: any) => x.id !== a.id))}
+                        <button onClick={() => setAmendments(prev => prev.filter((x) => x.id !== a.id))}
                           className="text-red-500 hover:text-red-700 text-xs">Remove</button>
                       </div>
                     ))}
@@ -506,7 +506,7 @@ function RIMSheetContent({
           <div className="grid grid-cols-2 gap-x-4 text-[7pt]">
             <div><span className="font-bold">District:</span> {district || '—'}</div>
             <div><span className="font-bold">Location:</span> {location || '—'}</div>
-            <div><span className="font-bold">Sub-Location:</span> {(location as any)?.subLocation || '—'}</div>
+            <div><span className="font-bold">Sub-Location:</span> {(location as unknown as { subLocation?: string })?.subLocation || '—'}</div>
             <div><span className="font-bold">Reg. Unit:</span> {registrationUnit || '—'}</div>
           </div>
         </div>
@@ -538,7 +538,7 @@ function RIMSheetContent({
             {mode === 'edit' ? '← Add parcels using the panel →' : 'No parcels on this sheet'}
           </div>
         ) : (
-          parcels.map((p: any) => (
+          parcels.map((p) => (
             <div key={p.id}
               className={`absolute flex flex-col items-center justify-center cursor-pointer ${selectedParcel === p.id ? 'outline-2 outline-blue-500' : ''}`}
               style={{

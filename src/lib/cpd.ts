@@ -3,6 +3,25 @@ import { randomBytes } from 'crypto'
 import type { CPDRecord, CPDCertificate, CPDActivity } from '@/types/cpd'
 import { CPD_POINTS } from '@/types/cpd'
 
+/** Row shape returned by generateCPDCertificate's INSERT ... RETURNING *. */
+interface CertificateRow {
+  id: string
+  user_id: string
+  year: number
+  total_points: number
+  verification_code: string
+  /** pg returns a Date for timestamptz, but CPDCertificate.generatedAt is declared string — keep in sync. */
+  generated_at: string
+  pdf_path: string | null
+}
+
+/** Row shape returned by verifyCPDCertificate's joined SELECT. */
+interface CertificateVerifyRow extends CertificateRow {
+  profile_name: string | null
+  isk_number: string | null
+  cpd_records: unknown
+}
+
 /**
  * AUDIT FIX (2026-07-05): Fraud prevention overhaul.
  *
@@ -108,7 +127,7 @@ export async function awardCPDPoints(
   const isManual = MANUAL_ACTIVITIES.includes(activity)
   const approved = !isManual
 
-  const result = await db.query(
+  const result = await db.query<{ id: string }>(
     `INSERT INTO cpd_records (user_id, activity, points, description, reference_id, verifiable, approved)
      VALUES ($1, $2, $3, $4, $5, true, $6)
      RETURNING id`,
@@ -162,7 +181,7 @@ export async function addManualCPDEntry(
     }
   }
 
-  const result = await db.query(
+  const result = await db.query<{ id: string }>(
     `INSERT INTO cpd_records (user_id, activity, points, description, reference_id, verifiable, approved, awarded_by)
      VALUES ($1, $2, $3, $4, $5, true, FALSE, $1)
      RETURNING id`,
@@ -257,7 +276,7 @@ export async function getTotalCPDForYear(userId: string, year: number): Promise<
   const startDate = new Date(year, 0, 1).toISOString()
   const endDate = new Date(year, 11, 31, 23, 59, 59).toISOString()
 
-  const result = await db.query(
+  const result = await db.query<{ total: unknown }>(
     `SELECT COALESCE(SUM(points), 0) as total
      FROM cpd_records
      WHERE user_id = $1 AND earned_at >= $2 AND earned_at <= $3 AND approved = TRUE`,
@@ -281,7 +300,7 @@ export async function getCPDSummary(userId: string, year: number): Promise<{
   const startDate = new Date(year, 0, 1).toISOString()
   const endDate = new Date(year, 11, 31, 23, 59, 59).toISOString()
 
-  const result = await db.query(
+  const result = await db.query<{ total: unknown; pending_count: unknown }>(
     `SELECT
        COALESCE(SUM(points) FILTER (WHERE approved = TRUE), 0) as total,
        COUNT(*) FILTER (WHERE approved = FALSE AND rejection_reason IS NULL) as pending_count
@@ -310,7 +329,7 @@ export async function generateCPDCertificate(
   const totalPoints = approvedRecords.reduce((sum, r) => sum + r.points, 0)
   const verificationCode = generateVerificationCode()
 
-  const result = await db.query(
+  const result = await db.query<CertificateRow>(
     `INSERT INTO cpd_certificates (user_id, year, total_points, verification_code)
      VALUES ($1, $2, $3, $4)
      RETURNING *`,
@@ -335,7 +354,7 @@ export async function generateCPDCertificate(
 }
 
 export async function verifyCPDCertificate(code: string): Promise<CPDCertificate | null> {
-  const result = await db.query(
+  const result = await db.query<CertificateVerifyRow>(
     `SELECT c.*, p.full_name as profile_name, p.isk_number,
             json_agg(cr.*) as cpd_records
      FROM cpd_certificates c
@@ -358,10 +377,10 @@ export async function verifyCPDCertificate(code: string): Promise<CPDCertificate
     iskNumber: data.isk_number || 'N/A',
     year: data.year,
     totalPoints: data.total_points,
-    activities: data.cpd_records || [],
+    activities: (data.cpd_records as CPDRecord[] | null) || [],
     generatedAt: data.generated_at,
     verificationCode: data.verification_code,
-    pdfPath: data.pdf_path
+    pdfPath: data.pdf_path ?? undefined
   }
 }
 

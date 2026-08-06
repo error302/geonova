@@ -26,6 +26,7 @@ import {
   type SerialConnectionConfig,
   type ParsedInstrumentData,
   type InstrumentInfo,
+  type NMEAPosition,
 } from '@/lib/serial'
 
 export interface StreamedPoint {
@@ -122,7 +123,7 @@ export function useInstrumentConnection(): UseInstrumentConnectionReturn {
       let point: StreamedPoint | null = null
 
       if (data.type === 'nmea') {
-        const nmea = data.data as any
+        const nmea = data.data as NMEAPosition
         if (nmea.latitude && nmea.longitude) {
           point = {
             id: `stream-${Date.now()}-${pointCounter++}`,
@@ -254,7 +255,7 @@ export function useInstrumentConnection(): UseInstrumentConnectionReturn {
       // Same parsing logic as connect()
       let point: StreamedPoint | null = null
       if (data.type === 'nmea') {
-        const nmea = data.data as any
+        const nmea = data.data as NMEAPosition
         if (nmea.latitude && nmea.longitude) {
           point = {
             id: `stream-${Date.now()}-${pointCounter++}`,

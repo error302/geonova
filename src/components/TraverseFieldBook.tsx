@@ -11,7 +11,7 @@ import { usePrint, PrintButton, PrintHeader } from '@/hooks/usePrint'
 // into the print-window HTML — escape before document.write().
 import { escapeXml } from '@/lib/xml/escape'
 import { reduceEDMObservation, computeMeanAngleDMS as sharedMeanAngleDMS, processTraverseObservations, getAtmosphericDefaults, autoDetectUTMZone, findNearestPreset, findPresetByCounty, fetchRealtimeWeather, computeAtmosphericErrorImpact, validateAtmosphericDefaults, KENYA_LOCATION_PRESETS } from '@/lib/survey/adapter'
-import type { AdaptedEDMResult, ProcessedObservation, AtmosphericDefaults, KenyaLocationPreset } from '@/lib/survey/adapter'
+import type { AdaptedEDMResult, ProcessedObservation, AtmosphericDefaults, KenyaLocationPreset, AtmosphericSource } from '@/lib/survey/adapter'
 import { CorrectionAuditTrail } from '@/components/survey/CorrectionAuditTrail'
 import type { CorrectionObservationSummary } from '@/components/survey/CorrectionAuditTrail'
 import { TraverseStationInput } from '@/types/field'
@@ -75,7 +75,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
   const [humidity, setHumidity] = useState(String(initialDefaults.humidity))
   const [meanElevation, setMeanElevation] = useState(String(initialDefaults.elevation))
   const [utmProjection, setUtmProjection] = useState<'UTM36S' | 'UTM37S'>(initialDefaults.utmZone)
-  const [atmSource, setAtmSource] = useState<string>(initialDefaults.source)
+  const [atmSource, setAtmSource] = useState<AtmosphericSource>(initialDefaults.source)
   const [atmVerified, setAtmVerified] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   
@@ -85,7 +85,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
     const raw = searchParams.get('field_import')
     if (!raw) return
     try {
-      const stations: TraverseStationInput[] = JSON.parse(decodeURIComponent(raw))
+      const stations = JSON.parse(decodeURIComponent(raw)) as TraverseStationInput[]
       const mapped = stations.map(s => ({
         station: s.label,
         bs: '', fs: '', hclDeg: '', hclMin: '', hclSec: '', hcrDeg: '', hcrMin: '', hcrSec: '', slopeDist: '', vaDeg: '', vaMin: '', vaSec: '', ih: '1.5', th: '1.5'
@@ -139,7 +139,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
       const vaS = headers.findIndex(h => h.includes('va_sec') || h.includes('va_s') || h.includes('vert_s'))
       const ihIdx = headers.findIndex(h => h.includes('ih'))
       const thIdx = headers.findIndex(h => h.includes('th'))
-      const imported: RawObservation[] = rows.map((row: any) => ({
+      const imported: RawObservation[] = rows.map((row) => ({
         station: stationIdx >= 0 ? row[stationIdx] || '' : '',
         bs: '', fs: '',
         hclDeg: hclD >= 0 ? row[hclD] || '' : '',
@@ -179,7 +179,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
       setError('Closing control point must be DIFFERENT from opening control point. A cadastral traverse requires minimum 2 distinct known control points for position verification per Survey Regulations Reg. 60 & 67. A 1-point traverse has no absolute position check.')
       return
     }
-    const validObs = observations.filter((o: any) => o.station && o.slopeDist)
+    const validObs = observations.filter((o) => o.station && o.slopeDist)
     if (validObs.length === 0) { setError('At least one valid observation required'); return }
     try {
       const res = computeTraverse({
@@ -321,7 +321,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
     <div className="space-y-4">
       <PrintHeader title="Traverse Field Book" />
       <div className="flex items-center gap-2 border-b border-[var(--border-color)] pb-2">
-        {(['input', 'compute', 'print'] as const).map((tab: any) => (
+        {(['input', 'compute', 'print'] as const).map((tab) => (
           <button key={tab} onClick={() => setActiveTab(tab)}
             className={`px-3 py-1.5 rounded text-sm font-medium capitalize transition-colors ${
               activeTab === tab ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--border-hover)]'
@@ -513,7 +513,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
                       utmZone: utmProjection,
                       geoidUndulation: -12,
                       refractionCoefficient: 0.13,
-                      source: atmSource as any,
+                      source: atmSource,
                       verified: atmVerified,
                     });
                     return (
@@ -565,20 +565,20 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
                       className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     <td className="px-1 py-1"><input aria-label="Fs" value={obs.fs} onChange={e => updateObs(i, 'fs', e.target.value)}
                       className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
-                    {(['hclDeg','hclMin','hclSec']).map((f: any) => (
-                      <td key={f} className="px-0.5 py-1"><input aria-label="Observation field" value={(obs as any)[f]} onChange={e => updateObs(i, f as keyof RawObservation, e.target.value)}
+                    {(['hclDeg','hclMin','hclSec'] as const).map((f) => (
+                      <td key={f} className="px-0.5 py-1"><input aria-label="Observation field" value={obs[f]} onChange={e => updateObs(i, f, e.target.value)}
                         type="number" className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     ))}
                     <td className="w-3"></td>
-                    {(['hcrDeg','hcrMin','hcrSec']).map((f: any) => (
-                      <td key={f} className="px-0.5 py-1"><input aria-label="Observation field" value={(obs as any)[f]} onChange={e => updateObs(i, f as keyof RawObservation, e.target.value)}
+                    {(['hcrDeg','hcrMin','hcrSec'] as const).map((f) => (
+                      <td key={f} className="px-0.5 py-1"><input aria-label="Observation field" value={obs[f]} onChange={e => updateObs(i, f, e.target.value)}
                         type="number" className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     ))}
                     <td className="px-1 py-1 text-center font-mono text-[10px] text-[var(--accent)] whitespace-nowrap">{computeMeanAngleDMS(obs)}</td>
                     <td className="px-1 py-1"><input aria-label="Slopedist" value={obs.slopeDist} onChange={e => updateObs(i, 'slopeDist', e.target.value)}
                       type="number" step="0.001" className="w-16 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
-                    {(['vaDeg','vaMin','vaSec']).map((f: any) => (
-                      <td key={f} className="px-0.5 py-1"><input aria-label="Observation field" value={(obs as any)[f]} onChange={e => updateObs(i, f as keyof RawObservation, e.target.value)}
+                    {(['vaDeg','vaMin','vaSec'] as const).map((f) => (
+                      <td key={f} className="px-0.5 py-1"><input aria-label="Observation field" value={obs[f]} onChange={e => updateObs(i, f, e.target.value)}
                         type="number" className="w-12 px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" /></td>
                     ))}
                     <td className="px-1 py-1"><input aria-label="Ih" value={obs.ih} onChange={e => updateObs(i, 'ih', e.target.value)}

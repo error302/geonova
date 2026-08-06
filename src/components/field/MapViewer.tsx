@@ -30,10 +30,10 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
   ref
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<any>(null);
+  const mapRef = useRef<import('ol/Map').default | null>(null);
   const kenyaCenterRef = useRef<number[]>([0, 0]);
-  const gpsFeatureRef = useRef<any>(null);
-  const olHelpersRef = useRef<any>(null);
+  const gpsFeatureRef = useRef<import('ol/Feature').default | null>(null);
+  const olHelpersRef = useRef<{ Point: typeof import('ol/geom/Point').default; fromLonLat: typeof import('ol/proj').fromLonLat } | null>(null);
 
 
   /* ---- Expose imperative handle to parent ---- */
@@ -62,9 +62,8 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
       const layers = map.getLayers().getArray();
       // Try beacon / parcel layers first, then geojson
       for (let i = layers.length - 1; i >= 0; i--) {
-        const l = layers[i] as any;
-        const src = l?.getSource?.();
-        if (src && src.getFeatures && src.getFeatures().length > 0) {
+        const src = (layers[i] as import('ol/layer/Layer').default).getSource() as import('ol/source/Vector').default | null;
+        if (src && typeof src.getFeatures === 'function' && src.getFeatures().length > 0) {
           const ext = src.getExtent();
           if (ext && ext[0] !== Infinity && ext[1] !== Infinity) {
             map.getView().fit(ext, { padding: [80, 80, 80, 80], maxZoom: 17, duration: 400 });
@@ -169,14 +168,14 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
 
         const beaconLayer = new VectorLayer({
           source: new VectorSource({ features: beaconFeatures }),
-          style: (feature: any) => new Style({
+          style: (feature) => new Style({
             image: new CircleStyle({
               radius: 8,
               fill: new Fill({ color: '#f59e0b' }),
               stroke: new Stroke({ color: '#ffffff', width: 2 }),
             }),
             text: new TextStyle({
-              text: feature.get('label') || '',
+              text: (feature.get('label') as string | undefined) || '',
               offsetY: -16,
               fill: new Fill({ color: '#f59e0b' }),
               stroke: new Stroke({ color: '#000', width: 3 }),
@@ -212,8 +211,8 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
         
         const gpsLayer = new VectorLayer({
           source: new VectorSource({ features: [gpsFeature] }),
-          style: (feature: any) => {
-            const acc = feature.get('accuracy') || 10;
+          style: (feature) => {
+            const acc = (feature.get('accuracy') as number | undefined) || 10;
             let color = 'rgba(239,68,68,0.4)'; // Red (Single) > 3m
             let strokeColor = '#ef4444';
             
@@ -278,7 +277,7 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
         }
 
         // Map click handler — uses ref for stable callback
-        map.on('click', (e: any) => {
+        map.on('click', (e: import('ol/MapBrowserEvent').default) => {
           const cb = onMapClickRef.current;
           if (cb) {
             const [lng, lat] = toLonLat(e.coordinate);

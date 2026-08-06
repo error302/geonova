@@ -13,6 +13,33 @@ import {
 } from 'lucide-react'
 import { processWithProgress } from '@/lib/performance'
 
+interface GeoJSONParcelProps {
+  parcel_number?: string
+  parcelNumber?: string
+  name?: string
+  owner_name?: string
+  ownerName?: string
+  owner?: string
+  owner_id?: string
+  ownerId?: string
+  national_id?: string
+  lr_number?: string
+  lrNumber?: string
+  title_deed?: string
+  area_ha?: string
+  area?: string
+}
+
+interface GeoJSONGeometry {
+  type?: string
+  coordinates?: unknown
+}
+
+interface GeoJSONFeature {
+  properties?: GeoJSONParcelProps
+  geometry?: GeoJSONGeometry
+}
+
 interface ParsedParcel {
   id: string
   parcelNumber: string
@@ -98,21 +125,21 @@ export function BatchParcelImport({ projectId, onImport }: BatchParcelImportProp
   }, [])
 
   const parseGeoJSON = useCallback((text: string): ParsedParcel[] => {
-    const geojson = JSON.parse(text)
+    const geojson = JSON.parse(text) as { features?: GeoJSONFeature[] }
     if (!geojson.features || !Array.isArray(geojson.features)) return []
 
-    return geojson.features.map((feature: any, idx: number) => {
-      const props = feature.properties || {}
-      const geom = feature.geometry
+    return geojson.features.map((feature, idx: number) => {
+      const props: GeoJSONParcelProps = feature.properties || {}
+      const geom: GeoJSONGeometry = feature.geometry || {}
 
       let vertices: Array<{ easting: number; northing: number }> = []
 
       if (geom.type === 'Polygon') {
-        const ring = geom.coordinates[0] || []
+        const ring = ((geom.coordinates as number[][][]) || [])[0] || []
         const verts = ring.slice(0, -1)
         vertices = verts.map((c: number[]) => ({ easting: c[0], northing: c[1] }))
       } else if (geom.type === 'MultiPolygon') {
-        const ring = geom.coordinates[0]?.[0] || []
+        const ring = ((geom.coordinates as number[][][][]) || [])[0]?.[0] || []
         const verts = ring.slice(0, -1)
         vertices = verts.map((c: number[]) => ({ easting: c[0], northing: c[1] }))
       }
@@ -203,7 +230,7 @@ export function BatchParcelImport({ projectId, onImport }: BatchParcelImportProp
               }),
             })
             if (res.ok) {
-              const data = await res.json()
+              const data = (await res.json()) as { data?: { imported?: number; failed?: number } }
               totalSuccess += data.data?.imported || chunk.length
               totalFailed += data.data?.failed || 0
             } else {
@@ -238,11 +265,11 @@ export function BatchParcelImport({ projectId, onImport }: BatchParcelImportProp
         })
 
         if (!res.ok) {
-          const data = await res.json()
+          const data = (await res.json()) as { error?: string }
           throw new Error(data.error || 'Import failed')
         }
 
-        const data = await res.json()
+        const data = (await res.json()) as { data?: { imported?: number; failed?: number } }
         setImportResult({
           success: data.data?.imported || parcels.length,
           failed: data.data?.failed || 0,
