@@ -9,7 +9,7 @@
  */
 
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react'
-import { Play, Square, MapPin, ChevronDown } from 'lucide-react'
+import { Play, Square, MapPin } from 'lucide-react'
 import { useMapContext } from '@/app/map/MapReactContext'
 
 export const GpsTrackPanel = memo(function GpsTrackPanel() {
@@ -18,7 +18,7 @@ export const GpsTrackPanel = memo(function GpsTrackPanel() {
   const [trackPoints, setTrackPoints] = useState<Array<[number, number]>>([])
   const [pointCount, setPointCount] = useState(0)
   const [totalDistance, setTotalDistance] = useState(0)
-  const trackLayerRef = useRef<any>(null)
+  const trackLayerRef = useRef<import('ol/layer/Vector').default | null>(null)
 
   // Accumulate GPS positions when tracking is active
   useEffect(() => {
@@ -133,7 +133,12 @@ export const GpsTrackPanel = memo(function GpsTrackPanel() {
           totalDistance: totalDistance.toFixed(1),
         }
         // Store in a list of tracks
-        const existingTracks = JSON.parse(localStorage.getItem('metardu:gps-tracks') || '[]')
+        const existingTracks = JSON.parse(localStorage.getItem('metardu:gps-tracks') || '[]') as Array<{
+          date: string
+          pointCount: number
+          geojson: unknown
+          totalDistance: string
+        }>
         existingTracks.push(trackData)
         // Keep last 50 tracks
         if (existingTracks.length > 50) existingTracks.shift()

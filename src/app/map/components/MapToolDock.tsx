@@ -26,8 +26,8 @@ import {
   X,
   MapPin, PenTool, Hexagon, Circle,
   Undo2, Redo2, Trash2, Edit3,
-  Navigation, Search, Bookmark,
-  Ruler, Compass, Satellite, Globe, Mountain, Moon,
+  Navigation, Search,
+  Ruler, Satellite, Globe, Mountain, Moon,
   FileOutput, Printer,
   Eye, MapPinned,
   Scissors, GitMerge, RefreshCw, Magnet, Info,
@@ -176,7 +176,6 @@ function ProjectBadge() {
 // ---------------------------------------------------------------------------
 
 interface DockPanelProps {
-  id: DockCategory
   label: string
   accent: string
   isOpen: boolean
@@ -184,7 +183,7 @@ interface DockPanelProps {
   children: React.ReactNode
 }
 
-const DockPanel = memo(function DockPanel({ id, label, accent, isOpen, onClose, children }: DockPanelProps) {
+const DockPanel = memo(function DockPanel({ label, accent, isOpen, onClose, children }: DockPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null)
 
   if (!isOpen) return null
@@ -232,19 +231,18 @@ const DockPanel = memo(function DockPanel({ id, label, accent, isOpen, onClose, 
 // Helper: polygon vertices from OL feature
 // ---------------------------------------------------------------------------
 
-function extractPolygonVertices(feature: any): SurveyPoint[] {
+function extractPolygonVertices(feature: import('ol/Feature').default | null): SurveyPoint[] {
   if (!feature) return []
   try {
-    const geom = feature.getGeometry?.()
+    const geom = feature.getGeometry()
     if (!geom) return []
-    const type = geom.getType?.()
+    const type = geom.getType()
     if (type === 'Polygon') {
-      const coords = geom.getCoordinates?.()
-      const ring = coords?.[0] || []
+      const ring = (geom as import('ol/geom/Polygon').default).getCoordinates()[0] || []
       return ring.slice(0, -1).map((c: number[]) => ({ easting: c[0], northing: c[1] }))
     }
     if (type === 'LineString') {
-      const coords = geom.getCoordinates?.() || []
+      const coords = (geom as import('ol/geom/LineString').default).getCoordinates()
       return coords.map((c: number[]) => ({ easting: c[0], northing: c[1] }))
     }
   } catch {}
@@ -705,8 +703,8 @@ export const MapToolDock = memo(function MapToolDock() {
 
         {/* Active panel — bottom sheet, only one at a time on mobile */}
         {openPanels.size > 0 && (() => {
-          const cat = [...openPanels].at(-1)!
-          const catDef = CATEGORIES.find(c => c.id === cat)!
+          const cat = [...openPanels][openPanels.size - 1]
+          const catDef = CATEGORIES.find(c => c.id === cat) ?? CATEGORIES[0]
           return (
             <div
               className="fixed inset-x-0 bottom-0 z-40 bg-[var(--bg-secondary)]/95 backdrop-blur-2xl border-t border-white/[0.08] rounded-t-2xl shadow-[0_-8px_40px_rgba(0,0,0,0.5)] transition-transform duration-300"
@@ -826,7 +824,6 @@ export const MapToolDock = memo(function MapToolDock() {
               {CATEGORIES.filter(cat => openPanels.has(cat.id)).map(cat => (
                 <DockPanel
                   key={cat.id}
-                  id={cat.id}
                   label={cat.label}
                   accent={cat.accent}
                   isOpen={openPanels.has(cat.id)}
