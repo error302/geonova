@@ -36,9 +36,18 @@
  *   node scripts/api-row-sweep.mjs --json               # machine-readable JSON
  *   node scripts/api-row-sweep.mjs --no-member-scan     # skip eslint (faster)
  *   node scripts/api-row-sweep.mjs --routes 'scheme|rim'# only matching paths
+ *   node scripts/api-row-sweep.mjs --batch N [--batch-size S]  # per-line worklist for batch N
  *   node scripts/api-row-sweep.mjs --check [base-ref]   # CI regression gate (see below)
  *   node scripts/api-row-sweep.mjs --apply <route-file>             # auto-type one route (see below)
  *   node scripts/api-row-sweep.mjs --apply <file> --verify           # …then typecheck it & attribute failures
+ *
+ * --batch N: prints a precise per-line worklist for batch N (files chunked
+ * by cumulative untyped-query count, default 30 per batch — --batch-size
+ * overrides). Mirrors member-scan.mjs --batch so a grind session starts from
+ * an exact list of files + query lines instead of scanning the JSON report.
+ * Chunking by untyped-query count keeps batches identical under
+ * --no-member-scan (untyped counts don't depend on eslint), so the fast path
+ * prints the same worklist as a full scan. Cannot be combined with --json.
  *
  * --check: the row-typing regression gate. Computes the changed route files
  * via `git diff --name-only --diff-filter=ACMR <base>...HEAD` filtered to
@@ -85,6 +94,22 @@ const TOP = topIdx >= 0 ? Number(args[topIdx + 1]) : Infinity
 const untypedOnly = args.includes('--untyped-only')
 const asJson = args.includes('--json')
 const skipMember = args.includes('--no-member-scan')
+const batchIdx = args.indexOf('--batch')
+const BATCH = batchIdx >= 0 ? Number(args[batchIdx + 1]) : null
+const sizeIdx = args.indexOf('--batch-size')
+const BATCH_SIZE = sizeIdx >= 0 ? Number(args[sizeIdx + 1]) : 30
+if (BATCH !== null && (args[batchIdx + 1] === undefined || args[batchIdx + 1].startsWith('--') || !Number.isInteger(BATCH) || BATCH < 1)) {
+  console.error(`[api-row-sweep] --batch requires a positive integer (got "${args[batchIdx + 1]}").`)
+  process.exit(2)
+}
+if (sizeIdx >= 0 && (args[sizeIdx + 1] === undefined || args[sizeIdx + 1].startsWith('--') || !Number.isInteger(BATCH_SIZE) || BATCH_SIZE < 1)) {
+  console.error(`[api-row-sweep] --batch-size requires a positive integer (got "${args[sizeIdx + 1]}").`)
+  process.exit(2)
+}
+if (BATCH !== null && asJson) {
+  console.error('[api-row-sweep] cannot combine --batch with --json (batch prints the human worklist; use --json alone for machine output).')
+  process.exit(2)
+}
 const routesIdx = args.indexOf('--routes')
 const ROUTES_RE = routesIdx >= 0 ? new RegExp(args[routesIdx + 1]) : null
 const checkMode = args.includes('--check')
@@ -786,6 +811,66 @@ async function main() {
 
   // Sort by member-access warnings desc, then query count desc
   files.sort((a, b) => (b.memberWarnings - a.memberWarnings) || (b.queries.length - a.queries.length))
+
+  // --batch N prints a precise per-line worklist for batch N, mirroring
+  // member-scan.mjs: files are chunked into batches by cumulative untyped
+  // query count (--batch-size, default 30) in the same order the ranking
+  // below produces (files with untyped queries first, highest count first); a
+  // file is never split. Chunking by untyped queries (not member-access
+  // warnings) keeps the batches identical under --no-member-scan, so the fast
+  // path prints the same deterministic worklist as a full scan. Each entry
+  // lists the file's declared interfaces plus its query lines (line number,
+  // typed/untyped, table, suggested interface) so a grind session starts from
+  // an exact per-line list without a JSON scratch step.
+  const batchFiles = files.filter((f) => f.queries.some((q) => !q.typed))
+  const batches = []
+  let curBatch = []
+  let curUntyped = 0
+  for (const f of batchFiles) {
+    const unt = f.queries.filter((q) => !q.typed).length
+    if (curUntyped > 0 && curUntyped + unt > BATCH_SIZE) {
+      batches.push(curBatch)
+      curBatch = []
+      curUntyped = 0
+    }
+    curBatch.push(f)
+    curUntyped += unt
+  }
+  if (curBatch.length) batches.push(curBatch)
+
+  if (BATCH !== null) {
+    if (!files.length) {
+      console.error('[api-row-sweep] no route files found — route discovery failed (check src/ tree).')
+      process.exit(2)
+    }
+    if (!batchFiles.length) {
+      console.log('[api-row-sweep] every route file is fully typed — the row-typing grind is complete! 🎉')
+      process.exit(0)
+    }
+    if (BATCH > batches.length) {
+      console.error(`[api-row-sweep] batch ${BATCH} out of range — found ${batches.length} batch(es) of ~${BATCH_SIZE} untyped queries.`)
+      process.exit(2)
+    }
+    const b = batches[BATCH - 1]
+    const bUntyped = b.reduce((a, f) => a + f.queries.filter((q) => !q.typed).length, 0)
+    const bWarn = b.reduce((a, f) => a + f.memberWarnings, 0)
+    console.log(`\n=== API ROW-TYPING BATCH ${BATCH} WORKLIST (${bUntyped} untyped queries · ${b.length} files · ${bWarn} member-access warnings) ===`)
+    console.log(`chunked by cumulative untyped-query count (--batch-size ${BATCH_SIZE}); order = most untyped queries first`)
+    console.log(`batches are computed live from this scan — batch numbers may differ from the doc's historical numbers\n`)
+    for (const f of b) {
+      const unt = f.queries.filter((q) => !q.typed).length
+      console.log(`${f.file}  (${f.memberWarnings} member-access · ${f.queries.length} queries, ${unt} untyped)`)
+      console.log(`  declared row interfaces: ${f.interfaces.length ? f.interfaces.map((i) => `${i.name}@${i.line}`).join(', ') : '(none)'}`)
+      for (const q of f.queries) {
+        if (untypedOnly && q.typed) continue
+        const status = q.typed ? `typed<${q.typeArg}>` : 'UN-TYPED'
+        const sug = q.suggested ? ` → suggest ${q.suggested}` : ''
+        console.log(`  L${String(q.line).padStart(4)} [${status.padEnd(16)}] ${q.table || '??'} ${sug}`)
+        console.log(`         ${q.sql}`)
+      }
+    }
+    process.exit(0)
+  }
 
   if (asJson) {
     console.log(JSON.stringify({ files }, null, 2))
