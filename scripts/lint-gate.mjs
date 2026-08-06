@@ -163,15 +163,23 @@ if (!baseRef || !files || files.length === 0) {
 }
 
 // Load the project's ESLint (8.x, legacy .eslintrc.json) via its Node API.
+// TWO instances, not one: ESLint 8 caches @typescript-eslint parser services
+// per Linter, and the base pass lints `git show` text whose content differs
+// from the on-disk HEAD files. Reusing one instance lets the base pass
+// poison the cached TS program that the HEAD pass then lints against,
+// producing spurious "type cannot be resolved" warnings on large diffs
+// (observed on the CI runner). Isolating the passes keeps each cache clean.
 const { ESLint } = await import(
   pathToFileURL(path.resolve(process.cwd(), 'node_modules/eslint/lib/api.js')).href
 )
 
-const eslint = new ESLint({
+const eslintOptions = {
   cwd: process.cwd(),
   resolvePluginsRelativeTo: process.cwd(),
   useEslintrc: true,
-})
+}
+const eslintBase = new ESLint(eslintOptions)
+const eslintHead = new ESLint(eslintOptions)
 
 function countWarnings(messages) {
   let total = 0
@@ -226,7 +234,7 @@ for (const f of files) {
     continue
   }
   try {
-    const res = await eslint.lintText(content, { filePath: path.resolve(process.cwd(), f) })
+    const res = await eslintBase.lintText(content, { filePath: path.resolve(process.cwd(), f) })
     const c = countWarnings(res.flatMap((r) => r.messages))
     baseWarnings += c.total
     baseMember += c.member
@@ -239,7 +247,7 @@ for (const f of files) {
 }
 
 // 2. Head: lint the working-tree/committed changed files.
-const results = await eslint.lintFiles(files)
+const results = await eslintHead.lintFiles(files)
 const headErrors = results.reduce((n, r) => n + (r.errorCount || 0), 0)
 let headWarnings = 0
 let headMember = 0
@@ -269,6 +277,18 @@ const memberLimit = memberFloorN === null ? baseMember : Math.max(baseMember, me
 const assignmentLimit = assignmentFloorN === null ? baseAssignment : Math.max(baseAssignment, assignmentFloorN)
 const explicitAnyLimit = explicitAnyFloorN === null ? baseExplicitAny : Math.max(baseExplicitAny, explicitAnyFloorN)
 
+// Always show the comparison so CI logs are self-diagnosing (the FAIL line
+// itself can still be buried under thousands of message lines).
+console.error(
+  `[lint-gate] changed files: ${files.length}, base ${baseWarnings} warnings (member ${baseMember}, assignment ${baseAssignment}, explicit-any ${baseExplicitAny}) vs head ${headWarnings} warnings (member ${headMember}, assignment ${headAssignment}, explicit-any ${headExplicitAny}), errors ${headErrors}`
+)
+
+// Collect the failure instead of process.exit(1) mid-print: console.error to
+// a pipe is async, and process.exit() drops pending writes — the FAIL line
+// was vanishing from CI logs on the very failures the gate caught. Setting
+// process.exitCode lets Node drain the output before exiting.
+let failMessage = null
+
 if (headErrors > 0) {
   for (const r of results) {
     if (r.errorCount > 0) {
@@ -277,11 +297,8 @@ if (headErrors > 0) {
       }
     }
   }
-  console.error(`[lint-gate] FAIL: ${headErrors} error(s) in changed files.`)
-  process.exit(1)
-}
-
-if (headWarnings > limit) {
+  failMessage = `[lint-gate] FAIL: ${headErrors} error(s) in changed files.`
+} else if (headWarnings > limit) {
   for (const r of results) {
     if (r.warningCount > 0) {
       for (const m of r.messages.filter((x) => x.severity === 1)) {
@@ -289,43 +306,43 @@ if (headWarnings > limit) {
       }
     }
   }
-  console.error(
-    `[lint-gate] FAIL: warnings increased (base ${baseWarnings} → head ${headWarnings}, limit ${limit}).`
-  )
-  process.exit(1)
+  failMessage = `[lint-gate] FAIL: warnings increased (base ${baseWarnings} → head ${headWarnings}, limit ${limit}).`
 }
 
 // Family-floor checks: fail when a gated family grows beyond its limit.
 // Shared helper keeps the three (member-access, assignment, explicit-any)
-// checks identical — only the rule/counts differ.
+// checks identical — only the rule/counts differ. First failing family wins.
 const familyFail = (rule, head, base, limit) => {
-  if (head <= limit) return
+  if (failMessage || head <= limit) return
   for (const r of results) {
     for (const m of r.messages.filter((x) => x.severity === 1 && x.ruleId === rule)) {
       console.error(`  ${r.filePath}:${m.line}:${m.column}  ${m.message}  ${m.ruleId}`)
     }
   }
   const repoFloor = committedFloors[rule]
-  console.error(
+  failMessage =
     `[lint-gate] FAIL: ${rule} warnings increased in changed files (base ${base} → head ${head}, limit ${limit}).` +
     (repoFloor !== undefined && repoFloor !== null ? ` (whole-repo floor: ${repoFloor})` : '')
-  )
-  process.exit(1)
 }
 familyFail(MEMBER_RULE, headMember, baseMember, memberLimit)
 familyFail(ASSIGNMENT_RULE, headAssignment, baseAssignment, assignmentLimit)
 familyFail(EXPLICIT_ANY_RULE, headExplicitAny, baseExplicitAny, explicitAnyLimit)
 
-const familyStats = [
-  { rule: MEMBER_RULE, label: 'member-access', head: headMember, base: baseMember },
-  { rule: ASSIGNMENT_RULE, label: 'assignment', head: headAssignment, base: baseAssignment },
-  { rule: EXPLICIT_ANY_RULE, label: 'explicit-any', head: headExplicitAny, base: baseExplicitAny },
-]
-const familyNotes = familyStats.map(({ rule, label, head, base }) => {
-  const repoFloor = committedFloors[rule]
-  return `${label} ${head} (base ${base}${repoFloor !== undefined && repoFloor !== null ? `, repo floor ${repoFloor}` : ''})`
-})
-console.log(
-  `[lint-gate] OK: ${headWarnings} warnings (base ${baseWarnings}), 0 errors across ${files.length} file(s), ${familyNotes.join(', ')}.`
-)
-process.exit(0)
+if (failMessage) {
+  console.error(failMessage)
+  process.exitCode = 1
+} else {
+  const familyStats = [
+    { rule: MEMBER_RULE, label: 'member-access', head: headMember, base: baseMember },
+    { rule: ASSIGNMENT_RULE, label: 'assignment', head: headAssignment, base: baseAssignment },
+    { rule: EXPLICIT_ANY_RULE, label: 'explicit-any', head: headExplicitAny, base: baseExplicitAny },
+  ]
+  const familyNotes = familyStats.map(({ rule, label, head, base }) => {
+    const repoFloor = committedFloors[rule]
+    return `${label} ${head} (base ${base}${repoFloor !== undefined && repoFloor !== null ? `, repo floor ${repoFloor}` : ''})`
+  })
+  console.log(
+    `[lint-gate] OK: ${headWarnings} warnings (base ${baseWarnings}), 0 errors across ${files.length} file(s), ${familyNotes.join(', ')}.`
+  )
+  process.exitCode = 0
+}
