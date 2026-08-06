@@ -8,6 +8,21 @@ interface ProjectTypeRow {
   project_type: string
 }
 
+interface BlockRow {
+  id: string
+  project_id: string
+  block_number: string
+  block_name: string | null
+  description: string | null
+  created_at: Date
+  updated_at: Date
+}
+
+interface BlockWithCountsRow extends BlockRow {
+  parcel_count: string
+  completed_count: string
+}
+
 export const dynamic = 'force-dynamic'
 
 export const POST = apiHandler(
@@ -41,7 +56,7 @@ export const POST = apiHandler(
       return NextResponse.json({ error: 'Only scheme projects can have blocks' }, { status: 400 })
     }
 
-    const dupCheck = await db.query(
+    const dupCheck = await db.query<{ id: string }>(
       'SELECT id FROM blocks WHERE project_id = $1 AND block_number = $2',
       [project_id, block_number]
     )
@@ -49,7 +64,7 @@ export const POST = apiHandler(
       return NextResponse.json({ error: `Block "${block_number}" already exists in this project` }, { status: 409 })
     }
 
-    const result = await db.query(
+    const result = await db.query<BlockRow>(
       `INSERT INTO blocks (project_id, block_number, block_name, description)
       VALUES ($1, $2, $3, $4) RETURNING *`,
       [project_id, block_number, block_name || null, description || null]
@@ -69,7 +84,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'project_id query parameter is required' }, { status: 400 })
     }
 
-    const projectCheck = await db.query(
+    const projectCheck = await db.query<{ id: string }>(
       'SELECT id FROM projects WHERE id = $1 AND user_id = $2',
       [projectId, ctx.userId]
     )
@@ -77,7 +92,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    const result = await db.query(
+    const result = await db.query<BlockWithCountsRow>(
       `SELECT b.*,
       COALESCE(pc.parcel_count, 0) as parcel_count,
       COALESCE(pc.completed_count, 0) as completed_count

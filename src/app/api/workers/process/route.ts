@@ -58,7 +58,7 @@ export const POST = apiHandler(
       const start = Date.now()
 
       try {
-        await db.query(
+        await db.query<never>(
           `UPDATE background_jobs SET status = 'running', started_at = NOW() WHERE id = $1 AND status = 'pending'`,
           [job.id]
         )
@@ -68,7 +68,7 @@ export const POST = apiHandler(
 
         const durationMs = Date.now() - start
 
-        await db.query(
+        await db.query<never>(
           `UPDATE background_jobs
              SET status = 'completed',
                  result = $2,
@@ -93,7 +93,7 @@ export const POST = apiHandler(
 
         if (isDeadLetter) {
           // Move to dead-letter queue (keep in same table but mark as 'dead_letter')
-          await db.query(
+          await db.query<never>(
             `UPDATE background_jobs
                SET status = 'dead_letter',
                    error_message = $2,
@@ -107,7 +107,7 @@ export const POST = apiHandler(
         } else {
           // Re-queue for retry (set back to pending with exponential backoff delay)
           const delayMs = Math.pow(2, newRetryCount) * 1000  // 2s, 4s, 8s
-          await db.query(
+          await db.query<never>(
             `UPDATE background_jobs
                SET status = 'pending',
                    error_message = $2,

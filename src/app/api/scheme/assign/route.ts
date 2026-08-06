@@ -8,6 +8,15 @@ interface AssignmentCheckRow {
   project_id: string
 }
 
+interface BlockAssignmentRow {
+  id: string
+  block_id: string
+  project_id: string
+  assigned_to: string | null
+  assigned_by: string
+  assigned_at: Date
+}
+
 export const dynamic = 'force-dynamic'
 
 export const POST = apiHandler(
@@ -19,7 +28,7 @@ export const POST = apiHandler(
       return NextResponse.json({ error: 'project_id and block_id are required' }, { status: 400 })
     }
 
-    const check = await db.query(
+    const check = await db.query<AssignmentCheckRow>(
       `SELECT b.id, b.project_id FROM blocks b
       JOIN projects p ON p.id = b.project_id
       WHERE b.id = $1 AND p.user_id = $2`,
@@ -29,7 +38,7 @@ export const POST = apiHandler(
       return NextResponse.json({ error: 'Block not found' }, { status: 404 })
     }
 
-    const result = await db.query(
+    const result = await db.query<BlockAssignmentRow>(
       `INSERT INTO block_assignments (block_id, project_id, assigned_to, assigned_by)
       VALUES ($1, $2, $3, $4)
       ON CONFLICT (block_id) DO UPDATE SET
@@ -41,7 +50,7 @@ export const POST = apiHandler(
     )
 
     if (assigned_to) {
-      await db.query(
+      await db.query<never>(
         `INSERT INTO scheme_activity_log (project_id, user_id, action, entity_type, entity_id, details)
         VALUES ($1, $2, 'block_assigned', 'block', $3, $4)`,
         [project_id, ctx.userId, block_id, JSON.stringify({ assigned_to })]
@@ -72,7 +81,7 @@ export const DELETE = apiHandler(
       return NextResponse.json({ error: 'Assignment not found' }, { status: 404 })
     }
 
-    await db.query('DELETE FROM block_assignments WHERE id = $1', [check.rows[0].id])
+    await db.query<never>('DELETE FROM block_assignments WHERE id = $1', [check.rows[0].id])
 
     return NextResponse.json({ message: 'Assignment removed' })
   }

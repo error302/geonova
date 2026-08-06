@@ -10,6 +10,16 @@ interface BlockCheckRow {
   updated_at?: Date
 }
 
+interface BlockRow {
+  id: string
+  project_id: string
+  block_number: string
+  block_name: string | null
+  description: string | null
+  created_at: Date
+  updated_at: Date
+}
+
 export const dynamic = 'force-dynamic'
 
 export const PATCH = apiHandler(
@@ -44,7 +54,7 @@ export const PATCH = apiHandler(
     }
 
     if (validated.block_number) {
-      const dupCheck = await db.query(
+      const dupCheck = await db.query<{ id: string }>(
         `SELECT id FROM blocks WHERE project_id = $1 AND block_number = $2 AND id != $3`,
         [check.rows[0].project_id, validated.block_number, blockId]
       )
@@ -82,7 +92,7 @@ export const PATCH = apiHandler(
       return NextResponse.json({ error: 'updated_at is required for optimistic locking', code: 'CONFLICT' }, { status: 409 })
     }
     values.push(clientUpdatedAt)
-    const result = await db.query(
+    const result = await db.query<BlockRow>(
       `UPDATE blocks SET ${updates.join(', ')} WHERE id = $${paramIndex} AND updated_at = $${paramIndex + 1} RETURNING *`,
       values
     )
@@ -123,7 +133,7 @@ export const DELETE = apiHandler(
       return NextResponse.json({ error: 'Block not found' }, { status: 404 })
     }
 
-    await db.query('DELETE FROM blocks WHERE id = $1', [blockId])
+    await db.query<never>('DELETE FROM blocks WHERE id = $1', [blockId])
 
     return NextResponse.json({
       message: `Block "${check.rows[0].block_number}" deleted successfully`

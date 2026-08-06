@@ -12,6 +12,21 @@ interface ParcelCountRow {
   computed: number
 }
 
+interface SubmissionTrackRow {
+  id: string
+  project_id: string
+  submission_number: number
+  submitted_by: string
+  status: string
+  documents: unknown
+  parcel_count: number
+  deed_plan_count: number
+  review_notes: string | null
+  created_at: Date
+  updated_at: Date
+  submitted_by_name: string | null
+}
+
 export const dynamic = 'force-dynamic'
 
 const createSubmissionSchema = z.object({
@@ -26,7 +41,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
     return NextResponse.json({ error: 'project_id is required' }, { status: 400 })
   }
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<SubmissionTrackRow>(
     `SELECT s.*, u.full_name as submitted_by_name
      FROM submissions s
      LEFT JOIN users u ON u.id = s.submitted_by
@@ -64,7 +79,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     [project_id]
   )
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<SubmissionTrackRow>(
     `INSERT INTO submissions (project_id, submission_number, submitted_by, 
       status, documents, parcel_count, deed_plan_count, review_notes)
      VALUES ($1, $2, $3, 'submitted', '[]'::jsonb, $4, $5, $6)

@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
 
   // 5. Handle failure result code
   if (typeof resultCode === 'number' && resultCode !== 0) {
-    await db.query(
+    await db.query<never>(
       `UPDATE payment_intents
        SET status = 'failed', provider_id = $1, updated_at = NOW()
        WHERE id = $2`,
@@ -162,7 +162,7 @@ export async function POST(request: NextRequest) {
     console.warn(
       `[mpesa] Amount mismatch: paid ${paidAmount} KES, expected ${expectedAmount} KES for plan ${planId}`
     )
-    await db.query(
+    await db.query<never>(
       `UPDATE payment_intents
        SET status = 'failed', provider_id = $1,
            metadata = metadata || $2::jsonb, updated_at = NOW()
@@ -181,7 +181,7 @@ export async function POST(request: NextRequest) {
   }
 
   // 8. Mark payment intent as completed
-  await db.query(
+  await db.query<never>(
     `UPDATE payment_intents
      SET status = 'completed', provider_id = $1, updated_at = NOW()
      WHERE id = $2`,
@@ -192,7 +192,7 @@ export async function POST(request: NextRequest) {
   // ByteByteGo audit fix: idempotent INSERT — use ON CONFLICT to prevent
   // duplicate rows when Safaricom retries the callback. The provider_id
   // (CheckoutRequestID) is unique per transaction.
-  await db.query(
+  await db.query<never>(
     `INSERT INTO payment_history
        (user_id, amount, currency, payment_method, provider, provider_id,
         status, transaction_id, metadata)
@@ -218,7 +218,7 @@ export async function POST(request: NextRequest) {
   const periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
 
   if (existingSub.rows.length > 0) {
-    await db.query(
+    await db.query<never>(
       `UPDATE user_subscriptions
        SET plan_id = $1, status = 'active', payment_method = 'mpesa',
            currency = 'KES', current_period_start = $2, current_period_end = $3
@@ -226,7 +226,7 @@ export async function POST(request: NextRequest) {
       [planId, periodStart, periodEnd, existingSub.rows[0].id]
     )
   } else {
-    await db.query(
+    await db.query<never>(
       `INSERT INTO user_subscriptions
          (user_id, plan_id, status, payment_method, currency,
           current_period_start, current_period_end)

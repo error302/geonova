@@ -121,7 +121,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     )
 
     // Update parcels_count on the section
-    await db.query(
+    await db.query<never>(
       `UPDATE rim_sections
        SET parcels_count = (SELECT COUNT(*) FROM rim_parcels WHERE rim_section_id = $1),
            updated_at = NOW()

@@ -158,7 +158,7 @@ export const POST = apiHandler(
 
     // Deactivate old version
     if (parentId) {
-      await db.query(
+      await db.query<never>(
         `UPDATE corridor_control_networks SET is_active = FALSE WHERE id = $1`,
         [parentId],
       )
@@ -186,7 +186,7 @@ export const POST = apiHandler(
     // Insert control points if provided
     if (body.control_points && body.control_points.length > 0) {
       for (const cp of body.control_points) {
-        await db.query(
+        await db.query<never>(
           `INSERT INTO corridor_control_points
             (network_id, point_name, point_type, easting, northing, elevation,
              chainage, offset, sigma_e, sigma_n, sigma_h, "order", epoch_year,

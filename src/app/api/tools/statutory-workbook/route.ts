@@ -44,6 +44,22 @@ interface RequestBody {
   referenceNumber?: string
 }
 
+
+interface WorkbookSurveyPointRow {
+  point_name: string
+  easting: number
+  northing: number
+  elevation: number | null
+  code: string | null
+}
+
+interface WorkbookObservationRow {
+  station_from: string
+  station_to: string
+  bearing: number
+  distance: number
+}
+
 /**
  * AUDIT FIX (2026-07-03): Previously this route used hardcoded sample data
  * (stations A, B, C, D with fake coordinates and traverse observations).
@@ -78,7 +94,7 @@ async function buildWorkbookInput(body: RequestBody, userId: string): Promise<Wo
       const proj = projRows[0]
 
       // Load survey points as traverse stations
-      const { rows: pointRows } = await db.query(
+      const { rows: pointRows } = await db.query<WorkbookSurveyPointRow>(
         `SELECT point_name, easting, northing, elevation, code
          FROM survey_points
          WHERE project_id = $1 AND easting IS NOT NULL AND northing IS NOT NULL
@@ -87,7 +103,7 @@ async function buildWorkbookInput(body: RequestBody, userId: string): Promise<Wo
       )
 
       // Load traverse observations
-      const { rows: obsRows } = await db.query(
+      const { rows: obsRows } = await db.query<WorkbookObservationRow>(
         `SELECT station_from, station_to, bearing, distance
          FROM traverse_observations obs
          JOIN parcel_traverses pt ON pt.id = obs.traverse_id
@@ -104,7 +120,7 @@ async function buildWorkbookInput(body: RequestBody, userId: string): Promise<Wo
       const profile = profileRows[0]
 
       // Build stations from survey points
-      const stations = pointRows.map((p: Record<string, unknown>) => ({
+      const stations = pointRows.map((p) => ({
         label: String(p.point_name || ''),
         easting: parseFloat(String(p.easting)),
         northing: parseFloat(String(p.northing)),
@@ -112,7 +128,7 @@ async function buildWorkbookInput(body: RequestBody, userId: string): Promise<Wo
       }))
 
       // Build field observations from traverse_observations
-      const fieldObs = obsRows.map((o: Record<string, unknown>) => ({
+      const fieldObs = obsRows.map((o) => ({
         stationFrom: String(o.station_from || ''),
         stationTo: String(o.station_to || ''),
         observedBearingDeg: parseFloat(String(o.bearing || 0)),

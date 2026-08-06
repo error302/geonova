@@ -101,7 +101,7 @@ export const POST = apiHandler({
   )
 
   // Log activity
-  await db.query(
+  await db.query<never>(
     `INSERT INTO scheme_activity_log (project_id, user_id, action, entity_type, entity_id, details)
      VALUES ($1, $2, $3, 'scheme', $1, $4)`,
     [

@@ -133,7 +133,7 @@ export const PATCH = apiHandler(
     }
 
     if (notifId) {
-      await db.query(
+      await db.query<never>(
         `UPDATE notifications SET read_at = NOW() WHERE id = $1 AND user_id = $2`,
         [notifId, user.id],
       )
@@ -161,7 +161,7 @@ export const DELETE = apiHandler(
       return NextResponse.json({ error: 'id query parameter is required' }, { status: 400 })
     }
 
-    await db.query(
+    await db.query<never>(
       `DELETE FROM notifications WHERE id = $1 AND user_id = $2`,
       [notifId, user.id],
     )

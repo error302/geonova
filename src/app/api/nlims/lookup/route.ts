@@ -152,7 +152,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 6000
         fetchedAt: new Date().toISOString()
       }
 
-      await db.query(
+      await db.query<never>(
         `INSERT INTO nlims_cache (parcel_number, county, data, fetched_at)
          VALUES ($1, $2, $3, $4)
          ON CONFLICT (parcel_number, county) DO UPDATE SET data = $3, fetched_at = $4`,

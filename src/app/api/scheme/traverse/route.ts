@@ -17,6 +17,60 @@ interface TraverseCheckRow {
   id: string
 }
 
+interface ParcelTraverseRow {
+  id: string
+  parcel_id: string
+  project_id: string
+  opening_station: string | null
+  opening_easting: number | null
+  opening_northing: number | null
+  opening_rl: number | null
+  closing_station: string | null
+  closing_easting: number | null
+  closing_northing: number | null
+  closing_rl: number | null
+  bs_bearing: number | null
+  is_closed: boolean | null
+  total_perimeter: number | null
+  linear_error: number | null
+  precision_ratio: number | null
+  accuracy_order: string | null
+  computed_area_ha: number | null
+  created_at: Date
+  updated_at: Date
+}
+
+interface TraverseObservationRow {
+  id: string
+  traverse_id: string
+  observation_order: number
+  station: string
+  bs: string | null
+  fs: string | null
+  hcl_deg: string | null
+  hcl_min: string | null
+  hcl_sec: string | null
+  hcr_deg: string | null
+  hcr_min: string | null
+  hcr_sec: string | null
+  slope_dist: number | null
+  va_deg: string | null
+  va_min: string | null
+  va_sec: string | null
+  ih: number | null
+  th: number | null
+  remarks: string | null
+}
+
+interface TraverseCoordinateRow {
+  id: string
+  traverse_id: string
+  station: string
+  easting: number
+  northing: number
+  rl: number | null
+}
+
 export const dynamic = 'force-dynamic'
 
 export const POST = apiHandler({
@@ -93,12 +147,12 @@ export const POST = apiHandler({
 
     const traverseId = upsertResult.rows[0].id
 
-    await db.query('DELETE FROM traverse_observations WHERE traverse_id = $1', [traverseId])
-    await db.query('DELETE FROM traverse_coordinates WHERE traverse_id = $1', [traverseId])
+    await db.query<never>('DELETE FROM traverse_observations WHERE traverse_id = $1', [traverseId])
+    await db.query<never>('DELETE FROM traverse_coordinates WHERE traverse_id = $1', [traverseId])
 
     for (let i = 0; i < observations.length; i++) {
       const obs = observations[i]
-      await db.query(
+      await db.query<never>(
         `INSERT INTO traverse_observations (
           traverse_id, observation_order, station, bs, fs,
           hcl_deg, hcl_min, hcl_sec, hcr_deg, hcr_min, hcr_sec,
@@ -146,7 +200,7 @@ export const POST = apiHandler({
     })
 
     for (const coord of result.coordinates) {
-      await db.query(
+      await db.query<never>(
         `INSERT INTO traverse_coordinates (traverse_id, station, easting, northing, rl)
         VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (traverse_id, station) DO UPDATE SET
@@ -164,7 +218,7 @@ export const POST = apiHandler({
       computedAreaHa = areaResult.areaHa
     }
 
-    await db.query(
+    await db.query<never>(
       `UPDATE parcel_traverses SET
         total_perimeter = $2, linear_error = $3, precision_ratio = $4,
         accuracy_order = $5, computed_area_ha = $6
@@ -173,7 +227,7 @@ export const POST = apiHandler({
     )
 
     if (computedAreaHa !== null) {
-      await db.query(
+      await db.query<never>(
         `UPDATE parcels SET area_ha = $2, status = 'computed' WHERE id = $1`,
         [parcel_id, computedAreaHa]
       )
@@ -223,9 +277,9 @@ export const GET = apiHandler({
     const traverseId = check.rows[0].id
 
     const [traverseRes, obsRes, coordsRes] = await Promise.all([
-      db.query('SELECT * FROM parcel_traverses WHERE id = $1', [traverseId]),
-      db.query('SELECT * FROM traverse_observations WHERE traverse_id = $1 ORDER BY observation_order', [traverseId]),
-      db.query('SELECT * FROM traverse_coordinates WHERE traverse_id = $1 ORDER BY station', [traverseId]),
+      db.query<ParcelTraverseRow>('SELECT * FROM parcel_traverses WHERE id = $1', [traverseId]),
+      db.query<TraverseObservationRow>('SELECT * FROM traverse_observations WHERE traverse_id = $1 ORDER BY observation_order', [traverseId]),
+      db.query<TraverseCoordinateRow>('SELECT * FROM traverse_coordinates WHERE traverse_id = $1 ORDER BY station', [traverseId]),
     ])
 
     return NextResponse.json({

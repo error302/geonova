@@ -106,7 +106,7 @@ export const POST = apiHandler(
     // ── Check if WebODM is configured ──
     if (!isWebODMConfigured()) {
       // WebODM not configured — mark as 'queued' but can't actually process
-      await db.query(
+      await db.query<never>(
         `UPDATE drone_processing_tasks
          SET status = 'queued', options = $2, updated_at = NOW()
          WHERE id = $1`,
@@ -139,7 +139,7 @@ export const POST = apiHandler(
       const webodmTaskId = await createWebODMTask(photoPaths, task.name ?? 'drone-task', options)
 
       // Update task with WebODM ID + status
-      await db.query(
+      await db.query<never>(
         `UPDATE drone_processing_tasks
          SET status = 'queued',
              webodm_task_id = $2,
@@ -161,7 +161,7 @@ export const POST = apiHandler(
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Unknown error'
 
-      await db.query(
+      await db.query<never>(
         `UPDATE drone_processing_tasks
          SET status = 'failed', error_message = $2, updated_at = NOW()
          WHERE id = $1`,
@@ -246,7 +246,7 @@ export const GET = apiHandler(
             updateParams.push(path.relative(STORAGE_ROOT, contourPath))
           }
 
-          await db.query(
+          await db.query<never>(
             `UPDATE drone_processing_tasks SET ${updateFields.join(', ')} WHERE id = $1`,
             updateParams
           )
@@ -260,7 +260,7 @@ export const GET = apiHandler(
             return NextResponse.json({ task: updated.rows[0] })
           }
         } else if (webodmStatus.status === 'failed') {
-          await db.query(
+          await db.query<never>(
             `UPDATE drone_processing_tasks
              SET status = 'failed', error_message = $2, progress = $3, updated_at = NOW()
              WHERE id = $1`,
@@ -268,7 +268,7 @@ export const GET = apiHandler(
           )
         } else {
           // Still running — update progress
-          await db.query(
+          await db.query<never>(
             `UPDATE drone_processing_tasks
              SET status = $2, progress = $3, updated_at = NOW()
              WHERE id = $1`,

@@ -83,7 +83,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
       const periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
 
       if (existing.length > 0) {
-        await db.query(
+        await db.query<never>(
           `UPDATE user_subscriptions
            SET plan_id = $1, status = 'active', payment_method = $2, currency = $3,
                current_period_start = $4, current_period_end = $5
@@ -91,7 +91,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
           [input.planId, input.payment_method, input.currency, now, periodEnd, existing[0].id]
         )
       } else {
-        await db.query(
+        await db.query<never>(
           `INSERT INTO user_subscriptions
            (user_id, plan_id, status, payment_method, currency, current_period_start, current_period_end)
            VALUES ($1, $2, 'active', $3, $4, $5, $6)`,
@@ -101,7 +101,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
     }
 
     if (input.paymentId) {
-      await db.query(
+      await db.query<never>(
         `UPDATE payment_history SET status = $1, transaction_id = $2 WHERE id = $3 AND user_id = $4`,
         [input.status, input.transaction_id ?? null, input.paymentId, userId]
       )
@@ -159,7 +159,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
         return NextResponse.json({ error: 'Stripe returned an invalid session' }, { status: 502 })
       }
 
-      await db.query(
+      await db.query<never>(
         'UPDATE payment_history SET transaction_id = $1 WHERE id = $2 AND user_id = $3',
         [stripeSession.id, paymentId, userId]
       )
@@ -181,7 +181,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
 
       // Update the payment_history record to reflect the PayPal currency/amount
       if (paypalCurrency !== priced.currency) {
-        await db.query(
+        await db.query<never>(
           'UPDATE payment_history SET amount = $1, currency = $2 WHERE id = $3 AND user_id = $4',
           [paypalAmount, paypalCurrency, paymentId, userId]
         )
@@ -202,7 +202,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
       const approval = order.links?.find((l) => l.rel === 'approve')?.href
       if (!approval) return NextResponse.json({ error: 'PayPal did not return approval link' }, { status: 502 })
 
-      await db.query(
+      await db.query<never>(
         'UPDATE payment_history SET transaction_id = $1 WHERE id = $2 AND user_id = $3',
         [order.id, paymentId, userId]
       )
@@ -228,7 +228,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
         return NextResponse.json({ error: 'M-Pesa returned an invalid response' }, { status: 502 })
       }
 
-      await db.query(
+      await db.query<never>(
         'UPDATE payment_history SET transaction_id = $1 WHERE id = $2 AND user_id = $3',
         [result.checkoutRequestId, paymentId, userId]
       )

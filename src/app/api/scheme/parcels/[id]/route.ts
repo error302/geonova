@@ -11,6 +11,21 @@ interface ParcelCheckRow {
   updated_at?: Date
 }
 
+interface ParcelRow {
+  id: string
+  project_id: string
+  block_id: string
+  parcel_number: string
+  lr_number_proposed: string | null
+  lr_number_confirmed: string | null
+  area_ha: number | null
+  status: string
+  assigned_surveyor: string | null
+  notes: string | null
+  created_at: Date
+  updated_at: Date
+}
+
 export const dynamic = 'force-dynamic'
 
 export const PATCH = apiHandler(
@@ -36,7 +51,7 @@ export const PATCH = apiHandler(
     }
 
     if (validated.parcel_number) {
-      const dupCheck = await db.query(
+      const dupCheck = await db.query<{ id: string }>(
         `SELECT id FROM parcels WHERE block_id = $1 AND parcel_number = $2 AND id != $3`,
         [check.rows[0].block_id, validated.parcel_number, parcelId]
       )
@@ -84,7 +99,7 @@ export const PATCH = apiHandler(
       return NextResponse.json({ error: 'updated_at is required for optimistic locking', code: 'CONFLICT' }, { status: 409 })
     }
     values.push(clientUpdatedAt)
-    const result = await db.query(
+    const result = await db.query<ParcelRow>(
       `UPDATE parcels SET ${updates.join(', ')} WHERE id = $${paramIndex} AND updated_at = $${paramIndex + 1} RETURNING *`,
       values
     )
@@ -115,7 +130,7 @@ export const DELETE = apiHandler(
       return NextResponse.json({ error: 'Parcel not found' }, { status: 404 })
     }
 
-    await db.query('DELETE FROM parcels WHERE id = $1', [parcelId])
+    await db.query<never>('DELETE FROM parcels WHERE id = $1', [parcelId])
 
     return NextResponse.json({
       message: `Parcel "${check.rows[0].parcel_number}" deleted successfully`

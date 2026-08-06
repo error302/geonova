@@ -8,6 +8,26 @@ interface BlockOwnerRow {
   project_id: string
 }
 
+interface ParcelRow {
+  id: string
+  project_id: string
+  block_id: string
+  parcel_number: string
+  lr_number_proposed: string | null
+  lr_number_confirmed: string | null
+  area_ha: number | null
+  status: string
+  assigned_surveyor: string | null
+  notes: string | null
+  created_at: Date
+  updated_at: Date
+}
+
+interface ParcelWithBlockRow extends ParcelRow {
+  block_number: string
+  block_name: string | null
+}
+
 export const dynamic = 'force-dynamic'
 
 export const POST = apiHandler(
@@ -30,7 +50,7 @@ export const POST = apiHandler(
 
     const projectId = blockCheck.rows[0].project_id
 
-    const dupCheck = await db.query(
+    const dupCheck = await db.query<{ id: string }>(
       'SELECT id FROM parcels WHERE block_id = $1 AND parcel_number = $2',
       [block_id, parcel_number]
     )
@@ -41,7 +61,7 @@ export const POST = apiHandler(
       )
     }
 
-    const result = await db.query(
+    const result = await db.query<ParcelRow>(
       `INSERT INTO parcels (project_id, block_id, parcel_number, lr_number_proposed, area_ha, status, notes)
       VALUES ($1, $2, $3, $4, $5, 'pending', $6) RETURNING *`,
       [projectId, block_id, parcel_number, lr_number_proposed || null, area_ha || null, notes || null]
@@ -66,7 +86,7 @@ export const GET = apiHandler(
     }
 
     if (blockId) {
-      const check = await db.query(
+      const check = await db.query<{ id: string }>(
         `SELECT b.id FROM blocks b
         JOIN projects p ON p.id = b.project_id
         WHERE b.id = $1 AND p.user_id = $2`,
@@ -76,7 +96,7 @@ export const GET = apiHandler(
         return NextResponse.json({ error: 'Block not found' }, { status: 404 })
       }
 
-      const result = await db.query(
+      const result = await db.query<ParcelWithBlockRow>(
         `SELECT p.*, b.block_number, b.block_name
         FROM parcels p
         JOIN blocks b ON b.id = p.block_id
@@ -89,7 +109,7 @@ export const GET = apiHandler(
     }
 
     if (projectId) {
-      const check = await db.query(
+      const check = await db.query<{ id: string }>(
         'SELECT id FROM projects WHERE id = $1 AND user_id = $2',
         [projectId, ctx.userId]
       )
@@ -97,7 +117,7 @@ export const GET = apiHandler(
         return NextResponse.json({ error: 'Project not found' }, { status: 404 })
       }
 
-      const result = await db.query(
+      const result = await db.query<ParcelWithBlockRow>(
         `SELECT p.*, b.block_number, b.block_name
         FROM parcels p
         JOIN blocks b ON b.id = p.block_id
