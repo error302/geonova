@@ -1,14 +1,19 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import Drawing from 'dxf-writer'
 import { initialiseSokDXFLayers, DXF_LAYERS } from '@/lib/drawing/dxfLayers'
 
+interface ProfilePoint {
+  chainage: number
+  groundLevel: number
+  formationLevel?: number | null
+}
+
 export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
-  const { points, title, projectId } = ctx.body as {
-    points: any[]
-    title?: string
+  const { points, projectId } = ctx.body as {
+    points: ProfilePoint[]
     projectId?: string
   }
 
@@ -19,8 +24,8 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   const drawing = new Drawing()
   initialiseSokDXFLayers(drawing)
 
-  const minCh = Math.min(...points.map((p: any) => p.chainage))
-  const minGL = Math.min(...points.map((p: any) => p.groundLevel))
+  const minCh = Math.min(...points.map((p) => p.chainage))
+  const minGL = Math.min(...points.map((p) => p.groundLevel))
 
   // Scale: 1:2000 horizontal, 1:200 vertical → 10x vertical exaggeration
   const hScale = 1 / 2000
@@ -40,7 +45,9 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   }
 
   // Formation line
-  const formPoints = points.filter((p: any) => p.formationLevel != null)
+  const formPoints = points.filter(
+    (p): p is ProfilePoint & { formationLevel: number } => p.formationLevel != null
+  )
   if (formPoints.length >= 2) {
     drawing.setActiveLayer(DXF_LAYERS.CENTRELINE.name)
     for (let i = 0; i < formPoints.length - 1; i++) {
@@ -57,7 +64,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
 
   // Chainage annotations
   drawing.setActiveLayer(DXF_LAYERS.CHAIN.name)
-  points.forEach((p: any) => {
+  points.forEach((p) => {
     drawing.drawText(
       (p.chainage - minCh) * hScale,
       -0.005,

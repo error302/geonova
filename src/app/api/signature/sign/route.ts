@@ -5,6 +5,17 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { hashDocument, generateVerificationToken } from '@/lib/compute/digitalSignature'
 import { appendAuditEntry } from '@/lib/audit/auditLog'
+interface ProfileRow {
+  full_name: string | null
+  isk_number: string | null
+  firm_name: string | null
+}
+
+interface SignatureInsertRow {
+  id: string
+  verification_token: string
+}
+
 import type { SignDocumentRequest } from '@/types/signature'
 
 export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
@@ -17,7 +28,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     )
   }
 
-  const profileResult = await db.query(
+  const profileResult = await db.query<ProfileRow>(
     'SELECT full_name, isk_number, firm_name FROM profiles WHERE id = $1',
     [ctx.userId]
   )
@@ -31,7 +42,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   const signedAt = new Date().toISOString()
   const verificationToken = generateVerificationToken(documentId, signedAt, iskNumber)
 
-  const insertResult = await db.query(
+  const insertResult = await db.query<SignatureInsertRow>(
     `INSERT INTO document_signatures (
       document_id, document_type, signed_by, surveyor_name, isk_number, firm_name,
       signed_at, document_hash, signature_data, method, valid, verification_token

@@ -21,6 +21,11 @@ import { execSync } from 'child_process'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
+interface Pm2Process {
+  name: string
+  pm2_env?: { status: string }
+}
+
 interface HealthCheck {
   status: 'ok' | 'degraded'
   timestamp: string
@@ -82,12 +87,12 @@ function checkPm2(): { status: string; instances?: number; error?: string } {
       timeout: 3000,
       encoding: 'utf-8',
     })
-    const processes = JSON.parse(output)
+    const processes = JSON.parse(output) as Pm2Process[]
     const metarduProcesses = processes.filter(
-      (p: any) => p.name === 'metardu' || p.name === 'metardu-worker'
+      (p) => p.name === 'metardu' || p.name === 'metardu-worker'
     )
     const onlineCount = metarduProcesses.filter(
-      (p: any) => p.pm2_env?.status === 'online'
+      (p) => p.pm2_env?.status === 'online'
     ).length
     return {
       status: onlineCount === metarduProcesses.length ? 'healthy' : 'degraded',
@@ -100,7 +105,7 @@ function checkPm2(): { status: string; instances?: number; error?: string } {
 
 function getVersion(): string {
   try {
-    const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf-8'))
+    const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf-8')) as { version?: string }
     return pkg.version || 'unknown'
   } catch {
     return 'unknown'

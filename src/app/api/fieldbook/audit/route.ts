@@ -3,6 +3,20 @@ export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { apiHandler, ValidationError } from '@/lib/api/handler'
 import { db } from '@/lib/db'
+interface AuditEventRow {
+  id: string
+  table_name: string
+  row_id: string
+  user_id: string | null
+  user_email: string | null
+  action: string
+  summary: string | null
+  prev_hash: string | null
+  hash: string
+  created_at: Date
+  payload: unknown
+}
+
 import { z } from 'zod'
 
 /**
@@ -45,7 +59,7 @@ export const GET = apiHandler({
     }
     params.push(limit)
 
-    const { rows } = await db.query(
+    const { rows } = await db.query<AuditEventRow>(
       `SELECT
          fae.id,
          fae.table_name,
@@ -91,7 +105,7 @@ export const POST = apiHandler({
   handler: async (ctx) => {
     const { row_id, table_name } = ctx.input
 
-    const { rows } = await db.query(
+    const { rows } = await db.query<AuditEventRow>(
       `SELECT id, action, prev_hash, hash, created_at
        FROM fieldbook_audit_events
        WHERE row_id = $1 AND table_name = $2

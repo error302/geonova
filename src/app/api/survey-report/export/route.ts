@@ -24,6 +24,11 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     return NextResponse.json({ error: 'Report not found' }, { status: 404 })
   }
 
+  const reportRow = report as NonNullable<typeof report> & {
+    surveyType?: string
+    projectName?: string
+  }
+
   if (format === 'pdf') {
     const pdfBuffer = await generatePdf({
       title: report.reportTitle || 'Survey Report',
@@ -40,13 +45,13 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     })
   } else if (format === 'docx') {
     // Determine survey type and use template if available
-    const surveyType = ((report as any).surveyType || 'cadastral') as any
+    const surveyType = (reportRow.surveyType || 'cadastral') as Parameters<typeof getTemplateSections>[0]
     const templateSections = getTemplateSections(surveyType, {
       reportNumber: report.reportNumber,
-      clientName: (report as any).clientName,
-      projectName: (report as any).projectName,
-      projectLocation: (report as any).projectLocation,
-      areaHectares: (report as any).areaHectares,
+      clientName: reportRow.clientName,
+      projectName: reportRow.projectName,
+      projectLocation: reportRow.projectLocation,
+      areaHectares: reportRow.areaHectares,
       date: new Date().toLocaleDateString('en-GB'),
       precisionRatio: '5000',
       pointSpacing: '20m',
@@ -54,8 +59,8 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
       horizontalAccuracy: '20mm',
       verticalAccuracy: '10mm',
       pointDensity: '1 per 400m²',
-      contractNumber: (report as any).contractNumber,
-      projectPurpose: (report as any).projectPurpose,
+      contractNumber: reportRow.contractNumber,
+      projectPurpose: reportRow.projectPurpose,
       structuralTolerance: '5mm',
       earthworksTolerance: '20mm',
       asBuiltTolerance: '10mm',
@@ -71,10 +76,10 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
       reportNumber: report.reportNumber,
       sections: templateSections.length > 0 ? templateSections : report.sections,
       surveyType,
-      clientName: (report as any).clientName,
-      projectName: (report as any).projectName,
-      projectLocation: (report as any).projectLocation,
-      areaHectares: (report as any).areaHectares,
+      clientName: reportRow.clientName,
+      projectName: reportRow.projectName,
+      projectLocation: reportRow.projectLocation,
+      areaHectares: reportRow.areaHectares,
       useTemplate: true,
     })
 

@@ -21,6 +21,16 @@ import { db } from '@/lib/db';
 import { getSubscription } from '@/lib/subscription/subscriptionEngine';
 import type { PlanId } from '@/lib/subscription/catalog';
 
+interface CompanyLogoRow {
+  id: string
+  filename: string
+  mime_type: string
+  file_size: number
+  width_px: number | null
+  height_px: number | null
+  created_at: Date
+}
+
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml'];
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
@@ -41,7 +51,7 @@ export async function GET() {
       return NextResponse.json({ error: 'User ID not found' }, { status: 400 });
     }
 
-    const { rows } = await db.query(
+    const { rows } = await db.query<CompanyLogoRow>(
       'SELECT id, filename, mime_type, file_size, width_px, height_px, created_at FROM company_logos WHERE user_id = $1',
       [userId]
     );
@@ -120,7 +130,7 @@ export async function POST(request: NextRequest) {
     const logoData = Buffer.from(arrayBuffer);
 
     // Upsert the logo (one logo per user)
-    await db.query(
+    await db.query<never>(
       `INSERT INTO company_logos (user_id, filename, mime_type, file_size, logo_data, updated_at)
        VALUES ($1, $2, $3, $4, $5, NOW())
        ON CONFLICT (user_id)
@@ -156,12 +166,12 @@ export async function DELETE() {
       return NextResponse.json({ error: 'User ID not found' }, { status: 400 });
     }
 
-    const result = await db.query(
+    const result = await db.query<never>(
       'DELETE FROM company_logos WHERE user_id = $1',
       [userId]
     );
 
-    if ((result as { rowCount?: number }).rowCount === 0) {
+    if (result.rowCount === 0) {
       return NextResponse.json({ error: 'No logo to delete' }, { status: 404 });
     }
 
