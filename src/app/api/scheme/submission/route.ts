@@ -56,8 +56,6 @@ interface TraverseCoordinateRow {
 
 export const dynamic = 'force-dynamic'
 
-type DbRow = Record<string, unknown>
-
 interface SchemeDetailRow {
   id: string
   scheme_number: string | null
@@ -67,7 +65,7 @@ interface SchemeDetailRow {
 }
 
 interface StationPoint { station: string; easting: number; northing: number }
-interface ParcelCoord extends StationPoint { parcel_id: unknown; parcel_number: string }
+interface ParcelCoord extends StationPoint { parcel_id: string; parcel_number: string }
 
 function toNum(v: unknown): number { return parseFloat(String(v ?? 0)) }
 function toStr(v: unknown): string { return String(v ?? '') }
@@ -91,13 +89,13 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   if (projectCheck.rows.length === 0) return NextResponse.json({ error: 'Project not found' }, { status: 404 })
   const project = projectCheck.rows[0]
 
-  let scheme: DbRow = {}
+  let scheme: SchemeDetailRow = { id: '', scheme_number: null, county: null, sub_county: null, ward: null }
   try {
     const sd = await db.query<SchemeDetailRow>(
       'SELECT id, scheme_number, county, sub_county, ward FROM scheme_details WHERE project_id = $1',
       [projectId]
     )
-    if (sd.rows.length > 0) scheme = sd.rows[0] as unknown as DbRow
+    if (sd.rows.length > 0) scheme = sd.rows[0]
   } catch {}
 
   const blocksResult = await db.query<BlockRow>(
@@ -296,7 +294,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
         drawY + drawH / 2 - ((n - centreN) / scaleRatio) * 1000,
       ]
 
-      const drawn = new Set<unknown>()
+      const drawn = new Set<string>()
       for (const pc of allParcelCoords) {
         if (drawn.has(pc.parcel_id)) continue
         const pCoords = allParcelCoords.filter((c) => c.parcel_id === pc.parcel_id)

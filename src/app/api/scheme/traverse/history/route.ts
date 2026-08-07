@@ -1,13 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
+
+interface TraverseHistoryRow {
+  id: string
+  parcel_traverse_id: string
+  version: number
+  snapshot: Record<string, unknown> | null
+  created_at: Date | string
+  parcel_number: string
+  block_number: string
+  project_name: string
+}
 
 export const dynamic = 'force-dynamic'
 
 export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
   const { parcelId } = ctx.params
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<TraverseHistoryRow>(
     `SELECT th.*, p.parcel_number, b.block_number, proj.name as project_name
      FROM traverse_history th
      JOIN parcel_traverses pt ON pt.id = th.parcel_traverse_id

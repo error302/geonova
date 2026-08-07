@@ -102,10 +102,11 @@ export default function RoadDesignWorkflowPage() {
     const saved = localStorage.getItem('metardu_road_pipeline')
     if (saved) {
       try {
-        const data = JSON.parse(saved)
+        const data = JSON.parse(saved) as { steps?: PipelineStep[]; projectId?: string }
         if (data.steps) {
+          const savedSteps = data.steps
           setSteps(prev => prev.map(s => {
-            const savedStep = data.steps.find((ss: PipelineStep) => ss.id === s.id)
+            const savedStep = savedSteps.find((ss: PipelineStep) => ss.id === s.id)
             return savedStep ? { ...s, status: savedStep.status } : s
           }))
         }

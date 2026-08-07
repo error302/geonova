@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
@@ -21,6 +21,11 @@ interface SchemeCoord {
   z: number
 }
 
+interface ProjectNameRow {
+  name: string | null
+  scheme_number: string | null
+}
+
 export const dynamic = 'force-dynamic'
 
 export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
@@ -31,7 +36,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   }
 
   // Fetch all parcels with coordinates
-  const { rows: parcels } = await db.query(
+  const { rows: parcels } = await db.query<SchemeParcelRow>(
     `SELECT p.parcel_number, p.lr_number_proposed, p.area_ha, p.status,
       b.block_number,
       tc.station_name, tc.easting, tc.northing, tc.elevation
@@ -48,7 +53,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   // Group coordinates by parcel
   const parcelData = new Map<string, { info: SchemeParcelRow; coords: SchemeCoord[] }>()
-  parcels.forEach((row: SchemeParcelRow) => {
+  parcels.forEach((row) => {
     const key = `${row.block_number}-${row.parcel_number}`
     if (!parcelData.has(key)) {
       parcelData.set(key, {
@@ -141,8 +146,8 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   dxfLines.push('0', 'ENDSEC', '0', 'EOF')
 
   const dxfContent = dxfLines.join('\n')
-  const project = await db.query('SELECT name, scheme_number FROM projects p LEFT JOIN scheme_details sd ON sd.project_id = p.id WHERE p.id = $1', [projectId])
-  const projRow = project.rows[0] as { name?: string; scheme_number?: string } | undefined
+  const project = await db.query<ProjectNameRow>('SELECT name, scheme_number FROM projects p LEFT JOIN scheme_details sd ON sd.project_id = p.id WHERE p.id = $1', [projectId])
+  const projRow: ProjectNameRow | undefined = project.rows[0]
   const fileName = `Scheme_${projRow?.scheme_number || projRow?.name || projectId}.dxf`
 
   return new NextResponse(dxfContent, {

@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 import { z } from 'zod'
@@ -14,6 +14,22 @@ const validActions = [
 
 const validEntities = ['block', 'parcel', 'traverse', 'scheme', 'project'] as const
 
+interface ProjectIdRow { id: string }
+
+interface ActivityLogRow {
+  id: string
+  project_id: string
+  user_id: string | null
+  action: string
+  details: Record<string, unknown> | null
+  created_at: Date | string
+}
+
+interface ActivityLogWithUserRow extends ActivityLogRow {
+  user_name: string | null
+  user_email: string | null
+}
+
 const logActivitySchema = z.object({
   project_id: z.string().min(1),
   action: z.enum(validActions),
@@ -27,7 +43,7 @@ export const POST = apiHandler(
   async (req, ctx) => {
     const { project_id, action, entity_type, entity_id, details } = ctx.body as z.infer<typeof logActivitySchema>
 
-    const check = await db.query(
+    const check = await db.query<ProjectIdRow>(
       'SELECT id FROM projects WHERE id = $1 AND user_id = $2',
       [project_id, ctx.userId]
     )
@@ -35,7 +51,7 @@ export const POST = apiHandler(
       return NextResponse.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    const result = await db.query(
+    const result = await db.query<ActivityLogRow>(
       `INSERT INTO scheme_activity_log (project_id, user_id, action, entity_type, entity_id, details)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *`,
@@ -57,7 +73,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'project_id is required' }, { status: 400 })
     }
 
-    const check = await db.query(
+    const check = await db.query<ProjectIdRow>(
       'SELECT id FROM projects WHERE id = $1 AND user_id = $2',
       [projectId, ctx.userId]
     )
@@ -65,7 +81,7 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    const result = await db.query(
+    const result = await db.query<ActivityLogWithUserRow>(
       `SELECT al.*, u.name as user_name, u.email as user_email
       FROM scheme_activity_log al
       LEFT JOIN users u ON u.id = al.user_id

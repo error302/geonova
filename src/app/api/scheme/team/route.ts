@@ -232,7 +232,7 @@ export const POST = apiHandler(
       }
 
       // Update user role if needed
-      await db.query(
+      await db.query<never>(
         'UPDATE users SET role = $1 WHERE id = $2 AND role != $1',
         [role, targetUserId]
       )
@@ -241,7 +241,7 @@ export const POST = apiHandler(
     }
 
     if (action === 'remove') {
-      await db.query(
+      await db.query<never>(
         'DELETE FROM block_assignments WHERE assigned_to = $1 AND block_id IN (SELECT id FROM blocks WHERE project_id = $2)',
         [targetUserId, projectId]
       )

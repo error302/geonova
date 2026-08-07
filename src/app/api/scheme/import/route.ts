@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 
@@ -29,7 +29,7 @@ export const POST = apiHandler(
       return NextResponse.json({ error: 'No CSV file provided' }, { status: 400 })
     }
 
-    const check = await db.query(
+    const check = await db.query<{ id: string; project_id: string }>(
       `SELECT b.id, b.project_id FROM blocks b
       JOIN projects p ON p.id = b.project_id
       WHERE b.id = $1 AND p.user_id = $2`,
@@ -90,7 +90,7 @@ export const POST = apiHandler(
         const areaHa = areaCol >= 0 ? (parseFloat(values[areaCol]) || null) : null
         const notes = notesCol >= 0 ? (values[notesCol]?.trim() || null) : null
 
-        const dupCheck = await client.query(
+        const dupCheck = await client.query<{ id: string }>(
           'SELECT id FROM parcels WHERE block_id = $1 AND parcel_number = $2',
           [blockId, parcelNumber]
         )

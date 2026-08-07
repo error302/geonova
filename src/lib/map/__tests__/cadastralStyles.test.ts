@@ -16,6 +16,60 @@ import {
   createEdgeAnnotationStyleFunction,
   createTraverseLegStyleFunction,
 } from '../cadastralStyles'
+// Test-side shapes of the mocked OL style objects (see the jest.mock factories
+// below) — these mirror the option bags the factories stash in `opts`, so the
+// deep assertion chains (result.opts.stroke.opts.color …) stay typed instead
+// of any-chains.
+interface MockStrokeOpts {
+  color?: string
+  width?: number
+  lineDash?: number[]
+}
+interface MockFillOpts {
+  color?: string
+}
+interface MockTextOpts {
+  text?: string
+  rotation?: number
+  font?: string
+  offsetX?: number
+  offsetY?: number
+}
+interface MockImageOpts {
+  radius?: number
+  points?: number
+  angle?: number
+  stroke?: MockStroke
+  fill?: MockFill
+}
+interface MockStroke {
+  opts: MockStrokeOpts
+}
+interface MockFill {
+  opts: MockFillOpts
+}
+interface MockText {
+  opts: MockTextOpts
+}
+interface MockImage {
+  opts: MockImageOpts
+}
+// The option-bag chain props are required because every style the factories
+// build carries them (assertions drill down through opts.stroke.opts.color …);
+// only the leaf values are optional.
+interface MockStyleOpts {
+  fill: MockFill
+  stroke: MockStroke
+  image: MockImage
+  text: MockText
+  geometry?: unknown
+  zIndex?: number
+}
+interface MockStyle {
+  opts: MockStyleOpts
+}
+type MockStyleFn = (feature: unknown) => MockStyle
+
 
 // ---------------------------------------------------------------------------
 // Mock OpenLayers style classes — defined inline inside factory to avoid
@@ -24,8 +78,8 @@ import {
 
 jest.mock('ol/style/Style', () => {
   const S = class Style {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: MockStyleOpts | undefined
+    constructor(opts?: MockStyleOpts) { this.opts = opts }
     getFill() { return this.opts?.fill }
     getStroke() { return this.opts?.stroke }
     getImage() { return this.opts?.image }
@@ -38,8 +92,8 @@ jest.mock('ol/style/Style', () => {
 
 jest.mock('ol/style/Stroke', () => {
   const S = class Stroke {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: MockStrokeOpts | undefined
+    constructor(opts?: MockStrokeOpts) { this.opts = opts }
     getColor() { return this.opts?.color }
     getWidth() { return this.opts?.width }
     getLineDash() { return this.opts?.lineDash }
@@ -49,8 +103,8 @@ jest.mock('ol/style/Stroke', () => {
 
 jest.mock('ol/style/Fill', () => {
   const F = class Fill {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: MockFillOpts | undefined
+    constructor(opts?: MockFillOpts) { this.opts = opts }
     getColor() { return this.opts?.color }
   }
   return { __esModule: true, default: F }
@@ -58,8 +112,8 @@ jest.mock('ol/style/Fill', () => {
 
 jest.mock('ol/style/Circle', () => {
   const C = class CircleStyle {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: MockImageOpts | undefined
+    constructor(opts?: MockImageOpts) { this.opts = opts }
     getRadius() { return this.opts?.radius }
     getStroke() { return this.opts?.stroke }
     getFill() { return this.opts?.fill }
@@ -69,8 +123,8 @@ jest.mock('ol/style/Circle', () => {
 
 jest.mock('ol/style/RegularShape', () => {
   const R = class RegularShape {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: MockImageOpts | undefined
+    constructor(opts?: MockImageOpts) { this.opts = opts }
     getPoints() { return this.opts?.points }
     getAngle() { return this.opts?.angle }
     getStroke() { return this.opts?.stroke }
@@ -81,8 +135,8 @@ jest.mock('ol/style/RegularShape', () => {
 
 jest.mock('ol/style/Text', () => {
   const T = class Text {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: MockTextOpts | undefined
+    constructor(opts?: MockTextOpts) { this.opts = opts }
     getText() { return this.opts?.text }
     getRotation() { return this.opts?.rotation }
     getFont() { return this.opts?.font }
@@ -284,10 +338,10 @@ describe('computeBearingDeg', () => {
 // ---------------------------------------------------------------------------
 
 describe('createParcelStyleFunction', () => {
-  let styleFn: any
+  let styleFn: MockStyleFn
 
   beforeAll(async () => {
-    styleFn = await createParcelStyleFunction()
+    styleFn = (await createParcelStyleFunction()) as unknown as MockStyleFn
   })
 
   it('returns a function', () => {
@@ -358,10 +412,10 @@ describe('createParcelStyleFunction', () => {
 // ---------------------------------------------------------------------------
 
 describe('createBeaconStyleFunction', () => {
-  let styleFn: any
+  let styleFn: MockStyleFn
 
   beforeAll(async () => {
-    styleFn = await createBeaconStyleFunction()
+    styleFn = (await createBeaconStyleFunction()) as unknown as MockStyleFn
   })
 
   it('returns a function', () => {
@@ -421,7 +475,7 @@ describe('createBeaconStyleFunction', () => {
     const result = styleFn(feature)
     // When label is present, the function returns an array of [marker, label]
     expect(Array.isArray(result)).toBe(true)
-    const labelStyle = result[1]
+    const labelStyle = (result as unknown as MockStyle[])[1]
     expect(labelStyle.opts.text.opts.text).toBe('BM-001')
   })
 
@@ -437,10 +491,10 @@ describe('createBeaconStyleFunction', () => {
 // ---------------------------------------------------------------------------
 
 describe('createEdgeAnnotationStyleFunction', () => {
-  let styleFn: any
+  let styleFn: MockStyleFn
 
   beforeAll(async () => {
-    styleFn = await createEdgeAnnotationStyleFunction()
+    styleFn = (await createEdgeAnnotationStyleFunction()) as unknown as MockStyleFn
   })
 
   it('returns a function', () => {
@@ -479,10 +533,10 @@ describe('createEdgeAnnotationStyleFunction', () => {
 // ---------------------------------------------------------------------------
 
 describe('createTraverseLegStyleFunction', () => {
-  let styleFn: any
+  let styleFn: MockStyleFn
 
   beforeAll(async () => {
-    styleFn = await createTraverseLegStyleFunction()
+    styleFn = (await createTraverseLegStyleFunction()) as unknown as MockStyleFn
   })
 
   it('returns a function', () => {
@@ -498,7 +552,7 @@ describe('createTraverseLegStyleFunction', () => {
     }
     const result = styleFn(feature)
     expect(Array.isArray(result)).toBe(true)
-    expect(result.length).toBeGreaterThanOrEqual(1)
+    expect((result as unknown as MockStyle[]).length).toBeGreaterThanOrEqual(1)
   })
 
   it('first style is the dashed line', () => {
@@ -512,9 +566,9 @@ describe('createTraverseLegStyleFunction', () => {
       }),
     }
     const result = styleFn(feature)
-    expect(result[0].opts.stroke).toBeDefined()
-    expect(result[0].opts.stroke.opts.color).toBe('#0066CC')
-    expect(result[0].opts.stroke.opts.lineDash).toEqual([8, 4])
+    expect((result as unknown as MockStyle[])[0].opts.stroke).toBeDefined()
+    expect((result as unknown as MockStyle[])[0].opts.stroke.opts.color).toBe('#0066CC')
+    expect((result as unknown as MockStyle[])[0].opts.stroke.opts.lineDash).toEqual([8, 4])
   })
 
   it('uses bearing property when available for arrow rotation', () => {
@@ -528,8 +582,8 @@ describe('createTraverseLegStyleFunction', () => {
       }),
     }
     const result = styleFn(feature)
-    if (result.length > 1) {
-      const arrowStyle = result[1]
+    if ((result as unknown as MockStyle[]).length > 1) {
+      const arrowStyle = (result as unknown as MockStyle[])[1]
       const arrowRotation = arrowStyle.opts.text.opts.rotation
       const expectedRotation = bearingToOLRotation(180)
       expect(arrowRotation).toBeCloseTo(expectedRotation, 6)
