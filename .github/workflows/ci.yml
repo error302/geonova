@@ -64,8 +64,9 @@ jobs:
       # → event.before, fallback HEAD~1) and the per-family floors are
       # auto-loaded from the committed baselines — a single flag call, no
       # inline bash.
+      # GUARDRAIL (2026-08-08): Whole-repo warning count tightened to 10,000 ceiling (down from 20,000).
       - name: Lint changed files (blocking, zero new warnings)
-        run: node scripts/lint-gate.mjs --paths-from-changed
+        run: node scripts/lint-gate.mjs --paths-from-changed --max-warnings 10000
       # A11Y GATE (2026-08-03): Bans placeholder-like / junk aria-labels
       # codebase-wide (placeholder-equals-name, generic phrases, punctuation,
       # crunched header text) so accessible names can't regress in tables.
@@ -100,7 +101,7 @@ jobs:
         with:
           node-version: '20'
       - name: API row-typing gate (blocking, no untyped queries in touched routes)
-        run: node scripts/api-row-sweep.mjs --check
+        run: node scripts/api-row-sweep.mjs --check --paths-from-changed
 
   build:
     name: Production Build

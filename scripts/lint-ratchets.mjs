@@ -43,7 +43,7 @@
  * Plugin resolution is pinned to the repo root (same trick as lint-gate.mjs)
  * to avoid the duplicate-plugin conflict in worktrees.
  */
-import { readFileSync, writeFileSync, existsSync } from 'node:fs'
+import nodeFs, { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
 import path from 'node:path'
@@ -290,6 +290,25 @@ const floorChecks = [
   checkFloor(EXPLICIT_ANY_RULE, EXPLICIT_ANY_BASELINE, 'explicit-any'),
 ]
 const floorOver = floorChecks.filter((f) => f.over)
+
+if (REPORT) {
+  try {
+    const routeFiles = (existsSync('src') ? (nodeFs.globSync ? nodeFs.globSync('src/**/route.ts', { cwd: process.cwd() }) : []) : []).filter((f) => !f.includes('/__tests__/'))
+    let totalQueries = 0
+    let untypedQueries = 0
+    const queryRe = /\b(?:db|client)\.query\s*(?:<([^>]*?(?:<[^>]*>)?[^>]*)>)?\s*\(/g
+    for (const rf of routeFiles) {
+      const src = readFileSync(path.resolve(process.cwd(), rf), 'utf8')
+      let m
+      queryRe.lastIndex = 0
+      while ((m = queryRe.exec(src))) {
+        totalQueries++
+        if (!m[1]) untypedQueries++
+      }
+    }
+    console.error(`\n[lint-ratchets] db.query typing: ${totalQueries - untypedQueries}/${totalQueries} queries typed (${untypedQueries} untyped across ${routeFiles.length} routes)`)
+  } catch { /* best effort */ }
+}
 
 if (warnRegressions.length || a11yRegressions.length || floorOver.length) {
   const overNote = floorOver.length

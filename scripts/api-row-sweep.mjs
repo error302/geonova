@@ -141,14 +141,21 @@ if (BATCH !== null && asJson) {
 const routesIdx = args.indexOf('--routes')
 const ROUTES_RE = routesIdx >= 0 ? new RegExp(args[routesIdx + 1]) : null
 const checkMode = args.includes('--check')
+const PFC = args.includes('--paths-from-changed')
+const effectiveCheckMode = checkMode || PFC
 
-// In --check mode the token immediately after --check (if not a flag) is the
+const planIdx = args.indexOf('--batch-plan')
+const BATCH_PLAN_FILE = planIdx >= 0 && args[planIdx + 1] && !args[planIdx + 1].startsWith('--') ? args[planIdx + 1] : null
+
+// In --check / --paths-from-changed mode, the token immediately after --check / --paths-from-changed (if not a flag) is the
 // base ref; otherwise it is resolved from the CI event env, mirroring
 // lint-gate.mjs. Lookup is gated to that slot so value-taking flags like
 // `--top 40` can't be misread as a base ref.
 const checkIdx = args.indexOf('--check')
-const CHECK_BASE = checkMode && args[checkIdx + 1] && !args[checkIdx + 1].startsWith('--')
-  ? args[checkIdx + 1]
+const pfcIdx = args.indexOf('--paths-from-changed')
+const flagIdx = checkIdx >= 0 ? checkIdx : pfcIdx
+const CHECK_BASE = flagIdx >= 0 && args[flagIdx + 1] && !args[flagIdx + 1].startsWith('--')
+  ? args[flagIdx + 1]
   : null
 const applyIdx = args.indexOf('--apply')
 const APPLY_FILE = applyIdx >= 0 ? args[applyIdx + 1] : null
@@ -162,8 +169,8 @@ if (verifyApply && !APPLY_FILE) {
   process.exit(2)
 }
 const applyAllMode = args.includes('--apply-all')
-if (applyAllMode && (APPLY_FILE || checkMode || asJson || BATCH !== null)) {
-  console.error('[api-row-sweep] cannot combine --apply-all with --apply/--check/--json/--batch (it sweeps every untyped route file).')
+if (applyAllMode && (APPLY_FILE || effectiveCheckMode || asJson || BATCH !== null)) {
+  console.error('[api-row-sweep] cannot combine --apply-all with --apply/--check/--paths-from-changed/--json/--batch (it sweeps every untyped route file).')
   process.exit(2)
 }
 
@@ -719,18 +726,38 @@ function resolveBaseRefFromEnv() {
 }
 
 /** Changed route files vs base (ACMR filter — added/copied/modified/renamed). */
-function changedRouteFiles(baseRef) {
+function changedRouteFiles(baseRef, usePfc = false) {
   const diffRef = baseRef === 'HEAD' ? 'HEAD' : `${baseRef}...HEAD`
+  const pattern = usePfc ? ['src/**/*.ts', 'src/**/*.tsx'] : ['src/**/route.ts']
   const raw = execFileSync(
     'git',
-    ['diff', '--name-only', '--diff-filter=ACMR', diffRef, '--', 'src/**/route.ts'],
+    ['diff', '--name-only', '--diff-filter=ACMR', diffRef, '--', ...pattern],
     { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
   )
-  return raw
+  const files = raw
     .split('\n')
     .map((s) => s.trim())
-    .filter((s) => s && s.endsWith('/route.ts') && !s.includes('/__tests__/'))
-    .sort()
+    .filter((s) => s && !s.includes('/__tests__/'))
+
+  const routes = new Set()
+  for (const f of files) {
+    if (f.endsWith('/route.ts')) {
+      routes.add(f)
+    } else if (usePfc && f.startsWith('src/app/')) {
+      let dir = path.dirname(f)
+      while (dir && dir.startsWith('src/app')) {
+        const candidate = path.join(dir, 'route.ts').split(/[\\/]/).join('/')
+        if (nodeFs.existsSync(candidate)) {
+          routes.add(candidate)
+          break
+        }
+        const parent = path.dirname(dir)
+        if (parent === dir) break
+        dir = parent
+      }
+    }
+  }
+  return [...routes].sort()
 }
 
 /** The untyped-query gate: any changed route file with an untyped db.query/client.query fails.
@@ -741,7 +768,7 @@ function runCheck() {
 
   let changed
   try {
-    changed = changedRouteFiles(baseRef)
+    changed = changedRouteFiles(baseRef, PFC)
   } catch (e) {
     console.error(`[api-row-sweep] git diff failed (${e.message.split('\n')[0]}) — cannot compute changed files.`)
     return 2
@@ -1341,6 +1368,26 @@ async function main() {
     curUntyped += unt
   }
   if (curBatch.length) batches.push(curBatch)
+
+  if (BATCH_PLAN_FILE) {
+    const planData = {
+      generatedAt: new Date().toISOString(),
+      totalUntyped: batchFiles.reduce((a, f) => a + f.queries.filter((q) => !q.typed).length, 0),
+      batchCount: batches.length,
+      batches: batches.map((b, idx) => ({
+        batch: idx + 1,
+        untypedQueries: b.reduce((a, f) => a + f.queries.filter((q) => !q.typed).length, 0),
+        files: b.map((f) => ({
+          file: f.file,
+          untypedQueries: f.queries.filter((q) => !q.typed).length,
+          memberWarnings: f.memberWarnings,
+        })),
+      })),
+    }
+    const planPath = path.resolve(process.cwd(), BATCH_PLAN_FILE)
+    writeFileSync(planPath, JSON.stringify(planData, null, 2), 'utf8')
+    console.log(`[api-row-sweep] wrote stable batch plan to ${BATCH_PLAN_FILE}`)
+  }
 
   if (BATCH !== null) {
     if (!files.length) {

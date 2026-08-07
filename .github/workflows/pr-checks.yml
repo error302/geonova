@@ -35,8 +35,9 @@ jobs:
       # in any changed file, including the per-family floors (auto-loaded
       # from the committed baselines). The whole-repo ratchet below is the
       # slow, blocking per-rule baseline.
+      # GUARDRAIL (2026-08-08): Whole-repo warning count tightened to 10,000 ceiling (down from 20,000).
       - name: Lint changed files (blocking, zero new warnings)
-        run: node scripts/lint-gate.mjs --paths-from-changed
+        run: node scripts/lint-gate.mjs --paths-from-changed --max-warnings 10000
 
       # AUDIT FIX (2026-08-04): Single blocking lint pass. lint-ratchets.mjs
       # runs eslint once over middleware.ts + src/ and fails if ANY rule in
@@ -101,7 +102,7 @@ jobs:
         with:
           node-version: '20'
       - name: API row-typing gate (blocking, no untyped queries in touched routes)
-        run: node scripts/api-row-sweep.mjs --check
+        run: node scripts/api-row-sweep.mjs --check --paths-from-changed
 
   axe-sweep:
     # A11Y GATE (2026-08-04): axe-core WCAG sweep across every /tools/* page.

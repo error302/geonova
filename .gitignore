@@ -213,3 +213,4 @@ scripts/ci-db-bootstrap.sql
 *.tar.gz
 __pycache__/
 *.pyc
+tunnel-log.txt
