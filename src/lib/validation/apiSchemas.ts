@@ -151,8 +151,9 @@ export const CsvImportSchema = z.object({
 // ─── Assignment Schema ───────────────────────────────────────────────────────
 
 export const AssignSurveyorSchema = z.object({
-  parcel_ids: z.array(z.string().uuid()).min(1).max(500),
-  surveyor_id: z.string().uuid(),
+  project_id: z.string().uuid(),
+  block_id: z.string().uuid(),
+  assigned_to: z.string().uuid().nullable().optional(),
 })
 
 // ─── Project Update Schema ──────────────────────────────────────────────────

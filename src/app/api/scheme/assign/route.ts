@@ -2,6 +2,7 @@
 import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 import { AssignSurveyorSchema } from '@/lib/validation/apiSchemas'
+import { z } from 'zod'
 
 interface AssignmentCheckRow {
   id: string
@@ -22,7 +23,7 @@ export const dynamic = 'force-dynamic'
 export const POST = apiHandler(
   { auth: true, schema: AssignSurveyorSchema, audit: 'block_assigned' , rateLimit: { max: 60, windowMs: 60000 } },
   async (req, ctx) => {
-    const { project_id, block_id, assigned_to } = ctx.body as any
+    const { project_id, block_id, assigned_to } = ctx.body as z.infer<typeof AssignSurveyorSchema>
 
     if (!project_id || !block_id) {
       return NextResponse.json({ error: 'project_id and block_id are required' }, { status: 400 })

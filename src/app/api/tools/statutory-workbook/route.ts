@@ -291,7 +291,7 @@ export async function POST(request: NextRequest) {
   const userId = (session.user as { id?: string }).id
   if (userId) setCurrentUserId(String(userId))
 
-  const rawBody = await request.json().catch(() => null)
+  const rawBody = (await request.json().catch(() => null)) as unknown
   const parsed = StatutoryWorkbookSchema.safeParse(rawBody)
   if (!parsed.success) {
     return NextResponse.json(

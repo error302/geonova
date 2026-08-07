@@ -63,7 +63,7 @@ export const POST = apiHandler(
           [job.id]
         )
 
-        const payload = typeof job.payload === 'string' ? JSON.parse(job.payload) : (job.payload || {})
+        const payload = typeof job.payload === 'string' ? JSON.parse(job.payload) as Record<string, unknown> : (job.payload || {})
         const result = await processJob(job.job_type, payload)
 
         const durationMs = Date.now() - start

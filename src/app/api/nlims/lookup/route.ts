@@ -145,7 +145,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 6000
     })
 
     if (response.ok) {
-      const data = await response.json()
+      const data = (await response.json()) as NLIMSParcel
       const parcel: NLIMSParcel = {
         ...data,
         source: 'NLIMS_LIVE',
