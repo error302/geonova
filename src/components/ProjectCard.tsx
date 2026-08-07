@@ -137,7 +137,21 @@ function DeleteConfirmModal({
 }
 
 /* ── ProjectCard ─────────────────────────────────────────────────────────── */
-export default function ProjectCard({ project, openLabel }: { project: any; openLabel: string }) {
+interface ProjectCardProject {
+  id: string
+  name: string | null
+  location?: string | null
+  survey_type?: string | null
+  utm_zone?: number | null
+  hemisphere?: string | null
+  created_at: string
+  point_count?: number
+  parcel_count?: number
+  _pointCount?: number
+  _parcelCount?: number
+}
+
+export default function ProjectCard({ project, openLabel }: { project: ProjectCardProject; openLabel: string }) {
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -159,7 +173,7 @@ export default function ProjectCard({ project, openLabel }: { project: any; open
     }
   }
 
-  const surveyType = getSurveyBadgeLabel(project.survey_type)
+  const surveyType = getSurveyBadgeLabel(project.survey_type ?? undefined)
 
   const pointCount = project.point_count ?? project._pointCount ?? 0
   const parcelCount = project.parcel_count ?? project._parcelCount ?? 0
@@ -192,7 +206,7 @@ export default function ProjectCard({ project, openLabel }: { project: any; open
     setDeleteError('')
     try {
       const res = await fetch(`/api/project/${project.id}`, { method: 'DELETE' })
-      const data = await res.json()
+      const data = (await res.json()) as { error?: string }
       if (!res.ok) {
         setDeleteError(data.error || 'Failed to delete project')
         setIsDeleting(false)
@@ -371,7 +385,7 @@ export default function ProjectCard({ project, openLabel }: { project: any; open
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <DeleteConfirmModal
-          projectName={project.name}
+          projectName={project.name ?? ''}
           pointCount={pointCount}
           parcelCount={parcelCount}
           onConfirm={handleDelete}

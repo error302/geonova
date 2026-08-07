@@ -43,7 +43,7 @@ const PROP_KEY = 'metardu_proposals'
 
 function loadJobs(): SurveyJob[] {
   if (typeof window === 'undefined') return []
-  try { return JSON.parse(localStorage.getItem(JOB_KEY) || '[]') } catch { return [] }
+  try { return JSON.parse(localStorage.getItem(JOB_KEY) || '[]') as SurveyJob[] } catch { return [] }
 }
 function saveJobs(jobs: SurveyJob[]) {
   if (typeof window === 'undefined') return
@@ -51,7 +51,7 @@ function saveJobs(jobs: SurveyJob[]) {
 }
 function loadProposals(): JobProposal[] {
   if (typeof window === 'undefined') return []
-  try { return JSON.parse(localStorage.getItem(PROP_KEY) || '[]') } catch { return [] }
+  try { return JSON.parse(localStorage.getItem(PROP_KEY) || '[]') as JobProposal[] } catch { return [] }
 }
 function saveProposals(p: JobProposal[]) {
   if (typeof window === 'undefined') return
@@ -59,20 +59,20 @@ function saveProposals(p: JobProposal[]) {
 }
 
 export function getJobs(filters?: { country?: string; surveyType?: string; status?: JobStatus }): SurveyJob[] {
-  let jobs = loadJobs().sort((a: any, b: any) => b.postedAt.localeCompare(a.postedAt))
-  if (filters?.country) jobs = jobs.filter((j: any) => j.country === filters.country)
-  if (filters?.surveyType) jobs = jobs.filter((j: any) => j.surveyType === filters.surveyType)
-  if (filters?.status) jobs = jobs.filter((j: any) => j.status === filters.status)
+  let jobs = loadJobs().sort((a: SurveyJob, b: SurveyJob) => b.postedAt.localeCompare(a.postedAt))
+  if (filters?.country) jobs = jobs.filter((j: SurveyJob) => j.country === filters.country)
+  if (filters?.surveyType) jobs = jobs.filter((j: SurveyJob) => j.surveyType === filters.surveyType)
+  if (filters?.status) jobs = jobs.filter((j: SurveyJob) => j.status === filters.status)
   return jobs
 }
 
 export function getJobById(id: string): SurveyJob | undefined {
-  return loadJobs().find((j: any) => j.id === id)
+  return loadJobs().find((j: SurveyJob) => j.id === id)
 }
 
 export function searchJobs(query: string): SurveyJob[] {
   const q = query.toLowerCase()
-  return loadJobs().filter((j: any) =>
+  return loadJobs().filter((j: SurveyJob) =>
     j.title.toLowerCase().includes(q) ||
     j.description.toLowerCase().includes(q) ||
     j.location.toLowerCase().includes(q) ||
@@ -103,7 +103,7 @@ export function updateJobStatus(id: string, status: JobStatus): boolean {
 }
 
 export function deleteJob(id: string) {
-  saveJobs(loadJobs().filter((j: any) => j.id !== id))
+  saveJobs(loadJobs().filter((j: SurveyJob) => j.id !== id))
 }
 
 export function submitProposal(data: Omit<JobProposal, 'id' | 'submittedAt'>): JobProposal {
@@ -118,7 +118,7 @@ export function submitProposal(data: Omit<JobProposal, 'id' | 'submittedAt'>): J
 }
 
 export function getProposalsForJob(jobId: string): JobProposal[] {
-  return loadProposals().filter((p: any) => p.jobId === jobId).sort((a: any, b: any) => b.submittedAt.localeCompare(a.submittedAt))
+  return loadProposals().filter((p: JobProposal) => p.jobId === jobId).sort((a: JobProposal, b: JobProposal) => b.submittedAt.localeCompare(a.submittedAt))
 }
 
 export const JOB_TYPES: { id: SurveyJobType; label: string }[] = [
@@ -153,7 +153,7 @@ export const COMMON_SKILLS = [
 ]
 
 export function formatBudget(amount: number, currency: Currency): string {
-  const c = CURRENCIES.find((c: any) => c.id === currency)
+  const c = CURRENCIES.find((c: (typeof CURRENCIES)[number]) => c.id === currency)
   const sym = c?.symbol ?? currency
   if (currency === 'KES' || currency === 'UGX' || currency === 'TZS' || currency === 'NGN') {
     return `${sym} ${amount.toLocaleString()}`

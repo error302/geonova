@@ -17,7 +17,7 @@
 
 import { buildPrintDocument, openPrint } from './buildPrintDocument'
 import type { PrintMeta } from './buildPrintDocument'
-import type { LevelBookResult } from '@/lib/computations/traverseEngine'
+import type { LevelBookResult, LevelBookRow } from '@/lib/computations/traverseEngine'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -43,7 +43,7 @@ function buildBody(inp: LevelBookPrintInput): string {
   const mLabel = isRF ? 'Rise & Fall' : 'Height of Collimation'
 
   // ── Table 1: Field Book ────────────────────────────────
-  const tableRows = r.rows.map((row: any) => `
+  const tableRows = r.rows.map((row: LevelBookRow) => `
 <tr>
   <td class="bold mono">${esc(row.station)}</td>
   <td class="right mono">${row.bs !== undefined ? row.bs.toFixed(3) : ''}</td>

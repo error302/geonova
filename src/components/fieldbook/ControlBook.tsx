@@ -1,19 +1,11 @@
 'use client';
 
 import type { Dispatch, SetStateAction } from 'react'
+import type { Row } from '@/components/fieldbook/MobileFieldbookShell'
 
 type Translator = (key: string, values?: Record<string, string | number>) => string
 
-export type ControlRow = {
-  id: string
-  pointId: string
-  instrumentHeight: string
-  targetHeight: string
-  bearing: string
-  verticalAngle: string
-  slopeDistance: string
-  remarks: string
-}
+export type ControlRow = Row
 
 export function ControlBook({
   t,
@@ -28,7 +20,7 @@ export function ControlBook({
   setStation: Dispatch<SetStateAction<{ name: string; e: string; n: string; z: string }>>
   rows: ControlRow[]
   setRows: Dispatch<SetStateAction<ControlRow[]>>
-  computed: { ok: true; rows: any[] } | { ok: false; errors: string[] }
+  computed: { ok: true; rows: Array<{ computed: { easting: number; northing: number; elevation: number } | null }> } | { ok: false; errors: string[] }
 }) {
   const outRows = computed.ok ? computed.rows : []
 

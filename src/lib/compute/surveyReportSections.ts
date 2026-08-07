@@ -135,7 +135,7 @@ export function generateTitlePage(input: SurveyReportInput): SectionContent {
 
 export function generateTableOfContents(sections: SectionContent[]): SectionContent {
   let content = '<h2>Table of Contents</h2><ul>'
-  sections.forEach((s: any) => {
+  sections.forEach((s: SectionContent) => {
     content += `<li>${s.sectionNumber}. ${s.title}</li>`
   })
   content += '</ul>'
@@ -170,7 +170,7 @@ export function generateScopeOfWork(input: SurveyReportInput): SectionContent {
   
   if (input.scopeItems && input.scopeItems.length > 0) {
     content += '<ol>'
-    input.scopeItems.forEach((item: any) => {
+    input.scopeItems.forEach((item: string) => {
       content += `<li>${item}</li>`
     })
     content += '</ol>'
@@ -285,7 +285,7 @@ export function generateControlSurvey(input: SurveyReportInput, controlPoints: C
   `
   
   if (controlPoints.length > 0) {
-    controlPoints.forEach((cp: any) => {
+    controlPoints.forEach((cp: ControlPoint) => {
       content += `
         <tr>
           <td style="border: 1px solid #000; padding: 5px;">${cp.id}</td>
@@ -312,8 +312,8 @@ export function generateControlSurvey(input: SurveyReportInput, controlPoints: C
 }
 
 function getControlAccuracyClass(points: ControlPoint[]): string {
-  if (points.some((p: any) => p.order === 'PRIMARY')) return 'First Order'
-  if (points.some((p: any) => p.order === 'SECONDARY')) return 'Second Order'
+  if (points.some((p: ControlPoint) => p.order === 'PRIMARY')) return 'First Order'
+  if (points.some((p: ControlPoint) => p.order === 'SECONDARY')) return 'Second Order'
   return 'Third Order'
 }
 
@@ -493,7 +493,7 @@ export function generateBenchmarkRegister(benchmarks: ControlPoint[]): SectionCo
   `
   
   if (benchmarks.length > 0) {
-    benchmarks.forEach((bm: any) => {
+    benchmarks.forEach((bm: ControlPoint) => {
       content += `
         <tr>
           <td style="border: 1px solid #000; padding: 5px;">${bm.id}</td>
@@ -565,7 +565,7 @@ export function generateLevellingComputations(runs?: LevellingRun[]): SectionCon
   `
   
   if (runs && runs.length > 0) {
-    runs.forEach((run: any) => {
+    runs.forEach((run: LevellingRun) => {
       const resultBadge = run.passes 
         ? '<span style="color: green; font-weight: bold;">PASS</span>'
         : '<span style="color: red; font-weight: bold;">FAIL</span>'
@@ -602,7 +602,7 @@ export function generateConclusions(input: SurveyReportInput): SectionContent {
   let conclusionsContent = ''
   if (input.conclusions && input.conclusions.length > 0) {
     conclusionsContent = '<ol>'
-    input.conclusions.forEach((c: any) => {
+    input.conclusions.forEach((c: string) => {
       conclusionsContent += `<li>${c}</li>`
     })
     conclusionsContent += '</ol>'
@@ -613,7 +613,7 @@ export function generateConclusions(input: SurveyReportInput): SectionContent {
   let recommendationsContent = ''
   if (input.recommendations && input.recommendations.length > 0) {
     recommendationsContent = '<ol>'
-    input.recommendations.forEach((r: any) => {
+    input.recommendations.forEach((r: string) => {
       recommendationsContent += `<li>${r}</li>`
     })
     recommendationsContent += '</ol>'

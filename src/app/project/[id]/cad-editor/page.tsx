@@ -33,7 +33,16 @@ export default function CADEditorPage() {
 
         // Fetch the adjusted traverse coordinates from the API
         const res = await fetch(`/api/project/${projectId}/fieldbook`)
-        const result = await res.json()
+        const result = (await res.json()) as {
+          data?: {
+            stations?: Array<{ id: string; name?: string; easting: number; northing: number }>
+            observations?: Array<Record<string, unknown>>
+            projectName?: string
+            lrNumber?: string
+            surveyor?: string
+            regNo?: string
+          }
+        }
 
         if (!result.data?.stations || result.data.stations.length === 0) {
           setError('No traverse data found. Compute a traverse first.')
@@ -65,7 +74,7 @@ export default function CADEditorPage() {
         const toY = (n: number) => H - PADDING - (n - minN) * scale
 
         // Build beacons
-        const beacons: CADDocument['beacons'] = stations.map((s: { id: string; name: string; easting: number; northing: number }, i: number) => ({
+        const beacons: CADDocument['beacons'] = stations.map((s: { id: string; name?: string; easting: number; northing: number }, i: number) => ({
           id: s.id || `b${i}`,
           label: s.name || `P${i + 1}`,
           x: toX(s.easting),

@@ -431,6 +431,12 @@ export class NTRIPClient {
     return `${protocol}://${auth}${host}:${port}/${mountpoint}`;
   }
 
+  /** Send a raw NMEA sentence (e.g. a manually-built GGA) over the socket. */
+  public sendGGA(sentence: string): void {
+    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) return;
+    this.socket.send(sentence);
+  }
+
   private sendVRSPosition(): void {
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) return;
     if (!this.config.roverPosition) return;

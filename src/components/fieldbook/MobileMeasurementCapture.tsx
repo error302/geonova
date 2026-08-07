@@ -57,6 +57,17 @@ const MODE_CONFIG: Record<CaptureMode, { label: string; icon: typeof Crosshair; 
   offset: { label: 'Offset', icon: Ruler, color: 'text-amber-400' },
 }
 
+interface SpeechRecognitionHandle {
+  continuous: boolean
+  interimResults: boolean
+  lang: string
+  onresult: ((event: { results: { [key: number]: { [key: number]: { transcript: string } } } }) => void) | null
+  onerror: (() => void) | null
+  onend: (() => void) | null
+  start: () => void
+  stop: () => void
+}
+
 export function MobileMeasurementCapture({ onCapture, stationName, surveyType }: MobileMeasurementCaptureProps) {
   const [mode, setMode] = useState<CaptureMode>('gps')
   const [gpsReading, setGpsReading] = useState<GPSReading | null>(null)
@@ -76,7 +87,7 @@ export function MobileMeasurementCapture({ onCapture, stationName, surveyType }:
   const [remarks, setRemarks] = useState('')
   const [photos, setPhotos] = useState<string[]>([])
   const [listening, setListening] = useState(false)
-  const recognitionRef = useRef<any>(null)
+  const recognitionRef = useRef<SpeechRecognitionHandle | null>(null)
 
   const handleCaptureGPS = useCallback(() => {
     if (!gpsReading) { alert('Waiting for GPS signal...'); return }

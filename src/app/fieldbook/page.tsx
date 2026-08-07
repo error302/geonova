@@ -84,21 +84,9 @@ type TravRow = {
   ih: string; th: string
   remarks: string
 }
-type ControlRow = {
-  id: string
-  pointId: string
-  instrumentHeight: string
-  targetHeight: string
-  bearing: string
-  verticalAngle: string
-  slopeDistance: string
-  remarks: string
-}
-type ControlSetup = {
-  id: string
-  station: { name: string; e: string; n: string; z: string }
-  rows: ControlRow[]
-}
+import type { ControlSetup, Row } from '@/components/fieldbook/MobileFieldbookShell'
+
+type ControlRow = Row
 
 function downloadBlob(filename: string, blob: Blob) {
   const url = URL.createObjectURL(blob)

@@ -196,44 +196,44 @@ const surveyors: MarketplaceSurveyor[] = [
 
 export function getTemplates(category?: string): SurveyTemplate[] {
   if (!category || category === 'all') return templates
-  return templates.filter((t: any) => t.category === category)
+  return templates.filter((t: SurveyTemplate) => t.category === category)
 }
 
 export function getTemplateById(id: string): SurveyTemplate | undefined {
-  return templates.find((t: any) => t.id === id)
+  return templates.find((t: SurveyTemplate) => t.id === id)
 }
 
 export function searchTemplates(query: string): SurveyTemplate[] {
   const q = query.toLowerCase()
-  return templates.filter((t: any) => 
+  return templates.filter((t: SurveyTemplate) => 
     t.name.toLowerCase().includes(q) ||
     t.description.toLowerCase().includes(q) ||
-    t.tags.some((tag: any) => tag.toLowerCase().includes(q))
+    t.tags.some((tag: string) => tag.toLowerCase().includes(q))
   )
 }
 
 export function getTopTemplates(limit = 5): SurveyTemplate[] {
-  return [...templates].sort((a: any, b: any) => b.downloads - a.downloads).slice(0, limit)
+  return [...templates].sort((a: SurveyTemplate, b: SurveyTemplate) => b.downloads - a.downloads).slice(0, limit)
 }
 
 export function getSurveyors(specialty?: string): MarketplaceSurveyor[] {
   if (!specialty || specialty === 'all') return surveyors
-  return surveyors.filter((s: any) => s.specialties.some((sp: any) => 
+  return surveyors.filter((s: MarketplaceSurveyor) => s.specialties.some((sp: string) => 
     sp.toLowerCase().includes(specialty.toLowerCase())
   ))
 }
 
 export function getSurveyorById(id: string): MarketplaceSurveyor | undefined {
-  return surveyors.find((s: any) => s.id === id)
+  return surveyors.find((s: MarketplaceSurveyor) => s.id === id)
 }
 
 export function searchSurveyors(query: string): MarketplaceSurveyor[] {
   const q = query.toLowerCase()
-  return surveyors.filter((s: any) => 
+  return surveyors.filter((s: MarketplaceSurveyor) => 
     s.name.toLowerCase().includes(q) ||
     s.title.toLowerCase().includes(q) ||
     s.country.toLowerCase().includes(q) ||
-    s.specialties.some((sp: any) => sp.toLowerCase().includes(q))
+    s.specialties.some((sp: string) => sp.toLowerCase().includes(q))
   )
 }
 

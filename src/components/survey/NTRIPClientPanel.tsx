@@ -97,7 +97,7 @@ export function NTRIPClientPanel() {
   const [rtcmMessages, setRtcmMessages] = useState(0)
   const [lastGgaSent, setLastGgaSent] = useState<Date | null>(null)
   const [showAdvanced, setShowAdvanced] = useState(false)
-  const ntripClientRef = useRef<any>(null)
+  const ntripClientRef = useRef<import('@/lib/gnss/ntrip-client').NTRIPClient | null>(null)
 
   // Update config when preset changes
   const handlePresetChange = useCallback((presetId: string) => {

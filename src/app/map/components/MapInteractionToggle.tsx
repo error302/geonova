@@ -51,28 +51,29 @@ export function MapInteractionToggle({ mapInstance }: { mapInstance: React.Mutab
       const interactions = map.getInteractions()
       const { default: DragPan } = await import('ol/interaction/DragPan')
       const { platformModifierKeyOnly } = await import('ol/events/condition')
-      let dragPan: any = null
-      interactions.forEach((interaction: any) => {
+      let dragPan: import('ol/interaction/DragPan').default | null = null
+      interactions.forEach((interaction: import('ol/interaction/Interaction').default) => {
         if (interaction instanceof DragPan) dragPan = interaction
       })
       if (!dragPan) return
-      // OL 10.x dropped the public setCondition() method — the pan condition is
-      // a private `condition_` field assigned in the constructor. Assign it
-      // directly (the field is read on every pointer event), while still
-      // supporting the older setCondition() API for other OL versions.
-      const applyCondition = (fn: any) => {
-        if (typeof (dragPan as any).setCondition === 'function') {
-          ;(dragPan as any).setCondition(fn)
+      const dp = dragPan as unknown as {
+        setCondition?: (fn: import('ol/events/condition').Condition) => void
+        condition_?: import('ol/events/condition').Condition
+      }
+      const applyCondition = (fn: import('ol/events/condition').Condition) => {
+        if (typeof dp.setCondition === 'function') {
+          dp.setCondition(fn)
         } else {
-          ;(dragPan as any).condition_ = fn
+          dp.condition_ = fn
         }
       }
       if (locked) {
-        applyCondition((event: any) => {
-          if (event.originalEvent && event.originalEvent.touches) {
-            return event.originalEvent.touches.length >= 2
+        applyCondition((event: import('ol/MapBrowserEvent').default) => {
+          const orig = event.originalEvent as TouchEvent | MouseEvent | undefined
+          if (orig && 'touches' in orig && orig.touches) {
+            return orig.touches.length >= 2
           }
-          if (event.originalEvent && event.originalEvent.ctrlKey) return true
+          if (orig && orig.ctrlKey) return true
           if (!('ontouchstart' in window) && navigator.maxTouchPoints === 0) return true
           return false
         })

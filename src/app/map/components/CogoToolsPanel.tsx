@@ -425,7 +425,7 @@ function CogoToolsPanelInner() {
 
       // Check if COGO results layer already exists
       const layers = map.getLayers().getArray()
-      let cogoLayer = layers.find((l: any) => l.get('cogoResults') === true)
+      let cogoLayer = layers.find((l) => l.get('cogoResults') === true) as import('ol/layer/Vector').default<import('ol/source/Vector').default> | undefined
 
       if (!cogoLayer) {
         const source = new VectorSource({ features: [feature] })
@@ -439,11 +439,11 @@ function CogoToolsPanelInner() {
             }),
           }),
         })
-        ;(cogoLayer as any).set('cogoResults', true)
-        ;(cogoLayer as any).set('name', 'COGO Results')
+        cogoLayer.set('cogoResults', true)
+        cogoLayer.set('name', 'COGO Results')
         map.addLayer(cogoLayer)
       } else {
-        ;(cogoLayer as any).getSource().addFeature(feature)
+        cogoLayer.getSource()?.addFeature(feature)
       }
 
       // Zoom to the new point

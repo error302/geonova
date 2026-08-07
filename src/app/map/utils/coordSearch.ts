@@ -146,7 +146,7 @@ async function flashFeature(
         import('ol/style/Circle'),
       ])
 
-    const originalStyle = feature.getStyle()
+    const originalStyle = feature.getStyle() as import('ol/style/Style').StyleLike | null | undefined
     const flashStyle = new Style({
       stroke: new Stroke({ color: '#D17B47', width: 4 }),
       fill: new Fill({ color: 'rgba(209, 123, 71, 0.3)' }),
@@ -159,7 +159,7 @@ async function flashFeature(
 
     feature.setStyle(flashStyle)
     setTimeout(() => {
-      feature.setStyle(originalStyle || undefined)
+      feature.setStyle((originalStyle as import('ol/style/Style').StyleLike) ?? undefined)
     }, 1500)
   } catch {
     // Flash is best-effort

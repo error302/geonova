@@ -22,7 +22,33 @@ import { UniversalMobileObservationForm } from './UniversalMobileObservationForm
 import type { CapturedBeaconPhoto } from './BeaconPhotoCapture'
 import { useHaptics, StickySummary, OfflineCacheIndicator } from './MobileFieldUX'
 
-type Row = { id: string; [key: string]: string }
+export type Row = { id: string; [key: string]: string }
+
+type ControlStation = { name: string; e: string; n: string; z: string }
+
+export type ControlSetup = { id: string; station: ControlStation; rows: Row[] }
+
+interface MobileComputed {
+  ok: boolean
+  errors?: string[]
+  mode?: 'open' | 'closed' | 'link'
+  calc?: {
+    precisionRatio?: number
+    arithmeticCheck?: boolean
+    misclosure?: number
+    misclosureDistance?: number
+    allowableMisclosure?: number
+    readings?: Array<{ reducedLevel?: number; station?: string }>
+  }
+  adjusted?: {
+    linearError: number
+    totalDistance: number
+    closingErrorE: number
+    closingErrorN: number
+  }
+  raw?: { legs?: Array<Record<string, unknown>> }
+  rows?: Array<Record<string, unknown>>
+}
 
 interface MobileFieldbookShellProps {
   surveyType: MobileSurveyType
@@ -41,7 +67,7 @@ interface MobileFieldbookShellProps {
   onViewAuditLog?: () => void
 
   // --- Computations ---
-  computed: any
+  computed: MobileComputed | null
 
   // --- Leveling setup props ---
   openingRL: string
@@ -68,12 +94,12 @@ interface MobileFieldbookShellProps {
   setCloseN: (val: string) => void
 
   // --- Control setups props ---
-  controlSetups: any[]
-  setControlSetups: React.Dispatch<React.SetStateAction<any[]>>
+  controlSetups: ControlSetup[]
+  setControlSetups: React.Dispatch<React.SetStateAction<ControlSetup[]>>
   activeControlSetupId: string
   setActiveControlSetupId: (id: string) => void
   controlStation: { name: string; e: string; n: string; z: string }
-  setControlStation: (val: any) => void
+  setControlStation: (val: ControlStation | ((p: ControlStation) => ControlStation)) => void
 
   // --- Mining setup props removed in v1 scope narrowing (see metardu-industrial repo) ---
 }
@@ -255,7 +281,7 @@ export function MobileFieldbookShell({
             surveyType === 'traverse'
               ? (computed.calc?.precisionRatio ?? 0) >= 5000
               : surveyType === 'leveling'
-                ? computed.calc?.arithmeticCheck
+                ? (computed.calc?.arithmeticCheck ?? false)
                 : true
           }
           secondary={
@@ -472,7 +498,7 @@ export function MobileFieldbookShell({
                         type="text"
                         className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] uppercase focus:outline-none focus:border-[var(--accent)]"
                         value={controlStation.name}
-                        onChange={(e) => setControlStation((p: any) => ({ ...p, name: e.target.value.toUpperCase() }))}
+                        onChange={(e) => setControlStation((p: ControlStation) => ({ ...p, name: e.target.value.toUpperCase() }))}
                       />
                     </div>
                     <div>
@@ -482,7 +508,7 @@ export function MobileFieldbookShell({
                         inputMode="decimal"
                         className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
                         value={controlStation.e}
-                        onChange={(e) => setControlStation((p: any) => ({ ...p, e: e.target.value }))}
+                        onChange={(e) => setControlStation((p: ControlStation) => ({ ...p, e: e.target.value }))}
                       />
                     </div>
                     <div>
@@ -492,7 +518,7 @@ export function MobileFieldbookShell({
                         inputMode="decimal"
                         className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
                         value={controlStation.n}
-                        onChange={(e) => setControlStation((p: any) => ({ ...p, n: e.target.value }))}
+                        onChange={(e) => setControlStation((p: ControlStation) => ({ ...p, n: e.target.value }))}
                       />
                     </div>
                     <div className="col-span-2">
@@ -502,7 +528,7 @@ export function MobileFieldbookShell({
                         inputMode="decimal"
                         className="w-full px-3 py-2 text-sm bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
                         value={controlStation.z}
-                        onChange={(e) => setControlStation((p: any) => ({ ...p, z: e.target.value }))}
+                        onChange={(e) => setControlStation((p: ControlStation) => ({ ...p, z: e.target.value }))}
                       />
                     </div>
                   </div>
@@ -519,7 +545,7 @@ export function MobileFieldbookShell({
                           {
                             id,
                             station: { ...src.station, name: src.station.name ? `${src.station.name}_copy${suffix}` : `STN_copy${suffix}` },
-                            rows: src.rows.map((r: any) => ({ ...r, id: crypto.randomUUID() })),
+                            rows: src.rows.map((r: Row) => ({ ...r, id: crypto.randomUUID() })),
                           },
                         ])
                         setActiveControlSetupId(id)
@@ -666,7 +692,7 @@ export function MobileFieldbookShell({
                 {!computed.ok ? (
                   <div className="p-3 bg-red-950/20 border border-red-500/30 rounded-lg text-xs text-red-300 space-y-1">
                     <div className="font-semibold text-red-400"><AlertTriangle className="w-3.5 h-3.5 inline shrink-0" /> Calculation Errors:</div>
-                    {computed.errors.map((e: string, i: number) => (
+                    {(computed.errors ?? []).map((e: string, i: number) => (
                       <div key={`item-${i}`} className="list-item ml-3">{e}</div>
                     ))}
                   </div>
@@ -676,17 +702,17 @@ export function MobileFieldbookShell({
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div className="col-span-2 p-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
                           <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold">Arithmetic Check</div>
-                          <div className={`font-mono text-sm font-bold ${computed.calc.arithmeticCheck ? 'text-green-400' : 'text-red-400'}`}>
-                            {computed.calc.arithmeticCheck ? 'PASS' : 'FAIL'}
+                          <div className={`font-mono text-sm font-bold ${(computed.calc?.arithmeticCheck ?? false) ? 'text-green-400' : 'text-red-400'}`}>
+                            {(computed.calc?.arithmeticCheck ?? false) ? 'PASS' : 'FAIL'}
                           </div>
                         </div>
                         <div className="p-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
                           <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold">Misclosure</div>
-                          <div className="font-mono text-sm text-[var(--text-primary)]">{Number(computed.calc.misclosure).toFixed(4)} m</div>
+                          <div className="font-mono text-sm text-[var(--text-primary)]">{Number(computed.calc?.misclosure ?? 0).toFixed(4)} m</div>
                         </div>
                         <div className="p-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
                           <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold">Allowable</div>
-                          <div className="font-mono text-sm text-[var(--text-primary)]">±{Number(computed.calc.allowableMisclosure).toFixed(4)} m</div>
+                          <div className="font-mono text-sm text-[var(--text-primary)]">±{Number(computed.calc?.allowableMisclosure ?? 0).toFixed(4)} m</div>
                         </div>
                       </div>
                     )}
@@ -701,21 +727,21 @@ export function MobileFieldbookShell({
                           <div className="grid grid-cols-2 gap-2 text-xs">
                             <div className="p-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
                               <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold">Linear Error</div>
-                              <div className="font-mono text-sm text-[var(--text-primary)]">{Number(computed.adjusted.linearError).toFixed(4)} m</div>
+                              <div className="font-mono text-sm text-[var(--text-primary)]">{Number(computed.adjusted?.linearError ?? 0).toFixed(4)} m</div>
                             </div>
                             <div className="p-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
                               <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold">Precision Ratio</div>
                               <div className="font-mono text-sm text-[var(--accent)] font-bold">
-                                1 : {Math.max(1, Math.round(Number(computed.adjusted.totalDistance) / Math.max(1e-12, Number(computed.adjusted.linearError)))).toLocaleString()}
+                                1 : {Math.max(1, Math.round(Number(computed.adjusted?.totalDistance ?? 0) / Math.max(1e-12, Number(computed.adjusted?.linearError ?? 0)))).toLocaleString()}
                               </div>
                             </div>
                             <div className="p-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
                               <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold">Closing Error E</div>
-                              <div className="font-mono text-xs text-[var(--text-primary)]">{Number(computed.adjusted.closingErrorE).toFixed(4)} m</div>
+                              <div className="font-mono text-xs text-[var(--text-primary)]">{Number(computed.adjusted?.closingErrorE ?? 0).toFixed(4)} m</div>
                             </div>
                             <div className="p-2.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
                               <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold">Closing Error N</div>
-                              <div className="font-mono text-xs text-[var(--text-primary)]">{Number(computed.adjusted.closingErrorN).toFixed(4)} m</div>
+                              <div className="font-mono text-xs text-[var(--text-primary)]">{Number(computed.adjusted?.closingErrorN ?? 0).toFixed(4)} m</div>
                             </div>
                           </div>
                         )}

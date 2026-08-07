@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useId } from 'react'
 import { Download } from 'lucide-react'
-import { computeSettingOut, checkCoordinate, parseSettingOutCSV, type InstrumentStation, type Backsight, type DesignPoint, type ReObservation, type SettingOutResult } from '@/lib/computations/settingOutEngine'
+import { computeSettingOut, checkCoordinate, parseSettingOutCSV, type InstrumentStation, type Backsight, type DesignPoint, type ReObservation, type SettingOutResult, type SettingOutRow } from '@/lib/computations/settingOutEngine'
 import SettingOutTable from './SettingOutTable'
 import StakeOutSheet from './StakeOutSheet'
 import ChainageOffsetTable from './ChainageOffsetTable'
@@ -66,7 +66,7 @@ export default function SettingOutCalculator() {
 
   function runCheck() {
     if (!result || !checkResults.pointId) return
-    const pt = result.rows.find((r: any) => r.id === checkResults.pointId)
+    const pt = result.rows.find((r: SettingOutRow) => r.id === checkResults.pointId)
     if (!pt) return
     const obs: ReObservation = {
       observedHz: parseFloat(checkResults.obsHz) || 0,
@@ -208,9 +208,9 @@ export default function SettingOutCalculator() {
                     ]},
                   ],
                   [
-                    { title: 'Setting Out Table', headers: ['Point ID', 'Hz Angle', 'HD (m)', 'ΔRL (m)', 'Design E', 'Design N', 'Design RL'], rows: result.rows.map((r: any) => [
-                      r.id, r.horizontalAngle || '—', r.horizontalDistance?.toFixed(4) || '—',
-                      r.deltaRL?.toFixed(4) || '—', r.designE?.toFixed(3) || '—',
+                    { title: 'Setting Out Table', headers: ['Point ID', 'Hz Angle', 'HD (m)', 'ΔRL (m)', 'Design E', 'Design N', 'Design RL'], rows: result.rows.map((r: SettingOutRow) => [
+                      r.id, r.HzAngle || '—', r.HD?.toFixed(4) || '—',
+                      r.heightDiff?.toFixed(4) || '—', r.designE?.toFixed(3) || '—',
                       r.designN?.toFixed(3) || '—', r.designRL?.toFixed(3) || '—',
                     ]) },
                   ],
@@ -224,9 +224,9 @@ export default function SettingOutCalculator() {
               onClick={() => {
                 const csv = toCSV(
                   ['Point ID', 'Hz Angle', 'HD (m)', 'Delta RL (m)', 'Design E', 'Design N', 'Design RL'],
-                  result.rows.map((r: any) => [
-                    r.id, r.horizontalAngle || '', r.horizontalDistance?.toFixed(4) || '',
-                    r.deltaRL?.toFixed(4) || '', r.designE?.toFixed(3) || '',
+                  result.rows.map((r: SettingOutRow) => [
+                    r.id, r.HzAngle || '', r.HD?.toFixed(4) || '',
+                    r.heightDiff?.toFixed(4) || '', r.designE?.toFixed(3) || '',
                     r.designN?.toFixed(3) || '', r.designRL?.toFixed(3) || '',
                   ]),
                 )
@@ -243,7 +243,7 @@ export default function SettingOutCalculator() {
       {/* Tabs */}
       {result && (
         <div className="flex gap-1 border-b border-[var(--border-color)]">
-          {(['table', 'chainage', 'check'] as const).map((tab: any) => (
+          {(['table', 'chainage', 'check'] as const).map((tab: 'table' | 'chainage' | 'check') => (
             <button key={tab} onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 text-sm font-medium border-b-2 rounded-t ${activeTab === tab ? 'border-[var(--accent)] text-[var(--accent)]' : 'border-transparent text-[var(--text-muted)]'}`}>
               {tab === 'table' ? 'Setting Out Table' : tab === 'chainage' ? 'Chainage & Offset' : 'Re-Observation Check'}
@@ -266,7 +266,7 @@ export default function SettingOutCalculator() {
               <select id="point-id" value={checkResults.pointId} onChange={e => setCheckResults(r => ({ ...r, pointId: e.target.value }))}
                 className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm">
                 <option value="">Select point</option>
-                {result.rows.map((r: any) => <option key={r.id} value={r.id}>{r.id} — {r.designE.toFixed(3)}/{r.designN.toFixed(3)}</option>)}
+                {result.rows.map((r: SettingOutRow) => <option key={r.id} value={r.id}>{r.id} — {r.designE.toFixed(3)}/{r.designN.toFixed(3)}</option>)}
               </select>
             </div>
             <Field label="Observed Hz (°)" value={checkResults.obsHz} onChange={v => setCheckResults(r => ({ ...r, obsHz: v }))} />

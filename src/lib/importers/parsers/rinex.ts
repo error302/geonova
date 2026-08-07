@@ -95,7 +95,7 @@ function identifySystem(satId: string): RinexObservation['system'] {
 
 export function parseRinexHeader(content: string): RinexHeader {
   const lines = content.split('\n')
-  const header: any = {}
+  const header: Partial<RinexHeader> = {}
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trimEnd()

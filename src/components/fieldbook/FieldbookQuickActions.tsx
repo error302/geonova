@@ -52,6 +52,21 @@ export interface ComputationPreview {
   detail?: string;
 }
 
+/** Live computation result shape (matches FieldbookWorkspace LiveComputed). */
+interface ComputedResult {
+  ok: boolean
+  errors?: string[]
+  mode?: 'open' | 'closed'
+  raw?: { legs: Array<{ easting?: number; northing?: number; adjEasting?: number; adjNorthing?: number; bearingDMS?: string }> }
+  adjusted?: {
+    legs: Array<{ easting?: number; northing?: number; adjEasting?: number; adjNorthing?: number; bearingDMS?: string }>
+    linearError?: number
+    totalDistance?: number
+  }
+  calc?: { readings: Array<{ reducedLevel?: number; station?: string }>; misclosure?: number; precisionRatio?: number; arithmeticCheck?: boolean }
+  rows?: Array<{ computed?: { easting: number; northing: number; elevation?: number | null }; corrected?: number; soundingId?: string }>
+}
+
 interface FieldbookQuickActionsProps {
   /** Current survey type */
   surveyType: 'leveling' | 'traverse' | 'control' | 'hydrographic' | 'mining';
@@ -66,7 +81,7 @@ interface FieldbookQuickActionsProps {
   bearingInput?: string;
 
   /** Current computation result (from the page) */
-  computed: any;
+  computed: ComputedResult | null;
 
   /** Callback to save a weather note with the fieldbook data */
   onWeatherNote?: (note: WeatherNote) => void;
@@ -169,7 +184,7 @@ function buildComputationPreview(
   surveyType: string,
   rows: Array<{ id: string; [key: string]: string }>,
   currentEntry: Record<string, string>,
-  computed: any
+  computed: ComputedResult | null
 ): ComputationPreview | null {
   if (!rows.length && !Object.keys(currentEntry).length) return null;
 
@@ -206,7 +221,7 @@ function buildComputationPreview(
           type: 'radiation_coord',
           label: 'Computed Point',
           value: `E: ${lastRow.computed.easting.toFixed(4)}  N: ${lastRow.computed.northing.toFixed(4)}`,
-          detail: `RL: ${lastRow.computed.elevation.toFixed(4)} m`,
+          detail: `RL: ${(lastRow.computed.elevation ?? 0).toFixed(4)} m`,
         };
       }
     }

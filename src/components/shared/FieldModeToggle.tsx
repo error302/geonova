@@ -43,13 +43,20 @@ function isSensorOptIn(): boolean {
 
 /* ── Component ─────────────────────────────────────────────────────────── */
 
+interface AmbientLightSensorInstance {
+  illuminance?: number
+  addEventListener: (event: string, callback: () => void) => void
+  removeEventListener: (event: string, callback: () => void) => void
+  start: () => void
+  stop: () => void
+}
+
 export default function FieldModeToggle() {
   const [mode, setMode] = useState<DisplayMode>('dark')
   const [mounted, setMounted] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
   const [sensorEnabled, setSensorEnabled] = useState(false)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const sensorRef = useRef<any>(null)
+  const sensorRef = useRef<AmbientLightSensorInstance | null>(null)
   const tooltipDismissed = useRef(false)
   const addNotification = useUIStore((s) => s.addNotification)
   const { t } = useLanguage()
@@ -79,24 +86,19 @@ export default function FieldModeToggle() {
   useEffect(() => {
     if (!mounted || !sensorEnabled) return
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let sensor: any = null
+    let sensor: AmbientLightSensorInstance | null = null
 
     try {
       // The AmbientLightSensor API is only available in some browsers
       // and requires the 'ambient-light-sensor' permission.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const AmbientLightSensorCtor = (window as any).AmbientLightSensor
+      const AmbientLightSensorCtor = (window as unknown as { AmbientLightSensor?: new () => AmbientLightSensorInstance }).AmbientLightSensor
       if (!AmbientLightSensorCtor) return
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       sensor = new AmbientLightSensorCtor()
       sensorRef.current = sensor
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       sensor.addEventListener('reading', () => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        const lux = sensor.illuminance
+        const lux = sensor?.illuminance
         if (typeof lux !== 'number') return
 
         // Auto-switch: bright sunlight is typically > 10,000 lux

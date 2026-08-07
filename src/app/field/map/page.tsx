@@ -118,9 +118,10 @@ export default function FieldMapPage() {
     if (visibleLayers.length === 0) { alert('No visible layers to export.'); return; }
     const features = visibleLayers[0].geojson!.features;
     const header = 'name,latitude,longitude\n';
-    const rows = features.map((f: any) => {
-      const coords = f.geometry?.coordinates;
-      const name = f.properties?.name || f.properties?.Name || '';
+    const rows = features.map((f: GeoJSON.Feature) => {
+      const coords = f.geometry && f.geometry.type === 'Point' ? (f.geometry as GeoJSON.Point).coordinates : null;
+      const props = (f.properties || {}) as Record<string, unknown>;
+      const name = String(props.name || props.Name || '');
       return coords ? `${name},${coords[1]?.toFixed(8)},${coords[0]?.toFixed(8)}` : '';
     }).join('\n');
     const blob = new Blob([header + rows], { type: 'text/csv' });
@@ -535,30 +536,33 @@ function downloadBlob(blob: Blob, filename: string) {
 
 function jsonToKML(geojson: GeoJSON.FeatureCollection): string {
   const pts = geojson.features
-    .filter((f: any) => f.geometry?.type === 'Point')
-    .map((f: any) => {
+    .filter((f): f is GeoJSON.Feature<GeoJSON.Point> => f.geometry?.type === 'Point')
+    .map((f) => {
       const [lng, lat] = f.geometry.coordinates;
-      const name = f.properties?.name || f.properties?.Name || 'Point';
+      const props = (f.properties || {}) as Record<string, unknown>;
+      const name = String(props.name || props.Name || 'Point');
       return `  <Placemark><name>${escapeXml(name)}</name><Point><coordinates>${lng},${lat},0</coordinates></Point></Placemark>`;
     })
     .join('\n');
 
   const lines = geojson.features
-    .filter((f: any) => f.geometry?.type === 'LineString')
-    .map((f: any) => {
+    .filter((f): f is GeoJSON.Feature<GeoJSON.LineString> => f.geometry?.type === 'LineString')
+    .map((f) => {
       const coords = f.geometry.coordinates.map((c: number[]) => `${c[0]},${c[1]},0`).join(' ');
-      const name = f.properties?.name || f.properties?.Name || 'Line';
+      const props = (f.properties || {}) as Record<string, unknown>;
+      const name = String(props.name || props.Name || 'Line');
       return `  <Placemark><name>${escapeXml(name)}</name><LineString><coordinates>${coords}</coordinates></LineString></Placemark>`;
     })
     .join('\n');
 
   const polys = geojson.features
-    .filter((f: any) => f.geometry?.type === 'Polygon')
-    .map((f: any) => {
+    .filter((f): f is GeoJSON.Feature<GeoJSON.Polygon> => f.geometry?.type === 'Polygon')
+    .map((f) => {
       const rings = f.geometry.coordinates.map(
         (ring: number[][]) => ring.map((c: number[]) => `${c[0]},${c[1]},0`).join(' ')
       ).join(' ');
-      const name = f.properties?.name || f.properties?.Name || 'Polygon';
+      const props = (f.properties || {}) as Record<string, unknown>;
+      const name = String(props.name || props.Name || 'Polygon');
       return `  <Placemark><name>${escapeXml(name)}</name><Polygon><outerBoundaryIs><LinearRing><coordinates>${rings}</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark>`;
     })
     .join('\n');

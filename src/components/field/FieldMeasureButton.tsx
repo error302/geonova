@@ -38,7 +38,7 @@ export function FieldMeasureButton({
   const [isCapturing, setIsCapturing] = useState(false)
   const [lastResult, setLastResult] = useState<'success' | 'error' | null>(null)
   const [lastPointId, setLastPointId] = useState<string | null>(null)
-  const flashTimer = useRef<any>(null)
+  const flashTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const { status, latestPoint } = useInstrumentStore()
   const isConnected = status === 'connected' || status === 'streaming'
