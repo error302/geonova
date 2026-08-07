@@ -49,7 +49,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   }
 
   // ── 1. Fetch project row ──────────────────────────────────────────────
-  const { rows: projectRows } = await db.query(
+  const { rows: projectRows } = await db.query<ProjectRow>(
     `SELECT
        p.id, p.name, p.survey_type, p.lr_number, p.location,
        p.registration_district, p.locality, p.ref_no, p.area_ha,
@@ -72,7 +72,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   const proj = projectRows[0]
 
   // ── 2. Fetch traverse results (most recent) ───────────────────────────
-  const { rows: traverseRows } = await db.query(
+  const { rows: traverseRows } = await db.query<TraverseResultRow>(
     `SELECT results
      FROM traverse_results
      WHERE project_id = $1
@@ -106,7 +106,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
 
   // ── 6. Audit log ──────────────────────────────────────────────────────
   try {
-    await db.query(
+    await db.query<never>(
       `INSERT INTO form_c22_audits
          (project_id, generated_by, station_count, area_ha, precision_ratio, angular_misclosure_sec, linear_misclosure_m, file_size_bytes)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
