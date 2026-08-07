@@ -59,6 +59,17 @@
  * file a PR touches must keep all its queries typed. Exit 0 = pass, 1 = fail,
  * 2 = usage/git error.
  *
+ * --check also runs the shared-schema drift gate (whole repo, cheap static
+ * scan): for every module under src/lib/validation that exports a zod schema
+ * (e.g. mapExtent.ts, viewportQuery.ts), any route importing a client shape
+ * type from that module (MapExtent, ViewportFeature, …) must ALSO import at
+ * least one schema value from the same module and validate through it. A
+ * route that imports the type but no schema lets the client shape and the
+ * server response drift — the gate fails (exit 1) naming the route + type.
+ * Scope: only DIRECT imports from @/lib/validation/* are tracked — a type
+ * re-exported through a shim module (e.g. MapExtent via @/app/map/MapReact
+ * Context) is not traced; import types from the schema module directly.
+ *
  * --apply <route-file>: mechanical one-file typing. For each untyped
  * db.query/client.query with resolvable output columns (a SELECT column list,
  * or INSERT/UPDATE/DELETE ... RETURNING), it wraps the call as
@@ -448,7 +459,8 @@ function changedRouteFiles(baseRef) {
     .sort()
 }
 
-/** The gate: any changed route file with an untyped db.query/client.query fails. */
+/** The untyped-query gate: any changed route file with an untyped db.query/client.query fails.
+ * @returns 0 = pass, 1 = fail, 2 = git error. */
 function runCheck() {
   const baseRef = CHECK_BASE || resolveBaseRefFromEnv()
   if (!CHECK_BASE) console.log(`[api-row-sweep] no base ref given — resolved: ${baseRef}`)
@@ -458,14 +470,12 @@ function runCheck() {
     changed = changedRouteFiles(baseRef)
   } catch (e) {
     console.error(`[api-row-sweep] git diff failed (${e.message.split('\n')[0]}) — cannot compute changed files.`)
-    process.exitCode = 2
-    return
+    return 2
   }
 
   if (!changed.length) {
     console.log(`[api-row-sweep] OK: no changed route files vs ${baseRef}...HEAD.`)
-    process.exitCode = 0
-    return
+    return 0
   }
 
   const offenders = []
@@ -491,8 +501,7 @@ function runCheck() {
       }
     }
     console.error('[api-row-sweep] FAIL: every route file a PR touches must keep all its db.query calls typed (<RowType> generic).')
-    process.exitCode = 1
-    return
+    return 1
   }
 
   const typed = changed.map((rel) => {
@@ -502,7 +511,129 @@ function runCheck() {
   })
   console.log(`[api-row-sweep] OK: ${changed.length} changed route file(s), all db.query/client.query calls typed:`)
   for (const t of typed) console.log(`  ${t}`)
-  process.exitCode = 0
+  return 0
+}
+
+// ---------------------------------------------------------------------------
+// Shared-schema drift gate — part of --check (whole repo, cheap static scan)
+// ---------------------------------------------------------------------------
+
+/**
+ * Discover every zod schema module under src/lib/validation — a module that
+ * exports at least one `*Schema` const. For each, collect the schema value
+ * names and the client shape type names derived from them (convention:
+ * `mapExtentSchema` -> `MapExtent`; also explicit `z.infer<typeof XSchema>`
+ * type declarations, in case a name doesn't follow the convention).
+ */
+function discoverSharedSchemas() {
+  const dir = path.join(process.cwd(), 'src/lib/validation')
+  let files = []
+  try {
+    files = nodeFs.readdirSync(dir).filter((f) => f.endsWith('.ts') && !f.includes('__tests__') && !f.endsWith('.d.ts'))
+  } catch {
+    return []
+  }
+  const mods = []
+  for (const f of files.sort()) {
+    let source
+    try {
+      source = readFileSync(path.join(dir, f), 'utf8')
+    } catch {
+      continue
+    }
+    const schemas = new Set()
+    let m
+    const schemaRe = /export\s+const\s+(\w+Schema)\s*=/g
+    while ((m = schemaRe.exec(source))) schemas.add(m[1])
+    if (!schemas.size) continue
+    const types = new Set()
+    for (const s of schemas) types.add(s.slice(0, -'Schema'.length))
+    const inferRe = /export\s+type\s+(\w+)\s*=\s*z\.infer\s*<\s*typeof\s+(\w+Schema)\s*>/g
+    while ((m = inferRe.exec(source))) types.add(m[1])
+    mods.push({
+      rel: `src/lib/validation/${f}`,
+      importPath: `@/lib/validation/${f.replace(/\.ts$/, '')}`,
+      schemas: [...schemas],
+      types: [...types],
+    })
+  }
+  return mods
+}
+
+/**
+ * Return drift violations for one route file, or null if clean.
+ *
+ * A violation = the file imports a client shape type from a schema module but
+ * does NOT import ANY schema value from that same module — so it cannot be
+ * validating the payload through the shared schema. Importing any schema from
+ * the module counts (its schemas compose, e.g. viewportQueryResponseSchema
+ * embeds viewportFeatureSchema), so only the true drift — type-only imports —
+ * fails.
+ */
+function sharedSchemaDrift(rel, source, mods) {
+  const modByPath = new Map(mods.map((m) => [m.importPath, m]))
+  const importRe = /import\s+(?:type\s*)?\{([^}]*)\}\s+from\s+['"](@\/lib\/validation\/[^'"]+)['"]/g
+  const found = new Map()
+  let m
+  while ((m = importRe.exec(source))) {
+    const mod = modByPath.get(m[2])
+    if (!mod) continue
+    let entry = found.get(m[2])
+    if (!entry) {
+      entry = { mod, importedTypes: new Set(), importedSchemas: new Set() }
+      found.set(m[2], entry)
+    }
+    for (const raw of m[1].split(',')) {
+      const name = raw.trim().replace(/^type\s+/, '').replace(/\s+as\s+\w+\s*$/, '').trim()
+      if (!name) continue
+      if (mod.schemas.includes(name)) entry.importedSchemas.add(name)
+      if (mod.types.includes(name)) entry.importedTypes.add(name)
+    }
+  }
+  if (!found.size) return null
+  const violations = []
+  for (const { mod, importedTypes, importedSchemas } of found.values()) {
+    if (importedTypes.size && !importedSchemas.size) {
+      const types = [...importedTypes].join(', ')
+      const suggested = [...importedTypes]
+        .map((t) => t + 'Schema')
+        .filter((s) => mod.schemas.includes(s))
+        .join(', ')
+      violations.push(
+        `  ${rel} imports client shape type(s) ${types} from ${mod.importPath} but no schema value from that module` +
+          (suggested ? ` — add ${suggested}` : '')
+      )
+    }
+  }
+  return violations.length ? violations : null
+}
+
+/** Gate: fails if ANY route imports a client shape type without its schema. @returns true if the gate failed. */
+function runSharedSchemaGate() {
+  const mods = discoverSharedSchemas()
+  if (!mods.length) {
+    console.log('[api-row-sweep] schema gate: no shared zod schema modules found under src/lib/validation — nothing to check.')
+    return false
+  }
+  const offenders = []
+  for (const rel of findRoutes()) {
+    let source
+    try {
+      source = readFileSync(path.join(process.cwd(), rel), 'utf8')
+    } catch {
+      continue
+    }
+    const drift = sharedSchemaDrift(rel, source, mods)
+    if (drift) offenders.push(...drift)
+  }
+  if (offenders.length) {
+    console.error('[api-row-sweep] FAIL: shared-schema drift — route(s) import client shape type(s) without the matching zod schema:')
+    for (const o of offenders) console.error(o)
+    console.error('[api-row-sweep] Fix: import the matching *Schema value from the same module and validate the payload with it (safeParse/parse), so the client type and the server response cannot drift.')
+    return true
+  }
+  console.log(`[api-row-sweep] OK: shared-schema gate — ${mods.length} schema module(s), no route imports a client shape type without its schema.`)
+  return false
 }
 
 /**
@@ -782,7 +913,12 @@ async function verifyFile(rel) {
 async function main() {
   // --check is a pure gate: no report, no member scan — fail fast and cheap.
   if (checkMode) {
-    runCheck()
+    // Two gates: (1) the shared-schema drift gate (whole repo, static scan),
+    // then (2) the untyped-query gate on changed route files. runCheck
+    // returns 0 = pass, 1 = fail, 2 = git error; Math.max preserves the
+    // most severe status (a git failure must stay exit 2, not collapse to 1).
+    const schemaFailed = runSharedSchemaGate() ? 1 : 0
+    process.exitCode = Math.max(schemaFailed, runCheck())
     return
   }
 
