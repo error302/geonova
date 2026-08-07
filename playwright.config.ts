@@ -1,5 +1,11 @@
 import { defineConfig, devices } from '@playwright/test'
 
+// CI_E2E_PROD=1 boots a production server (next build + next start) instead of
+// the dev server. Prod page loads are ~1-2s vs 10-16s lazy dev compiles, which
+// is what lets the 288-test E2E job fit inside the GitHub Actions timeout.
+// Local runs keep the dev server (fast boot, hot reload).
+const useProd = process.env.CI_E2E_PROD === 'true'
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: false,
@@ -26,9 +32,10 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npx next dev -p 3099',
+    command: useProd ? 'npx next build && npx next start -p 3099' : 'npx next dev -p 3099',
     port: 3099,
     reuseExistingServer: true,
-    timeout: 120_000,
+    // Prod path must cover the full next build (~5-10 min) before the port opens.
+    timeout: useProd ? 900_000 : 120_000,
   },
 })

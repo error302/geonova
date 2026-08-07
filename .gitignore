@@ -200,3 +200,16 @@ fix-roles.sql
 # Axe sweep artifacts
 axe-sweep-report.md
 .axe-baseline.json
+
+# Grind-session scratch — scan outputs, temp patch scripts, one-off diagnostics
+scripts/_*
+scripts/diagnose-*.js
+scripts/check-alive.js
+scripts/live-check.js
+scripts/real-test.js
+scripts/snap-502.js
+scripts/vm-fix-502.js
+scripts/ci-db-bootstrap.sql
+*.tar.gz
+__pycache__/
+*.pyc
