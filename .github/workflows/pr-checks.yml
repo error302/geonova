@@ -35,7 +35,12 @@ jobs:
       # in any changed file, including the per-family floors (auto-loaded
       # from the committed baselines). The whole-repo ratchet below is the
       # slow, blocking per-rule baseline.
-      # GUARDRAIL (2026-08-08): Whole-repo warning count tightened to 10,000 ceiling (down from 20,000).
+      # GUARDRAIL (2026-08-08): --max-warnings N is an absolute ceiling on the
+      # changed-files lint total (limit = max(base, N)) - a backstop so a mega
+      # diff cannot slip thousands of warnings past the no-new-warnings ratchet.
+      # Tightened 20,000 -> 10,000. Whole-repo count at this commit: ~6.6k
+      # warnings (eslint . scope, 2,361 files), so 10,000 caps further growth
+      # while leaving headroom. Re-tighten as the grind continues (9,000, 8,000...).
       - name: Lint changed files (blocking, zero new warnings)
         run: node scripts/lint-gate.mjs --paths-from-changed --max-warnings 10000
 
