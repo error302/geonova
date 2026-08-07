@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, useCallback } from 'react'
-import type { HistoryEntry, MapContext } from './useMapTypes'
+import type { HistoryEntry, MapContext, SerializedFeature, SerializedGeometry } from './useMapTypes'
 
 /**
  * Manages undo/redo history for the draw source features.
@@ -19,11 +19,25 @@ export function useMapHistory(ctx: MapContext) {
     if (!drawSource) return
     const json = JSON.stringify(
       drawSource.getFeatures().map((f) => {
-        // toJSON() exists on OL geometry instances but isn't on the base
-        // Geometry type — cast minimally for serialization.
-        const geom = f.getGeometry() as { toJSON?: () => unknown } | undefined
+        // OL v10 geometries have no toJSON() (verified on 10.8.0) — serialize
+        // explicitly into the SerializedGeometry shape restoreEntry reads.
+        const geom = f.getGeometry()
+        let geometry: SerializedGeometry | null = null
+        if (geom) {
+          const type = geom.getType()
+          if (type === 'Point') {
+            geometry = { type, coordinates: (geom as import('ol/geom/Point').default).getCoordinates() }
+          } else if (type === 'LineString') {
+            geometry = { type, coordinates: (geom as import('ol/geom/LineString').default).getCoordinates() }
+          } else if (type === 'Polygon') {
+            geometry = { type, coordinates: (geom as import('ol/geom/Polygon').default).getCoordinates() }
+          } else if (type === 'Circle') {
+            const circle = geom as import('ol/geom/Circle').default
+            geometry = { type, center: circle.getCenter(), radius: circle.getRadius() }
+          }
+        }
         return {
-          geometry: geom?.toJSON?.(),
+          geometry,
           properties: f.getProperties(),
         }
       })
@@ -44,7 +58,7 @@ export function useMapHistory(ctx: MapContext) {
     // null before the map is ready — never deref it without a check.
     const drawSource = ctx.drawSourceRef.current
     if (!drawSource) return
-    const features = JSON.parse(entry.featuresJson)
+    const features = JSON.parse(entry.featuresJson) as SerializedFeature[]
     drawSource.clear()
     for (const f of features) {
       if (f.geometry) {

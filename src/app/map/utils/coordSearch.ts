@@ -20,6 +20,17 @@ interface DMSResult {
   hemisphere: string
 }
 
+/** Feature properties consulted by searchFeatureOnMap. */
+interface SearchableFeatureProps {
+  label?: unknown
+  name?: unknown
+  beacon_name?: unknown
+  stationName?: unknown
+  parcelNumber?: unknown
+  parcel_number?: unknown
+  parcelNo?: unknown
+}
+
 /**
  * Parse a single DMS (Degrees, Minutes, Seconds) string.
  * Examples:
@@ -122,7 +133,10 @@ function tryParseDMS(input: string): { lat: number; lon: number } | null {
  * Flash a feature on the map by briefly toggling its style.
  * Creates a highlight overlay that fades after a short duration.
  */
-async function flashFeature(mapInstance: MutableRefObject<Map | null>, feature: any): Promise<void> {
+async function flashFeature(
+  mapInstance: MutableRefObject<Map | null>,
+  feature: import('ol/Feature').default,
+): Promise<void> {
   try {
     const [{ default: Style }, { default: Stroke }, { default: Fill }, { default: CircleStyle }] =
       await Promise.all([
@@ -160,7 +174,7 @@ async function searchFeatureOnMap(
   mapInstance: MutableRefObject<Map | null>,
   searchTerm: string,
   options: { parcelOnly?: boolean; beaconOnly?: boolean } = {},
-): Promise<any | null> {
+): Promise<import('ol/Feature').default | null> {
   if (!mapInstance.current) return null
   const map = mapInstance.current
 
@@ -170,18 +184,17 @@ async function searchFeatureOnMap(
 
   for (const layer of layers) {
     if (!(layer instanceof VectorLayer)) continue
-    const source = layer.getSource()
+    const source = (layer as import('ol/layer/Vector').default)
+      .getSource() as import('ol/source/Vector').default | null
     if (!source || typeof source.getFeatures !== 'function') continue
 
     const features = source.getFeatures()
     for (const feature of features) {
       // Check various feature properties for a match
-      const props = feature.getProperties() || {}
-      const label = (props.label || props.name || props.beacon_name || props.stationName || '')
-        .toString()
+      const props = (feature.getProperties() || {}) as SearchableFeatureProps
+      const label = String(props.label || props.name || props.beacon_name || props.stationName || '')
         .toLowerCase()
-      const parcelNumber = (props.parcelNumber || props.parcel_number || props.parcelNo || '')
-        .toString()
+      const parcelNumber = String(props.parcelNumber || props.parcel_number || props.parcelNo || '')
         .toLowerCase()
 
       if (options.beaconOnly) {
@@ -238,7 +251,7 @@ export async function handleCoordSearch(
       const geom = feature.getGeometry()
       if (geom) {
         const coord = geom.getType() === 'Point'
-          ? geom.getCoordinates()
+          ? (geom as import('ol/geom/SimpleGeometry').default).getCoordinates() ?? [0, 0]
           : geom.getClosestPoint(map.getView().getCenter() ?? [0, 0])
         map.getView().animate({ center: coord, zoom: 18, duration: 600 })
         flashFeature(mapInstance, feature)

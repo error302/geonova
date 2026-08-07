@@ -13,12 +13,17 @@ interface StationCoord {
   E?: number; N?: number; e?: number; n?: number;
 }
 
+/** OL Map with the workspace meta extension written during init. */
+type MapWithWsMeta = import('ol/Map').default & {
+  _wsMeta?: { projectName: string };
+}
+
 interface WorkspaceMapProps {
   projectId: string;
   projectName: string;
   boundaryData?: {
     adjustedStations?: Array<StationCoord> | null;
-    stations?: any[];
+    stations?: StationCoord[];
   } | null;
   /** T1.5 FIX (2026-07-09): UTM EPSG for coordinate transforms (default 'EPSG:21037') */
   epsg?: string;
@@ -328,7 +333,7 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
         }
 
         // ── Expose toggleBasemap ──
-        ;(map as unknown as { _wsMeta: { projectName: string } })._wsMeta = { projectName };
+        ;(map as MapWithWsMeta)._wsMeta = { projectName };
 
         if (!cancelled) setReady(true);
       } catch (err: unknown) {

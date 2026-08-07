@@ -32,6 +32,25 @@ export interface HistoryEntry {
   featuresJson: string
 }
 
+/**
+ * Serialized geometry as produced by the OpenLayers geometry `toJSON()`
+ * in the pushHistory snapshot (GeoJSON-ish; Circle is an OL extension).
+ *
+ * Only these four types are ever pushed (the draw modes); any other
+ * geometry type in a stored history entry is skipped on restore.
+ */
+export type SerializedGeometry =
+  | { type: 'Point'; coordinates: number[] }
+  | { type: 'LineString'; coordinates: number[][] }
+  | { type: 'Polygon'; coordinates: number[][][] }
+  | { type: 'Circle'; center: number[]; radius: number }
+
+/** One serialized feature inside a HistoryEntry.featuresJson payload. */
+export interface SerializedFeature {
+  geometry?: SerializedGeometry | null
+  properties?: Record<string, unknown>
+}
+
 export interface MouseCoord {
   lon: number
   lat: number

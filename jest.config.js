@@ -13,9 +13,21 @@ module.exports = {
         noEmit: false,
       },
     }],
+    // OpenLayers v10 ships ESM-only ("type": "module"); transpile its source
+    // with babel so real ol classes load under jest's CJS runtime. Matches the
+    // ol whitelist already present in transformIgnorePatterns below.
+    'node_modules[\\\\/]ol[\\\\/].*\\.js$': ['babel-jest', {
+      presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
+    }],
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(delaunator|robust-predicates|ol|ol/)/)',
+    // The lookbehind is deliberate: ol v10's nested ESM deps (rbush, earcut,
+    // quickselect) live under node_modules/ol/node_modules/, and without
+    // (?<!ol/) the whitelist would re-ignore (and leave untransformed) those
+    // inner paths. Only ol's hoisted top-level ESM deps (pbf, geotiff,
+    // jsonparse, topojson-client) are not covered — extend the transform key
+    // and whitelist when a test first needs those modules.
+    '(?<!ol/)node_modules/(?!(delaunator|robust-predicates|ol|ol/)/)',
   ],
   moduleNameMapper: {
     '^@/lib/workers/tinWorkerUrl$': '<rootDir>/tests/__mocks__/tinWorkerUrl.ts',
