@@ -10,9 +10,34 @@ import { NextRequest, NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { apiSuccess, apiError } from '@/lib/api/response'
 import { db } from '@/lib/db'
+
+interface InstrumentListingRow {
+  id: string
+  type: string
+  category: string
+  title: string
+  brand: string | null
+  model: string | null
+  condition: string | null
+  year: number | null
+  description: string | null
+  price: string
+  currency: string | null
+  rent_period: string | null
+  location: string | null
+  country: string | null
+  seller_name: string
+  seller_contact: string
+  images: unknown
+  verified: boolean
+  sold: boolean
+  user_id: string
+  created_at: string | Date
+  updated_at: string | Date
+}
 export const dynamic = 'force-dynamic'
 
-function rowToListing(row: Record<string, unknown>) {
+function rowToListing(row: InstrumentListingRow) {
   return {
     id: row.id,
     type: row.type,
@@ -43,7 +68,7 @@ function rowToListing(row: Record<string, unknown>) {
 export const GET = apiHandler({ auth: false, rateLimit: { max: 20, windowMs: 60000 } }, async (req, ctx) => {
   const { id } = ctx.params
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<InstrumentListingRow>(
     'SELECT * FROM instrument_listings WHERE id = $1',
     [id]
   )
@@ -62,7 +87,7 @@ export const PATCH = apiHandler({ auth: true, optimisticLock: true }, async (req
   const body = ctx.body as Record<string, unknown>
 
   // Verify ownership
-  const { rows: existing } = await db.query(
+  const { rows: existing } = await db.query<InstrumentListingRow>(
     'SELECT user_id, updated_at FROM instrument_listings WHERE id = $1',
     [id]
   )
@@ -100,7 +125,7 @@ export const PATCH = apiHandler({ auth: true, optimisticLock: true }, async (req
   }
   params.push(clientUpdatedAt)
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<InstrumentListingRow>(
     `UPDATE instrument_listings SET ${setClauses.join(', ')} WHERE id = $${idx} AND updated_at = $${idx + 1} RETURNING *`,
     params
   )
@@ -121,7 +146,7 @@ export const DELETE = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6
   const { id } = ctx.params
 
   // Verify ownership
-  const { rows: existing } = await db.query(
+  const { rows: existing } = await db.query<InstrumentListingRow>(
     'SELECT user_id FROM instrument_listings WHERE id = $1',
     [id]
   )
@@ -132,7 +157,7 @@ export const DELETE = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6
     return NextResponse.json(apiError('You can only delete your own listings'), { status: 403 })
   }
 
-  await db.query('DELETE FROM instrument_listings WHERE id = $1', [id])
+  await db.query<never>('DELETE FROM instrument_listings WHERE id = $1', [id])
 
   return NextResponse.json(apiSuccess({ deleted: true }))
 })

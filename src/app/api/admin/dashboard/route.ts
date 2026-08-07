@@ -182,7 +182,7 @@ export const GET = apiHandler(
     let dbLatencyMs = 0
     try {
       const healthStart = Date.now()
-      await db.query('SELECT 1')
+      await db.query<never>('SELECT 1')
       dbLatencyMs = Date.now() - healthStart
     } catch {
       dbStatus = 'unhealthy'

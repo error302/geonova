@@ -4,6 +4,29 @@ import { db } from '@/lib/db'
 import { getAuthUser } from '@/lib/auth/session'
 import { validateBody, equipmentSchema } from '@/lib/validation/apiValidation'
 
+interface EquipmentRow {
+  id: string
+  user_id: string
+  name: string
+  type: string
+  manufacturer: string | null
+  model: string | null
+  serial_number: string | null
+  purchase_date: string | null
+  purchase_cost: number | null
+  status: string
+  notes: string | null
+  created_at: string | Date
+  updated_at: string | Date
+}
+
+interface EquipmentWithCalibrationRow extends EquipmentRow {
+  last_calibrated: string | Date | null
+  next_calibration: string | Date | null
+  calibration_status: 'never' | 'overdue' | 'expiring' | 'current'
+  days_until_expiry: number | null
+}
+
 export const dynamic = 'force-dynamic'
 
 /**
@@ -22,7 +45,7 @@ export const GET = apiHandler(
     const status = url.searchParams.get('status') || 'active'
 
     if (includeCal) {
-      const result = await db.query(
+      const result = await db.query<EquipmentWithCalibrationRow>(
         `SELECT e.*,
           c.calibration_date as last_calibrated,
           c.next_calibration_date as next_calibration,
@@ -49,7 +72,7 @@ export const GET = apiHandler(
       return apiSuccess({ equipment: result.rows })
     }
 
-    const result = await db.query(
+    const result = await db.query<EquipmentRow>(
       `SELECT * FROM equipment WHERE user_id = $1 AND ($2 = 'all' OR status = $2) ORDER BY name ASC`,
       [user.id, status],
     )
@@ -87,7 +110,7 @@ export const POST = apiHandler(
       return NextResponse.json({ error: 'name and type are required' }, { status: 400 })
     }
 
-    const result = await db.query(
+    const result = await db.query<EquipmentRow>(
       `INSERT INTO equipment (user_id, name, type, manufacturer, model, serial_number, purchase_date, purchase_cost, status, notes)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
        RETURNING *`,
@@ -146,7 +169,7 @@ export const PATCH = apiHandler(
     updates.push(`updated_at = NOW()`)
     params.push(equipId, user.id)
 
-    const result = await db.query(
+    const result = await db.query<EquipmentRow>(
       `UPDATE equipment SET ${updates.join(', ')} WHERE id = $${idx} AND user_id = $${idx + 1} RETURNING *`,
       params,
     )
@@ -180,7 +203,7 @@ export const DELETE = apiHandler(
     const equipId = url.searchParams.get('id')
     if (!equipId) return NextResponse.json({ error: 'id is required' }, { status: 400 })
 
-    await db.query(`DELETE FROM equipment WHERE id = $1 AND user_id = $2`, [equipId, user.id])
+    await db.query<never>(`DELETE FROM equipment WHERE id = $1 AND user_id = $2`, [equipId, user.id])
     return apiSuccess({ id: equipId, deleted: true })
   },
 )

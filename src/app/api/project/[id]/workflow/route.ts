@@ -132,7 +132,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 600
   // If acknowledging tolerance, save that first
   if (body?.acknowledgeTolerance) {
     try {
-      await db.query(
+      await db.query<never>(
         `INSERT INTO quality_checks (project_id, passed, acknowledged, created_at)
          VALUES ($1, false, true, NOW())
          ON CONFLICT (project_id) DO UPDATE SET acknowledged = true`,
@@ -197,7 +197,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 600
 
   // Update project in DB
   const newMax = Math.max(workflowData.maxUnlocked, newStep)
-  await db.query(
+  await db.query<never>(
     'UPDATE projects SET workflow_step = $1, workflow_max_unlocked = $2, updated_at = NOW() WHERE id = $3',
     [newStep, newMax, id]
   )
