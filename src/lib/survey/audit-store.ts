@@ -8,6 +8,28 @@
 import { getPool } from '@/lib/db';
 import type { AuditEntry, AuditOperation } from './audit-trail';
 
+// ─── Row Types ───────────────────────────────────────────────────────────
+
+interface AuditTrailRow {
+  id: string
+  timestamp: Date
+  survey_id: string
+  project_id: string
+  user_id: string
+  operation: string
+  inputs: string | Record<string, unknown>
+  outputs: string | Record<string, unknown>
+  corrections: string | unknown[]
+  formula: string
+  reference: string
+  software_version: string
+  checksum: string
+  previous_hash: string | null
+  chain_hash: string
+  duration_ms: number
+  accuracy_check: string | Record<string, unknown> | null
+}
+
 // ─── Table Initialization ────────────────────────────────────────────────
 
 const CREATE_TABLE_SQL = `
@@ -151,12 +173,12 @@ export async function getAuditEntriesBySurvey(surveyId: string): Promise<AuditEn
   await ensureAuditTable();
   const pool = getPool();
 
-  const result = await pool.query(
+  const result = (await pool.query(
     `SELECT * FROM survey_audit_trail
      WHERE survey_id = $1
      ORDER BY timestamp ASC`,
     [surveyId]
-  );
+  )) as { rows: AuditTrailRow[] };
 
   return result.rows.map(rowToAuditEntry);
 }
@@ -168,12 +190,12 @@ export async function getAuditEntriesByProject(projectId: string): Promise<Audit
   await ensureAuditTable();
   const pool = getPool();
 
-  const result = await pool.query(
+  const result = (await pool.query(
     `SELECT * FROM survey_audit_trail
      WHERE project_id = $1
      ORDER BY timestamp ASC`,
     [projectId]
-  );
+  )) as { rows: AuditTrailRow[] };
 
   return result.rows.map(rowToAuditEntry);
 }
@@ -185,10 +207,10 @@ export async function getAuditEntryById(id: string): Promise<AuditEntry | null> 
   await ensureAuditTable();
   const pool = getPool();
 
-  const result = await pool.query(
+  const result = (await pool.query(
     `SELECT * FROM survey_audit_trail WHERE id = $1`,
     [id]
-  );
+  )) as { rows: AuditTrailRow[] };
 
   return result.rows.length > 0 ? rowToAuditEntry(result.rows[0]) : null;
 }
@@ -203,13 +225,13 @@ export async function getAuditEntriesByOperation(
   await ensureAuditTable();
   const pool = getPool();
 
-  const result = await pool.query(
+  const result = (await pool.query(
     `SELECT * FROM survey_audit_trail
      WHERE operation = $1
      ORDER BY timestamp DESC
      LIMIT $2`,
     [operation, limit]
-  );
+  )) as { rows: AuditTrailRow[] };
 
   return result.rows.map(rowToAuditEntry);
 }
@@ -226,7 +248,7 @@ export async function getAuditStats(projectId: string): Promise<{
   await ensureAuditTable();
   const pool = getPool();
 
-  const statsResult = await pool.query(
+  const statsResult = (await pool.query(
     `SELECT
        COUNT(*) as total,
        operation,
@@ -235,9 +257,9 @@ export async function getAuditStats(projectId: string): Promise<{
      WHERE project_id = $1
      GROUP BY operation`,
     [projectId]
-  );
+  )) as { rows: Array<{ operation: string; total: string | number; count: string | number }> };
 
-  const accuracyResult = await pool.query(
+  const accuracyResult = (await pool.query(
     `SELECT
        (accuracy_check->>'passed')::boolean as passed,
        COUNT(*) as count
@@ -245,36 +267,36 @@ export async function getAuditStats(projectId: string): Promise<{
      WHERE project_id = $1 AND accuracy_check IS NOT NULL
      GROUP BY (accuracy_check->>'passed')::boolean`,
     [projectId]
-  );
+  )) as { rows: Array<{ passed: boolean; count: string | number }> };
 
-  const timespanResult = await pool.query(
+  const timespanResult = (await pool.query(
     `SELECT
        MIN(timestamp) as first,
        MAX(timestamp) as last
      FROM survey_audit_trail
      WHERE project_id = $1`,
     [projectId]
-  );
+  )) as { rows: Array<{ first: Date | null; last: Date | null }> };
 
   const operations: Record<string, number> = {};
   for (const row of statsResult.rows) {
-    operations[row.operation] = parseInt(row.count, 10);
+    operations[row.operation] = parseInt(String(row.count), 10);
   }
 
   let passed = 0;
   let failed = 0;
   for (const row of accuracyResult.rows) {
-    if (row.passed) passed = parseInt(row.count, 10);
-    else failed = parseInt(row.count, 10);
+    if (row.passed) passed = parseInt(String(row.count), 10);
+    else failed = parseInt(String(row.count), 10);
   }
 
   return {
-    totalEntries: parseInt(statsResult.rows[0]?.total || '0', 10),
+    totalEntries: parseInt(String(statsResult.rows[0]?.total ?? '0'), 10),
     operations,
     accuracyChecks: { passed, failed },
     timespan: {
-      first: timespanResult.rows[0]?.first || null,
-      last: timespanResult.rows[0]?.last || null,
+      first: timespanResult.rows[0]?.first ? new Date(timespanResult.rows[0].first).toISOString() : null,
+      last: timespanResult.rows[0]?.last ? new Date(timespanResult.rows[0].last).toISOString() : null,
     },
   };
 }
@@ -339,7 +361,7 @@ export async function verifyAuditChain(projectId: string): Promise<{
 
 // ─── Row Mapper ──────────────────────────────────────────────────────────
 
-function rowToAuditEntry(row: Record<string, unknown>): AuditEntry {
+function rowToAuditEntry(row: AuditTrailRow): AuditEntry {
   return {
     id: row.id as string,
     timestamp: (row.timestamp as Date).toISOString(),

@@ -33,9 +33,36 @@ export interface AccuracyClass {
   scale: string
 }
 
+export interface AccuracyPointResult {
+  name: string
+  se: number
+  sn: number
+  sz: number
+  de: number
+  dn: number
+  dz: number
+  dE: number
+  dN: number
+  dZ: number
+  horizontalError: number
+  error3D: number
+}
+
+export interface AccuracyResults {
+  points: AccuracyPointResult[]
+  hRMSE: number
+  vRMSE: number
+  maxHorizontal: number
+  maxVertical: number
+  max3D: number
+  horizontalPass: boolean
+  verticalPass: boolean
+  pass: boolean
+}
+
 export interface DroneReportInput {
   gcps: GCPPoint[]
-  accuracyResults: any
+  accuracyResults: AccuracyResults | null
   selectedClass: AccuracyClass
   flightParams: { height: string; gsd: string; overlapFront: string; overlapSide: string }
   meta: PrintMeta
@@ -100,7 +127,7 @@ function buildBody(inp: DroneReportInput): string {
 </div>`
 
     // Residuals Table
-    const resRows = accuracyResults.points.map((p: any) => `
+    const resRows = accuracyResults.points.map((p) => `
 <tr>
   <td class="bold mono">${blank(p.name)}</td>
   <td class="right mono">${formatNumber(p.se)}</td>

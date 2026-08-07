@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * member-scan.mjs — ranked remediation plan data for no-unsafe-member-access.
+ * argument-scan.mjs — ranked remediation plan data for no-unsafe-argument.
  *
  * Lints the whole repo (ESLint Node API, same scope as lint-ratchets.mjs),
- * then for every @typescript-eslint/no-unsafe-member-access message extracts
- * the identifier chain at the violation's line/column from the source text
- * and classifies the dominant "any source" per file:
+ * then for every @typescript-eslint/no-unsafe-argument message extracts the
+ * argument expression at the violation's line/column from the source text
+ * and classifies the dominant "unsafe source" per file:
  *
  *   refs    — .current / useRef / MutableRefObject chains
  *   events  — e / event / evt / ev / target / change handlers
@@ -16,9 +16,14 @@
  *   props   — props / params / arg / args / ctx (request context)
  *   other   — anything not matched
  *
+ * Unlike member-access (which reports on the member being read), the
+ * unsafe-argument rule reports on the *argument expression* itself, so the
+ * extracted chain is the whole value being passed — e.g. `rows[0].x` or
+ * `map.getView()` — and the category says where that value came from.
+ *
  * Usage:
- *   node scripts/member-scan.mjs [--top N] [--out path.json]
- *   node scripts/member-scan.mjs --batch N [--batch-size 500]
+ *   node scripts/argument-scan.mjs [--top N] [--out path.json]
+ *   node scripts/argument-scan.mjs --batch N [--batch-size 500]
  *
  * --batch N prints a precise per-line worklist for batch N: every file in
  * that batch with each of its violation lines (line:col, chain, category,
@@ -31,6 +36,7 @@ import { writeFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import path from 'node:path'
 
+const RULE = '@typescript-eslint/no-unsafe-argument'
 const args = process.argv.slice(2)
 const topIdx = args.indexOf('--top')
 const TOP = topIdx >= 0 ? Number(args[topIdx + 1]) : 25
@@ -42,11 +48,11 @@ const sizeIdx = args.indexOf('--batch-size')
 const BATCH_SIZE = sizeIdx >= 0 ? Number(args[sizeIdx + 1]) : 500
 
 if (BATCH !== null && (!Number.isInteger(BATCH) || BATCH < 1)) {
-  console.error(`[member-scan] --batch requires a positive integer (got "${args[batchIdx + 1]}").`)
+  console.error(`[argument-scan] --batch requires a positive integer (got "${args[batchIdx + 1]}").`)
   process.exit(2)
 }
 if (!Number.isInteger(BATCH_SIZE) || BATCH_SIZE < 1) {
-  console.error(`[member-scan] --batch-size requires a positive integer (got "${args[sizeIdx + 1]}").`)
+  console.error(`[argument-scan] --batch-size requires a positive integer (got "${args[sizeIdx + 1]}").`)
   process.exit(2)
 }
 
@@ -62,7 +68,7 @@ const eslint = new ESLint({
 
 const results = await eslint.lintFiles(['middleware.ts', 'src/**/*.{ts,tsx}'])
 
-// Map a chain root to a broad any-source family. The root is the first
+// Map a chain root to a broad unsafe-source family. The root is the first
 // identifier (or a recognizable container like rows[i]/obs/row/data/fetched
 // results). Order matters: db-row containers win over generic names.
 function classify(chain) {
@@ -70,7 +76,7 @@ function classify(chain) {
   const root = chain.split(/[.[]/)[0]
   const rl = root.toLowerCase()
   if (s.includes('.current')) return 'refs'
-  if (/^rows?$/.test(root) || /^row$/.test(root) || /res\./.test(s) || /\.rows\[/.test(s) || /^records?$/.test(root) || /^record$/.test(root) || /^obs$/.test(root) || /^coord$/.test(root) || /^coords$/.test(root) || /^stations?$/.test(root) || /^points?$/.test(root) || /^boundarypoints?$/.test(root) || /^traverses?$/.test(root) || /^legs?$/.test(root) || /^parcels?$/.test(root)) return 'db'
+  if (/^rows?$/.test(root) || /^row$/.test(root) || /res\./.test(s) || /\\.rows\[/.test(s) || /^records?$/.test(root) || /^record$/.test(root) || /^obs$/.test(root) || /^coord$/.test(root) || /^coords$/.test(root) || /^stations?$/.test(root) || /^points?$/.test(root) || /^boundarypoints?$/.test(root) || /^traverses?$/.test(root) || /^legs?$/.test(root) || /^parcels?$/.test(root)) return 'db'
   if (/^(e|ev|evt|event|evnt)$/.test(root)) return 'events'
   if (s.includes('.target')) return 'events'
   if (/^(res|resp|response|data|json|result|body|payload|fetched)$/.test(root) || /^fetch/.test(root)) return 'fetch'
@@ -81,13 +87,13 @@ function classify(chain) {
   return 'other'
 }
 
-// Extract the identifier chain ending at the violation column on its line.
-// Some rules report the member name rather than the object, so `before` can
-// end with a trailing '.' (e.g. `obs.`) — tolerate it and drop the dot.
+// Extract the identifier chain starting at the violation column on its line.
+// The unsafe-argument rule points at the argument expression, so the chain
+// is the full value being passed; tolerate a trailing dot on the member name.
 function chainAtLine(lineText, column) {
   const clean = lineText.replace(/\r$/, '')
   const before = clean.slice(0, column - 1)
-  const m = before.match(/([A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*|\[[^\]]*\])*)\.?$/)
+  const m = before.match(/([A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*|\[[^\]]*\])*)$/)
   return m ? m[1] : clean.trim().slice(0, 40)
 }
 
@@ -96,7 +102,7 @@ let grand = 0
 
 for (const r of results) {
   const rel = r.filePath.split(/[\\/]/).join('/').replace(process.cwd().split(/[\\/]/).join('/') + '/', '')
-  const msgs = r.messages.filter((m) => m.ruleId === '@typescript-eslint/no-unsafe-member-access')
+  const msgs = r.messages.filter((m) => m.ruleId === RULE)
   if (!msgs.length) continue
   let entry = perFile.get(rel)
   if (!entry) {
@@ -138,9 +144,9 @@ const files = [...perFile.entries()]
 const catTotals = {}
 for (const f of files) for (const [c, n] of Object.entries(f.cats)) catTotals[c] = (catTotals[c] || 0) + n
 
-console.log(`\n=== MEMBER-ACCESS SCAN (whole repo) ===`)
-console.log(`total member-access warnings: ${grand}  across ${files.length} files`)
-console.log(`\n=== by any-source category ===`)
+console.log(`\n=== UNSAFE-ARGUMENT SCAN (whole repo) ===`)
+console.log(`total no-unsafe-argument warnings: ${grand}  across ${files.length} files`)
+console.log(`\n=== by unsafe-source category ===`)
 for (const [c, n] of Object.entries(catTotals).sort((a, b) => b[1] - a[1])) {
   const fcount = files.filter((f) => f.dominant === c).length
   console.log(`  ${c.padEnd(9)} ${String(n).padStart(5)} warnings  (dominant in ${String(fcount).padStart(3)} files)`)
@@ -171,11 +177,11 @@ if (current.length) batches.push(current)
 
 if (BATCH !== null) {
   if (!files.length) {
-    console.log('[member-scan] no member-access warnings — nothing to do. The grind is complete! 🎉')
+    console.log('[argument-scan] no no-unsafe-argument warnings — nothing to do. The grind is complete! 🎉')
     process.exit(0)
   }
   if (BATCH > batches.length) {
-    console.error(`[member-scan] batch ${BATCH} out of range — found ${batches.length} batch(es) of ~${BATCH_SIZE}-warning chunks.`)
+    console.error(`[argument-scan] batch ${BATCH} out of range — found ${batches.length} batch(es) of ~${BATCH_SIZE}-warning chunks.`)
     process.exit(2)
   }
   const b = batches[BATCH - 1]
@@ -196,5 +202,5 @@ if (OUT) {
   // Keep the ranking JSON lean — drop the per-line violations from it.
   const slim = files.map(({ violations, ...rest }) => rest)
   writeFileSync(OUT, JSON.stringify({ grand, files: slim, catTotals }, null, 2))
-  console.log(`\n[member-scan] JSON written to ${OUT}`)
+  console.log(`\n[argument-scan] JSON written to ${OUT}`)
 }

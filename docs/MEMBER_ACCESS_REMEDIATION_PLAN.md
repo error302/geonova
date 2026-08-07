@@ -1,13 +1,17 @@
 # Member-Access Remediation Plan
 
 Ranked plan for driving `@typescript-eslint/no-unsafe-member-access` toward zero.
-Baseline: **5,066 warnings across 541 files** (whole-repo, ESLint Node API, `middleware.ts + src/**` — same scope as `lint-ratchets.mjs`). Dedicated floor gate: `scripts/member-access-baseline.json`, re-baselined only via `node scripts/lint-ratchets.mjs --update-member-access`.
+**Current state (2026-08-07):** live **2,115 warnings across 386 files** (whole-repo, ESLint Node API, `middleware.ts + src/**` — same scope as `lint-ratchets.mjs`). Dedicated floor gate: `scripts/member-access-baseline.json` at **2,328** (history 2786 → 2733 → 2725 → 2714 → 2625 → 2328), re-baselined only via `node scripts/lint-ratchets.mjs --update-member-access`.
 
 The fast changed-files gate (`scripts/lint-gate.mjs`) now also fails PRs that *add* member-access in touched files, so this grind is regression-protected on every push.
+
+> **Freshness note:** the ranked batches below are the *historical* execution plan (they have landed). The live ranking and per-line worklists are regenerated with `node scripts/member-scan.mjs --top N` / `--batch N`; the top-of-family list also lives in `docs/WARNING_ZERO_PLAN.md`.
 
 ---
 
 ## 1. Dominant any-sources (whole family)
+
+> Figures below are from the 5,066-warning era; the *taxonomy* still holds. Re-derive with `member-scan.mjs`.
 
 | Source pattern | Warnings | Share | Typical shape | Fix recipe |
 |---|---|---|---|---|

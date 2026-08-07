@@ -265,7 +265,7 @@ export function computeWeightedTLS(
   const warnings: string[] = []
 
   // Initial weights (default to unit weight)
-  const P = l_weights ?? new Array(m).fill(1.0)
+  const P: number[] = l_weights ?? new Array<number>(m).fill(1.0)
 
   // Step 1: Initial standard LS solution
   // x_0 = (A^T·P·A)^(-1)·A^T·P·l
@@ -481,7 +481,7 @@ function solveLinearSystem(A: number[][], b: number[], n: number): number[] | nu
 function invertMatrix(A: number[][], n: number): number[][] {
   if (A.length === 0) return Array.from({ length: n }, () => new Array(n).fill(0))
   const M = A.map((row, i) => {
-    const aug = [...row, ...new Array(n).fill(0)]
+    const aug: number[] = [...row, ...new Array<number>(n).fill(0)]
     aug[n + i] = 1
     return aug
   })
@@ -494,7 +494,7 @@ function invertMatrix(A: number[][], n: number): number[][] {
     ;[M[col], M[maxRow]] = [M[maxRow], M[col]]
 
     const pivot = M[col][col]
-    if (Math.abs(pivot) < 1e-15) return Array.from({ length: n }, () => new Array(n).fill(0))
+    if (Math.abs(pivot) < 1e-15) return Array.from({ length: n }, () => new Array<number>(n).fill(0))
 
     for (let k = 0; k < 2 * n; k++) M[col][k] /= pivot
     for (let row = 0; row < n; row++) {

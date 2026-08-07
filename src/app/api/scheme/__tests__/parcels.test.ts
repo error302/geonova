@@ -71,7 +71,7 @@ describe('POST /api/scheme/parcels', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ parcel_number: '1' }),
     })
-    const res = await POST(req as any)
+    const res = await POST(req)
     const data = await res.json()
     expect(res.status).toBe(400)
     expect(data.error).toMatch(/validation/i)
@@ -86,7 +86,7 @@ describe('POST /api/scheme/parcels', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ block_id: TEST_BLOCK_UUID }),
     })
-    const res = await POST(req as any)
+    const res = await POST(req)
     const data = await res.json()
     expect(res.status).toBe(400)
     expect(data.error).toMatch(/validation/i)
@@ -108,7 +108,7 @@ describe('POST /api/scheme/parcels', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ block_id: TEST_BLOCK_UUID, parcel_number: '101', area_ha: 0.5 }),
     })
-    const res = await POST(req as any)
+    const res = await POST(req)
     expect(res.status).toBe(201)
     expect(mockDb).toHaveBeenCalledTimes(4)
   })
@@ -129,7 +129,7 @@ describe('GET /api/scheme/parcels', () => {
       ]))
 
     const req = new NextRequest(`http://localhost/api/scheme/parcels?block_id=${TEST_BLOCK_UUID}`)
-    const res = await GET(req as any)
+    const res = await GET(req)
     const data = await res.json()
     expect(res.status).toBe(200)
     expect(data.data).toHaveLength(2)
@@ -138,7 +138,7 @@ describe('GET /api/scheme/parcels', () => {
   it('should require block_id or project_id', async () => {
     mockSession.mockResolvedValue(createAuthSession())
     const req = new NextRequest('http://localhost/api/scheme/parcels')
-    const res = await GET(req as any)
+    const res = await GET(req)
     const data = await res.json()
     expect(res.status).toBe(400)
   })

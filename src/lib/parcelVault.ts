@@ -157,12 +157,15 @@ export async function getVaultStats(): Promise<VaultStats> {
     db.query("SELECT COUNT(*) as count FROM parcel_vault WHERE freshness = 'STALE'")
   ])
 
+  const countOf = (r: { rows: Array<{ count: string | number }> } | undefined) =>
+    parseInt(String(r?.rows?.[0]?.count ?? '0'))
+
   return {
-    totalParcels: parseInt(total.rows[0]?.count || '0'),
-    sharedParcels: parseInt(shared.rows[0]?.count || '0'),
-    freshParcels: parseInt(fresh.rows[0]?.count || '0'),
-    verifyParcels: parseInt(verify.rows[0]?.count || '0'),
-    staleParcels: parseInt(stale.rows[0]?.count || '0')
+    totalParcels: countOf(total),
+    sharedParcels: countOf(shared),
+    freshParcels: countOf(fresh),
+    verifyParcels: countOf(verify),
+    staleParcels: countOf(stale)
   }
 }
 
@@ -177,17 +180,18 @@ export async function deleteVaultEntry(parcelNumber: string, userId: string): Pr
  * Generates a deterministic SHA-256 cryptographic seal hash for a parcel state
  * by sorting all object keys alphabetically (Canonical JSON).
  */
-export function generateCanonicalParcelHash(obj: any): string {
+export function generateCanonicalParcelHash(obj: unknown): string {
 
-  function stringifyCanonical(data: any): string {
+  function stringifyCanonical(data: unknown): string {
     if (data === null || typeof data !== 'object') {
       return JSON.stringify(data)
     }
     if (Array.isArray(data)) {
       return '[' + data.map(stringifyCanonical).join(',') + ']'
     }
-    const sortedKeys = Object.keys(data).sort()
-    const kvPairs = sortedKeys.map(key => `${JSON.stringify(key)}:${stringifyCanonical(data[key])}`)
+    const record = data as Record<string, unknown>
+    const sortedKeys = Object.keys(record).sort()
+    const kvPairs = sortedKeys.map(key => `${JSON.stringify(key)}:${stringifyCanonical(record[key])}`)
     return '{' + kvPairs.join(',') + '}'
   }
 

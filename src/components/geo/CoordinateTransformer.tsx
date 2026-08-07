@@ -33,7 +33,7 @@ export default function CoordinateTransformer({ projectId }: { projectId?: strin
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ points, fromCRS, toCRS, projectId }),
       });
-      const data = await res.json();
+      const data = (await res.json()) as { error?: string; points: Array<{ id: string; x: number; y: number; z?: number; warning?: string }> };
       if (!res.ok) throw new Error(data.error);
       setResults(data.points);
     } catch (err: unknown) {
@@ -75,7 +75,7 @@ export default function CoordinateTransformer({ projectId }: { projectId?: strin
           </tr>
         </thead>
         <tbody>
-          {rows.map((row: any, idx: any) => (
+          {rows.map((row, idx) => (
             <tr key={`row-${row.id}-${idx}`}>
               <td className="border px-1"><input aria-label="Id" value={row.id} onChange={(e) => updateRow(idx, 'id', e.target.value)} className="w-full outline-none px-1" /></td>
               <td className="border px-1"><input value={row.x} onChange={(e) => updateRow(idx, 'x', e.target.value)} className="w-full outline-none px-1" aria-label="X coordinate" placeholder="0.000" /></td>

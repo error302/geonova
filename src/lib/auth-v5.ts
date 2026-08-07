@@ -23,6 +23,10 @@
  *   5. Find-and-replace getServerSession(authOptions) → auth() across the codebase
  *   6. Set NEXT_PUBLIC_AUTH_V5=true feature flag
  *
+ *   7. When removing @ts-nocheck, verify the `UserRow` interface inside the
+ *      authorize callback still matches the `SELECT id, email, ...` column
+ *      list (it is not type-checked until @ts-nocheck is removed).
+ *
  * Until then, src/lib/auth.ts (v4) is the source of truth.
  *
  * Migration plan: docs/SYSTEM_DESIGN_V3.md section 6
@@ -60,29 +64,41 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        if (!credentials?.email || !credentials?.password) return null
+        const email = typeof credentials?.email === 'string' ? credentials.email : null
+        const password = typeof credentials?.password === 'string' ? credentials.password : null
+        if (!email || !password) return null
 
         // Extract client IP (v5 uses standard Request)
-        const forwarded = req?.headers?.get('x-forwarded-for') || ''
-        const clientIp = forwarded.split(',')[0]?.trim() || 'unknown'
+        const forwarded: string = String(req?.headers?.get('x-forwarded-for') ?? '')
+        const clientIp: string = forwarded.split(',')[0]?.trim() || 'unknown'
 
         // Brute-force lockout check
-        const loginCheck = await checkLoginAllowed(credentials.email, clientIp)
+        const loginCheck = await checkLoginAllowed(email, clientIp)
         if (!loginCheck.allowed) {
           console.warn(
-            `[auth-v5] Login blocked for ${credentials.email} from ${clientIp}: ${loginCheck.reason}`
+            `[auth-v5] Login blocked for ${email} from ${clientIp}: ${loginCheck.reason}`
           )
           return null
         }
 
         try {
-          const { rows } = await db.query(
+          interface UserRow {
+            id: string
+            email: string
+            password_hash: string
+            full_name: string | null
+            isk_number: string | null
+            verified_isk: boolean
+            role: string
+            provider: string | null
+          }
+          const { rows } = (await db.query(
             'SELECT id, email, password_hash, full_name, isk_number, verified_isk, role, provider FROM users WHERE email = $1 LIMIT 1',
-            [credentials.email.toLowerCase().trim()]
-          )
+            [email.toLowerCase().trim()]
+          )) as unknown as { rows: UserRow[] }
 
           if (rows.length === 0) {
-            await recordFailedLogin(credentials.email, clientIp)
+            await recordFailedLogin(email, clientIp)
             return null
           }
 
@@ -90,18 +106,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
           // Block password login for OAuth-only accounts
           if (user.password_hash === OAUTH_NO_PASSWORD) {
-            await recordFailedLogin(credentials.email, clientIp)
+            await recordFailedLogin(email, clientIp)
             return null
           }
 
           // Verify password
-          const isValid = await bcrypt.compare(credentials.password, user.password_hash)
+          const isValid = await bcrypt.compare(password, user.password_hash)
           if (!isValid) {
-            await recordFailedLogin(credentials.email, clientIp)
+            await recordFailedLogin(email, clientIp)
             return null
           }
 
-          await recordSuccessfulLogin(credentials.email, clientIp)
+          await recordSuccessfulLogin(email, clientIp)
 
           return {
             id: user.id,

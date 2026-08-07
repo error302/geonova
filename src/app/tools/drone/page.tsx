@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { PageHeader } from '@/components/shared/PageHeader';
-import { printDroneReport, type DroneReportInput } from '@/lib/print/droneReportPrint';
+import { printDroneReport, type DroneReportInput, type AccuracyResults } from '@/lib/print/droneReportPrint';
 import { PrintMetaPanel, defaultPrintMeta, type PrintMeta } from '@/components/shared/PrintMetaPanel';
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
@@ -34,16 +34,6 @@ interface AccuracyClass {
 }
 
 type TabId = 'planning' | 'settingout' | 'accuracy' | 'report'
-
-interface AccuracyPointResult {
-  name: string; se: number; sn: number; sz: number; de: number; dn: number; dz: number
-  dE: number; dN: number; dZ: number; horizontalError: number; error3D: number
-}
-interface AccuracyResults {
-  points: AccuracyPointResult[]
-  hRMSE: number; vRMSE: number; maxHorizontal: number; maxVertical: number; max3D: number
-  horizontalPass: boolean; verticalPass: boolean; pass: boolean
-}
 
 const accuracyClasses: AccuracyClass[] = [
   { name: 'Class I', horizontal: 0.075, vertical: 0.15, scale: '1:500' },

@@ -127,49 +127,49 @@ function ensureRegistered(): void {
   // Using dynamic imports to avoid circular dependencies
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const deedPlan = require('./deed-plan');
+    const deedPlan = require('./deed-plan') as { DEED_PLAN_TEMPLATE: DocumentTemplate };
     registerTemplate(deedPlan.DEED_PLAN_TEMPLATE);
   } catch { /* template not available yet */ }
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const formC22 = require('./form-c22');
+    const formC22 = require('./form-c22') as { FORM_C22_TEMPLATE: DocumentTemplate };
     registerTemplate(formC22.FORM_C22_TEMPLATE);
   } catch { /* template not available yet */ }
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const beaconCert = require('./beacon-certificate');
+    const beaconCert = require('./beacon-certificate') as { BEACON_CERTIFICATE_TEMPLATE: DocumentTemplate };
     registerTemplate(beaconCert.BEACON_CERTIFICATE_TEMPLATE);
   } catch { /* template not available yet */ }
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const traverseSheet = require('./traverse-sheet');
+    const traverseSheet = require('./traverse-sheet') as { TRAVERSE_SHEET_TEMPLATE: DocumentTemplate };
     registerTemplate(traverseSheet.TRAVERSE_SHEET_TEMPLATE);
   } catch { /* template not available yet */ }
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const settingOut = require('./setting-out');
+    const settingOut = require('./setting-out') as { SETTING_OUT_TEMPLATE: DocumentTemplate };
     registerTemplate(settingOut.SETTING_OUT_TEMPLATE);
   } catch { /* template not available yet */ }
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const topoPlan = require('./topo-plan');
+    const topoPlan = require('./topo-plan') as { TOPO_PLAN_TEMPLATE: DocumentTemplate };
     registerTemplate(topoPlan.TOPO_PLAN_TEMPLATE);
   } catch { /* template not available yet */ }
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const mutationForm = require('./mutation-form');
+    const mutationForm = require('./mutation-form') as { MUTATION_FORM_TEMPLATE: DocumentTemplate };
     registerTemplate(mutationForm.MUTATION_FORM_TEMPLATE);
   } catch { /* template not available yet */ }
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const formNo4 = require('./form-no4');
+    const formNo4 = require('./form-no4') as { FORM_NO4_TEMPLATE: DocumentTemplate };
     registerTemplate(formNo4.FORM_NO4_TEMPLATE);
   } catch { /* template not available yet */ }
 }

@@ -36,11 +36,11 @@ export default function AreaCalculator() {
   };
 
   const removePoint = (id: number) => {
-    setPoints(points.filter((p: any) => p.id !== id));
+    setPoints(points.filter((p) => p.id !== id));
   };
 
   const updatePoint = (id: number, field: 'n' | 'e', value: string) => {
-    setPoints(points.map((p: any) => p.id === id ? { ...p, [field]: value } : p));
+    setPoints(points.map((p) => p.id === id ? { ...p, [field]: value } : p));
   };
 
   const calculate = () => {
@@ -48,8 +48,8 @@ export default function AreaCalculator() {
       setCalcError(null);
       if (method === 'coordinate') {
         const pts: Point2D[] = points
-          .map((p: any) => ({ northing: parseFloat(p.n), easting: parseFloat(p.e) }))
-          .filter((p: any) => !isNaN(p.northing) && !isNaN(p.easting));
+          .map((p) => ({ northing: parseFloat(p.n), easting: parseFloat(p.e) }))
+          .filter((p) => !isNaN(p.northing) && !isNaN(p.easting));
         if (pts.length >= 3) {
           const out = coordinateAreaSolution(pts);
           setSteps(out.steps);
@@ -58,7 +58,7 @@ export default function AreaCalculator() {
           setCalcError('Please enter at least 3 valid coordinate points.');
         }
       } else {
-        const ord = offsets.split(',').map((s: any) => parseFloat(s.trim())).filter((n: any) => !isNaN(n));
+        const ord = offsets.split(',').map((s) => parseFloat(s.trim())).filter((n) => !isNaN(n));
         if (ord.length < 2) { setCalcError('Please enter at least 2 valid ordinates.'); return; }
         const int = parseFloat(interval);
         if (isNaN(int) || int <= 0) { setCalcError('Please enter a valid interval.'); return; }

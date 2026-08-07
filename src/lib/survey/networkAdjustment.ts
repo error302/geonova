@@ -140,7 +140,7 @@ export function adjustNetwork(
     const wH = 1 / (obs.stdDevH * obs.stdDevH)
 
     // Delta Easting
-    const rowE = new Array(n).fill(0)
+    const rowE: number[] = new Array(n).fill(0)
     if (stationIndex.has(obs.to)) rowE[stationIndex.get(obs.to)! * 3] = 1
     if (stationIndex.has(obs.from)) rowE[stationIndex.get(obs.from)! * 3] = -1
     const obsE = toCoord.e - fromCoord.e
@@ -149,7 +149,7 @@ export function adjustNetwork(
     l.push(obs.deltaE - obsE)
 
     // Delta Northing
-    const rowN = new Array(n).fill(0)
+    const rowN: number[] = new Array(n).fill(0)
     if (stationIndex.has(obs.to)) rowN[stationIndex.get(obs.to)! * 3 + 1] = 1
     if (stationIndex.has(obs.from)) rowN[stationIndex.get(obs.from)! * 3 + 1] = -1
     const obsN = toCoord.n - fromCoord.n
@@ -158,7 +158,7 @@ export function adjustNetwork(
     l.push(obs.deltaN - obsN)
 
     // Delta Height
-    const rowH = new Array(n).fill(0)
+    const rowH: number[] = new Array(n).fill(0)
     if (stationIndex.has(obs.to)) rowH[stationIndex.get(obs.to)! * 3 + 2] = 1
     if (stationIndex.has(obs.from)) rowH[stationIndex.get(obs.from)! * 3 + 2] = -1
     const obsH = toCoord.h - fromCoord.h
@@ -362,7 +362,7 @@ function solveLinearSystem(A: number[][], b: number[]): number[] {
 
 function invertMatrix(A: number[][], n: number): number[][] {
   const M = A.map((row, i) => {
-    const aug = [...row, ...new Array(n).fill(0)]
+    const aug: number[] = [...row, ...new Array<number>(n).fill(0)]
     aug[n + i] = 1
     return aug
   })
@@ -374,7 +374,7 @@ function invertMatrix(A: number[][], n: number): number[][] {
     ;[M[col], M[maxRow]] = [M[maxRow], M[col]]
 
     const pivot = M[col][col]
-    if (Math.abs(pivot) < 1e-12) return Array.from({ length: n }, () => new Array(n).fill(0))
+    if (Math.abs(pivot) < 1e-12) return Array.from({ length: n }, () => new Array<number>(n).fill(0))
 
     for (let k = 0; k < 2 * n; k++) M[col][k] /= pivot
     for (let row = 0; row < n; row++) {

@@ -25,18 +25,18 @@ export default function DataCleaner({ projectId }: { projectId: string }) {
   const handleFileUpload = useCallback(async (file: File) => {
     if (file.name.endsWith('.csv')) {
       const text = await file.text()
-      const parsed = Papa.parse(text, { header: true, skipEmptyLines: true })
-      const points: RawSurveyPoint[] = parsed.data.map((row: any, idx: number) => ({
+      const parsed = Papa.parse<Record<string, string>>(text, { header: true, skipEmptyLines: true })
+      const points: RawSurveyPoint[] = parsed.data.map((row, idx) => ({
         id: row.id || row.code || String(idx),
-        easting: parseFloat(row.easting || row.Easting || row.X || 0),
-        northing: parseFloat(row.northing || row.Northing || row.Y || 0),
-        elevation: parseFloat(row.elevation || row.RL || row.Z),
+        easting: parseFloat(row.easting || row.Easting || row.X || '0'),
+        northing: parseFloat(row.northing || row.Northing || row.Y || '0'),
+        elevation: parseFloat(row.elevation || row.RL || row.Z || '0'),
         code: row.code || row.Code || ''
-      })).filter((p: any) => !isNaN(p.easting) && !isNaN(p.northing))
+      })).filter((p) => !isNaN(p.easting) && !isNaN(p.northing))
       setRawPoints(points)
     } else if (file.name.endsWith('.json')) {
       const text = await file.text()
-      setRawPoints(JSON.parse(text))
+      setRawPoints(JSON.parse(text) as RawSurveyPoint[])
     }
   }, [])
   
@@ -63,7 +63,7 @@ export default function DataCleaner({ projectId }: { projectId: string }) {
         <div className="flex gap-4 mb-4">
           <select
             value={dataType}
-            onChange={(e) => setDataType(e.target.value as any)}
+            onChange={(e) => setDataType(e.target.value as 'gnss' | 'totalstation' | 'lidar')}
             className="px-3 py-2 border rounded-lg dark:bg-gray-700"
           >
             <option value="gnss">GNSS/GPS Points</option>

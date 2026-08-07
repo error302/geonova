@@ -35,7 +35,8 @@ export async function renderPDFPageToDataURL(
   canvas.height = viewport.height;
   const ctx = canvas.getContext('2d')!;
 
-  await page.render({ canvasContext: ctx, viewport } as any).promise;
+  const renderParams: import('pdfjs-dist/types/src/display/api').RenderParameters = { canvasContext: ctx, canvas: ctx.canvas, viewport };
+  await page.render(renderParams).promise;
 
   return {
     dataUrl: canvas.toDataURL('image/png'),
@@ -48,7 +49,7 @@ export async function renderPDFPageToDataURL(
 // GCPs define the bounding box: min/max lat/lng of the 4 corners.
 // OL imports are done via require() since this function is only called
 // inside MapViewer's browser-only useEffect via dynamic import.
-export function buildOLGeoPDFLayer(layer: GeoPDFLayer) {
+export function buildOLGeoPDFLayer(layer: GeoPDFLayer): import('ol/layer/Base').default {
   // Browser-only dynamic require (SSR-safe, see note above).
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { default: ImageLayer } = require('ol/layer/Image');
@@ -57,8 +58,8 @@ export function buildOLGeoPDFLayer(layer: GeoPDFLayer) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { transformExtent } = require('ol/proj');
 
-  const lats = layer.gcps.map((g: any) => g.lat);
-  const lngs = layer.gcps.map((g: any) => g.lng);
+  const lats = layer.gcps.map((g) => g.lat);
+  const lngs = layer.gcps.map((g) => g.lng);
   const extent4326: [number, number, number, number] = [
     Math.min(...lngs),
     Math.min(...lats),

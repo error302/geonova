@@ -40,8 +40,8 @@ export const POST = apiHandler({
         throw new ValidationError('Invalid TIN payload', parsed.error.issues)
       }
       const { generateTIN, interpolateElevation } = await import('@/lib/compute/tin')
-      const triangles = generateTIN(parsed.data.points as any[])
-      let interpolations: any[] = []
+      const triangles = generateTIN(parsed.data.points)
+      let interpolations: Array<{ x: number; y: number; elevation: number | null }> = []
       if (parsed.data.query_points) {
         interpolations = parsed.data.query_points.map(qp => ({
           x: qp.x, y: qp.y,
@@ -62,13 +62,13 @@ export const POST = apiHandler({
         const { cutFillVolumeFromSignedSections, volumeFromSections } = await import('@/lib/engine/volume')
         const { method, sections } = cross.data
         if (method === 'cut_fill') {
-          const r = cutFillVolumeFromSignedSections(sections as any[])
+          const r = cutFillVolumeFromSignedSections(sections)
           return NextResponse.json({
             task, kind: 'cross_section', method, cutVolume: r.cutVolume,
             fillVolume: r.fillVolume, netVolume: r.netVolume, segments: r.segments,
           })
         }
-        const r = volumeFromSections(sections as any[], method === 'end_area' ? 'end_area' : 'prismoidal')
+        const r = volumeFromSections(sections, method === 'end_area' ? 'end_area' : 'prismoidal')
         return NextResponse.json({
           task, kind: 'cross_section', method: r.method,
           totalVolume: r.totalVolume, segments: r.segments,
@@ -84,7 +84,7 @@ export const POST = apiHandler({
           gridSpacing: surface.data.gridSpacing,
           power: surface.data.power,
           maxDistance: surface.data.maxDistance,
-        } as any)
+        })
         return NextResponse.json({
           task, kind: 'surface', method: r.method,
           cutVolume: r.cutVolume, fillVolume: r.fillVolume, netVolume: r.netVolume,
@@ -118,7 +118,7 @@ export const POST = apiHandler({
         throw new ValidationError('Invalid export_dxf payload', parsed.error.issues)
       }
       const { generateDXF } = await import('@/lib/export/generateDXF')
-      const dxf = generateDXF(parsed.data as any)
+      const dxf = generateDXF(parsed.data)
       return NextResponse.json({
         task, kind: 'dxf',
         filename: `${parsed.data.projectName.replace(/\s+/g, '_')}.dxf`,
@@ -146,7 +146,7 @@ export const POST = apiHandler({
         throw new ValidationError('Invalid export_geojson payload', parsed.error.issues)
       }
       const { generateGeoJSON } = await import('@/lib/export/generateGeoJSON')
-      const geojson = generateGeoJSON(parsed.data.points as any[], parsed.data.projectName, parsed.data.utmZone, parsed.data.hemisphere)
+      const geojson = generateGeoJSON(parsed.data.points, parsed.data.projectName, parsed.data.utmZone, parsed.data.hemisphere)
       return NextResponse.json({
         task, kind: 'geojson',
         filename: `${parsed.data.projectName.replace(/\s+/g, '_')}.geojson`,

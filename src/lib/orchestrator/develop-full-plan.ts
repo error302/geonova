@@ -63,7 +63,12 @@ export interface SettingOutPoints {
   points: Array<{ name: string; easting: number; northing: number; chainage: number; offset: number }>
 }
 
-async function loadProjectData(projectId: string) {
+async function loadProjectData(projectId: string): Promise<{
+  project: Project | null
+  points: SurveyPoint[] | null
+  traverseObs: TraverseObservation[] | null
+  levelingObs: LevelingObservation[] | null
+}> {
   const sb = createClient()
   
   const { data: project } = await sb
@@ -88,7 +93,12 @@ async function loadProjectData(projectId: string) {
     .select('*')
     .eq('project_id', projectId)
 
-  return { project, points, traverseObs, levelingObs }
+  return {
+    project: (project as Project | null) ?? null,
+    points: (points as SurveyPoint[] | null) ?? null,
+    traverseObs: (traverseObs as TraverseObservation[] | null) ?? null,
+    levelingObs: (levelingObs as LevelingObservation[] | null) ?? null,
+  }
 }
 
 function runAdjustmentChain(

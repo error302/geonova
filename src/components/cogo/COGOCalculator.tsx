@@ -199,7 +199,7 @@ export default function COGOCalculator({ compact = false }: Props) {
   const handleArea = () => {
     setError('')
     const lines = areaText.trim().split('\n').filter((l) => l.trim())
-    const points = lines.map((line: any) => {
+    const points = lines.map((line) => {
       const parts = line.split(/[,\t]+/)
       if (parts.length < 3) return null
       return { label: parts[0].trim(), easting: parseFloat(parts[1]), northing: parseFloat(parts[2]) }
@@ -213,7 +213,7 @@ export default function COGOCalculator({ compact = false }: Props) {
   const handleJoin = () => {
     setError('')
     const lines = joinText.trim().split('\n').filter((l) => l.trim())
-    const points = lines.map((line: any) => {
+    const points = lines.map((line) => {
       const parts = line.split(/[,\t]+/)
       if (parts.length < 3) return null
       return { label: parts[0].trim(), easting: parseFloat(parts[1]), northing: parseFloat(parts[2]) }
@@ -370,7 +370,7 @@ export default function COGOCalculator({ compact = false }: Props) {
           styles: { fontSize: 8 },
           headStyles: { fillColor: [34, 197, 94] },
         })
-        const finalY = (doc as any).lastAutoTable.finalY + 6
+        const finalY = ((doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? 34) + 6
         doc.setFontSize(9)
         doc.text(`Total Perimeter: ${joinResult.totalPerimeter.toFixed(4)} m`, 14, finalY)
       } else {
@@ -482,7 +482,7 @@ export default function COGOCalculator({ compact = false }: Props) {
 
       {/* Tab Bar */}
       <div className="flex items-center gap-1 border-b border-[var(--border-color)] mb-4 overflow-x-auto">
-        {TABS.map((tab: any) => (
+        {TABS.map((tab) => (
           <button key={tab.id} onClick={() => { setActiveTab(tab.id); clearAll() }}
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
               activeTab === tab.id

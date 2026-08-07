@@ -166,10 +166,10 @@ export function computeTraverse(input: {
   backsightBearingMin: number
   backsightBearingSec: number
 }): TraverseComputationResult {
-  const obs = input.observations.filter((o: any) => o.station && o.slopeDist)
+  const obs = input.observations.filter((o) => o.station && o.slopeDist)
   if (obs.length === 0) throw new Error('No valid observations')
 
-  const reduced: ReducedObservation[] = obs.map((o: any) => {
+  const reduced: ReducedObservation[] = obs.map((o) => {
     // Source: Basak, Chapter 10 — Mean angle from face-left and face-right horizontal circle readings
     // Source: Ghilani & Wolf, Chapter 12 — HCR_adj = HCR + 180° when HCR < 180°
     const hcl = dmsToDecimal({ degrees: parseInt(o.hclDeg) || 0, minutes: parseInt(o.hclMin) || 0, seconds: parseFloat(o.hclSec) || 0, direction: 'N' })
@@ -225,7 +225,7 @@ export function computeTraverse(input: {
   let currentN = input.openingNorthing
   let currentRL = input.openingRL ?? 0
 
-  const stations = [input.openingStation, ...obs.map((o: any) => o.station)]
+  const stations = [input.openingStation, ...obs.map((o) => o.station)]
 
   for (let i = 0; i < obs.length; i++) {
     // Source: Basak, Chapter 10 — WCB propagation using observed angles

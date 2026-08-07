@@ -64,7 +64,7 @@ export default function AddPointModal({
       setNorthing(editPointNorthing?.toFixed(4) || '')
       setElevation(editPointElevation?.toString() || '0')
       setIsControl(editPointIsControl || false)
-      setControlOrder((editPointControlOrder as any) || 'secondary')
+      setControlOrder((editPointControlOrder as 'primary' | 'secondary' | 'temporary') || 'secondary')
       setLocked(editPointLocked || false)
     } else if (prefillEasting !== undefined) {
       setEasting(prefillEasting.toFixed(4))
@@ -118,7 +118,7 @@ export default function AddPointModal({
           body: JSON.stringify(patchBody),
         })
         if (!res.ok) {
-          const err = await res.json().catch(() => ({ error: res.statusText }))
+          const err = (await res.json().catch(() => ({ error: res.statusText }))) as { error?: string }
           throw new Error(err.error || `Failed to update point (${res.status})`)
         }
       } else {
@@ -132,7 +132,7 @@ export default function AddPointModal({
           }),
         })
         if (!res.ok) {
-          const err = await res.json().catch(() => ({ error: res.statusText }))
+          const err = (await res.json().catch(() => ({ error: res.statusText }))) as { error?: string }
           if (res.status === 409 && err.error?.includes('already exists')) {
             throw new Error(`Point "${name}" already exists in this project. Use a different name.`)
           }
@@ -173,7 +173,7 @@ export default function AddPointModal({
       })
 
       if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: res.statusText }))
+        const err = (await res.json().catch(() => ({ error: res.statusText }))) as { error?: string }
         throw new Error(err.error || `Failed to add point (${res.status})`)
       }
 
@@ -280,7 +280,7 @@ export default function AddPointModal({
                 <label className="block text-sm text-[var(--text-primary)] mb-1" htmlFor="control-classification">Control Classification</label>
                 <select id="control-classification"
                   value={controlOrder}
-                  onChange={(e) => setControlOrder(e.target.value as any)}
+                  onChange={(e) => setControlOrder(e.target.value as 'primary' | 'secondary' | 'temporary')}
                   className="w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded focus:border-[var(--accent)] focus:outline-none text-[var(--text-primary)]"
                 >
                   <option value="primary">Primary Control</option>

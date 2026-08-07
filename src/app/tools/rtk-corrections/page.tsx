@@ -42,15 +42,15 @@ export default function NTRIPClientPage() {
     const es = new EventSource(`/api/gnss/ntrip?${params}`)
     eventSourceRef.current = es
     es.addEventListener('status', (e) => {
-      const data = JSON.parse((e as MessageEvent).data)
+      const data = JSON.parse((e as MessageEvent).data as string) as { message?: string; error?: string; connected?: boolean }
       setStatusMsg(data.message || data.error || '')
       if (data.connected) { setConnected(true); setError(null) }
       else { setConnected(false); if (data.error) setError(data.error) }
     })
     es.addEventListener('rtcm', (e) => {
-      const data = JSON.parse((e as MessageEvent).data)
-      setMessageCount(data.messageCount); setLastMessageAt(data.lastMessageAt)
-      setMessages(prev => [...prev, { type: data.type, length: data.length, receivedAt: data.receivedAt }].slice(-50))
+      const data = JSON.parse((e as MessageEvent).data as string) as { messageCount?: number; lastMessageAt?: string; type?: number; length?: number; receivedAt?: string }
+      setMessageCount(data.messageCount ?? 0); setLastMessageAt(data.lastMessageAt ?? null)
+      setMessages(prev => [...prev, { type: data.type ?? 0, length: data.length ?? 0, receivedAt: data.receivedAt ?? '' }].slice(-50))
     })
     es.onerror = () => { setConnected(false); setError('Connection lost'); es.close() }
   }, [host, port, mountpoint, username, password])

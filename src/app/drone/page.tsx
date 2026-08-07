@@ -74,11 +74,11 @@ function UploadSection({ onTaskCreated }: { onTaskCreated: (taskId: string) => v
       setProgress(100)
 
       if (!res.ok) {
-        const data = await res.json()
+        const data = (await res.json()) as { error?: string }
         throw new Error(data.error || `Upload failed (${res.status})`)
       }
 
-      const data = await res.json()
+      const data = (await res.json()) as { taskId: string }
       onTaskCreated(data.taskId)
       setSelectedFiles([])
       if (fileInputRef.current) fileInputRef.current.value = ''
@@ -199,7 +199,7 @@ function ProcessingSection({ taskId }: { taskId: string }) {
   const fetchTask = useCallback(async () => {
     const res = await fetch(`/api/drone/process?taskId=${taskId}`)
     if (res.ok) {
-      const data = await res.json()
+      const data = (await res.json()) as { task: DroneTask }
       setTask(data.task)
     }
   }, [taskId])
@@ -227,7 +227,7 @@ function ProcessingSection({ taskId }: { taskId: string }) {
       })
 
       if (!res.ok) {
-        const data = await res.json()
+        const data = (await res.json()) as { error?: string }
         throw new Error(data.error || 'Failed to start processing')
       }
 
@@ -397,7 +397,7 @@ function ResultsSection({ taskId }: { taskId: string }) {
   useEffect(() => {
     fetch(`/api/drone/process?taskId=${taskId}`)
       .then(r => r.ok ? r.json() : null)
-      .then(data => { if (data?.task) setTask(data.task) })
+      .then((data: { task?: DroneTask } | null) => { if (data?.task) setTask(data.task) })
   }, [taskId])
 
   if (!task || task.status !== 'completed') return null
@@ -457,7 +457,7 @@ function TaskHistory({ refreshKey }: { refreshKey: number }) {
   useEffect(() => {
     fetch('/api/drone/tasks?limit=10')
       .then(r => r.ok ? r.json() : null)
-      .then(data => { if (data?.tasks) setTasks(data.tasks) })
+      .then((data: { tasks?: DroneTask[] } | null) => { if (data?.tasks) setTasks(data.tasks) })
   }, [refreshKey])
 
   if (tasks.length === 0) return null

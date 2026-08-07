@@ -20,7 +20,7 @@ export default function GNSSProcessor({ projectId = '' }: { projectId?: string }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files).map((file: any) => ({
+      const newFiles = Array.from(e.target.files).map((file) => ({
         file,
         stationLabel: ''
       }))
@@ -53,26 +53,26 @@ export default function GNSSProcessor({ projectId = '' }: { projectId?: string }
       setStatus('Processing baselines...')
       
       const formData = new FormData()
-      files.forEach((f: any) => formData.append('files', f.file))
+      files.forEach((f) => formData.append('files', f.file))
       formData.append('projectId', projectId)
-      formData.append('stationLabels', JSON.stringify(files.map((f: any) => f.stationLabel)))
+      formData.append('stationLabels', JSON.stringify(files.map((f) => f.stationLabel)))
 
       const response = await fetch('/api/gnss/process', {
         method: 'POST',
         body: JSON.stringify({
           projectId,
-          files: files.map((f: any) => ({
+          files: files.map((f) => ({
             filename: f.file.name,
             stationId: f.stationLabel,
             fileType: f.file.name.endsWith('.nav') ? 'NAV' : 'OBS',
             sizeBytes: f.file.size,
             storagePath: ''
           })),
-          stationLabels: files.map((f: any) => f.stationLabel)
+          stationLabels: files.map((f) => f.stationLabel)
         })
       })
 
-      const data = await response.json()
+      const data = (await response.json()) as { error?: string; results?: GNSSBaseline[]; status?: string }
       
       if (!response.ok) {
         throw new Error(data.error || 'Processing failed')
@@ -91,8 +91,8 @@ export default function GNSSProcessor({ projectId = '' }: { projectId?: string }
     }
   }
 
-  const fixedCount = results.filter((r: any) => r.fixed).length
-  const rmsValues = results.map((r: any) => r.rmsError)
+  const fixedCount = results.filter((r) => r.fixed).length
+  const rmsValues = results.map((r) => r.rmsError)
   const bestRms = rmsValues.length ? Math.min(...rmsValues) : 0
   const worstRms = rmsValues.length ? Math.max(...rmsValues) : 0
 

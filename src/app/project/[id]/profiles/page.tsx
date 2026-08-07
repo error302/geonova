@@ -87,21 +87,21 @@ export default function ProfilesPage({ params }: PageProps) {
         .select('*')
         .eq('id', params.id)
         .single();
-      if (projectData) setProject(projectData);
+      if (projectData) setProject(projectData as Project);
 
       const { data: pointsData } = await dbClient
         .from('survey_points')
         .select('*')
         .eq('project_id', params.id)
         .order('name');
-      if (pointsData) setPoints(pointsData);
+      if (pointsData) setPoints(pointsData as SurveyPoint[]);
 
       const { data: alignmentsData } = await dbClient
         .from('alignments')
         .select('*')
         .eq('project_id', params.id)
         .order('created_at', { ascending: false });
-      if (alignmentsData) setAlignments(alignmentsData);
+      if (alignmentsData) setAlignments(alignmentsData as Alignment[]);
     } catch (err) {
       console.error('Error loading data:', err);
     } finally {
@@ -119,14 +119,14 @@ export default function ProfilesPage({ params }: PageProps) {
       .select('*')
       .eq('alignment_id', alignmentId)
       .order('chainage');
-    if (cpData) setChainagePoints(cpData);
+    if (cpData) setChainagePoints(cpData as ChainagePoint[]);
 
     const { data: csData } = await dbClient
       .from('cross_sections')
       .select('*')
       .eq('alignment_id', alignmentId)
       .order('chainage');
-    if (csData) setCrossSections(csData);
+    if (csData) setCrossSections(csData as CrossSection[]);
   };
 
   const createAlignment = async () => {
@@ -171,8 +171,8 @@ export default function ProfilesPage({ params }: PageProps) {
       setNewAlignmentName('');
       setSelectedPoints([]);
       await loadData();
-      setSelectedAlignment(alignment);
-      await loadAlignmentData(alignment.id);
+      setSelectedAlignment(alignment as Alignment);
+      await loadAlignmentData((alignment as Alignment).id);
       setActiveTab('profile');
     } catch (err) {
       console.error('Error creating alignment:', err);
@@ -386,11 +386,11 @@ export default function ProfilesPage({ params }: PageProps) {
                           <div className="rounded-xl bg-[var(--bg-primary)]/40 border border-[var(--border-color)] p-4">
                             <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2">Page</div>
                             <div className="flex gap-2">
-                              <select value={svgPage} onChange={(e) => setSvgPage(e.target.value as any)} className="flex-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-3 py-2 text-[var(--text-primary)]">
+                              <select value={svgPage} onChange={(e) => setSvgPage(e.target.value as 'A3' | 'A4')} className="flex-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-3 py-2 text-[var(--text-primary)]">
                                 <option value="A3">A3</option>
                                 <option value="A4">A4</option>
                               </select>
-                              <select value={svgOrientation} onChange={(e) => setSvgOrientation(e.target.value as any)} className="flex-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-3 py-2 text-[var(--text-primary)]">
+                              <select value={svgOrientation} onChange={(e) => setSvgOrientation(e.target.value as 'landscape' | 'portrait')} className="flex-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-3 py-2 text-[var(--text-primary)]">
                                 <option value="landscape">Landscape</option>
                                 <option value="portrait">Portrait</option>
                               </select>

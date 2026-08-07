@@ -331,7 +331,7 @@ export function permuteSymmetric(M: SparseMatrix, P: number[]): SparseMatrix {
   if (P.length !== n) throw new Error('Permutation length mismatch')
 
   // Build inverse permutation: Pinv[original] = new
-  const Pinv = new Array(n)
+  const Pinv: number[] = new Array<number>(n)
   for (let i = 0; i < n; i++) Pinv[P[i]] = i
 
   // Walk original matrix, push triplets with permuted indices
@@ -405,8 +405,8 @@ export function symbolicFactorize(M: SparseMatrix): SymbolicFactor {
 
   // Compute elimination tree using Liu/Davis algorithm with path compression.
   // ancestor[i] = root of i's subtree in the partial tree (initially i itself).
-  const parent = new Array(n).fill(-1)
-  const ancestor = new Array(n).fill(0).map((_, i) => i)
+  const parent: number[] = new Array<number>(n).fill(-1)
+  const ancestor: number[] = new Array<number>(n).fill(0).map((_, i) => i)
 
   for (let j = 0; j < n; j++) {
     // Iterate over ROW j's off-diagonal entries (c < j) — these are entries

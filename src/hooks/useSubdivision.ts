@@ -52,11 +52,11 @@ export function useSubdivision({
   const [roadReservePreview, setRoadReservePreview] = useState<RoadReserveInfo | null>(null)
 
   // ─── Refs for map layers ──────────────────────────────────────────────
-  const subdivisionLayerRef = useRef<any>(null)
-  const splitLineLayerRef = useRef<any>(null)
-  const roadReserveLayerRef = useRef<any>(null)
-  const drawInteractionRef = useRef<any>(null)
-  const clickHandlerRef = useRef<any>(null)
+  const subdivisionLayerRef = useRef<import('ol/layer/Vector').default | null>(null)
+  const splitLineLayerRef = useRef<import('ol/layer/Vector').default | null>(null)
+  const roadReserveLayerRef = useRef<import('ol/layer/Vector').default | null>(null)
+  const drawInteractionRef = useRef<import('ol/interaction/Draw').default | null>(null)
+  const clickHandlerRef = useRef<((evt: import('ol/MapBrowserEvent').default) => void) | null>(null)
   const splitLinePointsRef = useRef<Point2D[]>([])
 
   // ─── Stable refs for cleanup callbacks ────────────────────────────────
@@ -65,9 +65,9 @@ export function useSubdivision({
   const removeSplitLineLayerRef = useRef<() => void>(() => {})
   const removeRoadReserveLayerRef = useRef<() => void>(() => {})
   const removeDrawInteractionRef = useRef<() => void>(() => {})
-  const addSubdivisionLayerRef = useRef<(r: any) => void>(() => {})
-  const addSplitLineLayerRef = useRef<(l: any) => void>(() => {})
-  const addRoadReserveLayerRef = useRef<(r: any) => void>(() => {})
+  const addSubdivisionLayerRef = useRef<(r: SubdivisionResult) => void>(() => {})
+  const addSplitLineLayerRef = useRef<(l: SplitLine) => void>(() => {})
+  const addRoadReserveLayerRef = useRef<(r: RoadReserveInfo) => void>(() => {})
 
   // Keep map ref in sync
   useEffect(() => { mapRef.current = map }, [map])
@@ -216,7 +216,7 @@ export function useSubdivision({
   useEffect(() => {
     if (!map || !isDrawingSplitLine) return
 
-    const handleClick = async (evt: any) => {
+    const handleClick = async (evt: import('ol/MapBrowserEvent').default) => {
       const [x, y] = evt.coordinate as [number, number]
 
       // Convert from EPSG:3857 to EPSG:21037
@@ -334,7 +334,7 @@ export function useSubdivision({
 
   // ─── Center point picking (for radial) ───────────────────────────────
 
-  const pickCenterPointHandlerRef = useRef<((evt: any) => void) | null>(null)
+  const pickCenterPointHandlerRef = useRef<((evt: import('ol/MapBrowserEvent').default) => void) | null>(null)
 
   // Clean up pickCenterPoint handler on unmount
   useEffect(() => {
@@ -354,7 +354,7 @@ export function useSubdivision({
       map.un('click', pickCenterPointHandlerRef.current)
     }
 
-    const handleMapClick = async (evt: any) => {
+    const handleMapClick = async (evt: import('ol/MapBrowserEvent').default) => {
       const [x, y] = evt.coordinate as [number, number]
       const { to21037 } = await import('@/lib/map/projection')
       const [e, n] = await to21037(x, y)

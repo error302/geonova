@@ -72,8 +72,12 @@ export async function dispatchWebhook(
     .eq('active', true)
     .contains('events', [event])
 
-  const webhooks = (result as any).data
-  const error = (result as any).error
+  interface WebhookRow {
+    id: string
+    url: string
+    secret: string
+  }
+  const { data: webhooks, error } = result as unknown as { data: WebhookRow[] | null; error: unknown }
 
   if (error || !webhooks || webhooks.length === 0) {
     return { delivered: 0, failed: 0 }
