@@ -125,6 +125,16 @@ function walkPages(dir, acc = []) {
       // Skip dynamic segments ([param]) — they need a real id to render.
       if (!/^\[/.test(entry)) walkPages(full, acc)
     } else if (entry === 'page.tsx') {
+      // Skip redirect-stub pages: a page.tsx whose only job is
+      // redirect('/elsewhere') renders no UI, so a11y-scanning it is
+      // meaningless and flakes (the redirect destroys the axe context —
+      // observed on /tools/land-law -> /land-law). Detection: the file
+      // contains a redirect(...) call and has no JSX at all.
+      let src = ''
+      try { src = readFileSync(full, 'utf8') } catch { /* unreadable */ }
+      if (src.includes('redirect(') && !src.includes('<')) {
+        continue
+      }
       // src/app/tools/foo/page.tsx -> /tools/foo ; src/app/tools/page.tsx -> /tools
       const rel = dir.replace(/^src[\\/]app/, '').split(sep).join('/')
       acc.push(rel || '/')
