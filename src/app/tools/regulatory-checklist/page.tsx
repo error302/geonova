@@ -3,19 +3,34 @@
 import { useState, useEffect } from 'react'
 import { Scale, Wrench, FileCheck, Map, Award, Download, AlertCircle, CheckCircle2 } from 'lucide-react'
 
+interface ApprovedInstrument { brand: string; model: string; type: string }
+interface StandardScale { scale: string; label: string; maxAreaHa: number }
+interface ElectiveType { id: string; name: string }
+interface RegulationsData {
+  instruments?: ApprovedInstrument[]
+  standardScales?: StandardScale[]
+  electives?: ElectiveType[]
+}
+interface InstrumentCheckResult { approved: boolean; message: string }
+interface ScaleCheckResult { label: string; useCase: string }
+interface ElectiveCheckResult {
+  check: { met: boolean; details: string }
+  elective?: { description: string; minimumRequirement: string; deliverables: string[]; regulations: string[] }
+}
+
 export default function RegulatoryChecklistPage() {
-  const [data, setData] = useState<any>(null)
+  const [data, setData] = useState<RegulationsData | null>(null)
   const [loading, setLoading] = useState(true)
 
   // Instrument check
   const [brand, setBrand] = useState('')
   const [model, setModel] = useState('')
   const [requiredOrder, setRequiredOrder] = useState('Second Order Class II')
-  const [instrumentResult, setInstrumentResult] = useState<any>(null)
+  const [instrumentResult, setInstrumentResult] = useState<InstrumentCheckResult | null>(null)
 
   // Scale check
   const [areaHa, setAreaHa] = useState('')
-  const [scaleResult, setScaleResult] = useState<any>(null)
+  const [scaleResult, setScaleResult] = useState<ScaleCheckResult | null>(null)
 
   // Certificate
   const [surveyorName, setSurveyorName] = useState('')
@@ -29,7 +44,7 @@ export default function RegulatoryChecklistPage() {
   const [electiveArea, setElectiveArea] = useState('')
   const [electiveUnits, setElectiveUnits] = useState('')
   const [electiveLinear, setElectiveLinear] = useState('')
-  const [electiveResult, setElectiveResult] = useState<any>(null)
+  const [electiveResult, setElectiveResult] = useState<ElectiveCheckResult | null>(null)
 
   useEffect(() => { loadData() }, [])
 
@@ -37,7 +52,7 @@ export default function RegulatoryChecklistPage() {
     setLoading(true)
     try {
       const res = await fetch('/api/regulations')
-      if (res.ok) { const d = await res.json(); setData(d.data) }
+      if (res.ok) { const d = (await res.json()) as { data: RegulationsData }; setData(d.data) }
     } catch {} finally { setLoading(false) }
   }
 
@@ -46,7 +61,7 @@ export default function RegulatoryChecklistPage() {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ check_type: 'instrument', brand, model, requiredOrder }),
     })
-    if (res.ok) { const d = await res.json(); setInstrumentResult(d.data) }
+    if (res.ok) { const d = (await res.json()) as { data: InstrumentCheckResult }; setInstrumentResult(d.data) }
   }
 
   const checkScale = async () => {
@@ -54,7 +69,7 @@ export default function RegulatoryChecklistPage() {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ check_type: 'scale', areaHa: parseFloat(areaHa) }),
     })
-    if (res.ok) { const d = await res.json(); setScaleResult(d.data) }
+    if (res.ok) { const d = (await res.json()) as { data: ScaleCheckResult }; setScaleResult(d.data) }
   }
 
   const generateCert = async () => {
@@ -65,18 +80,18 @@ export default function RegulatoryChecklistPage() {
         surveyType, locality, areaHa: parseFloat(areaHa) || 0, scale: scaleResult?.label || '1:1250',
       }),
     })
-    if (res.ok) { const d = await res.json(); setCertResult(d.data) }
+    if (res.ok) { const d = (await res.json()) as { data: string }; setCertResult(d.data) }
   }
 
   const checkElective = async () => {
-    const body: any = { check_type: 'elective', electiveId }
+    const body: Record<string, unknown> = { check_type: 'elective', electiveId }
     if (electiveArea) body.areaHa = parseFloat(electiveArea)
     if (electiveUnits) body.unitCount = parseInt(electiveUnits)
     if (electiveLinear) body.linearLengthKm = parseFloat(electiveLinear)
     const res = await fetch('/api/regulations', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
     })
-    if (res.ok) { const d = await res.json(); setElectiveResult(d.data) }
+    if (res.ok) { const d = (await res.json()) as { data: ElectiveCheckResult }; setElectiveResult(d.data) }
   }
 
   const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[var(--accent)]/30 focus:outline-none"
@@ -110,7 +125,7 @@ export default function RegulatoryChecklistPage() {
           <div className="mt-3 text-[10px] text-[var(--text-muted)]">
             <div className="font-semibold mb-1">Approved Instruments ({data.instruments.length}):</div>
             <div className="grid grid-cols-3 gap-1 max-h-32 overflow-y-auto">
-              {data.instruments.map((inst: any, i: number) => (
+              {data.instruments.map((inst, i) => (
                 <div key={i} className="px-2 py-0.5 rounded bg-[var(--bg-tertiary)]">
                   {inst.brand} {inst.model} <span className="opacity-50">({inst.type})</span>
                 </div>
@@ -133,7 +148,7 @@ export default function RegulatoryChecklistPage() {
           </div>
         )}
         <div className="mt-2 grid grid-cols-3 gap-1 text-[10px] text-[var(--text-muted)]">
-          {data?.standardScales?.map((s: any) => (
+          {data?.standardScales?.map((s) => (
             <div key={s.scale} className="px-2 py-0.5 rounded bg-[var(--bg-tertiary)]">{s.label} — ≤{s.maxAreaHa}ha</div>
           ))}
         </div>
@@ -168,7 +183,7 @@ export default function RegulatoryChecklistPage() {
         <h2 className="text-sm font-semibold mb-2 flex items-center gap-2"><Award className="w-4 h-4" /> License Elective Survey Types</h2>
         <div className="grid grid-cols-2 gap-2 mb-2">
           <select value={electiveId} onChange={e => setElectiveId(e.target.value)} className={inputCls}>
-            {data?.electives?.map((e: any) => <option key={e.id} value={e.id}>{e.name}</option>)}
+            {data?.electives?.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
           </select>
           <div className="grid grid-cols-3 gap-1">
             <input value={electiveArea} onChange={e => setElectiveArea(e.target.value)} className={inputCls} placeholder="Area (ha)" />

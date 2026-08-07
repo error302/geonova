@@ -33,6 +33,18 @@ interface AccuracyClass {
   scale: string;
 }
 
+type TabId = 'planning' | 'settingout' | 'accuracy' | 'report'
+
+interface AccuracyPointResult {
+  name: string; se: number; sn: number; sz: number; de: number; dn: number; dz: number
+  dE: number; dN: number; dZ: number; horizontalError: number; error3D: number
+}
+interface AccuracyResults {
+  points: AccuracyPointResult[]
+  hRMSE: number; vRMSE: number; maxHorizontal: number; maxVertical: number; max3D: number
+  horizontalPass: boolean; verticalPass: boolean; pass: boolean
+}
+
 const accuracyClasses: AccuracyClass[] = [
   { name: 'Class I', horizontal: 0.075, vertical: 0.15, scale: '1:500' },
   { name: 'Class II', horizontal: 0.150, vertical: 0.30, scale: '1:1000' },
@@ -51,7 +63,7 @@ function calculateRMSE(errors: number[]): number {
 
 function DroneSurveyPage() {
   const { t } = useLanguage()
-  const [activeTab, setActiveTab] = useState<'planning' | 'settingout' | 'accuracy' | 'report'>('planning');
+  const [activeTab, setActiveTab] = useState<TabId>('planning');
   const [printMeta, setPrintMeta] = useState<PrintMeta>(defaultPrintMeta);
   const [flightParams, setFlightParams] = useState({ height: '', gsd: '', overlapFront: '', overlapSide: '' });
 
@@ -70,7 +82,7 @@ function DroneSurveyPage() {
     { id: 2, name: 'CP2', surveyE: '484750.0000', surveyN: '9863250.0000', surveyZ: '118.2500', droneE: '484750.0180', droneN: '9863249.9950', droneZ: '118.2350' },
   ]);
 
-  const [accuracyResults, setAccuracyResults] = useState<any>(null);
+  const [accuracyResults, setAccuracyResults] = useState<AccuracyResults | null>(null);
   const [selectedClass, setSelectedClass] = useState<AccuracyClass>(accuracyClasses[0]);
 
   const generateGCPs = () => {
@@ -217,10 +229,10 @@ function DroneSurveyPage() {
           { id: 'settingout', label: 'Setting Out' },
           { id: 'accuracy', label: 'Accuracy Check' },
           { id: 'report', label: 'Report' },
-        ].map((tab: any) => (
+        ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id as TabId)}
             className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
               activeTab === tab.id 
                 ? 'bg-[var(--accent)] text-black' 
@@ -505,7 +517,7 @@ function DroneSurveyPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {accuracyResults.points.map((p: any, i: number) => (
+                    {accuracyResults.points.map((p, i) => (
                       <tr key={`gcp-${p.name}-${i}`}>
                         <td className="font-semibold">{p.name}</td>
                         <td className="font-mono">{formatNumber(p.se, 4)}</td>

@@ -17,6 +17,13 @@ type EngineMode = 'python' | 'typescript' | null
 
 interface ContourSegment { elevation: number; segments: number[][][] }
 
+interface SpotHeightRow {
+  name?: string | null
+  easting?: number | null
+  northing?: number | null
+  elevation?: number | null
+}
+
 export default function ContoursPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: projectId } = use(params)
   const dbClient = createClient()
@@ -37,10 +44,10 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
         .eq('project_id', projectId)
         .order('name')
       if (data) {
-        setPoints(data.map((p: any) => ({
-          name: p.name,
-          easting: p.easting,
-          northing: p.northing,
+        setPoints((data as SpotHeightRow[]).map((p) => ({
+          name: p.name ?? '',
+          easting: p.easting ?? 0,
+          northing: p.northing ?? 0,
           elevation: p.elevation || 0
         })))
       }
@@ -68,10 +75,10 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
       if (data.contours && !data.fallback) {
         // Convert Python response format → ContourLine[]
         const converted: ContourLine[] = (data.contours as ContourSegment[]).flatMap(c =>
-          c.segments.map((seg: any) => ({
+          c.segments.map((seg) => ({
             elevation: c.elevation,
             isIndex: false,
-            points: seg.map((pt: any) => ({
+            points: seg.map((pt) => ({
               easting: pt[0],
               northing: pt[1],
               elevation: c.elevation,
@@ -122,7 +129,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
     )
   }
 
-  const elevations = points.map((p: any) => p.elevation)
+  const elevations = points.map((p) => p.elevation)
   const minElev = Math.min(...elevations)
   const maxElev = Math.max(...elevations)
 
@@ -184,7 +191,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
               { label: 'Min elevation', value: `${minElev.toFixed(2)} m` },
               { label: 'Max elevation', value: `${maxElev.toFixed(2)} m` },
               { label: 'Contour lines', value: contours.length },
-            ].map((item: any) => (
+            ].map((item) => (
               <div key={item.label} className="bg-[var(--bg-primary)] p-3 rounded-lg border border-[var(--border-color)]">
                 <p className="text-[var(--text-muted)] text-xs mb-1">{item.label}</p>
                 <p className="text-[var(--text-primary)] font-semibold font-mono">{item.value}</p>
@@ -214,9 +221,9 @@ function ContourMap({ points, contours }: { points: SpotHeight[]; contours: Cont
   const height = 500
   const padding = 48
 
-  const eastings = points.map((p: any) => p.easting)
-  const northings = points.map((p: any) => p.northing)
-  const elevations = points.map((p: any) => p.elevation)
+  const eastings = points.map((p) => p.easting)
+  const northings = points.map((p) => p.northing)
+  const elevations = points.map((p) => p.elevation)
 
   const minE = Math.min(...eastings), maxE = Math.max(...eastings)
   const minN = Math.min(...northings), maxN = Math.max(...northings)
@@ -288,7 +295,7 @@ function ContourMap({ points, contours }: { points: SpotHeight[]; contours: Cont
 
         {/* Elevation labels on major contours */}
         {contours
-          .filter((c: any) => c.elevation % 5 === 0 && c.points.length > 0)
+          .filter((c) => c.elevation % 5 === 0 && c.points.length > 0)
           .slice(0, 20)
           .map((contour, i) => {
             const p = contour.points[Math.floor(contour.points.length / 2)]
@@ -303,7 +310,7 @@ function ContourMap({ points, contours }: { points: SpotHeight[]; contours: Cont
           })}
 
         {/* Survey points */}
-        {points.map((p: any) => (
+        {points.map((p) => (
           <g key={p.name}>
             <circle cx={toX(p.easting)} cy={toY(p.northing)} r={3}
               fill={elevColor(p.elevation)} stroke="white" strokeWidth={0.8}/>

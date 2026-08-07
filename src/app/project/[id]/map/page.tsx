@@ -11,6 +11,28 @@ interface MapPageProps {
   params: { id: string };
 }
 
+interface BoundaryStationRow {
+  pointName?: string | null
+  label?: string | null
+  id?: string | null
+  station?: number | string | null
+  originalEasting?: number | null
+  originalNorthing?: number | null
+  adjustedEasting?: number | null
+  adjustedNorthing?: number | null
+  easting?: number | null
+  northing?: number | null
+}
+interface ProjectRow {
+  boundary_data?: { adjustedStations?: BoundaryStationRow[] } | null
+  name?: string | null
+  lr_number?: string | null
+  surveyor_name?: string | null
+  surveyor_license?: string | null
+  client_name?: string | null
+  county?: string | null
+}
+
 export default function MapPage({ params }: MapPageProps) {
   const [stations, setStations] = useState<AdjustedStation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,11 +56,11 @@ export default function MapPage({ params }: MapPageProps) {
       const { data: { session } } = await dbClient.auth.getSession();
       if (!session) { setError('Not authenticated'); return; }
 
-      const { data: project, error: projErr } = await dbClient
+      const { data: project, error: projErr } = (await dbClient
         .from('projects')
         .select('boundary_data, id, name, lr_number, surveyor_name, surveyor_license, client_name, county')
         .eq('id', params.id)
-        .single();
+        .single()) as { data: ProjectRow | null; error: { message: string; code: string; details?: string } | null };
 
       if (projErr || !project) {
         setError('Project not found');
@@ -63,8 +85,8 @@ export default function MapPage({ params }: MapPageProps) {
         return;
       }
 
-      const mapped: AdjustedStation[] = raw.map((s: any) => ({
-        pointName: s.pointName ?? s.label ?? s.id ?? String(s.station),
+      const mapped: AdjustedStation[] = raw.map((s: BoundaryStationRow) => ({
+        pointName: s.pointName ?? s.label ?? s.id ?? String(s.station ?? ''),
         originalEasting: Number(s.originalEasting ?? s.easting ?? 0),
         originalNorthing: Number(s.originalNorthing ?? s.northing ?? 0),
         adjustedEasting: Number(s.adjustedEasting ?? s.easting ?? 0),
@@ -106,11 +128,11 @@ export default function MapPage({ params }: MapPageProps) {
       });
 
       // Fetch current boundary_data to preserve other fields
-      const { data: project } = await dbClient
+      const { data: project } = (await dbClient
         .from('projects')
         .select('boundary_data')
         .eq('id', params.id)
-        .single();
+        .single()) as { data: { boundary_data?: { adjustedStations?: BoundaryStationRow[] } | null } | null };
 
       const currentBoundaryData = project?.boundary_data ?? {};
       const updatedBoundaryData = {

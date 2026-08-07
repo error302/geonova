@@ -5,12 +5,33 @@ import { useRouter } from 'next/navigation'
 import UTMZonePicker from '@/components/ui/UTMZonePicker'
 import { computeTraverseAccuracy, getAccuracyBadgeLabel, getAccuracyBadgeClass } from '@/lib/reports/traverseAccuracy'
 
+interface ProjectSettingsRow {
+  name?: string | null
+  location?: string | null
+  utm_zone?: number | null
+  hemisphere?: string | null
+  survey_type?: string | null
+  road_class?: string | null
+  terrain_type?: string | null
+  client_name?: string | null
+  surveyor_name?: string | null
+  datum?: string | null
+  traverse?: { linearError?: number | null }
+  road_name?: string | null
+  start_chainage?: number | null
+  folio_number?: string | null
+  register_number?: string | null
+  lr_number?: string | null
+  plot_parcel_number?: string | null
+  registration_district?: string | null
+  locality?: string | null
+}
+
 export default function ProjectSettingsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: projectId } = use(params)
   const router = useRouter()
   const dbClient = createClient()
   
-  const [project, setProject] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
@@ -39,28 +60,27 @@ export default function ProjectSettingsPage({ params }: { params: Promise<{ id: 
 
   useEffect(() => {
     async function loadProject() {
-      const { data, error } = await dbClient
+      const { data, error } = (await dbClient
         .from('projects')
         .select('*')
         .eq('id', projectId)
-        .single()
+        .single()) as { data: ProjectSettingsRow | null; error: { message: string; code: string; details?: string } | null }
 
       if (error || !data) {
         router.push('/dashboard')
         return
       }
 
-      setProject(data)
       setName(data.name || '')
       setLocation(data.location || '')
       setUtmZone(data.utm_zone || 37)
-      setHemisphere(data.hemisphere || 'S')
+      setHemisphere((data.hemisphere as 'N' | 'S') || 'S')
       setSurveyType(data.survey_type || 'topographic')
       setRoadClass(data.road_class || '')
       setTerrainType(data.terrain_type || '')
       setClientName(data.client_name || '')
       setSurveyorName(data.surveyor_name || '')
-      setDatum(data.datum || 'ARC1960')
+      setDatum((data.datum as 'ARC1960' | 'WGS84' | 'WGS84Geographic') || 'ARC1960')
       setLinearError(data.traverse?.linearError !== undefined ? String(data.traverse.linearError) : '')
       setRoadName(data.road_name || '')
       setStartChainage(data.start_chainage !== undefined ? String(data.start_chainage) : '')

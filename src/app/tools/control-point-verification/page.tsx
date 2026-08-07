@@ -3,8 +3,21 @@
 import { useState, useEffect } from 'react'
 import { ShieldCheck, AlertCircle, Plus, Clock, MapPin } from 'lucide-react'
 
+interface VerificationRow {
+  id: string
+  point_id: string
+  point_name?: string | null
+  condition: string
+  displacement_status?: string | null
+  verification_date: string
+  horizontal_displacement?: number | null
+  verifier_name?: string | null
+  method?: string | null
+  condition_notes?: string | null
+}
+
 export default function ControlPointVerificationPage() {
-  const [verifications, setVerifications] = useState<any[]>([])
+  const [verifications, setVerifications] = useState<VerificationRow[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
 
@@ -26,12 +39,12 @@ export default function ControlPointVerificationPage() {
     setLoading(true)
     try {
       const res = await fetch('/api/control-points/verifications?limit=100')
-      if (res.ok) { const data = await res.json(); setVerifications(data.data) }
+      if (res.ok) { const data = (await res.json()) as { data: VerificationRow[] }; setVerifications(data.data) }
     } catch {} finally { setLoading(false) }
   }
 
   const handleSubmit = async () => {
-    const body: any = {
+    const body: Record<string, unknown> = {
       point_type: pointType, point_id: pointId, point_name: pointName,
       verification_date: new Date().toISOString().split('T')[0],
       condition, method, condition_notes: notes,

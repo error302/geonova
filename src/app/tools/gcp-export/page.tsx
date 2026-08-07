@@ -7,6 +7,13 @@ import { PageHeader } from '@/components/shared/PageHeader'
 import Link from 'next/link'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
+interface GCPRow {
+  name?: string | null
+  easting?: number | null
+  northing?: number | null
+  elevation?: number | null
+}
+
 // ── helpers ──────────────────────────────────────────────────────────────────
 
 function download(content: string, filename: string) {
@@ -51,16 +58,16 @@ export default function GCPExportPage() {
       .eq('is_control', true)
       .then(({ data }) => {
         if (data && project) {
-          const pts: GCPPoint[] = data.map((p: any) => ({
-            name: p.name,
-            easting: p.easting,
-            northing: p.northing,
+          const pts: GCPPoint[] = (data as GCPRow[]).map((p) => ({
+            name: p.name ?? '',
+            easting: p.easting ?? 0,
+            northing: p.northing ?? 0,
             elevation: p.elevation ?? 0,
             utmZone: project.utm_zone,
             hemisphere: project.hemisphere as 'N' | 'S',
           }))
           setPoints(pts)
-          setSelectedPoints(new Set(pts.map((p: any) => p.name)))
+          setSelectedPoints(new Set(pts.map((p) => p.name)))
         }
         setLoading(false)
       })
@@ -68,7 +75,7 @@ export default function GCPExportPage() {
 
   // Update preview
   useEffect(() => {
-    const selected = points.filter((p: any) => selectedPoints.has(p.name))
+    const selected = points.filter((p) => selectedPoints.has(p.name))
     if (selected.length === 0) { setPreview(''); return }
     try {
       const { content } = exportGCPs(selected, format)
@@ -77,12 +84,12 @@ export default function GCPExportPage() {
   }, [points, selectedPoints, format])
 
   const project = projects.find((p) => p.id === selectedProject)
-  const selectedPts = points.filter((p: any) => selectedPoints.has(p.name))
+  const selectedPts = points.filter((p) => selectedPoints.has(p.name))
 
   const handleExport = () => {
     if (selectedPts.length === 0 || !project) return
     const { content, ext } = exportGCPs(selectedPts, format)
-    const fmtLabel = GCP_FORMATS.find((f: any) => f.id === format)?.label ?? format
+    const fmtLabel = GCP_FORMATS.find((f) => f.id === format)?.label ?? format
     download(content, `${project.name}_GCPs_${fmtLabel}.${ext}`)
   }
 
@@ -130,7 +137,7 @@ export default function GCPExportPage() {
               ) : (
                 <select value={selectedProject} onChange={e => setSelectedProject(e.target.value)} className="input w-full">
                   <option value="">— Choose project —</option>
-                  {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                  {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               )}
             </div>
@@ -143,11 +150,11 @@ export default function GCPExportPage() {
                     <span className="w-5 h-5 rounded-full bg-[var(--accent)] text-black text-xs font-bold flex items-center justify-center">2</span>
                     Select GCPs ({selectedPts.length}/{points.length})
                   </h2>
-                  <button onClick={() => setSelectedPoints(new Set(points.map((p: any) => p.name)))}
+                  <button onClick={() => setSelectedPoints(new Set(points.map((p) => p.name)))}
                     className="text-xs text-[var(--accent)] hover:underline">Select all</button>
                 </div>
                 <div className="space-y-2">
-                  {points.map((pt: any) => (
+                  {points.map((pt) => (
                     <label key={pt.name} className={`flex items-center gap-3 p-2.5 rounded-lg border cursor-pointer transition-colors ${
                       selectedPoints.has(pt.name)
                         ? 'bg-[var(--accent)]/5 border-[var(--accent)]/20'
@@ -185,7 +192,7 @@ export default function GCPExportPage() {
                 Export format
               </h2>
               <div className="space-y-2">
-                {GCP_FORMATS.map((f: any) => (
+                {GCP_FORMATS.map((f) => (
                   <label key={f.id} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                     format === f.id
                       ? 'bg-[var(--accent)]/5 border-[var(--accent)]/30'
@@ -209,7 +216,7 @@ export default function GCPExportPage() {
               disabled={selectedPts.length === 0}
               className="btn btn-primary w-full text-base py-3 disabled:opacity-50"
             >
-              Download {selectedPts.length > 0 ? `${selectedPts.length} GCPs` : 'GCPs'} — {GCP_FORMATS.find((f: any) => f.id === format)?.label}
+              Download {selectedPts.length > 0 ? `${selectedPts.length} GCPs` : 'GCPs'} — {GCP_FORMATS.find((f) => f.id === format)?.label}
             </button>
 
           </div>

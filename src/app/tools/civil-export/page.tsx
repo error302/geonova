@@ -7,6 +7,16 @@ import { PageHeader } from '@/components/shared/PageHeader'
 import Link from 'next/link'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
+interface ProjectRow { id: string; name: string; utm_zone: number; hemisphere: 'N' | 'S' }
+interface SurveyPointRow {
+  name?: string | null
+  easting?: number | null
+  northing?: number | null
+  elevation?: number | null
+  is_control?: boolean | null
+  code?: string | null
+}
+
 function download(content: string, filename: string) {
   const a = document.createElement('a')
   a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain' }))
@@ -15,7 +25,7 @@ function download(content: string, filename: string) {
 
 function CivilExportPage() {
   const { t } = useLanguage()
-  const [projects, setProjects]   = useState<any[]>([])
+  const [projects, setProjects]   = useState<ProjectRow[]>([])
   const [projectId, setProjectId] = useState('')
   const [allPoints, setAllPoints] = useState<CivilPoint[]>([])
   const [format, setFormat]       = useState<CivilFormat>('civil3d')
@@ -30,7 +40,7 @@ function CivilExportPage() {
       if (!user) return
       sb.from('projects').select('id,name,utm_zone,hemisphere').eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .then(({ data }) => { if (data) setProjects(data) })
+        .then(({ data }) => { if (data) setProjects(data as ProjectRow[]) })
     })
   }, [])
 
@@ -40,17 +50,21 @@ function CivilExportPage() {
     const sb = createClient()
     sb.from('survey_points').select('*').eq('project_id', projectId)
       .then(({ data }) => {
-        if (data) setAllPoints(data.map((p: any) => ({
-          name: p.name, easting: p.easting, northing: p.northing,
-          elevation: p.elevation ?? 0, is_control: p.is_control, code: p.code,
+        if (data) setAllPoints((data as SurveyPointRow[]).map((p) => ({
+          name: p.name ?? '',
+          easting: p.easting ?? 0,
+          northing: p.northing ?? 0,
+          elevation: p.elevation ?? 0,
+          is_control: p.is_control ?? false,
+          code: p.code ?? undefined,
         })))
         setLoading(false)
       })
   }, [projectId])
 
-  const project = projects.find((p: any) => p.id === projectId)
+  const project = projects.find((p) => p.id === projectId)
 
-  const filteredPoints = allPoints.filter((p: any) =>
+  const filteredPoints = allPoints.filter((p) =>
     filter === 'all' ? true : filter === 'control' ? p.is_control : !p.is_control
   )
 
@@ -64,7 +78,7 @@ function CivilExportPage() {
 
   const handleExport = () => {
     if (!filteredPoints.length || !project) return
-    const fmt = CIVIL_FORMATS.find((f: any) => f.id === format)!
+    const fmt = CIVIL_FORMATS.find((f) => f.id === format)!
     const { content, ext } = exportCivil(filteredPoints, format, project.name, project.utm_zone, project.hemisphere)
     download(content, `${project.name}_${fmt.label.replace(/[\s/]/g, '_')}.${ext}`)
   }
@@ -90,12 +104,12 @@ function CivilExportPage() {
                 ? <p className="text-sm text-[var(--text-muted)]">No projects. <Link href="/project/new" className="text-[var(--accent)]">Create one →</Link></p>
                 : <select value={projectId} onChange={e => setProjectId(e.target.value)} className="input w-full">
                     <option value="">— Choose project —</option>
-                    {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                    {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>}
               {project && (
                 <p className="text-xs text-[var(--text-muted)] mt-2">
                   UTM Zone {project.utm_zone}{project.hemisphere} · {allPoints.length} points total
-                  ({allPoints.filter((p: any) => p.is_control).length} control, {allPoints.filter((p: any) => !p.is_control).length} survey)
+                  ({allPoints.filter((p) => p.is_control).length} control, {allPoints.filter((p) => !p.is_control).length} survey)
                 </p>
               )}
             </div>
@@ -132,7 +146,7 @@ function CivilExportPage() {
                 Export format
               </h2>
               <div className="space-y-2">
-                {CIVIL_FORMATS.map((f: any) => (
+                {CIVIL_FORMATS.map((f) => (
                   <label key={f.id} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${format === f.id ? 'bg-[var(--accent)]/5 border-[var(--accent)]/30' : 'bg-[var(--bg-secondary)] border-[var(--border-color)] hover:border-[var(--accent)]/20'}`}>
                     <input aria-label="Fmt" type="radio" name="fmt" value={f.id} checked={format === f.id} onChange={() => setFormat(f.id)} className="mt-0.5 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
@@ -148,7 +162,7 @@ function CivilExportPage() {
 
             <button onClick={handleExport} disabled={!filteredPoints.length}
               className="btn btn-primary w-full text-base py-3 disabled:opacity-50">
-              Download {filteredPoints.length > 0 ? `${filteredPoints.length} points` : ''} — {CIVIL_FORMATS.find((f: any) => f.id === format)?.label}
+              Download {filteredPoints.length > 0 ? `${filteredPoints.length} points` : ''} — {CIVIL_FORMATS.find((f) => f.id === format)?.label}
             </button>
           </div>
 
