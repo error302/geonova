@@ -5,6 +5,21 @@ import { apiHandler, AppError } from '@/lib/api/handler'
 import { db } from '@/lib/db'
 import { z } from 'zod'
 
+interface ProjectRow {
+  id: string
+  name: string
+  survey_type: string | null
+  location: string | null
+  utm_zone: number | null
+  hemisphere: string | null
+  project_type: string
+  client_name: string | null
+  surveyor_name: string | null
+  country: string | null
+  datum: string | null
+  created_at: string | Date
+}
+
 const createProjectSchema = z.object({
   name: z.string().min(1, 'Project name is required'),
   survey_type: z.string().min(1, 'Survey type is required'),
@@ -30,7 +45,7 @@ export const POST = apiHandler({
   handler: async (ctx) => {
     const validated = ctx.input
 
-    const projectResult = await db.query(
+    const projectResult = await db.query<ProjectRow>(
       `INSERT INTO projects (user_id, name, survey_type, location, utm_zone, hemisphere,
         project_type, client_name, surveyor_name, country, datum, created_at)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,NOW())
@@ -47,11 +62,11 @@ export const POST = apiHandler({
       throw new AppError('Failed to create project', 500, 'PROJECT_CREATE_FAILED')
     }
 
-    const project = projectResult.rows[0] as Record<string, unknown>
+    const project = projectResult.rows[0]
 
     if (validated.project_type === 'scheme') {
       try {
-        await db.query(
+        await db.query<never>(
           `INSERT INTO scheme_details (project_id, scheme_number, county, sub_county, ward,
             planned_parcels, adjudication_section)
            VALUES ($1,$2,$3,$4,$5,$6,$7)`,
@@ -62,7 +77,7 @@ export const POST = apiHandler({
           ]
         )
       } catch (schemeErr) {
-        await db.query('DELETE FROM projects WHERE id = $1', [project.id])
+        await db.query<never>('DELETE FROM projects WHERE id = $1', [project.id])
         console.error('scheme_details insert failed:', schemeErr)
         throw new AppError('Failed to create scheme details', 500, 'SCHEME_CREATE_FAILED')
       }
@@ -103,7 +118,7 @@ export const GET = apiHandler({
       params = [ctx.userId, limit + 1]
     }
 
-    const result = await db.query(query, params)
+    const result = await db.query<ProjectRow>(query, params)
 
     // Check if there are more results
     const hasMore = result.rows.length > limit

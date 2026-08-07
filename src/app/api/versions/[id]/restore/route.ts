@@ -20,6 +20,15 @@ import { db } from '@/lib/db'
 import { requireVersionOwnership } from '@/lib/auth/ownership'
 import { z } from 'zod'
 
+interface EntityVersionRow {
+  id: string
+  entity_type: string
+  entity_id: string
+  version: number
+  snapshot: Record<string, unknown>
+  created_at: string | Date
+}
+
 const RestoreSchema = z.object({
   version_id: z.string().uuid('version_id must be a valid UUID'),
 })
@@ -58,7 +67,7 @@ export const POST = apiHandler({
   if (!ownership.ok) return ownership.error!
 
   // Get the version to restore
-  const { rows: versionRows } = await db.query(
+  const { rows: versionRows } = await db.query<EntityVersionRow>(
     `SELECT * FROM entity_versions WHERE id = $1`,
     [version_id]
   )
@@ -71,7 +80,7 @@ export const POST = apiHandler({
   }
 
   const version = versionRows[0]
-  const snapshot = version.snapshot as Record<string, unknown>
+  const snapshot = version.snapshot
   const { entity_type, entity_id } = version
 
   // Whitelist of tables that can be restored
@@ -92,7 +101,7 @@ export const POST = apiHandler({
   }
 
   // Verify entity still exists
-  const { rows: entityRows } = await db.query(
+  const { rows: entityRows } = await db.query<Record<string, unknown>>(
     `SELECT * FROM ${entity_type} WHERE id = $1`,
     [entity_id]
   )
@@ -139,7 +148,7 @@ export const POST = apiHandler({
   const currentUpdatedAt = entityRows[0].updated_at
   if (currentUpdatedAt) {
     values.push(currentUpdatedAt)
-    const result = await db.query(
+    const result = await db.query<{ id: string }>(
       `UPDATE ${entity_type} SET ${updates.join(', ')} WHERE id = $${paramIdx} AND updated_at = $${paramIdx + 1} RETURNING id`,
       values
     )
@@ -151,7 +160,7 @@ export const POST = apiHandler({
     }
   } else {
     // No updated_at column on this entity type — proceed without the guard
-    await db.query(
+    await db.query<never>(
       `UPDATE ${entity_type} SET ${updates.join(', ')} WHERE id = $${paramIdx}`,
       values
     )

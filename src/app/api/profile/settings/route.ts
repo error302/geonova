@@ -27,6 +27,25 @@ import { authOptions } from '@/lib/auth'
 import { setCurrentUserId, db } from '@/lib/db'
 import { z } from 'zod'
 
+interface ProfileRow {
+  id: string
+  full_name: string | null
+  firm_name: string | null
+  isk_number: string | null
+  phone: string | null
+  address: string | null
+  bio: string | null
+  avatar_url: string | null
+  notification_preferences: unknown
+  notification_preferences_updated_at: string | Date | null
+  license_number: string | null
+  verified_isk: boolean
+  is_suspended: boolean
+  email: string | null
+  role: string
+  created_at: string | Date
+}
+
 export const dynamic = 'force-dynamic'
 
 const NotificationChannelsSchema = z.object({
@@ -73,7 +92,7 @@ export async function GET() {
 
   const { userId } = auth
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<ProfileRow>(
     `SELECT
        p.id, p.full_name, p.firm_name, p.isk_number, p.phone,
        p.address, p.bio, p.avatar_url,
@@ -155,7 +174,7 @@ export async function PATCH(request: NextRequest) {
 
   profileValues.push(userId)
 
-  await db.query(
+  await db.query<never>(
     `UPDATE profiles SET ${profileFields.join(', ')} WHERE id = $${paramIdx}`,
     profileValues,
   )
@@ -184,7 +203,7 @@ export async function PATCH(request: NextRequest) {
 
   if (surveyorFields.length > 0) {
     surveyorValues.push(userId)
-    await db.query(
+    await db.query<never>(
       `UPDATE surveyor_profiles SET ${surveyorFields.join(', ')}, updated_at = NOW() WHERE user_id = $${sIdx}`,
       surveyorValues,
     ).catch(() => {
@@ -193,7 +212,7 @@ export async function PATCH(request: NextRequest) {
   }
 
   // Re-fetch the updated profile
-  const { rows } = await db.query(
+  const { rows } = await db.query<ProfileRow>(
     `SELECT
        p.full_name, p.firm_name, p.isk_number, p.phone,
        p.address, p.bio, p.avatar_url,
