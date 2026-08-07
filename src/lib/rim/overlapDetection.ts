@@ -93,8 +93,11 @@ export interface OverlapDetectionResult {
  * Overlap areas below this threshold are treated as numerical noise
  * and ignored. 0.01 m² = 100 cm² — sub-centimeter slivers from
  * coordinate rounding, not real boundary conflicts.
+ *
+ * Exported so the overlapDetection contract tests can pin the raw
+ * sliver below this floor directly.
  */
-const MIN_OVERLAP_AREA_SQM = 0.01
+export const MIN_OVERLAP_AREA_SQM = 0.01
 
 // shoelaceArea is imported from @/lib/engine/area (canonical implementation)
 

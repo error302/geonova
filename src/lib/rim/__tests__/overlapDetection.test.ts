@@ -16,7 +16,9 @@
  * full UTM → WGS84 → turf → UTM round-trip.
  */
 
-import { detectOverlaps, hasAnyOverlap, type ParcelForOverlap } from '../overlapDetection'
+import { calculateIntersection } from '@/lib/map/turfHelpers'
+import { shoelaceArea } from '@/lib/engine/area'
+import { detectOverlaps, hasAnyOverlap, MIN_OVERLAP_AREA_SQM, type ParcelForOverlap } from '../overlapDetection'
 
 // ─── Fixtures: 200 m × 200 m squares in UTM 37S ──────────────────────────
 const NEW_PARCEL: ParcelForOverlap = {
@@ -65,6 +67,21 @@ const EDGE_TOUCHING_PARCEL: ParcelForOverlap = {
     { easting: 200200, northing: 9900200 },
     { easting: 200400, northing: 9900200 },
     { easting: 200400, northing: 9900000 },
+  ],
+}
+
+/**
+ * Square with a 5 mm gap (0.005 m) east of NEW_PARCEL's eastern boundary —
+ * the tightest legitimate near-edge case. The UTM → WGS84 → turf round-trip
+ * must not manufacture an above-threshold sliver here either.
+ */
+const NEAR_EDGE_PARCEL: ParcelForOverlap = {
+  parcelNumber: 'LR 1000/5',
+  vertices: [
+    { easting: 200200.005, northing: 9900000 },
+    { easting: 200200.005, northing: 9900200 },
+    { easting: 200400.005, northing: 9900200 },
+    { easting: 200400.005, northing: 9900000 },
   ],
 }
 
@@ -135,5 +152,45 @@ describe('RIM overlap detection (real turf + proj4 integration)', () => {
     expect(result.checkedCount).toBe(1)
     expect(result.skippedCount).toBe(0)
     expect(result.elapsedMs).toBeGreaterThanOrEqual(0)
+  })
+
+  it('reports a parcel 5 mm from the boundary (0.005 m gap) as no overlap', async () => {
+    // Near-edge stress: a 5 mm gap is close enough that coordinate rounding in
+    // the UTM → WGS84 → turf round-trip could manufacture a hairline sliver,
+    // but far enough that it must never be treated as a boundary conflict
+    // (real RIM parcels routinely abut within survey tolerance).
+    await expect(
+      hasAnyOverlap({ newParcel: NEW_PARCEL, existingParcels: [NEAR_EDGE_PARCEL] })
+    ).resolves.toBe(false)
+  })
+
+  it('keeps raw slivers at near-edge separations below MIN_OVERLAP_AREA_SQM (contract pin)', async () => {
+    // Measure the raw intersections directly (bypassing hasAnyOverlap) and pin
+    // them below the exported threshold. The 5 mm gap is a no-false-positive
+    // guard; the shared-edge pair is where the UTM → WGS84 → turf round-trip
+    // can actually manufacture a hairline sliver. Because both assertions
+    // reference the real constant, loosening MIN_OVERLAP_AREA_SQM below the
+    // measured sliver magnitude fails the test — the noise floor is guarded
+    // at the contract level, not by a magic number.
+    const nearEdgeSliver = await calculateIntersection(
+      NEW_PARCEL.vertices,
+      NEAR_EDGE_PARCEL.vertices
+    )
+    expect(shoelaceArea(nearEdgeSliver ?? [])).toBeLessThan(MIN_OVERLAP_AREA_SQM)
+
+    const touchingSliver = await calculateIntersection(
+      NEW_PARCEL.vertices,
+      EDGE_TOUCHING_PARCEL.vertices
+    )
+    expect(shoelaceArea(touchingSliver ?? [])).toBeLessThan(MIN_OVERLAP_AREA_SQM)
+
+    const result = await detectOverlaps({
+      newParcel: NEW_PARCEL,
+      existingParcels: [NEAR_EDGE_PARCEL],
+    })
+    expect(result.hasOverlaps).toBe(false)
+    expect(result.overlaps).toHaveLength(0)
+    expect(result.checkedCount).toBe(1)
+    expect(result.skippedCount).toBe(0)
   })
 })
