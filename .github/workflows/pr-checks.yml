@@ -37,15 +37,6 @@ jobs:
       # slow, blocking per-rule baseline.
       - name: Lint changed files (blocking, zero new warnings)
         run: node scripts/lint-gate.mjs --paths-from-changed
-      # API ROW-TYPING GATE (2026-08-06): api-row-sweep --check blocks any
-      # PR/push that touches a route.ts file containing an untyped
-      # db.query/client.query (the any-rows pattern the row-typing grind has
-      # been removing). Base ref resolves from CI env exactly like lint-gate:
-      # pull_request -> origin/<base>, push -> event.before, else HEAD~1. It is
-      # a pure git-diff + route-file scan (no eslint pass), so it runs in
-      # seconds alongside the changed-files gate.
-      - name: API row-typing gate (blocking, no untyped queries in touched routes)
-        run: node scripts/api-row-sweep.mjs --check
 
       # AUDIT FIX (2026-08-04): Single blocking lint pass. lint-ratchets.mjs
       # runs eslint once over middleware.ts + src/ and fails if ANY rule in
@@ -91,6 +82,26 @@ jobs:
         run: |
           test -d out && echo "✓ static export OK"
           test -f out/index.html && echo "✓ index.html present"
+
+  row-typing:
+    name: API Row-Typing Gate
+    # ROW-TYPING GATE (2026-08-07): dedicated job for api-row-sweep --check so
+    # the gate runs on EVERY PR/push, independent of the (slower) ESLint job.
+    # Blocks any PR/push that touches a route.ts containing an untyped
+    # db.query/client.query, plus the whole-repo shared-schema drift check.
+    # Pure git-diff + static scan — zero npm dependencies (no npm ci), so it
+    # stays seconds-fast even as an isolated job.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # base ref (origin/<base> on PRs, event.before on pushes) must exist locally
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: API row-typing gate (blocking, no untyped queries in touched routes)
+        run: node scripts/api-row-sweep.mjs --check
 
   axe-sweep:
     # A11Y GATE (2026-08-04): axe-core WCAG sweep across every /tools/* page.
