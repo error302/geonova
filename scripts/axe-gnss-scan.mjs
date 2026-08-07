@@ -29,6 +29,9 @@
  *                        full sweep. Overrides --paths.
  *   --exclude a,b,c      Skip routes whose path contains any of these substrings
  *   --concurrency N      Pages scanned in parallel (default 4)
+ *   --no-prewarm         Skip the warm-up pass (each route is loaded once
+ *                        before scanning to force cold-compile — the classic
+ *                        cause of false hydrate-failed on fresh CI servers)
  *   --login              Log in first (auto-enabled when a protected route is scanned)
  *   --ci                 Exit 1 on any violation at/above --fail-on OR any baseline regression
  *   --fail-on impact     Threshold: minor | moderate | serious | critical (default serious);
@@ -81,6 +84,13 @@ const csv = (name) => {
 const JSON_OUT = has('--json')
 const CI_MODE = has('--ci')
 const NO_BASELINE = has('--no-baseline')
+// Cold dev-server compile is the classic source of false hydrate-failed
+// results: Next compiles a route on first request, and under --concurrency 6
+// the heavy pages can exceed the 45s hydration deadline (observed: land-law,
+// machine-control). Pre-warming every route once (browser hits each page,
+// pulling SSR + client chunks) makes the real scan run against warm routes.
+// Skip with --no-prewarm (fast local single-route debug).
+const NO_PREWARM = has('--no-prewarm')
 const DO_LOGIN = has('--login')
 const WRITE_BASELINE = arg('--write-baseline', null)
 const BASELINE_PATH = arg('--baseline', '.axe-baseline.json')
@@ -139,7 +149,7 @@ const PROTECTED_PAGES = [
 // ---------------------------------------------------------------------------
 // --paths-from-changed: map git-changed source files to the routes they touch
 // ---------------------------------------------------------------------------
-import { execSync } from 'node:child_process'
+import { execFileSync } from 'node:child_process'
 
 // Files that can change any page's rendering -> cannot narrow, full sweep.
 const GLOBAL_FILES = new Set(['middleware.ts'])
@@ -182,10 +192,13 @@ function changedRoutes(base, fileList) {
   if (!changed) {
     try {
       const diffRef = base === 'HEAD' ? 'HEAD' : `${base}...HEAD`
-      // argv-form execSync: no shell involved, so a malicious/odd base value
+      // execFileSync (NOT execSync): the argv array form is only supported by
+      // execFileSync — execSync treats an array as options, prints git usage,
+      // and throws "Command failed: git" every time, silently forcing CI to
+      // the full sweep. No shell is involved, so a malicious/odd base value
       // can never be interpreted as shell commands (defense in depth — base
       // is a CLI flag, but CI runs with a hardcoded ref).
-      changed = execSync('git', ['diff', '--name-only', diffRef], { encoding: 'utf8' })
+      changed = execFileSync('git', ['diff', '--name-only', diffRef], { encoding: 'utf8' })
         .split('\n').map((s) => s.trim()).filter(Boolean)
     } catch (e) {
       console.error(`[axe] --paths-from-changed: git diff failed (${e.message.split('\n')[0]}) — falling back to full sweep`)
@@ -477,6 +490,30 @@ async function scanRoute(context, routeDef) {
   throw new Error(`unreachable: scanRoute(${path})`)
 }
 
+// Pre-warm pass: force Next dev to compile every route (SSR + client chunks)
+// before the axe scan, so the 45s hydration deadline measures a warm page
+// instead of a cold compile. Retried routes that still fail get 3 attempts in
+// the real scan as before — this only removes the compile-time flake class.
+async function prewarmRoutes(context, routes, concurrency) {
+  console.error(`[axe] pre-warming ${routes.length} routes (cold-compile pass, concurrency ${concurrency})…`)
+  const start = Date.now()
+  await mapLimit(routes, concurrency, async (route) => {
+    const page = await context.newPage()
+    try {
+      await page.goto(`${BASE}${route.path}`, { waitUntil: 'domcontentloaded', timeout: 90000 })
+      // Give the browser a moment to pull the client JS chunks so the module
+      // graph is compiled too, not just the SSR shell.
+      await page.waitForTimeout(2000)
+    } catch (e) {
+      const msg = e.message.split('\n')[0]
+      console.error(`[axe] pre-warm ${route.path} failed (${msg}) — the scan will still retry it`)
+    } finally {
+      await page.close().catch(() => {})
+    }
+  })
+  console.error(`[axe] pre-warm complete in ${((Date.now() - start) / 1000).toFixed(1)}s`)
+}
+
 // Simple promise pool with a concurrency cap.
 async function mapLimit(items, limit, fn) {
   const out = new Array(items.length)
@@ -627,6 +664,8 @@ async function run() {
         console.error('[axe] login failed — protected routes will be marked auth-failed; public routes still scanned')
       }
     }
+
+    if (!NO_PREWARM) await prewarmRoutes(context, ROUTES, Math.min(4, CONCURRENCY))
 
     console.error(`[axe] scanning ${ROUTES.length} routes (concurrency ${CONCURRENCY}) against ${BASE}…`)
     const start = Date.now()

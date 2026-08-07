@@ -80,14 +80,17 @@ jobs:
         run: npx jest --silent --coverage --coverageReporters=text-summary --passWithNoTests
         timeout-minutes: 5
 
-      - name: Verify mobile static export
-        env:
-          MOBILE_BUILD: 'true'
-          NEXT_PUBLIC_SENTRY_DSN: ''
-          DISABLE_PWA: 'true'
+      # AUDIT FIX (2026-08-03): the static export can only contain pages that
+      # are renderable without a server. API routes, dynamic web routes and
+      # server-backed pages (searchParams/cookies/db at render time) cannot be
+      # statically exported — they are stashed by scripts/mobile-build.mjs
+      # (same pattern as the ci.yml mobile job) and restored afterwards.
+      - name: Build static export (MOBILE_BUILD=true)
+        run: node scripts/mobile-build.mjs
+      - name: Verify static export exists
         run: |
-          npx next build
-          test -d out && echo "✓ mobile static export OK"
+          test -d out && echo "✓ static export OK"
+          test -f out/index.html && echo "✓ index.html present"
 
   axe-sweep:
     # A11Y GATE (2026-08-04): axe-core WCAG sweep across every /tools/* page.
