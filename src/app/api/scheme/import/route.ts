@@ -96,7 +96,7 @@ export const POST = apiHandler(
         )
 
         if (dupCheck.rows.length > 0) {
-          await client.query(
+          await client.query<never>(
             `UPDATE parcels SET
               lr_number_proposed = $3, area_ha = $4, notes = $5, updated_at = NOW()
             WHERE block_id = $1 AND parcel_number = $2`,
@@ -104,7 +104,7 @@ export const POST = apiHandler(
           )
           results.skipped++
         } else {
-          await client.query(
+          await client.query<never>(
             `INSERT INTO parcels (project_id, block_id, parcel_number, lr_number_proposed, area_ha, status, notes)
             VALUES ($1, $2, $3, $4, $5, 'pending', $6)`,
             [parseInt(projectId as string), parseInt(blockId as string), parcelNumber, lrNumber, areaHa, notes]
