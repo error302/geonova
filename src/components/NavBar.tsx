@@ -106,6 +106,9 @@ const searchablePages = [
   { category: 'Resources', group: 'Resources', href: '/pricing', labelKey: 'nav.pricing' },
 ]
 
+/* ⚡ Bolt: Pre-compute map for O(1) page lookups instead of O(N) array search on every render/navigation */
+const searchablePagesMap = new Map(searchablePages.map(p => [p.href, p.labelKey]))
+
 interface DropdownProps {
   label: string
   children: React.ReactNode
@@ -227,8 +230,8 @@ export default function NavBar() {
 
   // Resolve dynamic sub-page titles using searchablePages definitions
   const pageTitle = useMemo(() => {
-    const matchedPage = searchablePages.find(p => p.href === pathname)
-    if (matchedPage) return t(matchedPage.labelKey)
+    const matchedLabelKey = searchablePagesMap.get(pathname)
+    if (matchedLabelKey) return t(matchedLabelKey)
 
     // Manual/Dynamic overrides
     if (pathname.startsWith('/fieldbook/')) {
