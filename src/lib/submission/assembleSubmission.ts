@@ -17,7 +17,47 @@ import type { LCBConsentInput } from './generators/lcbConsent'
 import type { MutationFormInput } from './generators/mutationForm'
 import { coordinateArea } from '@/lib/engine/area'
 import { angularClosureTolerance } from '@/lib/engine/traverse'
-import type { SubmissionPackage, QAGateResult, SurveySubtype } from './types'
+import type { SubmissionPackage, QAGateResult, SurveySubtype, SupportingDocument } from './types'
+
+/** Row shape for survey_points (typed callback params for the legacy client reads). */
+interface SurveyPointRow {
+  id?: string | number
+  idx?: number
+  name?: string | null
+  point_name?: string | null
+  easting?: number | null
+  northing?: number | null
+  adjusted_easting?: number | null
+  adjusted_northing?: number | null
+  observed_bearing?: number | null
+  observed_distance?: number | null
+  distance?: number | null
+}
+
+/** Row shape for supporting_documents. */
+interface SupportingDocumentRow {
+  type?: SupportingDocument['type'] | null
+  label?: string | null
+  required?: boolean | null
+  file_url?: string | null
+  uploaded_at?: string | null
+}
+
+/** surveyor_profiles row (typed reads in the sequence/insert block). */
+interface SurveyorProfileRow {
+  id: string
+  isk_number: string
+}
+
+/** project_submissions row (revision reads). */
+interface ProjectSubmissionRow {
+  revision_number: number
+}
+
+/** submission_sequences row (RETURNING current_sequence). */
+interface SubmissionSequenceRow {
+  current_sequence: number
+}
 
 interface ProjectData {
   id: string
@@ -30,8 +70,8 @@ interface ProjectData {
   area_m2: number
   perimeter_m: number
   subtype: SurveySubtype
-  survey_points: unknown[]
-  supporting_documents: unknown[]
+  survey_points: SurveyPointRow[]
+  supporting_documents: SupportingDocumentRow[]
   angular_misclosure: number
   linear_misclosure: number
   precision_ratio: string
@@ -57,29 +97,35 @@ export async function assembleSubmissionPackage(
 
   // QueryBuilder does not support DbClient-style nested relation selects,
   // so fetch project, points, and docs in separate queries.
-  const { data: project, error: projectError } = await dbClient
+  const projectRes = await dbClient
     .from('projects')
     .select('*')
     .eq('id', projectId)
     .single()
+  const project = projectRes.data as Record<string, unknown> | null
+  const projectError = projectRes.error
 
   if (projectError || !project) throw new Error('Project not found')
 
-  const { data: surveyPoints, error: pointsError } = await dbClient
+  const pointsRes = await dbClient
     .from('survey_points')
     .select('*')
     .eq('project_id', projectId)
-    .limit(50_000) // hard cap: 50k points per project (~50MB RAM for dense surveys).
+    .limit(50_000)
+  const surveyPoints = pointsRes.data as SurveyPointRow[] | null
+  const pointsError = pointsRes.error // hard cap: 50k points per project (~50MB RAM for dense surveys).
                     // Exceeding this requires project splitting or cursor pagination.
 
   if (pointsError) {
     throw new Error(`Failed to load survey points: ${pointsError.message}`)
   }
 
-  const { data: supportingDocuments, error: docsError } = await dbClient
+  const docsRes = await dbClient
     .from('supporting_documents')
     .select('*')
     .eq('project_id', projectId)
+  const supportingDocuments = docsRes.data as SupportingDocumentRow[] | null
+  const docsError = docsRes.error
 
   if (docsError) {
     throw new Error(`Failed to load supporting documents: ${docsError.message}`)
@@ -92,8 +138,8 @@ export async function assembleSubmissionPackage(
   } as unknown as ProjectData
 
   const adjustedCoordinates = (proj.survey_points || [])
-    .filter((pt: any) => pt.adjusted_easting != null && pt.adjusted_northing != null)
-    .map((pt: any) => ({
+    .filter((pt: SurveyPointRow) => pt.adjusted_easting != null && pt.adjusted_northing != null)
+    .map((pt: SurveyPointRow) => ({
       label: pt.point_name ?? pt.name ?? `P${pt.idx}`,
       easting: asNum(pt.adjusted_easting),
       northing: asNum(pt.adjusted_northing)
@@ -104,7 +150,7 @@ export async function assembleSubmissionPackage(
     const areaResult = coordinateArea(adjustedCoordinates);
     computedAreaM2 = areaResult.areaSqm;
   } else if (proj.survey_points && proj.survey_points.length >= 3) {
-    const rawCoordinates = (proj.survey_points || []).map((pt: any) => ({
+    const rawCoordinates = (proj.survey_points || []).map((pt: SurveyPointRow) => ({
       easting: asNum(pt.easting),
       northing: asNum(pt.northing)
     }));
@@ -128,10 +174,10 @@ export async function assembleSubmissionPackage(
     surveyor.registration_number
   )
 
-  const supportingDocs = (proj.supporting_documents ?? []).map((doc: any) => ({
-    type: doc.type,
-    label: doc.label,
-    required: doc.required,
+  const supportingDocs = (proj.supporting_documents ?? []).map((doc: SupportingDocumentRow) => ({
+    type: doc.type ?? 'ppa2',
+    label: doc.label ?? '',
+    required: doc.required ?? false,
     fileUrl: doc.file_url ?? null,
     uploadedAt: doc.uploaded_at ?? null
   }))
@@ -139,7 +185,7 @@ export async function assembleSubmissionPackage(
   const pkg: SubmissionPackage = {
     submissionRef: ref,
     projectId,
-    surveyor: { ...surveyor, registrationNumber: surveyor.registration_number } as any,
+    surveyor: { ...surveyor, registrationNumber: surveyor.registration_number } as unknown as SubmissionPackage['surveyor'],
     subtype: (proj.survey_type || 'cadastral_subdivision') as SurveySubtype,
     parcel: {
       lrNumber: proj.lr_number || '',
@@ -153,7 +199,7 @@ export async function assembleSubmissionPackage(
       clientName: proj.client_name || ''
     },
     traverse: {
-      points: (proj.survey_points || []).map((pt: any) => ({
+      points: (proj.survey_points || []).map((pt: SurveyPointRow) => ({
         pointName: pt.name || pt.point_name || `P${pt.id}`,
         easting: asNum(pt.easting),
         northing: asNum(pt.northing),
@@ -346,7 +392,7 @@ export async function assembleSubmissionPackage(
   const manifest = {
     submissionRef: ref,
     generatedAt: pkg.generatedAt,
-    surveyor: pkg.surveyor.registrationNumber || (pkg.surveyor as any).registration_number,
+    surveyor: pkg.surveyor.registrationNumber,
     lrNumber: pkg.parcel.lrNumber,
     areaHa: (pkg.parcel.areaM2 / 10000).toFixed(4),
     areaM2: pkg.parcel.areaM2.toFixed(2),
@@ -363,9 +409,9 @@ export async function assembleSubmissionPackage(
 
   // Get user from NextAuth session
   const authSession = await getServerSession(authOptions)
-  const userId = (authSession?.user as any)?.id ?? ''
+  const userId = (authSession?.user as { id?: string } | undefined)?.id ?? ''
   
-  const { rows: profileRows } = await db.query(
+  const { rows: profileRows } = await db.query<SurveyorProfileRow>(
     'SELECT id, user_id, isk_number, verified_isk FROM surveyor_profiles WHERE user_id = $1 LIMIT 1',
     [userId]
   )
@@ -376,7 +422,7 @@ export async function assembleSubmissionPackage(
   }
 
   const currentYear = new Date().getFullYear()
-  const { rows: existingRows } = await db.query(
+  const { rows: existingRows } = await db.query<ProjectSubmissionRow>(
     'SELECT revision_number FROM project_submissions WHERE project_id = $1 ORDER BY revision_number DESC LIMIT 1',
     [projectId]
   )
@@ -384,7 +430,7 @@ export async function assembleSubmissionPackage(
   const revisionNumber = (existingRows[0]?.revision_number ?? -1) + 1
 
   // Direct SQL replaces dbClient.rpc('increment_submission_sequence')
-  const { rows: seqRows } = await db.query(
+  const { rows: seqRows } = await db.query<SubmissionSequenceRow>(
     `INSERT INTO submission_sequences (surveyor_profile_id, year, current_sequence)
      VALUES ($1, $2, 1)
      ON CONFLICT (surveyor_profile_id, year)
@@ -396,7 +442,7 @@ export async function assembleSubmissionPackage(
   const sequence = seqRows[0]?.current_sequence ?? 1
   const submissionNumber = `${profile.isk_number}_${currentYear}_${String(sequence).padStart(3, '0')}_R${String(revisionNumber).padStart(2, '0')}`
 
-  await db.query(
+  await db.query<never>(
     `INSERT INTO project_submissions (project_id, surveyor_profile_id, submission_number, revision_code, submission_year, package_status, generated_artifacts, validation_results)
      VALUES ($1, $2, $3, $4, $5, 'ready', $6, $7)`,
     [

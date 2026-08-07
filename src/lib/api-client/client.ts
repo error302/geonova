@@ -26,6 +26,11 @@ export interface QueryResult<T = any> {
 // auth.getUser() stubs. Exported so consumers can narrow the `unknown` return
 // via `session as BrowserSession | null`. Real session access should go
 // through `useSession()` (client) / `getServerSession()` (server).
+/** Shape of the /api/auth/session JSON returned by the deprecated auth stubs. */
+interface SessionPayload {
+  user?: { id?: string; email?: string; name?: string } | null
+}
+
 export interface BrowserSession {
   user?: {
     id?: string
@@ -193,7 +198,7 @@ class ClientQueryBuilder<T = any> {
       })
 
       if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: res.statusText }))
+        const err = (await res.json().catch(() => ({ error: res.statusText }))) as { error?: string }
         return { data: null, error: { message: err.error || 'Query failed', code: String(res.status) } }
       }
 
@@ -215,7 +220,7 @@ export function createClient(): BrowserClient {
       async getUser() {
         try {
           const res = await fetch('/api/auth/session')
-          const session = await res.json()
+          const session = (await res.json()) as SessionPayload | null
           if (session?.user) {
             return {
               data: {
@@ -236,7 +241,7 @@ export function createClient(): BrowserClient {
       async getSession() {
         try {
           const res = await fetch('/api/auth/session')
-          const session = await res.json()
+          const session = (await res.json()) as SessionPayload | null
           if (session?.user) {
             return {
               data: {
@@ -275,7 +280,7 @@ export function createClient(): BrowserClient {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ password: params.password }),
           })
-          const json = await res.json().catch(() => ({}))
+          const json = (await res.json().catch(() => ({}))) as { error?: string; user?: unknown | null }
           if (!res.ok) {
             return { data: { user: null }, error: { message: json.error || 'Password update failed' } }
           }
@@ -292,7 +297,7 @@ export function createClient(): BrowserClient {
         const interval = setInterval(async () => {
           try {
             const res = await fetch('/api/auth/session')
-            const session = await res.json()
+            const session = (await res.json()) as SessionPayload | null
             const key = session?.user?.id || null
             if (key !== lastSession) {
               lastSession = key
@@ -339,11 +344,11 @@ export function createClient(): BrowserClient {
   }
 }
 
-export async function testConnection() {
+export async function testConnection(): Promise<{ data: unknown; error: unknown }> {
   try {
     const client = createClient()
-    const { data, error } = await client.from('projects').select('id').limit(1)
-    return { data, error }
+    const res = await client.from('projects').select('id').limit(1)
+    return { data: res.data, error: res.error }
   } catch (err: unknown) {
     return { data: null, error: err }
   }

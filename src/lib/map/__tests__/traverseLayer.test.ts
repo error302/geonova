@@ -22,10 +22,10 @@ jest.mock('@/lib/map/projection', () => ({
 
 jest.mock('ol/layer/Vector', () => {
   const L = class VectorLayer {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown> | undefined
+    constructor(opts?: Record<string, unknown>) { this.opts = opts }
     getSource() { return this.opts?.source }
-    set(_k: string, _v: any) { /* no-op */ }
+    set(_k: string, _v: unknown) { /* no-op */ }
   }
   return { __esModule: true, default: L }
 })
@@ -33,22 +33,22 @@ jest.mock('ol/layer/Vector', () => {
 jest.mock('ol/source/Vector', () => {
   const S = class VectorSource {
     features: unknown[]
-    constructor(opts?: any) { this.features = opts?.features ?? [] }
+    constructor(opts?: Record<string, unknown>) { this.features = (opts?.features ?? []) as unknown[] }
     getFeatures() { return this.features }
-    addFeature(f: any) { this.features.push(f) }
-    removeFeature(_f: any) { /* no-op */ }
+    addFeature(f: unknown) { this.features.push(f) }
+    removeFeature(_f: unknown) { /* no-op */ }
   }
   return { __esModule: true, default: S }
 })
 
 jest.mock('ol/Feature', () => {
   const F = class Feature {
-    opts: any
-    _style: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown> | undefined
+    _style: unknown
+    constructor(opts?: Record<string, unknown>) { this.opts = opts }
     get(key: string) { return this.opts?.[key] }
-    set(key: string, val: any) { if (this.opts) this.opts[key] = val }
-    setStyle(s: any) { this._style = s }
+    set(key: string, val: unknown) { if (this.opts) this.opts[key] = val }
+    setStyle(s: unknown) { this._style = s }
     getStyle() { return this._style }
   }
   return { __esModule: true, default: F }
@@ -74,8 +74,8 @@ jest.mock('ol/geom/Point', () => {
 
 jest.mock('ol/style/Style', () => {
   const S = class Style {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown> | undefined
+    constructor(opts?: Record<string, unknown>) { this.opts = opts }
     getStroke() { return this.opts?.stroke }
     getImage() { return this.opts?.image }
     getText() { return this.opts?.text }
@@ -85,8 +85,8 @@ jest.mock('ol/style/Style', () => {
 
 jest.mock('ol/style/Stroke', () => {
   const S = class Stroke {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown> | undefined
+    constructor(opts?: Record<string, unknown>) { this.opts = opts }
     getColor() { return this.opts?.color }
     getWidth() { return this.opts?.width }
     getLineDash() { return this.opts?.lineDash }
@@ -96,24 +96,24 @@ jest.mock('ol/style/Stroke', () => {
 
 jest.mock('ol/style/Fill', () => {
   const F = class Fill {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown> | undefined
+    constructor(opts?: Record<string, unknown>) { this.opts = opts }
   }
   return { __esModule: true, default: F }
 })
 
 jest.mock('ol/style/Text', () => {
   const T = class Text {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown> | undefined
+    constructor(opts?: Record<string, unknown>) { this.opts = opts }
   }
   return { __esModule: true, default: T }
 })
 
 jest.mock('ol/style/RegularShape', () => {
   const R = class RegularShape {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown> | undefined
+    constructor(opts?: Record<string, unknown>) { this.opts = opts }
   }
   return { __esModule: true, default: R }
 })
@@ -121,6 +121,18 @@ jest.mock('ol/style/RegularShape', () => {
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
+
+// Typed shapes for the mock style chain read in the style assertions below —
+// the values originate from mocked OL classes, so we re-type at the boundary.
+interface MockStyleLike {
+  opts: {
+    stroke: { opts: { color?: string; width?: number } }
+  }
+}
+
+interface MockFeatureLike {
+  getStyle(): MockStyleLike[]
+}
 
 describe('createTraverseLayer', () => {
   it('returns a VectorLayer instance', async () => {
@@ -225,7 +237,7 @@ describe('createTraverseLayer', () => {
     const features = layer.getSource()!.getFeatures()
 
     // First feature is the leg line
-    const lineFeature = features[0]
+    const lineFeature = features[0] as unknown as MockFeatureLike
     const styles = lineFeature.getStyle()
     // The last style in the array is the dashed line
     const lineStyle = Array.isArray(styles) ? styles[styles.length - 1] : styles
@@ -250,7 +262,7 @@ describe('createTraverseLayer', () => {
       { misclosureWarningThreshold: 15, misclosureErrorThreshold: 30 },
     )
     const features = layer.getSource()!.getFeatures()
-    const lineFeature = features[0]
+    const lineFeature = features[0] as unknown as MockFeatureLike
     const styles = lineFeature.getStyle()
     const lineStyle = Array.isArray(styles) ? styles[styles.length - 1] : styles
     expect(lineStyle.opts.stroke.opts.color).toBe('#FF8C00')
@@ -274,7 +286,7 @@ describe('createTraverseLayer', () => {
       { misclosureWarningThreshold: 15, misclosureErrorThreshold: 30 },
     )
     const features = layer.getSource()!.getFeatures()
-    const lineFeature = features[0]
+    const lineFeature = features[0] as unknown as MockFeatureLike
     const styles = lineFeature.getStyle()
     expect(Array.isArray(styles)).toBe(true)
     // First style should be the glow (wide, semi-transparent)
