@@ -22,7 +22,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
     return NextResponse.json({ error: 'Invalid table' }, { status: 400 })
   }
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<never>(
     `SELECT * FROM ${table} WHERE project_id = $1 ORDER BY updated_at DESC NULLS LAST`,
     [projectId]
   )

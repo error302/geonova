@@ -19,7 +19,7 @@ export const POST = apiHandler({ auth: true, schema: GeoTransformSchema, rateLim
 
   const result = transformCoordinates(transformInput)
 
-  await db.query(
+  await db.query<never>(
     `INSERT INTO online_service_logs (
       user_id, project_id, service, input_summary, status
     ) VALUES ($1, $2, $3, $4, $5)`,

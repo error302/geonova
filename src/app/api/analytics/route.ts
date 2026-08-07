@@ -26,7 +26,7 @@ export const POST = apiHandler({ auth: true, schema: analyticsEventSchema, rateL
     }
   }
 
-  await db.query(
+  await db.query<never>(
     `INSERT INTO audit_logs (
       action, details, user_id, table_name
     ) VALUES ($1, $2, $3, $4)`,

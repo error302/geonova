@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
   const buffer = Buffer.from(await file.arrayBuffer())
   await fs.writeFile(fullPath, buffer)
 
-  await db.query(
+  await db.query<never>(
     `INSERT INTO file_uploads (user_id, bucket, file_path, original_name, mime_type, size_bytes, created_at)
      VALUES ($1, $2, $3, $4, $5, $6, NOW())
      ON CONFLICT (file_path) DO UPDATE SET updated_at = NOW()`,

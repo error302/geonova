@@ -40,6 +40,7 @@
  *   node scripts/api-row-sweep.mjs --check [base-ref]   # CI regression gate (see below)
  *   node scripts/api-row-sweep.mjs --apply <route-file>             # auto-type one route (see below)
  *   node scripts/api-row-sweep.mjs --apply <file> --verify           # …then typecheck it & attribute failures
+ *   node scripts/api-row-sweep.mjs --apply-all                       # sweep: --apply --verify every untyped route file
  *
  * --batch N: prints a precise per-line worklist for batch N (files chunked
  * by cumulative untyped-query count, default 30 per batch — --batch-size
@@ -74,11 +75,16 @@
  * db.query/client.query with resolvable output columns (a SELECT column list,
  * or INSERT/UPDATE/DELETE ... RETURNING), it wraps the call as
  * db.query<Row>(...), synthesises a suggested row interface (column names
- * parsed from the SQL, best-effort types — REVIEW them: pg returns
- * bigint/numeric as string and timestamptz as Date, nullable columns need
- * `| null`), and reuses an already-declared interface when one exists.
- * Queries whose columns can't be resolved (SELECT *, dynamic SQL, INSERT
- * without RETURNING) are left untyped and listed as manual. After applying,
+ * parsed from the SQL; types now come from the real column definitions in
+ * src/lib/db/migrations/*.sql when the table is known — DOUBLE
+ * PRECISION/INTEGER → number, NUMERIC/BIGINT → string (pg returns numeric
+ * as string), TIMESTAMPTZ → Date, nullable → `| null` — falling back to
+ * name heuristics otherwise), and reuses an already-declared interface when
+ * one exists. SELECT * / t.* and RETURNING * against a schema-known table
+ * resolve to the table's full column list, so those queries get typed too.
+ * Queries whose columns can't be resolved (SELECT * against a table missing
+ * from the migrations, dynamic SQL, INSERT without RETURNING) are left
+ * untyped and listed as manual. After applying,
  * the review step is: verify/adjust column types (esp. `| null`, pg string
  * bigint/numeric), complete missing columns for `RETURNING *` (only the
  * INSERT column list is synthesised — id/created_at etc. need adding), and
@@ -86,6 +92,17 @@
  * conflict with a concrete row interface). Edits in place (CRLF preserved);
  * exactly one route file per invocation. Pass --verify to typecheck the
  * edited file and get the wrong guesses attributed automatically.
+ *
+ * --apply-all: loops --apply --verify over EVERY route file with ≥1 untyped
+ * query (findRoutes order, same schema-aware typing as single-file --apply).
+ * All flagged columns — the verify diagnostics attributed to generated
+ * interface columns — are collected into one review report printed at the
+ * end, and the sweep STOPS the first time a file's verify fails (exit 1),
+ * so a whole pass is one command: run it, fix what the report lists, re-run
+ * until it prints the 🎉 all-clean line. Files applied before the stop keep
+ * their edits (the report tells you exactly what to fix). Combine with
+ * --routes 're' to sweep only matching paths. Exits 1 if stopped, 2 on
+ * usage error.
  *
  * Output: per-file sections sorted by query count (desc), each listing the
  * queries, then the interfaces already declared.
@@ -142,6 +159,11 @@ if (applyIdx >= 0 && (!APPLY_FILE || APPLY_FILE.startsWith('--'))) {
 const verifyApply = args.includes('--verify')
 if (verifyApply && !APPLY_FILE) {
   console.error('[api-row-sweep] --verify requires --apply <route-file> (it typechecks the file after applying).')
+  process.exit(2)
+}
+const applyAllMode = args.includes('--apply-all')
+if (applyAllMode && (APPLY_FILE || checkMode || asJson || BATCH !== null)) {
+  console.error('[api-row-sweep] cannot combine --apply-all with --apply/--check/--json/--batch (it sweeps every untyped route file).')
   process.exit(2)
 }
 
@@ -231,13 +253,38 @@ function extractQueries(source) {
   return queries
 }
 
-/** Best-guess table name from SQL (FROM/JOIN/UPDATE/INSERT ... RETURNING). */
+/**
+ * Best-guess table name from SQL (FROM/JOIN/UPDATE/INSERT ... RETURNING).
+ * Scans with paren-depth tracking so a FROM inside a subquery is never
+ * mistaken for the statement's real table (`SELECT .. (SELECT COUNT(*)
+ * FROM survey_points ..) FROM projects` → projects, not survey_points).
+ */
 function tableFromSql(sql) {
-  const from = /\bFROM\s+([a-z_][a-z0-9_]*)/i.exec(sql)
-  const join = /\bJOIN\s+([a-z_][a-z0-9_]*)/i.exec(sql)
-  const update = /\bUPDATE\s+([a-z_][a-z0-9_]*)/i.exec(sql)
-  const insert = /\bINTO\s+([a-z_][a-z0-9_]*)/i.exec(sql)
-  return (from || update || insert) ? (from || update || insert)[1] : (join ? join[1] : null)
+  const s = sql.replace(/\s+/g, ' ').trim()
+  // INSERT ... ON CONFLICT DO UPDATE SET ... — the INTO table is the real one.
+  const insert = /\bINSERT\s+INTO\s+([a-z_][a-z0-9_]*)/i.exec(s)
+  if (insert) return insert[1]
+  let depth = 0
+  let quote = null
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i]
+    if (quote) {
+      if (c === quote) quote = null
+      continue
+    }
+    if (c === "'" || c === '"' || c === '`') { quote = c; continue }
+    if (c === '(') { depth++; continue }
+    if (c === ')') { depth--; continue }
+    if (depth !== 0) continue
+    // Top-level FROM/JOIN/UPDATE — but skip `UPDATE SET` in ON CONFLICT clauses
+    // (their INSERT INTO was already handled above).
+    if (/\b(?:FROM|JOIN|UPDATE)\s+([a-z_][a-z0-9_]*)\b/i.test(s.slice(i))) {
+      const mm = /\b(?:FROM|JOIN|UPDATE)\s+([a-z_][a-z0-9_]*)\b/i.exec(s.slice(i))
+      if (mm[1].toLowerCase() === 'set') { i += mm.index + mm[0].length - 1; continue }
+      return mm[1]
+    }
+  }
+  return null
 }
 
 /** snake_case table -> PascalCase + Row. Falls back to a generic name. */
@@ -301,10 +348,12 @@ function columnNameFromItem(item) {
 
 /**
  * Output column names for a query's SQL, or null when they can't be resolved
- * (SELECT * / t.*, dynamic SQL, INSERT without RETURNING). Also returns
+ * (SELECT * against a table missing from the schema, dynamic SQL, INSERT
+ * without RETURNING). SELECT * / t.* and RETURNING * resolve to the table's
+ * full column list when the migration schema knows the table. Also returns
  * `complete: false` when some items couldn't be named (e.g. `p.*`).
  */
-function columnsFromSql(sql) {
+function columnsFromSql(sql, table = null, schema = null) {
   if (!sql) return null
   const s = sql.replace(/\s+/g, ' ').trim()
   let list = null
@@ -312,15 +361,25 @@ function columnsFromSql(sql) {
   if (sel) {
     const head = sel[1]
     list = selectListUntilClause(head)
-    if (/^\s*(?:\*|[A-Za-z_][A-Za-z0-9_]*\.\*)\s*$/.test(list)) return null // SELECT * / t.*
+    const star = /^\s*(?:\*|([A-Za-z_][A-Za-z0-9_]*\.\*))\s*$/.exec(list)
+    if (star) {
+      // SELECT * / t.* — full column list from the migration schema.
+      const t = star[1] ? resolveAliasedTable(s, star[1].slice(0, -2)) : (table || tableFromSql(s))
+      const cols = schema ? schema.get(t) : null
+      if (cols) return { names: [...cols.keys()], complete: true }
+      return null // table unknown to the schema — leave manual
+    }
   } else {
     const ret = /\bRETURNING\s+(.+)$/i.exec(s)
     if (!ret) return null
     list = ret[1]
-    // `RETURNING *` on an INSERT: the output columns are exactly the INSERT
-    // column list (`INSERT INTO t (c1, c2, ...) VALUES ...`), so we can
-    // synthesise the row from those instead of giving up.
+    // `RETURNING *` — the full row: prefer the schema (all table columns,
+    // including ids/defaults), falling back to synthesising from the INSERT
+    // column list when the table isn't in the schema.
     if (/^\*\s*$/.test(list.trim())) {
+      const t = table || tableFromSql(s)
+      const cols = schema ? schema.get(t) : null
+      if (cols) return { names: [...cols.keys()], complete: true }
       const ins = /\bINSERT\s+INTO\s+[A-Za-z_][A-Za-z0-9_]*\s*\(([^)]*)\)/i.exec(s)
       if (ins) {
         const cols = ins[1].split(',').map((c) => c.trim()).filter(Boolean)
@@ -371,17 +430,232 @@ function selectListUntilClause(head) {
   return head
 }
 
-/** Best-effort column type by name — REVIEW these after --apply. */
-function guessColumnType(name) {
+/**
+ * Best-effort column type by name — schema-aware: when the query's table is
+ * known in the migration schema, the real SQL type (+ nullability) wins;
+ * otherwise fall back to name heuristics. REVIEW after --apply regardless.
+ */
+function guessColumnType(name, table = null, schema = null) {
+  if (schema && table) {
+    const col = schema.get(table)?.get(name.toLowerCase())
+    if (col) return col.nullable ? `${col.ts} | null` : col.ts
+  }
   const n = name.toLowerCase()
   if (n === 'id' || n.endsWith('_id')) return 'string'
   if (n.endsWith('_at') || n.endsWith('_on') || n.endsWith('_date') || n === 'date') return 'Date'
-  if (n === 'count' || n.endsWith('_count') || n.endsWith('_num') || n.endsWith('_no') || n.endsWith('_qty')) return 'number'
+  // COUNT(*) / COUNT(x) AS count / AS *_count → BIGINT → pg returns string;
+  // only INT columns (schema-known *_num/_no/_qty) are number.
+  if (n === 'count' || n.endsWith('_count')) return 'string'
+  if (n.endsWith('_num') || n.endsWith('_no') || n.endsWith('_qty')) return 'number'
   if (/easting|northing|latitude|longitude|elevation|altitude|bearing|angle|distance|perimeter|area|_deg|_min|_sec|_ms|ratio|percent|_ha|_m2|\brl\b/.test(n)) return 'number'
   if (/price|amount|cost|fee|total|size|bytes|weight|priority|retry|limit|offset/.test(n)) return 'number'
   if (n.startsWith('is_') || n.startsWith('has_') || n.endsWith('_flag') || n === 'active' || n === 'enabled') return 'boolean'
   if (['details', 'payload', 'result', 'snapshot', 'metadata', 'documents', 'template', 'data', 'config', 'settings', 'permissions', 'json'].includes(n) || n.endsWith('_json') || n.endsWith('_jsonb')) return 'unknown'
   return 'string'
+}
+
+// ---------------------------------------------------------------------------
+// Migration schema — real column types from src/lib/db/migrations/*.sql
+// ---------------------------------------------------------------------------
+
+const MIGRATIONS_DIR = path.join(process.cwd(), 'src/lib/db/migrations')
+
+/** Word tokens that end a column's type list (constraints / defaults follow). */
+const SQL_STOP_RE = /^(?:NOT|NULL|DEFAULT|UNIQUE|PRIMARY|REFERENCES|CHECK|CONSTRAINT|GENERATED|COLLATE|DEFERRABLE|INITIALLY|VALIDATE|ON|CASCADE|RESTRICT|SET|NO|ACTION|USING|WITH|STORED|INLINE|ENABLE|DISABLE|COMPRESSION)$/i
+
+/**
+ * Extract just the SQL type from a column declaration
+ * (`DOUBLE PRECISION NOT NULL DEFAULT 0` → `DOUBLE PRECISION`,
+ *  `TIMESTAMP(3) WITH TIME ZONE` → `TIMESTAMP WITH TIME ZONE`,
+ *  `VARCHAR(255)[]` → `VARCHAR(255)[]`).
+ */
+function extractSqlType(decl) {
+  let rest = decl.trim()
+  const parts = []
+  while (rest) {
+    const m = /^([A-Za-z_][A-Za-z0-9_]*)(\([^)]*\))?/.exec(rest)
+    if (!m || SQL_STOP_RE.test(m[1])) break
+    parts.push(m[1] + (m[2] || ''))
+    rest = rest.slice(m[0].length).trim()
+  }
+  if (!parts.length) return null
+  if (rest.startsWith('[]')) parts[parts.length - 1] += '[]'
+  return parts.join(' ')
+}
+
+/** Normalise a raw SQL type fragment to a TS type. */
+function tsFromSqlType(frag) {
+  let t = frag.trim().replace(/\s+/g, ' ').toUpperCase()
+  const isArray = t.endsWith('[]')
+  if (isArray) t = t.slice(0, -2).trim()
+  t = t.replace(/\([^)]*\)/g, '').replace(/\s+/g, ' ').trim()
+  let base
+  switch (t) {
+    case 'DOUBLE PRECISION':
+    case 'REAL':
+    case 'INTEGER':
+    case 'INT':
+    case 'SMALLINT':
+    case 'BIGINT':
+    case 'SERIAL':
+    case 'BIGSERIAL':
+    case 'SMALLSERIAL':
+    case 'OID':
+      base = 'number'
+      break
+    case 'NUMERIC':
+    case 'DECIMAL':
+    case 'MONEY':
+      base = 'string' // pg returns arbitrary-precision numerics as string
+      break
+    case 'TIMESTAMP':
+    case 'TIMESTAMP WITH TIME ZONE':
+    case 'TIMESTAMPTZ':
+    case 'DATE':
+    case 'TIME':
+      base = 'Date'
+      break
+    case 'BOOLEAN':
+    case 'BOOL':
+      base = 'boolean'
+      break
+    case 'JSON':
+    case 'JSONB':
+      base = 'unknown'
+      break
+    default:
+      base = 'string' // UUID/TEXT/VARCHAR/CHAR/CITEXT/GEOMETRY/… (hex WKB via pg)
+  }
+  return isArray ? `${base}[]` : base
+}
+
+/** Parse the body of a CREATE TABLE into Map<column, {ts, nullable}>. */
+function parseCreateTableBody(body) {
+  const cols = new Map()
+  for (const raw of body.split('\n')) {
+    const line = raw.trim()
+    if (!line) continue
+    // Table-level constraints start with a keyword, not a column name.
+    if (/^(PRIMARY|FOREIGN|UNIQUE|CONSTRAINT|CHECK|EXCLUDE|INDEX|KEY|REFERENCES|ALTER)\b/i.test(line)) continue
+    const cm = /^([a-z_][a-z0-9_]*)\s+/.exec(line)
+    if (!cm) continue
+    const name = cm[1].toLowerCase()
+    const type = extractSqlType(line.slice(cm[0].length))
+    if (!type) continue
+    const notNull = /\bNOT\s+NULL\b/i.test(line) || /\bPRIMARY\s+KEY\b/i.test(line)
+    cols.set(name, { ts: tsFromSqlType(type), nullable: !notNull })
+  }
+  return cols
+}
+
+/** Alias → real table for the SQL (`SELECT p.* FROM projects p` → p→projects). */
+function resolveAliasedTable(sql, alias) {
+  const re = /\b(?:FROM|JOIN)\s+([a-z_][a-z0-9_]*)\s+(?:AS\s+)?([a-z_][a-z0-9_]*)\b/gi
+  let m
+  while ((m = re.exec(sql))) {
+    if (m[2] === alias) return m[1]
+  }
+  return null
+}
+
+let _schema = null
+
+/**
+ * Merge one parsed CREATE TABLE column map into the schema. Tables that exist
+ * in several migrations (`CREATE TABLE IF NOT EXISTS` — the first definition
+ * wins at runtime) contribute a UNION of columns; a later definition overrides
+ * the type/nullability of a column it re-declares, but never drops columns
+ * only declared earlier (that would lose e.g. interval_days when a follow-up
+ * migration re-creates the same table with a narrower column set).
+ */
+function mergeTableColumns(table, cols) {
+  const existing = _schema.get(table)
+  if (!existing) {
+    _schema.set(table, cols)
+    return
+  }
+  for (const [name, col] of cols) existing.set(name, col)
+}
+
+/**
+ * Parse every CREATE TABLE / ALTER TABLE ADD COLUMN across
+ * src/lib/db/migrations/*.sql into Map<table, Map<column, {ts, nullable}>>.
+ * Duplicate CREATE TABLEs (IF NOT EXISTS) merge column sets; ALTER-added
+ * columns merge in. Cached per process.
+ */
+function getMigrationSchema() {
+  if (_schema) return _schema
+  _schema = new Map()
+  let files = []
+  try {
+    files = nodeFs.readdirSync(MIGRATIONS_DIR).filter((f) => f.endsWith('.sql')).sort()
+  } catch {
+    return _schema
+  }
+  for (const f of files) {
+    let src
+    try {
+      src = readFileSync(path.join(MIGRATIONS_DIR, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, ' ')
+    } catch {
+      continue
+    }
+    src = src.replace(/--[^\n]*/g, ' ')
+    // CREATE TABLE [IF NOT EXISTS] name ( … );
+    const ctRe = /\bCREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([a-z_][a-z0-9_]*)\s*\(/gi
+    let m
+    while ((m = ctRe.exec(src))) {
+      const table = m[1].toLowerCase()
+      let depth = 0
+      // Scan from the opening paren; depth reaches 0 again exactly at the
+      // table's own closing paren (nested parens e.g. uuid_generate_v4(),
+      // GEOMETRY(POINT, 4326), CHECK(...) balance inside it).
+      for (let i = m.index + m[0].length - 1; i < src.length; i++) {
+        const c = src[i]
+        if (c === '(') depth++
+        else if (c === ')') {
+          depth--
+          if (depth === 0) {
+            const cols = parseCreateTableBody(src.slice(m.index + m[0].length, i))
+            if (cols.size) mergeTableColumns(table, cols)
+            break
+          }
+        }
+      }
+    }
+    // ALTER TABLE name …; — multi-line statements add several columns at once:
+    //   ALTER TABLE survey_points
+    //     ADD COLUMN IF NOT EXISTS datum  VARCHAR(50),
+    //     ADD COLUMN IF NOT EXISTS utm_zone INTEGER;
+    // Capture the whole statement body (up to its `;`, paren-aware for CHECK
+    // constraints) and match EVERY `ADD [COLUMN] [IF NOT EXISTS] col TYPE`.
+    const altHeadRe = /\bALTER\s+TABLE\s+(?:IF\s+EXISTS\s+)?([a-z_][a-z0-9_]*)\s*/gi
+    let h
+    while ((h = altHeadRe.exec(src))) {
+      const table = h[1].toLowerCase()
+      let depth = 0
+      let end = -1
+      for (let i = altHeadRe.lastIndex; i < src.length; i++) {
+        const c = src[i]
+        if (c === '(') depth++
+        else if (c === ')') depth--
+        else if (c === ';' && depth <= 0) { end = i; break }
+      }
+      if (end < 0) continue
+      const body = src.slice(altHeadRe.lastIndex, end)
+      const addRe = /\bADD(?:\s+COLUMN)?(?:\s+IF\s+NOT\s+EXISTS)?\s+([a-z_][a-z0-9_]*)\s+([^,;]+)/gi
+      let am
+      while ((am = addRe.exec(body))) {
+        const name = am[1].toLowerCase()
+        const type = extractSqlType(am[2])
+        if (!type) continue
+        let cols = _schema.get(table)
+        if (!cols) { cols = new Map(); _schema.set(table, cols) }
+        const notNull = /\bNOT\s+NULL\b/i.test(am[2]) || /\bPRIMARY\s+KEY\b/i.test(am[2])
+        cols.set(name, { ts: tsFromSqlType(type), nullable: !notNull })
+      }
+    }
+  }
+  return _schema
 }
 
 // ---------------------------------------------------------------------------
@@ -669,7 +943,8 @@ function runApply(fileArg) {
 
   const queries = extractQueries(text)
   const declared = new Set(extractInterfaces(text).map((i) => i.name))
-  const interfaces = new Map() // row name -> ordered column names
+  const schema = getMigrationSchema() // real column types from migrations/*.sql
+  const interfaces = new Map() // row name -> { table, columns: string[] }
   const incomplete = new Set() // row names with unresolvable columns
   const edits = [] // { pos, text } — insert `<Name>` right before the `(`
   const wrapped = []
@@ -687,16 +962,16 @@ function runApply(fileArg) {
       skipped.push(`L${q.line}: ${q.sql}`)
       continue
     }
-    const cols = columnsFromSql(q.raw || q.sql)
+    const cols = columnsFromSql(q.raw || q.sql, q.table, schema)
     if (!cols) {
       skipped.push(`L${q.line}: ${q.sql} — no resolvable output columns (manual)`)
       continue
     }
     if (!interfaces.has(name)) {
-      interfaces.set(name, [...cols.names])
+      interfaces.set(name, { table: q.table, columns: [...cols.names] })
     } else {
       for (const c of cols.names) {
-        if (!interfaces.get(name).includes(c)) interfaces.get(name).push(c)
+        if (!interfaces.get(name).columns.includes(c)) interfaces.get(name).columns.push(c)
       }
     }
     if (!cols.complete) incomplete.add(name)
@@ -713,11 +988,12 @@ function runApply(fileArg) {
   const newNames = [...interfaces.keys()].filter((n) => !declared.has(n))
   if (newNames.length) {
     const blocks = newNames.map((name) => {
+      const entry = interfaces.get(name)
       const lines = [
-        '// AUTO-GENERATED by api-row-sweep --apply — REVIEW these column types.',
-        '// pg returns bigint/numeric as string, timestamptz as Date; add `| null` where nullable.',
+        '// AUTO-GENERATED by api-row-sweep --apply — column types from migrations/*.sql + name heuristics.',
+        '// pg returns bigint/numeric as string, timestamptz as Date; nullable columns carry `| null`; REVIEW.',
         `interface ${name} {`,
-        ...interfaces.get(name).map((c) => `  ${c}: ${guessColumnType(c)}`),
+        ...entry.columns.map((c) => `  ${c}: ${guessColumnType(c, entry.table, schema)}`),
         '}',
       ]
       return lines.join('\n')
@@ -746,7 +1022,7 @@ function runApply(fileArg) {
   if (newNames.length) {
     console.log(`  added ${newNames.length} interface(s) — REVIEW the column types:`)
     for (const n of newNames) {
-      const cols = interfaces.get(n)
+      const cols = interfaces.get(n).columns
       console.log(`    ${n} { ${cols.join(', ')} }${incomplete.has(n) ? '  (some columns unresolvable — fill by hand)' : ''}`)
     }
   }
@@ -807,7 +1083,12 @@ function generatedInterfaceSpans(source) {
 /**
  * Verify the applied file with the real TypeScript compiler (project tsconfig
  * options, `paths` aliases included) and attribute every diagnostic to a
- * generated interface column when possible. Exits 1 when the file has errors.
+ * generated interface column when possible. Returns `{ ok, diagnostics }`:
+ * ok=false when the file has errors; diagnostics are `{ rel, line, code, msg,
+ * attr }` entries (attr = the generated column a diagnostic traces to, when
+ * it can be attributed). Callers own the exit code — the single-file
+ * --apply --verify path sets exit 1 on !ok; --apply-all accumulates the
+ * diagnostics into its review report and stops on the first !ok file.
  */
 async function verifyFile(rel) {
   const full = path.join(process.cwd(), rel)
@@ -820,20 +1101,17 @@ async function verifyFile(rel) {
     ts = await import(pathToFileURL(path.resolve(cwd, 'node_modules/typescript/lib/typescript.js')).href)
   } catch (e) {
     console.error(`[api-row-sweep] --verify needs typescript in node_modules (${e.message.split('\n')[0]})`)
-    process.exitCode = 2
-    return
+    return { ok: false, diagnostics: [] }
   }
   const configPath = ts.findConfigFile(cwd, ts.sys.fileExists, 'tsconfig.json')
   if (!configPath) {
     console.error('[api-row-sweep] --verify: tsconfig.json not found from ' + cwd)
-    process.exitCode = 2
-    return
+    return { ok: false, diagnostics: [] }
   }
   const read = ts.readConfigFile(configPath, ts.sys.readFile)
   if (read.error) {
     console.error('[api-row-sweep] --verify: cannot read tsconfig:', ts.flattenDiagnosticMessageText(read.error.messageText, '\n'))
-    process.exitCode = 2
-    return
+    return { ok: false, diagnostics: [] }
   }
   const parsed = ts.parseJsonConfigFileContent(read.config, ts.sys, path.dirname(configPath))
   // Single-file check: strip build-management options that are unused here
@@ -845,12 +1123,26 @@ async function verifyFile(rel) {
   delete opts.tsBuildInfoFile
 
   // Program over the single file (its imports are pulled in automatically).
-  const program = ts.createProgram([full], opts)
+  // Ambient declaration files are added explicitly — without them a global
+  // module augmentation (e.g. src/types/next-auth.d.ts extending the session
+  // user with `id`) is invisible to the single-file program, producing false
+  // positives like `Property 'id' does not exist on session.user` that full
+  // `tsc --noEmit` does not report.
+  const programFiles = [full]
+  for (const pattern of ['src/types/**/*.d.ts', 'types/**/*.d.ts', 'next-env.d.ts']) {
+    try {
+      const matches = nodeFs.globSync(pattern, { cwd: process.cwd() }) ?? []
+      for (const m of matches) {
+        const abs = path.resolve(process.cwd(), m)
+        if (abs !== full && !programFiles.includes(abs)) programFiles.push(abs)
+      }
+    } catch { /* glob unavailable — ambient types just won't load */ }
+  }
+  const program = ts.createProgram(programFiles, opts)
   const sourceFile = program.getSourceFile(full)
   if (!sourceFile) {
     console.error(`[api-row-sweep] --verify: cannot parse ${rel}`)
-    process.exitCode = 2
-    return
+    return { ok: false, diagnostics: [] }
   }
   const all = [
     ...program.getSyntacticDiagnostics(sourceFile),
@@ -864,11 +1156,11 @@ async function verifyFile(rel) {
 
   if (!all.length) {
     console.log('  OK — 0 diagnostics; generated interfaces typecheck.')
-    process.exitCode = 0
-    return
+    return { ok: true, diagnostics: [] }
   }
 
   console.log(`  ${all.length} diagnostic(s) — check the review notes below:`)
+  const diagnostics = []
   let fixable = 0
   for (const d of all) {
     const pos = d.start != null ? sourceFile.getLineAndCharacterOfPosition(d.start) : null
@@ -897,13 +1189,79 @@ async function verifyFile(rel) {
         fixable++
       }
     }
+    diagnostics.push({ rel, line, code, msg, attr })
     console.log(`    ${rel}:${line ?? '?'}  ${code}  ${msg}`)
     if (attr) console.log(`      → ${attr}`)
   }
   console.log(`  review: ${fixable}/${all.length} diagnostic(s) trace to generated interface columns.`)
   console.log('  Fix the column types above (pg: DOUBLE PRECISION/INTEGER → number, NUMERIC/BIGINT → string,')
   console.log('  TIMESTAMPTZ → Date; add `| null` for nullable; add missing RETURNING * columns), then re-run.')
-  process.exitCode = 1
+  return { ok: false, diagnostics }
+}
+
+// ---------------------------------------------------------------------------
+// --apply-all: sweep --apply --verify over every untyped route file, collect
+// all flagged columns into one review report, stop at the first verify fail.
+// ---------------------------------------------------------------------------
+
+async function runApplyAll() {
+  const routes = findRoutes()
+  const files = routes
+    .map((rel) => {
+      let source = ''
+      try {
+        source = readFileSync(path.join(process.cwd(), rel), 'utf8')
+      } catch {
+        return null
+      }
+      return { file: rel, queries: extractQueries(source) }
+    })
+    .filter((f) => f && f.queries.some((q) => !q.typed))
+
+  if (!files.length) {
+    console.log('[api-row-sweep] --apply-all: every route file is fully typed — nothing to apply. 🎉')
+    return
+  }
+
+  console.log(`[api-row-sweep] --apply-all: ${files.length} route file(s) with ≥1 untyped query — applying + verifying in order.`)
+  const review = [] // { file, diagnostics } — flagged columns for the report
+  let stoppedAt = null
+  for (const { file, queries } of files) {
+    const unt = queries.filter((q) => !q.typed).length
+    console.log(`\n${'─'.repeat(70)}\n[api-row-sweep] → ${file} (${unt} untyped)`)
+    const applied = runApply(file)
+    if (!applied) {
+      console.error(`[api-row-sweep] --apply-all: --apply failed on ${file} — aborting.`)
+      process.exitCode = 2
+      return
+    }
+    const res = await verifyFile(file)
+    if (!res.ok) {
+      stoppedAt = file
+      if (res.diagnostics.length) review.push({ file, diagnostics: res.diagnostics })
+      break
+    }
+  }
+
+  // Consolidated review report — every flagged column across the sweep.
+  console.log(`\n${'═'.repeat(70)}`)
+  if (stoppedAt) {
+    console.log(`[api-row-sweep] --apply-all STOPPED at ${stoppedAt} — its verify failed.`)
+    console.log('Fix the flagged columns below (or complete manual queries), then re-run --apply-all.')
+    process.exitCode = 1
+  } else {
+    console.log('[api-row-sweep] --apply-all: all route files applied + verified clean. 🎉')
+  }
+  if (review.length) {
+    console.log('\n=== REVIEW REPORT — flagged columns ===')
+    for (const { file, diagnostics } of review) {
+      console.log(`\n${file}`)
+      for (const d of diagnostics) {
+        console.log(`  L${d.line ?? '?'}  ${d.code}  ${d.msg}`)
+        if (d.attr) console.log(`    → ${d.attr}`)
+      }
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -929,7 +1287,17 @@ async function main() {
   // masked by a clean verify that overwrites the exit code).
   if (APPLY_FILE) {
     const applied = runApply(APPLY_FILE)
-    if (verifyApply && applied) await verifyFile(APPLY_FILE)
+    if (verifyApply && applied) {
+      const res = await verifyFile(APPLY_FILE)
+      process.exitCode = res.ok ? 0 : 1
+    }
+    return
+  }
+
+  // --apply-all sweeps every untyped route file: apply + verify each, collect
+  // all flagged columns into one review report, stop at the first verify fail.
+  if (applyAllMode) {
+    await runApplyAll()
     return
   }
 

@@ -80,7 +80,7 @@ export const GET = apiHandler(
     const userId = ctx.userId!
 
     // Fetch the user's projects grouped by survey type
-    const { rows: projects } = (await db.query(
+    const { rows: projects } = await db.query<ProjectRow>(
       `SELECT id, name, survey_type, location, area_ha, created_at,
               (SELECT COUNT(*) FROM survey_points WHERE project_id = projects.id AND is_control = true) as control_point_count,
               (SELECT COUNT(*) FROM deed_plans WHERE project_id = projects.id) as deed_plan_count,
@@ -89,16 +89,16 @@ export const GET = apiHandler(
        WHERE user_id = $1
        ORDER BY created_at DESC`,
       [userId],
-    )) as { rows: ProjectRow[] }
+    )
 
     // Get user profile for declaration forms
-    const { rows: profile } = (await db.query(
+    const { rows: profile } = await db.query<ProfileRow>(
       `SELECT u.email, u.full_name, sp.firm_name, sp.license_number
        FROM users u
        LEFT JOIN surveyor_profiles sp ON sp.user_id = u.id
        WHERE u.id = $1`,
       [userId],
-    )) as { rows: ProfileRow[] }
+    )
 
     const user = profile[0] || { email: '', full_name: 'Unknown', firm_name: '', license_number: '' }
 

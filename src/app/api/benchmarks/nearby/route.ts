@@ -61,12 +61,12 @@ export async function GET(request: NextRequest) {
     let rows: BenchmarkRow[]
 
     try {
-      const res = await db.query(`SELECT * FROM benchmarks WHERE status = 'ACTIVE' LIMIT 100`)
+      const res = await db.query<BenchmarkRow>(`SELECT * FROM benchmarks WHERE status = 'ACTIVE' LIMIT 100`)
       rows = res.rows as BenchmarkRow[]
     } catch (err: unknown) {
       const msg = err instanceof Error ? (err as Error).message : ''
       if (msg.includes('column "status" does not exist')) {
-        const res = await db.query('SELECT * FROM benchmarks LIMIT 100')
+        const res = await db.query<BenchmarkRow>('SELECT * FROM benchmarks LIMIT 100')
         rows = res.rows as BenchmarkRow[]
       } else {
         throw err

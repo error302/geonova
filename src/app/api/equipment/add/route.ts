@@ -46,7 +46,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   const id = crypto.randomUUID()
   const now = new Date().toISOString()
 
-  await db.query(
+  await db.query<never>(
     `INSERT INTO equipment 
      (id, user_id, name, type, manufacturer, model, serial_number, purchase_date, 
       status, notes, created_at)
