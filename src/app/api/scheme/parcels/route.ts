@@ -1,31 +1,17 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 import { CreateParcelSchema } from '@/lib/validation/apiSchemas'
+import {
+  parcelResponseSchema,
+  parcelWithBlockListResponseSchema,
+  type Parcel,
+  type ParcelWithBlock,
+} from '@/lib/validation/scheme'
 
 interface BlockOwnerRow {
   id: string
   project_id: string
-}
-
-interface ParcelRow {
-  id: string
-  project_id: string
-  block_id: string
-  parcel_number: string
-  lr_number_proposed: string | null
-  lr_number_confirmed: string | null
-  area_ha: number | null
-  status: string
-  assigned_surveyor: string | null
-  notes: string | null
-  created_at: Date
-  updated_at: Date
-}
-
-interface ParcelWithBlockRow extends ParcelRow {
-  block_number: string
-  block_name: string | null
 }
 
 export const dynamic = 'force-dynamic'
@@ -61,13 +47,22 @@ export const POST = apiHandler(
       )
     }
 
-    const result = await db.query<ParcelRow>(
+    const result = await db.query<Parcel>(
       `INSERT INTO parcels (project_id, block_id, parcel_number, lr_number_proposed, area_ha, status, notes)
       VALUES ($1, $2, $3, $4, $5, 'pending', $6) RETURNING *`,
       [projectId, block_id, parcel_number, lr_number_proposed || null, area_ha || null, notes || null]
     )
 
-    return NextResponse.json({ data: result.rows[0] }, { status: 201 })
+    // Validate the created row against the shared parcel schema — the same one
+    // the client type derives from. If it drifts (e.g. an out-of-enum status
+    // or a non-UUID id), fail loudly instead of shipping a mismatched parcel.
+    const parsed = parcelResponseSchema.safeParse({ data: result.rows[0] })
+    if (!parsed.success) {
+      // eslint-disable-next-line no-console -- internal response drift log, not user-facing
+      console.error('[scheme/parcels] response validation failed:', parsed.error.issues)
+      return NextResponse.json({ error: 'Internal response validation failed' }, { status: 500 })
+    }
+    return NextResponse.json(parsed.data, { status: 201 })
   }
 )
 
@@ -96,7 +91,7 @@ export const GET = apiHandler(
         return NextResponse.json({ error: 'Block not found' }, { status: 404 })
       }
 
-      const result = await db.query<ParcelWithBlockRow>(
+      const result = await db.query<ParcelWithBlock>(
         `SELECT p.*, b.block_number, b.block_name
         FROM parcels p
         JOIN blocks b ON b.id = p.block_id
@@ -105,7 +100,13 @@ export const GET = apiHandler(
         [blockId]
       )
 
-      return NextResponse.json({ data: result.rows })
+      const parsed = parcelWithBlockListResponseSchema.safeParse({ data: result.rows })
+      if (!parsed.success) {
+        // eslint-disable-next-line no-console -- internal response drift log, not user-facing
+        console.error('[scheme/parcels] response validation failed:', parsed.error.issues)
+        return NextResponse.json({ error: 'Internal response validation failed' }, { status: 500 })
+      }
+      return NextResponse.json(parsed.data)
     }
 
     if (projectId) {
@@ -117,7 +118,7 @@ export const GET = apiHandler(
         return NextResponse.json({ error: 'Project not found' }, { status: 404 })
       }
 
-      const result = await db.query<ParcelWithBlockRow>(
+      const result = await db.query<ParcelWithBlock>(
         `SELECT p.*, b.block_number, b.block_name
         FROM parcels p
         JOIN blocks b ON b.id = p.block_id
@@ -126,7 +127,13 @@ export const GET = apiHandler(
         [projectId]
       )
 
-      return NextResponse.json({ data: result.rows })
+      const parsed = parcelWithBlockListResponseSchema.safeParse({ data: result.rows })
+      if (!parsed.success) {
+        // eslint-disable-next-line no-console -- internal response drift log, not user-facing
+        console.error('[scheme/parcels] response validation failed:', parsed.error.issues)
+        return NextResponse.json({ error: 'Internal response validation failed' }, { status: 500 })
+      }
+      return NextResponse.json(parsed.data)
     }
 
     return NextResponse.json({ data: [] })

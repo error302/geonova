@@ -1,65 +1,25 @@
 // ============================================================
 // Phase 25: Scheme / Large Project Types
 // Cadastral subdivision scheme support (ward-level, adjudication, etc.)
+//
+// The wire-crossing shapes (Parcel, Block, SchemeDetails, status unions)
+// now derive from the shared zod schemas in @/lib/validation/scheme — the
+// scheme API routes validate their responses with the same schemas, so the
+// client types and the server responses cannot drift. This module keeps the
+// UI-only constants (labels/colors) and the request-input interfaces.
 // ============================================================
 
+import type { ParcelStatus, SchemeStatus } from '@/lib/validation/scheme'
+
+export type {
+  Block,
+  Parcel,
+  ParcelStatus,
+  SchemeDetails,
+  SchemeStatus,
+} from '@/lib/validation/scheme'
+
 export type ProjectType = 'small' | 'medium' | 'scheme'
-
-export type SchemeStatus =
-  | 'planning'
-  | 'field_in_progress'
-  | 'computation'
-  | 'plan_generation'
-  | 'review'
-  | 'submitted'
-  | 'approved'
-
-export type ParcelStatus =
-  | 'pending'
-  | 'field_complete'
-  | 'computed'
-  | 'plan_generated'
-  | 'submitted'
-  | 'approved'
-
-export interface SchemeDetails {
-  id: number
-  project_id: number
-  scheme_number: string | null
-  county: string | null
-  sub_county: string | null
-  ward: string | null
-  planned_parcels: number
-  adjudication_section: string | null
-  status: SchemeStatus
-  created_at: string
-  updated_at: string
-}
-
-export interface Block {
-  id: number
-  project_id: number
-  block_number: string
-  block_name: string | null
-  description: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface Parcel {
-  id: number
-  project_id: number
-  block_id: number
-  parcel_number: string
-  lr_number_proposed: string | null
-  lr_number_confirmed: string | null
-  area_ha: number | null
-  status: ParcelStatus
-  assigned_surveyor: number | null
-  notes: string | null
-  created_at: string
-  updated_at: string
-}
 
 export interface CreateSchemeProjectInput {
   name: string

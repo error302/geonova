@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { apiHandler, apiSuccess } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { getAuthUser } from '@/lib/auth/session'
+import { viewportQueryResponseSchema, type ViewportFeature } from '@/lib/validation/viewportQuery'
 
 export const dynamic = 'force-dynamic'
 
@@ -34,12 +35,6 @@ interface FieldRecordRow {
   is_verified: boolean | null
 }
 
-interface ViewportFeature {
-  id: string
-  type: string
-  geometry: unknown
-  properties: Record<string, unknown>
-}
 
 /**
  * GET /api/spatial-index?west=&south=&east=&north=
@@ -98,7 +93,7 @@ export const GET = apiHandler(
             features.push({
               id: `parcel-${row.id}`,
               type: 'parcel',
-              geometry: JSON.parse(row.geojson),
+              geometry: JSON.parse(row.geojson) as ViewportFeature['geometry'],
               properties: {
                 parcelNumber: row.parcel_number,
                 areaHa: row.area_ha ? parseFloat(String(row.area_ha)) : null,
@@ -197,11 +192,22 @@ export const GET = apiHandler(
       }
     }
 
-    return apiSuccess({
-      type: 'FeatureCollection',
+    // Validate the response against the shared schema — the same one the
+    // client hook derives its type from. If this ever fails, the response and
+    // the client viewport shape have drifted; fail loudly instead of silently
+    // shipping a mismatched payload.
+    const payload = {
+      type: 'FeatureCollection' as const,
       features,
       count: features.length,
       bbox: [west, south, east, north],
-    })
+    }
+    const parsed = viewportQueryResponseSchema.safeParse(payload)
+    if (!parsed.success) {
+      // eslint-disable-next-line no-console -- internal response drift log, not user-facing
+      console.error('[spatial-index] response validation failed:', parsed.error.issues)
+      return NextResponse.json({ error: 'Internal response validation failed' }, { status: 500 })
+    }
+    return apiSuccess(parsed.data)
   },
 )

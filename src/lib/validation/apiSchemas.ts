@@ -4,6 +4,9 @@
  * CRITICAL INVARIANT: Levelling closure tolerance is 10√K mm (RDM 1.1, Table 5.1).
  */
 import { z } from 'zod'
+import { parcelStatusSchema as ParcelStatusEnum, schemeStatusSchema as SchemeStatusEnum } from './scheme'
+
+export { ParcelStatusEnum, SchemeStatusEnum }
 
 const KENYA_EASTING = { min: 166000, max: 1066000 }
 const KENYA_NORTHING = { min: 9140000, max: 10200000 }
@@ -16,13 +19,6 @@ export const SurveyTypeEnum = z.enum([
   'topographic', 'geodetic', 'mining', 'hydrographic', 'drone_uav', 'deformation_monitoring',
 ])
 
-export const ParcelStatusEnum = z.enum([
-  'pending', 'field_complete', 'computed', 'plan_generated', 'submitted', 'approved',
-])
-
-export const SchemeStatusEnum = z.enum([
-  'planning', 'field_in_progress', 'computation', 'plan_generation', 'review', 'submitted', 'approved',
-])
 
 // ─── Project Schemas ─────────────────────────────────────────────────────────
 

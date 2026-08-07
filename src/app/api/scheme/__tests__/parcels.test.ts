@@ -38,6 +38,25 @@ function mr(rows: any[]) {
   return { rows, command: '' as const, rowCount: rows.length, oid: 0 as const, fields: [] as any }
 }
 
+/** Schema-valid parcel row — parcelSchema in src/lib/validation/scheme.ts. */
+function validParcel(overrides: Record<string, unknown> = {}) {
+  return {
+    id: '00000000-0000-0000-0000-000000000003',
+    project_id: TEST_PROJECT_UUID,
+    block_id: TEST_BLOCK_UUID,
+    parcel_number: '101',
+    lr_number_proposed: null,
+    lr_number_confirmed: null,
+    area_ha: 0.5,
+    status: 'pending',
+    assigned_surveyor: null,
+    notes: null,
+    created_at: '2026-01-01T00:00:00.000Z',
+    updated_at: '2026-01-01T00:00:00.000Z',
+    ...overrides,
+  }
+}
+
 function createAuthSession() {
   return { user: { id: 'user-1', email: 'test@metardu.com', name: 'Test' }, expires: new Date().toISOString() }
 }
@@ -82,7 +101,7 @@ describe('POST /api/scheme/parcels', () => {
       .mockResolvedValueOnce(mr([]))                                                                                          // org lookup
       .mockResolvedValueOnce(mr([{ id: 1, project_id: TEST_PROJECT_UUID }]))                                                  // block check
       .mockResolvedValueOnce(mr([]))                                                                                          // dup check
-      .mockResolvedValueOnce(mr([{ id: 'p-1', parcel_number: '101', block_id: TEST_BLOCK_UUID, status: 'pending', area_ha: 0.5 }])) // INSERT
+      .mockResolvedValueOnce(mr([validParcel()])) // INSERT
 
     const req = new NextRequest('http://localhost/api/scheme/parcels', {
       method: 'POST',
@@ -105,8 +124,8 @@ describe('GET /api/scheme/parcels', () => {
       .mockResolvedValueOnce(mr([]))                                                                                            // org lookup
       .mockResolvedValueOnce(mr([{ id: 1 }]))                                                                                    // block check
       .mockResolvedValueOnce(mr([
-        { id: 'p-1', parcel_number: '101', status: 'computed', area_ha: 0.5 },
-        { id: 'p-2', parcel_number: '102', status: 'pending', area_ha: 0.3 },
+        validParcel({ id: '00000000-0000-0000-0000-000000000004', parcel_number: '101', status: 'computed', block_number: 'B1', block_name: 'Block 1' }),
+        validParcel({ id: '00000000-0000-0000-0000-000000000005', parcel_number: '102', status: 'pending', block_number: 'B1', block_name: 'Block 1' }),
       ]))
 
     const req = new NextRequest(`http://localhost/api/scheme/parcels?block_id=${TEST_BLOCK_UUID}`)

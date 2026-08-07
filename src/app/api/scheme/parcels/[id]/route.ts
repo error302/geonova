@@ -1,7 +1,8 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { apiHandler } from '@/lib/apiHandler'
 import { UpdateParcelSchema } from '@/lib/validation/apiSchemas'
+import { parcelResponseSchema, type Parcel } from '@/lib/validation/scheme'
 
 interface ParcelCheckRow {
   id: string
@@ -9,21 +10,6 @@ interface ParcelCheckRow {
   block_id: string
   parcel_number?: string
   updated_at?: Date
-}
-
-interface ParcelRow {
-  id: string
-  project_id: string
-  block_id: string
-  parcel_number: string
-  lr_number_proposed: string | null
-  lr_number_confirmed: string | null
-  area_ha: number | null
-  status: string
-  assigned_surveyor: string | null
-  notes: string | null
-  created_at: Date
-  updated_at: Date
 }
 
 export const dynamic = 'force-dynamic'
@@ -99,7 +85,7 @@ export const PATCH = apiHandler(
       return NextResponse.json({ error: 'updated_at is required for optimistic locking', code: 'CONFLICT' }, { status: 409 })
     }
     values.push(clientUpdatedAt)
-    const result = await db.query<ParcelRow>(
+    const result = await db.query<Parcel>(
       `UPDATE parcels SET ${updates.join(', ')} WHERE id = $${paramIndex} AND updated_at = $${paramIndex + 1} RETURNING *`,
       values
     )
@@ -111,7 +97,15 @@ export const PATCH = apiHandler(
       )
     }
 
-    return NextResponse.json({ data: result.rows[0] })
+    // Validate the updated row against the shared parcel schema so a status
+    // or shape drift can't reach the client unchecked.
+    const parsed = parcelResponseSchema.safeParse({ data: result.rows[0] })
+    if (!parsed.success) {
+      // eslint-disable-next-line no-console -- internal response drift log, not user-facing
+      console.error('[scheme/parcels/[id]] response validation failed:', parsed.error.issues)
+      return NextResponse.json({ error: 'Internal response validation failed' }, { status: 500 })
+    }
+    return NextResponse.json(parsed.data)
   }
 )
 

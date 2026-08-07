@@ -12,22 +12,24 @@
  * Uses performance utilities:
  * - useDebouncedCallback for 500ms debounce
  * - Deduplication to skip identical extents
+ *
+ * The response shape is validated with `viewportQueryResponseSchema` from
+ * @/lib/validation/viewportQuery — the same schema the route validates its
+ * own response against — so the client viewport shape and the server response
+ * can't drift apart.
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useDebouncedCallback } from '@/lib/performance'
+import { viewportQueryResponseSchema, type ViewportFeature } from '@/lib/validation/viewportQuery'
 import type { MapExtent } from '@/app/map/MapReactContext'
 import type Map from 'ol/Map'
 
-export interface ViewportFeature {
-  id: string
-  type: 'parcel' | 'beacon' | 'field_record' | 'control_point'
-  geometry: {
-    type: 'Point' | 'Polygon' | 'LineString'
-    coordinates: number[] | number[][] | number[][][]
-  }
-  properties: Record<string, unknown>
-}
+// Re-export the schema-derived feature type so existing consumers (and the
+// onFeaturesLoaded callback signature) keep working unchanged.
+// Re-export the schema-derived feature type so existing consumers (and the
+// onFeaturesLoaded callback signature) keep working unchanged.
+export type { ViewportFeature }
 
 interface UseViewportQueryOptions {
   mapInstance: React.MutableRefObject<Map | null>
@@ -89,11 +91,19 @@ export function useViewportQuery({
         return
       }
 
-      const data = await res.json()
-      const features = (data.data?.features || []) as ViewportFeature[]
+      // Validate the response against the shared schema — the same one the
+      // route uses to check its own output. If the server shape ever drifts,
+      // this fails closed (no features) instead of flowing garbage downstream.
+      const parsed = viewportQueryResponseSchema.safeParse(await res.json())
+      if (!parsed.success) {
+        setIsLoading(false)
+        return
+      }
+
+      const features = parsed.data.features
       setFeatureCount(features.length)
       onFeaturesLoaded?.(features)
-    } catch (err) {
+    } catch {
       // Silent fail — viewport queries are non-critical
     } finally {
       setIsLoading(false)
