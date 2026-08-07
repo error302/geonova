@@ -253,7 +253,10 @@ jobs:
           # or the later scan step sees no listener. Teardown uses pkill on
           # the real `next` process (killing the npx wrapper PID alone would
           # orphan the server).
-          nohup npx next dev -p 3100 > /tmp/axe-dev.log 2>&1 &
+          # Supervised boot: the wrapper restarts `next dev` if it dies
+          # mid-sweep (OOM / runner hiccup), so the sweep's recovery wait
+          # (axe-gnss-scan.mjs) finds the server back instead of failing.
+          nohup bash -c 'while true; do npx next dev -p 3100; sleep 3; done' > /tmp/axe-dev.log 2>&1 &
           disown || true
           echo $! > /tmp/axe-dev.pid
           # -m 20 caps a hung first compile so the poll can't burn the job budget.

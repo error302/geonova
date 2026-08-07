@@ -466,22 +466,40 @@ async function scanRoute(context, routeDef) {
       return result
     } catch (scanErr) {
       const msg = scanErr.message.split('\n')[0]
-      // Abort the whole sweep if the server itself is unreachable.
+      // Server went away mid-sweep (OOM / runner hiccup). CI supervises
+      // `next dev` with a restart loop, so wait for it to come back instead
+      // of aborting the whole sweep on the first refused page. Only give up
+      // after the recovery window expires — each attempt re-enters the loop,
+      // so up to 3 × 60s of recovery is tolerated before the route fails.
       if (/net::ERR_CONNECTION_REFUSED|ECONNREFUSED|failed to connect/i.test(msg)) {
+        console.error(`[axe] ${path} server unreachable (${msg}) — waiting for recovery…`)
+        const deadline = Date.now() + 60000
+        let back = false
+        while (Date.now() < deadline) {
+          await new Promise((r) => setTimeout(r, 3000))
+          try {
+            const probe = await fetch(BASE, { signal: AbortSignal.timeout(8000) })
+            if (probe.ok) { back = true; break }
+          } catch { /* still down */ }
+        }
         await page.close().catch(() => {})
-        throw new Error(`dev server unreachable at ${BASE}: ${msg}`)
-      }
-      console.error(`[axe] ${path} attempt ${attempt} failed: ${msg}`)
-      await page.close().catch(() => {})
-      await new Promise((r) => setTimeout(r, 1000))
-      if (attempt === 3) {
-        return {
-          page: path,
-          status: 'hydrate-failed',
-          error: `scan failed after 3 attempts (${msg})`,
-          violations: [],
-          incompleteCount: 0,
-          consoleErrors: attemptErrors,
+        if (!back) {
+          throw new Error(`dev server unreachable at ${BASE} after 60s recovery window: ${msg}`)
+        }
+        console.error(`[axe] server back up — retrying ${path}`)
+      } else {
+        console.error(`[axe] ${path} attempt ${attempt} failed: ${msg}`)
+        await page.close().catch(() => {})
+        await new Promise((r) => setTimeout(r, 1000))
+        if (attempt === 3) {
+          return {
+            page: path,
+            status: 'hydrate-failed',
+            error: `scan failed after 3 attempts (${msg})`,
+            violations: [],
+            incompleteCount: 0,
+            consoleErrors: attemptErrors,
+          }
         }
       }
     }
