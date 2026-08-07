@@ -3,6 +3,12 @@ import { db } from '@/lib/db'
 import { logAuditEvent } from '@/lib/enterprise/auditTrail'
 import { z } from 'zod'
 
+interface UserRow {
+  id: string
+  email: string
+  full_name: string | null
+}
+
 export const dynamic = 'force-dynamic'
 
 const suspendSchema = z.object({
@@ -22,7 +28,7 @@ export const POST = apiHandler(
     const { reason } = ctx.body as z.infer<typeof suspendSchema>
 
     // Check user exists
-    const { rows: userRows } = await db.query(
+    const { rows: userRows } = await db.query<UserRow>(
       'SELECT id, email, full_name FROM users WHERE id = $1',
       [userId],
     )
@@ -31,7 +37,7 @@ export const POST = apiHandler(
     }
 
     // Suspend the user via surveyor_profiles
-    await db.query(
+    await db.query<never>(
       `INSERT INTO surveyor_profiles (id, user_id, role, is_suspended, suspension_reason)
        VALUES (gen_random_uuid(), $1, 'surveyor', true, $2)
        ON CONFLICT (user_id) DO UPDATE
@@ -67,7 +73,7 @@ export const DELETE = apiHandler(
     const { userId } = ctx.params
 
     // Check user exists
-    const { rows: userRows } = await db.query(
+    const { rows: userRows } = await db.query<UserRow>(
       'SELECT id, email FROM users WHERE id = $1',
       [userId],
     )
@@ -76,7 +82,7 @@ export const DELETE = apiHandler(
     }
 
     // Unsuspend the user
-    await db.query(
+    await db.query<never>(
       `UPDATE surveyor_profiles
        SET is_suspended = false, suspension_reason = NULL
        WHERE user_id = $1`,

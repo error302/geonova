@@ -100,7 +100,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   }
 
   // ── Load project data ──
-  const { rows: projectRows } = await db.query(
+  const { rows: projectRows } = await db.query<ProjectRow>(
     `SELECT id, name, location, municipality, utm_zone, hemisphere, datum,
             client_name, surveyor_name, surveyor_licence, firm_name, firm_address,
             firm_phone, firm_email, drawing_no, reference, plan_title, area_sqm,
@@ -122,7 +122,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   const project = projectRows[0] as ProjectRow
 
   // ── Load boundary points ──
-  const { rows: boundaryRows } = await db.query(
+  const { rows: boundaryRows } = await db.query<BoundaryPointRow>(
     `SELECT name, easting, northing, elevation, monument_type, beacon_description
      FROM boundary_points WHERE project_id = $1 ORDER BY sequence`,
     [projectId],
@@ -136,19 +136,19 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   }
 
   // ── Load adjacent lots ──
-  const { rows: adjacentRows } = await db.query(
+  const { rows: adjacentRows } = await db.query<AdjacentLotRow>(
     `SELECT id, boundary_points, plan_reference FROM adjacent_lots WHERE project_id = $1`,
     [projectId],
   )
 
   // ── Load fence offsets ──
-  const { rows: fenceRows } = await db.query(
+  const { rows: fenceRows } = await db.query<FenceOffsetRow>(
     `SELECT segment_index, type, offset_metres, callout_text FROM fence_offsets WHERE project_id = $1`,
     [projectId],
   )
 
   // ── Load buildings ──
-  const { rows: buildingRows } = await db.query(
+  const { rows: buildingRows } = await db.query<BuildingRow>(
     `SELECT easting, northing, width_m, height_m, rotation_deg, label FROM buildings WHERE project_id = $1`,
     [projectId],
   )

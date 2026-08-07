@@ -3,6 +3,16 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { z } from 'zod'
 
+interface UserRow {
+  id: string
+  updated_at: string | Date
+  email: string
+  full_name: string | null
+  firm_name: string | null
+  license_number: string | null
+  phone: string | null
+}
+
 export const dynamic = 'force-dynamic'
 
 /**
@@ -38,7 +48,7 @@ export const PATCH = apiHandler(
     const body = ctx.body as z.infer<typeof patchUserProfileSchema>
 
     // Fetch current user row for optimistic lock check
-    const { rows } = await db.query(
+    const { rows } = await db.query<UserRow>(
       'SELECT id, updated_at FROM users WHERE id = $1',
       [userId]
     )
@@ -100,7 +110,7 @@ export const PATCH = apiHandler(
       userValues.push(userId)
       // T1.8: Add optimistic lock guard to WHERE clause
       userValues.push(body.updated_at)
-      const userResult = await db.query(
+      const userResult = await db.query<UserRow>(
         `UPDATE users SET ${userFields.join(', ')} WHERE id = $${userParamIdx} AND updated_at = $${userParamIdx + 1} RETURNING id`,
         userValues
       )
@@ -116,14 +126,14 @@ export const PATCH = apiHandler(
     if (profileFields.length > 0) {
       profileFields.push(`updated_at = NOW()`)
       profileValues.push(userId)
-      await db.query(
+      await db.query<never>(
         `UPDATE surveyor_profiles SET ${profileFields.join(', ')} WHERE user_id = $${profileParamIdx}`,
         profileValues
       )
     }
 
     // Fetch and return the updated user
-    const updated = await db.query(
+    const updated = await db.query<UserRow>(
       `SELECT u.id, u.email, u.full_name, u.updated_at,
               sp.firm_name, sp.license_number, sp.phone
        FROM users u

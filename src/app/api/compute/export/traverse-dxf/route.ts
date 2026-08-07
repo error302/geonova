@@ -75,7 +75,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   }
 
   // ── Verify project ownership ────────────────────────────────────────────
-  const { rows: projects } = await db.query(
+  const { rows: projects } = await db.query<TraverseProjectRow>(
     `SELECT p.id, p.name, p.location, p.project_type,
             p.surveyor_name,
             sd.scheme_number, sd.datum, sd.county
@@ -92,10 +92,10 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     )
   }
 
-  const project = projects[0] as TraverseProjectRow
+  const project = projects[0]
 
   // ── Fetch traverse data for all parcels in this project ─────────────────
-  const { rows: traverses } = await db.query(
+  const { rows: traverses } = await db.query<TraverseRow>(
     `SELECT pt.id AS traverse_id,
             pt.parcel_id,
             pt.is_closed,
@@ -145,9 +145,9 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   // Track station names to avoid duplicates across parcels
   const seenStations = new Set<string>()
 
-  for (const traverse of traverses as TraverseRow[]) {
+  for (const traverse of traverses) {
     // Fetch coordinates for this traverse
-    const { rows: coords } = await db.query(
+    const { rows: coords } = await db.query<TraverseCoordRow>(
       `SELECT station, easting, northing, rl
        FROM traverse_coordinates
        WHERE traverse_id = $1
@@ -156,7 +156,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     )
 
     // Fetch observations for this traverse
-    const { rows: observations } = await db.query(
+    const { rows: observations } = await db.query<TraverseObservationRow>(
       `SELECT station, bs, fs,
               hcl_deg, hcl_min, hcl_sec,
               hcr_deg, hcr_min, hcr_sec,
@@ -168,7 +168,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     )
 
     // Build station entries (unique by name)
-    for (const c of coords as TraverseCoordRow[]) {
+    for (const c of coords) {
       const stationName = `${c.station}`
       // Prefix with block-parcel to avoid name collisions across parcels
       const uniqueKey = `${traverse.block_number}-${traverse.parcel_number}-${c.station}`
@@ -186,7 +186,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
 
     // Build leg entries from observations
     for (let i = 0; i < observations.length; i++) {
-      const obs = observations[i] as TraverseObservationRow
+      const obs = observations[i]
       const fromStation = obs.station
       const toStation = obs.fs
 

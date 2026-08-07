@@ -6,6 +6,15 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db, setRlsContext } from '@/lib/db'
 import { SaveVIPsSchema } from '@/lib/validation/apiSchemas'
 
+interface VerticalIpsRow {
+  id: string
+  alignment_id: string
+  chainage: number | string
+  reduced_level: number | string
+  k_value: number | string | null
+  updated_at: string | Date
+}
+
 // POST: Save vertical intersection points for an alignment (upsert by chainage)
 export const POST = apiHandler({ auth: true, schema: SaveVIPsSchema, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
   const { alignment_id, vips } = ctx.body as z.infer<typeof SaveVIPsSchema>
@@ -13,13 +22,13 @@ export const POST = apiHandler({ auth: true, schema: SaveVIPsSchema, rateLimit: 
   const client = await db.getClient()
 
   try {
-    await client.query('BEGIN')
+    await client.query<never>('BEGIN')
     // Set RLS context for this client — CRITICAL for row-level security
     await setRlsContext(client)
 
-    const insertedRows: any[] = []
+    const insertedRows: VerticalIpsRow[] = []
     for (const vip of vips) {
-      const { rows } = await client.query(
+      const { rows } = await client.query<VerticalIpsRow>(
         `INSERT INTO vertical_ips (alignment_id, chainage, reduced_level, k_value)
          VALUES ($1, $2, $3, $4)
          ON CONFLICT (alignment_id, chainage) DO UPDATE SET
@@ -32,11 +41,11 @@ export const POST = apiHandler({ auth: true, schema: SaveVIPsSchema, rateLimit: 
       insertedRows.push(rows[0])
     }
 
-    await client.query('COMMIT')
+    await client.query<never>('COMMIT')
 
     return NextResponse.json({ data: insertedRows })
   } catch (txErr) {
-    await client.query('ROLLBACK')
+    await client.query<never>('ROLLBACK')
     throw txErr
   } finally {
     client.release()
