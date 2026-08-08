@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { ToolExportButtons } from '@/components/shared/ToolExportButtons'
-import { computeCurveElements, generateChainageTable, generateStakingTable, type HorizontalCurveData } from '@/lib/engineering/stakingTable'
+import { computeCurveElements, generateChainageTable, generateStakingTable, type HorizontalCurveData, type CurveElements, type ChainageTableEntry, type StakingPoint } from '@/lib/engineering/stakingTable'
 
 export default function StakingTablePage() {
   const [ipE, setIpE] = useState(500000)
@@ -13,7 +13,7 @@ export default function StakingTablePage() {
   const [incomingBearing, setIncomingBearing] = useState(45)
   const [interval, setInterval] = useState(20)
   const [offsets, setOffsets] = useState('-3.5,0,3.5')
-  const [computed, setComputed] = useState<{ elements: any; chainageTable: any[]; stakingTable: any[] } | null>(null)
+  const [computed, setComputed] = useState<{ elements: CurveElements; chainageTable: ChainageTableEntry[]; stakingTable: StakingPoint[] } | null>(null)
 
   const compute = () => {
     const data: HorizontalCurveData = { ipE, ipN, deflectionAngle: deflection, radius, ipChainage, incomingBearing }

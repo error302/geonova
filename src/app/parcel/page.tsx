@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react'
-import { analyzeBoundarySituation } from '@/lib/legal/landLawEngine'
+import { analyzeBoundarySituation, type LegalGuidance } from '@/lib/legal/landLawEngine'
 
 /**
  * Parcel Intelligence page.
@@ -53,7 +53,7 @@ export default function ParcelSearchPage() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<NLIMSLookupResult | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [legalGuidance, setLegalGuidance] = useState<any>(null)
+  const [legalGuidance, setLegalGuidance] = useState<LegalGuidance | null>(null)
 
   const [parcelNumber, setParcelNumber] = useState('')
   const [county, setCounty] = useState('')
@@ -90,8 +90,8 @@ export default function ParcelSearchPage() {
     }
   }
 
-  const handleLegalGuidance = (situation: string) => {
-    const guidance = analyzeBoundarySituation(situation as any)
+  const handleLegalGuidance = (situation: 'missing_monument' | 'overlap' | 'area_discrepancy' | 'encroachment' | 'coordinate_mismatch' | 'subdivision') => {
+    const guidance = analyzeBoundarySituation(situation)
     setLegalGuidance(guidance)
   }
 
@@ -264,10 +264,10 @@ export default function ParcelSearchPage() {
               <div>
                 <h3 className="font-medium mb-3">Select Situation</h3>
                 <div className="space-y-2">
-                  {legalScenarios.map((scenario: any) => (
+                  {legalScenarios.map((scenario) => (
                     <button
                       key={scenario.id}
-                      onClick={() => handleLegalGuidance(scenario.id)}
+                      onClick={() => handleLegalGuidance(scenario.id as 'missing_monument' | 'overlap' | 'area_discrepancy' | 'encroachment' | 'coordinate_mismatch' | 'subdivision')}
                       className="w-full text-left p-3 border rounded-lg hover:bg-[var(--bg-secondary)] hover:border-sky-300 transition"
                     >
                       {scenario.label}
@@ -313,7 +313,7 @@ export default function ParcelSearchPage() {
 
                   <div className="p-4 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)]">
                     <h4 className="font-medium mb-2 text-sm">References</h4>
-                    {legalGuidance.references.map((ref: any, i: number) => (
+                    {legalGuidance.references.map((ref: { book: string; chapter: string }, i: number) => (
                       <p key={i} className="text-xs text-[var(--text-muted)]">
                         {ref.book}, Chapter: {ref.chapter}
                       </p>

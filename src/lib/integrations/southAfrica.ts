@@ -35,7 +35,7 @@ const southAfricaRegistryData: SouthAfricaParcel[] = []
 
 export function searchSouthAfricaRegistry(query: string): SouthAfricaSearchResult {
   const q = query.toLowerCase()
-  const results = southAfricaRegistryData.filter((p: any) => 
+  const results = southAfricaRegistryData.filter((p) => 
     p.parcelId.toLowerCase().includes(q) ||
     p.erfNumber.toLowerCase().includes(q) ||
     p.township.toLowerCase().includes(q) ||
@@ -53,7 +53,7 @@ export function searchSouthAfricaRegistry(query: string): SouthAfricaSearchResul
 }
 
 export function getSouthAfricaParcelById(parcelId: string): SouthAfricaParcel | undefined {
-  return southAfricaRegistryData.find((p: any) => p.parcelId === parcelId)
+  return southAfricaRegistryData.find((p) => p.parcelId === parcelId)
 }
 
 export function getSouthAfricaProvinces() {

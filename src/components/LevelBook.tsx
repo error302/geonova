@@ -260,7 +260,7 @@ export default function LevelBook({ projectId }: LevelBookProps) {
                 </tr>
               </thead>
               <tbody>
-                {result.rows.map((row: any, i: number) => (
+                {result.rows.map((row, i) => (
                   <tr key={`item-${i}`} className="border-b border-[var(--border-color)]/30">
                     <td className="px-2 py-1.5 font-mono">{row.station}</td>
                     <td className="px-2 py-1.5 text-right font-mono text-[var(--text-secondary)]">

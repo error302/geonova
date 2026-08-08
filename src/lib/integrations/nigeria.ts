@@ -37,7 +37,7 @@ const nigeriaRegistryData: NigeriaParcel[] = []
 
 export function searchNigeriaRegistry(query: string): NigeriaSearchResult {
   const q = query.toLowerCase()
-  const results = nigeriaRegistryData.filter((p: any) => 
+  const results = nigeriaRegistryData.filter((p) => 
     p.parcelId.toLowerCase().includes(q) ||
     p.fileNumber.toLowerCase().includes(q) ||
     p.plotNumber.toLowerCase().includes(q) ||
@@ -55,7 +55,7 @@ export function searchNigeriaRegistry(query: string): NigeriaSearchResult {
 }
 
 export function getNigeriaParcelById(parcelId: string): NigeriaParcel | undefined {
-  return nigeriaRegistryData.find((p: any) => p.parcelId === parcelId)
+  return nigeriaRegistryData.find((p) => p.parcelId === parcelId)
 }
 
 export function getNigeriaStates() {
