@@ -50,7 +50,7 @@ export function generateDXF(options: DXFExportOptions): string {
   drawing.addLayer(DXF_LAYERS.CONTROL.name, Drawing.ACI.CYAN, 'CONTINUOUS')
   drawing.addLayer(DXF_LAYERS.BEACON_TXT.name, Drawing.ACI.WHITE, 'CONTINUOUS')
 
-  const byName = new Map(points.map((p: any) => [p.name, p] as const))
+  const byName = new Map(points.map((p: SurveyPoint) => [p.name, p] as const))
 
   // Points + labels
   for (const p of points) {

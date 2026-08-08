@@ -187,10 +187,10 @@ export async function getSurveyors(filters?: {
 
 export async function getCommunityStats(): Promise<CommunityStats> {
   const [surveyors, jobs, reviews, cpd] = await Promise.all([
-    db.query('SELECT COUNT(*) as count FROM users'),
-    db.query("SELECT COUNT(*) as count FROM survey_jobs WHERE status = 'OPEN'"),
-    db.query('SELECT COUNT(*) as count FROM peer_reviews WHERE status = $1', ['COMPLETED']),
-    db.query('SELECT SUM(points) as total FROM cpd_records')
+    db.query<{ count: string }>('SELECT COUNT(*) as count FROM users'),
+    db.query<{ count: string }>("SELECT COUNT(*) as count FROM survey_jobs WHERE status = 'OPEN'"),
+    db.query<{ count: string }>('SELECT COUNT(*) as count FROM peer_reviews WHERE status = $1', ['COMPLETED']),
+    db.query<{ total: string | null }>('SELECT SUM(points) as total FROM cpd_records')
   ])
 
   return {

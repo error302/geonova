@@ -212,7 +212,7 @@ export default function SurveyMap({
       };
       map.getView().on('change', viewChangeHandler);
 
-      mapClickHandler = async (evt: any) => {
+      mapClickHandler = async (evt: { pixel: number[]; coordinate: number[] }) => {
         const [x, y] = evt.coordinate as [number, number];
         const [e, n] = await to21037(x, y);
         setClickedCoord({ easting: e, northing: n });
@@ -220,7 +220,7 @@ export default function SurveyMap({
         // ── Check if a beacon feature was clicked ─────────────────
         if (onBeaconClick) {
           const { default: Feature } = await import('ol/Feature');
-          const hitFeature = map.forEachFeatureAtPixel(evt.pixel, (f: any) => f, {
+          const hitFeature = map.forEachFeatureAtPixel(evt.pixel, (f) => f as import('ol/Feature').default, {
             hitTolerance: 8,
           });
           if (hitFeature) {
@@ -228,9 +228,9 @@ export default function SurveyMap({
             if (label) {
               const geom = hitFeature.getGeometry();
               if (geom && geom.getType() === 'Point') {
-                const coord = geom.getCoordinates();
+                const coord = (geom as import('ol/geom/Point').default).getCoordinates();
                 const [be, bn] = await to21037(coord[0], coord[1]);
-                onBeaconClick(label, be, bn);
+                onBeaconClick(String(label), be, bn);
               }
             }
           }

@@ -366,7 +366,17 @@ export function compareCoordinates(
   // module load time.
   // Lazy import avoids a circular dependency at module load.
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { propagateToEpochRigorous } = require('./epochManagerRigorous')
+  const { propagateToEpochRigorous } = require('./epochManagerRigorous') as {
+    propagateToEpochRigorous: (
+      coord: EpochCoordinate,
+      targetEpoch: number,
+    ) => {
+      latitude: number
+      longitude: number
+      epoch: number
+      displacement: { de: number; dn: number }
+    }
+  }
 
   // Propagate both to the later epoch (or coord2's epoch)
   const commonEpoch = Math.max(coord1.epoch, coord2.epoch)

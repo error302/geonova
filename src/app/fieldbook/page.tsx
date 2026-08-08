@@ -322,7 +322,7 @@ export default function DigitalFieldBookPage() {
         })
       })
       
-      const data = await response.json()
+      const data = (await response.json()) as { error?: string; downloadUrl?: string }
       
       if (!response.ok) {
         throw new Error(data.error || 'Generation failed')
@@ -688,7 +688,7 @@ export default function DigitalFieldBookPage() {
       const adjusted = traverseComputed.adjusted
       if (adjusted && adjusted.legs && adjusted.legs.length >= 3) {
         // Extract adjusted coordinates from legs for cross-checking
-        const points = adjusted.legs.map((leg: any) => ({
+        const points = adjusted.legs.map((leg: { adjEasting?: number; adjNorthing?: number }) => ({
           easting: leg.adjEasting || 0,
           northing: leg.adjNorthing || 0,
         }))

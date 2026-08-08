@@ -539,12 +539,12 @@ export default function CommunityPage() {
 
     // Fetch stats, surveyors, equipment listings, and CPD (if logged in) in parallel
     Promise.allSettled([
-      fetch('/api/community/stats').then(r => r.ok ? r.json() : null),
-      fetch('/api/community/surveyors?limit=6').then(r => r.ok ? r.json() : null),
-      fetch('/api/marketplace/listings?limit=3').then(r => r.ok ? r.json() : null),
+      fetch('/api/community/stats').then(async r => r.ok ? (await r.json()) as CommunityStats : null),
+      fetch('/api/community/surveyors?limit=6').then(async r => r.ok ? (await r.json()) as { data: SurveyorProfile[] } : null),
+      fetch('/api/marketplace/listings?limit=3').then(async r => r.ok ? (await r.json()) as { data: EquipmentListing[] } : null),
       // CPD requires auth — 401 is expected if not logged in (not an error)
-      fetch('/api/cpd?action=summary', { credentials: 'include' }).then(r => {
-        if (r.ok) return r.json()
+      fetch('/api/cpd?action=summary', { credentials: 'include' }).then(async r => {
+        if (r.ok) return (await r.json()) as { summary: { total: number; pending: number; cap: number; remaining: number; percent: number } | null }
         return null // 401 or other — just skip CPD
       }),
     ]).then(([statsRes, surveyorsRes, listingsRes, cpdRes]) => {

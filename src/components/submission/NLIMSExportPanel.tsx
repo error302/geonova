@@ -66,7 +66,11 @@ export function NLIMSExportPanel({ projectId }: NLIMSExportPanelProps) {
         }),
       })
 
-      const data = await res.json()
+      const data = (await res.json()) as {
+        validation?: NLIMSValidationResult | null
+        error?: string
+        payload?: NLIMSSubmissionPayload | null
+      }
 
       if (!res.ok) {
         if (data.validation) {
@@ -78,8 +82,8 @@ export function NLIMSExportPanel({ projectId }: NLIMSExportPanelProps) {
         return
       }
 
-      setPayload(data.payload)
-      setValidation(data.validation)
+      setPayload(data.payload ?? null)
+      setValidation(data.validation ?? null)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Network error')
     } finally {

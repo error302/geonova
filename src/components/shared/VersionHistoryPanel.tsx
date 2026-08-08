@@ -138,10 +138,10 @@ export function VersionHistoryPanel({
       })
       const res = await fetch(`/api/versions?${params}`)
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
+        const body = (await res.json().catch(() => ({}))) as { error?: string }
         throw new Error(body.error || `Failed to load versions (${res.status})`)
       }
-      const json = await res.json()
+      const json = (await res.json()) as { data?: VersionEntry[] }
       setVersions(json.data ?? [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
@@ -182,7 +182,7 @@ export function VersionHistoryPanel({
           setDiffLoading(false)
           return
         }
-        const json = await res.json()
+        const json = (await res.json()) as DiffResponse
         setDiffData(json)
       } catch {
         // silently fail — diff is non-critical
@@ -204,7 +204,7 @@ export function VersionHistoryPanel({
         body: JSON.stringify({ version_id: restoreTarget.id }),
       })
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
+        const body = (await res.json().catch(() => ({}))) as { error?: string }
         throw new Error(body.error || `Restore failed (${res.status})`)
       }
       setRestoreTarget(null)

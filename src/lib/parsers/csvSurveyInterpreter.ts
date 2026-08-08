@@ -12,16 +12,16 @@ export function interpretCSV(csvText: string): CSVInterpretResult {
   const warnings: string[] = []
   
   try {
-    const lines = csvText.trim().split('\n').filter((l: any) => l.trim())
+    const lines = csvText.trim().split('\n').filter((l) => l.trim())
     if (lines.length < 2) {
       return { ok: false, error: 'File must have headers and at least one row', warnings }
     }
     
     // Parse headers
-    const headers = lines[0].split(',').map((h: any) => h.trim())
+    const headers = lines[0].split(',').map((h) => h.trim())
     
     // Parse rows
-    const rows = lines.slice(1).map((line: any) => {
+    const rows = lines.slice(1).map((line) => {
       const values = line.split(',')
       const row: Record<string, string> = {}
       headers.forEach((h, i) => {
@@ -129,7 +129,7 @@ function valuesForSurveyType(
     }
   }
 
-  const firstNumeric = Object.values(row).find((v: any) => !isNaN(parseFloat(v)))
+  const firstNumeric = Object.values(row).find((v) => !isNaN(parseFloat(v)))
   return { value1: parseFloat(firstNumeric || '0') }
 }
 

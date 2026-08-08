@@ -53,7 +53,7 @@ export default function ProfilePage() {
 
       if (data) {
         setProfile({
-          ...data,
+          ...(data as Profile),
           specializations: data.specializations || []
         })
       } else {
@@ -218,7 +218,7 @@ export default function ProfilePage() {
           <div className="card">
             <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Specializations</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {specializations.map((spec: any) => (
+              {specializations.map((spec: string) => (
                 <button
                   key={spec}
                   onClick={() => toggleSpecialization(spec)}

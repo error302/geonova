@@ -47,6 +47,7 @@
  *   }
  */
 
+import type { Point2D } from '@/types/surveyPoint'
 import { calculateIntersection } from '@/lib/map/turfHelpers'
 import { shoelaceArea } from '@/lib/engine/area'
 
@@ -133,8 +134,8 @@ export async function detectOverlaps(params: {
 
     try {
       const intersection = await calculateIntersection(
-        newParcel.vertices as any,
-        existing.vertices as any
+        newParcel.vertices as Point2D[],
+        existing.vertices as Point2D[]
       )
 
       if (!intersection || intersection.length < 3) {
@@ -199,8 +200,8 @@ export async function hasAnyOverlap(params: {
 
     try {
       const intersection = await calculateIntersection(
-        newParcel.vertices as any,
-        existing.vertices as any
+        newParcel.vertices as Point2D[],
+        existing.vertices as Point2D[]
       )
       if (intersection && intersection.length >= 3) {
         const area = shoelaceArea(intersection)

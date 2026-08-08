@@ -76,7 +76,7 @@ export function EquipmentManager() {
     try {
       const res = await fetch('/api/equipment?include_calibration=true')
       if (!res.ok) return
-      const data = await res.json()
+      const data = (await res.json()) as { data?: { equipment: Equipment[] } }
       setEquipment(data.data?.equipment || [])
     } catch {} finally {
       setLoading(false)
@@ -98,7 +98,7 @@ export function EquipmentManager() {
     try {
       const res = await fetch(`/api/equipment/${equipId}/calibration`)
       if (res.ok) {
-        const data = await res.json()
+        const data = (await res.json()) as { data?: { calibrations: Calibration[] } }
         setCalibrations(data.data?.calibrations || [])
       }
     } catch {} finally {
@@ -337,7 +337,7 @@ function AddEquipmentForm({ onClose, onAdded }: { onClose: () => void; onAdded: 
         body: JSON.stringify({ name, type, manufacturer, model, serialNumber, notes }),
       })
       if (!res.ok) {
-        const data = await res.json()
+        const data = (await res.json()) as { error?: string }
         throw new Error(data.error || 'Failed')
       }
       onAdded()
@@ -408,7 +408,7 @@ function AddCalibrationForm({ equipmentId, onClose, onAdded }: { equipmentId: st
         }),
       })
       if (!res.ok) {
-        const data = await res.json()
+        const data = (await res.json()) as { error?: string }
         throw new Error(data.error || 'Failed')
       }
       onAdded()

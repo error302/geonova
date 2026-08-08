@@ -67,8 +67,8 @@ export default function ChainageCalculator() {
     if (isNaN(startE) || isNaN(startN)) return;
 
     const alignment = alignmentPoints
-      .map((p: any) => ({ name: p.name, easting: parseFloat(p.easting), northing: parseFloat(p.northing) }))
-      .filter((p: any) => !isNaN(p.easting) && !isNaN(p.northing))
+      .map((p: AlignmentPoint) => ({ name: p.name, easting: parseFloat(p.easting), northing: parseFloat(p.northing) }))
+      .filter((p: { easting: number; northing: number }) => !isNaN(p.easting) && !isNaN(p.northing))
 
     const table = computeChainageTable({
       start: { easting: startE, northing: startN },

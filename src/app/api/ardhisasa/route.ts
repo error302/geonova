@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
-import { createArdhisasaClient, isArdhisasaConfigured, getArdhisasaStatus } from '@/lib/integrations/ardhisasaClient'
+import { createArdhisasaClient, isArdhisasaConfigured, getArdhisasaStatus, type SurveySubmissionData, type RecordSearchQuery } from '@/lib/integrations/ardhisasaClient'
 
 export const dynamic = 'force-dynamic'
 
@@ -64,17 +64,17 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   const client = createArdhisasaClient()
 
   if (action === 'submit') {
-    const result = await client.submitPlan(data as any || {})
+    const result = await client.submitPlan((data || {}) as unknown as SurveySubmissionData)
     return NextResponse.json({ success: true, data: result })
   }
 
   if (action === 'search') {
-    const results = await client.searchRecords(data as any || {})
+    const results = await client.searchRecords((data || {}) as RecordSearchQuery)
     return NextResponse.json({ success: true, data: results })
   }
 
   if (action === 'validate') {
-    const validation = await client.validateSubmission(data as any || {})
+    const validation = await client.validateSubmission((data || {}) as unknown as SurveySubmissionData)
     return NextResponse.json({ success: true, data: validation })
   }
 

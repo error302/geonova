@@ -94,7 +94,7 @@ export default function LogoUpload({
         body: formData,
       });
 
-      const data = await res.json();
+      const data = (await res.json()) as { upgradeRequired?: boolean; error?: string };
 
       if (!res.ok) {
         if (data.upgradeRequired) {
@@ -108,7 +108,7 @@ export default function LogoUpload({
 
       // Fetch the updated logo metadata
       const metaRes = await fetch('/api/documents/logo');
-      const metaData = await metaRes.json();
+      const metaData = (await metaRes.json()) as { logo?: LogoInfo };
 
       if (metaData.logo) {
         setLogo(metaData.logo);
@@ -164,7 +164,7 @@ export default function LogoUpload({
       const res = await fetch('/api/documents/logo', { method: 'DELETE' });
 
       if (!res.ok) {
-        const data = await res.json();
+        const data = (await res.json()) as { error?: string };
         setError(data.error || 'Delete failed');
         return;
       }
