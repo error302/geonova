@@ -5,6 +5,9 @@ import { defineConfig, devices } from '@playwright/test'
 // is what lets the 288-test E2E job fit inside the GitHub Actions timeout.
 // Local runs keep the dev server (fast boot, hot reload).
 const useProd = process.env.CI_E2E_PROD === 'true'
+// CI_E2E_SKIP_BUILD=true means the .next build artifact was already restored
+// (uploaded by the `build` job) — start it directly instead of rebuilding.
+const skipBuild = process.env.CI_E2E_SKIP_BUILD === 'true'
 
 export default defineConfig({
   testDir: './e2e',
@@ -32,7 +35,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: useProd ? 'npx next build && npx next start -p 3099' : 'npx next dev -p 3099',
+    command: useProd
+      ? (skipBuild ? 'npx next start -p 3099' : 'npx next build && npx next start -p 3099')
+      : 'npx next dev -p 3099',
     port: 3099,
     reuseExistingServer: true,
     // Prod path must cover the full next build (~5-10 min) before the port opens.

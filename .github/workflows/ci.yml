@@ -219,6 +219,11 @@ jobs:
           NEXT_PUBLIC_SENTRY_DSN: ''
           DISABLE_PWA: 'true'
           CI_E2E_PROD: 'true'
+          CI_E2E_SKIP_BUILD: 'true'
+          # env.ts throws at `next start` without these; E2E specs mock the
+          # auth routes and tolerate 500s, so a non-routable dummy URL is fine.
+          DATABASE_URL: 'postgresql://ci:ci@127.0.0.1:5432/metardu_e2e'
+          AUTH_SECRET: 'e2e-ci-secret-not-used-by-mocked-auth'
         run: npx playwright test --reporter=list --shard=${{ matrix.shard }}/2
       - name: Upload shard report
         if: always()

@@ -149,7 +149,8 @@
     "y-webrtc": "^10.3.0",
     "yjs": "^13.6.31",
     "zod": "^3.22.4",
-    "zustand": "^5.0.0"
+    "zustand": "^5.0.0",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.2.0",
