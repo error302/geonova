@@ -33,6 +33,7 @@ node scripts/api-row-sweep.mjs --batch N                 # per-line worklist for
 node scripts/api-row-sweep.mjs --batch N --batch-size S  # chunk size (default 30 untyped queries)
 node scripts/api-row-sweep.mjs --batch 1 --untyped-only  # only the UN-TYPED lines in the batch
 node scripts/api-row-sweep.mjs --batch 1 --no-member-scan  # same worklist, faster (no eslint pass)
+node scripts/api-row-sweep.mjs --batch-plan              # write the batch→file mapping JSON (see below)
 ```
 
 Files are chunked into batches by **cumulative untyped-query count** in the
@@ -42,11 +43,32 @@ batches **identical under `--no-member-scan`** — untyped counts don't depend
 on eslint, so the fast path prints the same deterministic worklist as a full
 scan. Each worklist entry lists the file's declared row interfaces plus every
 query line (line number, typed/untyped, table, suggested interface) so a
-grind session starts from an exact per-line list. **Batch numbers are
-computed live from the current scan and may differ between runs.**
+grind session starts from an exact per-line list.
 
-With 207 untyped queries and the default `--batch-size 30`, the tier is
-currently **8 batches** (30 / 30 / 30 / 30 / 30 / 30 / 30 / 1). Use a smaller
+### Stable batch numbers — `--batch-plan`
+
+`--batch-plan` writes the **batch → file mapping** (every batch, its untyped
+total, and the exact file list) to a committed JSON file — by default
+`docs/route-row-typing-plan.json`, alongside this doc — so the batch numbers
+referenced here **stay stable instead of shifting every scan**:
+
+```bash
+node scripts/api-row-sweep.mjs --batch-plan              # → docs/route-row-typing-plan.json
+node scripts/api-row-sweep.mjs --batch-plan my-plan.json # custom path
+node scripts/api-row-sweep.mjs --batch N                 # reads the committed plan for batch N's file list
+```
+
+When the committed plan exists, `--batch N` takes its **file membership from
+the plan** — typing a file (its untyped count dropping to 0) does not
+re-chunk the remaining files, so batch N always refers to the same files and
+the doc's batch references stay valid through the whole grind. Query lines
+are still read live (typed/untyped status updates as work proceeds), and
+`--batch-plan` is re-run after adding new routes to re-chunk. Without a
+committed plan, `--batch N` falls back to live chunking and prints a hint to
+run `--batch-plan`.
+
+With 207 untyped queries and the default `--batch-size 30`, the tier was
+**8 batches** (30 / 30 / 30 / 30 / 30 / 30 / 30 / 1). Use a smaller
 `--batch-size` for tighter PRs or a larger one to merge batches.
 
 ---
@@ -173,6 +195,7 @@ npx jest <touched area>                             # routes touching libs
 ## Regenerating this plan
 
 ```bash
-node scripts/api-row-sweep.mjs --batch 1            # live per-line worklist
+node scripts/api-row-sweep.mjs --batch-plan         # freeze the batch→file mapping (committed JSON)
+node scripts/api-row-sweep.mjs --batch 1            # per-line worklist (stable membership from the plan)
 node scripts/api-row-sweep.mjs --json               # machine-readable for the tables above
 ```

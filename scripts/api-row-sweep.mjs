@@ -37,6 +37,7 @@
  *   node scripts/api-row-sweep.mjs --no-member-scan     # skip eslint (faster)
  *   node scripts/api-row-sweep.mjs --routes 'scheme|rim'# only matching paths
  *   node scripts/api-row-sweep.mjs --batch N [--batch-size S]  # per-line worklist for batch N
+ *   node scripts/api-row-sweep.mjs --batch-plan [file]  # write stable batch→file mapping JSON (see below)
  *   node scripts/api-row-sweep.mjs --check [base-ref]   # CI regression gate (see below)
  *   node scripts/api-row-sweep.mjs --apply <route-file>             # auto-type one route (see below)
  *   node scripts/api-row-sweep.mjs --apply <file> --verify           # …then typecheck it & attribute failures
@@ -49,6 +50,16 @@
  * Chunking by untyped-query count keeps batches identical under
  * --no-member-scan (untyped counts don't depend on eslint), so the fast path
  * prints the same worklist as a full scan. Cannot be combined with --json.
+ *
+ * --batch-plan [file]: writes the batch → file mapping (every batch, its
+ * untyped-query total, and the exact file list per batch) to a JSON file so
+ * the doc's batch numbers stay STABLE instead of shifting every scan. The
+ * default path is docs/route-row-typing-plan.json (committed with
+ * docs/ROUTE_ROW_TYPING_PLAN.md); a positional path overrides it. When a
+ * committed plan exists, `--batch N` uses the plan's FILE MEMBERSHIP for
+ * batch N (numbers never shift as files get typed) while still reading each
+ * file's query lines live — re-run `--batch-plan` after adding new routes to
+ * re-chunk. Without a plan file, `--batch N` falls back to live chunking.
  *
  * --check: the row-typing regression gate. Computes the changed route files
  * via `git diff --name-only --diff-filter=ACMR <base>...HEAD` filtered to
@@ -142,12 +153,13 @@ const routesIdx = args.indexOf('--routes')
 const ROUTES_RE = routesIdx >= 0 ? new RegExp(args[routesIdx + 1]) : null
 const checkMode = args.includes('--check')
 const PFC = args.includes('--paths-from-changed')
-const checkSchemaDriftOnly = args.includes('--check-schema-drift')
-const skipSchemaDrift = args.includes('--skip-schema-drift')
-const effectiveCheckMode = checkMode || PFC || checkSchemaDriftOnly
+const effectiveCheckMode = checkMode || PFC
 
+const DEFAULT_BATCH_PLAN = 'docs/route-row-typing-plan.json'
 const planIdx = args.indexOf('--batch-plan')
-const BATCH_PLAN_FILE = planIdx >= 0 && args[planIdx + 1] && !args[planIdx + 1].startsWith('--') ? args[planIdx + 1] : null
+const BATCH_PLAN_FILE = planIdx >= 0 && args[planIdx + 1] && !args[planIdx + 1].startsWith('--')
+  ? args[planIdx + 1]
+  : (planIdx >= 0 ? DEFAULT_BATCH_PLAN : null)
 
 // In --check / --paths-from-changed mode, the token immediately after --check / --paths-from-changed (if not a flag) is the
 // base ref; otherwise it is resolved from the CI event env, mirroring
@@ -1322,42 +1334,18 @@ async function runApplyAll() {
   }
 }
 
-function validationFilesChanged(baseRef) {
-  if (!baseRef) return true
-  try {
-    const diffRef = baseRef === 'HEAD' ? 'HEAD' : `${baseRef}...HEAD`
-    const raw = execFileSync('git', ['diff', '--name-only', '--diff-filter=ACMR', diffRef, '--', 'src/lib/validation/'], {
-      encoding: 'utf8',
-      maxBuffer: 16 * 1024 * 1024,
-    })
-    return raw.trim().length > 0
-  } catch {
-    return true
-  }
-}
-
 // ---------------------------------------------------------------------------
 // Report
 // ---------------------------------------------------------------------------
 
 async function main() {
-  if (checkSchemaDriftOnly) {
-    process.exitCode = runSharedSchemaGate() ? 1 : 0
-    return
-  }
-
   // --check is a pure gate: no report, no member scan — fail fast and cheap.
   if (checkMode) {
-    let schemaFailed = 0
-    if (!skipSchemaDrift) {
-      const baseRef = CHECK_BASE || resolveBaseRefFromEnv()
-      const validationChanged = !PFC || validationFilesChanged(baseRef)
-      if (validationChanged) {
-        schemaFailed = runSharedSchemaGate() ? 1 : 0
-      } else {
-        console.log(`[api-row-sweep] schema gate: no schema modules in src/lib/validation changed vs ${baseRef} — skipping schema drift check.`)
-      }
-    }
+    // Two gates: (1) the shared-schema drift gate (whole repo, static scan),
+    // then (2) the untyped-query gate on changed route files. runCheck
+    // returns 0 = pass, 1 = fail, 2 = git error; Math.max preserves the
+    // most severe status (a git failure must stay exit 2, not collapse to 1).
+    const schemaFailed = runSharedSchemaGate() ? 1 : 0
     process.exitCode = Math.max(schemaFailed, runCheck())
     return
   }
@@ -1427,6 +1415,7 @@ async function main() {
   if (BATCH_PLAN_FILE) {
     const planData = {
       generatedAt: new Date().toISOString(),
+      batchSize: BATCH_SIZE,
       totalUntyped: batchFiles.reduce((a, f) => a + f.queries.filter((q) => !q.typed).length, 0),
       batchCount: batches.length,
       batches: batches.map((b, idx) => ({
@@ -1441,7 +1430,7 @@ async function main() {
     }
     const planPath = path.resolve(process.cwd(), BATCH_PLAN_FILE)
     writeFileSync(planPath, JSON.stringify(planData, null, 2), 'utf8')
-    console.log(`[api-row-sweep] wrote stable batch plan to ${BATCH_PLAN_FILE}`)
+    console.log(`[api-row-sweep] wrote stable batch plan to ${BATCH_PLAN_FILE} (${batches.length} batches, ${planData.totalUntyped} untyped queries)`)
   }
 
   if (BATCH !== null) {
@@ -1449,20 +1438,53 @@ async function main() {
       console.error('[api-row-sweep] no route files found — route discovery failed (check src/ tree).')
       process.exit(2)
     }
-    if (!batchFiles.length) {
-      console.log('[api-row-sweep] every route file is fully typed — the row-typing grind is complete! 🎉')
-      process.exit(0)
+
+    // Stable batch numbers: when a committed plan exists (the default
+    // docs/route-row-typing-plan.json, or the --batch-plan path), batch N's
+    // FILE MEMBERSHIP comes from the plan — numbers never shift as files get
+    // typed, so the doc's batch references stay valid. Query lines are still
+    // read live from the current source (typed status updates as the grind
+    // proceeds); re-run --batch-plan after adding new routes to re-chunk.
+    let b = null
+    let planUsed = false
+    const planPath = path.resolve(process.cwd(), BATCH_PLAN_FILE || DEFAULT_BATCH_PLAN)
+    if (!BATCH_PLAN_FILE || nodeFs.existsSync(planPath)) {
+      try {
+        const plan = JSON.parse(readFileSync(planPath, 'utf8'))
+        if (plan && Array.isArray(plan.batches) && plan.batches.length && BATCH <= plan.batches.length) {
+          const planned = plan.batches[BATCH - 1]
+          if (planned && Array.isArray(planned.files) && planned.files.length) {
+            const byFile = new Map(files.map((f) => [f.file, f]))
+            b = planned.files
+              .map((pf) => byFile.get(pf.file))
+              .filter((f) => f !== undefined) // plan may list files since deleted/renamed — drop silently
+            planUsed = true
+          }
+        }
+      } catch { /* plan missing/corrupt — fall back to live chunking */ }
     }
-    if (BATCH > batches.length) {
-      console.error(`[api-row-sweep] batch ${BATCH} out of range — found ${batches.length} batch(es) of ~${BATCH_SIZE} untyped queries.`)
-      process.exit(2)
+    if (!b) {
+      if (!batchFiles.length) {
+        console.log('[api-row-sweep] every route file is fully typed — the row-typing grind is complete! 🎉')
+        process.exit(0)
+      }
+      if (BATCH > batches.length) {
+        console.error(`[api-row-sweep] batch ${BATCH} out of range — found ${batches.length} batch(es) of ~${BATCH_SIZE} untyped queries (live chunking; no usable committed plan).`)
+        process.exit(2)
+      }
+      b = batches[BATCH - 1]
     }
-    const b = batches[BATCH - 1]
     const bUntyped = b.reduce((a, f) => a + f.queries.filter((q) => !q.typed).length, 0)
     const bWarn = b.reduce((a, f) => a + f.memberWarnings, 0)
     console.log(`\n=== API ROW-TYPING BATCH ${BATCH} WORKLIST (${bUntyped} untyped queries · ${b.length} files · ${bWarn} member-access warnings) ===`)
-    console.log(`chunked by cumulative untyped-query count (--batch-size ${BATCH_SIZE}); order = most untyped queries first`)
-    console.log(`batches are computed live from this scan — batch numbers may differ from the doc's historical numbers\n`)
+    if (planUsed) {
+      console.log(`file membership from committed plan ${BATCH_PLAN_FILE || DEFAULT_BATCH_PLAN} — batch numbers are stable across scans`)
+      console.log(`query lines are live; re-run --batch-plan after adding new routes to re-chunk\n`)
+    } else {
+      console.log(`chunked by cumulative untyped-query count (--batch-size ${BATCH_SIZE}); order = most untyped queries first`)
+      console.log(`batches are computed live from this scan — batch numbers may differ from the doc's historical numbers`)
+      console.log(`run --batch-plan to write a committed plan and freeze the numbering\n`)
+    }
     for (const f of b) {
       const unt = f.queries.filter((q) => !q.typed).length
       console.log(`${f.file}  (${f.memberWarnings} member-access · ${f.queries.length} queries, ${unt} untyped)`)
