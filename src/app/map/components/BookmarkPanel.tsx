@@ -24,7 +24,7 @@ interface BookmarkEntry {
 function loadBookmarks(): BookmarkEntry[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : []
+    return raw ? (JSON.parse(raw) as BookmarkEntry[]) : []
   } catch {
     return []
   }
