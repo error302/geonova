@@ -62,6 +62,13 @@ export const httpActiveRequests = new Gauge({
   registers: [register],
 });
 
+export const routeHitsTotal = new Counter({
+  name: 'metardu_route_hits_total',
+  help: 'Total API route hits (apiHandler-wrapped routes), by normalized path',
+  labelNames: ['method', 'path'] as const,
+  registers: [register],
+});
+
 // ─── 2. Survey Computation Metrics ──────────────────────────────────────
 
 export const surveyComputationsTotal = new Counter({

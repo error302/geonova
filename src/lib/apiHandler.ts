@@ -27,6 +27,8 @@ import { auditLog } from '@/lib/logger'
 import { setCurrentUserId, setCurrentOrgId } from '@/lib/db'
 import { db } from '@/lib/db'
 import { captureError } from '@/lib/monitoring/sentry'
+import { routeHitsTotal } from '@/lib/monitoring/metrics'
+import { normalizePath } from '@/lib/monitoring/middleware-tracker'
 import { appendAuditEntry } from '@/lib/audit/auditLog'
 import type { AuditEntityType, AuditAction } from '@/lib/audit/auditHash'
 import type { ZodSchema } from 'zod'
@@ -153,6 +155,16 @@ export function apiHandler(
     const reqId = enableRequestId ? generateRequestId() : undefined
     let userId = 'anonymous'
     try {
+      // Route-hit metric (2026-08-08): record every apiHandler-wrapped
+      // request by normalized path (dynamic segments → [id]) so
+      // api-row-sweep --traffic can weight batch plans by real route
+      // usage (high-traffic routes typed first). Best-effort — a metrics
+      // registry failure must never break the route.
+      try {
+        routeHitsTotal.inc({ method: req.method, path: normalizePath(req.nextUrl.pathname) })
+      } catch {
+        // metrics registry unavailable — ignore
+      }
       if (rlConfig) {
         const identifier = getClientIdentifier(req)
         const { allowed, remaining } = await rateLimit(identifier, rlConfig.max, rlConfig.windowMs)

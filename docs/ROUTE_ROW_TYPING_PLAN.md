@@ -45,6 +45,32 @@ scan. Each worklist entry lists the file's declared row interfaces plus every
 query line (line number, typed/untyped, table, suggested interface) so a
 grind session starts from an exact per-line list.
 
+### Traffic weighting — high-traffic routes typed first
+
+Batch order can be overlaid with **real route-hit data** so the busiest
+routes are typed first (hits desc, then untyped-query count desc):
+
+```bash
+node scripts/api-row-sweep.mjs --batch 1 --traffic            # use docs/route-traffic.json
+node scripts/api-row-sweep.mjs --batch 1 --traffic my-hits.json
+node scripts/api-row-sweep.mjs --capture-traffic <metrics-url>  # scrape route hits, then weight with them
+```
+
+Hit counts come from `metardu_route_hits_total`, the Prometheus counter wired
+into `apiHandler` (Node runtime — middleware runs in Edge where prom-client
+can't load). **The `audit_logs` table does NOT record HTTP hits** — it only
+holds row-level data mutations via DB triggers. To populate the traffic file:
+
+1. Deploy with the apiHandler wiring (it records every wrapped request).
+2. `node scripts/api-row-sweep.mjs --capture-traffic https://app.example.com/api/public/metrics`
+   — parses the counter, maps normalized paths (`/api/projects/[id]`) to
+   route files, and writes `docs/route-traffic.json`.
+3. The same run then proceeds weighted; commit the traffic file so `--traffic`
+   uses it without a scrape, or re-scrape before each planning session.
+
+Traffic-weighted plans record `trafficWeighted: true` and per-file `hits` in
+the batch-plan JSON.
+
 ### Stable batch numbers — `--batch-plan`
 
 `--batch-plan` writes the **batch → file mapping** (every batch, its untyped

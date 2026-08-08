@@ -38,10 +38,21 @@
  *   node scripts/api-row-sweep.mjs --routes 'scheme|rim'# only matching paths
  *   node scripts/api-row-sweep.mjs --batch N [--batch-size S]  # per-line worklist for batch N
  *   node scripts/api-row-sweep.mjs --batch-plan [file]  # write stable batch→file mapping JSON (see below)
+ *   node scripts/api-row-sweep.mjs --traffic [file]     # weight batch order by route hits (see below)
+ *   node scripts/api-row-sweep.mjs --capture-traffic <metrics-url>  # scrape route hits → traffic JSON, then weight with it
  *   node scripts/api-row-sweep.mjs --check [base-ref]   # CI regression gate (see below)
  *   node scripts/api-row-sweep.mjs --apply <route-file>             # auto-type one route (see below)
  *   node scripts/api-row-sweep.mjs --apply <file> --verify           # …then typecheck it & attribute failures
  *   node scripts/api-row-sweep.mjs --apply-all                       # sweep: --apply --verify every untyped route file
+ *
+ * --traffic [file]: overlays the batch worklists with real route-traffic
+ * data — the batch chunking is re-ordered so HIGH-TRAFFIC routes are typed
+ * first (hits desc, then untyped-query count desc as tiebreak). The file
+ * maps an API path or route file to a hit count (default docs/route-traffic.json,
+ * committed alongside the plan). NOTE: audit_logs only records row-level data
+ * mutations — the hit counts come from metardu_route_hits_total, the
+ * Prometheus counter wired into apiHandler, scraped via --capture-traffic
+ * from /api/public/metrics (or exported/committed by hand).
  *
  * --batch N: prints a precise per-line worklist for batch N (files chunked
  * by cumulative untyped-query count, default 30 per batch — --batch-size
@@ -160,6 +171,31 @@ const planIdx = args.indexOf('--batch-plan')
 const BATCH_PLAN_FILE = planIdx >= 0 && args[planIdx + 1] && !args[planIdx + 1].startsWith('--')
   ? args[planIdx + 1]
   : (planIdx >= 0 ? DEFAULT_BATCH_PLAN : null)
+
+// Traffic overlay (2026-08-08): --traffic [file] weights the batch chunking
+// by how often each route is hit (high-traffic routes typed first). The file
+// maps a route path (or route file) to a hit count:
+//   { "/api/projects": 420, "src/app/api/rim/route.ts": 137, ... }
+// Default docs/route-traffic.json (committed with the batch plan); a
+// positional path overrides it. --capture-traffic <metrics-url> scrapes the
+// Prometheus route-hits counter from /api/public/metrics and writes the file
+// (metardu_route_hits_total, wired into apiHandler), then the same run is
+// weighted with it. Hit counts come from the real traffic source — the
+// audit_logs table only records row-level data mutations, not HTTP hits.
+const DEFAULT_TRAFFIC = 'docs/route-traffic.json'
+const captureIdx = args.indexOf('--capture-traffic')
+const CAPTURE_TRAFFIC_URL = captureIdx >= 0 && args[captureIdx + 1] && !args[captureIdx + 1].startsWith('--')
+  ? args[captureIdx + 1]
+  : null
+if (captureIdx >= 0 && !CAPTURE_TRAFFIC_URL) {
+  console.error('[api-row-sweep] --capture-traffic requires a metrics endpoint URL (e.g. https://app.example.com/api/public/metrics).')
+  process.exit(2)
+}
+const trafficIdx = args.indexOf('--traffic')
+const TRAFFIC_FILE = trafficIdx >= 0 && args[trafficIdx + 1] && !args[trafficIdx + 1].startsWith('--')
+  ? args[trafficIdx + 1]
+  : (trafficIdx >= 0 || captureIdx >= 0 ? DEFAULT_TRAFFIC : null)
+const TRAFFIC_USED = !!(TRAFFIC_FILE || CAPTURE_TRAFFIC_URL)
 
 // In --check / --paths-from-changed mode, the token immediately after --check / --paths-from-changed (if not a flag) is the
 // base ref; otherwise it is resolved from the CI event env, mirroring
@@ -1338,6 +1374,124 @@ async function runApplyAll() {
 // Report
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Traffic overlay — weight batch chunking by real route hits
+// ---------------------------------------------------------------------------
+
+/** Route file -> API path (`src/app/api/foo/bar/route.ts` -> `/api/foo/bar`). */
+function routeFileToPath(rel) {
+  const m = /^src\/app\/api\/(.+)\/route\.ts$/.exec(rel)
+  return m ? '/api/' + m[1] : null
+}
+
+/**
+ * Map a metric path (e.g. `/api/projects/[id]`) to the route file it serves.
+ * Exact path match first; then `[id]` wildcards to any `[xyz]` folder
+ * (`/api/admin/users/[id]` → src/app/api/admin/users/[userId]/route.ts).
+ * Returns null when no route matches.
+ */
+function pathToRouteFile(apiPath, files) {
+  const segs = apiPath.replace(/^\/api\//, '').split('/').filter(Boolean)
+  const rels = files.map((f) => f.file)
+  for (const rel of rels) {
+    if (routeFileToPath(rel) === apiPath) return rel
+  }
+  for (const rel of rels) {
+    const p = routeFileToPath(rel)
+    if (!p) continue
+    const rsegs = p.replace(/^\/api\//, '').split('/').filter(Boolean)
+    if (rsegs.length !== segs.length) continue
+    let ok = true
+    for (let i = 0; i < segs.length; i++) {
+      const a = segs[i]
+      const b = rsegs[i]
+      if (a === b) continue
+      if (a === '[id]' && /^\[.*\]$/.test(b)) continue
+      ok = false
+      break
+    }
+    if (ok) return rel
+  }
+  return null
+}
+
+/**
+ * Load the traffic map from a JSON file. Keys may be API paths
+ * (`/api/projects`) or route file paths (`src/app/api/projects/route.ts`);
+ * both are normalised to route file paths. Returns Map<rel, hits> or null.
+ */
+function loadTrafficMap(file, files) {
+  let data
+  try {
+    data = JSON.parse(readFileSync(path.resolve(process.cwd(), file), 'utf8'))
+  } catch (e) {
+    console.warn(`[api-row-sweep] --traffic: cannot read ${file} (${e.message.split('\n')[0]}) — proceeding unweighted.`)
+    return null
+  }
+  const map = new Map()
+  for (const [key, hits] of Object.entries(data)) {
+    if (typeof hits !== 'number' || !Number.isFinite(hits) || hits <= 0) continue
+    let rel
+    if (key.startsWith('/api/')) {
+      rel = pathToRouteFile(key, files)
+    } else if (files.some((f) => f.file === key)) {
+      rel = key
+    } else {
+      const apiPath = '/api/' + key.replace(/^src\/app\/api\//, '').replace(/\/route\.ts$/, '')
+      rel = pathToRouteFile(apiPath, files)
+    }
+    if (rel) map.set(rel, (map.get(rel) || 0) + hits)
+  }
+  return map
+}
+
+/**
+ * --capture-traffic <url>: fetch the Prometheus route-hits counter from
+ * /api/public/metrics (metardu_route_hits_total, wired into apiHandler),
+ * aggregate hits per normalized path, map paths to route files, and write the
+ * traffic JSON (TRAFFIC_FILE). Returns 0 on success, 1 on fetch/parse error.
+ */
+async function captureTraffic(url, files) {
+  const endpoint = url.replace(/\/$/, '')
+  let text
+  try {
+    const res = await fetch(endpoint, { headers: { accept: 'text/plain' } })
+    if (!res.ok) {
+      console.error(`[api-row-sweep] --capture-traffic: HTTP ${res.status} from ${endpoint}`)
+      return 1
+    }
+    text = await res.text()
+  } catch (e) {
+    console.error(`[api-row-sweep] --capture-traffic: fetch failed (${e.message.split('\n')[0]})`)
+    return 1
+  }
+  const perPath = new Map()
+  const lineRe = /^metardu_route_hits_total\{([^}]*)\}\s+([0-9]+)/gm
+  let m
+  while ((m = lineRe.exec(text))) {
+    const labels = m[1]
+    const pathMatch = /path="([^"]*)"/.exec(labels)
+    if (!pathMatch) continue
+    perPath.set(pathMatch[1], (perPath.get(pathMatch[1]) || 0) + parseInt(m[2], 10))
+  }
+  if (!perPath.size) {
+    console.warn(`[api-row-sweep] --capture-traffic: no metardu_route_hits_total lines found — is the apiHandler wiring deployed?`)
+  }
+  const out = {}
+  let matched = 0
+  let totalHits = 0
+  for (const [apiPath, hits] of perPath) {
+    const rel = pathToRouteFile(apiPath, files)
+    if (!rel) continue
+    out[rel] = hits
+    matched++
+    totalHits += hits
+  }
+  writeFileSync(path.resolve(process.cwd(), TRAFFIC_FILE), JSON.stringify(out, null, 2), 'utf8')
+  console.log(`[api-row-sweep] --capture-traffic: wrote ${matched} route(s) / ${totalHits} hits to ${TRAFFIC_FILE}`)
+  return 0
+}
+
 async function main() {
   // --check is a pure gate: no report, no member scan — fail fast and cheap.
   if (checkMode) {
@@ -1383,8 +1537,29 @@ async function main() {
     }
   })
 
-  // Sort by member-access warnings desc, then query count desc
-  files.sort((a, b) => (b.memberWarnings - a.memberWarnings) || (b.queries.length - a.queries.length))
+  // Traffic overlay: --capture-traffic fetches the live counter first so the
+  // same run is weighted; --traffic [file] loads a committed/exported map.
+  // Hits are attached per file (0 when unknown) and drive the batch order.
+  let traffic = null
+  if (CAPTURE_TRAFFIC_URL) {
+    process.exitCode = await captureTraffic(CAPTURE_TRAFFIC_URL, files)
+  }
+  if (TRAFFIC_FILE) {
+    traffic = loadTrafficMap(TRAFFIC_FILE, files)
+    if (traffic) {
+      for (const f of files) f.hits = traffic.get(f.file) || 0
+      console.log(`[api-row-sweep] traffic weighting active (${TRAFFIC_FILE}) — ${traffic.size} route(s) with hits.`)
+    }
+  }
+
+  // Sort by member-access warnings desc, then query count desc; when traffic
+  // is present, high-traffic routes rank first (typed first), then untyped
+  // query count desc as the tiebreak within equal-hit files.
+  files.sort((a, b) =>
+    (traffic ? (b.hits || 0) - (a.hits || 0) : (b.memberWarnings - a.memberWarnings)) ||
+    (b.queries.filter((q) => !q.typed).length - a.queries.filter((q) => !q.typed).length) ||
+    (b.queries.length - a.queries.length)
+  )
 
   // --batch N prints a precise per-line worklist for batch N, mirroring
   // member-scan.mjs: files are chunked into batches by cumulative untyped
@@ -1416,6 +1591,7 @@ async function main() {
     const planData = {
       generatedAt: new Date().toISOString(),
       batchSize: BATCH_SIZE,
+      trafficWeighted: !!traffic,
       totalUntyped: batchFiles.reduce((a, f) => a + f.queries.filter((q) => !q.typed).length, 0),
       batchCount: batches.length,
       batches: batches.map((b, idx) => ({
@@ -1425,6 +1601,7 @@ async function main() {
           file: f.file,
           untypedQueries: f.queries.filter((q) => !q.typed).length,
           memberWarnings: f.memberWarnings,
+          hits: traffic ? (f.hits || 0) : undefined,
         })),
       })),
     }
@@ -1487,7 +1664,8 @@ async function main() {
     }
     for (const f of b) {
       const unt = f.queries.filter((q) => !q.typed).length
-      console.log(`${f.file}  (${f.memberWarnings} member-access · ${f.queries.length} queries, ${unt} untyped)`)
+      const hits = traffic ? `${f.hits || 0} hits · ` : ''
+      console.log(`${f.file}  (${hits}${f.memberWarnings} member-access · ${f.queries.length} queries, ${unt} untyped)`)
       console.log(`  declared row interfaces: ${f.interfaces.length ? f.interfaces.map((i) => `${i.name}@${i.line}`).join(', ') : '(none)'}`)
       for (const q of f.queries) {
         if (untypedOnly && q.typed) continue

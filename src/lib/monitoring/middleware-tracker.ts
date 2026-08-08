@@ -96,7 +96,7 @@ export async function withMetrics(
  *   /api/survey/audit?id=x → /api/survey/audit
  *   /users/123/profile     → /users/[id]/profile
  */
-function normalizePath(pathname: string): string {
+export function normalizePath(pathname: string): string {
   // Skip static assets
   if (
     pathname.startsWith('/_next/') ||
