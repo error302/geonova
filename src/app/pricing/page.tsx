@@ -3,6 +3,28 @@ import { useState, useEffect, useRef } from 'react'
 import { ModernPricingPage, PricingCardProps } from '@/components/ui/animated-glassy-pricing'
 import { PLAN_CATALOG, getPlanPrice, SUPPORTED_CURRENCIES, type CurrencyCode } from '@/lib/subscription/catalog'
 
+// Minimal typed surface for the PayPal v6 SDK global (window.paypal)
+interface PayPalV6PaymentSession {
+  start(opts: { presentationMode: string }, createOrder: () => Promise<{ orderId: string }>): Promise<void>
+}
+interface PayPalV6SDKInstance {
+  createPayPalOneTimePaymentSession(options: {
+    onApprove: (data: { orderId: string }) => void
+    onCancel: (data: unknown) => void
+    onError: (error: unknown) => void
+  }): PayPalV6PaymentSession
+}
+interface PayPalV6SDK {
+  createInstance(config: { clientId: string; components: string[]; pageType: string; currency: CurrencyCode }): Promise<PayPalV6SDKInstance>
+}
+
+declare global {
+  interface Window {
+    paypal?: PayPalV6SDK
+  }
+}
+
+
 const currencyMap: Record<string, CurrencyCode> = {
   'KE': 'KES', 'UG': 'UGX', 'TZ': 'TZS', 'NG': 'NGN',
   'GH': 'GHS', 'ZA': 'ZAR', 'IN': 'INR', 'ID': 'IDR',
@@ -50,13 +72,13 @@ export default function PricingPage() {
       try {
         const cached = localStorage.getItem('metardu:currency')
         if (cached) {
-          const { code, ts } = JSON.parse(cached)
+          const { code, ts } = JSON.parse(cached) as { code: CurrencyCode; ts: number }
           if (Date.now() - ts < 86400000) { setCurrency(code); return }
         }
       } catch { /* ignore */ }
       try {
         const res = await fetch('https://ipapi.co/json/')
-        const data = await res.json()
+        const data = (await res.json()) as { country_code?: string }
         if (data.country_code && currencyMap[data.country_code]) {
           const code = currencyMap[data.country_code]
           setCurrency(code)
@@ -87,7 +109,9 @@ export default function PricingPage() {
     script.onload = async () => {
       paypalLoadedRef.current = true
       try {
-        // @ts-expect-error PayPal v6 SDK global
+        if (!window.paypal) {
+          return
+        }
         const sdkInstance = await window.paypal.createInstance({
           clientId,
           components: ["paypal-payments"],
@@ -96,7 +120,7 @@ export default function PricingPage() {
         })
 
         const paymentSessionOptions = {
-          async onApprove(data: any) {
+          async onApprove(data: { orderId: string }) {
             console.log("Payment approved:", data)
             try {
               const res = await fetch('/api/payments/paypal/capture', {
@@ -104,7 +128,7 @@ export default function PricingPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ orderId: data.orderId })
               })
-              const captureData = await res.json()
+              const captureData = (await res.json()) as { error?: string }
               if (captureData.error) throw new Error(captureData.error)
               console.log("Payment captured successfully:", captureData)
               alert("Payment successful! Thank you for subscribing.")
@@ -113,10 +137,10 @@ export default function PricingPage() {
               alert("Payment capture failed.")
             }
           },
-          onCancel(data: any) {
+          onCancel(data: unknown) {
             console.log("Payment cancelled:", data)
           },
-          onError(error: any) {
+          onError(error: unknown) {
             console.error("Payment error:", error)
             alert("An error occurred during payment.")
           },
@@ -144,8 +168,9 @@ export default function PricingPage() {
                     })
                   })
                   .then(response => response.json())
-                  .then(data => {
+                  .then((data: { error?: string; orderId?: string }) => {
                     if (data.error) throw new Error(data.error)
+                    if (!data.orderId) throw new Error('Missing order ID from create response')
                     return { orderId: data.orderId }
                   })
                 }

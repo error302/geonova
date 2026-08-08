@@ -5,7 +5,26 @@ import { useState } from 'react';
 export default function ComputePage() {
   const [method, setMethod] = useState<'bowditch' | 'least_squares'>('bowditch');
   const [order, setOrder] = useState(3);
-  const [result, setResult] = useState<any>(null);
+  // Shape of the /api/survey/traverse response — mirrors the route's
+  // NextResponse.json({ processedObservations, adjustmentResult, pipelineConfig,
+  // correctionsApplied }). misclosure is optional (not returned by the API).
+  interface TraverseComputationResult {
+    adjustmentResult?: {
+      misclosure?: { easting?: number; northing?: number; linear?: number; ratio?: number }
+    }
+    correctionsApplied?: Array<{
+      from: string
+      to: string
+      rawDistance?: number
+      gridDistance?: number
+      atmosphericPPM?: number
+      seaLevelPPM?: number
+      lineScaleFactor?: number
+      convergence?: number
+      warnings?: string[]
+    }>
+  }
+  const [result, setResult] = useState<TraverseComputationResult | null>(null);
   const [loading, setLoading] = useState(false);
 
   const runComputation = async () => {
@@ -46,7 +65,7 @@ export default function ComputePage() {
           order,
         }),
       });
-      setResult(await res.json());
+      setResult((await res.json()) as TraverseComputationResult);
     } catch (err) {
       console.error(err);
     } finally {
@@ -64,7 +83,7 @@ export default function ComputePage() {
       <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', alignItems: 'center' }}>
         <div>
           <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }} htmlFor="adjustment-method">Adjustment Method</label>
-          <select id="adjustment-method" className="input-field" value={method} onChange={e => setMethod(e.target.value as any)} style={{ width: '200px' }}>
+          <select id="adjustment-method" className="input-field" value={method} onChange={e => setMethod(e.target.value as 'bowditch' | 'least_squares')} style={{ width: '200px' }}>
             <option value="bowditch">Bowditch (3rd/4th Order)</option>
             <option value="least_squares">Least Squares (1st/2nd Order)</option>
           </select>
@@ -127,7 +146,7 @@ export default function ComputePage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {result.correctionsApplied.map((c: any, i: number) => (
+                    {result.correctionsApplied.map((c, i: number) => (
                       <tr key={`item-${i}`} style={{ borderBottom: '1px solid var(--border)' }}>
                         <td style={{ padding: '8px' }}>{c.from} → {c.to}</td>
                         <td style={{ padding: '8px', textAlign: 'right' }}>{c.rawDistance?.toFixed(4)}</td>
