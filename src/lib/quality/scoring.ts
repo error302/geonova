@@ -43,6 +43,22 @@
  */
 
 import { db } from '@/lib/db'
+
+// ─── Row interfaces for typed db.query ─────────────────────────────────────
+
+interface AuditRow {
+  action: string
+  user_name: string | null
+  created_at: string | Date
+  /** JSONB payload — arrives as object from pg driver or as stringified JSON. */
+  payload: unknown
+}
+
+interface ProjectRow {
+  survey_type: string | null
+  created_at: string | Date
+}
+
 // ─── Types ──────────────────────────────────────────────────────────────
 
 export interface SurveyorMetricsQuery {
@@ -147,14 +163,14 @@ export async function computeSurveyorMetrics(
     : ''
 
   // Fetch all audit entries for this user in the date range
-  const auditResult = await db.query(
+  const auditResult = await db.query<AuditRow>(
     `SELECT * FROM audit_chain WHERE user_id = $1 ${dateClause} ORDER BY created_at ASC`,
     params
   )
   const auditEntries = auditResult.rows
 
   // Fetch projects this user worked on
-  const projectsResult = await db.query(
+  const projectsResult = await db.query<ProjectRow>(
     `SELECT survey_type, created_at FROM projects WHERE user_id = $1 ${dateClause}`,
     params
   )
@@ -184,16 +200,19 @@ export async function computeSurveyorMetrics(
     }
 
     // Parse payload (JSONB comes back as object in pg, but be defensive)
-    let payload: any = entry.payload
-    if (typeof payload === 'string') {
-      try { payload = JSON.parse(payload) } catch { payload = {} }
+    let payload: Record<string, unknown> = {}
+    if (typeof entry.payload === 'string') {
+      try { payload = JSON.parse(entry.payload) as Record<string, unknown> } catch { /* keep empty */ }
+    } else if (entry.payload !== null && typeof entry.payload === 'object') {
+      payload = entry.payload as Record<string, unknown>
     }
 
     // Gate pass/fail tracking
-    const metadata = payload?.metadata
-    if (metadata && typeof metadata.gatePassed === 'boolean') {
+    const meta = payload['metadata']
+    const metadata: Record<string, unknown> | null = (meta !== null && typeof meta === 'object') ? meta as Record<string, unknown> : null
+    if (metadata && typeof metadata['gatePassed'] === 'boolean') {
       totalGateRuns++
-      if (metadata.gatePassed) {
+      if (metadata['gatePassed']) {
         gatePasses++
       } else {
         gateFailures++
@@ -201,8 +220,10 @@ export async function computeSurveyorMetrics(
     }
 
     // Precision ratio tracking (from traverse adjustments)
-    if (action === 'adjust' && payload?.new?.precisionRatio) {
-      const ratio = Number(payload.new.precisionRatio)
+    const payloadNew = payload['new']
+    const newObj: Record<string, unknown> | null = (payloadNew !== null && typeof payloadNew === 'object') ? payloadNew as Record<string, unknown> : null
+    if (action === 'adjust' && newObj && 'precisionRatio' in newObj) {
+      const ratio = Number(newObj['precisionRatio'])
       if (!Number.isNaN(ratio) && ratio > 0) {
         precisionSum += ratio
         precisionCount++
@@ -220,7 +241,7 @@ export async function computeSurveyorMetrics(
 
   const firstEntry = auditEntries[0]
   const lastEntry = auditEntries[auditEntries.length - 1]
-  const toIso = (v: any): string | null => {
+  const toIso = (v: unknown): string | null => {
     if (!v) return null
     if (v instanceof Date) return v.toISOString()
     return String(v)

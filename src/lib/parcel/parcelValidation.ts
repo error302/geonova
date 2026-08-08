@@ -118,7 +118,7 @@ export function compareBoundaries(
   if (avgOffset > tolerance) {
     warnings.push(`Average boundary offset (${avgOffset.toFixed(2)}m) exceeds tolerance (${tolerance}m)`)
   }
-  const maxOffset = Math.max(...cornerOffsets.map((c: any) => c.offset))
+  const maxOffset = Math.max(...cornerOffsets.map((c) => c.offset))
   if (maxOffset > tolerance * 2) {
     warnings.push(`Corner offset (${maxOffset.toFixed(2)}m) significantly exceeds tolerance`)
   }
@@ -159,14 +159,14 @@ export function detectConflicts(
     })
   }
   
-  const maxOffset = Math.max(...comparison.cornerOffsets.map((c: any) => c.offset))
-  const highOffsetCorners = comparison.cornerOffsets.filter((c: any) => c.offset > tolerance)
+  const maxOffset = Math.max(...comparison.cornerOffsets.map((c) => c.offset))
+  const highOffsetCorners = comparison.cornerOffsets.filter((c) => c.offset > tolerance)
   
   if (maxOffset > tolerance * 3) {
     conflicts.push({
       type: 'boundary_shift',
       description: `Maximum corner offset is ${maxOffset.toFixed(2)}m`,
-      location: comparison.cornerOffsets.find((c: any) => c.offset === maxOffset)?.corner,
+      location: comparison.cornerOffsets.find((c) => c.offset === maxOffset)?.corner,
       severity: 'severe',
       recommendation: 'Original monuments may have been disturbed - verify with adjacent properties'
     })
@@ -194,11 +194,11 @@ export function detectConflicts(
   const hasConflict = conflicts.length > 0
   let severity: ConflictDetectionResult['severity'] = 'none'
   
-  if (conflicts.some((c: any) => c.severity === 'severe')) {
+  if (conflicts.some((c) => c.severity === 'severe')) {
     severity = 'severe'
-  } else if (conflicts.some((c: any) => c.severity === 'moderate')) {
+  } else if (conflicts.some((c) => c.severity === 'moderate')) {
     severity = 'moderate'
-  } else if (conflicts.some((c: any) => c.severity === 'minor')) {
+  } else if (conflicts.some((c) => c.severity === 'minor')) {
     severity = 'minor'
   }
   
@@ -212,7 +212,7 @@ export function detectConflicts(
 function calculateAreaFromPoints(points: SurveyPoint[]): number {
   if (points.length < 3) return 0
   
-  const coords = points.map((p: any) => ({ easting: p.easting, northing: p.northing }))
+  const coords = points.map((p) => ({ easting: p.easting, northing: p.northing }))
   const result = coordinateArea(coords)
   return result.areaSqm
 }
@@ -249,8 +249,8 @@ export function getDiscrepancyLayer(comparison: BoundaryComparisonResult): {
   features: object[]
 } {
   const features = comparison.cornerOffsets
-    .filter((c: any) => c.offset > 0.3)
-    .map((c: any) => ({
+    .filter((c) => c.offset > 0.3)
+    .map((c) => ({
       type: 'Feature' as const,
       properties: {
         corner: c.corner,

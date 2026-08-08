@@ -32,6 +32,7 @@ export interface SurveyObservation {
 export interface WorkflowResult {
   success: boolean
   surveyType: SurveyType
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- callers use results dynamically (traverse/leveling/radiation union); narrowing requires large refactor tracked separately
   results: any
   validation: ValidationResult
   warnings: string[]
@@ -113,7 +114,7 @@ export interface RadiationWorkflowData {
 export function detectSurveyType(observations: SurveyObservation[]): SurveyType {
   if (observations.length === 0) return 'unknown'
 
-  const types = new Set(observations.map((o: any) => o.type))
+  const types = new Set(observations.map((o) => o.type))
   
   if (types.has('BS') || types.has('IS') || types.has('FS')) {
     return 'leveling'
@@ -156,8 +157,8 @@ export function runTraverseWorkflow(data: TraverseWorkflowData): WorkflowResult 
       points: [
         { name: data.openingPoint.name, easting: data.openingPoint.easting, northing: data.openingPoint.northing }
       ],
-      distances: data.legs.map((l: any) => l.distance),
-      bearings: data.legs.map((l: any) => l.bearing)
+      distances: data.legs.map((l) => l.distance),
+      bearings: data.legs.map((l) => l.bearing)
     }
 
     const result = bowditchAdjustment(traverseInput)
@@ -317,7 +318,7 @@ export function runRadiationWorkflow(data: RadiationWorkflowData): WorkflowResul
   const errors: string[] = []
 
   try {
-    const points = data.observations.map((obs: any) => {
+    const points = data.observations.map((obs) => {
       const rad = radiation(
         { easting: data.station.easting, northing: data.station.northing },
         obs.bearing,
@@ -369,8 +370,8 @@ export function runCoordinatesWorkflow(observations: SurveyObservation[]): Workf
 
   try {
     const points = observations
-      .filter((o: any) => o.type === 'COORDINATE' && o.value1 !== undefined && o.value2 !== undefined)
-      .map((o: any) => ({
+      .filter((o) => o.type === 'COORDINATE' && o.value1 !== undefined && o.value2 !== undefined)
+      .map((o) => ({
         name: o.station,
         easting: o.value1!,
         northing: o.value2!,

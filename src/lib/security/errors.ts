@@ -1,6 +1,23 @@
-export function getErrorMessage(error: any): string {
-  const code = error?.code || ''
-  const message = error?.message || ''
+/** Extract a string code from an unknown thrown value (e.g. pg error codes). */
+function errCode(error: unknown): string {
+  if (typeof error === 'object' && error !== null && 'code' in error && typeof (error as { code: unknown }).code === 'string') {
+    return (error as { code: string }).code
+  }
+  return ''
+}
+
+/** Extract a string message from an unknown thrown value. */
+function errMessage(error: unknown): string {
+  if (error instanceof Error) return error.message
+  if (typeof error === 'object' && error !== null && 'message' in error && typeof (error as { message: unknown }).message === 'string') {
+    return (error as { message: string }).message
+  }
+  return ''
+}
+
+export function getErrorMessage(error: unknown): string {
+  const code = errCode(error)
+  const message = errMessage(error)
 
   if (code === '23505') return 'This name already exists. Please use a different name.'
   if (code === '23503') return 'Related record not found. Please refresh and try again.'
@@ -14,8 +31,8 @@ export function getErrorMessage(error: any): string {
   return message || 'Something went wrong. Please try again.'
 }
 
-export function getAuthErrorMessage(error: any): string {
-  const message = error?.message || ''
+export function getAuthErrorMessage(error: unknown): string {
+  const message = errMessage(error)
   
   if (message.includes('Invalid login credentials')) return 'Invalid email or password.'
   if (message.includes('User already registered')) return 'This email is already registered.'

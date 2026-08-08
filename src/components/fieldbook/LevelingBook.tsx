@@ -1,6 +1,7 @@
 'use client';
 
 import type { Dispatch, SetStateAction } from 'react'
+import type { LevelingResult } from '@/lib/engine/types'
 
 type Translator = (key: string, values?: Record<string, string | number>) => string
 
@@ -31,9 +32,9 @@ export function LevelingBook({
   setLevelMethod: Dispatch<SetStateAction<'rise_and_fall' | 'height_of_collimation'>>
   levelRows: LevelRow[]
   setLevelRows: Dispatch<SetStateAction<LevelRow[]>>
-  computed: { ok: true; calc: any } | { ok: false; errors: string[] }
+  computed: { ok: true; calc: LevelingResult } | { ok: false; errors: string[] }
 }) {
-  const outRows = computed.ok ? computed.calc.readings.filter((r: any) => r.station !== 'BM') : []
+  const outRows = computed.ok ? computed.calc.readings.filter((r) => r.station !== 'BM') : []
 
   return (
     <div className="card">

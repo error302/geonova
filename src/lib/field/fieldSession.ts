@@ -269,7 +269,7 @@ class FieldSession {
     try {
       const { getObservations } = await import('@/lib/offline/fieldBookDB')
       const observations = await getObservations(this.state.projectId)
-      const measurements: FieldMeasurement[] = observations.map((obs: any) => ({
+      const measurements: FieldMeasurement[] = observations.map((obs) => ({
         id: obs.id,
         timestamp: new Date(obs.createdAt).getTime(),
         pointId: '',
