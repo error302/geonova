@@ -235,7 +235,7 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
       moveendCleanupRef.current?.();
       moveendCleanupRef.current = null;
     };
-  }, [map, initialized, gridEnabled, gridInterval]);
+  }, [map, initialized, gridEnabled, gridInterval, overlayOpacity]);
 
   // ─── Sync overlay opacity to layers ───────────────────────────────────
   useEffect(() => {
@@ -361,7 +361,7 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
     } finally {
       setIsAddingWms(false);
     }
-  }, [map, wmsUrl, wmsLayerName, wmsLabel, customLayers.length, overlayOpacity]);
+  }, [map, wmsUrl, wmsLayerName, wmsLabel, overlayOpacity]);
 
   // ─── Remove custom layer ──────────────────────────────────────────────
   const removeCustomLayer = useCallback(

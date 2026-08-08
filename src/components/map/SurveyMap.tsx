@@ -47,7 +47,7 @@ export default function SurveyMap({
   centroidEasting,
   centroidNorthing,
   onBeaconClick,
-  readOnly = true,
+  readOnly: _readOnly = true,
   enableEditing = false,
   onVerticesChange,
   lrNumber,
@@ -64,7 +64,7 @@ export default function SurveyMap({
   const [mapReady, setMapReady] = useState(false);
   const [nearestStations, setNearestStations] = useState<NearestStation[]>([]);
   const [clickedCoord, setClickedCoord] = useState<{ easting: number; northing: number } | null>(null);
-  const [basemap, setBasemap] = useState<'osm' | 'satellite' | 'blank'>('osm');
+  const [_basemap, setBasemap] = useState<'osm' | 'satellite' | 'blank'>('osm');
 
   // ── Sheet layout state ────────────────────────────────────────
   const [showSheetLayout, setShowSheetLayout] = useState(false);
@@ -192,8 +192,11 @@ export default function SurveyMap({
 
       if (cancelled) return;
 
+      const target = mapRef.current;
+      if (!target) return;
+
       map = new Map({
-        target: mapRef.current!,
+        target,
         layers: [osmLayer, kenCORSLayer, parcelLayer, beaconLayer, annotationLayer],
         view: new View({
           center: savedState?.center ?? center3857,
@@ -219,7 +222,6 @@ export default function SurveyMap({
 
         // ── Check if a beacon feature was clicked ─────────────────
         if (onBeaconClick) {
-          const { default: Feature } = await import('ol/Feature');
           const hitFeature = map.forEachFeatureAtPixel(evt.pixel, (f) => f as import('ol/Feature').default, {
             hitTolerance: 8,
           });
@@ -264,24 +266,11 @@ export default function SurveyMap({
         mapInstanceRef.current = null;
       }
     };
+    // One-shot map initializer: identity is project+centroid; adjustedStations/epsg/
+    // onBeaconClick/to3857Single are captured for the initial build only (re-running
+    // would tear down the live map and drop in-progress user edits).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId, centroidEasting, centroidNorthing]);
-
-  const toggleBasemap = useCallback(async () => {
-    if (!mapInstanceRef.current) return;
-    const map = mapInstanceRef.current;
-
-    if (basemap === 'osm') {
-      map.getLayers().getArray()
-        .filter(l => l.get('basemapId'))
-        .forEach(l => l.setVisible(false));
-      setBasemap('blank');
-    } else {
-      map.getLayers().getArray()
-        .filter(l => l.get('basemapId') === 'osm')
-        .forEach(l => l.setVisible(true));
-      setBasemap('osm');
-    }
-  }, [basemap]);
 
   const fitToParcel = useCallback(async () => {
     if (!mapInstanceRef.current || adjustedStations.length < 3) return;
@@ -293,7 +282,7 @@ export default function SurveyMap({
     const ys = coords.map(c => c[1]);
     const extent = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)] as [number, number, number, number];
     mapInstanceRef.current.getView().fit(extent, { padding: [60, 60, 60, 60], duration: 400 });
-  }, [adjustedStations]);
+  }, [adjustedStations, epsg]);
 
   const handlePrint = useCallback(() => {
     if (!showSheetLayout) {
