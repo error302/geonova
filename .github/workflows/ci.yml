@@ -133,6 +133,18 @@ jobs:
         run: |
           test -d .next/standalone && echo "✓ standalone build OK"
           test -f .next/BUILD_ID && echo "✓ BUILD_ID present"
+      # Upload the compiled .next dir so E2E shards can start without rebuilding.
+      # E2E_BUILD_ARTIFACT (2026-08-08): removes the hidden ~8-min rebuild that
+      # was pushing the e2e job past its 20-min timeout on every push.
+      - name: Upload .next build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-build-${{ github.sha }}
+          path: |
+            .next/
+            public/
+          # Keep for 1 day — only needed for the E2E shards in the same run.
+          retention-days: 1
 
   i18n:
     name: i18n Integrity Check
@@ -174,10 +186,19 @@ jobs:
       - run: npx jest --silent --coverage --coverageReporters=text-summary
 
   e2e:
-    name: E2E Tests (Playwright)
+    name: "E2E Tests (shard ${{ matrix.shard }}/${{ strategy.job-total }})"
     runs-on: ubuntu-latest
+    # E2E_SHARDING (2026-08-08): 2-way shard matrix.  Each runner:
+    #   1. Downloads the .next artifact built by the `build` job (no rebuild).
+    #   2. Runs `next start` (not `next build`) via CI_E2E_PROD=true.
+    #   3. Executes its assigned shard of the 8 spec files.
+    # Wall-clock time drops from ~22 min (single runner + rebuild) to ~7 min.
     timeout-minutes: 20
     needs: [build]
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -185,20 +206,44 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
+      # Restore the pre-built .next so the webServer can start immediately
+      # with `next start` instead of re-running `next build`.
+      - name: Download .next build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: next-build-${{ github.sha }}
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
-      - name: Run Playwright E2E tests
+      - name: Run Playwright E2E tests (shard ${{ matrix.shard }}/2)
         env:
           NEXT_PUBLIC_SENTRY_DSN: ''
           DISABLE_PWA: 'true'
-        run: npx playwright test --reporter=list
-      - name: Upload test artifacts
-        if: failure()
+          CI_E2E_PROD: 'true'
+        run: npx playwright test --reporter=list --shard=${{ matrix.shard }}/2
+      - name: Upload shard report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-shard-${{ matrix.shard }}
           path: playwright-report/
           retention-days: 7
+
+  e2e-report:
+    # Synthetic status check — branch protection should require THIS job, not
+    # individual e2e shards (whose names change with matrix.shard counts).
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [e2e]
+    if: always()
+    steps:
+      - name: Report overall E2E status
+        run: |
+          if [ "${{ needs.e2e.result }}" = "success" ]; then
+            echo "✓ All E2E shards passed"
+          else
+            echo "✗ One or more E2E shards failed (result: ${{ needs.e2e.result }})"
+            exit 1
+          fi
 
   mobile-build-check:
     name: Mobile Build Verification
