@@ -19,7 +19,8 @@ const transformRequestSchema = z.object({
 export const POST = apiHandler(
   { auth: true, schema: transformRequestSchema, rateLimit: { max: 120, windowMs: 60000 } },
   async (req, ctx) => {
-    const { latitude, longitude, easting, northing, zone, hemisphere, fromSystem, toSystem } = ctx.body as any
+    const { latitude, longitude, easting, northing, zone, hemisphere, fromSystem, toSystem } =
+      ctx.body as z.infer<typeof transformRequestSchema>
 
     const result = await transformCoordinates(
       { latitude, longitude, easting, northing, zone, hemisphere },

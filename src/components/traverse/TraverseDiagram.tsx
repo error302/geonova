@@ -32,13 +32,32 @@ interface Point {
   northing: number;
 }
 
+interface TraverseLeg {
+  from: string;
+  to: string;
+  adjEasting: number;
+  adjNorthing: number;
+  correctedDeparture?: number;
+  correctedLatitude?: number;
+  adjDeltaE?: number;
+  adjDeltaN?: number;
+  departure?: number;
+  latitude?: number;
+  rawDeltaE?: number;
+  rawDeltaN?: number;
+}
+
+interface TraverseDiagramResult {
+  legs: TraverseLeg[];
+}
+
 export function TraverseDiagram({ result }: TraverseDiagramProps) {
   const WIDTH = 800;
   const HEIGHT = 500;
   const PAD = 50;
 
   const { adjustedPath, rawPath, closingError } = useMemo(() => {
-    const legs: any[] = result.legs || [];
+    const legs = (result as TraverseDiagramResult).legs || [];
     if (legs.length === 0) {
       return { adjustedPath: [], rawPath: [], closingError: 0 };
     }

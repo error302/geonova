@@ -60,11 +60,34 @@ const EMLID_SERVICE = '0000ee01-0000-1000-8000-00805f9b34fb'
 const EMLID_CHAR_POSITION = '0000ee02-0000-1000-8000-00805f9b34fb'
 const EMLID_CHAR_CORRECTIONS = '0000ee03-0000-1000-8000-00805f9b34fb'
 
+// Minimal structural types for the Web Bluetooth API surfaces this class
+// touches (the DOM lib doesn't ship them; navigator is cast through unknown).
+interface GNSSBLECharacteristic {
+  startNotifications(): Promise<void>
+  stopNotifications(): Promise<void>
+  writeValueWithoutResponse(value: Uint8Array): Promise<void>
+  addEventListener(event: 'characteristicvaluechanged', listener: (event: { target: { value: DataView } }) => void): void
+}
+interface GNSSBLEGATTService {
+  getCharacteristic(uuid: string): Promise<GNSSBLECharacteristic>
+}
+interface GNSSBLEGATTServer {
+  connected: boolean
+  connect(): Promise<GNSSBLEGATTServer>
+  disconnect(): void
+  getPrimaryService(uuid: string): Promise<GNSSBLEGATTService>
+}
+interface GNSSBLEDevice {
+  name?: string
+  gatt: GNSSBLEGATTServer
+  addEventListener(event: 'gattserverdisconnected', listener: () => void): void
+}
+
 export class GNSSBleConnection {
-  private device: any = null
-  private server: any = null
-  private rxCharacteristic: any = null
-  private txCharacteristic: any = null
+  private device: GNSSBLEDevice | null = null
+  private server: GNSSBLEGATTServer | null = null
+  private rxCharacteristic: GNSSBLECharacteristic | null = null
+  private txCharacteristic: GNSSBLECharacteristic | null = null
   private connected = false
   private state: GNSSConnectionState = {
     connected: false,
@@ -100,8 +123,9 @@ export class GNSSBleConnection {
       )
     }
 
-    // @ts-expect-error — Web Bluetooth API is not in the DOM lib types.
-    this.device = await navigator.bluetooth.requestDevice({
+    const device = await (navigator as unknown as {
+      bluetooth: { requestDevice: (opts: unknown) => Promise<GNSSBLEDevice> }
+    }).bluetooth.requestDevice({
       filters: [
         { services: [BLE_SERVICE_NMEA] },
         { services: [EMLID_SERVICE] },
@@ -113,37 +137,43 @@ export class GNSSBleConnection {
       ],
       optionalServices: [BLE_SERVICE_NMEA, EMLID_SERVICE, 'generic_access'],
     })
+    this.device = device
 
-    this.device.addEventListener('gattserverdisconnected', () => {
+    device.addEventListener('gattserverdisconnected', () => {
       this.connected = false
       this.state.connected = false
       this.state.receivingData = false
       this.notifyStateChange()
     })
 
-    this.server = await this.device.gatt.connect()
+    const server = await device.gatt.connect()
+    this.server = server
 
     // Try standard NMEA service first, then Emlid
-    let service
+    let service: GNSSBLEGATTService
+    let rxCharacteristic: GNSSBLECharacteristic
+    let txCharacteristic: GNSSBLECharacteristic
     try {
-      service = await this.server.getPrimaryService(BLE_SERVICE_NMEA)
-      this.rxCharacteristic = await service.getCharacteristic(BLE_CHAR_NMEA_RX)
-      this.txCharacteristic = await service.getCharacteristic(BLE_CHAR_NMEA_TX)
+      service = await server.getPrimaryService(BLE_SERVICE_NMEA)
+      rxCharacteristic = await service.getCharacteristic(BLE_CHAR_NMEA_RX)
+      txCharacteristic = await service.getCharacteristic(BLE_CHAR_NMEA_TX)
     } catch {
-      service = await this.server.getPrimaryService(EMLID_SERVICE)
-      this.rxCharacteristic = await service.getCharacteristic(EMLID_CHAR_POSITION)
-      this.txCharacteristic = await service.getCharacteristic(EMLID_CHAR_CORRECTIONS)
+      service = await server.getPrimaryService(EMLID_SERVICE)
+      rxCharacteristic = await service.getCharacteristic(EMLID_CHAR_POSITION)
+      txCharacteristic = await service.getCharacteristic(EMLID_CHAR_CORRECTIONS)
     }
+    this.rxCharacteristic = rxCharacteristic
+    this.txCharacteristic = txCharacteristic
 
     // Subscribe to NMEA notifications
-    await this.rxCharacteristic.startNotifications()
-    this.rxCharacteristic.addEventListener('characteristicvaluechanged', (event: any) => {
+    await rxCharacteristic.startNotifications()
+    rxCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
       this.handleNmeaData(event.target.value)
     })
 
     this.connected = true
     this.state.connected = true
-    this.state.deviceName = this.device.name || 'Unknown GNSS'
+    this.state.deviceName = device.name || 'Unknown GNSS'
     this.notifyStateChange()
   }
 

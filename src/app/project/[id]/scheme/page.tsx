@@ -64,6 +64,20 @@ interface BlockWithCounts extends Block {
   completed_count: number
 }
 
+interface TraverseSummaryRow {
+  accuracy_class: string
+  block_number?: string | number | null
+  parcel_number?: string | number | null
+  accuracy_order?: string | null
+  precision_ratio?: string | number | null
+  computed_area_ha?: string | number | null
+  status?: string | null
+}
+
+interface ParcelStatusRow {
+  status: string
+}
+
 export default function SchemeWorkspacePage() {
   const params = useParams()
   const router = useRouter()
@@ -116,7 +130,7 @@ export default function SchemeWorkspacePage() {
       if (blks.length > 0) {
         try {
           const parcelsJson = await apiGet(`/api/scheme/parcels?project_id=${projectId}`, parcelsResponseSchema, { ttlMs: 30_000 })
-          const parcels = parcelsJson.data || []
+          const parcels = (parcelsJson.data || []) as ParcelStatusRow[]
 
           const counts: Record<ParcelStatus, number> = {
             pending: 0, field_complete: 0, computed: 0, plan_generated: 0, submitted: 0, approved: 0
@@ -147,7 +161,8 @@ export default function SchemeWorkspacePage() {
 
     apiGet(`/api/scheme/traverse/summary?project_id=${project.id}`, traverseSummarySchema, { ttlMs: 0 })
       .then(result => {
-        const { data, summary } = result
+        const { summary } = result
+        const rows = (result.data || []) as TraverseSummaryRow[]
 
         // Update stat cards
         const totalEl = document.getElementById('summary-total')
@@ -156,7 +171,7 @@ export default function SchemeWorkspacePage() {
         const failedEl = document.getElementById('summary-failed')
         if (totalEl) totalEl.textContent = String(summary.total)
         if (passedEl) passedEl.textContent = String(summary.passed)
-        if (warningEl) warningEl.textContent = String(data.filter((r: any) => r.accuracy_class === 'warning').length + data.filter((r: any) => r.accuracy_class === 'pending').length)
+        if (warningEl) warningEl.textContent = String(rows.filter((r) => r.accuracy_class === 'warning').length + rows.filter((r) => r.accuracy_class === 'pending').length)
         if (failedEl) failedEl.textContent = String(summary.failed)
 
         // Render table
@@ -164,7 +179,7 @@ export default function SchemeWorkspacePage() {
         // statuses are user-entered — build the table with createElement +
         // textContent, never innerHTML (stored-XSS guard).
         const tableEl = document.getElementById('traverse-table')
-        if (tableEl && data.length > 0) {
+        if (tableEl && rows.length > 0) {
           tableEl.replaceChildren()
 
           const table = document.createElement('table')
@@ -184,7 +199,7 @@ export default function SchemeWorkspacePage() {
 
           const tbody = document.createElement('tbody')
           const colorMap: Record<string, string> = { pass: 'text-green-400', warning: 'text-yellow-400', fail: 'text-red-400', pending: 'text-gray-500' }
-          for (const r of data) {
+          for (const r of rows) {
             const color = colorMap[r.accuracy_class] || 'text-gray-500'
             const tr = document.createElement('tr')
             tr.className = 'border-b border-gray-800'

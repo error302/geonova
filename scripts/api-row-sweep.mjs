@@ -142,7 +142,9 @@ const routesIdx = args.indexOf('--routes')
 const ROUTES_RE = routesIdx >= 0 ? new RegExp(args[routesIdx + 1]) : null
 const checkMode = args.includes('--check')
 const PFC = args.includes('--paths-from-changed')
-const effectiveCheckMode = checkMode || PFC
+const checkSchemaDriftOnly = args.includes('--check-schema-drift')
+const skipSchemaDrift = args.includes('--skip-schema-drift')
+const effectiveCheckMode = checkMode || PFC || checkSchemaDriftOnly
 
 const planIdx = args.indexOf('--batch-plan')
 const BATCH_PLAN_FILE = planIdx >= 0 && args[planIdx + 1] && !args[planIdx + 1].startsWith('--') ? args[planIdx + 1] : null
@@ -1320,18 +1322,42 @@ async function runApplyAll() {
   }
 }
 
+function validationFilesChanged(baseRef) {
+  if (!baseRef) return true
+  try {
+    const diffRef = baseRef === 'HEAD' ? 'HEAD' : `${baseRef}...HEAD`
+    const raw = execFileSync('git', ['diff', '--name-only', '--diff-filter=ACMR', diffRef, '--', 'src/lib/validation/'], {
+      encoding: 'utf8',
+      maxBuffer: 16 * 1024 * 1024,
+    })
+    return raw.trim().length > 0
+  } catch {
+    return true
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Report
 // ---------------------------------------------------------------------------
 
 async function main() {
+  if (checkSchemaDriftOnly) {
+    process.exitCode = runSharedSchemaGate() ? 1 : 0
+    return
+  }
+
   // --check is a pure gate: no report, no member scan — fail fast and cheap.
   if (checkMode) {
-    // Two gates: (1) the shared-schema drift gate (whole repo, static scan),
-    // then (2) the untyped-query gate on changed route files. runCheck
-    // returns 0 = pass, 1 = fail, 2 = git error; Math.max preserves the
-    // most severe status (a git failure must stay exit 2, not collapse to 1).
-    const schemaFailed = runSharedSchemaGate() ? 1 : 0
+    let schemaFailed = 0
+    if (!skipSchemaDrift) {
+      const baseRef = CHECK_BASE || resolveBaseRefFromEnv()
+      const validationChanged = !PFC || validationFilesChanged(baseRef)
+      if (validationChanged) {
+        schemaFailed = runSharedSchemaGate() ? 1 : 0
+      } else {
+        console.log(`[api-row-sweep] schema gate: no schema modules in src/lib/validation changed vs ${baseRef} — skipping schema drift check.`)
+      }
+    }
     process.exitCode = Math.max(schemaFailed, runCheck())
     return
   }

@@ -14,14 +14,26 @@ interface BreaklineInput {
   type: 'hard' | 'soft' | 'ridge' | 'valley'
 }
 
+interface ContourSanityIssue {
+  severity: 'error' | 'warning'
+  message: string
+  suggestion?: string
+}
+
+interface ContourSanity {
+  passed: boolean
+  summary: string
+  issues: ContourSanityIssue[]
+}
+
 export default function TopographicSurveyPage() {
   const [points, setPoints] = useState<TopoPoint[]>([])
   const [breaklines, setBreaklines] = useState<BreaklineInput[]>([])
   const [pointInput, setPointInput] = useState('')
   const [breaklineInput, setBreaklineInput] = useState('')
   const [contourInterval, setContourInterval] = useState('1.0')
-  const [contours, setContours] = useState<any>(null)
-  const [sanity, setSanity] = useState<any>(null)
+  const [contours, setContours] = useState<unknown[] | null>(null)
+  const [sanity, setSanity] = useState<ContourSanity | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [codeFilter, setCodeFilter] = useState('')
@@ -84,8 +96,8 @@ export default function TopographicSurveyPage() {
           interval: parseFloat(contourInterval),
         }),
       })
-      if (!res.ok) { const e = await res.json(); throw new Error(e.error || 'Failed') }
-      const data = await res.json()
+      if (!res.ok) { const e = (await res.json()) as { error?: string }; throw new Error(e.error || 'Failed') }
+      const data = (await res.json()) as { data: { contours: unknown[]; sanity: ContourSanity } }
       setContours(data.data.contours)
       setSanity(data.data.sanity)
     } catch (e) { setError(e instanceof Error ? e.message : 'Failed') }
@@ -107,7 +119,7 @@ export default function TopographicSurveyPage() {
         }),
       })
       if (!res.ok) throw new Error('Export failed')
-      const data = await res.json()
+      const data = (await res.json()) as { content: string | ArrayBuffer; mimeType: string; filename: string }
       const blob = new Blob([data.content], { type: data.mimeType })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -219,7 +231,7 @@ export default function TopographicSurveyPage() {
             <p className="mt-1 opacity-80">{sanity.summary}</p>
             {sanity.issues.length > 0 && (
               <div className="mt-2 space-y-1">
-                {sanity.issues.map((issue: any, i: number) => (
+                {sanity.issues.map((issue, i) => (
                   <div key={i} className="text-[10px]">
                     <span className={issue.severity === 'error' ? 'text-red-400' : 'text-yellow-400'}>[{issue.severity.toUpperCase()}]</span>
                     {' '}{issue.message}

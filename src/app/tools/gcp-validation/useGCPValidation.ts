@@ -121,12 +121,17 @@ export function useGCPValidation() {
     const reader = new FileReader();
     reader.onload = (evt) => {
       try {
-        const json = JSON.parse(evt.target?.result as string);
+        const json = JSON.parse(evt.target?.result as string) as {
+          features?: Array<{
+            geometry?: { type?: string; coordinates?: number[] };
+            properties?: Record<string, unknown>;
+          }>;
+        };
         const features = json.features || [];
         const imported: KnownGCP[] = [];
         for (const f of features) {
           if (f.geometry?.type !== 'Point') continue;
-          const coords = f.geometry.coordinates;
+          const coords = f.geometry.coordinates ?? [];
           const props = f.properties || {};
           const name = props.name || props.id || `GCP-${imported.length + 1}`;
           // GeoJSON is WGS84, but we just take the UTM props if available

@@ -17,7 +17,7 @@ export default function CadastralComputeIntegration({ projectId }: { projectId: 
         setLoading(true);
         const res = await fetch(`/api/project/${projectId}/fieldbook`);
         if (!res.ok) throw new Error('Failed to fetch field book data');
-        const json = await res.json();
+        const json = (await res.json()) as { data: Array<{ station?: string; raw_data?: { station?: string; distance?: number; bearing?: number } }> };
         
         if (!json.data || json.data.length === 0) {
           setError('No field book data found. Please complete Step 2 first.');
@@ -25,12 +25,12 @@ export default function CadastralComputeIntegration({ projectId }: { projectId: 
           return;
         }
 
-        const rawRows: FieldBookRow[] = json.data.map((r: any) => ({
+        const rawRows = json.data.map((r) => ({
           ...r.raw_data,
           station: r.station || r.raw_data?.station,
           distance: r.raw_data?.distance,
           bearing: r.raw_data?.bearing,
-        }));
+        })) as unknown as FieldBookRow[];
         
         setRows(rawRows);
 
@@ -48,7 +48,7 @@ export default function CadastralComputeIntegration({ projectId }: { projectId: 
           const { createClient } = await import('@/lib/api-client/client');
           const dbClient = createClient();
           
-          const adjustedStations = computation.adjustedStations.legs.map((leg: any) => ({
+          const adjustedStations = computation.adjustedStations.legs.map((leg) => ({
             pointName: leg.to,
             originalEasting: leg.adjEasting - leg.correctionE,
             originalNorthing: leg.adjNorthing - leg.correctionN,
@@ -70,8 +70,8 @@ export default function CadastralComputeIntegration({ projectId }: { projectId: 
             .update({ boundary_data: { adjustedStations } })
             .eq('id', projectId);
 
-        } catch (compErr: any) {
-          setError(compErr.message || 'Failed to compute traverse from field book data. Ensure distances and bearings are entered correctly.');
+        } catch (compErr: unknown) {
+          setError(compErr instanceof Error ? compErr.message : 'Failed to compute traverse from field book data. Ensure distances and bearings are entered correctly.');
         }
 
       } catch (err: unknown) {

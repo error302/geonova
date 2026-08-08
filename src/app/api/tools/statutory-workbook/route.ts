@@ -300,7 +300,7 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const body = parsed.data as unknown as RequestBody
+  const body = parsed.data
   const input = await buildWorkbookInput(body, String(userId))
   const workbook = await generateStatutoryWorkbook(input)
   return new NextResponse(new Uint8Array(workbook), {

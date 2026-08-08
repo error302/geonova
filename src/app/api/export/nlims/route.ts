@@ -26,7 +26,7 @@ export const dynamic = 'force-dynamic'
 export const POST = apiHandler(
   { auth: true, rateLimit: { max: 30, windowMs: 60000 } },
   async (req, ctx) => {
-    const params = ctx.body as unknown as NLIMSExportParams
+    const params = ctx.body as NLIMSExportParams
 
     // Stage 1: schema validation
     const validation = validateNLIMSExport(params)

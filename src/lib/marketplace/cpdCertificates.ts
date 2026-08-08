@@ -105,7 +105,7 @@ const cpdRequirements: CPDRequirement[] = [
 
 export function getCPDRequirements(country?: string): CPDRequirement[] {
   if (!country) return cpdRequirements
-  return cpdRequirements.filter((r: any) => r.country.toLowerCase() === country.toLowerCase())
+  return cpdRequirements.filter((r) => r.country.toLowerCase() === country.toLowerCase())
 }
 
 export function getUserActivities(userId: string): CPDActivity[] {
@@ -115,7 +115,7 @@ export function getUserActivities(userId: string): CPDActivity[] {
 
 export function calculateCPDSummary(userId: string, country: string): CPDSummary {
   const activities = getUserActivities(userId)
-  const requirement = cpdRequirements.find((r: any) => r.country.toLowerCase() === country.toLowerCase())
+  const requirement = cpdRequirements.find((r) => r.country.toLowerCase() === country.toLowerCase())
   const yearlyHours = requirement?.yearlyHours || 40
 
   const totalHours = activities.reduce((sum, a) => sum + a.hours, 0)
@@ -127,7 +127,7 @@ export function calculateCPDSummary(userId: string, country: string): CPDSummary
     management: 0,
   }
 
-  activities.forEach((a: any) => {
+  activities.forEach((a) => {
     if (a.title.toLowerCase().includes('ethics') || a.title.toLowerCase().includes('law')) {
       categoryBreakdown.ethics += a.hours
     } else if (a.title.toLowerCase().includes('safety')) {
