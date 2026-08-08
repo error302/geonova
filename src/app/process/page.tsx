@@ -259,27 +259,43 @@ export default function ProcessPage() {
       if (result.success && result.results) {
         const config = getToleranceConfig(selectedProfile)
         
-        if (surveyType === 'traverse' && result.results.legs) {
-          const traverseTol = checkTolerance({
-            traverse: {
-              precisionRatio: result.results.precisionRatio || 0,
-              angularMisclosure: null,
-              linearError: Math.sqrt(result.results.closingErrorE ** 2 + result.results.closingErrorN ** 2),
-              totalDistance: result.results.totalDistance || 0,
-              numStations: result.results.legs?.length || 0
-            }
-          }, selectedProfile)
-          setToleranceResult(traverseTol)
-        } else if (surveyType === 'leveling' && result.results.readings) {
-          const levelingTol = checkTolerance({
-            leveling: {
-              arithmeticCheckPassed: result.results.arithmeticCheck || false,
-              arithmeticDiff: result.results.misclosure || 0,
-              closingError: result.results.misclosure || 0,
-              distanceKm: result.results.readings?.length * 0.1 || 1
-            }
-          }, selectedProfile)
-          setToleranceResult(levelingTol)
+        if (surveyType === 'traverse' && result.results) {
+          const res = result.results as {
+            legs?: TraverseLegLike[]
+            precisionRatio?: number
+            closingErrorE?: number
+            closingErrorN?: number
+            totalDistance?: number
+          }
+          if (res.legs) {
+            const traverseTol = checkTolerance({
+              traverse: {
+                precisionRatio: res.precisionRatio || 0,
+                angularMisclosure: null,
+                linearError: Math.sqrt((res.closingErrorE || 0) ** 2 + (res.closingErrorN || 0) ** 2),
+                totalDistance: res.totalDistance || 0,
+                numStations: res.legs.length
+              }
+            }, selectedProfile)
+            setToleranceResult(traverseTol)
+          }
+        } else if (surveyType === 'leveling' && result.results) {
+          const res = result.results as {
+            readings?: LevelingReading[]
+            arithmeticCheck?: boolean
+            misclosure?: number
+          }
+          if (res.readings) {
+            const levelingTol = checkTolerance({
+              leveling: {
+                arithmeticCheckPassed: res.arithmeticCheck || false,
+                arithmeticDiff: res.misclosure || 0,
+                closingError: res.misclosure || 0,
+                distanceKm: (res.readings.length || 0) * 0.1 || 1
+              }
+            }, selectedProfile)
+            setToleranceResult(levelingTol)
+          }
         }
       }
 

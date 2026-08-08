@@ -24324,201 +24324,14 @@
         "endColumn": 21
       },
       {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .legs on an `any` value.",
-        "line": 262,
-        "column": 57,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 262,
-        "endColumn": 61
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 265,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 265,
-        "endColumn": 65
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .precisionRatio on an `any` value.",
-        "line": 265,
-        "column": 46,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 265,
-        "endColumn": 60
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .closingErrorE on an `any` value.",
-        "line": 267,
-        "column": 53,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 267,
-        "endColumn": 66
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .closingErrorN on an `any` value.",
-        "line": 267,
-        "column": 89,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 267,
-        "endColumn": 102
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 268,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 268,
-        "endColumn": 63
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .totalDistance on an `any` value.",
-        "line": 268,
-        "column": 45,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 268,
-        "endColumn": 58
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 269,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 269,
-        "endColumn": 60
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .legs on an `any` value.",
-        "line": 269,
-        "column": 43,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 269,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .readings on an `any` value.",
-        "line": 273,
-        "column": 64,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 273,
-        "endColumn": 72
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 276,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 276,
-        "endColumn": 77
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .arithmeticCheck on an `any` value.",
-        "line": 276,
-        "column": 53,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 276,
-        "endColumn": 68
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 277,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 277,
-        "endColumn": 61
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .misclosure on an `any` value.",
-        "line": 277,
-        "column": 46,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 277,
-        "endColumn": 56
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 278,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 278,
-        "endColumn": 59
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .misclosure on an `any` value.",
-        "line": 278,
-        "column": 44,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 278,
-        "endColumn": 54
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .readings on an `any` value.",
-        "line": 279,
-        "column": 42,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 279,
-        "endColumn": 50
-      },
-      {
         "ruleId": "no-console",
         "severity": 1,
         "message": "Unexpected console statement.",
-        "line": 289,
+        "line": 305,
         "column": 7,
         "nodeType": "MemberExpression",
         "messageId": "unexpected",
-        "endLine": 289,
+        "endLine": 305,
         "endColumn": 20,
         "suggestions": [
           {
@@ -24528,8 +24341,8 @@
             },
             "fix": {
               "range": [
-                10788,
-                10825
+                11220,
+                11257
               ],
               "text": ""
             },
@@ -24541,11 +24354,11 @@
         "ruleId": "no-console",
         "severity": 1,
         "message": "Unexpected console statement.",
-        "line": 351,
+        "line": 367,
         "column": 7,
         "nodeType": "MemberExpression",
         "messageId": "unexpected",
-        "endLine": 351,
+        "endLine": 367,
         "endColumn": 20,
         "suggestions": [
           {
@@ -24555,8 +24368,8 @@
             },
             "fix": {
               "range": [
-                12877,
-                12908
+                13309,
+                13340
               ],
               "text": ""
             },
@@ -24568,30 +24381,30 @@
         "ruleId": "@typescript-eslint/no-non-null-assertion",
         "severity": 1,
         "message": "Forbidden non-null assertion.",
-        "line": 426,
+        "line": 442,
         "column": 58,
         "nodeType": "TSNonNullExpression",
         "messageId": "noNonNull",
-        "endLine": 426,
+        "endLine": 442,
         "endColumn": 82
       },
       {
         "ruleId": "@typescript-eslint/no-non-null-assertion",
         "severity": 1,
         "message": "Forbidden non-null assertion.",
-        "line": 431,
+        "line": 447,
         "column": 18,
         "nodeType": "TSNonNullExpression",
         "messageId": "noNonNull",
-        "endLine": 431,
+        "endLine": 447,
         "endColumn": 42,
         "suggestions": [
           {
             "messageId": "suggestOptionalChain",
             "fix": {
               "range": [
-                16458,
-                16459
+                16890,
+                16891
               ],
               "text": "?"
             },
@@ -24603,19 +24416,19 @@
         "ruleId": "@typescript-eslint/no-non-null-assertion",
         "severity": 1,
         "message": "Forbidden non-null assertion.",
-        "line": 444,
+        "line": 460,
         "column": 22,
         "nodeType": "TSNonNullExpression",
         "messageId": "noNonNull",
-        "endLine": 444,
+        "endLine": 460,
         "endColumn": 46,
         "suggestions": [
           {
             "messageId": "suggestOptionalChain",
             "fix": {
               "range": [
-                17088,
-                17089
+                17520,
+                17521
               ],
               "text": "?"
             },
@@ -24627,76 +24440,76 @@
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .legs on an `any` value.",
-        "line": 552,
+        "line": 568,
         "column": 84,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
-        "endLine": 552,
+        "endLine": 568,
         "endColumn": 88
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-call",
         "severity": 1,
         "message": "Unsafe call of an `any` typed value.",
-        "line": 570,
+        "line": 586,
         "column": 26,
         "nodeType": "MemberExpression",
         "messageId": "unsafeCall",
-        "endLine": 570,
+        "endLine": 586,
         "endColumn": 57
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .legs on an `any` value.",
-        "line": 570,
+        "line": 586,
         "column": 49,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
-        "endLine": 570,
+        "endLine": 586,
         "endColumn": 53
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .readings on an `any` value.",
-        "line": 586,
+        "line": 602,
         "column": 84,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
-        "endLine": 586,
+        "endLine": 602,
         "endColumn": 92
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-call",
         "severity": 1,
         "message": "Unsafe call of an `any` typed value.",
-        "line": 605,
+        "line": 621,
         "column": 26,
         "nodeType": "MemberExpression",
         "messageId": "unsafeCall",
-        "endLine": 605,
+        "endLine": 621,
         "endColumn": 61
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .readings on an `any` value.",
-        "line": 605,
+        "line": 621,
         "column": 49,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
-        "endLine": 605,
+        "endLine": 621,
         "endColumn": 57
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 39,
+    "warningCount": 22,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client';\r\n\r\nimport { useState, useRef, useEffect, useCallback, useMemo } from 'react'\r\nimport { AlertTriangle } from 'lucide-react'\r\nimport { interpretCSV, CSVInterpretResult } from '@/lib/parsers/csvSurveyInterpreter'\r\nimport SolutionStepsRenderer from '@/components/SolutionStepsRenderer'\r\nimport type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'\r\nimport { bowditchAdjustmentSolvedFromResult } from '@/lib/engine/solution/wrappers/traverse'\r\nimport { levelingSolved } from '@/lib/engine/solution/wrappers/leveling'\r\nimport { radiationSolved } from '@/lib/engine/solution/wrappers/radiation'\r\nimport { \r\n  detectSurveyType,\r\n  SurveyDataset,\r\n  SurveyObservation, \r\n  runWorkflow, \r\n  TraverseWorkflowData, \r\n  LevelingWorkflowData,\r\n  RadiationWorkflowData,\r\n  WorkflowResult \r\n} from '@/lib/workflows/workflowEngine'\r\nimport { \r\n  checkTolerance, \r\n  ToleranceProfile, \r\n  getToleranceConfig,\r\n  getAllToleranceProfiles,\r\n  ToleranceCheckResult \r\n} from '@/lib/validation/toleranceEngine'\r\ninterface ProjectRow { id: string; name: string }\r\ninterface TraverseLegLike {\r\n  from: string\r\n  to: string\r\n  distance?: number\r\n  bearingDMS?: string\r\n  adjEasting: number\r\n  adjNorthing: number\r\n  adjDeltaE: number\r\n  adjDeltaN: number\r\n}\r\ninterface RadiationPoint { name: string; easting: number; northing: number }\r\ninterface LevelingReading {\r\n  station: string\r\n  bs?: number\r\n  is?: number\r\n  fs?: number\r\n  rise?: number\r\n  fall?: number\r\n  reducedLevel?: number\r\n}\r\ntype SurveyPointRow = {\r\n  project_id: string\r\n  name: string\r\n  easting: number\r\n  northing: number\r\n  elevation: null\r\n  is_control: boolean\r\n  control_order?: string\r\n  locked?: boolean\r\n}\r\n\r\nimport Link from 'next/link'\r\nimport { createClient } from '@/lib/api-client/client'\r\n\r\nexport default function ProcessPage() {\r\n  const [processError, setProcessError] = useState<string | null>(null)\r\n  const [dragActive, setDragActive] = useState(false)\r\n  const [fileContent, setFileContent] = useState<string | null>(null)\r\n  const [interpretResult, setInterpretResult] = useState<CSVInterpretResult | null>(null)\r\n  const [processing, setProcessing] = useState(false)\r\n  const [processed, setProcessed] = useState(false)\r\n  const [manualType, setManualType] = useState<string>('')\r\n  const [selectedProfile, setSelectedProfile] = useState<ToleranceProfile>('cadastral')\r\n  const [workflowResult, setWorkflowResult] = useState<WorkflowResult | null>(null)\r\n  const [workflowSolutions, setWorkflowSolutions] = useState<Array<{ title?: string; steps: SolutionStep[] }>>([])\r\n  const [toleranceResult, setToleranceResult] = useState<ToleranceCheckResult | null>(null)\r\n  const [projects, setProjects] = useState<ProjectRow[]>([])\r\n  const [selectedProjectId, setSelectedProjectId] = useState<string>('')\r\n  const [saveLoading, setSaveLoading] = useState(false)\r\n  const [saveSuccess, setSaveSuccess] = useState(false)\r\n  \r\n  const fileInputRef = useRef<HTMLInputElement>(null)\r\n  // AUDIT FIX (H-007, 2026-07-27): useMemo to prevent infinite loop on /process.\r\n  const dbClient = useMemo(() => createClient(), [])\r\n\r\n  const fetchProjects = useCallback(async () => {\r\n    const { data: { session } } = await dbClient.auth.getSession()\r\n    const user = session?.user\r\n    if (!user) return\r\n\r\n    const { data } = await dbClient\r\n      .from('projects')\r\n      .select('*')\r\n      .eq('user_id', user.id)\r\n      .order('created_at', { ascending: false })\r\n      .limit(20)\r\n\r\n    if (data) {\r\n      setProjects(data)\r\n    }\r\n  }, [dbClient])\r\n\r\n  useEffect(() => {\r\n    fetchProjects()\r\n  }, [fetchProjects])\r\n\r\n  const handleDrag = (e: React.DragEvent) => {\r\n    e.preventDefault()\r\n    e.stopPropagation()\r\n    if (e.type === 'dragenter' || e.type === 'dragover') {\r\n      setDragActive(true)\r\n    } else if (e.type === 'dragleave') {\r\n      setDragActive(false)\r\n    }\r\n  }\r\n\r\n  const handleDrop = async (e: React.DragEvent) => {\r\n    e.preventDefault()\r\n    e.stopPropagation()\r\n    setDragActive(false)\r\n    \r\n    const files = e.dataTransfer.files\r\n    if (files && files[0]) {\r\n      const content = await files[0].text()\r\n      setFileContent(content)\r\n      const result = interpretCSV(content)\r\n      setInterpretResult(result)\r\n      \r\n      if (result.ok && result.dataset) {\r\n        const detected = detectSurveyTypeFromDataset(result.dataset)\r\n        // survey type detected\r\n      }\r\n    }\r\n  }\r\n\r\n  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {\r\n    const files = e.target.files\r\n    if (files && files[0]) {\r\n      const content = await files[0].text()\r\n      setFileContent(content)\r\n      const result = interpretCSV(content)\r\n      setInterpretResult(result)\r\n    }\r\n  }\r\n\r\n  const detectSurveyTypeFromDataset = (dataset: SurveyDataset): string => {\r\n    if (dataset?.surveyType && dataset.surveyType !== 'unknown') return dataset.surveyType\r\n    if (!dataset?.observations) return 'unknown'\r\n    const obs = dataset.observations\r\n    const types = new Set(obs.map((o: SurveyObservation) => o.type))\r\n    \r\n    if (types.has('BS') || types.has('IS') || types.has('FS')) return 'leveling'\r\n    if (types.has('BEARING') && types.has('DISTANCE')) return 'traverse'\r\n    if (types.has('ANGLE') && types.has('DISTANCE')) return 'radiation'\r\n    if (types.has('COORDINATE')) return 'coordinates'\r\n    return 'unknown'\r\n  }\r\n\r\n  const processSurvey = () => {\r\n    setProcessing(true)\r\n    \r\n    setTimeout(() => {\r\n      setProcessing(false)\r\n      setProcessed(true)\r\n    }, 1500)\r\n  }\r\n\r\n  const runProcessWithWorkflow = () => {\r\n    if (!interpretResult?.ok || !interpretResult.dataset) return\r\n\r\n    setProcessing(true)\r\n\r\n    try {\r\n      const dataset = interpretResult.dataset\r\n      const surveyType = detectSurveyTypeFromDataset(dataset)\r\n      let result: WorkflowResult\r\n\r\n      const solutions: Array<{ title?: string; steps: SolutionStep[] }> = []\r\n\r\n      if (surveyType === 'traverse') {\r\n        const traverseData: TraverseWorkflowData = {\r\n          legs: dataset.observations.map((obs: SurveyObservation, i: number) => ({\r\n            fromStation: obs.station,\r\n            toStation: dataset.observations[i + 1]?.station || `P${i + 2}`,\r\n            bearing: obs.value1 || 0,\r\n            distance: obs.value2 || 0\r\n          })),\r\n          openingPoint: {\r\n            name: dataset.observations[0]?.station || 'A',\r\n            easting: (dataset.metadata as { openingEasting?: number })?.openingEasting || 500000,\r\n            northing: (dataset.metadata as { openingNorthing?: number })?.openingNorthing || 4500000\r\n          }\r\n        }\r\n        result = runWorkflow('traverse', traverseData)\r\n        if (result.success && result.results?.legs) {\r\n          try {\r\n            const s = bowditchAdjustmentSolvedFromResult(result.results)\r\n            solutions.push({ title: s.solution.title, steps: s.steps })\r\n          } catch {}\r\n        }\r\n      } else if (surveyType === 'leveling') {\r\n        const levelingData: LevelingWorkflowData = {\r\n          readings: dataset.observations.map((obs: SurveyObservation) => ({\r\n            station: obs.station,\r\n            bs: obs.type === 'BS' ? obs.value1 : undefined,\r\n            is: obs.type === 'IS' ? obs.value1 : undefined,\r\n            fs: obs.type === 'FS' ? obs.value1 : undefined\r\n          })),\r\n          openingRL: (dataset.metadata as { openingRL?: number })?.openingRL || 100\r\n        }\r\n        result = runWorkflow('leveling', levelingData)\r\n        if (result.success && result.results?.readings) {\r\n          try {\r\n            const s = levelingSolved(\r\n              { readings: levelingData.readings, openingRL: levelingData.openingRL, closingRL: levelingData.closingRL, method: 'rise_and_fall', distanceKm: 1 },\r\n              result.results\r\n            )\r\n            solutions.push({ title: s.solution.title, steps: s.steps })\r\n          } catch {}\r\n        }\r\n      } else if (surveyType === 'radiation') {\r\n        const radiationData: RadiationWorkflowData = {\r\n          station: {\r\n            name: (dataset.metadata as { stationName?: string })?.stationName || 'STN1',\r\n            easting: (dataset.metadata as { stationEasting?: number })?.stationEasting || 500000,\r\n            northing: (dataset.metadata as { stationNorthing?: number })?.stationNorthing || 4500000\r\n          },\r\n          observations: dataset.observations.map((obs: SurveyObservation) => ({\r\n            pointName: obs.station,\r\n            bearing: obs.value1 || 0,\r\n            distance: obs.value2 || 0\r\n          }))\r\n        }\r\n        result = runWorkflow('radiation', radiationData)\r\n        if (radiationData.observations.length > 0) {\r\n          for (const obs of radiationData.observations.slice(0, 3)) {\r\n            try {\r\n              const s = radiationSolved({\r\n                station: { easting: radiationData.station.easting, northing: radiationData.station.northing },\r\n                bearingDeg: obs.bearing,\r\n                distance: obs.distance,\r\n              })\r\n              solutions.push({ title: s.solution.title, steps: s.steps })\r\n            } catch {}\r\n          }\r\n        }\r\n      } else {\r\n        result = {\r\n          success: false,\r\n          surveyType: 'unknown',\r\n          results: null,\r\n          validation: { passed: false, checks: [] },\r\n          warnings: [],\r\n          errors: ['Unknown survey type - cannot process']\r\n        }\r\n      }\r\n\r\n      setWorkflowResult(result)\r\n      setWorkflowSolutions(solutions)\r\n\r\n      if (result.success && result.results) {\r\n        const config = getToleranceConfig(selectedProfile)\r\n        \r\n        if (surveyType === 'traverse' && result.results.legs) {\r\n          const traverseTol = checkTolerance({\r\n            traverse: {\r\n              precisionRatio: result.results.precisionRatio || 0,\r\n              angularMisclosure: null,\r\n              linearError: Math.sqrt(result.results.closingErrorE ** 2 + result.results.closingErrorN ** 2),\r\n              totalDistance: result.results.totalDistance || 0,\r\n              numStations: result.results.legs?.length || 0\r\n            }\r\n          }, selectedProfile)\r\n          setToleranceResult(traverseTol)\r\n        } else if (surveyType === 'leveling' && result.results.readings) {\r\n          const levelingTol = checkTolerance({\r\n            leveling: {\r\n              arithmeticCheckPassed: result.results.arithmeticCheck || false,\r\n              arithmeticDiff: result.results.misclosure || 0,\r\n              closingError: result.results.misclosure || 0,\r\n              distanceKm: result.results.readings?.length * 0.1 || 1\r\n            }\r\n          }, selectedProfile)\r\n          setToleranceResult(levelingTol)\r\n        }\r\n      }\r\n\r\n      setProcessing(false)\r\n      setProcessed(true)\r\n    } catch (e) {\r\n      console.error('Processing error:', e)\r\n      setProcessing(false)\r\n    }\r\n  }\r\n\r\n  const handleSaveToProject = async () => {\r\n    if (!selectedProjectId || !workflowResult?.results) {\r\n      setProcessError('Please select a project first.')\r\n      return\r\n    }\r\n\r\n    setSaveLoading(true)\r\n\r\n    try {\r\n      const res = workflowResult.results as { legs?: TraverseLegLike[]; points?: RadiationPoint[] }\r\n      if (workflowResult.surveyType === 'traverse' && res.legs) {\r\n        const points: SurveyPointRow[] = res.legs.map((leg: TraverseLegLike) => ({\r\n          project_id: selectedProjectId,\r\n          name: leg.to,\r\n          easting: leg.adjEasting,\r\n          northing: leg.adjNorthing,\r\n          elevation: null,\r\n          is_control: false\r\n        }))\r\n\r\n        if (res.legs[0]) {\r\n          points.unshift({\r\n            project_id: selectedProjectId,\r\n            name: res.legs[0].from,\r\n            easting: res.legs[0].adjEasting - res.legs[0].adjDeltaE,\r\n            northing: res.legs[0].adjNorthing - res.legs[0].adjDeltaN,\r\n            elevation: null,\r\n            is_control: true,\r\n            control_order: 'primary',\r\n            locked: true\r\n          })\r\n        }\r\n\r\n        const { error: insertError } = await dbClient.from('survey_points').insert(points)\r\n        if (insertError) {\r\n          throw new Error(`Failed to save points: ${insertError.message}`)\r\n        }\r\n      } \r\n      else if (workflowResult.surveyType === 'radiation' && res.points) {\r\n        const points = res.points.map((pt: RadiationPoint) => ({\r\n          project_id: selectedProjectId,\r\n          name: pt.name,\r\n          easting: pt.easting,\r\n          northing: pt.northing,\r\n          elevation: null,\r\n          is_control: false\r\n        }))\r\n\r\n        const { error: insertError } = await dbClient.from('survey_points').insert(points)\r\n        if (insertError) {\r\n          throw new Error(`Failed to save points: ${insertError.message}`)\r\n        }\r\n      }\r\n\r\n      setSaveSuccess(true)\r\n      setTimeout(() => setSaveSuccess(false), 3000)\r\n    } catch (e) {\r\n      console.error('Save error:', e)\r\n      setProcessError('Error saving points to project. Please try again.')\r\n    }\r\n\r\n    setSaveLoading(false)\r\n  }\r\n\r\n  const detectLabel = (type: string) => {\r\n    switch (type) {\r\n      case 'leveling': return 'Leveling Run'\r\n      case 'traverse': return 'Traverse Survey'\r\n      case 'radiation': return 'Radiation / Detail Survey'\r\n      case 'boundary': return 'Boundary / Parcel'\r\n      default: return 'Unknown Survey Type'\r\n    }\r\n  }\r\n\r\n  return (\r\n    <div className=\"max-w-4xl mx-auto px-4 py-12\">\r\n      <h1 className=\"text-3xl font-bold mb-2\">Process Field Notes</h1>\r\n      <p className=\"text-sm text-[var(--text-muted)] mb-8\">\r\n        Upload your CSV field notes — METARDU detects the survey type and processes automatically\r\n      </p>\r\n\r\n      {!fileContent ? (\r\n        <>\r\n          <div\r\n            className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-colors ${\r\n              dragActive \r\n                ? 'border-[var(--accent)] bg-[var(--accent)]/10' \r\n                : 'border-[var(--border-color)] hover:border-gray-600'\r\n            }`}\r\n            onDragEnter={handleDrag}\r\n            onDragLeave={handleDrag}\r\n            onDragOver={handleDrag}\r\n            onDrop={handleDrop}\r\n            onClick={() => fileInputRef.current?.click()}\r\n          >\r\n            <div className=\"text-6xl mb-4\">[Clip]</div>\r\n            <p className=\"text-lg font-semibold text-[var(--text-primary)] mb-2\">\r\n              Drop your field notes here or click to upload\r\n            </p>\r\n            <p className=\"text-sm text-[var(--text-muted)]\">\r\n              Accepts: .csv, .txt files\r\n            </p>\r\n            <input\r\n              ref={fileInputRef}\r\n              type=\"file\"\r\n              accept=\".csv,.txt\"\r\n              className=\"hidden\"\r\n              onChange={handleFileSelect}\r\n            />\r\n          </div>\r\n\r\n          <div className=\"mt-8 p-6 bg-[var(--bg-secondary)]/50 rounded-xl border border-[var(--border-color)]\">\r\n            <h3 className=\"text-sm font-semibold text-[var(--text-secondary)] mb-4\">Download Sample Files</h3>\r\n            <div className=\"flex flex-wrap gap-3\">\r\n              <a href=\"/sample-files/traverse_sample.csv\" className=\"px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm\">\r\n                 Traverse Sample\r\n              </a>\r\n              <a href=\"/sample-files/leveling_sample.csv\" className=\"px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm\">\r\n                 Leveling Sample\r\n              </a>\r\n              <a href=\"/sample-files/radiation_sample.csv\" className=\"px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm\">\r\n                 Radiation Sample\r\n              </a>\r\n            </div>\r\n          </div>\r\n        </>\r\n      ) : interpretResult?.ok && interpretResult.dataset ? (\r\n        <div className=\"space-y-6\">\r\n          <div className=\"card border border-[var(--border-color)]\">\r\n            <div className=\"card-header flex items-center gap-3\">\r\n              <span className=\"text-2xl\"></span>\r\n              <span className=\"font-semibold\">\r\n                {detectLabel(detectSurveyTypeFromDataset(interpretResult.dataset!))} Detected\r\n              </span>\r\n            </div>\r\n            <div className=\"card-body\">\r\n              <p className=\"text-sm text-[var(--text-primary)] mb-4\">\r\n                {interpretResult.dataset!.observations.length} observations found\r\n              </p>\r\n\r\n              <div className=\"bg-[var(--bg-tertiary)] rounded p-3 overflow-x-auto\">\r\n                <table className=\"text-xs w-full\">\r\n                  <thead>\r\n                    <tr className=\"text-[var(--text-muted)]\">\r\n                      <th className=\"px-2 py-1 text-left\">Station</th>\r\n                      <th className=\"px-2 py-1 text-left\">Type</th>\r\n                      <th className=\"px-2 py-1 text-right\">Value</th>\r\n                    </tr>\r\n                  </thead>\r\n                  <tbody>\r\n                    {interpretResult.dataset!.observations.slice(0, 5).map((obs: SurveyObservation, i: number) => (\r\n                      <tr key={obs.station || i} className=\"border-t border-[var(--border-color)]\">\r\n                        <td className=\"px-2 py-1\">{obs.station}</td>\r\n                        <td className=\"px-2 py-1 text-[var(--accent)]\">{obs.type}</td>\r\n                        <td className=\"px-2 py-1 text-right font-mono\">{obs.value1}</td>\r\n                      </tr>\r\n                    ))}\r\n                  </tbody>\r\n                </table>\r\n              </div>\r\n\r\n              {interpretResult.warnings.length > 0 && (\r\n                <div className=\"mt-4 p-3 bg-yellow-900/20 border border-yellow-700 rounded\">\r\n                  {interpretResult.warnings.map((w, i) => (\r\n                    <p key={`warn-${i}`} className=\"text-sm text-yellow-400\"><AlertTriangle className=\"w-3.5 h-3.5 inline shrink-0\" /> {w}</p>\r\n                  ))}\r\n                </div>\r\n              )}\r\n\r\n              {!processed && (\r\n                <>\r\n                  <div className=\"mt-6\">\r\n                    <div className=\"block text-sm text-[var(--text-secondary)] mb-2\">Tolerance Profile</div>\r\n                    <div className=\"grid grid-cols-3 gap-3\">\r\n                      {getAllToleranceProfiles().map((profile) => (\r\n                        <button\r\n                          key={profile}\r\n                          onClick={() => setSelectedProfile(profile)}\r\n                          className={`p-3 rounded-lg border text-left transition-colors ${\r\n                            selectedProfile === profile\r\n                              ? 'border-[var(--accent)] bg-[var(--accent)]/10'\r\n                              : 'border-[var(--border-color)] hover:border-gray-600'\r\n                          }`}\r\n                        >\r\n                          <div className=\"font-medium text-[var(--text-primary)] capitalize\">{getToleranceConfig(profile).name}</div>\r\n                          <div className=\"text-xs text-[var(--text-muted)] mt-1\">{getToleranceConfig(profile).description}</div>\r\n                          <div className=\"text-xs text-[var(--text-muted)] mt-2\">1:{getToleranceConfig(profile).linearPrecision}</div>\r\n                        </button>\r\n                      ))}\r\n                    </div>\r\n                  </div>\r\n\r\n                  <div className=\"mt-6 flex gap-3\">\r\n                    <button\r\n                      onClick={runProcessWithWorkflow}\r\n                      disabled={processing}\r\n                      className=\"px-6 py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg\"\r\n                    >\r\n                      {processing ? 'Processing...' : 'Process Survey'}\r\n                    </button>\r\n                    <button\r\n                      onClick={() => {\r\n                        setFileContent(null)\r\n                        setInterpretResult(null)\r\n                        setProcessed(false)\r\n                        setWorkflowResult(null)\r\n                        setWorkflowSolutions([])\r\n                        setToleranceResult(null)\r\n                      }}\r\n                      className=\"px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg\"\r\n                    >\r\n                      Upload Different File\r\n                    </button>\r\n                  </div>\r\n                </>\r\n              )}\r\n            </div>\r\n          </div>\r\n\r\n          {processed && workflowResult && (\r\n            <>\r\n              <div className={`card border-2 ${toleranceResult?.passed ? 'border-green-700' : 'border-red-700'}`}>\r\n                <div className=\"card-header flex items-center gap-3\">\r\n                  <span className=\"text-2xl\">{toleranceResult?.passed ? '' : '[x]'}</span>\r\n                  <span className=\"font-semibold\">\r\n                    Tolerance Check: {toleranceResult?.passed ? 'PASS' : 'FAIL'}\r\n                  </span>\r\n                  <span className=\"text-sm text-[var(--text-muted)] ml-auto\">\r\n                    {toleranceResult?.precisionGrade}\r\n                  </span>\r\n                </div>\r\n                <div className=\"card-body\">\r\n                  {toleranceResult?.checks.map((check, i) => (\r\n                    <div key={`check-${check.name || i}`} className={`flex items-center justify-between py-2 border-b border-[var(--border-color)] last:border-0 ${check.passed ? 'text-green-400' : 'text-red-400'}`}>\r\n                      <span>{check.passed ? '' : '[x]'} {check.name}</span>\r\n                      <span className=\"text-sm\">{check.message}</span>\r\n                    </div>\r\n                  ))}\r\n                  \r\n                  {toleranceResult?.recommendations && toleranceResult.recommendations.length > 0 && (\r\n                    <div className=\"mt-4 p-3 bg-yellow-900/20 border border-yellow-700 rounded\">\r\n                      <div className=\"text-sm text-yellow-400 mb-2\">Recommendations:</div>\r\n                      {toleranceResult.recommendations.map((rec, i) => (\r\n                        <p key={`rec-${i}`} className=\"text-xs text-yellow-300\">• {rec}</p>\r\n                      ))}\r\n                    </div>\r\n                  )}\r\n                </div>\r\n              </div>\r\n\r\n              {workflowSolutions.length > 0 ? (\r\n                <div className=\"space-y-6\">\r\n                  {workflowSolutions.map((s, i) => (\r\n                    <SolutionStepsRenderer key={`sol-${i}`} title={s.title} steps={s.steps} />\r\n                  ))}\r\n                </div>\r\n              ) : null}\r\n\r\n              {workflowResult.surveyType === 'traverse' && workflowResult.results?.legs && (\r\n                <div className=\"card border border-[var(--border-color)]\">\r\n                  <div className=\"card-header\">\r\n                    <span className=\"font-semibold\">Gale's Table</span>\r\n                  </div>\r\n                  <div className=\"card-body overflow-x-auto\">\r\n                    <table className=\"text-xs w-full\">\r\n                      <thead>\r\n                        <tr className=\"text-[var(--text-muted)] border-b border-[var(--border-color)]\">\r\n                          <th className=\"px-2 py-2 text-left\">From</th>\r\n                          <th className=\"px-2 py-2 text-left\">To</th>\r\n                          <th className=\"px-2 py-2 text-right\">Dist</th>\r\n                          <th className=\"px-2 py-2 text-right\">Bearing</th>\r\n                          <th className=\"px-2 py-2 text-right\">Easting</th>\r\n                          <th className=\"px-2 py-2 text-right\">Northing</th>\r\n                        </tr>\r\n                      </thead>\r\n                      <tbody>\r\n                        {workflowResult.results.legs.map((leg: TraverseLegLike, i: number) => (\r\n                          <tr key={`leg-${leg.from}-${leg.to}-${i}`} className=\"border-b border-[var(--border-color)]\">\r\n                            <td className=\"px-2 py-2\">{leg.from}</td>\r\n                            <td className=\"px-2 py-2\">{leg.to}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{leg.distance?.toFixed(3)}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{leg.bearingDMS}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{leg.adjEasting?.toFixed(4)}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{leg.adjNorthing?.toFixed(4)}</td>\r\n                          </tr>\r\n                        ))}\r\n                      </tbody>\r\n                    </table>\r\n                  </div>\r\n                </div>\r\n              )}\r\n\r\n              {workflowResult.surveyType === 'leveling' && workflowResult.results?.readings && (\r\n                <div className=\"card border border-[var(--border-color)]\">\r\n                  <div className=\"card-header\">\r\n                    <span className=\"font-semibold\">Leveling Results</span>\r\n                  </div>\r\n                  <div className=\"card-body overflow-x-auto\">\r\n                    <table className=\"text-xs w-full\">\r\n                      <thead>\r\n                        <tr className=\"text-[var(--text-muted)] border-b border-[var(--border-color)]\">\r\n                          <th className=\"px-2 py-2 text-left\">Station</th>\r\n                          <th className=\"px-2 py-2 text-right\">BS</th>\r\n                          <th className=\"px-2 py-2 text-right\">IS</th>\r\n                          <th className=\"px-2 py-2 text-right\">FS</th>\r\n                          <th className=\"px-2 py-2 text-right\">Rise</th>\r\n                          <th className=\"px-2 py-2 text-right\">Fall</th>\r\n                          <th className=\"px-2 py-2 text-right\">RL</th>\r\n                        </tr>\r\n                      </thead>\r\n                      <tbody>\r\n                        {workflowResult.results.readings.map((r: LevelingReading, i: number) => (\r\n                          <tr key={`reading-${r.station}-${i}`} className=\"border-b border-[var(--border-color)]\">\r\n                            <td className=\"px-2 py-2\">{r.station}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.bs?.toFixed(3) || '—'}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.is?.toFixed(3) || '—'}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.fs?.toFixed(3) || '—'}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.rise?.toFixed(3) || '—'}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.fall?.toFixed(3) || '—'}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.reducedLevel?.toFixed(4) || '—'}</td>\r\n                          </tr>\r\n                        ))}\r\n                      </tbody>\r\n                    </table>\r\n                  </div>\r\n                </div>\r\n              )}\r\n\r\n              <div className=\"card border border-[var(--border-color)]\">\r\n                <div className=\"card-body space-y-4\">\r\n                  <h3 className=\"font-semibold\">Save to Project</h3>\r\n                  \r\n                  <div className=\"flex gap-3\">\r\n                    <select\r\n                      value={selectedProjectId}\r\n                      onChange={(e) => setSelectedProjectId(e.target.value)}\r\n                      className=\"flex-1 px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)]\"\r\n                    >\r\n                      <option value=\"\">Select a project...</option>\r\n                      {projects.map((p) => (\r\n                        <option key={p.id} value={p.id}>{p.name}</option>\r\n                      ))}\r\n                    </select>\r\n                    \r\n                    <button\r\n                      onClick={handleSaveToProject}\r\n                      disabled={!selectedProjectId || saveLoading}\r\n                      className=\"px-6 py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg disabled:opacity-50\"\r\n                    >\r\n                      {saveLoading ? 'Saving...' : saveSuccess ? ' Saved!' : 'Save Points'}\r\n                    </button>\r\n                  </div>\r\n\r\n                  <div className=\"flex gap-3 pt-2\">\r\n                    <Link href=\"/dashboard\" className=\"px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg text-center\">\r\n                      View Projects\r\n                    </Link>\r\n                    <button className=\"px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg\">\r\n                      Generate PDF Report\r\n                    </button>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </>\r\n          )}\r\n        </div>\r\n      ) : (\r\n        <div className=\"card border-red-800\">\r\n          <div className=\"card-header\">\r\n            <span className=\"font-semibold text-red-400\">Upload Failed</span>\r\n          </div>\r\n          <div className=\"card-body\">\r\n            <p className=\"text-[var(--text-primary)] mb-4\">\r\n              {interpretResult?.error || 'Could not parse the uploaded file'}\r\n            </p>\r\n            {interpretResult?.warnings.map((w, i) => (\r\n              <p key={`warn2-${i}`} className=\"text-sm text-yellow-400\"><AlertTriangle className=\"w-3.5 h-3.5 inline shrink-0\" /> {w}</p>\r\n            ))}\r\n            \r\n            <div className=\"mt-6 p-4 bg-[var(--bg-tertiary)] rounded\">\r\n              <p className=\"text-sm text-[var(--text-secondary)] mb-3\">Or select survey type manually:</p>\r\n              <select\r\n                value={manualType}\r\n                onChange={(e) => setManualType(e.target.value)}\r\n                className=\"input mb-3\"\r\n              >\r\n                <option value=\"\">Select type...</option>\r\n                <option value=\"leveling\">Leveling Run</option>\r\n                <option value=\"traverse\">Traverse Survey</option>\r\n                <option value=\"radiation\">Radiation / Detail</option>\r\n              </select>\r\n              {manualType && (\r\n                <button className=\"btn btn-primary\">\r\n                  Process as {detectLabel(manualType)}\r\n                </button>\r\n              )}\r\n            </div>\r\n\r\n            <button\r\n              onClick={() => {\r\n                setFileContent(null)\r\n                setInterpretResult(null)\r\n              }}\r\n              className=\"btn btn-secondary mt-4\"\r\n            >\r\n              Try Again\r\n            </button>\r\n          </div>\r\n        </div>\r\n      )}\r\n    </div>\r\n  )\r\n}\r\n",
+    "source": "'use client';\r\n\r\nimport { useState, useRef, useEffect, useCallback, useMemo } from 'react'\r\nimport { AlertTriangle } from 'lucide-react'\r\nimport { interpretCSV, CSVInterpretResult } from '@/lib/parsers/csvSurveyInterpreter'\r\nimport SolutionStepsRenderer from '@/components/SolutionStepsRenderer'\r\nimport type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'\r\nimport { bowditchAdjustmentSolvedFromResult } from '@/lib/engine/solution/wrappers/traverse'\r\nimport { levelingSolved } from '@/lib/engine/solution/wrappers/leveling'\r\nimport { radiationSolved } from '@/lib/engine/solution/wrappers/radiation'\r\nimport { \r\n  detectSurveyType,\r\n  SurveyDataset,\r\n  SurveyObservation, \r\n  runWorkflow, \r\n  TraverseWorkflowData, \r\n  LevelingWorkflowData,\r\n  RadiationWorkflowData,\r\n  WorkflowResult \r\n} from '@/lib/workflows/workflowEngine'\r\nimport { \r\n  checkTolerance, \r\n  ToleranceProfile, \r\n  getToleranceConfig,\r\n  getAllToleranceProfiles,\r\n  ToleranceCheckResult \r\n} from '@/lib/validation/toleranceEngine'\r\ninterface ProjectRow { id: string; name: string }\r\ninterface TraverseLegLike {\r\n  from: string\r\n  to: string\r\n  distance?: number\r\n  bearingDMS?: string\r\n  adjEasting: number\r\n  adjNorthing: number\r\n  adjDeltaE: number\r\n  adjDeltaN: number\r\n}\r\ninterface RadiationPoint { name: string; easting: number; northing: number }\r\ninterface LevelingReading {\r\n  station: string\r\n  bs?: number\r\n  is?: number\r\n  fs?: number\r\n  rise?: number\r\n  fall?: number\r\n  reducedLevel?: number\r\n}\r\ntype SurveyPointRow = {\r\n  project_id: string\r\n  name: string\r\n  easting: number\r\n  northing: number\r\n  elevation: null\r\n  is_control: boolean\r\n  control_order?: string\r\n  locked?: boolean\r\n}\r\n\r\nimport Link from 'next/link'\r\nimport { createClient } from '@/lib/api-client/client'\r\n\r\nexport default function ProcessPage() {\r\n  const [processError, setProcessError] = useState<string | null>(null)\r\n  const [dragActive, setDragActive] = useState(false)\r\n  const [fileContent, setFileContent] = useState<string | null>(null)\r\n  const [interpretResult, setInterpretResult] = useState<CSVInterpretResult | null>(null)\r\n  const [processing, setProcessing] = useState(false)\r\n  const [processed, setProcessed] = useState(false)\r\n  const [manualType, setManualType] = useState<string>('')\r\n  const [selectedProfile, setSelectedProfile] = useState<ToleranceProfile>('cadastral')\r\n  const [workflowResult, setWorkflowResult] = useState<WorkflowResult | null>(null)\r\n  const [workflowSolutions, setWorkflowSolutions] = useState<Array<{ title?: string; steps: SolutionStep[] }>>([])\r\n  const [toleranceResult, setToleranceResult] = useState<ToleranceCheckResult | null>(null)\r\n  const [projects, setProjects] = useState<ProjectRow[]>([])\r\n  const [selectedProjectId, setSelectedProjectId] = useState<string>('')\r\n  const [saveLoading, setSaveLoading] = useState(false)\r\n  const [saveSuccess, setSaveSuccess] = useState(false)\r\n  \r\n  const fileInputRef = useRef<HTMLInputElement>(null)\r\n  // AUDIT FIX (H-007, 2026-07-27): useMemo to prevent infinite loop on /process.\r\n  const dbClient = useMemo(() => createClient(), [])\r\n\r\n  const fetchProjects = useCallback(async () => {\r\n    const { data: { session } } = await dbClient.auth.getSession()\r\n    const user = session?.user\r\n    if (!user) return\r\n\r\n    const { data } = await dbClient\r\n      .from('projects')\r\n      .select('*')\r\n      .eq('user_id', user.id)\r\n      .order('created_at', { ascending: false })\r\n      .limit(20)\r\n\r\n    if (data) {\r\n      setProjects(data)\r\n    }\r\n  }, [dbClient])\r\n\r\n  useEffect(() => {\r\n    fetchProjects()\r\n  }, [fetchProjects])\r\n\r\n  const handleDrag = (e: React.DragEvent) => {\r\n    e.preventDefault()\r\n    e.stopPropagation()\r\n    if (e.type === 'dragenter' || e.type === 'dragover') {\r\n      setDragActive(true)\r\n    } else if (e.type === 'dragleave') {\r\n      setDragActive(false)\r\n    }\r\n  }\r\n\r\n  const handleDrop = async (e: React.DragEvent) => {\r\n    e.preventDefault()\r\n    e.stopPropagation()\r\n    setDragActive(false)\r\n    \r\n    const files = e.dataTransfer.files\r\n    if (files && files[0]) {\r\n      const content = await files[0].text()\r\n      setFileContent(content)\r\n      const result = interpretCSV(content)\r\n      setInterpretResult(result)\r\n      \r\n      if (result.ok && result.dataset) {\r\n        const detected = detectSurveyTypeFromDataset(result.dataset)\r\n        // survey type detected\r\n      }\r\n    }\r\n  }\r\n\r\n  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {\r\n    const files = e.target.files\r\n    if (files && files[0]) {\r\n      const content = await files[0].text()\r\n      setFileContent(content)\r\n      const result = interpretCSV(content)\r\n      setInterpretResult(result)\r\n    }\r\n  }\r\n\r\n  const detectSurveyTypeFromDataset = (dataset: SurveyDataset): string => {\r\n    if (dataset?.surveyType && dataset.surveyType !== 'unknown') return dataset.surveyType\r\n    if (!dataset?.observations) return 'unknown'\r\n    const obs = dataset.observations\r\n    const types = new Set(obs.map((o: SurveyObservation) => o.type))\r\n    \r\n    if (types.has('BS') || types.has('IS') || types.has('FS')) return 'leveling'\r\n    if (types.has('BEARING') && types.has('DISTANCE')) return 'traverse'\r\n    if (types.has('ANGLE') && types.has('DISTANCE')) return 'radiation'\r\n    if (types.has('COORDINATE')) return 'coordinates'\r\n    return 'unknown'\r\n  }\r\n\r\n  const processSurvey = () => {\r\n    setProcessing(true)\r\n    \r\n    setTimeout(() => {\r\n      setProcessing(false)\r\n      setProcessed(true)\r\n    }, 1500)\r\n  }\r\n\r\n  const runProcessWithWorkflow = () => {\r\n    if (!interpretResult?.ok || !interpretResult.dataset) return\r\n\r\n    setProcessing(true)\r\n\r\n    try {\r\n      const dataset = interpretResult.dataset\r\n      const surveyType = detectSurveyTypeFromDataset(dataset)\r\n      let result: WorkflowResult\r\n\r\n      const solutions: Array<{ title?: string; steps: SolutionStep[] }> = []\r\n\r\n      if (surveyType === 'traverse') {\r\n        const traverseData: TraverseWorkflowData = {\r\n          legs: dataset.observations.map((obs: SurveyObservation, i: number) => ({\r\n            fromStation: obs.station,\r\n            toStation: dataset.observations[i + 1]?.station || `P${i + 2}`,\r\n            bearing: obs.value1 || 0,\r\n            distance: obs.value2 || 0\r\n          })),\r\n          openingPoint: {\r\n            name: dataset.observations[0]?.station || 'A',\r\n            easting: (dataset.metadata as { openingEasting?: number })?.openingEasting || 500000,\r\n            northing: (dataset.metadata as { openingNorthing?: number })?.openingNorthing || 4500000\r\n          }\r\n        }\r\n        result = runWorkflow('traverse', traverseData)\r\n        if (result.success && result.results?.legs) {\r\n          try {\r\n            const s = bowditchAdjustmentSolvedFromResult(result.results)\r\n            solutions.push({ title: s.solution.title, steps: s.steps })\r\n          } catch {}\r\n        }\r\n      } else if (surveyType === 'leveling') {\r\n        const levelingData: LevelingWorkflowData = {\r\n          readings: dataset.observations.map((obs: SurveyObservation) => ({\r\n            station: obs.station,\r\n            bs: obs.type === 'BS' ? obs.value1 : undefined,\r\n            is: obs.type === 'IS' ? obs.value1 : undefined,\r\n            fs: obs.type === 'FS' ? obs.value1 : undefined\r\n          })),\r\n          openingRL: (dataset.metadata as { openingRL?: number })?.openingRL || 100\r\n        }\r\n        result = runWorkflow('leveling', levelingData)\r\n        if (result.success && result.results?.readings) {\r\n          try {\r\n            const s = levelingSolved(\r\n              { readings: levelingData.readings, openingRL: levelingData.openingRL, closingRL: levelingData.closingRL, method: 'rise_and_fall', distanceKm: 1 },\r\n              result.results\r\n            )\r\n            solutions.push({ title: s.solution.title, steps: s.steps })\r\n          } catch {}\r\n        }\r\n      } else if (surveyType === 'radiation') {\r\n        const radiationData: RadiationWorkflowData = {\r\n          station: {\r\n            name: (dataset.metadata as { stationName?: string })?.stationName || 'STN1',\r\n            easting: (dataset.metadata as { stationEasting?: number })?.stationEasting || 500000,\r\n            northing: (dataset.metadata as { stationNorthing?: number })?.stationNorthing || 4500000\r\n          },\r\n          observations: dataset.observations.map((obs: SurveyObservation) => ({\r\n            pointName: obs.station,\r\n            bearing: obs.value1 || 0,\r\n            distance: obs.value2 || 0\r\n          }))\r\n        }\r\n        result = runWorkflow('radiation', radiationData)\r\n        if (radiationData.observations.length > 0) {\r\n          for (const obs of radiationData.observations.slice(0, 3)) {\r\n            try {\r\n              const s = radiationSolved({\r\n                station: { easting: radiationData.station.easting, northing: radiationData.station.northing },\r\n                bearingDeg: obs.bearing,\r\n                distance: obs.distance,\r\n              })\r\n              solutions.push({ title: s.solution.title, steps: s.steps })\r\n            } catch {}\r\n          }\r\n        }\r\n      } else {\r\n        result = {\r\n          success: false,\r\n          surveyType: 'unknown',\r\n          results: null,\r\n          validation: { passed: false, checks: [] },\r\n          warnings: [],\r\n          errors: ['Unknown survey type - cannot process']\r\n        }\r\n      }\r\n\r\n      setWorkflowResult(result)\r\n      setWorkflowSolutions(solutions)\r\n\r\n      if (result.success && result.results) {\r\n        const config = getToleranceConfig(selectedProfile)\r\n        \r\n        if (surveyType === 'traverse' && result.results) {\r\n          const res = result.results as {\r\n            legs?: TraverseLegLike[]\r\n            precisionRatio?: number\r\n            closingErrorE?: number\r\n            closingErrorN?: number\r\n            totalDistance?: number\r\n          }\r\n          if (res.legs) {\r\n            const traverseTol = checkTolerance({\r\n              traverse: {\r\n                precisionRatio: res.precisionRatio || 0,\r\n                angularMisclosure: null,\r\n                linearError: Math.sqrt((res.closingErrorE || 0) ** 2 + (res.closingErrorN || 0) ** 2),\r\n                totalDistance: res.totalDistance || 0,\r\n                numStations: res.legs.length\r\n              }\r\n            }, selectedProfile)\r\n            setToleranceResult(traverseTol)\r\n          }\r\n        } else if (surveyType === 'leveling' && result.results) {\r\n          const res = result.results as {\r\n            readings?: LevelingReading[]\r\n            arithmeticCheck?: boolean\r\n            misclosure?: number\r\n          }\r\n          if (res.readings) {\r\n            const levelingTol = checkTolerance({\r\n              leveling: {\r\n                arithmeticCheckPassed: res.arithmeticCheck || false,\r\n                arithmeticDiff: res.misclosure || 0,\r\n                closingError: res.misclosure || 0,\r\n                distanceKm: (res.readings.length || 0) * 0.1 || 1\r\n              }\r\n            }, selectedProfile)\r\n            setToleranceResult(levelingTol)\r\n          }\r\n        }\r\n      }\r\n\r\n      setProcessing(false)\r\n      setProcessed(true)\r\n    } catch (e) {\r\n      console.error('Processing error:', e)\r\n      setProcessing(false)\r\n    }\r\n  }\r\n\r\n  const handleSaveToProject = async () => {\r\n    if (!selectedProjectId || !workflowResult?.results) {\r\n      setProcessError('Please select a project first.')\r\n      return\r\n    }\r\n\r\n    setSaveLoading(true)\r\n\r\n    try {\r\n      const res = workflowResult.results as { legs?: TraverseLegLike[]; points?: RadiationPoint[] }\r\n      if (workflowResult.surveyType === 'traverse' && res.legs) {\r\n        const points: SurveyPointRow[] = res.legs.map((leg: TraverseLegLike) => ({\r\n          project_id: selectedProjectId,\r\n          name: leg.to,\r\n          easting: leg.adjEasting,\r\n          northing: leg.adjNorthing,\r\n          elevation: null,\r\n          is_control: false\r\n        }))\r\n\r\n        if (res.legs[0]) {\r\n          points.unshift({\r\n            project_id: selectedProjectId,\r\n            name: res.legs[0].from,\r\n            easting: res.legs[0].adjEasting - res.legs[0].adjDeltaE,\r\n            northing: res.legs[0].adjNorthing - res.legs[0].adjDeltaN,\r\n            elevation: null,\r\n            is_control: true,\r\n            control_order: 'primary',\r\n            locked: true\r\n          })\r\n        }\r\n\r\n        const { error: insertError } = await dbClient.from('survey_points').insert(points)\r\n        if (insertError) {\r\n          throw new Error(`Failed to save points: ${insertError.message}`)\r\n        }\r\n      } \r\n      else if (workflowResult.surveyType === 'radiation' && res.points) {\r\n        const points = res.points.map((pt: RadiationPoint) => ({\r\n          project_id: selectedProjectId,\r\n          name: pt.name,\r\n          easting: pt.easting,\r\n          northing: pt.northing,\r\n          elevation: null,\r\n          is_control: false\r\n        }))\r\n\r\n        const { error: insertError } = await dbClient.from('survey_points').insert(points)\r\n        if (insertError) {\r\n          throw new Error(`Failed to save points: ${insertError.message}`)\r\n        }\r\n      }\r\n\r\n      setSaveSuccess(true)\r\n      setTimeout(() => setSaveSuccess(false), 3000)\r\n    } catch (e) {\r\n      console.error('Save error:', e)\r\n      setProcessError('Error saving points to project. Please try again.')\r\n    }\r\n\r\n    setSaveLoading(false)\r\n  }\r\n\r\n  const detectLabel = (type: string) => {\r\n    switch (type) {\r\n      case 'leveling': return 'Leveling Run'\r\n      case 'traverse': return 'Traverse Survey'\r\n      case 'radiation': return 'Radiation / Detail Survey'\r\n      case 'boundary': return 'Boundary / Parcel'\r\n      default: return 'Unknown Survey Type'\r\n    }\r\n  }\r\n\r\n  return (\r\n    <div className=\"max-w-4xl mx-auto px-4 py-12\">\r\n      <h1 className=\"text-3xl font-bold mb-2\">Process Field Notes</h1>\r\n      <p className=\"text-sm text-[var(--text-muted)] mb-8\">\r\n        Upload your CSV field notes — METARDU detects the survey type and processes automatically\r\n      </p>\r\n\r\n      {!fileContent ? (\r\n        <>\r\n          <div\r\n            className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-colors ${\r\n              dragActive \r\n                ? 'border-[var(--accent)] bg-[var(--accent)]/10' \r\n                : 'border-[var(--border-color)] hover:border-gray-600'\r\n            }`}\r\n            onDragEnter={handleDrag}\r\n            onDragLeave={handleDrag}\r\n            onDragOver={handleDrag}\r\n            onDrop={handleDrop}\r\n            onClick={() => fileInputRef.current?.click()}\r\n          >\r\n            <div className=\"text-6xl mb-4\">[Clip]</div>\r\n            <p className=\"text-lg font-semibold text-[var(--text-primary)] mb-2\">\r\n              Drop your field notes here or click to upload\r\n            </p>\r\n            <p className=\"text-sm text-[var(--text-muted)]\">\r\n              Accepts: .csv, .txt files\r\n            </p>\r\n            <input\r\n              ref={fileInputRef}\r\n              type=\"file\"\r\n              accept=\".csv,.txt\"\r\n              className=\"hidden\"\r\n              onChange={handleFileSelect}\r\n            />\r\n          </div>\r\n\r\n          <div className=\"mt-8 p-6 bg-[var(--bg-secondary)]/50 rounded-xl border border-[var(--border-color)]\">\r\n            <h3 className=\"text-sm font-semibold text-[var(--text-secondary)] mb-4\">Download Sample Files</h3>\r\n            <div className=\"flex flex-wrap gap-3\">\r\n              <a href=\"/sample-files/traverse_sample.csv\" className=\"px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm\">\r\n                 Traverse Sample\r\n              </a>\r\n              <a href=\"/sample-files/leveling_sample.csv\" className=\"px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm\">\r\n                 Leveling Sample\r\n              </a>\r\n              <a href=\"/sample-files/radiation_sample.csv\" className=\"px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm\">\r\n                 Radiation Sample\r\n              </a>\r\n            </div>\r\n          </div>\r\n        </>\r\n      ) : interpretResult?.ok && interpretResult.dataset ? (\r\n        <div className=\"space-y-6\">\r\n          <div className=\"card border border-[var(--border-color)]\">\r\n            <div className=\"card-header flex items-center gap-3\">\r\n              <span className=\"text-2xl\"></span>\r\n              <span className=\"font-semibold\">\r\n                {detectLabel(detectSurveyTypeFromDataset(interpretResult.dataset!))} Detected\r\n              </span>\r\n            </div>\r\n            <div className=\"card-body\">\r\n              <p className=\"text-sm text-[var(--text-primary)] mb-4\">\r\n                {interpretResult.dataset!.observations.length} observations found\r\n              </p>\r\n\r\n              <div className=\"bg-[var(--bg-tertiary)] rounded p-3 overflow-x-auto\">\r\n                <table className=\"text-xs w-full\">\r\n                  <thead>\r\n                    <tr className=\"text-[var(--text-muted)]\">\r\n                      <th className=\"px-2 py-1 text-left\">Station</th>\r\n                      <th className=\"px-2 py-1 text-left\">Type</th>\r\n                      <th className=\"px-2 py-1 text-right\">Value</th>\r\n                    </tr>\r\n                  </thead>\r\n                  <tbody>\r\n                    {interpretResult.dataset!.observations.slice(0, 5).map((obs: SurveyObservation, i: number) => (\r\n                      <tr key={obs.station || i} className=\"border-t border-[var(--border-color)]\">\r\n                        <td className=\"px-2 py-1\">{obs.station}</td>\r\n                        <td className=\"px-2 py-1 text-[var(--accent)]\">{obs.type}</td>\r\n                        <td className=\"px-2 py-1 text-right font-mono\">{obs.value1}</td>\r\n                      </tr>\r\n                    ))}\r\n                  </tbody>\r\n                </table>\r\n              </div>\r\n\r\n              {interpretResult.warnings.length > 0 && (\r\n                <div className=\"mt-4 p-3 bg-yellow-900/20 border border-yellow-700 rounded\">\r\n                  {interpretResult.warnings.map((w, i) => (\r\n                    <p key={`warn-${i}`} className=\"text-sm text-yellow-400\"><AlertTriangle className=\"w-3.5 h-3.5 inline shrink-0\" /> {w}</p>\r\n                  ))}\r\n                </div>\r\n              )}\r\n\r\n              {!processed && (\r\n                <>\r\n                  <div className=\"mt-6\">\r\n                    <div className=\"block text-sm text-[var(--text-secondary)] mb-2\">Tolerance Profile</div>\r\n                    <div className=\"grid grid-cols-3 gap-3\">\r\n                      {getAllToleranceProfiles().map((profile) => (\r\n                        <button\r\n                          key={profile}\r\n                          onClick={() => setSelectedProfile(profile)}\r\n                          className={`p-3 rounded-lg border text-left transition-colors ${\r\n                            selectedProfile === profile\r\n                              ? 'border-[var(--accent)] bg-[var(--accent)]/10'\r\n                              : 'border-[var(--border-color)] hover:border-gray-600'\r\n                          }`}\r\n                        >\r\n                          <div className=\"font-medium text-[var(--text-primary)] capitalize\">{getToleranceConfig(profile).name}</div>\r\n                          <div className=\"text-xs text-[var(--text-muted)] mt-1\">{getToleranceConfig(profile).description}</div>\r\n                          <div className=\"text-xs text-[var(--text-muted)] mt-2\">1:{getToleranceConfig(profile).linearPrecision}</div>\r\n                        </button>\r\n                      ))}\r\n                    </div>\r\n                  </div>\r\n\r\n                  <div className=\"mt-6 flex gap-3\">\r\n                    <button\r\n                      onClick={runProcessWithWorkflow}\r\n                      disabled={processing}\r\n                      className=\"px-6 py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg\"\r\n                    >\r\n                      {processing ? 'Processing...' : 'Process Survey'}\r\n                    </button>\r\n                    <button\r\n                      onClick={() => {\r\n                        setFileContent(null)\r\n                        setInterpretResult(null)\r\n                        setProcessed(false)\r\n                        setWorkflowResult(null)\r\n                        setWorkflowSolutions([])\r\n                        setToleranceResult(null)\r\n                      }}\r\n                      className=\"px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg\"\r\n                    >\r\n                      Upload Different File\r\n                    </button>\r\n                  </div>\r\n                </>\r\n              )}\r\n            </div>\r\n          </div>\r\n\r\n          {processed && workflowResult && (\r\n            <>\r\n              <div className={`card border-2 ${toleranceResult?.passed ? 'border-green-700' : 'border-red-700'}`}>\r\n                <div className=\"card-header flex items-center gap-3\">\r\n                  <span className=\"text-2xl\">{toleranceResult?.passed ? '' : '[x]'}</span>\r\n                  <span className=\"font-semibold\">\r\n                    Tolerance Check: {toleranceResult?.passed ? 'PASS' : 'FAIL'}\r\n                  </span>\r\n                  <span className=\"text-sm text-[var(--text-muted)] ml-auto\">\r\n                    {toleranceResult?.precisionGrade}\r\n                  </span>\r\n                </div>\r\n                <div className=\"card-body\">\r\n                  {toleranceResult?.checks.map((check, i) => (\r\n                    <div key={`check-${check.name || i}`} className={`flex items-center justify-between py-2 border-b border-[var(--border-color)] last:border-0 ${check.passed ? 'text-green-400' : 'text-red-400'}`}>\r\n                      <span>{check.passed ? '' : '[x]'} {check.name}</span>\r\n                      <span className=\"text-sm\">{check.message}</span>\r\n                    </div>\r\n                  ))}\r\n                  \r\n                  {toleranceResult?.recommendations && toleranceResult.recommendations.length > 0 && (\r\n                    <div className=\"mt-4 p-3 bg-yellow-900/20 border border-yellow-700 rounded\">\r\n                      <div className=\"text-sm text-yellow-400 mb-2\">Recommendations:</div>\r\n                      {toleranceResult.recommendations.map((rec, i) => (\r\n                        <p key={`rec-${i}`} className=\"text-xs text-yellow-300\">• {rec}</p>\r\n                      ))}\r\n                    </div>\r\n                  )}\r\n                </div>\r\n              </div>\r\n\r\n              {workflowSolutions.length > 0 ? (\r\n                <div className=\"space-y-6\">\r\n                  {workflowSolutions.map((s, i) => (\r\n                    <SolutionStepsRenderer key={`sol-${i}`} title={s.title} steps={s.steps} />\r\n                  ))}\r\n                </div>\r\n              ) : null}\r\n\r\n              {workflowResult.surveyType === 'traverse' && workflowResult.results?.legs && (\r\n                <div className=\"card border border-[var(--border-color)]\">\r\n                  <div className=\"card-header\">\r\n                    <span className=\"font-semibold\">Gale's Table</span>\r\n                  </div>\r\n                  <div className=\"card-body overflow-x-auto\">\r\n                    <table className=\"text-xs w-full\">\r\n                      <thead>\r\n                        <tr className=\"text-[var(--text-muted)] border-b border-[var(--border-color)]\">\r\n                          <th className=\"px-2 py-2 text-left\">From</th>\r\n                          <th className=\"px-2 py-2 text-left\">To</th>\r\n                          <th className=\"px-2 py-2 text-right\">Dist</th>\r\n                          <th className=\"px-2 py-2 text-right\">Bearing</th>\r\n                          <th className=\"px-2 py-2 text-right\">Easting</th>\r\n                          <th className=\"px-2 py-2 text-right\">Northing</th>\r\n                        </tr>\r\n                      </thead>\r\n                      <tbody>\r\n                        {workflowResult.results.legs.map((leg: TraverseLegLike, i: number) => (\r\n                          <tr key={`leg-${leg.from}-${leg.to}-${i}`} className=\"border-b border-[var(--border-color)]\">\r\n                            <td className=\"px-2 py-2\">{leg.from}</td>\r\n                            <td className=\"px-2 py-2\">{leg.to}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{leg.distance?.toFixed(3)}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{leg.bearingDMS}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{leg.adjEasting?.toFixed(4)}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{leg.adjNorthing?.toFixed(4)}</td>\r\n                          </tr>\r\n                        ))}\r\n                      </tbody>\r\n                    </table>\r\n                  </div>\r\n                </div>\r\n              )}\r\n\r\n              {workflowResult.surveyType === 'leveling' && workflowResult.results?.readings && (\r\n                <div className=\"card border border-[var(--border-color)]\">\r\n                  <div className=\"card-header\">\r\n                    <span className=\"font-semibold\">Leveling Results</span>\r\n                  </div>\r\n                  <div className=\"card-body overflow-x-auto\">\r\n                    <table className=\"text-xs w-full\">\r\n                      <thead>\r\n                        <tr className=\"text-[var(--text-muted)] border-b border-[var(--border-color)]\">\r\n                          <th className=\"px-2 py-2 text-left\">Station</th>\r\n                          <th className=\"px-2 py-2 text-right\">BS</th>\r\n                          <th className=\"px-2 py-2 text-right\">IS</th>\r\n                          <th className=\"px-2 py-2 text-right\">FS</th>\r\n                          <th className=\"px-2 py-2 text-right\">Rise</th>\r\n                          <th className=\"px-2 py-2 text-right\">Fall</th>\r\n                          <th className=\"px-2 py-2 text-right\">RL</th>\r\n                        </tr>\r\n                      </thead>\r\n                      <tbody>\r\n                        {workflowResult.results.readings.map((r: LevelingReading, i: number) => (\r\n                          <tr key={`reading-${r.station}-${i}`} className=\"border-b border-[var(--border-color)]\">\r\n                            <td className=\"px-2 py-2\">{r.station}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.bs?.toFixed(3) || '—'}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.is?.toFixed(3) || '—'}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.fs?.toFixed(3) || '—'}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.rise?.toFixed(3) || '—'}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.fall?.toFixed(3) || '—'}</td>\r\n                            <td className=\"px-2 py-2 text-right font-mono\">{r.reducedLevel?.toFixed(4) || '—'}</td>\r\n                          </tr>\r\n                        ))}\r\n                      </tbody>\r\n                    </table>\r\n                  </div>\r\n                </div>\r\n              )}\r\n\r\n              <div className=\"card border border-[var(--border-color)]\">\r\n                <div className=\"card-body space-y-4\">\r\n                  <h3 className=\"font-semibold\">Save to Project</h3>\r\n                  \r\n                  <div className=\"flex gap-3\">\r\n                    <select\r\n                      value={selectedProjectId}\r\n                      onChange={(e) => setSelectedProjectId(e.target.value)}\r\n                      className=\"flex-1 px-4 py-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)]\"\r\n                    >\r\n                      <option value=\"\">Select a project...</option>\r\n                      {projects.map((p) => (\r\n                        <option key={p.id} value={p.id}>{p.name}</option>\r\n                      ))}\r\n                    </select>\r\n                    \r\n                    <button\r\n                      onClick={handleSaveToProject}\r\n                      disabled={!selectedProjectId || saveLoading}\r\n                      className=\"px-6 py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg disabled:opacity-50\"\r\n                    >\r\n                      {saveLoading ? 'Saving...' : saveSuccess ? ' Saved!' : 'Save Points'}\r\n                    </button>\r\n                  </div>\r\n\r\n                  <div className=\"flex gap-3 pt-2\">\r\n                    <Link href=\"/dashboard\" className=\"px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg text-center\">\r\n                      View Projects\r\n                    </Link>\r\n                    <button className=\"px-6 py-3 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded-lg\">\r\n                      Generate PDF Report\r\n                    </button>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </>\r\n          )}\r\n        </div>\r\n      ) : (\r\n        <div className=\"card border-red-800\">\r\n          <div className=\"card-header\">\r\n            <span className=\"font-semibold text-red-400\">Upload Failed</span>\r\n          </div>\r\n          <div className=\"card-body\">\r\n            <p className=\"text-[var(--text-primary)] mb-4\">\r\n              {interpretResult?.error || 'Could not parse the uploaded file'}\r\n            </p>\r\n            {interpretResult?.warnings.map((w, i) => (\r\n              <p key={`warn2-${i}`} className=\"text-sm text-yellow-400\"><AlertTriangle className=\"w-3.5 h-3.5 inline shrink-0\" /> {w}</p>\r\n            ))}\r\n            \r\n            <div className=\"mt-6 p-4 bg-[var(--bg-tertiary)] rounded\">\r\n              <p className=\"text-sm text-[var(--text-secondary)] mb-3\">Or select survey type manually:</p>\r\n              <select\r\n                value={manualType}\r\n                onChange={(e) => setManualType(e.target.value)}\r\n                className=\"input mb-3\"\r\n              >\r\n                <option value=\"\">Select type...</option>\r\n                <option value=\"leveling\">Leveling Run</option>\r\n                <option value=\"traverse\">Traverse Survey</option>\r\n                <option value=\"radiation\">Radiation / Detail</option>\r\n              </select>\r\n              {manualType && (\r\n                <button className=\"btn btn-primary\">\r\n                  Process as {detectLabel(manualType)}\r\n                </button>\r\n              )}\r\n            </div>\r\n\r\n            <button\r\n              onClick={() => {\r\n                setFileContent(null)\r\n                setInterpretResult(null)\r\n              }}\r\n              className=\"btn btn-secondary mt-4\"\r\n            >\r\n              Try Again\r\n            </button>\r\n          </div>\r\n        </div>\r\n      )}\r\n    </div>\r\n  )\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -54007,131 +53820,6 @@
         "endColumn": 112
       },
       {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 62,
-        "column": 43,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 62,
-        "endColumn": 46,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                1914,
-                1917
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                1914,
-                1917
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 62,
-        "column": 54,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 62,
-        "endColumn": 72
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .easting on an `any` value.",
-        "line": 62,
-        "column": 65,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 62,
-        "endColumn": 72
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 62,
-        "column": 74,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 62,
-        "endColumn": 94
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .northing on an `any` value.",
-        "line": 62,
-        "column": 86,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 62,
-        "endColumn": 94
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 106,
-        "column": 33,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 106,
-        "endColumn": 36,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                3205,
-                3208
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                3205,
-                3208
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 106,
-        "column": 43,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 106,
-        "endColumn": 45
-      },
-      {
         "ruleId": "@typescript-eslint/no-unsafe-assignment",
         "severity": 1,
         "message": "Unsafe object destructuring of a property with an `any` value.",
@@ -54141,164 +53829,6 @@
         "messageId": "unsafeObjectPattern",
         "endLine": 127,
         "endColumn": 19
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 130,
-        "column": 43,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 130,
-        "endColumn": 46,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                3899,
-                3902
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                3899,
-                3902
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-return",
-        "severity": 1,
-        "message": "Unsafe return of a value of type `any`.",
-        "line": 130,
-        "column": 51,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeReturn",
-        "endLine": 130,
-        "endColumn": 55
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 130,
-        "column": 53,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 130,
-        "endColumn": 55
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 131,
-        "column": 49,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 131,
-        "endColumn": 52,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                3963,
-                3966
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                3963,
-                3966
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 132,
-        "column": 11,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 132,
-        "endColumn": 23
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .name on an `any` value.",
-        "line": 132,
-        "column": 19,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 132,
-        "endColumn": 23
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 133,
-        "column": 11,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 133,
-        "endColumn": 29
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .easting on an `any` value.",
-        "line": 133,
-        "column": 22,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 133,
-        "endColumn": 29
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 134,
-        "column": 11,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 134,
-        "endColumn": 31
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .northing on an `any` value.",
-        "line": 134,
-        "column": 23,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 134,
-        "endColumn": 31
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-argument",
@@ -54326,8 +53856,8 @@
             "messageId": "suggestUnknown",
             "fix": {
               "range": [
-                4404,
-                4407
+                4384,
+                4387
               ],
               "text": "unknown"
             },
@@ -54337,8 +53867,8 @@
             "messageId": "suggestNever",
             "fix": {
               "range": [
-                4404,
-                4407
+                4384,
+                4387
               ],
               "text": "never"
             },
@@ -54364,363 +53894,23 @@
             },
             "fix": {
               "range": [
-                4470,
-                4513
+                4450,
+                4493
               ],
               "text": ""
             },
             "desc": "Remove the console.error()."
           }
         ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 179,
-        "column": 36,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 179,
-        "endColumn": 39,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                5856,
-                5859
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                5856,
-                5859
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .locked on an `any` value.",
-        "line": 179,
-        "column": 47,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 179,
-        "endColumn": 53
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 183,
-        "column": 40,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 183,
-        "endColumn": 43,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                6106,
-                6109
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                6106,
-                6109
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .locked on an `any` value.",
-        "line": 183,
-        "column": 51,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 183,
-        "endColumn": 57
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 183,
-        "column": 71,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 183,
-        "endColumn": 74,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                6137,
-                6140
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                6137,
-                6140
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 184,
-        "column": 73,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 184,
-        "endColumn": 76,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                6220,
-                6223
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                6220,
-                6223
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 184,
-        "column": 83,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 184,
-        "endColumn": 85
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 184,
-        "column": 96,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 184,
-        "endColumn": 98
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 185,
-        "column": 99,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 185,
-        "endColumn": 101
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 191,
-        "column": 32,
-        "nodeType": "MemberExpression",
-        "messageId": "anyAssignment",
-        "endLine": 191,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 191,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 191,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-argument",
-        "severity": 1,
-        "message": "Unsafe argument of type `any` assigned to a parameter of type `Point`.",
-        "line": 192,
-        "column": 59,
-        "nodeType": "Identifier",
-        "messageId": "unsafeArgument",
-        "endLine": 192,
-        "endColumn": 64
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .name on an `any` value.",
-        "line": 206,
-        "column": 42,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 206,
-        "endColumn": 46
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 210,
-        "column": 30,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 210,
-        "endColumn": 51
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .easting on an `any` value.",
-        "line": 210,
-        "column": 36,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 210,
-        "endColumn": 43
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 210,
-        "column": 58,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 210,
-        "endColumn": 80
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .northing on an `any` value.",
-        "line": 210,
-        "column": 64,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 210,
-        "endColumn": 72
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 260,
-        "column": 47,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 260,
-        "endColumn": 50,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                10455,
-                10458
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                10455,
-                10458
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-return",
-        "severity": 1,
-        "message": "Unsafe return of a value of type `any`.",
-        "line": 260,
-        "column": 55,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeReturn",
-        "endLine": 260,
-        "endColumn": 61
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .name on an `any` value.",
-        "line": 260,
-        "column": 57,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 260,
-        "endColumn": 61
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 42,
+    "warningCount": 5,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client';\r\n\r\nimport { useState, useEffect, useCallback } from 'react';\r\nimport { createClient, type BrowserSession } from '@/lib/api-client/client';\r\nimport { coordinateArea } from '@/lib/engine/area';\r\nimport { distanceBearing } from '@/lib/engine/distance';\r\n\r\ninterface Point {\r\n  id: string;\r\n  name: string;\r\n  easting: number;\r\n  northing: number;\r\n  elevation?: number | null;\r\n  is_control?: boolean;\r\n  locked?: boolean;\r\n}\r\n\r\ninterface ParcelBuilderModalProps {\r\n  projectId: string;\r\n  points: Point[];\r\n  onClose: () => void;\r\n  onParcelCreated: (parcel?: { id: string; name: string | null; boundary_points: Array<{ name?: string; easting: number; northing: number }>; created_at?: string }) => void;\r\n  onDraftBoundaryChange?: (boundary: Array<{ easting: number; northing: number }> | null) => void;\r\n}\r\n\r\ninterface BoundaryPoint {\r\n  id: string;\r\n  name: string;\r\n  easting: number;\r\n  northing: number;\r\n}\r\n\r\ninterface BoundaryLine {\r\n  from: string;\r\n  to: string;\r\n  bearing: string;\r\n  bearingDeg: number;\r\n  distance: number;\r\n}\r\n\r\nexport default function ParcelBuilderModal({ projectId, points, onClose, onParcelCreated, onDraftBoundaryChange }: ParcelBuilderModalProps) {\r\n  const [parcelName, setParcelName] = useState('');\r\n  const [selectedPoints, setSelectedPoints] = useState<BoundaryPoint[]>([]);\r\n  const [isSelecting, setIsSelecting] = useState(true);\r\n  const [boundaryLines, setBoundaryLines] = useState<BoundaryLine[]>([]);\r\n  const [areaResult, setAreaResult] = useState<{\r\n    areaSqm: number;\r\n    areaHa: number;\r\n    areaAcres: number;\r\n    perimeter: number;\r\n  } | null>(null);\r\n  const [saving, setSaving] = useState(false);\r\n  const dbClient = createClient();\r\n\r\n  const computeParcel = useCallback(() => {\r\n    if (selectedPoints.length < 3) {\r\n      setBoundaryLines([]);\r\n      setAreaResult(null);\r\n      return;\r\n    }\r\n\r\n    const coords = selectedPoints.map((p: any) => ({ easting: p.easting, northing: p.northing }));\r\n    const areaData = coordinateArea(coords);\r\n\r\n    const lines: BoundaryLine[] = [];\r\n    for (let i = 0; i < selectedPoints.length; i++) {\r\n      const from = selectedPoints[i];\r\n      const to = selectedPoints[(i + 1) % selectedPoints.length];\r\n      const db = distanceBearing(from, to);\r\n      lines.push({\r\n        from: from.name,\r\n        to: to.name,\r\n        bearing: db.bearingDMS,\r\n        bearingDeg: db.bearing,\r\n        distance: db.distance\r\n      });\r\n    }\r\n\r\n    setBoundaryLines(lines);\r\n    setAreaResult({\r\n      areaSqm: areaData.areaSqm,\r\n      areaHa: areaData.areaHa,\r\n      areaAcres: areaData.areaAcres,\r\n      perimeter: areaData.perimeter\r\n    });\r\n  }, [selectedPoints]);\r\n\r\n  useEffect(() => {\r\n    if (selectedPoints.length >= 3) {\r\n      computeParcel();\r\n    } else {\r\n      setBoundaryLines([]);\r\n      setAreaResult(null);\r\n    }\r\n  }, [selectedPoints, computeParcel]);\r\n\r\n  const handlePointClick = (point: Point) => {\r\n    if (!isSelecting) return;\r\n\r\n    const firstPoint = selectedPoints[0]\r\n    if (selectedPoints.length > 0 && firstPoint && firstPoint.id === point.id) {\r\n      if (selectedPoints.length >= 3) setIsSelecting(false);\r\n      return;\r\n    }\r\n\r\n    if (selectedPoints.find((p: any) => p.id === point.id)) return;\r\n\r\n    setSelectedPoints([\r\n      ...selectedPoints,\r\n      {\r\n        id: point.id,\r\n        name: point.name,\r\n        easting: point.easting,\r\n        northing: point.northing\r\n      }\r\n    ]);\r\n  };\r\n\r\n  const handleSave = async () => {\r\n    if (!parcelName || selectedPoints.length < 3 || !areaResult) return;\r\n\r\n    setSaving(true);\r\n    try {\r\n      const { data: { session } } = await dbClient.auth.getSession();\r\n      const user = (session as BrowserSession | null)?.user;\r\n\r\n      const { data, error } = await dbClient.from('parcels').insert({\r\n        project_id: projectId,\r\n        name: parcelName,\r\n        point_ids: selectedPoints.map((p: any) => p.id),\r\n        boundary_points: selectedPoints.map((p: any) => ({\r\n          name: p.name,\r\n          easting: p.easting,\r\n          northing: p.northing\r\n        })),\r\n        area_sqm: areaResult.areaSqm,\r\n        area_ha: areaResult.areaHa,\r\n        area_acres: areaResult.areaAcres,\r\n        perimeter_m: areaResult.perimeter,\r\n        created_by: user?.id\r\n      }).select('id, name, boundary_points, created_at').single();\r\n\r\n      if (error) throw error;\r\n\r\n      onParcelCreated((data as any) ?? undefined);\r\n      onClose();\r\n    } catch (err) {\r\n      console.error('Error saving parcel:', err);\r\n      alert('Failed to save parcel');\r\n    } finally {\r\n      setSaving(false);\r\n    }\r\n  };\r\n\r\n  const handleReset = () => {\r\n    setSelectedPoints([]);\r\n    setIsSelecting(true);\r\n    setBoundaryLines([]);\r\n    setAreaResult(null);\r\n    setParcelName('');\r\n  };\r\n\r\n  return (\r\n    <div className=\"fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4\">\r\n      <div className=\"bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto\">\r\n        <div className=\"p-6 border-b border-[var(--border-color)] flex justify-between items-center\">\r\n          <div>\r\n            <h2 className=\"text-xl font-bold text-white\">Build Parcel</h2>\r\n            <p className=\"text-sm text-[var(--text-secondary)]\">Click points in boundary order. Click first point to close.</p>\r\n          </div>\r\n          <button onClick={onClose} className=\"text-[var(--text-secondary)] hover:text-white text-2xl\">&times;</button>\r\n        </div>\r\n\r\n        <div className=\"p-6 space-y-6\">\r\n          <div className=\"grid md:grid-cols-2 gap-6\">\r\n            <div>\r\n              <h3 className=\"font-semibold text-[var(--text-primary)] mb-3\">Available Points</h3>\r\n              <div className=\"bg-[var(--bg-tertiary)] rounded-lg p-3 max-h-64 overflow-y-auto\">\r\n                {points.filter((p: any) => !p.locked).length === 0 ? (\r\n                  <p className=\"text-[var(--text-muted)] text-sm\">No points available</p>\r\n                ) : (\r\n                  <div className=\"grid grid-cols-2 gap-2\">\r\n                    {points.filter((p: any) => !p.locked).map((point: any) => {\r\n                      const isAlreadySelected = selectedPoints.some((p: any) => p.id === point.id)\r\n                      const isFirst = selectedPoints.length > 0 && selectedPoints[0].id === point.id\r\n                      const canClose = isFirst && selectedPoints.length >= 3\r\n                      const disabled = !isSelecting || (isAlreadySelected && !canClose)\r\n\r\n                      return (\r\n                        <button\r\n                          key={point.id}\r\n                          onClick={() => handlePointClick(point)}\r\n                          disabled={disabled}\r\n                          className={`px-3 py-2 rounded text-sm font-mono text-left transition-colors ${\r\n                            isAlreadySelected\r\n                              ? canClose\r\n                                ? 'bg-green-900/40 border border-green-700 text-green-200 hover:bg-green-900/60'\r\n                                : 'bg-[var(--accent)] text-black'\r\n                              : isSelecting\r\n                                ? 'bg-gray-700 hover:bg-[var(--border-hover)] text-[var(--text-primary)]'\r\n                                : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-not-allowed'\r\n                          }`}\r\n                          title={canClose ? 'Click to close boundary' : undefined}\r\n                        >\r\n                          <div className=\"flex items-center justify-between gap-2\">\r\n                            <span>{point.name}</span>\r\n                            {canClose ? <span className=\"text-xs font-sans\">Close</span> : null}\r\n                          </div>\r\n                          <span className=\"text-xs text-[var(--text-secondary)] ml-1 block\">\r\n                            {point.easting.toFixed(0)}, {point.northing.toFixed(0)}\r\n                          </span>\r\n                        </button>\r\n                      )\r\n                    })}\r\n                  </div>\r\n                )}\r\n              </div>\r\n\r\n              {isSelecting && selectedPoints.length > 0 && (\r\n                <div className=\"mt-4\">\r\n                  <h4 className=\"text-sm font-semibold text-[var(--text-primary)] mb-2\">Selected Boundary ({selectedPoints.length})</h4>\r\n                  <div className=\"flex flex-wrap gap-2\">\r\n                    {selectedPoints.map((p, idx) => (\r\n                      <span key={p.id} className=\"px-2 py-1 bg-[var(--accent)]/20 text-[var(--accent)] rounded text-sm\">\r\n                        {p.name}\r\n                        {idx < selectedPoints.length - 1 && ' → '}\r\n                      </span>\r\n                    ))}\r\n                  </div>\r\n                  <div className=\"mt-3 flex items-center gap-2\">\r\n                    <button\r\n                      onClick={() => {\r\n                        if (selectedPoints.length >= 3) setIsSelecting(false)\r\n                      }}\r\n                      disabled={selectedPoints.length < 3}\r\n                      className=\"px-3 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm disabled:opacity-50\"\r\n                    >\r\n                      Close boundary\r\n                    </button>\r\n                    <span className=\"text-xs text-[var(--text-muted)]\">\r\n                      or click the first point again\r\n                    </span>\r\n                  </div>\r\n                </div>\r\n              )}\r\n            </div>\r\n\r\n            <div>\r\n              {areaResult ? (\r\n                <div className=\"bg-[var(--bg-tertiary)] rounded-xl p-6\">\r\n                  <h3 className=\"font-bold text-white text-lg mb-4\">PARCEL SUMMARY</h3>\r\n                  {isSelecting ? (\r\n                    <div className=\"mb-3 rounded border border-amber-700/50 bg-amber-900/10 px-3 py-2 text-xs text-amber-200\">\r\n                      Preview only — close the boundary (click the first point again) to enter a name and save.\r\n                    </div>\r\n                  ) : null}\r\n                  <div className=\"border-b border-[var(--border-color)] pb-2 mb-3\">\r\n                    <span className=\"text-[var(--text-secondary)] text-sm\">Boundary: </span>\r\n                    <span className=\"text-[var(--text-primary)]\">\r\n                      {selectedPoints.map((p: any) => p.name).join(' → ')}\r\n                    </span>\r\n                  </div>\r\n\r\n                  <div className=\"overflow-x-auto\">\r\n                  <table className=\"w-full text-sm mb-4 min-w-[300px]\">\r\n                    <thead>\r\n                      <tr className=\"border-b border-[var(--border-color)]\">\r\n                        <th className=\"text-left py-2 text-[var(--text-secondary)]\">Line</th>\r\n                        <th className=\"text-right py-2 text-[var(--text-secondary)]\">Bearing</th>\r\n                        <th className=\"text-right py-2 text-[var(--text-secondary)]\">Distance</th>\r\n                      </tr>\r\n                    </thead>\r\n                    <tbody>\r\n                      {boundaryLines.map((line, idx) => (\r\n                        <tr key={`${line}-${idx}`} className=\"border-b border-[var(--border-color)]\">\r\n                          <td className=\"py-2 text-[var(--text-primary)]\">{line.from}→{line.to}</td>\r\n                          <td className=\"py-2 text-right font-mono text-[var(--text-primary)]\">{line.bearing}</td>\r\n                          <td className=\"py-2 text-right font-mono text-[var(--text-primary)]\">{line.distance.toFixed(3)} m</td>\r\n                        </tr>\r\n                      ))}\r\n                    </tbody>\r\n                  </table>\r\n                  </div>\r\n\r\n                  <div className=\"space-y-2 pt-4 border-t border-[var(--border-color)]\">\r\n                    <div className=\"flex justify-between\">\r\n                      <span className=\"text-[var(--text-secondary)]\">Area:</span>\r\n                      <span className=\"font-mono text-white\">{areaResult.areaSqm.toFixed(4)} m²</span>\r\n                    </div>\r\n                    <div className=\"flex justify-between\">\r\n                      <span className=\"text-[var(--text-secondary)]\"></span>\r\n                      <span className=\"font-mono text-white\">{areaResult.areaHa.toFixed(6)} ha</span>\r\n                    </div>\r\n                    <div className=\"flex justify-between\">\r\n                      <span className=\"text-[var(--text-secondary)]\"></span>\r\n                      <span className=\"font-mono text-white\">{areaResult.areaAcres.toFixed(4)} acres</span>\r\n                    </div>\r\n                    <div className=\"flex justify-between pt-2 border-t border-[var(--border-color)]\">\r\n                      <span className=\"text-[var(--text-secondary)]\">Perimeter:</span>\r\n                      <span className=\"font-mono text-white\">{areaResult.perimeter.toFixed(3)} m</span>\r\n                    </div>\r\n                  </div>\r\n                </div>\r\n              ) : (\r\n                <div className=\"bg-[var(--bg-tertiary)]/50 rounded-xl p-6 text-center\">\r\n                  <p className=\"text-[var(--text-muted)]\">\r\n                    {selectedPoints.length < 3\r\n                      ? `Select at least 3 points (${3 - selectedPoints.length} more)`\r\n                      : 'Click the first point again to close the boundary'}\r\n                  </p>\r\n                </div>\r\n              )}\r\n            </div>\r\n          </div>\r\n\r\n          {!isSelecting && areaResult && (\r\n            <div className=\"border-t border-[var(--border-color)] pt-6\">\r\n              <div className=\"max-w-md\">\r\n                <label className=\"label\" htmlFor=\"parcel-name\">Parcel Name</label>\r\n                <input id=\"parcel-name\"\r\n                  className=\"input\"\r\n                  value={parcelName}\r\n                  onChange={e => setParcelName(e.target.value)}\r\n placeholder=\"e.g., Plot A, Parcel 1\"\r\n                />\r\n              </div>\r\n            </div>\r\n          )}\r\n        </div>\r\n\r\n        <div className=\"p-6 border-t border-[var(--border-color)] flex gap-3 justify-end\">\r\n          <button onClick={handleReset} className=\"px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded\">\r\n            Reset\r\n          </button>\r\n          <button onClick={onClose} className=\"px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded\">\r\n            Cancel\r\n          </button>\r\n          {!isSelecting && areaResult && (\r\n            <button\r\n              onClick={handleSave}\r\n              disabled={!parcelName || saving}\r\n              className=\"px-6 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded disabled:opacity-50\"\r\n            >\r\n              {saving ? 'Saving...' : 'Save Parcel'}\r\n            </button>\r\n          )}\r\n        </div>\r\n      </div>\r\n    </div>\r\n  );\r\n}\r\n",
+    "source": "'use client';\r\n\r\nimport { useState, useEffect, useCallback } from 'react';\r\nimport { createClient, type BrowserSession } from '@/lib/api-client/client';\r\nimport { coordinateArea } from '@/lib/engine/area';\r\nimport { distanceBearing } from '@/lib/engine/distance';\r\n\r\ninterface Point {\r\n  id: string;\r\n  name: string;\r\n  easting: number;\r\n  northing: number;\r\n  elevation?: number | null;\r\n  is_control?: boolean;\r\n  locked?: boolean;\r\n}\r\n\r\ninterface ParcelBuilderModalProps {\r\n  projectId: string;\r\n  points: Point[];\r\n  onClose: () => void;\r\n  onParcelCreated: (parcel?: { id: string; name: string | null; boundary_points: Array<{ name?: string; easting: number; northing: number }>; created_at?: string }) => void;\r\n  onDraftBoundaryChange?: (boundary: Array<{ easting: number; northing: number }> | null) => void;\r\n}\r\n\r\ninterface BoundaryPoint {\r\n  id: string;\r\n  name: string;\r\n  easting: number;\r\n  northing: number;\r\n}\r\n\r\ninterface BoundaryLine {\r\n  from: string;\r\n  to: string;\r\n  bearing: string;\r\n  bearingDeg: number;\r\n  distance: number;\r\n}\r\n\r\nexport default function ParcelBuilderModal({ projectId, points, onClose, onParcelCreated, onDraftBoundaryChange }: ParcelBuilderModalProps) {\r\n  const [parcelName, setParcelName] = useState('');\r\n  const [selectedPoints, setSelectedPoints] = useState<BoundaryPoint[]>([]);\r\n  const [isSelecting, setIsSelecting] = useState(true);\r\n  const [boundaryLines, setBoundaryLines] = useState<BoundaryLine[]>([]);\r\n  const [areaResult, setAreaResult] = useState<{\r\n    areaSqm: number;\r\n    areaHa: number;\r\n    areaAcres: number;\r\n    perimeter: number;\r\n  } | null>(null);\r\n  const [saving, setSaving] = useState(false);\r\n  const dbClient = createClient();\r\n\r\n  const computeParcel = useCallback(() => {\r\n    if (selectedPoints.length < 3) {\r\n      setBoundaryLines([]);\r\n      setAreaResult(null);\r\n      return;\r\n    }\r\n\r\n    const coords = selectedPoints.map((p) => ({ easting: p.easting, northing: p.northing }));\r\n    const areaData = coordinateArea(coords);\r\n\r\n    const lines: BoundaryLine[] = [];\r\n    for (let i = 0; i < selectedPoints.length; i++) {\r\n      const from = selectedPoints[i];\r\n      const to = selectedPoints[(i + 1) % selectedPoints.length];\r\n      const db = distanceBearing(from, to);\r\n      lines.push({\r\n        from: from.name,\r\n        to: to.name,\r\n        bearing: db.bearingDMS,\r\n        bearingDeg: db.bearing,\r\n        distance: db.distance\r\n      });\r\n    }\r\n\r\n    setBoundaryLines(lines);\r\n    setAreaResult({\r\n      areaSqm: areaData.areaSqm,\r\n      areaHa: areaData.areaHa,\r\n      areaAcres: areaData.areaAcres,\r\n      perimeter: areaData.perimeter\r\n    });\r\n  }, [selectedPoints]);\r\n\r\n  useEffect(() => {\r\n    if (selectedPoints.length >= 3) {\r\n      computeParcel();\r\n    } else {\r\n      setBoundaryLines([]);\r\n      setAreaResult(null);\r\n    }\r\n  }, [selectedPoints, computeParcel]);\r\n\r\n  const handlePointClick = (point: Point) => {\r\n    if (!isSelecting) return;\r\n\r\n    const firstPoint = selectedPoints[0]\r\n    if (selectedPoints.length > 0 && firstPoint && firstPoint.id === point.id) {\r\n      if (selectedPoints.length >= 3) setIsSelecting(false);\r\n      return;\r\n    }\r\n\r\n    if (selectedPoints.find((p) => p.id === point.id)) return;\r\n\r\n    setSelectedPoints([\r\n      ...selectedPoints,\r\n      {\r\n        id: point.id,\r\n        name: point.name,\r\n        easting: point.easting,\r\n        northing: point.northing\r\n      }\r\n    ]);\r\n  };\r\n\r\n  const handleSave = async () => {\r\n    if (!parcelName || selectedPoints.length < 3 || !areaResult) return;\r\n\r\n    setSaving(true);\r\n    try {\r\n      const { data: { session } } = await dbClient.auth.getSession();\r\n      const user = (session as BrowserSession | null)?.user;\r\n\r\n      const { data, error } = await dbClient.from('parcels').insert({\r\n        project_id: projectId,\r\n        name: parcelName,\r\n        point_ids: selectedPoints.map((p) => p.id),\r\n        boundary_points: selectedPoints.map((p) => ({\r\n          name: p.name,\r\n          easting: p.easting,\r\n          northing: p.northing\r\n        })),\r\n        area_sqm: areaResult.areaSqm,\r\n        area_ha: areaResult.areaHa,\r\n        area_acres: areaResult.areaAcres,\r\n        perimeter_m: areaResult.perimeter,\r\n        created_by: user?.id\r\n      }).select('id, name, boundary_points, created_at').single();\r\n\r\n      if (error) throw error;\r\n\r\n      onParcelCreated((data as any) ?? undefined);\r\n      onClose();\r\n    } catch (err) {\r\n      console.error('Error saving parcel:', err);\r\n      alert('Failed to save parcel');\r\n    } finally {\r\n      setSaving(false);\r\n    }\r\n  };\r\n\r\n  const handleReset = () => {\r\n    setSelectedPoints([]);\r\n    setIsSelecting(true);\r\n    setBoundaryLines([]);\r\n    setAreaResult(null);\r\n    setParcelName('');\r\n  };\r\n\r\n  return (\r\n    <div className=\"fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4\">\r\n      <div className=\"bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto\">\r\n        <div className=\"p-6 border-b border-[var(--border-color)] flex justify-between items-center\">\r\n          <div>\r\n            <h2 className=\"text-xl font-bold text-white\">Build Parcel</h2>\r\n            <p className=\"text-sm text-[var(--text-secondary)]\">Click points in boundary order. Click first point to close.</p>\r\n          </div>\r\n          <button onClick={onClose} className=\"text-[var(--text-secondary)] hover:text-white text-2xl\">&times;</button>\r\n        </div>\r\n\r\n        <div className=\"p-6 space-y-6\">\r\n          <div className=\"grid md:grid-cols-2 gap-6\">\r\n            <div>\r\n              <h3 className=\"font-semibold text-[var(--text-primary)] mb-3\">Available Points</h3>\r\n              <div className=\"bg-[var(--bg-tertiary)] rounded-lg p-3 max-h-64 overflow-y-auto\">\r\n                {points.filter((p) => !p.locked).length === 0 ? (\r\n                  <p className=\"text-[var(--text-muted)] text-sm\">No points available</p>\r\n                ) : (\r\n                  <div className=\"grid grid-cols-2 gap-2\">\r\n                    {points.filter((p) => !p.locked).map((point) => {\r\n                      const isAlreadySelected = selectedPoints.some((p) => p.id === point.id)\r\n                      const isFirst = selectedPoints.length > 0 && selectedPoints[0].id === point.id\r\n                      const canClose = isFirst && selectedPoints.length >= 3\r\n                      const disabled = !isSelecting || (isAlreadySelected && !canClose)\r\n\r\n                      return (\r\n                        <button\r\n                          key={point.id}\r\n                          onClick={() => handlePointClick(point)}\r\n                          disabled={disabled}\r\n                          className={`px-3 py-2 rounded text-sm font-mono text-left transition-colors ${\r\n                            isAlreadySelected\r\n                              ? canClose\r\n                                ? 'bg-green-900/40 border border-green-700 text-green-200 hover:bg-green-900/60'\r\n                                : 'bg-[var(--accent)] text-black'\r\n                              : isSelecting\r\n                                ? 'bg-gray-700 hover:bg-[var(--border-hover)] text-[var(--text-primary)]'\r\n                                : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-not-allowed'\r\n                          }`}\r\n                          title={canClose ? 'Click to close boundary' : undefined}\r\n                        >\r\n                          <div className=\"flex items-center justify-between gap-2\">\r\n                            <span>{point.name}</span>\r\n                            {canClose ? <span className=\"text-xs font-sans\">Close</span> : null}\r\n                          </div>\r\n                          <span className=\"text-xs text-[var(--text-secondary)] ml-1 block\">\r\n                            {point.easting.toFixed(0)}, {point.northing.toFixed(0)}\r\n                          </span>\r\n                        </button>\r\n                      )\r\n                    })}\r\n                  </div>\r\n                )}\r\n              </div>\r\n\r\n              {isSelecting && selectedPoints.length > 0 && (\r\n                <div className=\"mt-4\">\r\n                  <h4 className=\"text-sm font-semibold text-[var(--text-primary)] mb-2\">Selected Boundary ({selectedPoints.length})</h4>\r\n                  <div className=\"flex flex-wrap gap-2\">\r\n                    {selectedPoints.map((p, idx) => (\r\n                      <span key={p.id} className=\"px-2 py-1 bg-[var(--accent)]/20 text-[var(--accent)] rounded text-sm\">\r\n                        {p.name}\r\n                        {idx < selectedPoints.length - 1 && ' → '}\r\n                      </span>\r\n                    ))}\r\n                  </div>\r\n                  <div className=\"mt-3 flex items-center gap-2\">\r\n                    <button\r\n                      onClick={() => {\r\n                        if (selectedPoints.length >= 3) setIsSelecting(false)\r\n                      }}\r\n                      disabled={selectedPoints.length < 3}\r\n                      className=\"px-3 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm disabled:opacity-50\"\r\n                    >\r\n                      Close boundary\r\n                    </button>\r\n                    <span className=\"text-xs text-[var(--text-muted)]\">\r\n                      or click the first point again\r\n                    </span>\r\n                  </div>\r\n                </div>\r\n              )}\r\n            </div>\r\n\r\n            <div>\r\n              {areaResult ? (\r\n                <div className=\"bg-[var(--bg-tertiary)] rounded-xl p-6\">\r\n                  <h3 className=\"font-bold text-white text-lg mb-4\">PARCEL SUMMARY</h3>\r\n                  {isSelecting ? (\r\n                    <div className=\"mb-3 rounded border border-amber-700/50 bg-amber-900/10 px-3 py-2 text-xs text-amber-200\">\r\n                      Preview only — close the boundary (click the first point again) to enter a name and save.\r\n                    </div>\r\n                  ) : null}\r\n                  <div className=\"border-b border-[var(--border-color)] pb-2 mb-3\">\r\n                    <span className=\"text-[var(--text-secondary)] text-sm\">Boundary: </span>\r\n                    <span className=\"text-[var(--text-primary)]\">\r\n                      {selectedPoints.map((p) => p.name).join(' → ')}\r\n                    </span>\r\n                  </div>\r\n\r\n                  <div className=\"overflow-x-auto\">\r\n                  <table className=\"w-full text-sm mb-4 min-w-[300px]\">\r\n                    <thead>\r\n                      <tr className=\"border-b border-[var(--border-color)]\">\r\n                        <th className=\"text-left py-2 text-[var(--text-secondary)]\">Line</th>\r\n                        <th className=\"text-right py-2 text-[var(--text-secondary)]\">Bearing</th>\r\n                        <th className=\"text-right py-2 text-[var(--text-secondary)]\">Distance</th>\r\n                      </tr>\r\n                    </thead>\r\n                    <tbody>\r\n                      {boundaryLines.map((line, idx) => (\r\n                        <tr key={`${line}-${idx}`} className=\"border-b border-[var(--border-color)]\">\r\n                          <td className=\"py-2 text-[var(--text-primary)]\">{line.from}→{line.to}</td>\r\n                          <td className=\"py-2 text-right font-mono text-[var(--text-primary)]\">{line.bearing}</td>\r\n                          <td className=\"py-2 text-right font-mono text-[var(--text-primary)]\">{line.distance.toFixed(3)} m</td>\r\n                        </tr>\r\n                      ))}\r\n                    </tbody>\r\n                  </table>\r\n                  </div>\r\n\r\n                  <div className=\"space-y-2 pt-4 border-t border-[var(--border-color)]\">\r\n                    <div className=\"flex justify-between\">\r\n                      <span className=\"text-[var(--text-secondary)]\">Area:</span>\r\n                      <span className=\"font-mono text-white\">{areaResult.areaSqm.toFixed(4)} m²</span>\r\n                    </div>\r\n                    <div className=\"flex justify-between\">\r\n                      <span className=\"text-[var(--text-secondary)]\"></span>\r\n                      <span className=\"font-mono text-white\">{areaResult.areaHa.toFixed(6)} ha</span>\r\n                    </div>\r\n                    <div className=\"flex justify-between\">\r\n                      <span className=\"text-[var(--text-secondary)]\"></span>\r\n                      <span className=\"font-mono text-white\">{areaResult.areaAcres.toFixed(4)} acres</span>\r\n                    </div>\r\n                    <div className=\"flex justify-between pt-2 border-t border-[var(--border-color)]\">\r\n                      <span className=\"text-[var(--text-secondary)]\">Perimeter:</span>\r\n                      <span className=\"font-mono text-white\">{areaResult.perimeter.toFixed(3)} m</span>\r\n                    </div>\r\n                  </div>\r\n                </div>\r\n              ) : (\r\n                <div className=\"bg-[var(--bg-tertiary)]/50 rounded-xl p-6 text-center\">\r\n                  <p className=\"text-[var(--text-muted)]\">\r\n                    {selectedPoints.length < 3\r\n                      ? `Select at least 3 points (${3 - selectedPoints.length} more)`\r\n                      : 'Click the first point again to close the boundary'}\r\n                  </p>\r\n                </div>\r\n              )}\r\n            </div>\r\n          </div>\r\n\r\n          {!isSelecting && areaResult && (\r\n            <div className=\"border-t border-[var(--border-color)] pt-6\">\r\n              <div className=\"max-w-md\">\r\n                <label className=\"label\" htmlFor=\"parcel-name\">Parcel Name</label>\r\n                <input id=\"parcel-name\"\r\n                  className=\"input\"\r\n                  value={parcelName}\r\n                  onChange={e => setParcelName(e.target.value)}\r\n placeholder=\"e.g., Plot A, Parcel 1\"\r\n                />\r\n              </div>\r\n            </div>\r\n          )}\r\n        </div>\r\n\r\n        <div className=\"p-6 border-t border-[var(--border-color)] flex gap-3 justify-end\">\r\n          <button onClick={handleReset} className=\"px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded\">\r\n            Reset\r\n          </button>\r\n          <button onClick={onClose} className=\"px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded\">\r\n            Cancel\r\n          </button>\r\n          {!isSelecting && areaResult && (\r\n            <button\r\n              onClick={handleSave}\r\n              disabled={!parcelName || saving}\r\n              className=\"px-6 py-2 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded disabled:opacity-50\"\r\n            >\r\n              {saving ? 'Saving...' : 'Save Parcel'}\r\n            </button>\r\n          )}\r\n        </div>\r\n      </div>\r\n    </div>\r\n  );\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -120420,265 +119610,6 @@
         ]
       },
       {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 71,
-        "column": 41,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 71,
-        "endColumn": 44,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                1781,
-                1784
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                1781,
-                1784
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .type on an `any` value.",
-        "line": 71,
-        "column": 51,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 71,
-        "endColumn": 55
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 82,
-        "column": 24,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 82,
-        "endColumn": 27,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                2237,
-                2240
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                2237,
-                2240
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-argument",
-        "severity": 1,
-        "message": "Unsafe argument of type `any` assigned to a parameter of type `DXFEntity`.",
-        "line": 83,
-        "column": 41,
-        "nodeType": "Identifier",
-        "messageId": "unsafeArgument",
-        "endLine": 83,
-        "endColumn": 42
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 84,
-        "column": 24,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 84,
-        "endColumn": 27,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                2315,
-                2318
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                2315,
-                2318
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .easting on an `any` value.",
-        "line": 85,
-        "column": 13,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 85,
-        "endColumn": 20
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 85,
-        "column": 29,
-        "nodeType": "AssignmentExpression",
-        "messageId": "anyAssignment",
-        "endLine": 85,
-        "endColumn": 45
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .easting on an `any` value.",
-        "line": 85,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 85,
-        "endColumn": 45
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .easting on an `any` value.",
-        "line": 86,
-        "column": 13,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 86,
-        "endColumn": 20
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 86,
-        "column": 29,
-        "nodeType": "AssignmentExpression",
-        "messageId": "anyAssignment",
-        "endLine": 86,
-        "endColumn": 45
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .easting on an `any` value.",
-        "line": 86,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 86,
-        "endColumn": 45
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .northing on an `any` value.",
-        "line": 87,
-        "column": 13,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 87,
-        "endColumn": 21
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 87,
-        "column": 30,
-        "nodeType": "AssignmentExpression",
-        "messageId": "anyAssignment",
-        "endLine": 87,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .northing on an `any` value.",
-        "line": 87,
-        "column": 39,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 87,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .northing on an `any` value.",
-        "line": 88,
-        "column": 13,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 88,
-        "endColumn": 21
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 88,
-        "column": 30,
-        "nodeType": "AssignmentExpression",
-        "messageId": "anyAssignment",
-        "endLine": 88,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .northing on an `any` value.",
-        "line": 88,
-        "column": 39,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 88,
-        "endColumn": 47
-      },
-      {
         "ruleId": "@typescript-eslint/no-unused-vars",
         "severity": 1,
         "message": "'boundingBox' is defined but never used. Allowed unused args must match /^_/u.",
@@ -120690,96 +119621,6 @@
         "endColumn": 55
       },
       {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 173,
-        "column": 44,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 173,
-        "endColumn": 47,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                5135,
-                5138
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                5135,
-                5138
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .type on an `any` value.",
-        "line": 174,
-        "column": 7,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 174,
-        "endColumn": 11
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .x1 on an `any` value.",
-        "line": 175,
-        "column": 7,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 175,
-        "endColumn": 9
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .y1 on an `any` value.",
-        "line": 175,
-        "column": 29,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 175,
-        "endColumn": 31
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .x2 on an `any` value.",
-        "line": 176,
-        "column": 7,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 176,
-        "endColumn": 9
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .y2 on an `any` value.",
-        "line": 176,
-        "column": 29,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 176,
-        "endColumn": 31
-      },
-      {
         "ruleId": "@typescript-eslint/no-unused-vars",
         "severity": 1,
         "message": "'l' is defined but never used. Allowed unused args must match /^_/u.",
@@ -120789,131 +119630,6 @@
         "messageId": "unusedVar",
         "endLine": 187,
         "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 187,
-        "column": 49,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 187,
-        "endColumn": 52,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                5594,
-                5597
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                5594,
-                5597
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 209,
-        "column": 44,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 209,
-        "endColumn": 47,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                6279,
-                6282
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                6279,
-                6282
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .type on an `any` value.",
-        "line": 210,
-        "column": 8,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 210,
-        "endColumn": 12
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .type on an `any` value.",
-        "line": 210,
-        "column": 29,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 210,
-        "endColumn": 33
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .text on an `any` value.",
-        "line": 211,
-        "column": 7,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 211,
-        "endColumn": 11
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .x on an `any` value.",
-        "line": 211,
-        "column": 17,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 211,
-        "endColumn": 18
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .y on an `any` value.",
-        "line": 211,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 211,
-        "endColumn": 39
       },
       {
         "ruleId": "@typescript-eslint/no-unused-vars",
@@ -120941,10 +119657,10 @@
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 36,
+    "warningCount": 6,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "import { readFileSync } from 'fs'\r\nimport type { ParsedInput, ExtractedBuildingData, ExtractedWall, ExtractedRoom, ExtractedAnnotation, ExtractedFloor, BoundingBox2D, Point2D } from './types'\r\nimport { calculateConfidence } from './fileRouter'\r\n\r\ninterface DXFEntity {\r\n  type: string\r\n  layer?: string\r\n  x?: number\r\n  y?: number\r\n  x1?: number\r\n  y1?: number\r\n  x2?: number\r\n  y2?: number\r\n  thickness?: number\r\n  elevation?: number\r\n  text?: string\r\n  height?: number\r\n}\r\n\r\ninterface DXFParseResult {\r\n  entities: DXFEntity[]\r\n  units: string\r\n  layers: string[]\r\n  boundingBox: BoundingBox2D\r\n}\r\n\r\nfunction parseDXFFile(content: string): DXFParseResult {\r\n  const entities: DXFEntity[] = []\r\n  const layers = new Set<string>()\r\n  const lines = content.split('\\n')\r\n  \r\n  let i = 0\r\n  let currentEntity: Record<string, string> = {}\r\n  \r\n  while (i < lines.length) {\r\n    const line = lines[i]?.trim()\r\n    if (!line) {\r\n      i++\r\n      continue\r\n    }\r\n    \r\n    const code = parseInt(line, 10)\r\n    const nextLine = lines[i + 1]?.trim() || ''\r\n    \r\n    if (code >= 0 && code <= 999) {\r\n      currentEntity[code] = nextLine\r\n      \r\n      if (code === 0 && nextLine) {\r\n        if (Object.keys(currentEntity).length > 1) {\r\n          const entity = convertToEntity(currentEntity)\r\n          if (entity) {\r\n            entities.push(entity)\r\n            if (entity.layer) layers.add(entity.layer)\r\n          }\r\n        }\r\n        currentEntity = { 0: nextLine }\r\n      }\r\n    }\r\n    i += 2\r\n  }\r\n  \r\n  if (Object.keys(currentEntity).length > 1) {\r\n    const entity = convertToEntity(currentEntity)\r\n    if (entity) {\r\n      entities.push(entity)\r\n      if (entity.layer) layers.add(entity.layer)\r\n    }\r\n  }\r\n  \r\n  let units = 'meters'\r\n  const unitsEntity = entities.find((e: any) => e.type === 'INSUNITS')\r\n  if (unitsEntity && unitsEntity.text) {\r\n    const unitCode = parseInt(unitsEntity.text)\r\n    const unitMap: Record<number, string> = {\r\n      1: 'units', 2: 'inches', 3: 'feet', 4: 'miles',\r\n      5: 'millimeters', 6: 'centimeters', 7: 'meters', 8: 'kilometers',\r\n    }\r\n    units = unitMap[unitCode] || 'meters'\r\n  }\r\n  \r\n  let minE = Infinity, maxE = -Infinity, minN = Infinity, maxN = -Infinity\r\n  entities.forEach((e: any) => {\r\n    const coords = getEntityCoordinates(e)\r\n    coords.forEach((p: any) => {\r\n      if (p.easting < minE) minE = p.easting\r\n      if (p.easting > maxE) maxE = p.easting\r\n      if (p.northing < minN) minN = p.northing\r\n      if (p.northing > maxN) maxN = p.northing\r\n    })\r\n  })\r\n  \r\n  const boundingBox: BoundingBox2D = minE === Infinity \r\n    ? { minEasting: 0, maxEasting: 0, minNorthing: 0, maxNorthing: 0 }\r\n    : { minEasting: minE, maxEasting: maxE, minNorthing: minN, maxNorthing: maxN }\r\n  \r\n  return { entities, units, layers: Array.from(layers), boundingBox }\r\n}\r\n\r\nfunction convertToEntity(data: Record<string, string>): DXFEntity | null {\r\n  const type = data[0]\r\n  if (!type) return null\r\n  \r\n  const entity: DXFEntity = { type, layer: data[8] }\r\n  \r\n  switch (type) {\r\n    case 'LINE':\r\n      entity.x1 = parseFloat(data[10])\r\n      entity.y1 = parseFloat(data[20])\r\n      entity.x2 = parseFloat(data[11])\r\n      entity.y2 = parseFloat(data[21])\r\n      entity.thickness = parseFloat(data[39])\r\n      entity.elevation = parseFloat(data[30])\r\n      break\r\n    case 'POLYLINE':\r\n    case 'LWPOLYLINE':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      break\r\n    case 'CIRCLE':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      entity.thickness = parseFloat(data[40])\r\n      break\r\n    case 'ARC':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      entity.thickness = parseFloat(data[40])\r\n      break\r\n    case 'TEXT':\r\n    case 'MTEXT':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      entity.text = data[1] || data[3]\r\n      entity.height = parseFloat(data[40])\r\n      break\r\n    case 'DIMENSION':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      entity.text = data[1]\r\n      break\r\n    case 'INSERT':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      break\r\n    case 'POINT':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      break\r\n  }\r\n  \r\n  return entity\r\n}\r\n\r\nfunction getEntityCoordinates(entity: DXFEntity): Point2D[] {\r\n  const points: Point2D[] = []\r\n  \r\n  if (entity.x1 !== undefined && entity.y1 !== undefined) {\r\n    points.push({ easting: entity.x1, northing: entity.y1 })\r\n  }\r\n  if (entity.x2 !== undefined && entity.y2 !== undefined) {\r\n    points.push({ easting: entity.x2, northing: entity.y2 })\r\n  }\r\n  if (entity.x !== undefined && entity.y !== undefined) {\r\n    points.push({ easting: entity.x, northing: entity.y })\r\n  }\r\n  \r\n  return points\r\n}\r\n\r\nfunction inferWalls(entities: DXFEntity[], boundingBox: BoundingBox2D): ExtractedWall[] {\r\n  const walls: ExtractedWall[] = []\r\n  const wallLayers = ['WALLS', 'WALL', 'A-WALL', 'STRUCTURAL', 'MAIN', 'PARTITION']\r\n  const lineEntities = entities.filter((e: any) => \r\n    e.type === 'LINE' && \r\n    e.x1 !== undefined && e.y1 !== undefined &&\r\n    e.x2 !== undefined && e.y2 !== undefined\r\n  )\r\n  \r\n  lineEntities.forEach((line, idx) => {\r\n    const length = Math.sqrt(\r\n      Math.pow((line.x2 || 0) - (line.x1 || 0), 2) + \r\n      Math.pow((line.y2 || 0) - (line.y1 || 0), 2)\r\n    )\r\n    \r\n    if (length > 0.5) {\r\n      const layer = line.layer?.toUpperCase() || ''\r\n      const isLoadBearing = wallLayers.some((l: any) => \r\n        layer.includes('MAIN') || layer.includes('STRUCTURAL') || layer.includes('BEARING')\r\n      )\r\n      \r\n      walls.push({\r\n        id: `wall_${idx}`,\r\n        type: isLoadBearing ? 'load-bearing' : 'partition',\r\n        startPoint: { easting: line.x1 || 0, northing: line.y1 || 0 },\r\n        endPoint: { easting: line.x2 || 0, northing: line.y2 || 0 },\r\n        thickness: 0.2,\r\n        height: 3.0,\r\n        material: 'concrete',\r\n        level: 0,\r\n      })\r\n    }\r\n  })\r\n  \r\n  return walls\r\n}\r\n\r\nfunction extractAnnotations(entities: DXFEntity[]): ExtractedAnnotation[] {\r\n  const annotations: ExtractedAnnotation[] = []\r\n  const textEntities = entities.filter((e: any) => \r\n    (e.type === 'TEXT' || e.type === 'MTEXT') && \r\n    e.text && e.x !== undefined && e.y !== undefined\r\n  )\r\n  \r\n  textEntities.forEach((text, idx) => {\r\n    annotations.push({\r\n      id: `annotation_${idx}`,\r\n      type: 'text',\r\n      position: { easting: text.x || 0, northing: text.y || 0 },\r\n      content: text.text || '',\r\n      level: 0,\r\n    })\r\n  })\r\n  \r\n  return annotations\r\n}\r\n\r\nfunction inferRoomsFromWalls(walls: ExtractedWall[], boundingBox: BoundingBox2D): ExtractedRoom[] {\r\n  const rooms: ExtractedRoom[] = []\r\n  \r\n  const centerE = (boundingBox.minEasting + boundingBox.maxEasting) / 2\r\n  const centerN = (boundingBox.minNorthing + boundingBox.maxNorthing) / 2\r\n  \r\n  rooms.push({\r\n    id: 'room_1',\r\n    name: 'Living Room',\r\n    floor: 0,\r\n    boundary: [\r\n      { easting: boundingBox.minEasting, northing: boundingBox.minNorthing },\r\n      { easting: boundingBox.maxEasting, northing: boundingBox.minNorthing },\r\n      { easting: boundingBox.maxEasting, northing: boundingBox.maxNorthing },\r\n      { easting: boundingBox.minEasting, northing: boundingBox.maxNorthing },\r\n    ],\r\n    area: (boundingBox.maxEasting - boundingBox.minEasting) * (boundingBox.maxNorthing - boundingBox.minNorthing),\r\n    perimeter: 2 * ((boundingBox.maxEasting - boundingBox.minEasting) + (boundingBox.maxNorthing - boundingBox.minNorthing)),\r\n    height: 3.0,\r\n    function: 'living',\r\n  })\r\n  \r\n  return rooms\r\n}\r\n\r\nexport async function parseDXFFileContent(content: string, filename: string): Promise<ParsedInput> {\r\n  const parseResult = parseDXFFile(content)\r\n  \r\n  const walls = inferWalls(parseResult.entities, parseResult.boundingBox)\r\n  const annotations = extractAnnotations(parseResult.entities)\r\n  const rooms = inferRoomsFromWalls(walls, parseResult.boundingBox)\r\n  \r\n  const building: ExtractedBuildingData = {\r\n    floors: [{\r\n      id: 'floor_0',\r\n      level: 0,\r\n      name: 'Ground Floor',\r\n      elevation: 0,\r\n      boundingBox: parseResult.boundingBox,\r\n    }],\r\n    walls,\r\n    rooms,\r\n    doors: [],\r\n    windows: [],\r\n    columns: [],\r\n    beams: [],\r\n    annotations,\r\n    boundingBox: parseResult.boundingBox,\r\n    metadata: {\r\n      units: parseResult.units as 'meters' | 'centimeters' | 'millimeters',\r\n      projectName: filename.replace(/\\.[^/.]+$/, ''),\r\n    },\r\n  }\r\n  \r\n  const confidence = calculateConfidence(building)\r\n  \r\n  return {\r\n    type: 'DXF',\r\n    sourceFileName: filename,\r\n    sourceFileSize: Buffer.byteLength(content, 'utf8'),\r\n    sourceFileLastModified: Date.now(),\r\n    parsedAt: new Date().toISOString(),\r\n    version: '1.0.0',\r\n    building,\r\n    errors: [],\r\n    warnings: [\r\n      parseResult.units !== 'meters' ? `Detected units: ${parseResult.units}` : '',\r\n    ].filter(Boolean),\r\n    confidence,\r\n  }\r\n}\r\n\r\nexport function parseDXFBuffer(buffer: Buffer, filename: string): Promise<ParsedInput> {\r\n  const content = buffer.toString('utf8')\r\n  return parseDXFFileContent(content, filename)\r\n}",
+    "source": "import { readFileSync } from 'fs'\r\nimport type { ParsedInput, ExtractedBuildingData, ExtractedWall, ExtractedRoom, ExtractedAnnotation, ExtractedFloor, BoundingBox2D, Point2D } from './types'\r\nimport { calculateConfidence } from './fileRouter'\r\n\r\ninterface DXFEntity {\r\n  type: string\r\n  layer?: string\r\n  x?: number\r\n  y?: number\r\n  x1?: number\r\n  y1?: number\r\n  x2?: number\r\n  y2?: number\r\n  thickness?: number\r\n  elevation?: number\r\n  text?: string\r\n  height?: number\r\n}\r\n\r\ninterface DXFParseResult {\r\n  entities: DXFEntity[]\r\n  units: string\r\n  layers: string[]\r\n  boundingBox: BoundingBox2D\r\n}\r\n\r\nfunction parseDXFFile(content: string): DXFParseResult {\r\n  const entities: DXFEntity[] = []\r\n  const layers = new Set<string>()\r\n  const lines = content.split('\\n')\r\n  \r\n  let i = 0\r\n  let currentEntity: Record<string, string> = {}\r\n  \r\n  while (i < lines.length) {\r\n    const line = lines[i]?.trim()\r\n    if (!line) {\r\n      i++\r\n      continue\r\n    }\r\n    \r\n    const code = parseInt(line, 10)\r\n    const nextLine = lines[i + 1]?.trim() || ''\r\n    \r\n    if (code >= 0 && code <= 999) {\r\n      currentEntity[code] = nextLine\r\n      \r\n      if (code === 0 && nextLine) {\r\n        if (Object.keys(currentEntity).length > 1) {\r\n          const entity = convertToEntity(currentEntity)\r\n          if (entity) {\r\n            entities.push(entity)\r\n            if (entity.layer) layers.add(entity.layer)\r\n          }\r\n        }\r\n        currentEntity = { 0: nextLine }\r\n      }\r\n    }\r\n    i += 2\r\n  }\r\n  \r\n  if (Object.keys(currentEntity).length > 1) {\r\n    const entity = convertToEntity(currentEntity)\r\n    if (entity) {\r\n      entities.push(entity)\r\n      if (entity.layer) layers.add(entity.layer)\r\n    }\r\n  }\r\n  \r\n  let units = 'meters'\r\n  const unitsEntity = entities.find((e) => e.type === 'INSUNITS')\r\n  if (unitsEntity && unitsEntity.text) {\r\n    const unitCode = parseInt(unitsEntity.text)\r\n    const unitMap: Record<number, string> = {\r\n      1: 'units', 2: 'inches', 3: 'feet', 4: 'miles',\r\n      5: 'millimeters', 6: 'centimeters', 7: 'meters', 8: 'kilometers',\r\n    }\r\n    units = unitMap[unitCode] || 'meters'\r\n  }\r\n  \r\n  let minE = Infinity, maxE = -Infinity, minN = Infinity, maxN = -Infinity\r\n  entities.forEach((e) => {\r\n    const coords = getEntityCoordinates(e)\r\n    coords.forEach((p) => {\r\n      if (p.easting < minE) minE = p.easting\r\n      if (p.easting > maxE) maxE = p.easting\r\n      if (p.northing < minN) minN = p.northing\r\n      if (p.northing > maxN) maxN = p.northing\r\n    })\r\n  })\r\n  \r\n  const boundingBox: BoundingBox2D = minE === Infinity \r\n    ? { minEasting: 0, maxEasting: 0, minNorthing: 0, maxNorthing: 0 }\r\n    : { minEasting: minE, maxEasting: maxE, minNorthing: minN, maxNorthing: maxN }\r\n  \r\n  return { entities, units, layers: Array.from(layers), boundingBox }\r\n}\r\n\r\nfunction convertToEntity(data: Record<string, string>): DXFEntity | null {\r\n  const type = data[0]\r\n  if (!type) return null\r\n  \r\n  const entity: DXFEntity = { type, layer: data[8] }\r\n  \r\n  switch (type) {\r\n    case 'LINE':\r\n      entity.x1 = parseFloat(data[10])\r\n      entity.y1 = parseFloat(data[20])\r\n      entity.x2 = parseFloat(data[11])\r\n      entity.y2 = parseFloat(data[21])\r\n      entity.thickness = parseFloat(data[39])\r\n      entity.elevation = parseFloat(data[30])\r\n      break\r\n    case 'POLYLINE':\r\n    case 'LWPOLYLINE':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      break\r\n    case 'CIRCLE':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      entity.thickness = parseFloat(data[40])\r\n      break\r\n    case 'ARC':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      entity.thickness = parseFloat(data[40])\r\n      break\r\n    case 'TEXT':\r\n    case 'MTEXT':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      entity.text = data[1] || data[3]\r\n      entity.height = parseFloat(data[40])\r\n      break\r\n    case 'DIMENSION':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      entity.text = data[1]\r\n      break\r\n    case 'INSERT':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      break\r\n    case 'POINT':\r\n      entity.x = parseFloat(data[10])\r\n      entity.y = parseFloat(data[20])\r\n      break\r\n  }\r\n  \r\n  return entity\r\n}\r\n\r\nfunction getEntityCoordinates(entity: DXFEntity): Point2D[] {\r\n  const points: Point2D[] = []\r\n  \r\n  if (entity.x1 !== undefined && entity.y1 !== undefined) {\r\n    points.push({ easting: entity.x1, northing: entity.y1 })\r\n  }\r\n  if (entity.x2 !== undefined && entity.y2 !== undefined) {\r\n    points.push({ easting: entity.x2, northing: entity.y2 })\r\n  }\r\n  if (entity.x !== undefined && entity.y !== undefined) {\r\n    points.push({ easting: entity.x, northing: entity.y })\r\n  }\r\n  \r\n  return points\r\n}\r\n\r\nfunction inferWalls(entities: DXFEntity[], boundingBox: BoundingBox2D): ExtractedWall[] {\r\n  const walls: ExtractedWall[] = []\r\n  const wallLayers = ['WALLS', 'WALL', 'A-WALL', 'STRUCTURAL', 'MAIN', 'PARTITION']\r\n  const lineEntities = entities.filter((e) => \r\n    e.type === 'LINE' && \r\n    e.x1 !== undefined && e.y1 !== undefined &&\r\n    e.x2 !== undefined && e.y2 !== undefined\r\n  )\r\n  \r\n  lineEntities.forEach((line, idx) => {\r\n    const length = Math.sqrt(\r\n      Math.pow((line.x2 || 0) - (line.x1 || 0), 2) + \r\n      Math.pow((line.y2 || 0) - (line.y1 || 0), 2)\r\n    )\r\n    \r\n    if (length > 0.5) {\r\n      const layer = line.layer?.toUpperCase() || ''\r\n      const isLoadBearing = wallLayers.some((l) => \r\n        layer.includes('MAIN') || layer.includes('STRUCTURAL') || layer.includes('BEARING')\r\n      )\r\n      \r\n      walls.push({\r\n        id: `wall_${idx}`,\r\n        type: isLoadBearing ? 'load-bearing' : 'partition',\r\n        startPoint: { easting: line.x1 || 0, northing: line.y1 || 0 },\r\n        endPoint: { easting: line.x2 || 0, northing: line.y2 || 0 },\r\n        thickness: 0.2,\r\n        height: 3.0,\r\n        material: 'concrete',\r\n        level: 0,\r\n      })\r\n    }\r\n  })\r\n  \r\n  return walls\r\n}\r\n\r\nfunction extractAnnotations(entities: DXFEntity[]): ExtractedAnnotation[] {\r\n  const annotations: ExtractedAnnotation[] = []\r\n  const textEntities = entities.filter((e) => \r\n    (e.type === 'TEXT' || e.type === 'MTEXT') && \r\n    e.text && e.x !== undefined && e.y !== undefined\r\n  )\r\n  \r\n  textEntities.forEach((text, idx) => {\r\n    annotations.push({\r\n      id: `annotation_${idx}`,\r\n      type: 'text',\r\n      position: { easting: text.x || 0, northing: text.y || 0 },\r\n      content: text.text || '',\r\n      level: 0,\r\n    })\r\n  })\r\n  \r\n  return annotations\r\n}\r\n\r\nfunction inferRoomsFromWalls(walls: ExtractedWall[], boundingBox: BoundingBox2D): ExtractedRoom[] {\r\n  const rooms: ExtractedRoom[] = []\r\n  \r\n  const centerE = (boundingBox.minEasting + boundingBox.maxEasting) / 2\r\n  const centerN = (boundingBox.minNorthing + boundingBox.maxNorthing) / 2\r\n  \r\n  rooms.push({\r\n    id: 'room_1',\r\n    name: 'Living Room',\r\n    floor: 0,\r\n    boundary: [\r\n      { easting: boundingBox.minEasting, northing: boundingBox.minNorthing },\r\n      { easting: boundingBox.maxEasting, northing: boundingBox.minNorthing },\r\n      { easting: boundingBox.maxEasting, northing: boundingBox.maxNorthing },\r\n      { easting: boundingBox.minEasting, northing: boundingBox.maxNorthing },\r\n    ],\r\n    area: (boundingBox.maxEasting - boundingBox.minEasting) * (boundingBox.maxNorthing - boundingBox.minNorthing),\r\n    perimeter: 2 * ((boundingBox.maxEasting - boundingBox.minEasting) + (boundingBox.maxNorthing - boundingBox.minNorthing)),\r\n    height: 3.0,\r\n    function: 'living',\r\n  })\r\n  \r\n  return rooms\r\n}\r\n\r\nexport async function parseDXFFileContent(content: string, filename: string): Promise<ParsedInput> {\r\n  const parseResult = parseDXFFile(content)\r\n  \r\n  const walls = inferWalls(parseResult.entities, parseResult.boundingBox)\r\n  const annotations = extractAnnotations(parseResult.entities)\r\n  const rooms = inferRoomsFromWalls(walls, parseResult.boundingBox)\r\n  \r\n  const building: ExtractedBuildingData = {\r\n    floors: [{\r\n      id: 'floor_0',\r\n      level: 0,\r\n      name: 'Ground Floor',\r\n      elevation: 0,\r\n      boundingBox: parseResult.boundingBox,\r\n    }],\r\n    walls,\r\n    rooms,\r\n    doors: [],\r\n    windows: [],\r\n    columns: [],\r\n    beams: [],\r\n    annotations,\r\n    boundingBox: parseResult.boundingBox,\r\n    metadata: {\r\n      units: parseResult.units as 'meters' | 'centimeters' | 'millimeters',\r\n      projectName: filename.replace(/\\.[^/.]+$/, ''),\r\n    },\r\n  }\r\n  \r\n  const confidence = calculateConfidence(building)\r\n  \r\n  return {\r\n    type: 'DXF',\r\n    sourceFileName: filename,\r\n    sourceFileSize: Buffer.byteLength(content, 'utf8'),\r\n    sourceFileLastModified: Date.now(),\r\n    parsedAt: new Date().toISOString(),\r\n    version: '1.0.0',\r\n    building,\r\n    errors: [],\r\n    warnings: [\r\n      parseResult.units !== 'meters' ? `Detected units: ${parseResult.units}` : '',\r\n    ].filter(Boolean),\r\n    confidence,\r\n  }\r\n}\r\n\r\nexport function parseDXFBuffer(buffer: Buffer, filename: string): Promise<ParsedInput> {\r\n  const content = buffer.toString('utf8')\r\n  return parseDXFFileContent(content, filename)\r\n}",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
