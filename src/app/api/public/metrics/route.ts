@@ -27,6 +27,13 @@ import {
 // Track if we've initialized version info
 let initialized = false;
 
+/** COUNT(*) returns BIGINT → pg yields string. */
+interface ProjectStatusCounts {
+  active: string
+  archived: string
+  completed: string
+}
+
 async function initializeMetrics() {
   if (initialized) return;
   initialized = true;
@@ -42,7 +49,7 @@ async function initializeMetrics() {
     const { getPool } = await import('@/lib/db');
     const pool = getPool();
 
-    const result = await pool.query(
+    const result = await pool.query<ProjectStatusCounts>(
       `SELECT
          COUNT(*) FILTER (WHERE status = 'ACTIVE') as active,
          COUNT(*) FILTER (WHERE status = 'ARCHIVED') as archived,

@@ -79,10 +79,10 @@ describe('POST /api/scheme/blocks', () => {
     mockSession.mockResolvedValue(createAuthSession())
     const req = createMockRequest({ block_number: '1' })
     const res = await POST(req)
-    const data = await res.json()
+    const data = (await res.json()) as { error: string; issues: { path: (string | number)[] }[] }
     expect(res.status).toBe(400)
     expect(data.error).toMatch(/validation/i)
-    const fieldPaths = data.issues.map((e: any) => e.path.join('.'))
+    const fieldPaths = data.issues.map((e) => e.path.join('.'))
     expect(fieldPaths.some((f: string) => f.includes('project_id'))).toBe(true)
   })
 
@@ -90,10 +90,10 @@ describe('POST /api/scheme/blocks', () => {
     mockSession.mockResolvedValue(createAuthSession())
     const req = createMockRequest({ project_id: TEST_UUID })
     const res = await POST(req)
-    const data = await res.json()
+    const data = (await res.json()) as { error: string; issues: { path: (string | number)[] }[] }
     expect(res.status).toBe(400)
     expect(data.error).toMatch(/validation/i)
-    const fieldPaths = data.issues.map((e: any) => e.path.join('.'))
+    const fieldPaths = data.issues.map((e) => e.path.join('.'))
     expect(fieldPaths.some((f: string) => f.includes('block_number'))).toBe(true)
   })
 
@@ -109,7 +109,7 @@ describe('POST /api/scheme/blocks', () => {
 
     const req = createMockRequest({ project_id: TEST_UUID, block_number: '1', block_name: 'Block A' })
     const res = await POST(req)
-    const data = await res.json()
+    const data = (await res.json()) as { data: { block_number: string; block_name: string } }
 
     expect(res.status).toBe(201)
     expect(data.data.block_number).toBe('1')
@@ -127,7 +127,7 @@ describe('POST /api/scheme/blocks', () => {
 
     const req = createMockRequest({ project_id: TEST_UUID, block_number: '1' })
     const res = await POST(req)
-    const data = await res.json()
+    const data = (await res.json()) as { error: string }
 
     expect(res.status).toBe(409)
     expect(data.error).toMatch(/duplicate|already exists/i)
@@ -165,7 +165,7 @@ describe('GET /api/scheme/blocks', () => {
 
     const req = new NextRequest(`http://localhost/api/scheme/blocks?project_id=${TEST_UUID}`)
     const res = await GET(req)
-    const data = await res.json()
+    const data = (await res.json()) as { data: { parcel_count: number }[] }
 
     expect(res.status).toBe(200)
     expect(data.data).toHaveLength(2)

@@ -72,10 +72,10 @@ describe('POST /api/scheme/parcels', () => {
       body: JSON.stringify({ parcel_number: '1' }),
     })
     const res = await POST(req)
-    const data = await res.json()
+    const data = (await res.json()) as { error: string; issues: { path: (string | number)[] }[] }
     expect(res.status).toBe(400)
     expect(data.error).toMatch(/validation/i)
-    const fieldPaths = data.issues.map((e: any) => e.path.join('.'))
+    const fieldPaths = data.issues.map((e) => e.path.join('.'))
     expect(fieldPaths.some((f: string) => f.includes('block_id'))).toBe(true)
   })
 
@@ -87,10 +87,10 @@ describe('POST /api/scheme/parcels', () => {
       body: JSON.stringify({ block_id: TEST_BLOCK_UUID }),
     })
     const res = await POST(req)
-    const data = await res.json()
+    const data = (await res.json()) as { error: string; issues: { path: (string | number)[] }[] }
     expect(res.status).toBe(400)
     expect(data.error).toMatch(/validation/i)
-    const fieldPaths = data.issues.map((e: any) => e.path.join('.'))
+    const fieldPaths = data.issues.map((e) => e.path.join('.'))
     expect(fieldPaths.some((f: string) => f.includes('parcel_number'))).toBe(true)
   })
 
@@ -130,7 +130,7 @@ describe('GET /api/scheme/parcels', () => {
 
     const req = new NextRequest(`http://localhost/api/scheme/parcels?block_id=${TEST_BLOCK_UUID}`)
     const res = await GET(req)
-    const data = await res.json()
+    const data = (await res.json()) as { data: unknown[] }
     expect(res.status).toBe(200)
     expect(data.data).toHaveLength(2)
   })

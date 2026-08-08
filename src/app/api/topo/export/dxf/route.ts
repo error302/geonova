@@ -16,11 +16,15 @@ export async function POST(req: NextRequest) {
   if (!session?.user) {
     return NextResponse.json({ error: 'Authentication required', code: 'UNAUTHORIZED' }, { status: 401 })
   }
-  const userId = (session.user as any).id
+  const userId = session.user.id
   if (userId) setCurrentUserId(String(userId))
 
   try {
-    const { projectId, contours, spotHeights } = await req.json()
+    const { projectId, contours, spotHeights } = await req.json() as {
+      projectId?: string
+      contours: ContourLine[]
+      spotHeights: { e: number; n: number; z: number; label?: string }[]
+    }
 
     const drawing = new Drawing()
     initialiseSokDXFLayers(drawing)

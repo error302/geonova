@@ -46,7 +46,13 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'Weather service unavailable' }, { status: 503 })
     }
 
-    const data = await response.json()
+    const data = await response.json() as {
+      current: {
+        temperature_2m: number
+        surface_pressure: number
+        relative_humidity_2m: number
+      }
+    }
 
     return NextResponse.json({
       temperature: data.current.temperature_2m,

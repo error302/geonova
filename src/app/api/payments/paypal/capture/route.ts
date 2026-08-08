@@ -3,7 +3,7 @@ import { getPayPalService } from '@/lib/payments/paypal'
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json()
+    const body = await req.json() as { orderId?: string }
     const { orderId } = body
     
     if (!orderId) {
@@ -20,8 +20,9 @@ export async function POST(req: Request) {
     // Optionally: Update user's subscription status in database based on successful capture here.
     
     return NextResponse.json(captureResult)
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Internal Server Error'
     console.error('[PayPal Capture Order Error]', error)
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

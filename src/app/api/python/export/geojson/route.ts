@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   if (!session?.user) {
     return NextResponse.json({ error: 'Authentication required', code: 'UNAUTHORIZED' }, { status: 401 })
   }
-  const userId = (session.user as any).id
+  const userId = session.user.id
   if (userId) setCurrentUserId(String(userId))
 
   try {

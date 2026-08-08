@@ -621,11 +621,14 @@ export default function MapClient() {
       setPrintPlanGeometry(null)
     }
     setShowSheetLayout(true)
-    // Let React commit and the browser paint the overlay before printing.
     await new Promise(resolve => setTimeout(resolve, 500))
     await printMap(overrides)
-    // The overlay is hidden by the `afterprint` listener (below) once the user
-    // closes the print dialog — a reliable signal instead of a fixed timeout.
+
+    // Fallback timer: clear sheet layout and plan geometry if afterprint never fires (iOS Safari / cancel path)
+    setTimeout(() => {
+      setShowSheetLayout(false)
+      setPrintPlanGeometry(null)
+    }, 10000)
   }, [printMap, currentUtmEpsg])
 
   // Hide the sheet-layout overlay when the print dialog closes. Also drop the

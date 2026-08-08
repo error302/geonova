@@ -8,13 +8,13 @@ import { transformCoordinates, TransformInput } from '@/lib/geo/transform'
 import { GeoTransformSchema } from '@/lib/validation/apiSchemas'
 
 export const POST = apiHandler({ auth: true, schema: GeoTransformSchema, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
-  const body = ctx.body as z.infer<typeof GeoTransformSchema>
+  const body = ctx.body as z.infer<typeof GeoTransformSchema> & { projectId?: string }
 
   const transformInput: TransformInput & { projectId?: string } = {
     fromCRS: body.fromCRS,
     toCRS: body.toCRS,
     points: body.points.map(p => ({ id: p.id, x: p.x, y: p.y, z: p.z })),
-    projectId: (body as any).projectId,
+    projectId: body.projectId,
   }
 
   const result = transformCoordinates(transformInput)
@@ -25,7 +25,7 @@ export const POST = apiHandler({ auth: true, schema: GeoTransformSchema, rateLim
     ) VALUES ($1, $2, $3, $4, $5)`,
     [
       ctx.userId,
-      (body as any).projectId ?? null,
+      body.projectId ?? null,
       'coordinate-transform',
       `${body.points.length} points, ${body.fromCRS} → ${body.toCRS}`,
       'success',

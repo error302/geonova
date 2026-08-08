@@ -71,6 +71,7 @@ import path from 'node:path'
 const MEMBER_RULE = '@typescript-eslint/no-unsafe-member-access'
 const ASSIGNMENT_RULE = '@typescript-eslint/no-unsafe-assignment'
 const EXPLICIT_ANY_RULE = '@typescript-eslint/no-explicit-any'
+const ARGUMENT_RULE = '@typescript-eslint/no-unsafe-argument'
 
 const args = process.argv.slice(2)
 
@@ -82,6 +83,7 @@ let maxWarnings = null
 let memberFloor = null
 let assignmentFloor = null
 let explicitAnyFloor = null
+let argumentFloor = null
 const positional = []
 for (let i = 0; i < args.length; i++) {
   const a = args[i]
@@ -89,7 +91,7 @@ for (let i = 0; i < args.length; i++) {
     PFC = true
   } else if (a === '--base-only') {
     BASE_ONLY = true
-  } else if (a === '--max-warnings' || a === '--member-floor' || a === '--floor-assignment' || a === '--floor-explicit-any') {
+  } else if (a === '--max-warnings' || a === '--member-floor' || a === '--floor-assignment' || a === '--floor-explicit-any' || a === '--floor-argument') {
     const v = Number(args[++i])
     if (!Number.isFinite(v)) {
       console.error(`[lint-gate] ${a} requires a numeric value (got "${args[i]}").`)
@@ -98,7 +100,8 @@ for (let i = 0; i < args.length; i++) {
     if (a === '--max-warnings') maxWarnings = v
     else if (a === '--member-floor') memberFloor = v
     else if (a === '--floor-assignment') assignmentFloor = v
-    else explicitAnyFloor = v
+    else if (a === '--floor-explicit-any') explicitAnyFloor = v
+    else argumentFloor = v
   } else if (a.startsWith('--')) {
     console.error(`[lint-gate] unknown flag: ${a}`)
     process.exit(2)
@@ -201,15 +204,17 @@ function countWarnings(messages) {
   let member = 0
   let assignment = 0
   let explicitAny = 0
+  let argument = 0
   for (const m of messages) {
     if (m.severity === 1) {
       total++
       if (m.ruleId === MEMBER_RULE) member++
       else if (m.ruleId === ASSIGNMENT_RULE) assignment++
       else if (m.ruleId === EXPLICIT_ANY_RULE) explicitAny++
+      else if (m.ruleId === ARGUMENT_RULE) argument++
     }
   }
-  return { total, member, assignment, explicitAny }
+  return { total, member, assignment, explicitAny, argument }
 }
 
 // CHILD MODE (internal): compute the base warnings only and emit a single
@@ -221,6 +226,7 @@ if (BASE_ONLY) {
   let baseMember = 0
   let baseAssignment = 0
   let baseExplicitAny = 0
+  let baseArgument = 0
   for (const f of files) {
     let content
     try {
@@ -240,12 +246,13 @@ if (BASE_ONLY) {
       baseMember += c.member
       baseAssignment += c.assignment
       baseExplicitAny += c.explicitAny
+      baseArgument += c.argument
     } catch (err) {
       console.error(`[lint-gate] could not lint base version of ${f}: ${err.message}`)
       process.exit(2)
     }
   }
-  console.log(JSON.stringify({ total: baseWarnings, member: baseMember, assignment: baseAssignment, explicitAny: baseExplicitAny }))
+  console.log(JSON.stringify({ total: baseWarnings, member: baseMember, assignment: baseAssignment, explicitAny: baseExplicitAny, argument: baseArgument }))
   process.exit(0)
 }
 
@@ -261,6 +268,7 @@ for (const [rule, file] of [
   [MEMBER_RULE, 'scripts/member-access-baseline.json'],
   [ASSIGNMENT_RULE, 'scripts/assignment-baseline.json'],
   [EXPLICIT_ANY_RULE, 'scripts/explicit-any-baseline.json'],
+  [ARGUMENT_RULE, 'scripts/argument-baseline.json'],
 ]) {
   try {
     if (existsSync(file)) {
@@ -299,6 +307,7 @@ const baseWarnings = baseCounts.total
 const baseMember = baseCounts.member
 const baseAssignment = baseCounts.assignment
 const baseExplicitAny = baseCounts.explicitAny
+const baseArgument = baseCounts.argument
 
 // 2. Head: lint the working-tree/committed changed files.
 const results = await eslintHead.lintFiles(files)
@@ -307,6 +316,7 @@ let headWarnings = 0
 let headMember = 0
 let headAssignment = 0
 let headExplicitAny = 0
+let headArgument = 0
 for (const r of results) {
   for (const m of r.messages) {
     if (m.severity === 1) {
@@ -314,6 +324,7 @@ for (const r of results) {
       if (m.ruleId === MEMBER_RULE) headMember++
       else if (m.ruleId === ASSIGNMENT_RULE) headAssignment++
       else if (m.ruleId === EXPLICIT_ANY_RULE) headExplicitAny++
+      else if (m.ruleId === ARGUMENT_RULE) headArgument++
     }
   }
 }
@@ -327,14 +338,16 @@ const limit = maxWarnings === null ? baseWarnings : Math.max(baseWarnings, maxWa
 const memberFloorN = memberFloor !== null ? memberFloor : (committedFloors[MEMBER_RULE] ?? null)
 const assignmentFloorN = assignmentFloor !== null ? assignmentFloor : (committedFloors[ASSIGNMENT_RULE] ?? null)
 const explicitAnyFloorN = explicitAnyFloor !== null ? explicitAnyFloor : (committedFloors[EXPLICIT_ANY_RULE] ?? null)
+const argumentFloorN = argumentFloor !== null ? argumentFloor : (committedFloors[ARGUMENT_RULE] ?? null)
 const memberLimit = memberFloorN === null ? baseMember : Math.max(baseMember, memberFloorN)
 const assignmentLimit = assignmentFloorN === null ? baseAssignment : Math.max(baseAssignment, assignmentFloorN)
 const explicitAnyLimit = explicitAnyFloorN === null ? baseExplicitAny : Math.max(baseExplicitAny, explicitAnyFloorN)
+const argumentLimit = argumentFloorN === null ? baseArgument : Math.max(baseArgument, argumentFloorN)
 
 // Always show the comparison so CI logs are self-diagnosing (the FAIL line
 // itself can still be buried under thousands of message lines).
 console.error(
-  `[lint-gate] changed files: ${files.length}, base ${baseWarnings} warnings (member ${baseMember}, assignment ${baseAssignment}, explicit-any ${baseExplicitAny}) vs head ${headWarnings} warnings (member ${headMember}, assignment ${headAssignment}, explicit-any ${headExplicitAny}), errors ${headErrors}`
+  `[lint-gate] changed files: ${files.length}, base ${baseWarnings} warnings (member ${baseMember}, assignment ${baseAssignment}, explicit-any ${baseExplicitAny}, argument ${baseArgument}) vs head ${headWarnings} warnings (member ${headMember}, assignment ${headAssignment}, explicit-any ${headExplicitAny}, argument ${headArgument}), errors ${headErrors}`
 )
 
 // Collect the failure instead of process.exit(1) mid-print: console.error to
@@ -364,7 +377,7 @@ if (headErrors > 0) {
 }
 
 // Family-floor checks: fail when a gated family grows beyond its limit.
-// Shared helper keeps the three (member-access, assignment, explicit-any)
+// Shared helper keeps the four (member-access, assignment, explicit-any, argument)
 // checks identical — only the rule/counts differ. First failing family wins.
 const familyFail = (rule, head, base, limit) => {
   if (failMessage || head <= limit) return
@@ -381,6 +394,7 @@ const familyFail = (rule, head, base, limit) => {
 familyFail(MEMBER_RULE, headMember, baseMember, memberLimit)
 familyFail(ASSIGNMENT_RULE, headAssignment, baseAssignment, assignmentLimit)
 familyFail(EXPLICIT_ANY_RULE, headExplicitAny, baseExplicitAny, explicitAnyLimit)
+familyFail(ARGUMENT_RULE, headArgument, baseArgument, argumentLimit)
 
 if (failMessage) {
   console.error(failMessage)
@@ -390,6 +404,7 @@ if (failMessage) {
     { rule: MEMBER_RULE, label: 'member-access', head: headMember, base: baseMember },
     { rule: ASSIGNMENT_RULE, label: 'assignment', head: headAssignment, base: baseAssignment },
     { rule: EXPLICIT_ANY_RULE, label: 'explicit-any', head: headExplicitAny, base: baseExplicitAny },
+    { rule: ARGUMENT_RULE, label: 'argument', head: headArgument, base: baseArgument },
   ]
   const familyNotes = familyStats.map(({ rule, label, head, base }) => {
     const repoFloor = committedFloors[rule]

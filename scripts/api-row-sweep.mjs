@@ -760,6 +760,34 @@ function changedRouteFiles(baseRef, usePfc = false) {
   return [...routes].sort()
 }
 
+/**
+ * Print a whole-repo per-file typed/total summary. Used by --check when it
+ * passes with NO changed route files (the common push/PR case), so the CI
+ * gate always shows the live typing state instead of a bare "OK" line.
+ * Files with zero queries are skipped (0/0 is noise); the aggregate line
+ * carries the route count.
+ */
+function printWholeRepoTypedSummary() {
+  const rels = findRoutes()
+  const lines = []
+  let total = 0
+  let typed = 0
+  for (const rel of rels) {
+    let source
+    try {
+      source = readFileSync(path.join(process.cwd(), rel), 'utf8')
+    } catch {
+      continue
+    }
+    const qs = extractQueries(source)
+    total += qs.length
+    typed += qs.filter((q) => q.typed).length
+    if (qs.length) lines.push(`${rel} (${qs.filter((q) => q.typed).length}/${qs.length} queries typed)`)
+  }
+  console.log(`[api-row-sweep] whole-repo row typing: ${typed}/${total} queries typed across ${rels.length} route files:`)
+  for (const l of lines) console.log(`  ${l}`)
+}
+
 /** The untyped-query gate: any changed route file with an untyped db.query/client.query fails.
  * @returns 0 = pass, 1 = fail, 2 = git error. */
 function runCheck() {
@@ -776,6 +804,7 @@ function runCheck() {
 
   if (!changed.length) {
     console.log(`[api-row-sweep] OK: no changed route files vs ${baseRef}...HEAD.`)
+    printWholeRepoTypedSummary()
     return 0
   }
 

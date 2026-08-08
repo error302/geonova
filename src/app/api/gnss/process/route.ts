@@ -27,12 +27,12 @@ export const POST = apiHandler({ auth: true, schema: ProcessGNSSSchema, rateLimi
   const gnssSessionId = sessionRes.rows[0].id
 
   // Call Python service for processing
-  const result = await callPythonCompute<any>('/gnss/process', {
+  const result = await callPythonCompute<{ baselines?: Record<string, unknown>[] }>('/gnss/process', {
     files,
     stationLabels
   })
 
-  let results: any[] = []
+  let results: Record<string, unknown>[] = []
   let status: 'complete' | 'failed' | 'simulated' = 'complete'
   let errorMsg: string | undefined
 
@@ -73,7 +73,7 @@ export const POST = apiHandler({ auth: true, schema: ProcessGNSSSchema, rateLimi
   })
 })
 
-function generateMockBaselines(stationLabels: string[]): any[] {
+function generateMockBaselines(stationLabels: string[]): Record<string, unknown>[] {
   // No fabricated baseline data — return empty result
   return []
 }

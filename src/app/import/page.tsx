@@ -67,7 +67,8 @@ export default function ImportPage() {
     const detectedFormat = detectTotalStationFormat(text, selectedFile.name)
     setFormat(detectedFormat)
 
-    let parsed: any = { records: [], warnings: [] }
+    interface TotalStationRecord { pointId: string; easting?: number; northing?: number; elevation?: number }
+    let parsed: { records: TotalStationRecord[]; warnings: string[] } = { records: [], warnings: [] }
 
     switch (detectedFormat) {
       case 'gsi':
@@ -88,7 +89,7 @@ export default function ImportPage() {
     }
 
     setWarnings(parsed.warnings || [])
-    setPoints(parsed.records.map((r: any) => ({
+    setPoints(parsed.records.map((r) => ({
       pointId: r.pointId,
       easting: r.easting,
       northing: r.northing,
@@ -98,7 +99,7 @@ export default function ImportPage() {
   }, [])
 
   const toggleAll = (select: boolean) => {
-    setPoints(points.map((p: any) => ({ ...p, selected: select })))
+    setPoints(points.map((p) => ({ ...p, selected: select })))
   }
 
   const togglePoint = (idx: number) => {
@@ -109,9 +110,9 @@ export default function ImportPage() {
     if (!selectedProject) return
 
     setImporting(true)
-    const selectedPoints = points.filter((p: any) => p.selected)
+    const selectedPoints = points.filter((p) => p.selected)
 
-    const insertData = selectedPoints.map((p: any) => ({
+    const insertData = selectedPoints.map((p) => ({
       project_id: selectedProject,
       name: p.pointId,
       easting: p.easting || 0,
@@ -142,8 +143,8 @@ export default function ImportPage() {
     unknown: 'Unknown'
   }
 
-  const selectedCount = points.filter((p: any) => p.selected).length
-  const projectName = projects.find((p: any) => p.id === selectedProject)?.name
+  const selectedCount = points.filter((p) => p.selected).length
+  const projectName = projects.find((p) => p.id === selectedProject)?.name
 
   return (
     <div className="min-h-screen py-12">

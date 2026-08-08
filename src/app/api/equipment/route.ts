@@ -154,7 +154,7 @@ export const PATCH = apiHandler(
     let idx = 1
 
     for (const field of ['name', 'type', 'manufacturer', 'model', 'serial_number', 'status', 'notes']) {
-      const camelField = field.replace(/_([a-z])/g, (_, c) => c.toUpperCase())
+      const camelField = field.replace(/_([a-z])/g, (_: string, c: string) => c.toUpperCase())
       if (body[camelField] !== undefined || body[field] !== undefined) {
         updates.push(`${field} = $${idx}`)
         params.push(body[camelField] ?? body[field])

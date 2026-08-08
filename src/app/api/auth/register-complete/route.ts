@@ -40,14 +40,14 @@ export async function POST(req: NextRequest) {
 
   // Fire-and-forget welcome email — don't block the response
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space'
-  const userEmail = (session.user as any).email
-  const userName = (session.user as any).name
+  const userEmail = session.user.email
+  const userName = session.user.name
   if (userEmail) {
     fetch(`${baseUrl}/api/emails/welcome`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: userEmail, name: userName || '' })
-    }).catch((err: any) => console.warn('[register-complete] Welcome email failed:', err?.message || err))
+    }).catch((err: unknown) => console.warn('[register-complete] Welcome email failed:', err instanceof Error ? err.message : err))
   }
 
   return NextResponse.json({ ok: true })

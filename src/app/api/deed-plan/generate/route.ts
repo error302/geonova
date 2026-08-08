@@ -6,7 +6,7 @@ import { z } from 'zod'
 import type { DeedPlanInput, DeedPlanOutput } from '@/types/deedPlan'
 import { computeBoundaryLegs, computeArea, computeClosureCheck } from '@/lib/compute/deedPlan'
 import { renderDeedPlanSVG } from '@/lib/compute/deedPlanRenderer'
-import { runStatutoryGate } from '@/lib/validation/statutoryGate'
+import { runStatutoryGate, type StatutoryGateResult } from '@/lib/validation/statutoryGate'
 
 const BoundaryPointSchema = z.object({
   id: z.string().optional(),
@@ -167,7 +167,7 @@ export const POST = apiHandler(
     }
 
     // ── AUDIT FIX (2026-07-05): Run statutory gate ──
-    let gateResult: any = null
+    let gateResult: StatutoryGateResult | null = null
     try {
       const linearError = Math.sqrt(
         closureCheck.closingErrorE ** 2 + closureCheck.closingErrorN ** 2

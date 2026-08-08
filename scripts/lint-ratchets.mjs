@@ -30,9 +30,10 @@
  *   node scripts/lint-ratchets.mjs --update-member-access  # ratchet ONLY the member-access floor
  *   node scripts/lint-ratchets.mjs --update-assignment     # ratchet ONLY the no-unsafe-assignment floor
  *   node scripts/lint-ratchets.mjs --update-explicit-any   # ratchet ONLY the no-explicit-any floor
+ *   node scripts/lint-ratchets.mjs --update-row-typing     # ratchet ONLY the whole-repo untyped-query floor
  *   node scripts/lint-ratchets.mjs --report            # print drift tables vs last commit (verify still runs)
  *   node scripts/lint-ratchets.mjs --scope a,b         # lint only these paths (testing)
- *   node scripts/lint-ratchets.mjs --baseline-warnings p.json --baseline-a11y p.json --baseline-member-access p.json --baseline-assignment p.json --baseline-explicit-any p.json
+ *   node scripts/lint-ratchets.mjs --baseline-warnings p.json --baseline-a11y p.json --baseline-member-access p.json --baseline-assignment p.json --baseline-explicit-any p.json --baseline-row-typing p.json
  *   exit 0 = pass, 1 = ratchet exceeded, 2 = usage/run error
  *
  * The a11y evidence file (.a11y-audit.json) is written ONLY with --write-audit
@@ -61,15 +62,26 @@ const A11Y_BASELINE = aIdx >= 0 && args[aIdx + 1] ? args[aIdx + 1] : 'scripts/a1
 const MEMBER_RULE = '@typescript-eslint/no-unsafe-member-access'
 const ASSIGNMENT_RULE = '@typescript-eslint/no-unsafe-assignment'
 const EXPLICIT_ANY_RULE = '@typescript-eslint/no-explicit-any'
+const ARGUMENT_RULE = '@typescript-eslint/no-unsafe-argument'
 const mIdx = args.indexOf('--baseline-member-access')
 const MEMBER_BASELINE = mIdx >= 0 && args[mIdx + 1] ? args[mIdx + 1] : 'scripts/member-access-baseline.json'
 const assignIdx = args.indexOf('--baseline-assignment')
 const ASSIGNMENT_BASELINE = assignIdx >= 0 && args[assignIdx + 1] ? args[assignIdx + 1] : 'scripts/assignment-baseline.json'
 const anyIdx = args.indexOf('--baseline-explicit-any')
 const EXPLICIT_ANY_BASELINE = anyIdx >= 0 && args[anyIdx + 1] ? args[anyIdx + 1] : 'scripts/explicit-any-baseline.json'
+const argIdx = args.indexOf('--baseline-argument')
+const ARGUMENT_BASELINE = argIdx >= 0 && args[argIdx + 1] ? args[argIdx + 1] : 'scripts/argument-baseline.json'
+// Row-typing floor — whole-repo untyped db.query/client.query count across
+// every route file (static scan, not an eslint rule). Same decoupled-floor
+// treatment: --update never touches it, only --update-row-typing does.
+const ROW_TYPING_RULE = 'db.query untyped'
+const rtIdx = args.indexOf('--baseline-row-typing')
+const ROW_TYPING_BASELINE = rtIdx >= 0 && args[rtIdx + 1] ? args[rtIdx + 1] : 'scripts/row-typing-baseline.json'
 const UPDATE_MEMBER = args.includes('--update-member-access')
 const UPDATE_ASSIGNMENT = args.includes('--update-assignment')
 const UPDATE_EXPLICIT_ANY = args.includes('--update-explicit-any')
+const UPDATE_ARGUMENT = args.includes('--update-argument')
+const UPDATE_ROW_TYPING = args.includes('--update-row-typing')
 // Each --update-* (and plain --update) writes a DIFFERENT baseline and would
 // silently drop the others' updates — refuse to combine any of them.
 const updateFlags = [
@@ -77,6 +89,8 @@ const updateFlags = [
   ['--update-member-access', UPDATE_MEMBER],
   ['--update-assignment', UPDATE_ASSIGNMENT],
   ['--update-explicit-any', UPDATE_EXPLICIT_ANY],
+  ['--update-argument', UPDATE_ARGUMENT],
+  ['--update-row-typing', UPDATE_ROW_TYPING],
 ].filter(([, on]) => on)
 if (updateFlags.length > 1) {
   console.error(
@@ -163,7 +177,7 @@ if (UPDATE) {
     `[lint-ratchets] baselines written → ${WARN_BASELINE} (${Object.keys(warningCounts).length} rules, ${warnTotal} warnings), ${A11Y_BASELINE} (${Object.keys(a11yCounts).length} rules, ${a11yTotal} a11y findings)`
   )
   console.error(
-    `[lint-ratchets] note: --update does NOT move the family floors (${MEMBER_RULE}, ${ASSIGNMENT_RULE}, ${EXPLICIT_ANY_RULE}) — use --update-member-access / --update-assignment / --update-explicit-any for those.`
+    `[lint-ratchets] note: --update does NOT move the family floors (${MEMBER_RULE}, ${ASSIGNMENT_RULE}, ${EXPLICIT_ANY_RULE}, ${ARGUMENT_RULE}, ${ROW_TYPING_RULE}) — use --update-member-access / --update-assignment / --update-explicit-any / --update-argument / --update-row-typing for those.`
   )
   process.exit(0)
 }
@@ -181,6 +195,13 @@ function writeFloor(rule, baselinePath, label) {
 if (UPDATE_MEMBER) writeFloor(MEMBER_RULE, MEMBER_BASELINE, 'member-access')
 if (UPDATE_ASSIGNMENT) writeFloor(ASSIGNMENT_RULE, ASSIGNMENT_BASELINE, 'assignment')
 if (UPDATE_EXPLICIT_ANY) writeFloor(EXPLICIT_ANY_RULE, EXPLICIT_ANY_BASELINE, 'explicit-any')
+if (UPDATE_ARGUMENT) writeFloor(ARGUMENT_RULE, ARGUMENT_BASELINE, 'argument')
+if (UPDATE_ROW_TYPING) {
+  const rt = countRowTyping()
+  writeFileSync(ROW_TYPING_BASELINE, JSON.stringify({ [ROW_TYPING_RULE]: rt.untyped }, null, 2) + '\n')
+  console.error(`[lint-ratchets] row-typing floor written → ${ROW_TYPING_BASELINE} (${ROW_TYPING_RULE}: ${rt.untyped} untyped of ${rt.total} queries across ${rt.routeFiles} routes)`)
+  process.exit(0)
+}
 
 // ── Verify helpers ──────────────────────────────────────────────────────────
 function loadBaseline(p) {
@@ -284,31 +305,56 @@ function checkFloor(rule, baselinePath, label) {
   return { rule, prev, now, over, label }
 }
 
+// Row-typing floor — same decoupled treatment as the eslint-rule floors, but
+// its count comes from a static scan of every route file (not the eslint
+// pass), so the whole-repo untyped-query state is a first-class drift-table
+// row and a hard gate, not a bare report line.
+function countRowTyping() {
+  const routeFiles = (existsSync('src') && nodeFs.globSync ? nodeFs.globSync('src/**/route.ts', { cwd: process.cwd() }) : []).filter((f) => !f.includes('/__tests__/'))
+  let total = 0
+  let untyped = 0
+  const queryRe = /\b(?:db|client)\.query\s*(?:<([^>]*?(?:<[^>]*>)?[^>]*)>)?\s*\(/g
+  for (const rf of routeFiles) {
+    let src = ''
+    try {
+      src = readFileSync(path.resolve(process.cwd(), rf), 'utf8')
+    } catch {
+      continue
+    }
+    let m
+    queryRe.lastIndex = 0
+    while ((m = queryRe.exec(src))) {
+      total++
+      if (!m[1]) untyped++
+    }
+  }
+  return { routeFiles: routeFiles.length, total, untyped }
+}
+
+function checkRowTypingFloor() {
+  const rt = countRowTyping()
+  const base = loadBaseline(ROW_TYPING_BASELINE)
+  const prev = base[ROW_TYPING_RULE] || 0
+  const head = loadHeadBaseline(ROW_TYPING_BASELINE)?.[ROW_TYPING_RULE] ?? null
+  const over = rt.untyped > prev
+  if (REPORT || over) {
+    const headStr = head === null ? 'n/a' : String(head)
+    const deltaStr = head === null ? '' : rt.untyped - head === 0 ? ' (Δ 0)' : ` (Δ ${rt.untyped - head > 0 ? '+' : ''}${rt.untyped - head})`
+    console.error(
+      `\n[lint-ratchets] row-typing floor (${ROW_TYPING_RULE}): ${rt.untyped} untyped of ${rt.total} queries across ${rt.routeFiles} routes (committed ${headStr}, baseline ${prev})${deltaStr}${over ? '  ⚠ EXCEEDS' : ''}`
+    )
+  }
+  return { rule: ROW_TYPING_RULE, prev, now: rt.untyped, over, label: 'row-typing' }
+}
+
 const floorChecks = [
   checkFloor(MEMBER_RULE, MEMBER_BASELINE, 'member-access'),
   checkFloor(ASSIGNMENT_RULE, ASSIGNMENT_BASELINE, 'assignment'),
   checkFloor(EXPLICIT_ANY_RULE, EXPLICIT_ANY_BASELINE, 'explicit-any'),
+  checkFloor(ARGUMENT_RULE, ARGUMENT_BASELINE, 'argument'),
+  checkRowTypingFloor(),
 ]
 const floorOver = floorChecks.filter((f) => f.over)
-
-if (REPORT) {
-  try {
-    const routeFiles = (existsSync('src') ? (nodeFs.globSync ? nodeFs.globSync('src/**/route.ts', { cwd: process.cwd() }) : []) : []).filter((f) => !f.includes('/__tests__/'))
-    let totalQueries = 0
-    let untypedQueries = 0
-    const queryRe = /\b(?:db|client)\.query\s*(?:<([^>]*?(?:<[^>]*>)?[^>]*)>)?\s*\(/g
-    for (const rf of routeFiles) {
-      const src = readFileSync(path.resolve(process.cwd(), rf), 'utf8')
-      let m
-      queryRe.lastIndex = 0
-      while ((m = queryRe.exec(src))) {
-        totalQueries++
-        if (!m[1]) untypedQueries++
-      }
-    }
-    console.error(`\n[lint-ratchets] db.query typing: ${totalQueries - untypedQueries}/${totalQueries} queries typed (${untypedQueries} untyped across ${routeFiles.length} routes)`)
-  } catch { /* best effort */ }
-}
 
 if (warnRegressions.length || a11yRegressions.length || floorOver.length) {
   const overNote = floorOver.length

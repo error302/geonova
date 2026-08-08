@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   if (!session?.user) {
     return NextResponse.json({ error: 'Authentication required', code: 'UNAUTHORIZED' }, { status: 401 })
   }
-  const userId = (session.user as any).id
+  const userId = session.user.id
   if (userId) setCurrentUserId(String(userId))
 
   try {
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     }
 
     const shpwriteModule = await import('shp-write')
-    const shpwrite = (shpwriteModule as any).default ?? shpwriteModule
+    const shpwrite = (shpwriteModule as unknown as { default?: typeof import('shp-write') }).default ?? shpwriteModule
 
     if (typeof shpwrite.zip !== 'function') {
       throw new Error('shp-write zip() is unavailable')
@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
       ? zipResult
       : Buffer.from(zipResult)
 
-    return new NextResponse(zipBuffer, {
+    return new NextResponse(zipBuffer as unknown as BodyInit, {
       headers: {
         'Content-Type': 'application/zip',
         'Content-Disposition': `attachment; filename="contours_${projectId ?? 'export'}.zip"`,
