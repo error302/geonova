@@ -126,10 +126,13 @@ export function NTRIPClientPanel() {
         host: config.host,
         port: config.port,
         mountpoint: config.mountpoint,
-        username: config.username || undefined,
-        password: config.password || undefined,
+        username: config.username,
+        password: config.password,
         version: 2,
-      } as any)
+        // Panel has no TLS/VRS toggles; honest defaults (old `as any` hid these required fields)
+        secure: false,
+        vrsEnabled: false,
+      })
 
       client.onCorrection((data: Uint8Array) => {
         setRtcmMessages(prev => prev + 1)

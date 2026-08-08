@@ -50,6 +50,30 @@ export function useHaptics() {
 
 // ─── 2. Voice Input Component ───────────────────────────────────────────────
 
+// Web Speech API types (not in standard TS lib) — mirror of the
+// established recipe in VoiceDictationButton / MobileMeasurementCapture.
+interface SpeechRecognitionEvent {
+  results: SpeechRecognitionResultList
+  resultIndex: number
+}
+
+interface SpeechRecognitionInstance {
+  continuous: boolean
+  interimResults: boolean
+  lang: string
+  start(): void
+  stop(): void
+  abort(): void
+  onresult: ((event: SpeechRecognitionEvent) => void) | null
+  onerror: (() => void) | null
+  onend: (() => void) | null
+}
+
+type WindowWithSpeech = Window & {
+  SpeechRecognition?: new () => SpeechRecognitionInstance
+  webkitSpeechRecognition?: new () => SpeechRecognitionInstance
+}
+
 interface VoiceInputProps {
   value: string
   onChange: (value: string) => void
@@ -68,12 +92,12 @@ interface VoiceInputProps {
 export function VoiceInput({ value, onChange, placeholder = 'Tap mic to speak...', className = '' }: VoiceInputProps) {
   const [listening, setListening] = useState(false)
   const [supported, setSupported] = useState(false)
-  const recognitionRef = useRef<any>(null)
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
   const haptics = useHaptics()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+      const SpeechRecognition = (window as WindowWithSpeech).SpeechRecognition || (window as WindowWithSpeech).webkitSpeechRecognition
       if (SpeechRecognition) {
         setSupported(true)
         const recognition = new SpeechRecognition()
@@ -81,7 +105,7 @@ export function VoiceInput({ value, onChange, placeholder = 'Tap mic to speak...
         recognition.interimResults = false
         recognition.lang = 'en-US'
 
-        recognition.onresult = (event: any) => {
+        recognition.onresult = (event: SpeechRecognitionEvent) => {
           const transcript = event.results[0][0].transcript
           onChange(value ? `${value} ${transcript}` : transcript)
           haptics('success')

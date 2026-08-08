@@ -68,6 +68,11 @@ interface SpeechRecognitionHandle {
   stop: () => void
 }
 
+type WindowWithSpeech = Window & {
+  SpeechRecognition?: new () => SpeechRecognitionHandle
+  webkitSpeechRecognition?: new () => SpeechRecognitionHandle
+}
+
 export function MobileMeasurementCapture({ onCapture, stationName, surveyType }: MobileMeasurementCaptureProps) {
   const [mode, setMode] = useState<CaptureMode>('gps')
   const [gpsReading, setGpsReading] = useState<GPSReading | null>(null)
@@ -148,13 +153,13 @@ export function MobileMeasurementCapture({ onCapture, stationName, surveyType }:
 
   const toggleVoiceInput = useCallback(() => {
     if (listening) { recognitionRef.current?.stop(); setListening(false); return }
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    const SpeechRecognition = (window as WindowWithSpeech).SpeechRecognition || (window as WindowWithSpeech).webkitSpeechRecognition
     if (!SpeechRecognition) { alert('Voice input not supported. Use Chrome or Edge.'); return }
     const recognition = new SpeechRecognition()
     recognition.continuous = false
     recognition.interimResults = false
     recognition.lang = 'en-US'
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: { results: { [key: number]: { [key: number]: { transcript: string } } } }) => {
       const transcript = event.results[0][0].transcript
       setRemarks(prev => prev + (prev ? ' ' : '') + transcript)
     }
@@ -170,8 +175,8 @@ export function MobileMeasurementCapture({ onCapture, stationName, surveyType }:
     input.type = 'file'
     input.accept = 'image/*'
     input.capture = 'environment'
-    input.onchange = (e: any) => {
-      const file = e.target.files?.[0]
+    input.onchange = (e: Event) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
       if (!file) return
       const reader = new FileReader()
       reader.onload = () => setPhotos(prev => [...prev, reader.result as string])

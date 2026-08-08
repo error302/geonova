@@ -66,7 +66,8 @@ export function FieldMeasureButton({
 
         // Audio cue: short high beep
         try {
-          const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+          const AudioCtx = window.AudioContext || (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+          const ctx = new AudioCtx()
           const osc = ctx.createOscillator()
           const gain = ctx.createGain()
           osc.connect(gain)
