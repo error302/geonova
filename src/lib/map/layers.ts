@@ -20,6 +20,44 @@
 import { registerProjections } from '@/lib/map/projection'
 import { createParcelStyleFunction, type ParcelStatus } from '@/lib/map/cadastralStyles'
 
+// Scheme map API GeoJSON shapes (mirrors src/app/api/scheme/map/route.ts)
+interface SchemeParcelProperties {
+  type: string
+  parcel_id?: string
+  parcel_number?: string | null
+  lr_number?: string | null
+  block_number?: string | null
+  area_ha?: string | number | null
+  status?: string | null
+  station?: string
+}
+
+interface SchemeFeature {
+  type: 'Feature'
+  properties: SchemeParcelProperties
+  geometry: {
+    type: string
+    coordinates: number[] | number[][] | number[][][]
+  }
+}
+
+interface SchemeMapResponse {
+  features: SchemeFeature[]
+}
+
+// Hover state attached to the scheme parcel layer for later cleanup
+interface SchemeLayerHoverState {
+  highlightStyle: import('ol/style/Style').default
+  getHoverState: () => {
+    hoveredFeature: import('ol/Feature').default | null
+    originalStyle: import('ol/style/Style').default | null
+  }
+  setHoverState: (
+    feature: import('ol/Feature').default | null,
+    style: import('ol/style/Style').default | null,
+  ) => void
+}
+
 // ─── OSM Basemap ──────────────────────────────────────────────────────────
 
 export async function createOSMLayer() {
@@ -122,7 +160,7 @@ export async function createParcelLayerFromScheme(
     throw new Error(`Failed to fetch scheme data: ${response.status}`)
   }
 
-  const data = await response.json()
+  const data = (await response.json()) as SchemeMapResponse
 
   if (!data || !data.features || !Array.isArray(data.features)) {
     throw new Error('Invalid scheme data response')
@@ -172,7 +210,7 @@ export async function createParcelLayerFromScheme(
 
   const layer = new VectorLayer({
     source,
-    style: parcelStyleFn as any,
+    style: parcelStyleFn as import('ol/style/Style').StyleFunction,
     zIndex: 20,
     visible: true,
     properties: { name: 'scheme-parcels', projectId },
@@ -186,14 +224,14 @@ export async function createParcelLayerFromScheme(
     fill: new Fill({ color: 'rgba(209, 123, 71, 0.18)' }),
   })
 
-  let hoveredFeature: any = null
-  let originalStyle: any = null
+  let hoveredFeature: import('ol/Feature').default | null = null
+  let originalStyle: import('ol/style/Style').default | null = null
 
   // Store hover listeners on the layer for later cleanup
-  ;(layer as any)._hoverSetup = {
+  ;(layer as import('ol/layer/Vector').default & { _hoverSetup: SchemeLayerHoverState })._hoverSetup = {
     highlightStyle,
     getHoverState: () => ({ hoveredFeature, originalStyle }),
-    setHoverState: (f: any, s: any) => { hoveredFeature = f; originalStyle = s },
+    setHoverState: (f, s) => { hoveredFeature = f; originalStyle = s },
   }
 
   return layer
