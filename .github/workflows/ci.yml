@@ -143,6 +143,9 @@ jobs:
           path: |
             .next/
             public/
+          # .next/ is a dot-directory — upload-artifact@v4 excludes hidden
+          # files by default and would silently drop the whole build.
+          include-hidden-files: true
           # Keep for 1 day — only needed for the E2E shards in the same run.
           retention-days: 1
 
