@@ -833,253 +833,33 @@
     "filePath": "src/app/analytics/page.tsx",
     "messages": [
       {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 103,
-        "column": 19,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 103,
-        "endColumn": 42
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 104,
-        "column": 19,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 104,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .data on an `any` value.",
-        "line": 104,
-        "column": 28,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 104,
-        "endColumn": 32
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 106,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 106,
-        "endColumn": 52
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .projects on an `any` value.",
-        "line": 106,
-        "column": 32,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 106,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 107,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 107,
-        "endColumn": 85
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .projects on an `any` value.",
-        "line": 107,
-        "column": 33,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 107,
-        "endColumn": 41
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .projects on an `any` value.",
-        "line": 107,
-        "column": 65,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 107,
-        "endColumn": 73
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 108,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 108,
-        "endColumn": 69
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .projects on an `any` value.",
-        "line": 108,
-        "column": 35,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 108,
-        "endColumn": 43
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 109,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 109,
-        "endColumn": 42
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .parcels on an `any` value.",
-        "line": 109,
-        "column": 30,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 109,
-        "endColumn": 37
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 112,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 112,
-        "endColumn": 52
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .submissionsThisMonth on an `any` value.",
-        "line": 112,
-        "column": 27,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 112,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 113,
-        "column": 15,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 116,
-        "endColumn": 18
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 113,
-        "column": 29,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 113,
-        "endColumn": 59
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .revenue on an `any` value.",
-        "line": 113,
-        "column": 32,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 113,
-        "endColumn": 39
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .map on an `any` value.",
-        "line": 113,
-        "column": 56,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 113,
-        "endColumn": 59
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-argument",
-        "severity": 1,
-        "message": "Unsafe argument of type `any` assigned to a parameter of type `{ [s: string]: unknown; } | ArrayLike<unknown>`.",
-        "line": 117,
-        "column": 44,
-        "nodeType": "LogicalExpression",
-        "messageId": "unsafeArgument",
-        "endLine": 117,
-        "endColumn": 70
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .projects on an `any` value.",
-        "line": 117,
-        "column": 46,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 117,
-        "endColumn": 54
-      },
-      {
         "ruleId": "@typescript-eslint/no-non-null-assertion",
         "severity": 1,
         "message": "Forbidden non-null assertion.",
-        "line": 131,
+        "line": 149,
         "column": 26,
         "nodeType": "TSNonNullExpression",
         "messageId": "noNonNull",
-        "endLine": 131,
+        "endLine": 149,
         "endColumn": 44
       },
       {
         "ruleId": "@typescript-eslint/no-non-null-assertion",
         "severity": 1,
         "message": "Forbidden non-null assertion.",
-        "line": 131,
+        "line": 149,
         "column": 26,
         "nodeType": "TSNonNullExpression",
         "messageId": "noNonNull",
-        "endLine": 131,
+        "endLine": 149,
         "endColumn": 40,
         "suggestions": [
           {
             "messageId": "suggestOptionalChain",
             "fix": {
               "range": [
-                4790,
-                4791
+                5457,
+                5458
               ],
               "text": "?"
             },
@@ -1091,19 +871,19 @@
         "ruleId": "@typescript-eslint/no-non-null-assertion",
         "severity": 1,
         "message": "Forbidden non-null assertion.",
-        "line": 131,
+        "line": 149,
         "column": 26,
         "nodeType": "TSNonNullExpression",
         "messageId": "noNonNull",
-        "endLine": 131,
+        "endLine": 149,
         "endColumn": 34,
         "suggestions": [
           {
             "messageId": "suggestOptionalChain",
             "fix": {
               "range": [
-                4784,
-                4785
+                5451,
+                5452
               ],
               "text": "?"
             },
@@ -1115,22 +895,22 @@
         "ruleId": "@typescript-eslint/no-unused-vars",
         "severity": 1,
         "message": "'recentProjects' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 162,
+        "line": 180,
         "column": 17,
         "nodeType": "Identifier",
         "messageId": "unusedVar",
-        "endLine": 162,
+        "endLine": 180,
         "endColumn": 31
       },
       {
         "ruleId": "no-console",
         "severity": 1,
         "message": "Unexpected console statement.",
-        "line": 182,
+        "line": 200,
         "column": 9,
         "nodeType": "MemberExpression",
         "messageId": "unexpected",
-        "endLine": 182,
+        "endLine": 200,
         "endColumn": 22,
         "suggestions": [
           {
@@ -1140,8 +920,8 @@
             },
             "fix": {
               "range": [
-                7247,
-                7292
+                7914,
+                7959
               ],
               "text": ""
             },
@@ -1153,18 +933,18 @@
         "ruleId": "react-hooks/exhaustive-deps",
         "severity": 1,
         "message": "React Hook useEffect has a missing dependency: 'session'. Either include it or remove the dependency array.",
-        "line": 189,
+        "line": 207,
         "column": 6,
         "nodeType": "ArrayExpression",
-        "endLine": 189,
+        "endLine": 207,
         "endColumn": 41,
         "suggestions": [
           {
             "desc": "Update the dependencies array to be: [session?.user?.id, status, period, session]",
             "fix": {
               "range": [
-                7385,
-                7420
+                8052,
+                8087
               ],
               "text": "[session?.user?.id, status, period, session]"
             }
@@ -1175,10 +955,10 @@
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 26,
+    "warningCount": 6,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client';\r\n\r\nimport { useState, useEffect } from 'react'\r\nimport { useSession } from 'next-auth/react'\r\nimport {\r\n  AreaChart, Area, XAxis, YAxis, CartesianGrid,\r\n  PieChart, Pie, Cell,\r\n} from 'recharts'\r\nimport { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'\r\nimport { Loader2 } from 'lucide-react'\r\n\r\n// ---------------------------------------------------------------------------\r\n// Types\r\n// ---------------------------------------------------------------------------\r\n\r\ninterface AnalyticsData {\r\n  totalProjects: number\r\n  activeProjects: number\r\n  completedSurveys: number\r\n  totalPoints: number\r\n  storageUsed: number\r\n  apiCalls: number\r\n  userActivity: { date: string; count: number }[]\r\n  projectTypes: { type: string; count: number }[]\r\n  // Previous period data for delta computation\r\n  prevTotalProjects: number\r\n  prevActiveProjects: number\r\n  prevCompletedSurveys: number\r\n}\r\n\r\nconst emptyData: AnalyticsData = {\r\n  totalProjects: 0,\r\n  activeProjects: 0,\r\n  completedSurveys: 0,\r\n  totalPoints: 0,\r\n  storageUsed: 0,\r\n  apiCalls: 0,\r\n  userActivity: [],\r\n  projectTypes: [],\r\n  prevTotalProjects: 0,\r\n  prevActiveProjects: 0,\r\n  prevCompletedSurveys: 0,\r\n}\r\n\r\n// ---------------------------------------------------------------------------\r\n// Helpers\r\n// ---------------------------------------------------------------------------\r\n\r\nfunction computeDelta(current: number, previous: number): string | null {\r\n  if (previous === 0 && current === 0) return null\r\n  if (previous === 0) return current > 0 ? '+100%' : null\r\n  const change = ((current - previous) / previous) * 100\r\n  const sign = change >= 0 ? '+' : ''\r\n  return `${sign}${change.toFixed(0)}%`\r\n}\r\n\r\nfunction deltaColor(delta: string | null): string {\r\n  if (!delta) return 'text-[var(--text-muted)]'\r\n  return delta.startsWith('+') ? 'text-green-400' : 'text-red-400'\r\n}\r\n\r\nconst TYPE_COLORS = ['#60a5fa', '#4ade80', '#f59e0b', '#a78bfa', '#f472b6', '#94a3b8']\r\n\r\nconst activityChartConfig: ChartConfig = {\r\n  count: { label: 'Projects Created', color: 'hsl(var(--accent))' },\r\n}\r\n\r\nconst typeChartConfig: ChartConfig = {\r\n  cadastral: { label: 'Cadastral', color: '#60a5fa' },\r\n  topographic: { label: 'Topographic', color: '#4ade80' },\r\n  engineering: { label: 'Engineering', color: '#f59e0b' },\r\n  control: { label: 'Control', color: '#a78bfa' },\r\n  other: { label: 'Other', color: '#94a3b8' },\r\n}\r\n\r\n// ---------------------------------------------------------------------------\r\n// Component\r\n// ---------------------------------------------------------------------------\r\n\r\nexport default function AnalyticsPage() {\r\n  const { data: session, status } = useSession()\r\n  const [period, setPeriod] = useState('7d')\r\n  const [data, setData] = useState<AnalyticsData>(emptyData)\r\n  const [loading, setLoading] = useState(true)\r\n\r\n  useEffect(() => {\r\n    if (status === 'loading') return\r\n    if (!session?.user?.id) {\r\n      setLoading(false)\r\n      return\r\n    }\r\n\r\n    async function fetchAnalytics() {\r\n      try {\r\n        // Use the admin dashboard API for richer data if admin,\r\n        // otherwise fall back to direct DB query via Supabase\r\n        const isAdmin = (session?.user as { role?: string })?.role === 'super_admin' ||\r\n          (session?.user as { role?: string })?.role === 'admin'\r\n\r\n        if (isAdmin) {\r\n          const res = await fetch('/api/admin/dashboard')\r\n          if (res.ok) {\r\n            const json = await res.json()\r\n            const d = json.data ?? json\r\n            setData({\r\n              totalProjects: d.projects?.total ?? 0,\r\n              activeProjects: d.projects?.byStatus?.active ?? d.projects?.total ?? 0,\r\n              completedSurveys: d.projects?.byStatus?.completed ?? 0,\r\n              totalPoints: d.parcels ?? 0,\r\n              // AUDIT FIX: Don't fabricate storage from parcel count.\r\n              storageUsed: 0,\r\n              apiCalls: d.submissionsThisMonth ?? 0,\r\n              userActivity: (d.revenue?.byMonth ?? []).map((m: { month: string; total: number }) => ({\r\n                date: m.month,\r\n                count: m.total,\r\n              })),\r\n              projectTypes: Object.entries(d.projects?.byStatus ?? {}).map(([type, count]) => ({\r\n                type,\r\n                count: count as number,\r\n              })),\r\n              // AUDIT FIX: Don't fabricate 'previous period' deltas.\r\n              prevTotalProjects: 0,\r\n              prevActiveProjects: 0,\r\n              prevCompletedSurveys: 0,\r\n            })\r\n          }\r\n        } else {\r\n          // Regular user — query their own projects\r\n          const { createClient } = await import('@/lib/api-client/client')\r\n          const dbClient = createClient()\r\n          const userId = session!.user!.id!\r\n\r\n          const [projectsRes, pointsRes] = await Promise.all([\r\n            dbClient.from('projects').select('id, survey_type, created_at').eq('user_id', userId),\r\n            dbClient.from('survey_points').select('id, created_at').eq('user_id', userId),\r\n          ])\r\n\r\n          type ProjectRow = { id: string; survey_type: string | null; created_at: string }\r\n          type PointRow = { id: string; created_at: string }\r\n          const projects = (projectsRes.data ?? []) as ProjectRow[]\r\n          const points = (pointsRes.data ?? []) as PointRow[]\r\n\r\n          // Build activity based on period\r\n          const days = period === '7d' ? 7 : period === '30d' ? 30 : period === '90d' ? 90 : 365\r\n          const lastNDays: { date: string; count: number }[] = []\r\n          for (let i = days - 1; i >= 0; i--) {\r\n            const d = new Date()\r\n            d.setDate(d.getDate() - i)\r\n            const dateStr = d.toISOString().split('T')[0]\r\n            const count = projects.filter((p) => p.created_at?.startsWith(dateStr)).length\r\n            lastNDays.push({ date: dateStr, count })\r\n          }\r\n\r\n          const projectTypesMap: Record<string, number> = {}\r\n          projects.forEach((p) => {\r\n            const type = p.survey_type ?? 'Other'\r\n            projectTypesMap[type] = (projectTypesMap[type] ?? 0) + 1\r\n          })\r\n\r\n          // Compute previous period deltas\r\n          const halfPoint = Math.floor(projects.length / 2)\r\n          const recentProjects = projects.slice(0, halfPoint)\r\n          const olderProjects = projects.slice(halfPoint)\r\n\r\n          setData({\r\n            totalProjects: projects.length,\r\n            activeProjects: projects.length,\r\n            completedSurveys: projects.filter((p) => p.survey_type !== null).length,\r\n            totalPoints: points.length,\r\n            // AUDIT FIX (2026-07-03): Don't fabricate storage from points count.\r\n            storageUsed: 0,\r\n            // AUDIT FIX: apiCalls=0 was hardcoded. We don't track per-user API calls yet.\r\n            apiCalls: 0,\r\n            userActivity: lastNDays,\r\n            projectTypes: Object.entries(projectTypesMap).map(([type, count]) => ({ type, count })),\r\n            prevTotalProjects: olderProjects.length,\r\n            prevActiveProjects: olderProjects.length,\r\n            prevCompletedSurveys: olderProjects.filter((p) => p.survey_type !== null).length,\r\n          })\r\n        }\r\n      } catch (err) {\r\n        console.error('Analytics fetch failed:', err)\r\n      } finally {\r\n        setLoading(false)\r\n      }\r\n    }\r\n\r\n    fetchAnalytics()\r\n  }, [session?.user?.id, status, period])\r\n\r\n  if (loading) {\r\n    return (\r\n      <div className=\"min-h-screen bg-[var(--bg-primary)] flex items-center justify-center\">\r\n        <Loader2 className=\"w-8 h-8 text-[var(--accent)] animate-spin\" />\r\n      </div>\r\n    )\r\n  }\r\n\r\n  const deltas = {\r\n    totalProjects: computeDelta(data.totalProjects, data.prevTotalProjects),\r\n    activeProjects: computeDelta(data.activeProjects, data.prevActiveProjects),\r\n    completedSurveys: computeDelta(data.completedSurveys, data.prevCompletedSurveys),\r\n    apiCalls: null as string | null,\r\n  }\r\n\r\n  return (\r\n    <div className=\"min-h-screen bg-[var(--bg-primary)]\">\r\n      <div className=\"max-w-7xl mx-auto px-4 py-8\">\r\n        <div className=\"flex flex-wrap justify-between items-center mb-8 gap-4\">\r\n          <div>\r\n            <h1 className=\"text-3xl font-bold text-[var(--text-primary)]\">Analytics</h1>\r\n            <p className=\"text-[var(--text-muted)]\">Track your METARDU usage</p>\r\n          </div>\r\n          <select\r\n            value={period}\r\n            onChange={(e) => setPeriod(e.target.value)}\r\n            className=\"p-2 border border-[var(--border-color)] rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)]\"\r\n          >\r\n            <option value=\"7d\">Last 7 days</option>\r\n            <option value=\"30d\">Last 30 days</option>\r\n            <option value=\"90d\">Last 90 days</option>\r\n            <option value=\"1y\">Last year</option>\r\n          </select>\r\n        </div>\r\n\r\n        {/* Stat cards with computed deltas */}\r\n        <div className=\"grid grid-cols-2 md:grid-cols-4 gap-4 mb-8\">\r\n          {[\r\n            { label: 'Total Projects', value: data.totalProjects, delta: deltas.totalProjects },\r\n            { label: 'Active Projects', value: data.activeProjects, delta: deltas.activeProjects },\r\n            { label: 'Completed Surveys', value: data.completedSurveys, delta: deltas.completedSurveys },\r\n            { label: 'API Calls', value: data.apiCalls, delta: deltas.apiCalls },\r\n          ].map((card) => (\r\n            <div key={card.label} className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n              <p className=\"text-sm text-[var(--text-muted)] mb-1\">{card.label}</p>\r\n              <p className=\"text-3xl font-bold text-[var(--text-primary)]\">\r\n                {typeof card.value === 'number' ? card.value.toLocaleString() : card.value}\r\n              </p>\r\n              {card.delta ? (\r\n                <p className={`text-xs mt-1 ${deltaColor(card.delta)}`}>\r\n                  {card.delta.startsWith('+') ? '↑' : '↓'} {card.delta} from last period\r\n                </p>\r\n              ) : (\r\n                <p className=\"text-xs text-[var(--text-muted)] mt-1\">No prior data</p>\r\n              )}\r\n            </div>\r\n          ))}\r\n        </div>\r\n\r\n        {/* Charts */}\r\n        <div className=\"grid md:grid-cols-2 gap-6 mb-8\">\r\n          {/* User Activity — Recharts AreaChart */}\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-4 text-[var(--text-primary)]\">User Activity</h2>\r\n            <ChartContainer config={activityChartConfig} className=\"min-h-[240px] w-full\">\r\n              <AreaChart data={data.userActivity} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>\r\n                <defs>\r\n                  <linearGradient id=\"activityGrad\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\r\n                    <stop offset=\"5%\" stopColor=\"hsl(var(--accent))\" stopOpacity={0.3} />\r\n                    <stop offset=\"95%\" stopColor=\"hsl(var(--accent))\" stopOpacity={0} />\r\n                  </linearGradient>\r\n                </defs>\r\n                <CartesianGrid strokeDasharray=\"3 3\" stroke=\"var(--border-color)\" opacity={0.3} />\r\n                <XAxis\r\n                  dataKey=\"date\"\r\n                  tick={{ fontSize: 11, fill: 'var(--text-muted)' }}\r\n                  tickFormatter={(v: string) => v.split('-').slice(1).join('/')}\r\n                />\r\n                <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />\r\n                <ChartTooltip content={<ChartTooltipContent />} />\r\n                <Area\r\n                  type=\"monotone\"\r\n                  dataKey=\"count\"\r\n                  stroke=\"hsl(var(--accent))\"\r\n                  strokeWidth={2}\r\n                  fill=\"url(#activityGrad)\"\r\n                />\r\n              </AreaChart>\r\n            </ChartContainer>\r\n          </div>\r\n\r\n          {/* Projects by Type — Donut Chart */}\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-4 text-[var(--text-primary)]\">Projects by Type</h2>\r\n            {data.projectTypes.length > 0 ? (\r\n              <div className=\"flex items-start gap-4\">\r\n                <ChartContainer config={typeChartConfig} className=\"min-h-[200px] w-[200px]\">\r\n                  <PieChart>\r\n                    <Pie\r\n                      data={data.projectTypes}\r\n                      cx=\"50%\"\r\n                      cy=\"50%\"\r\n                      innerRadius={45}\r\n                      outerRadius={80}\r\n                      paddingAngle={2}\r\n                      dataKey=\"count\"\r\n                      stroke=\"none\"\r\n                    >\r\n                      {data.projectTypes.map((_, index) => (\r\n                        <Cell key={`cell-${index}`} fill={TYPE_COLORS[index % TYPE_COLORS.length]} />\r\n                      ))}\r\n                    </Pie>\r\n                    <ChartTooltip content={<ChartTooltipContent />} />\r\n                  </PieChart>\r\n                </ChartContainer>\r\n                <div className=\"space-y-2 text-sm flex-1\">\r\n                  {data.projectTypes.map((pt, i) => {\r\n                    const percentage = data.totalProjects > 0 ? (pt.count / data.totalProjects) * 100 : 0\r\n                    return (\r\n                      <div key={pt.type} className=\"flex items-center gap-2\">\r\n                        <div\r\n                          className=\"w-3 h-3 rounded-sm shrink-0\"\r\n                          style={{ backgroundColor: TYPE_COLORS[i % TYPE_COLORS.length] }}\r\n                        />\r\n                        <span className=\"text-[var(--text-secondary)] capitalize\">{pt.type}</span>\r\n                        <span className=\"text-[var(--text-primary)] font-medium ml-auto\">\r\n                          {pt.count}\r\n                          <span className=\"text-[var(--text-muted)] text-xs ml-1\">\r\n                            ({Math.round(percentage)}%)\r\n                          </span>\r\n                        </span>\r\n                      </div>\r\n                    )\r\n                  })}\r\n                </div>\r\n              </div>\r\n            ) : (\r\n              <p className=\"text-sm text-[var(--text-muted)]\">No project type data</p>\r\n            )}\r\n          </div>\r\n        </div>\r\n\r\n        {/* Storage, API, and Team info */}\r\n        {/* AUDIT FIX (2026-07-03): Storage/API widgets were fabricated.\r\n            Now show honest 'not yet available' when no real data. */}\r\n        <div className=\"grid md:grid-cols-3 gap-4\">\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">Storage</h2>\r\n            <div className=\"relative pt-4\">\r\n              {data.storageUsed > 0 ? (\r\n                <>\r\n                  <div className=\"w-full bg-[var(--bg-tertiary)] rounded-full h-4\">\r\n                    <div\r\n                      className=\"bg-green-500 h-4 rounded-full transition-all\"\r\n                      style={{ width: `${Math.min((data.storageUsed / 5) * 100, 100)}%` }}\r\n                    />\r\n                  </div>\r\n                  <p className=\"text-sm text-[var(--text-muted)] mt-2\">\r\n                    {data.storageUsed} GB of 5 GB used\r\n                  </p>\r\n                </>\r\n              ) : (\r\n                <p className=\"text-sm text-[var(--text-muted)]\">\r\n                  Storage tracking is not yet available. File-size accounting will be added in a future update.\r\n                </p>\r\n              )}\r\n            </div>\r\n          </div>\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">API Usage</h2>\r\n            <div className=\"relative pt-4\">\r\n              {data.apiCalls > 0 ? (\r\n                <>\r\n                  <div className=\"w-full bg-[var(--bg-tertiary)] rounded-full h-4\">\r\n                    <div\r\n                      className=\"bg-blue-500 h-4 rounded-full transition-all\"\r\n                      style={{ width: `${Math.min((data.apiCalls / 50000) * 100, 100)}%` }}\r\n                    />\r\n                  </div>\r\n                  <p className=\"text-sm text-[var(--text-muted)] mt-2\">\r\n                    {data.apiCalls.toLocaleString()} of 50,000 calls\r\n                  </p>\r\n                </>\r\n              ) : (\r\n                <p className=\"text-sm text-[var(--text-muted)]\">\r\n                  Per-user API call tracking is not yet available. Contact your administrator for platform-wide stats.\r\n                </p>\r\n              )}\r\n            </div>\r\n          </div>\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">Survey Points</h2>\r\n            <p className=\"text-3xl font-bold text-[var(--text-primary)]\">{data.totalPoints.toLocaleString()}</p>\r\n            <p className=\"text-sm text-[var(--text-muted)]\">Total points recorded</p>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n",
+    "source": "'use client';\r\n\r\nimport { useState, useEffect } from 'react'\r\nimport { useSession } from 'next-auth/react'\r\nimport {\r\n  AreaChart, Area, XAxis, YAxis, CartesianGrid,\r\n  PieChart, Pie, Cell,\r\n} from 'recharts'\r\nimport { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'\r\nimport { Loader2 } from 'lucide-react'\r\n\r\n// ---------------------------------------------------------------------------\r\n// Types\r\n// ---------------------------------------------------------------------------\r\n\r\ninterface AnalyticsData {\r\n  totalProjects: number\r\n  activeProjects: number\r\n  completedSurveys: number\r\n  totalPoints: number\r\n  storageUsed: number\r\n  apiCalls: number\r\n  userActivity: { date: string; count: number }[]\r\n  projectTypes: { type: string; count: number }[]\r\n  // Previous period data for delta computation\r\n  prevTotalProjects: number\r\n  prevActiveProjects: number\r\n  prevCompletedSurveys: number\r\n}\r\n\r\nconst emptyData: AnalyticsData = {\r\n  totalProjects: 0,\r\n  activeProjects: 0,\r\n  completedSurveys: 0,\r\n  totalPoints: 0,\r\n  storageUsed: 0,\r\n  apiCalls: 0,\r\n  userActivity: [],\r\n  projectTypes: [],\r\n  prevTotalProjects: 0,\r\n  prevActiveProjects: 0,\r\n  prevCompletedSurveys: 0,\r\n}\r\n\r\n// ---------------------------------------------------------------------------\r\n// Helpers\r\n// ---------------------------------------------------------------------------\r\n\r\nfunction computeDelta(current: number, previous: number): string | null {\r\n  if (previous === 0 && current === 0) return null\r\n  if (previous === 0) return current > 0 ? '+100%' : null\r\n  const change = ((current - previous) / previous) * 100\r\n  const sign = change >= 0 ? '+' : ''\r\n  return `${sign}${change.toFixed(0)}%`\r\n}\r\n\r\nfunction deltaColor(delta: string | null): string {\r\n  if (!delta) return 'text-[var(--text-muted)]'\r\n  return delta.startsWith('+') ? 'text-green-400' : 'text-red-400'\r\n}\r\n\r\nconst TYPE_COLORS = ['#60a5fa', '#4ade80', '#f59e0b', '#a78bfa', '#f472b6', '#94a3b8']\r\n\r\nconst activityChartConfig: ChartConfig = {\r\n  count: { label: 'Projects Created', color: 'hsl(var(--accent))' },\r\n}\r\n\r\nconst typeChartConfig: ChartConfig = {\r\n  cadastral: { label: 'Cadastral', color: '#60a5fa' },\r\n  topographic: { label: 'Topographic', color: '#4ade80' },\r\n  engineering: { label: 'Engineering', color: '#f59e0b' },\r\n  control: { label: 'Control', color: '#a78bfa' },\r\n  other: { label: 'Other', color: '#94a3b8' },\r\n}\r\n\r\n// ---------------------------------------------------------------------------\r\n// Component\r\n// ---------------------------------------------------------------------------\r\n\r\nexport default function AnalyticsPage() {\r\n  const { data: session, status } = useSession()\r\n  const [period, setPeriod] = useState('7d')\r\n  const [data, setData] = useState<AnalyticsData>(emptyData)\r\n  const [loading, setLoading] = useState(true)\r\n\r\n  useEffect(() => {\r\n    if (status === 'loading') return\r\n    if (!session?.user?.id) {\r\n      setLoading(false)\r\n      return\r\n    }\r\n\r\n    async function fetchAnalytics() {\r\n      try {\r\n        // Use the admin dashboard API for richer data if admin,\r\n        // otherwise fall back to direct DB query via Supabase\r\n        const isAdmin = (session?.user as { role?: string })?.role === 'super_admin' ||\r\n          (session?.user as { role?: string })?.role === 'admin'\r\n\r\n        if (isAdmin) {\r\n          const res = await fetch('/api/admin/dashboard')\r\n          if (res.ok) {\r\n            const json = (await res.json()) as {\r\n              data?: {\r\n                projects?: {\r\n                  total?: number\r\n                  byStatus?: Record<string, number>\r\n                }\r\n                parcels?: number\r\n                submissionsThisMonth?: number\r\n                revenue?: { byMonth?: Array<{ month: string; total: number }> }\r\n              }\r\n            }\r\n            const d = (json.data ?? json) as {\r\n              projects?: {\r\n                total?: number\r\n                byStatus?: Record<string, number>\r\n              }\r\n              parcels?: number\r\n              submissionsThisMonth?: number\r\n              revenue?: { byMonth?: Array<{ month: string; total: number }> }\r\n            }\r\n            setData({\r\n              totalProjects: d.projects?.total ?? 0,\r\n              activeProjects: d.projects?.byStatus?.active ?? d.projects?.total ?? 0,\r\n              completedSurveys: d.projects?.byStatus?.completed ?? 0,\r\n              totalPoints: d.parcels ?? 0,\r\n              // AUDIT FIX: Don't fabricate storage from parcel count.\r\n              storageUsed: 0,\r\n              apiCalls: d.submissionsThisMonth ?? 0,\r\n              userActivity: (d.revenue?.byMonth ?? []).map((m: { month: string; total: number }) => ({\r\n                date: m.month,\r\n                count: m.total,\r\n              })),\r\n              projectTypes: Object.entries(d.projects?.byStatus ?? {}).map(([type, count]) => ({\r\n                type,\r\n                count: count as number,\r\n              })),\r\n              // AUDIT FIX: Don't fabricate 'previous period' deltas.\r\n              prevTotalProjects: 0,\r\n              prevActiveProjects: 0,\r\n              prevCompletedSurveys: 0,\r\n            })\r\n          }\r\n        } else {\r\n          // Regular user — query their own projects\r\n          const { createClient } = await import('@/lib/api-client/client')\r\n          const dbClient = createClient()\r\n          const userId = session!.user!.id!\r\n\r\n          const [projectsRes, pointsRes] = await Promise.all([\r\n            dbClient.from('projects').select('id, survey_type, created_at').eq('user_id', userId),\r\n            dbClient.from('survey_points').select('id, created_at').eq('user_id', userId),\r\n          ])\r\n\r\n          type ProjectRow = { id: string; survey_type: string | null; created_at: string }\r\n          type PointRow = { id: string; created_at: string }\r\n          const projects = (projectsRes.data ?? []) as ProjectRow[]\r\n          const points = (pointsRes.data ?? []) as PointRow[]\r\n\r\n          // Build activity based on period\r\n          const days = period === '7d' ? 7 : period === '30d' ? 30 : period === '90d' ? 90 : 365\r\n          const lastNDays: { date: string; count: number }[] = []\r\n          for (let i = days - 1; i >= 0; i--) {\r\n            const d = new Date()\r\n            d.setDate(d.getDate() - i)\r\n            const dateStr = d.toISOString().split('T')[0]\r\n            const count = projects.filter((p) => p.created_at?.startsWith(dateStr)).length\r\n            lastNDays.push({ date: dateStr, count })\r\n          }\r\n\r\n          const projectTypesMap: Record<string, number> = {}\r\n          projects.forEach((p) => {\r\n            const type = p.survey_type ?? 'Other'\r\n            projectTypesMap[type] = (projectTypesMap[type] ?? 0) + 1\r\n          })\r\n\r\n          // Compute previous period deltas\r\n          const halfPoint = Math.floor(projects.length / 2)\r\n          const recentProjects = projects.slice(0, halfPoint)\r\n          const olderProjects = projects.slice(halfPoint)\r\n\r\n          setData({\r\n            totalProjects: projects.length,\r\n            activeProjects: projects.length,\r\n            completedSurveys: projects.filter((p) => p.survey_type !== null).length,\r\n            totalPoints: points.length,\r\n            // AUDIT FIX (2026-07-03): Don't fabricate storage from points count.\r\n            storageUsed: 0,\r\n            // AUDIT FIX: apiCalls=0 was hardcoded. We don't track per-user API calls yet.\r\n            apiCalls: 0,\r\n            userActivity: lastNDays,\r\n            projectTypes: Object.entries(projectTypesMap).map(([type, count]) => ({ type, count })),\r\n            prevTotalProjects: olderProjects.length,\r\n            prevActiveProjects: olderProjects.length,\r\n            prevCompletedSurveys: olderProjects.filter((p) => p.survey_type !== null).length,\r\n          })\r\n        }\r\n      } catch (err) {\r\n        console.error('Analytics fetch failed:', err)\r\n      } finally {\r\n        setLoading(false)\r\n      }\r\n    }\r\n\r\n    fetchAnalytics()\r\n  }, [session?.user?.id, status, period])\r\n\r\n  if (loading) {\r\n    return (\r\n      <div className=\"min-h-screen bg-[var(--bg-primary)] flex items-center justify-center\">\r\n        <Loader2 className=\"w-8 h-8 text-[var(--accent)] animate-spin\" />\r\n      </div>\r\n    )\r\n  }\r\n\r\n  const deltas = {\r\n    totalProjects: computeDelta(data.totalProjects, data.prevTotalProjects),\r\n    activeProjects: computeDelta(data.activeProjects, data.prevActiveProjects),\r\n    completedSurveys: computeDelta(data.completedSurveys, data.prevCompletedSurveys),\r\n    apiCalls: null as string | null,\r\n  }\r\n\r\n  return (\r\n    <div className=\"min-h-screen bg-[var(--bg-primary)]\">\r\n      <div className=\"max-w-7xl mx-auto px-4 py-8\">\r\n        <div className=\"flex flex-wrap justify-between items-center mb-8 gap-4\">\r\n          <div>\r\n            <h1 className=\"text-3xl font-bold text-[var(--text-primary)]\">Analytics</h1>\r\n            <p className=\"text-[var(--text-muted)]\">Track your METARDU usage</p>\r\n          </div>\r\n          <select\r\n            value={period}\r\n            onChange={(e) => setPeriod(e.target.value)}\r\n            className=\"p-2 border border-[var(--border-color)] rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)]\"\r\n          >\r\n            <option value=\"7d\">Last 7 days</option>\r\n            <option value=\"30d\">Last 30 days</option>\r\n            <option value=\"90d\">Last 90 days</option>\r\n            <option value=\"1y\">Last year</option>\r\n          </select>\r\n        </div>\r\n\r\n        {/* Stat cards with computed deltas */}\r\n        <div className=\"grid grid-cols-2 md:grid-cols-4 gap-4 mb-8\">\r\n          {[\r\n            { label: 'Total Projects', value: data.totalProjects, delta: deltas.totalProjects },\r\n            { label: 'Active Projects', value: data.activeProjects, delta: deltas.activeProjects },\r\n            { label: 'Completed Surveys', value: data.completedSurveys, delta: deltas.completedSurveys },\r\n            { label: 'API Calls', value: data.apiCalls, delta: deltas.apiCalls },\r\n          ].map((card) => (\r\n            <div key={card.label} className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n              <p className=\"text-sm text-[var(--text-muted)] mb-1\">{card.label}</p>\r\n              <p className=\"text-3xl font-bold text-[var(--text-primary)]\">\r\n                {typeof card.value === 'number' ? card.value.toLocaleString() : card.value}\r\n              </p>\r\n              {card.delta ? (\r\n                <p className={`text-xs mt-1 ${deltaColor(card.delta)}`}>\r\n                  {card.delta.startsWith('+') ? '↑' : '↓'} {card.delta} from last period\r\n                </p>\r\n              ) : (\r\n                <p className=\"text-xs text-[var(--text-muted)] mt-1\">No prior data</p>\r\n              )}\r\n            </div>\r\n          ))}\r\n        </div>\r\n\r\n        {/* Charts */}\r\n        <div className=\"grid md:grid-cols-2 gap-6 mb-8\">\r\n          {/* User Activity — Recharts AreaChart */}\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-4 text-[var(--text-primary)]\">User Activity</h2>\r\n            <ChartContainer config={activityChartConfig} className=\"min-h-[240px] w-full\">\r\n              <AreaChart data={data.userActivity} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>\r\n                <defs>\r\n                  <linearGradient id=\"activityGrad\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\r\n                    <stop offset=\"5%\" stopColor=\"hsl(var(--accent))\" stopOpacity={0.3} />\r\n                    <stop offset=\"95%\" stopColor=\"hsl(var(--accent))\" stopOpacity={0} />\r\n                  </linearGradient>\r\n                </defs>\r\n                <CartesianGrid strokeDasharray=\"3 3\" stroke=\"var(--border-color)\" opacity={0.3} />\r\n                <XAxis\r\n                  dataKey=\"date\"\r\n                  tick={{ fontSize: 11, fill: 'var(--text-muted)' }}\r\n                  tickFormatter={(v: string) => v.split('-').slice(1).join('/')}\r\n                />\r\n                <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />\r\n                <ChartTooltip content={<ChartTooltipContent />} />\r\n                <Area\r\n                  type=\"monotone\"\r\n                  dataKey=\"count\"\r\n                  stroke=\"hsl(var(--accent))\"\r\n                  strokeWidth={2}\r\n                  fill=\"url(#activityGrad)\"\r\n                />\r\n              </AreaChart>\r\n            </ChartContainer>\r\n          </div>\r\n\r\n          {/* Projects by Type — Donut Chart */}\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-4 text-[var(--text-primary)]\">Projects by Type</h2>\r\n            {data.projectTypes.length > 0 ? (\r\n              <div className=\"flex items-start gap-4\">\r\n                <ChartContainer config={typeChartConfig} className=\"min-h-[200px] w-[200px]\">\r\n                  <PieChart>\r\n                    <Pie\r\n                      data={data.projectTypes}\r\n                      cx=\"50%\"\r\n                      cy=\"50%\"\r\n                      innerRadius={45}\r\n                      outerRadius={80}\r\n                      paddingAngle={2}\r\n                      dataKey=\"count\"\r\n                      stroke=\"none\"\r\n                    >\r\n                      {data.projectTypes.map((_, index) => (\r\n                        <Cell key={`cell-${index}`} fill={TYPE_COLORS[index % TYPE_COLORS.length]} />\r\n                      ))}\r\n                    </Pie>\r\n                    <ChartTooltip content={<ChartTooltipContent />} />\r\n                  </PieChart>\r\n                </ChartContainer>\r\n                <div className=\"space-y-2 text-sm flex-1\">\r\n                  {data.projectTypes.map((pt, i) => {\r\n                    const percentage = data.totalProjects > 0 ? (pt.count / data.totalProjects) * 100 : 0\r\n                    return (\r\n                      <div key={pt.type} className=\"flex items-center gap-2\">\r\n                        <div\r\n                          className=\"w-3 h-3 rounded-sm shrink-0\"\r\n                          style={{ backgroundColor: TYPE_COLORS[i % TYPE_COLORS.length] }}\r\n                        />\r\n                        <span className=\"text-[var(--text-secondary)] capitalize\">{pt.type}</span>\r\n                        <span className=\"text-[var(--text-primary)] font-medium ml-auto\">\r\n                          {pt.count}\r\n                          <span className=\"text-[var(--text-muted)] text-xs ml-1\">\r\n                            ({Math.round(percentage)}%)\r\n                          </span>\r\n                        </span>\r\n                      </div>\r\n                    )\r\n                  })}\r\n                </div>\r\n              </div>\r\n            ) : (\r\n              <p className=\"text-sm text-[var(--text-muted)]\">No project type data</p>\r\n            )}\r\n          </div>\r\n        </div>\r\n\r\n        {/* Storage, API, and Team info */}\r\n        {/* AUDIT FIX (2026-07-03): Storage/API widgets were fabricated.\r\n            Now show honest 'not yet available' when no real data. */}\r\n        <div className=\"grid md:grid-cols-3 gap-4\">\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">Storage</h2>\r\n            <div className=\"relative pt-4\">\r\n              {data.storageUsed > 0 ? (\r\n                <>\r\n                  <div className=\"w-full bg-[var(--bg-tertiary)] rounded-full h-4\">\r\n                    <div\r\n                      className=\"bg-green-500 h-4 rounded-full transition-all\"\r\n                      style={{ width: `${Math.min((data.storageUsed / 5) * 100, 100)}%` }}\r\n                    />\r\n                  </div>\r\n                  <p className=\"text-sm text-[var(--text-muted)] mt-2\">\r\n                    {data.storageUsed} GB of 5 GB used\r\n                  </p>\r\n                </>\r\n              ) : (\r\n                <p className=\"text-sm text-[var(--text-muted)]\">\r\n                  Storage tracking is not yet available. File-size accounting will be added in a future update.\r\n                </p>\r\n              )}\r\n            </div>\r\n          </div>\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">API Usage</h2>\r\n            <div className=\"relative pt-4\">\r\n              {data.apiCalls > 0 ? (\r\n                <>\r\n                  <div className=\"w-full bg-[var(--bg-tertiary)] rounded-full h-4\">\r\n                    <div\r\n                      className=\"bg-blue-500 h-4 rounded-full transition-all\"\r\n                      style={{ width: `${Math.min((data.apiCalls / 50000) * 100, 100)}%` }}\r\n                    />\r\n                  </div>\r\n                  <p className=\"text-sm text-[var(--text-muted)] mt-2\">\r\n                    {data.apiCalls.toLocaleString()} of 50,000 calls\r\n                  </p>\r\n                </>\r\n              ) : (\r\n                <p className=\"text-sm text-[var(--text-muted)]\">\r\n                  Per-user API call tracking is not yet available. Contact your administrator for platform-wide stats.\r\n                </p>\r\n              )}\r\n            </div>\r\n          </div>\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">Survey Points</h2>\r\n            <p className=\"text-3xl font-bold text-[var(--text-primary)]\">{data.totalPoints.toLocaleString()}</p>\r\n            <p className=\"text-sm text-[var(--text-muted)]\">Total points recorded</p>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -19040,52 +18820,6 @@
         "ruleId": "@typescript-eslint/no-explicit-any",
         "severity": 1,
         "message": "Unexpected any. Specify a different type.",
-        "line": 21,
-        "column": 38,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 21,
-        "endColumn": 41,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                928,
-                931
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                928,
-                931
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 21,
-        "column": 48,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 21,
-        "endColumn": 50
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
         "line": 90,
         "column": 37,
         "nodeType": "TSAnyKeyword",
@@ -19097,8 +18831,8 @@
             "messageId": "suggestUnknown",
             "fix": {
               "range": [
-                4176,
-                4179
+                4171,
+                4174
               ],
               "text": "unknown"
             },
@@ -19108,247 +18842,23 @@
             "messageId": "suggestNever",
             "fix": {
               "range": [
-                4176,
-                4179
+                4171,
+                4174
               ],
               "text": "never"
             },
             "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
           }
         ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 122,
-        "column": 13,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 122,
-        "endColumn": 36
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-argument",
-        "severity": 1,
-        "message": "Unsafe argument of type `any` assigned to a parameter of type `SetStateAction<string>`.",
-        "line": 125,
-        "column": 18,
-        "nodeType": "LogicalExpression",
-        "messageId": "unsafeArgument",
-        "endLine": 125,
-        "endColumn": 58
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .error on an `any` value.",
-        "line": 125,
-        "column": 23,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 125,
-        "endColumn": 28
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 130,
-        "column": 13,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 130,
-        "endColumn": 32
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .data on an `any` value.",
-        "line": 130,
-        "column": 28,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 130,
-        "endColumn": 32
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 134,
-        "column": 41,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 134,
-        "endColumn": 43
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 136,
-        "column": 41,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 136,
-        "endColumn": 43
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 144,
-        "column": 49,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 144,
-        "endColumn": 52,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                5948,
-                5951
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                5948,
-                5951
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 144,
-        "column": 59,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 144,
-        "endColumn": 61
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 382,
-        "column": 38,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 382,
-        "endColumn": 41,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                20812,
-                20815
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                20812,
-                20815
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 383,
-        "column": 30,
-        "nodeType": "MemberExpression",
-        "messageId": "anyAssignment",
-        "endLine": 383,
-        "endColumn": 34
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 383,
-        "column": 32,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 383,
-        "endColumn": 34
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 383,
-        "column": 43,
-        "nodeType": "MemberExpression",
-        "messageId": "anyAssignment",
-        "endLine": 383,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .id on an `any` value.",
-        "line": 383,
-        "column": 45,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 383,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .flag on an `any` value.",
-        "line": 383,
-        "column": 52,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 383,
-        "endColumn": 56
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .name on an `any` value.",
-        "line": 383,
-        "column": 61,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 383,
-        "endColumn": 65
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 19,
+    "warningCount": 1,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client';\r\n\r\nimport { useState } from 'react'\r\nimport Link from 'next/link'\r\nimport { useRouter } from 'next/navigation'\r\nimport { BoundarySelectorMap } from '@/components/project/BoundarySelectorMap'\r\nimport { getUTMZoneFromLatLng } from '@/lib/geodesy/utmZones'\r\nimport { useCountry, ALL_COUNTRIES } from '@/lib/country'\r\nimport type { SurveyingCountry } from '@/lib/country'\r\nimport { SURVEY_TYPE_LABELS, SurveyType } from '@/types/project'\r\nimport type { ProjectType } from '@/types/scheme'\r\n\r\nexport default function NewProjectPage() {\r\n  const { country: defaultCountry, setCountry: setContextCountry } = useCountry()\r\n  const router = useRouter()\r\n\r\n  const [name, setName] = useState('')\r\n  const [location, setLocation] = useState('')\r\n  const [selectedCountry, setSelectedCountry] = useState<SurveyingCountry>(defaultCountry)\r\n  const [utmZone, setUtmZone] = useState(() => {\r\n    const c = ALL_COUNTRIES.find((c: any) => c.id === defaultCountry)\r\n    return c?.id === 'us' ? '17' : c?.id === 'uk' ? '30' : c?.id === 'australia' ? '51' : '37'\r\n  })\r\n  const [hemisphere, setHemisphere] = useState<'N' | 'S'>('S')\r\n  const [surveyType, setSurveyType] = useState<SurveyType>('topographic')\r\n  const [clientName, setClientName] = useState('')\r\n  const [surveyorName, setSurveyorName] = useState('')\r\n  const [error, setError] = useState('')\r\n  const [loading, setLoading] = useState(false)\r\n  const [detecting, setDetecting] = useState(false)\r\n  \r\n  const [polygonCoordinates, setPolygonCoordinates] = useState<number[][]>([])\r\n  const [estimatedArea, setEstimatedArea] = useState<number | null>(null)\r\n\r\n  // Phase 25: Project scale selector\r\n  const [projectType, setProjectType] = useState<ProjectType>('small')\r\n  const [schemeNumber, setSchemeNumber] = useState('')\r\n  const [schemeCounty, setSchemeCounty] = useState('')\r\n  const [schemeSubCounty, setSchemeSubCounty] = useState('')\r\n  const [schemeWard, setSchemeWard] = useState('')\r\n  const [plannedParcels, setPlannedParcels] = useState('')\r\n  const [adjudicationSection, setAdjudicationSection] = useState('')\r\n\r\n  const handleCountryChange = (newCountry: SurveyingCountry) => {\r\n    setSelectedCountry(newCountry)\r\n    const zoneMap: Partial<Record<SurveyingCountry, [string, 'N' | 'S']>> = {\r\n      us: ['17', 'N'], uk: ['30', 'N'], australia: ['51', 'S'],\r\n      new_zealand: ['59', 'S'], south_africa: ['35', 'S'],\r\n      bahrain: ['39', 'N'], nigeria: ['31', 'N'], ghana: ['30', 'N'],\r\n      tanzania: ['37', 'S'], uganda: ['36', 'N'], india: ['44', 'N'],\r\n      indonesia: ['48', 'S'], brazil: ['23', 'S'],\r\n      saudi_arabia: ['39', 'N'], oman: ['40', 'N'], uae: ['40', 'N'],\r\n    }\r\n    const [zone, hemi] = zoneMap[newCountry] || ['37', 'S']\r\n    setUtmZone(zone)\r\n    setHemisphere(hemi)\r\n  }\r\n\r\n  const detectZoneFromGPS = () => {\r\n    if (!navigator.geolocation) { setError('GPS not supported'); return }\r\n    setDetecting(true); setError('')\r\n    navigator.geolocation.getCurrentPosition(\r\n      (pos) => {\r\n        const { zone, hemisphere: hem, description } = getUTMZoneFromLatLng(pos.coords.latitude, pos.coords.longitude)\r\n        setUtmZone(String(zone)); setHemisphere(hem as 'N' | 'S')\r\n        setDetecting(false)\r\n        setError(`Detected: Zone ${zone}${hem} — ${description}`)\r\n        setTimeout(() => setError(''), 5000)\r\n      },\r\n      () => { setDetecting(false); setError('Could not get location. Check GPS permissions.') }\r\n    )\r\n  }\r\n\r\n  const datumLabels: Record<SurveyingCountry, string> = {\r\n    kenya: 'ARC1960', uganda: 'ARC1960', tanzania: 'ARC1960',\r\n    nigeria: 'Minna', ghana: 'Gold Coast 1920', south_africa: 'Hartebeesthoek94',\r\n    bahrain: 'Ain Al-Abd 1970', saudi_arabia: 'IGM 1969', oman: 'OTM / GRS80',\r\n    uae: 'NAD83(CSRS)', new_zealand: 'NZGD2000', us: 'NAD83(2011)',\r\n    uk: 'OSGB36', australia: 'GDA2020', india: 'WGS84', indonesia: 'WGS84',\r\n    brazil: 'WGS84', rwanda: 'ARC1960', burundi: 'ARC1960',\r\n    south_sudan: 'ARC1960', zambia: 'ARC1960', other: 'WGS84',\r\n  }\r\n\r\n  const handleSubmit = async (e: React.FormEvent) => {\r\n    e.preventDefault()\r\n    setError('')\r\n    setLoading(true)\r\n\r\n    try {\r\n      const payload: Record<string, any> = {\r\n        name,\r\n        survey_type: surveyType,\r\n        location,\r\n        utm_zone: parseInt(utmZone) || 37,\r\n        hemisphere,\r\n        project_type: projectType,\r\n        client_name: clientName || undefined,\r\n        surveyor_name: surveyorName || undefined,\r\n        country: selectedCountry,\r\n        datum: datumLabels[selectedCountry],\r\n        boundary: polygonCoordinates.length > 0 ? { type: 'Polygon', coordinates: [polygonCoordinates] } : undefined,\r\n        area_sqm: estimatedArea || undefined,\r\n      }\r\n\r\n      if (projectType === 'scheme') {\r\n        Object.assign(payload, {\r\n          scheme_number: schemeNumber || undefined,\r\n          county: schemeCounty || undefined,\r\n          sub_county: schemeSubCounty || undefined,\r\n          ward: schemeWard || undefined,\r\n          planned_parcels: plannedParcels ? parseInt(plannedParcels) : undefined,\r\n          adjudication_section: adjudicationSection || undefined,\r\n        })\r\n      }\r\n\r\n      const res = await fetch('/api/projects', {\r\n        method: 'POST',\r\n        headers: { 'Content-Type': 'application/json' },\r\n        body: JSON.stringify(payload),\r\n      })\r\n\r\n      const json = await res.json()\r\n\r\n      if (!res.ok) {\r\n        setError(json.error || 'Failed to create project')\r\n        setLoading(false)\r\n        return\r\n      }\r\n\r\n      const project = json.data\r\n      setContextCountry(selectedCountry)\r\n\r\n      if (projectType === 'scheme') {\r\n        router.push(`/project/${project.id}/scheme`)\r\n      } else {\r\n        router.push(`/project/${project.id}`)\r\n      }\r\n    } catch (err: unknown) {\r\n      setError((err as Error).message || 'Network error — please try again')\r\n      setLoading(false)\r\n    }\r\n  }\r\n\r\n  const currentCountry = ALL_COUNTRIES.find((c: any) => c.id === selectedCountry)\r\n  const inputClass = 'w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] focus:outline-none transition-colors text-sm'\r\n  const labelClass = 'block text-sm font-medium text-[var(--text-secondary)] mb-1.5'\r\n\r\n  const kenyaCounties = [\r\n    'Mombasa','Kilifi','Kwale','Lamu','Tana River','Taita Taveta',\r\n    'Garissa','Wajir','Mandera','Marsabit','Isiolo','Meru',\r\n    'Tharaka Nithi','Embu','Kitui','Machakos','Makueni','Nyandarua',\r\n    'Nyeri','Kirinyaga','Muranga','Kiambu','Turkana','West Pokot',\r\n    'Samburu','Trans Nzoia','Uasin Gishu','Elgeyo Marakwet','Nandi',\r\n    'Baringo','Laikipia','Nakuru','Narok','Kajiado','Kericho',\r\n    'Bomet','Kakamega','Vihiga','Bungoma','Busia','Siaya',\r\n    'Kisumu','Homa Bay','Migori','Kisii','Nyamira','Nairobi',\r\n  ]\r\n\r\n  return (\r\n    <div className=\"min-h-[calc(100vh-8rem)] bg-[var(--bg-primary)]\">\r\n      <main className=\"max-w-2xl mx-auto px-4 py-10\">\r\n\r\n        {/* Breadcrumb */}\r\n        <div className=\"flex items-center gap-2 text-sm text-[var(--text-muted)] mb-6\">\r\n          <Link href=\"/dashboard\" className=\"hover:text-[var(--accent)] transition-colors\">Dashboard</Link>\r\n          <svg className=\"w-4 h-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\r\n            <path strokeLinecap=\"round\" strokeLinejoin=\"round\" strokeWidth={2} d=\"M9 5l7 7-7 7\" />\r\n          </svg>\r\n          <span className=\"text-[var(--text-primary)]\">New Project</span>\r\n        </div>\r\n\r\n        <div className=\"mb-8\">\r\n          <h1 className=\"text-2xl font-bold text-[var(--text-primary)] mb-1\">Create New Project</h1>\r\n          <p className=\"text-sm text-[var(--text-secondary)]\">Set up your survey project parameters and coordinate system.</p>\r\n\r\n          {/* 1-Click Survey Type Presets */}\r\n          <div className=\"mt-4 p-4 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl\">\r\n            <span className=\"text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider block mb-2\">⚡ 1-Click Survey Presets</span>\r\n            <div className=\"grid grid-cols-1 sm:grid-cols-3 gap-2\">\r\n              <button\r\n                type=\"button\"\r\n                onClick={() => {\r\n                  setSurveyType('cadastral')\r\n                  setProjectType('scheme')\r\n                  setName(name || 'Cadastral Parcel Subdivision')\r\n                }}\r\n                className=\"px-3 py-2 text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-500/20 text-left transition\"\r\n              >\r\n                📜 <strong>Cadastral Subdivision</strong>\r\n                <span className=\"block text-[10px] opacity-70 mt-0.5\">Cap 299, Beacon tables, Mutation export</span>\r\n              </button>\r\n\r\n              <button\r\n                type=\"button\"\r\n                onClick={() => {\r\n                  setSurveyType('engineering')\r\n                  setProjectType('medium')\r\n                  setName(name || 'Road Corridor Alignment')\r\n                }}\r\n                className=\"px-3 py-2 text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 text-left transition\"\r\n              >\r\n                🛣️ <strong>Road Engineering</strong>\r\n                <span className=\"block text-[10px] opacity-70 mt-0.5\">RDM 1.3 Curves, Cross-sections, Chainage</span>\r\n              </button>\r\n\r\n              <button\r\n                type=\"button\"\r\n                onClick={() => {\r\n                  setSurveyType('topographic')\r\n                  setProjectType('small')\r\n                  setName(name || 'Topographic Site Survey')\r\n                }}\r\n                className=\"px-3 py-2 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/20 text-left transition\"\r\n              >\r\n                ⛰️ <strong>Topographic Survey</strong>\r\n                <span className=\"block text-[10px] opacity-70 mt-0.5\">TIN Contours, Point cloud, DXF Plot</span>\r\n              </button>\r\n            </div>\r\n          </div>\r\n        </div>\r\n\r\n        {/* Error / Info Banner */}\r\n        {error && (\r\n          <div className={`mb-6 p-3.5 border rounded-lg text-sm flex items-start gap-2 ${\r\n            error.startsWith('Detected')\r\n              ? 'bg-green-900/20 border-green-500/30 text-green-400'\r\n              : 'bg-red-900/20 border-red-500/30 text-red-400'\r\n          }`}>\r\n            {error}\r\n          </div>\r\n        )}\r\n\r\n        <form onSubmit={handleSubmit} className=\"space-y-6\">\r\n\r\n          {/* Project Scale Toggle */}\r\n          <div>\r\n            <div className={labelClass}>Project Scale <span className=\"text-[var(--accent)]\">*</span></div>\r\n            <div className=\"grid grid-cols-2 gap-0 rounded-lg border border-[var(--border-color)] overflow-hidden\">\r\n              <button type=\"button\" onClick={() => setProjectType('small')}\r\n                className={`py-3.5 px-4 text-sm font-medium transition-all flex flex-col items-center gap-1 ${\r\n                  projectType === 'small'\r\n                    ? 'bg-[var(--accent)] text-black'\r\n                    : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)]'\r\n                }`}>\r\n                <svg className=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" strokeWidth={1.5}>\r\n                  <path strokeLinecap=\"round\" strokeLinejoin=\"round\" d=\"M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z\" />\r\n                </svg>\r\n                <span>Small Project</span>\r\n                <span className=\"text-[10px] opacity-70\">Individual parcel / site</span>\r\n              </button>\r\n              <button type=\"button\" onClick={() => { setProjectType('scheme'); setSurveyType('cadastral') }}\r\n                className={`py-3.5 px-4 text-sm font-medium transition-all flex flex-col items-center gap-1 ${\r\n                  projectType === 'scheme'\r\n                    ? 'bg-orange-500 text-white'\r\n                    : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)]'\r\n                }`}>\r\n                <svg className=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" strokeWidth={1.5}>\r\n                  <path strokeLinecap=\"round\" strokeLinejoin=\"round\" d=\"M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z\" />\r\n                </svg>\r\n                <span>Scheme / Large Project</span>\r\n                <span className=\"text-[10px] opacity-70\">Subdivision, adjudication</span>\r\n              </button>\r\n            </div>\r\n            {projectType === 'scheme' && (\r\n              <p className=\"mt-2 text-xs text-orange-400\">\r\n                Scheme mode enables blocks, parcel management, batch deed plans, and Registry Index Maps.\r\n              </p>\r\n            )}\r\n          </div>\r\n\r\n          {/* Project Name */}\r\n          <div>\r\n            <label htmlFor=\"project-name\" className={labelClass}>Project Name <span className=\"text-[var(--accent)]\">*</span></label>\r\n            <input id=\"project-name\" type=\"text\" value={name} onChange={e => setName(e.target.value)}\r\n              className={inputClass} required\r\n              placeholder={projectType === 'scheme' ? 'e.g., Mwavumbo Ward Cadastral Subdivision' : 'e.g., Karen Estate Boundary Survey'} />\r\n          </div>\r\n\r\n          {/* Interactive Boundary Selector */}\r\n          <div>\r\n            <div className={labelClass}>Project Boundary Map</div>\r\n            <BoundarySelectorMap \r\n              className=\"w-full h-64 mb-2\"\r\n              onBoundaryChange={(coords, area, center) => {\r\n                setPolygonCoordinates(coords)\r\n                setEstimatedArea(area)\r\n                // Auto-detect UTM zone from drawn center\r\n                const { zone, hemisphere: hem } = getUTMZoneFromLatLng(center[1], center[0])\r\n                setUtmZone(String(zone))\r\n                setHemisphere(hem as 'N' | 'S')\r\n              }}\r\n            />\r\n            {estimatedArea && (\r\n              <p className=\"text-xs text-green-600 dark:text-green-400\">\r\n                Estimated Area: {(estimatedArea / 10000).toFixed(4)} Hectares ({(estimatedArea / 4046.86).toFixed(4)} Acres)\r\n              </p>\r\n            )}\r\n          </div>\r\n\r\n          {/* Location */}\r\n          <div>\r\n            <label htmlFor=\"project-location\" className={labelClass}>Location / Description</label>\r\n            <textarea id=\"project-location\" value={location} onChange={e => setLocation(e.target.value)}\r\n              className={`${inputClass} h-20 resize-none`}\r\n              placeholder={projectType === 'scheme' ? 'e.g., Mariakani, Kilifi County' : 'e.g., Mombasa, along Diani Beach Road'} />\r\n          </div>\r\n\r\n          {/* Scheme-specific fields */}\r\n          {projectType === 'scheme' && (\r\n            <div className=\"p-5 bg-orange-500/5 border border-orange-500/20 rounded-xl space-y-4\">\r\n              <h3 className=\"text-sm font-semibold text-[var(--text-primary)]\">Scheme Details</h3>\r\n              <div className=\"grid grid-cols-1 sm:grid-cols-2 gap-4\">\r\n                <div>\r\n                  <label htmlFor=\"scheme-number\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">Scheme Number</label>\r\n                  <input id=\"scheme-number\" type=\"text\" value={schemeNumber} onChange={e => setSchemeNumber(e.target.value)}\r\n                    className={inputClass} placeholder=\"e.g., CRS/MWK/001/2026\" />\r\n                </div>\r\n                <div>\r\n                  <label htmlFor=\"adjudication-section\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">Adjudication Section</label>\r\n                  <input id=\"adjudication-section\" type=\"text\" value={adjudicationSection} onChange={e => setAdjudicationSection(e.target.value)}\r\n                    className={inputClass} placeholder=\"e.g., Mwavumbo Section\" />\r\n                </div>\r\n              </div>\r\n              <div className=\"grid grid-cols-1 sm:grid-cols-3 gap-4\">\r\n                <div>\r\n                  <label htmlFor=\"scheme-county\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">County</label>\r\n                  <select id=\"scheme-county\" value={schemeCounty} onChange={e => setSchemeCounty(e.target.value)} className={inputClass}>\r\n                    <option value=\"\">Select county</option>\r\n                    {kenyaCounties.map(c => <option key={c} value={c}>{c}</option>)}\r\n                  </select>\r\n                </div>\r\n                <div>\r\n                  <label htmlFor=\"scheme-sub-county\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">Sub-County</label>\r\n                  <input id=\"scheme-sub-county\" type=\"text\" value={schemeSubCounty} onChange={e => setSchemeSubCounty(e.target.value)}\r\n                    className={inputClass} placeholder=\"e.g., Mariakani\" />\r\n                </div>\r\n                <div>\r\n                  <label htmlFor=\"scheme-ward\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">Ward</label>\r\n                  <input id=\"scheme-ward\" type=\"text\" value={schemeWard} onChange={e => setSchemeWard(e.target.value)}\r\n                    className={inputClass} placeholder=\"e.g., Mwavumbo\" />\r\n                </div>\r\n              </div>\r\n              <div>\r\n                <label htmlFor=\"planned-parcels\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">Planned Parcels</label>\r\n                <input id=\"planned-parcels\" type=\"number\" value={plannedParcels} onChange={e => setPlannedParcels(e.target.value)}\r\n                  className={inputClass} min={1} placeholder=\"e.g., 250\" />\r\n              </div>\r\n            </div>\r\n          )}\r\n\r\n          {/* UTM Zone */}\r\n          <div>\r\n            <label htmlFor=\"utm-zone\" className={labelClass}>UTM Zone (1–60)</label>\r\n            <div className=\"grid grid-cols-2 gap-4\">\r\n              <input id=\"utm-zone\" type=\"number\" value={utmZone} onChange={e => setUtmZone(e.target.value)}\r\n                className={inputClass} min={1} max={60} required />\r\n              <div className=\"flex rounded-lg border border-[var(--border-color)] overflow-hidden\">\r\n                {(['N', 'S'] as const).map(h => (\r\n                  <button key={h} type=\"button\" onClick={() => setHemisphere(h)}\r\n                    className={`flex-1 py-3 text-sm font-medium transition-colors ${\r\n                      hemisphere === h ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'\r\n                    }`}>\r\n                    {h === 'N' ? <><span className=\"sm:hidden\">N</span><span className=\"hidden sm:inline\">N — Northern</span></> : <><span className=\"sm:hidden\">S</span><span className=\"hidden sm:inline\">S — Southern</span></>}\r\n                  </button>\r\n                ))}\r\n              </div>\r\n            </div>\r\n            <button type=\"button\" onClick={detectZoneFromGPS} disabled={detecting}\r\n              className=\"mt-2 text-xs text-[var(--text-muted)] hover:text-[var(--accent)] flex items-center gap-1.5 transition-colors disabled:opacity-50\">\r\n              <svg className=\"w-3.5 h-3.5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" strokeWidth={2}>\r\n                <path strokeLinecap=\"round\" strokeLinejoin=\"round\" d=\"M15 10.5a3 3 0 11-6 0 3 3 0 016 0z\" />\r\n                <path strokeLinecap=\"round\" strokeLinejoin=\"round\" d=\"M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z\" />\r\n              </svg>\r\n              {detecting ? 'Detecting...' : 'Detect zone from GPS'}\r\n            </button>\r\n          </div>\r\n\r\n          {/* Country */}\r\n          <div>\r\n            <label htmlFor=\"country\" className={labelClass}>Country / Jurisdiction</label>\r\n            <select id=\"country\" value={selectedCountry} onChange={e => handleCountryChange(e.target.value as SurveyingCountry)} className={inputClass}>\r\n              {ALL_COUNTRIES.map((c: any) => (\r\n                <option key={c.id} value={c.id}>{c.flag} {c.name}</option>\r\n              ))}\r\n            </select>\r\n            {currentCountry && (\r\n              <div className=\"mt-2 p-3 bg-[var(--bg-tertiary)] rounded-lg border border-[var(--border-color)]/50 text-xs text-[var(--text-secondary)]\">\r\n                Datum: <span className=\"text-[var(--text-primary)]\">{datumLabels[selectedCountry]}</span>\r\n              </div>\r\n            )}\r\n          </div>\r\n\r\n          {/* Survey Type */}\r\n          <div>\r\n            <label htmlFor=\"survey-type\" className={labelClass}>Survey Type</label>\r\n            <select id=\"survey-type\" value={surveyType} onChange={e => setSurveyType(e.target.value as SurveyType)} className={inputClass}>\r\n              {(Object.entries(SURVEY_TYPE_LABELS) as [SurveyType, string][]).map(([val, label]) => (\r\n                <option key={val} value={val}>{label}</option>\r\n              ))}\r\n            </select>\r\n          </div>\r\n\r\n          {/* Client + Surveyor */}\r\n          <div className=\"grid grid-cols-1 sm:grid-cols-2 gap-4\">\r\n            <div>\r\n              <label htmlFor=\"client-name\" className={labelClass}>Client Name</label>\r\n              <input id=\"client-name\" type=\"text\" value={clientName} onChange={e => setClientName(e.target.value)}\r\n                className={inputClass} placeholder=\"e.g., Kilifi County Government\" />\r\n            </div>\r\n            <div>\r\n              <label htmlFor=\"surveyor-name\" className={labelClass}>Surveyor Name</label>\r\n              <input id=\"surveyor-name\" type=\"text\" value={surveyorName} onChange={e => setSurveyorName(e.target.value)}\r\n                className={inputClass} placeholder=\"Your name or company\" />\r\n            </div>\r\n          </div>\r\n\r\n          {/* Actions */}\r\n          <div className=\"flex items-center gap-3 pt-4 border-t border-[var(--border-color)]\">\r\n            <Link href=\"/dashboard\"\r\n              className=\"px-5 py-2.5 text-sm text-[var(--text-secondary)] border border-[var(--border-color)] rounded-lg hover:border-[var(--border-hover)] transition-colors\">\r\n              Cancel\r\n            </Link>\r\n            <button type=\"submit\" disabled={loading || !name.trim()}\r\n              className=\"flex-1 sm:flex-none sm:px-8 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black text-sm font-semibold rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed\">\r\n              {loading ? 'Creating...' : projectType === 'scheme' ? 'Create Scheme Project' : 'Create Project'}\r\n            </button>\r\n          </div>\r\n        </form>\r\n      </main>\r\n    </div>\r\n  )\r\n}\r\n",
+    "source": "'use client';\r\n\r\nimport { useState } from 'react'\r\nimport Link from 'next/link'\r\nimport { useRouter } from 'next/navigation'\r\nimport { BoundarySelectorMap } from '@/components/project/BoundarySelectorMap'\r\nimport { getUTMZoneFromLatLng } from '@/lib/geodesy/utmZones'\r\nimport { useCountry, ALL_COUNTRIES } from '@/lib/country'\r\nimport type { SurveyingCountry } from '@/lib/country'\r\nimport { SURVEY_TYPE_LABELS, SurveyType } from '@/types/project'\r\nimport type { ProjectType } from '@/types/scheme'\r\n\r\nexport default function NewProjectPage() {\r\n  const { country: defaultCountry, setCountry: setContextCountry } = useCountry()\r\n  const router = useRouter()\r\n\r\n  const [name, setName] = useState('')\r\n  const [location, setLocation] = useState('')\r\n  const [selectedCountry, setSelectedCountry] = useState<SurveyingCountry>(defaultCountry)\r\n  const [utmZone, setUtmZone] = useState(() => {\r\n    const c = ALL_COUNTRIES.find((c) => c.id === defaultCountry)\r\n    return c?.id === 'us' ? '17' : c?.id === 'uk' ? '30' : c?.id === 'australia' ? '51' : '37'\r\n  })\r\n  const [hemisphere, setHemisphere] = useState<'N' | 'S'>('S')\r\n  const [surveyType, setSurveyType] = useState<SurveyType>('topographic')\r\n  const [clientName, setClientName] = useState('')\r\n  const [surveyorName, setSurveyorName] = useState('')\r\n  const [error, setError] = useState('')\r\n  const [loading, setLoading] = useState(false)\r\n  const [detecting, setDetecting] = useState(false)\r\n  \r\n  const [polygonCoordinates, setPolygonCoordinates] = useState<number[][]>([])\r\n  const [estimatedArea, setEstimatedArea] = useState<number | null>(null)\r\n\r\n  // Phase 25: Project scale selector\r\n  const [projectType, setProjectType] = useState<ProjectType>('small')\r\n  const [schemeNumber, setSchemeNumber] = useState('')\r\n  const [schemeCounty, setSchemeCounty] = useState('')\r\n  const [schemeSubCounty, setSchemeSubCounty] = useState('')\r\n  const [schemeWard, setSchemeWard] = useState('')\r\n  const [plannedParcels, setPlannedParcels] = useState('')\r\n  const [adjudicationSection, setAdjudicationSection] = useState('')\r\n\r\n  const handleCountryChange = (newCountry: SurveyingCountry) => {\r\n    setSelectedCountry(newCountry)\r\n    const zoneMap: Partial<Record<SurveyingCountry, [string, 'N' | 'S']>> = {\r\n      us: ['17', 'N'], uk: ['30', 'N'], australia: ['51', 'S'],\r\n      new_zealand: ['59', 'S'], south_africa: ['35', 'S'],\r\n      bahrain: ['39', 'N'], nigeria: ['31', 'N'], ghana: ['30', 'N'],\r\n      tanzania: ['37', 'S'], uganda: ['36', 'N'], india: ['44', 'N'],\r\n      indonesia: ['48', 'S'], brazil: ['23', 'S'],\r\n      saudi_arabia: ['39', 'N'], oman: ['40', 'N'], uae: ['40', 'N'],\r\n    }\r\n    const [zone, hemi] = zoneMap[newCountry] || ['37', 'S']\r\n    setUtmZone(zone)\r\n    setHemisphere(hemi)\r\n  }\r\n\r\n  const detectZoneFromGPS = () => {\r\n    if (!navigator.geolocation) { setError('GPS not supported'); return }\r\n    setDetecting(true); setError('')\r\n    navigator.geolocation.getCurrentPosition(\r\n      (pos) => {\r\n        const { zone, hemisphere: hem, description } = getUTMZoneFromLatLng(pos.coords.latitude, pos.coords.longitude)\r\n        setUtmZone(String(zone)); setHemisphere(hem as 'N' | 'S')\r\n        setDetecting(false)\r\n        setError(`Detected: Zone ${zone}${hem} — ${description}`)\r\n        setTimeout(() => setError(''), 5000)\r\n      },\r\n      () => { setDetecting(false); setError('Could not get location. Check GPS permissions.') }\r\n    )\r\n  }\r\n\r\n  const datumLabels: Record<SurveyingCountry, string> = {\r\n    kenya: 'ARC1960', uganda: 'ARC1960', tanzania: 'ARC1960',\r\n    nigeria: 'Minna', ghana: 'Gold Coast 1920', south_africa: 'Hartebeesthoek94',\r\n    bahrain: 'Ain Al-Abd 1970', saudi_arabia: 'IGM 1969', oman: 'OTM / GRS80',\r\n    uae: 'NAD83(CSRS)', new_zealand: 'NZGD2000', us: 'NAD83(2011)',\r\n    uk: 'OSGB36', australia: 'GDA2020', india: 'WGS84', indonesia: 'WGS84',\r\n    brazil: 'WGS84', rwanda: 'ARC1960', burundi: 'ARC1960',\r\n    south_sudan: 'ARC1960', zambia: 'ARC1960', other: 'WGS84',\r\n  }\r\n\r\n  const handleSubmit = async (e: React.FormEvent) => {\r\n    e.preventDefault()\r\n    setError('')\r\n    setLoading(true)\r\n\r\n    try {\r\n      const payload: Record<string, any> = {\r\n        name,\r\n        survey_type: surveyType,\r\n        location,\r\n        utm_zone: parseInt(utmZone) || 37,\r\n        hemisphere,\r\n        project_type: projectType,\r\n        client_name: clientName || undefined,\r\n        surveyor_name: surveyorName || undefined,\r\n        country: selectedCountry,\r\n        datum: datumLabels[selectedCountry],\r\n        boundary: polygonCoordinates.length > 0 ? { type: 'Polygon', coordinates: [polygonCoordinates] } : undefined,\r\n        area_sqm: estimatedArea || undefined,\r\n      }\r\n\r\n      if (projectType === 'scheme') {\r\n        Object.assign(payload, {\r\n          scheme_number: schemeNumber || undefined,\r\n          county: schemeCounty || undefined,\r\n          sub_county: schemeSubCounty || undefined,\r\n          ward: schemeWard || undefined,\r\n          planned_parcels: plannedParcels ? parseInt(plannedParcels) : undefined,\r\n          adjudication_section: adjudicationSection || undefined,\r\n        })\r\n      }\r\n\r\n      const res = await fetch('/api/projects', {\r\n        method: 'POST',\r\n        headers: { 'Content-Type': 'application/json' },\r\n        body: JSON.stringify(payload),\r\n      })\r\n\r\n      const json = (await res.json()) as { error?: string; data?: { id: string } }\r\n\r\n      if (!res.ok) {\r\n        setError(json.error || 'Failed to create project')\r\n        setLoading(false)\r\n        return\r\n      }\r\n\r\n      const project = json.data\r\n      setContextCountry(selectedCountry)\r\n\r\n      if (projectType === 'scheme') {\r\n        router.push(`/project/${project.id}/scheme`)\r\n      } else {\r\n        router.push(`/project/${project.id}`)\r\n      }\r\n    } catch (err: unknown) {\r\n      setError((err as Error).message || 'Network error — please try again')\r\n      setLoading(false)\r\n    }\r\n  }\r\n\r\n  const currentCountry = ALL_COUNTRIES.find((c) => c.id === selectedCountry)\r\n  const inputClass = 'w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] focus:outline-none transition-colors text-sm'\r\n  const labelClass = 'block text-sm font-medium text-[var(--text-secondary)] mb-1.5'\r\n\r\n  const kenyaCounties = [\r\n    'Mombasa','Kilifi','Kwale','Lamu','Tana River','Taita Taveta',\r\n    'Garissa','Wajir','Mandera','Marsabit','Isiolo','Meru',\r\n    'Tharaka Nithi','Embu','Kitui','Machakos','Makueni','Nyandarua',\r\n    'Nyeri','Kirinyaga','Muranga','Kiambu','Turkana','West Pokot',\r\n    'Samburu','Trans Nzoia','Uasin Gishu','Elgeyo Marakwet','Nandi',\r\n    'Baringo','Laikipia','Nakuru','Narok','Kajiado','Kericho',\r\n    'Bomet','Kakamega','Vihiga','Bungoma','Busia','Siaya',\r\n    'Kisumu','Homa Bay','Migori','Kisii','Nyamira','Nairobi',\r\n  ]\r\n\r\n  return (\r\n    <div className=\"min-h-[calc(100vh-8rem)] bg-[var(--bg-primary)]\">\r\n      <main className=\"max-w-2xl mx-auto px-4 py-10\">\r\n\r\n        {/* Breadcrumb */}\r\n        <div className=\"flex items-center gap-2 text-sm text-[var(--text-muted)] mb-6\">\r\n          <Link href=\"/dashboard\" className=\"hover:text-[var(--accent)] transition-colors\">Dashboard</Link>\r\n          <svg className=\"w-4 h-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\r\n            <path strokeLinecap=\"round\" strokeLinejoin=\"round\" strokeWidth={2} d=\"M9 5l7 7-7 7\" />\r\n          </svg>\r\n          <span className=\"text-[var(--text-primary)]\">New Project</span>\r\n        </div>\r\n\r\n        <div className=\"mb-8\">\r\n          <h1 className=\"text-2xl font-bold text-[var(--text-primary)] mb-1\">Create New Project</h1>\r\n          <p className=\"text-sm text-[var(--text-secondary)]\">Set up your survey project parameters and coordinate system.</p>\r\n\r\n          {/* 1-Click Survey Type Presets */}\r\n          <div className=\"mt-4 p-4 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl\">\r\n            <span className=\"text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider block mb-2\">⚡ 1-Click Survey Presets</span>\r\n            <div className=\"grid grid-cols-1 sm:grid-cols-3 gap-2\">\r\n              <button\r\n                type=\"button\"\r\n                onClick={() => {\r\n                  setSurveyType('cadastral')\r\n                  setProjectType('scheme')\r\n                  setName(name || 'Cadastral Parcel Subdivision')\r\n                }}\r\n                className=\"px-3 py-2 text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-500/20 text-left transition\"\r\n              >\r\n                📜 <strong>Cadastral Subdivision</strong>\r\n                <span className=\"block text-[10px] opacity-70 mt-0.5\">Cap 299, Beacon tables, Mutation export</span>\r\n              </button>\r\n\r\n              <button\r\n                type=\"button\"\r\n                onClick={() => {\r\n                  setSurveyType('engineering')\r\n                  setProjectType('medium')\r\n                  setName(name || 'Road Corridor Alignment')\r\n                }}\r\n                className=\"px-3 py-2 text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 text-left transition\"\r\n              >\r\n                🛣️ <strong>Road Engineering</strong>\r\n                <span className=\"block text-[10px] opacity-70 mt-0.5\">RDM 1.3 Curves, Cross-sections, Chainage</span>\r\n              </button>\r\n\r\n              <button\r\n                type=\"button\"\r\n                onClick={() => {\r\n                  setSurveyType('topographic')\r\n                  setProjectType('small')\r\n                  setName(name || 'Topographic Site Survey')\r\n                }}\r\n                className=\"px-3 py-2 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/20 text-left transition\"\r\n              >\r\n                ⛰️ <strong>Topographic Survey</strong>\r\n                <span className=\"block text-[10px] opacity-70 mt-0.5\">TIN Contours, Point cloud, DXF Plot</span>\r\n              </button>\r\n            </div>\r\n          </div>\r\n        </div>\r\n\r\n        {/* Error / Info Banner */}\r\n        {error && (\r\n          <div className={`mb-6 p-3.5 border rounded-lg text-sm flex items-start gap-2 ${\r\n            error.startsWith('Detected')\r\n              ? 'bg-green-900/20 border-green-500/30 text-green-400'\r\n              : 'bg-red-900/20 border-red-500/30 text-red-400'\r\n          }`}>\r\n            {error}\r\n          </div>\r\n        )}\r\n\r\n        <form onSubmit={handleSubmit} className=\"space-y-6\">\r\n\r\n          {/* Project Scale Toggle */}\r\n          <div>\r\n            <div className={labelClass}>Project Scale <span className=\"text-[var(--accent)]\">*</span></div>\r\n            <div className=\"grid grid-cols-2 gap-0 rounded-lg border border-[var(--border-color)] overflow-hidden\">\r\n              <button type=\"button\" onClick={() => setProjectType('small')}\r\n                className={`py-3.5 px-4 text-sm font-medium transition-all flex flex-col items-center gap-1 ${\r\n                  projectType === 'small'\r\n                    ? 'bg-[var(--accent)] text-black'\r\n                    : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)]'\r\n                }`}>\r\n                <svg className=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" strokeWidth={1.5}>\r\n                  <path strokeLinecap=\"round\" strokeLinejoin=\"round\" d=\"M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z\" />\r\n                </svg>\r\n                <span>Small Project</span>\r\n                <span className=\"text-[10px] opacity-70\">Individual parcel / site</span>\r\n              </button>\r\n              <button type=\"button\" onClick={() => { setProjectType('scheme'); setSurveyType('cadastral') }}\r\n                className={`py-3.5 px-4 text-sm font-medium transition-all flex flex-col items-center gap-1 ${\r\n                  projectType === 'scheme'\r\n                    ? 'bg-orange-500 text-white'\r\n                    : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)]'\r\n                }`}>\r\n                <svg className=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" strokeWidth={1.5}>\r\n                  <path strokeLinecap=\"round\" strokeLinejoin=\"round\" d=\"M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z\" />\r\n                </svg>\r\n                <span>Scheme / Large Project</span>\r\n                <span className=\"text-[10px] opacity-70\">Subdivision, adjudication</span>\r\n              </button>\r\n            </div>\r\n            {projectType === 'scheme' && (\r\n              <p className=\"mt-2 text-xs text-orange-400\">\r\n                Scheme mode enables blocks, parcel management, batch deed plans, and Registry Index Maps.\r\n              </p>\r\n            )}\r\n          </div>\r\n\r\n          {/* Project Name */}\r\n          <div>\r\n            <label htmlFor=\"project-name\" className={labelClass}>Project Name <span className=\"text-[var(--accent)]\">*</span></label>\r\n            <input id=\"project-name\" type=\"text\" value={name} onChange={e => setName(e.target.value)}\r\n              className={inputClass} required\r\n              placeholder={projectType === 'scheme' ? 'e.g., Mwavumbo Ward Cadastral Subdivision' : 'e.g., Karen Estate Boundary Survey'} />\r\n          </div>\r\n\r\n          {/* Interactive Boundary Selector */}\r\n          <div>\r\n            <div className={labelClass}>Project Boundary Map</div>\r\n            <BoundarySelectorMap \r\n              className=\"w-full h-64 mb-2\"\r\n              onBoundaryChange={(coords, area, center) => {\r\n                setPolygonCoordinates(coords)\r\n                setEstimatedArea(area)\r\n                // Auto-detect UTM zone from drawn center\r\n                const { zone, hemisphere: hem } = getUTMZoneFromLatLng(center[1], center[0])\r\n                setUtmZone(String(zone))\r\n                setHemisphere(hem as 'N' | 'S')\r\n              }}\r\n            />\r\n            {estimatedArea && (\r\n              <p className=\"text-xs text-green-600 dark:text-green-400\">\r\n                Estimated Area: {(estimatedArea / 10000).toFixed(4)} Hectares ({(estimatedArea / 4046.86).toFixed(4)} Acres)\r\n              </p>\r\n            )}\r\n          </div>\r\n\r\n          {/* Location */}\r\n          <div>\r\n            <label htmlFor=\"project-location\" className={labelClass}>Location / Description</label>\r\n            <textarea id=\"project-location\" value={location} onChange={e => setLocation(e.target.value)}\r\n              className={`${inputClass} h-20 resize-none`}\r\n              placeholder={projectType === 'scheme' ? 'e.g., Mariakani, Kilifi County' : 'e.g., Mombasa, along Diani Beach Road'} />\r\n          </div>\r\n\r\n          {/* Scheme-specific fields */}\r\n          {projectType === 'scheme' && (\r\n            <div className=\"p-5 bg-orange-500/5 border border-orange-500/20 rounded-xl space-y-4\">\r\n              <h3 className=\"text-sm font-semibold text-[var(--text-primary)]\">Scheme Details</h3>\r\n              <div className=\"grid grid-cols-1 sm:grid-cols-2 gap-4\">\r\n                <div>\r\n                  <label htmlFor=\"scheme-number\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">Scheme Number</label>\r\n                  <input id=\"scheme-number\" type=\"text\" value={schemeNumber} onChange={e => setSchemeNumber(e.target.value)}\r\n                    className={inputClass} placeholder=\"e.g., CRS/MWK/001/2026\" />\r\n                </div>\r\n                <div>\r\n                  <label htmlFor=\"adjudication-section\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">Adjudication Section</label>\r\n                  <input id=\"adjudication-section\" type=\"text\" value={adjudicationSection} onChange={e => setAdjudicationSection(e.target.value)}\r\n                    className={inputClass} placeholder=\"e.g., Mwavumbo Section\" />\r\n                </div>\r\n              </div>\r\n              <div className=\"grid grid-cols-1 sm:grid-cols-3 gap-4\">\r\n                <div>\r\n                  <label htmlFor=\"scheme-county\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">County</label>\r\n                  <select id=\"scheme-county\" value={schemeCounty} onChange={e => setSchemeCounty(e.target.value)} className={inputClass}>\r\n                    <option value=\"\">Select county</option>\r\n                    {kenyaCounties.map(c => <option key={c} value={c}>{c}</option>)}\r\n                  </select>\r\n                </div>\r\n                <div>\r\n                  <label htmlFor=\"scheme-sub-county\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">Sub-County</label>\r\n                  <input id=\"scheme-sub-county\" type=\"text\" value={schemeSubCounty} onChange={e => setSchemeSubCounty(e.target.value)}\r\n                    className={inputClass} placeholder=\"e.g., Mariakani\" />\r\n                </div>\r\n                <div>\r\n                  <label htmlFor=\"scheme-ward\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">Ward</label>\r\n                  <input id=\"scheme-ward\" type=\"text\" value={schemeWard} onChange={e => setSchemeWard(e.target.value)}\r\n                    className={inputClass} placeholder=\"e.g., Mwavumbo\" />\r\n                </div>\r\n              </div>\r\n              <div>\r\n                <label htmlFor=\"planned-parcels\" className=\"block text-xs font-medium text-[var(--text-secondary)] mb-1\">Planned Parcels</label>\r\n                <input id=\"planned-parcels\" type=\"number\" value={plannedParcels} onChange={e => setPlannedParcels(e.target.value)}\r\n                  className={inputClass} min={1} placeholder=\"e.g., 250\" />\r\n              </div>\r\n            </div>\r\n          )}\r\n\r\n          {/* UTM Zone */}\r\n          <div>\r\n            <label htmlFor=\"utm-zone\" className={labelClass}>UTM Zone (1–60)</label>\r\n            <div className=\"grid grid-cols-2 gap-4\">\r\n              <input id=\"utm-zone\" type=\"number\" value={utmZone} onChange={e => setUtmZone(e.target.value)}\r\n                className={inputClass} min={1} max={60} required />\r\n              <div className=\"flex rounded-lg border border-[var(--border-color)] overflow-hidden\">\r\n                {(['N', 'S'] as const).map(h => (\r\n                  <button key={h} type=\"button\" onClick={() => setHemisphere(h)}\r\n                    className={`flex-1 py-3 text-sm font-medium transition-colors ${\r\n                      hemisphere === h ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'\r\n                    }`}>\r\n                    {h === 'N' ? <><span className=\"sm:hidden\">N</span><span className=\"hidden sm:inline\">N — Northern</span></> : <><span className=\"sm:hidden\">S</span><span className=\"hidden sm:inline\">S — Southern</span></>}\r\n                  </button>\r\n                ))}\r\n              </div>\r\n            </div>\r\n            <button type=\"button\" onClick={detectZoneFromGPS} disabled={detecting}\r\n              className=\"mt-2 text-xs text-[var(--text-muted)] hover:text-[var(--accent)] flex items-center gap-1.5 transition-colors disabled:opacity-50\">\r\n              <svg className=\"w-3.5 h-3.5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" strokeWidth={2}>\r\n                <path strokeLinecap=\"round\" strokeLinejoin=\"round\" d=\"M15 10.5a3 3 0 11-6 0 3 3 0 016 0z\" />\r\n                <path strokeLinecap=\"round\" strokeLinejoin=\"round\" d=\"M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z\" />\r\n              </svg>\r\n              {detecting ? 'Detecting...' : 'Detect zone from GPS'}\r\n            </button>\r\n          </div>\r\n\r\n          {/* Country */}\r\n          <div>\r\n            <label htmlFor=\"country\" className={labelClass}>Country / Jurisdiction</label>\r\n            <select id=\"country\" value={selectedCountry} onChange={e => handleCountryChange(e.target.value as SurveyingCountry)} className={inputClass}>\r\n              {ALL_COUNTRIES.map((c) => (\r\n                <option key={c.id} value={c.id}>{c.flag} {c.name}</option>\r\n              ))}\r\n            </select>\r\n            {currentCountry && (\r\n              <div className=\"mt-2 p-3 bg-[var(--bg-tertiary)] rounded-lg border border-[var(--border-color)]/50 text-xs text-[var(--text-secondary)]\">\r\n                Datum: <span className=\"text-[var(--text-primary)]\">{datumLabels[selectedCountry]}</span>\r\n              </div>\r\n            )}\r\n          </div>\r\n\r\n          {/* Survey Type */}\r\n          <div>\r\n            <label htmlFor=\"survey-type\" className={labelClass}>Survey Type</label>\r\n            <select id=\"survey-type\" value={surveyType} onChange={e => setSurveyType(e.target.value as SurveyType)} className={inputClass}>\r\n              {(Object.entries(SURVEY_TYPE_LABELS) as [SurveyType, string][]).map(([val, label]) => (\r\n                <option key={val} value={val}>{label}</option>\r\n              ))}\r\n            </select>\r\n          </div>\r\n\r\n          {/* Client + Surveyor */}\r\n          <div className=\"grid grid-cols-1 sm:grid-cols-2 gap-4\">\r\n            <div>\r\n              <label htmlFor=\"client-name\" className={labelClass}>Client Name</label>\r\n              <input id=\"client-name\" type=\"text\" value={clientName} onChange={e => setClientName(e.target.value)}\r\n                className={inputClass} placeholder=\"e.g., Kilifi County Government\" />\r\n            </div>\r\n            <div>\r\n              <label htmlFor=\"surveyor-name\" className={labelClass}>Surveyor Name</label>\r\n              <input id=\"surveyor-name\" type=\"text\" value={surveyorName} onChange={e => setSurveyorName(e.target.value)}\r\n                className={inputClass} placeholder=\"Your name or company\" />\r\n            </div>\r\n          </div>\r\n\r\n          {/* Actions */}\r\n          <div className=\"flex items-center gap-3 pt-4 border-t border-[var(--border-color)]\">\r\n            <Link href=\"/dashboard\"\r\n              className=\"px-5 py-2.5 text-sm text-[var(--text-secondary)] border border-[var(--border-color)] rounded-lg hover:border-[var(--border-hover)] transition-colors\">\r\n              Cancel\r\n            </Link>\r\n            <button type=\"submit\" disabled={loading || !name.trim()}\r\n              className=\"flex-1 sm:flex-none sm:px-8 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black text-sm font-semibold rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed\">\r\n              {loading ? 'Creating...' : projectType === 'scheme' ? 'Create Scheme Project' : 'Create Project'}\r\n            </button>\r\n          </div>\r\n        </form>\r\n      </main>\r\n    </div>\r\n  )\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -20957,33 +20467,6 @@
     "filePath": "src/app/project/[id]/scheme/map/page.tsx",
     "messages": [
       {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'Feature' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 28,
-        "column": 13,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 28,
-        "endColumn": 20,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedImportDeclaration",
-            "data": {
-              "varName": "Feature"
-            },
-            "fix": {
-              "range": [
-                1161,
-                1200
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused import declaration."
-          }
-        ]
-      },
-      {
         "ruleId": "@typescript-eslint/no-unsafe-assignment",
         "severity": 1,
         "message": "Unsafe assignment of an `any` value.",
@@ -20993,184 +20476,6 @@
         "messageId": "anyAssignment",
         "endLine": 111,
         "endColumn": 20
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 73,
-        "column": 29,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 73,
-        "endColumn": 32,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                2537,
-                2540
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                2537,
-                2540
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 74,
-        "column": 19,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 74,
-        "endColumn": 50
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 74,
-        "column": 27,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 74,
-        "endColumn": 48
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getProperties on an `any` value.",
-        "line": 74,
-        "column": 35,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 74,
-        "endColumn": 48
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .status on an `any` value.",
-        "line": 75,
-        "column": 34,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 75,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 77,
-        "column": 19,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 77,
-        "endColumn": 62
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 77,
-        "column": 30,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 77,
-        "endColumn": 60
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 77,
-        "column": 30,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 77,
-        "endColumn": 49
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getGeometry on an `any` value.",
-        "line": 77,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 77,
-        "endColumn": 49
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .getType on an `any` value.",
-        "line": 77,
-        "column": 53,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 77,
-        "endColumn": 60
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .parcel_number on an `any` value.",
-        "line": 84,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 84,
-        "endColumn": 51
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .type on an `any` value.",
-        "line": 92,
-        "column": 47,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 92,
-        "endColumn": 51
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .block_number on an `any` value.",
-        "line": 95,
-        "column": 40,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 95,
-        "endColumn": 52
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .parcel_count on an `any` value.",
-        "line": 95,
-        "column": 64,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 95,
-        "endColumn": 76
       },
       {
         "ruleId": "@typescript-eslint/no-explicit-any",
@@ -21187,8 +20492,8 @@
             "messageId": "suggestUnknown",
             "fix": {
               "range": [
-                4091,
-                4094
+                4095,
+                4098
               ],
               "text": "unknown"
             },
@@ -21198,45 +20503,23 @@
             "messageId": "suggestNever",
             "fix": {
               "range": [
-                4091,
-                4094
+                4095,
+                4098
               ],
               "text": "never"
             },
             "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
           }
         ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .features on an `any` value.",
-        "line": 177,
-        "column": 18,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 177,
-        "endColumn": 26
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .features on an `any` value.",
-        "line": 177,
-        "column": 35,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 177,
-        "endColumn": 43
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 19,
+    "warningCount": 2,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client';\r\n\r\n/*\r\n * PERFORMANCE NOTE — OpenLayers static imports (~700KB vendor-ol chunk)\r\n * These 14 OL modules are intentionally imported at the top level rather than\r\n * dynamically imported because the webpack splitChunks config already isolates\r\n * them into a separate `vendor-ol` chunk.  This page is only navigated to\r\n * explicitly (not on the initial load path), so the OL chunk is never part of\r\n * the critical-path bundle.  Dynamic imports would add complexity without\r\n * measurable benefit since the chunk is already code-split.\r\n */\r\n\r\nimport { useEffect, useState, useRef } from 'react'\r\nimport { useParams } from 'next/navigation'\r\nimport Link from 'next/link'\r\nimport Map from 'ol/Map'\r\nimport View from 'ol/View'\r\nimport TileLayer from 'ol/layer/Tile'\r\nimport VectorLayer from 'ol/layer/Vector'\r\nimport VectorSource from 'ol/source/Vector'\r\nimport XYZ from 'ol/source/XYZ'\r\nimport GeoJSON from 'ol/format/GeoJSON'\r\nimport { fromLonLat } from 'ol/proj'\r\nimport { Style, Fill, Stroke, Text } from 'ol/style'\r\nimport CircleStyle from 'ol/style/Circle'\r\nimport Overlay from 'ol/Overlay'\r\nimport { ArrowLeft, Download } from 'lucide-react'\r\nimport type Feature from 'ol/Feature'\r\nimport { registerProjections } from '@/lib/map/projection'\r\n\r\nconst STATUS_COLORS: Record<string, string> = {\r\n  pending: '#6b7280',\r\n  field_complete: '#3b82f6',\r\n  computed: '#22c55e',\r\n  plan_generated: '#f59e0b',\r\n  submitted: '#8b5cf6',\r\n  approved: '#10b981',\r\n}\r\n\r\nexport default function SchemeMapPage() {\r\n  const params = useParams()\r\n  const projectId = params.id as string\r\n  const mapRef = useRef<HTMLDivElement>(null)\r\n  const mapInstance = useRef<Map | null>(null)\r\n  const popupRef = useRef<HTMLDivElement>(null)\r\n  const [loading, setLoading] = useState(true)\r\n  const [error, setError] = useState('')\r\n  const [parcelCount, setParcelCount] = useState(0)\r\n\r\n  useEffect(() => {\r\n    if (!mapRef.current || !projectId) return\r\n\r\n    setLoading(true)\r\n\r\n    // Register EPSG:21037 (Arc 1960 / UTM Zone 37S) before using it for GeoJSON reprojection\r\n    registerProjections()\r\n\r\n    // Create map\r\n    const vectorSource = new VectorSource()\r\n\r\n    const map = new Map({\r\n      target: mapRef.current,\r\n      layers: [\r\n        new TileLayer({\r\n          source: new XYZ({\r\n            url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',\r\n            maxZoom: 19,\r\n            crossOrigin: 'anonymous',\r\n          }),\r\n        }),\r\n        new VectorLayer({\r\n          source: vectorSource,\r\n          style: ((feature: any) => {\r\n            const props = feature.getProperties()\r\n            const status = props.status as string || 'pending'\r\n            const color = STATUS_COLORS[status] || '#6b7280'\r\n            const geomType = feature.getGeometry()?.getType()\r\n\r\n            if (geomType === 'Polygon') {\r\n              return new Style({\r\n                fill: new Fill({ color: color + '40' }), // 25% opacity\r\n                stroke: new Stroke({ color, width: 2.5 }),\r\n                text: new Text({\r\n                  text: String(props.parcel_number || ''),\r\n                  font: 'bold 12px sans-serif',\r\n                  fill: new Fill({ color: '#ffffff' }),\r\n                  stroke: new Stroke({ color: '#000000', width: 3 }),\r\n                }),\r\n              })\r\n            }\r\n\r\n            if (geomType === 'Point' && props.type === 'block_label') {\r\n              return new Style({\r\n                text: new Text({\r\n                  text: `Block ${props.block_number}\\n(${props.parcel_count} parcels)`,\r\n                  font: 'bold 14px sans-serif',\r\n                  fill: new Fill({ color: '#1e40af' }),\r\n                  stroke: new Stroke({ color: '#ffffff', width: 4 }),\r\n                  textAlign: 'center',\r\n                }),\r\n              })\r\n            }\r\n\r\n            return new Style({\r\n              image: new CircleStyle({\r\n                radius: 5,\r\n                fill: new Fill({ color }),\r\n                stroke: new Stroke({ color: '#000', width: 1 }),\r\n              }),\r\n            })\r\n          }) as any,\r\n        }),\r\n      ],\r\n      view: new View({\r\n        center: fromLonLat([37.0, -1.3]), // Default: central Kenya\r\n        zoom: 15,\r\n      }),\r\n    })\r\n\r\n    // Popup overlay\r\n    const overlay = new Overlay({\r\n      element: popupRef.current || undefined,\r\n      autoPan: true,\r\n    })\r\n    map.addOverlay(overlay)\r\n\r\n    map.on('click', (evt) => {\r\n      const feature = map.forEachFeatureAtPixel(evt.pixel, f => f)\r\n      if (feature && popupRef.current) {\r\n        const props = feature.getProperties()\r\n        // VULN-002 FIX (security review 2026-08-03): block/parcel numbers and\r\n        // LR numbers are user-entered — render with textContent, never innerHTML.\r\n        const el = popupRef.current\r\n        el.replaceChildren()\r\n\r\n        const wrap = document.createElement('div')\r\n        wrap.style.cssText = 'font-size:12px;'\r\n\r\n        const title = document.createElement('strong')\r\n        title.textContent = `Block ${String(props.block_number ?? '')} — Parcel ${String(props.parcel_number || '')}`\r\n        wrap.append(title)\r\n        wrap.append(document.createElement('br'))\r\n\r\n        if (props.lr_number) {\r\n          const lr = document.createElement('div')\r\n          lr.textContent = `LR: ${String(props.lr_number)}`\r\n          wrap.append(lr)\r\n        }\r\n        if (props.area_ha) {\r\n          const area = document.createElement('div')\r\n          area.textContent = `Area: ${Number(props.area_ha).toFixed(4)} ha`\r\n          wrap.append(area)\r\n        }\r\n\r\n        const statusRow = document.createElement('div')\r\n        const statusLabel = document.createTextNode('Status: ')\r\n        const statusSpan = document.createElement('span')\r\n        statusSpan.style.color = STATUS_COLORS[props.status as string] || '#999'\r\n        statusSpan.textContent = String(props.status || 'pending')\r\n        statusRow.append(statusLabel, statusSpan)\r\n        wrap.append(statusRow)\r\n\r\n        el.append(wrap)\r\n        el.style.display = 'block'\r\n        overlay.setPosition(evt.coordinate)\r\n      } else if (popupRef.current) {\r\n        popupRef.current.style.display = 'none'\r\n      }\r\n    })\r\n\r\n    mapInstance.current = map\r\n\r\n    // Fetch scheme GeoJSON\r\n    fetch(`/api/scheme/map?project_id=${projectId}`)\r\n      .then(res => res.json())\r\n      .then(data => {\r\n        if (data.features && data.features.length > 0) {\r\n          const format = new GeoJSON()\r\n          const features = format.readFeatures(data, {\r\n            dataProjection: 'EPSG:21037', // Arc 1960 / UTM Zone 37S (Kenya cadastral datum)\r\n            featureProjection: 'EPSG:3857', // Web Mercator\r\n          })\r\n          vectorSource.addFeatures(features)\r\n          setParcelCount(features.filter(f => f.getGeometry()?.getType() === 'Polygon').length)\r\n\r\n          // Zoom to extent\r\n          const extent = vectorSource.getExtent()\r\n          if (extent && extent[0] !== Infinity) {\r\n            map.getView().fit(extent, { padding: [50, 50, 50, 50], maxZoom: 18 })\r\n          }\r\n        }\r\n        setLoading(false)\r\n      })\r\n      .catch(() => {\r\n        setError('Failed to load scheme data')\r\n        setLoading(false)\r\n      })\r\n\r\n    return () => {\r\n      map.setTarget(undefined)\r\n    }\r\n  }, [projectId])\r\n\r\n  return (\r\n    <div className=\"min-h-screen bg-gray-950 text-white\">\r\n      <div className=\"flex items-center justify-between px-6 py-4 border-b border-gray-800\">\r\n        <div className=\"flex items-center gap-4\">\r\n          <Link\r\n            href={`/project/${projectId}/scheme`}\r\n            className=\"p-2 hover:bg-gray-800 rounded-lg transition-colors\"\r\n          >\r\n            <ArrowLeft className=\"w-5 h-5 text-gray-400\" />\r\n          </Link>\r\n          <div>\r\n            <h1 className=\"text-xl font-bold\">Scheme Map</h1>\r\n            <p className=\"text-sm text-gray-400\">\r\n              {loading ? 'Loading parcels...' : `${parcelCount} parcels shown`}\r\n            </p>\r\n          </div>\r\n        </div>\r\n        <div className=\"flex gap-2\">\r\n          <a\r\n            href={`/api/scheme/export/geojson?project_id=${projectId}`}\r\n            className=\"inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors\"\r\n          >\r\n            <Download className=\"w-4 h-4\" />\r\n            GeoJSON\r\n          </a>\r\n          <a\r\n            href={`/api/scheme/export/dxf?project_id=${projectId}`}\r\n            className=\"inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors\"\r\n          >\r\n            <Download className=\"w-4 h-4\" />\r\n            DXF\r\n          </a>\r\n        </div>\r\n      </div>\r\n\r\n      {error && (\r\n        <div className=\"mx-6 mt-4 p-3 bg-red-900/50 border border-red-800 rounded-lg text-red-300 text-sm\">\r\n          {error}\r\n        </div>\r\n      )}\r\n\r\n      <div className=\"relative\" style={{ height: 'calc(100vh - 80px)' }}>\r\n        <div ref={mapRef} className=\"w-full h-full\" />\r\n\r\n        {loading && (\r\n          <div className=\"absolute inset-0 flex items-center justify-center bg-gray-950/60\">\r\n            <div className=\"flex items-center gap-3 text-gray-300\">\r\n              <svg className=\"w-6 h-6 animate-spin\" fill=\"none\" viewBox=\"0 0 24 24\">\r\n                <circle className=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" strokeWidth=\"4\" />\r\n                <path className=\"opacity-75\" fill=\"currentColor\" d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z\" />\r\n              </svg>\r\n              Loading scheme parcels...\r\n            </div>\r\n          </div>\r\n        )}\r\n\r\n        <div\r\n          ref={popupRef}\r\n          className=\"absolute bg-gray-800 border border-gray-600 rounded-lg p-3 shadow-xl\"\r\n          style={{ display: 'none', minWidth: 200 }}\r\n        />\r\n\r\n        {/* Legend */}\r\n        <div className=\"absolute bottom-4 right-4 bg-gray-900/90 backdrop-blur border border-gray-700 rounded-lg p-3\">\r\n          <h4 className=\"text-xs font-semibold text-gray-400 mb-2\">STATUS LEGEND</h4>\r\n          {Object.entries(STATUS_COLORS).map(([status, color]) => (\r\n            <div key={status} className=\"flex items-center gap-2 mb-1\">\r\n              <div className=\"w-3 h-3 rounded-full\" style={{ backgroundColor: color }} />\r\n              <span className=\"text-xs text-gray-300 capitalize\">{status.replace('_', ' ')}</span>\r\n            </div>\r\n          ))}\r\n        </div>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n",
+    "source": "'use client';\r\n\r\n/*\r\n * PERFORMANCE NOTE — OpenLayers static imports (~700KB vendor-ol chunk)\r\n * These 14 OL modules are intentionally imported at the top level rather than\r\n * dynamically imported because the webpack splitChunks config already isolates\r\n * them into a separate `vendor-ol` chunk.  This page is only navigated to\r\n * explicitly (not on the initial load path), so the OL chunk is never part of\r\n * the critical-path bundle.  Dynamic imports would add complexity without\r\n * measurable benefit since the chunk is already code-split.\r\n */\r\n\r\nimport { useEffect, useState, useRef } from 'react'\r\nimport { useParams } from 'next/navigation'\r\nimport Link from 'next/link'\r\nimport Map from 'ol/Map'\r\nimport View from 'ol/View'\r\nimport TileLayer from 'ol/layer/Tile'\r\nimport VectorLayer from 'ol/layer/Vector'\r\nimport VectorSource from 'ol/source/Vector'\r\nimport XYZ from 'ol/source/XYZ'\r\nimport GeoJSON from 'ol/format/GeoJSON'\r\nimport { fromLonLat } from 'ol/proj'\r\nimport { Style, Fill, Stroke, Text } from 'ol/style'\r\nimport CircleStyle from 'ol/style/Circle'\r\nimport Overlay from 'ol/Overlay'\r\nimport { ArrowLeft, Download } from 'lucide-react'\r\nimport type Feature from 'ol/Feature'\r\nimport { registerProjections } from '@/lib/map/projection'\r\n\r\nconst STATUS_COLORS: Record<string, string> = {\r\n  pending: '#6b7280',\r\n  field_complete: '#3b82f6',\r\n  computed: '#22c55e',\r\n  plan_generated: '#f59e0b',\r\n  submitted: '#8b5cf6',\r\n  approved: '#10b981',\r\n}\r\n\r\nexport default function SchemeMapPage() {\r\n  const params = useParams()\r\n  const projectId = params.id as string\r\n  const mapRef = useRef<HTMLDivElement>(null)\r\n  const mapInstance = useRef<Map | null>(null)\r\n  const popupRef = useRef<HTMLDivElement>(null)\r\n  const [loading, setLoading] = useState(true)\r\n  const [error, setError] = useState('')\r\n  const [parcelCount, setParcelCount] = useState(0)\r\n\r\n  useEffect(() => {\r\n    if (!mapRef.current || !projectId) return\r\n\r\n    setLoading(true)\r\n\r\n    // Register EPSG:21037 (Arc 1960 / UTM Zone 37S) before using it for GeoJSON reprojection\r\n    registerProjections()\r\n\r\n    // Create map\r\n    const vectorSource = new VectorSource()\r\n\r\n    const map = new Map({\r\n      target: mapRef.current,\r\n      layers: [\r\n        new TileLayer({\r\n          source: new XYZ({\r\n            url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',\r\n            maxZoom: 19,\r\n            crossOrigin: 'anonymous',\r\n          }),\r\n        }),\r\n        new VectorLayer({\r\n          source: vectorSource,\r\n          style: ((feature: Feature) => {\r\n            const props = feature.getProperties()\r\n            const status = props.status as string || 'pending'\r\n            const color = STATUS_COLORS[status] || '#6b7280'\r\n            const geomType = feature.getGeometry()?.getType()\r\n\r\n            if (geomType === 'Polygon') {\r\n              return new Style({\r\n                fill: new Fill({ color: color + '40' }), // 25% opacity\r\n                stroke: new Stroke({ color, width: 2.5 }),\r\n                text: new Text({\r\n                  text: String(props.parcel_number || ''),\r\n                  font: 'bold 12px sans-serif',\r\n                  fill: new Fill({ color: '#ffffff' }),\r\n                  stroke: new Stroke({ color: '#000000', width: 3 }),\r\n                }),\r\n              })\r\n            }\r\n\r\n            if (geomType === 'Point' && props.type === 'block_label') {\r\n              return new Style({\r\n                text: new Text({\r\n                  text: `Block ${props.block_number}\\n(${props.parcel_count} parcels)`,\r\n                  font: 'bold 14px sans-serif',\r\n                  fill: new Fill({ color: '#1e40af' }),\r\n                  stroke: new Stroke({ color: '#ffffff', width: 4 }),\r\n                  textAlign: 'center',\r\n                }),\r\n              })\r\n            }\r\n\r\n            return new Style({\r\n              image: new CircleStyle({\r\n                radius: 5,\r\n                fill: new Fill({ color }),\r\n                stroke: new Stroke({ color: '#000', width: 1 }),\r\n              }),\r\n            })\r\n          }) as any,\r\n        }),\r\n      ],\r\n      view: new View({\r\n        center: fromLonLat([37.0, -1.3]), // Default: central Kenya\r\n        zoom: 15,\r\n      }),\r\n    })\r\n\r\n    // Popup overlay\r\n    const overlay = new Overlay({\r\n      element: popupRef.current || undefined,\r\n      autoPan: true,\r\n    })\r\n    map.addOverlay(overlay)\r\n\r\n    map.on('click', (evt) => {\r\n      const feature = map.forEachFeatureAtPixel(evt.pixel, f => f)\r\n      if (feature && popupRef.current) {\r\n        const props = feature.getProperties()\r\n        // VULN-002 FIX (security review 2026-08-03): block/parcel numbers and\r\n        // LR numbers are user-entered — render with textContent, never innerHTML.\r\n        const el = popupRef.current\r\n        el.replaceChildren()\r\n\r\n        const wrap = document.createElement('div')\r\n        wrap.style.cssText = 'font-size:12px;'\r\n\r\n        const title = document.createElement('strong')\r\n        title.textContent = `Block ${String(props.block_number ?? '')} — Parcel ${String(props.parcel_number || '')}`\r\n        wrap.append(title)\r\n        wrap.append(document.createElement('br'))\r\n\r\n        if (props.lr_number) {\r\n          const lr = document.createElement('div')\r\n          lr.textContent = `LR: ${String(props.lr_number)}`\r\n          wrap.append(lr)\r\n        }\r\n        if (props.area_ha) {\r\n          const area = document.createElement('div')\r\n          area.textContent = `Area: ${Number(props.area_ha).toFixed(4)} ha`\r\n          wrap.append(area)\r\n        }\r\n\r\n        const statusRow = document.createElement('div')\r\n        const statusLabel = document.createTextNode('Status: ')\r\n        const statusSpan = document.createElement('span')\r\n        statusSpan.style.color = STATUS_COLORS[props.status as string] || '#999'\r\n        statusSpan.textContent = String(props.status || 'pending')\r\n        statusRow.append(statusLabel, statusSpan)\r\n        wrap.append(statusRow)\r\n\r\n        el.append(wrap)\r\n        el.style.display = 'block'\r\n        overlay.setPosition(evt.coordinate)\r\n      } else if (popupRef.current) {\r\n        popupRef.current.style.display = 'none'\r\n      }\r\n    })\r\n\r\n    mapInstance.current = map\r\n\r\n    // Fetch scheme GeoJSON\r\n    fetch(`/api/scheme/map?project_id=${projectId}`)\r\n      .then(res => res.json())\r\n      .then((data: { features?: unknown[] }) => {\r\n        if (data.features && data.features.length > 0) {\r\n          const format = new GeoJSON()\r\n          const features = format.readFeatures(data, {\r\n            dataProjection: 'EPSG:21037', // Arc 1960 / UTM Zone 37S (Kenya cadastral datum)\r\n            featureProjection: 'EPSG:3857', // Web Mercator\r\n          })\r\n          vectorSource.addFeatures(features)\r\n          setParcelCount(features.filter(f => f.getGeometry()?.getType() === 'Polygon').length)\r\n\r\n          // Zoom to extent\r\n          const extent = vectorSource.getExtent()\r\n          if (extent && extent[0] !== Infinity) {\r\n            map.getView().fit(extent, { padding: [50, 50, 50, 50], maxZoom: 18 })\r\n          }\r\n        }\r\n        setLoading(false)\r\n      })\r\n      .catch(() => {\r\n        setError('Failed to load scheme data')\r\n        setLoading(false)\r\n      })\r\n\r\n    return () => {\r\n      map.setTarget(undefined)\r\n    }\r\n  }, [projectId])\r\n\r\n  return (\r\n    <div className=\"min-h-screen bg-gray-950 text-white\">\r\n      <div className=\"flex items-center justify-between px-6 py-4 border-b border-gray-800\">\r\n        <div className=\"flex items-center gap-4\">\r\n          <Link\r\n            href={`/project/${projectId}/scheme`}\r\n            className=\"p-2 hover:bg-gray-800 rounded-lg transition-colors\"\r\n          >\r\n            <ArrowLeft className=\"w-5 h-5 text-gray-400\" />\r\n          </Link>\r\n          <div>\r\n            <h1 className=\"text-xl font-bold\">Scheme Map</h1>\r\n            <p className=\"text-sm text-gray-400\">\r\n              {loading ? 'Loading parcels...' : `${parcelCount} parcels shown`}\r\n            </p>\r\n          </div>\r\n        </div>\r\n        <div className=\"flex gap-2\">\r\n          <a\r\n            href={`/api/scheme/export/geojson?project_id=${projectId}`}\r\n            className=\"inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors\"\r\n          >\r\n            <Download className=\"w-4 h-4\" />\r\n            GeoJSON\r\n          </a>\r\n          <a\r\n            href={`/api/scheme/export/dxf?project_id=${projectId}`}\r\n            className=\"inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors\"\r\n          >\r\n            <Download className=\"w-4 h-4\" />\r\n            DXF\r\n          </a>\r\n        </div>\r\n      </div>\r\n\r\n      {error && (\r\n        <div className=\"mx-6 mt-4 p-3 bg-red-900/50 border border-red-800 rounded-lg text-red-300 text-sm\">\r\n          {error}\r\n        </div>\r\n      )}\r\n\r\n      <div className=\"relative\" style={{ height: 'calc(100vh - 80px)' }}>\r\n        <div ref={mapRef} className=\"w-full h-full\" />\r\n\r\n        {loading && (\r\n          <div className=\"absolute inset-0 flex items-center justify-center bg-gray-950/60\">\r\n            <div className=\"flex items-center gap-3 text-gray-300\">\r\n              <svg className=\"w-6 h-6 animate-spin\" fill=\"none\" viewBox=\"0 0 24 24\">\r\n                <circle className=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" strokeWidth=\"4\" />\r\n                <path className=\"opacity-75\" fill=\"currentColor\" d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z\" />\r\n              </svg>\r\n              Loading scheme parcels...\r\n            </div>\r\n          </div>\r\n        )}\r\n\r\n        <div\r\n          ref={popupRef}\r\n          className=\"absolute bg-gray-800 border border-gray-600 rounded-lg p-3 shadow-xl\"\r\n          style={{ display: 'none', minWidth: 200 }}\r\n        />\r\n\r\n        {/* Legend */}\r\n        <div className=\"absolute bottom-4 right-4 bg-gray-900/90 backdrop-blur border border-gray-700 rounded-lg p-3\">\r\n          <h4 className=\"text-xs font-semibold text-gray-400 mb-2\">STATUS LEGEND</h4>\r\n          {Object.entries(STATUS_COLORS).map(([status, color]) => (\r\n            <div key={status} className=\"flex items-center gap-2 mb-1\">\r\n              <div className=\"w-3 h-3 rounded-full\" style={{ backgroundColor: color }} />\r\n              <span className=\"text-xs text-gray-300 capitalize\">{status.replace('_', ' ')}</span>\r\n            </div>\r\n          ))}\r\n        </div>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -92552,237 +91835,15 @@
             "desc": "Remove unused variable \"ExtractedAnnotation\"."
           }
         ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 40,
-        "column": 32,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 40,
-        "endColumn": 35,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                1502,
-                1505
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                1502,
-                1505
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .isMesh on an `any` value.",
-        "line": 41,
-        "column": 21,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 41,
-        "endColumn": 27
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 42,
-        "column": 19,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 42,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .geometry on an `any` value.",
-        "line": 42,
-        "column": 32,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 42,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .boundingBox on an `any` value.",
-        "line": 43,
-        "column": 23,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 43,
-        "endColumn": 34
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-argument",
-        "severity": 1,
-        "message": "Unsafe argument of type `any` assigned to a parameter of type `Box3`.",
-        "line": 44,
-        "column": 53,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeArgument",
-        "endLine": 44,
-        "endColumn": 69
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .boundingBox on an `any` value.",
-        "line": 44,
-        "column": 58,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 44,
-        "endColumn": 69
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 45,
-        "column": 21,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 45,
-        "endColumn": 46
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .position on an `any` value.",
-        "line": 45,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 45,
-        "endColumn": 46
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 54,
-        "column": 33,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 54,
-        "endColumn": 68
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .x on an `any` value.",
-        "line": 54,
-        "column": 51,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 54,
-        "endColumn": 52
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 54,
-        "column": 70,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 54,
-        "endColumn": 106
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .z on an `any` value.",
-        "line": 54,
-        "column": 89,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 54,
-        "endColumn": 90
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 55,
-        "column": 31,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 55,
-        "endColumn": 66
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .x on an `any` value.",
-        "line": 55,
-        "column": 49,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 55,
-        "endColumn": 50
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 55,
-        "column": 68,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 55,
-        "endColumn": 104
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .z on an `any` value.",
-        "line": 55,
-        "column": 87,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 55,
-        "endColumn": 88
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .y on an `any` value.",
-        "line": 58,
-        "column": 46,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 58,
-        "endColumn": 47
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 19,
+    "warningCount": 1,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "import type { ParsedInput, ExtractedBuildingData, ExtractedWall, ExtractedFloor, BoundingBox2D, ExtractedAnnotation } from './types'\r\nimport { calculateConfidence } from './fileRouter'\r\n\r\nexport async function parseGLTFFile(file: File): Promise<ParsedInput> {\r\n  try {\r\n    const THREE = await import('three')\r\n    const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js')\r\n\r\n    const arrayBuffer = await file.arrayBuffer()\r\n    const loader = new GLTFLoader()\r\n\r\n    return new Promise((resolve) => {\r\n      loader.parse(arrayBuffer, '', (gltf) => {\r\n        const scene = gltf.scene\r\n        const box = new THREE.Box3().setFromObject(scene)\r\n        const size = box.getSize(new THREE.Vector3())\r\n        const center = box.getCenter(new THREE.Vector3())\r\n\r\n        const boundingBox: BoundingBox2D = {\r\n          minEasting: center.x - size.x / 2,\r\n          maxEasting: center.x + size.x / 2,\r\n          minNorthing: center.y - size.y / 2,\r\n          maxNorthing: center.y + size.y / 2,\r\n        }\r\n\r\n        const floors = Math.ceil(size.z / 3)\r\n        const extractedFloors: ExtractedFloor[] = []\r\n        \r\n        for (let i = 0; i < Math.max(1, floors); i++) {\r\n          extractedFloors.push({\r\n            id: `floor_${i}`,\r\n            level: i,\r\n            name: i === 0 ? 'Ground Floor' : `Floor ${i}`,\r\n            elevation: i * 3,\r\n            boundingBox,\r\n          })\r\n        }\r\n\r\n        const walls: ExtractedWall[] = []\r\n        scene.traverse((child: any) => {\r\n          if (child.isMesh) {\r\n            const geom = child.geometry\r\n            if (geom?.boundingBox) {\r\n              const meshBox = new THREE.Box3().copy(geom.boundingBox)\r\n              const position = child.position\r\n              \r\n              const width = meshBox.max.x - meshBox.min.x\r\n              const height = meshBox.max.z - meshBox.min.z\r\n              \r\n              if (width > 0.1 && height > 2) {\r\n                walls.push({\r\n                  id: `wall_${walls.length}`,\r\n                  type: 'unknown',\r\n                  startPoint: { easting: position.x + meshBox.min.x, northing: position.z + meshBox.min.z },\r\n                  endPoint: { easting: position.x + meshBox.max.x, northing: position.z + meshBox.max.z },\r\n                  thickness: 0.2,\r\n                  height: height,\r\n                  level: Math.floor(position.y / 3),\r\n                })\r\n              }\r\n            }\r\n          }\r\n        })\r\n\r\n        const building: ExtractedBuildingData = {\r\n          floors: extractedFloors,\r\n          walls,\r\n          rooms: [],\r\n          doors: [],\r\n          windows: [],\r\n          columns: [],\r\n          beams: [],\r\n          annotations: [],\r\n          boundingBox,\r\n          metadata: {\r\n            units: 'meters',\r\n            projectName: file.name.replace(/\\.[^/.]+$/, ''),\r\n          },\r\n        }\r\n\r\n        const confidence = calculateConfidence(building) * 0.75\r\n\r\n        resolve({\r\n          type: 'GLTF',\r\n          sourceFileName: file.name,\r\n          sourceFileSize: file.size,\r\n          sourceFileLastModified: file.lastModified,\r\n          parsedAt: new Date().toISOString(),\r\n          version: '1.0.0',\r\n          building,\r\n          errors: [],\r\n          warnings: ['3D model geometry extracted. For full semantic analysis, use AI enhancement.'],\r\n          confidence,\r\n        })\r\n      }, (error) => {\r\n        resolve({\r\n          type: 'GLTF',\r\n          sourceFileName: file.name,\r\n          sourceFileSize: file.size,\r\n          sourceFileLastModified: file.lastModified,\r\n          parsedAt: new Date().toISOString(),\r\n          version: '1.0.0',\r\n          errors: [`GLTF parse error: ${error}`],\r\n          warnings: [],\r\n          confidence: 0,\r\n        })\r\n      })\r\n    })\r\n  } catch (error) {\r\n    return {\r\n      type: 'GLTF',\r\n      sourceFileName: file.name,\r\n      sourceFileSize: file.size,\r\n      sourceFileLastModified: file.lastModified,\r\n      parsedAt: new Date().toISOString(),\r\n      version: '1.0.0',\r\n      errors: [error instanceof Error ? error.message : 'GLTF parsing failed'],\r\n      warnings: ['Ensure three.js is installed and GLTFLoader is available'],\r\n      confidence: 0,\r\n    }\r\n  }\r\n}\r\n\r\nexport async function parseOBJFile(file: File): Promise<ParsedInput> {\r\n  try {\r\n    const content = await file.text()\r\n    const lines = content.split('\\n')\r\n    \r\n    const vertices: number[] = []\r\n    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity, minZ = Infinity, maxZ = -Infinity\r\n\r\n    for (const line of lines) {\r\n      const parts = line.trim().split(/\\s+/)\r\n      if (parts[0] === 'v' && parts.length >= 4) {\r\n        const x = parseFloat(parts[1])\r\n        const y = parseFloat(parts[2])\r\n        const z = parseFloat(parts[3])\r\n        vertices.push(x, y, z)\r\n        \r\n        if (x < minX) minX = x\r\n        if (x > maxX) maxX = x\r\n        if (y < minY) minY = y\r\n        if (y > maxY) maxY = y\r\n        if (z < minZ) minZ = z\r\n        if (z > maxZ) maxZ = z\r\n      }\r\n    }\r\n\r\n    const boundingBox: BoundingBox2D = minX === Infinity\r\n      ? { minEasting: 0, maxEasting: 10, minNorthing: 0, maxNorthing: 10 }\r\n      : { minEasting: minX, maxEasting: maxX, minNorthing: minZ, maxNorthing: maxZ }\r\n\r\n    const floors = Math.ceil((maxY - minY) / 3)\r\n    const extractedFloors: ExtractedFloor[] = []\r\n    \r\n    for (let i = 0; i < Math.max(1, floors); i++) {\r\n      extractedFloors.push({\r\n        id: `floor_${i}`,\r\n        level: i,\r\n        name: i === 0 ? 'Ground Floor' : `Floor ${i}`,\r\n        elevation: minY + i * 3,\r\n        boundingBox,\r\n      })\r\n    }\r\n\r\n    const building: ExtractedBuildingData = {\r\n      floors: extractedFloors,\r\n      walls: [],\r\n      rooms: [],\r\n      doors: [],\r\n      windows: [],\r\n      columns: [],\r\n      beams: [],\r\n      annotations: [],\r\n      boundingBox,\r\n      metadata: {\r\n        units: 'meters',\r\n        projectName: file.name.replace(/\\.[^/.]+$/, ''),\r\n      },\r\n    }\r\n\r\n    const confidence = 0.5\r\n\r\n    return {\r\n      type: 'OBJ',\r\n      sourceFileName: file.name,\r\n      sourceFileSize: file.size,\r\n      sourceFileLastModified: file.lastModified,\r\n      parsedAt: new Date().toISOString(),\r\n      version: '1.0.0',\r\n      building,\r\n      errors: [],\r\n      warnings: ['OBJ is mesh-only format. No semantic wall/room data available.'],\r\n      confidence,\r\n    }\r\n  } catch (error) {\r\n    return {\r\n      type: 'OBJ',\r\n      sourceFileName: file.name,\r\n      sourceFileSize: file.size,\r\n      sourceFileLastModified: file.lastModified,\r\n      parsedAt: new Date().toISOString(),\r\n      version: '1.0.0',\r\n      errors: [error instanceof Error ? error.message : 'OBJ parsing failed'],\r\n      warnings: [],\r\n      confidence: 0,\r\n    }\r\n  }\r\n}",
+    "source": "import type { ParsedInput, ExtractedBuildingData, ExtractedWall, ExtractedFloor, BoundingBox2D, ExtractedAnnotation } from './types'\r\nimport { calculateConfidence } from './fileRouter'\r\n\r\nexport async function parseGLTFFile(file: File): Promise<ParsedInput> {\r\n  try {\r\n    const THREE = await import('three')\r\n    const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js')\r\n\r\n    const arrayBuffer = await file.arrayBuffer()\r\n    const loader = new GLTFLoader()\r\n\r\n    return new Promise((resolve) => {\r\n      loader.parse(arrayBuffer, '', (gltf) => {\r\n        const scene = gltf.scene\r\n        const box = new THREE.Box3().setFromObject(scene)\r\n        const size = box.getSize(new THREE.Vector3())\r\n        const center = box.getCenter(new THREE.Vector3())\r\n\r\n        const boundingBox: BoundingBox2D = {\r\n          minEasting: center.x - size.x / 2,\r\n          maxEasting: center.x + size.x / 2,\r\n          minNorthing: center.y - size.y / 2,\r\n          maxNorthing: center.y + size.y / 2,\r\n        }\r\n\r\n        const floors = Math.ceil(size.z / 3)\r\n        const extractedFloors: ExtractedFloor[] = []\r\n        \r\n        for (let i = 0; i < Math.max(1, floors); i++) {\r\n          extractedFloors.push({\r\n            id: `floor_${i}`,\r\n            level: i,\r\n            name: i === 0 ? 'Ground Floor' : `Floor ${i}`,\r\n            elevation: i * 3,\r\n            boundingBox,\r\n          })\r\n        }\r\n\r\n        const walls: ExtractedWall[] = []\r\n        scene.traverse((child) => {\r\n          const mesh = child as InstanceType<typeof THREE['Mesh']>\r\n          if (mesh.isMesh) {\r\n            const geom = mesh.geometry\r\n            if (geom?.boundingBox) {\r\n              const meshBox = new THREE.Box3().copy(geom.boundingBox)\r\n              const position = mesh.position\r\n              \r\n              const width = meshBox.max.x - meshBox.min.x\r\n              const height = meshBox.max.z - meshBox.min.z\r\n              \r\n              if (width > 0.1 && height > 2) {\r\n                walls.push({\r\n                  id: `wall_${walls.length}`,\r\n                  type: 'unknown',\r\n                  startPoint: { easting: position.x + meshBox.min.x, northing: position.z + meshBox.min.z },\r\n                  endPoint: { easting: position.x + meshBox.max.x, northing: position.z + meshBox.max.z },\r\n                  thickness: 0.2,\r\n                  height: height,\r\n                  level: Math.floor(position.y / 3),\r\n                })\r\n              }\r\n            }\r\n          }\r\n        })\r\n\r\n        const building: ExtractedBuildingData = {\r\n          floors: extractedFloors,\r\n          walls,\r\n          rooms: [],\r\n          doors: [],\r\n          windows: [],\r\n          columns: [],\r\n          beams: [],\r\n          annotations: [],\r\n          boundingBox,\r\n          metadata: {\r\n            units: 'meters',\r\n            projectName: file.name.replace(/\\.[^/.]+$/, ''),\r\n          },\r\n        }\r\n\r\n        const confidence = calculateConfidence(building) * 0.75\r\n\r\n        resolve({\r\n          type: 'GLTF',\r\n          sourceFileName: file.name,\r\n          sourceFileSize: file.size,\r\n          sourceFileLastModified: file.lastModified,\r\n          parsedAt: new Date().toISOString(),\r\n          version: '1.0.0',\r\n          building,\r\n          errors: [],\r\n          warnings: ['3D model geometry extracted. For full semantic analysis, use AI enhancement.'],\r\n          confidence,\r\n        })\r\n      }, (error) => {\r\n        resolve({\r\n          type: 'GLTF',\r\n          sourceFileName: file.name,\r\n          sourceFileSize: file.size,\r\n          sourceFileLastModified: file.lastModified,\r\n          parsedAt: new Date().toISOString(),\r\n          version: '1.0.0',\r\n          errors: [`GLTF parse error: ${error}`],\r\n          warnings: [],\r\n          confidence: 0,\r\n        })\r\n      })\r\n    })\r\n  } catch (error) {\r\n    return {\r\n      type: 'GLTF',\r\n      sourceFileName: file.name,\r\n      sourceFileSize: file.size,\r\n      sourceFileLastModified: file.lastModified,\r\n      parsedAt: new Date().toISOString(),\r\n      version: '1.0.0',\r\n      errors: [error instanceof Error ? error.message : 'GLTF parsing failed'],\r\n      warnings: ['Ensure three.js is installed and GLTFLoader is available'],\r\n      confidence: 0,\r\n    }\r\n  }\r\n}\r\n\r\nexport async function parseOBJFile(file: File): Promise<ParsedInput> {\r\n  try {\r\n    const content = await file.text()\r\n    const lines = content.split('\\n')\r\n    \r\n    const vertices: number[] = []\r\n    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity, minZ = Infinity, maxZ = -Infinity\r\n\r\n    for (const line of lines) {\r\n      const parts = line.trim().split(/\\s+/)\r\n      if (parts[0] === 'v' && parts.length >= 4) {\r\n        const x = parseFloat(parts[1])\r\n        const y = parseFloat(parts[2])\r\n        const z = parseFloat(parts[3])\r\n        vertices.push(x, y, z)\r\n        \r\n        if (x < minX) minX = x\r\n        if (x > maxX) maxX = x\r\n        if (y < minY) minY = y\r\n        if (y > maxY) maxY = y\r\n        if (z < minZ) minZ = z\r\n        if (z > maxZ) maxZ = z\r\n      }\r\n    }\r\n\r\n    const boundingBox: BoundingBox2D = minX === Infinity\r\n      ? { minEasting: 0, maxEasting: 10, minNorthing: 0, maxNorthing: 10 }\r\n      : { minEasting: minX, maxEasting: maxX, minNorthing: minZ, maxNorthing: maxZ }\r\n\r\n    const floors = Math.ceil((maxY - minY) / 3)\r\n    const extractedFloors: ExtractedFloor[] = []\r\n    \r\n    for (let i = 0; i < Math.max(1, floors); i++) {\r\n      extractedFloors.push({\r\n        id: `floor_${i}`,\r\n        level: i,\r\n        name: i === 0 ? 'Ground Floor' : `Floor ${i}`,\r\n        elevation: minY + i * 3,\r\n        boundingBox,\r\n      })\r\n    }\r\n\r\n    const building: ExtractedBuildingData = {\r\n      floors: extractedFloors,\r\n      walls: [],\r\n      rooms: [],\r\n      doors: [],\r\n      windows: [],\r\n      columns: [],\r\n      beams: [],\r\n      annotations: [],\r\n      boundingBox,\r\n      metadata: {\r\n        units: 'meters',\r\n        projectName: file.name.replace(/\\.[^/.]+$/, ''),\r\n      },\r\n    }\r\n\r\n    const confidence = 0.5\r\n\r\n    return {\r\n      type: 'OBJ',\r\n      sourceFileName: file.name,\r\n      sourceFileSize: file.size,\r\n      sourceFileLastModified: file.lastModified,\r\n      parsedAt: new Date().toISOString(),\r\n      version: '1.0.0',\r\n      building,\r\n      errors: [],\r\n      warnings: ['OBJ is mesh-only format. No semantic wall/room data available.'],\r\n      confidence,\r\n    }\r\n  } catch (error) {\r\n    return {\r\n      type: 'OBJ',\r\n      sourceFileName: file.name,\r\n      sourceFileSize: file.size,\r\n      sourceFileLastModified: file.lastModified,\r\n      parsedAt: new Date().toISOString(),\r\n      version: '1.0.0',\r\n      errors: [error instanceof Error ? error.message : 'OBJ parsing failed'],\r\n      warnings: [],\r\n      confidence: 0,\r\n    }\r\n  }\r\n}",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -109944,158 +109005,13 @@
   },
   {
     "filePath": "src/lib/__tests__/tier1SecurityHelpers.test.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access [0] on an `any` value.",
-        "line": 43,
-        "column": 40,
-        "nodeType": "Literal",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 43,
-        "endColumn": 41
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access [1] on an `any` value.",
-        "line": 62,
-        "column": 43,
-        "nodeType": "Literal",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 62,
-        "endColumn": 44
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access [0] on an `any` value.",
-        "line": 65,
-        "column": 40,
-        "nodeType": "Literal",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 65,
-        "endColumn": 41
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access [0] on an `any` value.",
-        "line": 127,
-        "column": 40,
-        "nodeType": "Literal",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 127,
-        "endColumn": 41
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access [0] on an `any` value.",
-        "line": 193,
-        "column": 40,
-        "nodeType": "Literal",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 193,
-        "endColumn": 41
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access [1] on an `any` value.",
-        "line": 215,
-        "column": 43,
-        "nodeType": "Literal",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 215,
-        "endColumn": 44
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 217,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 217,
-        "endColumn": 52
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .user_name on an `any` value.",
-        "line": 218,
-        "column": 20,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 218,
-        "endColumn": 29
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .changes on an `any` value.",
-        "line": 219,
-        "column": 20,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 219,
-        "endColumn": 27
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access [0] on an `any` value.",
-        "line": 277,
-        "column": 40,
-        "nodeType": "Literal",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 277,
-        "endColumn": 41
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access [1] on an `any` value.",
-        "line": 296,
-        "column": 43,
-        "nodeType": "Literal",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 296,
-        "endColumn": 44
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 297,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 297,
-        "endColumn": 52
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .user_agent on an `any` value.",
-        "line": 298,
-        "column": 20,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 298,
-        "endColumn": 30
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 13,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Tier 1 Regression Tests — Optimistic Locking + Audit Helpers\r\n *\r\n * CONTEXT\r\n * -------\r\n * T1.8: Added db.updateWithOptimisticLock() / db.deleteWithOptimisticLock()\r\n *       to eliminate the TOCTOU race in the old checkOptimisticLock() helper.\r\n * T1.9: Fixed createAuditLog() and logAuditEvent() which referenced\r\n *       non-existent columns and silently swallowed the Postgres error.\r\n *\r\n * These tests verify the CONTRACT without requiring a live database:\r\n * - The SQL generated by the helpers includes the optimistic-lock guard\r\n *   in the WHERE clause (not just in a pre-check).\r\n * - The assertTable whitelist rejects unknown table names.\r\n * - The audit helpers use the correct column names.\r\n */\r\n\r\nimport { db } from '@/lib/db'\r\n\r\n// ════════════════════════════════════════════════════════════════════════════\r\n// T1.8 — db.updateWithOptimisticLock contract\r\n// ════════════════════════════════════════════════════════════════════════════\r\ndescribe('[T1.8] db.updateWithOptimisticLock — SQL guard contract', () => {\r\n  // We spy on db.query to capture the SQL without hitting a real DB.\r\n  let querySpy: jest.SpyInstance\r\n\r\n  beforeEach(() => {\r\n    querySpy = jest.spyOn(db, 'query').mockResolvedValue({ rows: [{ id: 'test-id' }], rowCount: 1 } as never)\r\n  })\r\n\r\n  afterEach(() => {\r\n    querySpy.mockRestore()\r\n  })\r\n\r\n  it('includes \"AND updated_at = $N\" in the WHERE clause (not just a pre-check)', async () => {\r\n    await db.updateWithOptimisticLock(\r\n      'projects',\r\n      '123e4567-e89b-12d3-a456-426614174000',\r\n      { name: 'Updated Project' },\r\n      '2026-07-09T00:00:00Z',\r\n    )\r\n\r\n    const sql = querySpy.mock.calls[0][0] as string\r\n    // The guard MUST be in the UPDATE's WHERE clause — this is the whole\r\n    // point of T1.8. The old checkOptimisticLock did a separate SELECT.\r\n    expect(sql).toMatch(/WHERE id = \\$\\d+ AND updated_at = \\$\\d+/)\r\n    expect(sql).toContain('UPDATE projects')\r\n    expect(sql).toContain('SET name = $1')\r\n    expect(sql).toContain('updated_at = NOW()')\r\n    expect(sql).toContain('RETURNING *')\r\n  })\r\n\r\n  it('parameterizes values (no SQL injection via column values)', async () => {\r\n    const malicious = \"'; DROP TABLE projects; --\"\r\n    await db.updateWithOptimisticLock(\r\n      'projects',\r\n      '123e4567-e89b-12d3-a456-426614174000',\r\n      { name: malicious },\r\n      '2026-07-09T00:00:00Z',\r\n    )\r\n\r\n    const params = querySpy.mock.calls[0][1] as unknown[]\r\n    // The malicious string must be a parameter, not interpolated into SQL.\r\n    expect(params).toContain(malicious)\r\n    const sql = querySpy.mock.calls[0][0] as string\r\n    expect(sql).not.toContain('DROP TABLE')\r\n  })\r\n\r\n  it('rejects table names not in the whitelist (SQL injection guard)', async () => {\r\n    await expect(\r\n      db.updateWithOptimisticLock(\r\n        'users; DROP TABLE projects; --',\r\n        '123e4567-e89b-12d3-a456-426614174000',\r\n        { name: 'x' },\r\n        '2026-07-09T00:00:00Z',\r\n      )\r\n    ).rejects.toThrow(/not in the optimistic-lock whitelist/)\r\n  })\r\n\r\n  it('rejects empty updates object', async () => {\r\n    await expect(\r\n      db.updateWithOptimisticLock(\r\n        'projects',\r\n        '123e4567-e89b-12d3-a456-426614174000',\r\n        {},\r\n        '2026-07-09T00:00:00Z',\r\n      )\r\n    ).rejects.toThrow(/no columns to update/)\r\n  })\r\n\r\n  it('returns null when 0 rows affected (conflict)', async () => {\r\n    querySpy.mockRestore()\r\n    querySpy = jest.spyOn(db, 'query').mockResolvedValue({ rows: [], rowCount: 0 } as never)\r\n\r\n    const result = await db.updateWithOptimisticLock(\r\n      'projects',\r\n      '123e4567-e89b-12d3-a456-426614174000',\r\n      { name: 'Updated' },\r\n      '2026-07-09T00:00:00Z',\r\n    )\r\n\r\n    expect(result).toBeNull()\r\n  })\r\n})\r\n\r\n// ════════════════════════════════════════════════════════════════════════════\r\n// T1.8 — db.deleteWithOptimisticLock contract\r\n// ════════════════════════════════════════════════════════════════════════════\r\ndescribe('[T1.8] db.deleteWithOptimisticLock — SQL guard contract', () => {\r\n  let querySpy: jest.SpyInstance\r\n\r\n  beforeEach(() => {\r\n    querySpy = jest.spyOn(db, 'query').mockResolvedValue({ rows: [], rowCount: 1 } as never)\r\n  })\r\n\r\n  afterEach(() => {\r\n    querySpy.mockRestore()\r\n  })\r\n\r\n  it('includes \"AND updated_at = $2\" in the DELETE WHERE clause', async () => {\r\n    await db.deleteWithOptimisticLock(\r\n      'projects',\r\n      '123e4567-e89b-12d3-a456-426614174000',\r\n      '2026-07-09T00:00:00Z',\r\n    )\r\n\r\n    const sql = querySpy.mock.calls[0][0] as string\r\n    expect(sql).toMatch(/DELETE FROM projects\\s+WHERE id = \\$1 AND updated_at = \\$2/)\r\n  })\r\n\r\n  it('returns true when a row was deleted', async () => {\r\n    querySpy.mockRestore()\r\n    querySpy = jest.spyOn(db, 'query').mockResolvedValue({ rows: [], rowCount: 1 } as never)\r\n\r\n    const result = await db.deleteWithOptimisticLock(\r\n      'projects',\r\n      '123e4567-e89b-12d3-a456-426614174000',\r\n      '2026-07-09T00:00:00Z',\r\n    )\r\n    expect(result).toBe(true)\r\n  })\r\n\r\n  it('returns false when 0 rows deleted (conflict)', async () => {\r\n    querySpy.mockRestore()\r\n    querySpy = jest.spyOn(db, 'query').mockResolvedValue({ rows: [], rowCount: 0 } as never)\r\n\r\n    const result = await db.deleteWithOptimisticLock(\r\n      'projects',\r\n      '123e4567-e89b-12d3-a456-426614174000',\r\n      '2026-07-09T00:00:00Z',\r\n    )\r\n    expect(result).toBe(false)\r\n  })\r\n\r\n  it('rejects unknown table names', async () => {\r\n    await expect(\r\n      db.deleteWithOptimisticLock(\r\n        'evil_table',\r\n        '123e4567-e89b-12d3-a456-426614174000',\r\n        '2026-07-09T00:00:00Z',\r\n      )\r\n    ).rejects.toThrow(/not in the optimistic-lock whitelist/)\r\n  })\r\n})\r\n\r\n// ════════════════════════════════════════════════════════════════════════════\r\n// T1.9 — createAuditLog uses correct column names\r\n// ════════════════════════════════════════════════════════════════════════════\r\ndescribe('[T1.9] createAuditLog — correct column names (no silent failure)', () => {\r\n  let querySpy: jest.SpyInstance\r\n\r\n  beforeEach(() => {\r\n    querySpy = jest.spyOn(db, 'query').mockResolvedValue({\r\n      rows: [{ id: 'audit-1', action: 'UPDATE' }],\r\n      rowCount: 1,\r\n    } as never)\r\n  })\r\n\r\n  afterEach(() => {\r\n    querySpy.mockRestore()\r\n  })\r\n\r\n  it('INSERTs into table_name + record_id (NOT entity_type + entity_id)', async () => {\r\n    const { createAuditLog } = await import('@/lib/db/queries/audit')\r\n    await createAuditLog({\r\n      entityType: 'projects',\r\n      entityId: '123e4567-e89b-12d3-a456-426614174000',\r\n      action: 'UPDATE',\r\n      userId: '123e4567-e89b-12d3-a456-426614174001',\r\n      userName: 'test@example.com',\r\n    })\r\n\r\n    const sql = querySpy.mock.calls[0][0] as string\r\n    // T1.9: MUST use the real column names. The old code used entity_type /\r\n    // entity_id which don't exist in the schema.\r\n    expect(sql).toContain('table_name')\r\n    expect(sql).toContain('record_id')\r\n    expect(sql).not.toContain('entity_type')\r\n    expect(sql).not.toContain('entity_id')\r\n    expect(sql).not.toContain('user_name')\r\n    expect(sql).toContain('details') // changes → details\r\n  })\r\n\r\n  it('stores userName inside the details JSONB (no dedicated column)', async () => {\r\n    const { createAuditLog } = await import('@/lib/db/queries/audit')\r\n    await createAuditLog({\r\n      entityType: 'projects',\r\n      entityId: '123e4567-e89b-12d3-a456-426614174000',\r\n      action: 'UPDATE',\r\n      userId: '123e4567-e89b-12d3-a456-426614174001',\r\n      userName: 'test@example.com',\r\n      changes: '{\"field\": \"value\"}',\r\n    })\r\n\r\n    const params = querySpy.mock.calls[0][1] as unknown[]\r\n    // The 5th param is the details JSONB. It must contain user_name.\r\n    const details = JSON.parse(params[4] as string)\r\n    expect(details.user_name).toBe('test@example.com')\r\n    expect(details.changes).toEqual({ field: 'value' })\r\n  })\r\n\r\n  it('returns null on DB error (fire-and-forget) but logs with context', async () => {\r\n    querySpy.mockRestore()\r\n    querySpy = jest.spyOn(db, 'query').mockRejectedValue(new Error('column does not exist'))\r\n    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})\r\n\r\n    const { createAuditLog } = await import('@/lib/db/queries/audit')\r\n    const result = await createAuditLog({\r\n      entityType: 'projects',\r\n      entityId: '123e4567-e89b-12d3-a456-426614174000',\r\n      action: 'UPDATE',\r\n      userId: '123e4567-e89b-12d3-a456-426614174001',\r\n      userName: 'test@example.com',\r\n    })\r\n\r\n    expect(result).toBeNull()\r\n    // T1.9: The error MUST be logged with context (not silently swallowed).\r\n    expect(errorSpy).toHaveBeenCalledWith(\r\n      expect.stringContaining('[audit] createAuditLog FAILED'),\r\n      expect.objectContaining({\r\n        entityType: 'projects',\r\n        action: 'UPDATE',\r\n      })\r\n    )\r\n\r\n    errorSpy.mockRestore()\r\n  })\r\n})\r\n\r\n// ════════════════════════════════════════════════════════════════════════════\r\n// T1.9 — logAuditEvent uses correct column names\r\n// ════════════════════════════════════════════════════════════════════════════\r\ndescribe('[T1.9] logAuditEvent — correct column names (no silent failure)', () => {\r\n  let querySpy: jest.SpyInstance\r\n\r\n  beforeEach(() => {\r\n    querySpy = jest.spyOn(db, 'query').mockResolvedValue({\r\n      rows: [{ id: 'audit-uuid-1' }],\r\n      rowCount: 1,\r\n    } as never)\r\n  })\r\n\r\n  afterEach(() => {\r\n    querySpy.mockRestore()\r\n  })\r\n\r\n  it('INSERTs into table_name + record_id (NOT resource_type + resource_id)', async () => {\r\n    const { logAuditEvent } = await import('@/lib/enterprise/auditTrail')\r\n    await logAuditEvent({\r\n      userId: '123e4567-e89b-12d3-a456-426614174001',\r\n      action: 'USER_SUSPENDED',\r\n      resourceType: 'users',\r\n      resourceId: '123e4567-e89b-12d3-a456-426614174000',\r\n      timestamp: new Date('2026-07-09T00:00:00Z'),\r\n    })\r\n\r\n    const sql = querySpy.mock.calls[0][0] as string\r\n    // T1.9: MUST use real column names.\r\n    expect(sql).toContain('table_name')\r\n    expect(sql).toContain('record_id')\r\n    expect(sql).not.toContain('resource_type')\r\n    expect(sql).not.toContain('resource_id')\r\n    expect(sql).not.toContain('user_agent') // no such column\r\n  })\r\n\r\n  it('stores userAgent inside the details JSONB', async () => {\r\n    const { logAuditEvent } = await import('@/lib/enterprise/auditTrail')\r\n    await logAuditEvent({\r\n      userId: '123e4567-e89b-12d3-a456-426614174001',\r\n      action: 'LOGIN',\r\n      resourceType: 'auth',\r\n      userAgent: 'Mozilla/5.0',\r\n      timestamp: new Date(),\r\n    })\r\n\r\n    const params = querySpy.mock.calls[0][1] as unknown[]\r\n    const details = JSON.parse(params[4] as string)\r\n    expect(details.user_agent).toBe('Mozilla/5.0')\r\n  })\r\n\r\n  it('returns a UUID string (not a number — schema uses uuid_generate_v4)', async () => {\r\n    const { logAuditEvent } = await import('@/lib/enterprise/auditTrail')\r\n    const id = await logAuditEvent({\r\n      userId: '123e4567-e89b-12d3-a456-426614174001',\r\n      action: 'TEST',\r\n      resourceType: 'test',\r\n      timestamp: new Date(),\r\n    })\r\n\r\n    expect(typeof id).toBe('string')\r\n    // The old code returned `number` (SERIAL) — the real schema uses UUID.\r\n    expect(id).not.toBeNaN()\r\n  })\r\n})\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
