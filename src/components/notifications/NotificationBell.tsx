@@ -58,7 +58,7 @@ export function NotificationBell() {
     try {
       const res = await fetch('/api/notifications?limit=20')
       if (!res.ok) return
-      const data = await res.json()
+      const data = await res.json() as { data?: { notifications?: Notification[]; unreadCount?: number } }
       setNotifications(data.data?.notifications || [])
       setUnreadCount(data.data?.unreadCount || 0)
     } catch (err) {}

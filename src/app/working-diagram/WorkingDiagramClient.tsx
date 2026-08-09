@@ -253,9 +253,9 @@ export default function WorkingDiagramClient({ project, entries, projectId }: Pr
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ projectId, documentId: 'working-diagram' }),
       });
-      const json = await res.json();
+      const json = await res.json() as { error?: string; fileUrl?: string };
       if (!res.ok) throw new Error(json.error ?? 'Generation failed');
-      setPdfUrl(json.fileUrl);
+      setPdfUrl(json.fileUrl ?? null);
     } catch (err: unknown) {
       setPdfError(err instanceof Error ? (err as Error).message : 'Unknown error');
     } finally {

@@ -69,7 +69,7 @@ export function FieldRecordVault() {
 
       const res = await fetch(`/api/field-records?${params}`)
       if (!res.ok) throw new Error('Search failed')
-      const data = await res.json()
+      const data = await res.json() as { data?: { records?: FieldRecord[] } }
       setRecords(data.data?.records || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Search failed')
@@ -345,7 +345,7 @@ function AddRecordForm({ onClose, onAdded }: { onClose: () => void; onAdded: () 
         }),
       })
       if (!res.ok) {
-        const data = await res.json()
+        const data = await res.json() as { error?: string }
         throw new Error(data.error || 'Failed')
       }
       onAdded()

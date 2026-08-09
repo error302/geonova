@@ -81,7 +81,7 @@ async function exportDXF(
       })),
     }),
   })
-  const data = await resp.json()
+  const data = await resp.json() as { error?: string; filename?: string; dxf: string }
   if (!resp.ok) throw new Error(data.error || 'DXF export failed')
   const blob = new Blob([data.dxf], { type: 'application/dxf' })
   triggerDownload(blob, data.filename || safeFileName(projectName, 'dxf'))

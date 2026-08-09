@@ -70,7 +70,7 @@ export default function CoordinateTransformer() {
         })
       })
 
-      const data = await response.json()
+      const data = await response.json() as { error?: string; results?: TransformedCoord[] }
       if (!response.ok) throw new Error(data.error)
       
       setResults(data.results || [])

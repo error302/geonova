@@ -42,11 +42,11 @@ export default function CsvImportPanel({ projectId, blockId, blockName, onImport
         method: 'POST',
         body: formData,
       })
-      const json = await res.json()
+      const json = await res.json() as { error?: string; data?: ImportResult | null }
       if (!res.ok) throw new Error(json.error || 'Import failed')
 
-      setResult(json.data)
-      if (json.data.created > 0 && onImportComplete) {
+      setResult(json.data ?? null)
+      if ((json.data?.created ?? 0) > 0 && onImportComplete) {
         onImportComplete()
       }
     } catch (err: unknown) {

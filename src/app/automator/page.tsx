@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import { executeWorkflow, generateReport } from '@/lib/compute/workflowEngine'
 import { Play, FileText, Loader2 } from 'lucide-react'
 import type { Node, Edge } from 'reactflow'
+import type { WorkflowNode, WorkflowEdge } from '@/types/workflow'
 
 const WorkflowCanvas = dynamic(
   () => import('@/components/automator/WorkflowCanvas'),
@@ -18,7 +19,7 @@ export default function AutomatorPage() {
   const handleRunWorkflow = async (nodes: Node[], edges: Edge[]) => {
     setRunning(true)
     try {
-      const result = await executeWorkflow(nodes as any[], edges as any[])
+      const result = await executeWorkflow(nodes as WorkflowNode[], edges as WorkflowEdge[])
       setResults(result)
     } catch (err) {
       console.error(err)

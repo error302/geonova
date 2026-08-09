@@ -72,7 +72,7 @@ export function BeaconRegistryPanel() {
 
       const res = await fetch(`/api/beacons?${params}`)
       if (!res.ok) throw new Error('Search failed')
-      const data = await res.json()
+      const data = await res.json() as { data?: { beacons?: Beacon[] } }
       setResults(data.data?.beacons || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Search failed')
@@ -342,7 +342,7 @@ function AddBeaconForm({ onClose, onAdded }: { onClose: () => void; onAdded: () 
         }),
       })
       if (!res.ok) {
-        const data = await res.json()
+        const data = await res.json() as { error?: string }
         throw new Error(data.error || 'Failed to add beacon')
       }
       onAdded()

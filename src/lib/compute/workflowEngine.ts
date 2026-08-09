@@ -14,7 +14,7 @@ export async function executeWorkflow(
   })
   
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: 'Unknown error' }))
+    const error = await res.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
     throw new Error(error.error || 'Failed to execute workflow')
   }
   
@@ -33,7 +33,7 @@ export async function generateReport(
   })
   
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: 'Unknown error' }))
+    const error = await res.json().catch(() => ({ error: 'Unknown error' })) as { error?: string }
     throw new Error(error.error || 'Failed to generate report')
   }
   

@@ -1247,7 +1247,7 @@ export default function GuideTypePage({ params }: PageProps) {
     const saved = localStorage.getItem(`guide_${type}_progress`);
     if (saved) {
       try {
-        const data = JSON.parse(saved);
+        const data = JSON.parse(saved) as { completedSteps?: number[]; mode?: 'junior' | 'senior' };
         setCompletedSteps(data.completedSteps || []);
         if (data.mode) setMode(data.mode);
       } catch {}
@@ -1256,8 +1256,8 @@ export default function GuideTypePage({ params }: PageProps) {
     const savedChecklist = localStorage.getItem(`guide_${type}_fieldChecklist`)
     if (savedChecklist) {
       try {
-        const data = JSON.parse(savedChecklist)
-        setFieldChecklistDone(Array.isArray(data) ? data : [])
+        const data = JSON.parse(savedChecklist) as unknown[]
+        setFieldChecklistDone(Array.isArray(data) ? (data as number[]) : [])
       } catch {}
     } else {
       setFieldChecklistDone([])

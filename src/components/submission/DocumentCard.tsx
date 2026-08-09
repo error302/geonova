@@ -47,7 +47,7 @@ export default function DocumentCard({ doc, projectId, existing, onStatusChange 
         body: JSON.stringify({ projectId, documentId: doc.id }),
       });
 
-      const data = await res.json();
+      const data = await res.json() as { error?: string; fileUrl?: string };
 
       if (!res.ok || data.error) {
         throw new Error(data.error ?? 'Generation failed');

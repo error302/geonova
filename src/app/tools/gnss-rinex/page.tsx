@@ -40,8 +40,8 @@ export default function GNSSRinexPage() {
           station_name: stationName || 'unknown',
         }),
       })
-      if (!res.ok) { const e = await res.json(); throw new Error(e.error || `Failed (${res.status})`) }
-      const data = await res.json()
+      if (!res.ok) { const e = await res.json() as { error?: string }; throw new Error(e.error || `Failed (${res.status})`) }
+      const data = await res.json() as { data: GNSSPositionResult }
       setResult(data.data)
     } catch (e) { setError(e instanceof Error ? e.message : 'Processing failed') }
     finally { setLoading(false) }

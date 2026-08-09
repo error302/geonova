@@ -106,11 +106,11 @@ export function FieldToFinishButton({ projectId, disabled }: FieldToFinishButton
       });
 
       if (!res.ok) {
-        const data = await res.json();
+        const data = await res.json() as { error?: string };
         throw new Error(data.error || `Pipeline failed (${res.status})`);
       }
 
-      const data = await res.json();
+      const data = await res.json() as FieldToFinishResult;
       setResult(data);
       setExpanded(true);
     } catch (err) {

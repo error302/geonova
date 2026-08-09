@@ -74,7 +74,7 @@ export default function UniversalImporter({ projectId, onImportComplete }: Props
         }),
       });
 
-      const data = await res.json();
+      const data = await res.json() as { error?: string; imported: number };
       if (!res.ok) throw new Error(data.error ?? 'Commit failed');
 
       setStep('done');

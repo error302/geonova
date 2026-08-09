@@ -36,11 +36,13 @@ const BLANK = {
   priority: 'normal' as SchedulePriority, notes: '',
 }
 
+type ScheduleFormInput = Omit<JobSchedule, 'id' | 'user_id' | 'status' | 'created_at' | 'updated_at' | 'completed_at'> & { status?: ScheduleStatus }
+
 function ScheduleFormModal({
   initial, onSave, onClose,
 }: {
   initial?: Partial<JobSchedule>
-  onSave: (data: any) => Promise<void>
+  onSave: (data: ScheduleFormInput) => Promise<void>
   onClose: () => void
 }) {
   const [form, setForm] = useState({ ...BLANK, ...initial })
@@ -340,11 +342,11 @@ export default function SchedulePage() {
     )
   }
 
-  const handleSave = async (formData: any) => {
+  const handleSave = async (formData: ScheduleFormInput) => {
     if (editItem) {
       await updateSchedule(editItem.id, formData)
     } else {
-      await createSchedule({ ...formData, user_id: userId })
+      await createSchedule({ ...formData, user_id: userId, status: formData.status ?? 'upcoming' })
     }
     setShowForm(false)
     setEditItem(null)

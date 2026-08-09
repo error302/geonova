@@ -28,14 +28,14 @@ export default function BeaconReferencePage() {
       <div className="max-w-7xl mx-auto">
         <PageHeader title={t('tools.beaconReference')} subtitle={t('tools.beaconReferenceDesc')} />
 
-        {CATEGORIES.map((category: any) => (
+        {CATEGORIES.map((category) => (
           <div key={category.title} className="mb-10">
             <h2 className="text-lg font-semibold mb-4 pb-2 border-b border-[var(--border-color)]">
               {category.title}
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {category.types.map((type: any) => {
+              {category.types.map((type) => {
                 const def = BEACON_DEFINITIONS[type as BeaconType]
                 
                 return (
@@ -87,7 +87,7 @@ export default function BeaconReferencePage() {
                     <div className="border-t border-[var(--border-color)] pt-3">
                       <div className="text-xs text-[var(--text-muted)] mb-2">Status variants:</div>
                       <div className="grid grid-cols-4 gap-2">
-                        {STATUSES.map((status: any) => (
+                        {STATUSES.map((status) => (
                           <div key={status} className="flex flex-col items-center">
                             <div 
                               className="w-10 h-10"

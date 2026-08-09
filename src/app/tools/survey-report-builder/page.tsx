@@ -43,7 +43,7 @@ function SurveyReportBuilderContent() {
         .order('created_at', { ascending: false })
         .limit(50)
 
-      setProjects(data || [])
+      setProjects((data as Project[] | null) || [])
       setLoading(false)
     }
 
@@ -110,7 +110,7 @@ function SurveyReportBuilderContent() {
             <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-6">
               <h2 className="text-lg font-semibold mb-4">Select Project</h2>
               <div className="space-y-2">
-                {projects.map((p: any) => (
+                {projects.map((p) => (
                   <button
                     key={p.id}
                     onClick={() => setSelectedProjectId(p.id)}
