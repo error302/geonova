@@ -39,7 +39,7 @@ export async function generateLevellingReport(
     surveyType: project?.survey_type ?? '',
     reportTitle: 'LEVELLING REPORT',
     date: today,
-    refNo: project?.ref_no,
+    refNo: project?.ref_no ?? undefined,
   });
 
   doc.setFontSize(9);

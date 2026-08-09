@@ -29,7 +29,7 @@ export async function generateTraverseReport(
     surveyType: project?.survey_type ?? '',
     reportTitle: 'TRAVERSE COMPUTATION REPORT',
     date: today,
-    refNo: project?.ref_no,
+    refNo: project?.ref_no ?? undefined,
   });
 
   doc.setFontSize(9);
