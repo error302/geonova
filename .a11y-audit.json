@@ -49055,15 +49055,393 @@
             "desc": "Remove unused variable \"CheckCircle2\"."
           }
         ]
+      },
+      {
+        "ruleId": "@typescript-eslint/no-explicit-any",
+        "severity": 1,
+        "message": "Unexpected any. Specify a different type.",
+        "line": 123,
+        "column": 33,
+        "nodeType": "TSAnyKeyword",
+        "messageId": "unexpectedAny",
+        "endLine": 123,
+        "endColumn": 36,
+        "suggestions": [
+          {
+            "messageId": "suggestUnknown",
+            "fix": {
+              "range": [
+                4105,
+                4108
+              ],
+              "text": "unknown"
+            },
+            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
+          },
+          {
+            "messageId": "suggestNever",
+            "fix": {
+              "range": [
+                4105,
+                4108
+              ],
+              "text": "never"
+            },
+            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
+          }
+        ]
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 1,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 125,
+        "column": 11,
+        "nodeType": "Property",
+        "messageId": "anyAssignment",
+        "endLine": 125,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .latitude on an `any` value.",
+        "line": 125,
+        "column": 29,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 125,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 1,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 126,
+        "column": 11,
+        "nodeType": "Property",
+        "messageId": "anyAssignment",
+        "endLine": 126,
+        "endColumn": 39
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .longitude on an `any` value.",
+        "line": 126,
+        "column": 30,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 126,
+        "endColumn": 39
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 1,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 127,
+        "column": 11,
+        "nodeType": "Property",
+        "messageId": "anyAssignment",
+        "endLine": 127,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .altitude on an `any` value.",
+        "line": 127,
+        "column": 29,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 127,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 1,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 128,
+        "column": 11,
+        "nodeType": "Property",
+        "messageId": "anyAssignment",
+        "endLine": 128,
+        "endColumn": 29
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .hdop on an `any` value.",
+        "line": 128,
+        "column": 25,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 128,
+        "endColumn": 29
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 1,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 129,
+        "column": 11,
+        "nodeType": "Property",
+        "messageId": "anyAssignment",
+        "endLine": 129,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .satellites on an `any` value.",
+        "line": 129,
+        "column": 31,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 129,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 1,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 130,
+        "column": 11,
+        "nodeType": "Property",
+        "messageId": "anyAssignment",
+        "endLine": 130,
+        "endColumn": 35
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .fixType on an `any` value.",
+        "line": 130,
+        "column": 28,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 130,
+        "endColumn": 35
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 1,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 131,
+        "column": 11,
+        "nodeType": "Property",
+        "messageId": "anyAssignment",
+        "endLine": 131,
+        "endColumn": 39
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .timestamp on an `any` value.",
+        "line": 131,
+        "column": 30,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 131,
+        "endColumn": 39
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 1,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 132,
+        "column": 11,
+        "nodeType": "Property",
+        "messageId": "anyAssignment",
+        "endLine": 132,
+        "endColumn": 35
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .quality on an `any` value.",
+        "line": 132,
+        "column": 28,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 132,
+        "endColumn": 35
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 1,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 155,
+        "column": 13,
+        "nodeType": "VariableDeclarator",
+        "messageId": "anyAssignment",
+        "endLine": 155,
+        "endColumn": 65
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-call",
+        "severity": 1,
+        "message": "Unsafe call of an `any` typed value.",
+        "line": 155,
+        "column": 26,
+        "nodeType": "MemberExpression",
+        "messageId": "unsafeCall",
+        "endLine": 155,
+        "endColumn": 63
+      },
+      {
+        "ruleId": "@typescript-eslint/no-explicit-any",
+        "severity": 1,
+        "message": "Unexpected any. Specify a different type.",
+        "line": 155,
+        "column": 40,
+        "nodeType": "TSAnyKeyword",
+        "messageId": "unexpectedAny",
+        "endLine": 155,
+        "endColumn": 43,
+        "suggestions": [
+          {
+            "messageId": "suggestUnknown",
+            "fix": {
+              "range": [
+                5093,
+                5096
+              ],
+              "text": "unknown"
+            },
+            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
+          },
+          {
+            "messageId": "suggestNever",
+            "fix": {
+              "range": [
+                5093,
+                5096
+              ],
+              "text": "never"
+            },
+            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
+          }
+        ]
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .serial on an `any` value.",
+        "line": 155,
+        "column": 45,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 155,
+        "endColumn": 51
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-call",
+        "severity": 1,
+        "message": "Unsafe call of an `any` typed value.",
+        "line": 156,
+        "column": 13,
+        "nodeType": "MemberExpression",
+        "messageId": "unsafeCall",
+        "endLine": 156,
+        "endColumn": 22
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .open on an `any` value.",
+        "line": 156,
+        "column": 18,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 156,
+        "endColumn": 22
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 1,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 158,
+        "column": 13,
+        "nodeType": "VariableDeclarator",
+        "messageId": "anyAssignment",
+        "endLine": 158,
+        "endColumn": 47
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-call",
+        "severity": 1,
+        "message": "Unsafe call of an `any` typed value.",
+        "line": 158,
+        "column": 22,
+        "nodeType": "MemberExpression",
+        "messageId": "unsafeCall",
+        "endLine": 158,
+        "endColumn": 45
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .readable on an `any` value.",
+        "line": 158,
+        "column": 27,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 158,
+        "endColumn": 35
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-assignment",
+        "severity": 1,
+        "message": "Unsafe assignment of an `any` value.",
+        "line": 166,
+        "column": 19,
+        "nodeType": "VariableDeclarator",
+        "messageId": "anyAssignment",
+        "endLine": 166,
+        "endColumn": 56
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-call",
+        "severity": 1,
+        "message": "Unsafe call of an `any` typed value.",
+        "line": 166,
+        "column": 43,
+        "nodeType": "MemberExpression",
+        "messageId": "unsafeCall",
+        "endLine": 166,
+        "endColumn": 54
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-member-access",
+        "severity": 1,
+        "message": "Unsafe member access .read on an `any` value.",
+        "line": 166,
+        "column": 50,
+        "nodeType": "Identifier",
+        "messageId": "unsafeMemberExpression",
+        "endLine": 166,
+        "endColumn": 54
+      },
+      {
+        "ruleId": "@typescript-eslint/no-unsafe-argument",
+        "severity": 1,
+        "message": "Unsafe argument of type `any` assigned to a parameter of type `AllowSharedBufferSource | undefined`.",
+        "line": 168,
+        "column": 38,
+        "nodeType": "Identifier",
+        "messageId": "unsafeArgument",
+        "endLine": 168,
+        "endColumn": 43
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 3,
+    "warningCount": 33,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client'\r\n\r\n/**\r\n * GNSSRoverConnection — Direct hardware integration for RTK rovers\r\n *\r\n * Connects directly to GNSS receivers via:\r\n * 1. Web Bluetooth API (CHCNAV, South, EFIX, Stonex, Trimble, Leica)\r\n * 2. Web Serial API (USB-C OTG cable)\r\n *\r\n * Streams live NMEA-0183 sentences ($GNGGA, $GNRMC) into the fieldbook.\r\n * When the surveyor hits \"Capture\", it reads the current position from\r\n * the rover and populates the fieldbook row automatically.\r\n *\r\n * Uses existing:\r\n * - src/lib/gnss/nmea-parser.ts (NMEA parsing)\r\n * - src/lib/gnss/bluetooth.ts (Web Bluetooth)\r\n * - src/lib/serial/InstrumentSerialConnection.ts (Web Serial)\r\n * - src/hooks/useInstrumentConnection.ts (connection hook)\r\n */\r\n\r\nimport { useState, useEffect, useCallback, useRef } from 'react'\r\nimport {\r\n  Bluetooth, Usb, Wifi, WifiOff, Satellite, Loader2,\r\n  CheckCircle2, AlertTriangle, Crosshair, Radio,\r\n  Power, Activity, MapPin,\r\n} from 'lucide-react'\r\nimport type { NMEAPosition } from '@/lib/gnss/bluetooth'\r\n\r\ntype ConnectionType = 'bluetooth' | 'serial' | 'internal'\r\ntype ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error'\r\n\r\ninterface RoverPosition {\r\n  latitude: number\r\n  longitude: number\r\n  altitude: number\r\n  hdop: number\r\n  satellites: number\r\n  fixType: string\r\n  timestamp: Date\r\n  quality: number\r\n}\r\n\r\nconst FIX_TYPE_LABELS: Record<string, string> = {\r\n  none: 'No Fix',\r\n  gps: 'GPS Fix',\r\n  dgps: 'DGPS',\r\n  pps: 'PPS',\r\n  rtk: 'RTK Fixed',\r\n  float: 'RTK Float',\r\n}\r\n\r\nconst FIX_TYPE_COLORS: Record<string, string> = {\r\n  none: 'text-red-400',\r\n  gps: 'text-amber-400',\r\n  dgps: 'text-blue-400',\r\n  pps: 'text-blue-400',\r\n  rtk: 'text-emerald-400',\r\n  float: 'text-cyan-400',\r\n}\r\n\r\nexport function GNSSRoverConnection() {\r\n  const [connectionType, setConnectionType] = useState<ConnectionType>('internal')\r\n  const [state, setState] = useState<ConnectionState>('disconnected')\r\n  const [position, setPosition] = useState<RoverPosition | null>(null)\r\n  const [error, setError] = useState<string | null>(null)\r\n  const [nmeaCount, setNmeaCount] = useState(0)\r\n  const watchIdRef = useRef<number | null>(null)\r\n  const bluetoothCleanupRef = useRef<(() => void) | null>(null)\r\n\r\n  // Check API support\r\n  const bluetoothSupported = typeof navigator !== 'undefined' && 'bluetooth' in navigator\r\n  const serialSupported = typeof navigator !== 'undefined' && 'serial' in navigator\r\n\r\n  // Internal GPS fallback (browser Geolocation API)\r\n  const connectInternal = useCallback(async () => {\r\n    setState('connecting')\r\n    setError(null)\r\n    try {\r\n      if (!('geolocation' in navigator)) {\r\n        throw new Error('Geolocation not supported')\r\n      }\r\n      watchIdRef.current = navigator.geolocation.watchPosition(\r\n        (pos) => {\r\n          setPosition({\r\n            latitude: pos.coords.latitude,\r\n            longitude: pos.coords.longitude,\r\n            altitude: pos.coords.altitude || 0,\r\n            hdop: pos.coords.accuracy || 99,\r\n            satellites: 0,\r\n            fixType: pos.coords.accuracy < 3 ? 'rtk' : pos.coords.accuracy < 10 ? 'gps' : 'none',\r\n            timestamp: new Date(pos.timestamp),\r\n            quality: pos.coords.accuracy < 3 ? 4 : 1,\r\n          })\r\n          setNmeaCount(prev => prev + 1)\r\n          setState('connected')\r\n        },\r\n        (err) => {\r\n          setError(err.message)\r\n          setState('error')\r\n        },\r\n        { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }\r\n      )\r\n      setState('connected')\r\n    } catch (err) {\r\n      setError(err instanceof Error ? err.message : 'Failed to connect')\r\n      setState('error')\r\n    }\r\n  }, [])\r\n\r\n  // Web Bluetooth connection\r\n  const connectBluetooth = useCallback(async () => {\r\n    setState('connecting')\r\n    setError(null)\r\n    try {\r\n      if (!bluetoothSupported) {\r\n        throw new Error('Web Bluetooth not supported. Use Chrome or Edge.')\r\n      }\r\n\r\n      // Dynamically import the existing bluetooth module\r\n      const { WebBluetoothGNSS } = await import('@/lib/gnss/bluetooth')\r\n      const gnss = new WebBluetoothGNSS()\r\n\r\n      // Set up position callback\r\n      gnss.onPosition((nmeaPos: NMEAPosition) => {\r\n        setPosition({\r\n          latitude: nmeaPos.latitude,\r\n          longitude: nmeaPos.longitude,\r\n          altitude: nmeaPos.altitude,\r\n          hdop: nmeaPos.hdop,\r\n          satellites: nmeaPos.satellites,\r\n          fixType: nmeaPos.fixType,\r\n          timestamp: nmeaPos.timestamp,\r\n          quality: nmeaPos.quality,\r\n        })\r\n        setNmeaCount(prev => prev + 1)\r\n      })\r\n\r\n      await gnss.connect()\r\n      bluetoothCleanupRef.current = () => { gnss.disconnect() }\r\n      setState('connected')\r\n    } catch (err) {\r\n      setError(err instanceof Error ? err.message : 'Bluetooth connection failed')\r\n      setState('error')\r\n    }\r\n  }, [bluetoothSupported])\r\n\r\n  // Web Serial connection\r\n  const connectSerial = useCallback(async () => {\r\n    setState('connecting')\r\n    setError(null)\r\n    try {\r\n      if (!serialSupported) {\r\n        throw new Error('Web Serial not supported. Use Chrome or Edge.')\r\n      }\r\n\r\n      // navigator.serial is typed via src/types/web-serial.d.ts; feature-checked above\r\n      const port = await navigator.serial.requestPort()\r\n      await port.open({ baudRate: 115200 })\r\n\r\n      if (!port.readable) {\r\n        throw new Error('Serial port has no readable stream')\r\n      }\r\n      const reader = port.readable.getReader()\r\n      const decoder = new TextDecoder()\r\n      let buffer = ''\r\n\r\n      // Read loop\r\n      const readLoop = async () => {\r\n        try {\r\n          while (true) {\r\n            const { done, value } = await reader.read()\r\n            if (done) break\r\n            buffer += decoder.decode(value, { stream: true })\r\n\r\n            // Process complete NMEA sentences\r\n            const lines = buffer.split('\\n')\r\n            buffer = lines.pop() || ''\r\n\r\n            for (const line of lines) {\r\n              const trimmed = line.trim()\r\n              if (trimmed.startsWith('$')) {\r\n                setNmeaCount(prev => prev + 1)\r\n                // Parse NMEA\r\n                try {\r\n                  const { parseNMEA } = await import('@/lib/gnss/nmea-parser')\r\n                  const parsed = parseNMEA(trimmed)\r\n                  if (parsed && parsed.latitude) {\r\n                    setPosition({\r\n                      latitude: parsed.latitude,\r\n                      longitude: parsed.longitude,\r\n                      altitude: parsed.altitude,\r\n                      hdop: parsed.hdop,\r\n                      satellites: parsed.satellites,\r\n                      fixType: parsed.fixType,\r\n                      timestamp: parsed.timestamp,\r\n                      quality: parsed.quality,\r\n                    })\r\n                  }\r\n                } catch {}\r\n              }\r\n            }\r\n          }\r\n        } catch (err) {\r\n          setError('Serial read error: ' + (err instanceof Error ? err.message : 'unknown'))\r\n          setState('error')\r\n        }\r\n      }\r\n\r\n      readLoop()\r\n      setState('connected')\r\n    } catch (err) {\r\n      setError(err instanceof Error ? err.message : 'Serial connection failed')\r\n      setState('error')\r\n    }\r\n  }, [serialSupported])\r\n\r\n  const handleConnect = useCallback(() => {\r\n    if (connectionType === 'bluetooth') connectBluetooth()\r\n    else if (connectionType === 'serial') connectSerial()\r\n    else connectInternal()\r\n  }, [connectionType, connectBluetooth, connectSerial, connectInternal])\r\n\r\n  const handleDisconnect = useCallback(() => {\r\n    if (watchIdRef.current != null && connectionType === 'internal') {\r\n      navigator.geolocation.clearWatch(watchIdRef.current)\r\n      watchIdRef.current = null\r\n    }\r\n    if (bluetoothCleanupRef.current) {\r\n      bluetoothCleanupRef.current()\r\n      bluetoothCleanupRef.current = null\r\n    }\r\n    setState('disconnected')\r\n    setPosition(null)\r\n    setNmeaCount(0)\r\n  }, [connectionType])\r\n\r\n  // Cleanup on unmount\r\n  useEffect(() => {\r\n    return () => {\r\n      if (watchIdRef.current != null) {\r\n        navigator.geolocation.clearWatch(watchIdRef.current)\r\n      }\r\n      if (bluetoothCleanupRef.current) {\r\n        bluetoothCleanupRef.current()\r\n      }\r\n    }\r\n  }, [])\r\n\r\n  const isConnecting = state === 'connecting'\r\n  const isConnected = state === 'connected'\r\n  const fixColor = position ? FIX_TYPE_COLORS[position.fixType] || 'text-gray-400' : 'text-gray-600'\r\n  const fixLabel = position ? FIX_TYPE_LABELS[position.fixType] || 'Unknown' : 'No Fix'\r\n\r\n  return (\r\n    <div className=\"rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] overflow-hidden\">\r\n      {/* Header */}\r\n      <div className=\"flex items-center justify-between px-4 py-3 border-b border-[var(--border-color)]\">\r\n        <div className=\"flex items-center gap-2\">\r\n          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${\r\n            isConnected ? 'bg-emerald-500/10' : 'bg-[var(--bg-tertiary)]'\r\n          }`}>\r\n            <Satellite className={`w-4 h-4 ${isConnected ? 'text-emerald-400' : 'text-gray-400'}`} />\r\n          </div>\r\n          <div>\r\n            <span className=\"text-sm font-semibold text-[var(--text-primary)]\">GNSS Rover</span>\r\n            <p className=\"text-[10px] text-gray-500\">Direct hardware connection</p>\r\n          </div>\r\n        </div>\r\n        {/* Status indicator */}\r\n        <div className=\"flex items-center gap-1.5\">\r\n          {isConnecting && <Loader2 className=\"w-3 h-3 text-amber-400 animate-spin\" />}\r\n          {isConnected && <span className=\"w-2 h-2 rounded-full bg-emerald-400 animate-pulse\" />}\r\n          <span className={`text-[10px] font-medium ${\r\n            state === 'connected' ? 'text-emerald-400' :\r\n            state === 'connecting' ? 'text-amber-400' :\r\n            state === 'error' ? 'text-red-400' : 'text-gray-500'\r\n          }`}>\r\n            {state === 'connected' ? 'Connected' : state === 'connecting' ? 'Connecting...' : state === 'error' ? 'Error' : 'Disconnected'}\r\n          </span>\r\n        </div>\r\n      </div>\r\n\r\n      <div className=\"p-4 space-y-3\">\r\n        {/* Connection type selector */}\r\n        <div>\r\n          <div className=\"block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5\">Connection Method</div>\r\n          <div className=\"grid grid-cols-3 gap-2\">\r\n            <ConnTypeBtn\r\n              active={connectionType === 'bluetooth'}\r\n              onClick={() => setConnectionType('bluetooth')}\r\n              icon={Bluetooth}\r\n              label=\"Bluetooth\"\r\n              supported={bluetoothSupported}\r\n            />\r\n            <ConnTypeBtn\r\n              active={connectionType === 'serial'}\r\n              onClick={() => setConnectionType('serial')}\r\n              icon={Usb}\r\n              label=\"USB Serial\"\r\n              supported={serialSupported}\r\n            />\r\n            <ConnTypeBtn\r\n              active={connectionType === 'internal'}\r\n              onClick={() => setConnectionType('internal')}\r\n              icon={Radio}\r\n              label=\"Internal GPS\"\r\n              supported={true}\r\n            />\r\n          </div>\r\n        </div>\r\n\r\n        {/* Connect/Disconnect button */}\r\n        {!isConnected ? (\r\n          <button\r\n            onClick={handleConnect}\r\n            disabled={isConnecting}\r\n            className=\"w-full flex items-center justify-center gap-2 h-10 rounded-lg bg-[var(--accent)] text-black text-sm font-semibold hover:bg-[var(--accent-dim)] transition-colors disabled:opacity-50\"\r\n          >\r\n            {isConnecting ? <Loader2 className=\"w-4 h-4 animate-spin\" /> : <Power className=\"w-4 h-4\" />}\r\n            {isConnecting ? 'Connecting...' : `Connect via ${connectionType === 'bluetooth' ? 'Bluetooth' : connectionType === 'serial' ? 'USB' : 'Internal GPS'}`}\r\n          </button>\r\n        ) : (\r\n          <button\r\n            onClick={handleDisconnect}\r\n            className=\"w-full flex items-center justify-center gap-2 h-10 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-sm font-semibold hover:bg-red-500/30 transition-colors\"\r\n          >\r\n            <Power className=\"w-4 h-4\" />\r\n            Disconnect\r\n          </button>\r\n        )}\r\n\r\n        {/* Error */}\r\n        {error && (\r\n          <div className=\"flex items-start gap-2 p-2.5 rounded-lg bg-red-500/5 border border-red-500/20\">\r\n            <AlertTriangle className=\"w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5\" />\r\n            <p className=\"text-[11px] text-red-400\">{error}</p>\r\n          </div>\r\n        )}\r\n\r\n        {/* Live position display */}\r\n        {position && (\r\n          <div className=\"space-y-2\">\r\n            {/* Fix type badge */}\r\n            <div className=\"flex items-center justify-between p-2.5 rounded-lg bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)]\">\r\n              <div className=\"flex items-center gap-2\">\r\n                <Crosshair className={`w-4 h-4 ${fixColor}`} />\r\n                <span className={`text-sm font-semibold ${fixColor}`}>{fixLabel}</span>\r\n              </div>\r\n              <div className=\"flex items-center gap-3 text-[10px] text-gray-500\">\r\n                <span className=\"flex items-center gap-1\">\r\n                  <Activity className=\"w-3 h-3\" />\r\n                  {position.satellites} sats\r\n                </span>\r\n                <span className=\"flex items-center gap-1\">\r\n                  HDOP: {position.hdop.toFixed(1)}\r\n                </span>\r\n              </div>\r\n            </div>\r\n\r\n            {/* Coordinates */}\r\n            <div className=\"grid grid-cols-2 gap-2\">\r\n              <div className=\"p-2 rounded-lg bg-[var(--bg-tertiary)]/50\">\r\n                <span className=\"text-[9px] text-gray-500 uppercase tracking-wider\">Latitude</span>\r\n                <div className=\"text-xs font-mono text-[var(--text-primary)]\">{position.latitude.toFixed(8)}°</div>\r\n              </div>\r\n              <div className=\"p-2 rounded-lg bg-[var(--bg-tertiary)]/50\">\r\n                <span className=\"text-[9px] text-gray-500 uppercase tracking-wider\">Longitude</span>\r\n                <div className=\"text-xs font-mono text-[var(--text-primary)]\">{position.longitude.toFixed(8)}°</div>\r\n              </div>\r\n              <div className=\"p-2 rounded-lg bg-[var(--bg-tertiary)]/50\">\r\n                <span className=\"text-[9px] text-gray-500 uppercase tracking-wider\">Altitude</span>\r\n                <div className=\"text-xs font-mono text-[var(--text-primary)]\">{position.altitude.toFixed(3)} m</div>\r\n              </div>\r\n              <div className=\"p-2 rounded-lg bg-[var(--bg-tertiary)]/50\">\r\n                <span className=\"text-[9px] text-gray-500 uppercase tracking-wider\">NMEA Sentences</span>\r\n                <div className=\"text-xs font-mono text-[var(--text-primary)]\">{nmeaCount}</div>\r\n              </div>\r\n            </div>\r\n\r\n            {/* Last update */}\r\n            <div className=\"flex items-center justify-center gap-1 text-[9px] text-gray-600\">\r\n              <MapPin className=\"w-2.5 h-2.5\" />\r\n              Updated: {position.timestamp.toLocaleTimeString()}\r\n            </div>\r\n          </div>\r\n        )}\r\n\r\n        {/* Supported devices note */}\r\n        <div className=\"flex items-start gap-2 p-2.5 rounded-lg bg-blue-500/5 border border-blue-500/10\">\r\n          <Satellite className=\"w-3 h-3 text-blue-400 shrink-0 mt-0.5\" />\r\n          <p className=\"text-[10px] text-blue-400/70 leading-relaxed\">\r\n            Supports CHCNAV, South, EFIX, Stonex, Trimble, Leica rovers via Bluetooth or USB-C OTG.\r\n            Streams NMEA-0183 ($GNGGA, $GNRMC) directly into the fieldbook.\r\n          </p>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n\r\nfunction ConnTypeBtn({ active, onClick, icon: Icon, label, supported }: {\r\n  active: boolean\r\n  onClick: () => void\r\n  icon: typeof Bluetooth\r\n  label: string\r\n  supported: boolean\r\n}) {\r\n  return (\r\n    <button\r\n      onClick={onClick}\r\n      disabled={!supported}\r\n      className={`flex flex-col items-center gap-1 py-2.5 rounded-lg border transition-all ${\r\n        active\r\n          ? 'bg-[var(--accent)]/10 border-[var(--accent)]/30 text-[var(--accent)]'\r\n          : supported\r\n            ? 'bg-[var(--bg-tertiary)]/50 border-[var(--border-color)] text-gray-400 hover:bg-[var(--bg-tertiary)]'\r\n            : 'bg-[var(--bg-tertiary)]/30 border-[var(--border-color)]/50 text-gray-600 cursor-not-allowed'\r\n      }`}\r\n    >\r\n      <Icon className=\"w-4 h-4\" />\r\n      <span className=\"text-[10px] font-medium\">{label}</span>\r\n      {!supported && <span className=\"text-[8px] text-gray-600\">N/A</span>}\r\n    </button>\r\n  )\r\n}\r\n",
+    "source": "'use client'\r\n\r\n/**\r\n * GNSSRoverConnection — Direct hardware integration for RTK rovers\r\n *\r\n * Connects directly to GNSS receivers via:\r\n * 1. Web Bluetooth API (CHCNAV, South, EFIX, Stonex, Trimble, Leica)\r\n * 2. Web Serial API (USB-C OTG cable)\r\n *\r\n * Streams live NMEA-0183 sentences ($GNGGA, $GNRMC) into the fieldbook.\r\n * When the surveyor hits \"Capture\", it reads the current position from\r\n * the rover and populates the fieldbook row automatically.\r\n *\r\n * Uses existing:\r\n * - src/lib/gnss/nmea-parser.ts (NMEA parsing)\r\n * - src/lib/gnss/bluetooth.ts (Web Bluetooth)\r\n * - src/lib/serial/InstrumentSerialConnection.ts (Web Serial)\r\n * - src/hooks/useInstrumentConnection.ts (connection hook)\r\n */\r\n\r\nimport { useState, useEffect, useCallback, useRef } from 'react'\r\nimport {\r\n  Bluetooth, Usb, Wifi, WifiOff, Satellite, Loader2,\r\n  CheckCircle2, AlertTriangle, Crosshair, Radio,\r\n  Power, Activity, MapPin,\r\n} from 'lucide-react'\r\n\r\ntype ConnectionType = 'bluetooth' | 'serial' | 'internal'\r\ntype ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error'\r\n\r\ninterface RoverPosition {\r\n  latitude: number\r\n  longitude: number\r\n  altitude: number\r\n  hdop: number\r\n  satellites: number\r\n  fixType: string\r\n  timestamp: Date\r\n  quality: number\r\n}\r\n\r\nconst FIX_TYPE_LABELS: Record<string, string> = {\r\n  none: 'No Fix',\r\n  gps: 'GPS Fix',\r\n  dgps: 'DGPS',\r\n  pps: 'PPS',\r\n  rtk: 'RTK Fixed',\r\n  float: 'RTK Float',\r\n}\r\n\r\nconst FIX_TYPE_COLORS: Record<string, string> = {\r\n  none: 'text-red-400',\r\n  gps: 'text-amber-400',\r\n  dgps: 'text-blue-400',\r\n  pps: 'text-blue-400',\r\n  rtk: 'text-emerald-400',\r\n  float: 'text-cyan-400',\r\n}\r\n\r\nexport function GNSSRoverConnection() {\r\n  const [connectionType, setConnectionType] = useState<ConnectionType>('internal')\r\n  const [state, setState] = useState<ConnectionState>('disconnected')\r\n  const [position, setPosition] = useState<RoverPosition | null>(null)\r\n  const [error, setError] = useState<string | null>(null)\r\n  const [nmeaCount, setNmeaCount] = useState(0)\r\n  const watchIdRef = useRef<number | null>(null)\r\n  const bluetoothCleanupRef = useRef<(() => void) | null>(null)\r\n\r\n  // Check API support\r\n  const bluetoothSupported = typeof navigator !== 'undefined' && 'bluetooth' in navigator\r\n  const serialSupported = typeof navigator !== 'undefined' && 'serial' in navigator\r\n\r\n  // Internal GPS fallback (browser Geolocation API)\r\n  const connectInternal = useCallback(async () => {\r\n    setState('connecting')\r\n    setError(null)\r\n    try {\r\n      if (!('geolocation' in navigator)) {\r\n        throw new Error('Geolocation not supported')\r\n      }\r\n      watchIdRef.current = navigator.geolocation.watchPosition(\r\n        (pos) => {\r\n          setPosition({\r\n            latitude: pos.coords.latitude,\r\n            longitude: pos.coords.longitude,\r\n            altitude: pos.coords.altitude || 0,\r\n            hdop: pos.coords.accuracy || 99,\r\n            satellites: 0,\r\n            fixType: pos.coords.accuracy < 3 ? 'rtk' : pos.coords.accuracy < 10 ? 'gps' : 'none',\r\n            timestamp: new Date(pos.timestamp),\r\n            quality: pos.coords.accuracy < 3 ? 4 : 1,\r\n          })\r\n          setNmeaCount(prev => prev + 1)\r\n          setState('connected')\r\n        },\r\n        (err) => {\r\n          setError(err.message)\r\n          setState('error')\r\n        },\r\n        { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }\r\n      )\r\n      setState('connected')\r\n    } catch (err) {\r\n      setError(err instanceof Error ? err.message : 'Failed to connect')\r\n      setState('error')\r\n    }\r\n  }, [])\r\n\r\n  // Web Bluetooth connection\r\n  const connectBluetooth = useCallback(async () => {\r\n    setState('connecting')\r\n    setError(null)\r\n    try {\r\n      if (!bluetoothSupported) {\r\n        throw new Error('Web Bluetooth not supported. Use Chrome or Edge.')\r\n      }\r\n\r\n      // Dynamically import the existing bluetooth module\r\n      const { WebBluetoothGNSS } = await import('@/lib/gnss/bluetooth')\r\n      const gnss = new WebBluetoothGNSS()\r\n\r\n      // Set up position callback\r\n      gnss.onPosition((nmeaPos: any) => {\r\n        setPosition({\r\n          latitude: nmeaPos.latitude,\r\n          longitude: nmeaPos.longitude,\r\n          altitude: nmeaPos.altitude,\r\n          hdop: nmeaPos.hdop,\r\n          satellites: nmeaPos.satellites,\r\n          fixType: nmeaPos.fixType,\r\n          timestamp: nmeaPos.timestamp,\r\n          quality: nmeaPos.quality,\r\n        })\r\n        setNmeaCount(prev => prev + 1)\r\n      })\r\n\r\n      await gnss.connect()\r\n      bluetoothCleanupRef.current = () => { gnss.disconnect() }\r\n      setState('connected')\r\n    } catch (err) {\r\n      setError(err instanceof Error ? err.message : 'Bluetooth connection failed')\r\n      setState('error')\r\n    }\r\n  }, [bluetoothSupported])\r\n\r\n  // Web Serial connection\r\n  const connectSerial = useCallback(async () => {\r\n    setState('connecting')\r\n    setError(null)\r\n    try {\r\n      if (!serialSupported) {\r\n        throw new Error('Web Serial not supported. Use Chrome or Edge.')\r\n      }\r\n\r\n      const port = await (navigator as any).serial.requestPort()\r\n      await port.open({ baudRate: 115200 })\r\n\r\n      const reader = port.readable.getReader()\r\n      const decoder = new TextDecoder()\r\n      let buffer = ''\r\n\r\n      // Read loop\r\n      const readLoop = async () => {\r\n        try {\r\n          while (true) {\r\n            const { done, value } = await reader.read()\r\n            if (done) break\r\n            buffer += decoder.decode(value, { stream: true })\r\n\r\n            // Process complete NMEA sentences\r\n            const lines = buffer.split('\\n')\r\n            buffer = lines.pop() || ''\r\n\r\n            for (const line of lines) {\r\n              const trimmed = line.trim()\r\n              if (trimmed.startsWith('$')) {\r\n                setNmeaCount(prev => prev + 1)\r\n                // Parse NMEA\r\n                try {\r\n                  const { parseNMEA } = await import('@/lib/gnss/nmea-parser')\r\n                  const parsed = parseNMEA(trimmed)\r\n                  if (parsed && parsed.latitude) {\r\n                    setPosition({\r\n                      latitude: parsed.latitude,\r\n                      longitude: parsed.longitude,\r\n                      altitude: parsed.altitude,\r\n                      hdop: parsed.hdop,\r\n                      satellites: parsed.satellites,\r\n                      fixType: parsed.fixType,\r\n                      timestamp: parsed.timestamp,\r\n                      quality: parsed.quality,\r\n                    })\r\n                  }\r\n                } catch {}\r\n              }\r\n            }\r\n          }\r\n        } catch (err) {\r\n          setError('Serial read error: ' + (err instanceof Error ? err.message : 'unknown'))\r\n          setState('error')\r\n        }\r\n      }\r\n\r\n      readLoop()\r\n      setState('connected')\r\n    } catch (err) {\r\n      setError(err instanceof Error ? err.message : 'Serial connection failed')\r\n      setState('error')\r\n    }\r\n  }, [serialSupported])\r\n\r\n  const handleConnect = useCallback(() => {\r\n    if (connectionType === 'bluetooth') connectBluetooth()\r\n    else if (connectionType === 'serial') connectSerial()\r\n    else connectInternal()\r\n  }, [connectionType, connectBluetooth, connectSerial, connectInternal])\r\n\r\n  const handleDisconnect = useCallback(() => {\r\n    if (watchIdRef.current != null && connectionType === 'internal') {\r\n      navigator.geolocation.clearWatch(watchIdRef.current)\r\n      watchIdRef.current = null\r\n    }\r\n    if (bluetoothCleanupRef.current) {\r\n      bluetoothCleanupRef.current()\r\n      bluetoothCleanupRef.current = null\r\n    }\r\n    setState('disconnected')\r\n    setPosition(null)\r\n    setNmeaCount(0)\r\n  }, [connectionType])\r\n\r\n  // Cleanup on unmount\r\n  useEffect(() => {\r\n    return () => {\r\n      if (watchIdRef.current != null) {\r\n        navigator.geolocation.clearWatch(watchIdRef.current)\r\n      }\r\n      if (bluetoothCleanupRef.current) {\r\n        bluetoothCleanupRef.current()\r\n      }\r\n    }\r\n  }, [])\r\n\r\n  const isConnecting = state === 'connecting'\r\n  const isConnected = state === 'connected'\r\n  const fixColor = position ? FIX_TYPE_COLORS[position.fixType] || 'text-gray-400' : 'text-gray-600'\r\n  const fixLabel = position ? FIX_TYPE_LABELS[position.fixType] || 'Unknown' : 'No Fix'\r\n\r\n  return (\r\n    <div className=\"rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] overflow-hidden\">\r\n      {/* Header */}\r\n      <div className=\"flex items-center justify-between px-4 py-3 border-b border-[var(--border-color)]\">\r\n        <div className=\"flex items-center gap-2\">\r\n          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${\r\n            isConnected ? 'bg-emerald-500/10' : 'bg-[var(--bg-tertiary)]'\r\n          }`}>\r\n            <Satellite className={`w-4 h-4 ${isConnected ? 'text-emerald-400' : 'text-gray-400'}`} />\r\n          </div>\r\n          <div>\r\n            <span className=\"text-sm font-semibold text-[var(--text-primary)]\">GNSS Rover</span>\r\n            <p className=\"text-[10px] text-gray-500\">Direct hardware connection</p>\r\n          </div>\r\n        </div>\r\n        {/* Status indicator */}\r\n        <div className=\"flex items-center gap-1.5\">\r\n          {isConnecting && <Loader2 className=\"w-3 h-3 text-amber-400 animate-spin\" />}\r\n          {isConnected && <span className=\"w-2 h-2 rounded-full bg-emerald-400 animate-pulse\" />}\r\n          <span className={`text-[10px] font-medium ${\r\n            state === 'connected' ? 'text-emerald-400' :\r\n            state === 'connecting' ? 'text-amber-400' :\r\n            state === 'error' ? 'text-red-400' : 'text-gray-500'\r\n          }`}>\r\n            {state === 'connected' ? 'Connected' : state === 'connecting' ? 'Connecting...' : state === 'error' ? 'Error' : 'Disconnected'}\r\n          </span>\r\n        </div>\r\n      </div>\r\n\r\n      <div className=\"p-4 space-y-3\">\r\n        {/* Connection type selector */}\r\n        <div>\r\n          <div className=\"block text-[9px] text-gray-500 uppercase tracking-wider mb-1.5\">Connection Method</div>\r\n          <div className=\"grid grid-cols-3 gap-2\">\r\n            <ConnTypeBtn\r\n              active={connectionType === 'bluetooth'}\r\n              onClick={() => setConnectionType('bluetooth')}\r\n              icon={Bluetooth}\r\n              label=\"Bluetooth\"\r\n              supported={bluetoothSupported}\r\n            />\r\n            <ConnTypeBtn\r\n              active={connectionType === 'serial'}\r\n              onClick={() => setConnectionType('serial')}\r\n              icon={Usb}\r\n              label=\"USB Serial\"\r\n              supported={serialSupported}\r\n            />\r\n            <ConnTypeBtn\r\n              active={connectionType === 'internal'}\r\n              onClick={() => setConnectionType('internal')}\r\n              icon={Radio}\r\n              label=\"Internal GPS\"\r\n              supported={true}\r\n            />\r\n          </div>\r\n        </div>\r\n\r\n        {/* Connect/Disconnect button */}\r\n        {!isConnected ? (\r\n          <button\r\n            onClick={handleConnect}\r\n            disabled={isConnecting}\r\n            className=\"w-full flex items-center justify-center gap-2 h-10 rounded-lg bg-[var(--accent)] text-black text-sm font-semibold hover:bg-[var(--accent-dim)] transition-colors disabled:opacity-50\"\r\n          >\r\n            {isConnecting ? <Loader2 className=\"w-4 h-4 animate-spin\" /> : <Power className=\"w-4 h-4\" />}\r\n            {isConnecting ? 'Connecting...' : `Connect via ${connectionType === 'bluetooth' ? 'Bluetooth' : connectionType === 'serial' ? 'USB' : 'Internal GPS'}`}\r\n          </button>\r\n        ) : (\r\n          <button\r\n            onClick={handleDisconnect}\r\n            className=\"w-full flex items-center justify-center gap-2 h-10 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-sm font-semibold hover:bg-red-500/30 transition-colors\"\r\n          >\r\n            <Power className=\"w-4 h-4\" />\r\n            Disconnect\r\n          </button>\r\n        )}\r\n\r\n        {/* Error */}\r\n        {error && (\r\n          <div className=\"flex items-start gap-2 p-2.5 rounded-lg bg-red-500/5 border border-red-500/20\">\r\n            <AlertTriangle className=\"w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5\" />\r\n            <p className=\"text-[11px] text-red-400\">{error}</p>\r\n          </div>\r\n        )}\r\n\r\n        {/* Live position display */}\r\n        {position && (\r\n          <div className=\"space-y-2\">\r\n            {/* Fix type badge */}\r\n            <div className=\"flex items-center justify-between p-2.5 rounded-lg bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)]\">\r\n              <div className=\"flex items-center gap-2\">\r\n                <Crosshair className={`w-4 h-4 ${fixColor}`} />\r\n                <span className={`text-sm font-semibold ${fixColor}`}>{fixLabel}</span>\r\n              </div>\r\n              <div className=\"flex items-center gap-3 text-[10px] text-gray-500\">\r\n                <span className=\"flex items-center gap-1\">\r\n                  <Activity className=\"w-3 h-3\" />\r\n                  {position.satellites} sats\r\n                </span>\r\n                <span className=\"flex items-center gap-1\">\r\n                  HDOP: {position.hdop.toFixed(1)}\r\n                </span>\r\n              </div>\r\n            </div>\r\n\r\n            {/* Coordinates */}\r\n            <div className=\"grid grid-cols-2 gap-2\">\r\n              <div className=\"p-2 rounded-lg bg-[var(--bg-tertiary)]/50\">\r\n                <span className=\"text-[9px] text-gray-500 uppercase tracking-wider\">Latitude</span>\r\n                <div className=\"text-xs font-mono text-[var(--text-primary)]\">{position.latitude.toFixed(8)}°</div>\r\n              </div>\r\n              <div className=\"p-2 rounded-lg bg-[var(--bg-tertiary)]/50\">\r\n                <span className=\"text-[9px] text-gray-500 uppercase tracking-wider\">Longitude</span>\r\n                <div className=\"text-xs font-mono text-[var(--text-primary)]\">{position.longitude.toFixed(8)}°</div>\r\n              </div>\r\n              <div className=\"p-2 rounded-lg bg-[var(--bg-tertiary)]/50\">\r\n                <span className=\"text-[9px] text-gray-500 uppercase tracking-wider\">Altitude</span>\r\n                <div className=\"text-xs font-mono text-[var(--text-primary)]\">{position.altitude.toFixed(3)} m</div>\r\n              </div>\r\n              <div className=\"p-2 rounded-lg bg-[var(--bg-tertiary)]/50\">\r\n                <span className=\"text-[9px] text-gray-500 uppercase tracking-wider\">NMEA Sentences</span>\r\n                <div className=\"text-xs font-mono text-[var(--text-primary)]\">{nmeaCount}</div>\r\n              </div>\r\n            </div>\r\n\r\n            {/* Last update */}\r\n            <div className=\"flex items-center justify-center gap-1 text-[9px] text-gray-600\">\r\n              <MapPin className=\"w-2.5 h-2.5\" />\r\n              Updated: {position.timestamp.toLocaleTimeString()}\r\n            </div>\r\n          </div>\r\n        )}\r\n\r\n        {/* Supported devices note */}\r\n        <div className=\"flex items-start gap-2 p-2.5 rounded-lg bg-blue-500/5 border border-blue-500/10\">\r\n          <Satellite className=\"w-3 h-3 text-blue-400 shrink-0 mt-0.5\" />\r\n          <p className=\"text-[10px] text-blue-400/70 leading-relaxed\">\r\n            Supports CHCNAV, South, EFIX, Stonex, Trimble, Leica rovers via Bluetooth or USB-C OTG.\r\n            Streams NMEA-0183 ($GNGGA, $GNRMC) directly into the fieldbook.\r\n          </p>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n\r\nfunction ConnTypeBtn({ active, onClick, icon: Icon, label, supported }: {\r\n  active: boolean\r\n  onClick: () => void\r\n  icon: typeof Bluetooth\r\n  label: string\r\n  supported: boolean\r\n}) {\r\n  return (\r\n    <button\r\n      onClick={onClick}\r\n      disabled={!supported}\r\n      className={`flex flex-col items-center gap-1 py-2.5 rounded-lg border transition-all ${\r\n        active\r\n          ? 'bg-[var(--accent)]/10 border-[var(--accent)]/30 text-[var(--accent)]'\r\n          : supported\r\n            ? 'bg-[var(--bg-tertiary)]/50 border-[var(--border-color)] text-gray-400 hover:bg-[var(--bg-tertiary)]'\r\n            : 'bg-[var(--bg-tertiary)]/30 border-[var(--border-color)]/50 text-gray-600 cursor-not-allowed'\r\n      }`}\r\n    >\r\n      <Icon className=\"w-4 h-4\" />\r\n      <span className=\"text-[10px] font-medium\">{label}</span>\r\n      {!supported && <span className=\"text-[8px] text-gray-600\">N/A</span>}\r\n    </button>\r\n  )\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -90092,61 +90470,13 @@
   },
   {
     "filePath": "src/lib/map/stakeout.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 357,
-        "column": 5,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 357,
-        "endColumn": 40
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 357,
-        "column": 37,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 357,
-        "endColumn": 40,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                11214,
-                11217
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                11214,
-                11217
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 2,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client'\r\n/**\r\n * Stakeout Mode — GPS-guided point navigation for field surveying\r\n *\r\n * Provides:\r\n *  - Overlay creation (target marker, direction arrow, distance/bearing labels)\r\n *  - Audio alerts (proximity beeps using Web Audio API)\r\n *  - Bearing/distance computation in Arc 1960 / UTM Zone 37S\r\n *  - Color-coded proximity indicators\r\n *\r\n * All OpenLayers imports are dynamic for SSR compatibility.\r\n * Uses EPSG:21037 for coordinate math.\r\n */\r\n\r\n// ─── Types ────────────────────────────────────────────────────────────────\r\n\r\nexport interface StakeoutTarget {\r\n  easting: number\r\n  northing: number\r\n  elevation?: number\r\n  name?: string\r\n  id?: string\r\n}\r\n\r\nexport interface StakeoutPosition {\r\n  easting: number\r\n  northing: number\r\n  elevation?: number\r\n  accuracy: number\r\n}\r\n\r\nexport interface StakeoutState {\r\n  distance: number\r\n  bearing: number\r\n  bearingWCB: string\r\n  dE: number\r\n  dN: number\r\n  elevationDiff: number | null\r\n  proximityColor: 'green' | 'amber' | 'red'\r\n  proximityLabel: string\r\n}\r\n\r\n// ─── Bearing / Distance Computation ──────────────────────────────────────\r\n\r\n/**\r\n * Compute the whole-circle bearing from one point to another.\r\n * Returns bearing in degrees (0-360, clockwise from north).\r\n */\r\nexport function computeStakeoutBearing(\r\n  from: { easting: number; northing: number },\r\n  to: { easting: number; northing: number }\r\n): number {\r\n  const dE = to.easting - from.easting\r\n  const dN = to.northing - from.northing\r\n  let bearing = (Math.atan2(dE, dN) * 180) / Math.PI\r\n  if (bearing < 0) bearing += 360\r\n  return bearing\r\n}\r\n\r\n/**\r\n * Compute the horizontal distance between two points in meters.\r\n */\r\nexport function computeStakeoutDistance(\r\n  from: { easting: number; northing: number },\r\n  to: { easting: number; northing: number }\r\n): number {\r\n  const dE = to.easting - from.easting\r\n  const dN = to.northing - from.northing\r\n  return Math.sqrt(dE * dE + dN * dN)\r\n}\r\n\r\n/**\r\n * Format a bearing in WCB (Whole Circle Bearing) format: D°MM'SS\"\r\n */\r\nexport function formatBearingWCB(bearing: number): string {\r\n  const degrees = Math.floor(bearing)\r\n  const minutesFloat = (bearing - degrees) * 60\r\n  const minutes = Math.floor(minutesFloat)\r\n  const seconds = Math.round((minutesFloat - minutes) * 60)\r\n  return `${degrees}\\u00B0${minutes.toString().padStart(2, '0')}'${seconds.toString().padStart(2, '0')}\"`\r\n}\r\n\r\n/**\r\n * Compute the full stakeout state (distance, bearing, proximity, elevation).\r\n */\r\nexport function computeStakeoutState(\r\n  current: StakeoutPosition,\r\n  target: StakeoutTarget\r\n): StakeoutState {\r\n  const distance = computeStakeoutDistance(current, target)\r\n  const bearing = computeStakeoutBearing(current, target)\r\n  const bearingWCB = formatBearingWCB(bearing)\r\n  const dE = target.easting - current.easting\r\n  const dN = target.northing - current.northing\r\n\r\n  const elevationDiff =\r\n    current.elevation != null && target.elevation != null\r\n      ? target.elevation - current.elevation\r\n      : null\r\n\r\n  let proximityColor: 'green' | 'amber' | 'red'\r\n  let proximityLabel: string\r\n  if (distance < 1) {\r\n    proximityColor = 'green'\r\n    proximityLabel = 'ARRIVED'\r\n  } else if (distance < 3) {\r\n    proximityColor = 'amber'\r\n    proximityLabel = 'CLOSE'\r\n  } else {\r\n    proximityColor = 'red'\r\n    proximityLabel = 'APPROACHING'\r\n  }\r\n\r\n  return { distance, bearing, bearingWCB, dE, dN, elevationDiff, proximityColor, proximityLabel }\r\n}\r\n\r\n// ─── Audio Alerts ─────────────────────────────────────────────────────────\r\n\r\nlet audioCtx: AudioContext | null = null\r\nlet beepInterval: ReturnType<typeof setInterval> | null = null\r\n\r\nfunction getAudioContext(): AudioContext {\r\n  if (!audioCtx) {\r\n    audioCtx = new (window.AudioContext || window.webkitAudioContext)()\r\n  }\r\n  return audioCtx\r\n}\r\n\r\nfunction playTone(frequency: number, duration: number, type: OscillatorType = 'sine') {\r\n  try {\r\n    const ctx = getAudioContext()\r\n    if (ctx.state === 'suspended') ctx.resume()\r\n\r\n    const oscillator = ctx.createOscillator()\r\n    const gainNode = ctx.createGain()\r\n\r\n    oscillator.type = type\r\n    oscillator.frequency.setValueAtTime(frequency, ctx.currentTime)\r\n\r\n    gainNode.gain.setValueAtTime(0.15, ctx.currentTime)\r\n    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration)\r\n\r\n    oscillator.connect(gainNode)\r\n    gainNode.connect(ctx.destination)\r\n\r\n    oscillator.start(ctx.currentTime)\r\n    oscillator.stop(ctx.currentTime + duration)\r\n  } catch {\r\n    // Audio not available — fail silently\r\n  }\r\n}\r\n\r\nfunction playBeep() {\r\n  playTone(880, 0.15, 'sine')\r\n}\r\n\r\nfunction playFastBeep() {\r\n  playTone(1200, 0.08, 'sine')\r\n}\r\n\r\nfunction playContinuousTone() {\r\n  playTone(1400, 0.3, 'square')\r\n}\r\n\r\nfunction playArrivedChime() {\r\n  try {\r\n    const ctx = getAudioContext()\r\n    if (ctx.state === 'suspended') ctx.resume()\r\n\r\n    // Three-note ascending chime\r\n    const notes = [523.25, 659.25, 783.99] // C5, E5, G5\r\n    notes.forEach((freq, i) => {\r\n      const osc = ctx.createOscillator()\r\n      const gain = ctx.createGain()\r\n      osc.type = 'sine'\r\n      osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.15)\r\n      gain.gain.setValueAtTime(0.2, ctx.currentTime + i * 0.15)\r\n      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.15 + 0.3)\r\n      osc.connect(gain)\r\n      gain.connect(ctx.destination)\r\n      osc.start(ctx.currentTime + i * 0.15)\r\n      osc.stop(ctx.currentTime + i * 0.15 + 0.3)\r\n    })\r\n  } catch {\r\n    // Audio not available\r\n  }\r\n}\r\n\r\nlet lastArrivedChime = 0\r\n\r\n/**\r\n * Create a proximity-based audio alert system.\r\n * Call on each GPS position update with the current distance.\r\n * Returns a cleanup function to stop the alerts.\r\n */\r\nexport function createStakeoutAudioAlert(distance: number): void {\r\n  // Stop existing interval\r\n  if (beepInterval) {\r\n    clearInterval(beepInterval)\r\n    beepInterval = null\r\n  }\r\n\r\n  if (distance < 1) {\r\n    // Arrived — play chime once (no more than once every 5 seconds)\r\n    const now = Date.now()\r\n    if (now - lastArrivedChime > 5000) {\r\n      playArrivedChime()\r\n      lastArrivedChime = now\r\n    }\r\n  } else if (distance < 3) {\r\n    // Very close — continuous tone every 500ms\r\n    playContinuousTone()\r\n    beepInterval = setInterval(() => playContinuousTone(), 500)\r\n  } else if (distance < 10) {\r\n    // Close — fast beep every 400ms\r\n    playFastBeep()\r\n    beepInterval = setInterval(() => playFastBeep(), 400)\r\n  } else {\r\n    // Far — slow beep every 1500ms\r\n    playBeep()\r\n    beepInterval = setInterval(() => playBeep(), 1500)\r\n  }\r\n}\r\n\r\n/**\r\n * Stop the stakeout audio alerts.\r\n */\r\nexport function stopStakeoutAudio(): void {\r\n  if (beepInterval) {\r\n    clearInterval(beepInterval)\r\n    beepInterval = null\r\n  }\r\n  lastArrivedChime = 0\r\n}\r\n\r\n// ─── Overlay Creation ─────────────────────────────────────────────────────\r\n\r\n/**\r\n * Create an OL overlay showing the stakeout target on the map.\r\n * Returns the overlay and a Vector source for the direction line.\r\n * All OL imports are dynamic for SSR safety.\r\n */\r\nexport async function createStakeoutOverlay(\r\n  target: StakeoutTarget,\r\n  epsg: string = 'EPSG:21037',\r\n): Promise<{\r\n  overlay: import('ol/Overlay').default\r\n  targetSource: import('ol/source/Vector').default\r\n  targetLayer: import('ol/layer/Vector').default\r\n  directionSource: import('ol/source/Vector').default\r\n  directionLayer: import('ol/layer/Vector').default\r\n}> {\r\n  const [\r\n    { default: Overlay },\r\n    { default: VectorSource },\r\n    { default: VectorLayer },\r\n    { default: Feature },\r\n    { default: Point },\r\n    { default: Style },\r\n    { default: Fill },\r\n    { default: Stroke },\r\n    { default: CircleStyle },\r\n    { transform },\r\n  ] = await Promise.all([\r\n    import('ol/Overlay'),\r\n    import('ol/source/Vector'),\r\n    import('ol/layer/Vector'),\r\n    import('ol/Feature'),\r\n    import('ol/geom/Point'),\r\n    import('ol/style/Style'),\r\n    import('ol/style/Fill'),\r\n    import('ol/style/Stroke'),\r\n    import('ol/style/Circle'),\r\n    import('ol/proj').then(m => ({ transform: m.transform })),\r\n  ])\r\n\r\n  // Transform target from UTM to EPSG:3857\r\n  const targetCoord = transform([target.easting, target.northing], epsg, 'EPSG:3857')\r\n\r\n  // ── Target marker overlay (DOM element) ──\r\n  const overlayEl = document.createElement('div')\r\n  overlayEl.className = 'stakeout-target-overlay'\r\n  overlayEl.style.cssText = 'position:relative;pointer-events:none;'\r\n\r\n  // Crosshair container\r\n  const crosshair = document.createElement('div')\r\n  crosshair.style.cssText = `\r\n    width: 48px; height: 48px; position: relative;\r\n    transform: translate(-50%, -50%);\r\n  `\r\n\r\n  // Horizontal line\r\n  const hLine = document.createElement('div')\r\n  hLine.style.cssText = `\r\n    position:absolute; top:50%; left:0; width:100%; height:2px;\r\n    background: #D17B47; transform: translateY(-50%);\r\n    box-shadow: 0 0 6px rgba(209, 123, 71,0.6);\r\n  `\r\n  // Vertical line\r\n  const vLine = document.createElement('div')\r\n  vLine.style.cssText = `\r\n    position:absolute; left:50%; top:0; height:100%; width:2px;\r\n    background: #D17B47; transform: translateX(-50%);\r\n    box-shadow: 0 0 6px rgba(209, 123, 71,0.6);\r\n  `\r\n  // Center dot\r\n  const center = document.createElement('div')\r\n  center.style.cssText = `\r\n    position:absolute; top:50%; left:50%; width:8px; height:8px;\r\n    background: #D17B47; border-radius: 50%;\r\n    transform: translate(-50%, -50%);\r\n    box-shadow: 0 0 12px rgba(209, 123, 71,0.8);\r\n    animation: stakeout-pulse 1.5s ease-in-out infinite;\r\n  `\r\n  // Outer ring\r\n  const ring = document.createElement('div')\r\n  ring.style.cssText = `\r\n    position:absolute; top:50%; left:50%; width:32px; height:32px;\r\n    border: 2px solid rgba(209, 123, 71,0.5); border-radius: 50%;\r\n    transform: translate(-50%, -50%);\r\n    animation: stakeout-ring 2s ease-in-out infinite;\r\n  `\r\n  // Label\r\n  const label = document.createElement('div')\r\n  label.style.cssText = `\r\n    position:absolute; top:100%; left:50%; transform:translateX(-50%);\r\n    margin-top:8px; white-space:nowrap;\r\n    font-size:11px; font-family:monospace; color:#D17B47;\r\n    background:rgba(20,20,30,0.9); padding:2px 6px; border-radius:4px;\r\n    border:1px solid rgba(209, 123, 71,0.3);\r\n  `\r\n  label.textContent = target.name || `E:${target.easting.toFixed(1)} N:${target.northing.toFixed(1)}`\r\n\r\n  crosshair.append(hLine, vLine, ring, center, label)\r\n  overlayEl.appendChild(crosshair)\r\n\r\n  // Add CSS animations if not already present\r\n  if (!document.getElementById('stakeout-animations')) {\r\n    const style = document.createElement('style')\r\n    style.id = 'stakeout-animations'\r\n    style.textContent = `\r\n      @keyframes stakeout-pulse {\r\n        0%, 100% { box-shadow: 0 0 12px rgba(209, 123, 71,0.8); }\r\n        50% { box-shadow: 0 0 24px rgba(209, 123, 71,1); }\r\n      }\r\n      @keyframes stakeout-ring {\r\n        0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }\r\n        50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.2; }\r\n      }\r\n    `\r\n    document.head.appendChild(style)\r\n  }\r\n\r\n  const overlay = new Overlay({\r\n    element: overlayEl,\r\n    position: targetCoord,\r\n    positioning: 'center-center' as any,\r\n    stopEvent: false,\r\n  })\r\n\r\n  // ── Target point feature (beacon marker) ──\r\n  const targetSource = new VectorSource()\r\n  const targetFeature = new Feature({\r\n    geometry: new Point(targetCoord),\r\n    stakeoutTarget: true,\r\n  })\r\n  targetFeature.setStyle(\r\n    new Style({\r\n      image: new CircleStyle({\r\n        radius: 10,\r\n        fill: new Fill({ color: 'rgba(209, 123, 71,0.3)' }),\r\n        stroke: new Stroke({ color: '#D17B47', width: 2.5 }),\r\n      }),\r\n    })\r\n  )\r\n  targetSource.addFeature(targetFeature)\r\n\r\n  const targetLayer = new VectorLayer({\r\n    source: targetSource,\r\n    zIndex: 100,\r\n  })\r\n\r\n  // ── Direction line source (updated on each GPS position) ──\r\n  const directionSource = new VectorSource()\r\n  const directionLayer = new VectorLayer({\r\n    source: directionSource,\r\n    style: new Style({\r\n      stroke: new Stroke({\r\n        color: 'rgba(209, 123, 71,0.6)',\r\n        width: 2,\r\n        lineDash: [8, 6],\r\n      }),\r\n    }),\r\n    zIndex: 99,\r\n  })\r\n\r\n  return { overlay, targetSource, targetLayer, directionSource, directionLayer }\r\n}\r\n\r\n/**\r\n * Update the stakeout direction line from current GPS position to target.\r\n * Call on each GPS position update.\r\n */\r\nexport async function updateStakeoutDirection(\r\n  directionSource: import('ol/source/Vector').default,\r\n  current: StakeoutPosition,\r\n  target: StakeoutTarget,\r\n  epsg: string = 'EPSG:21037',\r\n): Promise<StakeoutState> {\r\n  const { default: Feature } = await import('ol/Feature')\r\n  const { default: LineString } = await import('ol/geom/LineString')\r\n  const { transform } = await import('ol/proj')\r\n\r\n  const state = computeStakeoutState(current, target)\r\n\r\n  const fromCoord = transform([current.easting, current.northing], epsg, 'EPSG:3857')\r\n  const toCoord = transform([target.easting, target.northing], epsg, 'EPSG:3857')\r\n\r\n  // Clear previous direction features\r\n  directionSource.clear()\r\n\r\n  const lineFeature = new Feature({\r\n    geometry: new LineString([fromCoord, toCoord]),\r\n  })\r\n\r\n  // Color-code based on proximity\r\n  let lineColor: string\r\n  if (state.proximityColor === 'green') lineColor = 'rgba(34,197,94,0.8)'\r\n  else if (state.proximityColor === 'amber') lineColor = 'rgba(245,158,11,0.8)'\r\n  else lineColor = 'rgba(209, 123, 71,0.6)'\r\n\r\n  const { default: Style } = await import('ol/style/Style')\r\n  const { default: Stroke } = await import('ol/style/Stroke')\r\n  lineFeature.setStyle(\r\n    new Style({\r\n      stroke: new Stroke({\r\n        color: lineColor,\r\n        width: 2.5,\r\n        lineDash: [8, 6],\r\n      }),\r\n    })\r\n  )\r\n\r\n  directionSource.addFeature(lineFeature)\r\n  return state\r\n}\r\n\r\n/**\r\n * Update the target marker style based on proximity.\r\n */\r\nexport async function updateTargetProximityStyle(\r\n  targetSource: import('ol/source/Vector').default,\r\n  proximityColor: 'green' | 'amber' | 'red'\r\n): Promise<void> {\r\n  const { default: Style } = await import('ol/style/Style')\r\n  const { default: Fill } = await import('ol/style/Fill')\r\n  const { default: Stroke } = await import('ol/style/Stroke')\r\n  const { default: CircleStyle } = await import('ol/style/Circle')\r\n\r\n  const colorMap = {\r\n    green: { fill: 'rgba(34,197,94,0.3)', stroke: '#22c55e' },\r\n    amber: { fill: 'rgba(245,158,11,0.3)', stroke: '#f59e0b' },\r\n    red: { fill: 'rgba(209, 123, 71,0.3)', stroke: '#D17B47' },\r\n  }\r\n  const colors = colorMap[proximityColor]\r\n\r\n  const features = targetSource.getFeatures()\r\n  for (const f of features) {\r\n    f.setStyle(\r\n      new Style({\r\n        image: new CircleStyle({\r\n          radius: 10,\r\n          fill: new Fill({ color: colors.fill }),\r\n          stroke: new Stroke({ color: colors.stroke, width: 2.5 }),\r\n        }),\r\n      })\r\n    )\r\n  }\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -93170,132 +93500,132 @@
         "severity": 1,
         "message": "Unsafe member access .minZoom on an `any` value.",
         "line": 219,
-        "column": 36,
+        "column": 37,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 219,
-        "endColumn": 43
+        "endColumn": 44
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .source on an `any` value.",
         "line": 221,
-        "column": 36,
+        "column": 37,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 221,
-        "endColumn": 42
+        "endColumn": 43
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .opacity on an `any` value.",
         "line": 229,
-        "column": 36,
+        "column": 37,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 229,
-        "endColumn": 43
+        "endColumn": 44
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .visible on an `any` value.",
         "line": 253,
-        "column": 36,
+        "column": 37,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 253,
-        "endColumn": 43
+        "endColumn": 44
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .zIndex on an `any` value.",
         "line": 260,
-        "column": 36,
+        "column": 37,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 260,
-        "endColumn": 42
+        "endColumn": 43
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .style on an `any` value.",
         "line": 295,
-        "column": 43,
+        "column": 44,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 295,
-        "endColumn": 48
+        "endColumn": 49
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .minZoom on an `any` value.",
         "line": 302,
-        "column": 36,
+        "column": 37,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 302,
-        "endColumn": 43
+        "endColumn": 44
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .minZoom on an `any` value.",
         "line": 310,
-        "column": 36,
+        "column": 37,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 310,
-        "endColumn": 43
+        "endColumn": 44
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .zIndex on an `any` value.",
         "line": 317,
-        "column": 36,
+        "column": 37,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 317,
-        "endColumn": 42
+        "endColumn": 43
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .style on an `any` value.",
         "line": 352,
-        "column": 43,
+        "column": 44,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 352,
-        "endColumn": 48
+        "endColumn": 49
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .minZoom on an `any` value.",
         "line": 359,
-        "column": 36,
+        "column": 37,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 359,
-        "endColumn": 43
+        "endColumn": 44
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 1,
         "message": "Unsafe member access .zIndex on an `any` value.",
         "line": 366,
-        "column": 36,
+        "column": 37,
         "nodeType": "Identifier",
         "messageId": "unsafeMemberExpression",
         "endLine": 366,
-        "endColumn": 42
+        "endColumn": 43
       }
     ],
     "suppressedMessages": [],
@@ -93304,7 +93634,7 @@
     "warningCount": 40,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Tests for vectorTileFactory module\r\n *\r\n * estimateTileCount() is a pure function — tested directly.\r\n * Async factory functions (createVectorTileLayer, createParcelTileLayer,\r\n * createBeaconTileLayer) are tested with mocked OpenLayers imports.\r\n *\r\n * Mock classes are defined INSIDE jest.mock factories to avoid hoisting\r\n * issues — jest.mock factories are hoisted above variable declarations.\r\n */\r\n\r\nimport {\r\n  estimateTileCount,\r\n  createVectorTileLayer,\r\n  createParcelTileLayer,\r\n  createBeaconTileLayer,\r\n} from '../vectorTileFactory'\r\n\r\ntype MockVectorTileLayer = {\r\n  opts: any\r\n  _props: Record<string, unknown>\r\n}\r\n\r\nfunction asMockLayer(layer: unknown): MockVectorTileLayer {\r\n  return layer as MockVectorTileLayer\r\n}\r\n\r\n// ---------------------------------------------------------------------------\r\n// Mock OpenLayers classes — defined inside factories for hoisting safety\r\n// ---------------------------------------------------------------------------\r\n\r\njest.mock('ol/layer/VectorTile', () => {\r\n  const MockVectorTileLayer = class MockVectorTileLayer {\r\n    opts: any\r\n    _props: Record<string, unknown>\r\n    constructor(opts?: any) {\r\n      this.opts = opts\r\n      this._props = {}\r\n    }\r\n    setStyle(s: any) { this._props.style = s }\r\n    set(key: string, val: any) { this._props[key] = val }\r\n    get(key: string) { return this._props[key] }\r\n  }\r\n  return { __esModule: true, default: MockVectorTileLayer }\r\n})\r\n\r\njest.mock('ol/source/VectorTile', () => {\r\n  const MockVectorTileSource = class MockVectorTileSource {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockVectorTileSource }\r\n})\r\n\r\njest.mock('ol/format/MVT', () => {\r\n  const MockMVTFormat = class MockMVTFormat {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockMVTFormat }\r\n})\r\n\r\njest.mock('ol/format/GeoJSON', () => {\r\n  const MockGeoJSONFormat = class MockGeoJSONFormat {\r\n    constructor() {}\r\n  }\r\n  return { __esModule: true, default: MockGeoJSONFormat }\r\n})\r\n\r\njest.mock('ol/style/Style', () => {\r\n  const MockStyle = class MockStyle {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockStyle }\r\n})\r\n\r\njest.mock('ol/style/Fill', () => {\r\n  const MockFill = class MockFill {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockFill }\r\n})\r\n\r\njest.mock('ol/style/Stroke', () => {\r\n  const MockStroke = class MockStroke {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockStroke }\r\n})\r\n\r\njest.mock('ol/style/Text', () => {\r\n  const MockText = class MockText {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockText }\r\n})\r\n\r\njest.mock('ol/style/Circle', () => {\r\n  const MockCircleStyle = class MockCircleStyle {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockCircleStyle }\r\n})\r\n\r\n// ---------------------------------------------------------------------------\r\n// estimateTileCount\r\n// ---------------------------------------------------------------------------\r\n\r\ndescribe('estimateTileCount', () => {\r\n  it('returns 1 tile for the entire world at zoom 0', () => {\r\n    const halfEarth = 20037508.342789244\r\n    const worldExtent = [-halfEarth, -halfEarth, halfEarth, halfEarth]\r\n    expect(estimateTileCount(worldExtent, 0)).toBe(1)\r\n  })\r\n\r\n  it('returns 4 tiles for the world at zoom 1', () => {\r\n    const halfEarth = 20037508.342789244\r\n    const worldExtent = [-halfEarth, -halfEarth, halfEarth, halfEarth]\r\n    expect(estimateTileCount(worldExtent, 1)).toBe(4)\r\n  })\r\n\r\n  it('returns 0 for a zero-area extent', () => {\r\n    expect(estimateTileCount([0, 0, 0, 0], 10)).toBe(0)\r\n  })\r\n\r\n  it('returns 0 for a degenerate extent (negative area)', () => {\r\n    expect(estimateTileCount([100, 100, 0, 0], 10)).toBe(0)\r\n  })\r\n\r\n  it('increases with zoom level', () => {\r\n    const halfEarth = 20037508.342789244\r\n    const extent = [-halfEarth, -halfEarth, halfEarth, halfEarth]\r\n    const z5 = estimateTileCount(extent, 5)\r\n    const z10 = estimateTileCount(extent, 10)\r\n    expect(z10).toBeGreaterThan(z5)\r\n  })\r\n\r\n  it('returns correct tile count for known zoom levels', () => {\r\n    const halfEarth = 20037508.342789244\r\n    const worldExtent = [-halfEarth, -halfEarth, halfEarth, halfEarth]\r\n    // At zoom z, total tiles = 2^z × 2^z = 4^z\r\n    expect(estimateTileCount(worldExtent, 2)).toBe(16)\r\n    expect(estimateTileCount(worldExtent, 3)).toBe(64)\r\n  })\r\n\r\n  it('handles a small local extent', () => {\r\n    // A small extent around Nairobi in EPSG:3857\r\n    const nairobiExtent = [8230000, -200000, 8250000, -180000]\r\n    const count = estimateTileCount(nairobiExtent, 14)\r\n    expect(count).toBeGreaterThan(0)\r\n    expect(Number.isInteger(count)).toBe(true)\r\n  })\r\n\r\n  it('handles extent exactly at tile boundaries', () => {\r\n    // At zoom 1, each tile is halfEarth wide/tall\r\n    const halfEarth = 20037508.342789244\r\n    const tileSize1 = 2 * halfEarth\r\n    // One tile at the top-left quadrant\r\n    const oneTileExtent = [-halfEarth, 0, 0, halfEarth]\r\n    expect(estimateTileCount(oneTileExtent, 1)).toBe(1)\r\n  })\r\n})\r\n\r\n// ---------------------------------------------------------------------------\r\n// createVectorTileLayer\r\n// ---------------------------------------------------------------------------\r\n\r\ndescribe('createVectorTileLayer', () => {\r\n  it('returns a layer with the correct constructor shape', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer).toBeDefined()\r\n    expect(asMockLayer(layer).opts).toBeDefined()\r\n  })\r\n\r\n  it('sets layerType to vectorTile', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('layerType')).toBe('vectorTile')\r\n  })\r\n\r\n  it('stores tileUrl property', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/data/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('tileUrl')).toBe('/data/parcels/{z}/{x}/{y}.pbf')\r\n  })\r\n\r\n  it('stores tileFormat property', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n      format: 'mvt',\r\n    })\r\n    expect(layer.get('tileFormat')).toBe('mvt')\r\n  })\r\n\r\n  it('applies custom style when provided', async () => {\r\n    const customStyle = jest.fn()\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n      style: customStyle,\r\n    })\r\n    expect(asMockLayer(layer)._props.style).toBe(customStyle)\r\n  })\r\n\r\n  it('passes minZoom to the layer and maxZoom to the source', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n      minZoom: 10,\r\n      maxZoom: 18,\r\n    })\r\n    expect(asMockLayer(layer).opts.minZoom).toBe(10)\r\n    // maxZoom is passed to the VectorTileSource, not the layer\r\n    expect(asMockLayer(layer).opts.source.opts.maxZoom).toBe(18)\r\n  })\r\n\r\n  it('passes opacity to the layer', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n      opacity: 0.7,\r\n    })\r\n    expect(asMockLayer(layer).opts.opacity).toBe(0.7)\r\n  })\r\n\r\n  it('supports GeoJSON format', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.geojson',\r\n      format: 'geojson',\r\n    })\r\n    expect(layer).toBeDefined()\r\n    expect(layer.get('tileFormat')).toBe('geojson')\r\n  })\r\n\r\n  it('handles PMTiles URL gracefully', async () => {\r\n    // ol-pmtiles is optional; the factory should fall back gracefully\r\n    const layer = await createVectorTileLayer({\r\n      url: '/data/parcels.pmtiles',\r\n    })\r\n    expect(layer).toBeDefined()\r\n  })\r\n\r\n  it('defaults to visible=true', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts.visible).toBe(true)\r\n  })\r\n\r\n  it('defaults to zIndex=10', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts.zIndex).toBe(10)\r\n  })\r\n})\r\n\r\n// ---------------------------------------------------------------------------\r\n// createParcelTileLayer\r\n// ---------------------------------------------------------------------------\r\n\r\ndescribe('createParcelTileLayer', () => {\r\n  it('returns a layer with correct constructor shape', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer).toBeDefined()\r\n    expect(asMockLayer(layer).opts).toBeDefined()\r\n  })\r\n\r\n  it('sets layerType to parcelTile', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('layerType')).toBe('parcelTile')\r\n  })\r\n\r\n  it('stores the tile URL', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('tileUrl')).toBe('/parcels/{z}/{x}/{y}.pbf')\r\n  })\r\n\r\n  it('has a style function', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(typeof asMockLayer(layer).opts.style).toBe('function')\r\n  })\r\n\r\n  it('defaults to minZoom=14', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts.minZoom).toBe(14)\r\n  })\r\n\r\n  it('allows overriding minZoom', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n      minZoom: 12,\r\n    })\r\n    expect(asMockLayer(layer).opts.minZoom).toBe(12)\r\n  })\r\n\r\n  it('defaults to zIndex=10 for parcels', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts.zIndex).toBe(10)\r\n  })\r\n})\r\n\r\n// ---------------------------------------------------------------------------\r\n// createBeaconTileLayer\r\n// ---------------------------------------------------------------------------\r\n\r\ndescribe('createBeaconTileLayer', () => {\r\n  it('returns a layer with correct constructor shape', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer).toBeDefined()\r\n    expect(asMockLayer(layer).opts).toBeDefined()\r\n  })\r\n\r\n  it('sets layerType to beaconTile', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('layerType')).toBe('beaconTile')\r\n  })\r\n\r\n  it('stores the tile URL', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('tileUrl')).toBe('/beacons/{z}/{x}/{y}.pbf')\r\n  })\r\n\r\n  it('has a style function', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(typeof asMockLayer(layer).opts.style).toBe('function')\r\n  })\r\n\r\n  it('defaults to minZoom=14', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts.minZoom).toBe(14)\r\n  })\r\n\r\n  it('uses zIndex=11 (above parcels)', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts.zIndex).toBe(11)\r\n  })\r\n})\r\n",
+    "source": "/**\r\n * Tests for vectorTileFactory module\r\n *\r\n * estimateTileCount() is a pure function — tested directly.\r\n * Async factory functions (createVectorTileLayer, createParcelTileLayer,\r\n * createBeaconTileLayer) are tested with mocked OpenLayers imports.\r\n *\r\n * Mock classes are defined INSIDE jest.mock factories to avoid hoisting\r\n * issues — jest.mock factories are hoisted above variable declarations.\r\n */\r\n\r\nimport {\r\n  estimateTileCount,\r\n  createVectorTileLayer,\r\n  createParcelTileLayer,\r\n  createBeaconTileLayer,\r\n} from '../vectorTileFactory'\r\n\r\ntype MockVectorTileLayer = {\r\n  opts: any\r\n  _props: Record<string, unknown>\r\n}\r\n\r\nfunction asMockLayer(layer: unknown): MockVectorTileLayer {\r\n  return layer as MockVectorTileLayer\r\n}\r\n\r\n// ---------------------------------------------------------------------------\r\n// Mock OpenLayers classes — defined inside factories for hoisting safety\r\n// ---------------------------------------------------------------------------\r\n\r\njest.mock('ol/layer/VectorTile', () => {\r\n  const MockVectorTileLayer = class MockVectorTileLayer {\r\n    opts: any\r\n    _props: Record<string, unknown>\r\n    constructor(opts?: any) {\r\n      this.opts = opts\r\n      this._props = {}\r\n    }\r\n    setStyle(s: any) { this._props.style = s }\r\n    set(key: string, val: any) { this._props[key] = val }\r\n    get(key: string) { return this._props[key] }\r\n  }\r\n  return { __esModule: true, default: MockVectorTileLayer }\r\n})\r\n\r\njest.mock('ol/source/VectorTile', () => {\r\n  const MockVectorTileSource = class MockVectorTileSource {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockVectorTileSource }\r\n})\r\n\r\njest.mock('ol/format/MVT', () => {\r\n  const MockMVTFormat = class MockMVTFormat {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockMVTFormat }\r\n})\r\n\r\njest.mock('ol/format/GeoJSON', () => {\r\n  const MockGeoJSONFormat = class MockGeoJSONFormat {\r\n    constructor() {}\r\n  }\r\n  return { __esModule: true, default: MockGeoJSONFormat }\r\n})\r\n\r\njest.mock('ol/style/Style', () => {\r\n  const MockStyle = class MockStyle {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockStyle }\r\n})\r\n\r\njest.mock('ol/style/Fill', () => {\r\n  const MockFill = class MockFill {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockFill }\r\n})\r\n\r\njest.mock('ol/style/Stroke', () => {\r\n  const MockStroke = class MockStroke {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockStroke }\r\n})\r\n\r\njest.mock('ol/style/Text', () => {\r\n  const MockText = class MockText {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockText }\r\n})\r\n\r\njest.mock('ol/style/Circle', () => {\r\n  const MockCircleStyle = class MockCircleStyle {\r\n    opts: any\r\n    constructor(opts?: any) { this.opts = opts }\r\n  }\r\n  return { __esModule: true, default: MockCircleStyle }\r\n})\r\n\r\n// ---------------------------------------------------------------------------\r\n// estimateTileCount\r\n// ---------------------------------------------------------------------------\r\n\r\ndescribe('estimateTileCount', () => {\r\n  it('returns 1 tile for the entire world at zoom 0', () => {\r\n    const halfEarth = 20037508.342789244\r\n    const worldExtent = [-halfEarth, -halfEarth, halfEarth, halfEarth]\r\n    expect(estimateTileCount(worldExtent, 0)).toBe(1)\r\n  })\r\n\r\n  it('returns 4 tiles for the world at zoom 1', () => {\r\n    const halfEarth = 20037508.342789244\r\n    const worldExtent = [-halfEarth, -halfEarth, halfEarth, halfEarth]\r\n    expect(estimateTileCount(worldExtent, 1)).toBe(4)\r\n  })\r\n\r\n  it('returns 0 for a zero-area extent', () => {\r\n    expect(estimateTileCount([0, 0, 0, 0], 10)).toBe(0)\r\n  })\r\n\r\n  it('returns 0 for a degenerate extent (negative area)', () => {\r\n    expect(estimateTileCount([100, 100, 0, 0], 10)).toBe(0)\r\n  })\r\n\r\n  it('increases with zoom level', () => {\r\n    const halfEarth = 20037508.342789244\r\n    const extent = [-halfEarth, -halfEarth, halfEarth, halfEarth]\r\n    const z5 = estimateTileCount(extent, 5)\r\n    const z10 = estimateTileCount(extent, 10)\r\n    expect(z10).toBeGreaterThan(z5)\r\n  })\r\n\r\n  it('returns correct tile count for known zoom levels', () => {\r\n    const halfEarth = 20037508.342789244\r\n    const worldExtent = [-halfEarth, -halfEarth, halfEarth, halfEarth]\r\n    // At zoom z, total tiles = 2^z × 2^z = 4^z\r\n    expect(estimateTileCount(worldExtent, 2)).toBe(16)\r\n    expect(estimateTileCount(worldExtent, 3)).toBe(64)\r\n  })\r\n\r\n  it('handles a small local extent', () => {\r\n    // A small extent around Nairobi in EPSG:3857\r\n    const nairobiExtent = [8230000, -200000, 8250000, -180000]\r\n    const count = estimateTileCount(nairobiExtent, 14)\r\n    expect(count).toBeGreaterThan(0)\r\n    expect(Number.isInteger(count)).toBe(true)\r\n  })\r\n\r\n  it('handles extent exactly at tile boundaries', () => {\r\n    // At zoom 1, each tile is halfEarth wide/tall\r\n    const halfEarth = 20037508.342789244\r\n    const tileSize1 = 2 * halfEarth\r\n    // One tile at the top-left quadrant\r\n    const oneTileExtent = [-halfEarth, 0, 0, halfEarth]\r\n    expect(estimateTileCount(oneTileExtent, 1)).toBe(1)\r\n  })\r\n})\r\n\r\n// ---------------------------------------------------------------------------\r\n// createVectorTileLayer\r\n// ---------------------------------------------------------------------------\r\n\r\ndescribe('createVectorTileLayer', () => {\r\n  it('returns a layer with the correct constructor shape', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer).toBeDefined()\r\n    expect(asMockLayer(layer).opts).toBeDefined()\r\n  })\r\n\r\n  it('sets layerType to vectorTile', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('layerType')).toBe('vectorTile')\r\n  })\r\n\r\n  it('stores tileUrl property', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/data/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('tileUrl')).toBe('/data/parcels/{z}/{x}/{y}.pbf')\r\n  })\r\n\r\n  it('stores tileFormat property', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n      format: 'mvt',\r\n    })\r\n    expect(layer.get('tileFormat')).toBe('mvt')\r\n  })\r\n\r\n  it('applies custom style when provided', async () => {\r\n    const customStyle = jest.fn()\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n      style: customStyle,\r\n    })\r\n    expect(asMockLayer(layer)._props.style).toBe(customStyle)\r\n  })\r\n\r\n  it('passes minZoom to the layer and maxZoom to the source', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n      minZoom: 10,\r\n      maxZoom: 18,\r\n    })\r\n    expect(asMockLayer(layer).opts?.minZoom).toBe(10)\r\n    // maxZoom is passed to the VectorTileSource, not the layer\r\n    expect(asMockLayer(layer).opts?.source.opts.maxZoom).toBe(18)\r\n  })\r\n\r\n  it('passes opacity to the layer', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n      opacity: 0.7,\r\n    })\r\n    expect(asMockLayer(layer).opts?.opacity).toBe(0.7)\r\n  })\r\n\r\n  it('supports GeoJSON format', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.geojson',\r\n      format: 'geojson',\r\n    })\r\n    expect(layer).toBeDefined()\r\n    expect(layer.get('tileFormat')).toBe('geojson')\r\n  })\r\n\r\n  it('handles PMTiles URL gracefully', async () => {\r\n    // ol-pmtiles is optional; the factory should fall back gracefully\r\n    const layer = await createVectorTileLayer({\r\n      url: '/data/parcels.pmtiles',\r\n    })\r\n    expect(layer).toBeDefined()\r\n  })\r\n\r\n  it('defaults to visible=true', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts?.visible).toBe(true)\r\n  })\r\n\r\n  it('defaults to zIndex=10', async () => {\r\n    const layer = await createVectorTileLayer({\r\n      url: '/tiles/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts?.zIndex).toBe(10)\r\n  })\r\n})\r\n\r\n// ---------------------------------------------------------------------------\r\n// createParcelTileLayer\r\n// ---------------------------------------------------------------------------\r\n\r\ndescribe('createParcelTileLayer', () => {\r\n  it('returns a layer with correct constructor shape', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer).toBeDefined()\r\n    expect(asMockLayer(layer).opts).toBeDefined()\r\n  })\r\n\r\n  it('sets layerType to parcelTile', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('layerType')).toBe('parcelTile')\r\n  })\r\n\r\n  it('stores the tile URL', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('tileUrl')).toBe('/parcels/{z}/{x}/{y}.pbf')\r\n  })\r\n\r\n  it('has a style function', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(typeof asMockLayer(layer).opts?.style).toBe('function')\r\n  })\r\n\r\n  it('defaults to minZoom=14', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts?.minZoom).toBe(14)\r\n  })\r\n\r\n  it('allows overriding minZoom', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n      minZoom: 12,\r\n    })\r\n    expect(asMockLayer(layer).opts?.minZoom).toBe(12)\r\n  })\r\n\r\n  it('defaults to zIndex=10 for parcels', async () => {\r\n    const layer = await createParcelTileLayer({\r\n      url: '/parcels/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts?.zIndex).toBe(10)\r\n  })\r\n})\r\n\r\n// ---------------------------------------------------------------------------\r\n// createBeaconTileLayer\r\n// ---------------------------------------------------------------------------\r\n\r\ndescribe('createBeaconTileLayer', () => {\r\n  it('returns a layer with correct constructor shape', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer).toBeDefined()\r\n    expect(asMockLayer(layer).opts).toBeDefined()\r\n  })\r\n\r\n  it('sets layerType to beaconTile', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('layerType')).toBe('beaconTile')\r\n  })\r\n\r\n  it('stores the tile URL', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(layer.get('tileUrl')).toBe('/beacons/{z}/{x}/{y}.pbf')\r\n  })\r\n\r\n  it('has a style function', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(typeof asMockLayer(layer).opts?.style).toBe('function')\r\n  })\r\n\r\n  it('defaults to minZoom=14', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts?.minZoom).toBe(14)\r\n  })\r\n\r\n  it('uses zIndex=11 (above parcels)', async () => {\r\n    const layer = await createBeaconTileLayer({\r\n      url: '/beacons/{z}/{x}/{y}.pbf',\r\n    })\r\n    expect(asMockLayer(layer).opts?.zIndex).toBe(11)\r\n  })\r\n})\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -105504,335 +105834,13 @@
   },
   {
     "filePath": "src/lib/serial/InstrumentSerialConnection.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 141,
-        "column": 31,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 141,
-        "endColumn": 34,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                5027,
-                5030
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                5027,
-                5030
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 200,
-        "column": 11,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 200,
-        "endColumn": 49
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 200,
-        "column": 46,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 200,
-        "endColumn": 49,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                7215,
-                7218
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                7215,
-                7218
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 201,
-        "column": 11,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 201,
-        "endColumn": 49
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 201,
-        "column": 46,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 201,
-        "endColumn": 49,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                7266,
-                7269
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                7266,
-                7269
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 202,
-        "column": 11,
-        "nodeType": "Property",
-        "messageId": "anyAssignment",
-        "endLine": 202,
-        "endColumn": 102
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 202,
-        "column": 99,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 202,
-        "endColumn": 102,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                7370,
-                7373
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                7370,
-                7373
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 223,
-        "column": 78,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 223,
-        "endColumn": 81,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                8077,
-                8080
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                8077,
-                8080
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-argument",
-        "severity": 1,
-        "message": "Unsafe argument of type `any` assigned to a parameter of type `string`.",
-        "line": 226,
-        "column": 29,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeArgument",
-        "endLine": 226,
-        "endColumn": 38
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .data on an `any` value.",
-        "line": 226,
-        "column": 34,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 226,
-        "endColumn": 38
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 303,
-        "column": 17,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 303,
-        "endColumn": 55
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 303,
-        "column": 17,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 303,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .remove on an `any` value.",
-        "line": 303,
-        "column": 41,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 303,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .catch on an `any` value.",
-        "line": 303,
-        "column": 50,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 303,
-        "endColumn": 55
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-argument",
-        "severity": 1,
-        "message": "Unsafe argument of type `any` assigned to a parameter of type `CommandType`.",
-        "line": 405,
-        "column": 45,
-        "nodeType": "TSAsExpression",
-        "messageId": "unsafeArgument",
-        "endLine": 405,
-        "endColumn": 63
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 405,
-        "column": 60,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 405,
-        "endColumn": 63,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                13836,
-                13839
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                13836,
-                13839
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 16,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * METARDU Instrument Serial Connection Manager\r\n * =============================================\r\n * Manages direct serial connections to surveying instruments\r\n * via the Web Serial API (Chrome/Edge desktop browsers).\r\n *\r\n * Supported instruments:\r\n * - Leica TS16 / TS60 / Viva series (GSI format, 9600-115200 baud)\r\n * - Trimble R10 / R12i / S7 (SSV/NMEA, 9600-38400 baud)\r\n * - Topcon OS / DS series (TOPCON, 9600 baud)\r\n * - Sokkia CX / FX series (SDR, 9600-115200 baud)\r\n * - Generic GNSS receivers (NMEA 0183, 4800-115200 baud)\r\n *\r\n * Features:\r\n * - Auto-detection of instrument protocol (NMEA vs GSI)\r\n * - Real-time coordinate streaming\r\n * - Configurable baud rate, parity, stop bits\r\n * - Connection health monitoring\r\n * - Automatic reconnection attempts\r\n */\r\n\r\nimport { Capacitor } from '@capacitor/core'\r\nimport { UsbSerial } from '@leeskies/capacitor-usb-serial'\r\nimport { createStreamParser, type ParsedInstrumentData, type InstrumentStreamParser } from './protocolParsers'\r\n\r\n// ─── Types ────────────────────────────────────────────────────────────────\r\n\r\nexport type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'streaming' | 'error' | 'reconnecting'\r\n\r\nexport interface SerialConnectionConfig {\r\n  /** Baud rate (default: 9600) */\r\n  baudRate: number\r\n  /** Data bits (default: 8) */\r\n  dataBits: 7 | 8\r\n  /** Stop bits (default: 1) */\r\n  stopBits: 1 | 2\r\n  /** Parity (default: 'none') */\r\n  parity: 'none' | 'even' | 'odd'\r\n  /** Flow control (default: 'none') */\r\n  flowControl: 'none' | 'hardware'\r\n  /** Read timeout in ms (default: 5000) */\r\n  readTimeout?: number\r\n}\r\n\r\nexport interface InstrumentInfo {\r\n  manufacturer: string\r\n  model?: string\r\n  protocol: 'nmea' | 'gsi' | 'topcon' | 'trimble' | 'sokkia' | 'unknown'\r\n  detectedAt: Date\r\n}\r\n\r\nexport interface ConnectionStats {\r\n  bytesReceived: number\r\n  messagesParsed: number\r\n  errors: number\r\n  connectedAt: Date\r\n  lastDataAt: Date\r\n}\r\n\r\ntype DataCallback = (data: ParsedInstrumentData) => void\r\ntype StatusCallback = (status: ConnectionStatus) => void\r\ntype ErrorCallback = (error: Error) => void\r\n\r\n// ─── Default Configuration ───────────────────────────────────────────────\r\n\r\nconst DEFAULT_CONFIG: SerialConnectionConfig = {\r\n  baudRate: 9600,\r\n  dataBits: 8,\r\n  stopBits: 1,\r\n  parity: 'none',\r\n  flowControl: 'none',\r\n  readTimeout: 5000,\r\n}\r\n\r\n// ─── Preset Configurations ──────────────────────────────────────────────\r\n\r\nexport const INSTRUMENT_PRESETS: Record<string, { name: string; config: SerialConnectionConfig; protocol: 'nmea' | 'gsi' | 'topcon' | 'trimble' | 'sokkia' }> = {\r\n  'leica-ts16': {\r\n    name: 'Leica TS16 / TS60 / Viva',\r\n    config: { baudRate: 115200, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none' },\r\n    protocol: 'gsi',\r\n  },\r\n  'leica-ts15': {\r\n    name: 'Leica TS15 / TS11',\r\n    config: { baudRate: 19200, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none' },\r\n    protocol: 'gsi',\r\n  },\r\n  'trimble-r10': {\r\n    name: 'Trimble R10 / R12i (GNSS)',\r\n    config: { baudRate: 38400, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'hardware' },\r\n    protocol: 'nmea',\r\n  },\r\n  'trimble-s7': {\r\n    name: 'Trimble S7 / S9 (Total Station)',\r\n    config: { baudRate: 9600, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none' },\r\n    protocol: 'trimble',\r\n  },\r\n  'topcon-os': {\r\n    name: 'Topcon OS / DS / GM',\r\n    config: { baudRate: 9600, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none' },\r\n    protocol: 'topcon',\r\n  },\r\n  'sokkia-cx': {\r\n    name: 'Sokkia CX / FX',\r\n    config: { baudRate: 115200, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none' },\r\n    protocol: 'sokkia',\r\n  },\r\n  'generic-gnss': {\r\n    name: 'Generic GNSS Receiver',\r\n    config: { baudRate: 4800, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none' },\r\n    protocol: 'nmea',\r\n  },\r\n}\r\n\r\n// ─── Serial Connection Manager ──────────────────────────────────────────\r\n\r\nexport class InstrumentSerialConnection {\r\n  private port: SerialPort | null = null\r\n  private reader: ReadableStreamDefaultReader<Uint8Array> | null = null\r\n  private writer: WritableStreamDefaultWriter<Uint8Array> | null = null\r\n  private parser: InstrumentStreamParser | null = null\r\n  private readLoopActive = false\r\n  private reconnectAttempts = 0\r\n  private maxReconnectAttempts = 3\r\n  private reconnectTimer: ReturnType<typeof setTimeout> | null = null\r\n  private healthCheckTimer: ReturnType<typeof setInterval> | null = null\r\n\r\n  // State\r\n  private _status: ConnectionStatus = 'disconnected'\r\n  private _config: SerialConnectionConfig\r\n  private _instrumentInfo: InstrumentInfo | null = null\r\n  private _stats: ConnectionStats | null = null\r\n\r\n  // Callbacks\r\n  private onDataCallbacks: Set<DataCallback> = new Set()\r\n  private onStatusCallbacks: Set<StatusCallback> = new Set()\r\n  private onErrorCallbacks: Set<ErrorCallback> = new Set()\r\n  \r\n  // Capacitor Native\r\n  private nativePortId: string | null = null\r\n  private nativeDataListener: any = null\r\n\r\n  constructor(config: Partial<SerialConnectionConfig> = {}) {\r\n    this._config = { ...DEFAULT_CONFIG, ...config }\r\n  }\r\n\r\n  // ─── Getters ─────────────────────────────────────────────────────────\r\n\r\n  get status(): ConnectionStatus { return this._status }\r\n  get config(): SerialConnectionConfig { return this._config }\r\n  get instrumentInfo(): InstrumentInfo | null { return this._instrumentInfo }\r\n  get stats(): ConnectionStats | null { return this._stats }\r\n  get isConnected(): boolean {\r\n    return this._status === 'connected' || this._status === 'streaming'\r\n  }\r\n\r\n  // ─── Event Handlers ─────────────────────────────────────────────────\r\n\r\n  onData(callback: DataCallback): () => void {\r\n    this.onDataCallbacks.add(callback)\r\n    return () => this.onDataCallbacks.delete(callback)\r\n  }\r\n\r\n  onStatus(callback: StatusCallback): () => void {\r\n    this.onStatusCallbacks.add(callback)\r\n    return () => this.onStatusCallbacks.delete(callback)\r\n  }\r\n\r\n  onError(callback: ErrorCallback): () => void {\r\n    this.onErrorCallbacks.add(callback)\r\n    return () => this.onErrorCallbacks.delete(callback)\r\n  }\r\n\r\n  // ─── Connection Lifecycle ───────────────────────────────────────────\r\n\r\n  async connect(): Promise<void> {\r\n    this.setStatus('connecting')\r\n\r\n    try {\r\n      if (Capacitor.isNativePlatform()) {\r\n        // --- NATIVE ANDROID MODE ---\r\n        const devicesResult = await UsbSerial.listDevices()\r\n        const devices = devicesResult.devices\r\n        \r\n        if (!devices || devices.length === 0) {\r\n          throw new Error('No USB serial devices found. Please connect an instrument via OTG.')\r\n        }\r\n\r\n        const deviceId = devices[0].deviceId\r\n        await UsbSerial.requestPermission({ deviceId })\r\n\r\n        const openResult = await UsbSerial.open({ deviceId })\r\n        this.nativePortId = openResult.portId\r\n\r\n        // Note: The plugin types use DataBits, StopBits, Parity enums\r\n        // For simplicity we cast our numbers to any/expected types if needed\r\n        await UsbSerial.setParameters({\r\n          portId: this.nativePortId,\r\n          baudRate: this._config.baudRate,\r\n          dataBits: this._config.dataBits as any,\r\n          stopBits: this._config.stopBits as any,\r\n          parity: (this._config.parity === 'none' ? 0 : this._config.parity === 'odd' ? 1 : 2) as any,\r\n        })\r\n\r\n        // Ensure DTR/RTS is active\r\n        await UsbSerial.setDTR({ portId: this.nativePortId, value: true }).catch(() => {})\r\n        await UsbSerial.setRTS({ portId: this.nativePortId, value: true }).catch(() => {})\r\n\r\n        this.parser = createStreamParser()\r\n        this._stats = {\r\n          bytesReceived: 0,\r\n          messagesParsed: 0,\r\n          errors: 0,\r\n          connectedAt: new Date(),\r\n          lastDataAt: new Date(),\r\n        }\r\n\r\n        this.setStatus('connected')\r\n        this.reconnectAttempts = 0\r\n        this.startHealthCheck()\r\n        \r\n        // Listen for data natively\r\n        this.nativeDataListener = await UsbSerial.addListener('data', (data: any) => {\r\n          if (!this.parser || !this.readLoopActive) return\r\n          // Native plugin returns base64\r\n          const text = atob(data.data)\r\n          \r\n          if (this._stats) {\r\n            this._stats.bytesReceived += text.length\r\n            this._stats.lastDataAt = new Date()\r\n          }\r\n          \r\n          const results = this.parser.feed(text)\r\n          for (const result of results) {\r\n            this.processParsedResult(result)\r\n          }\r\n        })\r\n\r\n        await UsbSerial.startReading({ portId: this.nativePortId })\r\n        this.readLoopActive = true\r\n        this.setStatus('streaming')\r\n        \r\n      } else {\r\n        // --- WEB BROWSER MODE ---\r\n        if (!('serial' in navigator)) {\r\n          throw new Error('Web Serial API is not supported in this browser. Please use Chrome or Edge.')\r\n        }\r\n\r\n        const serial = navigator.serial\r\n        this.port = await serial.requestPort()\r\n\r\n        await this.port.open({\r\n          baudRate: this._config.baudRate,\r\n          dataBits: this._config.dataBits,\r\n          stopBits: this._config.stopBits,\r\n          parity: this._config.parity,\r\n          flowControl: this._config.flowControl,\r\n        })\r\n\r\n        this.parser = createStreamParser()\r\n        this._stats = {\r\n          bytesReceived: 0,\r\n          messagesParsed: 0,\r\n          errors: 0,\r\n          connectedAt: new Date(),\r\n          lastDataAt: new Date(),\r\n        }\r\n\r\n        if (this.port.writable) {\r\n          this.writer = this.port.writable.getWriter()\r\n        }\r\n\r\n        this.setStatus('connected')\r\n        this.reconnectAttempts = 0\r\n        this.startReadLoop()\r\n        this.startHealthCheck()\r\n      }\r\n\r\n    } catch (error) {\r\n      if ((error as Error).name === 'NotFoundError') {\r\n        // User cancelled port selection\r\n        this.setStatus('disconnected')\r\n        return\r\n      }\r\n      this.setStatus('error')\r\n      const err = error instanceof Error ? error : new Error(String(error))\r\n      this.emitError(err)\r\n      throw err\r\n    }\r\n  }\r\n\r\n  /**\r\n   * Disconnect from the instrument\r\n   */\r\n  async disconnect(): Promise<void> {\r\n    this.stopReadLoop()\r\n    this.stopHealthCheck()\r\n    this.stopReconnect()\r\n\r\n    try {\r\n      if (Capacitor.isNativePlatform() && this.nativePortId) {\r\n        if (this.nativeDataListener) {\r\n          await this.nativeDataListener.remove().catch(() => {})\r\n          this.nativeDataListener = null\r\n        }\r\n        await UsbSerial.stopReading({ portId: this.nativePortId }).catch(() => {})\r\n        await UsbSerial.close({ portId: this.nativePortId }).catch(() => {})\r\n        this.nativePortId = null\r\n      } else {\r\n        if (this.writer) {\r\n          await this.writer.close().catch(() => {})\r\n          this.writer = null\r\n        }\r\n        if (this.reader) {\r\n          await this.reader.cancel().catch(() => {})\r\n          this.reader = null\r\n        }\r\n        if (this.port) {\r\n          await this.port.close().catch(() => {})\r\n          this.port = null\r\n        }\r\n      }\r\n    } catch {\r\n      // Ignore close errors\r\n    }\r\n\r\n    this._instrumentInfo = null\r\n    this.parser = null\r\n    this.setStatus('disconnected')\r\n  }\r\n\r\n  /**\r\n   * Update connection configuration (must reconnect)\r\n   */\r\n  updateConfig(config: Partial<SerialConnectionConfig>): void {\r\n    this._config = { ...this._config, ...config }\r\n  }\r\n\r\n  /**\r\n   * Connect using a preset instrument configuration\r\n   */\r\n  async connectWithPreset(presetKey: string): Promise<void> {\r\n    const preset = INSTRUMENT_PRESETS[presetKey]\r\n    if (!preset) throw new Error(`Unknown instrument preset: ${presetKey}`)\r\n    this._config = { ...preset.config }\r\n    await this.connect()\r\n  }\r\n\r\n  // ─── Data Transmission ─────────────────────────────────────────────\r\n\r\n  async send(data: Uint8Array): Promise<void> {\r\n    if (Capacitor.isNativePlatform()) {\r\n      if (!this.nativePortId) throw new Error('Not connected natively')\r\n      const b64 = btoa(String.fromCharCode.apply(null, Array.from(data)))\r\n      await UsbSerial.write({ portId: this.nativePortId, data: b64 })\r\n    } else {\r\n      if (!this.writer) throw new Error('Not connected')\r\n      await this.writer.write(data)\r\n    }\r\n  }\r\n\r\n  /**\r\n   * Send a string command to the instrument\r\n   */\r\n  async sendCommand(command: string): Promise<void> {\r\n    const encoder = new TextEncoder()\r\n    await this.send(encoder.encode(command + '\\r\\n'))\r\n  }\r\n\r\n  /**\r\n   * Request measurement from Leica total station (legacy convenience method)\r\n   */\r\n  async requestLeicaMeasurement(): Promise<void> {\r\n    // Standard Leica GSI measurement trigger commands\r\n    const commands = [\r\n      '%R1Q,5002:1,0,0,0,0\\r\\n',  // Request distance + angle\r\n      '%R1Q,2008:1,0\\r\\n',         // Trigger measurement\r\n    ]\r\n    for (const cmd of commands) {\r\n      await this.sendCommand(cmd)\r\n    }\r\n  }\r\n\r\n  /**\r\n   * Send a brand-specific instrument command\r\n   * Uses the multi-brand command protocol system (Leica, Topcon, Trimble, Sokkia)\r\n   *\r\n   * @example\r\n   * // Measure with a Topcon total station\r\n   * await connection.sendInstrumentCommand('topcon', 'measureAndRecord')\r\n   *\r\n   * // Set prism target on a Trimble S7\r\n   * await connection.sendInstrumentCommand('trimble', 'setPrismTarget', 0)\r\n   *\r\n   * // Set station on a Sokkia CX\r\n   * await connection.sendInstrumentCommand('sokkia', 'setStation', stationSetup)\r\n   */\r\n  async sendInstrumentCommand(\r\n    brand: 'leica' | 'topcon' | 'trimble' | 'sokkia',\r\n    commandType: string,\r\n    ...args: unknown[]\r\n  ): Promise<void> {\r\n    // Dynamic import to avoid circular dependency\r\n    const { getInstrumentCommand } = await import('./instrumentCommands')\r\n    const cmd = getInstrumentCommand(brand, commandType as any, ...args)\r\n    await this.sendCommand(cmd.command)\r\n  }\r\n\r\n  /**\r\n   * Get the brand for the currently connected instrument based on preset\r\n   */\r\n  getCurrentBrand(): 'leica' | 'topcon' | 'trimble' | 'sokkia' | null {\r\n    // Try to determine from detected protocol and preset\r\n    if (this._instrumentInfo) {\r\n      if (this._instrumentInfo.manufacturer?.toLowerCase().includes('leica')) return 'leica'\r\n      if (this._instrumentInfo.manufacturer?.toLowerCase().includes('topcon')) return 'topcon'\r\n      if (this._instrumentInfo.manufacturer?.toLowerCase().includes('trimble')) return 'trimble'\r\n      if (this._instrumentInfo.manufacturer?.toLowerCase().includes('sokkia')) return 'sokkia'\r\n    }\r\n    return null\r\n  }\r\n\r\n  // ─── Private Methods ───────────────────────────────────────────────\r\n\r\n  private setStatus(status: ConnectionStatus) {\r\n    this._status = status\r\n    this.onStatusCallbacks.forEach(cb => {\r\n      try { cb(status) } catch { /* ignore callback errors */ }\r\n    })\r\n  }\r\n\r\n  private emitError(error: Error) {\r\n    this.onErrorCallbacks.forEach(cb => {\r\n      try { cb(error) } catch { /* ignore callback errors */ }\r\n    })\r\n  }\r\n\r\n  private emitData(data: ParsedInstrumentData) {\r\n    this.onDataCallbacks.forEach(cb => {\r\n      try { cb(data) } catch { /* ignore callback errors */ }\r\n    })\r\n  }\r\n\r\n  private async startReadLoop(): Promise<void> {\r\n    if (!this.port?.readable || this.readLoopActive) return\r\n    this.readLoopActive = true\r\n\r\n    this.setStatus('streaming')\r\n\r\n    while (this.readLoopActive && this.port.readable) {\r\n      try {\r\n        this.reader = this.port.readable.getReader()\r\n\r\n        while (this.readLoopActive && this.reader) {\r\n          const { value, done } = await this.reader.read()\r\n\r\n          if (done) break\r\n          if (!value || !this.parser) continue\r\n\r\n          // Update stats\r\n          if (this._stats) {\r\n            this._stats.bytesReceived += value.length\r\n            this._stats.lastDataAt = new Date()\r\n          }\r\n\r\n          // Decode bytes to string and feed to parser\r\n          const decoder = new TextDecoder()\r\n          const text = decoder.decode(value, { stream: true })\r\n          const results = this.parser.feed(text)\r\n\r\n          // Emit parsed data\r\n          for (const result of results) {\r\n            this.processParsedResult(result)\r\n          }\r\n        }\r\n      } catch (error) {\r\n        if (this.readLoopActive) {\r\n          if (this._stats) { this._stats.errors++ }\r\n\r\n          if (this.reconnectAttempts < this.maxReconnectAttempts) {\r\n            this.setStatus('reconnecting')\r\n            this.reconnectAttempts++\r\n            this.scheduleReconnect()\r\n          } else {\r\n            this.setStatus('error')\r\n            this.emitError(error instanceof Error ? error : new Error(String(error)))\r\n          }\r\n        }\r\n      } finally {\r\n        if (this.reader) {\r\n          try { this.reader.releaseLock() } catch { /* ignore */ }\r\n          this.reader = null\r\n        }\r\n      }\r\n    }\r\n\r\n    this.readLoopActive = false\r\n  }\r\n\r\n  private stopReadLoop() {\r\n    this.readLoopActive = false\r\n    if (this.reader) {\r\n      try { this.reader.cancel() } catch { /* ignore */ }\r\n      try { this.reader.releaseLock() } catch { /* ignore */ }\r\n      this.reader = null\r\n    }\r\n  }\r\n\r\n  private scheduleReconnect() {\r\n    if (this.reconnectTimer) clearTimeout(this.reconnectTimer)\r\n    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 10000)\r\n\r\n    this.reconnectTimer = setTimeout(async () => {\r\n      try {\r\n        // Try to reopen the port\r\n        if (this.port) {\r\n          await this.port.open({\r\n            baudRate: this._config.baudRate,\r\n            dataBits: this._config.dataBits,\r\n            stopBits: this._config.stopBits,\r\n            parity: this._config.parity,\r\n            flowControl: this._config.flowControl,\r\n          })\r\n\r\n          if (this.port.writable) {\r\n            this.writer = this.port.writable.getWriter()\r\n          }\r\n\r\n          this.parser = createStreamParser()\r\n          this.startReadLoop()\r\n        }\r\n      } catch {\r\n        this.setStatus('error')\r\n      }\r\n    }, delay)\r\n  }\r\n\r\n  private stopReconnect() {\r\n    if (this.reconnectTimer) {\r\n      clearTimeout(this.reconnectTimer)\r\n      this.reconnectTimer = null\r\n    }\r\n  }\r\n\r\n  private startHealthCheck() {\r\n    this.stopHealthCheck()\r\n    this.healthCheckTimer = setInterval(() => {\r\n      if (this._stats) {\r\n        const timeSinceData = Date.now() - this._stats.lastDataAt.getTime()\r\n        // If no data for 30 seconds, consider connection stale\r\n        if (timeSinceData > 30000 && this._status === 'streaming') {\r\n          this._stats.errors++\r\n        }\r\n      }\r\n    }, 10000)\r\n  }\r\n\r\n  private stopHealthCheck() {\r\n    if (this.healthCheckTimer) {\r\n      clearInterval(this.healthCheckTimer)\r\n      this.healthCheckTimer = null\r\n    }\r\n  }\r\n\r\n  private processParsedResult(result: ParsedInstrumentData) {\r\n    if (result.type !== 'unknown') {\r\n      if (this._stats) this._stats.messagesParsed++\r\n      this.emitData(result)\r\n\r\n      if (!this._instrumentInfo) {\r\n        this._instrumentInfo = {\r\n          manufacturer: 'Unknown',\r\n          protocol: result.type,\r\n          detectedAt: new Date(),\r\n        }\r\n\r\n        if (result.type === 'gsi') {\r\n          this._instrumentInfo.manufacturer = 'Leica / Leica Geosystems'\r\n        } else if (result.type === 'nmea') {\r\n          this._instrumentInfo.manufacturer = 'GNSS Receiver'\r\n        } else if (result.type === 'topcon') {\r\n          this._instrumentInfo.manufacturer = 'Topcon'\r\n        } else if (result.type === 'trimble') {\r\n          this._instrumentInfo.manufacturer = 'Trimble'\r\n        } else if (result.type === 'sokkia') {\r\n          this._instrumentInfo.manufacturer = 'Sokkia'\r\n        }\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// ─── Helper: Check Web Serial Support ───────────────────────────────────\r\n\r\nexport function isSerialSupported(): boolean {\r\n  return typeof navigator !== 'undefined' && 'serial' in navigator\r\n}\r\n\r\n// ─── Helper: Get Available Ports (if previously granted) ─────────────────\r\n\r\nexport async function getPreviouslyAuthorizedPorts(): Promise<SerialPort[]> {\r\n  if (!isSerialSupported()) return []\r\n  try {\r\n    return await navigator.serial.getPorts()\r\n  } catch {\r\n    return []\r\n  }\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",

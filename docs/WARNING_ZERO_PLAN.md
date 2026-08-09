@@ -17,25 +17,25 @@
 
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
-| `no-unsafe-member-access` | 964 | **964** | active |
-| `no-unsafe-assignment` | 776 | **776** | active |
-| `no-explicit-any` | 483 | **483** | active |
-| `no-unsafe-argument` | 166 | **167** | active — closest to zero, grind first |
+| `no-unsafe-member-access` | 943 (WIP in tree; committed 973) | **973** | active |
+| `no-unsafe-assignment` | 772 | **776** | active |
+| `no-explicit-any` | 458 | **478** | active |
+| `no-unsafe-argument` | 164 | **165** | active — closest to zero, grind first |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 (1,857 files) | **0** | ✅ done |
-| **total warnings** | **5,075** | CI ceiling **10,000** | green |
+| **total warnings** | **4,874** (WIP in tree; committed 4,941) | CI ceiling **10,000** | green |
 
 Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 1,163 · `no-non-null-assertion` 570 · `no-console` 393 · `no-unsafe-call` 208 · `no-unsafe-return` 171 · `react-hooks/exhaustive-deps` 70 · `no-restricted-syntax` 16.
 
 ### Git / CI state
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
-- **HEAD:** `ca5c94df` (map-cluster cleanup + floors 1105/832/540/233).
-- **Uncommitted (next batches):** (1) browser-API `as any` typing (`src/types/web-api.d.ts` + 11 files, incl. the fieldbook speech consolidation); (2) console/deps drain in fieldbook/survey components (`useSubdivision` logger + dep arrays, `MobileMeasurementCapture` resetForm hoist, `NTRIPClientPanel`/`MobileFieldUX` unused imports); (3) member-access batch-1 grind (`cpd/page.tsx` typed fetch + CPDRequirement, `FieldDataCollector` FieldSessionState props, `CleanedExport` CleanedPoint/Anomaly map callbacks + pdfDoc cast); (4) `LayerControl.tsx` OL typing (`BasemapLayer`/`CustomTileLayer` aliases, typed `layer.get()` results, redundant `(layer as any).setOpacity` casts removed — 40 warnings → 0) — floors 1029/803/500/224, total 5105. Commit as conventional commits per batch.
-- **Unpushed (2):** `ce2847e2` (survey compute + pricing typing), `ca5c94df` (map cleanup + re-baseline). **Push both and watch CI** — expected: every code gate green (ESLint/TypeScript/Jest/Axe/i18n/API-Row-Typing/Security/Mobile/Prod builds), with known-red non-code jobs below.
+- **HEAD:** `0183c82d` (E2E standalone-server + OAuth env fix).
+- **Uncommitted (this batch):** non-browser-API cast typing — `src/lib/map/stakeout.ts` (`positioning: 'center-center' as any` removed; it's a valid OL `Positioning` member) and `src/lib/serial/InstrumentSerialConnection.ts` (plugin union types: `dataBits`/`stopBits` casts dropped, parity fixed from numeric 0/1/2 to the string union the installed `@leeskies/capacitor-usb-serial` actually declares, `nativeDataListener: any` → `PluginListenerHandle | null`, `(data: any)` → `DataEvent`, `commandType as any` → `as CommandType`) — 0 warnings left in both files. Re-baselined floors 973/776/478/165, total 4,941.
+- **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).
-  - `E2E Tests` — two problems remain: (a) the artifact fix (`b8ab126f`, `include-hidden-files: true` for `.next/`) made the server boot and tests run, but the 20-min job timeout kills the run; (b) tests fail on a next-auth `client_id is required` error (missing OAuth env in CI). Remaining fix: shorten E2E (drop the 2-shard split or raise the timeout) and inject the auth env the specs need.
+  - `E2E Tests` — `0183c82d` switched the E2E webServer to the standalone server (the `output: 'standalone'` + `next start` combo silently bypassed middleware — root cause of the protected-route failures), injected the OAuth env the specs need, aligned stale spec copy to the current UI, and raised the timeout. Shards were running clean at the last check; verify the next CI run's E2E verdict.
 - **⚠ WIP file — never commit as part of a typing batch:**
   `src/components/survey/GNSSRoverConnection.tsx` is the concurrent session's mid-edit file (has tsc errors, and it *reduces* warning counts while uncommitted). Re-baseline floors **with this file stashed** so floors match committed code — otherwise CI fails with "live > floor" (the premature-baseline trap; see §7 rule 4).
 - **Session worktree:** `write_file` lands in `.freebuff/worktrees/d90ebaf2-f825-4569-b94c-966f3d5aa130`; the real checkout is `C:/Users/user/Desktop/METARDU`. Sync edits across with `cp` (see §7 rule 6). Files are **CRLF** in the worktree, LF in primary — git normalizes; scripts must not assert exact line endings.
