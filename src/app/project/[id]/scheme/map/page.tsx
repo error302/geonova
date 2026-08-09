@@ -70,7 +70,7 @@ export default function SchemeMapPage() {
         }),
         new VectorLayer({
           source: vectorSource,
-          style: ((feature: any) => {
+          style: ((feature: Feature) => {
             const props = feature.getProperties()
             const status = props.status as string || 'pending'
             const color = STATUS_COLORS[status] || '#6b7280'
@@ -173,7 +173,7 @@ export default function SchemeMapPage() {
     // Fetch scheme GeoJSON
     fetch(`/api/scheme/map?project_id=${projectId}`)
       .then(res => res.json())
-      .then(data => {
+      .then((data: { features?: unknown[] }) => {
         if (data.features && data.features.length > 0) {
           const format = new GeoJSON()
           const features = format.readFeatures(data, {

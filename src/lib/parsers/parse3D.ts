@@ -37,12 +37,13 @@ export async function parseGLTFFile(file: File): Promise<ParsedInput> {
         }
 
         const walls: ExtractedWall[] = []
-        scene.traverse((child: any) => {
-          if (child.isMesh) {
-            const geom = child.geometry
+        scene.traverse((child) => {
+          const mesh = child as InstanceType<typeof THREE['Mesh']>
+          if (mesh.isMesh) {
+            const geom = mesh.geometry
             if (geom?.boundingBox) {
               const meshBox = new THREE.Box3().copy(geom.boundingBox)
-              const position = child.position
+              const position = mesh.position
               
               const width = meshBox.max.x - meshBox.min.x
               const height = meshBox.max.z - meshBox.min.z

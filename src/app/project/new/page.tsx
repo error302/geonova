@@ -18,7 +18,7 @@ export default function NewProjectPage() {
   const [location, setLocation] = useState('')
   const [selectedCountry, setSelectedCountry] = useState<SurveyingCountry>(defaultCountry)
   const [utmZone, setUtmZone] = useState(() => {
-    const c = ALL_COUNTRIES.find((c: any) => c.id === defaultCountry)
+    const c = ALL_COUNTRIES.find((c) => c.id === defaultCountry)
     return c?.id === 'us' ? '17' : c?.id === 'uk' ? '30' : c?.id === 'australia' ? '51' : '37'
   })
   const [hemisphere, setHemisphere] = useState<'N' | 'S'>('S')
@@ -119,7 +119,7 @@ export default function NewProjectPage() {
         body: JSON.stringify(payload),
       })
 
-      const json = await res.json()
+      const json = (await res.json()) as { error?: string; data?: { id: string } }
 
       if (!res.ok) {
         setError(json.error || 'Failed to create project')
@@ -141,7 +141,7 @@ export default function NewProjectPage() {
     }
   }
 
-  const currentCountry = ALL_COUNTRIES.find((c: any) => c.id === selectedCountry)
+  const currentCountry = ALL_COUNTRIES.find((c) => c.id === selectedCountry)
   const inputClass = 'w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] focus:outline-none transition-colors text-sm'
   const labelClass = 'block text-sm font-medium text-[var(--text-secondary)] mb-1.5'
 
@@ -379,7 +379,7 @@ export default function NewProjectPage() {
           <div>
             <label htmlFor="country" className={labelClass}>Country / Jurisdiction</label>
             <select id="country" value={selectedCountry} onChange={e => handleCountryChange(e.target.value as SurveyingCountry)} className={inputClass}>
-              {ALL_COUNTRIES.map((c: any) => (
+              {ALL_COUNTRIES.map((c) => (
                 <option key={c.id} value={c.id}>{c.flag} {c.name}</option>
               ))}
             </select>

@@ -40,7 +40,7 @@ describe('[T1.8] db.updateWithOptimisticLock — SQL guard contract', () => {
       '2026-07-09T00:00:00Z',
     )
 
-    const sql = querySpy.mock.calls[0][0] as string
+    const sql = (querySpy.mock.calls[0] as [string, unknown[]])[0]
     // The guard MUST be in the UPDATE's WHERE clause — this is the whole
     // point of T1.8. The old checkOptimisticLock did a separate SELECT.
     expect(sql).toMatch(/WHERE id = \$\d+ AND updated_at = \$\d+/)
@@ -59,10 +59,10 @@ describe('[T1.8] db.updateWithOptimisticLock — SQL guard contract', () => {
       '2026-07-09T00:00:00Z',
     )
 
-    const params = querySpy.mock.calls[0][1] as unknown[]
+    const params = (querySpy.mock.calls[0] as [string, unknown[]])[1]
     // The malicious string must be a parameter, not interpolated into SQL.
     expect(params).toContain(malicious)
-    const sql = querySpy.mock.calls[0][0] as string
+    const sql = (querySpy.mock.calls[0] as [string, unknown[]])[0]
     expect(sql).not.toContain('DROP TABLE')
   })
 
@@ -124,7 +124,7 @@ describe('[T1.8] db.deleteWithOptimisticLock — SQL guard contract', () => {
       '2026-07-09T00:00:00Z',
     )
 
-    const sql = querySpy.mock.calls[0][0] as string
+    const sql = (querySpy.mock.calls[0] as [string, unknown[]])[0]
     expect(sql).toMatch(/DELETE FROM projects\s+WHERE id = \$1 AND updated_at = \$2/)
   })
 
@@ -190,7 +190,7 @@ describe('[T1.9] createAuditLog — correct column names (no silent failure)', (
       userName: 'test@example.com',
     })
 
-    const sql = querySpy.mock.calls[0][0] as string
+    const sql = (querySpy.mock.calls[0] as [string, unknown[]])[0]
     // T1.9: MUST use the real column names. The old code used entity_type /
     // entity_id which don't exist in the schema.
     expect(sql).toContain('table_name')
@@ -212,9 +212,9 @@ describe('[T1.9] createAuditLog — correct column names (no silent failure)', (
       changes: '{"field": "value"}',
     })
 
-    const params = querySpy.mock.calls[0][1] as unknown[]
+    const params = (querySpy.mock.calls[0] as [string, unknown[]])[1]
     // The 5th param is the details JSONB. It must contain user_name.
-    const details = JSON.parse(params[4] as string)
+    const details = JSON.parse(params[4] as string) as Record<string, unknown>
     expect(details.user_name).toBe('test@example.com')
     expect(details.changes).toEqual({ field: 'value' })
   })
@@ -274,7 +274,7 @@ describe('[T1.9] logAuditEvent — correct column names (no silent failure)', ()
       timestamp: new Date('2026-07-09T00:00:00Z'),
     })
 
-    const sql = querySpy.mock.calls[0][0] as string
+    const sql = (querySpy.mock.calls[0] as [string, unknown[]])[0]
     // T1.9: MUST use real column names.
     expect(sql).toContain('table_name')
     expect(sql).toContain('record_id')
@@ -293,8 +293,8 @@ describe('[T1.9] logAuditEvent — correct column names (no silent failure)', ()
       timestamp: new Date(),
     })
 
-    const params = querySpy.mock.calls[0][1] as unknown[]
-    const details = JSON.parse(params[4] as string)
+    const params = (querySpy.mock.calls[0] as [string, unknown[]])[1]
+    const details = JSON.parse(params[4] as string) as Record<string, unknown>
     expect(details.user_agent).toBe('Mozilla/5.0')
   })
 

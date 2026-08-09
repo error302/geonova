@@ -100,8 +100,26 @@ export default function AnalyticsPage() {
         if (isAdmin) {
           const res = await fetch('/api/admin/dashboard')
           if (res.ok) {
-            const json = await res.json()
-            const d = json.data ?? json
+            const json = (await res.json()) as {
+              data?: {
+                projects?: {
+                  total?: number
+                  byStatus?: Record<string, number>
+                }
+                parcels?: number
+                submissionsThisMonth?: number
+                revenue?: { byMonth?: Array<{ month: string; total: number }> }
+              }
+            }
+            const d = (json.data ?? json) as {
+              projects?: {
+                total?: number
+                byStatus?: Record<string, number>
+              }
+              parcels?: number
+              submissionsThisMonth?: number
+              revenue?: { byMonth?: Array<{ month: string; total: number }> }
+            }
             setData({
               totalProjects: d.projects?.total ?? 0,
               activeProjects: d.projects?.byStatus?.active ?? d.projects?.total ?? 0,
