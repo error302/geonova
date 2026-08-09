@@ -101,7 +101,11 @@ export default function ProjectWorkspaceClient({ project, workflow }: Props) {
       try {
         const res = await fetch(`/api/project/${project.id}/workflow`);
         if (res.ok) {
-          const json = await res.json();
+          const json = (await res.json()) as {
+            data?: {
+              steps?: Array<{ id: string; completionPct?: number }>
+            }
+          };
           // The API returns the status but we need the raw data for the engine.
           // Build it from the API response + local project state.
           const data: ProjectWorkflowData = {

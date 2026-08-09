@@ -23,7 +23,15 @@ export function Step6Outputs({
   const template = data?.crossSectionTemplate
 
   const computeCurves = () => {
-    const results: any[] = []
+    const results: Array<{
+      name: string
+      from: string
+      to: string
+      radius: number
+      deflection: string
+      tangent: string
+      arc: string
+    }> = []
     for (let i = 0; i < ips.length - 1; i++) {
       const ip1 = ips[i]
       const ip2 = ips[i + 1]
@@ -50,7 +58,14 @@ export function Step6Outputs({
 
   const computeEarthworks = () => {
     if (!template || stations.length < 2) return []
-    const rows: any[] = []
+    const rows: Array<{
+      chainage: number
+      groundLevel: number
+      cutArea: number
+      fillArea: number
+      cutVol: number
+      fillVol: number
+    }> = []
     for (let i = 0; i < stations.length; i++) {
       const s = stations[i]
       let cutArea = 0, fillArea = 0
