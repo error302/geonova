@@ -16,6 +16,8 @@ export function sanitizeHtml(dirty: string): string {
         'ul', 'ol', 'li', 'a', 'strong', 'em', 'b', 'i', 'u',
         'br', 'hr', 'img', 'svg', 'style', 'blockquote', 'pre', 'code',
         'sub', 'sup', 'section', 'article', 'header', 'footer', 'nav',
+        'line', 'text', 'rect', 'circle', 'polygon', 'polyline', 'path',
+        'g', 'defs', 'pattern', 'tspan'
       ],
       ALLOWED_ATTR: [
         'class', 'id', 'style', 'href', 'src', 'alt', 'title',
@@ -24,6 +26,8 @@ export function sanitizeHtml(dirty: string): string {
         'border', 'cellpadding', 'cellspacing', 'colspan', 'rowspan',
         'text-align', 'font-size', 'font-weight', 'font-style',
         'background', 'color', 'padding', 'margin', 'vertical-align',
+        'x1', 'y1', 'x2', 'y2', 'points', 'stroke-dasharray', 'opacity',
+        'text-anchor', 'font-family', 'fill-opacity', 'stroke-linejoin'
       ],
     });
   }
