@@ -19,9 +19,10 @@
  * - Automatic reconnection attempts
  */
 
-import { Capacitor } from '@capacitor/core'
-import { UsbSerial } from '@leeskies/capacitor-usb-serial'
+import { Capacitor, type PluginListenerHandle } from '@capacitor/core'
+import { UsbSerial, type DataEvent } from '@leeskies/capacitor-usb-serial'
 import { createStreamParser, type ParsedInstrumentData, type InstrumentStreamParser } from './protocolParsers'
+import type { CommandType } from './instrumentCommands'
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -138,7 +139,7 @@ export class InstrumentSerialConnection {
   
   // Capacitor Native
   private nativePortId: string | null = null
-  private nativeDataListener: any = null
+  private nativeDataListener: PluginListenerHandle | null = null
 
   constructor(config: Partial<SerialConnectionConfig> = {}) {
     this._config = { ...DEFAULT_CONFIG, ...config }
@@ -192,14 +193,13 @@ export class InstrumentSerialConnection {
         const openResult = await UsbSerial.open({ deviceId })
         this.nativePortId = openResult.portId
 
-        // Note: The plugin types use DataBits, StopBits, Parity enums
-        // For simplicity we cast our numbers to any/expected types if needed
+        // The plugin's DataBits/StopBits/Parity are union types our config already satisfies
         await UsbSerial.setParameters({
           portId: this.nativePortId,
           baudRate: this._config.baudRate,
-          dataBits: this._config.dataBits as any,
-          stopBits: this._config.stopBits as any,
-          parity: (this._config.parity === 'none' ? 0 : this._config.parity === 'odd' ? 1 : 2) as any,
+          dataBits: this._config.dataBits,
+          stopBits: this._config.stopBits,
+          parity: this._config.parity,
         })
 
         // Ensure DTR/RTS is active
@@ -220,7 +220,7 @@ export class InstrumentSerialConnection {
         this.startHealthCheck()
         
         // Listen for data natively
-        this.nativeDataListener = await UsbSerial.addListener('data', (data: any) => {
+        this.nativeDataListener = await UsbSerial.addListener('data', (data: DataEvent) => {
           if (!this.parser || !this.readLoopActive) return
           // Native plugin returns base64
           const text = atob(data.data)
@@ -402,7 +402,7 @@ export class InstrumentSerialConnection {
   ): Promise<void> {
     // Dynamic import to avoid circular dependency
     const { getInstrumentCommand } = await import('./instrumentCommands')
-    const cmd = getInstrumentCommand(brand, commandType as any, ...args)
+    const cmd = getInstrumentCommand(brand, commandType as CommandType, ...args)
     await this.sendCommand(cmd.command)
   }
 

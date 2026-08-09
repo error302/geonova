@@ -354,7 +354,7 @@ export async function createStakeoutOverlay(
   const overlay = new Overlay({
     element: overlayEl,
     position: targetCoord,
-    positioning: 'center-center' as any,
+    positioning: 'center-center',
     stopEvent: false,
   })
 
