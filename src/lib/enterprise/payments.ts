@@ -83,7 +83,7 @@ export async function startSubscriptionPayment(input: {
 
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
-    throw new Error(data?.error || 'Failed to start payment')
+    throw new Error((data as { error?: string }).error || 'Failed to start payment')
   }
 
   return data as StartSubscriptionResult
@@ -106,7 +106,7 @@ export async function checkMpesaPaymentStatus(input: {
 
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
-    throw new Error(data?.error || 'Failed to check payment status')
+    throw new Error((data as { error?: string }).error || 'Failed to check payment status')
   }
 
   return data as { status: 'pending' | 'completed' | 'failed' }

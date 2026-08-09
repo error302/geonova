@@ -81,8 +81,8 @@ export async function getSubscription(userId: string, email?: string): Promise<S
 
 export async function getUsage(userId: string): Promise<UsageInfo> {
   const [projectResult, memberResult] = await Promise.all([
-    db.query('SELECT COUNT(*) as count FROM projects WHERE user_id = $1', [userId]),
-    db.query('SELECT COUNT(*) as count FROM project_members WHERE user_id = $1', [userId]),
+    db.query<{ count?: string }>('SELECT COUNT(*) as count FROM projects WHERE user_id = $1', [userId]),
+    db.query<{ count?: string }>('SELECT COUNT(*) as count FROM project_members WHERE user_id = $1', [userId]),
   ])
 
   return {

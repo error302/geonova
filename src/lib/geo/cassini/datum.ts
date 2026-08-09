@@ -244,8 +244,8 @@ export function deriveMolodenskyParams(
   }
 
   const n = 3
-  const ATA = Array.from({ length: n }, () => new Array(n).fill(0))
-  const ATb = new Array(n).fill(0)
+  const ATA: number[][] = Array.from({ length: n }, () => new Array(n).fill(0))
+  const ATb: number[] = new Array(n).fill(0)
 
   for (let rIdx = 0; rIdx < rows.length; rIdx++) {
     for (let i = 0; i < n; i++) {

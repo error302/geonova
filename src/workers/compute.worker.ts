@@ -329,7 +329,7 @@ function computeTraverseAdjustment(input: TraverseAdjustInput) {
     : 'Perfect'
 
   // Apply Bowditch adjustment
-  const adjustedLegs = computedLegs.map((leg: any) => {
+  const adjustedLegs = computedLegs.map((leg) => {
     const correctionN = totalDistance > 0 ? (leg.distance / totalDistance) * (-errorNorthing) : 0
     const correctionE = totalDistance > 0 ? (leg.distance / totalDistance) * (-errorEasting) : 0
 

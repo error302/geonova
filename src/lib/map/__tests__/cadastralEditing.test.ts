@@ -77,7 +77,7 @@ function createMockGeometry(coords?: number[][]): MockGeometry {
   }
 }
 
-function createMockFeature(id: string | number, geometry?: MockGeometry | null): MockFeature {
+function createMockFeature(id: string | number | undefined, geometry?: MockGeometry | null): MockFeature {
   const geo = geometry ?? createMockGeometry()
   return {
     getId: jest.fn(() => id),
@@ -443,13 +443,13 @@ describe('HistoryManager', () => {
 
   describe('feature without ID', () => {
     it('generates an ID for features without one', () => {
-      const feature = createMockFeature(undefined as any)
+      const feature = createMockFeature(undefined)
       history.record('add', feature as never)
       expect(history.getUndoCount()).toBe(1)
     })
 
     it('undo still works for features without ID (add uses findFeature which returns null)', () => {
-      const feature = createMockFeature(undefined as any)
+      const feature = createMockFeature(undefined)
       history.record('add', feature as never)
 
       // Undo should not throw even though findFeature returns null

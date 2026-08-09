@@ -85,7 +85,7 @@ export function useTileCache() {
         const request = store.get(url)
         request.onsuccess = () => {
           if (request.result) {
-            resolve(request.result.blob)
+            resolve((request.result as { blob: Blob }).blob)
           } else {
             resolve(null)
           }
@@ -490,7 +490,7 @@ export async function getCachedTileBlob(url: string): Promise<Blob | null> {
       const tx = db.transaction('tiles', 'readonly')
       const store = tx.objectStore('tiles')
       const req = store.get(url)
-      req.onsuccess = () => resolve(req.result?.blob || null)
+      req.onsuccess = () => resolve((req.result as { blob: Blob } | undefined)?.blob || null)
       req.onerror = () => resolve(null)
     })
   } catch {

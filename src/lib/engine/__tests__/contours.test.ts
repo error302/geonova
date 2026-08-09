@@ -36,7 +36,7 @@ describe('generateContours', () => {
   })
 
   it('all contour elevations are between min and max elevation', () => {
-    const elevations = SPOT_HEIGHTS.map((p: any) => p.elevation)
+    const elevations = SPOT_HEIGHTS.map((p) => p.elevation)
     const minE = Math.min(...elevations)
     const maxE = Math.max(...elevations)
     const contours = generateContours(SPOT_HEIGHTS, 5)

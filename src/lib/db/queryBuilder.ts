@@ -467,7 +467,7 @@ export class QueryBuilder<T = Record<string, unknown>> {
       // skipped here — nothing user-controlled is interpolated into SQL.
       const sql = `SELECT COUNT(*) as count FROM "${this.table}"${this.buildWhereClause(params)}`
       const result = await this.pool.query(sql, params as unknown[])
-      const count = parseInt(result.rows[0]?.count ?? '0', 10)
+      const count = parseInt((result.rows[0] as { count?: string } | undefined)?.count ?? '0', 10)
       return { data: null, error: null, count }
     }
 
@@ -491,7 +491,7 @@ export class QueryBuilder<T = Record<string, unknown>> {
       const countParams: unknown[] = []
       const countSql = `SELECT COUNT(*) as count FROM "${this.table}"${this.buildWhereClause(countParams)}`
       const countResult = await this.pool.query(countSql, countParams as unknown[])
-      const count = parseInt(countResult.rows[0]?.count ?? '0', 10)
+      const count = parseInt((countResult.rows[0] as { count?: string } | undefined)?.count ?? '0', 10)
 
       if (this.singleRow) {
         if (result.rows.length === 0) {

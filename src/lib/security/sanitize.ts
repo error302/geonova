@@ -52,8 +52,8 @@ export function sanitizeNumber(
 }
 
 export function sanitizeCoordinate(
-  easting: any, 
-  northing: any
+  easting: string | number, 
+  northing: string | number
 ): { easting: number; northing: number } | null {
   const e = sanitizeNumber(easting, 100000, 900000)
   const n = sanitizeNumber(northing, 0, 10000000)

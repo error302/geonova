@@ -7,7 +7,7 @@ export async function generateTraverseReport(
   projectId: string
 ): Promise<Buffer> {
 
-  const projectRes = await db.query(
+  const projectRes = await db.query<{ name: string; survey_type?: string; client_name?: string | null; ref_no?: string | null }>(
     'SELECT name, survey_type, client_name, ref_no FROM projects WHERE id = $1',
     [projectId]
   );

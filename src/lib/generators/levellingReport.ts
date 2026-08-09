@@ -7,7 +7,7 @@ export async function generateLevellingReport(
   projectId: string
 ): Promise<Buffer> {
 
-  const projectRes = await db.query(
+  const projectRes = await db.query<{ name: string; survey_type?: string; ref_no?: string | null }>(
     'SELECT name, survey_type, ref_no FROM projects WHERE id = $1',
     [projectId]
   );

@@ -62,8 +62,8 @@ function solveLinearSystem(A: number[][], b: number[]): number[] {
 function solveLeastSquares(A: number[][], b: number[]): number[] {
   const m = A.length
   const n = A[0].length
-  const ATA = Array.from({ length: n }, () => new Array(n).fill(0))
-  const ATb = new Array(n).fill(0)
+  const ATA: number[][] = Array.from({ length: n }, () => new Array(n).fill(0))
+  const ATb: number[] = new Array(n).fill(0)
 
   for (let r = 0; r < m; r++) {
     for (let i = 0; i < n; i++) {

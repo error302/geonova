@@ -70,7 +70,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         return
       }
 
-      const data = await res.json()
+      const data = (await res.json()) as { plan: string; isAdmin: boolean; status: string; trialEndsAt?: string; features?: string[] }
 
       resetState()
 
@@ -96,7 +96,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       }).catch(() => null)
 
       if (countRes?.ok) {
-        const countData = await countRes.json()
+        const countData = (await countRes.json()) as { count?: number }
         setProjectCount(countData.count || 0)
       }
     } catch {

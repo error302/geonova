@@ -16,7 +16,7 @@ export async function generateWorkingDiagramPdf(
   projectId: string
 ): Promise<Buffer> {
 
-  const projectRes = await db.query(
+  const projectRes = await db.query<{ name: string; survey_type?: string; lr_number?: string | null; utm_zone?: number; hemisphere?: string; datum?: string; field_book_no?: string; computations_no?: string | null }>(
     'SELECT name, survey_type, lr_number, utm_zone, hemisphere, datum, field_book_no, computations_no FROM projects WHERE id = $1',
     [projectId]
   );
