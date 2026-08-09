@@ -17,21 +17,21 @@
 
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
-| `no-unsafe-member-access` | 943 (WIP in tree; committed 973) | **973** | active |
-| `no-unsafe-assignment` | 772 | **776** | active |
-| `no-explicit-any` | 458 | **478** | active |
-| `no-unsafe-argument` | 164 | **165** | active — closest to zero, grind first |
+| `no-unsafe-member-access` | 893 (WIP in tree; committed 923) | **923** | active |
+| `no-unsafe-assignment` | 733 | **744** | active |
+| `no-explicit-any` | 427 | **447** | active |
+| `no-unsafe-argument` | 122 | **125** | active — closest to zero, grind first |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 (1,857 files) | **0** | ✅ done |
-| **total warnings** | **4,874** (WIP in tree; committed 4,941) | CI ceiling **10,000** | green |
+| **total warnings** | **4,705** (WIP in tree; committed 4,772) | CI ceiling **10,000** | green |
 
 Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 1,163 · `no-non-null-assertion` 570 · `no-console` 393 · `no-unsafe-call` 208 · `no-unsafe-return` 171 · `react-hooks/exhaustive-deps` 70 · `no-restricted-syntax` 16.
 
 ### Git / CI state
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
-- **HEAD:** `0183c82d` (E2E standalone-server + OAuth env fix).
-- **Uncommitted (this batch):** non-browser-API cast typing — `src/lib/map/stakeout.ts` (`positioning: 'center-center' as any` removed; it's a valid OL `Positioning` member) and `src/lib/serial/InstrumentSerialConnection.ts` (plugin union types: `dataBits`/`stopBits` casts dropped, parity fixed from numeric 0/1/2 to the string union the installed `@leeskies/capacitor-usb-serial` actually declares, `nativeDataListener: any` → `PluginListenerHandle | null`, `(data: any)` → `DataEvent`, `commandType as any` → `as CommandType`) — 0 warnings left in both files. Re-baselined floors 973/776/478/165, total 4,941.
+- **HEAD:** `625a476c` (non-browser cast typing + floors 165/478/973).
+- **Uncommitted (this batch):** argument grind batch 2 — 20 files (automator, guide/[type], schedule, beacon-reference, gnss-rinex, survey-report-builder, WorkingDiagramClient, BeaconRegistryPanel, BoundaryUploader, DrawingExportToolbar, MassHaulDiagram, UniversalImporter, NotificationBell, CoordinateTransformer, CsvImportPanel, DocumentCard, FieldRecordVault, UTMZonePicker, FieldToFinishButton, workflowEngine) — fetch/JSON.parse reads typed at read time, `: any` map annotations removed, `executeWorkflow` boundary cast narrowed to WorkflowNode/WorkflowEdge, schedule form input typed (`ScheduleFormInput` with optional status, `createSchedule` defaults `'upcoming'`). Floors 125/447/923/744, total 4,772.
 - **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).
@@ -58,7 +58,7 @@ If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read th
 
 Order = **finish the family closest to zero first** (each finish removes a floor + shrinks the ceiling), then the next, then mechanical rules. Argument → explicit-any → member-access → assignment → mechanical → CI tightening.
 
-### Phase 1 — `no-unsafe-argument` (166 → 0, ~90 files) — batch 1 done (19 files, floor 224→167)
+### Phase 1 — `no-unsafe-argument` (122 → 0, ~103 files) — batches 1+2 done (39 files, floor 224→125)
 
 Highest-leverage: every warning is a typed-call-site passing an `any` value. Recipe: type the *argument's* value at its source (fetch/JSON.parse/`useRef<any>`/`useState<any>`), or narrow the callee param. Ranked (regen: `node scripts/argument-scan.mjs --top 20`):
 
