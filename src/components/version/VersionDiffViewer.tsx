@@ -67,7 +67,7 @@ export function VersionDiffViewer({ entityType, entityId, onRestore }: VersionDi
     async function loadVersions() {
       try {
         const res = await fetch(`/api/versions?entity_type=${entityType}&entity_id=${entityId}&limit=50`)
-        const data = await res.json()
+        const data = (await res.json()) as { data?: VersionData[] }
         if (data.data) {
           setVersions(data.data)
           if (data.data.length >= 2) {

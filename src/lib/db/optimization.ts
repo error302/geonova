@@ -15,7 +15,7 @@ class DatabaseOptimizer {
   // Optimized query with caching
   async queryWithCache<T>(
     table: string,
-    query: any,
+    query: string,
     cacheKey: string,
     ttlSeconds = 60
   ): Promise<T[]> {
@@ -71,7 +71,7 @@ class DatabaseOptimizer {
   // Paginated query with cursor-based pagination
   async paginatedQuery<T>(
     table: string,
-    query: any,
+    query: string,
     options: {
       cursor?: string
       limit?: number
@@ -152,7 +152,7 @@ class DatabaseOptimizer {
   // Query with automatic join optimization
   async optimizedJoin<T>(
     primaryTable: string,
-    primaryQuery: any,
+    primaryQuery: string,
     joins: Array<{
       table: string
       foreignKey: string

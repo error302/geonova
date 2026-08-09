@@ -44,7 +44,7 @@ export default function LongitudinalSection({ projectId, points = [] }: Props) {
           </tr>
         </thead>
         <tbody>
-          {data.map((row: any, idx: any) => (
+          {data.map((row, idx) => (
             <tr key={`lsec-${idx}`}>
               <td className="border px-1 py-1">
                 <input aria-label="Chainage"

@@ -101,7 +101,7 @@ class OfflineStorage {
       const store = transaction.objectStore(storeName)
 
       // Generate ID if not present
-      const record = { ...(data as any), id: (data as any).id || this.generateId() }
+      const record = { ...(data as Record<string, unknown>), id: (data as { id?: string }).id || this.generateId() }
 
       const request = store.add(record)
 
@@ -118,7 +118,7 @@ class OfflineStorage {
       const store = transaction.objectStore(storeName)
       const request = store.get(id)
 
-      request.onsuccess = () => resolve(request.result || null)
+      request.onsuccess = () => resolve((request.result as T | undefined) ?? null)
       request.onerror = () => reject(request.error)
     })
   }
@@ -138,7 +138,7 @@ class OfflineStorage {
         request = store.getAll()
       }
 
-      request.onsuccess = () => resolve(request.result || [])
+      request.onsuccess = () => resolve((request.result as T[] | undefined) ?? [])
       request.onerror = () => reject(request.error)
     })
   }

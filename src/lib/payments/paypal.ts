@@ -124,7 +124,7 @@ export class PayPalService {
     })
 
     if (!response.ok) {
-      const error = await response.json()
+      const error = (await response.json()) as { message?: string }
       throw new Error(error.message || 'Failed to create PayPal order')
     }
 
@@ -143,7 +143,7 @@ export class PayPalService {
     })
 
     if (!response.ok) {
-      const error = await response.json()
+      const error = (await response.json()) as { message?: string }
       throw new Error(error.message || 'Failed to capture PayPal order')
     }
 
@@ -194,7 +194,7 @@ export class PayPalService {
     })
 
     if (!response.ok) {
-      const error = await response.json()
+      const error = (await response.json()) as { message?: string }
       throw new Error(error.message || 'Failed to create subscription')
     }
 

@@ -122,7 +122,7 @@ export function CommandPalette() {
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(debouncedQuery)}&limit=10`)
         if (cancelled || !res.ok) return
-        const data = await res.json()
+        const data = (await res.json()) as { data?: { groups?: Array<{ type: string; hits?: Array<{ id: string; title: string; subtitle?: string; meta?: Record<string, unknown> }> }> } }
         if (cancelled) return
         const results: SearchResult[] = []
         if (data.data?.groups) {

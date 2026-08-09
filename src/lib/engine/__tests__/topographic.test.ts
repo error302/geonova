@@ -52,7 +52,7 @@ describe('ASPRS Planimetric Table', () => {
   })
 
   it('each entry has Class 1 < Class 2 < Class 3', () => {
-    ASPRS_PLANIMETRIC.forEach((e: any) => {
+    ASPRS_PLANIMETRIC.forEach((e) => {
       expect(e.class1).toBeLessThan(e.class2)
       expect(e.class2).toBeLessThan(e.class3)
     })
@@ -70,7 +70,7 @@ describe('ASPRS Topographic Table', () => {
   })
 
   it('each entry has Class 1 < Class 2 < Class 3', () => {
-    ASPRS_TOPOGRAPHIC.forEach((e: any) => {
+    ASPRS_TOPOGRAPHIC.forEach((e) => {
       expect(e.class1).toBeLessThan(e.class2)
       expect(e.class2).toBeLessThan(e.class3)
     })

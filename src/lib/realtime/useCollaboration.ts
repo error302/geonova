@@ -103,7 +103,7 @@ export function useCollaboration({
     
     const observer = (event: any) => {
       event.changes.added.forEach((item: any) => {
-        item.content.getContent().forEach((msg: any) => {
+        item.content.getContent().forEach((msg: { message: string; userName: string; userId: string }) => {
           if (msg.userId !== userId) {
             callbacksRef.current.onChat?.(msg.message, msg.userName, msg.userId)
           }

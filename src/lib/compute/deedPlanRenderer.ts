@@ -370,7 +370,7 @@ function buildAbuttals(
 // POINT ID LABELS
 // ============================================================
 function buildPointLabels(pts: BoundaryPoint[], toX:(e:number)=>number, toY:(n:number)=>number): string {
-  return pts.map((p:any) => {
+  return pts.map((p) => {
     const sx = (toX(p.easting)+5).toFixed(2)
     const sy = (toY(p.northing)-5).toFixed(2)
     return `<text x="${sx}" y="${sy}" class="bi">${escapeXml(p.id)}</text>`

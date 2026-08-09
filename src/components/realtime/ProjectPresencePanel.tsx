@@ -17,6 +17,13 @@ interface ProjectPresencePanelProps {
 
 const ROLE_COLORS = ['#e8841a', '#3b82f6', '#10b981', '#8b5cf6', '#ec4899', '#f59e0b']
 
+interface PresenceRow {
+  user_id?: string
+  userId?: string
+  user_name?: string
+  updated_at: string
+}
+
 export function ProjectPresencePanel({ projectId, currentUserId }: ProjectPresencePanelProps) {
   const [collaborators, setCollaborators] = useState<Array<{ userId: string; name: string; status: string; color: string }>>([])
   const [expanded, setExpanded] = useState(false)
@@ -28,7 +35,7 @@ export function ProjectPresencePanel({ projectId, currentUserId }: ProjectPresen
       try {
         const res = await fetch(`/api/realtime/poll?table=projects&projectId=${projectId}`)
         if (res.ok) {
-          const data = await res.json()
+          const data = (await res.json()) as { data?: PresenceRow[] }
           const seen = new Map<string, { userId: string; name: string; status: string; color: string }>()
           for (const row of data.data || []) {
             const userId = row.user_id || row.userId

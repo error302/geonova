@@ -65,7 +65,7 @@ export default function UploadZone({
         body: formData,
       })
 
-      const data = await response.json()
+      const data = (await response.json()) as UploadResult & { error?: string }
 
       if (!response.ok) {
         throw new Error(data.error || 'Upload failed')

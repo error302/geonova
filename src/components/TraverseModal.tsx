@@ -300,14 +300,15 @@ export default function TraverseModal({
       .order('point_name')  // T1.5d FIX: was 'name'
     
     if (data) {
-      setControlPoints(data)
-      if (data.length > 0) {
-        setOpeningPointId(data[0].id)
+      const pts = data as ControlPoint[]
+      setControlPoints(pts)
+      if (pts.length > 0) {
+        setOpeningPointId(pts[0].id)
         // FIX: Default closing to SECOND control point — cadastral traverses require minimum 2
         // distinct known control points per Survey Regulations Reg. 60 & 67 (Basak Ch.10-11).
         // Defaulting to the same point as opening creates a 1-point traverse (swinging),
         // which has no absolute position check.
-        setClosingPointId(data.length > 1 ? data[1].id : '')
+        setClosingPointId(pts.length > 1 ? pts[1].id : '')
       }
     }
   }, [dbClient, projectId])

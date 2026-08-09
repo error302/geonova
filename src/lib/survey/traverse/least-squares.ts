@@ -243,8 +243,8 @@ export function leastSquaresAdjustment(
   
   // Step 1: Build design matrix A and observation vector b
   const A = new Matrix(n, u);
-  const b = new Array(n).fill(0);
-  const weights = new Array(n).fill(0);
+  const b: number[] = new Array(n).fill(0);
+  const weights: number[] = new Array(n).fill(0);
   
   for (let i = 0; i < n; i++) {
     const obs = observations[i];

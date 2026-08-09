@@ -27,6 +27,7 @@ jest.mock('@/lib/monitoring/sentry', () => ({
 import { POST } from '../blocks/route'
 import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
+import type { NextRequest } from 'next/server'
 
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
 const mockSession = getServerSession as jest.MockedFunction<typeof getServerSession>
@@ -61,7 +62,7 @@ describe('Security - SQL Injection Resistance', () => {
     // The handler will fail since db.query is not mocked for success,
     // but it should NOT pass the raw SQL string to the query
     try {
-      await POST(req as any)
+      await POST(req as unknown as NextRequest)
     } catch {
       // expected — db is mocked but not with return values
     }
@@ -98,7 +99,7 @@ describe('Security - SQL Injection Resistance', () => {
 
     let res
     try {
-      res = await POST(req as any)
+      res = await POST(req as unknown as NextRequest)
     } catch {
       // May throw due to incomplete mocking, that's ok
     }

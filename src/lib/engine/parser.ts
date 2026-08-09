@@ -24,7 +24,7 @@ export function parseDelimitedFile(content: string, delimiter: string = ','): Pa
     const line = lines[i].trim();
     if (!line) continue;
     
-    const parts = line.split(delimiter).map((p: any) => p.trim());
+    const parts = line.split(delimiter).map((p) => p.trim());
     
     let name = '';
     let easting = 0;

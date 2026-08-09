@@ -912,7 +912,7 @@ function solveBordered(
 
   for (let j = 0; j < m; j++) {
     // Extract row j of B (column j of Bᵀ)
-    const bVec = new Array(n).fill(0)
+    const bVec: number[] = new Array(n).fill(0)
     for (let idx = B.rowPtr[j]; idx < B.rowPtr[j + 1]; idx++) {
       bVec[B.colIdx[idx]] = B.values[idx]
     }
@@ -936,7 +936,7 @@ function solveBordered(
   if (dbg) console.error(`[solveBordered] S[0]=${S[0].map(v => v.toExponential(2)).join(', ')}, finite=${S.every(r => r.every(v => isFinite(v)))}`)
 
   // Solve S k = B y
-  const By = new Array(m).fill(0)
+  const By: number[] = new Array(m).fill(0)
   for (let i = 0; i < m; i++) {
     let sum = 0
     for (let idx = B.rowPtr[i]; idx < B.rowPtr[i + 1]; idx++) {

@@ -6,7 +6,9 @@ import { interpretCSV, CSVInterpretResult } from '@/lib/parsers/csvSurveyInterpr
 import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
 import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
 import { bowditchAdjustmentSolvedFromResult } from '@/lib/engine/solution/wrappers/traverse'
+import type { TraverseAdjustmentSolvedResult } from '@/lib/engine/solution/wrappers/traverse'
 import { levelingSolved } from '@/lib/engine/solution/wrappers/leveling'
+import type { LevelingResult } from '@/lib/engine/types'
 import { radiationSolved } from '@/lib/engine/solution/wrappers/radiation'
 import { 
   detectSurveyType,
@@ -94,7 +96,7 @@ export default function ProcessPage() {
       .limit(20)
 
     if (data) {
-      setProjects(data)
+      setProjects(data as ProjectRow[])
     }
   }, [dbClient])
 
@@ -192,7 +194,7 @@ export default function ProcessPage() {
         result = runWorkflow('traverse', traverseData)
         if (result.success && result.results?.legs) {
           try {
-            const s = bowditchAdjustmentSolvedFromResult(result.results)
+            const s = bowditchAdjustmentSolvedFromResult(result.results as TraverseAdjustmentSolvedResult)
             solutions.push({ title: s.solution.title, steps: s.steps })
           } catch {}
         }
@@ -211,7 +213,7 @@ export default function ProcessPage() {
           try {
             const s = levelingSolved(
               { readings: levelingData.readings, openingRL: levelingData.openingRL, closingRL: levelingData.closingRL, method: 'rise_and_fall', distanceKm: 1 },
-              result.results
+              result.results as LevelingResult
             )
             solutions.push({ title: s.solution.title, steps: s.steps })
           } catch {}

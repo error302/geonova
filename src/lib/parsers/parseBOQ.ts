@@ -51,7 +51,7 @@ export async function parseBOQSpreadsheet(file: File): Promise<ParsedInput> {
     const headers = jsonData[0].map((h: string) => String(h || '').toLowerCase().trim())
 
     const findColumn = (patterns: string[]): number => {
-      return headers.findIndex(h => patterns.some((p: any) => h.includes(p)))
+      return headers.findIndex(h => patterns.some((p) => h.includes(p)))
     }
 
     const descCol = findColumn(['description', 'item', 'work', 'description', 'particular'])
@@ -83,9 +83,9 @@ export async function parseBOQSpreadsheet(file: File): Promise<ParsedInput> {
       if (!row || !row[descCol]) continue
 
       const description = String(row[descCol] || '')
-      const quantity = parseFloat(row[qtyCol]) || 0
+      const quantity = parseFloat(String(row[qtyCol])) || 0
       const unit = String(row[unitCol] || 'item')
-      const unitRate = parseFloat(row[rateCol]) || 0
+      const unitRate = parseFloat(String(row[rateCol])) || 0
       const totalRate = quantity * unitRate
       const category = catCol !== -1 ? String(row[catCol] || 'General') : 'General'
 

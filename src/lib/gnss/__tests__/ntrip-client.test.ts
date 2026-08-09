@@ -54,9 +54,9 @@ class MockWebSocket {
     }
     // Also call the on* handler
     if (type === 'open' && this.onopen) this.onopen()
-    if (type === 'message' && this.onmessage) this.onmessage(event)
-    if (type === 'error' && this.onerror) this.onerror(event)
-    if (type === 'close' && this.onclose) this.onclose(event)
+    if (type === 'message' && this.onmessage) this.onmessage(event as { data: ArrayBuffer })
+    if (type === 'error' && this.onerror) this.onerror(event as Event)
+    if (type === 'close' && this.onclose) this.onclose(event as { code: number; reason: string })
   }
 
   constructor(public url: string, public protocols?: string[]) {
