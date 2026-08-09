@@ -17,10 +17,10 @@
 
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
-| `no-unsafe-member-access` | 1,017 | **1,029** | active |
-| `no-unsafe-assignment` | 792 | **803** | active |
-| `no-explicit-any` | 498 | **500** | active |
-| `no-unsafe-argument` | 223 | **224** | active — closest to zero, grind first |
+| `no-unsafe-member-access` | 964 | **964** | active |
+| `no-unsafe-assignment` | 776 | **776** | active |
+| `no-explicit-any` | 483 | **483** | active |
+| `no-unsafe-argument` | 166 | **167** | active — closest to zero, grind first |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 (1,857 files) | **0** | ✅ done |
 | **total warnings** | **5,075** | CI ceiling **10,000** | green |
@@ -58,7 +58,7 @@ If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read th
 
 Order = **finish the family closest to zero first** (each finish removes a floor + shrinks the ceiling), then the next, then mechanical rules. Argument → explicit-any → member-access → assignment → mechanical → CI tightening.
 
-### Phase 1 — `no-unsafe-argument` (232 → 0, ~90 files)
+### Phase 1 — `no-unsafe-argument` (166 → 0, ~90 files) — batch 1 done (19 files, floor 224→167)
 
 Highest-leverage: every warning is a typed-call-site passing an `any` value. Recipe: type the *argument's* value at its source (fetch/JSON.parse/`useRef<any>`/`useState<any>`), or narrow the callee param. Ranked (regen: `node scripts/argument-scan.mjs --top 20`):
 
