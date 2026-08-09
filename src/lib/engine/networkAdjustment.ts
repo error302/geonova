@@ -80,6 +80,8 @@ import {
   type SparseCholesky,
 } from './sparseMatrix'
 
+import { logger } from '@/lib/logger'
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -902,7 +904,7 @@ function solveBordered(
   const dbg = !!process.env.NETWORK_DEBUG
   // y = N⁻¹ u
   const y = sparseBackwardSolve(Nfactor.L, sparseForwardSolve(Nfactor.L, u))
-  if (dbg) console.error(`[solveBordered] y[0..3]=${y.slice(0, 4).map(v => v.toExponential(2)).join(', ')}, finite=${y.every(v => isFinite(v))}`)
+  if (dbg) logger.debug(`[solveBordered] y[0..3]=${y.slice(0, 4).map(v => v.toExponential(2)).join(', ')}, finite=${y.every(v => isFinite(v))}`)
 
   // Z = N⁻¹ Bᵀ (n × m matrix)
   // For each column j of Bᵀ (= row j of B), solve N z_j = b_j
@@ -919,7 +921,7 @@ function solveBordered(
     const z = sparseBackwardSolve(Nfactor.L, sparseForwardSolve(Nfactor.L, bVec))
     Z.push(z)
   }
-  if (dbg) console.error(`[solveBordered] Z computed, finite=${Z.every(z => z.every(v => isFinite(v)))}`)
+  if (dbg) logger.debug(`[solveBordered] Z computed, finite=${Z.every(z => z.every(v => isFinite(v)))}`)
 
   // S = B Z (m × m)
   const S: number[][] = Array.from({ length: m }, () => new Array(m).fill(0))
@@ -933,7 +935,7 @@ function solveBordered(
       S[i][j] = sum
     }
   }
-  if (dbg) console.error(`[solveBordered] S[0]=${S[0].map(v => v.toExponential(2)).join(', ')}, finite=${S.every(r => r.every(v => isFinite(v)))}`)
+  if (dbg) logger.debug(`[solveBordered] S[0]=${S[0].map(v => v.toExponential(2)).join(', ')}, finite=${S.every(r => r.every(v => isFinite(v)))}`)
 
   // Solve S k = B y
   const By: number[] = new Array(m).fill(0)
@@ -944,11 +946,11 @@ function solveBordered(
     }
     By[i] = sum
   }
-  if (dbg) console.error(`[solveBordered] By=${By.map(v => v.toExponential(2)).join(', ')}, finite=${By.every(v => isFinite(v))}`)
+  if (dbg) logger.debug(`[solveBordered] By=${By.map(v => v.toExponential(2)).join(', ')}, finite=${By.every(v => isFinite(v))}`)
 
   // Solve S k = By using dense Gaussian elimination (m is small: 4 or 7)
   const k = solveDense(S, By)
-  if (dbg) console.error(`[solveBordered] k=${k.map(v => v.toExponential(2)).join(', ')}, finite=${k.every(v => isFinite(v))}`)
+  if (dbg) logger.debug(`[solveBordered] k=${k.map(v => v.toExponential(2)).join(', ')}, finite=${k.every(v => isFinite(v))}`)
 
   // x = y - Z k
   const x = [...y]
@@ -957,7 +959,7 @@ function solveBordered(
       x[i] -= Z[j][i] * k[j]
     }
   }
-  if (dbg) console.error(`[solveBordered] x[0..3]=${x.slice(0, 4).map(v => v.toExponential(2)).join(', ')}, finite=${x.every(v => isFinite(v))}`)
+  if (dbg) logger.debug(`[solveBordered] x[0..3]=${x.slice(0, 4).map(v => v.toExponential(2)).join(', ')}, finite=${x.every(v => isFinite(v))}`)
 
   return x
 }
@@ -1083,7 +1085,7 @@ export function adjustNetwork(
   let lastPassed = false
 
   for (iteration = 1; iteration <= maxIterations; iteration++) {
-    if (process.env.NETWORK_DEBUG) console.error(`[networkAdjustment] iter ${iteration} start`)
+    if (process.env.NETWORK_DEBUG) logger.debug(`[networkAdjustment] iter ${iteration} start`)
     // Build design matrix at current coordinates
     let A: SparseMatrix
     let w: number[]
@@ -1105,12 +1107,12 @@ export function adjustNetwork(
     } catch (e) {
       return failResult(`Design matrix construction failed: ${(e as Error).message}`)
     }
-    if (process.env.NETWORK_DEBUG) console.error(`[networkAdjustment] iter ${iteration} design matrix built: ${A.rows}x${A.cols}, nnz=${A.values.length}`)
+    if (process.env.NETWORK_DEBUG) logger.debug(`[networkAdjustment] iter ${iteration} design matrix built: ${A.rows}x${A.cols}, nnz=${A.values.length}`)
 
     // Normal equations: N = Aᵀ P A, u = Aᵀ P w
     const N = ataDiag(A, P)
     const u = atdbDiag(A, P, w)
-    if (process.env.NETWORK_DEBUG) console.error(`[networkAdjustment] iter ${iteration} normal equations assembled: N is ${N.rows}x${N.cols}, nnz=${N.values.length}`)
+    if (process.env.NETWORK_DEBUG) logger.debug(`[networkAdjustment] iter ${iteration} normal equations assembled: N is ${N.rows}x${N.cols}, nnz=${N.values.length}`)
 
     // Solve for corrections
     let corrections: number[]
@@ -1125,13 +1127,13 @@ export function adjustNetwork(
         const maxDiag = diagN.reduce((s, v) => Math.max(s, Math.abs(v)), 0)
         const epsilon = Math.max(1e-6 * maxDiag, 1e-10)
         const Nreg = addDiagonal(N, epsilon)
-        if (process.env.NETWORK_DEBUG) console.error(`[networkAdjustment] iter ${iteration} regularized N with ε=${epsilon.toExponential()}`)
+        if (process.env.NETWORK_DEBUG) logger.debug(`[networkAdjustment] iter ${iteration} regularized N with ε=${epsilon.toExponential()}`)
 
         const symbolic = symbolicFactorize(Nreg)
         const factor = cholesky(Nreg, symbolic)
         lastFactor = factor
         corrections = solveBordered(Nreg, B, u, factor)
-        if (process.env.NETWORK_DEBUG) console.error(`[networkAdjustment] iter ${iteration} bordered solve done: corrections[0]=${corrections[0]}, max=${Math.max(...corrections.map(Math.abs))}`)
+        if (process.env.NETWORK_DEBUG) logger.debug(`[networkAdjustment] iter ${iteration} bordered solve done: corrections[0]=${corrections[0]}, max=${Math.max(...corrections.map(Math.abs))}`)
       } else {
         // Sparse Cholesky with AMD ordering
         const perm = approximateMinimumDegree(N)

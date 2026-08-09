@@ -39,6 +39,7 @@ import {
   type StakeoutState,
   type StakeoutPosition,
 } from '@/lib/map/stakeout'
+import { logger } from '@/lib/logger'
 
 interface UseMapInteractionsParams {
   mapInstance: React.MutableRefObject<Map | null>
@@ -103,6 +104,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     const map = p.mapInstance.current
 
     const handleClick = (evt: MapBrowserEvent) => {
+      const onIdentify = p.onIdentify
       // Don't interfere when drawing or measuring
       if (p.drawMode !== 'none' || p.measureMode !== 'none') return
 
@@ -116,7 +118,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
 
       if (features.length > 0) {
         const feature = features[0] as Feature
-        if (p.onIdentify) p.onIdentify(feature)
+        if (onIdentify) onIdentify(feature)
 
         // Show popup with basic info
         if (p.popupRef.current) {
@@ -152,14 +154,14 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
         }
       } else {
         // Clicked empty space — clear selection
-        if (p.onIdentify) p.onIdentify(null)
+        if (onIdentify) onIdentify(null)
         if (p.popupRef.current) p.popupRef.current.className = 'hidden'
       }
     }
 
     map.on('singleclick', handleClick)
     return () => map.un('singleclick', handleClick)
-  }, [p.drawMode, p.measureMode, p.onIdentify, p.popupRef])
+  }, [p.drawMode, p.measureMode, p.onIdentify, p.popupRef, p.mapInstance])
 
   // ── Stakeout overlay refs (persist across renders) ──
   const stakeoutOverlayRef = useRef<import('ol/Overlay').default | null>(null)
@@ -339,12 +341,13 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
               .eq('id', p.projectId)
 
             if (p.setSaveMsg) {
-              p.setSaveMsg(`Vertex edited — saved to project`)
-              setTimeout(() => p.setSaveMsg?.(''), 3000)
+              const setSaveMsg = p.setSaveMsg
+              setSaveMsg(`Vertex edited — saved to project`)
+              setTimeout(() => setSaveMsg?.(''), 3000)
             }
           }
         } catch (err) {
-          console.error('[VertexEdit] Failed to persist:', err)
+          logger.error('[VertexEdit] Failed to persist:', { error: err })
         }
       }
     })
@@ -361,9 +364,11 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     const features = p.selectInteractionRef.current.getFeatures().getArray()
     features.forEach((f: Feature) => drawSource.removeFeature(f))
     p.selectInteractionRef.current.getFeatures().clear()
-    p.setSelectedFeature(null)
-    p.pushHistory()
-  }, [p.pushHistory])
+    const setSelectedFeature = p.setSelectedFeature
+    const pushHistory = p.pushHistory
+    setSelectedFeature(null)
+    pushHistory()
+  }, [p.pushHistory, p.selectInteractionRef, p.drawSourceRef, p.setSelectedFeature])
 
   // ── MEASURE ──
   const toggleMeasure = useCallback(async (mode: MeasureMode) => {
@@ -461,10 +466,11 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
 
   // ── EXPORT ──
   const exportFeatures = useCallback(async (format: 'GeoJSON' | 'KML' | 'WKT' | 'DXF' | 'LandXML') => {
+    const hasFeature = p.hasFeature
     if (!p.drawSourceRef.current || p.drawSourceRef.current.getFeatures().length === 0) return
 
     if (format === 'DXF') {
-      if (!p.hasFeature('dxf_export')) return
+      if (!hasFeature('dxf_export')) return
       const features = p.drawSourceRef.current.getFeatures()
       const { transform } = await import('ol/proj')
       const points: SurveyPoint[] = []
@@ -501,7 +507,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     }
 
     if (format === 'LandXML') {
-      if (!p.hasFeature('landxml')) return
+      if (!hasFeature('landxml')) return
       const features = p.drawSourceRef.current.getFeatures()
       const { transform } = await import('ol/proj')
       const points: LandXMLPoint[] = []
@@ -568,45 +574,51 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     a.download = filename
     a.click()
     URL.revokeObjectURL(url)
-  }, [p.hasFeature])
+  }, [p.hasFeature, p.drawSourceRef, epsg])
 
   // ── CLEAR DRAWN ──
   const clearDrawn = useCallback(() => {
+    const setFeatureCount = p.setFeatureCount
+    const setSelectedFeature = p.setSelectedFeature
+    const clearHistory = p.clearHistory
     if (p.drawSourceRef.current) {
       p.drawSourceRef.current.clear()
-      p.setFeatureCount(0)
+      setFeatureCount(0)
     }
     if (p.measureSourceRef.current) p.measureSourceRef.current.clear()
-    p.setSelectedFeature(null)
+    setSelectedFeature(null)
     if (p.popupRef.current && p.mapInstance.current) {
       p.mapInstance.current.getOverlays().forEach((o) => o.setPosition(undefined))
     }
-    p.clearHistory()
-  }, [])
+    clearHistory()
+  }, [p.drawSourceRef, p.setFeatureCount, p.measureSourceRef, p.setSelectedFeature, p.popupRef, p.mapInstance, p.clearHistory])
 
   // ── GPS ──
   const toggleGPSInternal = useCallback(() => {
+    const setGpsTracking = p.setGpsTracking
+    const setStakeoutActive = p.setStakeoutActive
     if (!p.mapInstance.current) return
     if (!p.cleanupRef.current?.geolocation) return
 
     if (p.gpsTracking) {
       p.cleanupRef.current.geolocation.setTracking(false)
-      p.setGpsTracking(false)
-      p.setStakeoutActive(false)
+      setGpsTracking(false)
+      setStakeoutActive(false)
     } else {
       p.cleanupRef.current.geolocation.setTracking(true)
-      p.setGpsTracking(true)
+      setGpsTracking(true)
       const mapInstance = p.mapInstance.current
       p.cleanupRef.current.geolocation.once('change:position', () => {
         const pos = p.cleanupRef.current?.geolocation?.getPosition()
         if (pos && mapInstance) mapInstance.getView().animate({ center: pos, zoom: 16, duration: 1000 })
       })
     }
-  }, [p.gpsTracking])
+  }, [p.gpsTracking, p.mapInstance, p.cleanupRef, p.setGpsTracking, p.setStakeoutActive])
 
   // ── STAKEOUT: Activate with full overlay ──
   const activateStakeout = useCallback(async (target: StakeoutTarget) => {
-    if (!p.hasFeature('gps_stakeout')) return
+    const hasFeature = p.hasFeature
+    if (!hasFeature('gps_stakeout')) return
     if (!p.mapInstance.current) return
 
     // Deactivate any existing stakeout first
@@ -679,7 +691,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       const targetCoord = transform([target.easting, target.northing], epsg, 'EPSG:3857')
       p.mapInstance.current.getView().animate({ center: targetCoord, zoom: 18, duration: 800 })
     } catch (err) {
-      console.error('[activateStakeout] Failed:', err)
+      logger.error('[activateStakeout] Failed:', { error: err })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [p.hasFeature, p.gpsTracking, p.toggleGPS, p.gpsPos])
@@ -721,10 +733,13 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       }
     }
 
-    p.setStakeoutTarget(null)
-    p.setStakeoutActive(false)
-    p.setStakeoutState(null)
-  }, [])
+    const setStakeoutTarget = p.setStakeoutTarget
+    const setStakeoutActive = p.setStakeoutActive
+    const setStakeoutState = p.setStakeoutState
+    setStakeoutTarget(null)
+    setStakeoutActive(false)
+    setStakeoutState(null)
+  }, [p.mapInstance, p.setStakeoutTarget, p.setStakeoutActive, p.setStakeoutState])
 
   // ── STAKEOUT: Update on GPS position change ──
   const updateStakeoutOnGPS = useCallback(async () => {
@@ -767,16 +782,18 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       }
 
       // Update state for the panel
-      p.setStakeoutState(state)
+      const setStakeoutState = p.setStakeoutState
+      setStakeoutState(state)
 
       // Trigger audio alert
       createStakeoutAudioAlert(state.distance)
     } catch { /* skip update */ }
-  }, [p.stakeoutActive, p.stakeoutTarget, p.gpsPos, p.setStakeoutState])
+  }, [p.stakeoutActive, p.stakeoutTarget, p.gpsPos, p.setStakeoutState, epsg])
 
   // ── STAKEOUT: Legacy toggle (for backward compat) ──
   const toggleStakeout = useCallback(() => {
-    if (!p.hasFeature('gps_stakeout')) return
+    const hasFeature = p.hasFeature
+    if (!hasFeature('gps_stakeout')) return
     if (!p.stakeoutTarget) {
       if (!p.mapInstance.current) return
       const center = p.mapInstance.current.getView().getCenter()
@@ -789,7 +806,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     } else {
       deactivateStakeout()
     }
-  }, [p.hasFeature, p.stakeoutTarget, activateStakeout, deactivateStakeout])
+  }, [p.hasFeature, p.stakeoutTarget, activateStakeout, deactivateStakeout, p.mapInstance, epsg])
 
   // ── STAKEOUT INFO (uses pre-transformed UTM position — no require()) ──
   const stakeoutInfo = useCallback(() => {
@@ -809,11 +826,12 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
 
   // ── SAVE TO PROJECT — saves drawn features to current project (not throwaway) ──
   const saveToProject = useCallback(async () => {
+    const setSaveMsg = p.setSaveMsg
     if (!p.drawSourceRef.current) return
     const features = p.drawSourceRef.current.getFeatures()
     if (features.length === 0) {
-      p.setSaveMsg('Nothing to save — draw something first')
-      setTimeout(() => p.setSaveMsg(''), 3000)
+      setSaveMsg('Nothing to save — draw something first')
+      setTimeout(() => setSaveMsg(''), 3000)
       return
     }
 
@@ -822,8 +840,8 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       const dbClient = createClient()
       const { data: { session } } = await dbClient.auth.getSession()
       if (!session?.user) {
-        p.setSaveMsg('Not authenticated')
-        setTimeout(() => p.setSaveMsg(''), 3000)
+        setSaveMsg('Not authenticated')
+        setTimeout(() => setSaveMsg(''), 3000)
         return
       }
 
@@ -889,17 +907,17 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
           .eq('id', p.projectId)
 
         if (error) {
-          p.setSaveMsg(`Error: ${error.message}`)
+          setSaveMsg(`Error: ${error.message}`)
         } else {
           const areaStr = totalArea > 0 ? ` · ${totalArea.toFixed(1)} m²` : ''
-          p.setSaveMsg(`Saved ${features.length} feature(s) to "${existing?.name || 'project'}"${areaStr}`)
+          setSaveMsg(`Saved ${features.length} feature(s) to "${existing?.name || 'project'}"${areaStr}`)
         }
       } else {
         // ── No project linked — create a new one ──
         const projectName = prompt('Enter a name for the new project:', `Map Drawing — ${new Date().toLocaleDateString()}`)
         if (!projectName) {
-          p.setSaveMsg('Save cancelled')
-          setTimeout(() => p.setSaveMsg(''), 3000)
+          setSaveMsg('Save cancelled')
+          setTimeout(() => setSaveMsg(''), 3000)
           return
         }
 
@@ -926,21 +944,22 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
         const { error } = newProjectRow
 
         if (error) {
-          p.setSaveMsg(`Error: ${error.message}`)
+          setSaveMsg(`Error: ${error.message}`)
         } else {
           const areaStr = totalArea > 0 ? ` · ${totalArea.toFixed(1)} m²` : ''
-          p.setSaveMsg(`Saved to "${newProject?.name}"${areaStr}`)
+          setSaveMsg(`Saved to "${newProject?.name}"${areaStr}`)
         }
       }
-      setTimeout(() => p.setSaveMsg(''), 5000)
+      setTimeout(() => setSaveMsg(''), 5000)
     } catch (err: unknown) {
-      p.setSaveMsg(`Error: ${err instanceof Error ? (err as Error).message : 'Save failed'}`)
-      setTimeout(() => p.setSaveMsg(''), 4000)
+      setSaveMsg(`Error: ${err instanceof Error ? (err as Error).message : 'Save failed'}`)
+      setTimeout(() => setSaveMsg(''), 4000)
     }
-  }, [p.projectId])
+  }, [p.projectId, p.setSaveMsg, p.drawSourceRef])
 
   // ── ANNOTATIONS ──
   const toggleAnnotations = useCallback(async () => {
+    const setShowAnnotations = p.setShowAnnotations
     if (!p.mapInstance.current) return
 
     if (p.annotationLayerRef.current) {
@@ -957,13 +976,13 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     }
 
     if (p.showAnnotations) {
-      p.setShowAnnotations(false)
+      setShowAnnotations(false)
       return
     }
 
     if (!p.drawSourceRef.current) return
     const features = p.drawSourceRef.current.getFeatures()
-    if (features.length === 0) { p.setShowAnnotations(false); return }
+    if (features.length === 0) { setShowAnnotations(false); return }
 
     try {
       const { createDrawAnnotationLayer } = await import('@/app/map/utils/drawAnnotations')
@@ -998,7 +1017,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       }
 
       if (allAnnotationLayers.length === 0) {
-        p.setShowAnnotations(false)
+        setShowAnnotations(false)
         return
       }
 
@@ -1014,12 +1033,12 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       // Store all layers on the ref for complete cleanup
       ;(p.annotationLayerRef.current as import('ol/layer/Vector').default & { _allAnnotationLayers?: import('ol/layer/Vector').default[] })._allAnnotationLayers = allAnnotationLayers
 
-      p.setShowAnnotations(true)
+      setShowAnnotations(true)
     } catch (err) {
-      console.warn('Failed to create annotations:', err)
-      p.setShowAnnotations(false)
+      logger.warn('Failed to create annotations:', { error: err })
+      setShowAnnotations(false)
     }
-  }, [p.showAnnotations])
+  }, [p.showAnnotations, p.mapInstance, p.annotationLayerRef, p.setShowAnnotations, p.drawSourceRef, epsg])
 
   // ── NAVIGATION ──
   const fitToKenya = useCallback(async () => {
@@ -1042,21 +1061,21 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
           const lon = lonLat[0]
           const lat = lonLat[1]
           if (lon < 30 || lon > 45 || lat < -10 || lat > 10) {
-            console.warn('[fitToKenya] View center out of Kenya bounds, falling back')
+            logger.warn('[fitToKenya] View center out of Kenya bounds, falling back')
             view.setCenter(fromLonLat([37.0, -1.0]))
             view.setZoom(7)
           }
         } catch { /* ignore */ }
       }, 700)
     } catch (err) {
-      console.error('[fitToKenya] Extent transform failed, falling back:', err)
+      logger.error('[fitToKenya] Extent transform failed, falling back:', { error: err })
       try {
         const { fromLonLat } = await import('ol/proj')
         p.mapInstance.current.getView().setCenter(fromLonLat([37.0, -1.0]))
         p.mapInstance.current.getView().setZoom(7)
       } catch { /* absolute fallback */ }
     }
-  }, [])
+  }, [p.mapInstance])
 
   const fitToDrawn = useCallback(() => {
     if (!p.mapInstance.current || !p.drawSourceRef.current) return
@@ -1064,7 +1083,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     if (extent && extent[0] !== Infinity) {
       p.mapInstance.current.getView().fit(extent, { padding: [80, 80, 80, 80], duration: 400 })
     }
-  }, [])
+  }, [p.mapInstance, p.drawSourceRef])
 
   const resetToKenya = useCallback(() => {
     if (!p.mapInstance.current) return
@@ -1072,7 +1091,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     // real OL View method, so use the Kenya box directly.
     const KENYA_EXTENT: import('ol/extent').Extent = [-2.2e7, -1.2e7, 2.2e7, 1.5e7]
     p.mapInstance.current.getView().fit(KENYA_EXTENT, { duration: 400, padding: [0, 0, 0, 0] })
-  }, [])
+  }, [p.mapInstance])
 
   const getMapExtent = useCallback(async (): Promise<MapExtent | null> => {
     if (!p.mapInstance.current) return null
@@ -1086,12 +1105,12 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
       const [maxLon, maxLat] = transform([extent[2], extent[3]], 'EPSG:3857', 'EPSG:4326')
       return { minLat, minLon, maxLat, maxLon }
     } catch { return null }
-  }, [])
+  }, [p.mapInstance])
 
   const handleCoordSearchLocal = useCallback(async (searchInput: string) => {
     const { handleCoordSearch } = await import('@/app/map/utils/coordSearch')
     await handleCoordSearch(searchInput, p.mapInstance, epsg)
-  }, [epsg])
+  }, [epsg, p.mapInstance])
 
   const updateFeatureName = useCallback((name: string, selectedFeature: Feature | null) => {
     if (selectedFeature) {
@@ -1105,7 +1124,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     if (p.drawLayerRef.current) {
       p.drawLayerRef.current.setOpacity(val / 100)
     }
-  }, [])
+  }, [p.drawLayerRef])
 
   return {
     toggleDraw,

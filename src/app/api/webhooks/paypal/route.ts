@@ -20,6 +20,7 @@ import { db } from '@/lib/db'
 import type { CurrencyCode } from '@/lib/subscription/catalog'
 import { createVerify, createPublicKey } from 'crypto'
 import { crc32 } from 'zlib'
+import { logger } from '@/lib/logger'
 
 interface PayPalWebhookEvent {
   event_type: string
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
     const transmissionSig = headers.get('paypal-transmission-sig')
 
     if (!transmissionId || !transmissionTime || !certUrl || !authAlgo || !transmissionSig) {
-      console.warn('[PayPal Webhook] Missing verification headers — rejecting')
+      logger.warn('[PayPal Webhook] Missing verification headers — rejecting')
       return NextResponse.json({ error: 'Missing verification headers' }, { status: 400 })
     }
 
@@ -77,11 +78,11 @@ export async function POST(request: NextRequest) {
     try {
       const certUrlObj = new URL(certUrl)
       if (certUrlObj.protocol !== 'https:' || !allowedCertHosts.some(h => certUrlObj.hostname === h || certUrlObj.hostname.endsWith('.' + h))) {
-        console.error(`[PayPal Webhook] Invalid certUrl host: ${certUrlObj.hostname} — rejecting (SSRF protection)`)
+        logger.error(`[PayPal Webhook] Invalid certUrl host: ${certUrlObj.hostname} — rejecting (SSRF protection)`)
         return NextResponse.json({ error: 'Invalid certificate URL' }, { status: 403 })
       }
     } catch {
-      console.error(`[PayPal Webhook] Malformed certUrl: ${certUrl} — rejecting`)
+      logger.error(`[PayPal Webhook] Malformed certUrl: ${certUrl} — rejecting`)
       return NextResponse.json({ error: 'Malformed certificate URL' }, { status: 400 })
     }
 
@@ -96,13 +97,13 @@ export async function POST(request: NextRequest) {
 
     if (!webhookId) {
       if (isProduction) {
-        console.error('[PayPal Webhook] CRITICAL: PAYPAL_WEBHOOK_ID not set in production — rejecting all webhooks')
+        logger.error('[PayPal Webhook] CRITICAL: PAYPAL_WEBHOOK_ID not set in production — rejecting all webhooks')
         return NextResponse.json(
           { error: 'PayPal webhook verification not configured. Set PAYPAL_WEBHOOK_ID env var.' },
           { status: 503 }
         )
       } else {
-        console.warn('[PayPal Webhook] PAYPAL_WEBHOOK_ID not set in sandbox — skipping signature verification (development only)')
+        logger.warn('[PayPal Webhook] PAYPAL_WEBHOOK_ID not set in sandbox — skipping signature verification (development only)')
       }
     } else {
       try {
@@ -115,7 +116,7 @@ export async function POST(request: NextRequest) {
         // 3. Fetch the certificate from PayPal
         const certResponse = await fetch(certUrl)
         if (!certResponse.ok) {
-          console.error(`[PayPal Webhook] Failed to fetch certificate from ${certUrl}: ${certResponse.status}`)
+          logger.error(`[PayPal Webhook] Failed to fetch certificate from ${certUrl}: ${certResponse.status}`)
           return NextResponse.json({ error: 'Certificate fetch failed' }, { status: 500 })
         }
         const certPem = await certResponse.text()
@@ -131,11 +132,11 @@ export async function POST(request: NextRequest) {
 
         if (!isValid) {
           // AUDIT FIX (CRITICAL 4): No sandbox bypass — reject always
-          console.error('[PayPal Webhook] Signature verification FAILED — rejecting webhook')
+          logger.error('[PayPal Webhook] Signature verification FAILED — rejecting webhook')
           return NextResponse.json({ error: 'Invalid signature' }, { status: 403 })
         }
       } catch (verifyError: unknown) {
-        console.error(`[PayPal Webhook] Signature verification error: ${verifyError instanceof Error ? verifyError.message : String(verifyError)}`)
+        logger.error(`[PayPal Webhook] Signature verification error: ${verifyError instanceof Error ? verifyError.message : String(verifyError)}`)
         // AUDIT FIX (CRITICAL 4): No sandbox bypass — reject always
         return NextResponse.json({ error: 'Signature verification failed' }, { status: 403 })
       }
@@ -158,14 +159,14 @@ export async function POST(request: NextRequest) {
     if (eventType === 'CHECKOUT.ORDER.APPROVED') {
       const orderId = event.resource?.id
       if (!orderId) {
-        console.warn('[PayPal Webhook] No order ID in CHECKOUT.ORDER.APPROVED')
+        logger.warn('[PayPal Webhook] No order ID in CHECKOUT.ORDER.APPROVED')
         return NextResponse.json({ error: 'Missing order ID' }, { status: 400 })
       }
 
       // Auto-capture the approved order
       const paypal = getPayPalService()
       if (!paypal) {
-        console.error('[PayPal Webhook] PayPal service not available for capture')
+        logger.error('[PayPal Webhook] PayPal service not available for capture')
         return NextResponse.json({ error: 'PayPal not configured' }, { status: 500 })
       }
 
@@ -216,11 +217,11 @@ export async function POST(request: NextRequest) {
             }
 
           } else {
-            console.warn(`[PayPal Webhook] No payment_history record found for order ${orderId}`)
+            logger.warn(`[PayPal Webhook] No payment_history record found for order ${orderId}`)
           }
         }
       } catch (captureErr: unknown) {
-        console.error(`[PayPal Webhook] Capture failed: ${captureErr instanceof Error ? captureErr.message : String(captureErr)}`)
+        logger.error(`[PayPal Webhook] Capture failed: ${captureErr instanceof Error ? captureErr.message : String(captureErr)}`)
       }
     }
 
@@ -305,7 +306,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ received: true })
   } catch (error: unknown) {
-    console.error('[PayPal Webhook] Error:', (error as Error).message)
+    logger.error('[PayPal Webhook] Error:', { error: (error as Error).message })
     return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 })
   }
 }

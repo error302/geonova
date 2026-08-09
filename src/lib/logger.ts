@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Structured application logging for PM2 + audit trail + Sentry.
  *

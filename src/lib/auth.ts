@@ -5,6 +5,7 @@ import AzureADProvider from 'next-auth/providers/azure-ad'
 import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
 import { checkLoginAllowed, recordFailedLogin, recordSuccessfulLogin, getFailedAttemptCount } from '@/lib/security/loginLimiter'
+import { logger } from '@/lib/logger'
 
 /** Sentinel password hash for OAuth-only users (no password login possible) */
 const OAUTH_NO_PASSWORD = 'OAUTH_NO_PASSWORD'
@@ -196,7 +197,7 @@ export const authOptions: AuthOptions = {
         // Check brute-force lockout BEFORE checking credentials
         const loginCheck = await checkLoginAllowed(credentials.email, clientIp)
         if (!loginCheck.allowed) {
-          console.warn(`[auth] Login blocked for ${credentials.email} from ${clientIp}: ${loginCheck.reason}`)
+          logger.warn(`[auth] Login blocked for ${credentials.email} from ${clientIp}: ${loginCheck.reason}`)
           return null
         }
 
@@ -215,7 +216,7 @@ export const authOptions: AuthOptions = {
 
           // Block password login for OAuth-only accounts
           if (user.password_hash === OAUTH_NO_PASSWORD) {
-            console.warn(`[auth] Password login attempted on OAuth-only account: ${user.email}`)
+            logger.warn(`[auth] Password login attempted on OAuth-only account: ${user.email}`)
             await recordFailedLogin(credentials.email, clientIp)
             return null
           }
@@ -225,7 +226,7 @@ export const authOptions: AuthOptions = {
             await recordFailedLogin(credentials.email, clientIp)
             const remaining = 5 - await getFailedAttemptCount(credentials.email, clientIp)
             if (remaining <= 2 && remaining > 0) {
-              console.warn(`[auth] ${remaining} attempts remaining for ${credentials.email} from ${clientIp}`)
+              logger.warn(`[auth] ${remaining} attempts remaining for ${credentials.email} from ${clientIp}`)
             }
             return null
           }
@@ -237,7 +238,7 @@ export const authOptions: AuthOptions = {
               [user.id]
             )
             if (profileRows.length > 0 && profileRows[0].is_suspended) {
-              console.warn(`[auth] Suspended account login attempt: ${user.email}`)
+              logger.warn(`[auth] Suspended account login attempt: ${user.email}`)
               return null
             }
           } catch {
@@ -297,7 +298,7 @@ export const authOptions: AuthOptions = {
             provider: user.provider || 'credentials',
           }
         } catch (err) {
-          console.error('[auth] Login DB error:', err)
+          logger.error('[auth] Login DB error:', { error: err })
           return null
         }
       },
@@ -337,14 +338,14 @@ export const authOptions: AuthOptions = {
       if (account?.provider === 'google' || account?.provider === 'azure-ad') {
         // OAuth providers guarantee email_verified, but double-check
         if (!user.email) {
-          console.warn(`[auth] OAuth sign-in rejected: no email from ${account.provider}`)
+          logger.warn(`[auth] OAuth sign-in rejected: no email from ${account.provider}`)
           return false
         }
 
         // Google specifically provides email_verified in the profile
         const googleProfile = profile as Record<string, unknown> | undefined
         if (account.provider === 'google' && googleProfile?.email_verified === false) {
-          console.warn(`[auth] Google OAuth sign-in rejected: email not verified for ${user.email}`)
+          logger.warn(`[auth] Google OAuth sign-in rejected: email not verified for ${user.email}`)
           return false
         }
 
@@ -378,7 +379,7 @@ export const authOptions: AuthOptions = {
               [oauthUser.id]
             )
             if (profileRows.length > 0 && profileRows[0].is_suspended) {
-              console.warn(`[auth] Suspended OAuth account login attempt: ${user.email}`)
+              logger.warn(`[auth] Suspended OAuth account login attempt: ${user.email}`)
               return false
             }
           } catch {
@@ -387,13 +388,13 @@ export const authOptions: AuthOptions = {
 
           return true
         } catch (err) {
-          console.error('[auth] OAuth user creation/linking error:', err)
+          logger.error('[auth] OAuth user creation/linking error:', { error: err })
           return false
         }
       }
 
       // Unknown provider — reject
-      console.warn(`[auth] Unknown provider: ${account?.provider}`)
+      logger.warn(`[auth] Unknown provider: ${account?.provider}`)
       return false
     },
 
@@ -436,7 +437,7 @@ export const authOptions: AuthOptions = {
     if (!s) {
       // During build, provide a dummy value — the app won't actually run
       if (process.env.NEXT_PHASE === 'phase-production-build') {
-        console.warn('[auth] AUTH_SECRET not set during build — using dummy. Set it before running the app.')
+        logger.warn('[auth] AUTH_SECRET not set during build — using dummy. Set it before running the app.')
         return 'build-time-dummy-secret-do-not-use-in-production'
       }
       // Fail hard at runtime — never use a dummy secret in production
