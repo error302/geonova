@@ -34,12 +34,10 @@ function initOnlineManager() {
 
   // If Capacitor Network plugin is available (mobile), use it for richer events
   // This is optional — on web we fall back to navigator.onLine
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const capacitor = (window as any).Capacitor
+  const capacitor = window.Capacitor
   if (capacitor?.Plugins?.Network) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const Network = capacitor.Plugins.Network
-    Network.addListener('networkStatusChange', (status: any) => {
+    Network.addListener('networkStatusChange', (status) => {
       onlineManager.setOnline(status.connected)
     })
       .catch(() => { /* plugin not ready, ignore — navigator.onLine still works */ })

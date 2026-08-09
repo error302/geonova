@@ -3,10 +3,9 @@
 import { useState, useEffect } from 'react'
 import {
   getCPDRequirements,
-  getActivityTypes,
+  type CPDRequirement,
   type CPDSummary
 } from '@/lib/marketplace/cpdCertificates'
-import type { CPDRecord } from '@/types/cpd'
 
 /**
  * AUDIT FIX (H9, 2026-07-02): Rewired to call the real CPD API
@@ -17,20 +16,32 @@ import type { CPDRecord } from '@/types/cpd'
  * the API which calls lib/cpd.ts → cpd_records table.
  */
 
+/**
+ * Shape rendered by the "My Activities" list. The /api/cpd endpoint actually
+ * returns CPDRecord[] (lib/cpd.ts); these display fields are legacy and may be
+ * undefined for API-sourced rows — kept optional to match what the JSX reads.
+ */
+interface CpdActivityRow {
+  id: string
+  title?: string
+  provider?: string
+  date?: string
+  hours?: number
+  status?: string
+}
+
 export default function CPDPage() {
   const [loading, setLoading] = useState(true)
   const [fetchError, setFetchError] = useState<string | null>(null)
-  const [activities, setActivities] = useState<CPDRecord[]>([])
+  const [activities, setActivities] = useState<CpdActivityRow[]>([])
   const [summary, setSummary] = useState<CPDSummary | null>(null)
   const [country, setCountry] = useState('Kenya')
-  const [requirements, setRequirements] = useState<any[]>([])
-  const [activityTypes, setActivityTypes] = useState<any[]>([])
+  const [requirements, setRequirements] = useState<CPDRequirement[]>([])
   const [totalPoints, setTotalPoints] = useState(0)
 
   useEffect(() => {
     const loadData = async () => {
       setRequirements(getCPDRequirements(country))
-      setActivityTypes(getActivityTypes())
 
       try {
         // Fetch real CPD data from the API (which calls lib/cpd.ts → DB)
@@ -38,7 +49,7 @@ export default function CPDPage() {
         const res = await fetch(`/api/cpd?year=${year}`, { credentials: 'include' })
         let fetchedTotal = 0
         if (res.ok) {
-          const data = await res.json()
+          const data = (await res.json()) as { records?: CpdActivityRow[]; total?: number }
           setActivities(data.records ?? [])
           fetchedTotal = data.total ?? 0
           setTotalPoints(fetchedTotal)
@@ -114,7 +125,7 @@ export default function CPDPage() {
           </select>
         </div>
 
-        {requirements.map((req: any) => (
+        {requirements.map((req) => (
           <div key={req.id} className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <h3 className="font-semibold text-blue-900">{req.body}</h3>
             <p className="text-sm text-blue-700">{req.notes}</p>
@@ -191,15 +202,15 @@ export default function CPDPage() {
         <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-color)] p-6">
           <h2 className="text-lg font-semibold mb-4">My Activities</h2>
           <div className="space-y-3">
-            {activities.map((activity: any) => (
+            {activities.map((activity) => (
               <div key={activity.id} className="flex items-center justify-between border-b pb-3">
                 <div>
                   <h4 className="font-medium">{activity.title}</h4>
-                  <p className="text-sm text-[var(--text-muted)]">{activity.provider} • {new Date(activity.date).toLocaleDateString()}</p>
+                  <p className="text-sm text-[var(--text-muted)]">{activity.provider} • {new Date(activity.date ?? '').toLocaleDateString()}</p>
                 </div>
                 <div className="text-right">
                   <p className="font-semibold">{activity.hours} hours</p>
-                  <span className={`text-xs px-2 py-1 rounded ${getStatusColor(activity.status)}`}>
+                  <span className={`text-xs px-2 py-1 rounded ${getStatusColor(activity.status ?? '')}`}>
                     {activity.status}
                   </span>
                 </div>

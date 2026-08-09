@@ -5,6 +5,7 @@ import { FileJson, FileSpreadsheet, FileText, Save, Loader2 } from 'lucide-react
 // ponytail: lazy-load jspdf to keep ~400KB out of the initial client bundle
 import type { CleanDataResponse } from '@/types/fieldguard'
 import { createClient } from '@/lib/api-client/client'
+import type { jsPDF } from 'jspdf'
 
 interface CleanedExportProps {
   cleanedData: CleanDataResponse
@@ -19,8 +20,8 @@ export default function CleanedExport({ cleanedData, projectId }: CleanedExportP
     const geojson = {
       type: 'FeatureCollection',
       features: cleanedData.cleaned_points
-        .filter((p: any) => p.cleaned)
-        .map((p: any) => ({
+        .filter((p) => p.cleaned)
+        .map((p) => ({
           type: 'Feature',
           geometry: {
             type: 'Point',
@@ -54,7 +55,7 @@ export default function CleanedExport({ cleanedData, projectId }: CleanedExportP
       confidence: p.confidence
     }))
     const csv = ['point_id,easting,northing,elevation,code,cleaned,classification,confidence']
-      .concat(rows.map((r: any) => Object.values(r).join(',')))
+      .concat(rows.map((r) => Object.values(r).join(',')))
       .join('\n')
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
@@ -72,6 +73,7 @@ export default function CleanedExport({ cleanedData, projectId }: CleanedExportP
     ])
     const autoTable = autoTableModule.default
     const doc = new jsPDF()
+    const pdfDoc = doc as jsPDF & { lastAutoTable?: { finalY: number } }
     
     doc.setFontSize(18)
     doc.text('FieldGuard AI - Data Cleaning Report', 14, 20)
@@ -94,14 +96,14 @@ export default function CleanedExport({ cleanedData, projectId }: CleanedExportP
     })
     
     if (cleanedData.anomalies.length > 0) {
-      const anomalyData = cleanedData.anomalies.map((a: any) => [
+      const anomalyData = cleanedData.anomalies.map((a) => [
         a.point_id,
         a.type,
         a.severity,
         a.description
       ])
       autoTable(doc, {
-        startY: (doc as any).lastAutoTable.finalY + 15,
+        startY: (pdfDoc.lastAutoTable?.finalY ?? 0) + 15,
         head: [['Point ID', 'Type', 'Severity', 'Description']],
         body: anomalyData
       })

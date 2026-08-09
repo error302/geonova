@@ -32,7 +32,7 @@ import { FieldStationSetup } from './FieldStationSetup'
 import { useFieldSessionState, useFieldSession } from '@/hooks/useFieldSessionState'
 import { ToleranceBadge } from '@/components/survey/ToleranceBadge'
 import { InstrumentConnectionPanel } from '@/components/InstrumentConnectionPanel'
-import type { SurveyType } from '@/lib/field/fieldSession'
+import type { FieldSessionState, SurveyType } from '@/lib/field/fieldSession'
 
 interface FieldDataCollectorProps {
   projectId: string
@@ -370,7 +370,7 @@ function StakeoutPanel({
   onClose,
 }: {
   target: { e: number; n: number; z: number }
-  sessionState: any
+  sessionState: FieldSessionState
   onClose: () => void
 }) {
   return (
@@ -411,7 +411,7 @@ function SyncPanel({
   sessionState,
   onSync,
 }: {
-  sessionState: any
+  sessionState: FieldSessionState
   onSync: () => void
 }) {
   return (

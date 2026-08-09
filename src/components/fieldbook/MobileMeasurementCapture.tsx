@@ -57,21 +57,8 @@ const MODE_CONFIG: Record<CaptureMode, { label: string; icon: typeof Crosshair; 
   offset: { label: 'Offset', icon: Ruler, color: 'text-amber-400' },
 }
 
-interface SpeechRecognitionHandle {
-  continuous: boolean
-  interimResults: boolean
-  lang: string
-  onresult: ((event: { results: { [key: number]: { [key: number]: { transcript: string } } } }) => void) | null
-  onerror: (() => void) | null
-  onend: (() => void) | null
-  start: () => void
-  stop: () => void
-}
-
-type WindowWithSpeech = Window & {
-  SpeechRecognition?: new () => SpeechRecognitionHandle
-  webkitSpeechRecognition?: new () => SpeechRecognitionHandle
-}
+// Web Speech API types (not in standard TS lib) — structural declarations
+// live in src/types/web-api.d.ts.
 
 export function MobileMeasurementCapture({ onCapture, stationName, surveyType }: MobileMeasurementCaptureProps) {
   const [mode, setMode] = useState<CaptureMode>('gps')
@@ -92,7 +79,13 @@ export function MobileMeasurementCapture({ onCapture, stationName, surveyType }:
   const [remarks, setRemarks] = useState('')
   const [photos, setPhotos] = useState<string[]>([])
   const [listening, setListening] = useState(false)
-  const recognitionRef = useRef<SpeechRecognitionHandle | null>(null)
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null)
+
+  const resetForm = useCallback(() => {
+    setTarget(''); setBearingDeg(''); setBearingMin(''); setBearingSec('')
+    setDistance(''); setFaceLeft(''); setFaceRight(''); setOffsetE(''); setOffsetN('')
+    setRemarks(''); setPhotos([])
+  }, [])
 
   const handleCaptureGPS = useCallback(() => {
     if (!gpsReading) { alert('Waiting for GPS signal...'); return }
@@ -103,7 +96,7 @@ export function MobileMeasurementCapture({ onCapture, stationName, surveyType }:
       accuracy: gpsReading.accuracy, station: station || 'GPS Point', remarks, photos,
     })
     resetForm(); setShowForm(false)
-  }, [gpsReading, accuracyLevel, station, remarks, photos, onCapture])
+  }, [gpsReading, accuracyLevel, station, remarks, photos, onCapture, resetForm])
 
   const handleCaptureBearingDistance = useCallback(() => {
     const deg = parseFloat(bearingDeg) || 0
@@ -117,7 +110,7 @@ export function MobileMeasurementCapture({ onCapture, stationName, surveyType }:
       bearing, distance: dist, station: station || 'Setup', target: target || 'Target', remarks, photos,
     })
     resetForm(); setShowForm(false)
-  }, [bearingDeg, bearingMin, bearingSec, distance, station, target, remarks, photos, onCapture])
+  }, [bearingDeg, bearingMin, bearingSec, distance, station, target, remarks, photos, onCapture, resetForm])
 
   const handleCaptureAngle = useCallback(() => {
     const fl = parseFloat(faceLeft)
@@ -132,7 +125,7 @@ export function MobileMeasurementCapture({ onCapture, stationName, surveyType }:
       station: station || 'Setup', target: target || 'Target', remarks, photos,
     })
     resetForm(); setShowForm(false)
-  }, [faceLeft, faceRight, station, target, remarks, photos, onCapture])
+  }, [faceLeft, faceRight, station, target, remarks, photos, onCapture, resetForm])
 
   const handleCaptureOffset = useCallback(() => {
     const e = parseFloat(offsetE)
@@ -143,23 +136,17 @@ export function MobileMeasurementCapture({ onCapture, stationName, surveyType }:
       offsetE: e, offsetN: n, station: station || 'Base', target: target || 'Offset Point', remarks, photos,
     })
     resetForm(); setShowForm(false)
-  }, [offsetE, offsetN, station, target, remarks, photos, onCapture])
-
-  const resetForm = useCallback(() => {
-    setTarget(''); setBearingDeg(''); setBearingMin(''); setBearingSec('')
-    setDistance(''); setFaceLeft(''); setFaceRight(''); setOffsetE(''); setOffsetN('')
-    setRemarks(''); setPhotos([])
-  }, [])
+  }, [offsetE, offsetN, station, target, remarks, photos, onCapture, resetForm])
 
   const toggleVoiceInput = useCallback(() => {
     if (listening) { recognitionRef.current?.stop(); setListening(false); return }
-    const SpeechRecognition = (window as WindowWithSpeech).SpeechRecognition || (window as WindowWithSpeech).webkitSpeechRecognition
+    const SpeechRecognition = window.SpeechRecognition ?? window.webkitSpeechRecognition
     if (!SpeechRecognition) { alert('Voice input not supported. Use Chrome or Edge.'); return }
     const recognition = new SpeechRecognition()
     recognition.continuous = false
     recognition.interimResults = false
     recognition.lang = 'en-US'
-    recognition.onresult = (event: { results: { [key: number]: { [key: number]: { transcript: string } } } }) => {
+    recognition.onresult = (event: SpeechRecognitionEventLike) => {
       const transcript = event.results[0][0].transcript
       setRemarks(prev => prev + (prev ? ' ' : '') + transcript)
     }

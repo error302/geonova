@@ -6,6 +6,8 @@
 
 import { parseNMEA, type NMEAPosition } from './nmea-parser';
 
+export type { NMEAPosition } from './nmea-parser';
+
 export interface GNSSDevice {
   id: string;
   name: string;
@@ -30,6 +32,18 @@ const GNSS_SERVICE_UUIDS = [
 
 const NMEA_CHARACTERISTIC_UUID = '00002a67-0000-1000-8000-00805f9b34fb';
 
+/**
+ * Resolve the navigator.bluetooth API or throw a clear error when the
+ * browser doesn't support Web Bluetooth (typed via src/types/web-bluetooth.d.ts).
+ */
+function requireBluetooth(): Bluetooth {
+  const bluetooth = navigator.bluetooth;
+  if (!bluetooth) {
+    throw new Error('Web Bluetooth not available. Use Chrome or Edge.');
+  }
+  return bluetooth;
+}
+
 export class WebBluetoothGNSS {
   private device: BluetoothDevice | null = null;
   private characteristic: BluetoothRemoteGATTCharacteristic | null = null;
@@ -49,7 +63,7 @@ export class WebBluetoothGNSS {
     }
 
     try {
-      const device = await (navigator as any).bluetooth.requestDevice({
+      const device = await requireBluetooth().requestDevice({
         filters: [
           { services: [GNSS_SERVICE_UUIDS[0]] },
           { services: [GNSS_SERVICE_UUIDS[1]] },
@@ -88,13 +102,13 @@ export class WebBluetoothGNSS {
 
     try {
       if (deviceId) {
-        const devices = await (navigator as any).bluetooth.getDevices();
+        const devices = await requireBluetooth().getDevices();
         this.device = devices.find((d: BluetoothDevice) => d.id === deviceId) || null;
       }
 
       if (!this.device) {
         const devices = await this.scanForDevices();
-        this.device = await (navigator as any).bluetooth.requestDevice({
+        this.device = await requireBluetooth().requestDevice({
           filters: [{ namePrefix: devices[0].name.substring(0, 7) }],
           optionalServices: GNSS_SERVICE_UUIDS,
         });

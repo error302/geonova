@@ -40,7 +40,7 @@ function detectPlatform(): Platform {
 function isStandalone(): boolean {
   if (typeof window === 'undefined') return false
   // iOS Safari
-  if ((navigator as any).standalone === true) return true
+  if (navigator.standalone === true) return true
   // Android Chrome / Edge
   if (window.matchMedia('(display-mode: standalone)').matches) return true
   return false

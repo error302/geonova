@@ -13,8 +13,8 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react'
 import {
-  Mic, MicOff, Copy, MapPin, Clock, Vibrate,
-  Wifi, WifiOff, Database, X, Check,
+  Mic, MicOff, Copy, MapPin, Clock,
+  Wifi, WifiOff, Database,
 } from 'lucide-react'
 
 // ─── 1. Haptic Feedback Hook ────────────────────────────────────────────────
@@ -50,29 +50,8 @@ export function useHaptics() {
 
 // ─── 2. Voice Input Component ───────────────────────────────────────────────
 
-// Web Speech API types (not in standard TS lib) — mirror of the
-// established recipe in VoiceDictationButton / MobileMeasurementCapture.
-interface SpeechRecognitionEvent {
-  results: SpeechRecognitionResultList
-  resultIndex: number
-}
-
-interface SpeechRecognitionInstance {
-  continuous: boolean
-  interimResults: boolean
-  lang: string
-  start(): void
-  stop(): void
-  abort(): void
-  onresult: ((event: SpeechRecognitionEvent) => void) | null
-  onerror: (() => void) | null
-  onend: (() => void) | null
-}
-
-type WindowWithSpeech = Window & {
-  SpeechRecognition?: new () => SpeechRecognitionInstance
-  webkitSpeechRecognition?: new () => SpeechRecognitionInstance
-}
+// Web Speech API types (not in standard TS lib) — structural declarations
+// live in src/types/web-api.d.ts.
 
 interface VoiceInputProps {
   value: string
@@ -92,12 +71,12 @@ interface VoiceInputProps {
 export function VoiceInput({ value, onChange, placeholder = 'Tap mic to speak...', className = '' }: VoiceInputProps) {
   const [listening, setListening] = useState(false)
   const [supported, setSupported] = useState(false)
-  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null)
   const haptics = useHaptics()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const SpeechRecognition = (window as WindowWithSpeech).SpeechRecognition || (window as WindowWithSpeech).webkitSpeechRecognition
+      const SpeechRecognition = window.SpeechRecognition ?? window.webkitSpeechRecognition
       if (SpeechRecognition) {
         setSupported(true)
         const recognition = new SpeechRecognition()
@@ -105,7 +84,7 @@ export function VoiceInput({ value, onChange, placeholder = 'Tap mic to speak...
         recognition.interimResults = false
         recognition.lang = 'en-US'
 
-        recognition.onresult = (event: SpeechRecognitionEvent) => {
+        recognition.onresult = (event: SpeechRecognitionEventLike) => {
           const transcript = event.results[0][0].transcript
           onChange(value ? `${value} ${transcript}` : transcript)
           haptics('success')

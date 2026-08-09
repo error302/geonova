@@ -246,7 +246,7 @@ export class InstrumentSerialConnection {
           throw new Error('Web Serial API is not supported in this browser. Please use Chrome or Edge.')
         }
 
-        const serial = (navigator as any).serial as Serial
+        const serial = navigator.serial
         this.port = await serial.requestPort()
 
         await this.port.open({
@@ -601,7 +601,7 @@ export function isSerialSupported(): boolean {
 export async function getPreviouslyAuthorizedPorts(): Promise<SerialPort[]> {
   if (!isSerialSupported()) return []
   try {
-    return await ((navigator as any).serial as Serial).getPorts()
+    return await navigator.serial.getPorts()
   } catch {
     return []
   }

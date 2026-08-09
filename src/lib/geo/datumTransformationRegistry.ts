@@ -313,18 +313,22 @@ function transformViaProj4(lon: number, lat: number, targetProjDef: string): [nu
   // We use the global proj4 instance that's already registered with defs.
   // This is safe because registerProjections() is called on map init.
   // For server-side use, the caller must ensure proj4 is loaded.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const serverProj4 = require('proj4') as { default?: typeof import('proj4') } & typeof import('proj4')
   const proj4 = (typeof window !== 'undefined')
-    ? (window as any).proj4
-    // CJS interop fallback for server-side proj4 loading.
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    : require('proj4').default || require('proj4')
+    ? window.proj4
+    : (serverProj4.default || serverProj4)
+
+  if (!proj4) {
+    throw new Error('[datumRegistry] proj4 is not loaded — call registerProjections() before transforming.')
+  }
 
   // Register the target projection temporarily
   const tempKey = `__temp_${Date.now()}`
   proj4.defs(tempKey, targetProjDef)
 
   try {
-    const [easting, northing] = proj4('EPSG:4326', tempKey, [lon, lat])
+    const [easting, northing] = proj4('EPSG:4326', tempKey, [lon, lat]) as [number, number]
     return [easting, northing]
   } finally {
     // Clean up temp def (proj4 doesn't have a remove, but re-defining is harmless)

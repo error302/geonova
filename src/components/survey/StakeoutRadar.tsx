@@ -122,7 +122,7 @@ export function StakeoutRadar({ targetE, targetN, onClose, epsg = 'EPSG:21037' }
     if (!soundOn) return
     try {
       if (!audioCtxRef.current) {
-        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)()
+        audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)()
       }
       const ctx = audioCtxRef.current
       const oscillator = ctx.createOscillator()
@@ -142,9 +142,9 @@ export function StakeoutRadar({ targetE, targetN, onClose, epsg = 'EPSG:21037' }
   
   const handleOrientation = useCallback((e: DeviceOrientationEvent) => {
     let heading = null
-    if (typeof (e as any).webkitCompassHeading === 'number') {
+    if (typeof e.webkitCompassHeading === 'number') {
       // iOS
-      heading = (e as any).webkitCompassHeading
+      heading = e.webkitCompassHeading
     } else if (e.alpha !== null) {
       // Android
       // Note: DeviceOrientationEvent uses alpha = 0 for North (if absolute) in some specs, 
@@ -176,8 +176,11 @@ export function StakeoutRadar({ targetE, targetN, onClose, epsg = 'EPSG:21037' }
 
     // 2. Compass
     try {
-      if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
-        const permissionState = await (DeviceOrientationEvent as any).requestPermission()
+      const DeviceOrientationEventCtor = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
+        requestPermission?: () => Promise<'granted' | 'denied'>
+      }
+      if (typeof DeviceOrientationEventCtor.requestPermission === 'function') {
+        const permissionState = await DeviceOrientationEventCtor.requestPermission()
         if (permissionState === 'granted') {
           window.addEventListener('deviceorientation', handleOrientation, true)
         } else {

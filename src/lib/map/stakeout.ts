@@ -121,7 +121,7 @@ let beepInterval: ReturnType<typeof setInterval> | null = null
 
 function getAudioContext(): AudioContext {
   if (!audioCtx) {
-    audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)()
   }
   return audioCtx
 }

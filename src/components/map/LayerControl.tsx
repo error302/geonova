@@ -63,12 +63,23 @@ interface CustomLayerEntry {
   type?: 'xyz' | 'wms';
 }
 
+/** Concrete OL layer types created by the basemap factories. */
+type BasemapLayer =
+  | Awaited<ReturnType<typeof createOSMLayer>>
+  | Awaited<ReturnType<typeof createSatelliteLayer>>
+  | Awaited<ReturnType<typeof createBlankLayer>>;
+
+/** Concrete OL layer types created by the custom XYZ / WMS factories. */
+type CustomTileLayer =
+  | Awaited<ReturnType<typeof createCustomXYZLayer>>
+  | Awaited<ReturnType<typeof createWMSLayer>>;
+
 const CUSTOM_LAYERS_STORAGE_KEY = 'metardu-custom-layers';
 
 function loadPersistedLayers(): CustomLayerEntry[] {
   try {
     const raw = localStorage.getItem(CUSTOM_LAYERS_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return raw ? (JSON.parse(raw) as CustomLayerEntry[]) : [];
   } catch {
     return [];
   }
@@ -117,17 +128,17 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
     async function init() {
       // Check if layers already exist (from parent map init)
       const existingLayers = mapInstance.getLayers().getArray();
-      const hasExistingOSM = existingLayers.some((l: any) => l.get('basemapId') === 'osm');
-      const hasExistingSatellite = existingLayers.some((l: any) => l.get('basemapId') === 'satellite');
-      const hasExistingBlank = existingLayers.some((l: any) => l.get('basemapId') === 'blank');
-      const hasExistingGrid = existingLayers.some((l: any) => l.get('layerId') === GRID_LAYER_ID);
+      const hasExistingOSM = existingLayers.some((l) => l.get('basemapId') === 'osm');
+      const hasExistingSatellite = existingLayers.some((l) => l.get('basemapId') === 'satellite');
+      const hasExistingBlank = existingLayers.some((l) => l.get('basemapId') === 'blank');
+      const hasExistingGrid = existingLayers.some((l) => l.get('layerId') === GRID_LAYER_ID);
 
       // Only create basemap layers that don't already exist
-      let osmLayer: Awaited<ReturnType<typeof createOSMLayer>> | null = null;
-      let satelliteLayer: Awaited<ReturnType<typeof createSatelliteLayer>> | null = null;
-      let blankLayer: Awaited<ReturnType<typeof createBlankLayer>> | null = null;
+      let osmLayer: BasemapLayer | null = null;
+      let satelliteLayer: BasemapLayer | null = null;
+      let blankLayer: BasemapLayer | null = null;
 
-      const layerPromises: Promise<any>[] = [];
+      const layerPromises: Promise<BasemapLayer>[] = [];
       const layerNames: string[] = [];
 
       if (!hasExistingOSM) { layerPromises.push(createOSMLayer()); layerNames.push('osm'); }
@@ -175,7 +186,7 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
         const restored: CustomLayerEntry[] = [];
         for (const entry of persisted) {
           try {
-            let layer: any = null;
+            let layer: CustomTileLayer | null = null;
             if (entry.type === 'wms') {
               // WMS layers need a layer name which we stored in the url field
               // Format: url|layerName  (we stored it combined)
@@ -187,7 +198,7 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
               layer = await createCustomXYZLayer(entry.url, entry.label);
             }
             if (layer) {
-              (layer as any).setOpacity(overlayOpacity / 100);
+              layer.setOpacity(overlayOpacity / 100);
               mapInstance.addLayer(layer);
               const id = layer.get('basemapId') as string;
               restored.push({ id, label: entry.label, url: entry.url, type: entry.type });
@@ -243,9 +254,9 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
 
     const layers = map.getLayers().getArray();
     for (const layer of layers) {
-      const basemapId = layer.get('basemapId');
+      const basemapId = layer.get('basemapId') as string | undefined;
       if (basemapId === 'satellite' || basemapId?.startsWith('custom-')) {
-        (layer as any).setOpacity(overlayOpacity / 100);
+        layer.setOpacity(overlayOpacity / 100);
       }
     }
   }, [map, overlayOpacity]);
@@ -259,12 +270,12 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
 
       const layers = map.getLayers().getArray();
       for (const layer of layers) {
-        const basemapId = layer.get('basemapId');
+        const basemapId = layer.get('basemapId') as string | undefined;
         if (basemapId === 'osm') {
           layer.setVisible(target === 'osm');
         } else if (basemapId === 'satellite') {
           layer.setVisible(target === 'satellite');
-          (layer as any).setOpacity(overlayOpacity / 100);
+          layer.setOpacity(overlayOpacity / 100);
         } else if (basemapId === 'blank') {
           layer.setVisible(target === 'blank');
         }
@@ -312,7 +323,7 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
     try {
       const label = customLabel.trim() || `Orthophoto ${customLayers.length + 1}`;
       const layer = await createCustomXYZLayer(customUrl.trim(), label);
-      (layer as any).setOpacity(overlayOpacity / 100);
+      layer.setOpacity(overlayOpacity / 100);
 
       map.addLayer(layer);
       const id = layer.get('basemapId') as string;
@@ -342,7 +353,7 @@ export function LayerControl({ map, onBasemapChange, hideBasemap = false, defaul
     try {
       const label = wmsLabel.trim() || wmsLayerName.trim();
       const layer = await createWMSLayer(wmsUrl.trim(), wmsLayerName.trim(), label);
-      (layer as any).setOpacity(overlayOpacity / 100);
+      layer.setOpacity(overlayOpacity / 100);
 
       map.addLayer(layer);
       const id = layer.get('basemapId') as string;

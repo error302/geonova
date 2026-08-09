@@ -49,29 +49,8 @@ function toSpeechLang(i18nCode: Language | string): string {
 
 /* ------------------------------------------------------------------ */
 /*  Web Speech API types (not in standard TS lib)                     */
+/*  Structural declarations live in src/types/web-api.d.ts            */
 /* ------------------------------------------------------------------ */
-
-interface SpeechRecognitionEvent {
-  results: SpeechRecognitionResultList;
-  resultIndex: number;
-}
-
-interface SpeechRecognitionErrorEvent {
-  error: string;
-  message?: string;
-}
-
-interface SpeechRecognitionInstance {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  start(): void;
-  stop(): void;
-  abort(): void;
-  onresult: ((event: SpeechRecognitionEvent) => void) | null;
-  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
-  onend: (() => void) | null;
-}
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                         */
@@ -114,7 +93,7 @@ export function VoiceDictationButton({
   const [interimText, setInterimText] = useState('');
   const [supported, setSupported] = useState(false);
 
-  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const valueRef = useRef(value);
 
   // Keep valueRef in sync so the onresult callback always has latest text
@@ -126,7 +105,7 @@ export function VoiceDictationButton({
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const SpeechRecognitionAPI =
-      (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
+      window.SpeechRecognition ?? window.webkitSpeechRecognition;
     setSupported(!!SpeechRecognitionAPI);
   }, []);
 
@@ -151,17 +130,17 @@ export function VoiceDictationButton({
 
     // Start
     const SpeechRecognitionAPI =
-      (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
+      window.SpeechRecognition ?? window.webkitSpeechRecognition;
     if (!SpeechRecognitionAPI) return;
 
-    const recognition: SpeechRecognitionInstance = new SpeechRecognitionAPI();
+    const recognition: SpeechRecognitionLike = new SpeechRecognitionAPI();
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = speechLang;
 
     let finalTranscriptAccumulated = '';
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
+    recognition.onresult = (event: SpeechRecognitionEventLike) => {
       let interim = '';
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;
@@ -184,7 +163,7 @@ export function VoiceDictationButton({
       setInterimText(interim);
     };
 
-    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+    recognition.onerror = (event: SpeechRecognitionErrorEventLike) => {
       console.warn('VoiceDictation error:', event.error);
       if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
         setListening(false);

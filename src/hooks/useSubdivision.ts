@@ -19,6 +19,7 @@ import type { SubdivisionMethod, SubdivisionParams, SubdivisionResult, SplitLine
 import type { Point2D } from '@/lib/engine/types'
 import { subdivide, createRoadReserve } from '@/lib/engine/subdivision'
 import { downloadSubdivisionDXF } from '@/lib/export/subdivisionDXF'
+import { logger } from '@/lib/logger'
 import { createSubdivisionLayer, createSplitLineLayer, createRoadReservePreviewLayer } from '@/lib/map/subdivisionLayer'
 
 export interface UseSubdivisionOptions {
@@ -266,7 +267,7 @@ export function useSubdivision({
       mapRef.current.removeLayer(subdivisionLayerRef.current)
       subdivisionLayerRef.current = null
     }
-  }, [map])
+  }, [])
 
   const addSubdivisionLayer = useCallback(async (subResult: SubdivisionResult) => {
     if (!map) return
@@ -277,16 +278,16 @@ export function useSubdivision({
       map.addLayer(layer)
       subdivisionLayerRef.current = layer
     } catch (err) {
-      console.error('Failed to create subdivision layer:', err)
+      logger.error('Failed to create subdivision layer:', { error: err })
     }
-  }, [map, removeSubdivisionLayer])
+  }, [map])
 
   const removeSplitLineLayer = useCallback(() => {
     if (mapRef.current && splitLineLayerRef.current) {
       mapRef.current.removeLayer(splitLineLayerRef.current)
       splitLineLayerRef.current = null
     }
-  }, [map])
+  }, [])
 
   const removeDrawInteraction = useCallback(() => {
     if (mapRef.current && drawInteractionRef.current) {
@@ -306,16 +307,16 @@ export function useSubdivision({
         splitLineLayerRef.current = layer
       }
     } catch (err) {
-      console.error('Failed to create split line layer:', err)
+      logger.error('Failed to create split line layer:', { error: err })
     }
-  }, [map, removeSplitLineLayer])
+  }, [map])
 
   const removeRoadReserveLayer = useCallback(() => {
     if (mapRef.current && roadReserveLayerRef.current) {
       mapRef.current.removeLayer(roadReserveLayerRef.current)
       roadReserveLayerRef.current = null
     }
-  }, [map])
+  }, [])
 
   const addRoadReserveLayer = useCallback(async (rrInfo: RoadReserveInfo) => {
     if (!map) return
@@ -328,9 +329,9 @@ export function useSubdivision({
         roadReserveLayerRef.current = layer
       }
     } catch (err) {
-      console.error('Failed to create road reserve layer:', err)
+      logger.error('Failed to create road reserve layer:', { error: err })
     }
-  }, [map, removeRoadReserveLayer])
+  }, [map])
 
   // ─── Center point picking (for radial) ───────────────────────────────
 
@@ -407,7 +408,7 @@ export function useSubdivision({
         removeRoadReserveLayerRef.current()
       }
     } catch (err) {
-      console.error('Road reserve preview failed:', err)
+      logger.error('Road reserve preview failed:', { error: err })
     }
   }, [parentVertices, roadReserveWidth, roadReserveAuto, roadReserveEdges])
 

@@ -20,7 +20,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import {
   Radio, Wifi, WifiOff, Loader2, Satellite,
-  CheckCircle2, AlertTriangle, Settings2, ChevronDown,
+  AlertTriangle, Settings2, ChevronDown,
 } from 'lucide-react'
 
 type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error'
@@ -95,7 +95,7 @@ export function NTRIPClientPanel() {
   const [state, setState] = useState<ConnectionState>('disconnected')
   const [error, setError] = useState<string | null>(null)
   const [rtcmMessages, setRtcmMessages] = useState(0)
-  const [lastGgaSent, setLastGgaSent] = useState<Date | null>(null)
+  const [lastGgaSent] = useState<Date | null>(null)
   const [showAdvanced, setShowAdvanced] = useState(false)
   const ntripClientRef = useRef<import('@/lib/gnss/ntrip-client').NTRIPClient | null>(null)
 
@@ -134,7 +134,7 @@ export function NTRIPClientPanel() {
         vrsEnabled: false,
       })
 
-      client.onCorrection((data: Uint8Array) => {
+      client.onCorrection((_data: Uint8Array) => {
         setRtcmMessages(prev => prev + 1)
       })
 
@@ -161,41 +161,6 @@ export function NTRIPClientPanel() {
     setState('disconnected')
     setRtcmMessages(0)
   }, [])
-
-  // Send GGA position to caster (for VRS)
-  const sendGGA = useCallback(async (lat: number, lng: number) => {
-    if (!ntripClientRef.current || state !== 'connected') return
-
-    // Format NMEA GGA sentence
-    const now = new Date()
-    const hh = now.getUTCHours().toString().padStart(2, '0')
-    const mm = now.getUTCMinutes().toString().padStart(2, '0')
-    const ss = now.getUTCSeconds().toString().padStart(2, '0')
-
-    const latDeg = Math.floor(Math.abs(lat))
-    const latMin = (Math.abs(lat) - latDeg) * 60
-    const latDir = lat >= 0 ? 'N' : 'S'
-    const lngDeg = Math.floor(Math.abs(lng))
-    const lngMin = (Math.abs(lng) - lngDeg) * 60
-    const lngDir = lng >= 0 ? 'E' : 'W'
-
-    const gga = `GPGGA,${hh}${mm}${ss},${latDeg.toString().padStart(2, '0')}${latMin.toFixed(4)},${latDir},${lngDeg.toString().padStart(3, '0')}${lngMin.toFixed(4)},${lngDir},1,08,1.0,0,M,0,M,,*`
-
-    // Calculate checksum
-    let checksum = 0
-    for (let i = 0; i < gga.length; i++) {
-      checksum ^= gga.charCodeAt(i)
-    }
-
-    const sentence = `$${gga}${checksum.toString(16).toUpperCase().padStart(2, '0')}`
-
-    try {
-      ntripClientRef.current.sendGGA(sentence)
-      setLastGgaSent(new Date())
-    } catch (err) {
-      // Silent fail
-    }
-  }, [state])
 
   // Cleanup on unmount
   useEffect(() => {
