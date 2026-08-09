@@ -128,6 +128,11 @@ export default function NewProjectPage() {
       }
 
       const project = json.data
+      if (!project) {
+        setError('Failed to create project — missing response data')
+        setLoading(false)
+        return
+      }
       setContextCountry(selectedCountry)
 
       if (projectType === 'scheme') {
