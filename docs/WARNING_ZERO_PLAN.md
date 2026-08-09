@@ -23,9 +23,9 @@
 | `no-unsafe-argument` | 125 | **125** | active — closest to zero, grind first |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 (1,857 files) | **0** | ✅ done |
-| **total warnings** | **4,806** | CI ceiling **10,000** | green |
+| **total warnings** | **4,742** | CI ceiling **10,000** | green |
 
-Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 1,163 · `no-non-null-assertion` 570 · `no-console` 393 · `no-unsafe-call` 208 · `no-unsafe-return` 171 · `react-hooks/exhaustive-deps` 70 · `no-restricted-syntax` 16.
+Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,155 · `no-console` 341 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` ~205 · `no-non-null-assertion` ~568 · `no-unsafe-return` ~171 · `no-restricted-syntax` 16.
 
 ### Git / CI state
 
