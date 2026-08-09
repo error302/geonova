@@ -17,21 +17,21 @@
 
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
-| `no-unsafe-member-access` | 925 | **925** | active |
-| `no-unsafe-assignment` | 755 | **755** | active |
-| `no-explicit-any` | 464 | **464** | active |
-| `no-unsafe-argument` | 125 | **125** | active — closest to zero, grind first |
+| `no-unsafe-member-access` | 825 | **825** | active |
+| `no-unsafe-assignment` | 734 | **734** | active |
+| `no-explicit-any` | 451 | **451** | active |
+| `no-unsafe-argument` | 85 | **85** | active — closest to zero, grind first |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 (1,857 files) | **0** | ✅ done |
-| **total warnings** | **4,742** | CI ceiling **10,000** | green |
+| **total warnings** | **4,536** | CI ceiling **10,000** | green |
 
-Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,155 · `no-console` 341 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` ~205 · `no-non-null-assertion` ~568 · `no-unsafe-return` ~171 · `no-restricted-syntax` 16.
+Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,155 · `no-console` 341 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` ~175 · `no-non-null-assertion` ~570 · `no-unsafe-return` ~159 · `no-restricted-syntax` 16.
 
 ### Git / CI state
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
 - **HEAD:** `625a476c` (non-browser cast typing + floors 165/478/973).
-- **Uncommitted (this batch):** argument grind batch 2 — 20 files (automator, guide/[type], schedule, beacon-reference, gnss-rinex, survey-report-builder, WorkingDiagramClient, BeaconRegistryPanel, BoundaryUploader, DrawingExportToolbar, MassHaulDiagram, UniversalImporter, NotificationBell, CoordinateTransformer, CsvImportPanel, DocumentCard, FieldRecordVault, UTMZonePicker, FieldToFinishButton, workflowEngine) — fetch/JSON.parse reads typed at read time, `: any` map annotations removed, `executeWorkflow` boundary cast narrowed to WorkflowNode/WorkflowEdge, schedule form input typed (`ScheduleFormInput` with optional status, `createSchedule` defaults `'upcoming'`). Floors 125/447/923/744, total 4,772.
+- **Uncommitted (this batch):** member-access grind — survey-regulations/page.tsx (11), SettingOutTable (11), StakeOutSheet (11), subscriptionEngine (9) — `: any` map annotations removed so datum/mark/row/h params infer from `DatumSpec[]`/`SurveyMarkSpec[]`/`SettingOutRow[]`/`string[]`; `db.query<T>` generics on the 3 subscriptionEngine reads (subscription row + cancel/reactivate id). Floors 85/451/734/825, total 4,536.
 - **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).
