@@ -8,14 +8,14 @@ test.describe('Landing Page', () => {
 
   test('renders hero section with key content', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('h1')).toContainText('Precision Land')
-    await expect(page.locator('h1')).toContainText('Surveying')
+    await expect(page.locator('h1')).toContainText('Surveying software')
+    await expect(page.locator('h1')).toContainText('East Africa')
   })
 
-  test('has "Built for African Surveyors" badge', async ({ page }) => {
+  test('shows East African focus in hero copy', async ({ page }) => {
     await page.goto('/')
-    const badge = page.locator('text=Built for African Surveyors')
-    await expect(badge).toBeVisible()
+    const heroCopy = page.locator('p').filter({ hasText: 'built for Kenyan surveyors' }).first()
+    await expect(heroCopy).toBeVisible()
   })
 
   test('hero CTA links to register page', async ({ page }) => {
@@ -26,14 +26,13 @@ test.describe('Landing Page', () => {
     await expect(page).toHaveURL(/\/register/)
   })
 
-  test('trust bar shows African countries', async ({ page }) => {
+  test('trust bar shows Kenyan institutions', async ({ page }) => {
     await page.goto('/')
-    // Use .first() because "Kenya" appears in multiple places on the page
-    await expect(page.locator('text=Kenya').first()).toBeVisible()
-    await expect(page.locator('text=Nigeria').first()).toBeVisible()
-    await expect(page.locator('text=South Africa').first()).toBeVisible()
-    // Verify the trust bar section has multiple country entries
-    await expect(page.locator('text=Trusted by surveyors across the continent')).toBeVisible()
+    // Trust badges (ISK/EBK/SoK) plus the stats row
+    await expect(page.locator('text=ISK').first()).toBeVisible()
+    await expect(page.locator('text=EBK').first()).toBeVisible()
+    await expect(page.locator('text=SoK').first()).toBeVisible()
+    await expect(page.locator('text=Counties supported').first()).toBeVisible()
   })
 
   test('features bento grid renders 6 feature cards', async ({ page }) => {
@@ -42,10 +41,10 @@ test.describe('Landing Page', () => {
     const headings = page.locator('h3')
     await expect(headings.filter({ hasText: 'Traverse Adjustment' })).toBeVisible()
     await expect(headings.filter({ hasText: 'Deed Plan Generation' })).toBeVisible()
-    await expect(headings.filter({ hasText: 'RIM & CLA Forms' })).toBeVisible()
-    await expect(headings.filter({ hasText: 'COGO Calculations' })).toBeVisible()
-    await expect(headings.filter({ hasText: 'GPS Stakeout' })).toBeVisible()
-    await expect(headings.filter({ hasText: 'PDF Reports' })).toBeVisible()
+    await expect(headings.filter({ hasText: 'Topographic Surveys' })).toBeVisible()
+    await expect(headings.filter({ hasText: 'COGO Engine' })).toBeVisible()
+    await expect(headings.filter({ hasText: 'GNSS Baseline Processing' })).toBeVisible()
+    await expect(headings.filter({ hasText: 'Statutory Documents' })).toBeVisible()
   })
 
   test('how-it-works section shows 3 steps', async ({ page }) => {

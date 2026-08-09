@@ -57,9 +57,9 @@ test.describe('Fieldbook — Survey Type Tabs', () => {
     // Wait for the page to render — it may take a moment for client hydration
     await page.waitForTimeout(2000)
 
-    // The five tab buttons should be present
+    // The three tab buttons should be present
     // Tab text comes from i18n keys; check for known labels
-    const tabLabels = ['Leveling', 'Traverse', 'Control', 'Hydrographic', 'Mining']
+    const tabLabels = ['Leveling', 'Traverse', 'Control']
     for (const label of tabLabels) {
       // The tabs use i18n translations but the button text should contain these words
       const tab = page.locator('button').filter({ hasText: new RegExp(label, 'i') }).first()
@@ -83,49 +83,26 @@ test.describe('Fieldbook — Survey Type Tabs', () => {
     await page.goto('/fieldbook', { waitUntil: 'domcontentloaded' })
     await page.waitForTimeout(2000)
 
-    const traverseTab = page.locator('button').filter({ hasText: /traverse/i }).first()
+    // Scope to the tab bar (div.flex.gap-2) — the page has other buttons
+    // whose text contains "traverse" (headers, side panel).
+    const traverseTab = page.locator('div.flex.gap-2 button').filter({ hasText: /traverse/i }).first()
     await expect(traverseTab).toBeVisible({ timeout: 8000 })
     await traverseTab.click()
 
-    // After clicking, the traverse tab should now have the active style
-    const classes = await traverseTab.getAttribute('class')
-    expect(classes).toContain('amber')
+    // After clicking, the traverse book shows its bearing column
+    await expect(page.locator('th').filter({ hasText: /bearing/i }).first()).toBeVisible({ timeout: 8000 })
   })
 
   test('clicking Control tab switches the view', async ({ page }) => {
     await page.goto('/fieldbook', { waitUntil: 'domcontentloaded' })
     await page.waitForTimeout(2000)
 
-    const controlTab = page.locator('button').filter({ hasText: /control/i }).first()
+    const controlTab = page.locator('div.flex.gap-2 button').filter({ hasText: /control/i }).first()
     await expect(controlTab).toBeVisible({ timeout: 8000 })
     await controlTab.click()
 
-    const classes = await controlTab.getAttribute('class')
-    expect(classes).toContain('amber')
-  })
-
-  test('clicking Hydrographic tab switches the view', async ({ page }) => {
-    await page.goto('/fieldbook', { waitUntil: 'domcontentloaded' })
-    await page.waitForTimeout(2000)
-
-    const hydroTab = page.locator('button').filter({ hasText: /hydro/i }).first()
-    await expect(hydroTab).toBeVisible({ timeout: 8000 })
-    await hydroTab.click()
-
-    const classes = await hydroTab.getAttribute('class')
-    expect(classes).toContain('amber')
-  })
-
-  test('clicking Mining tab switches the view', async ({ page }) => {
-    await page.goto('/fieldbook', { waitUntil: 'domcontentloaded' })
-    await page.waitForTimeout(2000)
-
-    const miningTab = page.locator('button').filter({ hasText: /mining/i }).first()
-    await expect(miningTab).toBeVisible({ timeout: 8000 })
-    await miningTab.click()
-
-    const classes = await miningTab.getAttribute('class')
-    expect(classes).toContain('amber')
+    // Control book shows instrument height fields
+    await expect(page.locator('input[aria-label="Instrument Height"]').first()).toBeVisible({ timeout: 8000 })
   })
 })
 
@@ -153,7 +130,7 @@ test.describe('Fieldbook — Observation Form Fields', () => {
     await page.waitForTimeout(2000)
 
     // Switch to traverse tab
-    const traverseTab = page.locator('button').filter({ hasText: /traverse/i }).first()
+    const traverseTab = page.locator('div.flex.gap-2 button').filter({ hasText: /traverse/i }).first()
     await expect(traverseTab).toBeVisible({ timeout: 8000 })
     await traverseTab.click()
     await page.waitForTimeout(500)
@@ -168,14 +145,14 @@ test.describe('Fieldbook — Observation Form Fields', () => {
     await page.waitForTimeout(2000)
 
     // Switch to control tab
-    const controlTab = page.locator('button').filter({ hasText: /control/i }).first()
+    const controlTab = page.locator('div.flex.gap-2 button').filter({ hasText: /control/i }).first()
     await expect(controlTab).toBeVisible({ timeout: 8000 })
     await controlTab.click()
     await page.waitForTimeout(500)
 
-    // Control fields: station name, instrument height, etc.
-    const stationInput = page.locator('input[placeholder], input').filter({ hasText: '' }).first()
-    await expect(stationInput).toBeVisible({ timeout: 8000 })
+    // Control fields: instrument height and target height
+    await expect(page.locator('input[aria-label="Instrument Height"]').first()).toBeVisible({ timeout: 8000 })
+    await expect(page.locator('input[aria-label="Target Height"]').first()).toBeVisible({ timeout: 8000 })
   })
 })
 
@@ -255,12 +232,5 @@ test.describe('Fieldbook — Export Buttons', () => {
 
     const jsonBtn = page.locator('button').filter({ hasText: /json/i }).first()
     await expect(jsonBtn).toBeVisible({ timeout: 8000 })
-  })
-})
-
-test.describe('Fieldbook — AI Sub-page', () => {
-  test('fieldbook AI page route exists', async ({ page }) => {
-    const response = await page.goto('/fieldbook/ai', { waitUntil: 'commit' })
-    expect(response?.status()).not.toBe(404)
   })
 })

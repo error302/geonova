@@ -35,8 +35,16 @@ export default defineConfig({
     },
   ],
   webServer: {
+    // E2E_STANDALONE (2026-08-09): the build uses `output: 'standalone'`, and
+    // `next start` is unsupported there — Next prints a warning and the edge
+    // middleware (auth redirects, CSRF, rate limits, CSP) is not served, so
+    // protected routes render for unauthenticated users. Run the standalone
+    // server like production does (node .next/standalone/server.js), after
+    // copying public/ and .next/static beside it.
     command: useProd
-      ? (skipBuild ? 'npx next start -p 3099' : 'npx next build && npx next start -p 3099')
+      ? (skipBuild
+        ? 'cp -r public .next/standalone/public 2>/dev/null || true; cp -r .next/static .next/standalone/.next/static 2>/dev/null || true; PORT=3099 node .next/standalone/server.js'
+        : 'npx next build && cp -r public .next/standalone/public 2>/dev/null || true; cp -r .next/static .next/standalone/.next/static 2>/dev/null || true; PORT=3099 node .next/standalone/server.js')
       : 'npx next dev -p 3099',
     port: 3099,
     reuseExistingServer: true,
