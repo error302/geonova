@@ -66,7 +66,7 @@ export default function StakeOutSheet({ result }: Props) {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row: any, i: number) => (
+            {rows.map((row, i) => (
               <tr key={row.id} className={i % 2 === 0 ? 'bg-transparent' : 'bg-[var(--bg-tertiary)]/30'}>
                 <td className="px-2 py-1.5 border border-[var(--border-color)]/50 font-bold text-[var(--text-primary)]">{row.id}</td>
                 <td className="px-2 py-1.5 border border-[var(--border-color)]/50 text-right text-[var(--text-primary)]">{row.designE.toFixed(3)}</td>

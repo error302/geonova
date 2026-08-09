@@ -54,7 +54,15 @@ export async function getSubscription(userId: string, email?: string): Promise<S
     }
   }
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<{
+    plan_id?: string
+    status?: string
+    trial_ends_at?: string | null
+    current_period_start?: string | null
+    current_period_end?: string | null
+    payment_method?: string | null
+    currency?: string
+  }>(
     'SELECT plan_id, status, trial_ends_at, current_period_start, current_period_end, payment_method, currency FROM user_subscriptions WHERE user_id = $1 LIMIT 1',
     [userId]
   )
@@ -184,7 +192,7 @@ export function getTrialDaysLeft(trialEndsAt: string | null): number {
 }
 
 export async function cancelSubscription(userId: string): Promise<void> {
-  const { rows } = await db.query(
+  const { rows } = await db.query<{ id: string }>(
     'SELECT id FROM user_subscriptions WHERE user_id = $1 LIMIT 1',
     [userId]
   )
@@ -198,7 +206,7 @@ export async function cancelSubscription(userId: string): Promise<void> {
 }
 
 export async function reactivateSubscription(userId: string): Promise<void> {
-  const { rows } = await db.query(
+  const { rows } = await db.query<{ id: string }>(
     'SELECT id FROM user_subscriptions WHERE user_id = $1 LIMIT 1',
     [userId]
   )
