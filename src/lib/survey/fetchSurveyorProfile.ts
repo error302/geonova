@@ -24,7 +24,7 @@ export async function fetchSurveyorProfile(
   projectId: string
 ): Promise<SurveyorProfile> {
   try {
-    const projRes = await db.query(
+    const projRes = await db.query<{ user_id: string | null; surveyor_name: string | null; surveyor_license: string | null }>(
       'SELECT user_id, surveyor_name, surveyor_license FROM projects WHERE id = $1',
       [projectId]
     )
@@ -42,7 +42,7 @@ export async function fetchSurveyorProfile(
 
     // 2. Fall back to surveyor_profiles via user_id
     if (proj?.user_id) {
-      const userRes = await db.query(
+      const userRes = await db.query<{ full_name: string | null; isk_number: string | null; firm_name: string | null }>(
         'SELECT full_name, isk_number, firm_name FROM surveyor_profiles WHERE user_id = $1',
         [proj.user_id]
       )

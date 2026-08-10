@@ -50,7 +50,7 @@ export default function CSVUploadModal({
       }
 
       const validationWarnings = validatePoints(result.points)
-      setParsedPoints(result.points.map((p: any) => ({
+      setParsedPoints(result.points.map((p) => ({
         name: p.name,
         easting: p.easting,
         northing: p.northing,
@@ -72,7 +72,7 @@ export default function CSVUploadModal({
     setLoading(true)
 
     try {
-      const pointsToInsert = parsedPoints.map((p: any) => ({
+      const pointsToInsert = parsedPoints.map((p) => ({
         project_id: projectId,
         point_name: p.name,  // T1.5d FIX: was 'name' (column doesn't exist)
         easting: p.easting,

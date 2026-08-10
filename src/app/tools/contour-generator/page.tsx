@@ -40,6 +40,15 @@ import { BreaklineTab } from './BreaklineTab';
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import { ComputeLimitNotice } from '@/components/tools/ComputeLimitNotice'
 
+// ─── Project point row shape (from /api/project/[id]/points) ───────────────
+interface ProjectPointRow {
+  id: string
+  point_name?: string | null
+  easting: number
+  northing: number
+  elevation: number | null
+}
+
 // ─── Component ──────────────────────────────────────────────────────────────
 
 export default function ContourGeneratorPage() {
@@ -83,10 +92,10 @@ export default function ContourGeneratorPage() {
       try {
         const res = await fetch(`/api/project/${projectId}/points`)
         if (!res.ok) return
-        const json = await res.json()
+        const json = await res.json() as { data?: ProjectPointRow[] }
         const pts: SpotHeight[] = (json.data || [])
-          .filter((p: any) => p.elevation != null)
-          .map((p: any) => ({
+          .filter((p): p is ProjectPointRow & { elevation: number } => p.elevation != null)
+          .map((p) => ({
             name: p.point_name || p.id,
             easting: p.easting,
             northing: p.northing,

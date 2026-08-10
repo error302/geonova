@@ -46,12 +46,12 @@ async function deriveKey(secret: string): Promise<CryptoKey> {
 
 async function hashContent(content: string): Promise<string> {
   const buf = await crypto.subtle.digest('SHA-256', enc.encode(content))
-  return Array.from(new Uint8Array(buf)).map((b: any) => b.toString(16).padStart(2, '0')).join('')
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 
 async function hmacSign(key: CryptoKey, data: string): Promise<string> {
   const buf = await crypto.subtle.sign('HMAC', key, enc.encode(data))
-  return Array.from(new Uint8Array(buf)).map((b: any) => b.toString(16).padStart(2, '0')).join('')
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 
 export async function signDocument(
@@ -91,7 +91,7 @@ export function generateQRPayload(signedDoc: SignedDocument): string {
 
 export function parseQRPayload(payload: string): SignedDocument | null {
   try {
-    const decoded = JSON.parse(atob(payload))
+    const decoded = JSON.parse(atob(payload)) as { id: string; h: string; s: string; t: number; si: string }
     return { documentId: decoded.id, documentHash: decoded.h, signature: decoded.s, timestamp: decoded.t, signerId: decoded.si, metadata: {} }
   } catch { return null }
 }

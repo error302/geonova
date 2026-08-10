@@ -70,11 +70,12 @@ export async function searchVault(
     .single()
 
   if (personal) {
+    const entry = personal as unknown as ParcelVaultEntry
     return {
       source: 'personal',
-      freshness: (personal as any).freshness,
-      certificateDate: (personal as any).certificate_date,
-      data: personal as any
+      freshness: entry.freshness,
+      certificateDate: entry.certificate_date,
+      data: entry
     }
   }
 
@@ -85,11 +86,12 @@ export async function searchVault(
     .single()
 
   if (shared) {
+    const entry = shared as unknown as ParcelVaultShared
     return {
       source: 'shared',
-      freshness: (shared as any).freshness as VaultFreshness,
-      certificateDate: (shared as any).certificate_date,
-      data: shared as any
+      freshness: entry.freshness as VaultFreshness,
+      certificateDate: entry.certificate_date,
+      data: entry
     }
   }
 
@@ -167,12 +169,13 @@ export async function getVaultStats(): Promise<VaultStats> {
     dbClient.from('parcel_vault').select('id', { count: 'exact', head: true }).eq('freshness', 'STALE')
   ])
 
+  const countOf = (row: unknown): number => ((row as { count?: number | null } | null)?.count ?? 0)
   return {
-    totalParcels: (total as any).count || 0,
-    sharedParcels: (shared as any).count || 0,
-    freshParcels: (fresh as any).count || 0,
-    verifyParcels: (verify as any).count || 0,
-    staleParcels: (stale as any).count || 0
+    totalParcels: countOf(total),
+    sharedParcels: countOf(shared),
+    freshParcels: countOf(fresh),
+    verifyParcels: countOf(verify),
+    staleParcels: countOf(stale)
   }
 }
 
