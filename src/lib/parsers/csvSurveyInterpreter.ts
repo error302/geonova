@@ -138,7 +138,7 @@ function mapRowToType(
   headers: string[],
   surveyType: SurveyDataset['surveyType']
 ): SurveyObservation['type'] {
-  const h = headers.map((h: any) => h.toLowerCase())
+  const h = headers.map((h) => h.toLowerCase())
   if (surveyType === 'traverse') return 'BEARING'
   if (surveyType === 'radiation') return h.includes('bearing') || h.includes('wcb') || h.includes('azimuth') ? 'BEARING' : 'ANGLE'
   if (surveyType === 'coordinates') return 'COORDINATE'

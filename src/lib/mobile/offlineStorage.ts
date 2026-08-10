@@ -262,8 +262,8 @@ class OfflineStorage {
     return {
       observations: observations.length,
       photos: photos.length,
-      pendingSync: queue.filter((i: any) => i.status === 'pending').length,
-      failedSync: queue.filter((i: any) => i.status === 'failed').length,
+      pendingSync: (queue as SyncQueueItem[]).filter((i) => i.status === 'pending').length,
+      failedSync: (queue as SyncQueueItem[]).filter((i) => i.status === 'failed').length,
       storageUsed: this.estimateStorageSize(observations, photos),
     }
   }
@@ -290,7 +290,7 @@ class OfflineStorage {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
   }
 
-  private estimateStorageSize(observations: any[], photos: any[]): string {
+  private estimateStorageSize(observations: unknown[], photos: Array<{ data?: string }>): string {
     const obsSize = JSON.stringify(observations).length
     const photoSize = photos.reduce((sum, p) => sum + (p.data?.length || 0), 0)
     const totalBytes = obsSize + photoSize
@@ -353,7 +353,7 @@ export interface SyncQueueItem {
   type: 'field_observation' | 'photo' | 'survey_point'
   recordId: string
   action: 'create' | 'update' | 'delete'
-  data: any
+  data: unknown
   timestamp?: number
   status?: SyncStatus
   retryCount?: number

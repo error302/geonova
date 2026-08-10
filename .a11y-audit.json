@@ -1,6 +1,6 @@
 [
   {
-    "filePath": "middleware.ts",
+    "filePath": "src/middleware.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -58462,61 +58462,13 @@
   },
   {
     "filePath": "src/lib/engine/solution/wrappers/leveling.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 10,
-        "column": 56,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 10,
-        "endColumn": 59,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                638,
-                641
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                638,
-                641
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .reducedLevel on an `any` value.",
-        "line": 10,
-        "column": 73,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 10,
-        "endColumn": 85
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 2,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "import type { LevelingInput } from '@/lib/engine/leveling'\r\nimport type { LevelingResult } from '@/lib/engine/types'\r\nimport { createSolutionV1, solveWithSteps, type Solved, type Solution } from '@/lib/engine/solution/solutionBuilder'\r\nimport { formatDistanceMeters, fullNumber } from '@/lib/solution/format'\r\n\r\nexport function levelingSolved(input: LevelingInput, result: LevelingResult): Solved<LevelingResult> & { solution: Solution } {\r\n  const sumBS = result.readings.reduce((s, r) => s + (r.bs ?? 0), 0)\r\n  const sumFS = result.readings.reduce((s, r) => s + (r.fs ?? 0), 0)\r\n\r\n  const last = [...result.readings].reverse().find((r: any) => typeof r.reducedLevel === 'number')\r\n  const lastRL = last?.reducedLevel ?? input.openingRL\r\n\r\n  const arithmeticDiff = (sumBS - sumFS) - (lastRL - input.openingRL)\r\n  const distanceKm = input.distanceKm ?? 1\r\n\r\n  const solution = createSolutionV1({\r\n    title: `Leveling (${result.method === 'rise_and_fall' ? 'Rise & Fall' : 'Height of Collimation'})`,\r\n    given: [\r\n      { label: 'Opening RL', value: `${fullNumber(input.openingRL)} m` },\r\n      ...(input.closingRL !== undefined ? [{ label: 'Closing RL', value: `${fullNumber(input.closingRL)} m` }] : []),\r\n      { label: 'Distance (K)', value: `${fullNumber(distanceKm)} km` },\r\n      { label: 'No. of rows', value: `${result.readings.length}` },\r\n    ],\r\n    toFind: ['Reduced levels (RL)', 'Misclosure (if closing RL provided)', 'Arithmetic check (Basak)'],\r\n    solution: [\r\n      {\r\n        title: 'Core reduction',\r\n        formula:\r\n          result.method === 'height_of_collimation'\r\n            ? 'HI = RL + BS,  RL(next) = HI − (IS/FS)'\r\n            : 'Compute RLs and rises/falls between successive computed RLs',\r\n        computation: `Final RL = ${fullNumber(lastRL)} m`,\r\n      },\r\n      {\r\n        title: 'Arithmetic check (Basak)',\r\n        formula: 'ΣBS − ΣFS = Last RL − First RL',\r\n        substitution: `ΣBS=${fullNumber(sumBS)}, ΣFS=${fullNumber(sumFS)}, Last RL=${fullNumber(lastRL)}, First RL=${fullNumber(input.openingRL)}`,\r\n        computation: `Diff = (ΣBS−ΣFS) − (Last−First) = ${fullNumber(arithmeticDiff)} m`,\r\n        result: `${Math.abs(arithmeticDiff) < 0.001 ? 'PASS' : 'FAIL'}`,\r\n      },\r\n      {\r\n        title: 'Allowable misclosure (ordinary leveling)',\r\n        formula: 'Allowable = ±10√K mm',\r\n        substitution: `K = ${fullNumber(distanceKm)} km`,\r\n        computation: `Allowable = ±${fullNumber(result.allowableMisclosure * 1000)} mm`,\r\n      },\r\n    ],\r\n    check: [\r\n      {\r\n        label: 'Arithmetic check',\r\n        value: `${Math.abs(arithmeticDiff) < 0.001 ? 'PASS' : 'FAIL'} (diff ${arithmeticDiff.toFixed(4)} m)`,\r\n        ok: Math.abs(arithmeticDiff) < 0.001,\r\n      },\r\n      ...(input.closingRL !== undefined\r\n        ? [\r\n            {\r\n              label: 'Misclosure within allowable',\r\n              value: `${result.misclosure.toFixed(4)} m vs ±${result.allowableMisclosure.toFixed(4)} m`,\r\n              ok: result.isAcceptable,\r\n            },\r\n          ]\r\n        : []),\r\n    ],\r\n    result: [\r\n      { label: 'ΣBS', value: `${sumBS.toFixed(4)} m` },\r\n      { label: 'ΣFS', value: `${sumFS.toFixed(4)} m` },\r\n      { label: 'Final RL', value: `${lastRL.toFixed(4)} m` },\r\n      ...(input.closingRL !== undefined ? [{ label: 'Misclosure', value: formatDistanceMeters(result.misclosure) }] : []),\r\n    ],\r\n  })\r\n\r\n  return solveWithSteps(result, solution)\r\n}\r\n\r\nexport function levelingSolution(input: LevelingInput, result: LevelingResult): Solution {\r\n  return levelingSolved(input, result).solution\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -61839,72 +61791,13 @@
   },
   {
     "filePath": "src/lib/engine/__tests__/parser.test.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 45,
-        "column": 53,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 45,
-        "endColumn": 56,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                1499,
-                1502
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                1499,
-                1502
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 45,
-        "column": 61,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 45,
-        "endColumn": 67
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .trim on an `any` value.",
-        "line": 45,
-        "column": 63,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 45,
-        "endColumn": 67
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 3,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "import { parseDelimitedFile, pointsToCSV, validatePoints } from '../parser'\r\n\r\ndescribe('parseDelimitedFile', () => {\r\n  it('parses a CSV with name,easting,northing,elevation', () => {\r\n    const csv = 'A,1000,2000,150\\nB,1100,2100,152\\nC,1200,2200,148'\r\n    const r = parseDelimitedFile(csv)\r\n    expect(r.points.length).toBe(3)\r\n    expect(r.points[0].name).toBe('A')\r\n    expect(r.points[0].easting).toBeCloseTo(1000, 4)\r\n    expect(r.points[0].northing).toBeCloseTo(2000, 4)\r\n    expect(r.points[0].elevation).toBeCloseTo(150, 4)\r\n  })\r\n\r\n  it('handles tab-delimited format', () => {\r\n    const tsv = 'P1\\t500\\t600\\t100\\nP2\\t510\\t610\\t105'\r\n    const r = parseDelimitedFile(tsv, '\\t')\r\n    expect(r.points.length).toBe(2)\r\n    expect(r.points[0].easting).toBeCloseTo(500, 4)\r\n  })\r\n\r\n  it('skips blank lines', () => {\r\n    const csv = 'A,100,200,10\\n\\nB,110,210,12\\n'\r\n    const r = parseDelimitedFile(csv)\r\n    expect(r.points.length).toBe(2)\r\n  })\r\n\r\n\r\n})\r\n\r\ndescribe('pointsToCSV', () => {\r\n  const POINTS = [\r\n    { name: 'A', easting: 1000, northing: 2000, elevation: 150 },\r\n    { name: 'B', easting: 1100, northing: 2100, elevation: 152 },\r\n  ]\r\n\r\n  it('generates a CSV string', () => {\r\n    const csv = pointsToCSV(POINTS)\r\n    expect(typeof csv).toBe('string')\r\n    expect(csv).toContain('A')\r\n    expect(csv).toContain('1000')\r\n  })\r\n\r\n  it('has the same number of data rows as points', () => {\r\n    const csv = pointsToCSV(POINTS)\r\n    const lines = csv.trim().split('\\n').filter((l: any) => l.trim())\r\n    // May have a header row — data rows should include all points\r\n    expect(lines.length).toBeGreaterThanOrEqual(POINTS.length)\r\n  })\r\n\r\n  it('round-trips: parse(pointsToCSV(pts)) gives same points', () => {\r\n    const csv = pointsToCSV(POINTS)\r\n    const r = parseDelimitedFile(csv)\r\n    expect(r.points.length).toBeGreaterThan(0)\r\n  })\r\n})\r\n\r\ndescribe('validatePoints', () => {\r\n  it('returns empty array for valid UTM points', () => {\r\n    // validatePoints checks UTM range 100000-900000\r\n    const pts = [\r\n      { name: 'A', easting: 500000, northing: 9857000, elevation: 100 },\r\n      { name: 'B', easting: 501000, northing: 9858000, elevation: 102 },\r\n    ]\r\n    expect(validatePoints(pts)).toEqual([])\r\n  })\r\n\r\n  it('warns on duplicate point names', () => {\r\n    const pts = [\r\n      { name: 'A', easting: 500000, northing: 9857000, elevation: 100 },\r\n      { name: 'A', easting: 501000, northing: 9858000, elevation: 102 },\r\n    ]\r\n    const warnings = validatePoints(pts)\r\n    expect(warnings.length).toBeGreaterThan(0)\r\n    expect(warnings[0]).toContain('A')\r\n  })\r\n\r\n  it('warns on out-of-range UTM easting', () => {\r\n    const pts = [{ name: 'A', easting: 50000, northing: 9857000, elevation: 100 }]\r\n    const warnings = validatePoints(pts)\r\n    expect(warnings.length).toBeGreaterThan(0)\r\n  })\r\n})\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -69836,61 +69729,13 @@
   },
   {
     "filePath": "src/lib/geodesy/datums.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 312,
-        "column": 23,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 312,
-        "endColumn": 26,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                10938,
-                10941
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                10938,
-                10941
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Computed name [k] resolves to an `any` value.",
-        "line": 312,
-        "column": 46,
-        "nodeType": "Identifier",
-        "messageId": "unsafeComputedMemberAccess",
-        "endLine": 312,
-        "endColumn": 47
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 2,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Global Geodetic Datums and Transformations\r\n *\r\n * Reference:\r\n *   USACE EM 1110-1-1005 §5-2 (NAD83/WGS84)\r\n *   EPSG Registry v10 (all parameters)\r\n *   NOAA NGS (NAD83(2011) epoch)\r\n *   OSNet/OSTN15 (OSGB36 transformation)\r\n */\r\n\r\nimport { utmToGeographic, geographicToUTM } from './coordinates'\r\n\r\nexport interface DatumParameters {\r\n  name: string\r\n  ellipsoid: string\r\n  semiMajorAxis: number          // metres\r\n  inverseFlattening: number\r\n  dx: number; dy: number; dz: number  // to WGS84, metres (Helmert)\r\n  rx: number; ry: number; rz: number  // arc-seconds\r\n  scale: number                       // ppm\r\n  countries: string[]\r\n  projection?: string\r\n  notes?: string\r\n}\r\n\r\nexport const DATUM_REGISTRY: Record<string, DatumParameters> = {\r\n\r\n  // ── Global / Reference ──────────────────────────────────────────────────────\r\n  WGS84: {\r\n    name: 'WGS84 (G1762)',\r\n    ellipsoid: 'WGS84',\r\n    semiMajorAxis: 6378137.0,\r\n    inverseFlattening: 298.257223563,\r\n    dx: 0, dy: 0, dz: 0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Global'],\r\n    projection: 'WGS84 / UTM',\r\n  },\r\n\r\n  // ── Africa ──────────────────────────────────────────────────────────────────\r\n  ARC1960: {\r\n    name: 'Arc 1960',\r\n    ellipsoid: 'Clarke 1880 (RGS)',\r\n    semiMajorAxis: 6378249.145,\r\n    inverseFlattening: 293.465,\r\n    // FIXED: Previous values (-157, -2, -299) were incorrect.\r\n    // Kenya-specific TOWGS84 parameters from EPSG:1284 (Arc 1960 to WGS 84 (2), accuracy ~6m)\r\n    // Default EPSG:1122 parameters were (-160, -6, -302, 0, 0, 0, 0) with ~35m accuracy.\r\n    // Using the Kenya-specific values for better transformation accuracy.\r\n    // Source: EPSG Registry — EPSG:21037 (Arc 1960 / UTM zone 37S)\r\n    dx: -160, dy: -6, dz: -302,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Kenya', 'Uganda', 'Tanzania'],\r\n    projection: 'UTM Zone 36/37',\r\n    notes: 'EPSG:21037 (Zone 37S) and EPSG:21097 (Zone 37N for northern Kenya). Kenya-specific transformation EPSG:1284 (~6m accuracy) vs default EPSG:1122 (~35m accuracy). Clarke 1880 (RGS) ellipsoid, a=6378249.145m, 1/f=293.465.',\r\n  },\r\n  HARTEBEESTHOEK94: {\r\n    name: 'Hartebeesthoek94',\r\n    ellipsoid: 'GRS80',\r\n    semiMajorAxis: 6378137.0,\r\n    inverseFlattening: 298.257222101,\r\n    dx: 0, dy: 0, dz: 0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['South Africa', 'Namibia', 'Lesotho', 'Swaziland', 'Botswana'],\r\n    projection: 'South African CRS',\r\n  },\r\n  ADINDAN: {\r\n    name: 'Adindan',\r\n    ellipsoid: 'Clarke 1880',\r\n    semiMajorAxis: 6378249.145,\r\n    inverseFlattening: 293.465,\r\n    dx: -166, dy: -15, dz: 204,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Ethiopia', 'Sudan', 'Somalia', 'Mali'],\r\n  },\r\n\r\n  // ── United States ──────────────────────────────────────────────────────────\r\n  NAD83_2011: {\r\n    name: 'NAD83(2011) / NSRS',\r\n    ellipsoid: 'GRS80',\r\n    semiMajorAxis: 6378137.0,\r\n    inverseFlattening: 298.257222101,\r\n    dx: 0, dy: 0, dz: 0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['United States'],\r\n    projection: 'State Plane Coordinate System (SPCS) / UTM',\r\n    notes: 'Epoch 2010.00 — replaces NAD83(CORS96). Tie to NSRS via OPUS or CORS.',\r\n  },\r\n  NAD83_1986: {\r\n    name: 'NAD83(1986)',\r\n    ellipsoid: 'GRS80',\r\n    semiMajorAxis: 6378137.0,\r\n    inverseFlattening: 298.257222101,\r\n    dx: 0, dy: 0, dz: 0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['United States'],\r\n    projection: 'State Plane / UTM',\r\n    notes: 'Original NAD83. Still used in some legacy surveys.',\r\n  },\r\n  NAVD88: {\r\n    name: 'NAVD88',\r\n    ellipsoid: 'GRS80',\r\n    semiMajorAxis: 6378137.0,\r\n    inverseFlattening: 298.257222101,\r\n    dx: 0, dy: 0, dz: 0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['United States'],\r\n    projection: 'Orthometric (gravity-based)',\r\n    notes: 'NGVD29 → NAVD88 shift: ~0–1.5m depending on region. Use GEOIDxx for GNSS-to-ortho.',\r\n  },\r\n\r\n  // ── United Kingdom ─────────────────────────────────────────────────────────\r\n  OSGB36: {\r\n    name: 'OSGB36',\r\n    ellipsoid: 'Airy 1830',\r\n    semiMajorAxis: 6377563.396,\r\n    inverseFlattening: 299.3249646,\r\n    dx: 446.448, dy: -125.157, dz: 542.060,\r\n    rx: 0.1502, ry: 0.2470, rz: 0.8421, scale: -20.4894,\r\n    countries: ['United Kingdom'],\r\n    projection: 'British National Grid (Transverse Mercator)',\r\n    notes: 'OSTN15/NTv2 grid shift for sub-cm transformation to ETRS89/WGS84.',\r\n  },\r\n  ETRS89: {\r\n    name: 'ETRS89',\r\n    ellipsoid: 'GRS80',\r\n    semiMajorAxis: 6378137.0,\r\n    inverseFlattening: 298.257222101,\r\n    dx: 0, dy: 0, dz: 0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['United Kingdom', 'European Union'],\r\n    projection: 'British National Grid / UTM',\r\n    notes: 'European Terrestrial Reference System 1989. Tied to EUREF.',\r\n  },\r\n\r\n  // ── Australia ──────────────────────────────────────────────────────────────\r\n  GDA2020: {\r\n    name: 'GDA2020',\r\n    ellipsoid: 'GRS80',\r\n    semiMajorAxis: 6378137.0,\r\n    inverseFlattening: 298.257222101,\r\n    dx: 0, dy: 0, dz: 0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Australia'],\r\n    projection: 'MGA2020 (UTM)',\r\n    notes: 'Replaced GDA94. ITRF at epoch 2020.0. AUSGeoid2020 for AHD.',\r\n  },\r\n  GDA94: {\r\n    name: 'GDA94',\r\n    ellipsoid: 'GRS80',\r\n    semiMajorAxis: 6378137.0,\r\n    inverseFlattening: 298.257222101,\r\n    dx: 0, dy: 0, dz: 0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Australia'],\r\n    projection: 'MGA94 (UTM)',\r\n    notes: 'GDA94 to GDA2020 shift: ~1.8m across Australia.',\r\n  },\r\n\r\n  // ── New Zealand ────────────────────────────────────────────────────────────\r\n  NZGD2000: {\r\n    name: 'NZGD2000',\r\n    ellipsoid: 'GRS80',\r\n    semiMajorAxis: 6378137.0,\r\n    inverseFlattening: 298.257222101,\r\n    dx: 0, dy: 0, dz: 0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['New Zealand'],\r\n    projection: 'NZTM2000',\r\n    notes: 'ITRF at epoch 2000.00. NZVD2016 for orthometric (NZVD09 → NZVD2016 shift up to 0.5m).',\r\n  },\r\n\r\n  // ── Bahrain ────────────────────────────────────────────────────────────────\r\n  AIN_AL_ABD_1970: {\r\n    name: 'Ain Al-Abd 1970',\r\n    ellipsoid: 'Clarke 1880',\r\n    semiMajorAxis: 6378249.145,\r\n    inverseFlattening: 293.465,\r\n    dx: -243.1, dy: -154.4, dz: 406.1,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Bahrain'],\r\n    projection: 'UTM Zone 39N, CM Scale Factor 0.9996',\r\n    notes: 'Bahrain local datum. PRN: 8 GNSS reference stations (Diyar Al Muharraq, King Fahd Causeway, Scout Camp, Durrat, Jauu, Budaiya, Hawar, Umm Al Hassam). Leica GPS 1200 / Bahrain CSCS v1 coordinate system.',\r\n  },\r\n\r\n  // ── Saudi Arabia ───────────────────────────────────────────────────────────\r\n  IGM1969: {\r\n    name: 'IGM 1969 (GCS 1924)',\r\n    ellipsoid: 'Clarke 1880',\r\n    semiMajorAxis: 6378249.145,\r\n    inverseFlattening: 293.465,\r\n    dx: -144.9, dy: -115.1, dz: -141.8,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Saudi Arabia'],\r\n    projection: 'UTM Zone 37/38/39N',\r\n    notes: 'Saudi Arabia primary geodetic datum. GCS 1924 (not GDA). Modern surveys reference WGS84 via GNSS.',\r\n  },\r\n\r\n  // ── Oman ─────────────────────────────────────────────────────────────────\r\n  OMAN_OTM: {\r\n    name: 'Oman Transverse Mercator (OTM)',\r\n    ellipsoid: 'GRS80',\r\n    semiMajorAxis: 6378137.0,\r\n    inverseFlattening: 298.257222101,\r\n    dx: 0, dy: 0, dz: 0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Oman'],\r\n    projection: 'UTM Zone 39/40N / OTM',\r\n    notes: 'WGS84-aligned. UTM or Oman Transverse Mercator projection.',\r\n  },\r\n\r\n  // ── UAE ───────────────────────────────────────────────────────────────────\r\n  UAE_NAD83: {\r\n    name: 'UAE NAD83(CSRS)',\r\n    ellipsoid: 'GRS80',\r\n    semiMajorAxis: 6378137.0,\r\n    inverseFlattening: 298.257222101,\r\n    dx: 0, dy: 0, dz: 0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['United Arab Emirates'],\r\n    projection: 'UTM Zone 39/40/41N',\r\n    notes: 'WGS84 primary for modern GNSS. UTM zones 39–41.',\r\n  },\r\n\r\n  // ── Nigeria ────────────────────────────────────────────────────────────────\r\n  MINNA: {\r\n    name: 'Minna',\r\n    ellipsoid: 'Clarke 1880',\r\n    semiMajorAxis: 6378249.145,\r\n    inverseFlattening: 293.465,\r\n    dx: -92.7, dy: -47.5, dz: -48.4,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Nigeria'],\r\n    projection: 'UTM Zone 31/32N',\r\n  },\r\n\r\n  // ── Ghana ─────────────────────────────────────────────────────────────────\r\n  Ghana_1920: {\r\n    name: 'Gold Coast 1920 / Accra',\r\n    ellipsoid: 'War Office',\r\n    semiMajorAxis: 6378300.58,\r\n    inverseFlattening: 296.0,\r\n    dx: -88.0, dy: 290.0, dz: -207.0,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Ghana'],\r\n    projection: 'Ghana National Grid',\r\n  },\r\n\r\n  // ── Additional datums needed by coordinates.ts ──────────────────────────────\r\n  CAPE: {\r\n    name: 'Cape Verde (Cape) 1955',\r\n    ellipsoid: 'Clarke 1880',\r\n    semiMajorAxis: 6378249.145,\r\n    inverseFlattening: 293.465,\r\n    dx: -320, dy: 550, dz: -494,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Cape Verde', 'Saudi Arabia', 'Somalia'],\r\n    projection: 'UTM',\r\n  },\r\n  ED50: {\r\n    name: 'European Datum 1950',\r\n    ellipsoid: 'International 1924',\r\n    semiMajorAxis: 6378388.0,\r\n    inverseFlattening: 297.0,\r\n    dx: 89.5, dy: 93.8, dz: -123.1,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['Europe (legacy)', 'Middle East', 'North Africa'],\r\n    projection: 'UTM',\r\n  },\r\n  PSAD56: {\r\n    name: 'Provisional South American 1956',\r\n    ellipsoid: 'Clarke 1866',\r\n    semiMajorAxis: 6378206.4,\r\n    inverseFlattening: 294.9786982,\r\n    dx: -288, dy: 175, dz: -376,\r\n    rx: 0, ry: 0, rz: 0, scale: 0,\r\n    countries: ['South America (legacy)'],\r\n    projection: 'UTM',\r\n  },\r\n}\r\n\r\nexport function getAvailableDatums(): DatumParameters[] {\r\n  return Object.values(DATUM_REGISTRY)\r\n}\r\n\r\nexport function getDatumByCountry(country: string): DatumParameters[] {\r\n  const map: Record<string, string[]> = {\r\n    kenya: ['ARC1960', 'WGS84', 'NAD83_2011'],\r\n    uganda: ['ARC1960', 'WGS84'],\r\n    tanzania: ['ARC1960', 'WGS84'],\r\n    rwanda: ['ARC1960', 'WGS84'],\r\n    burundi: ['ARC1960', 'WGS84'],\r\n    south_sudan: ['WGS84', 'ARC1960'],\r\n    nigeria: ['MINNA', 'WGS84'],\r\n    ghana: ['Ghana_1920', 'WGS84', 'NAD83_2011'],\r\n    south_africa: ['HARTEBEESTHOEK94', 'CAPE', 'WGS84'],\r\n    zambia: ['ARC1960', 'WGS84'],\r\n    bahrain: ['AIN_AL_ABD_1970', 'WGS84'],\r\n    saudi_arabia: ['IGM1969', 'WGS84'],\r\n    oman: ['OMAN_OTM', 'WGS84'],\r\n    uae: ['UAE_NAD83', 'WGS84'],\r\n    new_zealand: ['NZGD2000', 'WGS84'],\r\n    us: ['NAD83_2011', 'NAD83_1986', 'WGS84', 'NAVD88'],\r\n    uk: ['OSGB36', 'ETRS89', 'WGS84'],\r\n    australia: ['GDA2020', 'GDA94', 'WGS84'],\r\n    india: ['WGS84', 'NAD83_2011'],\r\n    indonesia: ['WGS84', 'NAD83_2011'],\r\n    brazil: ['WGS84', 'NAD83_2011'],\r\n    other: ['WGS84', 'NAD83_2011'],\r\n  }\r\n  const keys = map[country] ?? ['WGS84']\r\n  return keys.map((k: any) => DATUM_REGISTRY[k]).filter(Boolean)\r\n}\r\n\r\nexport function getDatumByCountryAndIndex(country: string, index: number): DatumParameters {\r\n  const datums = getDatumByCountry(country)\r\n  return datums[index] ?? DATUM_REGISTRY['WGS84']\r\n}\r\n\r\nexport function getDatumNames(): string[] {\r\n  return Object.keys(DATUM_REGISTRY)\r\n}\r\n\r\nexport function getDatumByName(name: string): DatumParameters | undefined {\r\n  return DATUM_REGISTRY[name]\r\n}\r\n\r\n/**\r\n * Transform UTM grid coordinates from a source datum to WGS84.\r\n *\r\n * AUDIT FIX (C1, 2026-07-02):\r\n *   The previous implementation was mathematically wrong — it treated the\r\n *   EPSG `dx, dy, dz` translations (which are geocentric Cartesian\r\n *   translations in metres) as map-grid translations applied to UTM\r\n *   easting/northing. It also ignored `rx`, `ry`, and `dz` entirely.\r\n *   This produced completely wrong coordinates for any non-WGS84 datum.\r\n *\r\n *   The correct approach (per Bursa-Wolf / Position Vector transformation,\r\n *   EPSG 9606) is:\r\n *     1. Convert source UTM → source geodetic (lat, lon, h)\r\n *     2. Convert source geodetic → source geocentric XYZ (on source ellipsoid)\r\n *     3. Apply 7-parameter Helmert: X' = dX + (1+ds)·X - rz·Y + ry·Z, etc.\r\n *        (small-angle linearisation; rotations in arc-seconds → radians)\r\n *     4. Convert target geocentric XYZ → target geodetic (on WGS84 ellipsoid)\r\n *     5. Convert target geodetic → target UTM\r\n *\r\n *   Height `h` defaults to 0 (assumes the input is at the ellipsoid surface).\r\n *   For surveys with known orthometric/ellipsoidal height, pass it via the\r\n *   optional `height` parameter for a more accurate transform.\r\n *\r\n * @param easting       Source UTM easting (metres)\r\n * @param northing      Source UTM northing (metres)\r\n * @param zone          UTM zone (1-60)\r\n * @param hemisphere    'N' or 'S'\r\n * @param sourceDatum   Source datum parameters (from DATUM_REGISTRY)\r\n * @param height        Optional ellipsoidal height at the source point (metres).\r\n *                      Default 0. Affects the transform by up to a few cm at\r\n *                      sea level, more at altitude.\r\n * @returns             WGS84 UTM coordinates in the same zone + hemisphere.\r\n *\r\n * References:\r\n *   - EPSG Guidance Note 7-2 (March 2020), §2.4.3.2 Position Vector\r\n *     transformation (geogentric domain)\r\n *   - Bursa, M. (1962) — the original 7-parameter formulation\r\n *   - Hofmann-Wellenhof, B. et al. (2008) \"Physical Geodesy\", Ch. 3\r\n */\r\nexport function transformToWGS84(\r\n  easting: number,\r\n  northing: number,\r\n  zone: number,\r\n  hemisphere: 'N' | 'S',\r\n  sourceDatum: DatumParameters,\r\n  height: number = 0\r\n): { easting: number; northing: number; note: string } {\r\n  const { dx, dy, dz, rx, ry, rz, scale } = sourceDatum\r\n\r\n  // Short-circuit: if the source datum IS WGS84, no transform needed.\r\n  if (dx === 0 && dy === 0 && dz === 0 && rx === 0 && ry === 0 && rz === 0 && scale === 0) {\r\n    return { easting, northing, note: `${sourceDatum.name} is already WGS84-compatible.` }\r\n  }\r\n\r\n  // 1. Source UTM → source geodetic (lat, lon) on source ellipsoid\r\n  //    (utmToGeographic uses the source ellipsoid implicitly via the\r\n  //    standard Redfearn series; for datums that share WGS84's ellipsoid\r\n  //    parameters but differ only in their to-WGS84 params — like most\r\n  //    realisations of Arc 1960 vs WGS84 — this is correct.)\r\n  const sourceGeodetic = utmToGeographic(easting, northing, zone, hemisphere)\r\n\r\n  // 2. Source geodetic → source geocentric XYZ on source ellipsoid\r\n  const a = sourceDatum.semiMajorAxis\r\n  const f = 1 / sourceDatum.inverseFlattening\r\n  const e2 = 2 * f - f * f\r\n  const sinPhi = Math.sin(sourceGeodetic.lat)\r\n  const cosPhi = Math.cos(sourceGeodetic.lat)\r\n  const sinLam = Math.sin(sourceGeodetic.lon)\r\n  const cosLam = Math.cos(sourceGeodetic.lon)\r\n  const N = a / Math.sqrt(1 - e2 * sinPhi * sinPhi)\r\n  const Xs = (N + height) * cosPhi * cosLam\r\n  const Ys = (N + height) * cosPhi * sinLam\r\n  const Zs = ((1 - e2) * N + height) * sinPhi\r\n\r\n  // 3. Bursa-Wolf 7-parameter transform (Position Vector convention)\r\n  //    Rotations are in arc-seconds → radians. Scale is in ppm → fraction.\r\n  const ARCSEC_TO_RAD = Math.PI / (180 * 3600)\r\n  const rxRad = rx * ARCSEC_TO_RAD\r\n  const ryRad = ry * ARCSEC_TO_RAD\r\n  const rzRad = rz * ARCSEC_TO_RAD\r\n  const s = 1 + scale * 1e-6\r\n\r\n  // Standard Position Vector form (EPSG 9606):\r\n  //   X' = dX + (1+ds)·X +  rz·Y -  ry·Z\r\n  //   Y' = dY - rz·X + (1+ds)·Y +  rx·Z\r\n  //   Z' = dZ +  ry·X -  rx·Y + (1+ds)·Z\r\n  // (signs follow EPSG convention; verify against published test points)\r\n  const Xt = dx + s * Xs + rzRad * Ys - ryRad * Zs\r\n  const Yt = dy - rzRad * Xs + s * Ys + rxRad * Zs\r\n  const Zt = dz + ryRad * Xs - rxRad * Ys + s * Zs\r\n\r\n  // 4. Target geocentric XYZ → target geodetic (lat, lon, h) on WGS84 ellipsoid\r\n  //    Bowring's method for initial guess, then iterate.\r\n  const WGS84_A = 6378137.0\r\n  const WGS84_F = 1 / 298.257223563\r\n  const WGS84_E2 = 2 * WGS84_F - WGS84_F * WGS84_F\r\n  const p = Math.sqrt(Xt * Xt + Yt * Yt)\r\n  const targetLon = Math.atan2(Yt, Xt)\r\n  // Initial latitude estimate (Bowring 1976)\r\n  const wgsB = WGS84_A * Math.sqrt(1 - WGS84_E2)\r\n  const u = Math.atan2(\r\n    Zt * WGS84_A,\r\n    p * wgsB\r\n  )\r\n  const ep2 = WGS84_E2 / (1 - WGS84_E2)\r\n  const targetLat =\r\n    Math.atan2(\r\n      Zt + ep2 * wgsB * Math.pow(Math.sin(u), 3),\r\n      p - WGS84_E2 * WGS84_A * Math.pow(Math.cos(u), 3)\r\n    )\r\n\r\n  // 5. Target geodetic → target UTM (same zone + hemisphere)\r\n  const targetUtm = geographicToUTM(targetLat, targetLon, zone)\r\n\r\n  return {\r\n    easting: targetUtm.easting,\r\n    northing: targetUtm.northing,\r\n    note: `Bursa-Wolf (Position Vector, EPSG 9606): d(${dx.toFixed(1)}, ${dy.toFixed(1)}, ${dz.toFixed(1)}) m, r(${rx.toFixed(4)}\", ${ry.toFixed(4)}\", ${rz.toFixed(4)}\"), s(${scale.toFixed(4)} ppm)`,\r\n  }\r\n}\r\n\r\nexport function getScaleFactor(latitudeDegrees: number, heightMetres: number): number {\r\n  const latRad = latitudeDegrees * Math.PI / 180\r\n  const a = 6378137.0\r\n  const f = 1 / 298.257222101\r\n  const e2 = 2 * f - f * f\r\n  const sin2 = Math.sin(latRad) ** 2\r\n  const N = a / Math.sqrt(1 - e2 * sin2)\r\n  const H = heightMetres\r\n  return 1 + H / N\r\n}\r\n\r\nexport function getConvergenceAngle(\r\n  longitudeDegrees: number,\r\n  latitudeDegrees: number,\r\n  centralMeridianDegrees: number\r\n): number {\r\n  const dLon = (longitudeDegrees - centralMeridianDegrees) * Math.PI / 180\r\n  const latRad = latitudeDegrees * Math.PI / 180\r\n  const sinLat = Math.sin(latRad)\r\n  return dLon * sinLat * 206264.806247  // arc-seconds\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -76041,98 +75886,6 @@
         ]
       },
       {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 265,
-        "column": 37,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 265,
-        "endColumn": 40,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                7814,
-                7817
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                7814,
-                7817
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .status on an `any` value.",
-        "line": 265,
-        "column": 47,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 265,
-        "endColumn": 53
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 266,
-        "column": 36,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 266,
-        "endColumn": 39,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                7890,
-                7893
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                7890,
-                7893
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .status on an `any` value.",
-        "line": 266,
-        "column": 46,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 266,
-        "endColumn": 52
-      },
-      {
         "ruleId": "@typescript-eslint/no-non-null-assertion",
         "severity": 1,
         "message": "Forbidden non-null assertion.",
@@ -76147,161 +75900,12 @@
             "messageId": "suggestOptionalChain",
             "fix": {
               "range": [
-                8308,
-                8309
+                8340,
+                8341
               ],
               "text": "?"
             },
             "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 293,
-        "column": 45,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 293,
-        "endColumn": 48,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                8728,
-                8731
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                8728,
-                8731
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 293,
-        "column": 60,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 293,
-        "endColumn": 63,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                8743,
-                8746
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                8743,
-                8746
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 295,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 295,
-        "endColumn": 80
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-return",
-        "severity": 1,
-        "message": "Unsafe return of a value of type `any`.",
-        "line": 295,
-        "column": 49,
-        "nodeType": "BinaryExpression",
-        "messageId": "unsafeReturn",
-        "endLine": 295,
-        "endColumn": 76
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .data on an `any` value.",
-        "line": 295,
-        "column": 58,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 295,
-        "endColumn": 62
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-assignment",
-        "severity": 1,
-        "message": "Unsafe assignment of an `any` value.",
-        "line": 296,
-        "column": 11,
-        "nodeType": "VariableDeclarator",
-        "messageId": "anyAssignment",
-        "endLine": 296,
-        "endColumn": 43
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 356,
-        "column": 9,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 356,
-        "endColumn": 12,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                10369,
-                10372
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                10369,
-                10372
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
           }
         ]
       }
@@ -76309,10 +75913,10 @@
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 19,
+    "warningCount": 8,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Offline Storage Service for Mobile Field Data Collection\r\n * Uses IndexedDB for persistent storage with sync capability\r\n */\r\n\r\nconst DB_NAME = 'MetarduFieldDB'\r\nconst DB_VERSION = 1\r\n\r\n// Store names\r\nconst STORES = {\r\n  FIELD_OBSERVATIONS: 'field_observations',\r\n  SURVEY_POINTS: 'survey_points',\r\n  PHOTOS: 'photos',\r\n  PROJECTS: 'projects_offline',\r\n  SYNC_QUEUE: 'sync_queue',\r\n} as const\r\n\r\ninterface DBConfig {\r\n  name: string\r\n  keyPath: string\r\n  indexes?: { name: string; keyPath: string; unique?: boolean }[]\r\n}\r\n\r\nconst STORE_CONFIGS: Record<string, DBConfig> = {\r\n  [STORES.FIELD_OBSERVATIONS]: {\r\n    name: STORES.FIELD_OBSERVATIONS,\r\n    keyPath: 'id',\r\n    indexes: [\r\n      { name: 'project_id', keyPath: 'projectId' },\r\n      { name: 'timestamp', keyPath: 'timestamp' },\r\n      { name: 'synced', keyPath: 'synced' },\r\n    ],\r\n  },\r\n  [STORES.SURVEY_POINTS]: {\r\n    name: STORES.SURVEY_POINTS,\r\n    keyPath: 'id',\r\n    indexes: [\r\n      { name: 'project_id', keyPath: 'projectId' },\r\n      { name: 'point_name', keyPath: 'name' },\r\n    ],\r\n  },\r\n  [STORES.PHOTOS]: {\r\n    name: STORES.PHOTOS,\r\n    keyPath: 'id',\r\n    indexes: [\r\n      { name: 'project_id', keyPath: 'projectId' },\r\n      { name: 'point_id', keyPath: 'pointId' },\r\n    ],\r\n  },\r\n  [STORES.PROJECTS]: {\r\n    name: STORES.PROJECTS,\r\n    keyPath: 'id',\r\n  },\r\n  [STORES.SYNC_QUEUE]: {\r\n    name: STORES.SYNC_QUEUE,\r\n    keyPath: 'id',\r\n    indexes: [\r\n      { name: 'timestamp', keyPath: 'timestamp' },\r\n      { name: 'status', keyPath: 'status' },\r\n    ],\r\n  },\r\n}\r\n\r\nclass OfflineStorage {\r\n  private db: IDBDatabase | null = null\r\n\r\n  async init(): Promise<void> {\r\n    return new Promise((resolve, reject) => {\r\n      const request = indexedDB.open(DB_NAME, DB_VERSION)\r\n\r\n      request.onerror = () => reject(request.error)\r\n      request.onsuccess = () => {\r\n        this.db = request.result\r\n        resolve()\r\n      }\r\n\r\n      request.onupgradeneeded = (event) => {\r\n        const db = (event.target as IDBOpenDBRequest).result\r\n\r\n        // Create stores\r\n        Object.values(STORE_CONFIGS).forEach((config) => {\r\n          if (!db.objectStoreNames.contains(config.name)) {\r\n            const store = db.createObjectStore(config.name, { keyPath: config.keyPath })\r\n\r\n            // Create indexes\r\n            config.indexes?.forEach((index) => {\r\n              store.createIndex(index.name, index.keyPath, { unique: index.unique })\r\n            })\r\n          }\r\n        })\r\n      }\r\n    })\r\n  }\r\n\r\n  // Generic CRUD operations\r\n  async add<T>(storeName: string, data: T): Promise<string> {\r\n    if (!this.db) await this.init()\r\n\r\n    return new Promise((resolve, reject) => {\r\n      const transaction = this.db!.transaction([storeName], 'readwrite')\r\n      const store = transaction.objectStore(storeName)\r\n\r\n      // Generate ID if not present\r\n      const record = { ...(data as Record<string, unknown>), id: (data as { id?: string }).id || this.generateId() }\r\n\r\n      const request = store.add(record)\r\n\r\n      request.onsuccess = () => resolve(record.id)\r\n      request.onerror = () => reject(request.error)\r\n    })\r\n  }\r\n\r\n  async get<T>(storeName: string, id: string): Promise<T | null> {\r\n    if (!this.db) await this.init()\r\n\r\n    return new Promise((resolve, reject) => {\r\n      const transaction = this.db!.transaction([storeName], 'readonly')\r\n      const store = transaction.objectStore(storeName)\r\n      const request = store.get(id)\r\n\r\n      request.onsuccess = () => resolve((request.result as T | undefined) ?? null)\r\n      request.onerror = () => reject(request.error)\r\n    })\r\n  }\r\n\r\n  async getAll<T>(storeName: string, indexName?: string, query?: IDBValidKey): Promise<T[]> {\r\n    if (!this.db) await this.init()\r\n\r\n    return new Promise((resolve, reject) => {\r\n      const transaction = this.db!.transaction([storeName], 'readonly')\r\n      const store = transaction.objectStore(storeName)\r\n\r\n      let request: IDBRequest\r\n      if (indexName && query !== undefined) {\r\n        const index = store.index(indexName)\r\n        request = index.getAll(query)\r\n      } else {\r\n        request = store.getAll()\r\n      }\r\n\r\n      request.onsuccess = () => resolve((request.result as T[] | undefined) ?? [])\r\n      request.onerror = () => reject(request.error)\r\n    })\r\n  }\r\n\r\n  async update<T>(storeName: string, id: string, data: Partial<T>): Promise<void> {\r\n    if (!this.db) await this.init()\r\n\r\n    return new Promise((resolve, reject) => {\r\n      const transaction = this.db!.transaction([storeName], 'readwrite')\r\n      const store = transaction.objectStore(storeName)\r\n\r\n      const request = store.get(id)\r\n\r\n      request.onsuccess = () => {\r\n        const existing = request.result\r\n        if (!existing) {\r\n          reject(new Error('Record not found'))\r\n          return\r\n        }\r\n\r\n        const updated = { ...existing, ...data }\r\n        const putRequest = store.put(updated)\r\n\r\n        putRequest.onsuccess = () => resolve()\r\n        putRequest.onerror = () => reject(putRequest.error)\r\n      }\r\n\r\n      request.onerror = () => reject(request.error)\r\n    })\r\n  }\r\n\r\n  async delete(storeName: string, id: string): Promise<void> {\r\n    if (!this.db) await this.init()\r\n\r\n    return new Promise((resolve, reject) => {\r\n      const transaction = this.db!.transaction([storeName], 'readwrite')\r\n      const store = transaction.objectStore(storeName)\r\n      const request = store.delete(id)\r\n\r\n      request.onsuccess = () => resolve()\r\n      request.onerror = () => reject(request.error)\r\n    })\r\n  }\r\n\r\n  // Field observation specific methods\r\n  async saveFieldObservation(observation: FieldObservation): Promise<string> {\r\n    const record = {\r\n      ...observation,\r\n      timestamp: Date.now(),\r\n      synced: false,\r\n    }\r\n    const id = await this.add(STORES.FIELD_OBSERVATIONS, record)\r\n\r\n    // Add to sync queue\r\n    await this.addToSyncQueue({\r\n      type: 'field_observation',\r\n      recordId: id,\r\n      action: 'create',\r\n      data: record,\r\n    })\r\n\r\n    return id\r\n  }\r\n\r\n  async getFieldObservations(projectId: string): Promise<FieldObservation[]> {\r\n    return this.getAll(STORES.FIELD_OBSERVATIONS, 'project_id', projectId)\r\n  }\r\n\r\n  async getUnsyncedObservations(): Promise<FieldObservation[]> {\r\n    return this.getAll(STORES.FIELD_OBSERVATIONS, 'synced', 0 as unknown as IDBValidKey)\r\n  }\r\n\r\n  // Photo storage\r\n  async savePhoto(photoData: PhotoData): Promise<string> {\r\n    const record = {\r\n      ...photoData,\r\n      timestamp: Date.now(),\r\n      synced: false,\r\n    }\r\n    const id = await this.add(STORES.PHOTOS, record)\r\n\r\n    await this.addToSyncQueue({\r\n      type: 'photo',\r\n      recordId: id,\r\n      action: 'create',\r\n      data: record,\r\n    })\r\n\r\n    return id\r\n  }\r\n\r\n  // Sync queue management\r\n  async addToSyncQueue(item: SyncQueueItem): Promise<void> {\r\n    await this.add(STORES.SYNC_QUEUE, {\r\n      ...item,\r\n      id: this.generateId(),\r\n      timestamp: Date.now(),\r\n      status: 'pending',\r\n      retryCount: 0,\r\n    })\r\n  }\r\n\r\n  async getPendingSyncItems(): Promise<SyncQueueItem[]> {\r\n    return this.getAll(STORES.SYNC_QUEUE, 'status', 'pending')\r\n  }\r\n\r\n  async updateSyncStatus(id: string, status: SyncStatus, error?: string): Promise<void> {\r\n    await this.update(STORES.SYNC_QUEUE, id, { status, error, lastAttempt: Date.now() })\r\n  }\r\n\r\n  async removeFromSyncQueue(id: string): Promise<void> {\r\n    await this.delete(STORES.SYNC_QUEUE, id)\r\n  }\r\n\r\n  // Storage stats\r\n  async getStorageStats(): Promise<StorageStats> {\r\n    const observations = await this.getAll(STORES.FIELD_OBSERVATIONS)\r\n    const photos = await this.getAll(STORES.PHOTOS)\r\n    const queue = await this.getAll(STORES.SYNC_QUEUE)\r\n\r\n    return {\r\n      observations: observations.length,\r\n      photos: photos.length,\r\n      pendingSync: queue.filter((i: any) => i.status === 'pending').length,\r\n      failedSync: queue.filter((i: any) => i.status === 'failed').length,\r\n      storageUsed: this.estimateStorageSize(observations, photos),\r\n    }\r\n  }\r\n\r\n  // Clear all data (use with caution)\r\n  async clearAll(): Promise<void> {\r\n    if (!this.db) await this.init()\r\n\r\n    const storeNames = Object.values(STORES)\r\n\r\n    for (const storeName of storeNames) {\r\n      await new Promise<void>((resolve, reject) => {\r\n        const transaction = this.db!.transaction([storeName], 'readwrite')\r\n        const store = transaction.objectStore(storeName)\r\n        const request = store.clear()\r\n\r\n        request.onsuccess = () => resolve()\r\n        request.onerror = () => reject(request.error)\r\n      })\r\n    }\r\n  }\r\n\r\n  private generateId(): string {\r\n    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`\r\n  }\r\n\r\n  private estimateStorageSize(observations: any[], photos: any[]): string {\r\n    const obsSize = JSON.stringify(observations).length\r\n    const photoSize = photos.reduce((sum, p) => sum + (p.data?.length || 0), 0)\r\n    const totalBytes = obsSize + photoSize\r\n\r\n    if (totalBytes < 1024) return `${totalBytes} B`\r\n    if (totalBytes < 1024 * 1024) return `${(totalBytes / 1024).toFixed(1)} KB`\r\n    return `${(totalBytes / (1024 * 1024)).toFixed(1)} MB`\r\n  }\r\n}\r\n\r\n// Types\r\nexport interface FieldObservation {\r\n  id?: string\r\n  projectId: string\r\n  pointName: string\r\n  pointId?: string\r\n  observationType: 'gps' | 'total_station' | 'level' | 'manual'\r\n  northing: number\r\n  easting: number\r\n  elevation?: number\r\n  latitude?: number\r\n  longitude?: number\r\n  accuracy?: number\r\n  satellites?: number\r\n  solutionType?: 'fixed' | 'float' | 'dgps' | 'single'\r\n  hdop?: number\r\n  vdop?: number\r\n  pdop?: number\r\n  instrumentHeight?: number\r\n  rodHeight?: number\r\n  backsight?: string\r\n  foresight?: string\r\n  horizontalAngle?: number\r\n  verticalAngle?: number\r\n  slopeDistance?: number\r\n  temperature?: number\r\n  pressure?: number\r\n  humidity?: number\r\n  weather?: string\r\n  notes?: string\r\n  timestamp?: number\r\n  synced?: boolean\r\n}\r\n\r\nexport interface PhotoData {\r\n  id?: string\r\n  projectId: string\r\n  pointId?: string\r\n  pointName?: string\r\n  data: string // base64\r\n  thumbnail?: string // base64\r\n  caption?: string\r\n  orientation?: 'portrait' | 'landscape'\r\n  timestamp?: number\r\n  synced?: boolean\r\n}\r\n\r\nexport interface SyncQueueItem {\r\n  id?: string\r\n  type: 'field_observation' | 'photo' | 'survey_point'\r\n  recordId: string\r\n  action: 'create' | 'update' | 'delete'\r\n  data: any\r\n  timestamp?: number\r\n  status?: SyncStatus\r\n  retryCount?: number\r\n  error?: string\r\n  lastAttempt?: number\r\n}\r\n\r\nexport type SyncStatus = 'pending' | 'syncing' | 'synced' | 'failed'\r\n\r\nexport interface StorageStats {\r\n  observations: number\r\n  photos: number\r\n  pendingSync: number\r\n  failedSync: number\r\n  storageUsed: string\r\n}\r\n\r\n// Singleton instance\r\nexport const offlineStorage = new OfflineStorage()\r\nexport default offlineStorage\r\n",
+    "source": "/**\r\n * Offline Storage Service for Mobile Field Data Collection\r\n * Uses IndexedDB for persistent storage with sync capability\r\n */\r\n\r\nconst DB_NAME = 'MetarduFieldDB'\r\nconst DB_VERSION = 1\r\n\r\n// Store names\r\nconst STORES = {\r\n  FIELD_OBSERVATIONS: 'field_observations',\r\n  SURVEY_POINTS: 'survey_points',\r\n  PHOTOS: 'photos',\r\n  PROJECTS: 'projects_offline',\r\n  SYNC_QUEUE: 'sync_queue',\r\n} as const\r\n\r\ninterface DBConfig {\r\n  name: string\r\n  keyPath: string\r\n  indexes?: { name: string; keyPath: string; unique?: boolean }[]\r\n}\r\n\r\nconst STORE_CONFIGS: Record<string, DBConfig> = {\r\n  [STORES.FIELD_OBSERVATIONS]: {\r\n    name: STORES.FIELD_OBSERVATIONS,\r\n    keyPath: 'id',\r\n    indexes: [\r\n      { name: 'project_id', keyPath: 'projectId' },\r\n      { name: 'timestamp', keyPath: 'timestamp' },\r\n      { name: 'synced', keyPath: 'synced' },\r\n    ],\r\n  },\r\n  [STORES.SURVEY_POINTS]: {\r\n    name: STORES.SURVEY_POINTS,\r\n    keyPath: 'id',\r\n    indexes: [\r\n      { name: 'project_id', keyPath: 'projectId' },\r\n      { name: 'point_name', keyPath: 'name' },\r\n    ],\r\n  },\r\n  [STORES.PHOTOS]: {\r\n    name: STORES.PHOTOS,\r\n    keyPath: 'id',\r\n    indexes: [\r\n      { name: 'project_id', keyPath: 'projectId' },\r\n      { name: 'point_id', keyPath: 'pointId' },\r\n    ],\r\n  },\r\n  [STORES.PROJECTS]: {\r\n    name: STORES.PROJECTS,\r\n    keyPath: 'id',\r\n  },\r\n  [STORES.SYNC_QUEUE]: {\r\n    name: STORES.SYNC_QUEUE,\r\n    keyPath: 'id',\r\n    indexes: [\r\n      { name: 'timestamp', keyPath: 'timestamp' },\r\n      { name: 'status', keyPath: 'status' },\r\n    ],\r\n  },\r\n}\r\n\r\nclass OfflineStorage {\r\n  private db: IDBDatabase | null = null\r\n\r\n  async init(): Promise<void> {\r\n    return new Promise((resolve, reject) => {\r\n      const request = indexedDB.open(DB_NAME, DB_VERSION)\r\n\r\n      request.onerror = () => reject(request.error)\r\n      request.onsuccess = () => {\r\n        this.db = request.result\r\n        resolve()\r\n      }\r\n\r\n      request.onupgradeneeded = (event) => {\r\n        const db = (event.target as IDBOpenDBRequest).result\r\n\r\n        // Create stores\r\n        Object.values(STORE_CONFIGS).forEach((config) => {\r\n          if (!db.objectStoreNames.contains(config.name)) {\r\n            const store = db.createObjectStore(config.name, { keyPath: config.keyPath })\r\n\r\n            // Create indexes\r\n            config.indexes?.forEach((index) => {\r\n              store.createIndex(index.name, index.keyPath, { unique: index.unique })\r\n            })\r\n          }\r\n        })\r\n      }\r\n    })\r\n  }\r\n\r\n  // Generic CRUD operations\r\n  async add<T>(storeName: string, data: T): Promise<string> {\r\n    if (!this.db) await this.init()\r\n\r\n    return new Promise((resolve, reject) => {\r\n      const transaction = this.db!.transaction([storeName], 'readwrite')\r\n      const store = transaction.objectStore(storeName)\r\n\r\n      // Generate ID if not present\r\n      const record = { ...(data as Record<string, unknown>), id: (data as { id?: string }).id || this.generateId() }\r\n\r\n      const request = store.add(record)\r\n\r\n      request.onsuccess = () => resolve(record.id)\r\n      request.onerror = () => reject(request.error)\r\n    })\r\n  }\r\n\r\n  async get<T>(storeName: string, id: string): Promise<T | null> {\r\n    if (!this.db) await this.init()\r\n\r\n    return new Promise((resolve, reject) => {\r\n      const transaction = this.db!.transaction([storeName], 'readonly')\r\n      const store = transaction.objectStore(storeName)\r\n      const request = store.get(id)\r\n\r\n      request.onsuccess = () => resolve((request.result as T | undefined) ?? null)\r\n      request.onerror = () => reject(request.error)\r\n    })\r\n  }\r\n\r\n  async getAll<T>(storeName: string, indexName?: string, query?: IDBValidKey): Promise<T[]> {\r\n    if (!this.db) await this.init()\r\n\r\n    return new Promise((resolve, reject) => {\r\n      const transaction = this.db!.transaction([storeName], 'readonly')\r\n      const store = transaction.objectStore(storeName)\r\n\r\n      let request: IDBRequest\r\n      if (indexName && query !== undefined) {\r\n        const index = store.index(indexName)\r\n        request = index.getAll(query)\r\n      } else {\r\n        request = store.getAll()\r\n      }\r\n\r\n      request.onsuccess = () => resolve((request.result as T[] | undefined) ?? [])\r\n      request.onerror = () => reject(request.error)\r\n    })\r\n  }\r\n\r\n  async update<T>(storeName: string, id: string, data: Partial<T>): Promise<void> {\r\n    if (!this.db) await this.init()\r\n\r\n    return new Promise((resolve, reject) => {\r\n      const transaction = this.db!.transaction([storeName], 'readwrite')\r\n      const store = transaction.objectStore(storeName)\r\n\r\n      const request = store.get(id)\r\n\r\n      request.onsuccess = () => {\r\n        const existing = request.result\r\n        if (!existing) {\r\n          reject(new Error('Record not found'))\r\n          return\r\n        }\r\n\r\n        const updated = { ...existing, ...data }\r\n        const putRequest = store.put(updated)\r\n\r\n        putRequest.onsuccess = () => resolve()\r\n        putRequest.onerror = () => reject(putRequest.error)\r\n      }\r\n\r\n      request.onerror = () => reject(request.error)\r\n    })\r\n  }\r\n\r\n  async delete(storeName: string, id: string): Promise<void> {\r\n    if (!this.db) await this.init()\r\n\r\n    return new Promise((resolve, reject) => {\r\n      const transaction = this.db!.transaction([storeName], 'readwrite')\r\n      const store = transaction.objectStore(storeName)\r\n      const request = store.delete(id)\r\n\r\n      request.onsuccess = () => resolve()\r\n      request.onerror = () => reject(request.error)\r\n    })\r\n  }\r\n\r\n  // Field observation specific methods\r\n  async saveFieldObservation(observation: FieldObservation): Promise<string> {\r\n    const record = {\r\n      ...observation,\r\n      timestamp: Date.now(),\r\n      synced: false,\r\n    }\r\n    const id = await this.add(STORES.FIELD_OBSERVATIONS, record)\r\n\r\n    // Add to sync queue\r\n    await this.addToSyncQueue({\r\n      type: 'field_observation',\r\n      recordId: id,\r\n      action: 'create',\r\n      data: record,\r\n    })\r\n\r\n    return id\r\n  }\r\n\r\n  async getFieldObservations(projectId: string): Promise<FieldObservation[]> {\r\n    return this.getAll(STORES.FIELD_OBSERVATIONS, 'project_id', projectId)\r\n  }\r\n\r\n  async getUnsyncedObservations(): Promise<FieldObservation[]> {\r\n    return this.getAll(STORES.FIELD_OBSERVATIONS, 'synced', 0 as unknown as IDBValidKey)\r\n  }\r\n\r\n  // Photo storage\r\n  async savePhoto(photoData: PhotoData): Promise<string> {\r\n    const record = {\r\n      ...photoData,\r\n      timestamp: Date.now(),\r\n      synced: false,\r\n    }\r\n    const id = await this.add(STORES.PHOTOS, record)\r\n\r\n    await this.addToSyncQueue({\r\n      type: 'photo',\r\n      recordId: id,\r\n      action: 'create',\r\n      data: record,\r\n    })\r\n\r\n    return id\r\n  }\r\n\r\n  // Sync queue management\r\n  async addToSyncQueue(item: SyncQueueItem): Promise<void> {\r\n    await this.add(STORES.SYNC_QUEUE, {\r\n      ...item,\r\n      id: this.generateId(),\r\n      timestamp: Date.now(),\r\n      status: 'pending',\r\n      retryCount: 0,\r\n    })\r\n  }\r\n\r\n  async getPendingSyncItems(): Promise<SyncQueueItem[]> {\r\n    return this.getAll(STORES.SYNC_QUEUE, 'status', 'pending')\r\n  }\r\n\r\n  async updateSyncStatus(id: string, status: SyncStatus, error?: string): Promise<void> {\r\n    await this.update(STORES.SYNC_QUEUE, id, { status, error, lastAttempt: Date.now() })\r\n  }\r\n\r\n  async removeFromSyncQueue(id: string): Promise<void> {\r\n    await this.delete(STORES.SYNC_QUEUE, id)\r\n  }\r\n\r\n  // Storage stats\r\n  async getStorageStats(): Promise<StorageStats> {\r\n    const observations = await this.getAll(STORES.FIELD_OBSERVATIONS)\r\n    const photos = await this.getAll(STORES.PHOTOS)\r\n    const queue = await this.getAll(STORES.SYNC_QUEUE)\r\n\r\n    return {\r\n      observations: observations.length,\r\n      photos: photos.length,\r\n      pendingSync: (queue as SyncQueueItem[]).filter((i) => i.status === 'pending').length,\r\n      failedSync: (queue as SyncQueueItem[]).filter((i) => i.status === 'failed').length,\r\n      storageUsed: this.estimateStorageSize(observations, photos),\r\n    }\r\n  }\r\n\r\n  // Clear all data (use with caution)\r\n  async clearAll(): Promise<void> {\r\n    if (!this.db) await this.init()\r\n\r\n    const storeNames = Object.values(STORES)\r\n\r\n    for (const storeName of storeNames) {\r\n      await new Promise<void>((resolve, reject) => {\r\n        const transaction = this.db!.transaction([storeName], 'readwrite')\r\n        const store = transaction.objectStore(storeName)\r\n        const request = store.clear()\r\n\r\n        request.onsuccess = () => resolve()\r\n        request.onerror = () => reject(request.error)\r\n      })\r\n    }\r\n  }\r\n\r\n  private generateId(): string {\r\n    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`\r\n  }\r\n\r\n  private estimateStorageSize(observations: unknown[], photos: Array<{ data?: string }>): string {\r\n    const obsSize = JSON.stringify(observations).length\r\n    const photoSize = photos.reduce((sum, p) => sum + (p.data?.length || 0), 0)\r\n    const totalBytes = obsSize + photoSize\r\n\r\n    if (totalBytes < 1024) return `${totalBytes} B`\r\n    if (totalBytes < 1024 * 1024) return `${(totalBytes / 1024).toFixed(1)} KB`\r\n    return `${(totalBytes / (1024 * 1024)).toFixed(1)} MB`\r\n  }\r\n}\r\n\r\n// Types\r\nexport interface FieldObservation {\r\n  id?: string\r\n  projectId: string\r\n  pointName: string\r\n  pointId?: string\r\n  observationType: 'gps' | 'total_station' | 'level' | 'manual'\r\n  northing: number\r\n  easting: number\r\n  elevation?: number\r\n  latitude?: number\r\n  longitude?: number\r\n  accuracy?: number\r\n  satellites?: number\r\n  solutionType?: 'fixed' | 'float' | 'dgps' | 'single'\r\n  hdop?: number\r\n  vdop?: number\r\n  pdop?: number\r\n  instrumentHeight?: number\r\n  rodHeight?: number\r\n  backsight?: string\r\n  foresight?: string\r\n  horizontalAngle?: number\r\n  verticalAngle?: number\r\n  slopeDistance?: number\r\n  temperature?: number\r\n  pressure?: number\r\n  humidity?: number\r\n  weather?: string\r\n  notes?: string\r\n  timestamp?: number\r\n  synced?: boolean\r\n}\r\n\r\nexport interface PhotoData {\r\n  id?: string\r\n  projectId: string\r\n  pointId?: string\r\n  pointName?: string\r\n  data: string // base64\r\n  thumbnail?: string // base64\r\n  caption?: string\r\n  orientation?: 'portrait' | 'landscape'\r\n  timestamp?: number\r\n  synced?: boolean\r\n}\r\n\r\nexport interface SyncQueueItem {\r\n  id?: string\r\n  type: 'field_observation' | 'photo' | 'survey_point'\r\n  recordId: string\r\n  action: 'create' | 'update' | 'delete'\r\n  data: unknown\r\n  timestamp?: number\r\n  status?: SyncStatus\r\n  retryCount?: number\r\n  error?: string\r\n  lastAttempt?: number\r\n}\r\n\r\nexport type SyncStatus = 'pending' | 'syncing' | 'synced' | 'failed'\r\n\r\nexport interface StorageStats {\r\n  observations: number\r\n  photos: number\r\n  pendingSync: number\r\n  failedSync: number\r\n  storageUsed: string\r\n}\r\n\r\n// Singleton instance\r\nexport const offlineStorage = new OfflineStorage()\r\nexport default offlineStorage\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -79007,83 +78611,15 @@
         "messageId": "unusedVar",
         "endLine": 72,
         "endColumn": 15
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 141,
-        "column": 29,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 141,
-        "endColumn": 32,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                4451,
-                4454
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                4451,
-                4454
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-return",
-        "severity": 1,
-        "message": "Unsafe return of a value of type `any`.",
-        "line": 141,
-        "column": 37,
-        "nodeType": "CallExpression",
-        "messageId": "unsafeReturn",
-        "endLine": 141,
-        "endColumn": 52
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-call",
-        "severity": 1,
-        "message": "Unsafe call of an `any` typed value.",
-        "line": 141,
-        "column": 37,
-        "nodeType": "MemberExpression",
-        "messageId": "unsafeCall",
-        "endLine": 141,
-        "endColumn": 50
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .toLowerCase on an `any` value.",
-        "line": 141,
-        "column": 39,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 141,
-        "endColumn": 50
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 5,
+    "warningCount": 1,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "import type { SurveyDataset, SurveyObservation } from '../workflows/workflowEngine'\r\nimport { detectSurveyType } from './surveyDetector'\r\n\r\nexport interface CSVInterpretResult {\r\n  ok: boolean\r\n  dataset?: SurveyDataset\r\n  error?: string\r\n  warnings: string[]\r\n}\r\n\r\nexport function interpretCSV(csvText: string): CSVInterpretResult {\r\n  const warnings: string[] = []\r\n  \r\n  try {\r\n    const lines = csvText.trim().split('\\n').filter((l) => l.trim())\r\n    if (lines.length < 2) {\r\n      return { ok: false, error: 'File must have headers and at least one row', warnings }\r\n    }\r\n    \r\n    // Parse headers\r\n    const headers = lines[0].split(',').map((h) => h.trim())\r\n    \r\n    // Parse rows\r\n    const rows = lines.slice(1).map((line) => {\r\n      const values = line.split(',')\r\n      const row: Record<string, string> = {}\r\n      headers.forEach((h, i) => {\r\n        row[h] = (values[i] || '').trim()\r\n      })\r\n      return row\r\n    })\r\n    \r\n    // Detect survey type\r\n    const surveyType = detectSurveyType(headers, rows)\r\n    \r\n    if (surveyType === 'unknown') {\r\n      warnings.push('Could not auto-detect survey type. Check column headers.')\r\n    }\r\n    \r\n    // Build observations. For multi-measurement rows, value1/value2 must map to\r\n    // the workflow engine's expectations rather than the first numeric cell.\r\n    const observations = rows.map((row, i) => {\r\n      const values = valuesForSurveyType(row, headers, surveyType)\r\n\r\n      return {\r\n        id: `obs_${i}`,\r\n        station: pick(row, ['Station', 'station', 'Point', 'point', 'From', 'from']) || `P${i + 1}`,\r\n        target: pick(row, ['Target', 'target', 'To', 'to']),\r\n        type: mapRowToType(row, headers, surveyType),\r\n        value1: values.value1,\r\n        value2: values.value2,\r\n        value3: values.value3,\r\n      }\r\n    })\r\n    \r\n    // Extract metadata\r\n    const metadata: SurveyDataset['metadata'] = {}\r\n    if (headers.includes('Station') || headers.includes('station')) {\r\n      metadata.station = rows[0]?.['Station'] || rows[0]?.['station']\r\n    }\r\n    \r\n    return {\r\n      ok: true,\r\n      dataset: { \r\n        surveyType, \r\n        observations,\r\n        metadata \r\n      },\r\n      warnings\r\n    }\r\n    \r\n  } catch (err) {\r\n    return { ok: false, error: 'Failed to parse CSV file', warnings }\r\n  }\r\n}\r\n\r\nfunction pick(row: Record<string, string>, keys: string[]): string | undefined {\r\n  for (const key of keys) {\r\n    if (row[key] !== undefined && row[key] !== '') return row[key]\r\n  }\r\n  return undefined\r\n}\r\n\r\nfunction readNumber(row: Record<string, string>, keys: string[], fallback = 0): number {\r\n  const raw = pick(row, keys)\r\n  if (raw === undefined) return fallback\r\n  const n = parseFloat(raw)\r\n  return Number.isFinite(n) ? n : fallback\r\n}\r\n\r\nfunction readOptionalNumber(row: Record<string, string>, keys: string[]): number | undefined {\r\n  const raw = pick(row, keys)\r\n  if (raw === undefined) return undefined\r\n  const n = parseFloat(raw)\r\n  return Number.isFinite(n) ? n : undefined\r\n}\r\n\r\nfunction valuesForSurveyType(\r\n  row: Record<string, string>,\r\n  headers: string[],\r\n  surveyType: SurveyDataset['surveyType']\r\n) {\r\n  if (surveyType === 'traverse') {\r\n    return {\r\n      value1: readNumber(row, ['Bearing', 'bearing', 'WCB', 'wcb', 'Azimuth', 'azimuth']),\r\n      value2: readNumber(row, ['Distance', 'distance', 'Length', 'length']),\r\n    }\r\n  }\r\n\r\n  if (surveyType === 'radiation') {\r\n    return {\r\n      value1: readNumber(row, ['Bearing', 'bearing', 'Angle', 'angle', 'WCB', 'wcb', 'Azimuth', 'azimuth']),\r\n      value2: readNumber(row, ['Distance', 'distance', 'Length', 'length']),\r\n      value3: readOptionalNumber(row, ['VerticalAngle', 'verticalAngle', 'VA', 'va']),\r\n    }\r\n  }\r\n\r\n  if (surveyType === 'leveling') {\r\n    return {\r\n      value1: readNumber(row, ['BS', 'bs', 'IS', 'is', 'FS', 'fs']),\r\n    }\r\n  }\r\n\r\n  if (surveyType === 'coordinates') {\r\n    return {\r\n      value1: readNumber(row, ['Easting', 'easting', 'X', 'x']),\r\n      value2: readNumber(row, ['Northing', 'northing', 'Y', 'y']),\r\n      value3: readOptionalNumber(row, ['Elevation', 'elevation', 'RL', 'rl']),\r\n    }\r\n  }\r\n\r\n  const firstNumeric = Object.values(row).find((v) => !isNaN(parseFloat(v)))\r\n  return { value1: parseFloat(firstNumeric || '0') }\r\n}\r\n\r\nfunction mapRowToType(\r\n  row: Record<string, string>,\r\n  headers: string[],\r\n  surveyType: SurveyDataset['surveyType']\r\n): SurveyObservation['type'] {\r\n  const h = headers.map((h: any) => h.toLowerCase())\r\n  if (surveyType === 'traverse') return 'BEARING'\r\n  if (surveyType === 'radiation') return h.includes('bearing') || h.includes('wcb') || h.includes('azimuth') ? 'BEARING' : 'ANGLE'\r\n  if (surveyType === 'coordinates') return 'COORDINATE'\r\n  if (h.includes('bs') && row['BS']) return 'BS'\r\n  if (h.includes('fs') && row['FS']) return 'FS'\r\n  if (h.includes('is') && row['IS']) return 'IS'\r\n  if (h.includes('bearing')) return 'BEARING'\r\n  if (h.includes('angle')) return 'ANGLE'\r\n  if (h.includes('distance')) return 'DISTANCE'\r\n  return 'COORDINATE'\r\n}\r\n",
+    "source": "import type { SurveyDataset, SurveyObservation } from '../workflows/workflowEngine'\r\nimport { detectSurveyType } from './surveyDetector'\r\n\r\nexport interface CSVInterpretResult {\r\n  ok: boolean\r\n  dataset?: SurveyDataset\r\n  error?: string\r\n  warnings: string[]\r\n}\r\n\r\nexport function interpretCSV(csvText: string): CSVInterpretResult {\r\n  const warnings: string[] = []\r\n  \r\n  try {\r\n    const lines = csvText.trim().split('\\n').filter((l) => l.trim())\r\n    if (lines.length < 2) {\r\n      return { ok: false, error: 'File must have headers and at least one row', warnings }\r\n    }\r\n    \r\n    // Parse headers\r\n    const headers = lines[0].split(',').map((h) => h.trim())\r\n    \r\n    // Parse rows\r\n    const rows = lines.slice(1).map((line) => {\r\n      const values = line.split(',')\r\n      const row: Record<string, string> = {}\r\n      headers.forEach((h, i) => {\r\n        row[h] = (values[i] || '').trim()\r\n      })\r\n      return row\r\n    })\r\n    \r\n    // Detect survey type\r\n    const surveyType = detectSurveyType(headers, rows)\r\n    \r\n    if (surveyType === 'unknown') {\r\n      warnings.push('Could not auto-detect survey type. Check column headers.')\r\n    }\r\n    \r\n    // Build observations. For multi-measurement rows, value1/value2 must map to\r\n    // the workflow engine's expectations rather than the first numeric cell.\r\n    const observations = rows.map((row, i) => {\r\n      const values = valuesForSurveyType(row, headers, surveyType)\r\n\r\n      return {\r\n        id: `obs_${i}`,\r\n        station: pick(row, ['Station', 'station', 'Point', 'point', 'From', 'from']) || `P${i + 1}`,\r\n        target: pick(row, ['Target', 'target', 'To', 'to']),\r\n        type: mapRowToType(row, headers, surveyType),\r\n        value1: values.value1,\r\n        value2: values.value2,\r\n        value3: values.value3,\r\n      }\r\n    })\r\n    \r\n    // Extract metadata\r\n    const metadata: SurveyDataset['metadata'] = {}\r\n    if (headers.includes('Station') || headers.includes('station')) {\r\n      metadata.station = rows[0]?.['Station'] || rows[0]?.['station']\r\n    }\r\n    \r\n    return {\r\n      ok: true,\r\n      dataset: { \r\n        surveyType, \r\n        observations,\r\n        metadata \r\n      },\r\n      warnings\r\n    }\r\n    \r\n  } catch (err) {\r\n    return { ok: false, error: 'Failed to parse CSV file', warnings }\r\n  }\r\n}\r\n\r\nfunction pick(row: Record<string, string>, keys: string[]): string | undefined {\r\n  for (const key of keys) {\r\n    if (row[key] !== undefined && row[key] !== '') return row[key]\r\n  }\r\n  return undefined\r\n}\r\n\r\nfunction readNumber(row: Record<string, string>, keys: string[], fallback = 0): number {\r\n  const raw = pick(row, keys)\r\n  if (raw === undefined) return fallback\r\n  const n = parseFloat(raw)\r\n  return Number.isFinite(n) ? n : fallback\r\n}\r\n\r\nfunction readOptionalNumber(row: Record<string, string>, keys: string[]): number | undefined {\r\n  const raw = pick(row, keys)\r\n  if (raw === undefined) return undefined\r\n  const n = parseFloat(raw)\r\n  return Number.isFinite(n) ? n : undefined\r\n}\r\n\r\nfunction valuesForSurveyType(\r\n  row: Record<string, string>,\r\n  headers: string[],\r\n  surveyType: SurveyDataset['surveyType']\r\n) {\r\n  if (surveyType === 'traverse') {\r\n    return {\r\n      value1: readNumber(row, ['Bearing', 'bearing', 'WCB', 'wcb', 'Azimuth', 'azimuth']),\r\n      value2: readNumber(row, ['Distance', 'distance', 'Length', 'length']),\r\n    }\r\n  }\r\n\r\n  if (surveyType === 'radiation') {\r\n    return {\r\n      value1: readNumber(row, ['Bearing', 'bearing', 'Angle', 'angle', 'WCB', 'wcb', 'Azimuth', 'azimuth']),\r\n      value2: readNumber(row, ['Distance', 'distance', 'Length', 'length']),\r\n      value3: readOptionalNumber(row, ['VerticalAngle', 'verticalAngle', 'VA', 'va']),\r\n    }\r\n  }\r\n\r\n  if (surveyType === 'leveling') {\r\n    return {\r\n      value1: readNumber(row, ['BS', 'bs', 'IS', 'is', 'FS', 'fs']),\r\n    }\r\n  }\r\n\r\n  if (surveyType === 'coordinates') {\r\n    return {\r\n      value1: readNumber(row, ['Easting', 'easting', 'X', 'x']),\r\n      value2: readNumber(row, ['Northing', 'northing', 'Y', 'y']),\r\n      value3: readOptionalNumber(row, ['Elevation', 'elevation', 'RL', 'rl']),\r\n    }\r\n  }\r\n\r\n  const firstNumeric = Object.values(row).find((v) => !isNaN(parseFloat(v)))\r\n  return { value1: parseFloat(firstNumeric || '0') }\r\n}\r\n\r\nfunction mapRowToType(\r\n  row: Record<string, string>,\r\n  headers: string[],\r\n  surveyType: SurveyDataset['surveyType']\r\n): SurveyObservation['type'] {\r\n  const h = headers.map((h) => h.toLowerCase())\r\n  if (surveyType === 'traverse') return 'BEARING'\r\n  if (surveyType === 'radiation') return h.includes('bearing') || h.includes('wcb') || h.includes('azimuth') ? 'BEARING' : 'ANGLE'\r\n  if (surveyType === 'coordinates') return 'COORDINATE'\r\n  if (h.includes('bs') && row['BS']) return 'BS'\r\n  if (h.includes('fs') && row['FS']) return 'FS'\r\n  if (h.includes('is') && row['IS']) return 'IS'\r\n  if (h.includes('bearing')) return 'BEARING'\r\n  if (h.includes('angle')) return 'ANGLE'\r\n  if (h.includes('distance')) return 'DISTANCE'\r\n  return 'COORDINATE'\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -94449,107 +93985,15 @@
         "messageId": "unusedVar",
         "endLine": 132,
         "endColumn": 28
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 183,
-        "column": 44,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 183,
-        "endColumn": 47,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                6176,
-                6179
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                6176,
-                6179
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .passed on an `any` value.",
-        "line": 183,
-        "column": 55,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 183,
-        "endColumn": 61
-      },
-      {
-        "ruleId": "@typescript-eslint/no-explicit-any",
-        "severity": 1,
-        "message": "Unexpected any. Specify a different type.",
-        "line": 213,
-        "column": 39,
-        "nodeType": "TSAnyKeyword",
-        "messageId": "unexpectedAny",
-        "endLine": 213,
-        "endColumn": 42,
-        "suggestions": [
-          {
-            "messageId": "suggestUnknown",
-            "fix": {
-              "range": [
-                7210,
-                7213
-              ],
-              "text": "unknown"
-            },
-            "desc": "Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct."
-          },
-          {
-            "messageId": "suggestNever",
-            "fix": {
-              "range": [
-                7210,
-                7213
-              ],
-              "text": "never"
-            },
-            "desc": "Use `never` instead, this is useful when instantiating generic type parameters that you don't need to know the type of."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unsafe-member-access",
-        "severity": 1,
-        "message": "Unsafe member access .name on an `any` value.",
-        "line": 213,
-        "column": 49,
-        "nodeType": "Identifier",
-        "messageId": "unsafeMemberExpression",
-        "endLine": 213,
-        "endColumn": 53
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 5,
+    "warningCount": 1,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Tolerance Engine\r\n * Validates survey results against tolerance profiles following Basak standards\r\n * \r\n * METARDU Calculation Standards: N.N. Basak\r\n * - No intermediate rounding\r\n * - Full floating point precision\r\n * - Round only at display layer\r\n */\r\n\r\nexport type ToleranceProfile = 'cadastral' | 'engineering' | 'control'\r\n\r\nexport interface ToleranceConfig {\r\n  name: string\r\n  description: string\r\n  linearPrecision: number\r\n  angularMisclosure: number\r\n  closingErrorMmPerKm: number\r\n}\r\n\r\nexport interface ToleranceCheckResult {\r\n  passed: boolean\r\n  profile: ToleranceProfile\r\n  checks: ToleranceCheck[]\r\n  precisionGrade: string\r\n  recommendations: string[]\r\n}\r\n\r\nexport interface ToleranceCheck {\r\n  name: string\r\n  passed: boolean\r\n  actual: number\r\n  allowable: number\r\n  unit: string\r\n  message: string\r\n}\r\n\r\nconst TOLERANCE_CONFIGS: Record<ToleranceProfile, ToleranceConfig> = {\r\n  cadastral: {\r\n    name: 'Cadastral',\r\n    description: 'Urban property boundary surveys',\r\n    linearPrecision: 5000,\r\n    angularMisclosure: 60,\r\n    closingErrorMmPerKm: 10 // RDM 1.1 (2025) Table 5.1: 10√K mm\r\n  },\r\n  engineering: {\r\n    name: 'Engineering',\r\n    description: 'Construction and engineering surveys',\r\n    linearPrecision: 10000,\r\n    angularMisclosure: 30,\r\n    closingErrorMmPerKm: 8\r\n  },\r\n  control: {\r\n    name: 'Control',\r\n    description: 'High-precision control networks',\r\n    linearPrecision: 20000,\r\n    angularMisclosure: 10,\r\n    closingErrorMmPerKm: 4\r\n  }\r\n}\r\n\r\nexport function getToleranceConfig(profile: ToleranceProfile): ToleranceConfig {\r\n  return TOLERANCE_CONFIGS[profile]\r\n}\r\n\r\nexport function getAllToleranceProfiles(): ToleranceProfile[] {\r\n  return ['cadastral', 'engineering', 'control']\r\n}\r\n\r\nexport interface TraverseValidationInput {\r\n  precisionRatio: number\r\n  angularMisclosure: number | null\r\n  linearError: number\r\n  totalDistance: number\r\n  numStations: number\r\n}\r\n\r\nexport interface LevelingValidationInput {\r\n  arithmeticCheckPassed: boolean\r\n  arithmeticDiff: number\r\n  closingError: number\r\n  distanceKm: number\r\n}\r\n\r\nexport interface ValidationInput {\r\n  traverse?: TraverseValidationInput\r\n  leveling?: LevelingValidationInput\r\n}\r\n\r\nexport function checkTolerance(\r\n  input: ValidationInput,\r\n  profile: ToleranceProfile\r\n): ToleranceCheckResult {\r\n  const config = TOLERANCE_CONFIGS[profile]\r\n  const checks: ToleranceCheck[] = []\r\n  const recommendations: string[] = []\r\n\r\n  if (input.traverse) {\r\n    const { precisionRatio, angularMisclosure, linearError, totalDistance, numStations } = input.traverse\r\n\r\n    // FIXED: Previous version used `precision = 1/precisionRatio` which is a tiny decimal\r\n  // (e.g. 0.0002 for 1:5000), and compared it against config.linearPrecision (e.g. 5000).\r\n  // This meant the check ALWAYS failed. The precisionRatio IS already the large number\r\n  // (e.g. 5000 means 1:5000), so compare it directly.\r\n  // Source: Basak, Ghilani & Wolf — precision ratio = perimeter / linearMisclosure\r\n  checks.push({\r\n      name: 'Linear Precision',\r\n      passed: precisionRatio >= config.linearPrecision,\r\n      actual: precisionRatio,\r\n      allowable: config.linearPrecision,\r\n      unit: '1:X',\r\n      message: precisionRatio >= config.linearPrecision\r\n        ? `Precision 1:${Math.round(precisionRatio)} meets ${config.name} standard (1:${config.linearPrecision})`\r\n        : `Precision 1:${Math.round(precisionRatio)} below ${config.name} standard (1:${config.linearPrecision})`\r\n    })\r\n\r\n    if (angularMisclosure !== null) {\r\n      const angularAllowable = config.angularMisclosure * Math.sqrt(numStations)\r\n      checks.push({\r\n        name: 'Angular Misclosure',\r\n        passed: Math.abs(angularMisclosure) <= angularAllowable,\r\n        actual: Math.abs(angularMisclosure),\r\n        allowable: angularAllowable,\r\n        unit: 'seconds',\r\n        message: Math.abs(angularMisclosure) <= angularAllowable\r\n          ? `Angular misclosure ${angularMisclosure.toFixed(1)}\" within limit ${angularAllowable.toFixed(1)}\"`\r\n          : `Angular misclosure ${angularMisclosure.toFixed(1)}\" exceeds limit ${angularAllowable.toFixed(1)}\"`\r\n      })\r\n    }\r\n\r\n    if (totalDistance > 0 && linearError > 0) {\r\n      const linearPrecision = totalDistance / linearError\r\n      const allowableMm = (config.closingErrorMmPerKm * totalDistance) / 1000\r\n      \r\n      checks.push({\r\n        name: 'Linear Misclosure',\r\n        passed: linearError <= allowableMm,\r\n        actual: linearError,\r\n        allowable: allowableMm,\r\n        unit: 'm',\r\n        message: linearError <= allowableMm\r\n          ? `Closing error ${(linearError * 1000).toFixed(1)}mm within allowable ${allowableMm.toFixed(3)}m`\r\n          : `Closing error ${(linearError * 1000).toFixed(1)}mm exceeds allowable ${allowableMm.toFixed(3)}m`\r\n      })\r\n    }\r\n  }\r\n\r\n  if (input.leveling) {\r\n    const { arithmeticCheckPassed, arithmeticDiff, closingError, distanceKm } = input.leveling\r\n\r\n    checks.push({\r\n      name: 'Arithmetic Check',\r\n      passed: arithmeticCheckPassed,\r\n      actual: Math.abs(arithmeticDiff),\r\n      allowable: 0,\r\n      unit: 'm',\r\n      message: arithmeticCheckPassed\r\n        ? `Arithmetic check passed (diff: ${Math.abs(arithmeticDiff).toFixed(4)}m)`\r\n        : `Arithmetic check failed (diff: ${arithmeticDiff.toFixed(4)}m) - BLOCKED`\r\n    })\r\n\r\n    if (distanceKm > 0 && closingError !== undefined) {\r\n      const closingErrorMm = Math.abs(closingError) * 1000\r\n      const allowableMm = config.closingErrorMmPerKm * Math.sqrt(distanceKm)\r\n      \r\n      checks.push({\r\n        name: 'Closing Error',\r\n        passed: closingErrorMm <= allowableMm,\r\n        actual: closingErrorMm,\r\n        allowable: allowableMm,\r\n        unit: 'mm',\r\n        message: closingErrorMm <= allowableMm\r\n          ? `Closing error ${closingErrorMm.toFixed(1)}mm within allowable ${allowableMm.toFixed(1)}mm`\r\n          : `Closing error ${closingErrorMm.toFixed(1)}mm exceeds allowable ${allowableMm.toFixed(1)}mm`\r\n      })\r\n    }\r\n  }\r\n\r\n  const allPassed = checks.every(c => c.passed)\r\n  const precisionGrade = getPrecisionGrade(checks)\r\n\r\n  if (!allPassed) {\r\n    const failedChecks = checks.filter((c: any) => !c.passed)\r\n    for (const failed of failedChecks) {\r\n      if (failed.name === 'Linear Precision') {\r\n        recommendations.push('Consider re-measuring traverse legs or adding control points')\r\n      }\r\n      if (failed.name === 'Angular Misclosure') {\r\n        recommendations.push('Check angle measurements - possible instrument or booking error')\r\n      }\r\n      if (failed.name === 'Linear Misclosure') {\r\n        recommendations.push('Review distance measurements - possible systematic error')\r\n      }\r\n      if (failed.name === 'Arithmetic Check') {\r\n        recommendations.push('Recompute field notes - arithmetic error detected')\r\n      }\r\n      if (failed.name === 'Closing Error') {\r\n        recommendations.push('Consider running double-run leveling for verification')\r\n      }\r\n    }\r\n  }\r\n\r\n  return {\r\n    passed: allPassed,\r\n    profile,\r\n    checks,\r\n    precisionGrade,\r\n    recommendations\r\n  }\r\n}\r\n\r\nfunction getPrecisionGrade(checks: ToleranceCheck[]): string {\r\n  const linearCheck = checks.find((c: any) => c.name === 'Linear Precision')\r\n  if (!linearCheck) return 'Unknown'\r\n\r\n  // FIXED: linearCheck.actual is now the precision ratio (e.g. 5000 for 1:5000),\r\n  // not the reciprocal (0.0002). Compare ratio directly against thresholds.\r\n  const ratio = linearCheck.actual\r\n\r\n  if (ratio >= 20000) return 'Control Grade'\r\n  if (ratio >= 10000) return 'Engineering Grade'\r\n  if (ratio >= 5000) return 'Cadastral Grade'\r\n  if (ratio >= 3000) return 'Good'\r\n  if (ratio >= 1000) return 'Acceptable'\r\n  return 'Poor - Rejected'\r\n}\r\n\r\nexport function formatToleranceCheck(result: ToleranceCheckResult): string {\r\n  const status = result.passed ? ' PASS' : '[x] FAIL'\r\n  const lines = [\r\n    `Tolerance Check: ${status}`,\r\n    `Profile: ${TOLERANCE_CONFIGS[result.profile].name}`,\r\n    `Grade: ${result.precisionGrade}`,\r\n    ''\r\n  ]\r\n\r\n  for (const check of result.checks) {\r\n    lines.push(`${check.passed ? '' : '[x]'} ${check.name}: ${check.message}`)\r\n  }\r\n\r\n  if (result.recommendations.length > 0) {\r\n    lines.push('')\r\n    lines.push('Recommendations:')\r\n    for (const rec of result.recommendations) {\r\n      lines.push(`  • ${rec}`)\r\n    }\r\n  }\r\n\r\n  return lines.join('\\n')\r\n}\r\n",
+    "source": "/**\r\n * Tolerance Engine\r\n * Validates survey results against tolerance profiles following Basak standards\r\n * \r\n * METARDU Calculation Standards: N.N. Basak\r\n * - No intermediate rounding\r\n * - Full floating point precision\r\n * - Round only at display layer\r\n */\r\n\r\nexport type ToleranceProfile = 'cadastral' | 'engineering' | 'control'\r\n\r\nexport interface ToleranceConfig {\r\n  name: string\r\n  description: string\r\n  linearPrecision: number\r\n  angularMisclosure: number\r\n  closingErrorMmPerKm: number\r\n}\r\n\r\nexport interface ToleranceCheckResult {\r\n  passed: boolean\r\n  profile: ToleranceProfile\r\n  checks: ToleranceCheck[]\r\n  precisionGrade: string\r\n  recommendations: string[]\r\n}\r\n\r\nexport interface ToleranceCheck {\r\n  name: string\r\n  passed: boolean\r\n  actual: number\r\n  allowable: number\r\n  unit: string\r\n  message: string\r\n}\r\n\r\nconst TOLERANCE_CONFIGS: Record<ToleranceProfile, ToleranceConfig> = {\r\n  cadastral: {\r\n    name: 'Cadastral',\r\n    description: 'Urban property boundary surveys',\r\n    linearPrecision: 5000,\r\n    angularMisclosure: 60,\r\n    closingErrorMmPerKm: 10 // RDM 1.1 (2025) Table 5.1: 10√K mm\r\n  },\r\n  engineering: {\r\n    name: 'Engineering',\r\n    description: 'Construction and engineering surveys',\r\n    linearPrecision: 10000,\r\n    angularMisclosure: 30,\r\n    closingErrorMmPerKm: 8\r\n  },\r\n  control: {\r\n    name: 'Control',\r\n    description: 'High-precision control networks',\r\n    linearPrecision: 20000,\r\n    angularMisclosure: 10,\r\n    closingErrorMmPerKm: 4\r\n  }\r\n}\r\n\r\nexport function getToleranceConfig(profile: ToleranceProfile): ToleranceConfig {\r\n  return TOLERANCE_CONFIGS[profile]\r\n}\r\n\r\nexport function getAllToleranceProfiles(): ToleranceProfile[] {\r\n  return ['cadastral', 'engineering', 'control']\r\n}\r\n\r\nexport interface TraverseValidationInput {\r\n  precisionRatio: number\r\n  angularMisclosure: number | null\r\n  linearError: number\r\n  totalDistance: number\r\n  numStations: number\r\n}\r\n\r\nexport interface LevelingValidationInput {\r\n  arithmeticCheckPassed: boolean\r\n  arithmeticDiff: number\r\n  closingError: number\r\n  distanceKm: number\r\n}\r\n\r\nexport interface ValidationInput {\r\n  traverse?: TraverseValidationInput\r\n  leveling?: LevelingValidationInput\r\n}\r\n\r\nexport function checkTolerance(\r\n  input: ValidationInput,\r\n  profile: ToleranceProfile\r\n): ToleranceCheckResult {\r\n  const config = TOLERANCE_CONFIGS[profile]\r\n  const checks: ToleranceCheck[] = []\r\n  const recommendations: string[] = []\r\n\r\n  if (input.traverse) {\r\n    const { precisionRatio, angularMisclosure, linearError, totalDistance, numStations } = input.traverse\r\n\r\n    // FIXED: Previous version used `precision = 1/precisionRatio` which is a tiny decimal\r\n  // (e.g. 0.0002 for 1:5000), and compared it against config.linearPrecision (e.g. 5000).\r\n  // This meant the check ALWAYS failed. The precisionRatio IS already the large number\r\n  // (e.g. 5000 means 1:5000), so compare it directly.\r\n  // Source: Basak, Ghilani & Wolf — precision ratio = perimeter / linearMisclosure\r\n  checks.push({\r\n      name: 'Linear Precision',\r\n      passed: precisionRatio >= config.linearPrecision,\r\n      actual: precisionRatio,\r\n      allowable: config.linearPrecision,\r\n      unit: '1:X',\r\n      message: precisionRatio >= config.linearPrecision\r\n        ? `Precision 1:${Math.round(precisionRatio)} meets ${config.name} standard (1:${config.linearPrecision})`\r\n        : `Precision 1:${Math.round(precisionRatio)} below ${config.name} standard (1:${config.linearPrecision})`\r\n    })\r\n\r\n    if (angularMisclosure !== null) {\r\n      const angularAllowable = config.angularMisclosure * Math.sqrt(numStations)\r\n      checks.push({\r\n        name: 'Angular Misclosure',\r\n        passed: Math.abs(angularMisclosure) <= angularAllowable,\r\n        actual: Math.abs(angularMisclosure),\r\n        allowable: angularAllowable,\r\n        unit: 'seconds',\r\n        message: Math.abs(angularMisclosure) <= angularAllowable\r\n          ? `Angular misclosure ${angularMisclosure.toFixed(1)}\" within limit ${angularAllowable.toFixed(1)}\"`\r\n          : `Angular misclosure ${angularMisclosure.toFixed(1)}\" exceeds limit ${angularAllowable.toFixed(1)}\"`\r\n      })\r\n    }\r\n\r\n    if (totalDistance > 0 && linearError > 0) {\r\n      const linearPrecision = totalDistance / linearError\r\n      const allowableMm = (config.closingErrorMmPerKm * totalDistance) / 1000\r\n      \r\n      checks.push({\r\n        name: 'Linear Misclosure',\r\n        passed: linearError <= allowableMm,\r\n        actual: linearError,\r\n        allowable: allowableMm,\r\n        unit: 'm',\r\n        message: linearError <= allowableMm\r\n          ? `Closing error ${(linearError * 1000).toFixed(1)}mm within allowable ${allowableMm.toFixed(3)}m`\r\n          : `Closing error ${(linearError * 1000).toFixed(1)}mm exceeds allowable ${allowableMm.toFixed(3)}m`\r\n      })\r\n    }\r\n  }\r\n\r\n  if (input.leveling) {\r\n    const { arithmeticCheckPassed, arithmeticDiff, closingError, distanceKm } = input.leveling\r\n\r\n    checks.push({\r\n      name: 'Arithmetic Check',\r\n      passed: arithmeticCheckPassed,\r\n      actual: Math.abs(arithmeticDiff),\r\n      allowable: 0,\r\n      unit: 'm',\r\n      message: arithmeticCheckPassed\r\n        ? `Arithmetic check passed (diff: ${Math.abs(arithmeticDiff).toFixed(4)}m)`\r\n        : `Arithmetic check failed (diff: ${arithmeticDiff.toFixed(4)}m) - BLOCKED`\r\n    })\r\n\r\n    if (distanceKm > 0 && closingError !== undefined) {\r\n      const closingErrorMm = Math.abs(closingError) * 1000\r\n      const allowableMm = config.closingErrorMmPerKm * Math.sqrt(distanceKm)\r\n      \r\n      checks.push({\r\n        name: 'Closing Error',\r\n        passed: closingErrorMm <= allowableMm,\r\n        actual: closingErrorMm,\r\n        allowable: allowableMm,\r\n        unit: 'mm',\r\n        message: closingErrorMm <= allowableMm\r\n          ? `Closing error ${closingErrorMm.toFixed(1)}mm within allowable ${allowableMm.toFixed(1)}mm`\r\n          : `Closing error ${closingErrorMm.toFixed(1)}mm exceeds allowable ${allowableMm.toFixed(1)}mm`\r\n      })\r\n    }\r\n  }\r\n\r\n  const allPassed = checks.every(c => c.passed)\r\n  const precisionGrade = getPrecisionGrade(checks)\r\n\r\n  if (!allPassed) {\r\n    const failedChecks = checks.filter((c) => !c.passed)\r\n    for (const failed of failedChecks) {\r\n      if (failed.name === 'Linear Precision') {\r\n        recommendations.push('Consider re-measuring traverse legs or adding control points')\r\n      }\r\n      if (failed.name === 'Angular Misclosure') {\r\n        recommendations.push('Check angle measurements - possible instrument or booking error')\r\n      }\r\n      if (failed.name === 'Linear Misclosure') {\r\n        recommendations.push('Review distance measurements - possible systematic error')\r\n      }\r\n      if (failed.name === 'Arithmetic Check') {\r\n        recommendations.push('Recompute field notes - arithmetic error detected')\r\n      }\r\n      if (failed.name === 'Closing Error') {\r\n        recommendations.push('Consider running double-run leveling for verification')\r\n      }\r\n    }\r\n  }\r\n\r\n  return {\r\n    passed: allPassed,\r\n    profile,\r\n    checks,\r\n    precisionGrade,\r\n    recommendations\r\n  }\r\n}\r\n\r\nfunction getPrecisionGrade(checks: ToleranceCheck[]): string {\r\n  const linearCheck = checks.find((c) => c.name === 'Linear Precision')\r\n  if (!linearCheck) return 'Unknown'\r\n\r\n  // FIXED: linearCheck.actual is now the precision ratio (e.g. 5000 for 1:5000),\r\n  // not the reciprocal (0.0002). Compare ratio directly against thresholds.\r\n  const ratio = linearCheck.actual\r\n\r\n  if (ratio >= 20000) return 'Control Grade'\r\n  if (ratio >= 10000) return 'Engineering Grade'\r\n  if (ratio >= 5000) return 'Cadastral Grade'\r\n  if (ratio >= 3000) return 'Good'\r\n  if (ratio >= 1000) return 'Acceptable'\r\n  return 'Poor - Rejected'\r\n}\r\n\r\nexport function formatToleranceCheck(result: ToleranceCheckResult): string {\r\n  const status = result.passed ? ' PASS' : '[x] FAIL'\r\n  const lines = [\r\n    `Tolerance Check: ${status}`,\r\n    `Profile: ${TOLERANCE_CONFIGS[result.profile].name}`,\r\n    `Grade: ${result.precisionGrade}`,\r\n    ''\r\n  ]\r\n\r\n  for (const check of result.checks) {\r\n    lines.push(`${check.passed ? '' : '[x]'} ${check.name}: ${check.message}`)\r\n  }\r\n\r\n  if (result.recommendations.length > 0) {\r\n    lines.push('')\r\n    lines.push('Recommendations:')\r\n    for (const rec of result.recommendations) {\r\n      lines.push(`  • ${rec}`)\r\n    }\r\n  }\r\n\r\n  return lines.join('\\n')\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",

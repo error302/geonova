@@ -180,7 +180,7 @@ export function checkTolerance(
   const precisionGrade = getPrecisionGrade(checks)
 
   if (!allPassed) {
-    const failedChecks = checks.filter((c: any) => !c.passed)
+    const failedChecks = checks.filter((c) => !c.passed)
     for (const failed of failedChecks) {
       if (failed.name === 'Linear Precision') {
         recommendations.push('Consider re-measuring traverse legs or adding control points')
@@ -210,7 +210,7 @@ export function checkTolerance(
 }
 
 function getPrecisionGrade(checks: ToleranceCheck[]): string {
-  const linearCheck = checks.find((c: any) => c.name === 'Linear Precision')
+  const linearCheck = checks.find((c) => c.name === 'Linear Precision')
   if (!linearCheck) return 'Unknown'
 
   // FIXED: linearCheck.actual is now the precision ratio (e.g. 5000 for 1:5000),
