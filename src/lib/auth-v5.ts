@@ -32,6 +32,7 @@
  * Migration plan: docs/SYSTEM_DESIGN_V3.md section 6
  */
 
+import { logger } from '@/lib/logger'
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
@@ -75,7 +76,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // Brute-force lockout check
         const loginCheck = await checkLoginAllowed(email, clientIp)
         if (!loginCheck.allowed) {
-          console.warn(
+          logger.warn(
             `[auth-v5] Login blocked for ${email} from ${clientIp}: ${loginCheck.reason}`
           )
           return null
@@ -128,7 +129,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             verifiedIsk: user.verified_isk,
           }
         } catch (err) {
-          console.error('[auth-v5] Authorization error:', err)
+          logger.error('[auth-v5] Authorization error:', { error: err })
           return null
         }
       },
@@ -204,10 +205,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         // Verbose log gated to dev only — never log user IDs in production
         if (process.env.NODE_ENV !== 'production') {
-          console.log(`[auth-v5] Created default profile + project for user ${user.id}`)
+          logger.info(`[auth-v5] Created default profile + project for user ${user.id}`)
         }
       } catch (err) {
-        console.error('[auth-v5] Failed to create default profile:', err)
+        logger.error('[auth-v5] Failed to create default profile:', { error: err })
         // Don't fail the registration — user can create profile manually
       }
     },

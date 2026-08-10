@@ -63,6 +63,7 @@
  */
 
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
+import { logger } from '@/lib/logger'
 import { useMapHistory } from '@/hooks/useMapHistory'
 import type { MapContext } from '@/hooks/useMapTypes'
 import MapErrorBoundary from '@/app/map/MapErrorBoundary'
@@ -524,7 +525,7 @@ export default function MapClient() {
         setActiveProjection(targetProjection)
       }
     } catch (err) {
-      console.error('[MapClient] Projection switch failed:', err)
+      logger.error('[MapClient] Projection switch failed:', { error: err })
       setSaveMsg('Failed to switch projection')
       setTimeout(() => setSaveMsg(''), 3000)
     }
@@ -580,7 +581,7 @@ export default function MapClient() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (!mapReady) {
-        console.warn('[MapClient] Forcing mapReady=true after 5s timeout')
+        logger.warn('[MapClient] Forcing mapReady=true after 5s timeout')
         setMapReady(true)
       }
     }, 5000)
@@ -727,7 +728,7 @@ export default function MapClient() {
         }
       }
     } catch (err) {
-      console.error('[MapClient] Failed to load scheme data:', err)
+      logger.error('[MapClient] Failed to load scheme data:', { error: err })
       setSchemeError(err instanceof Error ? err.message : 'Failed to load scheme data')
       setSchemeLoaded(false)
     } finally {
@@ -760,7 +761,7 @@ export default function MapClient() {
       projectPointsLayerRef.current = result.pointsLayer
       setProjectPointsCount(result.pointCount)
     } catch (err) {
-      console.error('[MapClient] Failed to load project points:', err)
+      logger.error('[MapClient] Failed to load project points:', { error: err })
       setProjectPointsCount(0)
     } finally {
       setProjectPointsLoading(false)
@@ -1033,7 +1034,7 @@ export default function MapClient() {
           setActiveDigitizingTool(null)
         }
       } catch (err) {
-        console.error('[DigitizingTool] Error:', err)
+        logger.error('[DigitizingTool] Error:', { error: err })
       }
     })()
 
@@ -1161,7 +1162,7 @@ export default function MapClient() {
 
       setTraverseParcelPreviewActive(true)
     } catch (err) {
-      console.error('[MapClient] Traverse preview failed:', err)
+      logger.error('[MapClient] Traverse preview failed:', { error: err })
       setSaveMsg(err instanceof Error ? err.message : 'Failed to preview traverse')
       setTimeout(() => setSaveMsg(''), 4000)
     }
@@ -1190,7 +1191,7 @@ export default function MapClient() {
       setSaveMsg(`Parcel boundary created: ${areaHa} ha`)
       setTimeout(() => setSaveMsg(''), 4000)
     } catch (err) {
-      console.error('[MapClient] Traverse confirm failed:', err)
+      logger.error('[MapClient] Traverse confirm failed:', { error: err })
       setSaveMsg(err instanceof Error ? err.message : 'Failed to save parcel boundary')
       setTimeout(() => setSaveMsg(''), 4000)
     }

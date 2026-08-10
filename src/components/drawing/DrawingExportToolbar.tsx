@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react'
+import { logger } from '@/lib/logger'
 import { Download, FileText, Map, Copy, Check, Loader2 } from 'lucide-react'
 
 /* ------------------------------------------------------------------ */
@@ -256,7 +257,7 @@ export default function DrawingExportToolbar({
     try {
       await exportDXF(projectName, points, legs)
     } catch (err: unknown) {
-      console.error('DXF export failed:', err)
+      logger.error('DXF export failed:', { error: err })
     } finally {
       setLoading(null)
     }
@@ -267,7 +268,7 @@ export default function DrawingExportToolbar({
     try {
       exportGeoJSON(projectName, points, utmZone, hemisphere)
     } catch (err: unknown) {
-      console.error('GeoJSON export failed:', err)
+      logger.error('GeoJSON export failed:', { error: err })
     } finally {
       setLoading(null)
     }
@@ -278,7 +279,7 @@ export default function DrawingExportToolbar({
     try {
       await exportPDF(projectName, points)
     } catch (err: unknown) {
-      console.error('PDF export failed:', err)
+      logger.error('PDF export failed:', { error: err })
     } finally {
       setLoading(null)
     }
@@ -291,7 +292,7 @@ export default function DrawingExportToolbar({
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err: unknown) {
-      console.error('Copy failed:', err)
+      logger.error('Copy failed:', { error: err })
     } finally {
       setLoading(null)
     }

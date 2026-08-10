@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 import { CheckCircle2 } from 'lucide-react'
 import { z } from 'zod';
 import { createClient } from '@/lib/api-client/client';
@@ -121,9 +122,9 @@ export default function SubmissionClient({ project, existingDocs, projectId }: P
       } catch (err) {
         // Preview is best-effort; surface non-auth errors to console only
         if (err instanceof ApiError && err.isUnauthorized) {
-          console.error('Preview load: unauthorized');
+          logger.error('Preview load: unauthorized');
         } else {
-          console.error('Failed to load preview:', err);
+          logger.error('Failed to load preview:', { error: err });
         }
       }
     }
@@ -428,9 +429,9 @@ export default function SubmissionClient({ project, existingDocs, projectId }: P
                   }
                 } catch (err) {
                   if (err instanceof ApiError) {
-                    console.error('Package download failed:', err.message);
+                    logger.error('Package download failed:', { message: err.message });
                   } else {
-                    console.error('Package download failed:', err);
+                    logger.error('Package download failed:', { error: err });
                   }
                 }
               }}

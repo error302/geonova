@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { openDB, DBSchema, IDBPDatabase } from 'idb'
 
 const DB_NAME = 'metardu-offline'
@@ -539,10 +540,10 @@ export function startBackgroundSync(dbClient: SyncDbClient, options?: { interval
     const results = await syncPendingOperations(dbClient, { onConflict: options?.onConflict })
     
     if (results.synced > 0) {
-      if (process.env.NODE_ENV !== 'production') console.log(`[Sync] Synced ${results.synced} operations`)
+      if (process.env.NODE_ENV !== 'production') logger.info(`[Sync] Synced ${results.synced} operations`)
     }
     if (results.conflicts > 0) {
-      if (process.env.NODE_ENV !== 'production') console.log(`[Sync] Resolved ${results.conflicts} conflicts`)
+      if (process.env.NODE_ENV !== 'production') logger.info(`[Sync] Resolved ${results.conflicts} conflicts`)
     }
   }, interval)
 }
@@ -610,12 +611,12 @@ export function setupOnlineListener(onOnline: () => void): () => void {
   if (typeof window === 'undefined') return () => {}
   
   const handleOnline = async () => {
-    if (process.env.NODE_ENV !== 'production') console.log('[Sync] Back online - starting sync...')
+    if (process.env.NODE_ENV !== 'production') logger.info('[Sync] Back online - starting sync...')
     onOnline()
   }
   
   const handleOffline = () => {
-    if (process.env.NODE_ENV !== 'production') console.log('[Sync] Offline mode - changes stored locally')
+    if (process.env.NODE_ENV !== 'production') logger.info('[Sync] Offline mode - changes stored locally')
   }
   
   window.addEventListener('online', handleOnline)

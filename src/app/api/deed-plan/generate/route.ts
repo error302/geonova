@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { apiHandler } from '@/lib/apiHandler'
 import { z } from 'zod'
 import type { DeedPlanInput, DeedPlanOutput } from '@/types/deedPlan'
@@ -158,12 +159,12 @@ export const POST = apiHandler(
       }
     } catch {
       // Cross-check module not available — non-blocking but log
-      console.warn('[deed-plan] Cross-check module not available')
+      logger.warn('[deed-plan] Cross-check module not available')
     }
 
     // If cross-checks found issues, include them in the output as warnings
     if (crossCheckIssues.length > 0) {
-      console.warn('[deed-plan] Cross-check issues:', crossCheckIssues)
+      logger.warn('[deed-plan] Cross-check issues:', { crossCheckIssues })
     }
 
     // ── AUDIT FIX (2026-07-05): Run statutory gate ──
@@ -198,10 +199,10 @@ export const POST = apiHandler(
       })
 
       if (!gateResult.passed) {
-        console.warn('[deed-plan] Statutory gate blocked:', gateResult.summary)
+        logger.warn('[deed-plan] Statutory gate blocked:', { summary: gateResult.summary })
       }
     } catch (err) {
-      console.warn('[deed-plan] Statutory gate failed to run:', err)
+      logger.warn('[deed-plan] Statutory gate failed to run:', { error: err })
     }
 
     const svg = renderDeedPlanSVG({ ...input, area }, bearingSchedule, closureCheck)

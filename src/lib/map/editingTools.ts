@@ -12,6 +12,7 @@
  * MapClient's activeDrawTool / activeOneShotTool state.
  */
 
+import { logger } from '@/lib/logger'
 import * as turf from '@turf/turf'
 import type { Feature, Polygon as GeoPolygon, MultiPolygon } from 'geojson'
 
@@ -114,7 +115,7 @@ export function splitPolygonWithLine(
 
     return null
   } catch (err) {
-    console.error('[editingTools] splitPolygonWithLine failed:', err)
+    logger.error('[editingTools] splitPolygonWithLine failed:', { error: err })
     return null
   }
 }
@@ -142,7 +143,7 @@ export function mergePolygons(
 
     return (result.geometry as GeoPolygon).coordinates[0] as [number, number][]
   } catch (err) {
-    console.error('[editingTools] mergePolygons failed:', err)
+    logger.error('[editingTools] mergePolygons failed:', { error: err })
     return null
   }
 }
@@ -186,7 +187,7 @@ export function rotatePolygon(
     ])
     return rotated
   } catch (err) {
-    console.error('[editingTools] rotatePolygon failed:', err)
+    logger.error('[editingTools] rotatePolygon failed:', { error: err })
     return coords
   }
 }
@@ -215,7 +216,7 @@ export function createOffset(
       return offset.geometry.coordinates as [number, number][]
     }
   } catch (err) {
-    console.error('[editingTools] createOffset failed:', err)
+    logger.error('[editingTools] createOffset failed:', { error: err })
   }
   return null
 }
