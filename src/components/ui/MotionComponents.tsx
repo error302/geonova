@@ -201,7 +201,7 @@ export function GlassCard({
           "transition-colors duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.3)]",
         className
       )}
-      {...(({ onDrag: _onDrag, ...rest }: any) => rest)(props) as any}
+      {...(({ onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, onAnimationIteration: _onAnimationIteration, ...rest }: React.HTMLAttributes<HTMLDivElement>) => rest)(props)}
     >
       {children}
     </motion.div>
@@ -259,7 +259,7 @@ export function GlowButton({
         "hover:bg-[var(--accent-dim)]",
         className
       )}
-      {...(({ onDrag: _onDrag, ...rest }: any) => rest)(props) as any}
+      {...(({ onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, onAnimationIteration: _onAnimationIteration, ...rest }: React.HTMLAttributes<HTMLDivElement>) => rest)(props)}
     >
       {children}
     </motion.div>

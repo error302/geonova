@@ -161,7 +161,7 @@ export class ComputationWorker {
     vertexCount: number
     estimatedErrorSqM: number
   }> {
-    return this.sendRequest('computeArea', { vertices })
+    return this.sendRequest<{ areaSqM: number; areaHectares: number; perimeter: number; vertexCount: number; estimatedErrorSqM: number }>('computeArea', { vertices })
   }
 
   /**
@@ -170,14 +170,14 @@ export class ComputationWorker {
   batchArea(parcels: Array<{ id: string; vertices: SurveyPoint[] }>): Promise<
     Array<{ id: string; areaSqM: number; areaHectares: number }>
   > {
-    return this.sendRequest('batchArea', { parcels })
+    return this.sendRequest<Array<{ id: string; areaSqM: number; areaHectares: number }>>('batchArea', { parcels })
   }
 
   /**
    * Search parcels by text (offloaded to worker).
    */
-  searchParcels(parcels: any[], query: string): Promise<any[]> {
-    return this.sendRequest('searchParcels', { parcels, query })
+  searchParcels(parcels: Array<{ id: string; [key: string]: unknown }>, query: string): Promise<Array<{ id: string; [key: string]: unknown }>> {
+    return this.sendRequest<Array<{ id: string; [key: string]: unknown }>>('searchParcels', { parcels, query })
   }
 
   /**
@@ -188,10 +188,10 @@ export class ComputationWorker {
     fromProj: string,
     toProj: string,
   ): Promise<Array<{ lat: number; lng: number }>> {
-    return this.sendRequest('transformCoordinates', { points, fromProj, toProj })
+    return this.sendRequest<Array<{ lat: number; lng: number }>>('transformCoordinates', { points, fromProj, toProj })
   }
 
-  private sendRequest(type: string, payload: any): Promise<any> {
+  private sendRequest<T>(type: string, payload: unknown): Promise<T> {
     return new Promise((resolve, reject) => {
       if (!this.worker) {
         reject(new Error('Worker not initialized'))
@@ -209,7 +209,7 @@ export class ComputationWorker {
         if (data.error) {
           reject(new Error(data.error))
         } else {
-          resolve(data.result)
+          resolve(data.result as T)
         }
       }
 

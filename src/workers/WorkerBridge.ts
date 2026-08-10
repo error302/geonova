@@ -22,7 +22,7 @@ import type {
 type RequestId = string
 
 interface PendingRequest {
-  resolve: (payload: any) => void
+  resolve: (payload: unknown) => void
   reject: (error: Error) => void
   startTime: number
 }
@@ -85,7 +85,7 @@ class WorkerBridge {
   /**
    * Send a message to the worker and return a promise
    */
-  private send<T = any>(type: WorkerRequestType, payload: any, timeoutMs = 60000): Promise<T> {
+  private send<T = unknown>(type: WorkerRequestType, payload: unknown, timeoutMs = 60000): Promise<T> {
     return new Promise((resolve, reject) => {
       const id = `req_${Date.now()}_${this.requestIdCounter++}`
       const worker = this.getWorker()
@@ -255,7 +255,7 @@ class WorkerBridge {
       grid: number[][]
       rows: number
       cols: number
-      bounds: any
+      bounds: { minX: number; minY: number; maxX: number; maxY: number }
     }>('GENERATE_IDW_GRID', params, 120000)
   }
 

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { subscribeToProjectChanges, PresenceUser, realtimeService } from './index'
 import { initProjectSync } from './zustand-yjs-sync'
+import type { YArrayEvent } from 'yjs'
 
 export interface Collaborator {
   userId: string
@@ -22,10 +23,10 @@ interface UseCollaborationReturn {
   isConnected: boolean
   conflictWarnings: string[]
   sendCursor: (lat: number, lng: number) => void
-  sendFeatureEdit: (feature: any) => void
+  sendFeatureEdit: (feature: { id: string; [key: string]: unknown }) => void
   sendFeatureDelete: (featureId: string) => void
   sendChat: (message: string) => void
-  onFeatureEdit?: (feature: any, userId: string) => void
+  onFeatureEdit?: (feature: { id: string; [key: string]: unknown }, userId: string) => void
   onFeatureDelete?: (featureId: string, userId: string) => void
   onChat?: (message: string, userName: string, userId: string) => void
 }
@@ -40,7 +41,7 @@ export function useCollaboration({
   const [conflictWarnings] = useState<string[]>([])
   
   const callbacksRef = useRef<{
-    onFeatureEdit?: (feature: any, userId: string) => void
+    onFeatureEdit?: (feature: { id: string; [key: string]: unknown }, userId: string) => void
     onFeatureDelete?: (featureId: string, userId: string) => void
     onChat?: (message: string, userName: string, userId: string) => void
   }>({})
@@ -101,11 +102,12 @@ export function useCollaboration({
     const doc = realtimeService.getDoc(projectId)
     const yChat = doc.getArray('chat')
     
-    const observer = (event: any) => {
-      event.changes.added.forEach((item: any) => {
-        item.content.getContent().forEach((msg: { message: string; userName: string; userId: string }) => {
-          if (msg.userId !== userId) {
-            callbacksRef.current.onChat?.(msg.message, msg.userName, msg.userId)
+    const observer = (event: YArrayEvent<unknown>) => {
+      event.changes.added.forEach((item) => {
+        item.content.getContent().forEach((msg) => {
+          const m = msg as { message: string; userName: string; userId: string }
+          if (m.userId !== userId) {
+            callbacksRef.current.onChat?.(m.message, m.userName, m.userId)
           }
         })
       })
@@ -121,10 +123,10 @@ export function useCollaboration({
     const provider = realtimeService.getProvider(projectId)
     if (provider) {
       const awareness = provider.awareness
-      const localState = awareness.getLocalState()
+      const localState = awareness.getLocalState() as { user?: { [key: string]: unknown } } | null | undefined
       awareness.setLocalState({
         ...localState,
-        user: { ...localState?.user, cursor: { lat, lng } }
+        user: { ...(localState?.user ?? {}), cursor: { lat, lng } }
       })
     }
   }, [projectId, userId])

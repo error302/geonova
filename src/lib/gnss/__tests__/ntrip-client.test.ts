@@ -17,7 +17,7 @@ import {
 
 // ─── Mock WebSocket ────────────────────────────────────────────────────────
 
-type EventCallback = (event: any) => void
+type EventCallback = (event: Event) => void
 
 class MockWebSocket {
   static OPEN = 1
@@ -47,16 +47,16 @@ class MockWebSocket {
     this.listeners.get(type)?.delete(callback)
   }
 
-  private emit(type: string, event?: any) {
+  private emit(type: string, event?: Event) {
     const callbacks = this.listeners.get(type)
     if (callbacks) {
-      callbacks.forEach(cb => cb(event))
+      callbacks.forEach(cb => cb(event as Event))
     }
     // Also call the on* handler
     if (type === 'open' && this.onopen) this.onopen()
-    if (type === 'message' && this.onmessage) this.onmessage(event as { data: ArrayBuffer })
+    if (type === 'message' && this.onmessage) this.onmessage(event as unknown as { data: ArrayBuffer })
     if (type === 'error' && this.onerror) this.onerror(event as Event)
-    if (type === 'close' && this.onclose) this.onclose(event as { code: number; reason: string })
+    if (type === 'close' && this.onclose) this.onclose(event as unknown as { code: number; reason: string })
   }
 
   constructor(public url: string, public protocols?: string[]) {
@@ -73,11 +73,11 @@ let originalWebSocket: typeof WebSocket
 
 beforeAll(() => {
   originalWebSocket = global.WebSocket
-  ;(global as any).WebSocket = MockWebSocket as any
+  ;(global as unknown as { WebSocket: typeof WebSocket }).WebSocket = MockWebSocket as unknown as typeof WebSocket
 })
 
 afterAll(() => {
-  ;(global as any).WebSocket = originalWebSocket
+  ;(global as unknown as { WebSocket: typeof WebSocket }).WebSocket = originalWebSocket
 })
 
 // ─── Helper ────────────────────────────────────────────────────────────────

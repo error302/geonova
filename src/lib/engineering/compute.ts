@@ -11,8 +11,9 @@
  */
 
 import { z } from 'zod';
+import type { createClient } from '@/lib/api-client/client';
 
-let dbClient: any = null;
+let dbClient: ReturnType<typeof createClient> | null = null;
 
 export async function initComputeLogger() {
   const { createClient } = await import('@/lib/api-client/client');
@@ -21,8 +22,8 @@ export async function initComputeLogger() {
 
 async function logComputation(
   computationType: string,
-  input: any,
-  result: any,
+  input: unknown,
+  result: unknown,
   projectId?: string,
   userId?: string
 ) {
@@ -54,8 +55,8 @@ async function logComputation(
 
 export async function logEngineeringCompute(
   computationType: string,
-  input: any,
-  result: any,
+  input: unknown,
+  result: unknown,
   options?: { projectId?: string; userId?: string }
 ) {
   return logComputation(computationType, input, result, options?.projectId, options?.userId);
@@ -414,7 +415,7 @@ export function crossSectionVolume(input: CrossSectionVolumeInput): CrossSection
   const { areas, stationInterval, method } = parsed;
 
   // Precompute per-station incremental volumes
-  const stationVolumes: number[] = new Array(areas.length).fill(0);
+  const stationVolumes: number[] = new Array<number>(areas.length).fill(0);
 
   if (method === 'prismoidal' && areas.length >= 3) {
     // Simpson's 1/3 rule for groups of 3 stations (2 intervals each)
