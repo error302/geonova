@@ -264,7 +264,7 @@ class OfflineStorage {
       photos: photos.length,
       pendingSync: (queue as SyncQueueItem[]).filter((i) => i.status === 'pending').length,
       failedSync: (queue as SyncQueueItem[]).filter((i) => i.status === 'failed').length,
-      storageUsed: this.estimateStorageSize(observations, photos),
+      storageUsed: this.estimateStorageSize(observations, photos as Array<{ data?: string }>),
     }
   }
 
