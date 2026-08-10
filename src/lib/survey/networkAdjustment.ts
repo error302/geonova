@@ -37,7 +37,7 @@ export const ObservationSchema = z.object({
 
 export type Observation = z.infer<typeof ObservationSchema>
 
-let dbClient: any = null
+let dbClient: { from: (table: string) => { insert: (data: unknown) => Promise<unknown> } } | null = null
 
 async function logNetworkAdjustment(stations: Station[], observations: Observation[]) {
   if (typeof window === 'undefined') return

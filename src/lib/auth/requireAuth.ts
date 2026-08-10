@@ -35,7 +35,7 @@ export async function requireAuth() {
       }
     }
     // Set the user ID for RLS policies (current_user_id() in PostgreSQL)
-    const userId = (session.user as any).id
+    const userId = (session.user as { id?: string } | undefined)?.id
     if (userId) {
       setCurrentUserId(String(userId))
     }

@@ -1,4 +1,5 @@
 import { contours } from 'd3-contour'
+import type { ContourMultiPolygon } from 'd3-contour'
 
 export interface IDWOutput {
   grid: number[][]
@@ -48,18 +49,18 @@ export function generateContours(
 
   if (thresholds.length === 0) return []
 
-  const contourGenerator = (contours as any)()
+  const contourGenerator = contours()
     .size([cols, rows])
     .thresholds(thresholds)
 
-  const rawContours: any = contourGenerator(values)
+  const rawContours: ContourMultiPolygon[] = contourGenerator(values)
 
-  return rawContours.map((contour: any, i: number) => {
+  return rawContours.map((contour, i) => {
     const elevation = thresholds[i]
     const isIndex = Math.round(elevation / interval) % indexInterval === 0
 
     const worldRings: [number, number][][] = contour.coordinates.flatMap(
-      (polygon: any) => polygon.map((ring: any) =>
+      (polygon) => polygon.map((ring) =>
         ring.map(([px, py]: [number, number]): [number, number] => {
           const e = gridMinE + px * gridResolution
           const n = gridMinN + (rows - 1 - py) * gridResolution
