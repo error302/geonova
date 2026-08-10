@@ -87,7 +87,7 @@ export default function GenerateReportModal({ isOpen, onClose, surveyType, proje
         )
       }
 
-      const rawData = await response.json();
+      const rawData = (await response.json()) as { error?: string };
       if (rawData.error) throw new Error(rawData.error);
       
       // Handle deeply nested or strange response formats gracefully

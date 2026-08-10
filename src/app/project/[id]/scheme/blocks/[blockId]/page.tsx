@@ -85,7 +85,7 @@ export default function BlockDetailPage() {
         apiGet(`/api/scheme/parcels?block_id=${blockId}`, parcelsResponseSchema, { ttlMs: 0 }),
       ])
 
-      const found = blocksJson.data.find((b: any) => String(b.id) === String(blockId))
+      const found = (blocksJson.data as BlockInfo[]).find((b) => String(b.id) === String(blockId))
       if (found) setBlock(found)
 
       setParcels(parcelJson.data || [])

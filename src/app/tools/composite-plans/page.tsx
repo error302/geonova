@@ -17,7 +17,7 @@ export default function CompositePlansPage() {
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-4">
           <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="parcels-lr-number-area-m-easting-northing">Parcels (LR number, area m², easting, northing)</label><textarea id="parcels-lr-number-area-m-easting-northing" value={csv} onChange={e => setCsv(e.target.value)} rows={6} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
-          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="paper-size">Paper Size</label><select id="paper-size" value={paperSize} onChange={e => setPaperSize(e.target.value as any)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white"><option value="A4">A4</option><option value="A3">A3</option><option value="A2">A2</option><option value="A1">A1</option><option value="A0">A0</option></select></div>
+          <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="paper-size">Paper Size</label><select id="paper-size" value={paperSize} onChange={e => setPaperSize(e.target.value as 'A4' | 'A3' | 'A2' | 'A1' | 'A0')} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white"><option value="A4">A4</option><option value="A3">A3</option><option value="A2">A2</option><option value="A1">A1</option><option value="A0">A0</option></select></div>
           <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Generate Composite Plan</button>
         </div>
         <div>{result ? (

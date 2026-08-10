@@ -147,7 +147,7 @@ export async function markObservationSynced(observationId: string): Promise<void
 /**
  * @deprecated Use queueOperation from syncQueue.ts directly.
  */
-export async function updateSyncQueueItem(item: any): Promise<void> {
+export async function updateSyncQueueItem(item: import('./syncQueue').SyncOperation): Promise<void> {
   const { getDB } = await import('./syncQueue')
   const db = await getDB()
   await db.put('sync_queue', item)

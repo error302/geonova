@@ -154,9 +154,9 @@ export default function GuidePage() {
     const saved = localStorage.getItem('guide_progress');
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
+        const parsed = JSON.parse(saved) as Record<string, { completedSteps?: number }>;
         const progressMap: { [key: string]: number } = {};
-        Object.keys(parsed).forEach((key: any) => {
+        Object.keys(parsed).forEach((key) => {
           const data = parsed[key];
           progressMap[key] = data.completedSteps || 0;
         });

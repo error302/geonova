@@ -223,7 +223,7 @@ export default function DiagramCanvas({ diagram, width = 1122, height = 794 }: P
         )
       })}
 
-      {diagram.subAreas.map((area: any) => {
+      {diagram.subAreas.map((area) => {
         const centroid = polygonCentroid(area.beaconIds, positions)
         return (
           <g key={area.id}>

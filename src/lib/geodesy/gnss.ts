@@ -226,7 +226,7 @@ export function processGNSSNetwork(
   }
   
   // Calculate network statistics
-  const residuals = baselines.map((b: any) => b.sigma)
+  const residuals = baselines.map((b) => b.sigma)
   const rms = Math.sqrt(residuals.reduce((sum, r) => sum + r * r, 0) / residuals.length) || 0
   
   return {

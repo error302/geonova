@@ -62,7 +62,7 @@ export default function AvatarUploader({
         })
 
         if (!res.ok) {
-          const err = await res.json().catch(() => ({ error: 'Upload failed' }))
+          const err = (await res.json().catch(() => ({ error: 'Upload failed' }))) as { error?: string }
           throw new Error(err.error || `Upload failed (status ${res.status})`)
         }
 

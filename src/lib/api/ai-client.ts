@@ -27,7 +27,7 @@ async function checkSubscriptionAccess(): Promise<{ allowed: boolean; plan: stri
     })
     if (!res.ok) return { allowed: false, plan: 'free', isAdmin: false }
 
-    const data = await res.json()
+    const data = (await res.json()) as { plan?: string; isAdmin?: boolean }
     const plan = data.plan || 'free'
     const isAdmin = data.isAdmin === true
 

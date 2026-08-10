@@ -69,7 +69,7 @@ export function CountryProvider({ children }: { children: ReactNode }) {
 
     try {
       const cookies = Object.fromEntries(
-        document.cookie.split('; ').map((c) => c.split('='))
+        document.cookie.split('; ').map((c): [string, string] => { const [k, ...rest] = c.split('='); return [k, rest.join('=')] })
       )
       if (cookies['metardu_country']) {
         const cookieCountry = decodeURIComponent(cookies['metardu_country']) as SurveyingCountry

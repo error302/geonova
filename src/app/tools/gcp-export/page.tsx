@@ -43,7 +43,7 @@ export default function GCPExportPage() {
       if (!user) return
       dbClient.from('projects').select('id, name, utm_zone, hemisphere')
         .eq('user_id', user.id).order('created_at', { ascending: false })
-        .then(({ data }) => { if (data) setProjects(data) })
+        .then(({ data }) => { if (data) setProjects(data as { id: string; name: string; utm_zone: number; hemisphere: string }[]) })
     })
   }, [])
 

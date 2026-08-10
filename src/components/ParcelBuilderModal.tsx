@@ -142,7 +142,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
 
       if (error) throw error;
 
-      onParcelCreated((data as any) ?? undefined);
+      onParcelCreated((data ?? undefined) as { id: string; name: string | null; boundary_points: Array<{ name?: string; easting: number; northing: number }>; created_at?: string });
       onClose();
     } catch (err) {
       console.error('Error saving parcel:', err);

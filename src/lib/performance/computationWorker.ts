@@ -200,7 +200,7 @@ export class ComputationWorker {
 
       const id = crypto.randomUUID()
 
-      const handler = (e: MessageEvent) => {
+      const handler = (e: MessageEvent<{ id: string; error?: string; result?: unknown }>) => {
         const data = e.data
         if (data.id !== id) return
 

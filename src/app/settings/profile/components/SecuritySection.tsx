@@ -42,7 +42,7 @@ export default function SecuritySection({ email }: SecuritySectionProps) {
       })
 
       if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'Password update failed' }))
+        const err = (await res.json().catch(() => ({ error: 'Password update failed' }))) as { error?: string }
         throw new Error(err.error || `Failed (status ${res.status})`)
       }
 

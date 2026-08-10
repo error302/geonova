@@ -137,7 +137,7 @@ export async function getKeyPair(surveyorId: string): Promise<SurveyorKeyPair | 
   return new Promise((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, 'readonly')
     const request = tx.objectStore(STORE_NAME).get(surveyorId)
-    request.onsuccess = () => resolve(request.result || null)
+    request.onsuccess = () => resolve((request.result as SurveyorKeyPair | null) ?? null)
     request.onerror = () => reject(request.error)
   })
 }

@@ -47,7 +47,7 @@ export default function ImportPage() {
         .order('created_at', { ascending: false })
         .limit(20)
 
-      if (data) setProjects(data)
+      if (data) setProjects(data as Project[])
       setLoadingProjects(false)
     }
     loadProjects()

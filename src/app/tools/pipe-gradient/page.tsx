@@ -110,7 +110,7 @@ export default function PipeGradientPage() {
             <label className="block text-sm text-zinc-400 mb-2" htmlFor="pipe-material">Pipe Material</label>
             <select
                id="pipe-material" value={material}
-              onChange={e => setMaterial(e.target.value as any)}
+              onChange={e => setMaterial(e.target.value as 'HDPE' | 'Concrete' | 'uPVC' | 'VCP')}
               className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white"
             >
               <option value="HDPE">HDPE (n=0.011)</option>

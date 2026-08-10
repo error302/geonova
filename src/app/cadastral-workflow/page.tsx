@@ -128,7 +128,7 @@ export default function CadastralWorkflowPage() {
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
       if (saved) {
-        setState(JSON.parse(saved))
+        setState(JSON.parse(saved) as WorkflowState)
       }
     } catch {
       // ignore parse errors

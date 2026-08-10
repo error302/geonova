@@ -25,7 +25,7 @@ export function SupportingDocUpload({ projectId }: { projectId: string }) {
       .from('supporting_documents')
       .select('*')
       .eq('project_id', projectId)
-    setDocs(data ?? [])
+    setDocs((data ?? []) as Doc[])
   }
 
   async function handleUpload(docId: string, docType: string, file: File) {

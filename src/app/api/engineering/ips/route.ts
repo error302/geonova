@@ -39,7 +39,7 @@ export const POST = apiHandler({ auth: true, schema: SaveIPsSchema, rateLimit: {
     await client.query<never>('DELETE FROM alignment_ips WHERE alignment_id = $1', [alignment_id])
 
     // Insert new IPs
-    const insertedRows: any[] = []
+    const insertedRows: Record<string, unknown>[] = []
     for (let i = 0; i < ips.length; i++) {
       const ip = ips[i]
       const { rows } = await client.query<AlignmentIpsRow>(
@@ -48,7 +48,7 @@ export const POST = apiHandler({ auth: true, schema: SaveIPsSchema, rateLimit: {
          RETURNING *`,
         [alignment_id, ip.name, ip.easting, ip.northing, ip.radius, i]
       )
-      insertedRows.push(rows[0])
+      insertedRows.push(rows[0] as unknown as Record<string, unknown>)
     }
 
     // Compute derived values for each IP (deflection angle, tangent length, arc length, chainages)

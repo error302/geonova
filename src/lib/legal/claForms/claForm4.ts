@@ -156,7 +156,7 @@ export function generateClaForm4(data: ClaForm4Data): Uint8Array {
     cols.forEach((col) => {
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(8)
-      const lines = doc.splitTextToSize(col.text || '—', col.w - 4)
+      const lines = doc.splitTextToSize(col.text || '—', col.w - 4) as string[]
       doc.text(lines[0], x + 2, y + 5)
       x += col.w
     })

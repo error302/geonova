@@ -285,7 +285,7 @@ function integerSearch(
     }
   }
 
-  pushLevel(n - 1, new Array(n).fill(0), chi2)
+  pushLevel(n - 1, new Array<number>(n).fill(0), chi2)
 
   if (best === null) {
     // Fallback: nearest-integer rounding

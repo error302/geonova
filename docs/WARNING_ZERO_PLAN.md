@@ -17,13 +17,13 @@
 
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
-| `no-unsafe-member-access` | 589 | **589** | active |
-| `no-unsafe-assignment` | 635 | **635** | active |
-| `no-explicit-any` | 374 | **374** | active |
-| `no-unsafe-argument` | 76 | **76** | active — closest to zero, grind first |
+| `no-unsafe-member-access` | 502 | **502** | active |
+| `no-unsafe-assignment` | 581 | **581** | active |
+| `no-explicit-any` | 348 | **348** | active |
+| `no-unsafe-argument` | 3 | **3** | **last 3 are concurrent-WIP files (`GNSSRoverConnection`, `deedPlanExport.test`) — batch 1 done, floor 76→3** |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 (1,857 files) | **0** | ✅ done |
-| **total warnings** | **4,064** | CI ceiling **5,000** (tightened 10,000 → 5,000) | green |
+| **total warnings** | **3,811** | CI ceiling **5,000** (tightened 10,000 → 5,000) | green |
 
 Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,155 · `no-console` 341 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` ~175 · `no-non-null-assertion` ~570 · `no-unsafe-return` ~159 · `no-restricted-syntax` 16.
 
@@ -58,7 +58,9 @@ If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read th
 
 Order = **finish the family closest to zero first** (each finish removes a floor + shrinks the ceiling), then the next, then mechanical rules. Argument → explicit-any → member-access → assignment → mechanical → CI tightening.
 
-### Phase 1 — `no-unsafe-argument` (122 → 0, ~103 files) — batches 1+2 done (39 files, floor 224→125)
+### Phase 1 — `no-unsafe-argument` (122 → 0, ~103 files) — **batch 3 done (73/73 files, floor 76→3)**
+
+Batch 3 (this session) drained every remaining 1-warning file in `argument-scan --batch 1` — 73 files, type-the-source recipe (fetch/JSON.parse casts, `.select<Row>` generics, callback `: any` removals, jspdf `splitTextToSize` return casts). Also moved member-access 589→502, assignment 635→581, explicit-any 374→348, total 4,064→3,811. The only 3 remaining warnings live in concurrent-WIP files; once those land and fix, `--update-argument` takes the floor to 0 and the rule flips to `error` (see §6).
 
 Highest-leverage: every warning is a typed-call-site passing an `any` value. Recipe: type the *argument's* value at its source (fetch/JSON.parse/`useRef<any>`/`useState<any>`), or narrow the callee param. Ranked (regen: `node scripts/argument-scan.mjs --top 20`):
 

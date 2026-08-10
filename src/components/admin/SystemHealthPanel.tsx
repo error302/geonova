@@ -79,7 +79,7 @@ export default function SystemHealthPanel() {
       setError(null)
       const res = await fetch('/api/admin/health')
       if (!res.ok) throw new Error('Failed to fetch health data')
-      const json = await res.json()
+      const json = (await res.json()) as HealthData & { data?: HealthData }
       setData(json.data ?? json)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load health data')

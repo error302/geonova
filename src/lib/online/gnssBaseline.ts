@@ -353,7 +353,7 @@ export async function processBaseline(input: {
   })
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Unknown error' }))
+    const error = (await response.json().catch(() => ({ error: 'Unknown error' }))) as { error?: string }
     throw new Error(
       error.error || `Baseline processing failed (HTTP ${response.status}). ` +
       'Ensure the Python worker is running and RTKLIB is installed.'

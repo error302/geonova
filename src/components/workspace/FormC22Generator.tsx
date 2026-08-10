@@ -194,7 +194,7 @@ export default function FormC22Generator({ projectId }: Props) {
       });
 
       if (!response.ok) {
-        const errBody = await response.json().catch(() => ({}));
+        const errBody = (await response.json().catch(() => ({}))) as { error?: string };
         throw new Error(errBody.error || `Request failed (${response.status})`);
       }
 

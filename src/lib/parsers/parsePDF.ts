@@ -170,7 +170,7 @@ export async function rasterizePDFPage(file: File, pageNumber: number = 1, scale
   const context = canvas.getContext('2d')
   if (!context) throw new Error('Canvas context not available')
 
-  await page.render({ canvasContext: context, viewport, canvas } as any).promise
+  await page.render({ canvasContext: context, viewport, canvas }).promise
 
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {

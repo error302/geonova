@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import type { EngineeringMode, EngineeringStandard, RoadDesignData } from '@/types/engineering'
 import { KRDM2017, KeRRA, getCarriagewayWidth } from '@/lib/standards/engineering'
+import type { RoadClass } from '@/types/engineering'
 import type { EngineeringProject } from '../shared'
 import { ROAD_CLASSES } from '../shared'
 
@@ -58,7 +59,7 @@ export function Step1Setup({
       roadName: roadName.trim(),
       startChainage,
       designSpeed,
-      roadClass: roadClass as any,
+      roadClass: roadClass as RoadClass,
       standard,
       datum,
       coordinateSystem: coordSys
@@ -174,7 +175,7 @@ export function Step1Setup({
           <input id="carriagewayWidth"
             type="number"
             step="0.1"
-            value={getCarriagewayWidth(standard, roadClass as any)}
+            value={getCarriagewayWidth(standard, roadClass as RoadClass)}
             disabled
             className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-500"
           />

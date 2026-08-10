@@ -693,7 +693,7 @@ export function getInstrumentCommand(
     throw new Error(`Command '${commandType}' not supported for ${brand}`);
   }
 
-  return commandFactory(...args);
+  return commandFactory(...(args as unknown[]));
 }
 
 /**

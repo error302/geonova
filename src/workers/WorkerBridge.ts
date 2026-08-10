@@ -50,14 +50,14 @@ class WorkerBridge {
       { type: 'module' }
     )
 
-    this.worker.onmessage = (event: MessageEvent<WorkerMessage>) => {
+    this.worker.onmessage = (event: MessageEvent<WorkerMessage<unknown>>) => {
       const { type, payload, id } = event.data
       const pending = this.pendingRequests.get(id)
 
       if (!pending) return
 
       if (type === 'ERROR') {
-        pending.reject(new Error(payload))
+        pending.reject(new Error(String(payload)))
         this.pendingRequests.delete(id)
       } else if (type === 'PROGRESS') {
         // Progress updates don't resolve the promise

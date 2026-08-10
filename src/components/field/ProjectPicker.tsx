@@ -41,7 +41,7 @@ export function ProjectPicker({ onPick, title, subtitle }: ProjectPickerProps) {
           .limit(50)
 
         if (error) throw error
-        setProjects(data || [])
+        setProjects((data ?? []) as Project[])
       } catch (err) {
         console.error('[project-picker] Failed to load projects:', err)
         setError('Failed to load projects. Check your connection.')

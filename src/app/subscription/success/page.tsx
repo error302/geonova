@@ -46,7 +46,7 @@ export default function SubscriptionSuccessPage({
           body: JSON.stringify(payload),
         })
 
-        const data = await res.json().catch(() => ({}))
+        const data = (await res.json().catch(() => ({}))) as { error?: string }
         if (!res.ok) {
           if (res.status === 401) {
             // Redirect to login preserving all payment params so user can retry after auth

@@ -40,7 +40,8 @@ export async function checkReportAccess(userId: string, email?: string): Promise
   }
 
   const planId = data.plan_id || 'free'
-  const expired = data.current_period_end && new Date(data.current_period_end) < new Date()
+  const currentPeriodEnd = data.current_period_end
+  const expired = typeof currentPeriodEnd === 'string' && new Date(currentPeriodEnd) < new Date()
   const isPro = planId === 'pro' || planId === 'team' || planId === 'firm' || planId === 'enterprise'
   const canGenerate = isPro && !expired
 

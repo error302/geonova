@@ -141,7 +141,7 @@ export default function FieldBookWithSelection({
             }
             return row;
           });
-          setRows(loaded);
+          setRows(loaded as FieldBookRow[]);
           addLog({
             phase: 'input',
             level: 'success',

@@ -109,7 +109,7 @@ export class InstrumentedPool {
   on(event: 'error', listener: (err: Error, client: PoolClient) => void): this;
   on(event: 'connect' | 'acquire' | 'remove', listener: (client: PoolClient) => void): this;
   on(event: string, listener: (...args: any[]) => void): this {
-    this.pool.on(event as any, listener);
+    this.pool.on(event, listener);
     return this;
   }
 

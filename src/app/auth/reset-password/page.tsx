@@ -61,7 +61,7 @@ function ResetPasswordContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password }),
       })
-      const json = await res.json().catch(() => ({}))
+      const json = (await res.json().catch(() => ({}))) as { error?: string }
       if (!res.ok) {
         setError(json.error || 'Password update failed. Your reset link may have expired.')
         setLoading(false)

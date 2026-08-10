@@ -191,7 +191,7 @@ export function generateCLAForm3(input: CLA3Input): Uint8Array {
       doc.setFont('helvetica', 'normal')
     }
 
-    const nameLines = doc.splitTextToSize(entry.allotteeName, 34)
+    const nameLines = doc.splitTextToSize(entry.allotteeName, 34) as string[]
     doc.text(nameLines[0], cols[0], y)
     doc.text(entry.allotteeId, cols[1], y)
     doc.text(entry.interestType.replace(/_/g, ' ').toUpperCase(), cols[2], y)

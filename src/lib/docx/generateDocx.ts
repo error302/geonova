@@ -52,7 +52,7 @@ export async function generateDocx(options: DocxGenerationOptions): Promise<Buff
     ? inputSections || []
     : inputSections || []
 
-  const docSections: any[] = []
+  const docSections: Paragraph[] = []
 
   // Title Page
   docSections.push(
@@ -182,8 +182,8 @@ export async function generateDocx(options: DocxGenerationOptions): Promise<Buff
   return buffer
 }
 
-function parseHtmlToParagraphs(html: string): any[] {
-  const paragraphs: any[] = []
+function parseHtmlToParagraphs(html: string): Paragraph[] {
+  const paragraphs: Paragraph[] = []
   if (!html) return paragraphs
 
   const cleanHtml = html.replace(/\n/g, ' ').trim()

@@ -111,8 +111,8 @@ export function NetworkAdjustmentPanel({ projectId, projectData, surveyorProfile
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = '.gsi,.GSI'
-    input.onchange = async (e: any) => {
-      const file = e.target.files?.[0]
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
       if (!file) return
       try {
         setImportStatus('Parsing GSI file...')

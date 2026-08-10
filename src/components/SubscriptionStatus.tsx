@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link'
 
-export default function SubscriptionStatus({ subscription }: { subscription: any }) {
+export default function SubscriptionStatus({ subscription }: { subscription: { plan_id?: string | null; status?: string | null; trial_ends_at?: string | null } }) {
   const plan = subscription?.plan_id || 'free'
   const isTrialing = subscription?.status === 'trial'
 

@@ -200,7 +200,7 @@ export function generateClaForm5(data: ClaForm5Data): Uint8Array {
   } else {
     data.customaryRights.forEach((right, idx) => {
       // Calculate row height based on text length
-      const rightLines = doc.splitTextToSize(right, contentW - 20)
+      const rightLines = doc.splitTextToSize(right, contentW - 20) as string[]
       const rowH = Math.max(7, rightLines.length * 4.5 + 3)
 
       y = ensureSpace(rowH + 1, y)

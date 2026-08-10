@@ -83,7 +83,7 @@ export function ActivityFeed({ limit = 10 }: { limit?: number }) {
       setLoading(true)
       const res = await fetch(`/api/activity?limit=${limit}`)
       if (!res.ok) throw new Error('Failed to load activity')
-      const data = await res.json()
+      const data = (await res.json()) as { data?: { activities?: Activity[] } }
       setActivities(data.data?.activities || [])
       setError(null)
     } catch (err) {

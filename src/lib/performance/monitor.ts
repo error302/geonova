@@ -95,7 +95,7 @@ class PerformanceMonitor {
 
   private initErrorTracking(): void {
     window.addEventListener('error', (e) => {
-      this.trackError(e.message, e.error?.stack)
+      this.trackError(e.message, e.error instanceof Error ? e.error.stack : undefined)
     })
 
     window.addEventListener('unhandledrejection', (e) => {

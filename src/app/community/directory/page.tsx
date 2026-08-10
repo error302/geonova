@@ -32,7 +32,7 @@ export default function SurveyorDirectoryPage() {
     fetch(`/api/community/surveyors?${params}`)
       .then(r => r.ok ? r.json() : null)
       .then(data => {
-        if (!cancelled && data?.data) setSurveyors(data.data)
+        if (!cancelled && data?.data) setSurveyors(data.data as SurveyorProfile[])
       })
       .catch(() => { if (!cancelled) setSurveyors([]) })
       .finally(() => { if (!cancelled) setLoading(false) })

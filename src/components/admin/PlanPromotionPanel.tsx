@@ -170,7 +170,7 @@ export default function PlanPromotionPanel() {
       setLookupError(null)
       const res = await fetch(`/api/admin/users?search=${encodeURIComponent(email)}`)
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
+        const body = (await res.json().catch(() => ({}))) as { error?: string }
         throw new Error(body.error ?? 'User not found')
       }
       const data = await res.json()

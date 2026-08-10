@@ -1,7 +1,7 @@
 'use client'
 
 import { useReportWebVitals } from 'next/web-vitals'
-import { reportWebVital } from '@/lib/monitoring/webVitals'
+import { reportWebVital, type WebVitalMetric } from '@/lib/monitoring/webVitals'
 
 /**
  * WebVitals Reporter Component
@@ -14,7 +14,7 @@ import { reportWebVital } from '@/lib/monitoring/webVitals'
  * This component renders nothing — it only captures and reports metrics.
  */
 export function WebVitals() {
-  useReportWebVitals((metric) => {
+  useReportWebVitals((metric: WebVitalMetric) => {
     reportWebVital(metric)
   })
 

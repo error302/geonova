@@ -76,7 +76,7 @@ class CircuitBreaker {
   }
 
   private async executeWithTimeout<T>(fn: () => Promise<T>, timeoutMs: number): Promise<T> {
-    let timeoutId: any
+    let timeoutId: ReturnType<typeof setTimeout> | undefined
     const timeoutPromise = new Promise<never>((_, reject) => {
       timeoutId = setTimeout(() => {
         reject(new CircuitTimeoutError(this.options.name, timeoutMs))

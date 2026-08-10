@@ -101,7 +101,7 @@ export default function BillingPage() {
           trial_ends_at: subRes.trialEndsAt || null,
         })
       }
-      setPayments((pay || []) as any)
+      setPayments((pay || []) as PaymentRecord[])
     }
     setLoading(false)
   }, [dbClient])

@@ -5,7 +5,7 @@ export async function generateFullPackage(
   projectId: string
 ): Promise<Buffer> {
 
-  const readyDocsRes = await db.query(
+  const readyDocsRes = await db.query<{ document_id: string; file_url: string }>(
     "SELECT document_id, file_url FROM submission_documents WHERE project_id = $1 AND status = 'ready' AND document_id != 'full-package'",
     [projectId]
   );

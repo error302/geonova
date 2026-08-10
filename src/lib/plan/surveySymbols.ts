@@ -269,7 +269,7 @@ export const SYMBOL_REGISTRY = Object.fromEntries(
 
 export function buildSymbolDefs(symbolIds?: string[]): string {
   const symbols = symbolIds
-    ? SURVEY_SYMBOLS.filter((s: any) => symbolIds.includes(s.id))
+    ? SURVEY_SYMBOLS.filter((s) => symbolIds.includes(s.id))
     : SURVEY_SYMBOLS;
 
   return `<defs>\n${symbols.map((s: any) => s.svgDef).join('\n')}\n</defs>`;

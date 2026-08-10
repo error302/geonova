@@ -238,7 +238,7 @@ export default function ExportToolbar({
       })
 
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}))
+        const errData = (await res.json().catch(() => ({}))) as { error?: string }
         throw new Error(errData.error || 'Failed to generate Form C22')
       }
 

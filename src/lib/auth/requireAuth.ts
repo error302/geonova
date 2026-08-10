@@ -64,7 +64,7 @@ export async function requireRole(allowedRoles: UserRole[], userId: string) {
   // Ensure RLS context is set for this request
   setCurrentUserId(String(userId))
 
-  const { rows } = await db.query(
+  const { rows } = await db.query<{ role: UserRole; is_suspended: boolean }>(
     'SELECT role, is_suspended FROM surveyor_profiles WHERE user_id = $1',
     [userId]
   )

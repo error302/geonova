@@ -325,7 +325,7 @@ export function getStyleForFeature(feature: Feature<Geometry>, resolution: numbe
 
     case 'LineString':
       if (props.featureType === 'road_reserve') return createRoadReserveStyle(resolution)
-      if (props.featureType === 'contour') return createContourStyle(props.isIndex || false, resolution)
+      if (props.featureType === 'contour') return createContourStyle(Boolean(props.isIndex), resolution)
       if (props.featureType === 'water') return createWaterStyle(resolution)
       if (props.featureType === 'building') return createBuildingStyle(resolution)
       return new Style({

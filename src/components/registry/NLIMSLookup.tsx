@@ -26,7 +26,7 @@ export default function NLIMSLookup({ initialParcel = '', onParcelVerified }: NL
       if (county) params.append('county', county)
 
       const res = await fetch(`/api/nlims/lookup?${params}`)
-      const data = await res.json()
+      const data = (await res.json()) as NLIMSSearchResult
       setResult(data)
     } catch (error) {
       console.error('NLIMS lookup error:', error)

@@ -44,7 +44,7 @@ export function useFieldBook({ projectId, surveyType, initialRows = [] }: UseFie
         row._rowIndex = r.row_index;
         return row;
       });
-      setRows(loadedRows);
+      setRows(loadedRows as FieldBookRow[]);
     } else {
       setRows([]);
     }

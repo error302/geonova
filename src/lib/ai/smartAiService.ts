@@ -31,7 +31,7 @@ export async function smartChat(options: SmartChatOptions): Promise<string> {
       })
 
       if (res.ok) {
-        const data = await res.json()
+        const data = (await res.json()) as { response?: string }
         const text = data.response || ''
         if (options.onToken) {
           options.onToken(text)

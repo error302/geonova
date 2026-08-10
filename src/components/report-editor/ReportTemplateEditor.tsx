@@ -365,7 +365,7 @@ export function ReportTemplateEditor() {
 
   // ─── Save template ─────────────────────────────────────────────
   const saveTemplate = useCallback(() => {
-    const templates = JSON.parse(localStorage.getItem('metardu-report-templates') || '[]')
+    const templates = JSON.parse(localStorage.getItem('metardu-report-templates') || '[]') as ReportTemplate[]
     const existing = templates.findIndex((t: ReportTemplate) => t.id === template.id)
     if (existing >= 0) {
       templates[existing] = template
@@ -379,7 +379,7 @@ export function ReportTemplateEditor() {
   // ─── Load saved templates ──────────────────────────────────────
   const [savedTemplates, setSavedTemplates] = useState<ReportTemplate[]>([])
   const refreshSavedTemplates = useCallback(() => {
-    const templates = JSON.parse(localStorage.getItem('metardu-report-templates') || '[]')
+    const templates = JSON.parse(localStorage.getItem('metardu-report-templates') || '[]') as ReportTemplate[]
     setSavedTemplates(templates)
   }, [])
 

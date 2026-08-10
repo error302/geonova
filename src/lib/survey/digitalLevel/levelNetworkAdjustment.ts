@@ -104,7 +104,7 @@ export function adjustLevelNetwork(
   const W: number[] = []
 
   for (const obs of observations) {
-    const row = new Array(n).fill(0)
+    const row = new Array<number>(n).fill(0)
 
     // to station
     const toIdx = freeIndex.get(obs.toId)

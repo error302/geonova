@@ -13,7 +13,7 @@ import { addBreadcrumb } from '@/lib/monitoring/sentry'
 import { performanceMonitor } from '@/lib/performance/monitor'
 
 // Define a local Metric type since next/web-vitals may not export it
-interface WebVitalMetric {
+export interface WebVitalMetric {
   id: string
   name: string
   value: number

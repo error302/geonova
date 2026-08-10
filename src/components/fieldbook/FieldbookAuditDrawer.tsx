@@ -72,7 +72,7 @@ export function FieldbookAuditDrawer({ open, onClose, projectId }: FieldbookAudi
       if (projectId) url.searchParams.set('project_id', projectId)
       const res = await fetch(url.toString())
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = await res.json()
+      const data = (await res.json()) as { events?: AuditEvent[] }
       setEvents(data.events || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load audit log')

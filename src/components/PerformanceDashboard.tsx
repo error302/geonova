@@ -47,7 +47,7 @@ export default function PerformanceDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'full_optimization' }),
       })
-      const result = await res.json()
+      const result = (await res.json()) as Record<string, unknown>
       setOptimizationResult(result)
     } catch (error) {
       console.error('Optimization failed:', error)

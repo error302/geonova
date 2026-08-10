@@ -67,7 +67,7 @@ export default function SettingsTabs({ initialProfile, sessionEmail }: SettingsT
         body: JSON.stringify(patch),
       })
       if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'Update failed' }))
+        const err = (await res.json().catch(() => ({ error: 'Update failed' }))) as { error?: string }
         throw new Error(err.error || `Failed (status ${res.status})`)
       }
       const json = await res.json()

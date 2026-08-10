@@ -109,7 +109,7 @@ export async function cleanSurveyData(
     })
     
     if (!res.ok) {
-      const error = await res.json().catch(() => ({ error: 'Unknown error' }))
+      const error = (await res.json().catch(() => ({ error: 'Unknown error' }))) as { error?: string }
       throw new Error(error.error || 'Failed to clean data')
     }
     

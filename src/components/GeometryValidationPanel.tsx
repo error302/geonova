@@ -36,7 +36,7 @@ export default function GeometryValidationPanel() {
           proposed_ssd: ssd !== '' ? ssd : undefined,
         }),
       })
-      const data = await res.json()
+      const data = (await res.json()) as ValidationResult
       setResult({ ...data, road_class: roadClass, terrain })
     } catch {
       setResult({ status: 'ERROR', flags: ['Failed to connect to validation service'] })

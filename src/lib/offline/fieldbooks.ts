@@ -1,6 +1,6 @@
 import { getDB } from './syncQueue'
 
-export async function saveFieldbookOffline(fieldbook: any): Promise<void> {
+export async function saveFieldbookOffline(fieldbook: Record<string, unknown>): Promise<void> {
   const db = await getDB()
   await db.put('fieldbooks', fieldbook)
 }
