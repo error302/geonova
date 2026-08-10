@@ -19,7 +19,7 @@ const eslint = new ESLint({
 })
 
 const SKIP = new Set(['react-hooks/exhaustive-deps'])
-const results = await eslint.lintFiles(['src', 'middleware.ts'])
+const results = await eslint.lintFiles(['src', 'src/middleware.ts'])
 
 const perFile = []
 for (const r of results) {

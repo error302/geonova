@@ -7,13 +7,19 @@
  * selectively rather than blanket 'unsafe-inline'.
  */
 
-import crypto from 'crypto'
-
 /**
  * Generate a cryptographically random nonce string.
+ * Uses Web Crypto (globalThis.crypto.getRandomValues) instead of Node's
+ * crypto.randomBytes so this module also works in the Edge runtime —
+ * middleware.ts runs in Edge where `node:crypto` is unavailable.
  */
 export function generateNonce(): string {
-  return crypto.randomBytes(16).toString('base64')
+  const bytes = new Uint8Array(16)
+  crypto.getRandomValues(bytes)
+  // Base64-encode without Buffer (also unavailable in Edge).
+  let binary = ''
+  for (const b of bytes) binary += String.fromCharCode(b)
+  return btoa(binary)
 }
 
 /**

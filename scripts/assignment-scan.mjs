@@ -45,7 +45,7 @@ const eslint = new ESLint({
   useEslintrc: true,
 })
 
-const results = await eslint.lintFiles(['middleware.ts', 'src/**/*.{ts,tsx}'])
+const results = await eslint.lintFiles(['src/middleware.ts', 'src/**/*.{ts,tsx}'])
 
 // Map a chain root to a broad source family (same taxonomy as member-scan).
 function classify(chain) {

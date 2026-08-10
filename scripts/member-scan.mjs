@@ -60,7 +60,7 @@ const eslint = new ESLint({
   useEslintrc: true,
 })
 
-const results = await eslint.lintFiles(['middleware.ts', 'src/**/*.{ts,tsx}'])
+const results = await eslint.lintFiles(['src/middleware.ts', 'src/**/*.{ts,tsx}'])
 
 // Map a chain root to a broad any-source family. The root is the first
 // identifier (or a recognizable container like rows[i]/obs/row/data/fetched
