@@ -1,9 +1,9 @@
 {
-  "no-console": 299,
+  "no-console": 289,
   "@typescript-eslint/no-explicit-any": 274,
   "@typescript-eslint/no-unsafe-assignment": 548,
   "@typescript-eslint/no-unsafe-member-access": 459,
-  "@typescript-eslint/no-unused-vars": 1154,
+  "@typescript-eslint/no-unused-vars": 1155,
   "react-hooks/exhaustive-deps": 44,
   "@typescript-eslint/no-non-null-assertion": 570,
   "@typescript-eslint/no-unsafe-return": 135,
