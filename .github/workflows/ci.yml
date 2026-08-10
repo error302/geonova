@@ -207,19 +207,15 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     # E2E_SHARDING (2026-08-08): 2-way shard matrix.  Each runner:
-    #   1. Downloads the .next artifact built by the `build` job (no rebuild).
-    #   2. Runs the standalone server (node .next/standalone/server.js, like the
-    #      Docker deploy) via CI_E2E_PROD=true. middleware.ts is in src/ so
-    #      Next.js compiles it with the standalone build — auth redirects, CSP,
-    #      rate limiting, and CSRF all work.
+    #   1. Runs the dev server (npx next dev -p 3099) — the standalone server
+    #      silently drops the edge middleware (auth redirects, CSP, rate limits)
+    #      and crashes in the sandbox when middleware is compiled into it.
+    #   2. Postgres service container is available for health checks and any
+    #      API calls that need the database.
     #   3. Executes its assigned shard of the 8 spec files.
-    # Wall-clock time drops from ~22 min (single runner + rebuild) to ~7 min.
-    # E2E_TIMEOUT (2026-08-09): raised to 30 min as a safety margin — failing
-    # tests retry (2x) and the job was hitting 20 min before the shards were
-    # cancelled. Retries only matter on failure; with specs aligned to the
-    # current UI the passing path is ~7-10 min.
+    # E2E_TIMEOUT (2026-08-10): 30 min — the dev server is slower (~15 min
+    # passing path) but middleware works correctly.
     timeout-minutes: 30
-    needs: [build]
     strategy:
       fail-fast: false
       matrix:
@@ -231,20 +227,15 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
-      # Restore the pre-built .next so the webServer can start immediately
-      # with `next start` instead of re-running `next build`.
-      - name: Download .next build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: next-build-${{ github.sha }}
+      # Dev server handles middleware correctly; the standalone server had
+      # edge-sandbox crashes with middleware. The build artifact is not needed.
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
       - name: Run Playwright E2E tests (shard ${{ matrix.shard }}/2)
         env:
           NEXT_PUBLIC_SENTRY_DSN: ''
           DISABLE_PWA: 'true'
-          CI_E2E_PROD: 'true'
-          CI_E2E_SKIP_BUILD: 'true'
+          CI_E2E_PROD: 'false'
           # Postgres service container is running at 127.0.0.1:5432 with
           # user ci / password ci / db metardu_e2e (see `services:` above).
           DATABASE_URL: 'postgresql://ci:ci@127.0.0.1:5432/metardu_e2e'
