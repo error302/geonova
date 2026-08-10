@@ -17,7 +17,7 @@ import {
 } from '../vectorTileFactory'
 
 type MockVectorTileLayer = {
-  opts: any
+  opts: Record<string, unknown>
   _props: Record<string, unknown>
 }
 
@@ -31,14 +31,14 @@ function asMockLayer(layer: unknown): MockVectorTileLayer {
 
 jest.mock('ol/layer/VectorTile', () => {
   const MockVectorTileLayer = class MockVectorTileLayer {
-    opts: any
+    opts: Record<string, unknown>
     _props: Record<string, unknown>
-    constructor(opts?: any) {
+    constructor(opts: Record<string, unknown> = {}) {
       this.opts = opts
       this._props = {}
     }
-    setStyle(s: any) { this._props.style = s }
-    set(key: string, val: any) { this._props[key] = val }
+    setStyle(s: unknown) { this._props.style = s }
+    set(key: string, val: unknown) { this._props[key] = val }
     get(key: string) { return this._props[key] }
   }
   return { __esModule: true, default: MockVectorTileLayer }
@@ -46,16 +46,16 @@ jest.mock('ol/layer/VectorTile', () => {
 
 jest.mock('ol/source/VectorTile', () => {
   const MockVectorTileSource = class MockVectorTileSource {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown>
+    constructor(opts: Record<string, unknown> = {}) { this.opts = opts }
   }
   return { __esModule: true, default: MockVectorTileSource }
 })
 
 jest.mock('ol/format/MVT', () => {
   const MockMVTFormat = class MockMVTFormat {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown>
+    constructor(opts: Record<string, unknown> = {}) { this.opts = opts }
   }
   return { __esModule: true, default: MockMVTFormat }
 })
@@ -69,40 +69,40 @@ jest.mock('ol/format/GeoJSON', () => {
 
 jest.mock('ol/style/Style', () => {
   const MockStyle = class MockStyle {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown>
+    constructor(opts: Record<string, unknown> = {}) { this.opts = opts }
   }
   return { __esModule: true, default: MockStyle }
 })
 
 jest.mock('ol/style/Fill', () => {
   const MockFill = class MockFill {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown>
+    constructor(opts: Record<string, unknown> = {}) { this.opts = opts }
   }
   return { __esModule: true, default: MockFill }
 })
 
 jest.mock('ol/style/Stroke', () => {
   const MockStroke = class MockStroke {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown>
+    constructor(opts: Record<string, unknown> = {}) { this.opts = opts }
   }
   return { __esModule: true, default: MockStroke }
 })
 
 jest.mock('ol/style/Text', () => {
   const MockText = class MockText {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown>
+    constructor(opts: Record<string, unknown> = {}) { this.opts = opts }
   }
   return { __esModule: true, default: MockText }
 })
 
 jest.mock('ol/style/Circle', () => {
   const MockCircleStyle = class MockCircleStyle {
-    opts: any
-    constructor(opts?: any) { this.opts = opts }
+    opts: Record<string, unknown>
+    constructor(opts: Record<string, unknown> = {}) { this.opts = opts }
   }
   return { __esModule: true, default: MockCircleStyle }
 })
@@ -218,7 +218,7 @@ describe('createVectorTileLayer', () => {
     })
     expect(asMockLayer(layer).opts.minZoom).toBe(10)
     // maxZoom is passed to the VectorTileSource, not the layer
-    expect(asMockLayer(layer).opts.source.opts.maxZoom).toBe(18)
+    expect((asMockLayer(layer).opts.source as { opts: Record<string, unknown> }).opts.maxZoom).toBe(18)
   })
 
   it('passes opacity to the layer', async () => {

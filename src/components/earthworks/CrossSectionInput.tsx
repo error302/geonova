@@ -64,16 +64,16 @@ export default function EarthworksCalculator() {
       leftShots: row.leftShots
         .filter((s) => s.off && s.rl)
         .map((s) => ({ offset: -(parseFloat(s.off) || 0), rl: parseFloat(s.rl) || 0 }))
-        .sort((a: any, b: any) => a.offset - b.offset),
+        .sort((a, b) => a.offset - b.offset),
       rightShots: row.rightShots
         .filter((s) => s.off && s.rl)
         .map((s) => ({ offset: parseFloat(s.off) || 0, rl: parseFloat(s.rl) || 0 }))
-        .sort((a: any, b: any) => a.offset - b.offset),
+        .sort((a, b) => a.offset - b.offset),
     }
   }
 
   function compute() {
-    const inputs = sections.map(toInput).sort((a: any, b: any) => a.chainage - b.chainage)
+    const inputs = sections.map(toInput).sort((a, b) => a.chainage - b.chainage)
     const computed = inputs.map((s) => computeCrossSection(s, template))
     const ew = computeEarthwork(computed, parseFloat(shrinkage) || 0.85)
     setComputedSections(computed)

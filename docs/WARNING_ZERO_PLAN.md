@@ -72,7 +72,9 @@ Highest-leverage: every warning is a typed-call-site passing an `any` value. Rec
 
 Batches of ~10 files per commit; finish with `--update-argument` (floor → 0) and flip the rule to `error` in `.eslintrc` when live = 0 (see §6).
 
-### Phase 2 — `no-explicit-any` (538 → 0, 227 files)
+### Phase 2 — `no-explicit-any` (538 → 0, 227 files) — **batch 1 done (top-6 cluster, floor 348→280)**
+
+Batch 1 (this session) ground the top-density cluster — `vectorTileFactory.ts` + its two test files, `deedPlanExport.test.ts`, `leveling-standards.ts`, `governmentLicensing.ts`, `CrossSectionInput.tsx` — 68 explicit-any → 0. Recipe: typed test fixtures (`as const` + real `Feature`/`Style` literals), a new `src/types/ol-pmtiles.d.ts` module declaration for the pmtiles source's `RenderFeature` format, mock constructors with defaults, `tileFormat as RenderFeatureFormat` casts, and `: any` removal on typed-array callbacks (`.find((o) => …)` / `.sort((a, b) => …)`). Also moved member-access 502→459, assignment 581→554, argument 3→1, total 3,811→3,662. Next: `LayerControl.tsx` + `parcelVault.ts` (11 each) — though the earlier OL batches already drained LayerControl, so regen the ranking before the next batch.
 
 Ranked (regen: run a one-off eslint aggregation — `ESLint.lintFiles(['middleware.ts','src/**/*.{ts,tsx}'])` filtered to the rule id):
 

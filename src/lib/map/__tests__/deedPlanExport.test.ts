@@ -260,6 +260,9 @@ describe('formatCoord formula (tested indirectly)', () => {
   })
 })
 
+// The OL Map type is a large class surface; the mock is structural.
+const asOlMap = (map: unknown) => map as unknown as import('ol/Map').default
+
 // ---------------------------------------------------------------------------
 // exportDeedPlan
 // ---------------------------------------------------------------------------
@@ -268,7 +271,7 @@ describe('exportDeedPlan', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     // Default: mock canvas creation
-    jest.spyOn(document, 'createElement').mockReturnValue(mockCanvas as any)
+    jest.spyOn(document, 'createElement').mockReturnValue(mockCanvas as unknown as HTMLElement)
     // Mock toBlob to immediately resolve
     mockCanvasToBlob.mockImplementation((cb: (blob: Blob | null) => void) => {
       cb(new Blob(['png-data'], { type: 'image/png' }))
@@ -283,9 +286,9 @@ describe('exportDeedPlan', () => {
     const { map } = createMockMap()
     await expect(
       exportDeedPlan({
-        map: map as any,
+        map: asOlMap(map),
         scale: 1000,
-        paperSize: 'letter' as any,
+        paperSize: 'letter' as never,
         orientation: 'landscape',
       }),
     ).rejects.toThrow('Unsupported paper size')
@@ -295,7 +298,7 @@ describe('exportDeedPlan', () => {
     const { map } = createMockMap()
     await expect(
       exportDeedPlan({
-        map: map as any,
+        map: asOlMap(map),
         scale: 0,
         paperSize: 'a4',
         orientation: 'landscape',
@@ -307,7 +310,7 @@ describe('exportDeedPlan', () => {
     const { map } = createMockMap()
     await expect(
       exportDeedPlan({
-        map: map as any,
+        map: asOlMap(map),
         scale: -500,
         paperSize: 'a4',
         orientation: 'landscape',
@@ -319,7 +322,7 @@ describe('exportDeedPlan', () => {
     const { map } = createMockMap()
 
     const promise = exportDeedPlan({
-      map: map as any,
+      map: asOlMap(map),
       scale: 1000,
       paperSize: 'a4',
       orientation: 'landscape',
@@ -336,7 +339,7 @@ describe('exportDeedPlan', () => {
     const { map } = createMockMap()
 
     const promise = exportDeedPlan({
-      map: map as any,
+      map: asOlMap(map),
       scale: 500,
       paperSize: 'a3',
       orientation: 'landscape',
@@ -364,7 +367,7 @@ describe('exportDeedPlan', () => {
 
     // Fire rendercomplete synchronously
     const promise = exportDeedPlan({
-      map: map as any,
+      map: asOlMap(map),
       scale,
       paperSize: 'a4',
       orientation: 'landscape',
@@ -395,7 +398,7 @@ describe('exportDeedPlan', () => {
     })
 
     const promise = exportDeedPlan({
-      map: map as any,
+      map: asOlMap(map),
       scale: 1000,
       paperSize: 'a4',
       orientation: 'landscape',
@@ -418,7 +421,7 @@ describe('downloadDeedPlan', () => {
     jest.clearAllMocks()
 
     // Mock canvas
-    jest.spyOn(document, 'createElement').mockReturnValue(mockCanvas as any)
+    jest.spyOn(document, 'createElement').mockReturnValue(mockCanvas as unknown as HTMLElement)
     mockCanvasToBlob.mockImplementation((cb: (blob: Blob | null) => void) => {
       cb(new Blob(['png-data'], { type: 'image/png' }))
     })
@@ -442,17 +445,17 @@ describe('downloadDeedPlan', () => {
     jest.spyOn(document, 'createElement').mockImplementation((tag: string) => {
       createElementCallCount++
       if (tag === 'canvas' || createElementCallCount === 1) {
-        return mockCanvas as any
+        return mockCanvas as unknown as HTMLElement
       }
-      return mockAnchor as any
+      return mockAnchor as unknown as HTMLElement
     })
   })
 
   afterEach(() => {
     jest.restoreAllMocks()
     // Clean up global mocks
-    delete (globalThis.URL as any).createObjectURL
-    delete (globalThis.URL as any).revokeObjectURL
+    delete (globalThis.URL as unknown as { createObjectURL?: unknown }).createObjectURL
+    delete (globalThis.URL as unknown as { revokeObjectURL?: unknown }).revokeObjectURL
   })
 
   it('calls exportDeedPlan and creates a download link', async () => {
@@ -461,7 +464,7 @@ describe('downloadDeedPlan', () => {
     try {
       await downloadDeedPlan(
         {
-          map: map as any,
+          map: asOlMap(map),
           scale: 1000,
           paperSize: 'a4',
           orientation: 'landscape',
@@ -482,7 +485,7 @@ describe('downloadDeedPlan', () => {
 
     try {
       await downloadDeedPlan({
-        map: map as any,
+        map: asOlMap(map),
         scale: 1000,
         paperSize: 'a4',
         orientation: 'landscape',
@@ -500,7 +503,7 @@ describe('downloadDeedPlan', () => {
 
     try {
       await downloadDeedPlan({
-        map: map as any,
+        map: asOlMap(map),
         scale: 1000,
         paperSize: 'a4',
         orientation: 'landscape',

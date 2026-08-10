@@ -91,14 +91,14 @@ const activeLicenses: GovernmentLicense[] = []
 
 export function getGovernmentDepartments(country?: string) {
   if (!country) return governmentDepartments
-  return governmentDepartments.filter((d: any) => d.country.toLowerCase() === country.toLowerCase())
+  return governmentDepartments.filter((d) => d.country.toLowerCase() === country.toLowerCase())
 }
 
 export function requestGovernmentLicense(
   departmentId: string,
   seats: number
 ): GovernmentLicense {
-  const dept = governmentDepartments.find((d: any) => d.id === departmentId)
+  const dept = governmentDepartments.find((d) => d.id === departmentId)
   if (!dept) throw new Error('Department not found')
   
   const license: GovernmentLicense = {
@@ -122,7 +122,7 @@ export function requestGovernmentLicense(
 }
 
 export function getDepartmentLicense(licenseId: string): GovernmentLicense | undefined {
-  return activeLicenses.find((l: any) => l.id === licenseId)
+  return activeLicenses.find((l) => l.id === licenseId)
 }
 
 export function addLicenseSeat(
@@ -132,7 +132,7 @@ export function addLicenseSeat(
   userEmail: string,
   role: LicenseSeat['role']
 ): LicenseSeat | null {
-  const license = activeLicenses.find((l: any) => l.id === licenseId)
+  const license = activeLicenses.find((l) => l.id === licenseId)
   if (!license) return null
   
   if (license.seatsUsed >= license.seats) {
@@ -186,7 +186,7 @@ export async function renewLicense(
   licenseId: string,
   newExpiry: Date
 ): Promise<GovernmentLicense> {
-  const license = activeLicenses.find((l: any) => l.id === licenseId)
+  const license = activeLicenses.find((l) => l.id === licenseId)
   if (!license) throw new Error('License not found')
   license.validUntil = newExpiry.getTime()
   license.status = 'active'
@@ -195,7 +195,7 @@ export async function renewLicense(
 
 /** Deactivate (soft-delete) a license */
 export async function deactivateLicense(licenseId: string): Promise<void> {
-  const idx = activeLicenses.findIndex((l: any) => l.id === licenseId)
+  const idx = activeLicenses.findIndex((l) => l.id === licenseId)
   if (idx === -1) throw new Error('License not found')
   activeLicenses[idx].status = 'expired'
 }
@@ -206,7 +206,7 @@ export async function assignLicenseSeat(
   userId: string,
   role?: string
 ): Promise<LicenseSeat> {
-  const license = activeLicenses.find((l: any) => l.id === licenseId)
+  const license = activeLicenses.find((l) => l.id === licenseId)
   if (!license) throw new Error('License not found')
 
   if (license.seatsUsed >= license.seats) {
@@ -232,7 +232,7 @@ export async function revokeLicenseSeat(seatId: string): Promise<void> {
 
 /** List seats for a given license */
 export async function getLicenseSeats(licenseId: string): Promise<LicenseSeat[]> {
-  const license = activeLicenses.find((l: any) => l.id === licenseId)
+  const license = activeLicenses.find((l) => l.id === licenseId)
   if (!license) return []
   // In-memory stub: return empty array (seats are tracked externally)
   return []
@@ -244,7 +244,7 @@ export async function listGovernmentLicenses(options: {
   pageSize: number
   activeOnly: boolean
 }) {
-  let licenses = activeLicenses.filter((l: any) =>
+  let licenses = activeLicenses.filter((l) =>
     options.activeOnly ? l.status === 'active' : true
   )
   const total = licenses.length

@@ -14,6 +14,9 @@
  * - estimateTileCount:      Tile count estimator for loading progress
  */
 
+import type { FeatureLike } from 'ol/Feature'
+import type { default as Style } from 'ol/style/Style'
+
 /**
  * Options for creating a generic vector tile layer.
  */
@@ -25,7 +28,7 @@ export interface VectorTileOptions {
   /** Layer name to filter within the tile source */
   layerName?: string;
   /** Style function applied to each feature */
-  style?: (feature: any) => any;
+  style?: (feature: FeatureLike) => Style | Style[];
   /** Minimum zoom level for rendering */
   minZoom?: number;
   /** Maximum zoom level for rendering */
@@ -139,6 +142,9 @@ export async function createVectorTileLayer(options: VectorTileOptions) {
   ]);
 
   // Build the tile format appropriate for the requested encoding.
+  // VectorTileSource's FeatureType is RenderFeature while GeoJSON yields
+  // ol/Feature instances — the union needs an explicit typed cast.
+  type TileSourceFormat = import('ol/format/Feature').default<import('ol/render/Feature').default>
   const tileFormat =
     format === 'geojson'
       ? new GeoJSONModule.default()
@@ -148,30 +154,30 @@ export async function createVectorTileLayer(options: VectorTileOptions) {
 
   const isPMTiles = url.toLowerCase().endsWith('.pmtiles');
 
-  let source: any;
+  let source: import('ol/source/VectorTile').default;
 
   if (isPMTiles) {
     // Attempt to use the ol-pmtiles adapter for native PMTiles support.
     try {
       // ol-pmtiles is an optional dependency — ignore if not installed.
-      const pmTilesModule = await import(/* webpackIgnore: true */ 'ol-pmtiles' as any);
+      const pmTilesModule = await import(/* webpackIgnore: true */ 'ol-pmtiles');
       source = new pmTilesModule.default({
         url,
-        format: tileFormat,
+        format: tileFormat as TileSourceFormat,
       });
     } catch {
       // Adapter not installed — fall back to standard VectorTile source.
       // Caller must ensure a server-side PMTiles proxy is in front of the URL.
       source = new VectorTileSource({
         url,
-        format: tileFormat as any,
+        format: tileFormat as TileSourceFormat,
         maxZoom,
       });
     }
   } else {
     source = new VectorTileSource({
       url,
-      format: tileFormat as any,
+      format: tileFormat as TileSourceFormat,
       maxZoom,
     });
   }
@@ -252,8 +258,8 @@ export async function createParcelTileLayer(options: ParcelTileOptions) {
     visible: true,
     opacity,
     zIndex: 10,
-    style: (feature: any) => {
-      const parcelNumber = feature.get('parcel_number') ?? '';
+    style: (feature: FeatureLike) => {
+      const parcelNumber = (feature.get('parcel_number') as string | undefined) ?? '';
       return new Style({
         fill: new Fill({ color: 'rgba(27, 58, 92, 0.08)' }),
         stroke: new Stroke({ color: '#1B3A5C', width: 2 }),
@@ -330,8 +336,8 @@ export async function createBeaconTileLayer(options: BeaconTileOptions) {
     visible: true,
     opacity,
     zIndex: 11,
-    style: (feature: any) => {
-      const beaconId = feature.get('beacon_id') ?? '';
+    style: (feature: FeatureLike) => {
+      const beaconId = (feature.get('beacon_id') as string | undefined) ?? '';
       return new Style({
         image: new CircleStyle({
           radius: 5,
