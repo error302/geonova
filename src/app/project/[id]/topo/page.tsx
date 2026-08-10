@@ -45,7 +45,13 @@ export default function TopoPage() {
       return
     }
 
-    const points: SpotHeight[] = data.map((point: any) => ({
+    const points: SpotHeight[] = (data as Array<{
+      easting: number
+      northing: number
+      elevation: number
+      point_name?: string | null
+      name?: string | null
+    }>).map((point) => ({
       e: point.easting,
       n: point.northing,
       z: point.elevation,

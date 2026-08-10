@@ -145,9 +145,8 @@ export function generateRimPdf(
     })
 
     // Get final Y position after table
-    y = (doc as any).lastAutoTable?.finalY
-      ? (doc as any).lastAutoTable.finalY + 6
-      : y + parcels.length * 7 + 10
+    const tableEnd = (doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY
+    y = tableEnd ? tableEnd + 6 : y + parcels.length * 7 + 10
   } else {
     doc.setFont('helvetica', 'italic')
     doc.setFontSize(9)
@@ -201,9 +200,8 @@ export function generateRimPdf(
       },
     })
 
-    y = (doc as any).lastAutoTable?.finalY
-      ? (doc as any).lastAutoTable.finalY + 6
-      : y + beacons.length * 7 + 10
+    const tableEnd = (doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY
+    y = tableEnd ? tableEnd + 6 : y + beacons.length * 7 + 10
   } else {
     doc.setFont('helvetica', 'italic')
     doc.setFontSize(9)
@@ -230,7 +228,7 @@ export function generateRimPdf(
   doc.setTextColor(40)
 
   const notes = section.notes || 'No additional notes for this RIM section.'
-  const notesLines = doc.splitTextToSize(notes, innerW - 8)
+  const notesLines = doc.splitTextToSize(notes, innerW - 8) as string[]
   notesLines.forEach((line: string) => {
     if (y > PAGE_H - MARGIN - 55) {
       doc.addPage()
@@ -430,5 +428,5 @@ function drawTable(doc: jsPDF, opts: TableOptions) {
   doc.rect(x, startY, tableW, tableH)
 
   // Store final Y for caller reference
-  ;(doc as any).lastAutoTable = { finalY: currentY + 2 }
+  ;(doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable = { finalY: currentY + 2 }
 }

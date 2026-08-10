@@ -87,7 +87,7 @@ export function SubAreaPanel({ subAreas, beacons, onAdd, onUpdate, onRemove }: P
               }}
               className="w-full px-2 py-1 border rounded text-sm h-20"
             >
-              {beacons.map((b: any) => (
+              {beacons.map((b) => (
                 <option key={b.id} value={b.id}>{b.label}</option>
               ))}
             </select>
@@ -102,7 +102,7 @@ export function SubAreaPanel({ subAreas, beacons, onAdd, onUpdate, onRemove }: P
                 onChange={(e) => onUpdate(area.id, { fillPattern: e.target.value as SubArea['fillPattern'] })}
                 className="w-full px-2 py-1 border rounded text-sm"
               >
-                {FILL_PATTERNS.map((p: any) => (
+                {FILL_PATTERNS.map((p) => (
                   <option key={p.value} value={p.value}>{p.label}</option>
                 ))}
               </select>

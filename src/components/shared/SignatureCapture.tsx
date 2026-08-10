@@ -114,7 +114,7 @@ export default function SignatureCapture({
         })
       })
 
-      const responseData = await res.json()
+      const responseData = await res.json() as { verificationToken: string; signatureId: string; documentHash: string }
 
       if (responseData.verificationToken) {
         setResult({

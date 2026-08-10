@@ -192,7 +192,7 @@ export default function ProcessPage() {
           }
         }
         result = runWorkflow('traverse', traverseData)
-        if (result.success && result.results?.legs) {
+        if (result.success && (result.results as TraverseAdjustmentSolvedResult | undefined)?.legs) {
           try {
             const s = bowditchAdjustmentSolvedFromResult(result.results as TraverseAdjustmentSolvedResult)
             solutions.push({ title: s.solution.title, steps: s.steps })
@@ -209,7 +209,7 @@ export default function ProcessPage() {
           openingRL: (dataset.metadata as { openingRL?: number })?.openingRL || 100
         }
         result = runWorkflow('leveling', levelingData)
-        if (result.success && result.results?.readings) {
+        if (result.success && (result.results as LevelingResult | undefined)?.readings) {
           try {
             const s = levelingSolved(
               { readings: levelingData.readings, openingRL: levelingData.openingRL, closingRL: levelingData.closingRL, method: 'rise_and_fall', distanceKm: 1 },
@@ -567,7 +567,7 @@ export default function ProcessPage() {
                 </div>
               ) : null}
 
-              {workflowResult.surveyType === 'traverse' && workflowResult.results?.legs && (
+              {workflowResult.surveyType === 'traverse' && (workflowResult.results as TraverseAdjustmentSolvedResult | undefined)?.legs && (
                 <div className="card border border-[var(--border-color)]">
                   <div className="card-header">
                     <span className="font-semibold">Gale's Table</span>
@@ -585,7 +585,7 @@ export default function ProcessPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {workflowResult.results.legs.map((leg: TraverseLegLike, i: number) => (
+                        {(workflowResult.results as TraverseAdjustmentSolvedResult).legs.map((leg: TraverseLegLike, i: number) => (
                           <tr key={`leg-${leg.from}-${leg.to}-${i}`} className="border-b border-[var(--border-color)]">
                             <td className="px-2 py-2">{leg.from}</td>
                             <td className="px-2 py-2">{leg.to}</td>
@@ -601,7 +601,7 @@ export default function ProcessPage() {
                 </div>
               )}
 
-              {workflowResult.surveyType === 'leveling' && workflowResult.results?.readings && (
+              {workflowResult.surveyType === 'leveling' && (workflowResult.results as LevelingResult | undefined)?.readings && (
                 <div className="card border border-[var(--border-color)]">
                   <div className="card-header">
                     <span className="font-semibold">Leveling Results</span>
@@ -620,7 +620,7 @@ export default function ProcessPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {workflowResult.results.readings.map((r: LevelingReading, i: number) => (
+                        {(workflowResult.results as LevelingResult).readings.map((r: LevelingReading, i: number) => (
                           <tr key={`reading-${r.station}-${i}`} className="border-b border-[var(--border-color)]">
                             <td className="px-2 py-2">{r.station}</td>
                             <td className="px-2 py-2 text-right font-mono">{r.bs?.toFixed(3) || '—'}</td>

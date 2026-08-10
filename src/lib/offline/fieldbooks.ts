@@ -9,11 +9,11 @@ export async function getOfflineFieldbooks(projectId: string, type?: string): Pr
   const db = await getDB()
   const all = await db.getAll('fieldbooks')
   return all
-    .filter((fb: any) => {
+    .filter((fb: { project_id?: string; type?: string }) => {
       if (projectId && fb.project_id !== projectId) return false
       if (type && fb.type !== type) return false
       return true
     })
-    .sort((a: any, b: any) => String(b.updated_at ?? b.created_at ?? '').localeCompare(String(a.updated_at ?? a.created_at ?? '')))
+    .sort((a: { updated_at?: string | null; created_at?: string | null }, b: { updated_at?: string | null; created_at?: string | null }) => String(b.updated_at ?? b.created_at ?? '').localeCompare(String(a.updated_at ?? a.created_at ?? '')))
 }
 

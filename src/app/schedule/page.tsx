@@ -292,7 +292,7 @@ export default function SchedulePage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
   const [schedules, setSchedules] = useState<JobScheduleWithAlerts[]>([])
-  const [stats, setStats] = useState<any>(null)
+  const [stats, setStats] = useState<{ today: number; thisWeek: number; overdue: number; completed: number } | null>(null)
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'completed' | 'overdue'>('all')
   const [showForm, setShowForm] = useState(false)

@@ -30,8 +30,8 @@ Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,15
 ### Git / CI state
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
-- **HEAD:** `a489fbb3` (member-access batch 3 + floors 79/399/662/668).
-- **Uncommitted (this batch):** member-access grind batch 4 — 11 files (totalStationSerial Serial-port/reader/writer typed via `web-serial.d.ts`, scheme/team owner/activity zod schemas replace `z.any()`, ComplianceChecklistModal + ripple-buttons drop `: any` map annotations, rbac + deedPlanGeometry + boundaryShapefile `db.query<T>` row generics, optimization `paginatedQuery<T extends Record<string, unknown>>` + `(data || []) as T[]`, equipment + solutionToPdf drop `: any`, africasTalking SMS payload typed structurally). Floors 76/374/635/589, total 4,064.
+- **HEAD:** `762ffd3b` (E2E middleware → `src/` + Edge-safe crypto) with later ratchet commits pushed by the concurrent session (`2eb98d42` floor re-baselines + 3,700 ceiling).
+- **Uncommitted (this batch):** member-access grind batch 5 — 13 files (GNSSRoverConnection `nmeaPos: NMEAPosition` + `navigator.serial` typed, process/page workflow-result casts, topo/page supabase row shape, schedule stats state, ExportTab items, SightDistanceChecker pythonValidation state, SignatureCapture sign response, RoadBoundarySelector + SubAreaPanel + cogoEngine + fieldbooks drop `: any`, osmService.test typed fetch mock `jest.fn<Promise<unknown>, [...]>`, rimPdfGenerator `lastAutoTable` typed with no non-null assertions). Floors member **356**, assignment **499**, explicit-any **234**, argument 0, total **3,378**.
 - **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).

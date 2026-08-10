@@ -18,8 +18,8 @@ import {
 } from '../osmService'
 
 // Mock fetch
-const mockFetch = jest.fn()
-global.fetch = mockFetch as any
+const mockFetch = jest.fn<Promise<unknown>, [input: RequestInfo | URL, init?: RequestInit]>()
+global.fetch = mockFetch as unknown as typeof fetch
 
 describe('OSM Service', () => {
   beforeEach(() => {
@@ -114,7 +114,7 @@ describe('OSM Service', () => {
         ['buildings', 'natural'],
       )
 
-      const calledUrl = mockFetch.mock.calls[0][0]
+      const calledUrl = mockFetch.mock.calls[0][0] as string
       expect(calledUrl).toContain('types=buildings%2Cnatural')
     })
   })
@@ -217,7 +217,7 @@ describe('OSM Service', () => {
         minlon: 36.8, minlat: -1.3, maxlon: 36.85, maxlat: -1.25,
       })
 
-      const calledUrl = mockFetch.mock.calls[0][0]
+      const calledUrl = mockFetch.mock.calls[0][0] as string
       expect(calledUrl).toContain('/api/osm/features?')
       expect(calledUrl).toContain('minlon=36.8')
     })
@@ -233,8 +233,8 @@ describe('OSM Service', () => {
 
       await getNearbyFeaturesViaApi(-1.2921, 36.8219, 500)
 
-      expect(mockFetch.mock.calls[0][0]).toContain('/api/osm/nearby-features')
-      expect(mockFetch.mock.calls[0][1].method).toBe('POST')
+      expect(mockFetch.mock.calls[0][0] as string).toContain('/api/osm/nearby-features')
+      expect((mockFetch.mock.calls[0][1] as RequestInit | undefined)?.method).toBe('POST')
     })
 
     it('autoAbuttalsViaApi calls the Next.js API', async () => {
@@ -247,8 +247,8 @@ describe('OSM Service', () => {
 
       await autoAbuttalsViaApi(-1.2921, 36.8219, 200)
 
-      expect(mockFetch.mock.calls[0][0]).toContain('/api/osm/auto-abuttals')
-      expect(mockFetch.mock.calls[0][1].method).toBe('POST')
+      expect(mockFetch.mock.calls[0][0] as string).toContain('/api/osm/auto-abuttals')
+      expect((mockFetch.mock.calls[0][1] as RequestInit | undefined)?.method).toBe('POST')
     })
   })
 })

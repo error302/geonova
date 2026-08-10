@@ -24,6 +24,7 @@ import {
   AlertTriangle, Crosshair, Radio,
   Power, Activity, MapPin,
 } from 'lucide-react'
+import type { NMEAPosition } from '@/lib/gnss/bluetooth'
 
 type ConnectionType = 'bluetooth' | 'serial' | 'internal'
 type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error'
@@ -120,7 +121,7 @@ export function GNSSRoverConnection() {
       const gnss = new WebBluetoothGNSS()
 
       // Set up position callback
-      gnss.onPosition((nmeaPos: any) => {
+      gnss.onPosition((nmeaPos: NMEAPosition) => {
         setPosition({
           latitude: nmeaPos.latitude,
           longitude: nmeaPos.longitude,
@@ -152,10 +153,14 @@ export function GNSSRoverConnection() {
         throw new Error('Web Serial not supported. Use Chrome or Edge.')
       }
 
-      const port = await (navigator as any).serial.requestPort()
+      const port = await navigator.serial.requestPort()
       await port.open({ baudRate: 115200 })
 
-      const reader = port.readable.getReader()
+      if (!port.readable) {
+        throw new Error('Serial port has no readable stream')
+      }
+      const readable = port.readable
+      const reader = readable.getReader()
       const decoder = new TextDecoder()
       let buffer = ''
 

@@ -52,7 +52,7 @@ export default function SightDistanceChecker() {
     setPythonValidation(pyRes)
   }
 
-  const [pythonValidation, setPythonValidation] = useState<any>(null)
+  const [pythonValidation, setPythonValidation] = useState<{ status: string; flags: string[]; fallback?: boolean } | null>(null)
 
   return (
     <div className="space-y-6">

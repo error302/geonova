@@ -78,7 +78,7 @@ export default function ExportTab({
                 icon: '≡',
                 action: exportCSV,
               },
-            ].map((item: any) => (
+            ].map((item: { key: string; title: string; desc: string; format: string; icon: string; action: () => void }) => (
               <div
                 key={item.key}
                 className="p-3 bg-[var(--bg-tertiary)] rounded border border-[var(--border-color)] flex items-start justify-between gap-3"
