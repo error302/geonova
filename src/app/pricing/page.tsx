@@ -100,7 +100,6 @@ export default function PricingPage() {
     const script = document.createElement('script')
     const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || ''
     if (!clientId) {
-      console.warn('PayPal client ID not configured — set NEXT_PUBLIC_PAYPAL_CLIENT_ID (M-Pesa still works)')
       return
     }
     
@@ -121,7 +120,6 @@ export default function PricingPage() {
 
         const paymentSessionOptions = {
           async onApprove(data: { orderId: string }) {
-            console.log("Payment approved:", data)
             try {
               const res = await fetch('/api/payments/paypal/capture', {
                 method: 'POST',
@@ -130,18 +128,15 @@ export default function PricingPage() {
               })
               const captureData = (await res.json()) as { error?: string }
               if (captureData.error) throw new Error(captureData.error)
-              console.log("Payment captured successfully:", captureData)
               alert("Payment successful! Thank you for subscribing.")
-            } catch (error) {
-              console.error("Payment capture failed:", error)
+            } catch {
               alert("Payment capture failed.")
             }
           },
-          onCancel(data: unknown) {
-            console.log("Payment cancelled:", data)
+          onCancel() {
+            /* cancelled */
           },
-          onError(error: unknown) {
-            console.error("Payment error:", error)
+          onError() {
             alert("An error occurred during payment.")
           },
         }

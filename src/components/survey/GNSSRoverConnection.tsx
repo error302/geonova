@@ -165,7 +165,7 @@ export function GNSSRoverConnection() {
           while (true) {
             const { done, value } = await reader.read()
             if (done) break
-            buffer += decoder.decode(value, { stream: true })
+            buffer += decoder.decode(value as Uint8Array | undefined, { stream: true })
 
             // Process complete NMEA sentences
             const lines = buffer.split('\n')

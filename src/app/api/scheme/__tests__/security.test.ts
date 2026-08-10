@@ -34,7 +34,7 @@ const mockSession = getServerSession as jest.MockedFunction<typeof getServerSess
 
 /** Helper to create a NextRequest-like object with nextUrl */
 function makeNextRequest(url: string, options: RequestInit = {}) {
-  const req = new Request(url, options) as any
+  const req = new Request(url, options) as Request & { nextUrl: URL }
   Object.defineProperty(req, 'nextUrl', {
     value: new URL(url),
     writable: false,

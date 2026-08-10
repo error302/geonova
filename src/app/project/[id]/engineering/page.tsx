@@ -237,13 +237,8 @@ export default function EngineeringWorkspacePage() {
           },
         }
       })
-    } catch (err) {
-      if (err instanceof ApiError && err.isNotFound) {
-        // No alignment row yet — nothing to hydrate
-        setLoadingEngineering(false)
-        return
-      }
-      console.error('[loadEngineeringData] Error:', err)
+    } catch {
+      /* ignore load error */
     } finally {
       setLoadingEngineering(false)
     }
@@ -327,9 +322,8 @@ export default function EngineeringWorkspacePage() {
       setProject({ ...project, engineering_data: updated })
       setActiveStep('setup')
       showToast('Mode switched successfully')
-    } catch (err) {
+    } catch {
       showToast('Failed to save. Check your connection and try again.', 'error')
-      console.error('Save failed:', err)
     } finally {
       setSaving(false)
     }
@@ -422,8 +416,7 @@ export default function EngineeringWorkspacePage() {
       }
 
       return true
-    } catch (err) {
-      console.error('[saveToBackend] Error:', err)
+    } catch {
       return false
     }
   }, [project])
@@ -471,9 +464,8 @@ export default function EngineeringWorkspacePage() {
       } else {
         showToast('Saved successfully')
       }
-    } catch (err) {
+    } catch {
       showToast('Failed to save. Check your connection and try again.', 'error')
-      console.error('Save failed:', err)
     } finally {
       setSaving(false)
     }
@@ -500,9 +492,8 @@ export default function EngineeringWorkspacePage() {
       } else {
         showToast('All data saved')
       }
-    } catch (err) {
+    } catch {
       showToast('Failed to save. Check your connection and try again.', 'error')
-      console.error('Save All failed:', err)
     } finally {
       setSaving(false)
     }

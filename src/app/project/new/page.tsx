@@ -87,7 +87,7 @@ export default function NewProjectPage() {
     setLoading(true)
 
     try {
-      const payload: Record<string, any> = {
+      const payload: Record<string, unknown> = {
         name,
         survey_type: surveyType,
         location,

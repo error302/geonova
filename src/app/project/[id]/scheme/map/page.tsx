@@ -26,6 +26,7 @@ import CircleStyle from 'ol/style/Circle'
 import Overlay from 'ol/Overlay'
 import { ArrowLeft, Download } from 'lucide-react'
 import type Feature from 'ol/Feature'
+import type { FeatureLike } from 'ol/Feature'
 import { registerProjections } from '@/lib/map/projection'
 
 const STATUS_COLORS: Record<string, string> = {
@@ -70,9 +71,9 @@ export default function SchemeMapPage() {
         }),
         new VectorLayer({
           source: vectorSource,
-          style: ((feature: Feature) => {
+          style: (feature: FeatureLike) => {
             const props = feature.getProperties()
-            const status = props.status as string || 'pending'
+            const status = (props.status as string) || 'pending'
             const color = STATUS_COLORS[status] || '#6b7280'
             const geomType = feature.getGeometry()?.getType()
 
@@ -92,7 +93,7 @@ export default function SchemeMapPage() {
             if (geomType === 'Point' && props.type === 'block_label') {
               return new Style({
                 text: new Text({
-                  text: `Block ${props.block_number}\n(${props.parcel_count} parcels)`,
+                  text: `Block ${String(props.block_number ?? '')}\n(${String(props.parcel_count ?? '')} parcels)`,
                   font: 'bold 14px sans-serif',
                   fill: new Fill({ color: '#1e40af' }),
                   stroke: new Stroke({ color: '#ffffff', width: 4 }),
@@ -108,7 +109,7 @@ export default function SchemeMapPage() {
                 stroke: new Stroke({ color: '#000', width: 1 }),
               }),
             })
-          }) as any,
+          },
         }),
       ],
       view: new View({

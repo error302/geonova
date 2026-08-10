@@ -127,12 +127,10 @@ export async function getOsmFeatures(
       headers: workerHeaders(),
     })
     if (!res.ok) {
-      console.warn(`[osm] Feature fetch failed: ${res.status}`)
       return null
     }
     return await res.json() as OsmFeaturesResult
-  } catch (err) {
-    console.warn('[osm] Worker unavailable — features disabled:', err instanceof Error ? err.message : err)
+  } catch {
     return null
   }
 }
@@ -180,12 +178,10 @@ export async function streamExtract(
       body: JSON.stringify({ output_path: outputPath, bbox, filters }),
     })
     if (!res.ok) {
-      console.warn(`[osm] Stream extract failed: ${res.status}`)
       return null
     }
     return await res.json() as StreamExtractResult
-  } catch (err) {
-    console.warn('[osm] Stream extract unavailable:', err instanceof Error ? err.message : err)
+  } catch {
     return null
   }
 }
@@ -218,12 +214,10 @@ export async function getNearbyFeatures(
       body: JSON.stringify({ lat, lon, radius, feature_types: featureTypes }),
     })
     if (!res.ok) {
-      console.warn(`[osm] Nearby features fetch failed: ${res.status}`)
       return null
     }
     return await res.json() as NearbyFeaturesResult
-  } catch (err) {
-    console.warn('[osm] Overpass unavailable:', err instanceof Error ? err.message : err)
+  } catch {
     return null
   }
 }
@@ -251,12 +245,10 @@ export async function autoAbuttals(
       body: JSON.stringify({ lat, lon, radius }),
     })
     if (!res.ok) {
-      console.warn(`[osm] Auto-abuttals failed: ${res.status}`)
       return null
     }
     return await res.json() as AutoAbuttalsResult
-  } catch (err) {
-    console.warn('[osm] Auto-abuttals unavailable:', err instanceof Error ? err.message : err)
+  } catch {
     return null
   }
 }

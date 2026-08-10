@@ -32,10 +32,8 @@ const mockSession = getServerSession as jest.MockedFunction<typeof getServerSess
 const TEST_PROJECT_UUID = '00000000-0000-0000-0000-000000000001'
 const TEST_BLOCK_UUID = '00000000-0000-0000-0000-000000000002'
 
-/** Wrap mock rows into a pg QueryResult-like shape */
-// eslint-disable-next-line
-function mr(rows: any[]) {
-  return { rows, command: '' as const, rowCount: rows.length, oid: 0 as const, fields: [] as any }
+function mr<T>(rows: T[]) {
+  return { rows, command: '' as const, rowCount: rows.length, oid: 0 as const, fields: [] }
 }
 
 /** Schema-valid parcel row — parcelSchema in src/lib/validation/scheme.ts. */

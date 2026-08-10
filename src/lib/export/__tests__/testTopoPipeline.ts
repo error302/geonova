@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { parseGSIContent } from '../../importers/parsers/gsi'
 import { generateTopoDXF, TopoPoint } from '../topoDXF'
 

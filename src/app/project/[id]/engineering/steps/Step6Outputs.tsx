@@ -78,7 +78,7 @@ export function Step6Outputs({
       }
       let cutVol = 0, fillVol = 0
       if (i > 0) {
-        const prev = stations[i - 1]
+        const prev = rows[i - 1]
         const d = s.chainage - prev.chainage
         cutVol = ((prev.cutArea || 0) + cutArea) / 2 * d
         fillVol = ((prev.fillArea || 0) + fillArea) / 2 * d

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Self-check for the API client.
  * ponytail: one runnable check, the smallest thing that fails if logic breaks.

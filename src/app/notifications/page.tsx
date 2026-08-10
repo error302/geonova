@@ -110,10 +110,10 @@ export default function NotificationsPage() {
     saveLocal(updated)
     try {
       createClient().from('notifications').update({ read: true }).eq('id', id).then(({ error }) => {
-        if (error) console.error('Failed to mark read:', error)
+        if (error) { /* ignored offline */ }
       })
-    } catch (e) {
-      console.error('Failed to mark read:', e)
+    } catch {
+      /* ignored offline */
     }
   }
 
@@ -126,10 +126,10 @@ export default function NotificationsPage() {
         .update({ read: true })
         .in('id', notifications.map((n) => n.id))
         .then(({ error }) => {
-          if (error) console.error('Failed to mark all read:', error)
+          if (error) { /* ignored offline */ }
         })
-    } catch (e) {
-      console.error('Failed to mark all read:', e)
+    } catch {
+      /* ignored offline */
     }
   }
 

@@ -42,9 +42,8 @@ export async function convertDatum(
       elevation: p.z,
       datum: toDatum
     }))
-  } catch (err) {
-    console.error('Local Datum conversion failed:', err)
-    return coords.map((c: any) => ({ ...c, datum: fromDatum, fallback: true }))
+  } catch {
+    return coords.map((c) => ({ ...c, datum: fromDatum, fallback: true }))
   }
 }
 
@@ -76,8 +75,7 @@ export async function validateGeometry(params: {
     }
     
     return { status, flags }
-  } catch (err) {
-    console.error('Local Geometric validation failed:', err)
+  } catch {
     return { status: 'UNKNOWN', flags: ['Local validation failed'], fallback: true }
   }
 }
@@ -99,8 +97,7 @@ export async function generateContours(
     const contours = localGenerateContours(spotHeights, interval)
     
     return { contours }
-  } catch (err) {
-    console.error('Local Contour generation failed:', err)
+  } catch {
     return { contours: [], fallback: true }
   }
 }
@@ -151,8 +148,7 @@ export async function computeVolumes(
         shrinkage_factor: shrinkageFactor
       }
     }
-  } catch (err) {
-    console.error('Local Volume computation failed:', err)
+  } catch {
     return { sections: [], totals: {}, fallback: true }
   }
 }
@@ -164,6 +160,5 @@ export async function callPythonCompute<T>(
 ): Promise<{ ok: true; value: T } | { ok: false; status: number; error: string; fallback?: boolean; details?: unknown }> {
   // If anything still calls this generic python compute bridge, it will fail gracefully.
   // We have stripped the python requirement from the architecture.
-  console.warn(`[Edge Spatial Engine] Blocked call to remote python service: ${path}`)
   return { ok: false, status: 503, error: 'Python compute service has been decommissioned in favor of Edge WASM.', fallback: true }
 }

@@ -126,7 +126,6 @@ class FieldSession {
     notes?: string
   }): Promise<FieldMeasurement | null> {
     if (!this.state.setup) {
-      console.warn('[field-session] Cannot capture — station not set up')
       return null
     }
 
@@ -134,7 +133,6 @@ class FieldSession {
     const latestPoint = instrumentStore.latestPoint
 
     if (!latestPoint) {
-      console.warn('[field-session] No instrument reading available')
       return null
     }
 
@@ -193,8 +191,8 @@ class FieldSession {
         createdAt: new Date(measurement.timestamp).toISOString(),
         syncedAt: null,
       })
-    } catch (err) {
-      console.error('[field-session] Failed to save offline:', err)
+    } catch {
+      /* ignore offline save error */
     }
 
     // Add to session state
@@ -255,8 +253,7 @@ class FieldSession {
       })
 
       return { synced: syncedCount, failed: failedCount }
-    } catch (err) {
-      console.error('[field-session] Sync failed:', err)
+    } catch {
       this.setState({ isSyncing: false })
       return { synced: 0, failed: this.state.pendingSyncCount }
     }
@@ -289,8 +286,8 @@ class FieldSession {
         measurements,
         pendingSyncCount: measurements.filter(m => !m.synced).length,
       })
-    } catch (err) {
-      console.warn('[field-session] Failed to load measurements:', err)
+    } catch {
+      /* ignore load error */
     }
   }
 

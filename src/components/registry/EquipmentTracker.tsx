@@ -58,12 +58,8 @@ export default function EquipmentTracker() {
     try {
       const data = await apiGet('/api/equipment/list', equipmentListResponseSchema, { ttlMs: 0 })
       setEquipment((data.equipment as unknown as Equipment[]) || [])
-    } catch (error) {
-      if (error instanceof ApiError) {
-        console.error('Failed to fetch equipment:', error.message)
-      } else {
-        console.error('Failed to fetch equipment:', error)
-      }
+    } catch {
+      /* ignore fetch error */
     }
     setLoading(false)
   }
@@ -311,12 +307,8 @@ function AddEquipmentModal({ onClose, onAdd }: { onClose: () => void; onAdd: () 
       await apiPost('/api/equipment/add', equipmentMutationResponseSchema, form)
       apiInvalidate('/api/equipment/list')
       onAdd()
-    } catch (error) {
-      if (error instanceof ApiError) {
-        console.error('Failed to add equipment:', error.message)
-      } else {
-        console.error('Failed to add equipment:', error)
-      }
+    } catch {
+      /* ignore submission error */
     }
     setLoading(false)
   }
@@ -454,12 +446,8 @@ function AddCalibrationModal({
       await apiPost('/api/equipment/calibration', equipmentMutationResponseSchema, { equipmentId, ...form })
       apiInvalidate('/api/equipment/list')
       onAdd()
-    } catch (error) {
-      if (error instanceof ApiError) {
-        console.error('Failed to add calibration:', error.message)
-      } else {
-        console.error('Failed to add calibration:', error)
-      }
+    } catch {
+      /* ignore submission error */
     }
     setLoading(false)
   }
