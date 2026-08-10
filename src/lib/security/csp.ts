@@ -7,13 +7,20 @@
  * selectively rather than blanket 'unsafe-inline'.
  */
 
-import crypto from 'crypto'
-
 /**
  * Generate a cryptographically random nonce string.
  */
 export function generateNonce(): string {
-  return crypto.randomBytes(16).toString('base64')
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    const array = new Uint8Array(16)
+    crypto.getRandomValues(array)
+    return Buffer.from(array).toString('base64')
+  } else if (typeof window === 'undefined') {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const nodeCrypto = require('crypto')
+    return nodeCrypto.randomBytes(16).toString('base64')
+  }
+  return 'default-nonce-string-placeholder'
 }
 
 /**
