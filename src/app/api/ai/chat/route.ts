@@ -12,6 +12,7 @@ export const dynamic = 'force-dynamic'
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import {
@@ -138,7 +139,7 @@ async function decrementAiCalls(userId: string, email?: string): Promise<{ remai
 
     if (profile.rows.length === 0) {
       // No profile yet — FAIL CLOSED: deny the call until profile exists
-      console.error('[ai/chat] No profile found for user — blocking AI call (fail-closed)')
+      logger.error('[ai/chat] No profile found for user — blocking AI call (fail-closed)')
       return { remaining: 0, limit: TIER_LIMITS.free }
     }
 
@@ -164,7 +165,7 @@ async function decrementAiCalls(userId: string, email?: string): Promise<{ remai
     return { remaining: newRemaining, limit }
   } catch (err) {
     // FAIL CLOSED: If DB is down, deny ALL AI calls to prevent unlimited usage
-    console.error('[ai/chat] Usage tracking failed — BLOCKING AI call (fail-closed):', err)
+    logger.error('[ai/chat] Usage tracking failed — BLOCKING AI call (fail-closed):', { error: err })
     return { remaining: 0, limit: 0 }
   }
 }
@@ -335,7 +336,7 @@ export async function POST(request: NextRequest) {
   } catch (error: unknown) {
     // Never expose API keys or internal details in error responses
     const message = error instanceof Error ? (error as Error).message : 'AI service error'
-    console.error('[ai/chat] Error:', message)
+    logger.error('[ai/chat] Error:', { message })
 
     // Map common NVIDIA errors to user-friendly messages
     if (message.includes('NVIDIA_API_KEY not configured')) {

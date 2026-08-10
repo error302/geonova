@@ -22,6 +22,7 @@
  *   const unsubscribe = offlineQueue.onSyncComplete(() => refetchData())
  */
 
+import { logger } from '@/lib/logger'
 import { onlineManager } from '@tanstack/react-query'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -205,7 +206,7 @@ class OfflineMutationQueue {
           if (err instanceof Error && /HTTP 4\d\d/.test(err.message)) {
             await dbDelete(mutation.id)
             failed++
-            console.warn(`[offline-queue] dropping 4xx mutation ${mutation.id}:`, err.message)
+            logger.warn(`[offline-queue] dropping 4xx mutation ${mutation.id}:`, { message: err.message })
           } else {
             // Network error or 5xx — increment attempts, will retry next sync
             mutation.attempts++
@@ -236,7 +237,7 @@ if (typeof window !== 'undefined') {
   // Sync when browser comes back online
   window.addEventListener('online', () => {
     offlineQueue.sync().catch(err => {
-      console.error('[offline-queue] sync failed on reconnect:', err)
+      logger.error('[offline-queue] sync failed on reconnect:', { error: err })
     })
   })
 
@@ -244,7 +245,7 @@ if (typeof window !== 'undefined') {
   onlineManager.subscribe(() => {
     if (onlineManager.isOnline()) {
       offlineQueue.sync().catch(err => {
-        console.error('[offline-queue] sync failed on onlineManager event:', err)
+        logger.error('[offline-queue] sync failed on onlineManager event:', { error: err })
       })
     }
   })

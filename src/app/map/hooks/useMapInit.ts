@@ -20,6 +20,7 @@
  */
 
 import { useEffect } from 'react'
+import { logger } from '@/lib/logger'
 import type { MapCleanupRefs } from '@/lib/map/olTypes'
 import type OLMapType from 'ol/Map'
 import type { SelectEvent } from 'ol/interaction/Select'
@@ -99,7 +100,7 @@ export function useMapInit(params: UseMapInitParams) {
           const { registerProjections } = await import('@/lib/map/projection')
           await registerProjections()
         } catch (projErr) {
-          console.warn('Projection registration failed, using defaults:', projErr)
+          logger.warn('Projection registration failed, using defaults:', { error: projErr })
         }
 
         // Parallel import of all OL modules for performance
@@ -316,7 +317,7 @@ export function useMapInit(params: UseMapInitParams) {
             }
           }
         } catch (err) {
-          console.warn('DbClient query failed:', err)
+          logger.warn('DbClient query failed:', { error: err })
         }
 
         // ── Popup overlay ──
@@ -564,7 +565,7 @@ export function useMapInit(params: UseMapInitParams) {
 
         if (!cancelled) setMapReady(true)
       } catch (err: unknown) {
-        console.error('Map initialization failed:', err)
+        logger.error('Map initialization failed:', { error: err })
         if (!cancelled) setInitError(err instanceof Error ? (err as Error).message : 'Map failed to load')
       }
     }

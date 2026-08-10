@@ -15,6 +15,7 @@ export const dynamic = 'force-dynamic'
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
@@ -73,8 +74,8 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error('[logo-api] GET error:', error);
-    return NextResponse.json({ error: 'Failed to fetch logo' }, { status: 500 });
+    logger.error('[logo-api] GET error:', { error });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -148,7 +149,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('[logo-api] POST error:', error);
+    logger.error('[logo-api] POST error:', { error });
     return NextResponse.json({ error: 'Failed to upload logo' }, { status: 500 });
   }
 }
@@ -177,7 +178,7 @@ export async function DELETE() {
 
     return NextResponse.json({ success: true, message: 'Logo removed' });
   } catch (error) {
-    console.error('[logo-api] DELETE error:', error);
-    return NextResponse.json({ error: 'Failed to delete logo' }, { status: 500 });
+    logger.error('[logo-api] DELETE error:', { error });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

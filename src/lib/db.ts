@@ -1,4 +1,5 @@
 import { Pool, type PoolClient, type QueryResult, type QueryResultRow } from 'pg'
+import { logger } from '@/lib/logger'
 import { env } from '@/lib/env'
 
 let pool: Pool | null = null
@@ -142,7 +143,7 @@ export function getPool(): Pool {
 
     // Pool-level error listener — prevents unhandled errors from crashing the process
     pool.on('error', (err) => {
-      console.error('[db] Unexpected pool error:', err)
+      logger.error('[db] Unexpected pool error:', { error: err })
     })
   }
   return pool
@@ -197,7 +198,7 @@ export const db = {
       const result = await client.query(text, params)
       const elapsed = Date.now() - start
       if (elapsed > SLOW_QUERY_THRESHOLD_MS) {
-        console.warn(`[db] Slow query (${elapsed}ms):`, text.slice(0, 200))
+        logger.warn(`[db] Slow query (${elapsed}ms): ${text.slice(0, 200)}`)
       }
       return result
     } finally {
@@ -318,7 +319,7 @@ export const db = {
         client.release()
       }
     } catch (err) {
-      console.error('[db] Health check failed:', err)
+      logger.error('[db] Health check failed:', { error: err })
       return false
     }
   },

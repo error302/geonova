@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { logger } from '@/lib/logger'
 import {
   Trash2,
   HardDrive,
@@ -72,7 +73,7 @@ export function OfflineTileManager() {
       const data = await listCachedSources()
       setSources(data)
     } catch (err) {
-      console.error('Failed to list cached sources:', err)
+      logger.error('Failed to list cached sources:', { error: err })
     } finally {
       setLoading(false)
     }
@@ -89,7 +90,7 @@ export function OfflineTileManager() {
         await deleteCachedTiles(sourceId)
         await refreshSources()
       } catch (err) {
-        console.error('Failed to delete source:', err)
+        logger.error('Failed to delete source:', { error: err })
       } finally {
         setDeleting(null)
       }
@@ -103,7 +104,7 @@ export function OfflineTileManager() {
       await clearAllTileCache()
       await refreshSources()
     } catch (err) {
-      console.error('Failed to clear cache:', err)
+      logger.error('Failed to clear cache:', { error: err })
     } finally {
       setClearing(false)
     }

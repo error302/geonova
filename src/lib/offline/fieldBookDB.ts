@@ -15,6 +15,7 @@
  * No instrument software needed. No pen-and-paper. No Excel.
  */
 
+import { logger } from '@/lib/logger'
 import { openDB, type IDBPDatabase } from 'idb'
 
 const DB_NAME = 'metardu-fieldbook'
@@ -202,17 +203,17 @@ export function startAutoSync(intervalMs = 30000): void {
   if (syncInterval) return
 
   // Sync immediately on start
-  syncObservations().catch(console.error)
+  syncObservations().catch((err) => logger.error('[fieldBookDB] Auto-sync failed:', { error: err }))
 
   // Sync on connectivity restore
   const unsubscribe = onConnectivityChange((online) => {
-    if (online) syncObservations().catch(console.error)
+    if (online) syncObservations().catch((err) => logger.error('[fieldBookDB] Online sync failed:', { error: err }))
   })
 
   // Sync periodically
   syncInterval = setInterval(() => {
     if (isOnline()) {
-      syncObservations().catch(console.error)
+      syncObservations().catch((err) => logger.error('[fieldBookDB] Periodic sync failed:', { error: err }))
     }
   }, intervalMs)
 

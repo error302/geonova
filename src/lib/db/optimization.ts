@@ -4,6 +4,7 @@
  */
 
 import { createClient } from '@/lib/api-client/client'
+import { logger } from '@/lib/logger'
 import redisCache from '@/lib/cache/redis'
 
 // Query performance thresholds
@@ -56,7 +57,7 @@ class DatabaseOptimizer {
       
       if (error) {
         errors += batch.length
-        console.error(`[DB] Bulk insert error for ${table}:`, error)
+        logger.error(`[DB] Bulk insert error for ${table}:`, { error })
       } else {
         inserted += batch.length
       }
@@ -201,7 +202,7 @@ class DatabaseOptimizer {
     this.queryLog.set(query, times)
 
     if (duration > SLOW_QUERY_THRESHOLD) {
-      console.warn(`[DB] Slow query (${duration}ms): ${query}`)
+      logger.warn(`[DB] Slow query (${duration}ms): ${query}`)
     }
   }
 
@@ -274,7 +275,7 @@ export async function applyRecommendedIndexes(): Promise<{ applied: string[]; sk
         applied.push(sql)
       } catch (error) {
         skipped.push(sql)
-        console.error(`[DB] Failed to apply index: ${sql}`, error)
+        logger.error(`[DB] Failed to apply index: ${sql}`, { error })
       }
     }
   }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react'
+import { logger } from '@/lib/logger'
 import { transformCoordinates, getSupportedSystems, type CoordinateSystem, type TransformResult } from '@/lib/online/coordinates'
 import { calculateEDMCorrection } from '@/lib/online/weather'
 import { searchBenchmarks, getAvailableCountries, getBenchmarkTypes, Benchmark } from '@/lib/online/benchmarks'
@@ -72,7 +73,7 @@ export default function OnlineServicesPage() {
       )
       setTransformResult(result)
     } catch (e) {
-      console.error(e)
+      logger.error('Coordinate transform error:', { error: e })
     }
     setLoading(false)
   }
@@ -83,7 +84,7 @@ export default function OnlineServicesPage() {
       const result = await searchBenchmarks(benchmarkSearch)
       setBenchmarkResults(result.benchmarks)
     } catch (e) {
-      console.error(e)
+      logger.error('Benchmark search error:', { error: e })
     }
     setLoading(false)
   }
@@ -395,7 +396,7 @@ export default function OnlineServicesPage() {
                           })
                         }
                       } catch (e) {
-                        console.error('Failed to fetch weather:', e)
+                        logger.error('Failed to fetch weather:', { error: e })
                       }
                     })
                   }

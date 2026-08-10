@@ -8,6 +8,8 @@
  * - All survey validation results include safety disclaimers per Survey Act Cap 299
  */
 
+import { logger } from '@/lib/logger'
+
 const BASE_URL = 'https://integrate.api.nvidia.com/v1'
 const DEFAULT_MODEL = 'meta/llama-3.1-70b-instruct'
 const VISION_MODEL = 'meta/llama-3.2-90b-vision-instruct'
@@ -296,7 +298,7 @@ If no valid coordinates found, return empty arrays.`
       warnings: parsed.warnings || [],
     }
   } catch (e) {
-    console.error('Failed to parse NVIDIA response:', e)
+    logger.error('Failed to parse NVIDIA response:', { error: e })
     return { coordinates: [], warnings: ['Failed to parse AI response'] }
   }
 }
@@ -429,7 +431,7 @@ Return ONLY raw JSON with no other text, markdown, or code:
       disclaimer: 'This is an AI-assisted review for reference only. A licensed surveyor must make the final determination per the Survey Act Cap 299.',
     }
   } catch (e) {
-    console.error('Failed to parse validation response:', e)
+    logger.error('Failed to parse validation response:', { error: e })
     return {
       aiAssessment: 'needs_review',
       confidence: 'low',
@@ -576,7 +578,7 @@ Rules:
       disclaimer: 'AI-interpreted field data must be verified by a licensed surveyor before use in any official document per the Survey Act Cap 299.',
     }
   } catch (e) {
-    console.error('[interpretFieldPhoto] Failed to parse vision response:', e)
+    logger.error('[interpretFieldPhoto] Failed to parse vision response:', { error: e })
     return {
       observations: [],
       surveyType: 'unknown',

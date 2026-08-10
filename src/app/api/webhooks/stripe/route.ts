@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { getStripeService } from '@/lib/payments/stripe'
 
 interface StripeWebhookEvent {
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
     }
     event = JSON.parse(payload) as StripeWebhookEvent
   } catch (err: unknown) {
-    console.error('Stripe webhook verification failed:', (err as Error).message)
+    logger.error('Stripe webhook verification failed:', { message: (err as Error).message })
     return NextResponse.json({ error: 'Invalid webhook signature' }, { status: 400 })
   }
 
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
       }
 
       if (!paymentId || !userId || !planId) {
-        console.error('Stripe webhook: missing metadata in checkout.session.completed')
+        logger.error('Stripe webhook: missing metadata in checkout.session.completed')
         break
       }
 
@@ -224,7 +225,7 @@ export async function POST(request: NextRequest) {
     case 'payment_intent.payment_failed': {
       // Card payment failed — log for debugging
       const intent = event.data.object
-      console.warn(`[stripe] Payment failed: ${intent.id} — ${intent.last_payment_error?.message || 'unknown'}`)
+      logger.warn(`[stripe] Payment failed: ${intent.id} — ${intent.last_payment_error?.message || 'unknown'}`)
       break
     }
 

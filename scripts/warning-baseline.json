@@ -1,5 +1,5 @@
 {
-  "no-console": 258,
+  "no-console": 213,
   "@typescript-eslint/no-explicit-any": 123,
   "@typescript-eslint/no-unsafe-assignment": 358,
   "@typescript-eslint/no-unsafe-member-access": 115,

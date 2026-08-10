@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { logger } from '@/lib/logger';
 import { z } from 'zod';
 
 import { SurveyType } from '@/types/project';
@@ -152,9 +153,9 @@ function ReviewStepPanel({ surveyType, projectId }: { surveyType: SurveyType; pr
       }
     } catch (err) {
       if (err instanceof ApiError) {
-        console.error('Survey report error:', err.message);
+        logger.error('Survey report error:', { message: err.message });
       } else {
-        console.error('Survey report error:', err);
+        logger.error('Survey report error:', { error: err });
       }
     } finally {
       setLoading(null);
@@ -176,7 +177,7 @@ function ReviewStepPanel({ surveyType, projectId }: { surveyType: SurveyType; pr
         URL.revokeObjectURL(url);
       }
     } catch (err) {
-      console.error('DXF export error:', err);
+      logger.error('DXF export error:', { error: err });
     } finally {
       setLoading(null);
     }

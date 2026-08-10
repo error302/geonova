@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
@@ -219,7 +220,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
       const safeLR = (toStr(parcel.lr_number_proposed) || toStr(parcel.parcel_number)).replace(/[/\\]/g, '-')
       zipFiles.push({ path: `DeedPlans/Block${toStr(parcel.block_number)}/${safeLR}_DeedPlan.pdf`, content: Buffer.from(doc.output('arraybuffer')) })
     } catch (err) {
-      console.error(`Failed deed plan for parcel ${toStr(parcel.id)}:`, err)
+      logger.error(`Failed deed plan for parcel ${toStr(parcel.id)}:`, { error: err })
     }
   }
 
@@ -247,7 +248,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
       const safeLR = (toStr(parcel.lr_number_proposed) || toStr(parcel.parcel_number)).replace(/[/\\]/g, '-')
       zipFiles.push({ path: `PPA2_Forms/PPA2_${safeLR}.pdf`, content: Buffer.from(ppa2Buffer) })
     }
-  } catch (err) { console.error('Failed PPA2 forms:', err) }
+  } catch (err) { logger.error('Failed PPA2 forms:', { error: err }) }
 
   // 4. RIM
   try {
@@ -316,7 +317,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
       zipFiles.push({ path: 'RIM_Registry_Index_Map.pdf', content: Buffer.from(doc.output('arraybuffer')) })
     }
-  } catch (err) { console.error('Failed RIM:', err) }
+  } catch (err) { logger.error('Failed RIM:', { error: err }) }
 
   // 5. README
   zipFiles.push({

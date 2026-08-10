@@ -23,7 +23,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { rateLimit, getClientIdentifier } from '@/lib/security/rateLimit'
-import { auditLog } from '@/lib/logger'
+import { logger, auditLog } from '@/lib/logger'
 import { setCurrentUserId, setCurrentOrgId } from '@/lib/db'
 import { db } from '@/lib/db'
 import { captureError } from '@/lib/monitoring/sentry'
@@ -320,9 +320,9 @@ export function apiHandler(
         } catch (auditErr) {
           // Audit chain failure should NOT block the response — the
           // mutation has already happened. Log and continue.
-          console.warn(
+          logger.warn(
             `[apiHandler] appendAuditEntry failed for ${req.method} ${req.nextUrl.pathname}:`,
-            auditErr instanceof Error ? auditErr.message : auditErr
+            { error: auditErr instanceof Error ? auditErr.message : String(auditErr) }
           )
         }
       }
@@ -338,18 +338,15 @@ export function apiHandler(
       // AUDIT FIX (H3, 2026-07-02): Structured JSON logging (opt-in by default).
       // Includes requestId, userId, path, method for distributed tracing.
       if (structuredLogs) {
-        console.error(JSON.stringify({
-          level: 'error',
-          message: err instanceof Error ? err.message : String(err),
-          timestamp: new Date().toISOString(),
+        logger.error(err instanceof Error ? err.message : String(err), {
           requestId: reqId,
           userId,
           path: req.nextUrl.pathname,
           method: req.method,
           stack: err instanceof Error ? err.stack : undefined,
-        }))
+        })
       } else {
-        console.error('[apiHandler] Unhandled error:', err)
+        logger.error('[apiHandler] Unhandled error:', { error: err })
       }
 
       // Send to Sentry (only in production, key scrubbed by beforeSend)
