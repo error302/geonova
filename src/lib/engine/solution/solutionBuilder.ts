@@ -46,7 +46,7 @@ export function createSolutionV1(input: {
 
 export function isSolutionV1(value: unknown): value is SolutionV1 {
   if (!value || typeof value !== 'object') return false
-  const v = value as any
+  const v = value as Record<string, unknown>
   return v.version === 1 && Array.isArray(v.given) && Array.isArray(v.toFind) && Array.isArray(v.solution) && Array.isArray(v.result)
 }
 

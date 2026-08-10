@@ -66,7 +66,7 @@ export class PayPalService {
       throw new Error(`Failed to obtain PayPal access token (${response.status}). Mode: ${this.mode}. Check PAYPAL_MODE, CLIENT_ID and CLIENT_SECRET.`)
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as { access_token: string; expires_in: number }
     this.accessToken = data.access_token
     this.tokenExpiry = Date.now() + (data.expires_in * 1000) - 60000
 
@@ -198,7 +198,7 @@ export class PayPalService {
       throw new Error(error.message || 'Failed to create subscription')
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as { id: string; links?: Array<{ rel: string; href: string }> }
     const approveLink = data.links?.find((l: { rel: string }) => l.rel === 'approve')
 
     return {

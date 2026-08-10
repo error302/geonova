@@ -94,7 +94,7 @@ function verifyToken(token: string, secret: string): { userId?: string; email?: 
     }
 
     // Decode payload
-    const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString())
+    const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString()) as { sub?: string; userId?: string; email?: string; name?: string; fullName?: string }
     return {
       userId: payload.sub || payload.userId,
       email: payload.email,

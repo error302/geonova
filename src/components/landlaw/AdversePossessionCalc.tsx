@@ -117,7 +117,7 @@ export default function AdversePossessionCalc() {
             </div>
 
             <div className="flex flex-wrap gap-2 mb-3">
-              {evidenceTypes.map((type: any) => (
+              {evidenceTypes.map((type) => (
                 <button
                   key={type.type}
                   onClick={() => addEvidence(type.type as AdversePossessionEvidenceInput['type'])}

@@ -384,7 +384,7 @@ export default function OnlineServicesPage() {
                       const { latitude, longitude } = pos.coords
                       try {
                         const res = await fetch(`/api/weather?lat=${latitude}&lon=${longitude}`)
-                        const data = await res.json()
+                        const data = (await res.json()) as { temperature?: number; pressure?: number; humidity?: number; elevation?: number }
                         if (data.temperature !== undefined) {
                           setWeatherInput({
                             ...weatherInput,

@@ -205,7 +205,7 @@ export function generateCLAForm12(input: CLA12Input): Uint8Array {
   doc.text('Description of Dispute:', margin, y)
   y += 5
   doc.setFont('helvetica', 'normal')
-  const descLines = doc.splitTextToSize(input.disputeDescription, W - margin * 2)
+  const descLines = doc.splitTextToSize(input.disputeDescription, W - margin * 2) as string[]
   descLines.forEach((line: string) => {
     if (y > 275) { doc.addPage(); y = 20 }
     doc.text(line, margin, y)
@@ -233,7 +233,7 @@ export function generateCLAForm12(input: CLA12Input): Uint8Array {
   if (input.previousResolutionAttempts) {
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8.5)
-    const attemptLines = doc.splitTextToSize(input.previousResolutionAttempts, W - margin * 2)
+    const attemptLines = doc.splitTextToSize(input.previousResolutionAttempts, W - margin * 2) as string[]
     attemptLines.forEach((line: string) => {
       if (y > 275) { doc.addPage(); y = 20 }
       doc.text(line, margin, y)
@@ -278,7 +278,7 @@ export function generateCLAForm12(input: CLA12Input): Uint8Array {
   sectionHeader('PART G — RELIEF SOUGHT BY COMPLAINANT')
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(8.5)
-  const reliefLines = doc.splitTextToSize(input.reliefSought, W - margin * 2)
+  const reliefLines = doc.splitTextToSize(input.reliefSought, W - margin * 2) as string[]
   reliefLines.forEach((line: string) => {
     if (y > 275) { doc.addPage(); y = 20 }
     doc.text(line, margin, y)
@@ -291,7 +291,7 @@ export function generateCLAForm12(input: CLA12Input): Uint8Array {
     sectionHeader('PART H — DOCUMENTS ATTACHED')
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8.5)
-    const docLines = doc.splitTextToSize(input.documentsAttached, W - margin * 2)
+    const docLines = doc.splitTextToSize(input.documentsAttached, W - margin * 2) as string[]
     docLines.forEach((line: string) => {
       if (y > 275) { doc.addPage(); y = 20 }
       doc.text(line, margin, y)
@@ -337,7 +337,7 @@ export function generateCLAForm12(input: CLA12Input): Uint8Array {
     doc.text('Decision Summary:', margin, y)
     y += 5
     doc.setFont('helvetica', 'normal')
-    const decisionLines = doc.splitTextToSize(input.disputeCommittee?.decisionSummary ?? "—", W - margin * 2)
+    const decisionLines = doc.splitTextToSize(input.disputeCommittee?.decisionSummary ?? "—", W - margin * 2) as string[]
     decisionLines.forEach((line: string) => {
       if (y > 275) { doc.addPage(); y = 20 }
       doc.text(line, margin, y)
