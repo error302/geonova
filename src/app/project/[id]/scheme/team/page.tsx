@@ -40,9 +40,21 @@ const unassignedBlockSchema = z.object({
   stats: blockStatsSchema,
 }).passthrough()
 
+const teamOwnerSchema = z.object({
+  full_name: z.string().optional(),
+  email: z.string().optional(),
+}).passthrough()
+
+const schemeActivitySchema = z.object({
+  created_at: z.string(),
+  action: z.string(),
+  user_name: z.string().optional(),
+  user_email: z.string().optional(),
+}).passthrough()
+
 const teamResponseSchema = z.object({
   data: z.object({
-    owner: z.any().nullable(),
+    owner: teamOwnerSchema.nullable(),
     team: z.array(teamMemberSchema),
     unassigned_blocks: z.array(unassignedBlockSchema),
   }).passthrough(),
@@ -55,7 +67,7 @@ const statusResponseSchema = z.object({
 }).passthrough()
 
 const activityResponseSchema = z.object({
-  data: z.array(z.any()),
+  data: z.array(schemeActivitySchema),
 }).passthrough()
 
 const assignMutationSchema = z.object({ ok: z.boolean().optional() }).passthrough()
@@ -78,16 +90,28 @@ interface UnassignedBlock {
   stats: { total_parcels: number; approved: number; in_progress: number; pending: number }
 }
 
+interface TeamOwner {
+  full_name?: string
+  email?: string
+}
+
+interface SchemeActivity {
+  created_at: string
+  action: string
+  user_name?: string
+  user_email?: string
+}
+
 export default function TeamPage() {
   const params = useParams()
   const projectId = params.id as string
   const [team, setTeam] = useState<TeamMember[]>([])
   const [unassignedBlocks, setUnassignedBlocks] = useState<UnassignedBlock[]>([])
-  const [owner, setOwner] = useState<any>(null)
+  const [owner, setOwner] = useState<TeamOwner | null>(null)
   const [schemeStatus, setSchemeStatus] = useState('')
   const [loading, setLoading] = useState(true)
   const [assigning, setAssigning] = useState<string | null>(null)
-  const [activityLog, setActivityLog] = useState<any[]>([])
+  const [activityLog, setActivityLog] = useState<SchemeActivity[]>([])
   const [showActivity, setShowActivity] = useState(false)
   const [fetchError, setFetchError] = useState('')
 
@@ -247,7 +271,7 @@ export default function TeamPage() {
               <p className="text-gray-600 text-sm">No activity yet</p>
             ) : (
               <div className="space-y-2">
-                {activityLog.map((a: any, i: number) => (
+                {activityLog.map((a, i) => (
                   <div key={`item-${i}`} className="flex items-start gap-3 text-sm">
                     <span className="text-gray-600 whitespace-nowrap text-xs">
                       {new Date(a.created_at).toLocaleString()}

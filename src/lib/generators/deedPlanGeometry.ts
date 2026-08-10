@@ -241,7 +241,7 @@ export async function loadPreAdjustedFromDB(
 ): Promise<{ stations: PreAdjustedCoordinate[]; closure: PreAdjustedClosure } | null> {
   try {
     // Find the most recent traverse for this project via parcels
-    const traverseRes = await db.query(
+    const traverseRes = await db.query<{ id: string; linear_misclosure: number | null; precision_ratio: number | null }>(
       `SELECT pt.id, pt.linear_misclosure, pt.precision_ratio
        FROM parcel_traverses pt
        JOIN parcels p ON p.id = pt.parcel_id
@@ -266,7 +266,7 @@ export async function loadPreAdjustedFromDB(
     // Also try to get beacon info from field book entries for richer metadata
     const beaconLookup = new Map<string, { beaconNo: string; monument: string; markStatus: string }>();
     try {
-      const fbRes = await db.query(
+      const fbRes = await db.query<{ station: string; raw_data: Record<string, unknown> | null }>(
         'SELECT station, raw_data FROM project_fieldbook_entries WHERE project_id = $1 ORDER BY row_index ASC',
         [projectId]
       );
@@ -325,7 +325,7 @@ async function computeFromFieldBook(projectId: string): Promise<DeedPlanGeometry
     throw new Error('Deed Plan requires at least 3 traverse stations. Add observations in the Field Book panel.');
   }
 
-  const projectRes = await db.query(
+  const projectRes = await db.query<{ boundary_data: Record<string, unknown> | null; utm_zone: number | null; hemisphere: string | null }>(
     'SELECT boundary_data, utm_zone, hemisphere FROM projects WHERE id = $1',
     [projectId]
   );

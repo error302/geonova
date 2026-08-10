@@ -5,7 +5,7 @@ import { computeDeedPlanGeometry, loadPreAdjustedFromDB } from './deedPlanGeomet
 export async function generateBoundaryShapefile(
   projectId: string
 ): Promise<Buffer> {
-  const projectRes = await db.query(
+  const projectRes = await db.query<{ name: string; utm_zone: number | null; hemisphere: string | null }>(
     'SELECT name, utm_zone, hemisphere FROM projects WHERE id = $1',
     [projectId]
   );
@@ -35,7 +35,7 @@ export async function generateBoundaryShapefile(
       type: 'Feature',
       geometry: {
         type: 'Polygon',
-        coordinates: [beacons.map((b: any) => [b.e, b.n]).concat([[beacons[0].e, beacons[0].n]])]
+        coordinates: [beacons.map((b) => [b.e, b.n]).concat([[beacons[0].e, beacons[0].n]])]
       },
       properties: {
         project: project.name,

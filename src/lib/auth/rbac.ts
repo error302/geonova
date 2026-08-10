@@ -172,7 +172,7 @@ export async function requirePermissionAsync(
   resourceId?: string,
 ): Promise<PermissionCheckResult> {
   // First, check the user's role — super_admin and org_admin bypass all checks
-  const { rows: roleRows } = await db.query(
+  const { rows: roleRows } = await db.query<{ role: string }>(
     `SELECT role FROM user_roles
      WHERE user_id = $1 AND revoked_at IS NULL
      ORDER BY granted_at DESC
@@ -181,7 +181,7 @@ export async function requirePermissionAsync(
   )
 
   // Also check the users table role as a fallback
-  const { rows: userRows } = await db.query(
+  const { rows: userRows } = await db.query<{ role: string }>(
     `SELECT role FROM users WHERE id = $1`,
     [userId],
   )
@@ -246,7 +246,7 @@ export async function getOrgRole(
   organizationId: string,
 ): Promise<Role | null> {
   try {
-    const { rows } = await db.query(
+    const { rows } = await db.query<{ role: string }>(
       `SELECT role FROM organization_members
        WHERE user_id = $1 AND organization_id = $2 AND is_active = TRUE`,
       [userId, organizationId],
@@ -279,7 +279,7 @@ export async function canAccessProject(
   projectId: string,
 ): Promise<Role | 'owner' | null> {
   // 1. Check if user is the project owner
-  const { rows: projectRows } = await db.query(
+  const { rows: projectRows } = await db.query<{ user_id: string; organization_id: string | null }>(
     `SELECT user_id, organization_id FROM projects WHERE id = $1`,
     [projectId],
   )
@@ -295,7 +295,7 @@ export async function canAccessProject(
   }
 
   // 3. Check project_members table (legacy per-project membership)
-  const { rows: memberRows } = await db.query(
+  const { rows: memberRows } = await db.query<{ role: string }>(
     `SELECT role FROM project_members WHERE user_id = $1 AND project_id = $2`,
     [userId, projectId],
   )

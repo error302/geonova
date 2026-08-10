@@ -111,10 +111,13 @@ export async function sendSMS(to: string, message: string): Promise<Notification
       }).toString(),
     })
 
-    const data = await response.json()
+    const data = (await response.json()) as {
+      SMSMessageData?: { Recipients?: Array<{ status: string; messageId?: string; cost?: string }> }
+    }
 
-    if (data.SMSMessageData?.Recipients?.length > 0) {
-      const recipient = data.SMSMessageData.Recipients[0]
+    const recipients = data.SMSMessageData?.Recipients
+    if (recipients && recipients.length > 0) {
+      const recipient = recipients[0]
       return {
         success: recipient.status === 'Success',
         messageId: recipient.messageId,

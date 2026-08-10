@@ -69,7 +69,7 @@ class DatabaseOptimizer {
   }
 
   // Paginated query with cursor-based pagination
-  async paginatedQuery<T>(
+  async paginatedQuery<T extends Record<string, unknown>>(
     table: string,
     query: string,
     options: {
@@ -105,7 +105,7 @@ class DatabaseOptimizer {
 
     if (error) throw error
 
-    const results = data || []
+    const results = (data || []) as T[]
     const hasMore = results.length > limit
     const trimmedResults = hasMore ? results.slice(0, -1) : results
 

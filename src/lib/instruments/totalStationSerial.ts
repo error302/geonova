@@ -66,9 +66,9 @@ export const INSTRUMENT_PRESETS: Record<InstrumentBrand, InstrumentConfig> = {
 }
 
 export class TotalStationConnection {
-  private port: any = null
-  private reader: any = null
-  private writer: any = null
+  private port: SerialPort | null = null
+  private reader: ReadableStreamDefaultReader<Uint8Array> | null = null
+  private writer: WritableStreamDefaultWriter<Uint8Array> | null = null
   private config: InstrumentConfig
   private connected = false
   private decoder: TextDecoder
@@ -89,15 +89,16 @@ export class TotalStationConnection {
     if (!TotalStationConnection.isSupported()) {
       throw new Error('Web Serial API is not supported. Use Chrome/Edge 89+ or the METARDU mobile app.')
     }
-    this.port = await navigator.serial.requestPort()
-    await this.port.open({
+    const port = await navigator.serial.requestPort()
+    this.port = port
+    await port.open({
       baudRate: this.config.baudRate,
       dataBits: this.config.dataBits,
       stopBits: this.config.stopBits,
       parity: this.config.parity,
     })
-    this.reader = this.port.readable.getReader()
-    this.writer = this.port.writable.getWriter()
+    this.reader = port.readable?.getReader() ?? null
+    this.writer = port.writable?.getWriter() ?? null
     this.connected = true
     this.readLoop()
   }
@@ -121,10 +122,11 @@ export class TotalStationConnection {
   getConfig(): InstrumentConfig { return this.config }
 
   private async readLoop() {
-    if (!this.reader) return
+    const reader = this.reader
+    if (!reader) return
     try {
       while (this.connected) {
-        const { value, done } = await this.reader.read()
+        const { value, done } = await reader.read()
         if (done) break
         this.buffer += this.decoder.decode(value, { stream: true })
         const lines = this.buffer.split(/\r\n|\n|\r/)
