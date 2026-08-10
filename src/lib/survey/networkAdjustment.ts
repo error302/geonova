@@ -12,6 +12,7 @@
  */
 
 import { z } from 'zod'
+import type { BrowserClient } from '@/lib/api-client/client'
 
 export const StationSchema = z.object({
   id: z.string().min(1, 'Station ID is required'),
@@ -37,14 +38,16 @@ export const ObservationSchema = z.object({
 
 export type Observation = z.infer<typeof ObservationSchema>
 
-let dbClient: { from: (table: string) => { insert: (data: unknown) => Promise<unknown> } } | null = null
+let dbClient: BrowserClient | null = null
 
 async function logNetworkAdjustment(stations: Station[], observations: Observation[]) {
   if (typeof window === 'undefined') return
   try {
     const { createClient } = await import('@/lib/api-client/client')
     dbClient = createClient()
-    await dbClient.from('network_adjustments').insert({
+    const client = dbClient
+    if (!client) return
+    await client.from('network_adjustments').insert({
       stations,
       observations,
       status: 'pending',

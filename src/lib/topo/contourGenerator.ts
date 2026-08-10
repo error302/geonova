@@ -61,7 +61,7 @@ export function generateContours(
 
     const worldRings: [number, number][][] = contour.coordinates.flatMap(
       (polygon) => polygon.map((ring) =>
-        ring.map(([px, py]: [number, number]): [number, number] => {
+        ring.map(([px, py]: number[]): [number, number] => {
           const e = gridMinE + px * gridResolution
           const n = gridMinN + (rows - 1 - py) * gridResolution
           return [e, n]
