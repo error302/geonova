@@ -155,7 +155,7 @@ if (PFC) {
 if (PFC) {
   const diffRef = baseRef === 'HEAD' ? 'HEAD' : `${baseRef}...HEAD`
   try {
-    const raw = execFileSync('git', ['diff', '--name-only', '--diff-filter=ACMR', diffRef, '--', 'middleware.ts', 'src/*.ts', 'src/*.tsx', 'src/**/*.ts', 'src/**/*.tsx'], {
+    const raw = execFileSync('git', ['diff', '--name-only', '--diff-filter=ACMR', diffRef, '--', 'src/middleware.ts', 'src/*.ts', 'src/*.tsx', 'src/**/*.ts', 'src/**/*.tsx'], {
       encoding: 'utf8',
       maxBuffer: 64 * 1024 * 1024,
     })

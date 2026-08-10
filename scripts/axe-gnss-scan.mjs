@@ -162,7 +162,7 @@ const PROTECTED_PAGES = [
 import { execFileSync } from 'node:child_process'
 
 // Files that can change any page's rendering -> cannot narrow, full sweep.
-const GLOBAL_FILES = new Set(['middleware.ts'])
+const GLOBAL_FILES = new Set(['src/middleware.ts'])
 function isGlobal(file) {
   if (GLOBAL_FILES.has(file)) return true
   if (/[\\/]globals\.css$/.test(file)) return true

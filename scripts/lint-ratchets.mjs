@@ -99,7 +99,7 @@ if (updateFlags.length > 1) {
   process.exit(2)
 }
 const scopeIdx = args.indexOf('--scope')
-const SCOPE = scopeIdx >= 0 && args[scopeIdx + 1] ? args[scopeIdx + 1].split(',') : ['middleware.ts', 'src/']
+const SCOPE = scopeIdx >= 0 && args[scopeIdx + 1] ? args[scopeIdx + 1].split(',') : ['src/middleware.ts', 'src/']
 
 // Some scoped runs (tests) operate in a partial checkout that may lack
 // middleware.ts — drop scope entries that don't exist instead of failing.
