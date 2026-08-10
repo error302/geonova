@@ -11,6 +11,12 @@ interface UseFieldBookOptions {
   initialRows?: FieldBookRow[];
 }
 
+interface FieldBookEntryRow {
+  id: string
+  row_index: number
+  raw_data: Record<string, string | number | null>
+}
+
 export function useFieldBook({ projectId, surveyType, initialRows = [] }: UseFieldBookOptions) {
   const dbClient = useMemo(() => createClient(), []);
   const [rows, setRows] = useState<FieldBookRow[]>(initialRows);
@@ -37,14 +43,13 @@ export function useFieldBook({ projectId, surveyType, initialRows = [] }: UseFie
       return;
     }
 
-    if (data && data.length > 0) {
-      const loadedRows = data.map((r: any) => {
-        const row: FieldBookRow = { ...r.raw_data };
-        row._id = r.id;
-        row._rowIndex = r.row_index;
+    const rowsData = data as FieldBookEntryRow[] | null
+    if (rowsData && rowsData.length > 0) {
+      const loadedRows = rowsData.map((r) => {
+        const row: FieldBookRow = { ...r.raw_data, _id: r.id, _rowIndex: r.row_index };
         return row;
       });
-      setRows(loadedRows as FieldBookRow[]);
+      setRows(loadedRows);
     } else {
       setRows([]);
     }
@@ -61,7 +66,7 @@ export function useFieldBook({ projectId, surveyType, initialRows = [] }: UseFie
       setSaving(true);
       setError(null);
 
-      const records = rowsToSave.map((row: any, idx: any) => {
+      const records = rowsToSave.map((row, idx) => {
         const { _id, _rowIndex, ...data } = row;
         return {
           project_id: projectId,

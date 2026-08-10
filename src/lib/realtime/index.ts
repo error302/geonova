@@ -80,9 +80,9 @@ export function subscribeToProjectChanges(
   projectId: string,
   user: { id: string; email?: string; name?: string },
   callbacks: {
-    onPointsChange?: (payload: any) => void
-    onTraverseChange?: (payload: any) => void
-    onLevelingChange?: (payload: any) => void
+    onPointsChange?: (payload: unknown) => void
+    onTraverseChange?: (payload: unknown) => void
+    onLevelingChange?: (payload: unknown) => void
     onPresenceChange?: (users: PresenceUser[]) => void
   }
 ): { unsubscribe: () => Promise<void> } {

@@ -78,7 +78,7 @@ export function PerformanceMonitor({ visible = false }: { visible?: boolean }) {
       // FID / INP
       const fidObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          const value = (entry as any).processingStart - entry.startTime
+          const value = (entry as PerformanceEventTiming).processingStart - entry.startTime
           const name = 'INP'
           setVitals(prev => [
             ...prev.filter(v => v.name !== name),
@@ -93,8 +93,8 @@ export function PerformanceMonitor({ visible = false }: { visible?: boolean }) {
       let clsValue = 0
       const clsObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          if (!(entry as any).hadRecentInput) {
-            clsValue += (entry as any).value
+          if (!(entry as unknown as { hadRecentInput: boolean }).hadRecentInput) {
+            clsValue += (entry as unknown as { value: number }).value
           }
         }
         setVitals(prev => [

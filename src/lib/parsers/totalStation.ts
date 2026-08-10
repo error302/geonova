@@ -258,9 +258,9 @@ export function parseTraverseCSV(content: string): {
   if (lines.length < 2) return { headers: [], rows: [], errors: ['File is empty or has no data rows'] }
 
   const headers = lines[0].split(/[,\t]+/).map((h) => h.trim().toLowerCase().replace(/\s+/g, '_'))
-  const rows = lines.slice(1).map((line: any) =>
-    line.split(/[,\t]+/).map((cell: any) => cell.trim())
-  ).filter((r) => r.some((c: any) => c.length > 0))
+  const rows = lines.slice(1).map((line) =>
+    line.split(/[,\t]+/).map((cell) => cell.trim())
+  ).filter((r) => r.some((c) => c.length > 0))
 
   const errors: string[] = []
   if (!headers.some((h) => h.includes('station'))) errors.push('Missing "station" column')
