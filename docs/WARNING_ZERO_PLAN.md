@@ -58,9 +58,9 @@ If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read th
 
 Order = **finish the family closest to zero first** (each finish removes a floor + shrinks the ceiling), then the next, then mechanical rules. Argument → explicit-any → member-access → assignment → mechanical → CI tightening.
 
-### Phase 1 — `no-unsafe-argument` (122 → 0, ~103 files) — **batch 3 done (73/73 files, floor 76→3)**
+### Phase 1 — `no-unsafe-argument` — ✅ **DONE (0 warnings, floor → 0)**
 
-Batch 3 (this session) drained every remaining 1-warning file in `argument-scan --batch 1` — 73 files, type-the-source recipe (fetch/JSON.parse casts, `.select<Row>` generics, callback `: any` removals, jspdf `splitTextToSize` return casts). Also moved member-access 589→502, assignment 635→581, explicit-any 374→348, total 4,064→3,811. The only 3 remaining warnings live in concurrent-WIP files; once those land and fix, `--update-argument` takes the floor to 0 and the rule flips to `error` (see §6).
+Batch 3 drained every remaining 1-warning file in `argument-scan --batch 1` (73 files, type-the-source recipe); the last 3 warnings lived in concurrent-WIP files (`deedPlanExport.test.ts`, `GNSSRoverConnection.tsx`) — the Phase 2 batch-1 typed the former and the concurrent session's `d16f0f47` fixed the latter. `argument-scan --batch 1` now reports **0 warnings across 0 files**; floor locked to 0 in `scripts/argument-baseline.json`. Next per §6: flip the rule to `error` in the ESLint config (no more floor needed).
 
 Highest-leverage: every warning is a typed-call-site passing an `any` value. Recipe: type the *argument's* value at its source (fetch/JSON.parse/`useRef<any>`/`useState<any>`), or narrow the callee param. Ranked (regen: `node scripts/argument-scan.mjs --top 20`):
 
