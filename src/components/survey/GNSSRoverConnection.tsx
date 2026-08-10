@@ -20,8 +20,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
-  Bluetooth, Usb, Wifi, WifiOff, Satellite, Loader2,
-  CheckCircle2, AlertTriangle, Crosshair, Radio,
+  Bluetooth, Usb, Satellite, Loader2,
+  AlertTriangle, Crosshair, Radio,
   Power, Activity, MapPin,
 } from 'lucide-react'
 
