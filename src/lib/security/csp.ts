@@ -11,18 +11,37 @@
  * Generate a cryptographically random nonce string.
  */
 export function generateNonce(): string {
-  const array = new Uint8Array(16)
+  // Try Web Crypto API first (standard in browsers and Edge Runtime)
   if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    const array = new Uint8Array(16)
     crypto.getRandomValues(array)
-  } else {
-    for (let i = 0; i < 16; i++) {
-      array[i] = Math.floor(Math.random() * 256)
+    if (typeof Buffer !== 'undefined') {
+      return Buffer.from(array).toString('base64')
     }
+    return typeof btoa !== 'undefined' ? btoa(String.fromCharCode(...Array.from(array))) : 'fallback-nonce-1'
+  }
+
+  // Try Node.js crypto
+  try {
+    // Guard require so webpack/edge compiler doesn't panic
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const nodeCrypto = require('crypto')
+    if (nodeCrypto && nodeCrypto.randomBytes) {
+      return nodeCrypto.randomBytes(16).toString('base64')
+    }
+  } catch (e) {
+    // Fallthrough if crypto module isn't available
+  }
+
+  // Final fallback
+  const array = new Uint8Array(16)
+  for (let i = 0; i < 16; i++) {
+    array[i] = Math.floor(Math.random() * 256)
   }
   if (typeof Buffer !== 'undefined') {
     return Buffer.from(array).toString('base64')
   }
-  return typeof btoa !== 'undefined' ? btoa(String.fromCharCode(...Array.from(array))) : 'default-nonce-string'
+  return typeof btoa !== 'undefined' ? btoa(String.fromCharCode(...Array.from(array))) : 'fallback-nonce-2'
 }
 
 /**
