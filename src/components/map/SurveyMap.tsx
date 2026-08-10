@@ -62,7 +62,12 @@ export default function SurveyMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<import('ol/Map').default | null>(null);
   const [mapReady, setMapReady] = useState(false);
-  const [nearestStations, setNearestStations] = useState<NearestStation[]>([]);
+
+  const nearestStations = useMemo(() =>
+    nearestKenCORSStations(centroidEasting, centroidNorthing, 3),
+    [centroidEasting, centroidNorthing]
+  );
+
   const [clickedCoord, setClickedCoord] = useState<{ easting: number; northing: number } | null>(null);
   const [_basemap, setBasemap] = useState<'osm' | 'satellite' | 'blank'>('osm');
 
@@ -92,10 +97,12 @@ export default function SurveyMap({
   const [snapTolerance, setSnapTolerance] = useState(10);
 
   // Derive the editable vertices from adjustedStations
-  const editableVertices = adjustedStations.map(s => ({
-    easting: s.adjustedEasting,
-    northing: s.adjustedNorthing,
-  }));
+  const editableVertices = useMemo(() => {
+    return adjustedStations.map(s => ({
+      easting: s.adjustedEasting,
+      northing: s.adjustedNorthing,
+    }));
+  }, [adjustedStations]);
 
   const { state: vertexEditState } = useVertexEditing({
     map: mapInstanceRef.current,
@@ -157,11 +164,8 @@ export default function SurveyMap({
         }))
       );
 
-      const nearest = nearestKenCORSStations(centroidEasting, centroidNorthing, 3);
-      setNearestStations(nearest);
-
       const kenCORSWithCoords = await Promise.all(
-        nearest.map(async st => ({
+        nearestStations.map(async (st: NearestStation) => ({
           ...st,
           coord3857: await to3857Single(st.easting, st.northing),
         }))
