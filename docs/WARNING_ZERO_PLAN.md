@@ -17,13 +17,13 @@
 
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
-| `no-unsafe-member-access` | 753 | **753** | active |
-| `no-unsafe-assignment` | 705 | **705** | active |
-| `no-explicit-any` | 451 | **451** | active |
-| `no-unsafe-argument` | 82 | **82** | active — closest to zero, grind first |
+| `no-unsafe-member-access` | 668 | **668** | active |
+| `no-unsafe-assignment` | 662 | **662** | active |
+| `no-explicit-any` | 399 | **399** | active |
+| `no-unsafe-argument` | 79 | **79** | active — closest to zero, grind first |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 (1,857 files) | **0** | ✅ done |
-| **total warnings** | **4,410** | CI ceiling **10,000** | green |
+| **total warnings** | **4,218** | CI ceiling **10,000** | green |
 
 Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,155 · `no-console` 341 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` ~175 · `no-non-null-assertion` ~570 · `no-unsafe-return` ~159 · `no-restricted-syntax` 16.
 
@@ -31,7 +31,7 @@ Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,15
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
 - **HEAD:** `625a476c` (non-browser cast typing + floors 165/478/973).
-- **Uncommitted (this batch):** member-access grind — tier1SecurityHelpers.test (11) `querySpy.mock.calls` tuples + `JSON.parse` details typed; analytics (10) `/api/admin/dashboard` payload typed; project/new (10) `res.json()` payload + `ALL_COUNTRIES` callbacks typed; scheme/map (10) OL style `Feature` + GeoJSON fetch typed; parse3D (10) THREE traverse child cast to `Mesh`. Floors 82/451/705/753, total 4,410.
+- **Uncommitted (this batch):** member-access grind batch 3 — 10 files (contour-generator fetch → `ProjectPointRow` + typed filter/map, ValidationReport overlaps/gaps + `lastAutoTable` cast, ParcelNumberInput county/section callbacks, parcelVault personal/shared/count rows typed through `unknown`, planChecker checks/validSystems, digitalSignature `Uint8Array` map + QR decode, CSVUploadModal `result.points`/`parsedPoints`, aiPlanChecker points/issues, fetchSurveyorProfile `db.query<T>` rows, parcelNumber county/section lookups). Floors 79/399/662/668, total 4,218.
 - **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).
