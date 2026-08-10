@@ -67,11 +67,12 @@ jobs:
       # GUARDRAIL (2026-08-08): --max-warnings N is an absolute ceiling on the
       # changed-files lint total (limit = max(base, N)) - a backstop so a mega
       # diff cannot slip thousands of warnings past the no-new-warnings ratchet.
-      # Tightened 20,000 -> 10,000. Whole-repo count at this commit: ~6.6k
-      # warnings (eslint . scope, 2,361 files), so 10,000 caps further growth
-      # while leaving headroom. Re-tighten as the grind continues (9,000, 8,000...).
+      # Tightened 20,000 -> 10,000 -> 5,000. Whole-repo count at this commit:
+      # 4,218 warnings (lint-ratchets middleware.ts + src/ scope), so 5,000
+      # caps further growth with ~19% headroom. Re-tighten as the grind
+      # continues (4,500, 4,000...).
       - name: Lint changed files (blocking, zero new warnings)
-        run: node scripts/lint-gate.mjs --paths-from-changed --max-warnings 10000
+        run: node scripts/lint-gate.mjs --paths-from-changed --max-warnings 5000
       # A11Y GATE (2026-08-03): Bans placeholder-like / junk aria-labels
       # codebase-wide (placeholder-equals-name, generic phrases, punctuation,
       # crunched header text) so accessible names can't regress in tables.
@@ -191,11 +192,26 @@ jobs:
   e2e:
     name: "E2E Tests (shard ${{ matrix.shard }}/${{ strategy.job-total }})"
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: metardu_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     # E2E_SHARDING (2026-08-08): 2-way shard matrix.  Each runner:
     #   1. Downloads the .next artifact built by the `build` job (no rebuild).
     #   2. Runs the standalone server (node .next/standalone/server.js, like the
-    #      Docker deploy) via CI_E2E_PROD=true — `next start` is unsupported
-    #      with output:standalone and silently drops the edge middleware.
+    #      Docker deploy) via CI_E2E_PROD=true. middleware.ts is in src/ so
+    #      Next.js compiles it with the standalone build — auth redirects, CSP,
+    #      rate limiting, and CSRF all work.
     #   3. Executes its assigned shard of the 8 spec files.
     # Wall-clock time drops from ~22 min (single runner + rebuild) to ~7 min.
     # E2E_TIMEOUT (2026-08-09): raised to 30 min as a safety margin — failing
@@ -229,8 +245,8 @@ jobs:
           DISABLE_PWA: 'true'
           CI_E2E_PROD: 'true'
           CI_E2E_SKIP_BUILD: 'true'
-          # env.ts throws at `next start` without these; E2E specs mock the
-          # auth routes and tolerate 500s, so a non-routable dummy URL is fine.
+          # Postgres service container is running at 127.0.0.1:5432 with
+          # user ci / password ci / db metardu_e2e (see `services:` above).
           DATABASE_URL: 'postgresql://ci:ci@127.0.0.1:5432/metardu_e2e'
           AUTH_SECRET: 'e2e-ci-secret-not-used-by-mocked-auth'
           # OAuth creds must be non-empty: next-auth throws SIGNIN_OAUTH_ERROR
