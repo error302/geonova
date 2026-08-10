@@ -21,6 +21,13 @@ export interface ResolvedLogo {
   filename: string;
 }
 
+/** Row shape for the company_logos table. */
+interface CompanyLogoRow {
+  logo_data: Buffer | null;
+  mime_type: string;
+  filename: string;
+}
+
 /**
  * Resolve the company logo for a given user and plan.
  *
@@ -39,7 +46,7 @@ export async function resolveCompanyLogo(
 
   // Paid plans: look up the user's uploaded logo
   try {
-    const { rows } = await db.query(
+    const { rows } = await db.query<CompanyLogoRow>(
       'SELECT logo_data, mime_type, filename FROM company_logos WHERE user_id = $1',
       [userId]
     );
@@ -50,8 +57,8 @@ export async function resolveCompanyLogo(
 
     return {
       data: rows[0].logo_data as Buffer,
-      mimeType: rows[0].mime_type as string,
-      filename: rows[0].filename as string,
+      mimeType: rows[0].mime_type,
+      filename: rows[0].filename,
     };
   } catch (error) {
     console.error('[resolve-logo] Error fetching logo:', error);

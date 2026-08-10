@@ -110,7 +110,7 @@ export function generateDXFFromProject(
     projectName,
     points,
     traverseLegs:
-      traverseResult?.legs.map((l: any) => ({
+      traverseResult?.legs.map((l) => ({
         from: l.from,
         to: l.to,
         distance: 0,

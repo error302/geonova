@@ -82,9 +82,9 @@ export default function SubdivisionGeneratorPage() {
     try {
       const res = await fetch(`/api/project/${projectId}/points`)
       if (!res.ok) throw new Error('Failed')
-      const json = await res.json()
+      const json = (await res.json()) as { data?: Array<{ easting?: string | number; northing?: string | number }> }
       const points = json.data || []
-      const newRows: CoordRow[] = points.map((p: any, i: number) => ({
+      const newRows: CoordRow[] = points.map((p, i: number) => ({
         id: i + 1,
         easting: String(p.easting),
         northing: String(p.northing),

@@ -73,7 +73,7 @@ export function WeatherPanel({ lat, lon, elevation, onWeatherChange, t }: Weathe
     setLoading(true);
     try {
       const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}&current=temperature_2m,relative_humidity_2m,surface_pressure&timezone=Africa/Nairobi`);
-      const json = await res.json();
+      const json = (await res.json()) as { current?: { temperature_2m?: number; surface_pressure?: number; relative_humidity_2m?: number } };
       const current = json.current;
       if (current) {
         const data: WeatherData = {

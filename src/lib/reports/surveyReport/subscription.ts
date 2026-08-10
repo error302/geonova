@@ -23,12 +23,15 @@ export async function checkReportAccess(userId: string, email?: string): Promise
 
   const dbClient = createClient()
 
-  const { data, error } = await dbClient
+  const { data, error } = (await dbClient
     .from('user_subscriptions')
     .select('plan_id, status, current_period_end')
     .eq('user_id', userId)
     .eq('status', 'active')
-    .maybeSingle()
+    .maybeSingle()) as {
+    data: { plan_id: string | null; status: string | null; current_period_end: string | null } | null
+    error: unknown
+  }
 
   if (error || !data) {
     return {
@@ -60,11 +63,11 @@ export async function checkReportAccess(userId: string, email?: string): Promise
 export async function seedProfessionalTier(userId: string): Promise<void> {
   const dbClient = createClient()
 
-  const { data: existing } = await dbClient
+  const { data: existing } = (await dbClient
     .from('user_subscriptions')
     .select('id')
     .eq('user_id', userId)
-    .maybeSingle()
+    .maybeSingle()) as { data: { id: string } | null; error: unknown }
 
   if (existing) return
 

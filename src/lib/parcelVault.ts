@@ -62,7 +62,7 @@ export async function searchVault(
 ): Promise<VaultSearchResult | null> {
   const sanitized = parcelNumber.trim().toUpperCase().replace(/\s+/g, '')
 
-  const personal = await db.query(
+  const personal = await db.query<ParcelVaultEntry>(
     'SELECT * FROM parcel_vault WHERE parcel_number = $1 AND user_id = $2',
     [sanitized, userId]
   )
@@ -76,7 +76,7 @@ export async function searchVault(
     }
   }
 
-  const shared = await db.query(
+  const shared = await db.query<ParcelVaultShared>(
     'SELECT * FROM parcel_vault_shared WHERE parcel_number = $1',
     [sanitized]
   )
@@ -141,7 +141,7 @@ export async function saveToVault(
 }
 
 export async function getUserVault(userId: string): Promise<ParcelVaultEntry[]> {
-  const result = await db.query(
+  const result = await db.query<ParcelVaultEntry>(
     'SELECT * FROM parcel_vault WHERE user_id = $1 ORDER BY updated_at DESC',
     [userId]
   )

@@ -103,9 +103,9 @@ export async function saveObservation(obs: OfflineObservation): Promise<void> {
 export async function getObservations(projectId: string, surveyType?: ObservationType): Promise<OfflineObservation[]> {
   const db = await getDB()
   if (surveyType) {
-    return db.getAllFromIndex('observations', 'byProjectType', [projectId, surveyType])
+    return (await db.getAllFromIndex('observations', 'byProjectType', [projectId, surveyType])) as OfflineObservation[]
   }
-  return db.getAllFromIndex('observations', 'byProject', projectId)
+  return (await db.getAllFromIndex('observations', 'byProject', projectId)) as OfflineObservation[]
 }
 
 export async function deleteObservation(id: string): Promise<void> {
@@ -118,7 +118,7 @@ export async function getUnsyncedObservations(): Promise<OfflineObservation[]> {
   // ponytail: getAllFromIndex with null — IndexedDB doesn't support querying
   // for null values directly. Get all and filter. For a few hundred observations
   // this is fine; for thousands, add a separate 'unsynced' store.
-  const all = await db.getAll('observations')
+  const all = (await db.getAll('observations')) as OfflineObservation[]
   return all.filter(o => o.syncedAt === null)
 }
 
@@ -131,7 +131,7 @@ export async function savePhoto(id: string, blob: Blob): Promise<void> {
 
 export async function getPhoto(id: string): Promise<Blob | null> {
   const db = await getDB()
-  const result = await db.get('photos', id)
+  const result = (await db.get('photos', id)) as { id: string; blob: Blob } | undefined
   return result?.blob ?? null
 }
 
@@ -159,7 +159,7 @@ export async function syncObservations(): Promise<{ synced: number; failed: numb
         await saveObservation(obs)
         synced++
       } else {
-        const err = await res.json().catch(() => ({ error: 'Unknown error' }))
+        const err = (await res.json().catch(() => ({ error: 'Unknown error' }))) as { error?: string }
         obs.syncError = err.error || `HTTP ${res.status}`
         await saveObservation(obs)
         failed++
@@ -243,7 +243,7 @@ export function generateId(): string {
 
 export async function getSyncStatus(): Promise<{ total: number; unsynced: number; synced: number }> {
   const db = await getDB()
-  const all = await db.getAll('observations')
+  const all = (await db.getAll('observations')) as OfflineObservation[]
   const unsynced = all.filter(o => o.syncedAt === null)
   return {
     total: all.length,

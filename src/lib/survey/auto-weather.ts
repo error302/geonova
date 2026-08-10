@@ -98,7 +98,7 @@ export async function fetchWeatherForLocation(
       return { ...KENYA_DEFAULTS, location: { lat, lon } };
     }
 
-    const json = await response.json();
+    const json = (await response.json()) as { current?: { temperature_2m?: number; surface_pressure?: number; relative_humidity_2m?: number } };
     const current = json.current;
 
     if (!current) {

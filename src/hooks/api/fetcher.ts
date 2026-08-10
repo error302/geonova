@@ -44,7 +44,7 @@ export async function apiFetch<T>(
     let errorCode: string | undefined
 
     try {
-      const body = await response.json()
+      const body = (await response.json()) as { error?: string; code?: string }
       if (body.error) errorMessage = body.error
       if (body.code) errorCode = body.code
     } catch {

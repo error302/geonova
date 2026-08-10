@@ -58,7 +58,7 @@ export function parseDelimitedFile(content: string, delimiter: string = ','): Pa
 
 export function pointsToCSV(points: NamedPoint3D[]): string {
   const header = 'POINT,EASTING,NORTHING,ELEVATION\n';
-  const rows = points.map((p: any) => `${p.name},${p.easting},${p.northing},${p.elevation}`).join('\n');
+  const rows = points.map((p) => `${p.name},${p.easting},${p.northing},${p.elevation}`).join('\n');
   return header + rows;
 }
 

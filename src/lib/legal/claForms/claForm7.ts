@@ -206,15 +206,15 @@ export function generateClaForm7(data: ClaForm7Data): Uint8Array {
     y += 5
 
     // Draw text area box
-    const boxHeight = Math.max(18, doc.splitTextToSize(value || ' ', contentWidth).length * 4.5 + 4)
+    const boxHeight = Math.max(18, (doc.splitTextToSize(value || ' ', contentWidth) as string[]).length * 4.5 + 4)
     doc.setDrawColor(150, 150, 150)
     doc.setLineWidth(0.15)
     doc.rect(margin, y, contentWidth, boxHeight)
 
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8)
-    const lines = doc.splitTextToSize(value || '\u2014', contentWidth - 6)
-    lines.forEach((line: string) => {
+    const lines = doc.splitTextToSize(value || '\u2014', contentWidth - 6) as string[]
+    lines.forEach((line) => {
       if (y > 275) {
         addPageFooter()
         doc.addPage()
@@ -322,8 +322,8 @@ export function generateClaForm7(data: ClaForm7Data): Uint8Array {
     'I certify that the Community Land Management Committee has considered this ' +
     'application in accordance with Section 36 of the Community Land Act 2016 ' +
     'and the applicant has met all requirements for the proposed lease.'
-  const approvalLines = doc.splitTextToSize(approvalText, contentWidth)
-  approvalLines.forEach((line: string) => {
+  const approvalLines = doc.splitTextToSize(approvalText, contentWidth) as string[]
+  approvalLines.forEach((line) => {
     if (y > 275) {
       addPageFooter()
       doc.addPage()
@@ -358,8 +358,8 @@ export function generateClaForm7(data: ClaForm7Data): Uint8Array {
     'and belief. I understand that any false or misleading statement may result in ' +
     'the rejection of this application or the cancellation of any lease granted ' +
     'pursuant to this application, and may constitute an offence under the laws of Kenya.'
-  const declLines = doc.splitTextToSize(declarationText, contentWidth)
-  declLines.forEach((line: string) => {
+  const declLines = doc.splitTextToSize(declarationText, contentWidth) as string[]
+  declLines.forEach((line) => {
     if (y > 275) {
       addPageFooter()
       doc.addPage()

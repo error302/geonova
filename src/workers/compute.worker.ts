@@ -51,7 +51,7 @@ const RAD2DEG = 180 / PI
 interface CoordTransformParams {
   fromEpsg: number
   toEpsg: number
-  coordinates: Array<{ lat: number; lng: number } | { northing: number; easting: number }>
+  coordinates: Array<{ latitude: number; longitude: number } | { northing: number; easting: number }>
 }
 
 /**
@@ -428,13 +428,13 @@ self.onmessage = function (event: MessageEvent) {
 
       case 'TRANSFORM_COORDINATES': {
         const { fromEpsg, toEpsg, coordinates } = payload as CoordTransformParams
-        const results = coordinates.map((coord: any) => {
+        const results = coordinates.map((coord) => {
           if ('latitude' in coord && 'longitude' in coord) {
             // WGS84 → UTM
-            return wgs84ToArc1960UTM37S(coord.latitude as number, coord.longitude as number)
+            return wgs84ToArc1960UTM37S(coord.latitude, coord.longitude)
           } else {
             // UTM → WGS84
-            return arc1960UTM37SToWGS84(coord.northing as number, coord.easting as number)
+            return arc1960UTM37SToWGS84(coord.northing, coord.easting)
           }
         })
         self.postMessage({ type: 'TRANSFORM_COMPLETE', payload: { coordinates: results, count: results.length }, id })

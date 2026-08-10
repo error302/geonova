@@ -91,7 +91,7 @@ export function TIN3DViewer({ surface, points, width = 800, height = 500 }: TIN3
         }
 
         // ─── Render TIN surface as mesh ────────────────────────────────────
-        let geometry: any
+        let geometry: THREE.BufferGeometry | undefined
         if (surface && surface.triangles.length > 0) {
           geometry = new THREE.BufferGeometry()
           const vertices: number[] = []

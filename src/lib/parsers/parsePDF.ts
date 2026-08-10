@@ -5,6 +5,12 @@ export interface PDFParseOptions {
   scale?: number
 }
 
+/** Structural subset of the pdfjs TextItem used by the extractor. */
+interface PDFTextItem {
+  transform?: number[]
+  str?: string
+}
+
 export async function parsePDFContent(file: File, options: PDFParseOptions = {}): Promise<ParsedInput> {
   const { scale = 2 } = options
 
@@ -22,16 +28,18 @@ export async function parsePDFContent(file: File, options: PDFParseOptions = {})
       const page = await pdf.getPage(pageNum)
       const textContent = await page.getTextContent()
 
-      textContent.items.forEach((item: any, idx: number) => {
-        if (item.transform) {
-          const x = item.transform[4]
-          const y = item.transform[5]
+      textContent.items.forEach((item, idx: number) => {
+        const textItem = item as PDFTextItem
+        const transform = textItem.transform
+        if (transform) {
+          const x = transform[4] ?? 0
+          const y = transform[5] ?? 0
           
           annotations.push({
             id: `annotation_${pageNum}_${idx}`,
             type: 'text',
             position: { easting: x, northing: y },
-            content: item.str || '',
+            content: textItem.str || '',
             level: pageNum - 1,
           })
 
