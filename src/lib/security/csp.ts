@@ -25,11 +25,11 @@ export function generateNonce(): string {
   try {
     // Guard require so webpack/edge compiler doesn't panic
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const nodeCrypto = require('crypto')
+    const nodeCrypto = require('crypto') as { randomBytes?: (size: number) => { toString: (enc: string) => string } }
     if (nodeCrypto && nodeCrypto.randomBytes) {
       return nodeCrypto.randomBytes(16).toString('base64')
     }
-  } catch (e) {
+  } catch (_e) {
     // Fallthrough if crypto module isn't available
   }
 
