@@ -17,21 +17,21 @@
 
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
-| `no-unsafe-member-access` | 668 | **668** | active |
-| `no-unsafe-assignment` | 662 | **662** | active |
-| `no-explicit-any` | 399 | **399** | active |
-| `no-unsafe-argument` | 79 | **79** | active — closest to zero, grind first |
+| `no-unsafe-member-access` | 589 | **589** | active |
+| `no-unsafe-assignment` | 635 | **635** | active |
+| `no-explicit-any` | 374 | **374** | active |
+| `no-unsafe-argument` | 76 | **76** | active — closest to zero, grind first |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 (1,857 files) | **0** | ✅ done |
-| **total warnings** | **4,218** | CI ceiling **10,000** | green |
+| **total warnings** | **4,064** | CI ceiling **5,000** (tightened 10,000 → 5,000) | green |
 
 Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,155 · `no-console` 341 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` ~175 · `no-non-null-assertion` ~570 · `no-unsafe-return` ~159 · `no-restricted-syntax` 16.
 
 ### Git / CI state
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
-- **HEAD:** `625a476c` (non-browser cast typing + floors 165/478/973).
-- **Uncommitted (this batch):** member-access grind batch 3 — 10 files (contour-generator fetch → `ProjectPointRow` + typed filter/map, ValidationReport overlaps/gaps + `lastAutoTable` cast, ParcelNumberInput county/section callbacks, parcelVault personal/shared/count rows typed through `unknown`, planChecker checks/validSystems, digitalSignature `Uint8Array` map + QR decode, CSVUploadModal `result.points`/`parsedPoints`, aiPlanChecker points/issues, fetchSurveyorProfile `db.query<T>` rows, parcelNumber county/section lookups). Floors 79/399/662/668, total 4,218.
+- **HEAD:** `a489fbb3` (member-access batch 3 + floors 79/399/662/668).
+- **Uncommitted (this batch):** member-access grind batch 4 — 11 files (totalStationSerial Serial-port/reader/writer typed via `web-serial.d.ts`, scheme/team owner/activity zod schemas replace `z.any()`, ComplianceChecklistModal + ripple-buttons drop `: any` map annotations, rbac + deedPlanGeometry + boundaryShapefile `db.query<T>` row generics, optimization `paginatedQuery<T extends Record<string, unknown>>` + `(data || []) as T[]`, equipment + solutionToPdf drop `: any`, africasTalking SMS payload typed structurally). Floors 76/374/635/589, total 4,064.
 - **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).
