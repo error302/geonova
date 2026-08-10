@@ -21,16 +21,18 @@ export function generateNonce(): string {
     return typeof btoa !== 'undefined' ? btoa(String.fromCharCode(...Array.from(array))) : 'fallback-nonce-1'
   }
 
-  // Try Node.js crypto
-  try {
-    // Guard require so webpack/edge compiler doesn't panic
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const nodeCrypto = require('crypto') as { randomBytes?: (size: number) => { toString: (enc: string) => string } }
-    if (nodeCrypto && nodeCrypto.randomBytes) {
-      return nodeCrypto.randomBytes(16).toString('base64')
+  // Try Node.js crypto if window is undefined and it's not the Edge Runtime
+  if (typeof window === 'undefined' && typeof process !== 'undefined' && process.release?.name === 'node') {
+    try {
+      // Guard require so webpack/edge compiler doesn't panic
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const nodeCrypto = require('crypto') as { randomBytes?: (size: number) => { toString: (enc: string) => string } }
+      if (nodeCrypto && nodeCrypto.randomBytes) {
+        return nodeCrypto.randomBytes(16).toString('base64')
+      }
+    } catch (_e) {
+      // Fallthrough if crypto module isn't available
     }
-  } catch (_e) {
-    // Fallthrough if crypto module isn't available
   }
 
   // Final fallback
