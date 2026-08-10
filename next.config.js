@@ -132,12 +132,24 @@ const nextConfig = {
   },
 
   // ─── Webpack configuration for OpenLayers ───
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, nextRuntime }) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
       path: false,
       crypto: isServer ? false : require.resolve('crypto-browserify'),
+    }
+
+    // Middleware/edge bundles must stay self-contained. The catch-all
+    // `vendor-common` splitChunks group below emits shared CJS chunks that
+    // the Edge sandbox evaluates in ESM scope — 'ReferenceError: exports
+    // is not defined' on every middleware request (vercel/next.js#51313).
+    // Skipping code-splitting for the edge compilation keeps middleware in
+    // one ESM-compatible chunk; the app/server compilation keeps the full
+    // splitChunks config below.
+    if (isServer && nextRuntime === 'edge') {
+      config.optimization.splitChunks = false
+      return config
     }
 
     if (isServer) {
