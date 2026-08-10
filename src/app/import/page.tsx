@@ -308,7 +308,7 @@ export default function ImportPage() {
                     className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-4 py-2 text-[var(--text-primary)]"
                   >
                     <option value="">Select a project...</option>
-                    {projects.map((proj: any) => (
+                    {projects.map((proj) => (
                       <option key={proj.id} value={proj.id}>{proj.name}</option>
                     ))}
                   </select>

@@ -243,7 +243,7 @@ describe('sequentialAdjustment — serialization', () => {
     const json = JSON.stringify(serialized)
     expect(json.length).toBeGreaterThan(0)
 
-    const parsed = JSON.parse(json)
+    const parsed = JSON.parse(json) as { points?: unknown; N: { rowPtr?: unknown } }
     expect(parsed.points).toBeDefined()
     expect(parsed.N).toBeDefined()
     expect(parsed.N.rowPtr).toBeDefined()

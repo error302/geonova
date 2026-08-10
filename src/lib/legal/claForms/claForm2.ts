@@ -183,8 +183,8 @@ export function generateClaForm2(data: ClaForm2Data): Uint8Array {
 
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8)
-    const lines = doc.splitTextToSize(text || '\u2014', CONTENT_W - 4)
-    lines.forEach((line: string, i: number) => {
+    const lines = doc.splitTextToSize(text || '\u2014', CONTENT_W - 4) as string[]
+    lines.forEach((line, i: number) => {
       if (i < Math.floor(boxH / 4.5)) {
         doc.text(line, MARGIN_L + 2, y + 4 + i * 4.5)
       }
@@ -196,7 +196,7 @@ export function generateClaForm2(data: ClaForm2Data): Uint8Array {
       doc.setDrawColor(180, 180, 180)
       doc.rect(MARGIN_L, y, CONTENT_W, neededH, 'S')
       doc.setDrawColor(0, 0, 0)
-      lines.forEach((line: string, i: number) => {
+      lines.forEach((line, i: number) => {
         if (y + 4 + i * 4.5 > 275) {
           doc.addPage()
           addFooter(doc, doc.getNumberOfPages())

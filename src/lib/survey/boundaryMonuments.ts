@@ -150,11 +150,11 @@ export async function createBoundaryMonument(
   })
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: 'Unknown error' }))
+    const error = (await res.json().catch(() => ({ error: 'Unknown error' }))) as { error?: string }
     throw new Error(`Failed to create boundary monument: ${error.error || res.status}`)
   }
 
-  const result = await res.json()
+  const result = (await res.json()) as { data: BoundaryMonument }
   return result.data
 }
 
@@ -166,7 +166,7 @@ export async function getBoundaryMonument(id: string): Promise<BoundaryMonument>
   if (!res.ok) {
     throw new Error(`Failed to get boundary monument: ${res.status}`)
   }
-  const result = await res.json()
+  const result = (await res.json()) as { data: BoundaryMonument }
   return result.data
 }
 

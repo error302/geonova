@@ -118,9 +118,10 @@ export default function FieldBookWithSelection({
           return;
         }
 
-        if (data && data.length > 0) {
-          const loaded = data.map((r: Record<string, any>) => {
-            const raw = (r.raw_data ?? {}) as Record<string, any>;
+        const rows = (data ?? []) as Array<Record<string, unknown>>;
+        if (rows.length > 0) {
+          const loaded = rows.map((r) => {
+            const raw = (r.raw_data ?? {}) as Record<string, unknown>;
             const row: FieldBookRow = {} as FieldBookRow;
             for (const [k, v] of Object.entries(raw)) {
               row[k] = v as string | number | null;
@@ -136,7 +137,7 @@ export default function FieldBookWithSelection({
               'remark',
             ] as const) {
               if (r[fixed] != null && !(fixed in row)) {
-                row[fixed] = r[fixed];
+                row[fixed] = r[fixed] as string | number | null;
               }
             }
             return row;

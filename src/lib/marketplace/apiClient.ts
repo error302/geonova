@@ -23,7 +23,7 @@ export async function fetchListings(filters?: ListingFilters): Promise<Instrumen
 
   const res = await fetch(`/api/marketplace/listings?${params}`)
   if (!res.ok) return []
-  const json = await res.json()
+  const json = (await res.json()) as { data?: InstrumentListing[] }
   return json.data || []
 }
 
@@ -52,7 +52,7 @@ export async function createListing(data: {
     credentials: 'include',
   })
   if (!res.ok) return null
-  const json = await res.json()
+  const json = (await res.json()) as { data?: InstrumentListing }
   return json.data || null
 }
 
@@ -83,6 +83,6 @@ export async function fetchInquiries(listingId: string): Promise<any[]> {
     credentials: 'include',
   })
   if (!res.ok) return []
-  const json = await res.json()
+  const json = (await res.json()) as { data?: unknown[] }
   return json.data || []
 }

@@ -337,7 +337,7 @@ function AddEquipmentModal({ onClose, onAdd }: { onClose: () => void; onAdd: () 
               onChange={e => setForm({ ...form, type: e.target.value as EquipmentType })}
               className="w-full p-2 border rounded-lg"
             >
-              {EQUIPMENT_TYPES.map((t: any) => (
+              {EQUIPMENT_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>{t.label}</option>
               ))}
             </select>

@@ -647,8 +647,7 @@ export async function exportDeedPlan(options: DeedPlanExportOptions): Promise<Bl
   // Temporarily override getPixelRatio so OL renders at 1:1 (native pixels).
   // This ensures internal canvases are sized exactly to our target dimensions
   // without an additional device-pixel-ratio multiplier.
-  // eslint-disable-next-line
-  const mapAny = map as any;
+  const mapAny = map as unknown as { getPixelRatio: () => number };
   const origGetPixelRatio: () => number = mapAny.getPixelRatio;
   mapAny.getPixelRatio = () => 1;
 

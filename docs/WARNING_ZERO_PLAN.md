@@ -17,13 +17,13 @@
 
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
-| `no-unsafe-member-access` | 190 | **190** | active — batch 7 done (floor 258 → 190) |
-| `no-unsafe-assignment` | 402 | **402** | active |
-| `no-explicit-any` | 141 | **141** | active |
+| `no-unsafe-member-access` | 115 | **115** | active — batch 8 done (floor 190 → 115) |
+| `no-unsafe-assignment` | 358 | **358** | active |
+| `no-explicit-any` | 123 | **123** | active |
 | `no-unsafe-argument` | 0 | **0** | ✅ done (rule = error) |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 | **0** | ✅ done |
-| **total warnings** | **2,968** | CI ceiling **3,700** | green |
+| **total warnings** | **2,816** | CI ceiling **3,700** | green |
 
 Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,155 · `no-console` 341 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` ~175 · `no-non-null-assertion` ~570 · `no-unsafe-return` ~159 · `no-restricted-syntax` 16.
 
@@ -31,7 +31,7 @@ Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,15
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
 - **HEAD:** `762ffd3b` (E2E middleware → `src/` + Edge-safe crypto) with later ratchet commits pushed by the concurrent session (`2eb98d42` floor re-baselines + 3,700 ceiling).
-- **Uncommitted (this batch):** member-access grind batch 7 — the 4-warning tier, 17 files / 68 warnings (land-law + subdivision-generator + topology-check pages, WeatherPanel + auto-weather open-meteo payloads typed, TIN3DViewer `geometry: any` → `THREE.BufferGeometry`, fetcher error-body cast, resolve-logo + parcelVault `db.query<Row>` generics, parser + generateDXF + curves test `: any` removals, claForm7 `splitTextToSize` → `string[]` ×4, fieldBookDB typed idb reads, parsePDF structural `PDFTextItem`, subscription `maybeSingle` result casts, compute.worker `CoordTransformParams` lat/lng → latitude/longitude). Floors member-access **190**, assignment **402**, explicit-any **141**, argument 0, total **2,968**.
+- **Uncommitted (this batch):** member-access grind batch 8 — the 3-warning tier, 25 files / 75 warnings (import/opengraph/NavBar/ParcelAreaModal/EquipmentTracker/ChainageOffsetTable/LegacyUnitBadge/FieldBookWithSelection pages+components; ownership + coordinates + observations `db.query<Row>` generics; edmCorrection + atmosphericDefaults open-meteo casts; disputeProcedures + usSurveyStandards + coordinateSchedule + fieldBookExcel + claForm2/6 typed callbacks and `splitTextToSize` → `string[]`; deedPlanExport `map as unknown as { getPixelRatio }`; marketplace apiClient + boundaryMonuments typed fetch payloads; digitalLevelImport/levelNetworkAdjustment `LevelReading`-typed BS buffers; sequentialAdjustment `JSON.parse` cast). Floors member-access **115**, assignment **358**, explicit-any **123**, argument 0, total **2,816**.
 - **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).

@@ -1,7 +1,7 @@
 // Digital Level Unified Import – Auto-detect Format + Parse
 // Supports: Leica DNA03, Leica DiNi 12/22, Topcon DL, Generic CSV
 
-import { LevelFormat, LevelImportResult, LevelObservation } from './digitalLevelTypes'
+import { LevelFormat, LevelImportResult, LevelObservation, LevelReading } from './digitalLevelTypes'
 import { parseDNA03 } from './parseDNA03'
 import { parseDiNi } from './parseDiNi'
 import { parseTopconDL } from './parseTopconDL'
@@ -201,7 +201,7 @@ function parseGenericCSV(content: string): LevelImportResult {
  */
 function buildCSVObservations(readings: LevelImportResult['readings']): LevelImportResult['observations'] {
   const observations: LevelObservation[] = []
-  let bsReading: any = null
+  let bsReading: LevelReading | null = null
 
   for (const r of readings) {
     if (r.type === 'BS') {

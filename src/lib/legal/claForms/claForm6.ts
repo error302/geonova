@@ -194,15 +194,15 @@ export function generateClaForm6(data: ClaForm6Data): Uint8Array {
     y += 5
 
     // Draw text area box
-    const boxHeight = Math.max(20, doc.splitTextToSize(value || ' ', contentWidth).length * 4.5 + 4)
+    const boxHeight = Math.max(20, (doc.splitTextToSize(value || ' ', contentWidth) as string[]).length * 4.5 + 4)
     doc.setDrawColor(150, 150, 150)
     doc.setLineWidth(0.15)
     doc.rect(margin, y, contentWidth, boxHeight)
 
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8)
-    const lines = doc.splitTextToSize(value || '\u2014', contentWidth - 6)
-    lines.forEach((line: string) => {
+    const lines = doc.splitTextToSize(value || '\u2014', contentWidth - 6) as string[]
+    lines.forEach((line) => {
       if (y > 275) {
         addPageFooter()
         doc.addPage()
@@ -286,8 +286,8 @@ export function generateClaForm6(data: ClaForm6Data): Uint8Array {
     'with the Community Land Act 2016 and the regulations thereunder. The particulars ' +
     'recorded herein are true and accurate to the best of my knowledge and belief.'
 
-  const certLines = doc.splitTextToSize(certText, contentWidth)
-  certLines.forEach((line: string) => {
+  const certLines = doc.splitTextToSize(certText, contentWidth) as string[]
+  certLines.forEach((line) => {
     if (y > 275) {
       addPageFooter()
       doc.addPage()

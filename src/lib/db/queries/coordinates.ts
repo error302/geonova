@@ -16,6 +16,9 @@
 import { db } from '@/lib/db'
 import { computationCache, CacheKeys } from '../../cache/memory-cache'
 
+/** Row shape for queries that only select an id. */
+interface IdRow { id: string }
+
 // ─── Types ───────────────────────────────────────────────────────
 
 export interface CreateCoordinateInput {
@@ -77,7 +80,7 @@ export async function upsertCoordinate(input: CreateCoordinateInput) {
   computationCache.invalidate(CacheKeys.surveyCoordinates(input.surveyId))
 
   // Try to find an existing point with the same name in this project
-  const existing = await db.query(
+  const existing = await db.query<IdRow>(
     `SELECT id FROM survey_points
      WHERE project_id = $1 AND point_name = $2`,
     [input.surveyId, input.stationId]
@@ -123,7 +126,7 @@ export async function upsertCoordinate(input: CreateCoordinateInput) {
   }
 
   // Insert new point
-  const { rows } = await db.query(
+  const { rows } = await db.query<IdRow>(
     `INSERT INTO survey_points
        (project_id, point_name, easting, northing, elevation,
         datum, projection, utm_zone,
@@ -168,7 +171,7 @@ export async function batchUpsertCoordinates(coords: CreateCoordinateInput[]) {
   await db.transaction(async (client) => {
     for (const coord of coords) {
       // Reuse the upsert logic but within the transaction
-      const existing = await client.query(
+      const existing = await client.query<IdRow>(
         `SELECT id FROM survey_points
          WHERE project_id = $1 AND point_name = $2`,
         [coord.surveyId, coord.stationId]

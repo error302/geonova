@@ -179,7 +179,7 @@ function SearchTrigger({ t }: { t: Translator }) {
 }
 
 export default function NavBar() {
-  const [installPrompt, setInstallPrompt] = useState<any>(null)
+  const [installPrompt, setInstallPrompt] = useState<{ prompt: () => Promise<{ outcome: string }> } | null>(null)
   const [showInstall, setShowInstall] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
@@ -277,7 +277,7 @@ export default function NavBar() {
   useEffect(() => {
     const handleBeforeInstall = (e: Event) => {
       e.preventDefault()
-      setInstallPrompt(e)
+      setInstallPrompt(e as unknown as { prompt: () => Promise<{ outcome: string }> })
       setShowInstall(true)
     }
     window.addEventListener('beforeinstallprompt', handleBeforeInstall)
@@ -338,7 +338,7 @@ export default function NavBar() {
     setOpenDropdown(null)
   }, [pathname])
 
-  const currentLang = languages.find((l: any) => l.code === language) || languages[0]
+  const currentLang = languages.find((l) => l.code === language) || languages[0]
   const shellVariant = authStatus !== 'loading' && !isAuthenticated && isExplicitPublicRoute(pathname) ? 'public' : 'app'
   const desktopLinks = shellVariant === 'app' ? APP_SHELL_LINKS : PUBLIC_SHELL_LINKS
   const mobileLinks = shellVariant === 'app' ? APP_SHELL_LINKS : PUBLIC_SHELL_LINKS

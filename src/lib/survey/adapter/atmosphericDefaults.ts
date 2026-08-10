@@ -494,7 +494,7 @@ export async function fetchRealtimeWeather(
 
     if (!response.ok) return null;
 
-    const data = await response.json();
+    const data = (await response.json()) as { current: { temperature_2m: number; surface_pressure: number; relative_humidity_2m: number } };
     return {
       temperature: data.current.temperature_2m,
       pressure: data.current.surface_pressure,

@@ -9,7 +9,7 @@ export async function generateCoordinateSchedule(
     'SELECT name, survey_type, ref_no FROM projects WHERE id = $1',
     [projectId]
   );
-  const project = projectRes.rows[0];
+  const project = projectRes.rows[0] as { name: string; survey_type: string | null; ref_no: string | null } | undefined;
 
   const beaconsRes = await db.query(
     'SELECT * FROM project_beacons WHERE project_id = $1 ORDER BY beacon_no ASC',

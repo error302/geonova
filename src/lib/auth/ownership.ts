@@ -55,7 +55,7 @@ export async function requireProjectOwnership(
   projectId: string,
   userId: string | undefined | null
 ): Promise<OwnershipResult> {
-  const result = await db.query(
+  const result = await db.query<{ user_id: string | null }>(
     'SELECT user_id FROM projects WHERE id = $1',
     [projectId]
   )
@@ -100,7 +100,7 @@ export async function requireSurveyPointOwnership(
   surveyPointId: string,
   userId: string | undefined | null
 ): Promise<OwnershipResult> {
-  const result = await db.query(
+  const result = await db.query<{ user_id: string | null }>(
     `SELECT p.user_id
      FROM survey_points sp
      JOIN projects p ON p.id = sp.project_id
@@ -145,7 +145,7 @@ export async function requireVersionOwnership(
   versionId: string,
   userId: string | undefined | null
 ): Promise<OwnershipResult> {
-  const result = await db.query(
+  const result = await db.query<{ user_id: string | null }>(
     `SELECT p.user_id
      FROM entity_versions ev
      LEFT JOIN projects p ON p.id = ev.project_id

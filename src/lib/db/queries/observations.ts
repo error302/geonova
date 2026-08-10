@@ -21,6 +21,9 @@
 import { db } from '@/lib/db'
 import { computationCache, CacheKeys } from '../../cache/memory-cache'
 
+/** Row shape for queries that only select an id. */
+interface IdRow { id: string }
+
 // ─── Types ───────────────────────────────────────────────────────
 
 export interface CreateObservationInput {
@@ -68,7 +71,7 @@ export async function getObservations(surveyId: string): Promise<ObservationRow[
     CacheKeys.surveyObservations(surveyId),
     async () => {
       // Find the most recent traverse for this project
-      const traverseResult = await db.query(
+      const traverseResult = await db.query<IdRow>(
         `SELECT id FROM parcel_traverses
          WHERE project_id = $1
          ORDER BY created_at DESC
@@ -169,7 +172,7 @@ export async function batchCreateObservations(
  * Used by batch sync when a project has no traverse yet.
  */
 async function resolveOrCreateTraverse(projectId: string): Promise<string> {
-  const existing = await db.query(
+  const existing = await db.query<IdRow>(
     `SELECT id FROM parcel_traverses
      WHERE project_id = $1
      ORDER BY created_at DESC
@@ -179,7 +182,7 @@ async function resolveOrCreateTraverse(projectId: string): Promise<string> {
   if (existing.rows.length > 0) return existing.rows[0].id as string
 
   // Create a new traverse record
-  const created = await db.query(
+  const created = await db.query<IdRow>(
     `INSERT INTO parcel_traverses (project_id, name)
      VALUES ($1, 'Synced observations')
      RETURNING id`,

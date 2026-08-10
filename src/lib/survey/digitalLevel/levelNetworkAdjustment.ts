@@ -445,7 +445,7 @@ export function computeObservations(
   }>
 ): LevelObservation[] {
   const observations: LevelObservation[] = []
-  let bsBuffer: any = null
+  let bsBuffer: (typeof readings)[number] | null = null
 
   for (const r of readings) {
     if (r.type === 'BS') {

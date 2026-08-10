@@ -96,7 +96,7 @@ export default async function Image() {
             { label: '15+ Tools', sub: 'Offline ready' },
             { label: '18+ Tools', sub: 'Full precision' },
             { label: 'English & Swahili', sub: 'Built in Kenya' },
-          ].map((item: any) => (
+          ].map((item) => (
             <div
               key={item.label}
               style={{
