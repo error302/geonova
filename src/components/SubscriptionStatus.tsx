@@ -1,13 +1,14 @@
 'use client';
 import Link from 'next/link'
 
-export default function SubscriptionStatus({ subscription }: { subscription: { plan_id?: string | null; status?: string | null; trial_ends_at?: string | null } }) {
-  const plan = subscription?.plan_id || 'free'
+export default function SubscriptionStatus({ subscription }: { subscription: Record<string, unknown> | null }) {
+  const plan = (subscription?.plan_id as string | undefined) || 'free'
   const isTrialing = subscription?.status === 'trial'
+  const trialEndsAt = subscription?.trial_ends_at
 
-  const trialDaysLeft = isTrialing && subscription?.trial_ends_at
+  const trialDaysLeft = isTrialing && typeof trialEndsAt === 'string'
     ? Math.max(0, Math.ceil(
-        (new Date(subscription.trial_ends_at).getTime() - Date.now()) / 86400000
+        (new Date(trialEndsAt).getTime() - Date.now()) / 86400000
       ))
     : 0
 

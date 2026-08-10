@@ -52,7 +52,7 @@ export async function generateDocx(options: DocxGenerationOptions): Promise<Buff
     ? inputSections || []
     : inputSections || []
 
-  const docSections: Paragraph[] = []
+  const docSections: (Paragraph | TableOfContents)[] = []
 
   // Title Page
   docSections.push(
