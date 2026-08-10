@@ -11,16 +11,18 @@
  * Generate a cryptographically random nonce string.
  */
 export function generateNonce(): string {
+  const array = new Uint8Array(16)
   if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
-    const array = new Uint8Array(16)
     crypto.getRandomValues(array)
-    return Buffer.from(array).toString('base64')
-  } else if (typeof window === 'undefined') {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const nodeCrypto = require('crypto')
-    return nodeCrypto.randomBytes(16).toString('base64')
+  } else {
+    for (let i = 0; i < 16; i++) {
+      array[i] = Math.floor(Math.random() * 256)
+    }
   }
-  return 'default-nonce-string-placeholder'
+  if (typeof Buffer !== 'undefined') {
+    return Buffer.from(array).toString('base64')
+  }
+  return typeof btoa !== 'undefined' ? btoa(String.fromCharCode(...Array.from(array))) : 'default-nonce-string'
 }
 
 /**
