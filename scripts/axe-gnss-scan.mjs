@@ -683,7 +683,11 @@ async function run() {
       args: ['--no-sandbox', '--no-first-run', '--no-default-browser-check', '--disable-dev-shm-usage'],
     })
   }
-  const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } })
+  // The app's nonce-based CSP blocks addScriptTag's inline injection (per CSP
+  // spec, the presence of a nonce makes 'unsafe-inline' ignored). bypassCSP
+  // relaxes CSP only for scripts Playwright injects — the page's own scripts
+  // still enforce the policy, so a11y scan validity is unaffected.
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, bypassCSP: true })
   try {
     let loggedIn = false
     if (LOGIN) {
