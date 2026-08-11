@@ -15,7 +15,7 @@
  * - Static page navigation (tools, docs, settings)
  */
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo, memo } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Search, Command, ArrowRight, ArrowLeft, CornerDownLeft,
@@ -328,7 +328,10 @@ export function CommandPalette() {
 
 // ─── Helper components ──────────────────────────────────────────────────
 
-function ResultRow({
+// ⚡ Bolt: Wrapped ResultRow in React.memo() to prevent unnecessary re-renders of all rows
+// when navigating through the list using arrow keys.
+// Impact: Reduces React render time significantly when moving cursor rapidly, making navigation smoother.
+const ResultRow = memo(function ResultRow({
   selected, onClick, onHover, icon: Icon, title, subtitle, href, category,
 }: {
   selected: boolean
@@ -365,7 +368,7 @@ function ResultRow({
       {selected && <ArrowRight className="w-3 h-3 text-[#D17B47] shrink-0" />}
     </div>
   )
-}
+})
 
 function getResultIcon(type: string): typeof LayoutDashboard {
   switch (type) {
