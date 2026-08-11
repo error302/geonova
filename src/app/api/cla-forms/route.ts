@@ -6,6 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 import { requireAuth } from '@/lib/auth/requireAuth';
 import { CLA_FORM_REGISTRY } from '@/lib/legal/claForms';
 import { CLAFormGenerateSchema } from '@/lib/validation/apiSchemas';
@@ -55,7 +56,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const pdfBytes = formEntry.generator(data);
+    const pdfBytes = formEntry.generator(data as never);
 
     if (!pdfBytes || pdfBytes.length === 0) {
       return NextResponse.json(
@@ -77,7 +78,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error during CLA form generation.';
-    console.error('[cla-forms] Generation error:', message, error);
+    logger.error('[cla-forms] Generation error:', { message, error });
     return NextResponse.json(
       { success: false, error: message },
       { status: 500 }
