@@ -5,7 +5,7 @@ test.describe('Responsive Design — Mobile', () => {
 
   test('landing page hero text is readable on mobile', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('h1')).toContainText('Precision Land')
+    await expect(page.locator('h1')).toContainText('Surveying software')
   })
 
   test('pricing cards visible on mobile', async ({ page }) => {
@@ -34,13 +34,13 @@ test.describe('Responsive Design — Tablet', () => {
 
   test('landing page renders correctly on tablet', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('h1')).toContainText('Precision Land')
+    await expect(page.locator('h1')).toContainText('Surveying software')
     await expect(page.locator('h3').filter({ hasText: 'Traverse Adjustment' })).toBeVisible()
   })
 
-  test('login page shows split layout on tablet', async ({ page }) => {
+  test('login page shows header on tablet', async ({ page }) => {
     await page.goto('/login')
-    await expect(page.locator('text=Kenya Survey Regulations compliant')).toBeVisible()
+    await expect(page.locator('text=East Africa Survey Platform')).toBeVisible()
   })
 })
 
@@ -49,7 +49,7 @@ test.describe('Responsive Design — Desktop', () => {
 
   test('landing page full layout on desktop', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('h1')).toContainText('Precision Land')
+    await expect(page.locator('h1')).toContainText('Surveying software')
     await expect(page.locator('h3').filter({ hasText: 'Traverse Adjustment' })).toBeVisible()
     await expect(page.locator('text=Most Popular')).toBeVisible()
   })
