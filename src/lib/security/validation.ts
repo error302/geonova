@@ -122,7 +122,7 @@ export function sanitizeObject<T extends Record<string, unknown>>(
 
   // Handle arrays
   if (Array.isArray(obj)) {
-    return obj.map((item) =>
+    return obj.map((item: unknown) =>
       typeof item === 'object' && item !== null && !Array.isArray(item)
         ? sanitizeObject(item as Record<string, unknown>)
         : typeof item === 'string'
@@ -138,7 +138,7 @@ export function sanitizeObject<T extends Record<string, unknown>>(
     } else if (typeof value === 'string') {
       sanitized[key] = sanitizeString(value)
     } else if (Array.isArray(value)) {
-      sanitized[key] = value.map((item) =>
+      sanitized[key] = value.map((item: unknown) =>
         typeof item === 'object' && item !== null && !Array.isArray(item)
           ? sanitizeObject(item as Record<string, unknown>)
           : typeof item === 'string'

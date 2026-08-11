@@ -46,7 +46,7 @@ const INQUIRY_KEY = 'metardu_instrument_inquiries'
 
 function loadListings(): InstrumentListing[] {
   if (typeof window === 'undefined') return []
-  try { return JSON.parse(localStorage.getItem(LISTING_KEY) || '[]') } catch { return [] }
+  try {  return JSON.parse(localStorage.getItem(LISTING_KEY) || '[]') as InstrumentListing[] } catch { return [] }
 }
 function saveListings(items: InstrumentListing[]) {
   if (typeof window === 'undefined') return
@@ -54,7 +54,7 @@ function saveListings(items: InstrumentListing[]) {
 }
 function loadInquiries(): InquiryMessage[] {
   if (typeof window === 'undefined') return []
-  try { return JSON.parse(localStorage.getItem(INQUIRY_KEY) || '[]') } catch { return [] }
+  try {  return JSON.parse(localStorage.getItem(INQUIRY_KEY) || '[]') as InquiryMessage[] } catch { return [] }
 }
 function saveInquiries(items: InquiryMessage[]) {
   if (typeof window === 'undefined') return

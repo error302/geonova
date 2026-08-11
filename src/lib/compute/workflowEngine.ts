@@ -18,7 +18,7 @@ export async function executeWorkflow(
     throw new Error(error.error || 'Failed to execute workflow')
   }
   
-  return res.json()
+  return (await res.json()) as { status: string; results: Record<string, unknown>; errors: string[] }
 }
 
 export async function generateReport(
@@ -37,5 +37,5 @@ export async function generateReport(
     throw new Error(error.error || 'Failed to generate report')
   }
   
-  return res.json()
+  return (await res.json()) as ReportResponse
 }

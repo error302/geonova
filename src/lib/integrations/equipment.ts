@@ -48,7 +48,7 @@ const LOG_KEY = 'metardu_calibration_logs'
 function load(): Equipment[] {
   if (typeof window === 'undefined') return []
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]') as Equipment[]
   } catch { return [] }
 }
 
@@ -60,7 +60,7 @@ function save(items: Equipment[]): void {
 function loadLogs(): CalibrationLog[] {
   if (typeof window === 'undefined') return []
   try {
-    return JSON.parse(localStorage.getItem(LOG_KEY) || '[]')
+    return JSON.parse(localStorage.getItem(LOG_KEY) || '[]') as CalibrationLog[]
   } catch { return [] }
 }
 

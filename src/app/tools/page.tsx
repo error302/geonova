@@ -133,7 +133,7 @@ const MAX_RECENT = 6
 
 function getRecentTools(): string[] {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]') as string[]
   } catch {
     return []
   }
@@ -154,7 +154,7 @@ const FAV_STORAGE_KEY = 'metardu-fav-tools'
 
 function getFavTools(): string[] {
   try {
-    return JSON.parse(localStorage.getItem(FAV_STORAGE_KEY) || '[]')
+    return JSON.parse(localStorage.getItem(FAV_STORAGE_KEY) || '[]') as string[]
   } catch {
     return []
   }

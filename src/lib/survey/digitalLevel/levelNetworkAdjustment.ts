@@ -337,7 +337,7 @@ function adjustAllFixed(
 // ── Matrix operations (pure TypeScript, no dependencies) ─────────────────────
 
 function multiplyAtWA(A: number[][], W: number[], n: number): number[][] {
-  const result = Array.from({ length: n }, function() { return new Array(n).fill(0) })
+  const result = Array.from({ length: n }, function() { return new Array<number>(n).fill(0) })
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
       for (let k = 0; k < A.length; k++) {
@@ -349,7 +349,7 @@ function multiplyAtWA(A: number[][], W: number[], n: number): number[][] {
 }
 
 function multiplyAtWl(A: number[][], W: number[], l: number[], n: number): number[] {
-  const result = new Array(n).fill(0)
+  const result = new Array<number>(n).fill(0)
   for (let i = 0; i < n; i++) {
     for (let k = 0; k < A.length; k++) {
       result[i] += A[k][i] * W[k] * l[k]
@@ -384,7 +384,7 @@ function solveLinearSystem(A: number[][], b: number[]): number[] {
   }
 
   // Back substitution
-  const x = new Array(n).fill(0)
+  const x = new Array<number>(n).fill(0)
   for (let i = n - 1; i >= 0; i--) {
     x[i] = M[i][n]
     for (let j = i + 1; j < n; j++) {
@@ -412,7 +412,7 @@ function invertMatrix(A: number[][], n: number): number[][] {
 
     const pivot = M[col][col]
     if (Math.abs(pivot) < 1e-12) {
-      return Array.from({ length: n }, function() { return new Array(n).fill(0) })
+      return Array.from({ length: n }, function() { return new Array<number>(n).fill(0) })
     }
 
     for (let k = 0; k < 2 * n; k++) {

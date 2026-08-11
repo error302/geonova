@@ -129,7 +129,7 @@ export class PayPalService {
       throw new Error(error.message || 'Failed to create PayPal order')
     }
 
-    return response.json()
+    return (await response.json()) as PayPalOrder
   }
 
   async captureOrder(orderId: string): Promise<PayPalCaptureResult> {
@@ -148,7 +148,7 @@ export class PayPalService {
       throw new Error(error.message || 'Failed to capture PayPal order')
     }
 
-    return response.json()
+    return (await response.json()) as PayPalCaptureResult
   }
 
   async getOrderDetails(orderId: string): Promise<PayPalOrder> {
@@ -164,7 +164,7 @@ export class PayPalService {
       throw new Error('Failed to get PayPal order details')
     }
 
-    return response.json()
+    return (await response.json()) as PayPalOrder
   }
 
   async createSubscription(planId: string, subscriber: { email: string; name?: string }): Promise<{ subscriptionId: string; approvalUrl: string }> {

@@ -87,7 +87,7 @@ class Matrix {
   constructor(rows: number, cols: number) {
     this.rows = rows;
     this.cols = cols;
-    this.data = Array.from({ length: rows }, () => new Array(cols).fill(0)) as unknown as number[][];
+    this.data = Array.from({ length: rows }, () => new Array<number>(cols).fill(0)) as unknown as number[][];
   }
   
   static fromArray(arr: number[][]): Matrix {
@@ -139,7 +139,7 @@ class Matrix {
   }
   
   multiplyVector(v: number[]): number[] {
-    const result = new Array(this.rows).fill(0);
+    const result = new Array<number>(this.rows).fill(0);
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
         result[i] += this.data[i][j] * v[j];
