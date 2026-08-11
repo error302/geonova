@@ -64,7 +64,9 @@ test.describe('Authentication Flow — Register', () => {
     await expect(submitBtn).toContainText('Create Account')
   })
 
-  test('register page shows left panel compliance checklist on desktop', async ({ page }) => {
+  test('register page shows left panel compliance checklist on desktop', async ({ page }, testInfo) => {
+    // The compliance panel is hidden on mobile (lg:flex) — desktop-only.
+    test.skip(testInfo.project.name === 'mobile-chrome', 'Compliance panel is desktop-only (lg:flex)')
     await page.goto('/register')
     await expect(page.locator('text=Kenya Survey Regulations compliant')).toBeVisible()
     await expect(page.locator('text=Works offline in the field')).toBeVisible()

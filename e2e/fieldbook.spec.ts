@@ -64,7 +64,10 @@ test.describe('Fieldbook — Page Load', () => {
 })
 
 test.describe('Fieldbook — Survey Type Tabs', () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    // The desktop shell (tab bar, observation tables, export bar) is not
+    // rendered on the mobile viewport — MobileFieldbookShell replaces it.
+    test.skip(testInfo.project.name === 'mobile-chrome', 'Desktop fieldbook shell is not rendered on mobile')
     await mockAuthSession(page)
   })
 
@@ -124,7 +127,10 @@ test.describe('Fieldbook — Survey Type Tabs', () => {
 })
 
 test.describe('Fieldbook — Observation Form Fields', () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    // The desktop shell (tab bar, observation tables, export bar) is not
+    // rendered on the mobile viewport — MobileFieldbookShell replaces it.
+    test.skip(testInfo.project.name === 'mobile-chrome', 'Desktop fieldbook shell is not rendered on mobile')
     await mockAuthSession(page)
   })
 
@@ -223,7 +229,10 @@ test.describe('Fieldbook — Feature Buttons', () => {
 })
 
 test.describe('Fieldbook — Export Buttons', () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    // The desktop shell (tab bar, observation tables, export bar) is not
+    // rendered on the mobile viewport — MobileFieldbookShell replaces it.
+    test.skip(testInfo.project.name === 'mobile-chrome', 'Desktop fieldbook shell is not rendered on mobile')
     await mockAuthSession(page)
   })
 
