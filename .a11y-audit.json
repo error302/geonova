@@ -2685,6 +2685,22 @@
     ]
   },
   {
+    "filePath": "src/app/api/cron/weekly-digest/route.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": [
+      {
+        "ruleId": "no-mixed-spaces-and-tabs",
+        "replacedBy": []
+      }
+    ]
+  },
+  {
     "filePath": "src/app/api/cross-section/route.ts",
     "messages": [],
     "suppressedMessages": [],

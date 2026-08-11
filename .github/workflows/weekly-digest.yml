@@ -1,0 +1,36 @@
+name: Weekly Digest Emails
+
+# Sends the branded weekly-digest summary email (last 7 days of project
+# activity) to opted-in users every Monday morning. Hits the scheduler
+# endpoint directly (Bearer API_ADMIN_KEY); recipients are filtered by
+# notification_preferences.email.weekly_digest inside the endpoint.
+
+on:
+  schedule:
+    # Monday 06:00 UTC — the app's "Monday-morning cron" convention.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  send-digests:
+    name: Send weekly digests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APP_URL: ${{ vars.PROD_APP_URL || 'https://metardu.space' }}
+    steps:
+      - name: Trigger weekly-digest scheduler
+        env:
+          API_ADMIN_KEY: ${{ secrets.API_ADMIN_KEY }}
+        run: |
+          HTTP_CODE=$(curl -sf -o /tmp/weekly-digest.json -w "%{http_code}" --max-time 180 \
+            -X POST \
+            -H "Authorization: Bearer ${API_ADMIN_KEY}" \
+            -H "Content-Type: application/json" \
+            "${APP_URL}/api/cron/weekly-digest" || echo "000")
+          echo "HTTP ${HTTP_CODE}"
+          cat /tmp/weekly-digest.json 2>/dev/null || true
+          if [ "${HTTP_CODE}" != "200" ]; then
+            echo "Scheduler call failed (HTTP ${HTTP_CODE})" >&2
+            exit 1
+          fi
