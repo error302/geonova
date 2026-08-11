@@ -36,14 +36,14 @@ export async function getUserJobs(): Promise<MetarduJob[]> {
   const user = (session as unknown as BrowserSession | null)?.user ?? null
   if (!user) return []
 
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('jobs')
     .select('*')
     .eq('user_id', user.id)
     .order('scheduled_date', { ascending: true })
 
-  if (error) throw error
-  return (data ?? null) as unknown as MetarduJob[]
+  if (res.error) throw res.error
+  return (res.data ?? null) as unknown as MetarduJob[]
 }
 
 export async function createJob(job: CreateJobInput): Promise<MetarduJob> {
@@ -53,71 +53,71 @@ export async function createJob(job: CreateJobInput): Promise<MetarduJob> {
   const user = (session as unknown as BrowserSession | null)?.user ?? null
   if (!user) throw new Error('Not authenticated')
 
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('jobs')
     .insert({ ...job, user_id: user.id })
     .select()
     .single()
 
-  if (error) throw error
-  return data as unknown as MetarduJob
+  if (res.error) throw res.error
+  return res.data as unknown as MetarduJob
 }
 
 export async function getJob(id: string): Promise<MetarduJob | null> {
   const dbClient = createClient()
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('jobs')
     .select('*')
     .eq('id', id)
     .single()
 
-  if (error) throw error
-  return (data ?? null) as unknown as MetarduJob | null
+  if (res.error) throw res.error
+  return (res.data ?? null) as unknown as MetarduJob | null
 }
 
 export async function updateJob(id: string, updates: Partial<MetarduJob>): Promise<MetarduJob> {
   const dbClient = createClient()
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('jobs')
     .update(updates)
     .eq('id', id)
     .select()
     .single()
 
-  if (error) throw error
-  return data as unknown as MetarduJob
+  if (res.error) throw res.error
+  return res.data as unknown as MetarduJob
 }
 
 export async function deleteJob(id: string): Promise<void> {
   const dbClient = createClient()
-  const { error } = await dbClient
+  const res = await dbClient
     .from('jobs')
     .delete()
     .eq('id', id)
 
-  if (error) throw error
+  if (res.error) throw res.error
 }
 
 export async function getEquipmentByType(survey_type: string): Promise<string[]> {
   const dbClient = createClient()
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('equipment_recommendations')
     .select('equipment')
     .eq('survey_type', survey_type)
     .single()
 
-  if (error || !data) return []
-  return ((data as unknown) as { equipment?: string[] }).equipment ?? []
+  if (res.error || !res.data) return []
+  return ((res.data as unknown) as { equipment?: string[] }).equipment ?? []
 }
 
 export async function getChecklistByType(survey_type: string): Promise<string[]> {
   const dbClient = createClient()
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('job_checklists')
     .select('tasks')
     .eq('survey_type', survey_type)
     .single()
 
-  if (error || !data) return []
-  return ((data as unknown) as { tasks?: string[] }).tasks ?? []
+  if (res.error || !res.data) return []
+  return ((res.data as unknown) as { tasks?: string[] }).tasks ?? []
 }

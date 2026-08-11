@@ -49,7 +49,7 @@ export async function getOrCreateProjectSubmission(projectId: string): Promise<P
     throw new Error('Not authenticated')
   }
 
-  const { data: existing, error: existingError } = await dbClient
+  const existingRes = await dbClient
     .from('project_submissions')
     .select('*')
     .eq('project_id', projectId)
@@ -58,15 +58,15 @@ export async function getOrCreateProjectSubmission(projectId: string): Promise<P
     .limit(1)
     .maybeSingle()
 
-  if (existingError) {
-    throw existingError
+  if (existingRes.error) {
+    throw existingRes.error
   }
 
-  if (existing) {
-    return mapSubmissionRow(existing as unknown as ProjectSubmissionRow)
+  if (existingRes.data) {
+    return mapSubmissionRow(existingRes.data as unknown as ProjectSubmissionRow)
   }
 
-  const { data, error } = await dbClient
+  const insertRes = await dbClient
     .from('project_submissions')
     .insert({
       project_id: projectId,
@@ -83,11 +83,11 @@ export async function getOrCreateProjectSubmission(projectId: string): Promise<P
     .select('*')
     .single()
 
-  if (error) {
-    throw error
+  if (insertRes.error) {
+    throw insertRes.error
   }
 
-  return mapSubmissionRow(data as unknown as ProjectSubmissionRow)
+  return mapSubmissionRow(insertRes.data as unknown as ProjectSubmissionRow)
 }
 
 export async function updateProjectSubmission(
@@ -129,7 +129,7 @@ export async function updateProjectSubmission(
     Object.entries(payload).filter(([, value]) => value !== undefined)
   ) as Record<string, unknown>
 
-  const { data, error } = await dbClient
+  const updateRes = await dbClient
     .from('project_submissions')
     .update(sanitized)
     .eq('id', id)
@@ -137,9 +137,9 @@ export async function updateProjectSubmission(
     .select('*')
     .single()
 
-  if (error) {
-    throw error
+  if (updateRes.error) {
+    throw updateRes.error
   }
 
-  return mapSubmissionRow(data as unknown as ProjectSubmissionRow)
+  return mapSubmissionRow(updateRes.data as unknown as ProjectSubmissionRow)
 }

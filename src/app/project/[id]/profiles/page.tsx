@@ -82,26 +82,26 @@ export default function ProfilesPage({ params }: PageProps) {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const { data: projectData } = await dbClient
+      const projRes = await dbClient
         .from('projects')
         .select('*')
         .eq('id', params.id)
         .single();
-      if (projectData) setProject((projectData as unknown) as Project);
+      if (projRes.data) setProject((projRes.data as unknown) as Project);
 
-      const { data: pointsData } = await dbClient
+      const ptsRes = await dbClient
         .from('survey_points')
         .select('*')
         .eq('project_id', params.id)
         .order('name');
-      if (pointsData) setPoints((pointsData as unknown) as SurveyPoint[]);
+      if (ptsRes.data) setPoints((ptsRes.data as unknown) as SurveyPoint[]);
 
-      const { data: alignmentsData } = await dbClient
+      const alignRes = await dbClient
         .from('alignments')
         .select('*')
         .eq('project_id', params.id)
         .order('created_at', { ascending: false });
-      if (alignmentsData) setAlignments((alignmentsData as unknown) as Alignment[]);
+      if (alignRes.data) setAlignments((alignRes.data as unknown) as Alignment[]);
     } catch (err) {
       console.error('Error loading data:', err);
     } finally {
@@ -114,26 +114,26 @@ export default function ProfilesPage({ params }: PageProps) {
   }, [loadData]);
 
   const loadAlignmentData = async (alignmentId: string) => {
-    const { data: cpData } = await dbClient
+    const cpRes = await dbClient
       .from('chainage_points')
       .select('*')
       .eq('alignment_id', alignmentId)
       .order('chainage');
-    if (cpData) setChainagePoints((cpData as unknown) as ChainagePoint[]);
+    if (cpRes.data) setChainagePoints((cpRes.data as unknown) as ChainagePoint[]);
 
-    const { data: csData } = await dbClient
+    const csRes = await dbClient
       .from('cross_sections')
       .select('*')
       .eq('alignment_id', alignmentId)
       .order('chainage');
-    if (csData) setCrossSections((csData as unknown) as CrossSection[]);
+    if (csRes.data) setCrossSections((csRes.data as unknown) as CrossSection[]);
   };
 
   const createAlignment = async () => {
     if (!newAlignmentName || selectedPoints.length < 2) return;
 
     try {
-      const { data: alignment, error } = await dbClient
+      const alignInsRes = await dbClient
         .from('alignments')
         .insert({
           project_id: params.id,
@@ -142,7 +142,8 @@ export default function ProfilesPage({ params }: PageProps) {
         .select()
         .single();
 
-      if (error) throw error;
+      const alignment = (alignInsRes.data as unknown) as Alignment;
+      if (alignInsRes.error) throw alignInsRes.error;
 
       const first = selectedPoints[0]
       const table = computeChainageTable({

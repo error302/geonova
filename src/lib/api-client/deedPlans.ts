@@ -12,7 +12,7 @@ export async function saveDeedPlan(
   const user = (session as unknown as BrowserSession | null)?.user ?? null
   if (!user) throw new Error('Not authenticated')
 
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('deed_plans')
     .insert({
       project_id: projectId,
@@ -32,32 +32,32 @@ export async function saveDeedPlan(
     .select()
     .single()
 
-  if (error) throw error
-  return data as unknown as DeedPlanDocument
+  if (res.error) throw res.error
+  return res.data as unknown as DeedPlanDocument
 }
 
 export async function getDeedPlansByProject(projectId: string): Promise<DeedPlanDocument[]> {
   const dbClient = createClient()
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('deed_plans')
     .select('*')
     .eq('project_id', projectId)
     .order('created_at', { ascending: false })
 
-  if (error) throw error
-  return data as unknown as DeedPlanDocument[]
+  if (res.error) throw res.error
+  return res.data as unknown as DeedPlanDocument[]
 }
 
 export async function getDeedPlanById(id: string): Promise<DeedPlanDocument | null> {
   const dbClient = createClient()
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('deed_plans')
     .select('*')
     .eq('id', id)
     .single()
 
-  if (error) throw error
-  return data as unknown as DeedPlanDocument
+  if (res.error) throw res.error
+  return res.data as unknown as DeedPlanDocument
 }
 
 export async function updateDeedPlanStatus(
@@ -65,13 +65,13 @@ export async function updateDeedPlanStatus(
   status: 'draft' | 'finalised'
 ): Promise<DeedPlanDocument> {
   const dbClient = createClient()
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('deed_plans')
     .update({ status, updated_at: new Date().toISOString() })
     .eq('id', id)
     .select()
     .single()
 
-  if (error) throw error
-  return data as unknown as DeedPlanDocument
+  if (res.error) throw res.error
+  return res.data as unknown as DeedPlanDocument
 }

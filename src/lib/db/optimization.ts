@@ -25,14 +25,14 @@ class DatabaseOptimizer {
       async () => {
         const dbClient = createClient()
         const startTime = Date.now()
-        const { data, error } = await dbClient.from(table).select(query)
+        const selectRes = await dbClient.from(table).select(query)
         
-        if (error) throw error
+        if (selectRes.error) throw selectRes.error
         
         const duration = Date.now() - startTime
         this.logQuery(`SELECT ${table}`, duration)
         
-        return ((data || []) as unknown) as T[]
+        return ((selectRes.data || []) as unknown) as T[]
       },
       ttlSeconds
     )
@@ -99,14 +99,14 @@ class DatabaseOptimizer {
     }
 
     const startTime = Date.now()
-    const { data, error } = await queryBuilder
+    const pagRes = await queryBuilder
     const duration = Date.now() - startTime
 
     this.logQuery(`PAGINATED_SELECT ${table}`, duration)
 
-    if (error) throw error
+    if (pagRes.error) throw pagRes.error
 
-    const results = (data || []) as unknown as T[]
+    const results = (pagRes.data || []) as unknown as T[]
     const hasMore = results.length > limit
     const trimmedResults = hasMore ? results.slice(0, -1) : results
 
@@ -176,13 +176,13 @@ class DatabaseOptimizer {
       })
 
       const startTime = Date.now()
-      const { data, error } = await queryBuilder
+      const joinRes = await queryBuilder
       const duration = Date.now() - startTime
 
       this.logQuery(`JOIN ${primaryTable}`, duration)
 
-      if (error) throw error
-      return data || []
+      if (joinRes.error) throw joinRes.error
+      return ((joinRes.data || []) as unknown) as T[]
     }
 
     if (cacheKey) {

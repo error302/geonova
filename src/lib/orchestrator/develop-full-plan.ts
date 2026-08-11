@@ -71,33 +71,33 @@ async function loadProjectData(projectId: string): Promise<{
 }> {
   const sb = createClient()
   
-  const { data: project } = await sb
+  const projRes = await sb
     .from('projects')
     .select('*')
     .eq('id', projectId)
     .single()
 
-  const { data: points } = await sb
+  const ptsRes = await sb
     .from('survey_points')
     .select('*')
     .eq('project_id', projectId)
     .order('created_at', { ascending: true })
 
-  const { data: traverseObs } = await sb
+  const travRes = await sb
     .from('traverse_observations')
     .select('*')
     .eq('project_id', projectId)
 
-  const { data: levelingObs } = await sb
+  const levRes = await sb
     .from('leveling_observations')
     .select('*')
     .eq('project_id', projectId)
 
   return {
-    project: (project as unknown as Project | null) ?? null,
-    points: (points as unknown as SurveyPoint[] | null) ?? null,
-    traverseObs: (traverseObs as unknown as TraverseObservation[] | null) ?? null,
-    levelingObs: (levelingObs as unknown as LevelingObservation[] | null) ?? null,
+    project: (projRes.data as unknown as Project | null) ?? null,
+    points: (ptsRes.data as unknown as SurveyPoint[] | null) ?? null,
+    traverseObs: (travRes.data as unknown as TraverseObservation[] | null) ?? null,
+    levelingObs: (levRes.data as unknown as LevelingObservation[] | null) ?? null,
   }
 }
 

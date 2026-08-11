@@ -143,7 +143,7 @@ export function adjustNetwork(
     const wH = 1 / (obs.stdDevH * obs.stdDevH)
 
     // Delta Easting
-    const rowE: number[] = new Array(n).fill(0)
+    const rowE: number[] = new Array<number>(n).fill(0)
     if (stationIndex.has(obs.to)) rowE[stationIndex.get(obs.to)! * 3] = 1
     if (stationIndex.has(obs.from)) rowE[stationIndex.get(obs.from)! * 3] = -1
     const obsE = toCoord.e - fromCoord.e
@@ -277,7 +277,7 @@ export function adjustNetwork(
     try {
       // Lazy import keeps the LSA stats module out of the hot path.
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { computeStatisticalReport, computeQvvDiagonal } = require('./lsaStatisticalTesting')
+      const { computeStatisticalReport, computeQvvDiagonal } = require('./lsaStatisticalTesting') as typeof import('./lsaStatisticalTesting')
 
       // Build observation labels for the w-test
       const observationLabels = observations.flatMap(obs => [

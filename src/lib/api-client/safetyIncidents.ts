@@ -15,7 +15,7 @@ export async function createIncident(params: {
   const user = (session as unknown as BrowserSession | null)?.user ?? null
   if (!user) throw new Error('Not authenticated')
 
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('safety_incidents')
     .insert({
       project_id: params.project_id,
@@ -29,31 +29,31 @@ export async function createIncident(params: {
     .select()
     .single()
   
-  if (error) throw error
-  return data as unknown as SafetyIncident
+  if (res.error) throw res.error
+  return res.data as unknown as SafetyIncident
 }
 
 export async function getIncidents(projectId: string) {
   const dbClient = createClient()
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('safety_incidents')
     .select('*')
     .eq('project_id', projectId)
     .order('created_at', { ascending: false })
   
-  if (error) throw error
-  return data as unknown as SafetyIncident[]
+  if (res.error) throw res.error
+  return res.data as unknown as SafetyIncident[]
 }
 
 export async function updateIncidentStatus(id: string, status: string) {
   const dbClient = createClient()
-  const { data, error } = await dbClient
+  const res = await dbClient
     .from('safety_incidents')
     .update({ status, updated_at: new Date().toISOString() })
     .eq('id', id)
     .select()
     .single()
   
-  if (error) throw error
-  return data as unknown as SafetyIncident
+  if (res.error) throw res.error
+  return res.data as unknown as SafetyIncident
 }

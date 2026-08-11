@@ -32,7 +32,7 @@ export async function createSurveyReport(
   const user = (session as unknown as BrowserSession | null)?.user ?? null
   if (!user) throw new Error('Not authenticated')
 
-  const { data, error } = await dbClient
+  const insRes = await dbClient
     .from('survey_reports')
     .insert({
       project_id: projectId,
@@ -48,8 +48,8 @@ export async function createSurveyReport(
     .select('id')
     .single()
 
-  if (error) throw error
-  return ((data as unknown) as { id: string }).id
+  if (insRes.error) throw insRes.error
+  return ((insRes.data as unknown) as { id: string }).id
 }
 
 export async function saveSurveyReport(
@@ -87,16 +87,16 @@ export async function getSurveyReportsByProject(
   const user = (session as unknown as BrowserSession | null)?.user ?? null
   if (!user) throw new Error('Not authenticated')
 
-  const { data, error } = await dbClient
+  const projRes = await dbClient
     .from('survey_reports')
     .select('id, report_number, report_title, revision, status, completeness, created_at, updated_at')
     .eq('project_id', projectId)
     .eq('user_id', user.id)
     .order('updated_at', { ascending: false })
 
-  if (error) throw error
+  if (projRes.error) throw projRes.error
 
-  const rows = ((data ?? null) as unknown as SurveyReportDbRow[] | null) ?? []
+  const rows = ((projRes.data ?? null) as unknown as SurveyReportDbRow[] | null) ?? []
   return rows.map((row) => ({
     id: row.id,
     reportNumber: row.report_number,
@@ -118,19 +118,19 @@ export async function getSurveyReportById(
   const user = (session as unknown as BrowserSession | null)?.user ?? null
   if (!user) throw new Error('Not authenticated')
 
-  const { data, error } = await dbClient
+  const idRes = await dbClient
     .from('survey_reports')
     .select('*')
     .eq('id', id)
     .eq('user_id', user.id)
     .single()
 
-  if (error) {
-    if (error.code === 'PGRST116') return null
-    throw error
+  if (idRes.error) {
+    if (idRes.error.code === 'PGRST116') return null
+    throw idRes.error
   }
 
-  const row = data as unknown as SurveyReportDbRow
+  const row = idRes.data as unknown as SurveyReportDbRow
   return {
     ...row.input_data,
     sections: row.sections,
