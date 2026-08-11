@@ -2,7 +2,7 @@
 
 **Goal:** clear every `@typescript-eslint` / JS warning so the CI `--max-warnings` ceiling can drop to `0` and each rule flips to `error`.
 
-**Progress:** 14,030 → **5,291** (measured 2026-08-09, `lint-ratchets --report`). Row-typing (0/532) and a11y (0 findings) are **done**; four unsafe-families + seven mechanical rules remain.
+**Progress:** 14,030 → **1,790** (measured 2026-08-11, `lint-ratchets --report`). Row-typing (0/538), a11y (0 findings), member-access, explicit-any, argument, **assignment** and no-unsafe-return are **done** (rules flipped to `error`); `no-unused-vars`/`no-non-null-assertion` + the mechanical rules remain.
 
 > **This doc is the canonical checkpoint.** Every grind session starts by reading the
 > **STATUS CHECKPOINT** below and ends by updating it. If an agent is rate-limited or
@@ -18,14 +18,14 @@
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
 | `no-unsafe-member-access` | 0 | **0** | ✅ done (rule = error) — 1-warning tail ground (30 → 0) |
-| `no-unsafe-assignment` | 249 | **249** | active |
+| `no-unsafe-assignment` | 0 | **0** | ✅ done (rule = error) — batches 1b/1c + tail drained 281 → 0 (floor 10 → 0), flipped 2026-08-11 |
 | `no-explicit-any` | 0 | **0** | ✅ done (rule = error) — 1-warning tail + `db.ts` default ground |
 | `no-unsafe-argument` | 0 | **0** | ✅ done (rule = error) |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 | **0** | ✅ done |
-| **total warnings** | **2,344** | CI ceiling **3,700** | green |
+| **total warnings** | **1,790** | CI ceiling **2,800** | green |
 
-Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,155 · `no-console` 341 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` ~175 · `no-non-null-assertion` ~570 · `no-unsafe-return` ~159 · `no-restricted-syntax` 16.
+Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 1,151 · `no-console` 8 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` 1 · `no-non-null-assertion` 570 · `no-restricted-syntax` 16. (`no-unsafe-return` ground to 0 2026-08-11; family done.)
 
 ### Git / CI state
 
