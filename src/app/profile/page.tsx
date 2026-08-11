@@ -54,7 +54,7 @@ export default function ProfilePage() {
       if (data) {
         setProfile({
           ...(data as Profile),
-          specializations: data.specializations || []
+          specializations: (data as Profile).specializations || []
         })
       } else {
         setProfile(prev => ({ ...prev, id: user.id ?? "" }))

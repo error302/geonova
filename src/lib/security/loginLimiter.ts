@@ -71,8 +71,8 @@ async function upstashGet(key: string): Promise<LoginAttempt | null> {
     body: JSON.stringify([key]),
   })
 
-  const data = await res.json()
-  const raw: string | null = data?.result
+  const data = await res.json() as { result?: string | null }
+  const raw: string | null = data?.result ?? null
   if (!raw) return null
   try {
     return JSON.parse(raw) as LoginAttempt

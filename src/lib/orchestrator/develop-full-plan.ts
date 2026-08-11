@@ -218,7 +218,7 @@ async function packageAndUpload(
 
   if (!res.ok) throw new Error('Upload failed')
 
-  const json = await res.json()
+  const json = await res.json() as { url: string }
   return json.url
 }
 

@@ -55,7 +55,7 @@ export default function ObservationsPage() {
           surveyorName: 'Demo Surveyor',
         }),
       });
-      const data = await res.json();
+      const data = await res.json() as { count: number };
       alert(`Synced ${data.count} observations`);
     } catch (err) {
       console.error(err);

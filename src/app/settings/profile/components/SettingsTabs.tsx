@@ -70,8 +70,8 @@ export default function SettingsTabs({ initialProfile, sessionEmail }: SettingsT
         const err = (await res.json().catch(() => ({ error: 'Update failed' }))) as { error?: string }
         throw new Error(err.error || `Failed (status ${res.status})`)
       }
-      const json = await res.json()
-      setProfile(prev => ({ ...prev, ...json.data }))
+      const json = await res.json() as { data?: Partial<ProfileData> }
+      setProfile(prev => ({ ...(prev ?? {}), ...json.data } as ProfileData))
       setSaveState({ status: 'saved', message: 'Changes saved' })
 
       // Refresh session so navbar avatar/name updates immediately

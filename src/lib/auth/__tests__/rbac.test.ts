@@ -10,7 +10,7 @@ jest.mock('@/lib/db', () => ({
 // Mock next/server to prevent Next.js module loading issues
 jest.mock('next/server', () => ({
   NextResponse: {
-    json: jest.fn((data, init) => ({ data, status: init?.status || 200 })),
+    json: jest.fn((data: unknown, init?: { status?: number }) => ({ data, status: init?.status || 200 })),
   },
 }))
 

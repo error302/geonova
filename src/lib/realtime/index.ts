@@ -111,7 +111,7 @@ export function subscribeToProjectChanges(
     const handleAwarenessChange = () => {
       const states = Array.from(awareness.getStates().values())
       const users = states
-        .filter(state => state.user && state.user.userId !== user.id)
+        .filter((state: { user?: { userId?: string } }) => state.user && state.user.userId !== user.id)
         .map(state => state.user as PresenceUser)
       callbacks.onPresenceChange!(users)
     }

@@ -292,7 +292,7 @@ export function generateClaForm4(data: ClaForm4Data): Uint8Array {
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(8.5)
   const declText = 'I, the undersigned, hereby declare that the information provided in this form is true and correct to the best of my knowledge. The committee has been established in accordance with the Community Land Act, 2016 and the community has been duly consulted in the nomination and appointment of all committee members listed herein.'
-  const declLines = doc.splitTextToSize(declText, contentW)
+  const declLines: string[] = doc.splitTextToSize(declText, contentW)
   declLines.forEach((line: string) => {
     y = ensureSpace(6, y)
     doc.text(line, M, y)

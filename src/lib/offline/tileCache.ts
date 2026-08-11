@@ -440,7 +440,7 @@ export async function deleteCachedTiles(sourceId: string): Promise<void> {
       cursorReq.onsuccess = () => {
         const cursor = cursorReq.result
         if (cursor) {
-          if (cursor.value.sourceId === sourceId) {
+          if ((cursor.value as { sourceId: string }).sourceId === sourceId) {
             cursor.delete()
           }
           cursor.continue()

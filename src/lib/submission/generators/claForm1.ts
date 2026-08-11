@@ -191,7 +191,7 @@ export function generateCLAForm1(input: CLA1Input): Uint8Array {
   doc.text('Geographic Description:', margin, y)
   y += 5
   doc.setFont('helvetica', 'normal')
-  const geoLines = doc.splitTextToSize(input.geographicDescription || '\u2014', W - margin * 2)
+  const geoLines: string[] = doc.splitTextToSize(input.geographicDescription || '\u2014', W - margin * 2)
   geoLines.forEach((line: string) => {
     if (y > 275) { doc.addPage(); y = 20 }
     doc.text(line, margin, y)

@@ -156,7 +156,7 @@ export default function ProfilesPage({ params }: PageProps) {
       const chainageData = table.map((row) => {
         const source = byName.get(row.pointName)
         return {
-          alignment_id: alignment.id,
+          alignment_id: (alignment as { id: string }).id,
           project_id: params.id,
           point_name: row.pointName,
           chainage: row.chainage,

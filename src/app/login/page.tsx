@@ -106,7 +106,7 @@ function LoginForm() {
         // Check if the database is available — if not, show a service-unavailable message
         try {
           const healthRes = await fetch('/api/public/health')
-          const healthData = await healthRes.json()
+          const healthData = await healthRes.json() as { checks?: { database?: string } }
           if (healthData.checks?.database === 'error') {
             setError('Service temporarily unavailable. The database is not reachable. Please try again later.')
             return

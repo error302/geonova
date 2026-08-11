@@ -70,7 +70,7 @@ export default function ProjectCrossSections({ projectId }: ProjectCrossSections
       try {
         const res = await fetch(`/api/project/${projectId}/points`)
         if (!res.ok) return
-        const json = await res.json()
+        const json = await res.json() as { data?: SurveyPoint[] }
         const points: SurveyPoint[] = json.data || []
 
         // Try to match points to chainage stations

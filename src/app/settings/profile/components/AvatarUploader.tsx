@@ -66,7 +66,7 @@ export default function AvatarUploader({
           throw new Error(err.error || `Upload failed (status ${res.status})`)
         }
 
-        const json = await res.json()
+        const json = await res.json() as { data?: { path?: string } }
         const storedPath = json.data?.path as string | undefined
         if (!storedPath) throw new Error('Storage did not return a file path')
 

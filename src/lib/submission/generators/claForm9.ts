@@ -211,7 +211,7 @@ export function generateCLAForm9(input: CLA9Input): Uint8Array {
   if (input.developmentPlanSummary) {
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8.5)
-    const devLines = doc.splitTextToSize(input.developmentPlanSummary, W - margin * 2)
+    const devLines: string[] = doc.splitTextToSize(input.developmentPlanSummary, W - margin * 2)
     devLines.forEach((line: string) => {
       if (y > 275) { doc.addPage(); y = 20 }
       doc.text(line, margin, y)

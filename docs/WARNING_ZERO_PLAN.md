@@ -17,13 +17,13 @@
 
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
-| `no-unsafe-member-access` | 30 | **30** | active — 1-warning tail done (43 → 30, explicit-any collateral) |
-| `no-unsafe-assignment` | 281 | **281** | active |
+| `no-unsafe-member-access` | 0 | **0** | ✅ done (rule = error) — 1-warning tail ground (30 → 0) |
+| `no-unsafe-assignment` | 249 | **249** | active |
 | `no-explicit-any` | 0 | **0** | ✅ done (rule = error) — 1-warning tail + `db.ts` default ground |
 | `no-unsafe-argument` | 0 | **0** | ✅ done (rule = error) |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 | **0** | ✅ done |
-| **total warnings** | **2,412** | CI ceiling **3,700** | green |
+| **total warnings** | **2,344** | CI ceiling **3,700** | green |
 
 Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,155 · `no-console` 341 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` ~175 · `no-non-null-assertion` ~570 · `no-unsafe-return` ~159 · `no-restricted-syntax` 16.
 

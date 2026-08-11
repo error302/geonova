@@ -433,7 +433,7 @@ export function VirtualizedTable<T>(props: VirtualizedTableProps<T>) {
     // Verify react-window is actually available at runtime
     try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const rw = require('react-window');
+      const rw = require('react-window') as { VariableSizeList?: unknown };
       if (!rw.VariableSizeList) setUseVirtualized(false);
     } catch {
       setUseVirtualized(false);

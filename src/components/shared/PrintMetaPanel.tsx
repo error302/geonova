@@ -66,7 +66,7 @@ export function PrintMetaPanel({ meta, onChange }: PrintMetaPanelProps) {
   const set = (key: keyof PrintMeta, value: string) =>
     onChange({ ...meta, [key]: value })
 
-  const filledCount = Object.values(meta).filter(v => v && v.trim()).length
+  const filledCount = (Object.values(meta) as string[]).filter(v => v && v.trim()).length
 
   return (
     <div className="mb-4 border border-[var(--border-color)] rounded-lg overflow-hidden">

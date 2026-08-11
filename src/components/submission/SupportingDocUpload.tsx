@@ -42,7 +42,7 @@ export function SupportingDocUpload({ projectId }: { projectId: string }) {
 
       if (!res.ok) throw new Error('Upload failed')
 
-      const json = await res.json()
+      const json = await res.json() as { url: string }
       const fileUrl = json.url
 
       await dbClient

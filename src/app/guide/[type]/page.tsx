@@ -1271,7 +1271,7 @@ export default function GuideTypePage({ params }: PageProps) {
       lastUpdated: new Date().toISOString()
     }));
     
-    const allProgress = JSON.parse(localStorage.getItem('guide_progress') || '{}');
+    const allProgress = JSON.parse(localStorage.getItem('guide_progress') || '{}') as Record<string, { completedSteps: number }>;
     allProgress[type] = { completedSteps: steps.length };
     localStorage.setItem('guide_progress', JSON.stringify(allProgress));
   };

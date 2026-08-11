@@ -43,7 +43,7 @@ export default function PhotoUploader({ projectId, photos, onChange, maxPhotos =
           continue
         }
 
-        const json = await res.json()
+        const json = await res.json() as { url: string }
         const url = json.url
 
         const newPhoto: Photo = {

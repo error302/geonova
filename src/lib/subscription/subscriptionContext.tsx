@@ -120,10 +120,10 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           throw new Error(`Session request failed with ${response.status}`)
         }
 
-        const session = await response.json()
+        const session = await response.json() as { user?: { id?: string } } | null
         if (!active) return
 
-        setUserId((session?.user as { id?: string } | undefined)?.id ?? null)
+        setUserId(session?.user?.id ?? null)
       } catch {
         if (!active) return
         setUserId(null)

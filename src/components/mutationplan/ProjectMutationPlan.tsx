@@ -69,7 +69,7 @@ export default function ProjectMutationPlan({ projectId }: ProjectMutationPlanPr
           if (!cancelled) setLoaded(true)
           return
         }
-        const json = await res.json()
+        const json = await res.json() as { data?: DeedPlanRecord[] }
         const plans: DeedPlanRecord[] = json.data || []
         if (plans.length === 0) {
           if (!cancelled) setLoaded(true)

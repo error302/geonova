@@ -360,6 +360,6 @@ export async function processBaseline(input: {
     )
   }
 
-  const data = await response.json()
+  const data = await response.json() as { baseline: BaselineProcessResult }
   return data.baseline as BaselineProcessResult
 }

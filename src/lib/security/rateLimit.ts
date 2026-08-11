@@ -42,7 +42,7 @@ async function upstashRateLimit(
     ]),
   })
 
-  const data = await res.json()
+  const data = await res.json() as Array<{ result?: number }>
   const count: number = data[0]?.result ?? 1
   const remaining = Math.max(0, maxRequests - count)
   return { allowed: count <= maxRequests, remaining }
