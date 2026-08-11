@@ -85,7 +85,7 @@ export async function callAI<T>(options: AICallOptions): Promise<AIResponse<T>> 
       }
     }
 
-    const data = await response.json()
+    const data: unknown = await response.json()
     return {
       success: true,
       data: data as T,

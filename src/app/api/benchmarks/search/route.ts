@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   if (authError) return authError
 
   try {
-    const rawBody = await request.json()
+    const rawBody: unknown = await request.json()
 
     const parsed = SearchBenchmarksSchema.safeParse(rawBody)
     if (!parsed.success) {

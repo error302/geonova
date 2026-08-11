@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   const { session, error } = await requireAuth()
   if (error) return error
 
-  const body = await request.json().catch(() => null)
+  const body: unknown = await request.json().catch(() => null)
 
   // Try native TS processing first
   const validated = validateRasterRequest(body)

@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
   if (userId) setCurrentUserId(String(userId))
 
   try {
-    const rawBody = await request.json()
+    const rawBody: unknown = await request.json()
     const parsed = AutomatorRunSchema.safeParse(rawBody)
     if (!parsed.success) {
       return NextResponse.json({ error: 'Validation failed', details: parsed.error.issues }, { status: 400 })

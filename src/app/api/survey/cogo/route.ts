@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   if (error) return error
 
   try {
-    const rawBody = await request.json().catch(() => null)
+    const rawBody: unknown = await request.json().catch(() => null)
     const parsed = CogoOperationSchema.safeParse(rawBody)
     if (!parsed.success) {
       return NextResponse.json(

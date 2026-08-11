@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const rawBody = await req.json().catch(() => null)
+  const rawBody: unknown = await req.json().catch(() => null)
   const parsed = welcomeSchema.safeParse(rawBody)
   if (!parsed.success) {
     return NextResponse.json(

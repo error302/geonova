@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
   const userName = (session.user as { name?: string }).name ?? session.user.email ?? 'Unknown'
 
   try {
-    const rawBody = await request.json().catch(() => null)
+    const rawBody: unknown = await request.json().catch(() => null)
     const parsed = FieldSyncSchema.safeParse(rawBody)
     if (!parsed.success) {
       return NextResponse.json(

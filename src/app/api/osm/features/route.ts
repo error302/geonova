@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const data = await res.json()
+    const data: unknown = await res.json()
     return NextResponse.json(data)
   } catch (err) {
     return NextResponse.json(

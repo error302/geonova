@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
     const userId = session.user.id
 
-    const body = await req.json().catch(() => ({}))
+    const body: unknown = await req.json().catch(() => ({}))
     const parsed = updateSchema.safeParse(body)
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Invalid input' }, { status: 400 })

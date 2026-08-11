@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Authentication required', code: 'UNAUTHORIZED' }, { status: 401 })
     }
 
-    const rawBody = await request.json()
+    const rawBody: unknown = await request.json()
     const parsed = SubscriptionActionSchema.safeParse(rawBody)
     if (!parsed.success) {
       return NextResponse.json({ error: 'Validation failed', details: parsed.error.issues }, { status: 400 })

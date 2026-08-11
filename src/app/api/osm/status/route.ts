@@ -24,7 +24,7 @@ export async function GET() {
       })
     }
 
-    const data = await res.json()
+    const data = await res.json() as unknown as Record<string, unknown>
     return NextResponse.json({
       worker_running: true,
       ...data,

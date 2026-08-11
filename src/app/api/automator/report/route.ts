@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
   if (userId) setCurrentUserId(String(userId))
 
   try {
-    const rawBody = await request.json().catch(() => null)
+    const rawBody: unknown = await request.json().catch(() => null)
     const parsed = AutomatorReportSchema.safeParse(rawBody)
     if (!parsed.success) {
       return NextResponse.json(

@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
     }
 
-    const body = await req.json()
+    const body: unknown = await req.json()
 
     // Try new schema first, fall back to legacy
     let input: z.infer<typeof CurveComputeSchema> | z.infer<typeof LegacyCurveComputeSchema>

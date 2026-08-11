@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   if (userId) setCurrentUserId(String(userId))
 
   try {
-    const body = await req.json()
+    const body: unknown = await req.json()
     const result = await callPythonCompute('export/geojson', body)
     if (result.ok) {
       return NextResponse.json(result.value)

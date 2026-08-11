@@ -29,7 +29,7 @@ function okResponse() {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json().catch(() => ({}))
+    const body: unknown = await req.json().catch(() => ({}))
     const parsed = forgotSchema.safeParse(body)
     if (!parsed.success) return okResponse()
 

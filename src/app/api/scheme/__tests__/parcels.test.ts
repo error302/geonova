@@ -137,7 +137,7 @@ describe('GET /api/scheme/parcels', () => {
     mockSession.mockResolvedValue(createAuthSession())
     const req = new NextRequest('http://localhost/api/scheme/parcels')
     const res = await GET(req)
-    const data = await res.json()
+    const data: unknown = await res.json()
     expect(res.status).toBe(400)
   })
 })

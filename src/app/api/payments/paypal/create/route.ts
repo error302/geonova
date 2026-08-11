@@ -5,7 +5,7 @@ import { logger } from '@/lib/logger'
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json()
+    const body = await req.json() as unknown as { planId?: PlanId; currency?: CurrencyCode }
     const { planId, currency } = body as { planId: PlanId; currency: CurrencyCode }
     
     if (!planId || !currency) {

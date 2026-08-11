@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const rawBody = await req.json().catch(() => null)
+  const rawBody: unknown = await req.json().catch(() => null)
   const parsed = schema.safeParse(rawBody)
   if (!parsed.success) {
     return NextResponse.json(
