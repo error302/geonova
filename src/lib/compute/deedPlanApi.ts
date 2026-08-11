@@ -14,5 +14,5 @@ export async function generateDeedPlan(input: DeedPlanInput): Promise<DeedPlanOu
     throw new Error(error.error || 'Failed to generate deed plan')
   }
 
-  return res.json()
+  return (await res.json()) as DeedPlanOutput
 }

@@ -477,7 +477,7 @@ export class AuditTrail {
    */
   private sanitize(data: Record<string, unknown>): Record<string, unknown> {
     try {
-      return JSON.parse(JSON.stringify(data));
+      return JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
     } catch {
       const sanitized: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(data)) {

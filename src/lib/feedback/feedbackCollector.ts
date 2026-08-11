@@ -82,7 +82,7 @@ export function drainStoredErrors(): CollectedError[] {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY_ERRORS)
     sessionStorage.removeItem(STORAGE_KEY_ERRORS)
-    return raw ? JSON.parse(raw) : []
+    return raw ? JSON.parse(raw) as CollectedError[] : []
   } catch {
     return []
   }

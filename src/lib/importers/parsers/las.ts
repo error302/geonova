@@ -237,5 +237,5 @@ export async function parseLaz(file: File): Promise<ParsedSurveyData> {
     );
   }
 
-  return res.json();
+  return (await res.json()) as ParsedSurveyData;
 }

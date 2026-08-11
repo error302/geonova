@@ -62,7 +62,7 @@ const KEY = 'metardu_field_missions'
 
 function load(): FieldMission[] {
   if (typeof window === 'undefined') return []
-  try { return JSON.parse(localStorage.getItem(KEY) || '[]') } catch { return [] }
+  try { return JSON.parse(localStorage.getItem(KEY) || '[]') as FieldMission[] } catch { return [] }
 }
 function persist(items: FieldMission[]) {
   if (typeof window === 'undefined') return

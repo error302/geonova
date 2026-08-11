@@ -364,7 +364,7 @@ function solveLinearSystem7(A: number[][], b: number[]): number[] | null {
     }
   }
 
-  const x = new Array(n).fill(0)
+  const x = new Array<number>(n).fill(0)
   for (let i = n - 1; i >= 0; i--) {
     x[i] = M[i][n]
     for (let j = i + 1; j < n; j++) {

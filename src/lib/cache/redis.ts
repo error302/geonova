@@ -46,7 +46,7 @@ class RedisCache {
 
     try {
       const value = await this.client.get(key)
-      return value ? JSON.parse(value as string) : null
+      return value ? JSON.parse(value as string) as T : null
     } catch {
       return null
     }

@@ -309,7 +309,7 @@ function solve3x3(A: number[][], b: number[]): number[] {
     }
   }
 
-  const x = new Array(n).fill(0)
+  const x = new Array<number>(n).fill(0)
   for (let i = n - 1; i >= 0; i--) {
     let sum = aug[i][n]
     for (let j = i + 1; j < n; j++) {

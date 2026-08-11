@@ -485,7 +485,7 @@ export default function DashboardSearch() {
 
         {/* Footer hint */}
         <div className="flex items-center justify-between px-4 py-3 border-t border-[var(--border-color)] bg-[var(--bg-primary)]/40 text-[10px] text-[var(--text-muted)]">
-          <span>{results ? Object.values(results).reduce((sum, arr) => sum + (arr as unknown[]).length, 0) : 0} results</span>
+          <span>{results ? Object.values(results).reduce<number>((sum, arr) => sum + (arr as unknown[]).length, 0) : 0} results</span>
           <div className="flex items-center gap-2">
             <kbd className="px-1 py-0.5 rounded border border-[var(--border-color)] bg-[var(--bg-tertiary)] text-[9px]">
               ↑↓

@@ -19,5 +19,5 @@ export async function validateBoundary(
     throw new Error(error.error || 'Failed to validate boundary')
   }
   
-  return res.json()
+  return (await res.json()) as ValidateResponse
 }

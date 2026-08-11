@@ -134,7 +134,7 @@ export async function searchBoundaryMonuments(
   if (!res.ok) {
     throw new Error(`Failed to search boundary monuments: ${res.status}`)
   }
-  return res.json()
+  return (await res.json()) as { data: BoundaryMonument[]; count: number }
 }
 
 /**

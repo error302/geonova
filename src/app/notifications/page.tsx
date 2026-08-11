@@ -20,7 +20,7 @@ const LS_KEY = 'metardu_notifications'
 
 function loadLocal(): Notification[] {
   if (typeof window === 'undefined') return []
-  try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]') } catch { return [] }
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]') as Notification[] } catch { return [] }
 }
 
 function saveLocal(items: Notification[]) {
