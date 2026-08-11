@@ -16,6 +16,7 @@
  */
 
 import { db } from '@/lib/db'
+import { logger } from '@/lib/logger'
 
 // ════════════════════════════════════════════════════════════════════════════
 // T1.8 — db.updateWithOptimisticLock contract
@@ -222,7 +223,7 @@ describe('[T1.9] createAuditLog — correct column names (no silent failure)', (
   it('returns null on DB error (fire-and-forget) but logs with context', async () => {
     querySpy.mockRestore()
     querySpy = jest.spyOn(db, 'query').mockRejectedValue(new Error('column does not exist'))
-    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+    const errorSpy = jest.spyOn(logger, 'error').mockImplementation(() => {})
 
     const { createAuditLog } = await import('@/lib/db/queries/audit')
     const result = await createAuditLog({
