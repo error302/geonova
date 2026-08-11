@@ -1,0 +1,35 @@
+name: Trial Ending Reminders
+
+# Sends the branded "your Pro trial ends in 3 days" email to trial users.
+# Hits the scheduler endpoint directly (Bearer API_ADMIN_KEY) — the endpoint
+# is idempotent, so re-runs are safe.
+
+on:
+  schedule:
+    # Daily at 08:00 UTC — covers trials expiring in the next 3 days.
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  send-reminders:
+    name: Send trial-ending reminders
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APP_URL: ${{ vars.PROD_APP_URL || 'https://metardu.space' }}
+    steps:
+      - name: Trigger trial-reminder scheduler
+        env:
+          API_ADMIN_KEY: ${{ secrets.API_ADMIN_KEY }}
+        run: |
+          HTTP_CODE=$(curl -sf -o /tmp/trial-reminders.json -w "%{http_code}" --max-time 120 \
+            -X POST \
+            -H "Authorization: Bearer ${API_ADMIN_KEY}" \
+            -H "Content-Type: application/json" \
+            "${APP_URL}/api/cron/trial-reminders" || echo "000")
+          echo "HTTP ${HTTP_CODE}"
+          cat /tmp/trial-reminders.json 2>/dev/null || true
+          if [ "${HTTP_CODE}" != "200" ]; then
+            echo "Scheduler call failed (HTTP ${HTTP_CODE})" >&2
+            exit 1
+          fi
