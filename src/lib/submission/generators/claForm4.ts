@@ -151,7 +151,7 @@ export function generateCLAForm4(input: CLA4Input): Uint8Array {
   if (input.restrictions) {
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8.5)
-    const restrictionLines = doc.splitTextToSize(input.restrictions, W - margin * 2)
+    const restrictionLines = doc.splitTextToSize(input.restrictions, W - margin * 2) as string[]
     restrictionLines.forEach((line: string) => {
       if (y > 275) { doc.addPage(); y = 20 }
       doc.text(line, margin, y)
@@ -182,7 +182,7 @@ export function generateCLAForm4(input: CLA4Input): Uint8Array {
     sectionHeader('PART F — REMARKS')
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8.5)
-    const remarkLines = doc.splitTextToSize(input.remarks, W - margin * 2)
+    const remarkLines = doc.splitTextToSize(input.remarks, W - margin * 2) as string[]
     remarkLines.forEach((line: string) => {
       if (y > 275) { doc.addPage(); y = 20 }
       doc.text(line, margin, y)

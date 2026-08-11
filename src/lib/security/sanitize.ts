@@ -7,7 +7,7 @@ export function sanitizeHtml(dirty: string): string {
   if (typeof window !== 'undefined') {
     // DOMPurify requires window; guarded client-side load.
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const createDOMPurify = require('dompurify');
+    const createDOMPurify = require('dompurify') as unknown as typeof import('dompurify') & { default?: typeof import('dompurify') };
     const DOMPurify = createDOMPurify.default || createDOMPurify;
     return DOMPurify.sanitize(dirty, {
       ALLOWED_TAGS: [

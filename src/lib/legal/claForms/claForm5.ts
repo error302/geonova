@@ -139,7 +139,7 @@ export function generateClaForm5(data: ClaForm5Data): Uint8Array {
     y += 5
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8.5)
-    const lines = doc.splitTextToSize(value || '—', contentW)
+    const lines = doc.splitTextToSize(value || '—', contentW) as string[]
     lines.forEach((line: string) => {
       y = ensureSpace(5, y)
       doc.text(line, M, y)
@@ -271,7 +271,7 @@ export function generateClaForm5(data: ClaForm5Data): Uint8Array {
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(8.5)
   const declText = 'I, the undersigned, hereby declare that the information provided in this application is true and accurate to the best of my knowledge and belief. The customary rights described herein have been exercised by the community for the period stated and are recognized by the community through its traditions, customs, and practices. I understand that any false declaration may lead to the rejection of this application or prosecution under the law.'
-  const declLines = doc.splitTextToSize(declText, contentW)
+  const declLines = doc.splitTextToSize(declText, contentW) as string[]
   declLines.forEach((line: string) => {
     y = ensureSpace(6, y)
     doc.text(line, M, y)

@@ -132,9 +132,9 @@ export async function createParcelFromTraverse(
     throw new Error(`Failed to fetch traverse data: ${traverseRes.statusText}`)
   }
 
-  const traverseData = await traverseRes.json()
+  const traverseData = (await traverseRes.json()) as { data?: { coordinates: Array<{ station: string; easting: number; northing: number; rl: number | null }> } }
   const coordinates: Array<{ station: string; easting: number; northing: number; rl: number | null }> =
-    traverseData.data?.coordinates
+    traverseData.data?.coordinates ?? []
 
   if (!coordinates || coordinates.length < 3) {
     throw new Error('Traverse has fewer than 3 coordinate stations — cannot form a polygon')
@@ -296,7 +296,7 @@ export async function createTraversePolygonPreview(
  * Remove the traverse polygon preview from the map.
  */
 export function removeTraversePolygonPreview(
-  mapInstance: any,
+  mapInstance: import('ol/Map').default | null,
   layer: import('ol/layer/Vector').default | null
 ): void {
   if (!mapInstance || !layer) return

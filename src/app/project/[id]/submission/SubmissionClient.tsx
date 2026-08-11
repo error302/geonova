@@ -472,7 +472,7 @@ export default function SubmissionClient({ project, existingDocs, projectId }: P
               });
 
               if (!res.ok) {
-                const err = await res.json();
+                const err = (await res.json()) as { blockers?: string[]; warnings?: string[] };
                 setPackageResult({
                   passed: false,
                   ref: '',

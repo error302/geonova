@@ -17,21 +17,21 @@
 
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
-| `no-unsafe-member-access` | 115 | **115** | active — batch 8 done (floor 190 → 115) |
-| `no-unsafe-assignment` | 358 | **358** | active |
-| `no-explicit-any` | 123 | **123** | active |
+| `no-unsafe-member-access` | 43 | **43** | active — 2-warning tier done (79 → 43) |
+| `no-unsafe-assignment` | 326 | **326** | active |
+| `no-explicit-any` | 62 | **62** | active |
 | `no-unsafe-argument` | 0 | **0** | ✅ done (rule = error) |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 | **0** | ✅ done |
-| **total warnings** | **2,816** | CI ceiling **3,700** | green |
+| **total warnings** | **2,544** | CI ceiling **3,700** | green |
 
 Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,155 · `no-console` 341 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` ~175 · `no-non-null-assertion` ~570 · `no-unsafe-return` ~159 · `no-restricted-syntax` 16.
 
 ### Git / CI state
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
-- **HEAD:** `762ffd3b` (E2E middleware → `src/` + Edge-safe crypto) with later ratchet commits pushed by the concurrent session (`2eb98d42` floor re-baselines + 3,700 ceiling).
-- **Uncommitted (this batch):** member-access grind batch 8 — the 3-warning tier, 25 files / 75 warnings (import/opengraph/NavBar/ParcelAreaModal/EquipmentTracker/ChainageOffsetTable/LegacyUnitBadge/FieldBookWithSelection pages+components; ownership + coordinates + observations `db.query<Row>` generics; edmCorrection + atmosphericDefaults open-meteo casts; disputeProcedures + usSurveyStandards + coordinateSchedule + fieldBookExcel + claForm2/6 typed callbacks and `splitTextToSize` → `string[]`; deedPlanExport `map as unknown as { getPixelRatio }`; marketplace apiClient + boundaryMonuments typed fetch payloads; digitalLevelImport/levelNetworkAdjustment `LevelReading`-typed BS buffers; sequentialAdjustment `JSON.parse` cast). Floors member-access **115**, assignment **358**, explicit-any **123**, argument 0, total **2,816**.
+- **HEAD:** `d41231d8` (explicit-any batch 4) — on `origin/main`; local work continues on `chore/lint-typing-page-batch`.
+- **Uncommitted (this batch):** member-access grind batch 9 — the 2-warning tier, 18 files / 36 member-access → 0 (community/directory + SubmissionClient + PlanPromotionPanel + BoundaryUploader typed fetch payloads; SurveyMap savedState shape; jobs.ts client row casts; ownership.test error json; community/projects/auditTrail `db.query<Row>` generics; traverse.test dropped `: any`; feedbackCollector real html2canvas types; claForm4/5/6 `splitTextToSize` → `string[]`; traverseToParcel typed fetch + OL Map; surveyDetector dropped `: any`; sanitize dompurify module typing). Floors member-access **43**, assignment **326**, explicit-any **62**, argument 0, total **2,544**.
 - **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).
@@ -93,6 +93,8 @@ Recipe: `: any` → `unknown` + narrow, or the real type (row interface / OL typ
 
 ### Phase 3 — `no-unsafe-member-access` (1,101 → 0, ~350 files)
 
+Batches 1–9 done (floor 1,220 → **43**): member-access 1,101 → 43 across the API-route tiers, the page tiers, the map/OL clusters, and now the 2-warning tier (batch 9: fetch payload casts, `db.query<Row>` generics, `splitTextToSize` → `string[]`, idb/dompurify/html2canvas library-boundary typings). Next: the 1-warning tail (~43 files) — then the rule flips to error.
+
 Top 22 (regen: `node scripts/member-scan.mjs --top 22`; per-line worklist: `--batch N`):
 
 | W | dom% | File |
@@ -108,6 +110,8 @@ Top 22 (regen: `node scripts/member-scan.mjs --top 22`; per-line worklist: `--ba
 Dominant any-sources (from scan): `db` 90 · `other-object` 47 · `events` 30 · `props` 10 · `ol` 9 · `builders` 7 · `refs` 2. Type the *source* once per file — the whole file collapses.
 
 ### Phase 4 — `no-unsafe-assignment` (829 → 0, ~350 files)
+
+Batches 1–2 done (floor 925 → **326**).
 
 Top 20 (regen: `node scripts/assignment-scan.mjs --top 20`):
 

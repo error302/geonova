@@ -17,8 +17,8 @@ export default function BoundaryUploader({ onUpload, loading }: BoundaryUploader
     let boundary: BoundaryPolygon
     
     if (file.name.endsWith('.json') || file.name.endsWith('.geojson')) {
-      const data = JSON.parse(text)
-      boundary = data.features ? data.features[0].geometry : data
+      const data = JSON.parse(text) as { features?: Array<{ geometry: BoundaryPolygon }> } | BoundaryPolygon
+      boundary = 'features' in data && data.features ? data.features[0].geometry : (data as BoundaryPolygon)
     } else {
       const lines = text.trim().split('\n')
       const points = lines.map((line) => {

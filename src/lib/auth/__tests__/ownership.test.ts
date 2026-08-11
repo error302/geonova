@@ -174,14 +174,14 @@ describe('Error response shape (consistency check)', () => {
   it('all 404 errors include a code: NOT_FOUND field', async () => {
     mockDb.mockResolvedValueOnce(rows([]))
     const result = await requireProjectOwnership('missing', 'user-1')
-    const json = await result.error!.json()
+    const json = (await result.error!.json()) as { code?: string }
     expect(json.code).toBe('NOT_FOUND')
   })
 
   it('all 403 errors include a code: FORBIDDEN field', async () => {
     mockDb.mockResolvedValueOnce(rows([{ user_id: 'other' }]))
     const result = await requireProjectOwnership('p', 'user-1')
-    const json = await result.error!.json()
+    const json = (await result.error!.json()) as { code?: string }
     expect(json.code).toBe('FORBIDDEN')
   })
 })

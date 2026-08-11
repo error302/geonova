@@ -85,7 +85,7 @@ export async function getJobById(id: string): Promise<SurveyJob | null> {
 }
 
 export async function createJob(job: Partial<SurveyJob>, userId: string): Promise<string> {
-  const result = await db.query(
+  const result = await db.query<{ id: string }>(
     `INSERT INTO survey_jobs (
       posted_by, title, description, job_type, county, 
       location_description, parcel_number, estimated_area,
@@ -246,7 +246,7 @@ export async function submitPeerReview(
   verdict: string,
   comments: ReviewComment[]
 ): Promise<void> {
-  const reviewerResult = await db.query(
+  const reviewerResult = await db.query<{ id: string }>(
     `INSERT INTO peer_reviewers (request_id, reviewer_id, verdict, completed_at, cpd_points)
      VALUES ($1, $2, $3, $4, $5)
      RETURNING id`,

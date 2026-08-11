@@ -136,7 +136,7 @@ export async function captureScreenshot(): Promise<string | null> {
 
   // Try html2canvas if available (may be loaded dynamically)
   try {
-    const mod = await import('html2canvas' as string).catch(() => null)
+    const mod = await import('html2canvas').catch(() => null)
     if (mod) {
       const canvas = await mod.default(document.body, {
         backgroundColor: '#0a0a0a',

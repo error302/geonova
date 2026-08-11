@@ -173,8 +173,8 @@ export default function PlanPromotionPanel() {
         const body = (await res.json().catch(() => ({}))) as { error?: string }
         throw new Error(body.error ?? 'User not found')
       }
-      const data = await res.json()
-      const users: UserInfo[] = data.users ?? data.data ?? (Array.isArray(data) ? data : [])
+      const data = (await res.json()) as UserInfo[] | { users?: UserInfo[]; data?: UserInfo[] }
+      const users: UserInfo[] = Array.isArray(data) ? data : (data.users ?? data.data ?? [])
       if (users.length === 0) {
         setUser(null)
         setLookupError('No user found with that email')

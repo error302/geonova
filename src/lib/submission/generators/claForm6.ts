@@ -200,7 +200,7 @@ export function generateCLAForm6(input: CLA6Input): Uint8Array {
   doc.text('Resolution Text (Full):', margin, y)
   y += 5
   doc.setFont('helvetica', 'normal')
-  const resLines = doc.splitTextToSize(input.resolutionText, W - margin * 2)
+  const resLines = doc.splitTextToSize(input.resolutionText, W - margin * 2) as string[]
   resLines.forEach((line: string) => {
     if (y > 275) { doc.addPage(); y = 20 }
     doc.text(line, margin, y)
@@ -233,7 +233,7 @@ export function generateCLAForm6(input: CLA6Input): Uint8Array {
     sectionHeader('PART E — REMARKS')
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8.5)
-    const remarkLines = doc.splitTextToSize(input.remarks, W - margin * 2)
+    const remarkLines = doc.splitTextToSize(input.remarks, W - margin * 2) as string[]
     remarkLines.forEach((line: string) => {
       if (y > 275) { doc.addPage(); y = 20 }
       doc.text(line, margin, y)

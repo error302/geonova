@@ -105,7 +105,7 @@ export async function getEquipmentByType(survey_type: string): Promise<string[]>
     .single()
 
   if (error || !data) return []
-  return (data.equipment as string[] | undefined) || []
+  return (data as { equipment?: string[] }).equipment ?? []
 }
 
 export async function getChecklistByType(survey_type: string): Promise<string[]> {
@@ -117,5 +117,5 @@ export async function getChecklistByType(survey_type: string): Promise<string[]>
     .single()
 
   if (error || !data) return []
-  return (data.tasks as string[] | undefined) || []
+  return (data as { tasks?: string[] }).tasks ?? []
 }

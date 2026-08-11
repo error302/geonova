@@ -87,7 +87,7 @@ export async function listProjects(
            LIMIT $2 OFFSET $3`,
           [surveyorLicense, pageSize, offset]
         ),
-        db.query(
+        db.query<{ total: number }>(
           `SELECT COUNT(*)::INTEGER AS total
            FROM projects p
            JOIN surveyor_profiles sp ON sp.user_id = p.user_id
@@ -118,7 +118,7 @@ export async function listProjects(
  */
 export async function createProject(input: CreateProjectInput) {
   // Resolve user_id from surveyor license
-  const surveyorResult = await db.query(
+  const surveyorResult = await db.query<{ user_id: string }>(
     `SELECT user_id FROM surveyor_profiles WHERE license_number = $1`,
     [input.surveyorLicense]
   )

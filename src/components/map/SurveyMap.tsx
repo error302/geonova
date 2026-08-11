@@ -132,7 +132,7 @@ export default function SurveyMap({
 
       const storageKey = `metardu_map_${projectId}`;
       const saved = localStorage.getItem(storageKey);
-      const savedState = saved ? JSON.parse(saved) : null;
+      const savedState = saved ? (JSON.parse(saved) as { center?: number[]; zoom?: number }) : null;
 
       const center3857 = transform(
         [centroidEasting, centroidNorthing],

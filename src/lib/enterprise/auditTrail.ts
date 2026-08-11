@@ -74,7 +74,7 @@ export async function logAuditEvent(event: Omit<AuditEvent, 'id'>): Promise<stri
     fullDetails.user_agent = userAgent;
   }
 
-  const result = await db.query(
+  const result = await db.query<{ id: string }>(
     `INSERT INTO audit_logs (action, table_name, record_id, user_id, details, ip_address, created_at)
      VALUES ($1, $2, $3, $4, $5, $6, $7)
      RETURNING id`,
@@ -140,7 +140,7 @@ export async function queryAuditLogs(
   const offset = Math.max(query.offset ?? 0, 0);
 
   // Count query
-  const countResult = await db.query(
+  const countResult = await db.query<{ total: string }>(
     `SELECT COUNT(*) as total FROM audit_logs al ${whereClause}`,
     params,
   );
