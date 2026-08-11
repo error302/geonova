@@ -217,8 +217,8 @@ export function computeHelmertTransformationRigorous(
 
   for (; iteration < maxIter; iteration++) {
     // Build normal equations: (J^T W J) δ = J^T W r
-    const N: number[][] = Array.from({ length: 7 }, () => new Array(7).fill(0))
-    const t: number[] = new Array(7).fill(0)
+    const N: number[][] = Array.from({ length: 7 }, () => new Array<number>(7).fill(0))
+    const t: number[] = new Array<number>(7).fill(0)
 
     let currentRms = 0
 

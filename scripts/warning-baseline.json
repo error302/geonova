@@ -1,10 +1,10 @@
 {
   "no-console": 195,
   "@typescript-eslint/no-unused-vars": 1154,
-  "@typescript-eslint/no-unsafe-assignment": 113,
+  "@typescript-eslint/no-unsafe-assignment": 94,
   "react-hooks/exhaustive-deps": 44,
   "@typescript-eslint/no-non-null-assertion": 570,
   "no-restricted-syntax": 16,
-  "@typescript-eslint/no-unsafe-return": 42,
+  "@typescript-eslint/no-unsafe-return": 38,
   "@typescript-eslint/no-unsafe-call": 2
 }

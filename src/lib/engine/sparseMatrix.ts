@@ -490,7 +490,7 @@ export function cholesky(M: SparseMatrix, symbolic: SymbolicFactor): SparseChole
   const n = M.rows
 
   // Build a lookup for M's entries: mLookup[r] gives Map<col, value> for row r
-  const mLookup: Map<number, number>[] = new Array(n).fill(null).map(() => new Map())
+  const mLookup: Map<number, number>[] = Array.from({ length: n }, () => new Map<number, number>())
   for (let r = 0; r < n; r++) {
     for (let idx = M.rowPtr[r]; idx < M.rowPtr[r + 1]; idx++) {
       mLookup[r].set(M.colIdx[idx], M.values[idx])
@@ -824,7 +824,7 @@ export function sparseInverseDiagonal(
   //
   // Then: (M⁻¹)[j, j] = Σ_{k=j..n-1} (Z[k, j])²  (since M⁻¹ = L⁻ᵀ L⁻¹ and L⁻¹ is lower)
 
-  const zCols: Array<Map<number, number>> = new Array(n).fill(null).map(() => new Map())
+  const zCols: Array<Map<number, number>> = Array.from({ length: n }, () => new Map<number, number>())
 
   for (let j = n - 1; j >= 0; j--) {
     // Z[j, j] = 1 / L[j, j]

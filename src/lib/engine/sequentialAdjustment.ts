@@ -153,7 +153,7 @@ export function initSequentialState(
   // Build initial normal equations (will be populated by first adjustment)
   // Start with empty N (zero matrix) — the adjustNetwork call will compute it
   const N = fromTriplets(paramCount, paramCount, [], true)
-  const u = new Array(paramCount).fill(0)
+  const u = new Array<number>(paramCount).fill(0)
 
   return {
     points: [...points],
@@ -165,7 +165,7 @@ export function initSequentialState(
     dimension,
     N,
     u,
-    lastCorrections: new Array(paramCount).fill(0),
+    lastCorrections: new Array<number>(paramCount).fill(0),
     totalIterations: 0,
     lastUpdatedAt: new Date().toISOString(),
     options,

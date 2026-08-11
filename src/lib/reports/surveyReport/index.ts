@@ -82,7 +82,7 @@ function bodyText(doc: jsPDF, text: string, maxWidth = 180): void {
   doc.setTextColor(30, 30, 30)
   doc.setFontSize(9)
   doc.setFont('helvetica', 'normal')
-  const lines: string[] = doc.splitTextToSize(text, maxWidth)
+  const lines = doc.splitTextToSize(text, maxWidth) as unknown as string[]
   doc.text(lines, 15, _yPos)
   _yPos += lines.length * 4.5 + 3
 }
@@ -592,7 +592,7 @@ function photosSection(doc: jsPDF, photos: Photo[]): void {
         doc.setFont('helvetica', 'normal')
         doc.setTextColor(30, 30, 30)
         const caption = photo.caption || 'Field photograph'
-        const captionLines: string[] = doc.splitTextToSize(caption, imgW)
+        const captionLines = doc.splitTextToSize(caption, imgW) as unknown as string[]
         doc.text(captionLines, 15 + j * (imgW + 5), _yPos)
         _yPos += captionLines.length * 4
         if (photo.orientation) {

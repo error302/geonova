@@ -81,7 +81,7 @@ export async function startSubscriptionPayment(input: {
     }),
   })
 
-  const data = await res.json().catch(() => ({}))
+  const data = (await res.json().catch(() => ({}))) as unknown
   if (!res.ok) {
     throw new Error((data as { error?: string }).error || 'Failed to start payment')
   }
@@ -104,7 +104,7 @@ export async function checkMpesaPaymentStatus(input: {
     }),
   })
 
-  const data = await res.json().catch(() => ({}))
+  const data = (await res.json().catch(() => ({}))) as unknown
   if (!res.ok) {
     throw new Error((data as { error?: string }).error || 'Failed to check payment status')
   }

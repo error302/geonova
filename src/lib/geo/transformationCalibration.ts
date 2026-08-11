@@ -265,7 +265,7 @@ export function calibrateTransformation(
   const scaleStd = sumDistSq > 0 ? sigmaZero / Math.sqrt(sumDistSq) : 0
 
   // Build the 7×7 covariance matrix (diagonal approximation)
-  const covariance: number[][] = Array(7).fill(null).map(() => new Array(7).fill(0))
+  const covariance: number[][] = Array.from({ length: 7 }, () => new Array<number>(7).fill(0))
   covariance[0][0] = txStd * txStd
   covariance[1][1] = tyStd * tyStd
   covariance[2][2] = tzStd * tzStd

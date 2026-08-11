@@ -7,17 +7,17 @@ export async function generateSubmissionRef(
   const dbClient = await createClient()
   const currentYear = new Date().getFullYear()
 
-  const { data: profile } = await dbClient
+  const profRes = await dbClient
     .from('surveyor_profiles')
     .select('id')
     .eq('isk_number', iskNumber)
     .single()
 
-  if (!profile) {
+  if (!profRes.data) {
     throw new Error('Surveyor profile not found')
   }
 
-  const { data: existingSubmissions } = await dbClient
+  const existRes = await dbClient
     .from('project_submissions')
     .select('revision_number')
     .eq('project_id', projectId)
@@ -27,7 +27,7 @@ export async function generateSubmissionRef(
 
   // ponytail: Phase 6 — existingSubmissions is Record<string, unknown> | null;
   // cast revision_number to number explicitly
-  const rawRevision = existingSubmissions?.revision_number as number | undefined
+  const rawRevision = (existRes.data as unknown as { revision_number?: number } | null)?.revision_number
   const revision = (rawRevision ?? -1) + 1
   const paddedRev = String(revision).padStart(2, '0')
 
@@ -38,10 +38,10 @@ export async function generateSubmissionRef(
      ON CONFLICT (surveyor_profile_id, year)
      DO UPDATE SET current_sequence = submission_sequences.current_sequence + 1
      RETURNING current_sequence`,
-    [profile.id, currentYear]
+    [profRes.data.id, currentYear]
   )
 
-  const sequence = rows[0]?.current_sequence ?? 1
+  const sequence = (rows[0] as unknown as { current_sequence?: number })?.current_sequence ?? 1
   const paddedSeq = String(sequence).padStart(3, '0')
 
   const ref = `${iskNumber}_${currentYear}_${paddedSeq}_R${paddedRev}`

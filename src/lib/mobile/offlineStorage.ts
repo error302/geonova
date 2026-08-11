@@ -153,7 +153,7 @@ class OfflineStorage {
       const request = store.get(id)
 
       request.onsuccess = () => {
-        const existing = request.result
+        const existing = (request.result as unknown) as Record<string, unknown>
         if (!existing) {
           reject(new Error('Record not found'))
           return

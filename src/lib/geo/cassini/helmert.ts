@@ -106,8 +106,8 @@ export function computeHelmert4Params(
   }
 
   const cols = 4
-  const MTM: number[][] = Array.from({ length: cols }, () => new Array(cols).fill(0))
-  const MTab: number[] = new Array(cols).fill(0)
+  const MTM: number[][] = Array.from({ length: cols }, () => new Array<number>(cols).fill(0))
+  const MTab: number[] = new Array<number>(cols).fill(0)
 
   for (let rIdx = 0; rIdx < rows.length; rIdx++) {
     for (let c1 = 0; c1 < cols; c1++) {
