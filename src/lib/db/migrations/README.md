@@ -81,3 +81,4 @@ node /app/migrate.js || echo "WARNING: Migration failed"
 | 013 | projects_add_surveyor_country.sql | Surveyor country column |
 | 014 | entity_trigger_uuid_fix.sql | Entity trigger UUID fix |
 | 048 | trial_reminder.sql | Trial-ending reminder idempotency column (trial_reminder_sent_at) |
+| 049 | trial_final_reminder.sql | 24-hour final trial reminder idempotency column (trial_reminder_2_sent_at) |

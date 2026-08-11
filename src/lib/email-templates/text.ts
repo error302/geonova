@@ -53,6 +53,23 @@ Questions? Reply to this email or write to support@metardu.com.
 `
 }
 
+export interface TrialExpiringTextArgs {
+  name: string
+  trialEndsAt: string
+  planPriceNote: string
+}
+export function trialExpiringText({ name, trialEndsAt, planPriceNote }: TrialExpiringTextArgs): string {
+  return `Hi${name ? ` ${name}` : ''} — your METARDU Pro trial ends in under 24 hours (on ${formatDate(trialEndsAt)}).
+
+After that you'll move to the Free plan automatically. Your projects, observations, and documents stay safe.
+
+Keep Pro (${planPriceNote}):
+  ${process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space'}/pricing
+
+— METARDU
+`
+}
+
 export interface PasswordResetTextArgs {
   name: string
   resetUrl: string
