@@ -142,12 +142,6 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased" suppressHydrationWarning>
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[var(--accent)] focus:text-black focus:rounded focus:font-semibold"
-        >
-          Skip to content
-        </a>
         <AuthProvider>
           {/* UI-8 (2026-07-24): Wire ThemeProvider so next-themes useTheme()
               works across the app. The CSS in globals.css uses
