@@ -39,7 +39,7 @@ export default function TopoPage() {
       .select('*')
       .eq('project_id', id)
       .eq('point_type', 'spot_height')
-      .not('elevation', 'is', null)
+            .not('elevation', 'is', null) as unknown as { data: Array<{ easting: number; northing: number; elevation: number; point_name?: string | null; name?: string | null }> | null; error: unknown }
 
     if (error || !data) {
       setStatus('error')

@@ -90,7 +90,7 @@ export default function NotificationsPage() {
           .select('*')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
-          .limit(50)
+                    .limit(50) as unknown as { data: Notification[] | null }
         if (data && (data as unknown[]).length > 0) {
           setNotifications(data as Notification[])
           setLoading(false)

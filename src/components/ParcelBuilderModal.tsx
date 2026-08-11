@@ -139,7 +139,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
         area_acres: areaResult.areaAcres,
         perimeter_m: areaResult.perimeter,
         created_by: user?.id
-      }).select('id, name, boundary_points, created_at').single();
+            }).select('id, name, boundary_points, created_at').single() as unknown as { data: { id: string; name: string | null; boundary_points: Array<{ name?: string; easting: number; northing: number }>; created_at?: string } | null; error: unknown };
 
       if (error) throw error;
 

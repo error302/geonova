@@ -202,7 +202,7 @@ export default function DashboardSearch() {
         signal: controller.signal,
       });
       if (!res.ok) throw new Error(`Search failed: ${res.status}`);
-      const data: SearchResponse = await res.json();
+            const data: SearchResponse = await res.json() as unknown as SearchResponse;
       // Only update if this wasn't aborted
       if (!controller.signal.aborted) {
         setResults(data.results);

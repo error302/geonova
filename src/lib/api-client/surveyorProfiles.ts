@@ -78,7 +78,7 @@ export async function getOwnSurveyorDocumentProfile(): Promise<SurveyorDocumentP
     .from('surveyor_profiles')
     .select('user_id, display_name, isk_number, firm_name, county, phone, email, office_address, seal_image_path, profile_public, verified_isk')
     .eq('user_id', user.id)
-    .maybeSingle()
+        .maybeSingle() as unknown as { data: SurveyorProfileRow | null; error: unknown }
 
   if (error) {
     throw error
@@ -113,7 +113,7 @@ export async function saveOwnSurveyorDocumentProfile(profile: SurveyorDocumentPr
     .from('surveyor_profiles')
     .upsert(payload, { onConflict: 'user_id' })
     .select('user_id, display_name, isk_number, firm_name, county, phone, email, office_address, seal_image_path, profile_public, verified_isk')
-    .single()
+    .single() as unknown as { data: SurveyorProfileRow | null; error: unknown }
 
   if (error) {
     throw error

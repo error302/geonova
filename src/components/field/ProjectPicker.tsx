@@ -39,7 +39,7 @@ export function ProjectPicker({ onPick, title, subtitle }: ProjectPickerProps) {
           .from('projects')
           .select('id, name, survey_type, county, created_at')
           .order('created_at', { ascending: false })
-          .limit(50)
+                    .limit(50) as unknown as { data: Project[] | null; error: unknown }
 
         if (error) throw error
         setProjects((data ?? []) as Project[])

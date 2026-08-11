@@ -159,7 +159,7 @@ export default function AdminPaymentsPage() {
         }
         if (!res.ok) throw new Error('Failed to fetch payments')
 
-        const data: PaymentsResponse = await res.json()
+                const data: PaymentsResponse = await res.json() as unknown as PaymentsResponse
         setPayments(data.payments || [])
         setPagination(data.pagination || pagination)
         setSummary(data.summary || summary)

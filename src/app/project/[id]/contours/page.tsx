@@ -42,7 +42,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
         .from('survey_points')
         .select('name, easting, northing, elevation')
         .eq('project_id', projectId)
-        .order('name')
+                .order('name') as unknown as { data: SpotHeightRow[] | null }
       if (data) {
         setPoints((data as SpotHeightRow[]).map((p) => ({
           name: p.name ?? '',
@@ -270,7 +270,7 @@ function ContourMap({ points, contours }: { points: SpotHeight[]; contours: Cont
         className="bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)]">
 
         {/* Grid lines */}
-        {[...Array(5)].map((_, i) => {
+                {Array.from({ length: 5 }, (_, i) => {
           const y = padding + (i / 4) * (height - padding * 2)
           return <line key={`${_}-${i}`} x1={padding} y1={y} x2={width - padding} y2={y}
             stroke="#1e1e1e" strokeWidth={0.5}/>

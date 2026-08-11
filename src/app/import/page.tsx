@@ -46,7 +46,7 @@ export default function ImportPage() {
         .select('id, name')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(20)
+                .limit(20) as unknown as { data: Project[] | null }
 
       if (data) setProjects(data as Project[])
       setLoadingProjects(false)

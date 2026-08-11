@@ -41,7 +41,7 @@ function SurveyReportBuilderContent() {
         .from('projects')
         .select('id, name, location')
         .order('created_at', { ascending: false })
-        .limit(50)
+                .limit(50) as unknown as { data: Project[] | null }
 
       setProjects((data as Project[] | null) || [])
       setLoading(false)

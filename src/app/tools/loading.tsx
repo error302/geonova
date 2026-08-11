@@ -7,7 +7,7 @@ export default function ToolsLoading() {
         <div className="card">
           <div className="card-header h-8 bg-[var(--bg-tertiary)]" />
           <div className="card-body space-y-4">
-            {[...Array(4)].map((_, i) => (
+                        {Array.from({ length: 4 }, (_, i) => (
               <div key={`${_}-${i}`} className="h-10 rounded bg-[var(--bg-tertiary)]" />
             ))}
           </div>

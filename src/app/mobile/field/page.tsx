@@ -99,7 +99,7 @@ function MobileFieldContent() {
   const loadProject = async () => {
     try {
       const dbClient = createClient()
-      const { data } = await dbClient.from('projects').select('name').eq('id', projectId).single()
+            const { data } = await dbClient.from('projects').select('name').eq('id', projectId).single() as unknown as { data: { name: string } | null }
       if ((data as { name?: string } | null)?.name) setProjectName((data as { name: string }).name)
     } catch {
       // Project might not exist or DB unreachable

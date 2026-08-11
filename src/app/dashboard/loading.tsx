@@ -12,7 +12,7 @@ export default function DashboardLoading() {
 
       {/* Project cards skeleton */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[...Array(6)].map((_, i) => (
+                {Array.from({ length: 6 }, (_, i) => (
           <div key={`${_}-${i}`} className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5">
             <div className="h-5 w-3/4 rounded bg-[var(--bg-tertiary)] mb-3" />
             <div className="h-4 w-1/2 rounded bg-[var(--bg-tertiary)] mb-4" />

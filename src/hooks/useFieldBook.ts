@@ -35,7 +35,7 @@ export function useFieldBook({ projectId, surveyType, initialRows = [] }: UseFie
       .select('*')
       .eq('project_id', projectId)
       .eq('survey_type', surveyType)
-      .order('row_index', { ascending: true });
+            .order('row_index', { ascending: true }) as unknown as { data: Array<Record<string, unknown>> | null; error: { message: string } | null };
 
     if (fetchError) {
       setError('Failed to load: ' + fetchError.message);

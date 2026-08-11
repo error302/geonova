@@ -90,7 +90,7 @@ export default function FormC22Generator({ projectId }: Props) {
           .from('projects')
           .select('id, name, lr_number, registration_district, locality, survey_type, area_ha, ref_no')
           .eq('id', projectId)
-          .maybeSingle();
+                    .maybeSingle() as unknown as { data: ProjectData | null; error: unknown };
 
         if (dbError) throw dbError;
         if (!data) {
@@ -114,7 +114,7 @@ export default function FormC22Generator({ projectId }: Props) {
             .from('surveyor_profiles')
             .select('isk_number, firm_name')
             .eq('user_id', userId)
-            .maybeSingle();
+                        .maybeSingle() as unknown as { data: Record<string, unknown> | null };
 
           if (spData) {
             iskNumberVal = (spData as Record<string, unknown>).isk_number as string || '';

@@ -297,7 +297,7 @@ export default function TraverseModal({
       .select('id, point_name as name, easting, northing')  // T1.5d FIX: alias point_name as name for backwards-compat with this component
       .eq('project_id', projectId)
       .eq('is_control', true)
-      .order('point_name')  // T1.5d FIX: was 'name'
+            .order('point_name') as unknown as { data: ControlPoint[] | null }  // T1.5d FIX: was 'name'
     
     if (data) {
       const pts = data as ControlPoint[]

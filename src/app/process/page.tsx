@@ -94,7 +94,7 @@ export default function ProcessPage() {
       .select('*')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
-      .limit(20)
+            .limit(20) as unknown as { data: ProjectRow[] | null }
 
     if (data) {
       setProjects(data as ProjectRow[])

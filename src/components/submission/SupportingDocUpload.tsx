@@ -25,7 +25,7 @@ export function SupportingDocUpload({ projectId }: { projectId: string }) {
     const { data } = await dbClient
       .from('supporting_documents')
       .select('*')
-      .eq('project_id', projectId)
+            .eq('project_id', projectId) as unknown as { data: Doc[] | null }
     setDocs((data ?? []) as Doc[])
   }
 

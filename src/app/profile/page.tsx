@@ -49,7 +49,7 @@ export default function ProfilePage() {
         .from('profiles')
         .select('*')
         .eq('id', user.id)
-        .single()
+                .single() as unknown as { data: Profile | null }
 
       if (data) {
         setProfile({
@@ -142,7 +142,7 @@ export default function ProfilePage() {
     return (
       <div className="max-w-3xl mx-auto px-6 py-8 animate-pulse">
         <div className="h-8 w-36 rounded bg-[var(--bg-tertiary)] mb-8" />
-        {[...Array(5)].map((_, i) => <div key={`${_}-${i}`} className="h-14 rounded-lg bg-[var(--bg-tertiary)] mb-4" />)}
+                {Array.from({ length: 5 }, (_, i) => <div key={`${_}-${i}`} className="h-14 rounded-lg bg-[var(--bg-tertiary)] mb-4" />)}
       </div>
     )
   }

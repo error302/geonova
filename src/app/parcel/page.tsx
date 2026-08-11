@@ -74,7 +74,7 @@ export default function ParcelSearchPage() {
       const res = await fetch(`/api/nlims/lookup?${params}`, {
         credentials: 'include',
       })
-      const data: NLIMSLookupResult = await res.json()
+            const data: NLIMSLookupResult = await res.json() as unknown as NLIMSLookupResult
 
       if (!res.ok) {
         setError(data.error || `Search failed (HTTP ${res.status})`)
