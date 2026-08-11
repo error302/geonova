@@ -4,6 +4,7 @@
  * Collects user feedback, errors, and usage data into sessionStorage
  * so the FeedbackWidget can package and submit them together.
  */
+import { logger } from '@/lib/logger'
 
 export type FeedbackCategory = 'bug' | 'feature' | 'general' | 'performance'
 
@@ -157,5 +158,5 @@ export async function captureScreenshot(): Promise<string | null> {
  *  SECURITY: Does NOT log email or full user agent — those are PII.
  *  Logs only type, id, message length, and timestamp. */
 export function logFeedbackToConsole(entry: FeedbackEntry) {
-  console.warn(`[METARDU Feedback] type=${entry.type} id=${entry.id} msgLen=${entry.message.length} ts=${entry.timestamp}`)
+  logger.warn(`[METARDU Feedback] type=${entry.type} id=${entry.id} msgLen=${entry.message.length} ts=${entry.timestamp}`)
 }

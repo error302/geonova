@@ -13,6 +13,7 @@
  */
 
 import { db } from '@/lib/db'
+import { logger } from '@/lib/logger'
 export interface SurveyorProfile {
   surveyorName: string
   iskNumber: string
@@ -57,7 +58,7 @@ export async function fetchSurveyorProfile(
       }
     }
   } catch (err) {
-    console.warn('[fetchSurveyorProfile] Failed:', err)
+    logger.warn('[fetchSurveyorProfile] Failed:', { error: err })
   }
   return { surveyorName: '', iskNumber: '', firmName: '', referenceNumber: '' }
 }

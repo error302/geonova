@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { Mountain, Save, CheckCircle, Grid3X3 } from 'lucide-react';
+import { logger } from '@/lib/logger'
 
 interface TopoPoint {
   id: string;
@@ -114,7 +115,7 @@ export default function TopoComputePanel({ projectId }: { projectId: string }) {
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (e) { console.error(e); }
+    } catch (e) { logger.error(e instanceof Error ? e.message : String(e)); }
   };
 
   return (

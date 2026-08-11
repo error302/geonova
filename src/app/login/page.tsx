@@ -6,6 +6,7 @@ import { signIn } from 'next-auth/react'
 import { Eye, EyeOff, ArrowLeft, CheckCircle2, ShieldCheck, WifiOff , AlertTriangle } from 'lucide-react'
 import MetarduLogo from '@/components/MetarduLogo'
 import Image from 'next/image'
+import { logger } from '@/lib/logger'
 
 type View = 'login' | 'forgot' | 'sent'
 
@@ -126,7 +127,7 @@ function LoginForm() {
       localStorage.removeItem('auth:redirect')
       window.location.href = getRedirectTo()
     } catch (err) {
-      console.error('Login error:', err)
+      logger.error('Login error:', { error: err })
       setLoading(false)
       setError('An error occurred. Please try again.')
     }
@@ -140,7 +141,7 @@ function LoginForm() {
         callbackUrl: getRedirectTo(),
       })
     } catch (err) {
-      console.error('OAuth sign-in error:', err)
+      logger.error('OAuth sign-in error:', { error: err })
       setOauthLoading(null)
       setError('Unable to sign in with this provider. Please try again.')
     }

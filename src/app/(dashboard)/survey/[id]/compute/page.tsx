@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { logger } from '@/lib/logger'
 
 export default function ComputePage() {
   const [method, setMethod] = useState<'bowditch' | 'least_squares'>('bowditch');
@@ -67,7 +68,7 @@ export default function ComputePage() {
       });
       setResult((await res.json()) as TraverseComputationResult);
     } catch (err) {
-      console.error(err);
+      logger.error(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }

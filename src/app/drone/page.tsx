@@ -7,6 +7,7 @@ import {
   Map as MapIcon, Box, Mountain, FileCode, ChevronRight, RefreshCw,
 } from 'lucide-react'
 import Link from 'next/link'
+import { logger } from '@/lib/logger'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -233,7 +234,7 @@ function ProcessingSection({ taskId }: { taskId: string }) {
 
       await fetchTask()
     } catch (err) {
-      console.error(err)
+      logger.error(err instanceof Error ? err.message : String(err))
     } finally {
       setProcessing(false)
     }

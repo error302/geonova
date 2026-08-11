@@ -102,7 +102,7 @@ export default function FormC22Generator({ projectId }: Props) {
 
         // Also fetch surveyor profile
         const { data: sData } = await dbClient.auth.getSession();
-        const session = (sData?.session as unknown) as BrowserSession | null | undefined;
+        const session = sData?.session as BrowserSession | null | undefined;
         const userId = session?.user?.id;
 
         let surveyorNameVal = '';
@@ -117,8 +117,8 @@ export default function FormC22Generator({ projectId }: Props) {
             .maybeSingle();
 
           if (spData) {
-            iskNumberVal = ((spData as unknown) as Record<string, unknown>).isk_number as string || '';
-            firmNameVal = ((spData as unknown) as Record<string, unknown>).firm_name as string || '';
+            iskNumberVal = (spData as Record<string, unknown>).isk_number as string || '';
+            firmNameVal = (spData as Record<string, unknown>).firm_name as string || '';
           }
 
           surveyorNameVal = session?.user?.user_metadata?.full_name || '';

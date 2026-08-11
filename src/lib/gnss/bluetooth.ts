@@ -5,6 +5,7 @@
  */
 
 import { parseNMEA, type NMEAPosition } from './nmea-parser';
+import { logger } from '@/lib/logger'
 
 export type { NMEAPosition } from './nmea-parser';
 
@@ -214,7 +215,7 @@ export class WebBluetoothGNSS {
       try {
         callback(position);
       } catch (error) {
-        console.error('Error in position callback:', error);
+        logger.error('Error in position callback:', { error: error });
       }
     }
   }
@@ -224,7 +225,7 @@ export class WebBluetoothGNSS {
       try {
         callback(connected, error);
       } catch (err) {
-        console.error('Error in connection callback:', err);
+        logger.error('Error in connection callback:', { error: err });
       }
     }
   }

@@ -20,6 +20,7 @@
 
 import { parseNMEA, type NMEAPosition } from './nmea-parser';
 import { type GNSSDevice, type PositionCallback, type ConnectionCallback } from './bluetooth';
+import { logger } from '@/lib/logger'
 
 export interface CapacitorGNSSDevice {
   deviceId: string;
@@ -336,7 +337,7 @@ export class CapacitorBLEGNSS {
         dataView,
       );
     } catch (err) {
-      console.warn('BLE command send failed:', err);
+      logger.warn('BLE command send failed:', { error: err });
     }
   }
 

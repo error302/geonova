@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/api-client/client'
+import { logger } from '@/lib/logger'
 
 interface Doc {
   id: string
@@ -55,7 +56,7 @@ export function SupportingDocUpload({ projectId }: { projectId: string }) {
 
       await loadDocs()
     } catch (err) {
-      console.error('Upload failed:', err)
+      logger.error('Upload failed:', { error: err })
     } finally {
       setUploading(null)
     }

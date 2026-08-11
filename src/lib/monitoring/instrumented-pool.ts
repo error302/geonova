@@ -20,6 +20,7 @@ import {
   dbPoolIdleConnections,
   dbPoolWaitingRequests,
 } from './metrics';
+import { logger } from '@/lib/logger'
 
 export class InstrumentedPool {
   private pool: Pool;
@@ -35,7 +36,7 @@ export class InstrumentedPool {
 
     // Track pool errors
     this.pool.on('error', (err) => {
-      console.error('[InstrumentedPool] Unexpected error:', err);
+      logger.error('[InstrumentedPool] Unexpected error:', { error: err });
       dbQueryTotal.inc({ operation: 'pool_error', table: 'unknown', status: 'error' });
     });
   }
@@ -62,7 +63,7 @@ export class InstrumentedPool {
 
       // Log slow queries (> 250ms)
       if (duration > 0.25) {
-        console.warn(`[SLOW QUERY] ${duration.toFixed(3)}s`, {
+        logger.warn(`[SLOW QUERY] ${duration.toFixed(3)}s`, {
           operation,
           table,
           query: typeof text === 'string' ? text.substring(0, 200) : text.text?.substring(0, 200),
@@ -108,7 +109,7 @@ export class InstrumentedPool {
 
   on(event: 'error', listener: (err: Error, client: PoolClient) => void): this;
   on(event: 'connect' | 'acquire' | 'remove', listener: (client: PoolClient) => void): this;
-  on(event: string, listener: Function): this {
+  on(event: string, listener: (...args: never[]) => void): this {
     this.pool.on(event as never, listener as never);
     return this;
   }

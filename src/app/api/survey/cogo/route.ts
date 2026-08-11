@@ -21,6 +21,7 @@ import {
   type Point,
 } from '@/lib/survey/cogo/engine';
 import { CogoOperationSchema } from '@/lib/validation/apiSchemas';
+import { logger } from '@/lib/logger'
 
 export async function POST(request: NextRequest) {
   // SECURITY: Require authentication to prevent DoS via unauthenticated compute
@@ -66,7 +67,7 @@ export async function POST(request: NextRequest) {
         );
     }
   } catch (error) {
-    console.error('COGO API error:', error);
+    logger.error('COGO API error:', { error: error });
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Computation failed' },
       { status: 500 }

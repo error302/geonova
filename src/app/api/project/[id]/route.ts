@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
+import { logger } from '@/lib/logger'
 
 export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
   const { id } = ctx.params
@@ -65,7 +66,7 @@ export const DELETE = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6
       ]
     )
   } catch (auditErr) {
-    console.warn('[DELETE /api/project] audit_logs insert failed (non-fatal):', auditErr)
+    logger.warn('[DELETE /api/project] audit_logs insert failed (non-fatal):', { error: auditErr })
   }
 
   // ── Single DELETE — CASCADE handles all child tables automatically ──

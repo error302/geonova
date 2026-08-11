@@ -5,6 +5,7 @@
 
 import { createHmac, timingSafeEqual, randomUUID } from 'crypto'
 import { stripeBreaker } from '@/lib/resilience/circuitBreaker'
+import { logger } from '@/lib/logger'
 
 export interface StripeConfig {
   secretKey: string
@@ -245,7 +246,7 @@ export class StripeService {
     const now = Date.now()
     const maxAge = 5 * 60 * 1000 // 5 minutes
     if (isNaN(webhookTime) || Math.abs(now - webhookTime) > maxAge) {
-      console.warn(`[stripe] Webhook timestamp outside 5min window: ${timestamp} (now: ${now})`)
+      logger.warn(`[stripe] Webhook timestamp outside 5min window: ${timestamp} (now: ${now})`)
       return false
     }
 

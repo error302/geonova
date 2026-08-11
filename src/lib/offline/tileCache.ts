@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { MapExtent } from '@/app/map/MapReactContext'
+import { logger } from '@/lib/logger'
 
 interface TileCacheStats {
   cached: number
@@ -71,7 +72,7 @@ export function useTileCache() {
         request.onerror = () => reject(request.error)
       })
     } catch (error) {
-      console.error('Failed to cache tile:', error)
+      logger.error('Failed to cache tile:', { error: error })
     }
   }, [getTileIndexDB])
 
@@ -162,7 +163,7 @@ export function useTileCache() {
       
       setCacheStats({ cached: 0, total: 0, size: 0 })
     } catch (error) {
-      console.error('Failed to clear cache:', error)
+      logger.error('Failed to clear cache:', { error: error })
     }
   }, [getTileIndexDB])
 

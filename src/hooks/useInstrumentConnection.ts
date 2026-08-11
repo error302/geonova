@@ -34,6 +34,7 @@ import type {
   TrimbleMeasurement,
   SokkiaMeasurement,
 } from '@/lib/serial/protocolParsers'
+import { logger } from '@/lib/logger'
 
 export interface StreamedPoint {
   id: string
@@ -394,7 +395,7 @@ export function useInstrumentConnection(): UseInstrumentConnectionReturn {
     try {
       await connectionRef.current.sendInstrumentCommand(brand, commandType, ...args)
     } catch (err) {
-      console.error('Failed to send instrument command:', err)
+      logger.error('Failed to send instrument command:', { error: err })
       setError(err instanceof Error ? err.message : 'Command failed')
     }
   }, [])

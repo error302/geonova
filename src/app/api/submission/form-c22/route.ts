@@ -5,6 +5,7 @@ import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { generateFormC22Pdf } from '@/lib/generators/formC22'
 import type { FormC22Input } from '@/lib/generators/formC22'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/submission/form-c22
@@ -123,7 +124,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     )
   } catch (auditErr) {
     // Audit failure should not block the PDF response
-    console.error('[form-c22] audit log failed:', auditErr)
+    logger.error('[form-c22] audit log failed:', { error: auditErr })
   }
 
   const safeName = (input.lrNumber || input.projectName || 'unknown')

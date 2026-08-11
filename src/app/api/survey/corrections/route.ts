@@ -22,6 +22,7 @@ import {
   type RawObservation,
 } from '@/lib/survey/pipeline/correction-pipeline';
 import { CorrectionsSchema } from '@/lib/validation/apiSchemas';
+import { logger } from '@/lib/logger'
 
 export async function POST(request: NextRequest) {
   // SECURITY: Require authentication to prevent DoS via unauthenticated compute
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     )
   } catch (error) {
-    console.error('Corrections API error:', error);
+    logger.error('Corrections API error:', { error: error });
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Correction failed' },
       { status: 500 }

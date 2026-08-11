@@ -12,6 +12,7 @@ import { apiGet, ApiError } from '@/lib/api/client'
 import MobileDesktopNotice from '@/components/MobileDesktopNotice'
 import type { SchemeDetails, Block, ParcelStatus } from '@/types/scheme'
 import { SCHEME_STATUS_LABELS, PARCEL_STATUS_LABELS, PARCEL_STATUS_COLORS } from '@/types/scheme'
+import { logger } from '@/lib/logger'
 
 // ponytail: response schemas — Phase 4 wave 2 will move these to src/lib/api/schemas/
 
@@ -105,7 +106,7 @@ export default function SchemeWorkspacePage() {
         // 404 / not-ok → fall through to the blocks-existence fallback below
         if (err instanceof ApiError && !err.isNotFound && !err.isUnauthorized) {
           // unexpected error — surface it, but keep trying the fallback so the page can still load
-          console.error('[scheme] project fetch failed:', (err as Error).message)
+          logger.error('[scheme] project fetch failed:', { error: (err as Error).message })
         }
       }
 

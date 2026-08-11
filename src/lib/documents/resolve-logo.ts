@@ -11,6 +11,7 @@
 
 import { db } from '@/lib/db';
 import type { PlanId } from '@/lib/subscription/catalog';
+import { logger } from '@/lib/logger'
 
 export interface ResolvedLogo {
   /** The logo image data as a Buffer */
@@ -61,7 +62,7 @@ export async function resolveCompanyLogo(
       filename: rows[0].filename,
     };
   } catch (error) {
-    console.error('[resolve-logo] Error fetching logo:', error);
+    logger.error('[resolve-logo] Error fetching logo:', { error: error });
     return null;
   }
 }

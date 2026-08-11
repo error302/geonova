@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Save, CheckCircle, TrendingUp, Layers, Target } from 'lucide-react';
+import { logger } from '@/lib/logger'
 
 interface AsBuiltPoint {
   id: string;
@@ -90,7 +91,7 @@ export default function ConstructionComputePanel({ projectId }: { projectId: str
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (e) { console.error(e); }
+    } catch (e) { logger.error(e instanceof Error ? e.message : String(e)); }
   };
 
   return (

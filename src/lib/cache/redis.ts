@@ -4,6 +4,7 @@
  */
 
 import { createClient } from 'redis'
+import { logger } from '@/lib/logger'
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379'
 const IS_NEXT_BUILD = process.env.NEXT_PHASE === 'phase-production-build'
@@ -34,7 +35,7 @@ class RedisCache {
       this.disabled = true
       this.client = null
       if (process.env.NODE_ENV !== 'production') {
-        console.warn('[Redis] Cache disabled; Redis is not reachable.')
+        logger.warn('[Redis] Cache disabled; Redis is not reachable.')
       }
     }
   }

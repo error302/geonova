@@ -6,6 +6,7 @@ import ComparisonPanel from '@/components/cadastra/ComparisonPanel'
 import ValidationReport from '@/components/cadastra/ValidationReport'
 import { validateBoundary } from '@/lib/compute/cadastraValidator'
 import type { BoundaryPolygon, ValidationResult } from '@/types/cadastra'
+import { logger } from '@/lib/logger'
 
 export default function CadastraValidatorPage() {
   const [loading, setLoading] = useState(false)
@@ -26,7 +27,7 @@ export default function CadastraValidatorPage() {
       const response = await validateBoundary(projectId, boundary)
       setResult(response.validation)
     } catch (err) {
-      console.error(err)
+      logger.error(err instanceof Error ? err.message : String(err))
     } finally {
       setLoading(false)
     }

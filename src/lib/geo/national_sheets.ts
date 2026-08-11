@@ -17,6 +17,7 @@
 import nationalSheetCornersData from '../../../data/cassini/national_sheet_corners.json'
 import type { TopoSheetParams, CommonPoint } from './cassini'
 import { computeHelmert4Params, estimateSheetAccuracy, computeABCoefficients } from './cassini'
+import { logger } from '@/lib/logger'
 
 // ─── Type Definitions for the JSON structure ──────────────────────────────
 
@@ -163,7 +164,7 @@ for (const [sheetId, sheetData] of sheetEntries) {
   } catch (err) {
     // Singular matrix or other computation error — skip this sheet
     // This can happen for sheets with collinear control points
-    console.warn(
+    logger.warn(
       `[national_sheets] Skipping sheet ${id}: ${err instanceof Error ? err.message : String(err)}`,
     )
   }

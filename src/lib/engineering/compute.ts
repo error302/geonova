@@ -12,6 +12,7 @@
 
 import { z } from 'zod';
 import type { createClient } from '@/lib/api-client/client';
+import { logger } from '@/lib/logger'
 
 let dbClient: ReturnType<typeof createClient> | null = null;
 
@@ -32,7 +33,7 @@ async function logComputation(
       const { createClient } = await import('@/lib/api-client/client');
       dbClient = createClient();
     } catch (e) {
-      console.warn('Compute logger: DbClient not available');
+      logger.warn('Compute logger: DbClient not available');
       return;
     }
   }
@@ -49,7 +50,7 @@ async function logComputation(
       created_at: new Date().toISOString()
     });
   } catch (e) {
-    console.warn('Compute logger: Failed to log', e);
+    logger.warn('Compute logger: Failed to log', { error: e });
   }
 }
 

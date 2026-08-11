@@ -2,6 +2,7 @@
  * Centralized error handling — no information leakage to clients.
  */
 import { NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 export class AppError extends Error {
   constructor(
@@ -32,7 +33,7 @@ export function handleApiError(error: unknown): NextResponse {
   }
 
   // Log full error server-side, return generic message to client
-  console.error('[API Error]', error)
+  logger.error('[API Error]', { error: error })
   return NextResponse.json(
     { error: 'An internal error occurred', code: 'INTERNAL_ERROR' },
     { status: 500 }

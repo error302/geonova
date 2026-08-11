@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { apiHandler, apiSuccess } from '@/lib/apiHandler'
 import { exportToNLIMS, validateNLIMSExport, type NLIMSExportParams } from '@/lib/export/nlimsExporter'
 import { runStatutoryGate, formatGateResult, type StatutoryGateInput } from '@/lib/validation/statutoryGate'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -79,7 +80,7 @@ export const POST = apiHandler(
       })
     } catch (auditErr) {
       // Don't block the export on audit failure
-      console.warn('[nlims/export] Audit chain append failed:', auditErr)
+      logger.warn('[nlims/export] Audit chain append failed:', { error: auditErr })
     }
 
     return apiSuccess({

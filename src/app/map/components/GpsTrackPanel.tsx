@@ -11,6 +11,7 @@
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react'
 import { Play, Square, MapPin } from 'lucide-react'
 import { useMapContext } from '@/app/map/MapReactContext'
+import { logger } from '@/lib/logger'
 
 export const GpsTrackPanel = memo(function GpsTrackPanel() {
   const { mapInstance, gpsPos, gpsTracking } = useMapContext()
@@ -148,7 +149,7 @@ export const GpsTrackPanel = memo(function GpsTrackPanel() {
         // localStorage might be full — track still visible on map
       }
     } catch (err) {
-      console.error('[GpsTrackPanel] Failed to create track layer:', err)
+      logger.error('[GpsTrackPanel] Failed to create track layer:', { error: err })
     }
   }, [trackPoints, mapInstance, totalDistance])
 

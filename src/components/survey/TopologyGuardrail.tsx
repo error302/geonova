@@ -28,6 +28,7 @@ import {
   type RoadReserve,
 } from '@/lib/survey/topologyChecker'
 import type { SurveyPoint } from '@/lib/map/turfHelpers'
+import { logger } from '@/lib/logger'
 
 interface TopologyGuardrailProps {
   /** Vertices of the parcel currently being drawn/edited */
@@ -113,7 +114,7 @@ export function TopologyGuardrail({
         setResult(checkResult)
         onIssuesChange?.(checkResult.issues)
       } catch (err) {
-        console.error('[TopologyGuardrail] Check failed:', err)
+        logger.error('[TopologyGuardrail] Check failed:', { error: err })
       } finally {
         setChecking(false)
       }

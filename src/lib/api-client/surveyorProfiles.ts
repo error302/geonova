@@ -67,9 +67,8 @@ export function detailsRecordToSurveyorProfile(
 
 export async function getOwnSurveyorDocumentProfile(): Promise<SurveyorDocumentProfile> {
   const dbClient = createClient()
-  const authRes = await dbClient.auth.getSession()
-  const session = authRes.data?.session
-  const user = (session as unknown as BrowserSession | null)?.user ?? null
+  const { data: { session } } = await dbClient.auth.getSession()
+  const user = (session as BrowserSession | null)?.user ?? null
 
   if (!user) {
     throw new Error('Not authenticated')
@@ -90,9 +89,8 @@ export async function getOwnSurveyorDocumentProfile(): Promise<SurveyorDocumentP
 
 export async function saveOwnSurveyorDocumentProfile(profile: SurveyorDocumentProfile): Promise<SurveyorDocumentProfile> {
   const dbClient = createClient()
-  const authRes = await dbClient.auth.getSession()
-  const session = authRes.data?.session
-  const user = (session as unknown as BrowserSession | null)?.user ?? null
+  const { data: { session } } = await dbClient.auth.getSession()
+  const user = (session as BrowserSession | null)?.user ?? null
 
   if (!user) {
     throw new Error('Not authenticated')

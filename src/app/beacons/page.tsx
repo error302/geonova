@@ -26,6 +26,7 @@ import Point from 'ol/geom/Point'
 import { fromLonLat } from 'ol/proj'
 import Overlay from 'ol/Overlay'
 import type { Map as MapType, Overlay as OverlayType } from 'ol'
+import { logger } from '@/lib/logger'
 
 interface Beacon {
   id: string
@@ -211,7 +212,7 @@ export default function BeaconsPage() {
         }
         map.on('click', handleClick as (e: unknown) => void)
       } catch (err) {
-        console.error('Beacons map init failed:', err)
+        logger.error('Beacons map init failed:', { error: err })
       }
     }
 
@@ -298,7 +299,7 @@ export default function BeaconsPage() {
         if (existing) map.removeLayer(existing)
         map.addLayer(new VectorLayer({ source: vectorSource }))
       } catch (err) {
-        console.error('Beacons map feature update failed:', err)
+        logger.error('Beacons map feature update failed:', { error: err })
       }
     }
 

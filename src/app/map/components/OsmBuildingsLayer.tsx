@@ -17,6 +17,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Loader2, Building2 } from 'lucide-react'
+import { logger } from '@/lib/logger'
 
 interface OsmBuildingsLayerProps {
   map: import('ol/Map').default | null  // OpenLayers Map
@@ -69,7 +70,7 @@ export function OsmBuildingsLayer({ map, visible }: OsmBuildingsLayerProps) {
         formatRef.current = new GeoJSON()
       } catch (err) {
         if (!cancelled) {
-          console.error('[osm-buildings] Failed to init layer:', err)
+          logger.error('[osm-buildings] Failed to init layer:', { error: err })
         }
       }
     })()

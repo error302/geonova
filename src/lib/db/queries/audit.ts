@@ -27,6 +27,7 @@
  */
 
 import { db } from '@/lib/db'
+import { logger } from '@/lib/logger'
 
 export interface CreateAuditEntry {
   entityType: string
@@ -86,7 +87,7 @@ export async function createAuditLog(entry: CreateAuditEntry): Promise<AuditLogR
   } catch (error) {
     // Audit logging should never fail the main operation — but it MUST be
     // visible when it fails so we can fix it. Log with full context.
-    console.error('[audit] createAuditLog FAILED (silent swallow was the old behavior):', {
+    logger.error('[audit] createAuditLog FAILED (silent swallow was the old behavior):', {
       error: error instanceof Error ? error.message : String(error),
       entityType: entry.entityType,
       entityId: entry.entityId,

@@ -9,6 +9,7 @@ import { generateContours } from '@/lib/topo/contourGenerator'
 import { runIDW as computeIDW } from '@/lib/topo/idwEngine'
 import type { SpotHeight } from '@/components/drawing/TopoCanvas'
 import type { ContourLine } from '@/lib/topo/contourGenerator'
+import { logger } from '@/lib/logger'
 
 const TopoCanvas = dynamic(() => import('@/components/drawing/TopoCanvas').then(m => ({ default: m.TopoCanvas })), {
   ssr: false,
@@ -106,7 +107,7 @@ export default function TopoPage() {
         setProgress(100)
         setStatus('done')
       } catch (err) {
-        console.error('IDW error:', err)
+        logger.error('IDW error:', { error: err })
         setStatus('error')
       }
     }, 0)

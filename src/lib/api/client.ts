@@ -18,6 +18,7 @@
 
 import type { ZodSchema, ZodIssue } from 'zod'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 // ─── Error Types ───────────────────────────────────────────────────────────
 
@@ -103,7 +104,7 @@ export async function api<T>(
   const result = schema.safeParse(parsed)
   if (!result.success) {
     if (process.env.NODE_ENV !== 'production') {
-      console.error(`[api] Response schema mismatch for ${path}:`, result.error.issues)
+      logger.error(`[api] Response schema mismatch for ${path}:`,  { error: result.error.issues })
     }
     throw new ApiError(r.status, 'INTERNAL_ERROR', `Response schema mismatch for ${path}`, {
       issues: result.error.issues,

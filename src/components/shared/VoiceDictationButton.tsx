@@ -21,6 +21,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Mic, MicOff } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import type { Language } from '@/lib/i18n/messages';
+import { logger } from '@/lib/logger'
 
 /* ------------------------------------------------------------------ */
 /*  Language mapping: i18n code → Web Speech API BCP-47 code          */
@@ -164,7 +165,7 @@ export function VoiceDictationButton({
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEventLike) => {
-      console.warn('VoiceDictation error:', event.error);
+      logger.warn('VoiceDictation error:', { error: event.error });
       if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
         setListening(false);
         setInterimText('');
@@ -189,7 +190,7 @@ export function VoiceDictationButton({
       recognition.start();
       setListening(true);
     } catch (err) {
-      console.warn('VoiceDictation failed to start:', err);
+      logger.warn('VoiceDictation failed to start:', { error: err });
       setListening(false);
     }
   }, [listening, speechLang, onChange]);

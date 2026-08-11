@@ -17,6 +17,7 @@ interface SignatureInsertRow {
 }
 
 import type { SignDocumentRequest } from '@/types/signature'
+import { logger } from '@/lib/logger'
 
 export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
   const { documentId, documentType, content, method, signatureData } = ctx.body as SignDocumentRequest
@@ -86,7 +87,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
       reason: `Document signed via ${method}`,
     },
   }).catch((err) => {
-    console.error('[audit] Failed to record signature audit entry:', err)
+    logger.error('[audit] Failed to record signature audit entry:', { error: err })
   })
 
   return NextResponse.json({

@@ -16,6 +16,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { Activity, Gauge, Zap, Clock, AlertTriangle } from 'lucide-react'
+import { logger } from '@/lib/logger'
 
 interface WebVital {
   name: string
@@ -116,7 +117,7 @@ export function PerformanceMonitor({ visible = false }: { visible?: boolean }) {
         ])
       }
     } catch (err) {
-      console.warn('[PerformanceMonitor] Observer error:', err)
+      logger.warn('[PerformanceMonitor] Observer error:', { error: err })
     }
 
     // Track fetch count

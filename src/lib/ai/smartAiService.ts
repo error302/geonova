@@ -9,6 +9,7 @@
 
 import { localLlmService, LocalChatOptions } from './localLlmService'
 import type { InitProgressReport } from '@mlc-ai/web-llm'
+import { logger } from '@/lib/logger'
 
 export interface SmartChatOptions {
   messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>
@@ -40,7 +41,7 @@ export async function smartChat(options: SmartChatOptions): Promise<string> {
         return text
       }
     } catch {
-      console.warn('[smartAiService] Cloud AI request failed — switching to Offline WebGPU LLM Engine')
+      logger.warn('[smartAiService] Cloud AI request failed — switching to Offline WebGPU LLM Engine')
     }
   }
 

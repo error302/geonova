@@ -9,6 +9,7 @@ import {
   getScheduleStats, enrichWithAlerts, formatDate, formatTime,
   getRelativeDate, STATUS_LABELS, PRIORITY_COLORS, SURVEY_TYPES, EQUIPMENT_OPTIONS,
 } from '@/lib/schedule/schedule'
+import { logger } from '@/lib/logger'
 
 /* ── Helpers ────────────────────────────────────────────────────────────── */
 
@@ -324,7 +325,7 @@ export default function SchedulePage() {
       setStats(schedStats)
       setReminders(dueReminders)
     } catch (err) {
-      console.error('Failed to load schedules', err)
+      logger.error('Failed to load schedules', { error: err })
     } finally {
       setLoading(false)
     }

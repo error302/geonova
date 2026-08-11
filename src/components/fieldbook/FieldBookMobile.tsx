@@ -11,6 +11,7 @@ import {
   type OfflineObservation,
 } from '@/lib/offline';
 import { QuickAddModal } from './QuickAddModal';
+import { logger } from '@/lib/logger'
 
 interface FieldBookMobileProps {
   projectId: string;
@@ -55,7 +56,7 @@ export function FieldBookMobile({ projectId, surveyType, surveyorId }: FieldBook
       setLastSync(new Date());
       await loadObservations();
     } catch (err) {
-      console.error('Sync failed:', err);
+      logger.error('Sync failed:', { error: err });
     } finally {
       setSyncing(false);
     }

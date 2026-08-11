@@ -14,6 +14,7 @@
 
 import { db } from '@/lib/db'
 import { projectCache, CacheKeys } from '../../cache/memory-cache'
+import { logger } from '@/lib/logger'
 
 // ─── Types ───────────────────────────────────────────────────────
 
@@ -125,7 +126,7 @@ export async function createProject(input: CreateProjectInput) {
   const userId = surveyorResult.rows[0]?.user_id ?? null
 
   if (!userId) {
-    console.warn(
+    logger.warn(
       `[createProject] No surveyor found with license "${input.surveyorLicense}". ` +
         `Project will be created without an owner.`
     )

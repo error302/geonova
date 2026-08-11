@@ -48,6 +48,7 @@ import type { ModifyEvent } from 'ol/interaction/Modify'
 import type { DrawEvent } from 'ol/interaction/Draw'
 import type { GeometryFunction as DrawGeometryFunction } from 'ol/interaction/Draw'
 import type { Options as SnapOptions } from 'ol/interaction/Snap'
+import { logger } from '@/lib/logger'
 
 // ---------------------------------------------------------------------------
 // Exported interfaces
@@ -927,7 +928,7 @@ export async function createSubdivisionInteraction(
       if (onError) {
         onError(error);
       } else {
-        console.error('[cadastralEditing] Subdivision failed:', error.message);
+        logger.error('[cadastralEditing] Subdivision failed:', { error: error.message });
       }
     } finally {
       splitSource.clear();

@@ -11,6 +11,7 @@ import { QueryBuilder } from '@/lib/db/queryBuilder'
 import { getPool } from '@/lib/db'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { logger } from '@/lib/logger'
 
 // ponytail: Phase 6 — auth/storage/rpc return types use `unknown` (deprecated stubs).
 // from() returns QueryBuilder which defaults to Record<string, unknown> for type safety.
@@ -88,7 +89,7 @@ export async function createClient(): Promise<DbClient> {
       }
     },
     rpc: async (fn: string, _args?: Record<string, unknown>) => {
-      console.warn(`[db/server] rpc(${fn}) called but not implemented.`)
+      logger.warn(`[db/server] rpc(${fn}) called but not implemented.`)
       return { data: null, error: { message: 'RPC not implemented' } }
     }
   }

@@ -19,6 +19,7 @@ import type {
   PersonnelItem,
   ControlPoint
 } from '@/types/surveyReport'
+import { logger } from '@/lib/logger'
 
 interface SurveyReportBuilderProps {
   projectId: string
@@ -134,7 +135,7 @@ export default function SurveyReportBuilder({ projectId, existingReportId }: Sur
           return
         }
       } catch (err) {
-        console.error('Failed to load report:', err)
+        logger.error('Failed to load report:', { error: err })
       }
     }
     // Only generate fresh report when creating new (no existingReportId)

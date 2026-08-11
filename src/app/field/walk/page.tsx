@@ -5,6 +5,7 @@ import { FieldParcel, FieldWalkPoint, MapLayer } from '@/types/field';
 import { watchPosition, clearWatch, haversineDistance, computeAreaM2, computePerimeterM } from '@/lib/field/gps';
 import { Play, Square, RotateCcw, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { logger } from '@/lib/logger'
 
 const MapViewer = dynamic(() => import('@/components/field/MapViewer'), { ssr: false });
 
@@ -32,7 +33,7 @@ export default function WalkPage() {
         lastPoint = wp;
         setPoints(prev => [...prev, wp]);
       },
-      (err) => { console.error('Walk GPS error:', err); }
+      (err) => { logger.error('Walk GPS error:', { error: err }); }
     );
     watchIdRef.current = id;
   }

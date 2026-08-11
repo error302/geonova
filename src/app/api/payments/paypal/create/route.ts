@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getPayPalService } from '@/lib/payments/paypal'
 import { getPlanPrice, PlanId, CurrencyCode } from '@/lib/subscription/catalog'
+import { logger } from '@/lib/logger'
 
 export async function POST(req: Request) {
   try {
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ orderId: order.id })
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Internal Server Error'
-    console.error('[PayPal Create Order Error]', error)
+    logger.error('[PayPal Create Order Error]', { error: error })
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }

@@ -34,6 +34,7 @@ import {
 import { GNSSConnectionPanel } from '@/components/gnss/GNSSConnectionPanel'
 import { useInstrumentStore, type StreamedPoint } from '@/stores/instrumentStore'
 import type { NMEAPosition } from '@/lib/gnss/nmea-parser'
+import { logger } from '@/lib/logger'
 
 // ─── Survey type metadata ───────────────────────────────────────
 
@@ -158,7 +159,7 @@ function MobileFieldContent() {
       await loadObservations()
       await loadStats()
     } catch (error) {
-      console.error('Save error:', error)
+      logger.error('Save error:', { error: error })
       alert('Failed to save observation')
     }
   }, [projectId, activeSurveyType])

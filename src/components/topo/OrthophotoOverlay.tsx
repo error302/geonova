@@ -17,6 +17,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { logger } from '@/lib/logger'
 
 export interface OrthophotoBounds {
   minEasting: number
@@ -59,7 +60,7 @@ export function OrthophotoOverlay({
       setImgLoaded(true)
     }
     img.onerror = () => {
-      console.error('[OrthophotoOverlay] Failed to load image')
+      logger.error('[OrthophotoOverlay] Failed to load image')
       setImgLoaded(false)
     }
     img.src = imageUrl

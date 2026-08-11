@@ -11,6 +11,7 @@
  */
 
 import * as Sentry from '@sentry/nextjs'
+import { logger } from '@/lib/logger'
 
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN
 const SENTRY_ENVIRONMENT = process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || 'production'
@@ -51,7 +52,7 @@ export function captureError(error: Error, context?: Record<string, unknown>) {
   if (isProduction()) {
     Sentry.captureException(error, { extra: context })
   } else {
-    console.error('[sentry] Error captured:', error, context)
+    logger.error('[sentry] Error captured:', { error, context })
   }
 }
 
@@ -99,7 +100,7 @@ export function captureAiError(error: Error, context: {
       Sentry.captureException(error)
     })
   } else {
-    console.error(`[sentry] AI error (${context.action}):`, error.message, context)
+    logger.error(`[sentry] AI error (${context.action}):`, { error: error.message, context })
   }
 }
 

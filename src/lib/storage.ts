@@ -8,6 +8,7 @@
 import { promises as fs } from 'fs'
 import path from 'path'
 import crypto from 'crypto'
+import { logger } from '@/lib/logger'
 
 const STORAGE_ROOT = process.env.STORAGE_ROOT || path.join(process.cwd(), 'uploads')
 const USE_GCS = !!(process.env.GCS_PROJECT_ID && process.env.GCS_BUCKET_NAME)
@@ -113,7 +114,7 @@ export async function getSignedUrl(filePath: string, expiresIn: number = 3600): 
   const fullPath = path.join(STORAGE_ROOT, filePath)
   const exists = await fs.access(fullPath).then(() => true).catch(() => false)
   if (!exists) {
-    console.warn(`[storage] File not found: ${fullPath}`)
+    logger.warn(`[storage] File not found: ${fullPath}`)
   }
   return `/api/storage?path=${encodeURIComponent(filePath)}`
 }

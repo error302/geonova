@@ -5,6 +5,7 @@ import { z } from 'zod'
 import db from '@/lib/db'
 import { getMpesaService } from '@/lib/payments/mpesa'
 import { getPlan } from '@/lib/subscription/catalog'
+import { logger } from '@/lib/logger'
 
 interface PaymentIntentRow {
   id: string
@@ -159,7 +160,7 @@ export async function POST(request: NextRequest) {
     paidAmount > 0 &&
     Math.round(paidAmount) !== Math.round(expectedAmount)
   ) {
-    console.warn(
+    logger.warn(
       `[mpesa] Amount mismatch: paid ${paidAmount} KES, expected ${expectedAmount} KES for plan ${planId}`
     )
     await db.query<never>(

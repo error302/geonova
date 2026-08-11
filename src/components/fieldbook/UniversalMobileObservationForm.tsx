@@ -23,6 +23,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { X, Check, MapPin, Ruler, Compass, Bluetooth, RefreshCw } from 'lucide-react'
 import { BeaconPhotoCapture, type CapturedBeaconPhoto } from './BeaconPhotoCapture'
 import { VoiceDictationButton } from '@/components/shared/VoiceDictationButton'
+import { logger } from '@/lib/logger'
 
 export type MobileSurveyType = 'leveling' | 'traverse' | 'control'
 
@@ -194,7 +195,7 @@ export function UniversalMobileObservationForm({
         setInstrumentConnected(true)
       }
     } catch (err) {
-      console.error('Instrument read failed:', err)
+      logger.error('Instrument read failed:', { error: err })
     } finally {
       setReadingFromInstrument(false)
     }

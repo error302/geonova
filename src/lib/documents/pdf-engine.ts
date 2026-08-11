@@ -21,6 +21,7 @@
  */
 
 import PDFDocument from 'pdfkit';
+import { logger } from '@/lib/logger'
 
 // ─── Paper Size Constants (mm) ───────────────────────────────────
 
@@ -339,7 +340,7 @@ export function drawCompanyLogo(
     });
     doc.restore();
   } catch (error) {
-    console.error('[pdf-engine] Failed to render company logo:', error);
+    logger.error('[pdf-engine] Failed to render company logo:', { error: error });
     // Fall back to text if image rendering fails
     drawText(doc, 'LOGO', x, y, 5, { color: '#999999', bold: true });
   }

@@ -25,6 +25,7 @@
  * Kenya geoid undulation range: ~-15m to +5m (mostly negative —
  * the geoid is below the ellipsoid in East Africa).
  */
+import { logger } from '@/lib/logger'
 
 // ─── EGM96 5°×5° grid for East Africa ──────────────────────────────────────
 // Values are geoid undulation N in metres at 5° intervals.
@@ -288,7 +289,7 @@ export async function loadEGM2008Grid(
   //   return false
   // }
 
-  console.info('[geoid] EGM2008 grid loading is a stub — using EGM96 5° grid fallback')
+  logger.info('[geoid] EGM2008 grid loading is a stub — using EGM96 5° grid fallback')
   return false
 }
 

@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 import { apiHandler, AppError } from '@/lib/api/handler'
 import { db } from '@/lib/db'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 interface ProjectRow {
   id: string
@@ -78,7 +79,7 @@ export const POST = apiHandler({
         )
       } catch (schemeErr) {
         await db.query<never>('DELETE FROM projects WHERE id = $1', [project.id])
-        console.error('scheme_details insert failed:', schemeErr)
+        logger.error('scheme_details insert failed:', { error: schemeErr })
         throw new AppError('Failed to create scheme details', 500, 'SCHEME_CREATE_FAILED')
       }
     }

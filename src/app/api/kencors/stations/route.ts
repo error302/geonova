@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import type { KenCORSStation } from '@/types/kencors'
+import { logger } from '@/lib/logger'
 
 // ─── Zod Schemas ──────────────────────────────────────────────────────────────
 
@@ -158,7 +159,7 @@ export async function GET(request: NextRequest) {
           }
         }
       } catch (apiError) {
-        console.error('KenCORS API error:', apiError)
+        logger.error('KenCORS API error:', { error: apiError })
       }
     }
 
@@ -182,7 +183,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ stations })
 
   } catch (error) {
-    console.error('KenCORS stations error:', error)
+    logger.error('KenCORS stations error:', { error: error })
     return NextResponse.json(
       { error: 'Failed to fetch KenCORS stations', stations: DEFAULT_STATIONS },
       { status: 200 }

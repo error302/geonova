@@ -16,6 +16,7 @@ import { useState, useRef, useCallback } from 'react'
 import { Camera, X, MapPin, Loader2, CheckCircle2, AlertTriangle, ImageOff } from 'lucide-react'
 import { extractEXIFGPS, isEXIFSupported, type EXIFGPSData } from '@/lib/engineering/exifPhoto'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { logger } from '@/lib/logger'
 
 export interface CapturedBeaconPhoto {
   /** object URL for preview — revoke on unmount */
@@ -68,7 +69,7 @@ export function BeaconPhotoCapture({ photos, onChange, maxPhotos = 4 }: BeaconPh
             exif = await extractEXIFGPS(file)
             if (!exif) missingGps = true
           } catch (err) {
-            console.warn('EXIF parse failed for', file.name, err)
+            logger.warn('EXIF parse failed for', { fileName: file.name, error: err })
             missingGps = true
           }
 
@@ -80,7 +81,7 @@ export function BeaconPhotoCapture({ photos, onChange, maxPhotos = 4 }: BeaconPh
             caption: '',
           })
         } catch (err) {
-          console.error('Photo capture failed:', err)
+          logger.error('Photo capture failed:', { error: err })
           setError(t('photoCapture.captureFailed', { name: file.name }))
         }
       }

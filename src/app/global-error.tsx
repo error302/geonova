@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import AppErrorBoundary from '@/components/shared/AppErrorBoundary'
+import { logger } from '@/lib/logger'
 
 export default function GlobalError({
   error,
@@ -15,7 +16,7 @@ export default function GlobalError({
     import('@/lib/monitoring/sentry').then(({ captureError }) => {
       captureError(error, { context: 'global-error' })
     }).catch(() => {
-      console.error('[global-error]', error.message, error.digest ? `ref=${error.digest}` : '')
+      logger.error('[global-error]', { error: error.message, digest: error.digest })
     })
   }, [error])
 

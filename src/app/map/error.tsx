@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { logger } from '@/lib/logger'
 
 export default function MapErrorPage({
   error,
@@ -11,7 +12,7 @@ export default function MapErrorPage({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error('[Map Error]', error)
+    logger.error('[Map Error]', { error: error })
     import('@sentry/nextjs').then(({ captureException }) => captureException(error)).catch(() => {})
   }, [error])
   return (

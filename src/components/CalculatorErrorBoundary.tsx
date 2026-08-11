@@ -1,6 +1,7 @@
 'use client';
 
 import { Component, type ReactNode } from 'react'
+import { logger } from '@/lib/logger'
 
 interface Props {
   children: ReactNode
@@ -23,7 +24,7 @@ export class CalculatorErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error) {
-    console.error(`[METARDU] Calculator error${this.props.toolName ? ` (${this.props.toolName})` : ''}:`, error)
+    logger.error(`[METARDU] Calculator error${this.props.toolName ? ` (${this.props.toolName})` : ''}:`, { error })
   }
 
   render() {

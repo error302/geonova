@@ -6,6 +6,7 @@ import { executeWorkflow, generateReport } from '@/lib/compute/workflowEngine'
 import { Play, FileText, Loader2 } from 'lucide-react'
 import type { Node, Edge } from 'reactflow'
 import type { WorkflowNode, WorkflowEdge } from '@/types/workflow'
+import { logger } from '@/lib/logger'
 
 const WorkflowCanvas = dynamic(
   () => import('@/components/automator/WorkflowCanvas'),
@@ -22,7 +23,7 @@ export default function AutomatorPage() {
       const result = await executeWorkflow(nodes as WorkflowNode[], edges as WorkflowEdge[])
       setResults(result)
     } catch (err) {
-      console.error(err)
+      logger.error(err instanceof Error ? err.message : String(err))
     } finally {
       setRunning(false)
     }
@@ -38,7 +39,7 @@ export default function AutomatorPage() {
       )
       setResults({ report })
     } catch (err) {
-      console.error(err)
+      logger.error(err instanceof Error ? err.message : String(err))
     } finally {
       setRunning(false)
     }

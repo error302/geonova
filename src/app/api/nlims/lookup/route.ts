@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import type { NLIMSSearchResult, NLIMSParcel } from '@/types/nlims'
+import { logger } from '@/lib/logger'
 
 // ─── DB Row Interfaces ───────────────────────────────────────────────────
 interface ParcelVaultRow {
@@ -166,7 +167,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 30, windowMs: 6000
       } as NLIMSSearchResult)
     }
   } catch (apiError) {
-    console.error('NLIMS API error:', apiError)
+    logger.error('NLIMS API error:', { error: apiError })
   }
 
   return NextResponse.json(

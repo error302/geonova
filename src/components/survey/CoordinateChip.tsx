@@ -14,6 +14,7 @@
 
 import { useEffect, useState } from 'react'
 import { Globe, MapPin, Layers } from 'lucide-react'
+import { logger } from '@/lib/logger'
 
 interface CoordinateChipProps {
   lat: number
@@ -85,7 +86,7 @@ export function CoordinateChip({
           })
         }
       } catch (err) {
-        console.warn('[CoordinateChip] Transform failed:', err)
+        logger.warn('[CoordinateChip] Transform failed:', { error: err })
       }
     }
 

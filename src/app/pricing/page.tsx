@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { ModernPricingPage, PricingCardProps } from '@/components/ui/animated-glassy-pricing'
 import { PLAN_CATALOG, getPlanPrice, SUPPORTED_CURRENCIES, type CurrencyCode } from '@/lib/subscription/catalog'
+import { logger } from '@/lib/logger'
 
 // Minimal typed surface for the PayPal v6 SDK global (window.paypal)
 interface PayPalV6PaymentSession {
@@ -171,12 +172,12 @@ export default function PricingPage() {
                 }
               )
             } catch (error) {
-              console.error("PayPal payment start error:", error)
+              logger.error("PayPal payment start error:", { error })
             }
           })
         }
       } catch (err) {
-        console.warn('[Pricing] PayPal SDK v6 render error:', err)
+        logger.warn('[Pricing] PayPal SDK v6 render error:', { error: err })
       }
     }
     document.body.appendChild(script)

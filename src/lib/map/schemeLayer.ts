@@ -97,7 +97,7 @@ export async function loadSchemeData(projectId: string): Promise<SchemeGeoJSON> 
     throw new Error(`Failed to load scheme data: ${response.status} ${text}`)
   }
 
-  const data: SchemeGeoJSON = await response.json()
+  const data = await response.json() as unknown as SchemeGeoJSON
 
   if (!data || !data.features) {
     throw new Error('Invalid scheme data response')

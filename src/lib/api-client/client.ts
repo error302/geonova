@@ -10,6 +10,7 @@
  * DB methods (.from()) are actively used and safe.
  * Storage methods should use /api/storage endpoint instead.
  */
+import { logger } from '@/lib/logger'
 
 // ponytail: Phase 6 Batch 5 — auth/storage/rpc return types moved to `unknown`
 // (deprecated stubs). FilterOp union, unknown params, typed catch applied.
@@ -338,7 +339,7 @@ export function createClient(): BrowserClient {
       }
     },
     rpc: async (fn: string, _args?: Record<string, unknown>) => {
-      console.warn(`[db/client] rpc(${fn}) called but not implemented.`)
+      logger.warn(`[db/client] rpc(${fn}) called but not implemented.`)
       return { data: null, error: { message: 'RPC not implemented' } }
     }
   }

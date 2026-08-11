@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { logger } from '@/lib/logger'
 
 export default function ErrorPage({
   error,
@@ -18,10 +19,10 @@ export default function ErrorPage({
         captureError(error)
       }).catch(() => {
         // Sentry not available — fall back to console
-        console.error('[error-boundary]', error.message, error.digest ? `ref=${error.digest}` : '')
+        logger.error('[error-boundary]', { error: error.message, digest: error.digest })
       })
     } catch {
-      console.error('[error-boundary]', error.message)
+      logger.error('[error-boundary]', { error: error.message })
     }
   }, [error])
 

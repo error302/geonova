@@ -12,6 +12,7 @@ import {
   utmToGeodetic
 } from '@/lib/geodesy/gnss';
 import type { BaselineResult, GNSSBaseStation, GNSSNetworkResult } from '@/lib/geodesy/gnss';
+import { logger } from '@/lib/logger'
 
 interface Observation {
   id: number;
@@ -115,7 +116,7 @@ export default function GNSSProcessor() {
         setResult(network);
       }
     } catch (e) {
-      console.error(e);
+      logger.error(e instanceof Error ? e.message : String(e));
     }
   };
 

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { createClient, type BrowserSession } from '@/lib/api-client/client';
 import { coordinateArea } from '@/lib/engine/area';
 import { distanceBearing } from '@/lib/engine/distance';
+import { logger } from '@/lib/logger'
 
 interface Point {
   id: string;
@@ -145,7 +146,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
       onParcelCreated((data ?? undefined) as { id: string; name: string | null; boundary_points: Array<{ name?: string; easting: number; northing: number }>; created_at?: string });
       onClose();
     } catch (err) {
-      console.error('Error saving parcel:', err);
+      logger.error('Error saving parcel:', { error: err });
       alert('Failed to save parcel');
     } finally {
       setSaving(false);

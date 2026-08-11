@@ -1,4 +1,5 @@
 import type { RawSurveyPoint, CleanDataResponse, CleanDataRequest } from '@/types/fieldguard'
+import { logger } from '@/lib/logger'
 
 const BASE = process.env.NEXT_PUBLIC_URL || ''
 
@@ -115,7 +116,7 @@ export async function cleanSurveyData(
     
     return res.json() as Promise<CleanDataResponse>
   } catch (error) {
-    console.warn('Falling back to local survey data cleaning:', error)
+    logger.warn('Falling back to local survey data cleaning:', { error: error })
     return buildLocalFallback(points)
   }
 }

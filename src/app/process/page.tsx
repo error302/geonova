@@ -61,6 +61,7 @@ type SurveyPointRow = {
 
 import Link from 'next/link'
 import { createClient } from '@/lib/api-client/client'
+import { logger } from '@/lib/logger'
 
 export default function ProcessPage() {
   const [processError, setProcessError] = useState<string | null>(null)
@@ -304,7 +305,7 @@ export default function ProcessPage() {
       setProcessing(false)
       setProcessed(true)
     } catch (e) {
-      console.error('Processing error:', e)
+      logger.error('Processing error:', { error: e })
       setProcessing(false)
     }
   }
@@ -366,7 +367,7 @@ export default function ProcessPage() {
       setSaveSuccess(true)
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (e) {
-      console.error('Save error:', e)
+      logger.error('Save error:', { error: e })
       setProcessError('Error saving points to project. Please try again.')
     }
 

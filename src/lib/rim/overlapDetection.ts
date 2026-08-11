@@ -50,6 +50,7 @@
 import type { Point2D } from '@/types/surveyPoint'
 import { calculateIntersection } from '@/lib/map/turfHelpers'
 import { shoelaceArea } from '@/lib/engine/area'
+import { logger } from '@/lib/logger'
 
 // ─── Types ──────────────────────────────────────────────────────────────
 
@@ -162,9 +163,9 @@ export async function detectOverlaps(params: {
     } catch (err) {
       // Turf can throw on degenerate polygons. Skip and continue.
       skippedCount++
-      console.warn(
+      logger.warn(
         `[overlapDetection] Failed to check against ${existing.parcelNumber}:`,
-        err instanceof Error ? err.message : String(err)
+        { error: err instanceof Error ? err.message : String(err) }
       )
     }
   }

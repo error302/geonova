@@ -2,6 +2,7 @@
  * PayPal Payment Integration
  * Processes PayPal payments
  */
+import { logger } from '@/lib/logger'
 
 export interface PayPalConfig {
   clientId: string
@@ -62,7 +63,7 @@ export class PayPalService {
 
     if (!response.ok) {
       const errorBody = await response.text().catch(() => 'unknown')
-      console.error(`[PayPal] Token request failed: ${response.status} ${response.statusText} | mode=${this.mode} | body=${errorBody}`)
+      logger.error(`[PayPal] Token request failed: ${response.status} ${response.statusText} | mode=${this.mode} | body=${errorBody}`)
       throw new Error(`Failed to obtain PayPal access token (${response.status}). Mode: ${this.mode}. Check PAYPAL_MODE, CLIENT_ID and CLIENT_SECRET.`)
     }
 
@@ -242,7 +243,7 @@ export function getPayPalService(): PayPalService | null {
   const clientSecret = process.env.PAYPAL_CLIENT_SECRET
   
   if (!clientId || !clientSecret) {
-    console.warn('[PayPal] PAYPAL_CLIENT_ID or PAYPAL_CLIENT_SECRET not set — PayPal disabled')
+    logger.warn('[PayPal] PAYPAL_CLIENT_ID or PAYPAL_CLIENT_SECRET not set — PayPal disabled')
     return null
   }
 

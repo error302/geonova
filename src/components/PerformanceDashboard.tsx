@@ -8,6 +8,7 @@
 import { useState, useEffect } from 'react'
 import { performanceMonitor } from '@/lib/performance/monitor'
 import { PERFORMANCE_BUDGETS } from '@/lib/performance/config'
+import { logger } from '@/lib/logger'
 
 interface PerformanceReport {
   webVitals?: {
@@ -50,7 +51,7 @@ export default function PerformanceDashboard() {
       const result = (await res.json()) as Record<string, unknown>
       setOptimizationResult(result)
     } catch (error) {
-      console.error('Optimization failed:', error)
+      logger.error('Optimization failed:', { error: error })
     } finally {
       setIsOptimizing(false)
     }

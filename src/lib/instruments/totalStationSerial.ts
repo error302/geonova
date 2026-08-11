@@ -20,6 +20,7 @@
  *   - Safari/Firefox: NOT supported (use the Capacitor mobile app
  *     which has a polyfill via @capacitor-community/serial)
  */
+import { logger } from '@/lib/logger'
 
 export type InstrumentBrand = 'topcon' | 'leica' | 'sokkia' | 'trimble' | 'pentax' | 'south' | 'generic'
 
@@ -138,7 +139,7 @@ export class TotalStationConnection {
         }
       }
     } catch (err) {
-      if (this.connected) console.error('[TotalStation] Read error:', err)
+      if (this.connected) logger.error('[TotalStation] Read error:', { error: err })
     }
   }
 }

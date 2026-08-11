@@ -17,6 +17,7 @@
  * Uses Upstash Redis when UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN
  * are set (production). Falls back to in-memory for local development.
  */
+import { logger } from '@/lib/logger'
 
 interface LoginAttempt {
   count: number
@@ -181,7 +182,7 @@ export async function recordFailedLogin(email: string, ip: string): Promise<void
 
     if (record.count >= MAX_FAILED_ATTEMPTS) {
       record.lockedUntil = now + LOCKOUT_DURATION_MS
-      console.warn(`[loginLimiter] Account locked: ${email} from ${ip} after ${record.count} failed attempts. Locked for ${LOCKOUT_DURATION_MS / 60000} minutes.`)
+      logger.warn(`[loginLimiter] Account locked: ${email} from ${ip} after ${record.count} failed attempts. Locked for ${LOCKOUT_DURATION_MS / 60000} minutes.`)
     }
 
     await upstashSet(redisKey, record)
@@ -200,7 +201,7 @@ export async function recordFailedLogin(email: string, ip: string): Promise<void
 
   if (record.count >= MAX_FAILED_ATTEMPTS) {
     record.lockedUntil = now + LOCKOUT_DURATION_MS
-    console.warn(`[loginLimiter] Account locked: ${email} from ${ip} after ${record.count} failed attempts. Locked for ${LOCKOUT_DURATION_MS / 60000} minutes.`)
+    logger.warn(`[loginLimiter] Account locked: ${email} from ${ip} after ${record.count} failed attempts. Locked for ${LOCKOUT_DURATION_MS / 60000} minutes.`)
   }
 }
 

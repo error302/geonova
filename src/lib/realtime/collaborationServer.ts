@@ -21,6 +21,7 @@
  * For Docker deployment, this runs alongside the Next.js app
  * on a separate port (3001) or as a serverless WebSocket.
  */
+/* eslint-disable no-console */
 
 import { WebSocketServer, WebSocket } from 'ws'
 import { createServer, IncomingMessage } from 'http'

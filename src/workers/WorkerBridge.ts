@@ -18,6 +18,7 @@ import type {
   WorkerResponseType,
   WorkerMessage,
 } from './compute.worker'
+import { logger } from '@/lib/logger'
 
 type RequestId = string
 
@@ -69,7 +70,7 @@ class WorkerBridge {
     }
 
     this.worker.onerror = (error) => {
-      console.error('[WorkerBridge] Worker error:', error)
+      logger.error('[WorkerBridge] Worker error:', { error: error })
       // Reject all pending requests
       this.pendingRequests.forEach((pending, id) => {
         pending.reject(new Error('Worker crashed'))

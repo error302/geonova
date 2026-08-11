@@ -27,6 +27,7 @@ import {
   type CorrectionRecord,
   type AccuracyCheckResult,
 } from '@/lib/survey/audit-trail';
+import { logger } from '@/lib/logger'
 
 interface AuditEntryBody {
   surveyId: string
@@ -206,7 +207,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(entry, { status: 201 });
   } catch (err) {
-    console.error('[Audit API] POST error:', err);
+    logger.error('[Audit API] POST error:', { error: err });
     return NextResponse.json(
       { error: 'Failed to store audit entry', details: String(err) },
       { status: 500 }

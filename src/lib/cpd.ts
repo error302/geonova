@@ -2,6 +2,7 @@ import { db } from '@/lib/db'
 import { randomBytes } from 'crypto'
 import type { CPDRecord, CPDCertificate, CPDActivity } from '@/types/cpd'
 import { CPD_POINTS } from '@/types/cpd'
+import { logger } from '@/lib/logger'
 
 /** Row shape returned by generateCPDCertificate's INSERT ... RETURNING *. */
 interface CertificateRow {
@@ -117,7 +118,7 @@ export async function awardCPDPoints(
   if (currentTotal + points > CPD_ANNUAL_CAP) {
     // Would exceed the annual cap — don't award
     // Log this to the audit chain for transparency
-    console.warn(`[CPD] Annual cap (${CPD_ANNUAL_CAP}) would be exceeded for user ${userId}. Current: ${currentTotal}, attempted: +${points}`)
+    logger.warn(`[CPD] Annual cap (${CPD_ANNUAL_CAP}) would be exceeded for user ${userId}. Current: ${currentTotal}, attempted: +${points}`)
     return null
   }
 

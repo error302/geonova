@@ -17,6 +17,7 @@
  * To set up: https://upstash.com → create Redis DB → copy REST URL & token.
  * Add to Vercel: Settings → Environment Variables.
  */
+import { logger } from '@/lib/logger'
 
 // ─── Upstash implementation (production) ─────────────────────────────────────
 
@@ -128,7 +129,7 @@ export async function rateLimit(
     // ByteByteGo audit fix: in-memory rate limiting is NOT acceptable in production.
     // It silently fails in multi-instance deployments (each instance gets its own
     // counter, so attackers get N×the limit). Fail loudly instead.
-    console.error(
+    logger.error(
       '[rate-limit] PRODUCTION ERROR: UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN ' +
       'must be set in production. In-memory rate limiting is disabled. ' +
       'Set these env vars or set NODE_ENV=development for local dev.'

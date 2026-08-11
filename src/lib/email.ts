@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import { logger } from '@/lib/logger'
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
@@ -25,7 +26,7 @@ export interface SendEmailOptions {
 
 export async function sendEmail({ to, subject, text, html, replyTo, from, headers }: SendEmailOptions) {
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.warn(`[email] Email service not configured. Would have sent "${subject}" to ${to}`)
+    logger.warn(`[email] Email service not configured. Would have sent "${subject}" to ${to}`)
     return { success: false, error: 'Email service not configured' }
   }
 
@@ -41,7 +42,7 @@ export async function sendEmail({ to, subject, text, html, replyTo, from, header
     })
     return { success: true, info }
   } catch (error) {
-    console.error('[email] Error sending email:', error)
+    logger.error('[email] Error sending email:', { error: error })
     return { success: false, error }
   }
 }

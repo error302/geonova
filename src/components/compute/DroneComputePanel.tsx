@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { Plane, Save, CheckCircle, BarChart3 } from 'lucide-react';
+import { logger } from '@/lib/logger'
 
 interface GCPResult {
   name: string;
@@ -80,7 +81,7 @@ export default function DroneComputePanel({ projectId }: { projectId: string }) 
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (e) { console.error(e); }
+    } catch (e) { logger.error(e instanceof Error ? e.message : String(e)); }
   };
 
   return (

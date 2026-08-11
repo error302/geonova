@@ -33,6 +33,7 @@ import {
   type ContourLine,
 } from '@/lib/engine/contours'
 import { getTinWorkerUrl } from '@/lib/workers/tinWorkerUrl'
+import { logger } from '@/lib/logger'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -122,7 +123,7 @@ function getWorker(): Worker | null {
       workerInstance = null
       workerUnavailable = true
       // Surface a console warning so devs can spot this in DevTools
-      console.warn('[tinWorkerClient] Web worker crashed; falling back to sync engine:', err.message || err)
+      logger.warn('[tinWorkerClient] Web worker crashed; falling back to sync engine:', { error: err.message || err })
       for (const [, handler] of pendingEntries) {
         clearTimeout(handler.timer)
         try {

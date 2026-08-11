@@ -4,6 +4,7 @@ import { useState, useId } from 'react'
 import { Download , AlertTriangle } from 'lucide-react'
 import { inverseComputation, polarComputation, intersectionComputation, resectionComputation, areaComputation, joinComputation, distanceDistanceIntersection, bearingDistanceIntersection, arcByRadiusAndChord, type InverseStep, type DistDistResult, type BearingDistResult, type ArcResult } from '@/lib/computations/cogoEngine'
 import { downloadCSV, toCSV } from '@/lib/export/helpers'
+import { logger } from '@/lib/logger'
 
 type Tab = 'inverse' | 'polar' | 'intersection' | 'distDist' | 'bearingDist' | 'arcBoundary' | 'resection' | 'area' | 'join'
 
@@ -387,7 +388,7 @@ export default function COGOCalculator({ compact = false }: Props) {
       const tabName = TABS.find((t) => t.id === activeTab)?.label.replace(/[^a-zA-Z]/g, '_') || activeTab
       doc.save(`METARDU_COGO_${tabName}_${date}.pdf`)
     } catch (err) {
-      console.error('PDF export error:', err)
+      logger.error('PDF export error:', { error: err })
       setError('Failed to export PDF. Please try again.')
     }
   }
@@ -452,7 +453,7 @@ export default function COGOCalculator({ compact = false }: Props) {
       const tabName = TABS.find(t => t.id === activeTab)?.label.replace(/[^a-zA-Z]/g, '_') || activeTab
       downloadCSV(csv, `METARDU_COGO_${tabName}`)
     } catch (err) {
-      console.error('CSV export error:', err)
+      logger.error('CSV export error:', { error: err })
       setError('Failed to export CSV. Please try again.')
     }
   }

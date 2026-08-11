@@ -23,6 +23,7 @@ import {
   projectsTotal,
   activeUsers,
 } from '@/lib/monitoring/metrics';
+import { logger } from '@/lib/logger'
 
 // Track if we've initialized version info
 let initialized = false;
@@ -82,7 +83,7 @@ export async function GET() {
       },
     });
   } catch (err) {
-    console.error('[Metrics] Error generating metrics:', err);
+    logger.error('[Metrics] Error generating metrics:', { error: err });
     return new NextResponse('# Error generating metrics\n', {
       status: 500,
       headers: { 'Content-Type': 'text/plain' },

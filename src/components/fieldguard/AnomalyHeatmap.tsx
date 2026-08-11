@@ -20,6 +20,7 @@ import Point from 'ol/geom/Point'
 import { fromLonLat } from 'ol/proj'
 import Overlay from 'ol/Overlay'
 import type { Map as MapType, Overlay as OverlayType } from 'ol'
+import { logger } from '@/lib/logger'
 
 interface AnomalyHeatmapProps {
   points: CleanedPoint[]
@@ -68,7 +69,7 @@ export default function AnomalyHeatmap({ points, anomalies }: AnomalyHeatmapProp
 
         mapInstance.current = map
       } catch (err) {
-        console.error('AnomalyHeatmap init failed:', err)
+        logger.error('AnomalyHeatmap init failed:', { error: err })
       }
     }
 
@@ -186,7 +187,7 @@ export default function AnomalyHeatmap({ points, anomalies }: AnomalyHeatmapProp
           map.un('click', handleClick as (e: unknown) => void)
         }
       } catch (err) {
-        console.error('AnomalyHeatmap feature update failed:', err)
+        logger.error('AnomalyHeatmap feature update failed:', { error: err })
       }
     }
 

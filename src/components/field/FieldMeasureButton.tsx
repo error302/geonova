@@ -20,6 +20,7 @@
 import { useState, useCallback, useRef } from 'react'
 import { Crosshair, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react'
 import { useInstrumentStore } from '@/stores/instrumentStore'
+import { logger } from '@/lib/logger'
 
 interface FieldMeasureButtonProps {
   onCapture: (pointId: string) => Promise<boolean>
@@ -93,7 +94,7 @@ export function FieldMeasureButton({
       }
     } catch (err) {
       setLastResult('error')
-      console.error('[field-measure] Capture failed:', err)
+      logger.error('[field-measure] Capture failed:', { error: err })
     } finally {
       setIsCapturing(false)
     }

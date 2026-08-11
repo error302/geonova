@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { logger } from '@/lib/logger'
 
 interface AppErrorBoundaryProps {
   /** The error object from Next.js error boundary */
@@ -30,7 +31,7 @@ export default function AppErrorBoundary({ error, reset, context }: AppErrorBoun
       captureError(error, { context: context ?? 'global' })
     }).catch(() => {
       // Sentry not available — fall back to console
-      console.error('[error-boundary]', error.message, error.digest ? `ref=${error.digest}` : '')
+      logger.error('[error-boundary]', { error: error.message, digest: error.digest })
     })
   }, [error, context])
 

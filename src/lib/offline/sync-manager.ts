@@ -22,6 +22,7 @@ import {
   SyncQueueEntry,
   type OfflineMediaAttachment,
 } from './db';
+import { logger } from '@/lib/logger'
 
 // ─── Types ───────────────────────────────────────────────────────────────
 
@@ -500,7 +501,7 @@ class SyncManager {
       try {
         listener(this.state);
       } catch (err) {
-        console.error('[SyncManager] Listener error:', err);
+        logger.error('[SyncManager] Listener error:', { error: err });
       }
     }
   }

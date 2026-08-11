@@ -25,6 +25,7 @@ import { FieldBookMobile } from '@/components/fieldbook/FieldBookMobile'
 import { ToleranceBadge } from '@/components/survey/ToleranceBadge'
 import { checkTolerance, type ToleranceCheckResult, type SurveyType } from '@/lib/survey/liveToleranceChecker'
 import type { RawObservation } from '@/lib/computations/traverseEngine'
+import { logger } from '@/lib/logger'
 
 type Tab = 'points' | 'traverse' | 'leveling' | 'radiation' | 'offline' | 'map'
 type SyncStatus = 'synced' | 'pending' | 'offline'
@@ -234,7 +235,7 @@ export default function FieldPage() {
       setPCtrl(false)
       fetchProjectPoints(selectedProject)
     } catch (e) {
-      console.error(e)
+      logger.error(e instanceof Error ? e.message : String(e))
     }
   }
 

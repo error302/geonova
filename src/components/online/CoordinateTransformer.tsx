@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { ArrowRightLeft, Copy, Check } from 'lucide-react'
 import type { DatumCode, TransformedCoord } from '@/types/gnss'
+import { logger } from '@/lib/logger'
 
 const DATUM_OPTIONS: { value: DatumCode; label: string }[] = [
   { value: 'WGS84', label: 'WGS84 (GPS)' },
@@ -75,7 +76,7 @@ export default function CoordinateTransformer() {
       
       setResults(data.results || [])
     } catch (err) {
-      console.error(err)
+      logger.error(err instanceof Error ? err.message : String(err))
     } finally {
       setLoading(false)
     }

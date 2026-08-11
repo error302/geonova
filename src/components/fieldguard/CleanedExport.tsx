@@ -6,6 +6,7 @@ import { FileJson, FileSpreadsheet, FileText, Save, Loader2 } from 'lucide-react
 import type { CleanDataResponse } from '@/types/fieldguard'
 import { createClient } from '@/lib/api-client/client'
 import type { jsPDF } from 'jspdf'
+import { logger } from '@/lib/logger'
 
 interface CleanedExportProps {
   cleanedData: CleanDataResponse
@@ -127,7 +128,7 @@ export default function CleanedExport({ cleanedData, projectId }: CleanedExportP
       })
       setSaved(true)
     } catch (err) {
-      console.error(err)
+      logger.error(err instanceof Error ? err.message : String(err))
     } finally {
       setSaving(false)
     }

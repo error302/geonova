@@ -2,6 +2,7 @@
  * Performance Monitoring for METARDU
  * Track and report performance metrics
  */
+import { logger } from '@/lib/logger'
 
 interface PerformanceMetric {
   name: string
@@ -120,7 +121,7 @@ class PerformanceMonitor {
 
     // Log slow metrics in development
     if (process.env.NODE_ENV === 'development' && value > 1000) {
-      console.warn(`[Performance] Slow ${name}: ${value.toFixed(2)}ms`)
+      logger.warn(`[Performance] Slow ${name}: ${value.toFixed(2)}ms`)
     }
   }
 

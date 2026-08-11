@@ -8,6 +8,7 @@ import {
 } from 'recharts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
 import { Loader2 } from 'lucide-react'
+import { logger } from '@/lib/logger'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -197,7 +198,7 @@ export default function AnalyticsPage() {
           })
         }
       } catch (err) {
-        console.error('Analytics fetch failed:', err)
+        logger.error('Analytics fetch failed:', { error: err })
       } finally {
         setLoading(false)
       }

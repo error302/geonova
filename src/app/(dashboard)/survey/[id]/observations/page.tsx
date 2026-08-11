@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { logger } from '@/lib/logger'
 
 interface Observation {
   fromStationId: string;
@@ -58,7 +59,7 @@ export default function ObservationsPage() {
       const data = await res.json() as { count: number };
       alert(`Synced ${data.count} observations`);
     } catch (err) {
-      console.error(err);
+      logger.error(err instanceof Error ? err.message : String(err));
     } finally {
       setSyncing(false);
     }

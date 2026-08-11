@@ -19,6 +19,7 @@ import { printTraverseSheet, type TraverseSheetInput } from '@/lib/print/travers
 import { PrintMetaPanel, defaultPrintMeta, type PrintMeta } from '@/components/shared/PrintMetaPanel'
 import { CoordinateCanvas, type CanvasPoint, type CanvasLine, type CanvasLeg } from '@/components/drawing/CoordinateCanvas'
 import DrawingExportToolbar from '@/components/drawing/DrawingExportToolbar'
+import { logger } from '@/lib/logger'
 
 interface TraverseFieldBookProps {
   projectId: string
@@ -101,7 +102,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
         if (stations[0].elevation) setOpeningRL(stations[0].elevation.toString())
       }
     } catch {
-      console.error('Failed to parse field_import param')
+      logger.error('Failed to parse field_import param')
     }
   }, [searchParams])
 

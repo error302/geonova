@@ -26,6 +26,7 @@ import {
 } from 'lucide-react'
 import { bowditchAdjustment, type TraverseInput } from '@/lib/engine/traverse'
 import type { TraverseResult } from '@/lib/engine/types'
+import { logger } from '@/lib/logger'
 
 interface BowditchApplyButtonProps {
   /** Traverse input data (stations, bearings, distances) */
@@ -64,7 +65,7 @@ export function BowditchApplyButton({
       setResult(adjResult)
       setShowDetails(true)
     } catch (err) {
-      console.error('[BowditchApplyButton] Adjustment failed:', err)
+      logger.error('[BowditchApplyButton] Adjustment failed:', { error: err })
       alert(`Adjustment failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
     } finally {
       setComputing(false)

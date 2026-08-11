@@ -12,6 +12,7 @@
  * stays free of side-effects and we don't need `require.main === module`
  * gymnastics that confuse the Next.js bundler.
  */
+/* eslint-disable no-console */
 
 import { getCollaborationServer } from './collaborationServer'
 

@@ -30,6 +30,7 @@ import {
   type LSStation,
 } from '@/lib/survey/traverse/least-squares';
 import { TraverseComputeSchema } from '@/lib/validation/apiSchemas';
+import { logger } from '@/lib/logger'
 
 export async function POST(request: NextRequest) {
   // SECURITY: Require authentication to prevent DoS via unauthenticated compute
@@ -106,7 +107,7 @@ export async function POST(request: NextRequest) {
       })),
     })
   } catch (error) {
-    console.error('Traverse computation error:', error);
+    logger.error('Traverse computation error:', { error: error });
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Computation failed' },
       { status: 500 }

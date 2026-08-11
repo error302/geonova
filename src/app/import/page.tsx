@@ -7,6 +7,7 @@ import { parseGSI } from '@/lib/import/totalStation/parseGSI'
 import { parseJobXML } from '@/lib/import/totalStation/parseJobXML'
 import { parseTopcon } from '@/lib/import/totalStation/parseTopcon'
 import { parseSDR } from '@/lib/import/totalStation/parseSDR'
+import { logger } from '@/lib/logger'
 
 interface ParsedPoint {
   pointId: string
@@ -124,7 +125,7 @@ export default function ImportPage() {
     const { error } = await dbClient.from('survey_points').insert(insertData)
 
     if (error) {
-      console.error('Import error:', error)
+      logger.error('Import error:', { error: error })
       setImporting(false)
       return
     }

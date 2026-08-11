@@ -12,6 +12,7 @@
  *
  * This approach requires zero additional runtime dependencies.
  */
+import { logger } from '@/lib/logger'
 
 let injectedStyleEl: HTMLStyleElement | null = null;
 
@@ -148,6 +149,6 @@ export function createPrintHandler(
   }
 ): () => void {
   return () => {
-    exportMapPDF(mapContainerId, options).catch(console.error);
+    exportMapPDF(mapContainerId, options).catch((err: unknown) => logger.error('[exportMapPDF] Export failed:', { error: err }));
   };
 }

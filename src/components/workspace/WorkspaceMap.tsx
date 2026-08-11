@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState, Component } from 'react';
 import { useUIStore } from '@/stores/uiStore';
 import { useProjectStore } from '@/stores/projectStore';
+import { logger } from '@/lib/logger'
 
 // ── Types ─────────────────────────────────────────────────────────────
 
@@ -34,7 +35,7 @@ interface WorkspaceMapProps {
 class MapEB extends Component<{ children: React.ReactNode }, { err: Error | null }> {
   state = { err: null as Error | null };
   static getDerivedStateFromError(err: Error) { return { err }; }
-  componentDidCatch(e: Error, info: React.ErrorInfo) { console.error('[WorkspaceMap]', e, info); }
+  componentDidCatch(e: Error, info: React.ErrorInfo) { logger.error('[WorkspaceMap]', { error: e, info }); }
   render() {
     if (this.state.err) return (
       <div className="h-full w-full flex items-center justify-center bg-[#0a0a0f]">
@@ -337,7 +338,7 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
 
         if (!cancelled) setReady(true);
       } catch (err: unknown) {
-        console.error('[WorkspaceMap] init failed:', err);
+        logger.error('[WorkspaceMap] init failed:', { error: err });
       }
     }
 

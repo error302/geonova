@@ -14,6 +14,7 @@
 import { useCallback, useRef, useState } from 'react';
 import type { PlanId } from '@/lib/subscription/catalog';
 import SubscriptionBadge from '@/components/SubscriptionBadge';
+import { logger } from '@/lib/logger'
 
 interface LogoInfo {
   id: string;
@@ -115,7 +116,7 @@ export default function LogoUpload({
         onUploadSuccess?.(metaData.logo);
       }
     } catch (err) {
-      console.error('[LogoUpload] Upload error:', err);
+      logger.error('[LogoUpload] Upload error:', { error: err });
       setError('Upload failed. Please try again.');
       setPreview(null);
     } finally {
@@ -173,7 +174,7 @@ export default function LogoUpload({
       setPreview(null);
       onDeleteSuccess?.();
     } catch (err) {
-      console.error('[LogoUpload] Delete error:', err);
+      logger.error('[LogoUpload] Delete error:', { error: err });
       setError('Delete failed. Please try again.');
     } finally {
       setDeleting(false);

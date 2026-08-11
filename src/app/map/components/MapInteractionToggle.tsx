@@ -16,6 +16,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { Lock, Unlock, Hand } from 'lucide-react'
 import { MapOverlaySlot } from '@/app/map/components/MapOverlayManager'
 import type Map from 'ol/Map'
+import { logger } from '@/lib/logger'
 
 type LockState = 'locked' | 'unlocked'
 const STORAGE_KEY = 'metardu:map-gesture-lock'
@@ -81,7 +82,7 @@ export function MapInteractionToggle({ mapInstance }: { mapInstance: React.Mutab
         applyCondition(platformModifierKeyOnly)
       }
     } catch (err) {
-      console.warn('[MapInteractionToggle] Failed to apply lock:', err)
+      logger.warn('[MapInteractionToggle] Failed to apply lock:', { error: err })
     }
   }, [mapInstance])
 

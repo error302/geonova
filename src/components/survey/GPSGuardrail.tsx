@@ -11,6 +11,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { ShieldCheck, ShieldAlert, ShieldQuestion, Satellite, Activity } from 'lucide-react'
+import { logger } from '@/lib/logger'
 
 type AccuracyLevel = 'high' | 'moderate' | 'low' | 'unknown'
 
@@ -85,7 +86,7 @@ export function GPSGuardrail({ compact = false, onAccuracyChange, useCapacitor =
         watchIdRef.current = watchId
       }
     } catch (err) {
-      console.warn('[GPSGuardrail] Failed to start watch:', err)
+      logger.warn('[GPSGuardrail] Failed to start watch:', { error: err })
       setWatching(false)
     }
   }, [useCapacitor, watching])

@@ -21,6 +21,7 @@ import {
   Ruler,
   XCircle,
 } from 'lucide-react';
+import { logger } from '@/lib/logger'
 
 /* ══════════════════════════════════════════════════════════════════════
  *  TYPES
@@ -497,13 +498,13 @@ export default function OrthophotoViewerPage() {
           }
         }
       } catch (fitErr) {
-        console.warn('[Orthophoto Viewer] Could not auto-fit to extent:', fitErr);
+        logger.warn('[Orthophoto Viewer] Could not auto-fit to extent:', { error: fitErr });
       }
 
       setGeoTIFFLoaded(true);
       setTiffLoading(false);
     } catch (err) {
-      console.error('[Orthophoto Viewer] GeoTIFF load error:', err);
+      logger.error('[Orthophoto Viewer] GeoTIFF load error:', { error: err });
       setTiffError(`Failed to load GeoTIFF: ${err instanceof Error ? err.message : 'Unknown error'}`);
       setTiffLoading(false);
     }

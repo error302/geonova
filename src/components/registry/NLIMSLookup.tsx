@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Search, Building2, AlertTriangle, Info, Check, Download } from 'lucide-react'
 import type { NLIMSParcel, NLIMSSearchResult } from '@/types/nlims'
+import { logger } from '@/lib/logger'
 
 interface NLIMSLookupProps {
   initialParcel?: string
@@ -29,7 +30,7 @@ export default function NLIMSLookup({ initialParcel = '', onParcelVerified }: NL
       const data = (await res.json()) as NLIMSSearchResult
       setResult(data)
     } catch (error) {
-      console.error('NLIMS lookup error:', error)
+      logger.error('NLIMS lookup error:', { error: error })
       setResult({ found: false, error: 'Failed to search registry', isMockData: false })
     }
 

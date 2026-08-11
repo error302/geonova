@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/api-client/client'
+import { logger } from '@/lib/logger'
 
 interface Notification {
   id: string
@@ -139,10 +140,10 @@ export default function NotificationsPage() {
     saveLocal(updated)
     try {
       createClient().from('notifications').delete().eq('id', id).then(({ error }) => {
-        if (error) console.error('Failed to dismiss:', error)
+        if (error) logger.error('Failed to dismiss:', { error: error })
       })
     } catch (e) {
-      console.error('Failed to dismiss:', e)
+      logger.error('Failed to dismiss:', { error: e })
     }
   }
 

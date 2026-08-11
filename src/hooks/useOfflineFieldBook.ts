@@ -29,6 +29,7 @@ import {
   generateId,
   getSyncStatus,
 } from '@/lib/offline/fieldBookDB'
+import { logger } from '@/lib/logger'
 
 export function useOfflineFieldBook(projectId: string, surveyType?: ObservationType) {
   const [observations, setObservations] = useState<OfflineObservation[]>([])
@@ -48,7 +49,7 @@ export function useOfflineFieldBook(projectId: string, surveyType?: ObservationT
         if (mountedRef.current) setSyncStatus(status)
       }
     } catch (err) {
-      console.error('[useOfflineFieldBook] Failed to load observations:', err)
+      logger.error('[useOfflineFieldBook] Failed to load observations:', { error: err })
     } finally {
       if (mountedRef.current) setLoading(false)
     }

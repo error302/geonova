@@ -24,6 +24,7 @@ import { computeTraverseAccuracy, getAccuracyBadgeLabel, getAccuracyBadgeClass }
 import Link from 'next/link'
 import MobileDesktopNotice from '@/components/MobileDesktopNotice'
 import { useSubscription } from '@/lib/subscription/subscriptionContext'
+import { logger } from '@/lib/logger'
 
 /* ── Lazy-loaded heavy components (canvas/DXF/PDF renderers) ────────── */
 const SurveyPlanViewer = dynamic(() => import('@/components/SurveyPlanViewer'), {
@@ -584,7 +585,7 @@ export default function DocumentsPage({ params }: PageProps) {
         alert(result.error || 'Failed to create submission')
       }
     } catch (error) {
-      console.error('Error creating submission:', error)
+      logger.error('Error creating submission:', { error: error })
       alert('Error creating submission. Please try again.')
     } finally {
       setIsCreatingSubmission(false)

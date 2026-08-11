@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 const envSchema = z.object({
   STRIPE_SECRET_KEY: z.string().optional(),
@@ -81,14 +82,14 @@ if (!parsedEnv.success) {
     // During Next.js build, process.env.NEXT_PHASE === 'phase-production-build'
     // In that case, just warn — the app won't actually run
     if (process.env.NEXT_PHASE === 'phase-production-build') {
-      console.warn(message)
+      logger.warn(message)
     } else {
       throw new Error(message)
     }
   }
 
   // Optional fields — warn but continue
-  console.warn('[env] Some optional environment variables are missing — related features will be disabled.')
+  logger.warn('[env] Some optional environment variables are missing — related features will be disabled.')
 }
 
 const defaults = {

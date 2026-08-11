@@ -8,6 +8,7 @@
 import { useState } from 'react'
 import { generateShapefileZip } from '@/lib/export/shapefile'
 import type { ShapefileData } from '@/types/submission'
+import { logger } from '@/lib/logger'
 
 interface ShapefileExportProps {
   data: ShapefileData
@@ -33,7 +34,7 @@ export default function ShapefileExport({ data, projectName, disabled }: Shapefi
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
     } catch (error) {
-      console.error('Shapefile export failed:', error)
+      logger.error('Shapefile export failed:', { error: error })
       alert('Failed to generate shapefile. Please try again.')
     } finally {
       setIsExporting(false)

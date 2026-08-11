@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Pen, Type, FileCheck, Check } from 'lucide-react'
 import type { DigitalSignature } from '@/types/signature'
+import { logger } from '@/lib/logger'
 
 interface SignatureCaptureProps {
   documentId: string
@@ -139,7 +140,7 @@ export default function SignatureCapture({
         })
       }
     } catch (error) {
-      console.error('Sign error:', error)
+      logger.error('Sign error:', { error: error })
     }
 
     setLoading(false)

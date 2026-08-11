@@ -19,6 +19,7 @@
 //   // weather.pressure = 1013.2 (hPa)
 //   // weather.humidity = 65 (%)
 // ──────────────────────────────────────────────────────────────────────────
+import { logger } from '@/lib/logger'
 
 export interface WeatherData {
   temperature: number;  // °C
@@ -94,7 +95,7 @@ export async function fetchWeatherForLocation(
     });
 
     if (!response.ok) {
-      console.warn(`[Weather] API returned ${response.status}, using defaults`);
+      logger.warn(`[Weather] API returned ${response.status}, using defaults`);
       return { ...KENYA_DEFAULTS, location: { lat, lon } };
     }
 
@@ -119,7 +120,7 @@ export async function fetchWeatherForLocation(
 
     return data;
   } catch (err) {
-    console.warn('[Weather] Fetch failed, using Kenya defaults:', err);
+    logger.warn('[Weather] Fetch failed, using Kenya defaults:', { error: err });
     return { ...KENYA_DEFAULTS, location: { lat, lon } };
   }
 }

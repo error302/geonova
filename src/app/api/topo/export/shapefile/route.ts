@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { setCurrentUserId } from '@/lib/db'
 import type { ContourLine } from '@/lib/topo/contourGenerator'
+import { logger } from '@/lib/logger'
 
 interface SpotHeightInput {
   e: number
@@ -87,7 +88,7 @@ export async function POST(req: NextRequest) {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Shapefile generation failed'
-    console.error('Shapefile export error:', message)
+    logger.error('Shapefile export error:', { error: message })
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }

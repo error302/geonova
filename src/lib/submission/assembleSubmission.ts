@@ -18,6 +18,7 @@ import type { MutationFormInput } from './generators/mutationForm'
 import { coordinateArea } from '@/lib/engine/area'
 import { angularClosureTolerance } from '@/lib/engine/traverse'
 import type { SubmissionPackage, QAGateResult, SurveySubtype, SupportingDocument } from './types'
+import { logger } from '@/lib/logger'
 
 /** Row shape for survey_points (typed callback params for the legacy client reads). */
 interface SurveyPointRow {
@@ -159,7 +160,7 @@ export async function assembleSubmissionPackage(
   }
 
   if (adjustedCoordinates.length < 3 && proj.survey_points && proj.survey_points.length >= 3) {
-    console.warn('No adjusted coordinates found - using raw coordinates for area computation');
+    logger.warn('No adjusted coordinates found - using raw coordinates for area computation');
   }
 
   if (adjustedCoordinates.length < 3 && (!proj.survey_points || proj.survey_points.length < 3)) {

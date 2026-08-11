@@ -33,6 +33,7 @@ import { db } from '@/lib/db';
 import { fieldToFinish, type FieldObservation, type FieldToFinishInput } from '@/lib/survey/field-to-finish';
 import type { SurveyTypeKey } from '@/lib/engine/traverse';
 import { preSubmitCheck } from '@/lib/submission/pre-submit-check';
+import { logger } from '@/lib/logger'
 
 interface FieldBookEntryRow {
   id: string
@@ -216,7 +217,7 @@ export async function POST(
       },
     });
   } catch (err) {
-    console.error('[Field-to-Finish] Error:', err);
+    logger.error('[Field-to-Finish] Error:', { error: err });
     return NextResponse.json(
       { error: 'Pipeline failed', details: String(err) },
       { status: 500 },

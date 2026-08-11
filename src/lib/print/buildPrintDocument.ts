@@ -7,6 +7,7 @@
  *
  * References: RDM 1.1 (2025) Table 5.4 | SRVY2025-1 | Survey Regulations 1994
  */
+import { logger } from '@/lib/logger'
 
 export interface PrintMeta {
   /** Document title e.g. "Level Book — Rise & Fall" */
@@ -359,7 +360,7 @@ export function openPrint(html: string): void {
     // Fallback: try without window features (popup blocker may strip them)
     const w2 = window.open('', '_blank')
     if (!w2) {
-      console.error('openPrint: popup blocked. Allow popups for this site.')
+      logger.error('openPrint: popup blocked. Allow popups for this site.')
       return
     }
     w2.document.write(html)

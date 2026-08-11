@@ -3,6 +3,7 @@
  * Parses standard GPS/GNSS sentences from receivers
  * Supports: GGA, RMC, GLL, VTG
  */
+import { logger } from '@/lib/logger'
 
 export interface NMEAPosition {
   latitude: number;
@@ -108,7 +109,7 @@ function getFixType(quality: number): NMEAPosition['fixType'] {
 export function parseGGA(sentence: string): NMEAPosition | null {
   const validation = validateChecksum(sentence);
   if (!validation.valid) {
-    console.warn('Invalid checksum for GGA:', validation);
+    logger.warn('Invalid checksum for GGA:', { error: validation });
     return null;
   }
   
@@ -146,7 +147,7 @@ export function parseGGA(sentence: string): NMEAPosition | null {
 export function parseRMC(sentence: string): NMEAPosition | null {
   const validation = validateChecksum(sentence);
   if (!validation.valid) {
-    console.warn('Invalid checksum for RMC:', validation);
+    logger.warn('Invalid checksum for RMC:', { error: validation });
     return null;
   }
   

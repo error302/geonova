@@ -14,6 +14,7 @@
 //   // For React components, use next/dynamic:
 //   const MapView = dynamic(() => import('@/components/map/SurveyMap'))
 // ──────────────────────────────────────────────────────────────────────────
+import { logger } from '@/lib/logger'
 
 // ─── Three.js (~600KB) ──────────────────────────────────────────────────
 let threeCache: typeof import('three') | null = null;
@@ -123,6 +124,6 @@ export function reportLoadedDeps() {
   const loaded = deps.filter(d => d.loaded);
   const notLoaded = deps.filter(d => !d.loaded);
 
-  console.log(`[LazyDeps] Loaded: ${loaded.map(d => d.name).join(', ') || 'none'}`);
-  console.log(`[LazyDeps] Not loaded: ${notLoaded.map(d => d.name).join(', ') || 'none'}`);
+  logger.info(`[LazyDeps] Loaded: ${loaded.map(d => d.name).join(', ') || 'none'}`);
+  logger.info(`[LazyDeps] Not loaded: ${notLoaded.map(d => d.name).join(', ') || 'none'}`);
 }

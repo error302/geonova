@@ -20,6 +20,7 @@ import { db } from '@/lib/db'
 import { createHash } from 'crypto'
 import { getRoleFromProfile, canApproveAndLock } from '@/lib/rbac'
 import { notifyProjectLocked } from '@/lib/notifications/africasTalking'
+import { logger } from '@/lib/logger'
 
 interface SurveyorProfileRow {
   role: string | null
@@ -189,7 +190,7 @@ export const POST = apiHandler({ auth: true, audit: 'project:approve_lock', rate
       projectId,
     })
   } catch (notifyErr) {
-    console.error('[project:approve] Notification failed (non-blocking):', notifyErr)
+    logger.error('[project:approve] Notification failed (non-blocking):', { error: notifyErr })
   }
 
   return NextResponse.json({

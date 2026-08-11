@@ -8,6 +8,7 @@ import { SurveyPlanDataSchema } from '@/lib/validation/surveySchema'
 import ComplianceChecklistModal from '@/components/ComplianceChecklistModal'
 import { AlertCircle, FileCheck, Globe } from 'lucide-react'
 import { sanitizeHtml } from '@/lib/security/sanitize'
+import { logger } from '@/lib/logger'
 
 interface SurveyPlanViewerProps {
   data: SurveyPlanData
@@ -37,7 +38,7 @@ export default function SurveyPlanViewer({ data, options, className = '', submis
       // Quality Hardening: Validate data before rendering
       const validation = SurveyPlanDataSchema.safeParse(data)
       if (!validation.success) {
-        console.error('Survey plan data validation failed:', validation.error)
+        logger.error('Survey plan data validation failed:', { error: validation.error })
         setError(validation.error.errors[0].message)
         return
       }
@@ -61,7 +62,7 @@ export default function SurveyPlanViewer({ data, options, className = '', submis
       rendererRef.current = renderer
       setSvgContent(content)
     } catch (e) {
-      console.error('Survey plan render error:', e)
+      logger.error('Survey plan render error:', { error: e })
       setError(e instanceof Error ? e.message : 'Unknown rendering error')
       setSvgContent('')
     } finally {

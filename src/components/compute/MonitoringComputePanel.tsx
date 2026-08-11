@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { BarChart3, AlertTriangle, Save, CheckCircle } from 'lucide-react';
+import { logger } from '@/lib/logger'
 
 interface EpochPoint {
   name: string;
@@ -91,7 +92,7 @@ export default function MonitoringComputePanel({ projectId }: { projectId: strin
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (e) { console.error(e); }
+    } catch (e) { logger.error(e instanceof Error ? e.message : String(e)); }
   };
 
   return (

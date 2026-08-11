@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Calculator, Loader2, Save, CheckCircle } from 'lucide-react';
+import { logger } from '@/lib/logger'
 
 interface FieldBookRow {
   fromStation: string;
@@ -114,7 +115,7 @@ export default function LevellingComputePanel({ projectId }: { projectId: string
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (e) { console.error(e); }
+    } catch (e) { logger.error(e instanceof Error ? e.message : String(e)); }
   };
 
   return (

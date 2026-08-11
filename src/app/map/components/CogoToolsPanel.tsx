@@ -25,6 +25,7 @@ import { tienstraResection } from '@/lib/engine/cogo'
 import { distanceBearing } from '@/lib/engine/distance'
 import { bearingToString, parseFieldAngle } from '@/lib/engine/angles'
 import type { Point2D } from '@/lib/engine/types'
+import { logger } from '@/lib/logger'
 
 // ─── Shared Helpers ──────────────────────────────────────────────────────
 
@@ -449,7 +450,7 @@ function CogoToolsPanelInner() {
       // Zoom to the new point
       map.getView().animate({ center: coord3857, zoom: 17, duration: 500 })
     } catch (err) {
-      console.error('[CogoToolsPanel] Failed to add point to map:', err)
+      logger.error('[CogoToolsPanel] Failed to add point to map:', { error: err })
     }
   }, [mapInstance])
 

@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { rateLimit, getClientIdentifier } from '@/lib/security/rateLimit'
 import { createHmac } from 'crypto'
+import { logger } from '@/lib/logger'
 
 /**
  * Verify Twilio webhook signature.
@@ -20,7 +21,7 @@ function verifyTwilioSignature(req: NextRequest, body: string): boolean {
   // In production, TWILIO_AUTH_TOKEN MUST be set or the webhook refuses all requests.
   if (!authToken) {
     if (process.env.NODE_ENV === 'production') {
-      console.error('[whatsapp] TWILIO_AUTH_TOKEN not set — refusing all webhook requests in production')
+      logger.error('[whatsapp] TWILIO_AUTH_TOKEN not set — refusing all webhook requests in production')
       return false
     }
     return true // dev mode — allow without verification

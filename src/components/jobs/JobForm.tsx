@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createJob, getEquipmentByType, getChecklistByType, CreateJobInput } from '@/lib/api-client/jobs'
+import { logger } from '@/lib/logger'
 
 interface JobFormProps {
   surveyType?: string
@@ -41,7 +42,7 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
       await createJob(jobData)
       onSuccess?.()
     } catch (error) {
-      console.error(error)
+      logger.error(error instanceof Error ? error.message : String(error))
     } finally {
       setLoading(false)
     }

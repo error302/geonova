@@ -17,6 +17,7 @@
  */
 
 import { sealRecord } from '@/lib/security/cryptoSealing'
+import { logger } from '@/lib/logger'
 
 export interface NeighborConsensusRecord {
   id: string
@@ -145,7 +146,7 @@ export async function createConsensusRecord(
     record.seal = sealed.signature
   } catch (err) {
     // Sealing is optional — record is still valid without it
-    console.warn('[neighborConsensus] Failed to seal record:', err)
+    logger.warn('[neighborConsensus] Failed to seal record:', { error: err })
   }
 
   return record

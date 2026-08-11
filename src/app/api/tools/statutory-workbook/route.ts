@@ -6,6 +6,7 @@ import { authOptions } from '@/lib/auth'
 import { db, setCurrentUserId } from '@/lib/db'
 import { generateStatutoryWorkbook, type WorkbookInput } from '@/lib/submission/workbook/statutoryWorkbook'
 import { StatutoryWorkbookSchema } from '@/lib/validation/apiSchemas'
+import { logger } from '@/lib/logger'
 
 interface WorkbookProjectRow {
   id: string
@@ -213,7 +214,7 @@ async function buildWorkbookInput(body: RequestBody, userId: string): Promise<Wo
         ],
       }
     } catch (err) {
-      console.warn('[statutory-workbook] Failed to load project data, falling back to sample:', err)
+      logger.warn('[statutory-workbook] Failed to load project data, falling back to sample:', { error: err })
       // Fall through to sample data
     }
   }

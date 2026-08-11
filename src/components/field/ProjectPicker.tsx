@@ -10,6 +10,7 @@
 import { useState, useEffect } from 'react'
 import { FolderKanban, ChevronRight, Loader2, MapPin } from 'lucide-react'
 import { createClient } from '@/lib/api-client/client'
+import { logger } from '@/lib/logger'
 
 interface Project {
   id: string
@@ -43,7 +44,7 @@ export function ProjectPicker({ onPick, title, subtitle }: ProjectPickerProps) {
         if (error) throw error
         setProjects((data ?? []) as Project[])
       } catch (err) {
-        console.error('[project-picker] Failed to load projects:', err)
+        logger.error('[project-picker] Failed to load projects:', { error: err })
         setError('Failed to load projects. Check your connection.')
       } finally {
         setLoading(false)

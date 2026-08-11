@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import Image from 'next/image'
 import type { Photo } from '@/lib/reports/surveyReport/types'
+import { logger } from '@/lib/logger'
 
 interface PhotoUploaderProps {
   projectId: string
@@ -39,7 +40,7 @@ export default function PhotoUploader({ projectId, photos, onChange, maxPhotos =
         })
 
         if (!res.ok) {
-          console.error('Upload failed:', res.statusText)
+          logger.error('Upload failed:', { error: res.statusText })
           continue
         }
 
@@ -57,7 +58,7 @@ export default function PhotoUploader({ projectId, photos, onChange, maxPhotos =
         onChange([...photos, newPhoto])
       }
     } catch (err) {
-      console.error('Upload failed:', err)
+      logger.error('Upload failed:', { error: err })
     } finally {
       setUploading(false)
     }

@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, forwardRef, useImperativeHandle, useCallback } from 'react';
 import { MapLayer, FieldBeacon, FieldParcel, GeoPDFLayer, MBTilesSession } from '@/types/field';
+import { logger } from '@/lib/logger'
 
 
 
@@ -303,7 +304,7 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
 
         mapRef.current = map;
       } catch (err) {
-        console.error('[MapViewer] Init error:', err);
+        logger.error('[MapViewer] Init error:', { error: err });
       }
     }
 

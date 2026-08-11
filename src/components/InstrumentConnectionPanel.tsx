@@ -50,6 +50,7 @@ import { WebBluetoothGNSS } from '@/lib/gnss/bluetooth'
 import { CapacitorBLEGNSS, type CapacitorGNSSDevice } from '@/lib/gnss/capacitor-ble'
 import { useInstrumentStore, type InstrumentDevice, type ConnectionTransport } from '@/stores/instrumentStore'
 import type { NMEAPosition } from '@/lib/gnss/nmea-parser'
+import { logger } from '@/lib/logger'
 
 type TransportMode = 'serial' | 'ble'
 
@@ -122,7 +123,7 @@ export function InstrumentConnectionPanel({
     try {
       await hookSendCommand(commandType, ...args)
     } catch (err) {
-      console.error('Command failed:', err)
+      logger.error('Command failed:', { error: err })
     }
   }, [hookSendCommand])
 

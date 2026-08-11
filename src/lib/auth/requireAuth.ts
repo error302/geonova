@@ -18,6 +18,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { NextResponse } from 'next/server'
 import { db, setCurrentUserId } from '@/lib/db'
+import { logger } from '@/lib/logger'
 
 /**
  * @deprecated Use apiHandler({ auth: true }) instead
@@ -41,7 +42,7 @@ export async function requireAuth() {
     }
     return { session, error: null }
   } catch (err) {
-    console.error('[requireAuth] Session check failed:', err)
+    logger.error('[requireAuth] Session check failed:', { error: err })
     return {
       session: null,
       error: NextResponse.json(

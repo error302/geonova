@@ -5,6 +5,7 @@ import { createClient } from '@/lib/api-client/client';
 import Link from 'next/link';
 import { computeChainageTable } from '@/lib/engine/chainage'
 import { generateLongitudinalProfileSvg } from '@/lib/reports/profileSvg'
+import { logger } from '@/lib/logger'
 
 interface PageProps {
   params: { id: string }
@@ -103,7 +104,7 @@ export default function ProfilesPage({ params }: PageProps) {
         .order('created_at', { ascending: false });
       if (alignRes.data) setAlignments((alignRes.data as unknown) as Alignment[]);
     } catch (err) {
-      console.error('Error loading data:', err);
+      logger.error('Error loading data:', { error: err });
     } finally {
       setLoading(false);
     }
@@ -177,7 +178,7 @@ export default function ProfilesPage({ params }: PageProps) {
       await loadAlignmentData(typedAlignment.id);
       setActiveTab('profile');
     } catch (err) {
-      console.error('Error creating alignment:', err);
+      logger.error('Error creating alignment:', { error: err });
       setProfileError('Failed to create alignment. Please try again.');
     }
   };

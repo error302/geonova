@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { RotateCcw, GitCompare, ArrowRight, Check } from 'lucide-react'
+import { logger } from '@/lib/logger'
 
 interface VersionData {
   version: number
@@ -76,7 +77,7 @@ export function VersionDiffViewer({ entityType, entityId, onRestore }: VersionDi
           }
         }
       } catch (err) {
-        console.error('Failed to load versions:', err)
+        logger.error('Failed to load versions:', { error: err })
       } finally {
         setLoading(false)
       }

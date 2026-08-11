@@ -20,6 +20,7 @@ import {
   Radio, MapPin, Search, Loader2, Navigation,
   Triangle, Building2, ChevronRight,
 } from 'lucide-react'
+import { logger } from '@/lib/logger'
 
 export interface ControlPoint {
   id: string
@@ -136,7 +137,7 @@ export function ControlPointRegistry() {
 
       setResults(combined)
     } catch (err) {
-      console.error('[ControlPointRegistry] Search failed:', err)
+      logger.error('[ControlPointRegistry] Search failed:', { error: err })
       setResults([])
     } finally {
       setLoading(false)

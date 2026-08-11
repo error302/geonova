@@ -14,6 +14,7 @@
  * Uses EPSG:21037 for coordinate storage.
  * All OpenLayers imports are dynamic for SSR compatibility.
  */
+import { logger } from '@/lib/logger'
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -185,7 +186,7 @@ export async function createParcelFromTraverse(
       }
     } catch {
       // Last resort: just return the computed result without persisting
-      console.warn('[traverseToParcel] Could not save boundary to server, returning computed result only')
+      logger.warn('[traverseToParcel] Could not save boundary to server, returning computed result only')
     }
   }
 

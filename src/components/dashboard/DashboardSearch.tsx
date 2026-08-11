@@ -10,6 +10,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { Search, X, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/logger'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -209,7 +210,7 @@ export default function DashboardSearch() {
     } catch (err) {
       // Ignore abort errors
       if (err instanceof DOMException && err.name === 'AbortError') return;
-      console.error('Search error:', err);
+      logger.error('Search error:', { error: err });
       setResults(null);
     } finally {
       if (!controller.signal.aborted) {

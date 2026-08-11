@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react'
+import { logger } from '@/lib/logger'
 
 // ─── Proper React Error Boundary (class component required) ───────────
 // The previous implementation only caught window.error / unhandledrejection
@@ -27,7 +28,7 @@ export default class MapErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('[MapErrorBoundary] Caught render error:', error, errorInfo)
+    logger.error('[MapErrorBoundary] Caught render error:', { error, errorInfo })
   }
 
   private handleReload = () => {

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Wrench, Save, CheckCircle } from 'lucide-react';
+import { logger } from '@/lib/logger'
 
 /**
  * Engineering Compute Panel — wraps existing engineering sub-components.
@@ -59,7 +60,7 @@ export default function EngineeringComputePanel({ projectId }: { projectId: stri
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (e) { console.error(e); }
+    } catch (e) { logger.error(e instanceof Error ? e.message : String(e)); }
   };
 
   return (

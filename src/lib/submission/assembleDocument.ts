@@ -1,6 +1,7 @@
 import { uploadFile, getSignedUrl } from '@/lib/storage';
 import { db } from '@/lib/db';
 import { loadPreAdjustedFromDB } from '../generators/deedPlanGeometry';
+import { logger } from '@/lib/logger'
 
 // ── Row interfaces for the queries below (typed via db.query<T>) ──────────────
 interface ProjectOwnerRow {
@@ -97,7 +98,7 @@ async function fetchSurveyorProfile(projectId: string): Promise<{
       }
     }
   } catch (err) {
-    console.warn('[assembleDocument] Failed to fetch surveyor profile:', err);
+    logger.warn('[assembleDocument] Failed to fetch surveyor profile:', { error: err });
   }
   return { surveyorName: '', iskNumber: '', firmName: '', referenceNumber: '' };
 }
@@ -308,7 +309,7 @@ export async function generateDocument(
       } catch (auditErr) {
         // Audit failure should NOT block the document generation —
         // the surveyor needs their plan. Log and continue.
-        console.warn('[assembleDocument] Audit chain append failed:', auditErr);
+        logger.warn('[assembleDocument] Audit chain append failed:', { error: auditErr });
       }
       break;
     }
