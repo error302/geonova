@@ -266,9 +266,11 @@ export function CommandPalette() {
               {apiResults.map((item, idx) => (
                 <ResultRow
                   key={`api-${item.id}`}
+                  item={item}
+                  index={idx}
                   selected={idx === selectedIndex}
-                  onClick={() => handleSelect(item)}
-                  onHover={() => setSelectedIndex(idx)}
+                  onSelect={handleSelect}
+                  onHover={setSelectedIndex}
                   icon={getResultIcon(item.type)}
                   title={item.title}
                   subtitle={item.subtitle || item.type}
@@ -291,9 +293,11 @@ export function CommandPalette() {
                 return (
                   <ResultRow
                     key={`nav-${item.href}`}
+                    item={item}
+                    index={actualIndex}
                     selected={actualIndex === selectedIndex}
-                    onClick={() => handleSelect(item)}
-                    onHover={() => setSelectedIndex(actualIndex)}
+                    onSelect={handleSelect}
+                    onHover={setSelectedIndex}
                     icon={item.icon}
                     title={item.title}
                     subtitle={item.subtitle}
@@ -329,14 +333,17 @@ export function CommandPalette() {
 // ─── Helper components ──────────────────────────────────────────────────
 
 // ⚡ Bolt: Wrapped ResultRow in React.memo() to prevent unnecessary re-renders of all rows
-// when navigating through the list using arrow keys.
+// when navigating through the list using arrow keys. Also updated to accept stable
+// references (onSelect/onHover with item/index) to prevent breaking memoization.
 // Impact: Reduces React render time significantly when moving cursor rapidly, making navigation smoother.
 const ResultRow = memo(function ResultRow({
-  selected, onClick, onHover, icon: Icon, title, subtitle, href, category,
+  item, index, selected, onSelect, onHover, icon: Icon, title, subtitle, href, category,
 }: {
+  item: StaticNavItem | SearchResult
+  index: number
   selected: boolean
-  onClick: () => void
-  onHover: () => void
+  onSelect: (item: StaticNavItem | SearchResult) => void
+  onHover: (idx: number) => void
   icon: typeof LayoutDashboard
   title: string
   subtitle: string
@@ -345,8 +352,8 @@ const ResultRow = memo(function ResultRow({
 }) {
   return (
     <div
-      onClick={onClick}
-      onMouseEnter={onHover}
+      onClick={() => onSelect(item)}
+      onMouseEnter={() => onHover(index)}
       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
         selected ? 'bg-[#D17B47]/10' : 'hover:bg-white/[0.03]'
       }`}
