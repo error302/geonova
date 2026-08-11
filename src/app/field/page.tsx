@@ -142,7 +142,7 @@ export default function FieldPage() {
         setUser((session as Record<string, unknown>).user as { id: string } | null)
       }
     })
-    return () => subscription.unsubscribe()
+    return () => subRes.data.subscription.unsubscribe()
   }, [user, dbClient, router])
 
   // Point batch parser

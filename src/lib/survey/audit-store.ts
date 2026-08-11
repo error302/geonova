@@ -380,7 +380,7 @@ function rowToAuditEntry(row: AuditTrailRow): AuditEntry {
     chainHash: row.chain_hash as string,
     durationMs: row.duration_ms as number,
     accuracyCheck: row.accuracy_check
-      ? (typeof row.accuracy_check === 'string' ? ((JSON.parse(row.accuracy_check as string) as unknown) as AuditEntry['accuracyCheck']) : row.accuracy_check)
+      ? (typeof row.accuracy_check === 'string' ? ((JSON.parse(row.accuracy_check as string) as unknown) as AuditEntry['accuracyCheck']) : (row.accuracy_check as unknown as AuditEntry['accuracyCheck']))
       : null,
   };
 }
