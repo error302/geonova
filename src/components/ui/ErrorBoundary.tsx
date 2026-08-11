@@ -42,7 +42,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
     try {
       const feedbackEntries: Record<string, unknown>[] = JSON.parse(
         sessionStorage.getItem('metardu_feedback_errors') || '[]'
-      )
+            ) as unknown as Record<string, unknown>[]
       feedbackEntries.push({
         message: error.message,
         stack: error.stack?.slice(0, 500),

@@ -61,7 +61,7 @@ export function captureError(error: Error) {
   try {
     const entries: CollectedError[] = JSON.parse(
       sessionStorage.getItem(STORAGE_KEY_ERRORS) || '[]'
-    )
+        ) as unknown as CollectedError[]
     entries.push({
       message: error.message,
       stack: error.stack?.slice(0, 500),

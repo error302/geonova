@@ -35,7 +35,7 @@ const logActivitySchema = z.object({
   action: z.enum(validActions),
   entity_type: z.enum(validEntities),
   entity_id: z.string().optional(),
-  details: z.any().optional(),
+    details: z.unknown().optional(),
 })
 
 export const POST = apiHandler(

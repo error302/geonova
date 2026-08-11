@@ -457,7 +457,7 @@ export function computeQvvDiagonal(
 ): number[] {
   const m = A.length
   const n = A[0].length
-  const QvvDiag: number[] = new Array(m)
+    const QvvDiag: number[] = new Array<number>(m)
 
   for (let i = 0; i < m; i++) {
     // P⁻¹ diagonal = 1/W[i]

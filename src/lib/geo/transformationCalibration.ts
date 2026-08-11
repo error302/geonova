@@ -426,7 +426,7 @@ export function validateCommonPoints(points: CommonPoint[]): string[] {
     const sourcePts = points.map(p => [p.source.x, p.source.y, p.source.z])
     const centroid = computeCentroid(sourcePts)
     // Compute the covariance matrix of point positions
-    const cov = Array(3).fill(null).map(() => new Array(3).fill(0))
+    const cov = Array.from({ length: 3 }, () => new Array<number>(3).fill(0))
     for (const p of sourcePts) {
       for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {

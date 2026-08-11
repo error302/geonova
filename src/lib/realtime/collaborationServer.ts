@@ -269,7 +269,7 @@ export class CollaborationServer {
 
       ws.on('message', (data: Buffer) => {
         try {
-          const msg: CollaborationMessage = JSON.parse(data.toString())
+                    const msg: CollaborationMessage = JSON.parse(data.toString()) as unknown as CollaborationMessage
           collaborator.lastSeen = Date.now()
 
           switch (msg.type) {

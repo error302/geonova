@@ -49,6 +49,7 @@ const OAUTH_NO_PASSWORD = 'OAUTH_NO_PASSWORD'
 
 // ─── Session strategy: JWT with database fallback ───────────────────────────
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- staged v5 migration file (see header)
 export const { handlers, auth, signIn, signOut } = NextAuth({
   // Session strategy: JWT for read performance, DB for revocation
   session: {

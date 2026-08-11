@@ -189,7 +189,7 @@ export function generateCLAForm11(input: CLA11Input): Uint8Array {
   doc.text('Details of Proposed Variation:', margin, y)
   y += 5
   doc.setFont('helvetica', 'normal')
-  const detailLines: string[] = doc.splitTextToSize(input.proposedVariationDetails, W - margin * 2)
+    const detailLines: string[] = doc.splitTextToSize(input.proposedVariationDetails, W - margin * 2) as string[]
   detailLines.forEach((line: string) => {
     if (y > 275) { doc.addPage(); y = 20 }
     doc.text(line, margin, y)

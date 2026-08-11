@@ -87,7 +87,7 @@ export default function BillingPage() {
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(10)
+                .limit(10) as unknown as { data: PaymentRecord[] | null }
       const [subRes, { data: pay }] = await Promise.all([subPromise, payPromise])
       // Map API response to SubscriptionRecord format
       if (subRes) {

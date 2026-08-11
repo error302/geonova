@@ -226,7 +226,7 @@ export default function SurveyMap({
             hitTolerance: 8,
           });
           if (hitFeature) {
-            const label = hitFeature.get('label') || hitFeature.get('name') || hitFeature.get('stationName');
+                        const label: unknown = hitFeature.get('label') || hitFeature.get('name') || hitFeature.get('stationName');
             if (label) {
               const geom = hitFeature.getGeometry();
               if (geom && geom.getType() === 'Point') {

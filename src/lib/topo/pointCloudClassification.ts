@@ -76,7 +76,7 @@ export function classifyPointCloud(
   const cols = Math.ceil((maxX - minX) / params.cellSize)
   const rows = Math.ceil((maxY - minY) / params.cellSize)
   const grid: (ClassifiedPoint | null)[][] = Array.from({ length: rows }, () =>
-    Array(cols).fill(null)
+        new Array<ClassifiedPoint | null>(cols).fill(null)
   )
 
   const classified: ClassifiedPoint[] = points.map(p => ({

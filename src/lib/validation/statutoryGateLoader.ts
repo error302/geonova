@@ -103,7 +103,7 @@ function parseBoundaryPoints(raw: unknown, fallbackAreaSqm: number | null): {
     pts = raw as typeof pts
   } else if (typeof raw === 'string') {
     try {
-      const parsed = JSON.parse(raw)
+            const parsed: unknown = JSON.parse(raw)
       if (Array.isArray(parsed)) pts = parsed as typeof pts
     } catch {
       // not JSON — ignore

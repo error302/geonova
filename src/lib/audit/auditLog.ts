@@ -193,7 +193,7 @@ function rowToEntry(row: AuditChainRow): AuditEntry {
     action: row.action,
     previousHash: row.previous_hash,
     entryHash: row.entry_hash,
-    payload: typeof row.payload === 'string' ? JSON.parse(row.payload) : row.payload,
+        payload: typeof row.payload === 'string' ? JSON.parse(row.payload) as unknown as AuditPayload : row.payload,
     createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : String(row.created_at),
   }
 }

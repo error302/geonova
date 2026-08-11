@@ -28,7 +28,7 @@ export function generateContours(
   const { grid, gridMinE, gridMinN, gridResolution, cols, rows } = idwOutput
   const { interval, indexInterval = 5 } = options
 
-  const values: number[] = Array(cols * rows)
+    const values: number[] = new Array<number>(cols * rows)
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       values[(rows - 1 - row) * cols + col] = grid[row][col]

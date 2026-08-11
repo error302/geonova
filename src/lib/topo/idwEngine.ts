@@ -95,7 +95,7 @@ export function runIDWSync(
   const rows = Math.ceil((maxY - minY) / cellSize) + 1
 
   const grid: number[][] = Array.from({ length: rows }, () =>
-    new Array(cols).fill(noData)
+        new Array<number>(cols).fill(noData)
   )
 
   for (let row = 0; row < rows; row++) {

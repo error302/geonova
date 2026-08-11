@@ -68,7 +68,7 @@ export function createWebGLPointsLayer(
 
   if (minElevation == null || maxElevation == null) {
     for (const feature of features) {
-      const elev = feature.get(elevationField)
+            const elev: unknown = feature.get(elevationField)
       if (typeof elev === 'number') {
         minElev = Math.min(minElev, elev)
         maxElev = Math.max(maxElev, elev)

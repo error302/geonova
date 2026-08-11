@@ -208,7 +208,7 @@ describe('sparseMatrix — Cholesky', () => {
     // Chain of 50 stations, each connected to its neighbors
     // Normal matrix is tridiagonal — sparse Cholesky should be fast
     const n = 50
-    const dense: number[][] = Array.from({ length: n }, () => new Array(n).fill(0))
+        const dense: number[][] = Array.from({ length: n }, () => new Array<number>(n).fill(0))
     for (let i = 0; i < n; i++) {
       dense[i][i] = 2
       if (i > 0) dense[i][i - 1] = -1
