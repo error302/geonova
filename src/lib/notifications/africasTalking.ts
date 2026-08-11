@@ -161,10 +161,10 @@ export async function sendWhatsApp(to: string, message: string): Promise<Notific
       }),
     })
 
-    const data = await response.json()
-    const msgId = (data as Record<string, unknown>).messageId as string | undefined
+    const data = await response.json() as unknown as Record<string, unknown>
+    const msgId = data.messageId as string | undefined
 
-    if ((data as Record<string, unknown>).status === 'Success' || msgId) {
+    if (data.status === 'Success' || msgId) {
       return {
         success: true,
         messageId: msgId,

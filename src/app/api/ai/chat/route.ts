@@ -12,7 +12,6 @@ export const dynamic = 'force-dynamic'
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { logger } from '@/lib/logger'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import {
@@ -139,7 +138,7 @@ async function decrementAiCalls(userId: string, email?: string): Promise<{ remai
 
     if (profile.rows.length === 0) {
       // No profile yet — FAIL CLOSED: deny the call until profile exists
-      logger.error('[ai/chat] No profile found for user — blocking AI call (fail-closed)')
+      console.error('[ai/chat] No profile found for user — blocking AI call (fail-closed)')
       return { remaining: 0, limit: TIER_LIMITS.free }
     }
 
@@ -165,7 +164,7 @@ async function decrementAiCalls(userId: string, email?: string): Promise<{ remai
     return { remaining: newRemaining, limit }
   } catch (err) {
     // FAIL CLOSED: If DB is down, deny ALL AI calls to prevent unlimited usage
-    logger.error('[ai/chat] Usage tracking failed — BLOCKING AI call (fail-closed):', { error: err })
+    console.error('[ai/chat] Usage tracking failed — BLOCKING AI call (fail-closed):', err)
     return { remaining: 0, limit: 0 }
   }
 }
@@ -213,7 +212,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 4. Parse request
-    const body = await request.json().catch(() => ({}))
+    const body = await request.json().catch(() => ({})) as Record<string, unknown>
     const parsed = requestSchema.safeParse(body)
 
     if (!parsed.success) {
@@ -336,7 +335,7 @@ export async function POST(request: NextRequest) {
   } catch (error: unknown) {
     // Never expose API keys or internal details in error responses
     const message = error instanceof Error ? (error as Error).message : 'AI service error'
-    logger.error('[ai/chat] Error:', { message })
+    console.error('[ai/chat] Error:', message)
 
     // Map common NVIDIA errors to user-friendly messages
     if (message.includes('NVIDIA_API_KEY not configured')) {

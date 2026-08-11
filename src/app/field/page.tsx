@@ -96,22 +96,23 @@ export default function FieldPage() {
   const dbClient = useMemo(() => createClient(), [])
 
   const fetchProjects = useCallback(async (userId: string) => {
-    const { data } = await dbClient
+    const { data } = (await dbClient
       .from('projects')
       .select('id, name, survey_type')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-    if (data) setProjects(data as unknown as FieldProject[])
+      .order('created_at', { ascending: false })) as { data: FieldProject[] | null; error: unknown }
+    if (data) setProjects(data)
+    if (data) setProjects(data)
   }, [dbClient])
 
   const fetchProjectPoints = useCallback(async (projectId: string) => {
     if (!projectId) return
-    const { data } = await dbClient
+    const { data } = (await dbClient
       .from('survey_points')
       .select('*')
       .eq('project_id', projectId)
-      .order('created_at', { ascending: false })
-    if (data) setPoints(data as unknown as FieldPoint[])
+      .order('created_at', { ascending: false })) as { data: FieldPoint[] | null; error: unknown }
+    if (data) setPoints(data)
   }, [dbClient])
 
   // Auth check

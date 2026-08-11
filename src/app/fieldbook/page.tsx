@@ -376,10 +376,10 @@ export default function DigitalFieldBookPage() {
     ;(async () => {
       try {
         const session = await dbClient.auth.getSession()
-        const sessUser = (session.data?.session as unknown as { user?: unknown } | null)?.user
+        const sessUser = (session.data.session as Record<string, unknown> | null)?.user
         if (!sessUser) return
-        const { data, error } = await dbClient.from('projects').select('id, name').order('created_at', { ascending: false })
-        if (!error && data && isMounted) setProjects(data as { id: string; name: string }[])
+        const { data, error } = (await dbClient.from('projects').select('id, name').order('created_at', { ascending: false })) as { data: { id: string; name: string }[] | null; error: unknown }
+        if (!error && data && isMounted) setProjects(data)
       } catch {}
     })()
     return () => {
@@ -397,12 +397,12 @@ export default function DigitalFieldBookPage() {
 
       if (!projectId || !isOnline()) return
       try {
-        const { data, error } = await dbClient
+        const { data, error } = (await dbClient
           .from('fieldbooks')
           .select('id, type, name, data, updated_at, created_at')
           .eq('project_id', projectId)
           .eq('type', type)
-          .order('updated_at', { ascending: false })
+          .order('updated_at', { ascending: false })) as { data: SavedFieldbook[] | null; error: unknown }
         if (!error && data && isMounted) {
           setSavedFieldbooks((prev) => {
             const byId = new Map(prev.map((x) => [x.id, x]))

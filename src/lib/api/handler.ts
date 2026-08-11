@@ -369,7 +369,7 @@ export function apiHandler<TInput = unknown>(
 
       if (req.method !== 'GET' && req.method !== 'HEAD' && req.method !== 'DELETE' && !rawBody) {
         try {
-          const rawBody = await req.json()
+          const rawBody = await req.json() as unknown as Record<string, unknown>
 
           if (schema) {
             const parsed = schema.safeParse(rawBody)
