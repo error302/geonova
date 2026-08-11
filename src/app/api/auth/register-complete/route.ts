@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: userEmail, name: userName || '' })
-    }).catch((err: unknown) => console.warn('[register-complete] Welcome email failed:', err instanceof Error ? err.message : err))
+    }).catch((err: unknown) => logger.warn('[register-complete] Welcome email failed:', { error: err instanceof Error ? err.message : String(err) }))
   }
 
   return NextResponse.json({ ok: true })

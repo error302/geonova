@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { requireAuth } from '@/lib/auth/requireAuth'
 import { NearbyBenchmarksSchema } from '@/lib/validation/apiSchemas'
 import { db } from '@/lib/db'
@@ -89,7 +90,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(results)
   } catch (error) {
-    console.error('Benchmark lookup error:', error)
+    logger.error('Benchmark lookup error:', { error })
     return NextResponse.json({ error: 'Failed to lookup benchmarks' }, { status: 500 })
   }
 }

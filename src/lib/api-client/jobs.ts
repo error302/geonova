@@ -31,8 +31,9 @@ export type CreateJobInput = Omit<MetarduJob, 'id' | 'created_at' | 'updated_at'
 
 export async function getUserJobs(): Promise<MetarduJob[]> {
   const dbClient = createClient()
-  const { data: { session } } = await dbClient.auth.getSession()
-  const user = (session as BrowserSession | null)?.user ?? null
+  const authRes = await dbClient.auth.getSession()
+  const session = authRes.data?.session
+  const user = (session as unknown as BrowserSession | null)?.user ?? null
   if (!user) return []
 
   const { data, error } = await dbClient
@@ -47,8 +48,9 @@ export async function getUserJobs(): Promise<MetarduJob[]> {
 
 export async function createJob(job: CreateJobInput): Promise<MetarduJob> {
   const dbClient = createClient()
-  const { data: { session } } = await dbClient.auth.getSession()
-  const user = (session as BrowserSession | null)?.user ?? null
+  const authRes = await dbClient.auth.getSession()
+  const session = authRes.data?.session
+  const user = (session as unknown as BrowserSession | null)?.user ?? null
   if (!user) throw new Error('Not authenticated')
 
   const { data, error } = await dbClient
@@ -105,7 +107,7 @@ export async function getEquipmentByType(survey_type: string): Promise<string[]>
     .single()
 
   if (error || !data) return []
-  return (data as { equipment?: string[] }).equipment ?? []
+  return ((data as unknown) as { equipment?: string[] }).equipment ?? []
 }
 
 export async function getChecklistByType(survey_type: string): Promise<string[]> {
@@ -117,5 +119,5 @@ export async function getChecklistByType(survey_type: string): Promise<string[]>
     .single()
 
   if (error || !data) return []
-  return (data as { tasks?: string[] }).tasks ?? []
+  return ((data as unknown) as { tasks?: string[] }).tasks ?? []
 }

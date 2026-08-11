@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { z } from 'zod'
@@ -57,7 +58,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
         [ctx.userId, 'METARDU Professional Practice', 'METARDU Platform — auto-logged', 0.5, 'Technical Practice', 'METARDU Platform — auto-logged']
       )
     } catch (e) {
-      console.warn('Could not insert CPD activity (table might not exist)', e)
+      logger.warn('Could not insert CPD activity (table might not exist)', { error: e })
     }
   }
 

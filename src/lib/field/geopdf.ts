@@ -52,11 +52,11 @@ export async function renderPDFPageToDataURL(
 export function buildOLGeoPDFLayer(layer: GeoPDFLayer): import('ol/layer/Base').default {
   // Browser-only dynamic require (SSR-safe, see note above).
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { default: ImageLayer } = require('ol/layer/Image');
+  const { default: ImageLayer } = require('ol/layer/Image') as typeof import('ol/layer/Image');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { default: ImageStatic } = require('ol/source/ImageStatic');
+  const { default: ImageStatic } = require('ol/source/ImageStatic') as typeof import('ol/source/ImageStatic');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { transformExtent } = require('ol/proj');
+  const { transformExtent } = require('ol/proj') as typeof import('ol/proj');
 
   const lats = layer.gcps.map((g) => g.lat);
   const lngs = layer.gcps.map((g) => g.lng);

@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { setCurrentUserId } from '@/lib/db'
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json(result.value)
   } catch (error) {
-    console.error('Clean data error:', error)
+    logger.error('Clean data error:', { error })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -115,7 +116,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(result.rows)
     }
   } catch (error) {
-    console.error('Cleaned datasets GET error:', error)
+    logger.error('Cleaned datasets GET error:', { error })
     return NextResponse.json({ error: 'Failed to fetch datasets' }, { status: 500 })
   }
 }

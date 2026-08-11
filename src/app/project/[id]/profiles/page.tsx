@@ -87,21 +87,21 @@ export default function ProfilesPage({ params }: PageProps) {
         .select('*')
         .eq('id', params.id)
         .single();
-      if (projectData) setProject(projectData as Project);
+      if (projectData) setProject((projectData as unknown) as Project);
 
       const { data: pointsData } = await dbClient
         .from('survey_points')
         .select('*')
         .eq('project_id', params.id)
         .order('name');
-      if (pointsData) setPoints(pointsData as SurveyPoint[]);
+      if (pointsData) setPoints((pointsData as unknown) as SurveyPoint[]);
 
       const { data: alignmentsData } = await dbClient
         .from('alignments')
         .select('*')
         .eq('project_id', params.id)
         .order('created_at', { ascending: false });
-      if (alignmentsData) setAlignments(alignmentsData as Alignment[]);
+      if (alignmentsData) setAlignments((alignmentsData as unknown) as Alignment[]);
     } catch (err) {
       console.error('Error loading data:', err);
     } finally {
@@ -119,14 +119,14 @@ export default function ProfilesPage({ params }: PageProps) {
       .select('*')
       .eq('alignment_id', alignmentId)
       .order('chainage');
-    if (cpData) setChainagePoints(cpData as ChainagePoint[]);
+    if (cpData) setChainagePoints((cpData as unknown) as ChainagePoint[]);
 
     const { data: csData } = await dbClient
       .from('cross_sections')
       .select('*')
       .eq('alignment_id', alignmentId)
       .order('chainage');
-    if (csData) setCrossSections(csData as CrossSection[]);
+    if (csData) setCrossSections((csData as unknown) as CrossSection[]);
   };
 
   const createAlignment = async () => {
@@ -171,8 +171,9 @@ export default function ProfilesPage({ params }: PageProps) {
       setNewAlignmentName('');
       setSelectedPoints([]);
       await loadData();
-      setSelectedAlignment(alignment as Alignment);
-      await loadAlignmentData((alignment as Alignment).id);
+      const typedAlignment = (alignment as unknown) as Alignment;
+      setSelectedAlignment(typedAlignment);
+      await loadAlignmentData(typedAlignment.id);
       setActiveTab('profile');
     } catch (err) {
       console.error('Error creating alignment:', err);

@@ -152,7 +152,7 @@ export function adjustNetwork(
     l.push(obs.deltaE - obsE)
 
     // Delta Northing
-    const rowN: number[] = new Array(n).fill(0)
+    const rowN: number[] = new Array<number>(n).fill(0)
     if (stationIndex.has(obs.to)) rowN[stationIndex.get(obs.to)! * 3 + 1] = 1
     if (stationIndex.has(obs.from)) rowN[stationIndex.get(obs.from)! * 3 + 1] = -1
     const obsN = toCoord.n - fromCoord.n
@@ -161,7 +161,7 @@ export function adjustNetwork(
     l.push(obs.deltaN - obsN)
 
     // Delta Height
-    const rowH: number[] = new Array(n).fill(0)
+    const rowH: number[] = new Array<number>(n).fill(0)
     if (stationIndex.has(obs.to)) rowH[stationIndex.get(obs.to)! * 3 + 2] = 1
     if (stationIndex.has(obs.from)) rowH[stationIndex.get(obs.from)! * 3 + 2] = -1
     const obsH = toCoord.h - fromCoord.h
@@ -319,7 +319,7 @@ export function adjustNetwork(
 }
 
 function multiplyAtWA(A: number[][], W: number[], n: number): number[][] {
-  const result = Array.from({ length: n }, () => new Array(n).fill(0))
+  const result = Array.from({ length: n }, () => new Array<number>(n).fill(0))
   for (let i = 0; i < n; i++)
     for (let j = 0; j < n; j++)
       for (let k = 0; k < A.length; k++)
@@ -328,7 +328,7 @@ function multiplyAtWA(A: number[][], W: number[], n: number): number[][] {
 }
 
 function multiplyAtWl(A: number[][], W: number[], l: number[], n: number): number[] {
-  const result = new Array(n).fill(0)
+  const result = new Array<number>(n).fill(0)
   for (let i = 0; i < n; i++)
     for (let k = 0; k < A.length; k++)
       result[i] += A[k][i] * W[k] * l[k]
@@ -354,7 +354,7 @@ function solveLinearSystem(A: number[][], b: number[]): number[] {
     }
   }
 
-  const x = new Array(n).fill(0)
+  const x = new Array<number>(n).fill(0)
   for (let i = n - 1; i >= 0; i--) {
     x[i] = M[i][n]
     for (let j = i + 1; j < n; j++) x[i] -= M[i][j] * x[j]

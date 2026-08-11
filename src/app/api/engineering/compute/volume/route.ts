@@ -1,10 +1,11 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { z } from 'zod'
-import { crossSectionVolume, CrossSectionVolumeSchema } from '@/lib/engineering/compute'
+import { crossSectionVolume } from '@/lib/engineering/compute'
 
 const VolumeComputeSchema = z.object({
   areas: z.array(z.number()).min(2),
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Validation failed', details: error.errors }, { status: 400 })
     }
-    console.error('Volume compute error:', error)
+    logger.error('Volume compute error:', { error })
     return NextResponse.json({ error: 'Computation failed' }, { status: 500 })
   }
 }

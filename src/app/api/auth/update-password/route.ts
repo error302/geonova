@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import { getServerSession } from 'next-auth'
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
       user: { id: userId, email: session.user.email, name: session.user.name },
     })
   } catch (err) {
-    console.error('[update-password] Error:', err)
+    logger.error('[update-password] Error:', { error: err })
     return NextResponse.json({ error: 'Failed to update password' }, { status: 500 })
   }
 }

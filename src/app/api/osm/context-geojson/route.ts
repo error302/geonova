@@ -5,7 +5,7 @@ const WORKER_SECRET = process.env.WORKER_SECRET || ''
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    const body = (await request.json().catch(() => ({}))) as { lat?: number; lon?: number; radius?: number }
     const { lat, lon, radius } = body
 
     if (lat === undefined || lon === undefined || radius === undefined) {
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const data = await res.json()
+    const data = (await res.json()) as unknown
     return NextResponse.json(data)
   } catch (err) {
     return NextResponse.json(

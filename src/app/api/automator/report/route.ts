@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { setCurrentUserId } from '@/lib/db'
@@ -45,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result.value)
   } catch (error) {
-    console.error('Report generation error:', error)
+    logger.error('Report generation error:', { error })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

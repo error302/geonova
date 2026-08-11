@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic'
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
 import { z } from 'zod'
@@ -118,7 +119,7 @@ export async function POST(request: NextRequest) {
     })
   } catch (err: unknown) {
     const message = err instanceof Error ? (err as Error).message : 'Unknown error'
-    console.error('[register] Error:', message)
+    logger.error('[register] Error:', { message })
     return NextResponse.json(
       { error: 'Registration failed. Please try again.' },
       { status: 500 }

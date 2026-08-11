@@ -124,13 +124,13 @@ export function ProcessingToolbox({ compact = false }: { compact?: boolean }) {
   // Read from both old (metardu-tool-*) and canonical (metardu-*-tools)
   // keys for backward compat, write only to canonical.
   useEffect(() => {
-    const canonicalFav = JSON.parse(localStorage.getItem('metardu-fav-tools') || '[]')
-    const oldFav = JSON.parse(localStorage.getItem('metardu-tool-favorites') || '[]')
-    const fav = Array.from(new Set([...canonicalFav, ...oldFav])) as string[]
+    const canonicalFav = (JSON.parse(localStorage.getItem('metardu-fav-tools') || '[]') as unknown) as string[]
+    const oldFav = (JSON.parse(localStorage.getItem('metardu-tool-favorites') || '[]') as unknown) as string[]
+    const fav = Array.from(new Set([...(Array.isArray(canonicalFav) ? canonicalFav : []), ...(Array.isArray(oldFav) ? oldFav : [])]))
 
-    const canonicalRec = JSON.parse(localStorage.getItem('metardu-recent-tools') || '[]')
-    const oldRec = JSON.parse(localStorage.getItem('metardu-tool-recent') || '[]')
-    const rec = Array.from(new Set([...canonicalRec, ...oldRec])) as string[]
+    const canonicalRec = (JSON.parse(localStorage.getItem('metardu-recent-tools') || '[]') as unknown) as string[]
+    const oldRec = (JSON.parse(localStorage.getItem('metardu-tool-recent') || '[]') as unknown) as string[]
+    const rec = Array.from(new Set([...(Array.isArray(canonicalRec) ? canonicalRec : []), ...(Array.isArray(oldRec) ? oldRec : [])]))
 
     setFavorites(fav)
     setRecent(rec)

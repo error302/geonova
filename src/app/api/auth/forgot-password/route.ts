@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { randomBytes } from 'crypto'
 import { z } from 'zod'
 import { sendTemplatedEmail } from '@/lib/email-templates'
@@ -67,12 +68,12 @@ export async function POST(req: NextRequest) {
     if (!result.success && result.error === 'Email service not configured') {
       // SECURITY: Do NOT log the reset URL or token. Anyone with log
       // access could hijack the account. Log only a masked hint.
-      console.warn('[forgot-password] SMTP not configured. Reset token generated (length: %d).', token.length)
+      logger.warn('[forgot-password] SMTP not configured. Reset token generated.', { tokenLength: token.length })
     }
 
     return okResponse()
   } catch (err) {
-    console.error('[forgot-password] Error:', err)
+    logger.error('[forgot-password] Error:', { error: err })
     return okResponse()
   }
 }

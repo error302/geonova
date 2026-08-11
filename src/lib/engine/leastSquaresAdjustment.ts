@@ -131,7 +131,7 @@ type Vector = number[]
 function transpose(A: Matrix): Matrix {
   const rows = A.length
   const cols = A[0].length
-  const result: Matrix = Array(cols).fill(null).map(() => Array(rows).fill(0))
+  const result: Matrix = Array.from({ length: cols }, () => new Array<number>(rows).fill(0))
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       result[j][i] = A[i][j]
@@ -144,7 +144,7 @@ function multiply(A: Matrix, B: Matrix): Matrix {
   const rowsA = A.length
   const colsA = A[0].length
   const colsB = B[0].length
-  const result: Matrix = Array(rowsA).fill(null).map(() => Array(colsB).fill(0))
+  const result: Matrix = Array.from({ length: rowsA }, () => new Array<number>(colsB).fill(0))
   for (let i = 0; i < rowsA; i++) {
     for (let j = 0; j < colsB; j++) {
       for (let k = 0; k < colsA; k++) {
@@ -158,7 +158,7 @@ function multiply(A: Matrix, B: Matrix): Matrix {
 function multiplyVector(A: Matrix, v: Vector): Vector {
   const rows = A.length
   const cols = A[0].length
-  const result: Vector = Array(rows).fill(0)
+  const result: Vector = new Array<number>(rows).fill(0)
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       result[i] += A[i][j] * v[j]
@@ -171,7 +171,7 @@ function multiplyDiagonal(A: Matrix, diag: Vector): Matrix {
   // Multiply Aᵀ · P where P is diagonal
   const rows = A.length
   const cols = A[0].length
-  const result: Matrix = Array(rows).fill(null).map(() => Array(cols).fill(0))
+  const result: Matrix = Array.from({ length: rows }, () => new Array<number>(cols).fill(0))
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       result[i][j] = A[i][j] * diag[i]
@@ -186,7 +186,7 @@ function multiplyDiagonal(A: Matrix, diag: Vector): Matrix {
 function solveAndInvert(A: Matrix, b: Vector): { solution: Vector; inverse: Matrix } {
   const n = A.length
   // Augmented matrix [A | I | b]
-  const aug: Matrix = A.map((row, i) => [...row, ...Array(n).fill(0).map((_, j) => (j === i ? 1 : 0)), b[i]])
+  const aug: Matrix = A.map((row, i) => [...row, ...Array.from({ length: n }, (_, j) => (j === i ? 1 : 0)), b[i]])
 
   // Forward elimination
   for (let col = 0; col < n; col++) {
@@ -281,7 +281,7 @@ export function adjustTraverseLSA(observations: TraverseObservations): LSAResult
     const to = stationMap.get(angle.toStationId)      // foresight
     if (!from || !to) continue
 
-    const row: Vector = Array(paramCount).fill(0)
+    const row: Vector = new Array<number>(paramCount).fill(0)
 
     // AUDIT FIX (2026-07-03): If atStationId is provided, compute a true
     // interior angle θ = α_BC − α_BA (bearing from vertex to foresight
@@ -391,7 +391,7 @@ export function adjustTraverseLSA(observations: TraverseObservations): LSAResult
     const to = stationMap.get(dist.toStationId)
     if (!from || !to) continue
 
-    const row: Vector = Array(paramCount).fill(0)
+    const row: Vector = new Array<number>(paramCount).fill(0)
     const computedDist = computeDistance(from.easting, from.northing, to.easting, to.northing)
 
     if (computedDist < 0.001) continue
@@ -459,7 +459,7 @@ export function adjustTraverseLSA(observations: TraverseObservations): LSAResult
   // q_vv_i = 1/P_i - Σ_j (A·Ninv)[i][j] · A[i][j]
   const ANinv: number[][] = []
   for (let i = 0; i < A.length; i++) {
-    const row: number[] = new Array(A[i].length).fill(0)
+    const row: number[] = new Array<number>(A[i].length).fill(0)
     for (let j = 0; j < A[i].length; j++) {
       let sum = 0
       for (let k = 0; k < A[i].length; k++) {

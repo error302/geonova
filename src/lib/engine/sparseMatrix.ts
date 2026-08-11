@@ -83,7 +83,7 @@ export function fromTriplets(
   nonZero.sort((a, b) => (a.row !== b.row ? a.row - b.row : a.col - b.col))
 
   // Build CSR with duplicate summing
-  const rowPtr = new Array(rows + 1).fill(0)
+  const rowPtr = new Array<number>(rows + 1).fill(0)
   const colIdx: number[] = []
   const values: number[] = []
 
@@ -134,7 +134,7 @@ export function fromDense(A: number[][], symmetric = false): SparseMatrix {
  * Convert a sparse matrix to dense. For tests and small matrices only.
  */
 export function toDense(M: SparseMatrix): number[][] {
-  const out: number[][] = Array.from({ length: M.rows }, () => new Array(M.cols).fill(0))
+  const out: number[][] = Array.from({ length: M.rows }, () => new Array<number>(M.cols).fill(0))
   for (let r = 0; r < M.rows; r++) {
     for (let idx = M.rowPtr[r]; idx < M.rowPtr[r + 1]; idx++) {
       const c = M.colIdx[idx]
@@ -163,7 +163,7 @@ export function sparseMatVec(M: SparseMatrix, x: number[]): number[] {
   if (x.length !== M.cols) {
     throw new Error(`Dimension mismatch: matrix has ${M.cols} cols, vector has ${x.length}`)
   }
-  const y = new Array(M.rows).fill(0)
+  const y = new Array<number>(M.rows).fill(0)
 
   if (M.symmetric) {
     // Lower triangle: M[i, j] for j <= i
@@ -251,7 +251,7 @@ export function atdbDiag(A: SparseMatrix, d: number[], b: number[]): number[] {
   if (b.length !== A.rows) throw new Error('b dimension mismatch')
 
   const n = A.cols
-  const u = new Array(n).fill(0)
+  const u = new Array<number>(n).fill(0)
   for (let i = 0; i < A.rows; i++) {
     const factor = d[i] * b[i]
     if (factor === 0) continue
@@ -277,7 +277,7 @@ export function approximateMinimumDegree(M: SparseMatrix): number[] {
   if (n !== M.cols) throw new Error('AMD requires square matrix')
 
   // Build adjacency lists (symmetric, excluding diagonal)
-  const adj: Set<number>[] = new Array(n).fill(null).map(() => new Set())
+  const adj: Set<number>[] = Array.from({ length: n }, () => new Set<number>())
   for (let r = 0; r < n; r++) {
     for (let idx = M.rowPtr[r]; idx < M.rowPtr[r + 1]; idx++) {
       const c = M.colIdx[idx]
@@ -288,8 +288,8 @@ export function approximateMinimumDegree(M: SparseMatrix): number[] {
     }
   }
 
-  const degree = new Array(n).fill(0).map((_, i) => adj[i].size)
-  const eliminated = new Array(n).fill(false)
+  const degree = Array.from({ length: n }, (_, i) => adj[i].size)
+  const eliminated = new Array<boolean>(n).fill(false)
   const perm: number[] = []
 
   for (let step = 0; step < n; step++) {
@@ -393,7 +393,7 @@ export function symbolicFactorize(M: SparseMatrix): SymbolicFactor {
 
   // Build column adjacency: colAdj[j] = list of rows r > j where M[r, j] != 0
   // (used later for column pattern computation)
-  const colAdj: number[][] = new Array(n).fill(null).map(() => [])
+  const colAdj: number[][] = Array.from({ length: n }, () => [])
   for (let r = 0; r < n; r++) {
     for (let idx = M.rowPtr[r]; idx < M.rowPtr[r + 1]; idx++) {
       const c = M.colIdx[idx]
@@ -442,8 +442,8 @@ export function symbolicFactorize(M: SparseMatrix): SymbolicFactor {
   // Note: the related formula "pattern(L[:, j]) = {j} ∪ ⋃_{c ∈ children[j]} pattern(L[:, c])"
   // actually computes the ROW pattern pattern(L[j, :]) (transposed), not the
   // column pattern. Don't confuse them.
-  const colRows: number[][] = new Array(n).fill(null).map(() => [])
-  const colCount: number[] = new Array(n).fill(0)
+  const colRows: number[][] = Array.from({ length: n }, () => [])
+  const colCount: number[] = new Array<number>(n).fill(0)
 
   for (let j = 0; j < n; j++) {
     const rows: number[] = [j]
@@ -498,8 +498,7 @@ export function cholesky(M: SparseMatrix, symbolic: SymbolicFactor): SparseChole
   }
 
   // Store L column-by-column for easy access
-  // lColumns[j] = Map<row, value> for column j of L
-  const lColumns: Array<Map<number, number>> = new Array(n).fill(null).map(() => new Map())
+  const lColumns: Array<Map<number, number>> = Array.from({ length: n }, () => new Map<number, number>())
 
   for (let j = 0; j < n; j++) {
     const rows = symbolic.colRows[j] // sorted, includes j and rows > j
@@ -571,7 +570,7 @@ export function cholesky(M: SparseMatrix, symbolic: SymbolicFactor): SparseChole
   // Sort by row then col (CSR)
   triplets.sort((a, b) => (a.row !== b.row ? a.row - b.row : a.col - b.col))
 
-  const rowPtr = new Array(n + 1).fill(0)
+  const rowPtr = new Array<number>(n + 1).fill(0)
   const colIdx: number[] = []
   const values: number[] = []
   let prevRow = -1
@@ -602,7 +601,7 @@ export function cholesky(M: SparseMatrix, symbolic: SymbolicFactor): SparseChole
 export function sparseForwardSolve(L: SparseMatrix, b: number[]): number[] {
   if (L.rows !== L.cols) throw new Error('Forward solve requires square matrix')
   const n = L.rows
-  const y = new Array(n).fill(0)
+  const y = new Array<number>(n).fill(0)
 
   for (let r = 0; r < n; r++) {
     let diag = 0
@@ -642,10 +641,10 @@ export function sparseForwardSolve(L: SparseMatrix, b: number[]): number[] {
  */
 export function sparseBackwardSolve(L: SparseMatrix, y: number[]): number[] {
   const n = L.rows
-  const x = new Array(n)
+  const x = new Array<number>(n)
 
   // Build column-major: for each column c, list of (row, value) with row >= c
-  const colEntries: Array<Array<{ row: number; val: number }>> = new Array(n).fill(null).map(() => [])
+  const colEntries: Array<Array<{ row: number; val: number }>> = Array.from({ length: n }, () => [])
   for (let r = 0; r < n; r++) {
     for (let idx = L.rowPtr[r]; idx < L.rowPtr[r + 1]; idx++) {
       const c = L.colIdx[idx]
@@ -715,7 +714,7 @@ export function sparseCholeskySolveOrdered(
   const xp = sparseBackwardSolve(L, yp)
 
   // Invert permutation
-  const x = new Array(M.rows)
+  const x = new Array<number>(M.rows)
   for (let i = 0; i < M.rows; i++) x[P[i]] = xp[i]
 
   return { x, permutation: P }
@@ -730,7 +729,7 @@ export function sparseCholeskySolveOrdered(
  */
 export function diagonal(M: SparseMatrix): number[] {
   const n = Math.min(M.rows, M.cols)
-  const diag = new Array(n).fill(0)
+  const diag = new Array<number>(n).fill(0)
   for (let r = 0; r < n; r++) {
     for (let idx = M.rowPtr[r]; idx < M.rowPtr[r + 1]; idx++) {
       if (M.colIdx[idx] === r) {
@@ -863,7 +862,7 @@ export function sparseInverseDiagonal(
   }
 
   // (M⁻¹)[j, j] = Σ_{k=j..n-1} (Z[k, j])²
-  const invDiag = new Array(n).fill(0)
+  const invDiag = new Array<number>(n).fill(0)
   for (let j = 0; j < n; j++) {
     let sum = 0
     for (const v of zCols[j].values()) {

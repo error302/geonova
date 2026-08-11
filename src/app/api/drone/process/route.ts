@@ -14,6 +14,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { promises as fs } from 'fs'
@@ -286,7 +287,7 @@ export const GET = apiHandler(
         }
       } catch (err) {
         // If WebODM poll fails, return the DB status (don't fail the request)
-        console.error('[drone/process] WebODM poll failed:', err)
+        logger.error('[drone/process] WebODM poll failed:', { error: err })
       }
     }
 
