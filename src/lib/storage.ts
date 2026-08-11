@@ -32,7 +32,7 @@ export async function uploadFile(
     const gcs = new Storage({
       projectId: process.env.GCS_PROJECT_ID,
       credentials: process.env.GCS_KEY_FILE
-        ? JSON.parse(process.env.GCS_KEY_FILE)
+        ? ((JSON.parse(process.env.GCS_KEY_FILE) as unknown) as Record<string, string>)
         : undefined,
     })
     const bucket = gcs.bucket(process.env.GCS_BUCKET_NAME || 'metardu-storage')
@@ -61,7 +61,7 @@ export async function downloadFile(filePath: string): Promise<Buffer> {
     const gcs = new Storage({
       projectId: process.env.GCS_PROJECT_ID,
       credentials: process.env.GCS_KEY_FILE
-        ? JSON.parse(process.env.GCS_KEY_FILE)
+        ? ((JSON.parse(process.env.GCS_KEY_FILE) as unknown) as Record<string, string>)
         : undefined,
     })
     const bucket = gcs.bucket(process.env.GCS_BUCKET_NAME || 'metardu-storage')
@@ -79,7 +79,7 @@ export async function deleteFile(filePath: string): Promise<void> {
     const gcs = new Storage({
       projectId: process.env.GCS_PROJECT_ID,
       credentials: process.env.GCS_KEY_FILE
-        ? JSON.parse(process.env.GCS_KEY_FILE)
+        ? ((JSON.parse(process.env.GCS_KEY_FILE) as unknown) as Record<string, string>)
         : undefined,
     })
     const bucket = gcs.bucket(process.env.GCS_BUCKET_NAME || 'metardu-storage')
@@ -97,7 +97,7 @@ export async function getSignedUrl(filePath: string, expiresIn: number = 3600): 
     const gcs = new Storage({
       projectId: process.env.GCS_PROJECT_ID,
       credentials: process.env.GCS_KEY_FILE
-        ? JSON.parse(process.env.GCS_KEY_FILE)
+        ? ((JSON.parse(process.env.GCS_KEY_FILE) as unknown) as Record<string, string>)
         : undefined,
     })
     const bucket = gcs.bucket(process.env.GCS_BUCKET_NAME || 'metardu-storage')

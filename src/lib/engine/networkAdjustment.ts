@@ -914,7 +914,7 @@ function solveBordered(
 
   for (let j = 0; j < m; j++) {
     // Extract row j of B (column j of Bᵀ)
-    const bVec: number[] = new Array(n).fill(0)
+    const bVec: number[] = new Array<number>(n).fill(0)
     for (let idx = B.rowPtr[j]; idx < B.rowPtr[j + 1]; idx++) {
       bVec[B.colIdx[idx]] = B.values[idx]
     }
@@ -924,7 +924,7 @@ function solveBordered(
   if (dbg) logger.debug(`[solveBordered] Z computed, finite=${Z.every(z => z.every(v => isFinite(v)))}`)
 
   // S = B Z (m × m)
-  const S: number[][] = Array.from({ length: m }, () => new Array(m).fill(0))
+  const S: number[][] = Array.from({ length: m }, () => new Array<number>(m).fill(0))
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < m; j++) {
       let sum = 0
@@ -938,7 +938,7 @@ function solveBordered(
   if (dbg) logger.debug(`[solveBordered] S[0]=${S[0].map(v => v.toExponential(2)).join(', ')}, finite=${S.every(r => r.every(v => isFinite(v)))}`)
 
   // Solve S k = B y
-  const By: number[] = new Array(m).fill(0)
+  const By: number[] = new Array<number>(m).fill(0)
   for (let i = 0; i < m; i++) {
     let sum = 0
     for (let idx = B.rowPtr[i]; idx < B.rowPtr[i + 1]; idx++) {
@@ -1145,7 +1145,7 @@ export function adjustNetwork(
         const yp = sparseForwardSolve(factor.L, up)
         const xp = sparseBackwardSolve(factor.L, yp)
         // Invert permutation
-        corrections = new Array(paramCount)
+        corrections = new Array<number>(paramCount)
         for (let i = 0; i < paramCount; i++) corrections[perm[i]] = xp[i]
       }
     } catch (e) {

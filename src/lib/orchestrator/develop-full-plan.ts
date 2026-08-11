@@ -94,10 +94,10 @@ async function loadProjectData(projectId: string): Promise<{
     .eq('project_id', projectId)
 
   return {
-    project: (project as Project | null) ?? null,
-    points: (points as SurveyPoint[] | null) ?? null,
-    traverseObs: (traverseObs as TraverseObservation[] | null) ?? null,
-    levelingObs: (levelingObs as LevelingObservation[] | null) ?? null,
+    project: (project as unknown as Project | null) ?? null,
+    points: (points as unknown as SurveyPoint[] | null) ?? null,
+    traverseObs: (traverseObs as unknown as TraverseObservation[] | null) ?? null,
+    levelingObs: (levelingObs as unknown as LevelingObservation[] | null) ?? null,
   }
 }
 

@@ -92,7 +92,7 @@ export async function getSchedules(userId: string): Promise<JobSchedule[]> {
     .order('scheduled_date', { ascending: true })
     .order('scheduled_time', { ascending: true })
   if (error) throw new Error(error.message)
-  return data ?? []
+  return (data ?? []) as unknown as JobSchedule[]
 }
 
 export async function getUpcomingSchedules(userId: string): Promise<JobScheduleWithAlerts[]> {
@@ -106,7 +106,7 @@ export async function getScheduleById(id: string): Promise<JobSchedule | null> {
   const sb = createClient()
   const { data, error } = await sb.from('job_schedule').select('*').eq('id', id).maybeSingle()
   if (error) throw new Error(error.message)
-  return data
+  return (data ?? null) as unknown as JobSchedule | null
 }
 
 export async function createSchedule(data: Omit<JobSchedule, 'id' | 'created_at' | 'updated_at' | 'completed_at'>): Promise<JobSchedule> {
@@ -117,7 +117,7 @@ export async function createSchedule(data: Omit<JobSchedule, 'id' | 'created_at'
     .select()
     .single()
   if (error) throw new Error(error.message)
-  return result
+  return result as unknown as JobSchedule
 }
 
 export async function updateSchedule(id: string, updates: Partial<JobSchedule>): Promise<JobSchedule> {
@@ -129,7 +129,7 @@ export async function updateSchedule(id: string, updates: Partial<JobSchedule>):
     .select()
     .single()
   if (error) throw new Error(error.message)
-  return result
+  return result as unknown as JobSchedule
 }
 
 export async function deleteSchedule(id: string): Promise<void> {

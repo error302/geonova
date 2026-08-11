@@ -306,7 +306,15 @@ export function createContourStyle(isIndex: boolean = false, resolution: number 
  */
 export function getStyleForFeature(feature: Feature<Geometry>, resolution: number): Style | Style[] {
   const geomType = feature.getGeometry()?.getType()
-  const props = feature.getProperties()
+  const props = feature.getProperties() as {
+    status?: 'registered' | 'pending' | 'disputed' | 'cancelled'
+    parcelNumber?: string
+    name?: string
+    beaconType?: 'concrete' | 'iron_pin' | 'stone' | 'pipe'
+    beaconNumber?: string
+    featureType?: string
+    isIndex?: boolean
+  }
 
   switch (geomType) {
     case 'Polygon':

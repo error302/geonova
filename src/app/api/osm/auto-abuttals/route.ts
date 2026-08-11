@@ -18,7 +18,7 @@ const WORKER_SECRET = process.env.WORKER_SECRET || ''  // P0-5: fail-closed, no 
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    const body = (await request.json().catch(() => ({}))) as { lat?: number; lon?: number; radius?: number }
     const { lat, lon, radius = 200 } = body
 
     if (typeof lat !== 'number' || typeof lon !== 'number') {
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const data = await res.json()
+    const data = (await res.json()) as unknown
     return NextResponse.json(data)
   } catch (err) {
     return NextResponse.json(

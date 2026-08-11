@@ -161,7 +161,7 @@ export function coordinate3D(
  * Create a value with zero uncertainty (e.g., a defined constant).
  */
 export function certain<T>(value: T, dimensions: number): WithUncertainty<T> {
-  const zero = Array.from({ length: dimensions }, () => new Array(dimensions).fill(0))
+  const zero = Array.from({ length: dimensions }, () => new Array<number>(dimensions).fill(0))
   if (typeof value === 'number') {
     return { value, covariance: [[0]] }
   }
@@ -328,7 +328,7 @@ export function propagate<T extends number[]>(
   const fx = fn(x)
 
   // Compute Jacobian (m×n) using central difference
-  const J: number[][] = Array(outputDim).fill(null).map(() => new Array(n).fill(0))
+  const J: number[][] = Array.from({ length: outputDim }, () => new Array<number>(n).fill(0))
   for (let j = 0; j < n; j++) {
     const xPlus = [...x] as T
     const xMinus = [...x] as T
@@ -442,7 +442,7 @@ export function polygonArea2D(
 
   // Build full 2n×2n covariance matrix
   // Ordering: [E1, N1, E2, N2, ..., En, Nn]
-  const Sigma: number[][] = Array(2 * n).fill(null).map(() => new Array(2 * n).fill(0))
+  const Sigma: number[][] = Array.from({ length: 2 * n }, () => new Array<number>(2 * n).fill(0))
 
   for (let i = 0; i < n; i++) {
     Sigma[2 * i][2 * i] = vertices[i].covariance[0][0]
@@ -481,7 +481,7 @@ export function polygonArea2D(
   signedArea = signedArea / 2
   const sign = signedArea >= 0 ? 1 : -1
 
-  const J = new Array(2 * n).fill(0)
+  const J = new Array<number>(2 * n).fill(0)
   for (let i = 0; i < n; i++) {
     const iPlus = (i + 1) % n
     const iMinus = (i - 1 + n) % n
@@ -533,7 +533,7 @@ function matMul(A: number[][], B: number[][]): number[][] {
   const rows = A.length
   const cols = B[0].length
   const inner = B.length
-  const result: number[][] = Array(rows).fill(null).map(() => Array(cols).fill(0))
+  const result: number[][] = Array.from({ length: rows }, () => new Array<number>(cols).fill(0))
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       let sum = 0
@@ -549,7 +549,7 @@ function matMul(A: number[][], B: number[][]): number[][] {
 function transpose(A: number[][]): number[][] {
   const rows = A.length
   const cols = A[0].length
-  const result: number[][] = Array(cols).fill(null).map(() => Array(rows).fill(0))
+  const result: number[][] = Array.from({ length: cols }, () => new Array<number>(rows).fill(0))
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       result[j][i] = A[i][j]

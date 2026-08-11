@@ -383,7 +383,7 @@ function computeStandardLSFallback(A: number[][], l: number[], warnings: string[
 
   const AtA = matMul(transpose(A), A)
   const Atl = matVec(transpose(A), l)
-  const x = solveLinearSystem(AtA, Atl, n) || new Array(n).fill(0)
+  const x = solveLinearSystem(AtA, Atl, n) || new Array<number>(n).fill(0)
 
   const Ax = A.map(row => row.reduce((s, a, j) => s + a * x[j], 0))
   const residuals = l.map((li, i) => li - Ax[i])
@@ -396,8 +396,8 @@ function computeStandardLSFallback(A: number[][], l: number[], warnings: string[
 
   return {
     x,
-    deltaA: A.map(() => new Array(n).fill(0)),
-    deltal: new Array(m).fill(0),
+    deltaA: A.map(() => new Array<number>(n).fill(0)),
+    deltal: new Array<number>(m).fill(0),
     A_adjusted: A,
     l_adjusted: l,
     residuals,
@@ -415,7 +415,7 @@ function computeStandardLSFallback(A: number[][], l: number[], warnings: string[
 function transpose(A: number[][]): number[][] {
   const rows = A.length
   const cols = A[0].length
-  const result: number[][] = Array(cols).fill(null).map(() => Array(rows).fill(0))
+  const result: number[][] = Array.from({ length: cols }, () => new Array<number>(rows).fill(0))
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       result[j][i] = A[i][j]
@@ -428,7 +428,7 @@ function matMul(A: number[][], B: number[][]): number[][] {
   const rows = A.length
   const cols = B[0].length
   const inner = B.length
-  const result: number[][] = Array(rows).fill(null).map(() => Array(cols).fill(0))
+  const result: number[][] = Array.from({ length: rows }, () => new Array<number>(cols).fill(0))
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       let sum = 0
@@ -447,8 +447,8 @@ function matVec(A: number[][], v: number[]): number[] {
 
 function diag(v: number[]): number[][] {
   const n = v.length
-  return Array(n).fill(null).map((_, i) =>
-    Array(n).fill(null).map((_, j) => (i === j ? v[i] : 0)),
+  return Array.from({ length: n }, (_, i) =>
+    Array.from({ length: n }, (_, j) => (i === j ? v[i] : 0)),
   )
 }
 
@@ -469,7 +469,7 @@ function solveLinearSystem(A: number[][], b: number[], n: number): number[] | nu
     }
   }
 
-  const x = new Array(n).fill(0)
+  const x = new Array<number>(n).fill(0)
   for (let i = n - 1; i >= 0; i--) {
     x[i] = M[i][n]
     for (let j = i + 1; j < n; j++) x[i] -= M[i][j] * x[j]
@@ -479,7 +479,7 @@ function solveLinearSystem(A: number[][], b: number[], n: number): number[] | nu
 }
 
 function invertMatrix(A: number[][], n: number): number[][] {
-  if (A.length === 0) return Array.from({ length: n }, () => new Array(n).fill(0))
+  if (A.length === 0) return Array.from({ length: n }, () => new Array<number>(n).fill(0))
   const M = A.map((row, i) => {
     const aug: number[] = [...row, ...new Array<number>(n).fill(0)]
     aug[n + i] = 1
@@ -521,8 +521,8 @@ function jacobiEigen(A_in: number[][]): { eigenvalues: number[]; eigenvectors: n
   // Copy A (work on a copy)
   const A = A_in.map(row => [...row])
   // V starts as identity
-  const V: number[][] = Array(n).fill(null).map((_, i) =>
-    Array(n).fill(null).map((_, j) => (i === j ? 1 : 0) as number),
+  const V: number[][] = Array.from({ length: n }, (_, i) =>
+    Array.from({ length: n }, (_, j) => (i === j ? 1 : 0) as number),
   )
 
   const maxSweeps = 100

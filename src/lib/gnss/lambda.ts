@@ -70,7 +70,7 @@ type Vector = number[]
 
 function matMul(A: Matrix, B: Matrix): Matrix {
   const m = A.length, n = B[0].length, k = B.length
-  const C: Matrix = Array.from({ length: m }, () => new Array(n).fill(0))
+  const C: Matrix = Array.from({ length: m }, () => new Array<number>(n).fill(0))
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
       let sum = 0
@@ -83,7 +83,7 @@ function matMul(A: Matrix, B: Matrix): Matrix {
 
 function matTranspose(A: Matrix): Matrix {
   const m = A.length, n = A[0].length
-  const T: Matrix = Array.from({ length: n }, () => new Array(m).fill(0))
+  const T: Matrix = Array.from({ length: n }, () => new Array<number>(m).fill(0))
   for (let i = 0; i < m; i++) for (let j = 0; j < n; j++) T[j][i] = A[i][j]
   return T
 }
@@ -94,7 +94,7 @@ function matVecMul(A: Matrix, v: Vector): Vector {
 
 /** Identity matrix n×n. */
 function identity(n: number): Matrix {
-  const I: Matrix = Array.from({ length: n }, () => new Array(n).fill(0))
+  const I: Matrix = Array.from({ length: n }, () => new Array<number>(n).fill(0))
   for (let i = 0; i < n; i++) I[i][i] = 1
   return I
 }
@@ -115,7 +115,7 @@ interface LDLT {
 function ldlDecomposition(Q: Matrix): LDLT {
   const n = Q.length
   const L: Matrix = identity(n)
-  const D: number[] = new Array(n).fill(0)
+  const D: number[] = new Array<number>(n).fill(0)
 
   // Work on a copy
   const A = Q.map(row => [...row])
@@ -308,7 +308,7 @@ function computeQuadForm(zint: Vector, z: Vector, L: Matrix, D: number[]): numbe
   const n = z.length
   const diff = zint.map((v, i) => v - z[i])
   // w = L^{-1} * diff (forward substitution: L is unit lower triangular)
-  const w = new Array(n).fill(0)
+  const w = new Array<number>(n).fill(0)
   for (let i = 0; i < n; i++) {
     w[i] = diff[i]
     for (let j = 0; j < i; j++) w[i] -= L[i][j] * w[j]
