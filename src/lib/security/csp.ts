@@ -34,16 +34,25 @@ export function generateNonce(): string {
  * Next.js 15, 'unsafe-inline' can be removed — Next.js 15 properly
  * injects nonces into all inline scripts.
  */
-export function getCspHeaders(nonce: string) {
+export function getCspHeaders(_nonce: string) {
+  // `_nonce` is retained (unused) so middleware can keep generating a
+  // per-request nonce and passing the x-nonce header — the plumbing
+  // returns with the Next.js 15 upgrade (see script-src comment).
   const isDev = process.env.NODE_ENV === 'development'
 
   return {
     'Content-Security-Policy': [
       `default-src 'self'`,
-      // 'unsafe-inline' required for Next.js 14 RSC inline scripts.
-      // 'nonce-${nonce}' allows components that use <Script nonce> to
-      // be more restrictive. Remove 'unsafe-inline' after Next.js 15 upgrade.
-      `script-src 'self' 'unsafe-inline' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ''} 'wasm-unsafe-eval'`,
+      // 'unsafe-inline' required for Next.js 14 RSC inline scripts. The
+      // nonce was removed from script-src (2026-08-12): per CSP3, a nonce
+      // makes 'unsafe-inline' ignored, which forced the root layout to read
+      // headers() (x-nonce) to tag every inline script — and headers() in
+      // the root layout breaks the Capacitor static export ("used headers"
+      // on every page, Mobile Build Verification CI failure). With
+      // 'unsafe-inline' alone the inline scripts work and the export stays
+      // green. Reintroduce the nonce together with the Next.js 15 upgrade,
+      // when Next injects nonces into RSC scripts automatically.
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} 'wasm-unsafe-eval'`,
       `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net`,
       `font-src 'self' https://fonts.gstatic.com`,
       `img-src 'self' data: blob: https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://*.mapbox.com https://server.arcgisonline.com https://*.arcgisonline.com https://*.basemaps.cartocdn.com`,

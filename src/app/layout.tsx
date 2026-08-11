@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from 'next'
+import type { Metadata, Viewport } from 'next'
 
 import './globals.css'
 import AuthProvider from '@/components/AuthProvider'
@@ -6,7 +6,6 @@ import { ThemeProvider } from 'next-themes'
 import AppShell from '@/components/layout/AppShell'
 import QueryProvider from '@/lib/api/QueryProvider'
 import { getPublicAppUrl } from '@/lib/site'
-import { headers } from 'next/headers'
 import { WebVitals } from './web-vitals'
 
 const publicAppUrl = getPublicAppUrl()
@@ -90,11 +89,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // CSP nonce from middleware (x-nonce response header) so the app's own
-  // inline scripts (font loader, next-themes theme init) carry the nonce.
-  // Without it, the nonce in script-src nullifies 'unsafe-inline' and the
-  // browser blocks those scripts (console error + broken fonts/theme).
-  const cspNonce = headers().get('x-nonce') ?? undefined
+  // No CSP nonce plumbing here: reading headers() in the root layout forces
+  // every page dynamic, which fails the Capacitor static export (mobile build).
+  // Inline scripts (font flipper, next-themes init) are allowed via
+  // 'unsafe-inline' in script-src (required for Next 14 RSC anyway); the
+  // nonce-based CSP returns with the Next 15 upgrade.
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -142,7 +141,6 @@ export default function RootLayout({
           />
         </noscript>
         <script
-          nonce={cspNonce}
           dangerouslySetInnerHTML={{
             __html: "!function(){var l=document.querySelector('link[data-font-stylesheet]');if(l){l.media='all';}}();",
           }}
@@ -162,7 +160,6 @@ export default function RootLayout({
             attribute="data-theme"
             defaultTheme="dark"
             enableSystem={false}
-            nonce={cspNonce}
           >
             <QueryProvider>
               <WebVitals />
