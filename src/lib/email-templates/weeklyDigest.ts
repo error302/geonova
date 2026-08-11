@@ -16,6 +16,7 @@ import {
   Accent,
   Divider,
   Link,
+  escapeHtml,
 } from './components'
 import { weeklyDigestText, WeeklyDigestTextArgs } from './text'
 import { formatDate } from './utils'
@@ -50,7 +51,7 @@ export const weeklyDigestEmail = {
     const dashboardUrl = `${APP_URL}/dashboard`
     const bodyHtml = `
       ${Heading('Your week in review')}
-      ${RichParagraph(`Hi${args.name ? ` ${args.name}` : ''}, here is a summary of your METARDU activity for ${Accent(formatDate(args.weekStart))} — ${Accent(formatDate(args.weekEnd))}.`)}
+      ${RichParagraph(`Hi${args.name ? ` ${escapeHtml(args.name)}` : ''}, here is a summary of your METARDU activity for ${Accent(formatDate(args.weekStart))} — ${Accent(formatDate(args.weekEnd))}.`)}
       ${Paragraph('This week you:')}
       <ul style="margin:0 0 20px;padding-left:22px;color:#cccccc;font-size:15px;line-height:1.9;">
         <li>Worked on <strong style="color:#e5e5e5;">${args.projectsActive}</strong> active project${args.projectsActive === 1 ? '' : 's'}</li>

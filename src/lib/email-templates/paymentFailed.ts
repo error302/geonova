@@ -41,7 +41,7 @@ export const paymentFailedEmail = {
       ${Paragraph(`Hi${args.name ? ` ${args.name}` : ''}, we tried to charge your payment method for the ${args.planName} plan but it did not go through.`)}
       ${CalloutBox(
         'What happened',
-        `${formatCurrency(args.amount, args.currency)} for ${args.planName} — ${escapeOnce(args.failureReason)}`,
+        `${escapeOnce(formatCurrency(args.amount, args.currency))} for ${escapeOnce(args.planName)} — ${escapeOnce(args.failureReason)}`,
         { tone: 'warning' },
       )}
       ${RichParagraph(`Your projects, observations, and documents are ${Accent('safe')} — we do not delete any of your work. Your subscription is paused until you update your payment method.`)}

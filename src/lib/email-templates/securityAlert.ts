@@ -51,7 +51,7 @@ export const securityAlertEmail = {
         'Event details',
         `
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            <tr><td style="color:#8a8a96;font-size:12px;padding:2px 0;">When</td><td style="color:#e5e5e5;font-size:13px;text-align:right;padding:2px 0;">${formatDateTime(args.timestamp)}</td></tr>
+            <tr><td style="color:#8a8a96;font-size:12px;padding:2px 0;">When</td><td style="color:#e5e5e5;font-size:13px;text-align:right;padding:2px 0;">${escapeOnce(formatDateTime(args.timestamp))}</td></tr>
             <tr><td style="color:#8a8a96;font-size:12px;padding:2px 0;">Device</td><td style="color:#e5e5e5;font-size:13px;text-align:right;padding:2px 0;">${escapeOnce(args.deviceInfo)}</td></tr>
             <tr><td style="color:#8a8a96;font-size:12px;padding:2px 0;">Approx. location</td><td style="color:#e5e5e5;font-size:13px;text-align:right;padding:2px 0;">${escapeOnce(args.location)}</td></tr>
           </table>

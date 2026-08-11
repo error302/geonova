@@ -14,6 +14,7 @@ import {
   Accent,
   Divider,
   Link,
+  escapeHtml,
 } from './components'
 import { trialEndingText, TrialEndingTextArgs } from './text'
 
@@ -31,7 +32,7 @@ export const trialEndingEmail = {
   render(args: TrialEndingEmail) {
     const bodyHtml = `
       ${Heading('Your Pro trial ends soon')}
-      ${RichParagraph(`Hi${args.name ? ` ${args.name}` : ''}, your 14-day Pro trial ends on ${Accent(formatTrialEnd(args.trialEndsAt))}.`)}
+      ${RichParagraph(`Hi${args.name ? ` ${escapeHtml(args.name)}` : ''}, your 14-day Pro trial ends on ${Accent(formatTrialEnd(args.trialEndsAt))}.`)}
       ${Paragraph('After the trial you will move to the Free plan, which includes:')}
       ${List([
         '<strong style="color:#e5e5e5;">1 project</strong> (vs. unlimited on Pro)',
