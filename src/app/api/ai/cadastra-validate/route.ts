@@ -49,12 +49,12 @@ export async function POST(request: NextRequest) {
   if (userId) setCurrentUserId(String(userId))
 
   try {
-    const rawBody = await request.json()
+    const rawBody = (await request.json().catch(() => ({}))) as unknown
     const parsed = ValidateBodySchema.safeParse(rawBody)
     if (!parsed.success) {
       return NextResponse.json({ error: 'Validation failed', details: parsed.error.issues }, { status: 400 })
     }
-    const body: ValidateRequest = rawBody
+    const body = rawBody as ValidateRequest
     
     const result = await callPythonCompute<ValidateResponse>(
       '/cadastra-validate',

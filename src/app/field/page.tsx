@@ -116,8 +116,9 @@ export default function FieldPage() {
   // Auth check
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await dbClient.auth.getSession()
-      const user = (session as Record<string, unknown>)?.user
+      const authRes = await dbClient.auth.getSession()
+      const session = authRes.data?.session
+      const user = (session as unknown as { user?: { id: string } } | null)?.user
       if (!user) {
         window.location.replace('/login?next=%2Ffield')
         return
@@ -133,7 +134,7 @@ export default function FieldPage() {
   useEffect(() => {
     if (!user) return
     
-    const { data: { subscription } } = dbClient.auth.onAuthStateChange((_event, session) => {
+    const subRes = dbClient.auth.onAuthStateChange((_event, session) => {
       if (!session) {
         setUser(null)
         window.location.replace('/login?next=%2Ffield')

@@ -539,8 +539,8 @@ export class QueryBuilder<T = Record<string, unknown>> {
     const sql = `INSERT INTO "${this.table}" (${quotedColumns}) VALUES ${valuesList.join(', ')} RETURNING ${this.buildReturningColumns()}`
 
     const result = await this.pool.query(sql, params as unknown[])
-    const data = Array.isArray(this.insertPayload) ? result.rows : (result.rows[0] ?? null)
-    return { data: data as T, error: null }
+    const data = Array.isArray(this.insertPayload) ? (result.rows as unknown as T) : ((result.rows[0] ?? null) as unknown as T)
+    return { data, error: null }
   }
 
   private async executeUpdate(): Promise<QueryResult<T>> {
@@ -616,8 +616,8 @@ export class QueryBuilder<T = Record<string, unknown>> {
     const sql = `INSERT INTO "${this.table}" (${quotedColumns}) VALUES ${valuesList.join(', ')} ON CONFLICT (${quotedConflict}) ${conflictAction} RETURNING ${this.buildReturningColumns()}`
 
     const result = await this.pool.query(sql, params as unknown[])
-    const data = Array.isArray(this.insertPayload) ? result.rows : (result.rows[0] ?? null)
-    return { data: data as T, error: null }
+    const data = Array.isArray(this.insertPayload) ? (result.rows as unknown as T) : ((result.rows[0] ?? null) as unknown as T)
+    return { data, error: null }
   }
 }
 

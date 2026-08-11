@@ -74,7 +74,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
 
       if (data.contours && !data.fallback) {
         // Convert Python response format → ContourLine[]
-        const converted: ContourLine[] = (data.contours as ContourSegment[]).flatMap(c =>
+        const converted: ContourLine[] = ((data.contours as unknown) as ContourSegment[]).flatMap(c =>
           c.segments.map((seg) => ({
             elevation: c.elevation,
             isIndex: false,

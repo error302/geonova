@@ -376,7 +376,7 @@ export default function DigitalFieldBookPage() {
     ;(async () => {
       try {
         const session = await dbClient.auth.getSession()
-        const sessUser = (session.data.session as Record<string, unknown> | null)?.user
+        const sessUser = (session.data?.session as unknown as { user?: unknown } | null)?.user
         if (!sessUser) return
         const { data, error } = await dbClient.from('projects').select('id, name').order('created_at', { ascending: false })
         if (!error && data && isMounted) setProjects(data as { id: string; name: string }[])

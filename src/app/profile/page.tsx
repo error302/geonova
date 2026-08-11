@@ -38,7 +38,8 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const { data: { session } } = await dbClient.auth.getSession()
+      const authRes = await dbClient.auth.getSession()
+      const session = authRes.data?.session
       const user = session?.user
       if (!user) {
         window.location.replace('/login?next=%2Fprofile')
@@ -53,8 +54,8 @@ export default function ProfilePage() {
 
       if (data) {
         setProfile({
-          ...(data as Profile),
-          specializations: (data as Profile).specializations || []
+          ...((data as unknown) as Profile),
+          specializations: ((data as unknown) as Profile).specializations || []
         })
       } else {
         setProfile(prev => ({ ...prev, id: user.id ?? "" }))
@@ -70,7 +71,8 @@ export default function ProfilePage() {
     setSaving(true)
     setSaved(false)
 
-    const { data: { session } } = await dbClient.auth.getSession()
+    const authRes = await dbClient.auth.getSession()
+    const session = authRes.data?.session
     const user = session?.user
     if (!user) return
 

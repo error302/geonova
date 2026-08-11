@@ -47,7 +47,7 @@ export function withApiCache(
     // Cache successful responses
     if (response.status === 200) {
       try {
-        const data = await response.json()
+        const data = (await response.json()) as unknown
         const headers: Record<string, string> = {}
         response.headers.forEach((value, key) => {
           headers[key] = value
