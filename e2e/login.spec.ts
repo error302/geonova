@@ -4,7 +4,7 @@ test.describe('Login Page', () => {
   test('loads login page correctly', async ({ page }) => {
     await page.goto('/login')
     await expect(page.locator('text=Welcome back')).toBeVisible()
-    await expect(page.locator('text=Sign in to your account')).toBeVisible()
+    await expect(page.locator('text=Sign in to your METARDU account')).toBeVisible()
   })
 
   test('has email and password input fields', async ({ page }) => {
@@ -33,15 +33,17 @@ test.describe('Login Page', () => {
   test('password show/hide toggle works', async ({ page }) => {
     await page.goto('/login')
     const passwordInput = page.locator('input[type="password"]')
-    const toggleBtn = page.locator('button[type="button"]').filter({ has: page.locator('svg') }).first()
-    
+    // OAuth buttons are also type=button with an svg and render first, so
+    // target the toggle by its aria-label instead of the loose selector.
+    const toggleBtn = page.getByRole('button', { name: 'Show password' })
+
     await passwordInput.fill('testpassword')
     await toggleBtn.click()
     // After clicking, input type should change to text
     await expect(page.locator('input[type="text"]')).toBeVisible()
-    
+
     // Click again to hide
-    await toggleBtn.click()
+    await page.getByRole('button', { name: 'Hide password' }).click()
     await expect(page.locator('input[type="password"]')).toBeVisible()
   })
 
@@ -88,14 +90,14 @@ test.describe('Login Page', () => {
   test('METARDU branding visible on mobile', async ({ page }) => {
     await page.goto('/login')
     // Mobile-only METARDU link
-    const mobileBranding = page.locator('a.text-2xl')
+    const mobileBranding = page.locator('header a[href="/"]').first()
     await expect(mobileBranding).toBeAttached()
   })
 
   test('left panel shows compliance checklist on desktop', async ({ page }) => {
     await page.goto('/login')
-    await expect(page.locator('text=Kenya Survey Regulations compliant')).toBeVisible()
-    await expect(page.locator('text=Works offline in the field')).toBeVisible()
-    await expect(page.locator('text=Trusted by surveyors across East Africa')).toBeVisible()
+    await expect(page.locator('text=Kenya Survey Compliant')).toBeVisible()
+    await expect(page.locator('text=Works Offline')).toBeVisible()
+    await expect(page.locator('text=Trusted Across East Africa')).toBeVisible()
   })
 })

@@ -48,9 +48,9 @@ export function getCspHeaders(nonce: string) {
       `font-src 'self' https://fonts.gstatic.com`,
       `img-src 'self' data: blob: https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://*.mapbox.com https://server.arcgisonline.com https://*.arcgisonline.com https://*.basemaps.cartocdn.com`,
       `connect-src 'self' ${isDev ? 'ws://localhost:* http://localhost:*' : ''} wss: https:`,
-      // Web Bluetooth API requires bluetooth directive (Chrome 104+)
-      // Needed for GNSSConnectionPanel + InstrumentConnectionPanel
-      `bluetooth 'self'`,
+      // Web Bluetooth is gated by Permissions-Policy (set in middleware), NOT
+      // a CSP directive — 'bluetooth' is not a valid CSP source and Chrome
+      // logs "Unrecognized Content-Security-Policy directive" for it.
       `worker-src 'self' blob:`,
       `frame-src 'none'`,
       `object-src 'none'`,

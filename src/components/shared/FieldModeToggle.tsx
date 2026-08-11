@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { Sun, Eye } from 'lucide-react'
 import { useUIStore } from '@/stores/uiStore'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
@@ -60,6 +61,7 @@ export default function FieldModeToggle() {
   const tooltipDismissed = useRef(false)
   const addNotification = useUIStore((s) => s.addNotification)
   const { t } = useLanguage()
+  const pathname = usePathname()
 
   /* ── Hydration-safe mount ───────────────────────────────────────────── */
   useEffect(() => {
@@ -73,6 +75,16 @@ export default function FieldModeToggle() {
   /* ── First-use tooltip ──────────────────────────────────────────────── */
   useEffect(() => {
     if (!mounted) return
+    // First-use tooltip only in field-work contexts. On the public
+    // landing/marketing pages (and forms like /project/new) the tooltip's
+    // full-screen dismiss overlay would swallow the visitor's first click
+    // (e.g. the hero CTA) — see the E2E hero-CTA spec. Field mode is a
+    // display theme for outdoor work, so the hint belongs on field pages.
+    const isFieldContext =
+      pathname?.startsWith('/fieldbook') ||
+      pathname?.startsWith('/field') ||
+      pathname?.startsWith('/map')
+    if (!isFieldContext) return
     try {
       const hasSeenTooltip = localStorage.getItem('metardu_field_tooltip_seen')
       if (!hasSeenTooltip && !tooltipDismissed.current) {
@@ -80,7 +92,7 @@ export default function FieldModeToggle() {
         return () => clearTimeout(timer)
       }
     } catch { /* ignore */ }
-  }, [mounted])
+  }, [mounted, pathname])
 
   /* ── Ambient light sensor (opt-in) ─────────────────────────────────── */
   useEffect(() => {

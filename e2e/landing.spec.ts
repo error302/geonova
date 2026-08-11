@@ -20,7 +20,10 @@ test.describe('Landing Page', () => {
 
   test('hero CTA links to register page', async ({ page }) => {
     await page.goto('/')
-    const ctaLink = page.locator('a[href="/register"]').first()
+    // Hero CTA is unique by its label ('Start a project'); the first
+    // a[href="/register"] in DOM order is the desktop nav's Get Started
+    // link, which is CSS-hidden on mobile.
+    const ctaLink = page.getByRole('link', { name: 'Start a project' })
     await expect(ctaLink).toBeVisible()
     await ctaLink.click()
     await expect(page).toHaveURL(/\/register/)
@@ -49,36 +52,38 @@ test.describe('Landing Page', () => {
 
   test('how-it-works section shows 3 steps', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('text=Enter Your Observations')).toBeVisible()
-    await expect(page.locator('text=Adjust & Calculate')).toBeVisible()
-    await expect(page.locator('text=Export & Submit')).toBeVisible()
+    await expect(page.locator('text=Set Up Project')).toBeVisible()
+    await expect(page.locator('text=Collect & Compute')).toBeVisible()
+    await expect(page.locator('text=Submit & Archive')).toBeVisible()
   })
 
   test('professional tools grid shows 8 tools', async ({ page }) => {
     await page.goto('/')
     const tools = [
-      'Leveling',
-      'Coordinate Transform',
-      'Area Calculation',
-      'Curve Design',
-      'Bearing & Distance',
-      'Vertical Curves',
-      'Setting Out',
-      'Subdivision',
+      'Traverse',
+      'COGO',
+      'Contours',
+      'Curves',
+      'GNSS',
+      'Deed Plans',
+      'Reports',
+      'Validation',
     ]
     for (const tool of tools) {
-      await expect(page.locator('h3').filter({ hasText: tool })).toBeVisible()
+      // exact:true — substring matching collides with feature headings
+      // (e.g. 'Traverse' vs 'Traverse Adjustment').
+      await expect(page.getByRole('heading', { name: tool, exact: true })).toBeVisible()
     }
   })
 
   test('pricing section shows 3 tiers', async ({ page }) => {
     await page.goto('/')
     // Use h3 for unique heading matches
-    await expect(page.locator('h3').filter({ hasText: 'Starter' })).toBeVisible()
-    await expect(page.locator('h3').filter({ hasText: 'Professional' })).toBeVisible()
-    await expect(page.locator('h3').filter({ hasText: 'Enterprise' })).toBeVisible()
-    await expect(page.locator('text=$49')).toBeVisible()
-    await expect(page.locator('text=$199')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Free', exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Pro', exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Team', exact: true })).toBeVisible()
+    await expect(page.locator('text=KSh 500')).toBeVisible()
+    await expect(page.locator('text=KSh 2,000')).toBeVisible()
     await expect(page.locator('text=Most Popular')).toBeVisible()
   })
 
@@ -90,9 +95,9 @@ test.describe('Landing Page', () => {
 
   test('footer has privacy, terms, and community links', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('a[href="/community"]')).toBeVisible()
-    await expect(page.locator('a[href="/docs/privacy"]')).toBeVisible()
-    await expect(page.locator('a[href="/docs/terms"]')).toBeVisible()
+    await expect(page.locator('footer a[href="/community"]')).toBeVisible()
+    await expect(page.locator('footer a[href="/docs/privacy"]')).toBeVisible()
+    await expect(page.locator('footer a[href="/docs/terms"]')).toBeVisible()
   })
 
   test('skip-to-content link exists for accessibility', async ({ page }) => {

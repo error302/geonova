@@ -6,6 +6,7 @@ import { ThemeProvider } from 'next-themes'
 import AppShell from '@/components/layout/AppShell'
 import QueryProvider from '@/lib/api/QueryProvider'
 import { getPublicAppUrl } from '@/lib/site'
+import { headers } from 'next/headers'
 import { WebVitals } from './web-vitals'
 
 const publicAppUrl = getPublicAppUrl()
@@ -89,6 +90,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // CSP nonce from middleware (x-nonce response header) so the app's own
+  // inline scripts (font loader, next-themes theme init) carry the nonce.
+  // Without it, the nonce in script-src nullifies 'unsafe-inline' and the
+  // browser blocks those scripts (console error + broken fonts/theme).
+  const cspNonce = headers().get('x-nonce') ?? undefined
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -136,18 +142,15 @@ export default function RootLayout({
           />
         </noscript>
         <script
+          nonce={cspNonce}
           dangerouslySetInnerHTML={{
             __html: "!function(){var l=document.querySelector('link[data-font-stylesheet]');if(l){l.media='all';}}();",
           }}
         />
       </head>
       <body className="antialiased" suppressHydrationWarning>
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[var(--accent)] focus:text-black focus:rounded focus:font-semibold"
-        >
-          Skip to content
-        </a>
+        {/* Skip link is rendered by AppShell's SkipToContent on every page —
+            the layout-level copy was removed to avoid duplicate anchors. */}
         <AuthProvider>
           {/* UI-8 (2026-07-24): Wire ThemeProvider so next-themes useTheme()
               works across the app. The CSS in globals.css uses
@@ -155,7 +158,12 @@ export default function RootLayout({
               use attribute="data-theme". Default is dark (the :root vars).
               Sonner toasts, field mode toggle, and outdoor mode toggle can
               now use useTheme() to switch between 'dark', 'light', 'field'. */}
-          <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
+          <ThemeProvider
+            attribute="data-theme"
+            defaultTheme="dark"
+            enableSystem={false}
+            nonce={cspNonce}
+          >
             <QueryProvider>
               <WebVitals />
               <script

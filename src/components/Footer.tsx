@@ -19,6 +19,7 @@ const FOOTER_LINKS = {
   ],
   Developers: [
     { label: 'Quick Start Guide', href: '/docs/quick-start' },
+    { label: 'Community', href: '/community' },
     { label: 'Contact Support', href: 'mailto:hello@metardu.app' },
   ],
 } as const

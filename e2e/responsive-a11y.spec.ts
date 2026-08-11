@@ -5,27 +5,29 @@ test.describe('Responsive Design — Mobile', () => {
 
   test('landing page hero text is readable on mobile', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('h1')).toContainText('Precision Land')
+    await expect(page.locator('h1')).toContainText('Surveying software')
   })
 
   test('pricing cards visible on mobile', async ({ page }) => {
     await page.goto('/')
     // Scroll to pricing section first
-    await page.locator('text=Start Free, Scale as You Grow').scrollIntoViewIfNeeded()
-    await expect(page.locator('text=$49')).toBeVisible()
+    await page.locator('text=Start free, scale as you grow').scrollIntoViewIfNeeded()
+    await expect(page.locator('text=KSh 500')).toBeVisible()
     await expect(page.locator('text=Most Popular')).toBeVisible()
   })
 
   test('login page shows mobile branding', async ({ page }) => {
     await page.goto('/login')
-    const mobileBrand = page.locator('.md\\:hidden')
-    await expect(mobileBrand.first()).toBeVisible()
+    const mobileBrand = page.locator('header a[href="/"]').first()
+    await expect(mobileBrand).toBeVisible()
   })
 
   test('professional tools grid is single column on mobile', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('h3').filter({ hasText: 'Leveling' })).toBeVisible()
-    await expect(page.locator('h3').filter({ hasText: 'Area Calculation' })).toBeVisible()
+    // exact:true — 'Traverse' substring-matches the 'Traverse Adjustment'
+    // feature heading too.
+    await expect(page.getByRole('heading', { name: 'Traverse', exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'COGO', exact: true })).toBeVisible()
   })
 })
 
@@ -34,13 +36,13 @@ test.describe('Responsive Design — Tablet', () => {
 
   test('landing page renders correctly on tablet', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('h1')).toContainText('Precision Land')
+    await expect(page.locator('h1')).toContainText('Surveying software')
     await expect(page.locator('h3').filter({ hasText: 'Traverse Adjustment' })).toBeVisible()
   })
 
   test('login page shows split layout on tablet', async ({ page }) => {
     await page.goto('/login')
-    await expect(page.locator('text=Kenya Survey Regulations compliant')).toBeVisible()
+    await expect(page.locator('text=Kenya Survey Compliant')).toBeVisible()
   })
 })
 
@@ -49,7 +51,7 @@ test.describe('Responsive Design — Desktop', () => {
 
   test('landing page full layout on desktop', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('h1')).toContainText('Precision Land')
+    await expect(page.locator('h1')).toContainText('Surveying software')
     await expect(page.locator('h3').filter({ hasText: 'Traverse Adjustment' })).toBeVisible()
     await expect(page.locator('text=Most Popular')).toBeVisible()
   })

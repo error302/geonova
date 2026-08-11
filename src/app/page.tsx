@@ -126,6 +126,8 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-x-hidden">
       <HeroSection />
+      <TrustStrip />
+      <StatsBar />
       <FeaturesSection />
       <WorkflowSection />
       <ToolsSection />
@@ -221,6 +223,50 @@ function HeroSection() {
 }
 
 
+
+/* ============================================================= */
+/*  TRUST STRIP                                                  */
+/* ============================================================= */
+
+function TrustStrip() {
+  return (
+    <section aria-label="Regulatory compliance" className="border-b border-[var(--border-color)] bg-[var(--bg-secondary)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6">
+        <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center">
+          {TRUST_BADGES.map((badge, i) => (
+            <li key={i} className="flex flex-col items-center">
+              <span className="text-sm font-bold text-[var(--text-primary)]/85 tracking-wider">{badge.label}</span>
+              <span className="text-[10px] uppercase tracking-wider text-[var(--text-primary)]/65">{badge.sublabel}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+/* ============================================================= */
+/*  STATS BAR                                                    */
+/* ============================================================= */
+
+function StatsBar() {
+  return (
+    <section aria-label="Key facts" className="border-b border-[var(--border-color)] bg-[var(--bg-secondary)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+        {STATS.map((stat, i) => (
+          <div key={i} className="text-center">
+            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[var(--text-primary)]">
+              {stat.value}{stat.suffix}
+            </div>
+            <div className="text-xs text-[var(--text-primary)]/65 mt-2 uppercase tracking-widest">
+              {stat.label}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
 
 /* ============================================================= */
 /*  FEATURES                                                     */
