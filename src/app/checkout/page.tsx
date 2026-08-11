@@ -114,7 +114,7 @@ function CheckoutContent() {
           {[1, 2, 3].map((s) => (
             <div
               key={s}
-              className={`flex-1 h-2 rounded ${step >= (s as any) ? 'bg-[var(--accent)]' : 'bg-[var(--bg-tertiary)]'}`}
+              className={`flex-1 h-2 rounded ${step >= s ? 'bg-[var(--accent)]' : 'bg-[var(--bg-tertiary)]'}`}
             />
           ))}
         </div>

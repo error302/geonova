@@ -300,7 +300,7 @@ export function parseGSIBlock(block: string): GSIMeasurement[] {
       const indexStr = String(word.index)
       if (GSI_CODE_MAP[indexStr]) {
         const key = GSI_CODE_MAP[indexStr]
-        ;(measurement as any)[key] = word.value
+        ;(measurement as unknown as Record<string, number>)[key] = word.value
       }
     }
 

@@ -86,7 +86,7 @@ export const GET = apiHandler(
 
       // Cache key: rounded to 10m grid (nearby searches share cache within 10m)
       const cacheKey = `beacons:near:${Math.round(e / 10) * 10}:${Math.round(n / 10) * 10}:${radius}:${limit}`
-      const cached = await redisCache.get<any>(cacheKey)
+      const cached = await redisCache.get<{ beacons: NearbyBeaconRow[]; searchType: 'proximity'; center: { easting: number; northing: number }; radiusM: number }>(cacheKey)
       if (cached) {
         return apiSuccess({ ...cached, cached: true })
       }

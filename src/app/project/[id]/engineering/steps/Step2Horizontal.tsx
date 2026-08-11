@@ -28,7 +28,7 @@ export function Step2Horizontal({
     setIps([...ips, newIp])
   }
 
-  const updateIP = (index: number, field: keyof IntersectionPoint, value: any) => {
+  const updateIP = (index: number, field: keyof IntersectionPoint, value: IntersectionPoint[keyof IntersectionPoint]) => {
     const updated = [...ips]
     updated[index] = { ...updated[index], [field]: value }
     setIps(updated)

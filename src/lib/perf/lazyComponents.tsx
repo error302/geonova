@@ -6,11 +6,11 @@
  *   // Then use <LazySurveyMap /> directly in JSX
  */
 
-import dynamic from 'next/dynamic'
+import dynamic, { type Loader } from 'next/dynamic'
 
 // Helper to make dynamic imports — typed loosely since component exports vary
-function lazy(loader: () => Promise<any>) {
-  return dynamic(loader, { ssr: false })
+function lazy(loader: () => Promise<unknown>) {
+  return dynamic(loader as unknown as Loader, { ssr: false })
 }
 
 // ─── Map Components ───────────────────────────────────────────────────────────

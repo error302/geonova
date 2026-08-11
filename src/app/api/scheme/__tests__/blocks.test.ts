@@ -48,7 +48,7 @@ function mr<T>(rows: T[]) {
   return { rows, command: '' as const, rowCount: rows.length, oid: 0 as const, fields: [] }
 }
 
-function createMockRequest(body: any): NextRequest {
+function createMockRequest(body: unknown): NextRequest {
   return new NextRequest('http://localhost/api/scheme/blocks', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

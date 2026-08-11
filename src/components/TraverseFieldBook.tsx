@@ -552,7 +552,7 @@ export default function TraverseFieldBook({ projectId, onImport }: TraverseField
                 </tr>
                 <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/30">
                   <th></th><th></th><th></th><th></th>
-                  {[1,2,3,4,5,6,7,8,9,10].map((i: any) => <th key={`item-${i}`} className="px-1 py-1 text-[10px] text-[var(--text-muted)]">{['','Deg','Min','Sec','','Deg','Min','Sec','','','','Deg','Min','Sec','','',''][i-1]}</th>)}
+                  {[1,2,3,4,5,6,7,8,9,10].map((i) => <th key={`item-${i}`} className="px-1 py-1 text-[10px] text-[var(--text-muted)]">{['','Deg','Min','Sec','','Deg','Min','Sec','','','','Deg','Min','Sec','','',''][i-1]}</th>)}
                 </tr>
               </thead>
               <tbody>

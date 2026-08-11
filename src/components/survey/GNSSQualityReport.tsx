@@ -70,7 +70,7 @@ export function GNSSQualityReport({ externalPosition }: {
     if (!externalPosition) return
 
     const q: GNSSQuality = {
-      fixQuality: externalPosition.fixType as any || (externalPosition.quality >= 4 ? 'rtk_fixed' : externalPosition.quality >= 2 ? 'dgps' : 'gps'),
+      fixQuality: externalPosition.fixType as GNSSQuality['fixQuality'] || (externalPosition.quality >= 4 ? 'rtk_fixed' : externalPosition.quality >= 2 ? 'dgps' : 'gps'),
       satellites: externalPosition.satellites || 0,
       satellitesGPS: 0,
       satellitesGLONASS: 0,

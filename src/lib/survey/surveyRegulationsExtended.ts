@@ -90,7 +90,7 @@ export function checkInstrumentApproval(
 export interface FieldNoteCheck {
   regulation: string
   requirement: string
-  status: 'pass' | 'fail' | 'warning'
+  status: 'pass' | 'fail' | 'warning' | 'not_applicable' | 'not_applicable'
   details: string
 }
 
@@ -160,7 +160,7 @@ export function checkFieldNoteCompliance(input: {
   checks.push({
     regulation: 'Reg 72',
     requirement: 'Topographical features shall be recorded in the field notes.',
-    status: input.topographicFeatures ? 'pass' : 'not_applicable' as any,
+    status: input.topographicFeatures ? 'pass' : 'not_applicable',
     details: input.topographicFeatures
       ? 'Topographic features recorded.'
       : 'Not applicable for this survey type.',

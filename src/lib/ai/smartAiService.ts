@@ -8,11 +8,12 @@
  */
 
 import { localLlmService, LocalChatOptions } from './localLlmService'
+import type { InitProgressReport } from '@mlc-ai/web-llm'
 
 export interface SmartChatOptions {
   messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>
   onToken?: (token: string) => void
-  onProgress?: (report: any) => void
+  onProgress?: (report: InitProgressReport) => void
   forceOffline?: boolean
 }
 

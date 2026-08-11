@@ -9,7 +9,7 @@ import type { AdjustedStation, Observation } from './networkAdjustment'
 export function generateNetworkDXF(params: {
   adjustedStations: AdjustedStation[]
   observations: Observation[]
-  projectData: Record<string, any>
+  projectData: { lr_number?: string; county?: string; district?: string; locality?: string }
   surveyorProfile: { fullName: string; registrationNumber: string; firmName: string }
 }): string {
   const { adjustedStations, observations, projectData, surveyorProfile } = params

@@ -150,11 +150,11 @@ export async function getUserVault(userId: string): Promise<ParcelVaultEntry[]> 
 
 export async function getVaultStats(): Promise<VaultStats> {
   const [total, shared, fresh, verify, stale] = await Promise.all([
-    db.query('SELECT COUNT(*) as count FROM parcel_vault'),
-    db.query('SELECT COUNT(*) as count FROM parcel_vault_shared'),
-    db.query("SELECT COUNT(*) as count FROM parcel_vault WHERE freshness = 'FRESH'"),
-    db.query("SELECT COUNT(*) as count FROM parcel_vault WHERE freshness = 'VERIFY'"),
-    db.query("SELECT COUNT(*) as count FROM parcel_vault WHERE freshness = 'STALE'")
+    db.query<{ count: string | number }>('SELECT COUNT(*) as count FROM parcel_vault'),
+    db.query<{ count: string | number }>('SELECT COUNT(*) as count FROM parcel_vault_shared'),
+    db.query<{ count: string | number }>("SELECT COUNT(*) as count FROM parcel_vault WHERE freshness = 'FRESH'"),
+    db.query<{ count: string | number }>("SELECT COUNT(*) as count FROM parcel_vault WHERE freshness = 'VERIFY'"),
+    db.query<{ count: string | number }>("SELECT COUNT(*) as count FROM parcel_vault WHERE freshness = 'STALE'")
   ])
 
   const countOf = (r: { rows: Array<{ count: string | number }> } | undefined) =>

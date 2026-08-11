@@ -23,7 +23,7 @@
 import { useMemo } from 'react';
 
 interface TraverseDiagramProps {
-  result: any;
+  result: TraverseDiagramResult | null;
 }
 
 interface Point {
@@ -57,7 +57,7 @@ export function TraverseDiagram({ result }: TraverseDiagramProps) {
   const PAD = 50;
 
   const { adjustedPath, rawPath, closingError } = useMemo(() => {
-    const legs = (result as TraverseDiagramResult).legs || [];
+    const legs = result?.legs ?? [];
     if (legs.length === 0) {
       return { adjustedPath: [], rawPath: [], closingError: 0 };
     }

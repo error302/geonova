@@ -16,6 +16,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import SettingsTabs from './components/SettingsTabs'
+import type { ProfileData } from './components/SettingsTabs'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,7 +32,7 @@ export default async function ProfileSettingsPage() {
   const userId = String(session.user.id)
 
   // Fetch full profile with firm info from joined surveyor_profiles
-  const { rows } = await db.query(
+  const { rows } = await db.query<ProfileData>(
     `SELECT
        p.id, p.full_name, p.firm_name, p.isk_number, p.phone,
        p.address, p.bio, p.avatar_url,

@@ -27,7 +27,7 @@ import { memoize } from '@/lib/performance'
 
 // Memoized area computation — caches results for same vertex sets
 const memoizedComputeArea = memoize(computeAreaWithPrecision, {
-  keyFn: (...args: any[]) => JSON.stringify(args[0]),
+  keyFn: (vertices) => JSON.stringify(vertices[0]),
   maxSize: 200,
 })
 

@@ -25,7 +25,7 @@ export function Step5Stations({
     setStations([...stations, { chainage: lastCh + 20, groundLevel: 0 }])
   }
 
-  const updateStation = (index: number, field: keyof StationData, value: any) => {
+  const updateStation = (index: number, field: keyof StationData, value: StationData[keyof StationData]) => {
     const updated = [...stations]
     updated[index] = { ...updated[index], [field]: value }
     setStations(updated)

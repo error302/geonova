@@ -50,7 +50,7 @@ function ScheduleFormModal({
   const [error, setError] = useState('')
   const [equipInput, setEquipInput] = useState('')
   const [memberInput, setMemberInput] = useState('')
-  const f = (k: string, v: any) => setForm(p => ({ ...p, [k]: v }))
+  const f = <K extends keyof typeof form>(k: K, v: (typeof form)[K]) => setForm(p => ({ ...p, [k]: v }))
 
   const toggleReminderDay = (d: number) => {
     setForm(p => ({

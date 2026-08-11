@@ -551,7 +551,7 @@ export default function SurveyReport({
                       placeholder="Describe and suggest a resolution..."
                       value={d.description}
                       onChange={e => {
-                        const updated = discrepancies.map((x: any) => x.id === d.id ? { ...x, description: e.target.value } : x)
+                        const updated = discrepancies.map((x) => x.id === d.id ? { ...x, description: e.target.value } : x)
                         setDiscrepancies(updated)
                       }}
                     />

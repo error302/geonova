@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/tooltip'
 import { apiPost, ApiError } from '@/lib/api/client'
 import { realtimeService } from '@/lib/realtime'
+import type { AdjustmentResult } from '@/lib/survey/networkAdjustment'
 import * as Y from 'yjs'
 
 // ponytail: response schemas — Phase 4 wave 2 will move these to src/lib/api/schemas/
@@ -65,7 +66,7 @@ interface ExportToolbarProps {
   surveyType?: string
   hasTraverseData: boolean
   hasAdjustedCoords: boolean
-  onAdjustmentComplete?: (result: any) => void
+  onAdjustmentComplete?: (result: AdjustmentResult) => void
 }
 
 interface TraverseResult {
@@ -183,7 +184,7 @@ export default function ExportToolbar({
       )
 
       setTraverseResult(result as unknown as TraverseResult)
-      onAdjustmentComplete?.(result)
+      onAdjustmentComplete?.(result as unknown as AdjustmentResult)
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message || 'Adjustment failed')

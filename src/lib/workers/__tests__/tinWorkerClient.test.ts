@@ -155,7 +155,7 @@ describe('tinWorker._handleRequest (wire format)', () => {
 
   it('throws on unknown op', () => {
     expect(() =>
-      _handleRequest({ id: 'req-x', op: 'unknown' as any, points: [] })
+      _handleRequest({ id: 'req-x', op: 'unknown' as never, points: [] })
     ).toThrow(/Unknown op/)
   })
 })

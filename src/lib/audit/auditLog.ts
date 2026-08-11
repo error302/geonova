@@ -326,7 +326,7 @@ export async function verifyChain(filter?: {
     ? 'SELECT * FROM audit_chain WHERE project_id = $1 ORDER BY sequence ASC'
     : 'SELECT * FROM audit_chain ORDER BY sequence ASC'
   const params = filter?.projectId ? [filter.projectId] : []
-  const result = await db.query(query, params)
+  const result = await db.query<AuditChainRow>(query, params)
 
   const entries = result.rows.map(rowToEntry)
   const modifiedEntries: ChainVerification['modifiedEntries'] = []
@@ -424,7 +424,7 @@ export async function queryAuditEntries(filter: {
   if (filter.offset !== undefined) params.push(filter.offset)
 
   const query = `SELECT * FROM audit_chain ${whereClause} ${orderClause} ${limitClause} ${offsetClause}`.trim()
-  const result = await db.query(query, params)
+  const result = await db.query<AuditChainRow>(query, params)
   return result.rows.map(rowToEntry)
 }
 
@@ -447,7 +447,7 @@ export async function getChainSummary(filter?: {
     ? 'SELECT * FROM audit_chain WHERE project_id = $1 ORDER BY sequence ASC'
     : 'SELECT * FROM audit_chain ORDER BY sequence ASC'
   const params = filter?.projectId ? [filter.projectId] : []
-  const result = await db.query(query, params)
+  const result = await db.query<AuditChainRow>(query, params)
   const entries = result.rows.map(rowToEntry)
 
   if (entries.length === 0) {

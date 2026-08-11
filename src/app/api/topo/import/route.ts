@@ -58,7 +58,7 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
   // Bulk import — wrap all inserts in a single transaction so partial
   // failures don't leave orphan survey points in the database.
   // (DB best practice: multi-row writes must be atomic.)
-  const inserted: any[] = []
+  const inserted: SurveyPointRow[] = []
   await db.transaction(async (client) => {
     for (const p of validPoints) {
       try {

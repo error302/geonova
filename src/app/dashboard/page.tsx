@@ -10,7 +10,7 @@ import { log } from '@/lib/logger'
 import { getAuthUser, isAdmin as checkIsAdmin } from '@/lib/auth/session'
 import { createClient } from '@/lib/api-client/server'
 
-import ProjectCard from '@/components/ProjectCard'
+import ProjectCard, { type ProjectCardProject } from '@/components/ProjectCard'
 import { ConnectivityIndicator } from '@/components/shared/ConnectivityIndicator'
 import OnboardingWrapper from '@/components/shared/OnboardingWrapper'
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed'
@@ -45,7 +45,7 @@ export default async function DashboardPage() {
   const userIsAdmin = await checkIsAdmin()
 
   // ponytail: Phase 6 — was `any[]`; now typed via query builder default
-  let projects: Record<string, unknown>[] = []
+  let projects: ProjectCardProject[] = []
   let subscription: Record<string, unknown> | null = null
 
   try {
@@ -54,13 +54,13 @@ export default async function DashboardPage() {
     if (userIsAdmin) {
       subscription = { plan_id: 'enterprise', status: 'active', trial_ends_at: null }
       const { data, error } = await dbClient.from('projects').select('*').order('created_at', { ascending: false })
-      if (!error) projects = (data as unknown as Record<string, unknown>[]) ?? []
+      if (!error) projects = (data as unknown as ProjectCardProject[]) ?? []
     } else {
       const [pRes, sRes] = await Promise.all([
         dbClient.from('projects').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
         dbClient.from('user_subscriptions').select('*').eq('user_id', user.id).maybeSingle(),
       ])
-      if (!pRes.error) projects = (pRes.data as unknown as Record<string, unknown>[]) ?? []
+      if (!pRes.error) projects = (pRes.data as unknown as ProjectCardProject[]) ?? []
       if (!sRes.error || sRes.error?.code === 'PGRST116') subscription = (sRes.data as Record<string, unknown>) ?? null
     }
   } catch (err) {
@@ -283,7 +283,7 @@ export default async function DashboardPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[minmax(180px,auto)]">
-          {projectsWithCounts.map((project: any, i: number) => {
+          {projectsWithCounts.map((project, i: number) => {
             // Asymmetrical bento grid logic:
             const pattern = [
               'md:col-span-8', 'md:col-span-4',

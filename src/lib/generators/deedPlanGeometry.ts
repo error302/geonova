@@ -315,7 +315,7 @@ export async function loadPreAdjustedFromDB(
  * are available.
  */
 async function computeFromFieldBook(projectId: string): Promise<DeedPlanGeometry> {
-  const entriesRes = await db.query(
+  const entriesRes = await db.query<{ row_index: number; station: string; raw_data: Record<string, unknown> }>(
     'SELECT row_index, station, raw_data FROM project_fieldbook_entries WHERE project_id = $1 ORDER BY row_index ASC',
     [projectId]
   );

@@ -38,7 +38,7 @@ export async function generateVolumetricReport(
   const project = projectRes.rows[0];
   if (!project) throw new Error('Project not found');
 
-  const entriesRes = await db.query(
+  const entriesRes = await db.query<{ row_index: number; raw_data: Record<string, unknown> }>(
     'SELECT row_index, station, raw_data FROM project_fieldbook_entries WHERE project_id = $1 ORDER BY row_index ASC',
     [projectId]
   );

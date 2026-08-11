@@ -10,11 +10,11 @@ export function initProjectSync(projectId: string) {
   activeSyncs.add(projectId)
 
   const doc = realtimeService.getDoc(projectId)
-  const yProject = doc.getMap<any>('project')
+  const yProject = doc.getMap<unknown>('project')
 
   // 1. Initial Load: If Yjs has data, push it to Zustand
   if (Array.from(yProject.keys()).length > 0) {
-    const projectData = yProject.toJSON() as ProjectData
+    const projectData = yProject.toJSON() as unknown as ProjectData
     useProjectStore.getState().loadProject(projectData)
   } else {
     // If Yjs is empty, initialize it from Zustand
@@ -34,7 +34,7 @@ export function initProjectSync(projectId: string) {
     // Prevent echo loops by checking if we caused this change
     if (event.transaction.local) return
 
-    const updatedData = yProject.toJSON() as ProjectData
+    const updatedData = yProject.toJSON() as unknown as ProjectData
     useProjectStore.getState().loadProject(updatedData)
   })
 

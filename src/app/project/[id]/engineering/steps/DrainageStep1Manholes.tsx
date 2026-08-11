@@ -31,7 +31,7 @@ export function DrainageStep1Manholes({
     setManholes([...manholes, newMh])
   }
 
-  const updateManhole = (index: number, field: keyof Manhole, value: any) => {
+  const updateManhole = (index: number, field: keyof Manhole, value: Manhole[keyof Manhole]) => {
     const updated = [...manholes]
     updated[index] = { ...updated[index], [field]: value }
     setManholes(updated)

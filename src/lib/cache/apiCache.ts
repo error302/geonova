@@ -29,7 +29,7 @@ export function withApiCache(
       : `api:${req.nextUrl.pathname}:${req.nextUrl.search}`
 
     // Try cache
-    const cached = await redisCache.get<{ data: any; headers: Record<string, string> }>(cacheKey)
+    const cached = await redisCache.get<{ data: unknown; headers: Record<string, string> }>(cacheKey)
     
     if (cached) {
       return NextResponse.json(cached.data, {

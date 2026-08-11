@@ -156,7 +156,7 @@ async function computeIPValues(
   let currentChainage = startChainage
   let prevBearing: number | null = null
 
-  const computed: any[] = []
+  const computed: AlignmentIpsRow[] = []
   for (let i = 0; i < ips.length; i++) {
     const ip = ips[i]
     const ipEasting = Number(ip.easting)

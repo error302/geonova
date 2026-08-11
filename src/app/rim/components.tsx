@@ -11,6 +11,7 @@ import {
   Waves,
   Factory,
   Gem,
+  type LucideIcon,
 } from 'lucide-react';
 
 // ────────────────────────────────────────────────────────────────
@@ -18,7 +19,7 @@ import {
 // ────────────────────────────────────────────────────────────────
 
 export function getCategoryIcon(category: string) {
-  const icons: Record<string, any> = {
+  const icons: Record<string, LucideIcon> = {
     urban: Building2,
     agricultural: Trees,
     pastoral: Mountain,

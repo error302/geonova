@@ -141,7 +141,7 @@ export default function TraverseComputePanel({ parcelId }: { parcelId: number })
     void loadSaved()
   }, [parcelId])
 
-  const updateObs = (index: number, field: keyof ObservationRow, value: any) => {
+  const updateObs = (index: number, field: keyof ObservationRow, value: ObservationRow[keyof ObservationRow]) => {
     setObservations(prev => prev.map((obs, i) =>
       i === index ? { ...obs, [field]: value } : obs
     ))

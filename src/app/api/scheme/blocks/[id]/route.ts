@@ -64,7 +64,7 @@ export const PATCH = apiHandler(
     }
 
     const updates: string[] = []
-    const values: any[] = []
+    const values: unknown[] = []
     let paramIndex = 1
 
     if (validated.block_number !== undefined) {

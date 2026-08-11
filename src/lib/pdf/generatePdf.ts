@@ -47,7 +47,7 @@ export async function generatePdf(options: PdfGenerationOptions): Promise<Buffer
 
   // Generate PDF
   const pdfBuffer = await page.pdf({
-    format: paperSize as any,
+    format: paperSize.toLowerCase() as 'a4' | 'a3',
     printBackground: true,
     margin: {
       top: '10mm',

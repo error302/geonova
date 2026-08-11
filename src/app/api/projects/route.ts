@@ -97,7 +97,7 @@ export const GET = apiHandler({
     const limit = Math.min(parseInt(url.searchParams.get('limit') || '50'), 200)
 
     let query: string
-    let params: any[]
+    let params: unknown[]
 
     if (cursor) {
       // Cursor is the created_at of the last item from the previous page

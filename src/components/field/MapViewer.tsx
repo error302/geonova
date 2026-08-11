@@ -93,7 +93,7 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
         // Inject OpenLayers CSS via link tag (dynamic import of CSS crashes in Next.js)
         if (!document.querySelector('link[href*="ol/ol.css"]')) {
           try {
-            await import('ol/ol.css' as any);
+            await import('ol/ol.css');
           } catch {
             const link = document.createElement('link');
             link.rel = 'stylesheet';

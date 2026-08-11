@@ -26,7 +26,7 @@ export function BoundarySelectorMap({ onBoundaryChange, className = '' }: Bounda
   useEffect(() => {
     if (!document.querySelector('link[href*="ol/ol.css"]')) {
       try {
-        void import('ol/ol.css' as any)
+        void import('ol/ol.css')
       } catch {
         const link = document.createElement('link')
         link.rel = 'stylesheet'

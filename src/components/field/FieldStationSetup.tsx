@@ -34,7 +34,7 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
     }
   )
 
-  const update = (field: keyof StationSetup, value: any) => {
+  const update = (field: keyof StationSetup, value: StationSetup[keyof StationSetup]) => {
     setSetup(prev => ({ ...prev, [field]: value }))
   }
 

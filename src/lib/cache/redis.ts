@@ -177,6 +177,6 @@ export async function cacheMiddleware(
 }
 
 interface ResponseCache {
-  data: any
+  data: unknown
   timestamp: number
 }

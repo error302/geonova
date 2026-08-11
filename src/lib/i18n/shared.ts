@@ -10,10 +10,10 @@ export function isLanguage(value: string | undefined | null): value is Language 
 function getNestedValue(obj: unknown, path: string): unknown {
   if (!obj) return undefined
   const parts = path.split('.').filter(Boolean)
-  let current: any = obj
+  let current: unknown = obj
   for (const part of parts) {
     if (current && typeof current === 'object' && part in current) {
-      current = current[part]
+      current = (current as Record<string, unknown>)[part]
     } else {
       return undefined
     }

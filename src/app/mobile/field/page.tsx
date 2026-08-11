@@ -16,6 +16,7 @@
  */
 
 import { Suspense, useState, useEffect, useCallback } from 'react'
+import type { CapturedBeaconPhoto } from '@/components/fieldbook/BeaconPhotoCapture'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -135,7 +136,7 @@ function MobileFieldContent() {
   }
 
   // ─── Observation handling ─────────────────────────────
-  const handleAddObservation = useCallback(async (row: Record<string, string>, photos: any[]) => {
+  const handleAddObservation = useCallback(async (row: Record<string, string>, photos: CapturedBeaconPhoto[]) => {
     if (!projectId) return
 
     const observation: FieldObservation = {

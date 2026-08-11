@@ -32,7 +32,7 @@ import { generateClaForm5 } from './claForm5';
 import { generateClaForm6 } from './claForm6';
 import { generateClaForm7 } from './claForm7';
 
-type FormGenerator = (data: any) => Uint8Array;
+type FormGenerator = (data: never) => Uint8Array;
 
 export const CLA_FORM_REGISTRY: Record<string, { generator: FormGenerator; description: string; claFormNumber: string }> = {
   cla_form_1: { generator: generateClaForm1, description: 'Community Land Registration Application', claFormNumber: 'CLA Form 1' },

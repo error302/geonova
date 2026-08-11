@@ -33,7 +33,7 @@ export type WorkerResponseType =
   | 'PONG'
   | 'ERROR'
 
-export interface WorkerMessage<T = any> {
+export interface WorkerMessage<T = unknown> {
   type: WorkerRequestType | WorkerResponseType
   payload: T
   id: string

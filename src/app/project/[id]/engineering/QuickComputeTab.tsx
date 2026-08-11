@@ -107,7 +107,7 @@ export function QuickComputeTab({
           {activeTab === 'curves' && <HorizontalCurvePanel projectId={projectId} projectData={projectData} surveyorProfile={surveyorProfile} />}
           {activeTab === 'superelevation' && <SuperelevationPanel projectId={projectId} projectData={projectData} surveyorProfile={surveyorProfile} />}
           {activeTab === 'volumes' && <VolumesPanel projectId={projectId} projectData={projectData} surveyorProfile={surveyorProfile} />}
-          {activeTab === 'network' && <NetworkAdjustmentPanel projectId={projectId} projectData={project as unknown as Record<string, any>} />}
+          {activeTab === 'network' && <NetworkAdjustmentPanel projectId={projectId} projectData={project as unknown as Record<string, unknown>} />}
           {activeTab === 'road_reserve' && <RoadReservePanel
             roadClass={project.engineering_data?.road?.roadClass || 'C'}
             roadLength={undefined}

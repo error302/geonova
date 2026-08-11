@@ -14,7 +14,7 @@ export function DiagramTitleBlock({ y, width, height, titleBlock: t }: Props) {
   return (
     <g>
       <line x1={8} y1={y} x2={width - 8} y2={y} stroke="#111" strokeWidth={1} />
-      {[1,2,3,4].map((i: any) => (
+      {[1,2,3,4].map((i) => (
         <line key={`item-${i}`} x1={col * i} y1={y} x2={col * i} y2={y + height - 8} stroke="#555" strokeWidth={0.5} />
       ))}
 

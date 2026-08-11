@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react'
+import { useState, type ComponentProps } from 'react'
 import DepartureWarning from './DepartureWarning'
 
 interface ValidationResult {
@@ -57,7 +57,7 @@ export default function GeometryValidationPanel() {
     <div className="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-4 space-y-4">
       <h3 className="text-sm font-bold text-[var(--text-primary)]">Road Geometric Validation — RDM 1.3</h3>
       
-      {result.status === 'RED' && <DepartureWarning result={result as any} />}
+      {result.status === 'RED' && <DepartureWarning result={result as ComponentProps<typeof DepartureWarning>['result']} />}
 
       <div className="grid grid-cols-2 gap-3">
         <div>

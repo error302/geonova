@@ -7,11 +7,11 @@ import { useSession } from 'next-auth/react'
 import {
   FolderKanban, LayoutDashboard, MapPinned, UserRound, UsersRound, Wrench, FileText,
   CalendarDays, Radar, Store, ChevronRight, X, AlertTriangle, Clock,
-  BookOpen, Compass, MapPin, ShieldCheck
+  BookOpen, Compass, MapPin, ShieldCheck, type LucideIcon
 } from 'lucide-react'
 import { PRIMARY_NAV_ITEMS, isNavItemActive } from '@/lib/navigation-shell'
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, LucideIcon> = {
   dashboard: LayoutDashboard,
   projects: FolderKanban,
   tools: Wrench,

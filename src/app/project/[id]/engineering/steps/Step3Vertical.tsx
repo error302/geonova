@@ -26,7 +26,7 @@ export function Step3Vertical({
     setVips([...vips, newVip])
   }
 
-  const updateVIP = (index: number, field: keyof VerticalIP, value: any) => {
+  const updateVIP = (index: number, field: keyof VerticalIP, value: VerticalIP[keyof VerticalIP]) => {
     const updated = [...vips]
     updated[index] = { ...updated[index], [field]: value }
     setVips(updated)

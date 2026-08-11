@@ -17,13 +17,13 @@
 
 | Family | Live | Floor (baseline) | Status |
 |---|---|---|---|
-| `no-unsafe-member-access` | 43 | **43** | active — 2-warning tier done (79 → 43) |
-| `no-unsafe-assignment` | 326 | **326** | active |
-| `no-explicit-any` | 62 | **62** | active |
+| `no-unsafe-member-access` | 30 | **30** | active — 1-warning tail done (43 → 30, explicit-any collateral) |
+| `no-unsafe-assignment` | 281 | **281** | active |
+| `no-explicit-any` | 0 | **0** | ✅ done (rule = error) — 1-warning tail + `db.ts` default ground |
 | `no-unsafe-argument` | 0 | **0** | ✅ done (rule = error) |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 | **0** | ✅ done |
-| **total warnings** | **2,544** | CI ceiling **3,700** | green |
+| **total warnings** | **2,412** | CI ceiling **3,700** | green |
 
 Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,155 · `no-console` 341 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` ~175 · `no-non-null-assertion` ~570 · `no-unsafe-return` ~159 · `no-restricted-syntax` 16.
 
@@ -31,7 +31,7 @@ Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` ~1,15
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
 - **HEAD:** `d41231d8` (explicit-any batch 4) — on `origin/main`; local work continues on `chore/lint-typing-page-batch`.
-- **Uncommitted (this batch):** member-access grind batch 9 — the 2-warning tier, 18 files / 36 member-access → 0 (community/directory + SubmissionClient + PlanPromotionPanel + BoundaryUploader typed fetch payloads; SurveyMap savedState shape; jobs.ts client row casts; ownership.test error json; community/projects/auditTrail `db.query<Row>` generics; traverse.test dropped `: any`; feedbackCollector real html2canvas types; claForm4/5/6 `splitTextToSize` → `string[]`; traverseToParcel typed fetch + OL Map; surveyDetector dropped `: any`; sanitize dompurify module typing). Floors member-access **43**, assignment **326**, explicit-any **62**, argument 0, total **2,544**.
+- **Uncommitted (this batch):** explicit-any grind batch 5 — the full 1-warning tail, 62 files / 62 explicit-any → 0, plus `db.ts`'s `= any` default → `= QueryResultRow` (the last explicit-any in the repo). Setters `value: any` → `T[keyof T]`; `useState<any>` → typed (`BrowserSession['user']`, `unknown`); `Record<string, any>` → `LucideIcon`/`unknown`; dropped `: any` in map callbacks (element type flows); OL casts (`ol/ol.css` unquoted, TileSource, `setStyle` structural); `WorkerMessage<T = unknown>`, `lazy()` generic, i18n `unknown` walk, claForms `(data: never)` registry, zustand `getMap<unknown>`, `raw` union, instrumented-pool `Function` overload; fallout fixes for the `QueryResultRow` default across auditLog/rbac/parcelVault/generators/settings-profile. Floors member-access **30**, assignment **281**, explicit-any **0** (rule = error), argument 0, total **2,412**.
 - **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).

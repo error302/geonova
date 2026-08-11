@@ -137,7 +137,7 @@ function DeleteConfirmModal({
 }
 
 /* ── ProjectCard ─────────────────────────────────────────────────────────── */
-interface ProjectCardProject {
+export interface ProjectCardProject {
   id: string
   name: string | null
   location?: string | null

@@ -14,7 +14,7 @@ const WorkflowCanvas = dynamic(
 
 export default function AutomatorPage() {
   const [running, setRunning] = useState(false)
-  const [results, setResults] = useState<any>(null)
+  const [results, setResults] = useState<unknown>(null)
   
   const handleRunWorkflow = async (nodes: Node[], edges: Edge[]) => {
     setRunning(true)
@@ -74,7 +74,7 @@ export default function AutomatorPage() {
         <WorkflowCanvas onSave={handleRunWorkflow} />
       </div>
       
-      {results && (
+      {!!results && (
         <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg p-6">
           <h3 className="text-lg font-semibold mb-4">Results</h3>
           <pre className="bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-x-auto">

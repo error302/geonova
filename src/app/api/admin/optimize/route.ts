@@ -76,7 +76,7 @@ async function analyzeQueries(): Promise<NextResponse> {
 }
 
 async function runFullOptimization(): Promise<NextResponse> {
-  const results: Record<string, any> = {}
+  const results: Record<string, unknown> = {}
 
   const indexResult = await applyIndexes()
   results.indexes = await indexResult.json()

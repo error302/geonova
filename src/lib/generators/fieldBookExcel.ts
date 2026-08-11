@@ -11,7 +11,7 @@ export async function generateFieldBookExcel(
   );
   const project = projectRes.rows[0] as { name: string; survey_type: string | null; ref_no: string | null } | undefined;
 
-  const entriesRes = await db.query(
+  const entriesRes = await db.query<{ row_index: number; raw_data: Record<string, unknown> }>(
     'SELECT row_index, raw_data FROM project_fieldbook_entries WHERE project_id = $1 ORDER BY row_index ASC',
     [projectId]
   );

@@ -78,7 +78,7 @@ export async function sendInquiry(listingId: string, data: {
   return res.ok
 }
 
-export async function fetchInquiries(listingId: string): Promise<any[]> {
+export async function fetchInquiries(listingId: string): Promise<unknown[]> {
   const res = await fetch(`/api/marketplace/inquiries?listingId=${listingId}`, {
     credentials: 'include',
   })

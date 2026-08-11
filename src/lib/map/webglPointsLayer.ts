@@ -161,7 +161,7 @@ export function updateWebGLPointsStyle(
 
   // WebGL points layer doesn't support setStyle — recreate the style object
   // In practice, you'd recreate the layer or use the layer's style function
-  ;(layer as any).setStyle({
+  ;(layer as unknown as { setStyle: (style: object) => void }).setStyle({
     'circle-radius': pointRadius,
     'circle-fill-color': [
       'interpolate',

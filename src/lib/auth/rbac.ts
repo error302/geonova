@@ -316,7 +316,7 @@ export async function getUserOrganizations(userId: string): Promise<
   }>
 > {
   try {
-    const { rows } = await db.query(
+    const { rows } = await db.query<{ organization_id: string; organization_name: string; organization_slug: string; role: Role; is_active: boolean }>(
       `SELECT
          om.organization_id,
          o.name AS organization_name,

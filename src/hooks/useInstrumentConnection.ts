@@ -28,6 +28,12 @@ import {
   type InstrumentInfo,
   type NMEAPosition,
 } from '@/lib/serial'
+import type {
+  GSIMeasurement,
+  TopconMeasurement,
+  TrimbleMeasurement,
+  SokkiaMeasurement,
+} from '@/lib/serial/protocolParsers'
 
 export interface StreamedPoint {
   id: string
@@ -42,7 +48,7 @@ export interface StreamedPoint {
   quality?: number     // Fix quality (NMEA)
   satellites?: number  // Number of satellites (NMEA)
   hdop?: number        // Horizontal dilution of precision
-  raw: any
+  raw: NMEAPosition | GSIMeasurement | TopconMeasurement | TrimbleMeasurement | SokkiaMeasurement
 }
 
 export interface UseInstrumentConnectionReturn {

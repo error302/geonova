@@ -36,7 +36,7 @@ export default function ObservationsPage() {
     setObservations(observations.filter((_, i) => i !== index));
   };
 
-  const updateObs = (index: number, field: keyof Observation, value: any) => {
+  const updateObs = (index: number, field: keyof Observation, value: Observation[keyof Observation]) => {
     const updated = [...observations];
     updated[index] = { ...updated[index], [field]: value };
     setObservations(updated);

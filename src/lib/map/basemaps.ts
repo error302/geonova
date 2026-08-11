@@ -52,7 +52,7 @@ export async function createSatelliteLayer() {
 export async function createBlankLayer() {
   const { default: TileLayer } = await import('ol/layer/Tile');
   const layer = new TileLayer({
-    source: null as any,
+    source: null as unknown as import('ol/source/Tile').default,
     zIndex: 0,
     visible: false,
   });

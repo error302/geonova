@@ -5,7 +5,7 @@ export async function createIncident(params: {
   project_id: string
   incident_type: string
   severity: string
-  location?: any
+  location?: unknown
   description: string
   evidence_images?: string[]
 }) {
