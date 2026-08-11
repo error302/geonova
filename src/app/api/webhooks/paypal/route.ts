@@ -16,6 +16,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayPalService } from '@/lib/payments/paypal'
+import { sendTemplatedEmail } from '@/lib/email-templates'
 import { db } from '@/lib/db'
 import type { CurrencyCode } from '@/lib/subscription/catalog'
 import { createVerify, createPublicKey } from 'crypto'
@@ -42,6 +43,28 @@ interface PaymentHistoryRow {
 
 interface UserSubscriptionRow {
   id: string
+}
+
+// ── Payment email helpers (fire-and-forget — webhooks must respond fast) ──
+async function lookupUser(userId: string): Promise<{ email: string; full_name: string } | undefined> {
+  const { rows } = await db.query<{ email: string; full_name: string }>(
+    'SELECT email, full_name FROM users WHERE id = $1 LIMIT 1',
+    [userId]
+  )
+  return rows[0]
+}
+
+function planDisplayName(planId: string): string {
+  const names: Record<string, string> = { pro: 'Pro', enterprise: 'Enterprise', basic: 'Basic' }
+  return names[planId] || planId
+}
+
+function notify(what: string, send: Promise<{ success: boolean; error?: string }>) {
+  void send.then((res) => {
+    if (!res.success && res.error !== 'Email service not configured') {
+      logger.warn(`[paypal] ${what} email not sent:`, { error: res.error })
+    }
+  })
 }
 
 // PayPal webhook event types we handle
@@ -242,6 +265,22 @@ export async function POST(request: NextRequest) {
             [captureId, payRows[0].id]
           )
         }
+
+        // Receipt email (fire-and-forget)
+        const paidUser = await lookupUser(payRows[0].user_id).catch(() => undefined)
+        if (paidUser?.email) {
+          const amount = event.resource?.amount
+          notify('receipt', sendTemplatedEmail('paymentReceipt', {
+            to: paidUser.email,
+            name: paidUser.full_name,
+            planName: planDisplayName(payRows[0].plan_id),
+            amount: Number(amount?.value ?? 0),
+            currency: (amount?.currency_code || 'USD').toUpperCase(),
+            paidAt: new Date().toISOString(),
+            transactionId: captureId || 'N/A',
+            paymentMethod: 'PayPal',
+          }))
+        }
       }
     }
 
@@ -260,6 +299,19 @@ export async function POST(request: NextRequest) {
             `UPDATE payment_history SET status = 'failed' WHERE id = $1`,
             [payRows[0].id]
           )
+
+          // Payment-failed email (fire-and-forget)
+          const failedUser = await lookupUser(payRows[0].user_id).catch(() => undefined)
+          if (failedUser?.email) {
+            notify('payment-failed', sendTemplatedEmail('paymentFailed', {
+              to: failedUser.email,
+              name: failedUser.full_name,
+              planName: planDisplayName(payRows[0].plan_id),
+              amount: 0,
+              currency: 'USD',
+              failureReason: 'PayPal declined the payment. Please try another payment method.',
+            }))
+          }
         }
       }
     }

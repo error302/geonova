@@ -11,6 +11,8 @@
  */
 
 import { escapeHtml } from './components'
+import { readFileSync } from 'fs'
+import { join } from 'path'
 
 export interface EmailBranding {
   appName: string
@@ -31,6 +33,20 @@ const BRANDING: EmailBranding = {
   appUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://metardu.space',
   year: new Date().getFullYear(),
 }
+
+/**
+ * METARDU logo embedded as a data URI so it renders without the recipient's
+ * client loading remote images (Gmail/Outlook block them by default). Falls
+ * back to the hosted URL when the local asset cannot be read.
+ */
+const LOGO_SRC: string = (() => {
+  try {
+    const png = readFileSync(join(process.cwd(), 'public', 'metardu-icon.png'))
+    return `data:image/png;base64,${png.toString('base64')}`
+  } catch {
+    return `${BRANDING.appUrl}/metardu-icon.png`
+  }
+})()
 
 export interface LayoutOptions {
   /** Optional preheader text shown in inbox preview (~85 chars max). */
@@ -89,6 +105,7 @@ export function renderEmailLayout(
           <!-- Header -->
           <tr>
             <td style="padding:32px 40px 24px;text-align:center;background-color:#0a0a0f;border-bottom:1px solid #1f1f2a;">
+              <img src="${LOGO_SRC}" alt="METARDU" width="56" height="56" style="display:block;margin:0 auto 10px;border-radius:12px;" />
               <h1 style="margin:0;color:${BRANDING.brandColor};font-size:28px;font-weight:800;letter-spacing:-0.02em;">METARDU</h1>
               <p style="margin:6px 0 0;color:#8a8a96;font-size:13px;letter-spacing:0.01em;">${escapeHtml(BRANDING.tagline)}</p>
             </td>

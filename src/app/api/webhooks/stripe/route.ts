@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 import { getStripeService } from '@/lib/payments/stripe'
+import { sendTemplatedEmail } from '@/lib/email-templates'
 
 interface StripeWebhookEvent {
   type: string
@@ -14,6 +15,10 @@ interface StripeWebhookEvent {
       status?: string
       currency?: string
       payment_intent?: string
+      amount_total?: number
+      amount_paid?: number
+      amount_due?: number
+      next_payment_attempt?: number
       last_payment_error?: { message?: string }
     }
   }
@@ -49,6 +54,29 @@ export async function POST(request: NextRequest) {
   }
 
   const db = (await import('@/lib/db')).default
+
+  // ── Payment email helpers (fire-and-forget — webhooks must respond fast,
+  // Stripe retries on slow responses) ────────────────────────────────────────
+  async function lookupUser(userId: string): Promise<{ email: string; full_name: string } | undefined> {
+    const { rows } = await db.query<{ email: string; full_name: string }>(
+      'SELECT email, full_name FROM users WHERE id = $1 LIMIT 1',
+      [userId]
+    )
+    return rows[0]
+  }
+
+  function planDisplayName(planId: string): string {
+    const names: Record<string, string> = { pro: 'Pro', enterprise: 'Enterprise', basic: 'Basic' }
+    return names[planId] || planId
+  }
+
+  function notify(what: string, send: Promise<{ success: boolean; error?: string }>) {
+    void send.then((res) => {
+      if (!res.success && res.error !== 'Email service not configured') {
+        logger.warn(`[stripe] ${what} email not sent:`, { error: res.error })
+      }
+    })
+  }
 
   switch (event.type) {
     case 'checkout.session.completed': {
@@ -113,6 +141,21 @@ export async function POST(request: NextRequest) {
         ['completed', session.id, paymentId, userId]
       )
 
+      // Receipt email for the new subscription (fire-and-forget)
+      const receiptUser = await lookupUser(userId).catch(() => undefined)
+      if (receiptUser?.email) {
+        notify('receipt', sendTemplatedEmail('paymentReceipt', {
+          to: receiptUser.email,
+          name: receiptUser.full_name,
+          planName: planDisplayName(planId),
+          amount: (session.amount_total ?? 0) / 100,
+          currency,
+          paidAt: now.toISOString(),
+          transactionId: session.payment_intent || session.id || 'N/A',
+          paymentMethod: 'Stripe card',
+        }))
+      }
+
       break
     }
 
@@ -165,6 +208,22 @@ export async function POST(request: NextRequest) {
           'UPDATE user_subscriptions SET status = $1 WHERE user_id = $2',
           ['expired', userSub.user_id]
         )
+
+        // Payment-failed email (fire-and-forget)
+        const failedUser = await lookupUser(userSub.user_id).catch(() => undefined)
+        if (failedUser?.email) {
+          notify('payment-failed', sendTemplatedEmail('paymentFailed', {
+            to: failedUser.email,
+            name: failedUser.full_name,
+            planName: planDisplayName(invoice.metadata?.plan_id || 'pro'),
+            amount: (invoice.amount_due ?? 0) / 100,
+            currency: (invoice.currency || 'USD').toUpperCase(),
+            failureReason: invoice.last_payment_error?.message || 'Your payment method was declined.',
+            ...(invoice.next_payment_attempt
+              ? { retryAt: new Date(invoice.next_payment_attempt * 1000).toISOString() }
+              : {}),
+          }))
+        }
       }
       break
     }
@@ -218,6 +277,21 @@ export async function POST(request: NextRequest) {
            WHERE user_id = $3`,
           [now.toISOString(), periodEnd.toISOString(), userId]
         )
+
+        // Renewal receipt email (fire-and-forget)
+        const paidUser = await lookupUser(userId).catch(() => undefined)
+        if (paidUser?.email) {
+          notify('receipt', sendTemplatedEmail('paymentReceipt', {
+            to: paidUser.email,
+            name: paidUser.full_name,
+            planName: planDisplayName(invoice.metadata?.plan_id || 'pro'),
+            amount: (invoice.amount_paid ?? 0) / 100,
+            currency: (invoice.currency || 'USD').toUpperCase(),
+            paidAt: now.toISOString(),
+            transactionId: invoice.payment_intent || invoice.id || 'N/A',
+            paymentMethod: 'Stripe card',
+          }))
+        }
       }
       break
     }
