@@ -149,7 +149,7 @@ export function renderStepContent(
               <p className="text-zinc-400 text-sm">Generate drainage layout PDF, invert levels schedule.</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              {['Drainage Layout PDF', 'Invert Levels Schedule', 'Manhole Schedule', 'Long Section PDF'].map((fmt: any) => (
+              {['Drainage Layout PDF', 'Invert Levels Schedule', 'Manhole Schedule', 'Long Section PDF'].map((fmt: string) => (
                 <button key={fmt} className="py-3 rounded-lg border border-zinc-700 text-zinc-300 text-sm hover:bg-zinc-800">
                   ↓ {fmt}
                 </button>
@@ -165,7 +165,7 @@ export function renderStepContent(
             <p className="text-zinc-400 text-sm">Generate PDF reports, long section, peg book.</p>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            {['Horizontal Alignment Report', 'Vertical Alignment Report', 'Earthworks Summary', 'Long Section PDF'].map((fmt: any) => (
+            {['Horizontal Alignment Report', 'Vertical Alignment Report', 'Earthworks Summary', 'Long Section PDF'].map((fmt: string) => (
               <button key={fmt} className="py-3 rounded-lg border border-zinc-700 text-zinc-300 text-sm hover:bg-zinc-800">
                 ↓ {fmt}
               </button>

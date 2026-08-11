@@ -139,7 +139,7 @@ export async function markObservationSynced(observationId: string): Promise<void
   const db = await getDB()
   const obs = await db.get('traverse_obs', observationId)
   if (obs) {
-    ;(obs as any).synced = true
+    obs.synced = true
     await db.put('traverse_obs', obs)
   }
 }
@@ -173,7 +173,7 @@ export async function getOfflineStats(projectId?: string): Promise<{
   return {
     totalProjects: projects.length,
     totalObservations: observations.length,
-    unsyncedObservations: (observations as any[]).filter(o => !o.synced).length,
+    unsyncedObservations: observations.filter((o) => !o.synced).length,
     dirtyProjects: pending.length,
   }
 }

@@ -668,11 +668,11 @@ export type CommandType =
   | 'stopTracking'
   | 'getInstrumentInfo';
 
-const COMMAND_SETS: Record<InstrumentBrand, Record<string, (...args: any[]) => MeasurementCommand>> = {
-  leica: LEICA_COMMANDS,
-  topcon: TOPCON_COMMANDS,
-  trimble: TRIMBLE_COMMANDS,
-  sokkia: SOKKIA_COMMANDS,
+const COMMAND_SETS: Record<InstrumentBrand, Record<string, (...args: unknown[]) => MeasurementCommand>> = {
+  leica: LEICA_COMMANDS as unknown as unknown as Record<string, (...args: unknown[]) => MeasurementCommand>,
+  topcon: TOPCON_COMMANDS as unknown as Record<string, (...args: unknown[]) => MeasurementCommand>,
+  trimble: TRIMBLE_COMMANDS as unknown as Record<string, (...args: unknown[]) => MeasurementCommand>,
+  sokkia: SOKKIA_COMMANDS as unknown as Record<string, (...args: unknown[]) => MeasurementCommand>,
 };
 
 /**
@@ -681,7 +681,7 @@ const COMMAND_SETS: Record<InstrumentBrand, Record<string, (...args: any[]) => M
 export function getInstrumentCommand(
   brand: InstrumentBrand,
   commandType: CommandType,
-  ...args: any[]
+  ...args: unknown[]
 ): MeasurementCommand {
   const commandSet = COMMAND_SETS[brand];
   if (!commandSet) {

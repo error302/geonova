@@ -51,12 +51,12 @@ export default function ChainageCalculator() {
 
   const removePoint = (id: string) => {
     if (alignmentPoints.length > 2) {
-      setAlignmentPoints(alignmentPoints.filter((p: any) => p.id !== id));
+      setAlignmentPoints(alignmentPoints.filter((p: AlignmentPoint) => p.id !== id));
     }
   };
 
   const updatePoint = (id: string, field: keyof AlignmentPoint, value: string) => {
-    setAlignmentPoints(alignmentPoints.map((p: any) => p.id === id ? { ...p, [field]: value } : p));
+    setAlignmentPoints(alignmentPoints.map((p: AlignmentPoint) => p.id === id ? { ...p, [field]: value } : p));
   };
 
   const calculate = () => {

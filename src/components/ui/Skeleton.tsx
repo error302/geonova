@@ -24,7 +24,7 @@ export function SkeletonTable() {
   return (
     <div className="animate-pulse">
       <div className="h-10 bg-[var(--bg-tertiary)] rounded mb-2"/>
-      {[1,2,3,4,5].map((i: any) => (
+      {[1,2,3,4,5].map((i: number) => (
         <div key={`item-${i}`} className="h-8 bg-[var(--bg-secondary)] rounded mb-1"/>
       ))}
     </div>
@@ -43,7 +43,7 @@ export function SkeletonMap() {
 export function SkeletonList() {
   return (
     <div className="animate-pulse space-y-3">
-      {[1,2,3,4,5].map((i: any) => (
+      {[1,2,3,4,5].map((i: number) => (
         <div key={`item-${i}`} className="h-16 bg-[var(--bg-secondary)] rounded-lg"/>
       ))}
     </div>

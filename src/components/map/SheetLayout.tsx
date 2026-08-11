@@ -8,7 +8,7 @@ import { to21037 } from '@/lib/map/projection';
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
-interface SheetLayoutProps {
+export interface SheetLayoutProps {
   show: boolean;
   map: import('ol/Map').default | null;
   planGeometry: PlanGeometry | null;

@@ -259,7 +259,7 @@ export const SURVEY_SYMBOLS: SurveySymbol[] = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const SYMBOL_REGISTRY = Object.fromEntries(
-  SURVEY_SYMBOLS.map((s: any) => [s.id, s])
+  SURVEY_SYMBOLS.map((s) => [s.id, s])
 ) as Record<string, SurveySymbol>;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -272,7 +272,7 @@ export function buildSymbolDefs(symbolIds?: string[]): string {
     ? SURVEY_SYMBOLS.filter((s) => symbolIds.includes(s.id))
     : SURVEY_SYMBOLS;
 
-  return `<defs>\n${symbols.map((s: any) => s.svgDef).join('\n')}\n</defs>`;
+  return `<defs>\n${symbols.map((s) => s.svgDef).join('\n')}\n</defs>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

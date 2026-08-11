@@ -149,7 +149,7 @@ export default function DynamicFieldBook({ projectId, surveyType, initialRows = 
         const sections = rows
           .filter((r) => r.chainage && r.area)
           .map((r) => ({ chainage: Number(r.chainage), area: Number(r.area) }))
-          .sort((a: any, b: any) => a.chainage - b.chainage);
+          .sort((a, b) => a.chainage - b.chainage);
         
         if (sections.length >= 2) {
           const result = computeCutFillVolume(sections);

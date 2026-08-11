@@ -39,13 +39,13 @@ import {
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
 
 // Helper to build a fake pg QueryResult-like object
-function rows(rows: any[]) {
+function rows(rows: Array<{ user_id: string | null }>) {
   return {
     rows,
     command: '' as const,
     rowCount: rows.length,
     oid: 0 as const,
-    fields: [] as any[],
+    fields: [],
   }
 }
 

@@ -1,3 +1,4 @@
+import type { CellValue } from 'exceljs'
 import type { ParsedInput, BOQData, BOQItem } from './types'
 
 export async function parseBOQSpreadsheet(file: File): Promise<ParsedInput> {
@@ -24,9 +25,9 @@ export async function parseBOQSpreadsheet(file: File): Promise<ParsedInput> {
     }
 
     // Convert worksheet rows to a 2D array (similar to sheet_to_json with header: 1)
-    const jsonData: any[][] = []
+    const jsonData: CellValue[][] = []
     firstSheet.eachRow({ includeEmpty: false }, (row) => {
-      const rowArray: any[] = []
+      const rowArray: CellValue[] = []
       for (let col = 1; col <= row.cellCount; col++) {
         const cell = row.getCell(col)
         rowArray.push(cell.value ?? '')
@@ -48,7 +49,7 @@ export async function parseBOQSpreadsheet(file: File): Promise<ParsedInput> {
       }
     }
 
-    const headers = jsonData[0].map((h: string) => String(h || '').toLowerCase().trim())
+    const headers = jsonData[0].map((h: CellValue) => String(h || '').toLowerCase().trim())
 
     const findColumn = (patterns: string[]): number => {
       return headers.findIndex(h => patterns.some((p) => h.includes(p)))

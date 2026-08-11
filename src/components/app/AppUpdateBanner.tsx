@@ -79,6 +79,7 @@ interface ServiceWorkerEvent extends Event {
 
 // Register SW update detection — call this once from layout or a provider
 let swDetectorRegistered = false
+let swDetectorCleanup: (() => void) | null = null
 
 export function registerServiceWorkerUpdateDetector() {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return
@@ -109,7 +110,7 @@ export function registerServiceWorkerUpdateDetector() {
     registration.addEventListener('updatefound', updatefoundHandler)
 
     // Store cleanup for potential module teardown
-    ;(registerServiceWorkerUpdateDetector as any)._cleanup = () => {
+    swDetectorCleanup = () => {
       if (stateChangeHandler && registration.installing) {
         registration.installing.removeEventListener('statechange', stateChangeHandler)
       }
@@ -121,6 +122,6 @@ export function registerServiceWorkerUpdateDetector() {
 
 /** Clean up SW update detection listeners (call on app teardown if needed) */
 export function unregisterServiceWorkerUpdateDetector() {
-  const cleanup = (registerServiceWorkerUpdateDetector as any)._cleanup
+  const cleanup = swDetectorCleanup
   if (typeof cleanup === 'function') cleanup()
 }

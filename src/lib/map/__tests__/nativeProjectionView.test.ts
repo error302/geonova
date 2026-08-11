@@ -38,7 +38,7 @@ jest.mock('proj4', () => ({
 // ---------------------------------------------------------------------------
 
 jest.mock('ol/proj/proj4', () => ({
-  register: jest.fn((_p4: any) => {}),
+  register: jest.fn((_p4: string) => {}),
 }))
 
 const mockProjection = {
@@ -47,7 +47,7 @@ const mockProjection = {
 }
 
 jest.mock('ol/proj', () => ({
-  register: jest.fn((_p4: any) => {}),
+  register: jest.fn((_p4: string) => {}),
   get: jest.fn(() => mockProjection),
   transform: jest.fn((coord: number[], _from: string, _to: string) => coord),
 }))

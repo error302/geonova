@@ -50,10 +50,10 @@ export const PATCH = apiHandler(
     }
 
     const updates: string[] = []
-    const values: any[] = []
+    const values: unknown[] = []
     let paramIndex = 1
 
-    const fieldMap: Record<string, any> = {
+    const fieldMap: Record<string, unknown> = {
       parcel_number: validated.parcel_number,
       lr_number_proposed: validated.lr_number_proposed,
       lr_number_confirmed: validated.lr_number_confirmed,

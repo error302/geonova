@@ -67,8 +67,9 @@ class PerformanceMonitor {
       let clsValue = 0
       const clsObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          if (!(entry as any).hadRecentInput) {
-            clsValue += (entry as any).value
+          const clsEntry = entry as { hadRecentInput?: boolean; value?: number }
+          if (!clsEntry.hadRecentInput) {
+            clsValue += clsEntry.value ?? 0
           }
         }
         this.record('CLS', clsValue)

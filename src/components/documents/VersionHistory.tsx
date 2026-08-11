@@ -227,20 +227,20 @@ function VersionDiff({ v1, v2 }: { v1: PlanVersion; v2: PlanVersion }) {
       type: 'added' | 'removed' | 'modified'
     }> = []
 
-    const fields: Array<{ key: keyof PlanVersion['data']; label: string; format?: (v: any) => string }> = [
+    const fields: Array<{ key: keyof PlanVersion['data']; label: string; format?: (v: string | number | undefined) => string }> = [
       { key: 'parcelNumber', label: 'Parcel Number' },
-      { key: 'areaHectares', label: 'Area (ha)', format: (v: number) => v.toFixed(4) },
+      { key: 'areaHectares', label: 'Area (ha)', format: (v) => (typeof v === 'number' ? v.toFixed(4) : String(v)) },
       { key: 'surveyorName', label: 'Surveyor' },
       { key: 'surveyorLicense', label: 'License' },
       { key: 'beaconCount', label: 'Beacons' },
-      { key: 'boundaryLength', label: 'Boundary Length (m)', format: (v: number) => v.toFixed(2) },
+      { key: 'boundaryLength', label: 'Boundary Length (m)', format: (v) => (typeof v === 'number' ? v.toFixed(2) : String(v)) },
       { key: 'status', label: 'Status' },
     ]
 
     for (const field of fields) {
       const val1 = v1.data[field.key]
       const val2 = v2.data[field.key]
-      const fmt = field.format || ((v: any) => String(v))
+      const fmt = field.format || ((v: unknown) => String(v))
 
       if (val1 === val2) continue
 

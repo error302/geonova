@@ -99,8 +99,8 @@ export async function syncProject(
     const db = await getDB()
     const project = await db.get('projects', projectId)
     if (project) {
-      ;(project as any).last_sync = new Date().toISOString()
-      ;(project as any).dirty = false
+      project.last_sync = new Date().toISOString()
+      project.dirty = false
       await db.put('projects', project)
     }
   }

@@ -179,7 +179,7 @@ export function NetworkAdjustmentPanel({ projectId, projectData, surveyorProfile
     }])
   }
 
-  const updateStation = (id: string, field: keyof Station, value: any) => {
+  const updateStation = (id: string, field: keyof Station, value: string | number | boolean) => {
     setStations(prev => prev.map(s => s.id === id ? { ...s, [field]: value } : s))
   }
 
@@ -197,7 +197,7 @@ export function NetworkAdjustmentPanel({ projectId, projectData, surveyorProfile
     }])
   }
 
-  const updateObservation = (idx: number, field: keyof Observation, value: any) => {
+  const updateObservation = (idx: number, field: keyof Observation, value: string | number) => {
     setObservations(prev => prev.map((o, i) => i === idx ? { ...o, [field]: value } : o))
   }
 

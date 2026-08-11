@@ -77,7 +77,7 @@ export default function SurveyMap({
   }, [adjustedStations]);
 
   // ── Dynamically import SheetLayout to avoid SSR issues ─────────
-  const [SheetLayoutComponent, setSheetLayoutComponent] = useState<React.ComponentType<any> | null>(null);
+  const [SheetLayoutComponent, setSheetLayoutComponent] = useState<React.ComponentType<import('./SheetLayout').SheetLayoutProps> | null>(null);
 
   useEffect(() => {
     import('./SheetLayout').then((mod) => {
@@ -119,7 +119,7 @@ export default function SurveyMap({
 
     // Store handler references for cleanup
     let viewChangeHandler: (() => void) | null = null;
-    let mapClickHandler: ((evt: any) => void) | null = null;
+    let mapClickHandler: ((evt: { pixel: number[]; coordinate: number[] }) => void) | null = null;
 
     async function initMap() {
       await registerProjections();

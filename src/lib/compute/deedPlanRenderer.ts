@@ -309,8 +309,8 @@ function buildBoundaryLabels(
   toX:(e:number)=>number, toY:(n:number)=>number
 ): string {
   return legs.map(leg => {
-    const fp = pts.find((p:any)=>p.id===leg.fromPoint)
-    const tp = pts.find((p:any)=>p.id===leg.toPoint)
+    const fp = pts.find((p) => p.id === leg.fromPoint)
+    const tp = pts.find((p) => p.id === leg.toPoint)
     if (!fp || !tp) return ''
     const fx=toX(fp.easting), fy=toY(fp.northing), tx=toX(tp.easting), ty=toY(tp.northing)
     const mx=(fx+tx)/2, my=(fy+ty)/2

@@ -106,7 +106,7 @@ const universities = [
 
 export function getUniversities(country?: string) {
   if (!country) return universities
-  return universities.filter((u: any) => u.country.toLowerCase() === country.toLowerCase())
+  return universities.filter((u) => u.country.toLowerCase() === country.toLowerCase())
 }
 
 export function requestUniversityLicense(
@@ -114,7 +114,7 @@ export function requestUniversityLicense(
   seats: number,
   licenseType: UniversityLicense['licenseType']
 ): UniversityLicense {
-  const uni = universities.find((u: any) => u.id === universityId)
+  const uni = universities.find((u) => u.id === universityId)
   if (!uni) throw new Error('University not found')
   
   const fees: Record<UniversityLicense['licenseType'], number> = {

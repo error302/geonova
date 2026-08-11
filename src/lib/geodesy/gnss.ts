@@ -318,7 +318,7 @@ export function calculatePDOP(satellites: Array<{ x: number; y: number; z: numbe
 
 // Matrix utilities
 function transpose(m: number[][]): number[][] {
-  return m[0].map((_, i) => m.map((row: any) => row[i]))
+  return m[0].map((_, i) => m.map((row) => row[i]))
 }
 
 function multiply(a: number[][], b: number[][]): number[][] {
@@ -360,5 +360,5 @@ function inverse(m: number[][]): number[][] | null {
     }
   }
   
-  return aug.map((row: any) => row.slice(n))
+  return aug.map((row) => row.slice(n))
 }
