@@ -146,29 +146,39 @@ export async function middleware(request: NextRequest) {
     const identifier = getClientIdentifier(request)
 
     // Determine the rate-limit category from the URL path
-    let category: RateLimitCategory = 'api'
+    let category: RateLimitCategory | null = 'api'
     const path = request.nextUrl.pathname
 
-    if (path.startsWith('/api/auth/'))           category = 'auth'
+    if (path.startsWith('/api/auth/')) {
+      // The auth budget exists to slow credential brute-force, which is
+      // POST-only. NextAuth's discovery/session endpoints (session, csrf,
+      // providers, signout, error, verify-request) are GETs the client fires
+      // on every page load — applying the tight 20/min budget to them trips
+      // false 429s for shared IPs (and E2E suites). App-level brute-force
+      // limits (loginLimiter) still apply inside the route handlers.
+      category = request.method === 'POST' ? 'auth' : null
+    }
     else if (path.startsWith('/api/submissions')) category = 'submission'
     else if (path.startsWith('/api/upload'))     category = 'upload'
     else if (path.startsWith('/api/mpesa'))      category = 'mpesa'
     else if (path.startsWith('/api/export'))     category = 'export'
 
-    const limits = RATE_LIMITS[category]
-    const result = await rateLimit(identifier, limits.max, limits.windowMs)
+    if (category) {
+      const limits = RATE_LIMITS[category]
+      const result = await rateLimit(identifier, limits.max, limits.windowMs)
 
-    if (!result.allowed) {
-      // Compute seconds until the window resets.
-      // The in-memory store tracks resetTime; for Upstash we approximate from windowMs.
-      const retryAfterSeconds = Math.ceil(limits.windowMs / 1000)
-      return new NextResponse('Too Many Requests', {
-        status: 429,
-        headers: {
-          'Retry-After': String(retryAfterSeconds),
-          'X-RateLimit-Remaining': '0',
-        },
-      })
+      if (!result.allowed) {
+        // Compute seconds until the window resets.
+        // The in-memory store tracks resetTime; for Upstash we approximate from windowMs.
+        const retryAfterSeconds = Math.ceil(limits.windowMs / 1000)
+        return new NextResponse('Too Many Requests', {
+          status: 429,
+          headers: {
+            'Retry-After': String(retryAfterSeconds),
+            'X-RateLimit-Remaining': '0',
+          },
+        })
+      }
     }
   }
 

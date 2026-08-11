@@ -1,36 +1,53 @@
 import { test, expect } from '@playwright/test'
+import { encode } from 'next-auth/jwt'
 
 /**
- * Mock NextAuth session so protected pages render their full UI.
- * This avoids needing a real database while still testing the rendered components.
+ * Mint a real NextAuth session cookie so protected pages render their full UI.
+ * The middleware's getToken() check decodes the session *cookie* (not the
+ * /api/auth/session API), so mocking that endpoint never satisfied it — the
+ * page was always redirected to /login before it could render. Producing the
+ * cookie with next-auth's own `encode` (same AUTH_SECRET the server uses)
+ * keeps middleware, server components and /api/auth/session in agreement
+ * without needing a real database.
  */
 async function mockAuthSession(page: import('@playwright/test').Page) {
-  // Intercept NextAuth session endpoint to return a mock authenticated session
-  await page.route('**/api/auth/session', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        user: {
-          id: 'test-user-id',
-          email: 'test@metardu.test',
-          name: 'Test Surveyor',
-          role: 'surveyor',
-        },
-        expires: new Date(Date.now() + 86400000).toISOString(),
-      }),
-    })
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET
+  if (!secret) {
+    throw new Error('AUTH_SECRET is required to mint the E2E session cookie')
+  }
+  const token = await encode({
+    secret,
+    maxAge: 60 * 60, // 1 hour
+    token: {
+      sub: 'test-user-id',
+      name: 'Test Surveyor',
+      email: 'test@metardu.test',
+      role: 'surveyor',
+      picture: null,
+      jti: 'e2e-session',
+    },
   })
-
-  // Intercept JWT endpoint so the middleware token check passes
-  await page.route('**/api/auth/jwt', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        token: 'mock-jwt-token',
-      }),
-    })
+  // next-auth uses the __Secure- prefix when NEXTAUTH_URL is https (and
+  // marks the cookie Secure). Match the server's effective cookie name so the
+  // middleware's getToken() can decode it. CI runs without NEXTAUTH_URL, so
+  // the plain non-secure name is the default there.
+  const authUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || ''
+  const cookieName = authUrl.startsWith('https://')
+    ? '__Secure-next-auth.session-token'
+    : 'next-auth.session-token'
+  await page.context().addCookies([
+    { name: cookieName, value: token, url: 'http://localhost:3099' },
+  ])
+  // FieldModeToggle shows an onboarding tooltip 800ms after mount unless
+  // metardu_field_tooltip_seen is set. Its dismiss overlay is a fixed
+  // full-screen button (z-40) that swallows every pointer event on the page,
+  // so seed the key to keep the tooltip from blocking the tab interactions.
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem('metardu_field_tooltip_seen', 'true')
+    } catch {
+      /* ignore */
+    }
   })
 }
 

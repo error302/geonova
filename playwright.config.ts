@@ -1,4 +1,19 @@
 import { defineConfig, devices } from '@playwright/test'
+import { readFileSync, existsSync } from 'fs'
+
+// Load .env (Next.js convention) so specs can mint session cookies with the
+// same AUTH_SECRET the dev server uses. Vars already in the process env (CI
+// sets them explicitly on the workflow step) win; only missing ones are set.
+// Kept dependency-free: dotenv is only a transitive dep of Next.js. Values are
+// trimmed (dotenv behavior) — the local .env is CRLF with trailing spaces.
+if (existsSync('.env')) {
+  for (const rawLine of readFileSync('.env', 'utf8').split(/\r?\n/)) {
+    const m = rawLine.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/)
+    if (m && !(m[1] in process.env)) {
+      process.env[m[1]] = m[2].trim().replace(/^['"]|['"]$/g, '')
+    }
+  }
+}
 
 // CI_E2E_PROD=1 boots a production server (next build + next start) instead of
 // the dev server. Prod page loads are ~1-2s vs 10-16s lazy dev compiles, which
