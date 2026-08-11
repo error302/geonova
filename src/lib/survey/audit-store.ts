@@ -369,9 +369,9 @@ function rowToAuditEntry(row: AuditTrailRow): AuditEntry {
     projectId: row.project_id as string,
     userId: row.user_id as string,
     operation: row.operation as AuditOperation,
-    inputs: typeof row.inputs === 'string' ? JSON.parse(row.inputs as string) : (row.inputs as Record<string, unknown>),
-    outputs: typeof row.outputs === 'string' ? JSON.parse(row.outputs as string) : (row.outputs as Record<string, unknown>),
-    correctionsApplied: typeof row.corrections === 'string' ? JSON.parse(row.corrections as string) : (row.corrections as AuditEntry['correctionsApplied']),
+    inputs: typeof row.inputs === 'string' ? ((JSON.parse(row.inputs as string) as unknown) as Record<string, unknown>) : (row.inputs as Record<string, unknown>),
+    outputs: typeof row.outputs === 'string' ? ((JSON.parse(row.outputs as string) as unknown) as Record<string, unknown>) : (row.outputs as Record<string, unknown>),
+    correctionsApplied: typeof row.corrections === 'string' ? ((JSON.parse(row.corrections as string) as unknown) as AuditEntry['correctionsApplied']) : (row.corrections as AuditEntry['correctionsApplied']),
     formula: row.formula as string,
     reference: row.reference as string,
     softwareVersion: row.software_version as string,
@@ -380,7 +380,7 @@ function rowToAuditEntry(row: AuditTrailRow): AuditEntry {
     chainHash: row.chain_hash as string,
     durationMs: row.duration_ms as number,
     accuracyCheck: row.accuracy_check
-      ? (typeof row.accuracy_check === 'string' ? JSON.parse(row.accuracy_check as string) : row.accuracy_check) as AuditEntry['accuracyCheck']
+      ? (typeof row.accuracy_check === 'string' ? ((JSON.parse(row.accuracy_check as string) as unknown) as AuditEntry['accuracyCheck']) : row.accuracy_check)
       : null,
   };
 }

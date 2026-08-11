@@ -32,7 +32,7 @@ class DatabaseOptimizer {
         const duration = Date.now() - startTime
         this.logQuery(`SELECT ${table}`, duration)
         
-        return data || []
+        return ((data || []) as unknown) as T[]
       },
       ttlSeconds
     )
@@ -106,7 +106,7 @@ class DatabaseOptimizer {
 
     if (error) throw error
 
-    const results = (data || []) as T[]
+    const results = (data || []) as unknown as T[]
     const hasMore = results.length > limit
     const trimmedResults = hasMore ? results.slice(0, -1) : results
 

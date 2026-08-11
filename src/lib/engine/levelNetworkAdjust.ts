@@ -105,7 +105,7 @@ export function adjustLevelNetwork(
     // Variance is proportional to distance, so w = 1/var \propto 1/L
     const w = 1 / obs.distanceKm
 
-    const row: number[] = new Array(n).fill(0)
+    const row: number[] = new Array<number>(n).fill(0)
     if (stationIndex.has(obs.to)) row[stationIndex.get(obs.to)!] = 1
     if (stationIndex.has(obs.from)) row[stationIndex.get(obs.from)!] = -1
 
@@ -206,7 +206,7 @@ export function adjustLevelNetwork(
 
 // Re-using matrix functions
 function multiplyAtWA(A: number[][], W: number[], n: number): number[][] {
-  const result = Array.from({ length: n }, () => new Array(n).fill(0))
+  const result = Array.from({ length: n }, () => new Array<number>(n).fill(0))
   for (let i = 0; i < n; i++)
     for (let j = 0; j < n; j++)
       for (let k = 0; k < A.length; k++)
@@ -215,7 +215,7 @@ function multiplyAtWA(A: number[][], W: number[], n: number): number[][] {
 }
 
 function multiplyAtWl(A: number[][], W: number[], l: number[], n: number): number[] {
-  const result = new Array(n).fill(0)
+  const result = new Array<number>(n).fill(0)
   for (let i = 0; i < n; i++)
     for (let k = 0; k < A.length; k++)
       result[i] += A[k][i] * W[k] * l[k]
@@ -237,7 +237,7 @@ function solveLinearSystem(A: number[][], b: number[]): number[] {
       for (let k = col; k <= n; k++) M[row][k] -= factor * M[col][k]
     }
   }
-  const x = new Array(n).fill(0)
+  const x = new Array<number>(n).fill(0)
   for (let i = n - 1; i >= 0; i--) {
     x[i] = M[i][n]
     for (let j = i + 1; j < n; j++) x[i] -= M[i][j] * x[j]
@@ -248,7 +248,7 @@ function solveLinearSystem(A: number[][], b: number[]): number[] {
 
 function invertMatrix(A: number[][], n: number): number[][] {
   const M = A.map((row, i) => {
-    const aug: number[] = [...row, ...new Array(n).fill(0)]
+    const aug: number[] = [...row, ...new Array<number>(n).fill(0)]
     aug[n + i] = 1
     return aug
   })
@@ -258,7 +258,7 @@ function invertMatrix(A: number[][], n: number): number[][] {
       if (Math.abs(M[row][col]) > Math.abs(M[maxRow][col])) maxRow = row
     ;[M[col], M[maxRow]] = [M[maxRow], M[col]]
     const pivot = M[col][col]
-    if (Math.abs(pivot) < 1e-12) return Array.from({ length: n }, () => new Array(n).fill(0) as number[])
+    if (Math.abs(pivot) < 1e-12) return Array.from({ length: n }, () => new Array<number>(n).fill(0))
     for (let k = 0; k < 2 * n; k++) M[col][k] /= pivot
     for (let row = 0; row < n; row++) {
       if (row === col) continue

@@ -87,7 +87,7 @@ class Matrix {
   constructor(rows: number, cols: number) {
     this.rows = rows;
     this.cols = cols;
-    this.data = Array.from({ length: rows }, () => new Array(cols).fill(0));
+    this.data = Array.from({ length: rows }, () => new Array<number>(cols).fill(0));
   }
   
   static fromArray(arr: number[][]): Matrix {

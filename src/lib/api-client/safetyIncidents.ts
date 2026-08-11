@@ -10,8 +10,9 @@ export async function createIncident(params: {
   evidence_images?: string[]
 }) {
   const dbClient = createClient()
-  const { data: { session } } = await dbClient.auth.getSession()
-  const user = (session as BrowserSession | null)?.user ?? null
+  const authRes = await dbClient.auth.getSession()
+  const session = authRes.data?.session
+  const user = (session as unknown as BrowserSession | null)?.user ?? null
   if (!user) throw new Error('Not authenticated')
 
   const { data, error } = await dbClient

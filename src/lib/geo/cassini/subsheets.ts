@@ -48,7 +48,7 @@ function solveLinearSystem(A: number[][], b: number[]): number[] {
     }
   }
 
-  const x = new Array(n).fill(0)
+  const x = new Array<number>(n).fill(0)
   for (let i = n - 1; i >= 0; i--) {
     let sum = aug[i][n]
     for (let j = i + 1; j < n; j++) {
@@ -62,8 +62,8 @@ function solveLinearSystem(A: number[][], b: number[]): number[] {
 function solveLeastSquares(A: number[][], b: number[]): number[] {
   const m = A.length
   const n = A[0].length
-  const ATA: number[][] = Array.from({ length: n }, () => new Array(n).fill(0))
-  const ATb: number[] = new Array(n).fill(0)
+  const ATA: number[][] = Array.from({ length: n }, () => new Array<number>(n).fill(0))
+  const ATb: number[] = new Array<number>(n).fill(0)
 
   for (let r = 0; r < m; r++) {
     for (let i = 0; i < n; i++) {
@@ -209,7 +209,7 @@ export function getUtmZone(sheetId: string): number {
 export function getSubSheetGrid(sheetId: string): (SubSheetDef | null)[][] {
   const subs = KENYA_SUB_SHEETS.filter(ss => ss.sheetId === sheetId)
   if (subs.length === 0) return []
-  const grid: (SubSheetDef | null)[][] = Array.from({ length: 5 }, () => Array(5).fill(null))
+  const grid: (SubSheetDef | null)[][] = Array.from({ length: 5 }, () => new Array<SubSheetDef | null>(5).fill(null))
   for (const sub of subs) {
     const idx = parseInt(sub.subId) - 1
     if (idx >= 0 && idx < 25) {

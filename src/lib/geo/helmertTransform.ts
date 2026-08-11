@@ -255,7 +255,7 @@ export function transformPoints(
 function transpose(A: number[][]): number[][] {
   const rows = A.length
   const cols = A[0].length
-  const result: number[][] = Array(cols).fill(null).map(() => Array(rows).fill(0))
+  const result: number[][] = Array.from({ length: cols }, () => new Array<number>(rows).fill(0))
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       result[j][i] = A[i][j]
@@ -268,7 +268,7 @@ function matMul(A: number[][], B: number[][]): number[][] {
   const rows = A.length
   const cols = B[0].length
   const inner = B.length
-  const result: number[][] = Array(rows).fill(null).map(() => Array(cols).fill(0))
+  const result: number[][] = Array.from({ length: rows }, () => new Array<number>(cols).fill(0))
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       let sum = 0
@@ -283,7 +283,7 @@ function matMul(A: number[][], B: number[][]): number[][] {
 
 function matVec(A: number[][], v: number[]): number[] {
   const rows = A.length
-  const result: number[] = Array(rows).fill(0)
+  const result: number[] = new Array<number>(rows).fill(0)
   for (let i = 0; i < rows; i++) {
     let sum = 0
     for (let j = 0; j < v.length; j++) {

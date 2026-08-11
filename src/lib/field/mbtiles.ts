@@ -8,7 +8,7 @@ export async function uploadMBTiles(file: File): Promise<MBTilesSession> {
     const err = (await res.json()) as { error?: string };
     throw new Error(err.error ?? 'Upload failed');
   }
-  return res.json() as Promise<MBTilesSession>;
+  return (await res.json()) as unknown as MBTilesSession;
 }
 
 // buildOLMBTilesLayer is only called inside MapViewer useEffect (browser-only)
@@ -16,9 +16,9 @@ export async function uploadMBTiles(file: File): Promise<MBTilesSession> {
 export function buildOLMBTilesLayer(session: MBTilesSession): import('ol/layer/Tile').default {
   // Browser-only dynamic require (SSR-safe, see note above).
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { default: XYZ } = require('ol/source/XYZ');
+  const { default: XYZ } = require('ol/source/XYZ') as typeof import('ol/source/XYZ');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { default: TileLayer } = require('ol/layer/Tile');
+  const { default: TileLayer } = require('ol/layer/Tile') as typeof import('ol/layer/Tile');
   
   return new TileLayer({
     source: new XYZ({

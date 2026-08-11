@@ -41,8 +41,9 @@ function mapSubmissionRow(row: ProjectSubmissionRow): ProjectSubmissionRecord {
 
 export async function getOrCreateProjectSubmission(projectId: string): Promise<ProjectSubmissionRecord> {
   const dbClient = createClient()
-  const { data: { session } } = await dbClient.auth.getSession()
-  const user = (session as BrowserSession | null)?.user ?? null
+  const authRes = await dbClient.auth.getSession()
+  const session = authRes.data?.session
+  const user = (session as unknown as BrowserSession | null)?.user ?? null
 
   if (!user) {
     throw new Error('Not authenticated')
@@ -104,8 +105,9 @@ export async function updateProjectSubmission(
   }>
 ): Promise<ProjectSubmissionRecord> {
   const dbClient = createClient()
-  const { data: { session } } = await dbClient.auth.getSession()
-  const user = (session as BrowserSession | null)?.user ?? null
+  const authRes = await dbClient.auth.getSession()
+  const session = authRes.data?.session
+  const user = (session as unknown as BrowserSession | null)?.user ?? null
 
   if (!user) {
     throw new Error('Not authenticated')
@@ -125,7 +127,7 @@ export async function updateProjectSubmission(
 
   const sanitized = Object.fromEntries(
     Object.entries(payload).filter(([, value]) => value !== undefined)
-  )
+  ) as Record<string, unknown>
 
   const { data, error } = await dbClient
     .from('project_submissions')
