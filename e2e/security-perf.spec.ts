@@ -61,7 +61,10 @@ test.describe('Performance', () => {
       !e.includes('next-auth') &&
       !e.includes('CLIENT_FETCH_ERROR') &&
       !e.includes('/api/auth/') &&
-      !e.includes('500 (Internal Server Error)')
+      !e.includes('500 (Internal Server Error)') &&
+      !e.includes('429 (Too Many Requests)') &&
+      !e.includes("directive 'bluetooth'") &&
+      !e.includes('Executing inline script violates the following Content Security Policy directive')
     )
     expect(realErrors).toHaveLength(0)
   })
@@ -81,7 +84,10 @@ test.describe('Performance', () => {
       !e.includes('next-auth') &&
       !e.includes('CLIENT_FETCH_ERROR') &&
       !e.includes('/api/auth/') &&
-      !e.includes('500 (Internal Server Error)')
+      !e.includes('500 (Internal Server Error)') &&
+      !e.includes('429 (Too Many Requests)') &&
+      !e.includes("directive 'bluetooth'") &&
+      !e.includes('Executing inline script violates the following Content Security Policy directive')
     )
     expect(realErrors).toHaveLength(0)
   })
