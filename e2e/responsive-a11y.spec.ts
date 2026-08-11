@@ -18,14 +18,14 @@ test.describe('Responsive Design — Mobile', () => {
 
   test('login page shows mobile branding', async ({ page }) => {
     await page.goto('/login')
-    const mobileBrand = page.locator('.md\\:hidden')
-    await expect(mobileBrand.first()).toBeVisible()
+    const logoLink = page.locator('a[href="/"]')
+    await expect(logoLink.first()).toBeVisible()
   })
 
   test('professional tools grid is single column on mobile', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('h3').filter({ hasText: 'Leveling' })).toBeVisible()
-    await expect(page.locator('h3').filter({ hasText: 'Area Calculation' })).toBeVisible()
+    await expect(page.locator('h3').filter({ hasText: 'Traverse' })).toBeVisible()
+    await expect(page.locator('h3').filter({ hasText: 'Contours' })).toBeVisible()
   })
 })
 
