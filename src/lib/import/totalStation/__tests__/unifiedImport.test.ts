@@ -11,6 +11,7 @@ import { adaptSDR } from '../adapters/sdrAdapter'
 import { adaptSouth } from '../adapters/southAdapter'
 import { adaptTopcon } from '../adapters/topconAdapter'
 import { adaptJobXML } from '../adapters/jobXmlAdapter'
+import { defined } from '@/test-utils/defined'
 
 // ─── Sample Data ───────────────────────────────────────────────────────
 
@@ -153,8 +154,8 @@ describe('Unified Total Station Import', () => {
     it('sets stationCoords from first point', () => {
       const result = adaptSDR(SDR_SAMPLE)
       expect(result.stationCoords).toBeDefined()
-      expect(result.stationCoords!.easting).toBeCloseTo(1234567.89)
-      expect(result.stationCoords!.northing).toBeCloseTo(984321.456)
+      expect(defined(result.stationCoords).easting).toBeCloseTo(1234567.89)
+      expect(defined(result.stationCoords).northing).toBeCloseTo(984321.456)
     })
   })
 
@@ -231,7 +232,7 @@ describe('Unified Total Station Import', () => {
     it('sets stationCoords from first point', () => {
       const result = adaptTopcon(TOPCON_SAMPLE)
       expect(result.stationCoords).toBeDefined()
-      expect(result.stationCoords!.northing).toBeCloseTo(984321.456)
+      expect(defined(result.stationCoords).northing).toBeCloseTo(984321.456)
     })
   })
 
@@ -260,8 +261,8 @@ describe('Unified Total Station Import', () => {
     it('sets stationCoords from first point', () => {
       const result = adaptJobXML(JOBXML_SAMPLE)
       expect(result.stationCoords).toBeDefined()
-      expect(result.stationCoords!.easting).toBeCloseTo(984321.456)
-      expect(result.stationCoords!.elevation).toBeCloseTo(1542.345)
+      expect(defined(result.stationCoords).easting).toBeCloseTo(984321.456)
+      expect(defined(result.stationCoords).elevation).toBeCloseTo(1542.345)
     })
   })
 

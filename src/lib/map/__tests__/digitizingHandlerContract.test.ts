@@ -29,6 +29,7 @@ import {
   splitPolygonWithLine,
   reshapePolygon,
 } from '../editingTools'
+import { defined } from '@/test-utils/defined'
 
 // ─── Shared fixtures (UTM metres) ────────────────────────────────────────────
 
@@ -60,7 +61,7 @@ describe('[T0.1] Merge contract: operates on the user-provided polygon set', () 
   it('merges exactly the two adjacent polygons the user selected', () => {
     const merged = mergePolygons([square100, squareEast])
     expect(merged).not.toBeNull()
-    expect(merged!.length).toBeGreaterThan(4)
+    expect(defined(merged).length).toBeGreaterThan(4)
   })
 
   it('returns null when the user selected two non-adjacent polygons', () => {
@@ -130,7 +131,7 @@ describe('[T0.3] Offset contract: distance is a parameter, not a side effect', (
   it('a positive distance produces a LARGER polygon (buffer outward)', () => {
     const off = createOffset(square100, 10, true)
     expect(off).not.toBeNull()
-    expect(off!.length).toBeGreaterThan(square100.length)
+    expect(defined(off).length).toBeGreaterThan(square100.length)
   })
 
   it('different distances produce different offsets', () => {
@@ -148,8 +149,8 @@ describe('[T0.4] Split contract: operates on the polygon the line crosses', () =
     const line: [number, number][] = [[50, -10], [50, 110]]
     const result = splitPolygonWithLine(square100, line)
     expect(result).not.toBeNull()
-    expect(result!.polygon1.length).toBeGreaterThan(3)
-    expect(result!.polygon2.length).toBeGreaterThan(3)
+    expect(defined(result).polygon1.length).toBeGreaterThan(3)
+    expect(defined(result).polygon2.length).toBeGreaterThan(3)
   })
 
   it('returns null when the line does not cross the polygon', () => {
@@ -170,7 +171,7 @@ describe('[T0.4] Reshape contract: operates on the polygon the line crosses', ()
     const newSegment: [number, number][] = [[20, -10], [80, 110]]
     const result = reshapePolygon(square100, newSegment)
     expect(result).not.toBeNull()
-    expect(result!.length).toBeGreaterThanOrEqual(4)
+    expect(defined(result).length).toBeGreaterThanOrEqual(4)
   })
 
   it('returns null when the new segment does not cross the polygon', () => {

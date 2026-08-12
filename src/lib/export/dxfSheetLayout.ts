@@ -855,7 +855,8 @@ function buildGridTicks(
   innerBottom: number,
   innerTop: number,
 ): void {
-  const interval = opts.gridInterval!;
+  const interval = opts.gridInterval;
+  if (interval === undefined) return;
   const tickLen = GRID_TICK_LENGTH;
   const isLargeSheet = opts.sheetSize === 'A0' || opts.sheetSize === 'A1';
   const labelH = isLargeSheet ? 2 : 1.8;
@@ -952,10 +953,16 @@ function buildDrawingExtent(
   innerBottom: number,
   innerTop: number,
 ): void {
-  const minEasting = opts.minEasting!;
-  const maxEasting = opts.maxEasting!;
-  const minNorthing = opts.minNorthing!;
-  const maxNorthing = opts.maxNorthing!;
+  const minEasting = opts.minEasting;
+  const maxEasting = opts.maxEasting;
+  const minNorthing = opts.minNorthing;
+  const maxNorthing = opts.maxNorthing;
+  if (
+    minEasting === undefined || maxEasting === undefined ||
+    minNorthing === undefined || maxNorthing === undefined
+  ) {
+    return;
+  }
 
   // Compute paper dimensions
   const drawW = metersToMm(maxEasting - minEasting, opts.scale);

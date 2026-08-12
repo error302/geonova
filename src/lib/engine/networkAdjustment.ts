@@ -1164,7 +1164,8 @@ export function adjustNetwork(
 
       maxCorrection = Math.max(maxCorrection, Math.abs(dE), Math.abs(dN), Math.abs(dH))
 
-      const cur = currentCoords.get(p.name)!
+      const cur = currentCoords.get(p.name)
+      if (!cur) continue
       currentCoords.set(p.name, {
         e: cur.e + dE,
         n: cur.n + dN,
@@ -1240,7 +1241,8 @@ export function adjustNetwork(
 
     for (let i = 0; i < adjustablePoints.length; i++) {
       const p = adjustablePoints[i]
-      const cur = currentCoords.get(p.name)!
+      const cur = currentCoords.get(p.name)
+      if (!cur) continue
       const baseIdx = i * paramPerPoint
 
       const qEE = invDiag[baseIdx] ?? 0
@@ -1368,9 +1370,10 @@ function computeResidualsAndStats(
 
   for (let i = 0; i < observations.length; i++) {
     const obs = observations[i]
-    const from = currentCoords.get(obs.from)!
-    const to = currentCoords.get(obs.to)!
-    const at = obs.at ? currentCoords.get(obs.at)! : undefined
+    const from = currentCoords.get(obs.from)
+    const to = currentCoords.get(obs.to)
+    const at = obs.at ? currentCoords.get(obs.at) : undefined
+    if (!from || !to) continue
 
     let computed = 0
     let v = 0

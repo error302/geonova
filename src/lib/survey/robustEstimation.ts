@@ -256,50 +256,50 @@ export function adjustNetworkRobust(
       if (obs.type === 'coordinate_diff' && obs.from && obs.to) {
         const fromC = adjustedCoords.get(obs.from)
         const toC = adjustedCoords.get(obs.to)
-        if (fromC && toC) {
+        if (fromC && toC && obs.deltaE !== undefined) {
           // Use the E component residual (could also average all 3)
           const predictedE = toC.e - fromC.e
-          residual = obs.deltaE! - predictedE
+          residual = obs.deltaE - predictedE
           sigma = obs.stdDevE ?? 0.005
         }
       } else if (obs.type === 'slope_distance' && obs.from && obs.to) {
         const fromC = adjustedCoords.get(obs.from)
         const toC = adjustedCoords.get(obs.to)
-        if (fromC && toC) {
+        if (fromC && toC && obs.distance !== undefined) {
           const dE = toC.e - fromC.e
           const dN = toC.n - fromC.n
           const dH = toC.h - fromC.h
           const predicted = Math.sqrt(dE * dE + dN * dN + dH * dH)
-          residual = obs.distance! - predicted
+          residual = obs.distance - predicted
           sigma = obs.stdDevDistance ?? 0.003
         }
       } else if (obs.type === 'horizontal_direction' && obs.from && obs.to) {
         const fromC = adjustedCoords.get(obs.from)
         const toC = adjustedCoords.get(obs.to)
-        if (fromC && toC) {
+        if (fromC && toC && obs.direction !== undefined) {
           const dE = toC.e - fromC.e
           const dN = toC.n - fromC.n
           const predicted = Math.atan2(dE, dN)
-          residual = obs.direction! - predicted
+          residual = obs.direction - predicted
           sigma = obs.stdDevDirection ?? 5e-6
         }
       } else if (obs.type === 'zenith_angle' && obs.from && obs.to) {
         const fromC = adjustedCoords.get(obs.from)
         const toC = adjustedCoords.get(obs.to)
-        if (fromC && toC) {
+        if (fromC && toC && obs.zenith !== undefined) {
           const dE = toC.e - fromC.e
           const dN = toC.n - fromC.n
           const dH = toC.h - fromC.h
           const predicted = Math.atan2(Math.sqrt(dE * dE + dN * dN), dH)
-          residual = obs.zenith! - predicted
+          residual = obs.zenith - predicted
           sigma = obs.stdDevZenith ?? 5e-6
         }
       } else if (obs.type === 'height_difference' && obs.from && obs.to) {
         const fromC = adjustedCoords.get(obs.from)
         const toC = adjustedCoords.get(obs.to)
-        if (fromC && toC) {
+        if (fromC && toC && obs.deltaH !== undefined) {
           const predicted = toC.h - fromC.h
-          residual = obs.deltaH! - predicted
+          residual = obs.deltaH - predicted
           sigma = obs.stdDevH ?? 0.002
         }
       }
