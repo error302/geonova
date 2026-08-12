@@ -14,8 +14,6 @@ import {
   X,
   ChevronDown,
   ChevronUp,
-  CheckCircle2,
-  AlertCircle,
   Layers,
 } from 'lucide-react'
 import Drawing from 'dxf-writer'
@@ -23,7 +21,6 @@ import {
   type SurveyPointWithCode,
   type FeatureCodeDef,
   type LayerMappingResult,
-  type FeatureCategory,
   getAllGroups,
   getFeatureCode,
   mapPointsToLayers,
@@ -36,7 +33,6 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
 import {
   Dialog,
   DialogContent,
@@ -618,14 +614,13 @@ export default function TopoDrawingComposer({ projectId }: TopoDrawingComposerPr
   const [editingPointId, setEditingPointId] = useState<string | null>(null)
   const [showSettings, setShowSettings] = useState(false)
   const [showStats, setShowStats] = useState(true)
-  const [showPreview, setShowPreview] = useState(true)
-  const [showLayerPreview, setShowLayerPreview] = useState(true)
+  const [showLayerPreview] = useState(true)
   const [activeTab, setActiveTab] = useState<'points' | 'layers' | 'preview'>('points')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // ─── Derived state ─────────────────────────────────────────────────────
   const layerResults = useMemo(
-    () => mapPointsToLayers(points.map(({ id, description, ...rest }) => rest)),
+    () => mapPointsToLayers(points.map(({ id: _id, description: _description, ...rest }) => rest)),
     [points],
   )
 
@@ -718,7 +713,7 @@ export default function TopoDrawingComposer({ projectId }: TopoDrawingComposerPr
 
   const handleExportDXF = useCallback(() => {
     if (points.length === 0) return
-    const surveyPoints: SurveyPointWithCode[] = points.map(({ id, description, ...rest }) => rest)
+    const surveyPoints: SurveyPointWithCode[] = points.map(({ id: _id, description: _description, ...rest }) => rest)
     const dxf = generateTopoDXF(surveyPoints, settings, projectId ?? 'Topographic Survey')
     const date = new Date().toISOString().split('T')[0]
     downloadDXF(dxf, `topo_${projectId ?? 'survey'}_${date}.dxf`)

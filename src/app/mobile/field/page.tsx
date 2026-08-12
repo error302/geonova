@@ -20,11 +20,11 @@ import type { CapturedBeaconPhoto } from '@/components/fieldbook/BeaconPhotoCapt
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
-  Bluetooth, MapPin, Ruler, Compass, Mountain,
-  ChevronRight, RefreshCw, Wifi, WifiOff, Camera, Plus,
-  ArrowLeft, Check, X, Satellite, Settings,
+  Bluetooth, MapPin, Ruler, Compass,
+  RefreshCw, Wifi, WifiOff, Plus,
+  ArrowLeft, Satellite,
 } from 'lucide-react'
-import { offlineStorage, type FieldObservation, type PhotoData } from '@/lib/mobile/offlineStorage'
+import { offlineStorage, type FieldObservation } from '@/lib/mobile/offlineStorage'
 import { syncService } from '@/lib/mobile/syncService'
 import { createClient } from '@/lib/api-client/client'
 import {
@@ -32,7 +32,7 @@ import {
   type MobileSurveyType,
 } from '@/components/fieldbook/UniversalMobileObservationForm'
 import { GNSSConnectionPanel } from '@/components/gnss/GNSSConnectionPanel'
-import { useInstrumentStore, type StreamedPoint } from '@/stores/instrumentStore'
+import { useInstrumentStore } from '@/stores/instrumentStore'
 import type { NMEAPosition } from '@/lib/gnss/nmea-parser'
 import { logger } from '@/lib/logger'
 
@@ -61,13 +61,11 @@ function MobileFieldContent() {
   const [activeSurveyType, setActiveSurveyType] = useState<MobileSurveyType>('traverse')
   const [showForm, setShowForm] = useState(false)
   const [showGNSS, setShowGNSS] = useState(false)
-  const [showSettings, setShowSettings] = useState(false)
 
   // Observations
   const [recentObservations, setRecentObservations] = useState<FieldObservation[]>([])
 
   // Instrument store
-  const instrumentStore = useInstrumentStore()
   const isConnected = useInstrumentStore((s) => s.status === 'connected' || s.status === 'streaming')
 
   // ─── Initialize ───────────────────────────────────────
@@ -137,7 +135,7 @@ function MobileFieldContent() {
   }
 
   // ─── Observation handling ─────────────────────────────
-  const handleAddObservation = useCallback(async (row: Record<string, string>, photos: CapturedBeaconPhoto[]) => {
+  const handleAddObservation = useCallback(async (row: Record<string, string>, _photos: CapturedBeaconPhoto[]) => {
     if (!projectId) return
 
     const observation: FieldObservation = {
@@ -179,7 +177,7 @@ function MobileFieldContent() {
   }, [])
 
   // ─── GNSS position callback ───────────────────────────
-  const handleGNSSPosition = useCallback((pos: NMEAPosition) => {
+  const handleGNSSPosition = useCallback((_pos: NMEAPosition) => {
     // Update instrument store via the panel — already handled inside GNSSConnectionPanel
     // This callback is for any additional side effects
   }, [])

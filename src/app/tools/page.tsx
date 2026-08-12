@@ -6,8 +6,6 @@ import { PageHeader } from '@/components/shared/PageHeader'
 import { useSubscription } from '@/lib/subscription/subscriptionContext'
 import { trackToolUsed } from '@/lib/analytics/events'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
-import type { FeatureKey } from '@/lib/subscription/featureGates'
-import type { PlanId } from '@/lib/subscription/catalog'
 import type { ComponentType } from 'react'
 import {
   BookOpenText,
@@ -36,7 +34,6 @@ import {
   Mountain,
   Layers,
   NotebookPen,
-  Pickaxe,
   PlaneTakeoff,
   RadioTower,
   Ruler,
@@ -44,7 +41,6 @@ import {
   Satellite,
   ScanLine,
   Search,
-  Ship,
   Spline,
   SquareDashedMousePointer,
   Star,
@@ -65,8 +61,7 @@ import {
  *  single source of truth. The catalog page imports it for badge display;
  *  each gated tool page wraps its content in <ToolGate> for enforcement.
  * ══════════════════════════════════════════════════════════════════════ */
-import { TOOL_GATES, PLAN_RANK, type GateInfo } from '@/lib/subscription/toolGates'
-type GateInfoLocal = GateInfo // alias to keep the rest of this file unchanged
+import { TOOL_GATES, type GateInfo } from '@/lib/subscription/toolGates'
 
 const TOOL_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   '/tools/beacon-certificate': FileBadge,
@@ -320,7 +315,7 @@ function getEffectiveBadge(tool: ToolDef): string | undefined {
  *  MAIN COMPONENT
  * ══════════════════════════════════════════════════════════════════════ */
 export default function ToolsPage() {
-  const { plan, isAdmin, hasFeature, loading } = useSubscription()
+  const { hasFeature } = useSubscription()
   const [searchQuery, setSearchQuery] = useState('')
   const [recentTools, setRecentTools] = useState<string[]>([])
   const [favTools, setFavTools] = useState<string[]>([])
@@ -335,7 +330,7 @@ export default function ToolsPage() {
   }, [])
 
   const handleToggleFav = useCallback((href: string) => {
-    const isNowFav = toggleFavTool(href)
+    toggleFavTool(href)
     setFavTools(getFavTools())
   }, [])
 
@@ -386,7 +381,6 @@ export default function ToolsPage() {
       .filter((t): t is ToolDef => !!t)
   }, [favTools, mounted])
 
-  const userPlanRank = PLAN_RANK[plan] ?? 0
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-24 lg:pb-32">
@@ -472,7 +466,6 @@ export default function ToolsPage() {
                   description={tool.description}
                   badge={getEffectiveBadge(tool)}
                   gate={TOOL_GATES[tool.href]}
-                  userPlanRank={userPlanRank}
                   hasFeature={hasFeature}
                   isFav={favTools.includes(tool.href)}
                   onToggleFav={handleToggleFav}
@@ -499,7 +492,6 @@ export default function ToolsPage() {
                   description={tool.description}
                   badge={getEffectiveBadge(tool)}
                   gate={TOOL_GATES[tool.href]}
-                  userPlanRank={userPlanRank}
                   hasFeature={hasFeature}
                   isFav={true}
                   onToggleFav={handleToggleFav}
@@ -534,7 +526,6 @@ export default function ToolsPage() {
                   description={tool.description}
                   badge={getEffectiveBadge(tool)}
                   gate={TOOL_GATES[tool.href]}
-                  userPlanRank={userPlanRank}
                   hasFeature={hasFeature}
                   isFav={favTools.includes(tool.href)}
                   onToggleFav={handleToggleFav}
@@ -558,7 +549,6 @@ function ToolLink({
   description,
   badge,
   gate,
-  userPlanRank,
   hasFeature,
   isFav,
   onToggleFav,
@@ -569,7 +559,6 @@ function ToolLink({
   description?: string
   badge?: string
   gate?: GateInfo
-  userPlanRank: number
   hasFeature: (feature: string) => boolean
   isFav: boolean
   onToggleFav: (href: string) => void
@@ -578,7 +567,6 @@ function ToolLink({
   const Icon = TOOL_ICONS[href] ?? FileCog
 
   const isLocked = gate ? !hasFeature(gate.feature) : false
-  const requiredPlanRank = gate ? PLAN_RANK[gate.minPlan] : 0
 
   const handleClick = () => {
     if (!isLocked) {
