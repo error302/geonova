@@ -2,7 +2,7 @@
 
 **Goal:** clear every `@typescript-eslint` / JS warning so the CI `--max-warnings` ceiling can drop to `0` and each rule flips to `error`.
 
-**Progress:** 14,030 → **1,033** (measured 2026-08-12, `lint-ratchets --report` on origin/main). Row-typing (0/538), a11y (0 findings), member-access, explicit-any, argument, **assignment**, no-unsafe-return and no-unsafe-call are **done** (rules flipped to `error`); `no-unused-vars`/`no-non-null-assertion` + the mechanical rules remain.
+**Progress:** 14,030 → **977** (measured 2026-08-12, `lint-ratchets --report` on origin/main). Row-typing (0/538), a11y (0 findings), member-access, explicit-any, argument, **assignment**, no-unsafe-return and no-unsafe-call are **done** (rules flipped to `error`); `no-unused-vars`/`no-non-null-assertion` + the mechanical rules remain.
 
 > **This doc is the canonical checkpoint.** Every grind session starts by reading the
 > **STATUS CHECKPOINT** below and ends by updating it. If an agent is rate-limited or
@@ -23,9 +23,9 @@
 | `no-unsafe-argument` | 0 | **0** | ✅ done (rule = error) |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 | **0** | ✅ done |
-| **total warnings** | **1,033** | CI ceiling **1,350** | green |
+| **total warnings** | **977** | CI ceiling **1,350** | green |
 
-Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 973 · `no-console` 0 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` 0 · `no-non-null-assertion` 0 · `no-restricted-syntax` 16. (Non-null batch 3 fixed 85 sites in `networkAdjustment.ts`, `helmertRigorous.test`, `cassini.test`, `fr583_4acres_survey.test`, `statutoryGate.test`, `gnssBaseline.test` via a `mustGet()` map guard + the shared `defined()` helper.) (Unused-vars grind started 2026-08-12: batch 1 dropped 34 sites in `mobile/field/page.tsx`, `TopoDrawingComposer.tsx`, `tools/page.tsx` — dead imports/state/props removed, `_`-prefixed callback args, dead `userPlanRank` prop chain deleted; batch 2 dropped 51 sites in `TraverseFieldBook`; batch 3 dropped 82 sites in `develop-full-plan`, `formNo3Renderer`, `RailwayPanel`, `RoadPanel`, `GNSSConnectionPanel`, `ReportTemplateEditor`, `SubdivisionPanel`, `deed-plan/generator`, `international`, `stubs`, `sequentialAdjustment`, `cadastralPlanDXF`, `scheme/page` — dead imports trimmed, unused usePrint/useRouter/state removed, 42-line dead `includeSheetLayout` block deleted.) (Non-null grind started 2026-08-12: batch 1 fixed 115 sites in `featureCodes.test`, `mpesa.test`, `networkAdjustment.test`, `unified3dAdjustment.test`, `LongSectionRenderer`, `ProgressMonitorPanel` via a `defined()` guard helper / type-predicate filters / an `id` guard — real narrowing, not suppressions; batch 2 fixed 60 sites; batch 3 fixed 85 sites; batch 4 fixed 33 sites in `sequentialAdjustment.test`, `lsaIterative.test`, `spiralAlignment.test`, `verticalCurveDesigner.test`, `analytics/page.tsx`; batch 5 fixed 54 sites; batch 6 fixed 25 sites in `robustEstimation`, `networkAdjustment`, `dxfSheetLayout`, `digitizingHandlerContract.test`, `unifiedImport.test`; batch 7 fixed 28 sites in `traverse/engine`, `gsiParser`, `beaconLookup`, `levelNetworkAdjust`, `numbering.test`, `subdivision.test`, `cogo.test`; batch 8 fixed 33 sites in `cpd/route`, `process/page`, `LongitudinalSection`, `FieldStationSetup`, `asBuiltSurvey`, `atmosphericDefaults`, `working-diagram/traverse`, `deformationMonitoring.test`, `toolGates.test`, `ntrip-client.test`, `chainage.test` in `loginLimiter`, `offlineStorage`, `entityGraph`, `national_sheets`, `crossSectionPdf`, `AnalysisTab`, `traverseAccuracy.test`, `rinex.test`, `pileGrid.test` via `upstashEnv()`/`requireDb()`/`cassOf()` guards, get-or-guard narrowing, type-predicate filters, and the shared `defined()` helper) in `statutoryWorkbook`, `benchmarks`, `crossSectionGeometry.test`, `least-squares`, `ownership.test`, `traverseLayer.test` via `lastRow(ws)`/`findStation()` guards, captured closure consts, and the `defined()` test helper.) (`no-unsafe-return` ground to 0 and `no-unsafe-call`/`no-console` drained to 0 2026-08-12; both unsafe-return and unsafe-call flipped to `error`.)
+Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 917 · `no-console` 0 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` 0 · `no-non-null-assertion` 0 · `no-restricted-syntax` 16. (Non-null batch 3 fixed 85 sites in `networkAdjustment.ts`, `helmertRigorous.test`, `cassini.test`, `fr583_4acres_survey.test`, `statutoryGate.test`, `gnssBaseline.test` via a `mustGet()` map guard + the shared `defined()` helper.) (Unused-vars grind started 2026-08-12: batch 1 dropped 34 sites in `mobile/field/page.tsx`, `TopoDrawingComposer.tsx`, `tools/page.tsx` — dead imports/state/props removed, `_`-prefixed callback args, dead `userPlanRank` prop chain deleted; batch 2 dropped 51 sites in `TraverseFieldBook`; batch 3 dropped 82 sites in `develop-full-plan`, `formNo3Renderer`, `RailwayPanel`, `RoadPanel`, `GNSSConnectionPanel`, `ReportTemplateEditor`, `SubdivisionPanel`, `deed-plan/generator`, `international`, `stubs`, `sequentialAdjustment`, `cadastralPlanDXF`, `scheme/page` — dead imports trimmed, unused usePrint/useRouter/state removed, 42-line dead `includeSheetLayout` block deleted.) (Non-null grind started 2026-08-12: batch 1 fixed 115 sites in `featureCodes.test`, `mpesa.test`, `networkAdjustment.test`, `unified3dAdjustment.test`, `LongSectionRenderer`, `ProgressMonitorPanel` via a `defined()` guard helper / type-predicate filters / an `id` guard — real narrowing, not suppressions; batch 2 fixed 60 sites; batch 3 fixed 85 sites; batch 4 fixed 33 sites in `sequentialAdjustment.test`, `lsaIterative.test`, `spiralAlignment.test`, `verticalCurveDesigner.test`, `analytics/page.tsx`; batch 5 fixed 54 sites; batch 6 fixed 25 sites in `robustEstimation`, `networkAdjustment`, `dxfSheetLayout`, `digitizingHandlerContract.test`, `unifiedImport.test`; batch 7 fixed 28 sites in `traverse/engine`, `gsiParser`, `beaconLookup`, `levelNetworkAdjust`, `numbering.test`, `subdivision.test`, `cogo.test`; batch 8 fixed 33 sites in `cpd/route`, `process/page`, `LongitudinalSection`, `FieldStationSetup`, `asBuiltSurvey`, `atmosphericDefaults`, `working-diagram/traverse`, `deformationMonitoring.test`, `toolGates.test`, `ntrip-client.test`, `chainage.test` in `loginLimiter`, `offlineStorage`, `entityGraph`, `national_sheets`, `crossSectionPdf`, `AnalysisTab`, `traverseAccuracy.test`, `rinex.test`, `pileGrid.test` via `upstashEnv()`/`requireDb()`/`cassOf()` guards, get-or-guard narrowing, type-predicate filters, and the shared `defined()` helper) in `statutoryWorkbook`, `benchmarks`, `crossSectionGeometry.test`, `least-squares`, `ownership.test`, `traverseLayer.test` via `lastRow(ws)`/`findStation()` guards, captured closure consts, and the `defined()` test helper.) (`no-unsafe-return` ground to 0 and `no-unsafe-call`/`no-console` drained to 0 2026-08-12; both unsafe-return and unsafe-call flipped to `error`.)
 
 ### Git / CI state
 
@@ -56,7 +56,7 @@ If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read th
 
 ## 1. Remaining work, ordered for completion
 
-**Checklist state (live scan 2026-08-12, origin/main @ `a6bfb64f` — committed total 1,033):**
+**Checklist state (live scan 2026-08-12, origin/main @ `aade1ce0` — committed total 977):**
 
 | Family | Live | Rule | Status |
 |---|---|---|---|
@@ -69,13 +69,13 @@ If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read th
 | `no-console` | 0 | warn | ✅ drained |
 | row-typing (`db.query` untyped) | 0 / 532 | gate | ✅ done |
 | a11y findings | 0 | gate | ✅ done |
-| `no-unused-vars` | **973** | warn | ⏳ next |
+| `no-unused-vars` | **917** | warn | ⏳ next |
 | `no-non-null-assertion` | **0** | warn (flip to `error` next per §6) | ✅ done |
 | `react-hooks/exhaustive-deps` | **44** | warn | ⏳ |
 | `no-restricted-syntax` | **16** | warn | ⏳ |
-| **total** | **1,033** | CI ceiling **1,350** | green |
+| **total** | **977** | CI ceiling **1,350** | green |
 
-Order = finish the family closest to zero first (each finish removes a floor + shrinks the ceiling), then mechanical rules, then CI tightening. **All six `no-unsafe-*` families are done** — only the mechanical rules remain. Finish order: **unused-vars (973) → exhaustive-deps (44) → no-restricted-syntax (16) → ceiling → 0**.
+Order = finish the family closest to zero first (each finish removes a floor + shrinks the ceiling), then mechanical rules, then CI tightening. **All six `no-unsafe-*` families are done** — only the mechanical rules remain. Finish order: **unused-vars (917) → exhaustive-deps (44) → no-restricted-syntax (16) → ceiling → 0**.
 
 ### Phase 1 — `no-unsafe-argument` — ✅ **DONE (0 warnings, rule = error)**
 
@@ -93,7 +93,7 @@ All batches drained (`argument-scan --batch 1` → 0 across 0 files); floor lock
 
 829 → 0 (batches 1–2 + 1b/1c + the tail, 281 → 0, floor 10 → 0); rule = `error`. Same type-the-source recipe as Phase 3.
 
-### Phase 5 — mechanical rules (1,033 combined)
+### Phase 5 — mechanical rules (977 combined)
 
 | Rule | Live | Fix class | Next tier |
 |---|---|---|---|
@@ -109,7 +109,7 @@ All batches drained (`argument-scan --batch 1` → 0 across 0 files); floor lock
 
 1. Push every batch; watch the ci.yml run — all code gates must stay green.
 2. As each family hits 0: drop its floor to 0 (via `--update-<family>`) and flip the rule to `"error"` in the ESLint config so it can never regress. Done for all six `no-unsafe-*` families; the four mechanical rules ride the `--max-warnings` ceiling (no floors).
-3. Tighten `--max-warnings`: 20,000 → 10,000 → 5,000 → 3,700 → 3,000 → 2,800 → 2,000 → 1,500 → 1,400 → 1,350 (now) → **500** → **0** as the totals shrink (total is 1,033). Keep the ceiling documented in the workflow files.
+3. Tighten `--max-warnings`: 20,000 → 10,000 → 5,000 → 3,700 → 3,000 → 2,800 → 2,000 → 1,500 → 1,400 → 1,350 (now) → **500** → **0** as the totals shrink (total is 977). Keep the ceiling documented in the workflow files.
 4. E2E is green (all four shards — standalone-server + OAuth env + seeded-user fixes landed). The only known-red job left is **Deploy to Production** (GCP VM SSH — infra, needs credentials/VM work, out of code scope).
 
 ## 2. Root causes (why ~80% is the `no-unsafe-*` family)
