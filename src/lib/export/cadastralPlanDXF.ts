@@ -27,25 +27,13 @@
 
 import Drawing, { type Point2D } from 'dxf-writer'
 import { initialiseSokDXFLayers, formatBearingDMS, formatDistanceM, formatPlanDate } from '@/lib/drawing/dxfLayers'
-import {
-  generateSheetLayout,
-  addDrawingEntities,
-  lineEntity,
-  textEntity,
-  pointEntity,
-  type DXFEntity,
-  type SheetLayoutOptions,
-} from '@/lib/export/dxfSheetLayout'
 import type { SurveyPlanData } from '@/lib/reports/surveyPlan/types'
 import {
   boundingBox,
   bearingFromDelta,
   distance,
-  midpoint,
-  segmentAngle,
   offsetFromMidpoint,
   centroid,
-  formatBearingDegMinSec,
   offsetPointPerpendicular,
 } from '@/lib/reports/surveyPlan/geometry'
 
@@ -176,7 +164,6 @@ export function generateCadastralPlanDXF(
     const to = pts[(i + 1) % pts.length]
     const dist = distance(from.easting, from.northing, to.easting, to.northing)
     const bearingDeg = bearingFromDelta(to.easting - from.easting, to.northing - from.northing)
-    const [mx, my] = midpoint(from.easting, from.northing, to.easting, to.northing)
 
     // Offset the label perpendicular to the segment
     const [ox, oy] = offsetFromMidpoint(
@@ -386,50 +373,6 @@ export function generateCadastralPlanDXF(
 
   // ── Optionally add the sheet layout using dxfSheetLayout ──
   const dxfString = drawing.toDxfString()
-
-  if (opts.includeSheetLayout) {
-    const sheetOptions: SheetLayoutOptions = {
-      sheetSize: opts.sheetSize,
-      orientation: 'landscape',
-      scale,
-      units: 'metric',
-      coordinateSystem,
-      projectName: p.name || 'Cadastral Survey Plan',
-      projectNumber: p.drawing_no || p.fileReference,
-      clientName: p.client_name,
-      surveyorName: p.surveyor_name,
-      surveyorLicense: p.surveyor_licence ? `LS/${p.surveyor_licence}` : undefined,
-      date: new Date().toISOString().split('T')[0],
-      revision: p.revisions?.[0]?.rev,
-      sheetNumber: '1',
-      totalSheets: '1',
-      showNorthArrow: true,
-      showScaleBar: true,
-      showGridTicks: opts.includeGrid,
-      gridInterval: opts.gridInterval,
-      showBorder: true,
-      minEasting: bb.minE,
-      maxEasting: bb.maxE,
-      minNorthing: bb.minN,
-      maxNorthing: bb.maxN,
-      layers: CADASTRAL_LAYERS.map(l => ({
-        name: l.name,
-        color: l.color,
-        lineType: l.linetype,
-      })),
-    }
-
-    const sheetLayout = generateSheetLayout(sheetOptions)
-
-    // Merge: use the sheet layout as the base and add our entities
-    // The drawing entities from dxf-writer are in real-world coordinates
-    // The sheet layout is in paper coordinates, so we keep them separate
-    // and return the real-world coordinate DXF as the primary output
-    // with the sheet layout available as a reference
-
-    // For the final output, we use the dxf-writer output (real-world coords)
-    // as it is more useful for CAD import
-  }
 
   return dxfString
 }

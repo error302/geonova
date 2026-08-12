@@ -5,13 +5,12 @@ import { AlertTriangle } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import { computeTraverse, type RawObservation, type TraverseComputationResult } from '@/lib/computations/traverseEngine'
 import { parseTraverseCSV } from '@/lib/parsers/totalStation'
-import { bearingToString } from '@/lib/engine/angles'
-import { usePrint, PrintButton, PrintHeader } from '@/hooks/usePrint'
+import { PrintHeader } from '@/hooks/usePrint'
 // XSS guard (2026-08-03): station names are user-entered and interpolated
 // into the print-window HTML — escape before document.write().
 import { escapeXml } from '@/lib/xml/escape'
-import { reduceEDMObservation, computeMeanAngleDMS as sharedMeanAngleDMS, processTraverseObservations, getAtmosphericDefaults, autoDetectUTMZone, findNearestPreset, findPresetByCounty, fetchRealtimeWeather, computeAtmosphericErrorImpact, validateAtmosphericDefaults, KENYA_LOCATION_PRESETS } from '@/lib/survey/adapter'
-import type { AdaptedEDMResult, ProcessedObservation, AtmosphericDefaults, KenyaLocationPreset, AtmosphericSource } from '@/lib/survey/adapter'
+import { reduceEDMObservation, computeMeanAngleDMS as sharedMeanAngleDMS, getAtmosphericDefaults, fetchRealtimeWeather, computeAtmosphericErrorImpact, KENYA_LOCATION_PRESETS } from '@/lib/survey/adapter'
+import type { AtmosphericSource } from '@/lib/survey/adapter'
 import { CorrectionAuditTrail } from '@/components/survey/CorrectionAuditTrail'
 import type { CorrectionObservationSummary } from '@/components/survey/CorrectionAuditTrail'
 import { TraverseStationInput } from '@/types/field'
@@ -43,8 +42,7 @@ function computeMeanAngleDMS(obs: RawObservation): string {
   return sharedMeanAngleDMS(obs.hclDeg, obs.hclMin, obs.hclSec, obs.hcrDeg, obs.hcrMin, obs.hcrSec)
 }
 
-export default function TraverseFieldBook({ projectId, onImport }: TraverseFieldBookProps) {
-  const { print, isPrinting, paperSize, setPaperSize, orientation, setOrientation } = usePrint({ title: 'Traverse Field Book' })
+export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) {
   const [observations, setObservations] = useState<RawObservation[]>([
     { station: '', bs: '', fs: '', hclDeg: '', hclMin: '', hclSec: '', hcrDeg: '', hcrMin: '', hcrSec: '', slopeDist: '', vaDeg: '', vaMin: '', vaSec: '', ih: '1.5', th: '1.5' },
   ])

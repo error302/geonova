@@ -38,19 +38,7 @@
 
 import {
   fromTriplets,
-  ataDiag,
-  atdbDiag,
-  approximateMinimumDegree,
-  permuteSymmetric,
-  symbolicFactorize,
-  cholesky,
-  sparseForwardSolve,
-  sparseBackwardSolve,
-  sparseInverseDiagonal,
-  addDiagonal,
-  diagonal,
   type SparseMatrix,
-  type SparseCholesky,
 } from './sparseMatrix'
 import {
   adjustNetwork,
@@ -58,8 +46,6 @@ import {
   type NetworkObservation,
   type NetworkAdjustmentOptions,
   type NetworkAdjustmentResult,
-  type AdjustedPoint,
-  type ObservationResidual,
 } from './networkAdjustment'
 
 // ---------------------------------------------------------------------------

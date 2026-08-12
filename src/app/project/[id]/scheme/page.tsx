@@ -1,17 +1,17 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import {
-  ArrowLeft, Plus, LayoutGrid, MapPin, FileText,
-  AlertCircle, CheckCircle2, Clock, BarChart3, Download, FolderArchive, Package, Map, Users
+  Plus, LayoutGrid,
+  AlertCircle, CheckCircle2, BarChart3, Download, FolderArchive, Package, Map, Users
 } from 'lucide-react'
 import { z } from 'zod'
 import { apiGet, ApiError } from '@/lib/api/client'
 import MobileDesktopNotice from '@/components/MobileDesktopNotice'
-import type { SchemeDetails, Block, ParcelStatus } from '@/types/scheme'
-import { SCHEME_STATUS_LABELS, PARCEL_STATUS_LABELS, PARCEL_STATUS_COLORS } from '@/types/scheme'
+import type { Block, ParcelStatus } from '@/types/scheme'
+import { PARCEL_STATUS_LABELS } from '@/types/scheme'
 import { logger } from '@/lib/logger'
 
 // ponytail: response schemas — Phase 4 wave 2 will move these to src/lib/api/schemas/
@@ -81,11 +81,9 @@ interface ParcelStatusRow {
 
 export default function SchemeWorkspacePage() {
   const params = useParams()
-  const router = useRouter()
   const projectId = params.id as string
 
   const [project, setProject] = useState<ProjectRow | null>(null)
-  const [schemeDetails, setSchemeDetails] = useState<SchemeDetails | null>(null)
   const [blocks, setBlocks] = useState<BlockWithCounts[]>([])
   const [parcelCounts, setParcelCounts] = useState<Record<ParcelStatus, number>>({
     pending: 0, field_complete: 0, computed: 0, plan_generated: 0, submitted: 0, approved: 0
