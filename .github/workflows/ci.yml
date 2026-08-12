@@ -247,6 +247,16 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
+      # E2E_DB_SCHEMA (2026-08-12): the Postgres service container starts
+      # EMPTY. DB-backed specs (project-crud dashboard load, auth register)
+      # hit undefined-table errors, and a hanging query wedges the dev server
+      # with no output for ~26 min — shard 2/4 was cancelled this way on the
+      # 4-group split. Apply the schema before tests (idempotent via
+      # schema_migrations; each shard runner has its own Postgres container).
+      - name: Apply database migrations
+        run: npm run migrate
+        env:
+          DATABASE_URL: 'postgresql://ci:ci@127.0.0.1:5432/metardu_e2e'
       # Dev server handles middleware correctly; the standalone server had
       # edge-sandbox crashes with middleware. The build artifact is not needed.
       - name: Install Playwright browsers
