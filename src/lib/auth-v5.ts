@@ -71,7 +71,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!email || !password) return null
 
         // Extract client IP (v5 uses standard Request)
-        const forwarded: string = String(req?.headers?.get('x-forwarded-for') ?? '')
+        // req is loosely typed by next-auth; headers is IncomingHttpHeaders — index access, not .get()
+        const reqHeaders = (req as { headers?: Record<string, string | string[] | undefined> } | undefined)?.headers
+        const rawForwarded = reqHeaders?.['x-forwarded-for']
+        const forwarded: string = Array.isArray(rawForwarded) ? (rawForwarded[0] ?? '') : (rawForwarded ?? '')
         const clientIp: string = forwarded.split(',')[0]?.trim() || 'unknown'
 
         // Brute-force lockout check
@@ -139,15 +142,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // OAuth providers — same as v4, config from env
     ...(process.env.GOOGLE_CLIENT_ID
       ? [Google({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           clientId: process.env.GOOGLE_CLIENT_ID!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         })]
       : []),
 
     ...(process.env.AZURE_AD_CLIENT_ID
       ? [AzureAD({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           clientId: process.env.AZURE_AD_CLIENT_ID!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           tenantId: process.env.AZURE_AD_TENANT_ID!,
         })]
       : []),
@@ -177,7 +185,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session
     },
 
-    async authorized({ request, auth }) {
+    async authorized({ _request, _auth }) {
       // Per-route authorization — replaces middleware.ts redirects
       // Return true to allow, false to redirect to login, or a Response object
       return true

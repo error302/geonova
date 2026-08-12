@@ -8,7 +8,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 // 374, 390, 420) then re-ran on every render, triggering API calls in an
 // infinite loop. (Confirmed on /fieldbook causing 100s of /api/db and
 // /api/auth/session requests.)
-import Link from 'next/link'
 // papaparse loaded dynamically on CSV export
 // jsPDF loaded dynamically on PDF generation
 
@@ -16,9 +15,10 @@ import { createClient } from '@/lib/api-client/client'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import { heightOfCollimation, riseAndFall } from '@/lib/engine/leveling'
+import { logger } from '@/lib/logger'
 import { bowditchAdjustment, forwardTraverse } from '@/lib/engine/traverse'
 import { TRAVERSE_PRECISION_STANDARDS } from '@/lib/engine/traverse'
-import { bearingToString, normalizeBearing, parseDMSString, parseFieldAngle } from '@/lib/engine/angles'
+import { bearingToString, normalizeBearing, parseFieldAngle } from '@/lib/engine/angles'
 import { polar3DWithHeights } from '@/lib/engine/polar'
 import { isOnline, queueOperation, setupOnlineListener, syncPendingOperations } from '@/lib/offline/syncQueue'
 import { getOfflineFieldbooks, saveFieldbookOffline } from '@/lib/offline/fieldbooks'
@@ -26,7 +26,7 @@ import { LevelingBook } from '@/components/fieldbook/LevelingBook'
 import { TraverseBook } from '@/components/fieldbook/TraverseBook'
 import { ControlBook } from '@/components/fieldbook/ControlBook'
 import { MobileFieldbookShell } from '@/components/fieldbook/MobileFieldbookShell'
-import { MobileMeasurementCapture, type CapturedMeasurement } from '@/components/fieldbook/MobileMeasurementCapture'
+import { type CapturedMeasurement } from '@/components/fieldbook/MobileMeasurementCapture'
 import { GNSSRoverConnection } from '@/components/survey/GNSSRoverConnection'
 import { NTRIPClientPanel } from '@/components/survey/NTRIPClientPanel'
 import { GNSSQualityReport } from '@/components/survey/GNSSQualityReport'
@@ -38,7 +38,7 @@ import { InstrumentStreamBar, type StreamedReading, type SurveyType as StreamSur
 import { InstantClosureFeedback } from '@/components/fieldbook/InstantClosureFeedback'
 import { useAutoSave } from '@/hooks/useAutoSave'
 import { useNotifications } from '@/hooks/useNotifications'
-import { crossCheckArea, crossCheckBearing, crossCheckClosure, crossCheckDistance } from '@/lib/engine/calculationCrossCheck'
+import { crossCheckArea, crossCheckClosure } from '@/lib/engine/calculationCrossCheck'
 
 /** useIsMobile — SSR-safe media-query hook (lg breakpoint = 1024px). */
 function useIsMobile() {
@@ -994,7 +994,7 @@ export default function DigitalFieldBookPage() {
   }
 
   // ─── Handle measurement capture from MobileMeasurementCapture ─────
-  function handleMeasurementCapture(m: CapturedMeasurement) {
+  function _handleMeasurementCapture(m: CapturedMeasurement) {
     if (m.type === 'gps') {
       if (type === 'control') {
         setControlRows((p) => [...p, {
@@ -1112,7 +1112,7 @@ export default function DigitalFieldBookPage() {
       }
       return {}
     } catch (err) {
-      console.error('pullInstrumentReading failed:', err)
+      logger.error('pullInstrumentReading failed:', { error: err })
       return {}
     }
   }

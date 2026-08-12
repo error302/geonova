@@ -49,15 +49,15 @@ import { authOptions } from '@/lib/auth'
 import { setCurrentUserId } from '@/lib/db'
 import { captureError } from '@/lib/monitoring/sentry'
 import { rateLimit, getClientIdentifier } from '@/lib/security/rateLimit'
-import { auditLog } from '@/lib/logger'
+import { auditLog, logger } from '@/lib/logger'
 import type { ZodSchema } from 'zod'
 import type { Session } from 'next-auth'
 import {
   AppError,
   AuthenticationError,
   AuthorizationError,
-  NotFoundError,
-  ConflictError,
+  _NotFoundError,
+  _ConflictError,
   ValidationError,
   RateLimitError,
 } from './errors'
@@ -240,7 +240,7 @@ function logError(
   const logLevel = status >= 500 ? 'error' : 'warn'
 
   if (logLevel === 'error') {
-    console.error(
+    logger.error(
       JSON.stringify({
         level: 'error',
         message: `[apiHandler] ${context.method} ${context.path} → ${status}`,
@@ -253,7 +253,7 @@ function logError(
       })
     )
   } else {
-    console.warn(
+    logger.warn(
       JSON.stringify({
         level: 'warn',
         message: `[apiHandler] ${context.method} ${context.path} → ${status}`,

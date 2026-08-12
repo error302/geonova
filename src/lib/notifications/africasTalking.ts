@@ -16,6 +16,7 @@
  */
 
 import { env } from '@/lib/env'
+import { logger } from '@/lib/logger'
 
 // ── Types ──────────────────────────────────────────────────────
 
@@ -91,7 +92,9 @@ export async function sendSMS(to: string, message: string): Promise<Notification
   }
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const username = env.AFRICASTALKING_USERNAME!
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const apiKey = env.AFRICASTALKING_API_KEY!
     const senderId = env.AFRICASTALKING_SENDER_ID || 'METARDU'
 
@@ -129,7 +132,7 @@ export async function sendSMS(to: string, message: string): Promise<Notification
     return { success: false, error: JSON.stringify(data) }
   } catch (err: unknown) {
     const msg = err instanceof Error ? (err as Error).message : 'Unknown error'
-    console.error('[Notification] SMS send failed:', msg)
+    logger.error('[Notification] SMS send failed:', { error: msg })
     return { success: false, error: msg }
   }
 }
@@ -143,7 +146,9 @@ export async function sendWhatsApp(to: string, message: string): Promise<Notific
   }
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const username = env.AFRICASTALKING_USERNAME!
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const apiKey = env.AFRICASTALKING_API_KEY!
 
     // Africa's Talking WhatsApp sandbox API
@@ -174,7 +179,7 @@ export async function sendWhatsApp(to: string, message: string): Promise<Notific
     return { success: false, error: JSON.stringify(data) }
   } catch (err: unknown) {
     const msg = err instanceof Error ? (err as Error).message : 'Unknown error'
-    console.error('[Notification] WhatsApp send failed:', msg)
+    logger.error('[Notification] WhatsApp send failed:', { error: msg })
     return { success: false, error: msg }
   }
 }
