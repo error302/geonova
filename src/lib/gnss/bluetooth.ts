@@ -115,7 +115,10 @@ export class WebBluetoothGNSS {
         });
       }
 
-      const server = await this.device!.gatt?.connect();
+      if (!this.device) {
+        throw new Error('No Bluetooth device selected');
+      }
+      const server = await this.device.gatt?.connect();
       if (!server) {
         throw new Error('Failed to connect to GATT server');
       }
@@ -137,8 +140,9 @@ export class WebBluetoothGNSS {
       this.characteristic = await service.getCharacteristic(NMEA_CHARACTERISTIC_UUID);
 
       await this.characteristic.startNotifications();
-      this.boundNotificationHandler = this.handleNotification.bind(this);
-      this.characteristic.addEventListener('characteristicvaluechanged', this.boundNotificationHandler!);
+      const notificationHandler = this.handleNotification.bind(this);
+      this.boundNotificationHandler = notificationHandler;
+      this.characteristic.addEventListener('characteristicvaluechanged', notificationHandler);
 
       this.notifyConnection(true);
     } catch (error) {

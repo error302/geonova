@@ -42,9 +42,13 @@ export const POST = apiHandler(
     }
 
     const body = ctx.body as z.infer<typeof ApproveSchema>
+    const userId = ctx.userId
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
     if (body.action === 'approve') {
-      const success = await approveCPDEntry(body.recordId, ctx.userId!)
+      const success = await approveCPDEntry(body.recordId, userId)
       if (!success) {
         return NextResponse.json(
           { error: 'CPD entry not found or already approved', code: 'NOT_FOUND' },
@@ -64,7 +68,7 @@ export const POST = apiHandler(
           { status: 400 }
         )
       }
-      const success = await rejectCPDEntry(body.recordId, ctx.userId!, body.reason)
+      const success = await rejectCPDEntry(body.recordId, userId, body.reason)
       if (!success) {
         return NextResponse.json(
           { error: 'CPD entry not found or already processed', code: 'NOT_FOUND' },

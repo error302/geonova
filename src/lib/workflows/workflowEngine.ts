@@ -369,12 +369,14 @@ export function runCoordinatesWorkflow(observations: SurveyObservation[]): Workf
   const errors: string[] = []
 
   try {
+    const isCoordinate = (o: SurveyObservation): o is SurveyObservation & { value1: number; value2: number } =>
+      o.type === 'COORDINATE' && o.value1 !== undefined && o.value2 !== undefined
     const points = observations
-      .filter((o) => o.type === 'COORDINATE' && o.value1 !== undefined && o.value2 !== undefined)
+      .filter(isCoordinate)
       .map((o) => ({
         name: o.station,
-        easting: o.value1!,
-        northing: o.value2!,
+        easting: o.value1,
+        northing: o.value2,
         elevation: o.value3
       }))
 

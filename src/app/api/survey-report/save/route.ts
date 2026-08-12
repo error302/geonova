@@ -28,13 +28,17 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     return NextResponse.json({ error: 'Sections required' }, { status: 400 })
   }
 
+  if (!input) {
+    return NextResponse.json({ error: 'Input required' }, { status: 400 })
+  }
+
   const comp = completeness ?? 0
 
   if (reportId) {
-    await saveSurveyReport(reportId, input!, sections, comp)
+    await saveSurveyReport(reportId, input, sections, comp)
     return NextResponse.json({ id: reportId, saved: true })
   } else {
-    const id = await createSurveyReport(input!, sections, comp, projectId)
+    const id = await createSurveyReport(input, sections, comp, projectId)
     return NextResponse.json({ id, created: true })
   }
 })

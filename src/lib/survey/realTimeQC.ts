@@ -202,12 +202,13 @@ export function detectRedundantObservationDiscrepancies(
     const reverseKey = `${obs.toStation}->${obs.fromStation}`
 
     // Check if we already have observations for this leg (either direction)
-    if (groups.has(key)) {
-      groups.get(key)!.push(obs)
-    } else if (groups.has(reverseKey)) {
-      groups.get(reverseKey)!.push(obs)
+    const fwd = groups.get(key)
+    if (fwd) {
+      fwd.push(obs)
     } else {
-      groups.set(key, [obs])
+      const rev = groups.get(reverseKey)
+      if (rev) rev.push(obs)
+      else groups.set(key, [obs])
     }
   }
 

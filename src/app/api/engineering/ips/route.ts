@@ -200,8 +200,8 @@ async function computeIPValues(
 
       // Chainages
       chainageTC = currentChainage
-      chainageMC = chainageTC! + arcLength / 2
-      chainageCT = chainageTC! + arcLength
+      chainageMC = chainageTC + arcLength / 2
+      chainageCT = chainageTC + arcLength
     }
 
     // Update the IP in the database with computed values

@@ -416,10 +416,12 @@ function threadSegments(
   for (let i = 0; i < segments.length; i++) {
     const k0 = ptKey(segments[i][0])
     const k1 = ptKey(segments[i][1])
-    if (!endpointMap.has(k0)) endpointMap.set(k0, [])
-    if (!endpointMap.has(k1)) endpointMap.set(k1, [])
-    endpointMap.get(k0)!.push(i)
-    endpointMap.get(k1)!.push(i)
+    const k0List = endpointMap.get(k0)
+    if (k0List) k0List.push(i)
+    else endpointMap.set(k0, [i])
+    const k1List = endpointMap.get(k1)
+    if (k1List) k1List.push(i)
+    else endpointMap.set(k1, [i])
   }
 
   for (let startIdx = 0; startIdx < segments.length; startIdx++) {

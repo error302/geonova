@@ -643,8 +643,8 @@ export function generateLevelingSummary(
         <td><strong>${esc(p.name)}</strong></td>
         <td style="font-family:monospace">${p.easting.toFixed(4)}</td>
         <td style="font-family:monospace">${p.northing.toFixed(4)}</td>
-        <td style="font-family:monospace">${p.elevation!.toFixed(4)}</td>
-        <td style="font-family:monospace">${ex[`adj_${p.name}`] || p.elevation!.toFixed(4)}</td>
+        <td style="font-family:monospace">${p.elevation?.toFixed(4) ?? '—'}</td>
+        <td style="font-family:monospace">${ex[`adj_${p.name}`] || (p.elevation?.toFixed(4) ?? '—')}</td>
         <td>${ex[`remark_${p.name}`] || (p.is_control ? 'Control BM' : 'TP')}</td>
       </tr>`).join('')}
       ${elevationPoints.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:#888;">No elevation data. Add elevations to survey points in the workspace.</td></tr>' : ''}

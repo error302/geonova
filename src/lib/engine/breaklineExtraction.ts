@@ -329,10 +329,12 @@ function stitchCandidates(
   candidates.forEach((c, i) => {
     const k1 = ptKey(c.a)
     const k2 = ptKey(c.b)
-    if (!endpointMap.has(k1)) endpointMap.set(k1, [])
-    if (!endpointMap.has(k2)) endpointMap.set(k2, [])
-    endpointMap.get(k1)!.push(i)
-    endpointMap.get(k2)!.push(i)
+    const k1List = endpointMap.get(k1)
+    if (k1List) k1List.push(i)
+    else endpointMap.set(k1, [i])
+    const k2List = endpointMap.get(k2)
+    if (k2List) k2List.push(i)
+    else endpointMap.set(k2, [i])
   })
 
   const used = new Array(candidates.length).fill(false)

@@ -295,9 +295,13 @@ function integerSearch(
     secondBestF = computeQuadForm(secondBest, z, L, D)
   }
 
+  if (best === null || secondBest === null) {
+    throw new Error('Integer ambiguity search produced no candidates')
+  }
+
   return {
-    best: best!,
-    secondBest: secondBest!,
+    best,
+    secondBest,
     bestF,
     secondBestF,
   }

@@ -24,7 +24,10 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
 
   // IDOR protection — verify project ownership before allowing overwrite
   const ownership = await requireProjectOwnership(id, ctx.userId)
-  if (!ownership.ok) return ownership.error!
+  if (!ownership.ok) {
+    if (!ownership.error) throw new Error('Ownership check failed without an error response')
+    return ownership.error
+  }
 
   const body = ctx.body as Record<string, unknown>
 
@@ -58,7 +61,10 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   // IDOR protection — verify project ownership before returning data
   const ownership = await requireProjectOwnership(id, ctx.userId)
-  if (!ownership.ok) return ownership.error!
+  if (!ownership.ok) {
+    if (!ownership.error) throw new Error('Ownership check failed without an error response')
+    return ownership.error
+  }
 
   const res = await db.query<NetworkAdjustmentRow>(
     'SELECT * FROM network_adjustments WHERE project_id = $1',

@@ -31,8 +31,8 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
     action: searchParams.get('action') || undefined,
     resourceType: searchParams.get('resourceType') || undefined,
     resourceId: searchParams.get('resourceId') || undefined,
-    limit: searchParams.has('limit') ? parseInt(searchParams.get('limit')!, 10) : undefined,
-    offset: searchParams.has('offset') ? parseInt(searchParams.get('offset')!, 10) : undefined,
+    limit: searchParams.has('limit') ? parseInt(searchParams.get('limit') ?? '', 10) : undefined,
+    offset: searchParams.has('offset') ? parseInt(searchParams.get('offset') ?? '', 10) : undefined,
   };
 
   const startDateStr = searchParams.get('startDate');

@@ -40,13 +40,17 @@ export const GET = apiHandler(
     const url = new URL(req.url)
     const entityType = url.searchParams.get('entityType') as AuditEntityType | null
     const entityId = url.searchParams.get('entityId')
-    const limit = url.searchParams.get('limit') ? parseInt(url.searchParams.get('limit')!, 10) : 200
+    const limitRaw = url.searchParams.get('limit')
+    const limit = limitRaw ? parseInt(limitRaw, 10) : 200
     const newestFirst = url.searchParams.get('newestFirst') === 'true'
     const summaryOnly = url.searchParams.get('summary') === 'true'
 
     // IDOR protection — verify project ownership
     const ownership = await requireProjectOwnership(id, ctx.userId)
-    if (!ownership.ok) return ownership.error!
+    if (!ownership.ok) {
+    if (!ownership.error) throw new Error('Ownership check failed without an error response')
+    return ownership.error
+  }
 
     if (summaryOnly) {
       const summary = await getChainSummary({ projectId: id })
