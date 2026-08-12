@@ -36731,59 +36731,13 @@
   },
   {
     "filePath": "src/lib/engine/levelNetworkAdjust.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 109,
-        "column": 39,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 109,
-        "endColumn": 64
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 110,
-        "column": 41,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 110,
-        "endColumn": 68
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 178,
-        "column": 18,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 178,
-        "endColumn": 39
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 183,
-        "column": 19,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 183,
-        "endColumn": 42
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 4,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Level Network Adjustment Engine (Least Squares)\r\n * Phase A3 — Metardu Professional Engine\r\n *\r\n * Performs a 1D least squares adjustment of interconnected leveling loops.\r\n *\r\n * Observation Equation:\r\n * v = h_j - h_i - \\Delta h_{ij}\r\n * where:\r\n *   h_i, h_j are the unknown elevations of stations i and j\r\n *   \\Delta h_{ij} is the observed elevation difference from i to j\r\n *\r\n * Weighting:\r\n * w = 1 / L  (where L is distance in km) OR w = 1 / \\sigma^2\r\n */\r\n\r\nimport { z } from 'zod'\r\n\r\nexport const LevelStationSchema = z.object({\r\n  id: z.string().min(1, 'Station ID is required'),\r\n  elevation: z.number().finite().default(0), // Approx if free, fixed if isFixed\r\n  isFixed: z.boolean().default(false),\r\n})\r\n\r\nexport type LevelStation = z.infer<typeof LevelStationSchema>\r\n\r\nexport const LevelObservationSchema = z.object({\r\n  from: z.string().min(1, 'From station is required'),\r\n  to: z.string().min(1, 'To station is required'),\r\n  deltaH: z.number().finite(),\r\n  distanceKm: z.number().positive().default(1),\r\n})\r\n\r\nexport type LevelObservation = z.infer<typeof LevelObservationSchema>\r\n\r\nexport interface AdjustedLevelStation extends LevelStation {\r\n  adjustedElevation: number\r\n  residual: number\r\n  stdDev: number\r\n}\r\n\r\nexport interface LevelAdjustmentResult {\r\n  adjustedStations: AdjustedLevelStation[]\r\n  sigmaZero: number\r\n  degreesOfFreedom: number\r\n  passed: boolean\r\n  warnings: string[]\r\n  residuals: Array<{\r\n    from: string\r\n    to: string\r\n    observedDelta: number\r\n    adjustedDelta: number\r\n    residual: number\r\n    standardizedResidual: number\r\n  }>\r\n}\r\n\r\nexport function adjustLevelNetwork(\r\n  stations: LevelStation[],\r\n  observations: LevelObservation[]\r\n): LevelAdjustmentResult {\r\n  const stationValidation = LevelStationSchema.array().safeParse(stations)\r\n  if (!stationValidation.success) {\r\n    throw new Error('Invalid stations: ' + stationValidation.error.message)\r\n  }\r\n  const obsValidation = LevelObservationSchema.array().safeParse(observations)\r\n  if (!obsValidation.success) {\r\n    throw new Error('Invalid observations: ' + obsValidation.error.message)\r\n  }\r\n\r\n  const warnings: string[] = []\r\n\r\n  const fixed = stations.filter(s => s.isFixed)\r\n  if (fixed.length === 0) {\r\n    throw new Error('At least one fixed benchmark is required.')\r\n  }\r\n\r\n  const free = stations.filter(s => !s.isFixed)\r\n  const n = free.length\r\n  const m = observations.length\r\n  const dof = m - n\r\n\r\n  if (dof < 0) {\r\n    throw new Error(`Insufficient observations. Need at least ${n} runs for ${n} free stations.`)\r\n  }\r\n\r\n  const stationIndex = new Map<string, number>()\r\n  free.forEach((s, i) => stationIndex.set(s.id, i))\r\n\r\n  const elevations = new Map<string, number>()\r\n  stations.forEach(s => elevations.set(s.id, s.elevation))\r\n\r\n  // Estimate initial elevations if missing (using a simple spanning tree approach could be better, but we assume approximations or 0 are provided)\r\n  // The system is linear, so initial approximations don't affect convergence, only the size of dx.\r\n\r\n  const A: number[][] = []\r\n  const W: number[] = []\r\n  const l: number[] = []\r\n\r\n  for (const obs of observations) {\r\n    const fromH = elevations.get(obs.from) ?? 0\r\n    const toH = elevations.get(obs.to) ?? 0\r\n    \r\n    // Weight inversely proportional to distance (km)\r\n    // Variance is proportional to distance, so w = 1/var \\propto 1/L\r\n    const w = 1 / obs.distanceKm\r\n\r\n    const row: number[] = new Array<number>(n).fill(0)\r\n    if (stationIndex.has(obs.to)) row[stationIndex.get(obs.to)!] = 1\r\n    if (stationIndex.has(obs.from)) row[stationIndex.get(obs.from)!] = -1\r\n\r\n    const obsH = toH - fromH\r\n    A.push(row)\r\n    W.push(w)\r\n    l.push(obs.deltaH - obsH)\r\n  }\r\n\r\n  const N = multiplyAtWA(A, W, n)\r\n  const t = multiplyAtWl(A, W, l, n)\r\n  \r\n  let x: number[]\r\n  try {\r\n    x = solveLinearSystem(N, t)\r\n  } catch (err: unknown) {\r\n    throw new Error('Failed to solve network equations: ' + (err as Error).message)\r\n  }\r\n\r\n  free.forEach((s, i) => {\r\n    elevations.set(s.id, (elevations.get(s.id) ?? 0) + x[i])\r\n  })\r\n\r\n  const v: number[] = []\r\n  for (let i = 0; i < m; i++) {\r\n    let ax = 0\r\n    for (let j = 0; j < n; j++) ax += A[i][j] * x[j]\r\n    v.push(ax - l[i])\r\n  }\r\n\r\n  const vWv = v.reduce((sum, res, i) => sum + W[i] * res * res, 0)\r\n  const sigmaZero = dof > 0 ? Math.sqrt(vWv / dof) : 0\r\n\r\n  if (dof === 0) {\r\n    warnings.push('Zero degrees of freedom — cannot compute reliable error estimates.')\r\n  }\r\n\r\n  const Qxx = invertMatrix(N, n)\r\n\r\n  const residualsOut = observations.map((obs, i) => {\r\n    const qll = 1 / W[i]\r\n    let aTQa = 0\r\n    const aRow = A[i]\r\n    for (let row = 0; row < n; row++) {\r\n      let sum = 0\r\n      for (let col = 0; col < n; col++) {\r\n        sum += Qxx[row][col] * aRow[col]\r\n      }\r\n      aTQa += aRow[row] * sum\r\n    }\r\n    const qvv = Math.max(0, qll - aTQa)\r\n    const stdRes = qvv > 0 ? v[i] / (sigmaZero * Math.sqrt(qvv)) : 0\r\n\r\n    return {\r\n      from: obs.from,\r\n      to: obs.to,\r\n      observedDelta: obs.deltaH,\r\n      adjustedDelta: obs.deltaH + v[i],\r\n      residual: v[i],\r\n      standardizedResidual: stdRes\r\n    }\r\n  })\r\n\r\n  const passed = residualsOut.every(r => Math.abs(r.standardizedResidual) < 3.0)\r\n  if (!passed) {\r\n    warnings.push('One or more standardized residuals exceed 3.0. Check for blunders in leveling runs.')\r\n  }\r\n\r\n  const adjustedStations: AdjustedLevelStation[] = stations.map(s => {\r\n    const adjH = elevations.get(s.id)!\r\n    let stdDev = 0\r\n    let res = 0\r\n\r\n    if (!s.isFixed) {\r\n      const idx = stationIndex.get(s.id)!\r\n      res = x[idx]\r\n      const qHH = Qxx[idx][idx]\r\n      stdDev = sigmaZero * Math.sqrt(Math.max(qHH, 0))\r\n    }\r\n\r\n    return {\r\n      ...s,\r\n      adjustedElevation: adjH,\r\n      residual: res,\r\n      stdDev\r\n    }\r\n  })\r\n\r\n  return {\r\n    adjustedStations,\r\n    sigmaZero,\r\n    degreesOfFreedom: dof,\r\n    passed,\r\n    warnings,\r\n    residuals: residualsOut\r\n  }\r\n}\r\n\r\n// Re-using matrix functions\r\nfunction multiplyAtWA(A: number[][], W: number[], n: number): number[][] {\r\n  const result = Array.from({ length: n }, () => new Array<number>(n).fill(0))\r\n  for (let i = 0; i < n; i++)\r\n    for (let j = 0; j < n; j++)\r\n      for (let k = 0; k < A.length; k++)\r\n        result[i][j] += A[k][i] * W[k] * A[k][j]\r\n  return result\r\n}\r\n\r\nfunction multiplyAtWl(A: number[][], W: number[], l: number[], n: number): number[] {\r\n  const result = new Array<number>(n).fill(0)\r\n  for (let i = 0; i < n; i++)\r\n    for (let k = 0; k < A.length; k++)\r\n      result[i] += A[k][i] * W[k] * l[k]\r\n  return result\r\n}\r\n\r\nfunction solveLinearSystem(A: number[][], b: number[]): number[] {\r\n  const n = b.length\r\n  const M = A.map((row, i) => [...row, b[i]])\r\n  for (let col = 0; col < n; col++) {\r\n    let maxRow = col\r\n    for (let row = col + 1; row < n; row++)\r\n      if (Math.abs(M[row][col]) > Math.abs(M[maxRow][col])) maxRow = row\r\n    ;[M[col], M[maxRow]] = [M[maxRow], M[col]]\r\n    if (Math.abs(M[col][col]) < 1e-12)\r\n      throw new Error('Singular normal equation matrix — check network geometry.')\r\n    for (let row = col + 1; row < n; row++) {\r\n      const factor = M[row][col] / M[col][col]\r\n      for (let k = col; k <= n; k++) M[row][k] -= factor * M[col][k]\r\n    }\r\n  }\r\n  const x = new Array<number>(n).fill(0)\r\n  for (let i = n - 1; i >= 0; i--) {\r\n    x[i] = M[i][n]\r\n    for (let j = i + 1; j < n; j++) x[i] -= M[i][j] * x[j]\r\n    x[i] /= M[i][i]\r\n  }\r\n  return x\r\n}\r\n\r\nfunction invertMatrix(A: number[][], n: number): number[][] {\r\n  const M = A.map((row, i) => {\r\n    const aug: number[] = [...row, ...new Array<number>(n).fill(0)]\r\n    aug[n + i] = 1\r\n    return aug\r\n  })\r\n  for (let col = 0; col < n; col++) {\r\n    let maxRow = col\r\n    for (let row = col + 1; row < n; row++)\r\n      if (Math.abs(M[row][col]) > Math.abs(M[maxRow][col])) maxRow = row\r\n    ;[M[col], M[maxRow]] = [M[maxRow], M[col]]\r\n    const pivot = M[col][col]\r\n    if (Math.abs(pivot) < 1e-12) return Array.from({ length: n }, () => new Array<number>(n).fill(0))\r\n    for (let k = 0; k < 2 * n; k++) M[col][k] /= pivot\r\n    for (let row = 0; row < n; row++) {\r\n      if (row === col) continue\r\n      const factor = M[row][col]\r\n      for (let k = 0; k < 2 * n; k++) M[row][k] -= factor * M[col][k]\r\n    }\r\n  }\r\n  return M.map(row => row.slice(n))\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -37797,111 +37751,13 @@
   },
   {
     "filePath": "src/lib/engine/__tests__/cogo.test.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 36,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 36,
-        "endColumn": 19,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                1315,
-                1316
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 37,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 37,
-        "endColumn": 19,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                1370,
-                1371
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 54,
-        "column": 28,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 54,
-        "endColumn": 35,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                1904,
-                1905
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 55,
-        "column": 28,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 55,
-        "endColumn": 35,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                1967,
-                1968
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 4,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "import { radiation, bearingIntersection, tienstraResection } from '../cogo'\r\n\r\ndescribe('radiation', () => {\r\n  it('computes point due north from station', () => {\r\n    const r = radiation({ easting: 1000, northing: 2000 }, 0, 100)\r\n    expect(r.point.easting).toBeCloseTo(1000, 3)\r\n    expect(r.point.northing).toBeCloseTo(2100, 3)\r\n  })\r\n\r\n  it('computes point due east from station', () => {\r\n    const r = radiation({ easting: 1000, northing: 2000 }, 90, 100)\r\n    expect(r.point.easting).toBeCloseTo(1100, 3)\r\n    expect(r.point.northing).toBeCloseTo(2000, 3)\r\n  })\r\n\r\n  it('computes point at 45° correctly', () => {\r\n    const r = radiation({ easting: 0, northing: 0 }, 45, 100)\r\n    expect(r.point.easting).toBeCloseTo(70.711, 2)\r\n    expect(r.point.northing).toBeCloseTo(70.711, 2)\r\n  })\r\n\r\n  it('preserves distance and bearing in result', () => {\r\n    const r = radiation({ easting: 500, northing: 500 }, 135, 200)\r\n    expect(r.distance).toBeCloseTo(200, 4)\r\n    expect(r.bearing).toBeCloseTo(135, 4)\r\n  })\r\n})\r\n\r\ndescribe('bearingIntersection', () => {\r\n  it('finds intersection of two perpendicular bearings', () => {\r\n    const result = bearingIntersection(\r\n      { easting: 0, northing: 0 }, 90,\r\n      { easting: 100, northing: 100 }, 180\r\n    )\r\n    expect(result).not.toBeNull()\r\n    expect(result!.point.easting).toBeCloseTo(100, 1)\r\n    expect(result!.point.northing).toBeCloseTo(0, 1)\r\n  })\r\n\r\n  it('returns null for parallel bearings', () => {\r\n    const result = bearingIntersection(\r\n      { easting: 0, northing: 0 }, 0,\r\n      { easting: 100, northing: 0 }, 0\r\n    )\r\n    expect(result).toBeNull()\r\n  })\r\n\r\n  it('returns finite coordinates for valid intersection', () => {\r\n    const result = bearingIntersection(\r\n      { easting: 500, northing: 500 }, 45,\r\n      { easting: 600, northing: 500 }, 315\r\n    )\r\n    expect(result).not.toBeNull()\r\n    expect(Number.isFinite(result!.point.easting)).toBe(true)\r\n    expect(Number.isFinite(result!.point.northing)).toBe(true)\r\n  })\r\n})\r\n\r\ndescribe('tienstraResection', () => {\r\n  it('returns null for degenerate/dangerous circle geometry', () => {\r\n    // When angles are equal and symmetrical, point is on the dangerous circle\r\n    const r = tienstraResection(\r\n      { easting: 0,   northing: 0   },\r\n      { easting: 100, northing: 0   },\r\n      { easting: 50,  northing: 100 },\r\n      50, 50\r\n    )\r\n    // May return null for dangerous configurations — both null and valid are acceptable\r\n    if (r !== null) {\r\n      expect(Number.isFinite(r.point.easting)).toBe(true)\r\n      expect(Number.isFinite(r.point.northing)).toBe(true)\r\n    }\r\n  })\r\n\r\n  it('computes valid position for well-conditioned resection', () => {\r\n    // Three control points forming a wide triangle, station inside\r\n    // Known station P at approx (60, 40) observing angles to A, B, C\r\n    const A = { easting: 0,   northing: 0   }\r\n    const B = { easting: 120, northing: 0   }\r\n    const C = { easting: 60,  northing: 120 }\r\n    // Use asymmetric angles to avoid dangerous circle\r\n    const r = tienstraResection(A, B, C, 60, 70)\r\n    if (r !== null) {\r\n      expect(Number.isFinite(r.point.easting)).toBe(true)\r\n      expect(Number.isFinite(r.point.northing)).toBe(true)\r\n    }\r\n  })\r\n})\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -38503,59 +38359,13 @@
   },
   {
     "filePath": "src/lib/engine/__tests__/subdivision.test.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 65,
-        "column": 20,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 65,
-        "endColumn": 61
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 66,
-        "column": 20,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 66,
-        "endColumn": 61
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 88,
-        "column": 20,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 88,
-        "endColumn": 61
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 89,
-        "column": 20,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 89,
-        "endColumn": 61
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 4,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Tests for the METARDU Subdivision Engine\r\n */\r\n\r\nimport { subdivide } from '@/lib/engine/subdivision'\r\nimport type { Point2D } from '@/lib/engine/types'\r\nimport type { SubdivisionParams } from '@/types/subdivision'\r\n\r\n// ─── Test fixtures ───────────────────────────────────────────────────────────\r\n\r\n/** Simple 100m × 100m square (1.0 ha), vertices CW from NW */\r\nconst SQUARE_1HA: Point2D[] = [\r\n  { easting: 100, northing: 200 },\r\n  { easting: 200, northing: 200 },\r\n  { easting: 200, northing: 100 },\r\n  { easting: 100, northing: 100 },\r\n]\r\n\r\n/** Rectangle 200m × 50m = 1.0 ha */\r\nconst RECT_1HA: Point2D[] = [\r\n  { easting: 100, northing: 150 },\r\n  { easting: 300, northing: 150 },\r\n  { easting: 300, northing: 100 },\r\n  { easting: 100, northing: 100 },\r\n]\r\n\r\n/** Irregular pentagon (roughly 2.4 ha) */\r\nconst PENTAGON: Point2D[] = [\r\n  { easting: 100, northing: 300 },\r\n  { easting: 250, northing: 320 },\r\n  { easting: 350, northing: 250 },\r\n  { easting: 280, northing: 120 },\r\n  { easting: 120, northing: 130 },\r\n]\r\n\r\n// ─── Helpers ────────────────────────────────────────────────────────────────\r\n\r\nfunction roundHa(ha: number, decimals = 4): number {\r\n  return Math.round(ha * Math.pow(10, decimals)) / Math.pow(10, decimals)\r\n}\r\n\r\nfunction totalLotsArea(lots: { areaHa: number }[]): number {\r\n  return lots.reduce((s, l) => s + l.areaHa, 0)\r\n}\r\n\r\n// ─── Tests ──────────────────────────────────────────────────────────────────\r\n\r\ndescribe('subdivide', () => {\r\n  // ─── Single Split ────────────────────────────────────────────────────────\r\n\r\n  describe('single-split', () => {\r\n    it('should split a square into two pieces with a vertical line', () => {\r\n      const params: SubdivisionParams = {\r\n        splitLine: {\r\n          startPoint: { easting: 150, northing: 80 },\r\n          endPoint: { easting: 150, northing: 220 },\r\n        },\r\n      }\r\n\r\n      const result = subdivide(SQUARE_1HA, 'single-split', params)\r\n\r\n      expect(result.method).toBe('single-split')\r\n      expect(result.lots.length).toBe(2)\r\n\r\n      const lot1 = result.lots.find(l => l.lotNumber === 1)!\r\n      const lot2 = result.lots.find(l => l.lotNumber === 2)!\r\n\r\n      // Each lot should be approximately 0.5 ha\r\n      expect(lot1.areaHa).toBeGreaterThan(0)\r\n      expect(lot2.areaHa).toBeGreaterThan(0)\r\n      expect(lot1.areaHa + lot2.areaHa).toBeCloseTo(result.parentParcel.areaHa, 0)\r\n\r\n      // Total should equal parent\r\n      expect(roundHa(totalLotsArea(result.lots))).toBeCloseTo(roundHa(result.parentParcel.areaHa), 3)\r\n    })\r\n\r\n    it('should split a square into two pieces with a horizontal line', () => {\r\n      const params: SubdivisionParams = {\r\n        splitLine: {\r\n          startPoint: { easting: 80, northing: 150 },\r\n          endPoint: { easting: 220, northing: 150 },\r\n        },\r\n      }\r\n\r\n      const result = subdivide(SQUARE_1HA, 'single-split', params)\r\n\r\n      expect(result.lots.length).toBe(2)\r\n      const lot1 = result.lots.find(l => l.lotNumber === 1)!\r\n      const lot2 = result.lots.find(l => l.lotNumber === 2)!\r\n      expect(lot1.areaHa).toBeGreaterThan(0)\r\n      expect(lot2.areaHa).toBeGreaterThan(0)\r\n      expect(lot1.areaHa + lot2.areaHa).toBeCloseTo(result.parentParcel.areaHa, 0)\r\n    })\r\n\r\n    it('should handle diagonal split', () => {\r\n      const params: SubdivisionParams = {\r\n        splitLine: {\r\n          startPoint: { easting: 100, northing: 100 },\r\n          endPoint: { easting: 200, northing: 200 },\r\n        },\r\n      }\r\n\r\n      const result = subdivide(SQUARE_1HA, 'single-split', params)\r\n\r\n      expect(result.lots.length).toBe(2)\r\n      // Each half should be 0.5 ha for a diagonal of a square\r\n      expect(roundHa(totalLotsArea(result.lots))).toBeCloseTo(roundHa(result.parentParcel.areaHa), 3)\r\n    })\r\n  })\r\n\r\n  // ─── Grid Subdivision ────────────────────────────────────────────────────\r\n\r\n  describe('grid', () => {\r\n    it('should split a square into 4 equal lots (2×2)', () => {\r\n      const params: SubdivisionParams = { rows: 2, cols: 2 }\r\n\r\n      const result = subdivide(SQUARE_1HA, 'grid', params)\r\n\r\n      expect(result.method).toBe('grid')\r\n      expect(result.lots.length).toBe(4)\r\n\r\n      // Each lot should be ~0.25 ha\r\n      for (const lot of result.lots) {\r\n        expect(lot.areaHa).toBeGreaterThan(0)\r\n      }\r\n\r\n      // Total should equal parent\r\n      expect(roundHa(totalLotsArea(result.lots))).toBeCloseTo(roundHa(result.parentParcel.areaHa), 1)\r\n    })\r\n\r\n    it('should split a rectangle into 2 lots (1×2)', () => {\r\n      const params: SubdivisionParams = { rows: 1, cols: 2 }\r\n\r\n      const result = subdivide(RECT_1HA, 'grid', params)\r\n\r\n      expect(result.lots.length).toBe(2)\r\n\r\n      // Each lot should be ~0.5 ha (100m × 50m)\r\n      for (const lot of result.lots) {\r\n        expect(lot.areaHa).toBeGreaterThan(0)\r\n      }\r\n      expect(roundHa(totalLotsArea(result.lots))).toBeCloseTo(roundHa(result.parentParcel.areaHa), 1)\r\n    })\r\n\r\n    it('should split a square into 6 lots (2×3)', () => {\r\n      const params: SubdivisionParams = { rows: 2, cols: 3 }\r\n\r\n      const result = subdivide(SQUARE_1HA, 'grid', params)\r\n\r\n      expect(result.lots.length).toBe(6)\r\n\r\n      for (const lot of result.lots) {\r\n        expect(lot.areaHa).toBeGreaterThan(0)\r\n      }\r\n    })\r\n\r\n    it('should number lots left-to-right, top-to-bottom', () => {\r\n      const params: SubdivisionParams = { rows: 2, cols: 2 }\r\n\r\n      const result = subdivide(SQUARE_1HA, 'grid', params)\r\n\r\n      // Lot numbers should be 1-4\r\n      const lotNumbers = result.lots.map(l => l.lotNumber).sort((a, b) => a - b)\r\n      expect(lotNumbers).toEqual([1, 2, 3, 4])\r\n    })\r\n\r\n    it('should handle irregular polygon grid subdivision', () => {\r\n      const params: SubdivisionParams = { rows: 2, cols: 2 }\r\n\r\n      const result = subdivide(PENTAGON, 'grid', params)\r\n\r\n      // Should have some lots (might not be exactly 4 for irregular shapes)\r\n      expect(result.lots.length).toBeGreaterThanOrEqual(2)\r\n      expect(result.lots.length).toBeLessThanOrEqual(4)\r\n\r\n      // All lots should have positive area\r\n      for (const lot of result.lots) {\r\n        expect(lot.areaHa).toBeGreaterThan(0)\r\n      }\r\n    })\r\n  })\r\n\r\n  // ─── Radial Subdivision ──────────────────────────────────────────────────\r\n\r\n  describe('radial', () => {\r\n    it('should split a square into 4 radial sectors from center', () => {\r\n      const params: SubdivisionParams = {\r\n        center: { easting: 150, northing: 150 },\r\n        numLots: 4,\r\n      }\r\n\r\n      const result = subdivide(SQUARE_1HA, 'radial', params)\r\n\r\n      expect(result.method).toBe('radial')\r\n      expect(result.lots.length).toBeGreaterThanOrEqual(2)\r\n\r\n      // All lots should have positive area\r\n      for (const lot of result.lots) {\r\n        expect(lot.areaHa).toBeGreaterThan(0)\r\n      }\r\n    })\r\n\r\n    it('should default to centroid when center is not provided', () => {\r\n      const params: SubdivisionParams = { numLots: 4 }\r\n\r\n      const result = subdivide(SQUARE_1HA, 'radial', params)\r\n\r\n      expect(result.lots.length).toBeGreaterThanOrEqual(2)\r\n    })\r\n\r\n    it('should handle 6 sectors', () => {\r\n      const params: SubdivisionParams = {\r\n        center: { easting: 150, northing: 150 },\r\n        numLots: 6,\r\n      }\r\n\r\n      const result = subdivide(SQUARE_1HA, 'radial', params)\r\n\r\n      expect(result.lots.length).toBeGreaterThanOrEqual(2)\r\n      for (const lot of result.lots) {\r\n        expect(lot.areaHa).toBeGreaterThan(0)\r\n      }\r\n    })\r\n\r\n    it('should work with irregular polygon', () => {\r\n      const params: SubdivisionParams = {\r\n        numLots: 5,\r\n      }\r\n\r\n      const result = subdivide(PENTAGON, 'radial', params)\r\n\r\n      expect(result.lots.length).toBeGreaterThanOrEqual(2)\r\n    })\r\n  })\r\n\r\n  // ─── Area-Based Subdivision ──────────────────────────────────────────────\r\n\r\n  describe('area', () => {\r\n    it('should split 1ha into two ~0.5ha lots', () => {\r\n      const params: SubdivisionParams = { targetArea: 0.5 }\r\n\r\n      const result = subdivide(SQUARE_1HA, 'area', params)\r\n\r\n      expect(result.method).toBe('area')\r\n      expect(result.lots.length).toBeGreaterThanOrEqual(2)\r\n\r\n      for (const lot of result.lots) {\r\n        expect(lot.areaHa).toBeGreaterThan(0)\r\n        expect(lot.areaTarget).toBe(0.5)\r\n        expect(lot.areaError).toBeDefined()\r\n      }\r\n\r\n      // Check total covers most of parent\r\n      expect(roundHa(totalLotsArea(result.lots))).toBeCloseTo(roundHa(result.parentParcel.areaHa), 1)\r\n    })\r\n\r\n    it('should split 1ha into four ~0.25ha lots', () => {\r\n      const params: SubdivisionParams = { targetArea: 0.25 }\r\n\r\n      const result = subdivide(SQUARE_1HA, 'area', params)\r\n\r\n      expect(result.lots.length).toBeGreaterThanOrEqual(3)\r\n    })\r\n\r\n    it('should handle target area larger than parent', () => {\r\n      const params: SubdivisionParams = { targetArea: 5.0 } // 5 ha target, 1 ha parent\r\n\r\n      const result = subdivide(SQUARE_1HA, 'area', params)\r\n\r\n      // Should return 1 lot with whatever area is available\r\n      expect(result.lots.length).toBe(1)\r\n      expect(result.lots[0].areaHa).toBeCloseTo(1.0, 1)\r\n    })\r\n\r\n    it('should work with irregular polygon', () => {\r\n      const params: SubdivisionParams = { targetArea: 0.5 }\r\n\r\n      const result = subdivide(PENTAGON, 'area', params)\r\n\r\n      expect(result.lots.length).toBeGreaterThanOrEqual(2)\r\n      for (const lot of result.lots) {\r\n        expect(lot.areaHa).toBeGreaterThan(0)\r\n      }\r\n    })\r\n\r\n    it('should use preferred bearing when specified', () => {\r\n      const params: SubdivisionParams = {\r\n        targetArea: 0.5,\r\n        preferredBearing: 90, // East\r\n      }\r\n\r\n      const result = subdivide(RECT_1HA, 'area', params)\r\n\r\n      expect(result.lots.length).toBeGreaterThanOrEqual(2)\r\n    })\r\n  })\r\n\r\n  // ─── General ─────────────────────────────────────────────────────────────\r\n\r\n  describe('general', () => {\r\n    it('should correctly report parent parcel info', () => {\r\n      const params: SubdivisionParams = { rows: 2, cols: 2 }\r\n      const result = subdivide(SQUARE_1HA, 'grid', params)\r\n\r\n      expect(result.parentParcel.areaHa).toBeCloseTo(1.0, 2)\r\n      expect(result.parentParcel.vertices.length).toBe(4)\r\n    })\r\n\r\n    it('should compute centroid and perimeter for each lot', () => {\r\n      const params: SubdivisionParams = { rows: 2, cols: 2 }\r\n      const result = subdivide(SQUARE_1HA, 'grid', params)\r\n\r\n      for (const lot of result.lots) {\r\n        expect(lot.centroid.easting).toBeDefined()\r\n        expect(lot.centroid.northing).toBeDefined()\r\n        expect(lot.perimeter).toBeGreaterThan(0)\r\n        expect(lot.vertices.length).toBeGreaterThanOrEqual(3)\r\n      }\r\n    })\r\n\r\n    it('should handle a triangle', () => {\r\n      const triangle: Point2D[] = [\r\n        { easting: 100, northing: 200 },\r\n        { easting: 300, northing: 200 },\r\n        { easting: 200, northing: 100 },\r\n      ]\r\n\r\n      const params: SubdivisionParams = {\r\n        splitLine: {\r\n          startPoint: { easting: 150, northing: 100 },\r\n          endPoint: { easting: 250, northing: 200 },\r\n        },\r\n      }\r\n\r\n      const result = subdivide(triangle, 'single-split', params)\r\n\r\n      expect(result.parentParcel.areaHa).toBeGreaterThan(0)\r\n      expect(result.lots.length).toBeGreaterThanOrEqual(1)\r\n    })\r\n  })\r\n})\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -50859,111 +50669,13 @@
   },
   {
     "filePath": "src/lib/submission/__tests__/numbering.test.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 89,
-        "column": 14,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 89,
-        "endColumn": 21,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                2888,
-                2889
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 90,
-        "column": 14,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 90,
-        "endColumn": 21,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                2928,
-                2929
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 91,
-        "column": 14,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 91,
-        "endColumn": 21,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                2968,
-                2969
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 92,
-        "column": 14,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 92,
-        "endColumn": 21,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                3007,
-                3008
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 4,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * P2-1 Phase 13 Workstream 3: Submission numbering tests\r\n *\r\n * Tests the SRVY2025-1 format parsing and revision incrementing.\r\n * The generateSubmissionNumber function requires a DB connection\r\n * (tested via integration), so this suite covers the pure functions.\r\n */\r\n\r\nimport { incrementRevision, parseSubmissionNumber } from '../numbering'\r\n\r\ndescribe('P2-1: SRVY2025-1 submission numbering', () => {\r\n  describe('parseSubmissionNumber', () => {\r\n    test('parses a valid submission number', () => {\r\n      const result = parseSubmissionNumber('RS149_2025_002_R00')\r\n      expect(result).toEqual({\r\n        registrationNo: 'RS149',\r\n        year: 2025,\r\n        sequence: 2,\r\n        revision: 0,\r\n      })\r\n    })\r\n\r\n    test('parses with double-digit revision', () => {\r\n      const result = parseSubmissionNumber('RS149_2025_002_R10')\r\n      expect(result).toEqual({\r\n        registrationNo: 'RS149',\r\n        year: 2025,\r\n        sequence: 2,\r\n        revision: 10,\r\n      })\r\n    })\r\n\r\n    test('parses with 3-digit sequence', () => {\r\n      const result = parseSubmissionNumber('ISK/LS/2024/123_2025_099_R03')\r\n      expect(result).toEqual({\r\n        registrationNo: 'ISK/LS/2024/123',\r\n        year: 2025,\r\n        sequence: 99,\r\n        revision: 3,\r\n      })\r\n    })\r\n\r\n    test('returns null for invalid format (too few parts)', () => {\r\n      expect(parseSubmissionNumber('RS149_2025_002')).toBeNull()\r\n    })\r\n\r\n    test('returns null for invalid format (no R prefix)', () => {\r\n      expect(parseSubmissionNumber('RS149_2025_002_00')).toBeNull()\r\n    })\r\n\r\n    test('returns null for non-numeric year', () => {\r\n      expect(parseSubmissionNumber('RS149_XXXX_002_R00')).toBeNull()\r\n    })\r\n\r\n    test('returns null for empty string', () => {\r\n      expect(parseSubmissionNumber('')).toBeNull()\r\n    })\r\n  })\r\n\r\n  describe('incrementRevision', () => {\r\n    test('R00 → R01', () => {\r\n      expect(incrementRevision('RS149_2025_002_R00')).toBe('RS149_2025_002_R01')\r\n    })\r\n\r\n    test('R09 → R10 (zero-padding preserved)', () => {\r\n      expect(incrementRevision('RS149_2025_002_R09')).toBe('RS149_2025_002_R10')\r\n    })\r\n\r\n    test('R99 → R100 (expands to 3 digits)', () => {\r\n      expect(incrementRevision('RS149_2025_002_R99')).toBe('RS149_2025_002_R100')\r\n    })\r\n\r\n    test('throws for invalid format', () => {\r\n      expect(() => incrementRevision('RS149_2025_002')).toThrow('Invalid')\r\n    })\r\n\r\n    test('throws for missing R prefix', () => {\r\n      expect(() => incrementRevision('RS149_2025_002_00')).toThrow('Invalid')\r\n    })\r\n  })\r\n\r\n  describe('format consistency', () => {\r\n    test('round-trip: parse → increment → parse', () => {\r\n      const original = 'RS149_2025_007_R02'\r\n      const incremented = incrementRevision(original)\r\n      const parsed = parseSubmissionNumber(incremented)\r\n\r\n      expect(parsed).not.toBeNull()\r\n      expect(parsed!.revision).toBe(3)\r\n      expect(parsed!.sequence).toBe(7)\r\n      expect(parsed!.year).toBe(2025)\r\n      expect(parsed!.registrationNo).toBe('RS149')\r\n    })\r\n  })\r\n})\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -51440,59 +51152,13 @@
   },
   {
     "filePath": "src/lib/survey/beaconLookup.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 232,
-        "column": 7,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 232,
-        "endColumn": 23
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 233,
-        "column": 7,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 233,
-        "endColumn": 24
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 242,
-        "column": 7,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 242,
-        "endColumn": 23
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 243,
-        "column": 7,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 243,
-        "endColumn": 24
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 4,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Beacon Reference Database — Offline-Cached Spatial Lookup\r\n * =========================================================\r\n *\r\n * A spatial query layer over the Survey of Kenya beacon database\r\n * (trig beacons, bench marks, control points). Optimized for field\r\n * use: the full database is cached locally so queries work without\r\n * internet, and spatial queries use accurate haversine distance\r\n * (not bounding-box approximation).\r\n *\r\n * Why this exists\r\n * ---------------\r\n * Surveyors spend hours searching SoK archives for nearby control\r\n * points when starting a new survey. A built-in lookup that works\r\n * offline saves that time. The existing src/lib/online/benchmarks.ts\r\n * uses bounding-box distance (Pythagorean on lat/lon degrees) which\r\n * is fine for filtering but inaccurate for distance reporting. This\r\n * module adds proper haversine distance and a local cache.\r\n *\r\n * What lives here\r\n * ---------------\r\n *   - Haversine distance (accurate great-circle distance on the\r\n *     ellipsoid, ±0.3% vs Vincenty)\r\n *   - Spatial nearest-K query: \"find the 5 nearest trig beacons\r\n *     to this coordinate, within 10 km\"\r\n *   - Offline cache: the full database is held in memory; queries\r\n *     never hit the network. Future work: persist to IndexedDB\r\n *     for cross-session offline use.\r\n *   - Bearing computation: \"what bearing is the nearest BM from\r\n *     my current position?\" — helps surveyors locate physical marks.\r\n *\r\n * Usage\r\n * -----\r\n *   import { findNearestBeacons } from '@/lib/survey/beaconLookup'\r\n *\r\n *   const results = await findNearestBeacons({\r\n *     latitude: -1.2921,\r\n *     longitude: 36.8219,\r\n *     radiusKm: 10,\r\n *     limit: 5,\r\n *     types: ['TRIG', 'BM'],\r\n *   })\r\n *\r\n *   for (const beacon of results.beacons) {\r\n *     console.log(`${beacon.name}: ${beacon.distanceKm.toFixed(2)} km at ${beacon.bearingDeg.toFixed(0)}°`)\r\n *   }\r\n */\r\n\r\nimport { BENCHMARK_DATABASE, type Benchmark } from '@/lib/online/benchmarks'\r\n\r\n// ─── Types ──────────────────────────────────────────────────────────────\r\n\r\nexport type BeaconType = 'BM' | 'CP' | 'TRIG' | 'TIDAL'\r\n\r\nexport interface BeaconSearchParams {\r\n  latitude: number\r\n  longitude: number\r\n  /** Maximum distance in kilometres. Default: 50 km. */\r\n  radiusKm?: number\r\n  /** Maximum number of results to return (sorted nearest first). Default: 10. */\r\n  limit?: number\r\n  /** Filter by beacon type. Omit to include all types. */\r\n  types?: BeaconType[]\r\n  /** Filter by country (case-insensitive). Omit for all countries. */\r\n  country?: string\r\n}\r\n\r\nexport interface BeaconSearchResult {\r\n  /** Beacon with distance and bearing from the search point. */\r\n  beacon: Benchmark\r\n  /** Distance from search point in kilometres (haversine). */\r\n  distanceKm: number\r\n  /** Initial bearing from search point to beacon, in degrees (0-360). */\r\n  bearingDeg: number\r\n}\r\n\r\nexport interface BeaconSearchResponse {\r\n  beacons: BeaconSearchResult[]\r\n  total: number\r\n  searchPoint: { latitude: number; longitude: number }\r\n  radiusKm: number\r\n  /** Time spent on the query, in milliseconds. */\r\n  elapsedMs: number\r\n  /** True if results came from the local cache (always true for now). */\r\n  fromCache: boolean\r\n}\r\n\r\n// ─── Haversine distance ────────────────────────────────────────────────\r\n\r\nconst EARTH_RADIUS_KM = 6371\r\n\r\nfunction toRadians(deg: number): number {\r\n  return (deg * Math.PI) / 180\r\n}\r\n\r\nfunction toDegrees(rad: number): number {\r\n  return (rad * 180) / Math.PI\r\n}\r\n\r\n/**\r\n * Haversine great-circle distance between two lat/lon points.\r\n * Accurate to ±0.3% vs Vincenty's formulae — more than enough for\r\n * beacon location (we're not doing geodesy here, just navigation).\r\n */\r\nexport function haversineDistanceKm(\r\n  lat1: number,\r\n  lon1: number,\r\n  lat2: number,\r\n  lon2: number\r\n): number {\r\n  const dLat = toRadians(lat2 - lat1)\r\n  const dLon = toRadians(lon2 - lon1)\r\n  const a =\r\n    Math.sin(dLat / 2) * Math.sin(dLat / 2) +\r\n    Math.cos(toRadians(lat1)) *\r\n      Math.cos(toRadians(lat2)) *\r\n      Math.sin(dLon / 2) *\r\n      Math.sin(dLon / 2)\r\n  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))\r\n  return EARTH_RADIUS_KM * c\r\n}\r\n\r\n/**\r\n * Initial bearing (forward azimuth) from point 1 to point 2.\r\n * Returns degrees 0-360, where 0 = north, 90 = east.\r\n *\r\n * Uses the standard spherical bearing formula. The bearing is\r\n * \"initial\" — it changes as you travel along the great circle.\r\n * For short distances (< 100 km) the change is negligible.\r\n */\r\nexport function bearingDegrees(\r\n  lat1: number,\r\n  lon1: number,\r\n  lat2: number,\r\n  lon2: number\r\n): number {\r\n  const φ1 = toRadians(lat1)\r\n  const φ2 = toRadians(lat2)\r\n  const Δλ = toRadians(lon2 - lon1)\r\n  const y = Math.sin(Δλ) * Math.cos(φ2)\r\n  const x =\r\n    Math.cos(φ1) * Math.sin(φ2) -\r\n    Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ)\r\n  return (toDegrees(Math.atan2(y, x)) + 360) % 360\r\n}\r\n\r\n// ─── Cache ──────────────────────────────────────────────────────────────\r\n\r\n/**\r\n * In-memory cache of beacons with lat/lon coordinates.\r\n * Beacons without coordinates are excluded (can't do spatial search).\r\n *\r\n * Future work: persist to IndexedDB for cross-session offline use.\r\n * For now, the in-memory cache is populated on first query and\r\n * survives for the lifetime of the process.\r\n */\r\nlet cachedBeacons: Benchmark[] | null = null\r\n\r\nfunction getCachedBeacons(): Benchmark[] {\r\n  if (cachedBeacons === null) {\r\n    cachedBeacons = BENCHMARK_DATABASE.filter(\r\n      (b: Benchmark) =>\r\n        b.latitude !== undefined && b.longitude !== undefined\r\n    )\r\n  }\r\n  return cachedBeacons as Benchmark[]\r\n}\r\n\r\n/**\r\n * Force a cache rebuild on next query. Useful after database updates.\r\n */\r\nexport function invalidateBeaconCache(): void {\r\n  cachedBeacons = null\r\n}\r\n\r\n/**\r\n * Get cache statistics (for UI display / debugging).\r\n */\r\nexport function getCacheStats(): {\r\n  totalBeacons: number\r\n  beaconsWithCoordinates: number\r\n  isCached: boolean\r\n} {\r\n  const all = BENCHMARK_DATABASE\r\n  const withCoords = all.filter(\r\n    (b: Benchmark) => b.latitude !== undefined && b.longitude !== undefined\r\n  )\r\n  return {\r\n    totalBeacons: all.length,\r\n    beaconsWithCoordinates: withCoords.length,\r\n    isCached: cachedBeacons !== null,\r\n  }\r\n}\r\n\r\n// ─── Public API ─────────────────────────────────────────────────────────\r\n\r\n/**\r\n * Find the nearest beacons to a coordinate.\r\n *\r\n * Uses haversine distance for accuracy. Results are sorted nearest-first.\r\n * Filters by radius, type, and country before sorting.\r\n *\r\n * @returns beacons within radiusKm, sorted nearest-first, limited to `limit`\r\n */\r\nexport async function findNearestBeacons(\r\n  params: BeaconSearchParams\r\n): Promise<BeaconSearchResponse> {\r\n  const startTime = Date.now()\r\n  const {\r\n    latitude,\r\n    longitude,\r\n    radiusKm = 50,\r\n    limit = 10,\r\n    types,\r\n    country,\r\n  } = params\r\n\r\n  const allBeacons = getCachedBeacons()\r\n\r\n  // Filter + compute distance\r\n  const results: BeaconSearchResult[] = []\r\n  for (const beacon of allBeacons) {\r\n    // Type filter\r\n    if (types && !types.includes(beacon.type as BeaconType)) continue\r\n\r\n    // Country filter\r\n    if (country && beacon.country.toLowerCase() !== country.toLowerCase()) continue\r\n\r\n    const distanceKm = haversineDistanceKm(\r\n      latitude,\r\n      longitude,\r\n      beacon.latitude!,\r\n      beacon.longitude!\r\n    )\r\n\r\n    // Radius filter\r\n    if (distanceKm > radiusKm) continue\r\n\r\n    const bearingDeg = bearingDegrees(\r\n      latitude,\r\n      longitude,\r\n      beacon.latitude!,\r\n      beacon.longitude!\r\n    )\r\n\r\n    results.push({ beacon, distanceKm, bearingDeg })\r\n  }\r\n\r\n  // Sort nearest-first\r\n  results.sort((a, b) => a.distanceKm - b.distanceKm)\r\n\r\n  // Limit\r\n  const limited = results.slice(0, limit)\r\n\r\n  return {\r\n    beacons: limited,\r\n    total: results.length,\r\n    searchPoint: { latitude, longitude },\r\n    radiusKm,\r\n    elapsedMs: Date.now() - startTime,\r\n    fromCache: true,\r\n  }\r\n}\r\n\r\n/**\r\n * Get a single beacon by ID. Returns null if not found.\r\n */\r\nexport async function getBeaconById(id: string): Promise<Benchmark | null> {\r\n  return BENCHMARK_DATABASE.find((b: Benchmark) => b.id === id) ?? null\r\n}\r\n\r\n/**\r\n * Format a beacon search result as a human-readable summary.\r\n * Useful for display in the UI or for a surveyor's field sheet.\r\n */\r\nexport function formatBeaconResults(response: BeaconSearchResponse): string {\r\n  if (response.beacons.length === 0) {\r\n    return `No beacons found within ${response.radiusKm} km of ${response.searchPoint.latitude.toFixed(4)}, ${response.searchPoint.longitude.toFixed(4)}.`\r\n  }\r\n\r\n  const lines: string[] = [\r\n    `${response.total} beacon(s) within ${response.radiusKm} km (showing nearest ${response.beacons.length}, ${response.elapsedMs}ms):`,\r\n    '',\r\n  ]\r\n\r\n  for (const { beacon, distanceKm, bearingDeg } of response.beacons) {\r\n    const bearingLabel = formatBearing(bearingDeg)\r\n    lines.push(\r\n      `  ${beacon.name} (${beacon.type}): ${distanceKm.toFixed(2)} km ${bearingLabel} — ${beacon.elevation.toFixed(3)} m ${beacon.datum}`\r\n    )\r\n  }\r\n\r\n  return lines.join('\\n')\r\n}\r\n\r\n/**\r\n * Convert a bearing in degrees to a 16-point compass label.\r\n * 0° = N, 22.5° = NNE, 45° = NE, etc.\r\n */\r\nfunction formatBearing(bearingDeg: number): string {\r\n  const labels = [\r\n    'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',\r\n    'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW',\r\n  ]\r\n  const idx = Math.round(bearingDeg / 22.5) % 16\r\n  return `${labels[idx]} (${bearingDeg.toFixed(0)}°)`\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -52781,81 +52447,24 @@
         "endColumn": 19
       },
       {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 479,
-        "column": 5,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 479,
-        "endColumn": 23,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                15864,
-                15865
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
         "ruleId": "@typescript-eslint/no-unused-vars",
         "severity": 1,
         "message": "'bs' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 494,
+        "line": 495,
         "column": 11,
         "nodeType": "Identifier",
         "messageId": "unusedVar",
-        "endLine": 494,
+        "endLine": 495,
         "endColumn": 13
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 508,
-        "column": 16,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 508,
-        "endColumn": 32
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 509,
-        "column": 16,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 509,
-        "endColumn": 31
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 510,
-        "column": 17,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 510,
-        "endColumn": 32
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 7,
+    "warningCount": 3,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * METARDU — Leica GSI Field Data Parser\r\n *\r\n * Parses Leica total station raw observation files (.gsi) as exported by\r\n * Leica TPS1000/1200/TS/TM instruments.\r\n *\r\n * Format reference: Leica TPS1000 Technical Reference (ISO 17123-3 compliant),\r\n *   Ghilani & Wolf, Elementary Surveying 16th Ed., Chapter 13\r\n *\r\n * GSI-8 (8-char words) and GSI-16 (16-char words) are both supported.\r\n * Multiple word types per record. Records may span multiple lines.\r\n *\r\n * Word types used in Kenyan surveying:\r\n *   01  — Point number (ASCII string, left-padded with spaces)\r\n *   02  — Additional point number\r\n *   11  — Slope distance (mm, 0.001m resolution)\r\n *   12  — Horizontal distance (mm)\r\n *   13  — Horizontal distance, corrected (mm)\r\n *   14  — Horizontal circle, face-left (Hz — hundredths of arc-second, 360°)\r\n *   15  — Vertical circle (V — hundredths of arc-second)\r\n *   16  — Horizontal circle, face-right (second face, used to compute mean)\r\n *   17  — Slope distance with high accuracy (0.1mm resolution)\r\n *   21  — Easting (coordinate, 0.001m)\r\n *   22  — Northing (coordinate, 0.001m)\r\n *   23  — Elevation (coordinate, 0.001m)\r\n *   32  — Height of instrument (mm)\r\n *   33  — Height of target (mm)\r\n *   41  — Time (HHMMSS)\r\n *   42  — Date (DDMMYY or YYMMDD depending on instrument settings)\r\n *   47  — Temperature (0.1°C)\r\n *\r\n * Observation reduction:\r\n *   Mean Hz angle = (Hz_face_left + (Hz_face_right ± 180°)) / 2\r\n *   Horizontal Distance = SD × cos(VA)\r\n *   ΔH = SD × sin(VA) + IH − TH\r\n *\r\n * Output: array of GSIStation records suitable for passing to\r\n * computeTraverse() in @/lib/computations/traverseEngine\r\n */\r\n\r\nexport interface GSIObservation {\r\n  pointNumber: string\r\n  slopeDist?: number       // metres (from word 11/17)\r\n  horizDist?: number       // metres (from word 12/13)\r\n  hzFaceLeft?: number      // degrees decimal (from word 14)\r\n  hzFaceRight?: number     // degrees decimal (from word 16)\r\n  verticalAngle?: number  // degrees decimal (from word 15)\r\n  instrumentHeight?: number  // metres\r\n  targetHeight?: number   // metres\r\n  easting?: number         // metres\r\n  northing?: number        // metres\r\n  elevation?: number        // metres\r\n  temperature?: number      // degrees Celsius\r\n  rawLine: string\r\n}\r\n\r\nexport interface GSIStation {\r\n  stationName: string\r\n  stationNumber: string\r\n  observations: GSIObservation[]\r\n  heightOfInstrument?: number\r\n}\r\n\r\nexport interface GSIParseResult {\r\n  stations: GSIStation[]\r\n  rawRecords: GSIObservation[]\r\n  errors: string[]\r\n  format: 'GSI-8' | 'GSI-16' | 'UNKNOWN'\r\n  instrument: string\r\n  totalStations: number\r\n  totalObservations: number\r\n}\r\n\r\n// ── GSI word type codes ────────────────────────────────────────────────────────\r\n\r\n/** GSI word type codes (two-digit numeric string) */\r\nconst WORD_CODES = {\r\n  POINT_NUMBER: '01',\r\n  SLOPE_DIST: '11',\r\n  HORIZ_DIST: '12',\r\n  HORIZ_DIST_CORR: '13',\r\n  HZ_FACE_LEFT: '14',\r\n  V_ANGLE: '15',\r\n  HZ_FACE_RIGHT: '16',\r\n  SLOPE_DIST_ACC: '17',\r\n  EASTING: '21',\r\n  NORTHING: '22',\r\n  ELEVATION: '23',\r\n  INSTRUMENT_HEIGHT: '32',\r\n  TARGET_HEIGHT: '33',\r\n} as const\r\n\r\ntype WordCode = typeof WORD_CODES[keyof typeof WORD_CODES]\r\n\r\n// ── Word parsing helpers ────────────────────────────────────────────────────────\r\n\r\n/**\r\n * Detect whether the GSI file uses 8-character or 16-character word format.\r\n * GSI-8: each word = 8 chars (1 char '*' + 2 char type + 5 char value)\r\n * GSI-16: each word = 16 chars (1 char '*' + 2 char type + 13 char value)\r\n *\r\n * Strategy: parse first non-empty line, count visible characters after the\r\n * first `*` to determine word boundary. Also check if the word after the\r\n * expected 8-char word looks like a valid type code.\r\n */\r\nfunction detectGSIFormat(firstLine: string): 'GSI-8' | 'GSI-16' | 'UNKNOWN' {\r\n  const firstStar = firstLine.indexOf('*')\r\n  if (firstStar === -1) return 'UNKNOWN'\r\n\r\n  // In GSI-8 format, after the first `*`, the word type (2 digits) starts immediately.\r\n  // The value portion starts at offset 3 within the 8-char word.\r\n  // In GSI-16 format, the value portion starts at offset 3 within the 16-char word.\r\n  //\r\n  // Detection heuristic: look at the character after where the first word ends\r\n  // in GSI-8 mode. If it's also a `*` (start of next word), it's GSI-8.\r\n  // If it's part of a longer value field, it's GSI-16.\r\n\r\n  const afterFirst = firstLine.substring(firstStar + 1)\r\n\r\n  // Try GSI-8: expect word at positions 0-7 (*01XXXXXX), next * at position 8\r\n  if (afterFirst.length >= 8 && afterFirst.charAt(7) === '*') {\r\n    // Next word starts immediately — this is GSI-8\r\n    return 'GSI-8'\r\n  }\r\n\r\n  // Try GSI-16: word spans 16 chars (*WWXXXXXXXXXXXXX)\r\n  if (afterFirst.length >= 16 && afterFirst.charAt(15) === '*') {\r\n    return 'GSI-16'\r\n  }\r\n\r\n  // Fallback: if the first word's type code (chars 1-2) is valid (all digits)\r\n  // and the remaining chars look like numeric data, infer from data length\r\n  const chunk8 = afterFirst.substring(0, 8)\r\n  const type8 = chunk8.substring(0, 2)\r\n  const val8 = chunk8.substring(2, 8)\r\n\r\n  const chunk16 = afterFirst.substring(0, 16)\r\n  const type16 = chunk16.substring(0, 2)\r\n  const val16 = chunk16.substring(2, 16)\r\n\r\n  const typeValid = (t: string) => /^\\d{2}$/.test(t)\r\n  const valNumeric = (v: string) => /^[+-]?\\d+$/.test(v.trim())\r\n\r\n  if (typeValid(type8) && valNumeric(val8) && afterFirst.length >= 16) {\r\n    // If at position 8 there's a `*`, it's GSI-8\r\n    if (afterFirst.charAt(8) === '*') return 'GSI-8'\r\n  }\r\n\r\n  if (typeValid(type16) && valNumeric(val16.substring(0, 13)) && afterFirst.length >= 16) {\r\n    // Check if GSI-16 makes sense\r\n    if (afterFirst.charAt(16) === '*') return 'GSI-16'\r\n  }\r\n\r\n  // Heuristic: if the value is very long (>6 chars) it's GSI-16\r\n  if (typeValid(type8) && val8.trim().length > 6) return 'GSI-16'\r\n  if (typeValid(type8) && val8.trim().length <= 6) return 'GSI-8'\r\n\r\n  return 'UNKNOWN'\r\n}\r\n\r\n/** Parse a GSI angle value from string to decimal degrees */\r\nfunction parseGSIAngle(raw: string): number {\r\n  const s = raw.trim()\r\n  if (!s || s === '0') return 0\r\n\r\n  const negative = s.startsWith('-')\r\n  const absStr = s.replace('-', '').replace('+', '')\r\n\r\n  // GSI angle format: DDDMMSSSS (no decimal point, units = 0.01 arc-seconds)\r\n  // Length determines how to split: 7 digits = DDMMSS, 8 digits = DDMMSSe, 9 digits = DDMMSsee\r\n  const len = absStr.length\r\n  let d: number, m: number, ss: number\r\n\r\n  if (len === 7) {\r\n    d = parseInt(absStr.substring(0, 3), 10)\r\n    m = parseInt(absStr.substring(3, 5), 10)\r\n    ss = parseInt(absStr.substring(5, 7), 10)\r\n  } else if (len === 8) {\r\n    d = parseInt(absStr.substring(0, 3), 10)\r\n    m = parseInt(absStr.substring(3, 5), 10)\r\n    ss = parseInt(absStr.substring(5, 8), 10) / 10\r\n  } else if (len === 9) {\r\n    d = parseInt(absStr.substring(0, 3), 10)\r\n    m = parseInt(absStr.substring(3, 5), 10)\r\n    ss = parseInt(absStr.substring(5, 9), 10) / 100\r\n  } else if (len <= 6) {\r\n    d = parseInt(absStr.substring(0, Math.max(1, len - 4)), 10)\r\n    m = parseInt(absStr.substring(Math.max(1, len - 4), Math.max(2, len - 2)), 10)\r\n    ss = parseInt(absStr.substring(Math.max(2, len - 2)), 10)\r\n  } else {\r\n    // Very long value — last 7 chars = DDMMSS, preceding = degrees\r\n    const last7 = absStr.slice(-7)\r\n    const degPart = absStr.slice(0, -7)\r\n    d = parseInt(degPart.padStart(3, '0'), 10)\r\n    m = parseInt(last7.substring(0, 2), 10)\r\n    ss = parseInt(last7.substring(2, 7), 10)\r\n  }\r\n\r\n  if (isNaN(d) || isNaN(m) || isNaN(ss)) return 0\r\n  const decimal = d + m / 60 + ss / 3600\r\n  return negative ? -decimal : decimal\r\n}\r\n\r\n/** Parse a GSI distance value to metres */\r\nfunction parseGSIDistance(raw: string): number {\r\n  const s = raw.trim()\r\n  if (!s || s === '0') return 0\r\n  const value = parseInt(s, 10)\r\n  if (isNaN(value)) return 0\r\n  // GSI distances: 1 unit = 0.001m (millimetres)\r\n  return value / 1000\r\n}\r\n\r\n// ── Core parser ─────────────────────────────────────────────────────────────\r\n\r\ninterface RawWord {\r\n  code: string\r\n  value: string\r\n  raw: string\r\n}\r\n\r\nfunction extractWordsGSI(line: string, wordSize: number): RawWord[] {\r\n  const words: RawWord[] = []\r\n  let pos = 0\r\n\r\n  while (pos < line.length) {\r\n    // Each word starts with '*'\r\n    const star = line.indexOf('*', pos)\r\n    if (star === -1) break\r\n\r\n    const typeCode = line.substring(star + 1, star + 3)\r\n    if (!/^\\d{2}$/.test(typeCode)) {\r\n      pos = star + 1\r\n      continue\r\n    }\r\n\r\n    const raw = line.substring(star, star + wordSize)\r\n    const value = line.substring(star + 3, star + wordSize)\r\n\r\n    words.push({ code: typeCode, value, raw })\r\n    pos = star + wordSize\r\n  }\r\n\r\n  return words\r\n}\r\n\r\n/**\r\n * Parse a single GSI data record (one line from the .gsi file).\r\n * Returns a flat observation object with all values extracted.\r\n */\r\nfunction parseGSILine(line: string, wordSize: number): GSIObservation | null {\r\n  const trimmed = line.trim()\r\n  if (!trimmed || !trimmed.startsWith('*')) return null\r\n\r\n  const words = extractWordsGSI(trimmed, wordSize)\r\n  if (words.length === 0) return null\r\n\r\n  const obs: Partial<GSIObservation> = { rawLine: line }\r\n\r\n  for (const word of words) {\r\n    const code = word.code as WordCode\r\n    const val = word.value\r\n\r\n    switch (code) {\r\n      case WORD_CODES.POINT_NUMBER:\r\n        obs.pointNumber = val.trim()\r\n        break\r\n\r\n      case WORD_CODES.SLOPE_DIST:\r\n      case WORD_CODES.SLOPE_DIST_ACC:\r\n        if (!obs.slopeDist) obs.slopeDist = parseGSIDistance(val)\r\n        break\r\n\r\n      case WORD_CODES.HORIZ_DIST:\r\n      case WORD_CODES.HORIZ_DIST_CORR:\r\n        if (!obs.horizDist) obs.horizDist = parseGSIDistance(val)\r\n        break\r\n\r\n      case WORD_CODES.HZ_FACE_LEFT:\r\n        obs.hzFaceLeft = parseGSIAngle(val)\r\n        break\r\n\r\n      case WORD_CODES.HZ_FACE_RIGHT:\r\n        obs.hzFaceRight = parseGSIAngle(val)\r\n        break\r\n\r\n      case WORD_CODES.V_ANGLE:\r\n        obs.verticalAngle = parseGSIAngle(val)\r\n        break\r\n\r\n      case WORD_CODES.INSTRUMENT_HEIGHT:\r\n        obs.instrumentHeight = parseGSIDistance(val)\r\n        break\r\n\r\n      case WORD_CODES.TARGET_HEIGHT:\r\n        obs.targetHeight = parseGSIDistance(val)\r\n        break\r\n\r\n      case WORD_CODES.EASTING:\r\n        obs.easting = parseFloat((parseInt(val, 10) / 1000).toFixed(3))\r\n        break\r\n\r\n      case WORD_CODES.NORTHING:\r\n        obs.northing = parseFloat((parseInt(val, 10) / 1000).toFixed(3))\r\n        break\r\n\r\n      case WORD_CODES.ELEVATION:\r\n        obs.elevation = parseFloat((parseInt(val, 10) / 1000).toFixed(3))\r\n        break\r\n    }\r\n  }\r\n\r\n  if (!obs.pointNumber) return null\r\n  return obs as GSIObservation\r\n}\r\n\r\n/**\r\n * Group raw GSI observations by station.\r\n * In GSI format, the current station name is typically the point number\r\n * of the instrument station observation. Observations are sequential —\r\n * we detect station changes by the pattern of target IDs vs station IDs.\r\n *\r\n * Simplified grouping: all observations in the file are treated as a single\r\n * traverse from the first station. In a full implementation, station\r\n * changes would be detected from the observation pattern (BS→IS→FS).\r\n */\r\nfunction groupByStation(\r\n  observations: GSIObservation[],\r\n  errors: string[]\r\n): GSIStation[] {\r\n  if (observations.length === 0) return []\r\n\r\n  // Find instrument station: the point that appears most frequently as the\r\n  // target of backsight observations (Hz observations pointing TO it)\r\n  const pointCounts = new Map<string, number>()\r\n  for (const obs of observations) {\r\n    const name = obs.pointNumber || 'UNKNOWN'\r\n    pointCounts.set(name, (pointCounts.get(name) || 0) + 1)\r\n  }\r\n\r\n  let maxCount = 0\r\n  let stationName = observations[0]?.pointNumber || 'Unknown'\r\n  pointCounts.forEach((count, name) => {\r\n    if (count > maxCount) { maxCount = count; stationName = name }\r\n  })\r\n\r\n  // Group consecutive observations by target changes\r\n  // Simple approach: each time the point number changes, it's a new station\r\n  const stations: GSIStation[] = []\r\n  let currentStation: GSIStation = {\r\n    stationName,\r\n    stationNumber: stationName,\r\n    observations: [],\r\n  }\r\n\r\n  let lastPoint = ''\r\n  for (const obs of observations) {\r\n    const pt = obs.pointNumber || ''\r\n\r\n    if (pt !== lastPoint && obs.hzFaceLeft !== undefined) {\r\n      // Point changed and this is a Hz observation — new station\r\n      if (currentStation.observations.length > 0) {\r\n        stations.push(currentStation)\r\n      }\r\n      // New station detected — this observation is its first shot\r\n      const ih = obs.instrumentHeight ?? 0\r\n      currentStation = {\r\n        stationName: pt,\r\n        stationNumber: pt,\r\n        observations: [],\r\n        heightOfInstrument: ih,\r\n      }\r\n    }\r\n\r\n    currentStation.observations.push(obs)\r\n    lastPoint = pt\r\n  }\r\n\r\n  if (currentStation.observations.length > 0) {\r\n    stations.push(currentStation)\r\n  }\r\n\r\n  if (stations.length === 0 && observations.length > 0) {\r\n    errors.push('Could not group observations by station — treating all as single traverse')\r\n    stations.push({\r\n      stationName,\r\n      stationNumber: stationName,\r\n      observations,\r\n    })\r\n  }\r\n\r\n  return stations\r\n}\r\n\r\n/**\r\n * Parse a Leica GSI file and return observations ready for traverse computation.\r\n * Detects GSI-8 vs GSI-16 format automatically.\r\n */\r\nexport function parseGSI(gsiContent: string): GSIParseResult {\r\n  const lines = gsiContent.split(/\\r?\\n/)\r\n  const errors: string[] = []\r\n\r\n  if (lines.length === 0) {\r\n    return { stations: [], rawRecords: [], errors: ['Empty file'], format: 'UNKNOWN', instrument: 'Unknown', totalStations: 0, totalObservations: 0 }\r\n  }\r\n\r\n  // Detect format from first non-empty line\r\n  const firstDataLine = lines.find(l => l.trim().startsWith('*')) || ''\r\n  const format = detectGSIFormat(firstDataLine)\r\n  const wordSize = format === 'GSI-8' ? 8 : 16\r\n\r\n  const observations: GSIObservation[] = []\r\n  let totalDistCount = 0\r\n\r\n  for (const line of lines) {\r\n    const obs = parseGSILine(line, wordSize)\r\n    if (obs && obs.pointNumber) {\r\n      observations.push(obs)\r\n      if (obs.slopeDist !== undefined || obs.horizDist !== undefined) totalDistCount++\r\n    }\r\n  }\r\n\r\n  const stations = groupByStation(observations, errors)\r\n\r\n  // Detect instrument from file header lines (first few non-data lines)\r\n  let instrument = 'Leica Total Station'\r\n  const headerLines = lines.slice(0, 5).filter(l => !l.startsWith('*'))\r\n  if (headerLines.length > 0) {\r\n    instrument = headerLines[0].trim().substring(0, 50) || instrument\r\n  }\r\n\r\n  return {\r\n    stations,\r\n    rawRecords: observations,\r\n    errors,\r\n    format,\r\n    instrument,\r\n    totalStations: stations.length,\r\n    totalObservations: observations.length,\r\n  }\r\n}\r\n\r\n/**\r\n * Reduce raw GSI observations to the format expected by computeTraverse().\r\n * Applies face-left/face-right mean, HD from SD+VA, ΔH computation.\r\n *\r\n * Output is an array of TraverseEngine.RawObservation objects (or compatible).\r\n */\r\nexport function reduceGSIObservations(\r\n  parseResult: GSIParseResult,\r\n  backsightBearing: { degrees: number; minutes: number; seconds: number }\r\n): Array<{\r\n  station: string\r\n  bs: string\r\n  fs: string\r\n  hclDeg: string\r\n  hclMin: string\r\n  hclSec: string\r\n  hcrDeg: string\r\n  hcrMin: string\r\n  hcrSec: string\r\n  slopeDist: string\r\n  vaDeg: string\r\n  vaMin: string\r\n  vaSec: string\r\n  ih: string\r\n  th: string\r\n  remarks?: string\r\n}> {\r\n  const allObs = parseResult.rawRecords\r\n\r\n  // ── Step 1: Pair face-left and face-right observations ────────────────────\r\n  // For each target, look for corresponding FL and FR measurements\r\n  const byTarget = new Map<string, GSIObservation[]>()\r\n\r\n  for (const obs of allObs) {\r\n    const key = obs.pointNumber || `?${Math.random().toString(36).slice(2)}`\r\n    if (!byTarget.has(key)) byTarget.set(key, [])\r\n    byTarget.get(key)!.push(obs)\r\n  }\r\n\r\n  // Build traverse legs: sorted by the order they appear in the file\r\n  const stations = parseResult.stations\r\n  const result: ReturnType<typeof reduceGSIObservations> = []\r\n\r\n  // For each station, create a traverse leg\r\n  for (let i = 0; i < allObs.length - 1; i++) {\r\n    const obs = allObs[i]\r\n    const nextObs = allObs[i + 1]\r\n\r\n    if (!obs.hzFaceLeft && !obs.horizDist) continue  // Skip if no angle or distance\r\n\r\n    // Determine BS and FS from the observation\r\n    const bs = obs.pointNumber\r\n    const fs = nextObs?.pointNumber || `P${i + 2}`\r\n\r\n    // Get IH from the current station's metadata\r\n    const station = stations.find(s => s.stationName === obs.pointNumber)\r\n    const ih = station?.heightOfInstrument ?? obs.instrumentHeight ?? 1.600\r\n\r\n    // Get TH from the observation\r\n    const th = obs.targetHeight ?? 1.400\r\n\r\n    // ── Hz angle: use FL if only one face, mean of FL+FR if both ──────────\r\n    let meanHz = obs.hzFaceLeft ?? 0\r\n    if (obs.hzFaceLeft !== undefined && obs.hzFaceRight !== undefined) {\r\n      // mean = (FL + FR ± 180°) / 2\r\n      let fr = obs.hzFaceRight!\r\n      if (fr < obs.hzFaceLeft!) fr += 360\r\n      meanHz = (obs.hzFaceLeft! + fr) / 2\r\n      if (meanHz >= 360) meanHz -= 360\r\n    }\r\n\r\n    // Convert decimal degrees to DD MM SS.s\r\n    const hzDMS = decimalToDMS(meanHz)\r\n\r\n    // ── Vertical angle (V) ─────────────────────────────────────────────────\r\n    const va = obs.verticalAngle ?? 0\r\n    const vaDMS = decimalToDMS(Math.abs(va))\r\n\r\n    // ── Slope distance ────────────────────────────────────────────────────\r\n    let sd: number\r\n    if (obs.slopeDist !== undefined) {\r\n      sd = obs.slopeDist\r\n    } else if (obs.horizDist !== undefined) {\r\n      // Already horizontal — no VA needed\r\n      sd = obs.horizDist\r\n    } else {\r\n      sd = 0\r\n    }\r\n\r\n    result.push({\r\n      station: obs.pointNumber || `P${i + 1}`,\r\n      bs: i > 0 ? allObs[i - 1].pointNumber : '',\r\n      fs,\r\n      hclDeg: String(hzDMS.deg),\r\n      hclMin: String(hzDMS.min),\r\n      hclSec: hzDMS.sec.toFixed(1),\r\n      hcrDeg: obs.hzFaceRight !== undefined ? String(decimalToDMS(obs.hzFaceRight).deg) : '0',\r\n      hcrMin: obs.hzFaceRight !== undefined ? String(decimalToDMS(obs.hzFaceRight).min) : '0',\r\n      hcrSec: obs.hzFaceRight !== undefined ? decimalToDMS(obs.hzFaceRight).sec.toFixed(1) : '0.0',\r\n      slopeDist: sd.toFixed(3),\r\n      vaDeg: String(vaDMS.deg),\r\n      vaMin: String(vaDMS.min),\r\n      vaSec: vaDMS.sec.toFixed(1),\r\n      ih: ih.toFixed(3),\r\n      th: th.toFixed(3),\r\n      remarks: obs.slopeDist === undefined && obs.horizDist !== undefined ? 'HD' : undefined,\r\n    })\r\n  }\r\n\r\n  return result\r\n}\r\n\r\n// ── DMS helpers ───────────────────────────────────────────────────────────────\r\n\r\ninterface DMSResult {\r\n  deg: number\r\n  min: number\r\n  sec: number\r\n}\r\n\r\nfunction decimalToDMS(decimal: number): DMSResult {\r\n  if (decimal < 0) {\r\n    const dms = decimalToDMS(-decimal)\r\n    return { deg: -dms.deg, min: dms.min, sec: dms.sec }\r\n  }\r\n  const deg = Math.floor(decimal)\r\n  const minFloat = (decimal - deg) * 60\r\n  const min = Math.floor(minFloat)\r\n  const sec = (minFloat - min) * 60\r\n  return { deg, min, sec }\r\n}",
+    "source": "/**\r\n * METARDU — Leica GSI Field Data Parser\r\n *\r\n * Parses Leica total station raw observation files (.gsi) as exported by\r\n * Leica TPS1000/1200/TS/TM instruments.\r\n *\r\n * Format reference: Leica TPS1000 Technical Reference (ISO 17123-3 compliant),\r\n *   Ghilani & Wolf, Elementary Surveying 16th Ed., Chapter 13\r\n *\r\n * GSI-8 (8-char words) and GSI-16 (16-char words) are both supported.\r\n * Multiple word types per record. Records may span multiple lines.\r\n *\r\n * Word types used in Kenyan surveying:\r\n *   01  — Point number (ASCII string, left-padded with spaces)\r\n *   02  — Additional point number\r\n *   11  — Slope distance (mm, 0.001m resolution)\r\n *   12  — Horizontal distance (mm)\r\n *   13  — Horizontal distance, corrected (mm)\r\n *   14  — Horizontal circle, face-left (Hz — hundredths of arc-second, 360°)\r\n *   15  — Vertical circle (V — hundredths of arc-second)\r\n *   16  — Horizontal circle, face-right (second face, used to compute mean)\r\n *   17  — Slope distance with high accuracy (0.1mm resolution)\r\n *   21  — Easting (coordinate, 0.001m)\r\n *   22  — Northing (coordinate, 0.001m)\r\n *   23  — Elevation (coordinate, 0.001m)\r\n *   32  — Height of instrument (mm)\r\n *   33  — Height of target (mm)\r\n *   41  — Time (HHMMSS)\r\n *   42  — Date (DDMMYY or YYMMDD depending on instrument settings)\r\n *   47  — Temperature (0.1°C)\r\n *\r\n * Observation reduction:\r\n *   Mean Hz angle = (Hz_face_left + (Hz_face_right ± 180°)) / 2\r\n *   Horizontal Distance = SD × cos(VA)\r\n *   ΔH = SD × sin(VA) + IH − TH\r\n *\r\n * Output: array of GSIStation records suitable for passing to\r\n * computeTraverse() in @/lib/computations/traverseEngine\r\n */\r\n\r\nexport interface GSIObservation {\r\n  pointNumber: string\r\n  slopeDist?: number       // metres (from word 11/17)\r\n  horizDist?: number       // metres (from word 12/13)\r\n  hzFaceLeft?: number      // degrees decimal (from word 14)\r\n  hzFaceRight?: number     // degrees decimal (from word 16)\r\n  verticalAngle?: number  // degrees decimal (from word 15)\r\n  instrumentHeight?: number  // metres\r\n  targetHeight?: number   // metres\r\n  easting?: number         // metres\r\n  northing?: number        // metres\r\n  elevation?: number        // metres\r\n  temperature?: number      // degrees Celsius\r\n  rawLine: string\r\n}\r\n\r\nexport interface GSIStation {\r\n  stationName: string\r\n  stationNumber: string\r\n  observations: GSIObservation[]\r\n  heightOfInstrument?: number\r\n}\r\n\r\nexport interface GSIParseResult {\r\n  stations: GSIStation[]\r\n  rawRecords: GSIObservation[]\r\n  errors: string[]\r\n  format: 'GSI-8' | 'GSI-16' | 'UNKNOWN'\r\n  instrument: string\r\n  totalStations: number\r\n  totalObservations: number\r\n}\r\n\r\n// ── GSI word type codes ────────────────────────────────────────────────────────\r\n\r\n/** GSI word type codes (two-digit numeric string) */\r\nconst WORD_CODES = {\r\n  POINT_NUMBER: '01',\r\n  SLOPE_DIST: '11',\r\n  HORIZ_DIST: '12',\r\n  HORIZ_DIST_CORR: '13',\r\n  HZ_FACE_LEFT: '14',\r\n  V_ANGLE: '15',\r\n  HZ_FACE_RIGHT: '16',\r\n  SLOPE_DIST_ACC: '17',\r\n  EASTING: '21',\r\n  NORTHING: '22',\r\n  ELEVATION: '23',\r\n  INSTRUMENT_HEIGHT: '32',\r\n  TARGET_HEIGHT: '33',\r\n} as const\r\n\r\ntype WordCode = typeof WORD_CODES[keyof typeof WORD_CODES]\r\n\r\n// ── Word parsing helpers ────────────────────────────────────────────────────────\r\n\r\n/**\r\n * Detect whether the GSI file uses 8-character or 16-character word format.\r\n * GSI-8: each word = 8 chars (1 char '*' + 2 char type + 5 char value)\r\n * GSI-16: each word = 16 chars (1 char '*' + 2 char type + 13 char value)\r\n *\r\n * Strategy: parse first non-empty line, count visible characters after the\r\n * first `*` to determine word boundary. Also check if the word after the\r\n * expected 8-char word looks like a valid type code.\r\n */\r\nfunction detectGSIFormat(firstLine: string): 'GSI-8' | 'GSI-16' | 'UNKNOWN' {\r\n  const firstStar = firstLine.indexOf('*')\r\n  if (firstStar === -1) return 'UNKNOWN'\r\n\r\n  // In GSI-8 format, after the first `*`, the word type (2 digits) starts immediately.\r\n  // The value portion starts at offset 3 within the 8-char word.\r\n  // In GSI-16 format, the value portion starts at offset 3 within the 16-char word.\r\n  //\r\n  // Detection heuristic: look at the character after where the first word ends\r\n  // in GSI-8 mode. If it's also a `*` (start of next word), it's GSI-8.\r\n  // If it's part of a longer value field, it's GSI-16.\r\n\r\n  const afterFirst = firstLine.substring(firstStar + 1)\r\n\r\n  // Try GSI-8: expect word at positions 0-7 (*01XXXXXX), next * at position 8\r\n  if (afterFirst.length >= 8 && afterFirst.charAt(7) === '*') {\r\n    // Next word starts immediately — this is GSI-8\r\n    return 'GSI-8'\r\n  }\r\n\r\n  // Try GSI-16: word spans 16 chars (*WWXXXXXXXXXXXXX)\r\n  if (afterFirst.length >= 16 && afterFirst.charAt(15) === '*') {\r\n    return 'GSI-16'\r\n  }\r\n\r\n  // Fallback: if the first word's type code (chars 1-2) is valid (all digits)\r\n  // and the remaining chars look like numeric data, infer from data length\r\n  const chunk8 = afterFirst.substring(0, 8)\r\n  const type8 = chunk8.substring(0, 2)\r\n  const val8 = chunk8.substring(2, 8)\r\n\r\n  const chunk16 = afterFirst.substring(0, 16)\r\n  const type16 = chunk16.substring(0, 2)\r\n  const val16 = chunk16.substring(2, 16)\r\n\r\n  const typeValid = (t: string) => /^\\d{2}$/.test(t)\r\n  const valNumeric = (v: string) => /^[+-]?\\d+$/.test(v.trim())\r\n\r\n  if (typeValid(type8) && valNumeric(val8) && afterFirst.length >= 16) {\r\n    // If at position 8 there's a `*`, it's GSI-8\r\n    if (afterFirst.charAt(8) === '*') return 'GSI-8'\r\n  }\r\n\r\n  if (typeValid(type16) && valNumeric(val16.substring(0, 13)) && afterFirst.length >= 16) {\r\n    // Check if GSI-16 makes sense\r\n    if (afterFirst.charAt(16) === '*') return 'GSI-16'\r\n  }\r\n\r\n  // Heuristic: if the value is very long (>6 chars) it's GSI-16\r\n  if (typeValid(type8) && val8.trim().length > 6) return 'GSI-16'\r\n  if (typeValid(type8) && val8.trim().length <= 6) return 'GSI-8'\r\n\r\n  return 'UNKNOWN'\r\n}\r\n\r\n/** Parse a GSI angle value from string to decimal degrees */\r\nfunction parseGSIAngle(raw: string): number {\r\n  const s = raw.trim()\r\n  if (!s || s === '0') return 0\r\n\r\n  const negative = s.startsWith('-')\r\n  const absStr = s.replace('-', '').replace('+', '')\r\n\r\n  // GSI angle format: DDDMMSSSS (no decimal point, units = 0.01 arc-seconds)\r\n  // Length determines how to split: 7 digits = DDMMSS, 8 digits = DDMMSSe, 9 digits = DDMMSsee\r\n  const len = absStr.length\r\n  let d: number, m: number, ss: number\r\n\r\n  if (len === 7) {\r\n    d = parseInt(absStr.substring(0, 3), 10)\r\n    m = parseInt(absStr.substring(3, 5), 10)\r\n    ss = parseInt(absStr.substring(5, 7), 10)\r\n  } else if (len === 8) {\r\n    d = parseInt(absStr.substring(0, 3), 10)\r\n    m = parseInt(absStr.substring(3, 5), 10)\r\n    ss = parseInt(absStr.substring(5, 8), 10) / 10\r\n  } else if (len === 9) {\r\n    d = parseInt(absStr.substring(0, 3), 10)\r\n    m = parseInt(absStr.substring(3, 5), 10)\r\n    ss = parseInt(absStr.substring(5, 9), 10) / 100\r\n  } else if (len <= 6) {\r\n    d = parseInt(absStr.substring(0, Math.max(1, len - 4)), 10)\r\n    m = parseInt(absStr.substring(Math.max(1, len - 4), Math.max(2, len - 2)), 10)\r\n    ss = parseInt(absStr.substring(Math.max(2, len - 2)), 10)\r\n  } else {\r\n    // Very long value — last 7 chars = DDMMSS, preceding = degrees\r\n    const last7 = absStr.slice(-7)\r\n    const degPart = absStr.slice(0, -7)\r\n    d = parseInt(degPart.padStart(3, '0'), 10)\r\n    m = parseInt(last7.substring(0, 2), 10)\r\n    ss = parseInt(last7.substring(2, 7), 10)\r\n  }\r\n\r\n  if (isNaN(d) || isNaN(m) || isNaN(ss)) return 0\r\n  const decimal = d + m / 60 + ss / 3600\r\n  return negative ? -decimal : decimal\r\n}\r\n\r\n/** Parse a GSI distance value to metres */\r\nfunction parseGSIDistance(raw: string): number {\r\n  const s = raw.trim()\r\n  if (!s || s === '0') return 0\r\n  const value = parseInt(s, 10)\r\n  if (isNaN(value)) return 0\r\n  // GSI distances: 1 unit = 0.001m (millimetres)\r\n  return value / 1000\r\n}\r\n\r\n// ── Core parser ─────────────────────────────────────────────────────────────\r\n\r\ninterface RawWord {\r\n  code: string\r\n  value: string\r\n  raw: string\r\n}\r\n\r\nfunction extractWordsGSI(line: string, wordSize: number): RawWord[] {\r\n  const words: RawWord[] = []\r\n  let pos = 0\r\n\r\n  while (pos < line.length) {\r\n    // Each word starts with '*'\r\n    const star = line.indexOf('*', pos)\r\n    if (star === -1) break\r\n\r\n    const typeCode = line.substring(star + 1, star + 3)\r\n    if (!/^\\d{2}$/.test(typeCode)) {\r\n      pos = star + 1\r\n      continue\r\n    }\r\n\r\n    const raw = line.substring(star, star + wordSize)\r\n    const value = line.substring(star + 3, star + wordSize)\r\n\r\n    words.push({ code: typeCode, value, raw })\r\n    pos = star + wordSize\r\n  }\r\n\r\n  return words\r\n}\r\n\r\n/**\r\n * Parse a single GSI data record (one line from the .gsi file).\r\n * Returns a flat observation object with all values extracted.\r\n */\r\nfunction parseGSILine(line: string, wordSize: number): GSIObservation | null {\r\n  const trimmed = line.trim()\r\n  if (!trimmed || !trimmed.startsWith('*')) return null\r\n\r\n  const words = extractWordsGSI(trimmed, wordSize)\r\n  if (words.length === 0) return null\r\n\r\n  const obs: Partial<GSIObservation> = { rawLine: line }\r\n\r\n  for (const word of words) {\r\n    const code = word.code as WordCode\r\n    const val = word.value\r\n\r\n    switch (code) {\r\n      case WORD_CODES.POINT_NUMBER:\r\n        obs.pointNumber = val.trim()\r\n        break\r\n\r\n      case WORD_CODES.SLOPE_DIST:\r\n      case WORD_CODES.SLOPE_DIST_ACC:\r\n        if (!obs.slopeDist) obs.slopeDist = parseGSIDistance(val)\r\n        break\r\n\r\n      case WORD_CODES.HORIZ_DIST:\r\n      case WORD_CODES.HORIZ_DIST_CORR:\r\n        if (!obs.horizDist) obs.horizDist = parseGSIDistance(val)\r\n        break\r\n\r\n      case WORD_CODES.HZ_FACE_LEFT:\r\n        obs.hzFaceLeft = parseGSIAngle(val)\r\n        break\r\n\r\n      case WORD_CODES.HZ_FACE_RIGHT:\r\n        obs.hzFaceRight = parseGSIAngle(val)\r\n        break\r\n\r\n      case WORD_CODES.V_ANGLE:\r\n        obs.verticalAngle = parseGSIAngle(val)\r\n        break\r\n\r\n      case WORD_CODES.INSTRUMENT_HEIGHT:\r\n        obs.instrumentHeight = parseGSIDistance(val)\r\n        break\r\n\r\n      case WORD_CODES.TARGET_HEIGHT:\r\n        obs.targetHeight = parseGSIDistance(val)\r\n        break\r\n\r\n      case WORD_CODES.EASTING:\r\n        obs.easting = parseFloat((parseInt(val, 10) / 1000).toFixed(3))\r\n        break\r\n\r\n      case WORD_CODES.NORTHING:\r\n        obs.northing = parseFloat((parseInt(val, 10) / 1000).toFixed(3))\r\n        break\r\n\r\n      case WORD_CODES.ELEVATION:\r\n        obs.elevation = parseFloat((parseInt(val, 10) / 1000).toFixed(3))\r\n        break\r\n    }\r\n  }\r\n\r\n  if (!obs.pointNumber) return null\r\n  return obs as GSIObservation\r\n}\r\n\r\n/**\r\n * Group raw GSI observations by station.\r\n * In GSI format, the current station name is typically the point number\r\n * of the instrument station observation. Observations are sequential —\r\n * we detect station changes by the pattern of target IDs vs station IDs.\r\n *\r\n * Simplified grouping: all observations in the file are treated as a single\r\n * traverse from the first station. In a full implementation, station\r\n * changes would be detected from the observation pattern (BS→IS→FS).\r\n */\r\nfunction groupByStation(\r\n  observations: GSIObservation[],\r\n  errors: string[]\r\n): GSIStation[] {\r\n  if (observations.length === 0) return []\r\n\r\n  // Find instrument station: the point that appears most frequently as the\r\n  // target of backsight observations (Hz observations pointing TO it)\r\n  const pointCounts = new Map<string, number>()\r\n  for (const obs of observations) {\r\n    const name = obs.pointNumber || 'UNKNOWN'\r\n    pointCounts.set(name, (pointCounts.get(name) || 0) + 1)\r\n  }\r\n\r\n  let maxCount = 0\r\n  let stationName = observations[0]?.pointNumber || 'Unknown'\r\n  pointCounts.forEach((count, name) => {\r\n    if (count > maxCount) { maxCount = count; stationName = name }\r\n  })\r\n\r\n  // Group consecutive observations by target changes\r\n  // Simple approach: each time the point number changes, it's a new station\r\n  const stations: GSIStation[] = []\r\n  let currentStation: GSIStation = {\r\n    stationName,\r\n    stationNumber: stationName,\r\n    observations: [],\r\n  }\r\n\r\n  let lastPoint = ''\r\n  for (const obs of observations) {\r\n    const pt = obs.pointNumber || ''\r\n\r\n    if (pt !== lastPoint && obs.hzFaceLeft !== undefined) {\r\n      // Point changed and this is a Hz observation — new station\r\n      if (currentStation.observations.length > 0) {\r\n        stations.push(currentStation)\r\n      }\r\n      // New station detected — this observation is its first shot\r\n      const ih = obs.instrumentHeight ?? 0\r\n      currentStation = {\r\n        stationName: pt,\r\n        stationNumber: pt,\r\n        observations: [],\r\n        heightOfInstrument: ih,\r\n      }\r\n    }\r\n\r\n    currentStation.observations.push(obs)\r\n    lastPoint = pt\r\n  }\r\n\r\n  if (currentStation.observations.length > 0) {\r\n    stations.push(currentStation)\r\n  }\r\n\r\n  if (stations.length === 0 && observations.length > 0) {\r\n    errors.push('Could not group observations by station — treating all as single traverse')\r\n    stations.push({\r\n      stationName,\r\n      stationNumber: stationName,\r\n      observations,\r\n    })\r\n  }\r\n\r\n  return stations\r\n}\r\n\r\n/**\r\n * Parse a Leica GSI file and return observations ready for traverse computation.\r\n * Detects GSI-8 vs GSI-16 format automatically.\r\n */\r\nexport function parseGSI(gsiContent: string): GSIParseResult {\r\n  const lines = gsiContent.split(/\\r?\\n/)\r\n  const errors: string[] = []\r\n\r\n  if (lines.length === 0) {\r\n    return { stations: [], rawRecords: [], errors: ['Empty file'], format: 'UNKNOWN', instrument: 'Unknown', totalStations: 0, totalObservations: 0 }\r\n  }\r\n\r\n  // Detect format from first non-empty line\r\n  const firstDataLine = lines.find(l => l.trim().startsWith('*')) || ''\r\n  const format = detectGSIFormat(firstDataLine)\r\n  const wordSize = format === 'GSI-8' ? 8 : 16\r\n\r\n  const observations: GSIObservation[] = []\r\n  let totalDistCount = 0\r\n\r\n  for (const line of lines) {\r\n    const obs = parseGSILine(line, wordSize)\r\n    if (obs && obs.pointNumber) {\r\n      observations.push(obs)\r\n      if (obs.slopeDist !== undefined || obs.horizDist !== undefined) totalDistCount++\r\n    }\r\n  }\r\n\r\n  const stations = groupByStation(observations, errors)\r\n\r\n  // Detect instrument from file header lines (first few non-data lines)\r\n  let instrument = 'Leica Total Station'\r\n  const headerLines = lines.slice(0, 5).filter(l => !l.startsWith('*'))\r\n  if (headerLines.length > 0) {\r\n    instrument = headerLines[0].trim().substring(0, 50) || instrument\r\n  }\r\n\r\n  return {\r\n    stations,\r\n    rawRecords: observations,\r\n    errors,\r\n    format,\r\n    instrument,\r\n    totalStations: stations.length,\r\n    totalObservations: observations.length,\r\n  }\r\n}\r\n\r\n/**\r\n * Reduce raw GSI observations to the format expected by computeTraverse().\r\n * Applies face-left/face-right mean, HD from SD+VA, ΔH computation.\r\n *\r\n * Output is an array of TraverseEngine.RawObservation objects (or compatible).\r\n */\r\nexport function reduceGSIObservations(\r\n  parseResult: GSIParseResult,\r\n  backsightBearing: { degrees: number; minutes: number; seconds: number }\r\n): Array<{\r\n  station: string\r\n  bs: string\r\n  fs: string\r\n  hclDeg: string\r\n  hclMin: string\r\n  hclSec: string\r\n  hcrDeg: string\r\n  hcrMin: string\r\n  hcrSec: string\r\n  slopeDist: string\r\n  vaDeg: string\r\n  vaMin: string\r\n  vaSec: string\r\n  ih: string\r\n  th: string\r\n  remarks?: string\r\n}> {\r\n  const allObs = parseResult.rawRecords\r\n\r\n  // ── Step 1: Pair face-left and face-right observations ────────────────────\r\n  // For each target, look for corresponding FL and FR measurements\r\n  const byTarget = new Map<string, GSIObservation[]>()\r\n\r\n  for (const obs of allObs) {\r\n    const key = obs.pointNumber || `?${Math.random().toString(36).slice(2)}`\r\n    const list = byTarget.get(key) ?? []\r\n    list.push(obs)\r\n    byTarget.set(key, list)\r\n  }\r\n\r\n  // Build traverse legs: sorted by the order they appear in the file\r\n  const stations = parseResult.stations\r\n  const result: ReturnType<typeof reduceGSIObservations> = []\r\n\r\n  // For each station, create a traverse leg\r\n  for (let i = 0; i < allObs.length - 1; i++) {\r\n    const obs = allObs[i]\r\n    const nextObs = allObs[i + 1]\r\n\r\n    if (!obs.hzFaceLeft && !obs.horizDist) continue  // Skip if no angle or distance\r\n\r\n    // Determine BS and FS from the observation\r\n    const bs = obs.pointNumber\r\n    const fs = nextObs?.pointNumber || `P${i + 2}`\r\n\r\n    // Get IH from the current station's metadata\r\n    const station = stations.find(s => s.stationName === obs.pointNumber)\r\n    const ih = station?.heightOfInstrument ?? obs.instrumentHeight ?? 1.600\r\n\r\n    // Get TH from the observation\r\n    const th = obs.targetHeight ?? 1.400\r\n\r\n    // ── Hz angle: use FL if only one face, mean of FL+FR if both ──────────\r\n    let meanHz = obs.hzFaceLeft ?? 0\r\n    if (obs.hzFaceLeft !== undefined && obs.hzFaceRight !== undefined) {\r\n      // mean = (FL + FR ± 180°) / 2\r\n      let fr = obs.hzFaceRight\r\n      if (fr < obs.hzFaceLeft) fr += 360\r\n      meanHz = (obs.hzFaceLeft + fr) / 2\r\n      if (meanHz >= 360) meanHz -= 360\r\n    }\r\n\r\n    // Convert decimal degrees to DD MM SS.s\r\n    const hzDMS = decimalToDMS(meanHz)\r\n\r\n    // ── Vertical angle (V) ─────────────────────────────────────────────────\r\n    const va = obs.verticalAngle ?? 0\r\n    const vaDMS = decimalToDMS(Math.abs(va))\r\n\r\n    // ── Slope distance ────────────────────────────────────────────────────\r\n    let sd: number\r\n    if (obs.slopeDist !== undefined) {\r\n      sd = obs.slopeDist\r\n    } else if (obs.horizDist !== undefined) {\r\n      // Already horizontal — no VA needed\r\n      sd = obs.horizDist\r\n    } else {\r\n      sd = 0\r\n    }\r\n\r\n    result.push({\r\n      station: obs.pointNumber || `P${i + 1}`,\r\n      bs: i > 0 ? allObs[i - 1].pointNumber : '',\r\n      fs,\r\n      hclDeg: String(hzDMS.deg),\r\n      hclMin: String(hzDMS.min),\r\n      hclSec: hzDMS.sec.toFixed(1),\r\n      hcrDeg: obs.hzFaceRight !== undefined ? String(decimalToDMS(obs.hzFaceRight).deg) : '0',\r\n      hcrMin: obs.hzFaceRight !== undefined ? String(decimalToDMS(obs.hzFaceRight).min) : '0',\r\n      hcrSec: obs.hzFaceRight !== undefined ? decimalToDMS(obs.hzFaceRight).sec.toFixed(1) : '0.0',\r\n      slopeDist: sd.toFixed(3),\r\n      vaDeg: String(vaDMS.deg),\r\n      vaMin: String(vaDMS.min),\r\n      vaSec: vaDMS.sec.toFixed(1),\r\n      ih: ih.toFixed(3),\r\n      th: th.toFixed(3),\r\n      remarks: obs.slopeDist === undefined && obs.horizDist !== undefined ? 'HD' : undefined,\r\n    })\r\n  }\r\n\r\n  return result\r\n}\r\n\r\n// ── DMS helpers ───────────────────────────────────────────────────────────────\r\n\r\ninterface DMSResult {\r\n  deg: number\r\n  min: number\r\n  sec: number\r\n}\r\n\r\nfunction decimalToDMS(decimal: number): DMSResult {\r\n  if (decimal < 0) {\r\n    const dms = decimalToDMS(-decimal)\r\n    return { deg: -dms.deg, min: dms.min, sec: dms.sec }\r\n  }\r\n  const deg = Math.floor(decimal)\r\n  const minFloat = (decimal - deg) * 60\r\n  const min = Math.floor(minFloat)\r\n  const sec = (minFloat - min) * 60\r\n  return { deg, min, sec }\r\n}",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -53546,116 +53155,46 @@
     "filePath": "src/lib/survey/traverse/engine.ts",
     "messages": [
       {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 149,
-        "column": 18,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 149,
-        "endColumn": 71
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 149,
-        "column": 18,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 149,
-        "endColumn": 62,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                5396,
-                5397
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 150,
-        "column": 19,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 150,
-        "endColumn": 73
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 150,
-        "column": 19,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 150,
-        "endColumn": 63,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                5470,
-                5471
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
         "ruleId": "@typescript-eslint/no-unused-vars",
         "severity": 1,
         "message": "'firstFixed' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 251,
+        "line": 253,
         "column": 9,
         "nodeType": "Identifier",
         "messageId": "unusedVar",
-        "endLine": 251,
+        "endLine": 253,
         "endColumn": 19
       },
       {
         "ruleId": "@typescript-eslint/no-unused-vars",
         "severity": 1,
         "message": "'legs' is defined but never used. Allowed unused args must match /^_/u.",
-        "line": 287,
+        "line": 289,
         "column": 3,
         "nodeType": "Identifier",
         "messageId": "unusedVar",
-        "endLine": 287,
+        "endLine": 289,
         "endColumn": 7
       },
       {
         "ruleId": "@typescript-eslint/no-unused-vars",
         "severity": 1,
         "message": "'fixedStations' is defined but never used. Allowed unused args must match /^_/u.",
-        "line": 288,
+        "line": 290,
         "column": 3,
         "nodeType": "Identifier",
         "messageId": "unusedVar",
-        "endLine": 288,
+        "endLine": 290,
         "endColumn": 16
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 7,
+    "warningCount": 3,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Traverse Computation Engine\r\n * \r\n * Computes adjusted coordinates for a traverse (open or closed)\r\n * using either the Bowditch/Compass rule or Least Squares adjustment.\r\n * \r\n * For 3rd/4th order: Bowditch adjustment (proportional distribution)\r\n * For 1st/2nd order: Least Squares adjustment (statistically optimal)\r\n * \r\n * References:\r\n * - Schofield, W. (2001) \"Engineering Surveying\"\r\n * - Anderson & Mikhail (1998) \"Surveying: Theory and Practice\"\r\n */\r\n\r\n// ─── Types ───────────────────────────────────────────────────────\r\n\r\nexport interface TraverseStation {\r\n  name: string;\r\n  easting?: number;    // Known for control points\r\n  northing?: number;   // Known for control points\r\n  isFixed: boolean;    // Control/fixed point\r\n}\r\n\r\nexport interface TraverseLeg {\r\n  fromStation: string;\r\n  toStation: string;\r\n  bearing: number;       // Decimal degrees (0-360)\r\n  distance: number;      // Meters (already corrected through pipeline)\r\n  stdDevBearing?: number; // Standard deviation of bearing (seconds)\r\n  stdDevDistance?: number; // Standard deviation of distance (meters)\r\n}\r\n\r\nexport interface TraverseResult {\r\n  stations: AdjustedStation[];\r\n  misclosure: {\r\n    easting: number;       // meters\r\n    northing: number;      // meters\r\n    linear: number;        // meters (total linear misclosure)\r\n    angular: number;       // seconds (angular misclosure)\r\n    ratio: string;         // e.g., \"1:25000\"\r\n    ratioValue: number;    // numeric ratio denominator\r\n  };\r\n  adjustmentMethod: 'bowditch' | 'least_squares';\r\n  order: number;           // 1st, 2nd, 3rd, 4th\r\n  passesOrder: boolean;    // Whether misclosure meets the order requirement\r\n  totalDistance: number;   // meters\r\n  warnings: string[];\r\n}\r\n\r\nexport interface AdjustedStation {\r\n  name: string;\r\n  easting: number;\r\n  northing: number;\r\n  correctionE: number;     // Correction applied (meters)\r\n  correctionN: number;     // Correction applied (meters)\r\n  isFixed: boolean;\r\n  stdDevE?: number;        // From least squares\r\n  stdDevN?: number;        // From least squares\r\n}\r\n\r\n// ─── Accuracy Order Requirements ─────────────────────────────────\r\n\r\n/** Minimum misclosure ratio for each survey order */\r\nexport const ORDER_REQUIREMENTS: Record<number, number> = {\r\n  1: 100000,   // 1st order: 1:100,000\r\n  2: 20000,    // 2nd order: 1:20,000\r\n  3: 10000,    // 3rd order: 1:10,000 (Kenya cadastral minimum)\r\n  4: 5000,     // 4th order: 1:5,000 (topographic)\r\n};\r\n\r\n/** Default standard deviations for each order */\r\nexport const ORDER_STDS: Record<number, { angle: number; distPPM: number }> = {\r\n  1: { angle: 1.0, distPPM: 5 },       // 1\", 5 ppm\r\n  2: { angle: 2.0, distPPM: 10 },       // 2\", 10 ppm\r\n  3: { angle: 5.0, distPPM: 20 },       // 5\", 20 ppm\r\n  4: { angle: 10.0, distPPM: 50 },      // 10\", 50 ppm\r\n};\r\n\r\n// ─── Bowditch (Compass Rule) Adjustment ──────────────────────────\r\n\r\n/**\r\n * Apply Bowditch/Compass rule adjustment to a closed traverse.\r\n * \r\n * The Bowditch rule distributes the misclosure proportionally\r\n * to the cumulative distance from the start:\r\n * \r\n *   Correction_E(i) = -misclosure_E × (Σd₀→i / Σd_total)\r\n *   Correction_N(i) = -misclosure_N × (Σd₀→i / Σd_total)\r\n * \r\n * This is the standard method for 3rd and 4th order traverses\r\n * and is accepted by Kenya Survey Department for cadastral work.\r\n * \r\n * @param stations - Traverse stations (with fixed coordinates for control points)\r\n * @param legs - Traverse legs with bearings and distances\r\n * @param order - Required accuracy order (1-4)\r\n * @returns Traverse result with adjusted coordinates\r\n */\r\nexport function bowditchAdjustment(\r\n  stations: TraverseStation[],\r\n  legs: TraverseLeg[],\r\n  order: number = 3\r\n): TraverseResult {\r\n  const warnings: string[] = [];\r\n  \r\n  // Validate: need at least 2 fixed stations\r\n  const fixedStations = stations.filter(s => s.isFixed && s.easting !== undefined && s.northing !== undefined);\r\n  if (fixedStations.length < 2) {\r\n    throw new Error('Need at least 2 fixed control stations for traverse');\r\n  }\r\n  \r\n  // Compute preliminary coordinates\r\n  const preliminary = computePreliminaryCoordinates(stations, legs);\r\n  \r\n  // Compute misclosure\r\n  const misclosure = computeMisclosure(preliminary, stations, legs);\r\n  \r\n  // Check angular misclosure\r\n  const angularClosure = computeAngularClosure(legs, fixedStations);\r\n  misclosure.angular = angularClosure;\r\n  \r\n  // Compute total traverse distance\r\n  const totalDistance = legs.reduce((sum, leg) => sum + leg.distance, 0);\r\n  \r\n  // Compute misclosure ratio\r\n  const ratioValue = totalDistance / misclosure.linear;\r\n  misclosure.ratioValue = ratioValue;\r\n  misclosure.ratio = `1:${Math.round(ratioValue)}`;\r\n  \r\n  // Check against order requirement\r\n  const requiredRatio = ORDER_REQUIREMENTS[order] ?? ORDER_REQUIREMENTS[3];\r\n  const passesOrder = ratioValue >= requiredRatio;\r\n  \r\n  if (!passesOrder) {\r\n    warnings.push(\r\n      `Traverse closure ${misclosure.ratio} does NOT meet ${order} order requirement (1:${requiredRatio})`\r\n    );\r\n  }\r\n  \r\n  // Apply Bowditch corrections\r\n  const adjusted: AdjustedStation[] = [];\r\n  let cumulativeDistance = 0;\r\n  \r\n  for (let i = 0; i < preliminary.length; i++) {\r\n    const station = preliminary[i];\r\n    \r\n    if (station.isFixed) {\r\n      adjusted.push({\r\n        name: station.name,\r\n        easting: stations.find(s => s.name === station.name)!.easting!,\r\n        northing: stations.find(s => s.name === station.name)!.northing!,\r\n        correctionE: 0,\r\n        correctionN: 0,\r\n        isFixed: true,\r\n      });\r\n    } else {\r\n      // Proportional correction based on cumulative distance\r\n      const proportion = cumulativeDistance / totalDistance;\r\n      const corrE = -misclosure.easting * proportion;\r\n      const corrN = -misclosure.northing * proportion;\r\n      \r\n      adjusted.push({\r\n        name: station.name,\r\n        easting: (station.easting ?? 0) + corrE,\r\n        northing: (station.northing ?? 0) + corrN,\r\n        correctionE: corrE,\r\n        correctionN: corrN,\r\n        isFixed: false,\r\n      });\r\n    }\r\n    \r\n    // Add distance to next leg\r\n    const leg = legs.find(l => l.fromStation === station.name);\r\n    if (leg) {\r\n      cumulativeDistance += leg.distance;\r\n    }\r\n  }\r\n  \r\n  return {\r\n    stations: adjusted,\r\n    misclosure,\r\n    adjustmentMethod: 'bowditch',\r\n    order,\r\n    passesOrder,\r\n    totalDistance,\r\n    warnings,\r\n  };\r\n}\r\n\r\n// ─── Helper Functions ────────────────────────────────────────────\r\n\r\n/**\r\n * Compute preliminary (unadjusted) traverse coordinates.\r\n */\r\nfunction computePreliminaryCoordinates(\r\n  stations: TraverseStation[],\r\n  legs: TraverseLeg[]\r\n): TraverseStation[] {\r\n  const result: TraverseStation[] = [];\r\n  const coordMap = new Map<string, { easting: number; northing: number }>();\r\n  \r\n  // Initialize with fixed station coordinates\r\n  for (const station of stations) {\r\n    if (station.isFixed && station.easting !== undefined && station.northing !== undefined) {\r\n      coordMap.set(station.name, { easting: station.easting, northing: station.northing });\r\n    }\r\n  }\r\n  \r\n  // Compute coordinates along each leg\r\n  for (const leg of legs) {\r\n    const from = coordMap.get(leg.fromStation);\r\n    if (!from) {\r\n      throw new Error(`No coordinates for station ${leg.fromStation}`);\r\n    }\r\n    \r\n    const bearingRad = leg.bearing * Math.PI / 180;\r\n    const dE = leg.distance * Math.sin(bearingRad);\r\n    const dN = leg.distance * Math.cos(bearingRad);\r\n    \r\n    const toCoord = {\r\n      easting: from.easting + dE,\r\n      northing: from.northing + dN,\r\n    };\r\n    \r\n    coordMap.set(leg.toStation, toCoord);\r\n  }\r\n  \r\n  // Build result preserving order\r\n  for (const station of stations) {\r\n    const coord = coordMap.get(station.name);\r\n    result.push({\r\n      name: station.name,\r\n      easting: coord?.easting,\r\n      northing: coord?.northing,\r\n      isFixed: station.isFixed,\r\n    });\r\n  }\r\n  \r\n  return result;\r\n}\r\n\r\n/**\r\n * Compute linear misclosure of a closed traverse.\r\n */\r\nfunction computeMisclosure(\r\n  preliminary: TraverseStation[],\r\n  original: TraverseStation[],\r\n  legs: TraverseLeg[]\r\n): TraverseResult['misclosure'] {\r\n  // For a closed traverse, the last computed position should\r\n  // match the closing fixed point\r\n  const firstFixed = original.find(s => s.isFixed && s.easting !== undefined);\r\n  const lastLeg = legs[legs.length - 1];\r\n  \r\n  // Find the last computed position\r\n  const lastComputed = preliminary.find(s => s.name === lastLeg.toStation);\r\n  const closingPoint = original.find(s => s.name === lastLeg.toStation && s.isFixed);\r\n  \r\n  let dE = 0, dN = 0;\r\n  \r\n  if (closingPoint && closingPoint.easting !== undefined && closingPoint.northing !== undefined) {\r\n    if (lastComputed?.easting !== undefined && lastComputed?.northing !== undefined) {\r\n      dE = lastComputed.easting - closingPoint.easting;\r\n      dN = lastComputed.northing - closingPoint.northing;\r\n    }\r\n  }\r\n  \r\n  const linear = Math.sqrt(dE * dE + dN * dN);\r\n  \r\n  return {\r\n    easting: dE,\r\n    northing: dN,\r\n    linear,\r\n    angular: 0, // Computed separately\r\n    ratio: '',\r\n    ratioValue: 0,\r\n  };\r\n}\r\n\r\n/**\r\n * Compute angular misclosure of a closed traverse.\r\n * \r\n * For a closed traverse with n sides:\r\n *   Sum of interior angles = (n - 2) × 180°\r\n *   Angular misclosure = Observed sum - Theoretical sum\r\n */\r\nfunction computeAngularClosure(\r\n  legs: TraverseLeg[],\r\n  fixedStations: TraverseStation[]\r\n): number {\r\n  // Simple check: sum of bearings should be consistent\r\n  // For a full loop traverse, the sum of bearing differences\r\n  // should equal n × 180° (for interior angles)\r\n  // This is a simplified version — full angular closure requires\r\n  // observed angles at each station\r\n  \r\n  // For now, use the bearing-based check\r\n  // The total angular closure is checked by verifying\r\n  // that the computed azimuth from the last leg back to\r\n  // the start matches the known azimuth\r\n  \r\n  return 0; // Placeholder — will be computed from observed angles in full implementation\r\n}\r\n\r\n/**\r\n * Compute forward bearing from two coordinate pairs.\r\n */\r\nexport function computeBearing(\r\n  fromE: number,\r\n  fromN: number,\r\n  toE: number,\r\n  toN: number\r\n): number {\r\n  const dE = toE - fromE;\r\n  const dN = toN - fromN;\r\n  \r\n  let bearing = Math.atan2(dE, dN) * 180 / Math.PI;\r\n  if (bearing < 0) bearing += 360;\r\n  \r\n  return bearing;\r\n}\r\n\r\n/**\r\n * Compute distance between two coordinate pairs.\r\n */\r\nexport function computeDistance(\r\n  fromE: number,\r\n  fromN: number,\r\n  toE: number,\r\n  toN: number\r\n): number {\r\n  const dE = toE - fromE;\r\n  const dN = toN - fromN;\r\n  return Math.sqrt(dE * dE + dN * dN);\r\n}\r\n",
+    "source": "/**\r\n * Traverse Computation Engine\r\n * \r\n * Computes adjusted coordinates for a traverse (open or closed)\r\n * using either the Bowditch/Compass rule or Least Squares adjustment.\r\n * \r\n * For 3rd/4th order: Bowditch adjustment (proportional distribution)\r\n * For 1st/2nd order: Least Squares adjustment (statistically optimal)\r\n * \r\n * References:\r\n * - Schofield, W. (2001) \"Engineering Surveying\"\r\n * - Anderson & Mikhail (1998) \"Surveying: Theory and Practice\"\r\n */\r\n\r\n// ─── Types ───────────────────────────────────────────────────────\r\n\r\nexport interface TraverseStation {\r\n  name: string;\r\n  easting?: number;    // Known for control points\r\n  northing?: number;   // Known for control points\r\n  isFixed: boolean;    // Control/fixed point\r\n}\r\n\r\nexport interface TraverseLeg {\r\n  fromStation: string;\r\n  toStation: string;\r\n  bearing: number;       // Decimal degrees (0-360)\r\n  distance: number;      // Meters (already corrected through pipeline)\r\n  stdDevBearing?: number; // Standard deviation of bearing (seconds)\r\n  stdDevDistance?: number; // Standard deviation of distance (meters)\r\n}\r\n\r\nexport interface TraverseResult {\r\n  stations: AdjustedStation[];\r\n  misclosure: {\r\n    easting: number;       // meters\r\n    northing: number;      // meters\r\n    linear: number;        // meters (total linear misclosure)\r\n    angular: number;       // seconds (angular misclosure)\r\n    ratio: string;         // e.g., \"1:25000\"\r\n    ratioValue: number;    // numeric ratio denominator\r\n  };\r\n  adjustmentMethod: 'bowditch' | 'least_squares';\r\n  order: number;           // 1st, 2nd, 3rd, 4th\r\n  passesOrder: boolean;    // Whether misclosure meets the order requirement\r\n  totalDistance: number;   // meters\r\n  warnings: string[];\r\n}\r\n\r\nexport interface AdjustedStation {\r\n  name: string;\r\n  easting: number;\r\n  northing: number;\r\n  correctionE: number;     // Correction applied (meters)\r\n  correctionN: number;     // Correction applied (meters)\r\n  isFixed: boolean;\r\n  stdDevE?: number;        // From least squares\r\n  stdDevN?: number;        // From least squares\r\n}\r\n\r\n// ─── Accuracy Order Requirements ─────────────────────────────────\r\n\r\n/** Minimum misclosure ratio for each survey order */\r\nexport const ORDER_REQUIREMENTS: Record<number, number> = {\r\n  1: 100000,   // 1st order: 1:100,000\r\n  2: 20000,    // 2nd order: 1:20,000\r\n  3: 10000,    // 3rd order: 1:10,000 (Kenya cadastral minimum)\r\n  4: 5000,     // 4th order: 1:5,000 (topographic)\r\n};\r\n\r\n/** Default standard deviations for each order */\r\nexport const ORDER_STDS: Record<number, { angle: number; distPPM: number }> = {\r\n  1: { angle: 1.0, distPPM: 5 },       // 1\", 5 ppm\r\n  2: { angle: 2.0, distPPM: 10 },       // 2\", 10 ppm\r\n  3: { angle: 5.0, distPPM: 20 },       // 5\", 20 ppm\r\n  4: { angle: 10.0, distPPM: 50 },      // 10\", 50 ppm\r\n};\r\n\r\n// ─── Bowditch (Compass Rule) Adjustment ──────────────────────────\r\n\r\n/**\r\n * Apply Bowditch/Compass rule adjustment to a closed traverse.\r\n * \r\n * The Bowditch rule distributes the misclosure proportionally\r\n * to the cumulative distance from the start:\r\n * \r\n *   Correction_E(i) = -misclosure_E × (Σd₀→i / Σd_total)\r\n *   Correction_N(i) = -misclosure_N × (Σd₀→i / Σd_total)\r\n * \r\n * This is the standard method for 3rd and 4th order traverses\r\n * and is accepted by Kenya Survey Department for cadastral work.\r\n * \r\n * @param stations - Traverse stations (with fixed coordinates for control points)\r\n * @param legs - Traverse legs with bearings and distances\r\n * @param order - Required accuracy order (1-4)\r\n * @returns Traverse result with adjusted coordinates\r\n */\r\nexport function bowditchAdjustment(\r\n  stations: TraverseStation[],\r\n  legs: TraverseLeg[],\r\n  order: number = 3\r\n): TraverseResult {\r\n  const warnings: string[] = [];\r\n  \r\n  // Validate: need at least 2 fixed stations\r\n  const fixedStations = stations.filter(s => s.isFixed && s.easting !== undefined && s.northing !== undefined);\r\n  if (fixedStations.length < 2) {\r\n    throw new Error('Need at least 2 fixed control stations for traverse');\r\n  }\r\n  \r\n  // Compute preliminary coordinates\r\n  const preliminary = computePreliminaryCoordinates(stations, legs);\r\n  \r\n  // Compute misclosure\r\n  const misclosure = computeMisclosure(preliminary, stations, legs);\r\n  \r\n  // Check angular misclosure\r\n  const angularClosure = computeAngularClosure(legs, fixedStations);\r\n  misclosure.angular = angularClosure;\r\n  \r\n  // Compute total traverse distance\r\n  const totalDistance = legs.reduce((sum, leg) => sum + leg.distance, 0);\r\n  \r\n  // Compute misclosure ratio\r\n  const ratioValue = totalDistance / misclosure.linear;\r\n  misclosure.ratioValue = ratioValue;\r\n  misclosure.ratio = `1:${Math.round(ratioValue)}`;\r\n  \r\n  // Check against order requirement\r\n  const requiredRatio = ORDER_REQUIREMENTS[order] ?? ORDER_REQUIREMENTS[3];\r\n  const passesOrder = ratioValue >= requiredRatio;\r\n  \r\n  if (!passesOrder) {\r\n    warnings.push(\r\n      `Traverse closure ${misclosure.ratio} does NOT meet ${order} order requirement (1:${requiredRatio})`\r\n    );\r\n  }\r\n  \r\n  // Apply Bowditch corrections\r\n  const adjusted: AdjustedStation[] = [];\r\n  let cumulativeDistance = 0;\r\n  \r\n  for (let i = 0; i < preliminary.length; i++) {\r\n    const station = preliminary[i];\r\n    \r\n    if (station.isFixed) {\r\n      const fixedStation = stations.find(s => s.name === station.name)\r\n      if (!fixedStation || fixedStation.easting === undefined || fixedStation.northing === undefined) continue\r\n      adjusted.push({\r\n        name: station.name,\r\n        easting: fixedStation.easting,\r\n        northing: fixedStation.northing,\r\n        correctionE: 0,\r\n        correctionN: 0,\r\n        isFixed: true,\r\n      });\r\n    } else {\r\n      // Proportional correction based on cumulative distance\r\n      const proportion = cumulativeDistance / totalDistance;\r\n      const corrE = -misclosure.easting * proportion;\r\n      const corrN = -misclosure.northing * proportion;\r\n      \r\n      adjusted.push({\r\n        name: station.name,\r\n        easting: (station.easting ?? 0) + corrE,\r\n        northing: (station.northing ?? 0) + corrN,\r\n        correctionE: corrE,\r\n        correctionN: corrN,\r\n        isFixed: false,\r\n      });\r\n    }\r\n    \r\n    // Add distance to next leg\r\n    const leg = legs.find(l => l.fromStation === station.name);\r\n    if (leg) {\r\n      cumulativeDistance += leg.distance;\r\n    }\r\n  }\r\n  \r\n  return {\r\n    stations: adjusted,\r\n    misclosure,\r\n    adjustmentMethod: 'bowditch',\r\n    order,\r\n    passesOrder,\r\n    totalDistance,\r\n    warnings,\r\n  };\r\n}\r\n\r\n// ─── Helper Functions ────────────────────────────────────────────\r\n\r\n/**\r\n * Compute preliminary (unadjusted) traverse coordinates.\r\n */\r\nfunction computePreliminaryCoordinates(\r\n  stations: TraverseStation[],\r\n  legs: TraverseLeg[]\r\n): TraverseStation[] {\r\n  const result: TraverseStation[] = [];\r\n  const coordMap = new Map<string, { easting: number; northing: number }>();\r\n  \r\n  // Initialize with fixed station coordinates\r\n  for (const station of stations) {\r\n    if (station.isFixed && station.easting !== undefined && station.northing !== undefined) {\r\n      coordMap.set(station.name, { easting: station.easting, northing: station.northing });\r\n    }\r\n  }\r\n  \r\n  // Compute coordinates along each leg\r\n  for (const leg of legs) {\r\n    const from = coordMap.get(leg.fromStation);\r\n    if (!from) {\r\n      throw new Error(`No coordinates for station ${leg.fromStation}`);\r\n    }\r\n    \r\n    const bearingRad = leg.bearing * Math.PI / 180;\r\n    const dE = leg.distance * Math.sin(bearingRad);\r\n    const dN = leg.distance * Math.cos(bearingRad);\r\n    \r\n    const toCoord = {\r\n      easting: from.easting + dE,\r\n      northing: from.northing + dN,\r\n    };\r\n    \r\n    coordMap.set(leg.toStation, toCoord);\r\n  }\r\n  \r\n  // Build result preserving order\r\n  for (const station of stations) {\r\n    const coord = coordMap.get(station.name);\r\n    result.push({\r\n      name: station.name,\r\n      easting: coord?.easting,\r\n      northing: coord?.northing,\r\n      isFixed: station.isFixed,\r\n    });\r\n  }\r\n  \r\n  return result;\r\n}\r\n\r\n/**\r\n * Compute linear misclosure of a closed traverse.\r\n */\r\nfunction computeMisclosure(\r\n  preliminary: TraverseStation[],\r\n  original: TraverseStation[],\r\n  legs: TraverseLeg[]\r\n): TraverseResult['misclosure'] {\r\n  // For a closed traverse, the last computed position should\r\n  // match the closing fixed point\r\n  const firstFixed = original.find(s => s.isFixed && s.easting !== undefined);\r\n  const lastLeg = legs[legs.length - 1];\r\n  \r\n  // Find the last computed position\r\n  const lastComputed = preliminary.find(s => s.name === lastLeg.toStation);\r\n  const closingPoint = original.find(s => s.name === lastLeg.toStation && s.isFixed);\r\n  \r\n  let dE = 0, dN = 0;\r\n  \r\n  if (closingPoint && closingPoint.easting !== undefined && closingPoint.northing !== undefined) {\r\n    if (lastComputed?.easting !== undefined && lastComputed?.northing !== undefined) {\r\n      dE = lastComputed.easting - closingPoint.easting;\r\n      dN = lastComputed.northing - closingPoint.northing;\r\n    }\r\n  }\r\n  \r\n  const linear = Math.sqrt(dE * dE + dN * dN);\r\n  \r\n  return {\r\n    easting: dE,\r\n    northing: dN,\r\n    linear,\r\n    angular: 0, // Computed separately\r\n    ratio: '',\r\n    ratioValue: 0,\r\n  };\r\n}\r\n\r\n/**\r\n * Compute angular misclosure of a closed traverse.\r\n * \r\n * For a closed traverse with n sides:\r\n *   Sum of interior angles = (n - 2) × 180°\r\n *   Angular misclosure = Observed sum - Theoretical sum\r\n */\r\nfunction computeAngularClosure(\r\n  legs: TraverseLeg[],\r\n  fixedStations: TraverseStation[]\r\n): number {\r\n  // Simple check: sum of bearings should be consistent\r\n  // For a full loop traverse, the sum of bearing differences\r\n  // should equal n × 180° (for interior angles)\r\n  // This is a simplified version — full angular closure requires\r\n  // observed angles at each station\r\n  \r\n  // For now, use the bearing-based check\r\n  // The total angular closure is checked by verifying\r\n  // that the computed azimuth from the last leg back to\r\n  // the start matches the known azimuth\r\n  \r\n  return 0; // Placeholder — will be computed from observed angles in full implementation\r\n}\r\n\r\n/**\r\n * Compute forward bearing from two coordinate pairs.\r\n */\r\nexport function computeBearing(\r\n  fromE: number,\r\n  fromN: number,\r\n  toE: number,\r\n  toN: number\r\n): number {\r\n  const dE = toE - fromE;\r\n  const dN = toN - fromN;\r\n  \r\n  let bearing = Math.atan2(dE, dN) * 180 / Math.PI;\r\n  if (bearing < 0) bearing += 360;\r\n  \r\n  return bearing;\r\n}\r\n\r\n/**\r\n * Compute distance between two coordinate pairs.\r\n */\r\nexport function computeDistance(\r\n  fromE: number,\r\n  fromN: number,\r\n  toE: number,\r\n  toN: number\r\n): number {\r\n  const dE = toE - fromE;\r\n  const dN = toN - fromN;\r\n  return Math.sqrt(dE * dE + dN * dN);\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
