@@ -2,7 +2,7 @@
 
 **Goal:** clear every `@typescript-eslint` / JS warning so the CI `--max-warnings` ceiling can drop to `0` and each rule flips to `error`.
 
-**Progress:** 14,030 → **888** (measured 2026-08-12, `lint-ratchets --report` on origin/main). Row-typing (0/538), a11y (0 findings), member-access, explicit-any, argument, **assignment**, no-unsafe-return and no-unsafe-call are **done** (rules flipped to `error`); `no-unused-vars` + the mechanical rules remain.
+**Progress:** 14,030 → **888** (measured 2026-08-12, `lint-ratchets --report` on origin/main). Row-typing (0/538), a11y (0 findings), member-access, explicit-any, argument, **assignment**, no-unsafe-return, no-unsafe-call and **no-non-null-assertion** are **done** (rules flipped to `error`); `no-unused-vars` + the mechanical rules remain.
 
 > **This doc is the canonical checkpoint.** Every grind session starts by reading the
 > **STATUS CHECKPOINT** below and ends by updating it. If an agent is rate-limited or
@@ -31,7 +31,7 @@ Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 828 �
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
 - **HEAD:** `d390a727` (total re-baseline 928 → 888) — on `origin/main`; local work continues on `chore/lint-typing-page-batch`.
-- **Uncommitted (this batch):** none in flight — tree holds only `.a11y-audit.json` (a11y-sweep regeneration) + untracked `docs/Metardu_Repowise_Intelligence.md`, `scripts/sync-mirror.mjs`, `_tmp-*.py` helpers. Floors: member-access 0 · assignment 0 · explicit-any 0 · argument 0 · non-null 0 · total **1,033** (all six `no-unsafe-*` rules flipped to `error`).
+- **Uncommitted (this batch):** none in flight — tree holds only `.a11y-audit.json` (a11y-sweep regeneration) + untracked `docs/Metardu_Repowise_Intelligence.md`, `scripts/sync-mirror.mjs`, `_tmp-*.py` helpers. Floors: member-access 0 · assignment 0 · explicit-any 0 · argument 0 · non-null 0 · total **888** (all six `no-unsafe-*` rules + `no-non-null-assertion` flipped to `error`).
 - **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).
@@ -47,7 +47,7 @@ node scripts/sync-mirror.mjs             # converge the .freebuff mirror to HEAD
 git status --short                     # expect nothing (or the concurrent session’s WIP)
 git log --oneline origin/main..HEAD    # confirm what's still unpushed
 node scripts/lint-ratchets.mjs --report   # confirm gate green + live floors (exit 0)
-node scripts/warn-scan.mjs                 # regenerate the per-file census (next: non-null batch 12)
+node scripts/warn-scan.mjs                 # regenerate the per-file census (next: unused-vars batch 7)
 ```
 
 If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read the report, never `--update` a floor to mask a WIP-induced drop.
@@ -70,7 +70,7 @@ If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read th
 | row-typing (`db.query` untyped) | 0 / 532 | gate | ✅ done |
 | a11y findings | 0 | gate | ✅ done |
 | `no-unused-vars` | **828** | warn | ⏳ next |
-| `no-non-null-assertion` | **0** | warn (flip to `error` next per §6) | ✅ done |
+| `no-non-null-assertion` | **0** | `error` | ✅ done |
 | `react-hooks/exhaustive-deps` | **44** | warn | ⏳ |
 | `no-restricted-syntax` | **16** | warn | ⏳ |
 | **total** | **888** | CI ceiling **1,100** | green |
@@ -97,7 +97,7 @@ All batches drained (`argument-scan --batch 1` → 0 across 0 files); floor lock
 
 | Rule | Live | Fix class | Next tier |
 |---|---|---|---|
-| `no-non-null-assertion` | **0** | ✅ done — batches 1–12 drained 113 → 0 (batch 12 = the 47-site 1-warning tail); next per §6: flip the rule to `error` | — |
+| `no-non-null-assertion` | **0** | ✅ done — batches 1–12 drained 113 → 0, suppression sweep removed the last 9 hidden `!` sites; flipped to `error` 2026-08-12 | — |
 | `no-unused-vars` | **973** | `_`-prefix unused bindings, drop dead imports/state/props | batches 1–3 drained 167 sites; next: 7-warning tier — `admin/page` · `SurveyReportBuilder` · `traverseEngine` · `generateDocx` · `fileRouter` · `formNo4Renderer` · `spiralAlignment` · `deformationMonitoring` |
 | `react-hooks/exhaustive-deps` | **44** | careful per-effect dep fixes; `eslint-disable-next-line` only with a justification (repo convention) | `useMapInteractions` 16 · `useSubdivision` 6 · `MobileMeasurementCapture` 4 |
 | `no-restricted-syntax` | **16** | project-specific banned patterns — check the rule config | `nativeProjectionView.test.ts` 9 · `MapClient.tsx` 2 |
