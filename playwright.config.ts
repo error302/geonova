@@ -28,7 +28,9 @@ export default defineConfig({
   testDir: './e2e',
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  // E2E_FAST (2026-08-12): suite is green — one retry is enough safety
+  // margin; halves the worst-case cost of a flaky shard.
+  retries: process.env.CI ? 1 : 0,
   workers: 1,
   reporter: [['html', { open: 'never', outputFolder: 'e2e-results' }], ['list']],
   timeout: 60_000,

@@ -238,7 +238,13 @@ jobs:
     #   2. Postgres service container is available for health checks and any
     #      API calls that need the database.
     #   3. Executes its assigned spec group.
-    timeout-minutes: 30
+    # E2E_FAST (2026-08-12): measured shard wall time on the green 4-group
+    # split is ~5-7 min (nav-pages shard 1 = 6m48s worst, run 31608012173;
+    # the ~237s nav-pages dev-compile profile was from the old 2-shard,
+    # pre-fix config). Retries lowered to 1 in playwright.config.ts. The
+    # 20-min cap is 3x the measured time — cancels fast on a regression
+    # instead of churning toward the old 30-min wall.
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
