@@ -11348,270 +11348,21 @@
     "filePath": "src/app/mobile/field/page.tsx",
     "messages": [
       {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'Mountain' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 23,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 23,
-        "endColumn": 46,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "Mountain"
-            },
-            "fix": {
-              "range": [
-                926,
-                936
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"Mountain\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'ChevronRight' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 24,
-        "column": 3,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 24,
-        "endColumn": 15,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "ChevronRight"
-            },
-            "fix": {
-              "range": [
-                936,
-                953
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"ChevronRight\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'Camera' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 24,
-        "column": 43,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 24,
-        "endColumn": 49,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "Camera"
-            },
-            "fix": {
-              "range": [
-                979,
-                987
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"Camera\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'Check' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 25,
-        "column": 14,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 25,
-        "endColumn": 19,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "Check"
-            },
-            "fix": {
-              "range": [
-                1007,
-                1014
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"Check\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'X' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 25,
-        "column": 21,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 25,
-        "endColumn": 22,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "X"
-            },
-            "fix": {
-              "range": [
-                1014,
-                1017
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"X\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'Settings' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 25,
-        "column": 35,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 25,
-        "endColumn": 43,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "Settings"
-            },
-            "fix": {
-              "range": [
-                1028,
-                1038
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"Settings\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'PhotoData' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 27,
-        "column": 54,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 27,
-        "endColumn": 63,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "PhotoData"
-            },
-            "fix": {
-              "range": [
-                1110,
-                1126
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"PhotoData\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'StreamedPoint' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 35,
-        "column": 35,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 35,
-        "endColumn": 48,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "StreamedPoint"
-            },
-            "fix": {
-              "range": [
-                1516,
-                1536
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"StreamedPoint\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'showSettings' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 64,
-        "column": 10,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 64,
-        "endColumn": 22
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'setShowSettings' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 64,
-        "column": 24,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 64,
-        "endColumn": 39
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'instrumentStore' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 70,
-        "column": 9,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 70,
-        "endColumn": 24
-      },
-      {
         "ruleId": "react-hooks/exhaustive-deps",
         "severity": 1,
         "message": "React Hook useEffect has missing dependencies: 'loadObservations' and 'loadProject'. Either include them or remove the dependency array.",
-        "line": 96,
+        "line": 94,
         "column": 6,
         "nodeType": "ArrayExpression",
-        "endLine": 96,
+        "endLine": 94,
         "endColumn": 17,
         "suggestions": [
           {
             "desc": "Update the dependencies array to be: [loadObservations, loadProject, projectId]",
             "fix": {
               "range": [
-                3867,
-                3878
+                3672,
+                3683
               ],
               "text": "[loadObservations, loadProject, projectId]"
             }
@@ -11619,57 +11370,35 @@
         ]
       },
       {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'photos' is defined but never used. Allowed unused args must match /^_/u.",
-        "line": 140,
-        "column": 80,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 140,
-        "endColumn": 86
-      },
-      {
         "ruleId": "react-hooks/exhaustive-deps",
         "severity": 1,
         "message": "React Hook useCallback has a missing dependency: 'loadObservations'. Either include it or remove the dependency array.",
-        "line": 165,
+        "line": 163,
         "column": 6,
         "nodeType": "ArrayExpression",
-        "endLine": 165,
+        "endLine": 163,
         "endColumn": 35,
         "suggestions": [
           {
             "desc": "Update the dependencies array to be: [projectId, activeSurveyType, loadObservations]",
             "fix": {
               "range": [
-                6387,
-                6416
+                6193,
+                6222
               ],
               "text": "[projectId, activeSurveyType, loadObservations]"
             }
           }
         ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'pos' is defined but never used. Allowed unused args must match /^_/u.",
-        "line": 182,
-        "column": 43,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 182,
-        "endColumn": 46
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 15,
+    "warningCount": 2,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client';\r\n\r\n/**\r\n * Mobile Field Collection Page — Upgraded\r\n * ═══════════════════════════════════════\r\n * Integrates:\r\n *   - UniversalMobileObservationForm (multi-survey-type entry)\r\n *   - GNSSConnectionPanel (BLE/Web Bluetooth instrument streaming)\r\n *   - BeaconPhotoCapture (evidence-chain photos with EXIF GPS)\r\n *   - offlineStorage + syncService (IndexedDB offline-first + auto sync)\r\n *   - instrumentStore (reactive instrument connection state)\r\n *\r\n * Replaces the old basic GPS-only field page with a professional\r\n * surveyor workflow supporting traverse, leveling, control,\r\n * hydrographic, and mining observations.\r\n */\r\n\r\nimport { Suspense, useState, useEffect, useCallback } from 'react'\r\nimport type { CapturedBeaconPhoto } from '@/components/fieldbook/BeaconPhotoCapture'\r\nimport { useSearchParams } from 'next/navigation'\r\nimport Link from 'next/link'\r\nimport {\r\n  Bluetooth, MapPin, Ruler, Compass, Mountain,\r\n  ChevronRight, RefreshCw, Wifi, WifiOff, Camera, Plus,\r\n  ArrowLeft, Check, X, Satellite, Settings,\r\n} from 'lucide-react'\r\nimport { offlineStorage, type FieldObservation, type PhotoData } from '@/lib/mobile/offlineStorage'\r\nimport { syncService } from '@/lib/mobile/syncService'\r\nimport { createClient } from '@/lib/api-client/client'\r\nimport {\r\n  UniversalMobileObservationForm,\r\n  type MobileSurveyType,\r\n} from '@/components/fieldbook/UniversalMobileObservationForm'\r\nimport { GNSSConnectionPanel } from '@/components/gnss/GNSSConnectionPanel'\r\nimport { useInstrumentStore, type StreamedPoint } from '@/stores/instrumentStore'\r\nimport type { NMEAPosition } from '@/lib/gnss/nmea-parser'\r\nimport { logger } from '@/lib/logger'\r\n\r\n// ─── Survey type metadata ───────────────────────────────────────\r\n\r\nconst SURVEY_TYPES: Record<MobileSurveyType, { label: string; icon: typeof Compass; color: string }> = {\r\n  leveling:     { label: 'Leveling',     icon: Ruler,    color: 'bg-sky-500' },\r\n  traverse:     { label: 'Traverse',     icon: Compass,  color: 'bg-amber-500' },\r\n  control:      { label: 'Control',      icon: MapPin,   color: 'bg-emerald-500' },\r\n}\r\n\r\n// ─── Main Component ─────────────────────────────────────────────\r\n\r\nfunction MobileFieldContent() {\r\n  const searchParams = useSearchParams()\r\n  const projectId = searchParams.get('project') || ''\r\n\r\n  // ─── State ────────────────────────────────────────────\r\n  const [projectName, setProjectName] = useState('Unknown Project')\r\n  const [isOnline, setIsOnline] = useState(true)\r\n  const [isSyncing, setIsSyncing] = useState(false)\r\n  const [pendingCount, setPendingCount] = useState(0)\r\n  const [lastSync, setLastSync] = useState<string | null>(null)\r\n\r\n  // Survey mode\r\n  const [activeSurveyType, setActiveSurveyType] = useState<MobileSurveyType>('traverse')\r\n  const [showForm, setShowForm] = useState(false)\r\n  const [showGNSS, setShowGNSS] = useState(false)\r\n  const [showSettings, setShowSettings] = useState(false)\r\n\r\n  // Observations\r\n  const [recentObservations, setRecentObservations] = useState<FieldObservation[]>([])\r\n\r\n  // Instrument store\r\n  const instrumentStore = useInstrumentStore()\r\n  const isConnected = useInstrumentStore((s) => s.status === 'connected' || s.status === 'streaming')\r\n\r\n  // ─── Initialize ───────────────────────────────────────\r\n  useEffect(() => {\r\n    if (projectId) {\r\n      loadProject()\r\n      loadObservations()\r\n      loadStats()\r\n    }\r\n\r\n    setIsOnline(navigator.onLine)\r\n\r\n    const handleOnline = () => setIsOnline(true)\r\n    const handleOffline = () => setIsOnline(false)\r\n\r\n    window.addEventListener('online', handleOnline)\r\n    window.addEventListener('offline', handleOffline)\r\n\r\n    syncService.startAutoSync()\r\n\r\n    return () => {\r\n      window.removeEventListener('online', handleOnline)\r\n      window.removeEventListener('offline', handleOffline)\r\n      syncService.stopAutoSync()\r\n    }\r\n  }, [projectId])\r\n\r\n  // ─── Data loading ─────────────────────────────────────\r\n  const loadProject = async () => {\r\n    try {\r\n      const dbClient = createClient()\r\n            const { data } = await dbClient.from('projects').select('name').eq('id', projectId).single() as unknown as { data: { name: string } | null }\r\n      if ((data as { name?: string } | null)?.name) setProjectName((data as { name: string }).name)\r\n    } catch {\r\n      // Project might not exist or DB unreachable\r\n    }\r\n  }\r\n\r\n  const loadObservations = async () => {\r\n    if (!projectId) return\r\n    const observations = await offlineStorage.getFieldObservations(projectId)\r\n    setRecentObservations(observations.slice(-10).reverse())\r\n  }\r\n\r\n  const loadStats = async () => {\r\n    const stats = await offlineStorage.getStorageStats()\r\n    setPendingCount(stats.pendingSync)\r\n  }\r\n\r\n  // ─── Sync ─────────────────────────────────────────────\r\n  const handleSync = async () => {\r\n    if (!isOnline) return\r\n    setIsSyncing(true)\r\n    try {\r\n      const { synced, failed } = await syncService.forceSync()\r\n      setLastSync(new Date().toLocaleTimeString())\r\n      await loadStats()\r\n      await loadObservations()\r\n      if (failed > 0) {\r\n        alert(`Synced: ${synced}, Failed: ${failed}`)\r\n      }\r\n    } catch {\r\n      // Sync will retry automatically\r\n    } finally {\r\n      setIsSyncing(false)\r\n    }\r\n  }\r\n\r\n  // ─── Observation handling ─────────────────────────────\r\n  const handleAddObservation = useCallback(async (row: Record<string, string>, photos: CapturedBeaconPhoto[]) => {\r\n    if (!projectId) return\r\n\r\n    const observation: FieldObservation = {\r\n      projectId,\r\n      pointName: row.station || row.pointId || row.soundingId || `PT${Date.now()}`,\r\n      observationType: activeSurveyType === 'leveling' ? 'level' : 'gps',\r\n      northing: parseFloat(row.northing || row.easting || '0'),\r\n      easting: parseFloat(row.easting || '0'),\r\n      elevation: parseFloat(row.elevation || row.depth || '0') || undefined,\r\n      latitude: undefined,\r\n      longitude: undefined,\r\n      accuracy: undefined,\r\n      rodHeight: parseFloat(row.ih || row.instrumentHeight || row.th || row.targetHeight || '0') || undefined,\r\n      notes: row.remarks || undefined,\r\n    }\r\n\r\n    try {\r\n      await offlineStorage.saveFieldObservation(observation)\r\n      await loadObservations()\r\n      await loadStats()\r\n    } catch (error) {\r\n      logger.error('Save error:', { error: error })\r\n      alert('Failed to save observation')\r\n    }\r\n  }, [projectId, activeSurveyType])\r\n\r\n  // ─── Pull from instrument ─────────────────────────────\r\n  const handlePullFromInstrument = useCallback(async (): Promise<Partial<Record<string, string>>> => {\r\n    const latest = useInstrumentStore.getState().latestPoint\r\n    if (!latest) return {}\r\n\r\n    const reading: Partial<Record<string, string>> = {}\r\n    if (latest.northing) reading.northing = latest.northing.toFixed(4)\r\n    if (latest.easting) reading.easting = latest.easting.toFixed(4)\r\n    if (latest.elevation !== null) reading.elevation = latest.elevation.toFixed(4)\r\n    if (latest.latitude) reading.bearing = latest.latitude.toFixed(7)\r\n    if (latest.longitude) reading.slopeDist = latest.longitude.toFixed(7)\r\n    return reading\r\n  }, [])\r\n\r\n  // ─── GNSS position callback ───────────────────────────\r\n  const handleGNSSPosition = useCallback((pos: NMEAPosition) => {\r\n    // Update instrument store via the panel — already handled inside GNSSConnectionPanel\r\n    // This callback is for any additional side effects\r\n  }, [])\r\n\r\n  // ─── Render ───────────────────────────────────────────\r\n\r\n  return (\r\n    <div className=\"min-h-screen bg-gray-950 text-white flex flex-col\">\r\n      {/* Header */}\r\n      <header className=\"bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center justify-between sticky top-0 z-20\">\r\n        <div className=\"flex items-center gap-3\">\r\n          <Link href=\"/dashboard\" className=\"text-gray-400 hover:text-white\">\r\n            <ArrowLeft className=\"w-5 h-5\" />\r\n          </Link>\r\n          <div>\r\n            <h1 className=\"text-base font-bold\">Field Collection</h1>\r\n            <p className=\"text-xs text-gray-400 truncate max-w-[180px]\">{projectName}</p>\r\n          </div>\r\n        </div>\r\n        <div className=\"flex items-center gap-2\">\r\n          {/* GNSS toggle */}\r\n          <button\r\n            onClick={() => setShowGNSS(!showGNSS)}\r\n            className={`p-2 rounded-lg transition-colors ${\r\n              isConnected\r\n                ? 'bg-green-900/40 text-green-400 ring-1 ring-green-500/30'\r\n                : 'bg-gray-800 text-gray-400'\r\n            }`}\r\n            title=\"GNSS Connection\"\r\n          >\r\n            <Satellite className=\"w-5 h-5\" />\r\n          </button>\r\n          {/* Sync */}\r\n          <button\r\n            onClick={handleSync}\r\n            disabled={isSyncing || !isOnline}\r\n            className={`p-2 rounded-lg transition-colors ${\r\n              isSyncing ? 'bg-blue-900/40 text-blue-400' : isOnline ? 'bg-gray-800 text-gray-400' : 'bg-red-900/40 text-red-400'\r\n            }`}\r\n            title=\"Sync\"\r\n          >\r\n            <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />\r\n          </button>\r\n          {/* Online status */}\r\n          {isOnline ? (\r\n            <Wifi className=\"w-5 h-5 text-green-500\" />\r\n          ) : (\r\n            <WifiOff className=\"w-5 h-5 text-red-500\" />\r\n          )}\r\n        </div>\r\n      </header>\r\n\r\n      {/* GNSS Panel (slide-down) */}\r\n      {showGNSS && (\r\n        <div className=\"border-b border-gray-800 bg-gray-900/50 backdrop-blur-md\">\r\n          <GNSSConnectionPanel\r\n            onPosition={handleGNSSPosition}\r\n            showCoordinateSystem={true}\r\n            autoReconnect={true}\r\n            className=\"border-0 rounded-none shadow-none\"\r\n          />\r\n        </div>\r\n      )}\r\n\r\n      {/* Stats Bar */}\r\n      <div className=\"bg-gray-900/50 px-4 py-2 flex justify-between items-center text-xs border-b border-gray-800\">\r\n        <div className=\"flex items-center gap-3\">\r\n          <span className=\"text-gray-500\">\r\n            Pending: <span className=\"text-yellow-400 font-mono\">{pendingCount}</span>\r\n          </span>\r\n          {isConnected && (\r\n            <span className=\"flex items-center gap-1 text-green-400\">\r\n              <span className=\"w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse\" />\r\n              Instrument connected\r\n            </span>\r\n          )}\r\n        </div>\r\n        {lastSync && (\r\n          <span className=\"text-gray-600\">\r\n            Synced: {lastSync}\r\n          </span>\r\n        )}\r\n      </div>\r\n\r\n      {/* Main Content */}\r\n      <main className=\"flex-1 overflow-y-auto\">\r\n        {/* Survey Type Selector */}\r\n        <div className=\"p-4\">\r\n          <div className=\"text-xs text-gray-500 uppercase tracking-wider font-medium mb-2\">Survey Type</div>\r\n          <div className=\"flex gap-2 overflow-x-auto pb-1\">\r\n            {(Object.entries(SURVEY_TYPES) as [MobileSurveyType, typeof SURVEY_TYPES[MobileSurveyType]][]).map(([key, meta]) => {\r\n              const Icon = meta.icon\r\n              return (\r\n                <button\r\n                  key={key}\r\n                  onClick={() => setActiveSurveyType(key)}\r\n                  className={[\r\n                    'flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all',\r\n                    activeSurveyType === key\r\n                      ? `${meta.color} text-white shadow-lg`\r\n                      : 'bg-gray-800 text-gray-400 hover:bg-gray-750',\r\n                  ].join(' ')}\r\n                >\r\n                  <Icon className=\"w-4 h-4\" />\r\n                  {meta.label}\r\n                </button>\r\n              )\r\n            })}\r\n          </div>\r\n        </div>\r\n\r\n        {/* Add Observation FAB */}\r\n        <div className=\"px-4 mb-4\">\r\n          <button\r\n            onClick={() => setShowForm(true)}\r\n            className=\"w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-lg shadow-blue-600/20\"\r\n          >\r\n            <Plus className=\"w-5 h-5\" />\r\n            New {SURVEY_TYPES[activeSurveyType].label} Reading\r\n          </button>\r\n        </div>\r\n\r\n        {/* Quick Instrument Read */}\r\n        {isConnected && (\r\n          <div className=\"px-4 mb-4\">\r\n            <button\r\n              onClick={() => setShowForm(true)}\r\n              className=\"w-full py-3 border border-green-500/30 bg-green-900/10 text-green-400 rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-green-900/20 transition-colors\"\r\n            >\r\n              <Bluetooth className=\"w-4 h-4\" />\r\n              Pull from Instrument →\r\n            </button>\r\n          </div>\r\n        )}\r\n\r\n        {/* Recent Observations */}\r\n        {recentObservations.length > 0 && (\r\n          <div className=\"px-4 pb-4\">\r\n            <div className=\"text-xs text-gray-500 uppercase tracking-wider font-medium mb-2\">Recent Observations</div>\r\n            <div className=\"space-y-1.5\">\r\n              {recentObservations.map((obs) => (\r\n                <div\r\n                  key={obs.id}\r\n                  className=\"flex items-center justify-between py-2.5 px-3 bg-gray-900 rounded-lg border border-gray-800\"\r\n                >\r\n                  <div className=\"flex items-center gap-3\">\r\n                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${\r\n                      obs.observationType === 'gps'\r\n                        ? 'bg-blue-900/40 text-blue-400'\r\n                        : obs.observationType === 'level'\r\n                        ? 'bg-sky-900/40 text-sky-400'\r\n                        : 'bg-purple-900/40 text-purple-400'\r\n                    }`}>\r\n                      {obs.observationType === 'gps' ? 'GPS' : obs.observationType === 'level' ? 'LV' : 'TS'}\r\n                    </div>\r\n                    <div>\r\n                      <p className=\"font-medium text-sm text-gray-200\">{obs.pointName}</p>\r\n                      <p className=\"text-xs text-gray-500\">\r\n                        {new Date(obs.timestamp || 0).toLocaleTimeString()}\r\n                      </p>\r\n                    </div>\r\n                  </div>\r\n                  <span className={`text-xs px-2 py-0.5 rounded-full ${\r\n                    obs.synced\r\n                      ? 'bg-green-900/30 text-green-400'\r\n                      : 'bg-yellow-900/30 text-yellow-400'\r\n                  }`}>\r\n                    {obs.synced ? 'Synced' : 'Pending'}\r\n                  </span>\r\n                </div>\r\n              ))}\r\n            </div>\r\n          </div>\r\n        )}\r\n\r\n        {/* Empty state */}\r\n        {recentObservations.length === 0 && (\r\n          <div className=\"px-4 py-12 text-center\">\r\n            <MapPin className=\"w-12 h-12 text-gray-700 mx-auto mb-3\" />\r\n            <p className=\"text-gray-500 text-sm\">No observations yet</p>\r\n            <p className=\"text-gray-600 text-xs mt-1\">\r\n              Tap &ldquo;New Reading&rdquo; to start collecting data\r\n            </p>\r\n          </div>\r\n        )}\r\n      </main>\r\n\r\n      {/* Universal Mobile Observation Form (bottom sheet) */}\r\n      {showForm && (\r\n        <UniversalMobileObservationForm\r\n          surveyType={activeSurveyType}\r\n          stationName={recentObservations[0]?.pointName}\r\n          onAdd={handleAddObservation}\r\n          onClose={() => setShowForm(false)}\r\n          lastStation={recentObservations[0]?.pointName}\r\n          onPullInstrumentReading={isConnected ? handlePullFromInstrument : undefined}\r\n        />\r\n      )}\r\n    </div>\r\n  )\r\n}\r\n\r\nexport default function MobileFieldPage() {\r\n  return (\r\n    <Suspense\r\n      fallback={\r\n        <div className=\"min-h-screen bg-gray-950 p-4 text-sm text-gray-400 flex items-center justify-center\">\r\n          <RefreshCw className=\"w-5 h-5 animate-spin mr-2\" />\r\n          Loading field collection…\r\n        </div>\r\n      }\r\n    >\r\n      <MobileFieldContent />\r\n    </Suspense>\r\n  )\r\n}\r\n",
+    "source": "'use client';\r\n\r\n/**\r\n * Mobile Field Collection Page — Upgraded\r\n * ═══════════════════════════════════════\r\n * Integrates:\r\n *   - UniversalMobileObservationForm (multi-survey-type entry)\r\n *   - GNSSConnectionPanel (BLE/Web Bluetooth instrument streaming)\r\n *   - BeaconPhotoCapture (evidence-chain photos with EXIF GPS)\r\n *   - offlineStorage + syncService (IndexedDB offline-first + auto sync)\r\n *   - instrumentStore (reactive instrument connection state)\r\n *\r\n * Replaces the old basic GPS-only field page with a professional\r\n * surveyor workflow supporting traverse, leveling, control,\r\n * hydrographic, and mining observations.\r\n */\r\n\r\nimport { Suspense, useState, useEffect, useCallback } from 'react'\r\nimport type { CapturedBeaconPhoto } from '@/components/fieldbook/BeaconPhotoCapture'\r\nimport { useSearchParams } from 'next/navigation'\r\nimport Link from 'next/link'\r\nimport {\r\n  Bluetooth, MapPin, Ruler, Compass,\r\n  RefreshCw, Wifi, WifiOff, Plus,\r\n  ArrowLeft, Satellite,\r\n} from 'lucide-react'\r\nimport { offlineStorage, type FieldObservation } from '@/lib/mobile/offlineStorage'\r\nimport { syncService } from '@/lib/mobile/syncService'\r\nimport { createClient } from '@/lib/api-client/client'\r\nimport {\r\n  UniversalMobileObservationForm,\r\n  type MobileSurveyType,\r\n} from '@/components/fieldbook/UniversalMobileObservationForm'\r\nimport { GNSSConnectionPanel } from '@/components/gnss/GNSSConnectionPanel'\r\nimport { useInstrumentStore } from '@/stores/instrumentStore'\r\nimport type { NMEAPosition } from '@/lib/gnss/nmea-parser'\r\nimport { logger } from '@/lib/logger'\r\n\r\n// ─── Survey type metadata ───────────────────────────────────────\r\n\r\nconst SURVEY_TYPES: Record<MobileSurveyType, { label: string; icon: typeof Compass; color: string }> = {\r\n  leveling:     { label: 'Leveling',     icon: Ruler,    color: 'bg-sky-500' },\r\n  traverse:     { label: 'Traverse',     icon: Compass,  color: 'bg-amber-500' },\r\n  control:      { label: 'Control',      icon: MapPin,   color: 'bg-emerald-500' },\r\n}\r\n\r\n// ─── Main Component ─────────────────────────────────────────────\r\n\r\nfunction MobileFieldContent() {\r\n  const searchParams = useSearchParams()\r\n  const projectId = searchParams.get('project') || ''\r\n\r\n  // ─── State ────────────────────────────────────────────\r\n  const [projectName, setProjectName] = useState('Unknown Project')\r\n  const [isOnline, setIsOnline] = useState(true)\r\n  const [isSyncing, setIsSyncing] = useState(false)\r\n  const [pendingCount, setPendingCount] = useState(0)\r\n  const [lastSync, setLastSync] = useState<string | null>(null)\r\n\r\n  // Survey mode\r\n  const [activeSurveyType, setActiveSurveyType] = useState<MobileSurveyType>('traverse')\r\n  const [showForm, setShowForm] = useState(false)\r\n  const [showGNSS, setShowGNSS] = useState(false)\r\n\r\n  // Observations\r\n  const [recentObservations, setRecentObservations] = useState<FieldObservation[]>([])\r\n\r\n  // Instrument store\r\n  const isConnected = useInstrumentStore((s) => s.status === 'connected' || s.status === 'streaming')\r\n\r\n  // ─── Initialize ───────────────────────────────────────\r\n  useEffect(() => {\r\n    if (projectId) {\r\n      loadProject()\r\n      loadObservations()\r\n      loadStats()\r\n    }\r\n\r\n    setIsOnline(navigator.onLine)\r\n\r\n    const handleOnline = () => setIsOnline(true)\r\n    const handleOffline = () => setIsOnline(false)\r\n\r\n    window.addEventListener('online', handleOnline)\r\n    window.addEventListener('offline', handleOffline)\r\n\r\n    syncService.startAutoSync()\r\n\r\n    return () => {\r\n      window.removeEventListener('online', handleOnline)\r\n      window.removeEventListener('offline', handleOffline)\r\n      syncService.stopAutoSync()\r\n    }\r\n  }, [projectId])\r\n\r\n  // ─── Data loading ─────────────────────────────────────\r\n  const loadProject = async () => {\r\n    try {\r\n      const dbClient = createClient()\r\n            const { data } = await dbClient.from('projects').select('name').eq('id', projectId).single() as unknown as { data: { name: string } | null }\r\n      if ((data as { name?: string } | null)?.name) setProjectName((data as { name: string }).name)\r\n    } catch {\r\n      // Project might not exist or DB unreachable\r\n    }\r\n  }\r\n\r\n  const loadObservations = async () => {\r\n    if (!projectId) return\r\n    const observations = await offlineStorage.getFieldObservations(projectId)\r\n    setRecentObservations(observations.slice(-10).reverse())\r\n  }\r\n\r\n  const loadStats = async () => {\r\n    const stats = await offlineStorage.getStorageStats()\r\n    setPendingCount(stats.pendingSync)\r\n  }\r\n\r\n  // ─── Sync ─────────────────────────────────────────────\r\n  const handleSync = async () => {\r\n    if (!isOnline) return\r\n    setIsSyncing(true)\r\n    try {\r\n      const { synced, failed } = await syncService.forceSync()\r\n      setLastSync(new Date().toLocaleTimeString())\r\n      await loadStats()\r\n      await loadObservations()\r\n      if (failed > 0) {\r\n        alert(`Synced: ${synced}, Failed: ${failed}`)\r\n      }\r\n    } catch {\r\n      // Sync will retry automatically\r\n    } finally {\r\n      setIsSyncing(false)\r\n    }\r\n  }\r\n\r\n  // ─── Observation handling ─────────────────────────────\r\n  const handleAddObservation = useCallback(async (row: Record<string, string>, _photos: CapturedBeaconPhoto[]) => {\r\n    if (!projectId) return\r\n\r\n    const observation: FieldObservation = {\r\n      projectId,\r\n      pointName: row.station || row.pointId || row.soundingId || `PT${Date.now()}`,\r\n      observationType: activeSurveyType === 'leveling' ? 'level' : 'gps',\r\n      northing: parseFloat(row.northing || row.easting || '0'),\r\n      easting: parseFloat(row.easting || '0'),\r\n      elevation: parseFloat(row.elevation || row.depth || '0') || undefined,\r\n      latitude: undefined,\r\n      longitude: undefined,\r\n      accuracy: undefined,\r\n      rodHeight: parseFloat(row.ih || row.instrumentHeight || row.th || row.targetHeight || '0') || undefined,\r\n      notes: row.remarks || undefined,\r\n    }\r\n\r\n    try {\r\n      await offlineStorage.saveFieldObservation(observation)\r\n      await loadObservations()\r\n      await loadStats()\r\n    } catch (error) {\r\n      logger.error('Save error:', { error: error })\r\n      alert('Failed to save observation')\r\n    }\r\n  }, [projectId, activeSurveyType])\r\n\r\n  // ─── Pull from instrument ─────────────────────────────\r\n  const handlePullFromInstrument = useCallback(async (): Promise<Partial<Record<string, string>>> => {\r\n    const latest = useInstrumentStore.getState().latestPoint\r\n    if (!latest) return {}\r\n\r\n    const reading: Partial<Record<string, string>> = {}\r\n    if (latest.northing) reading.northing = latest.northing.toFixed(4)\r\n    if (latest.easting) reading.easting = latest.easting.toFixed(4)\r\n    if (latest.elevation !== null) reading.elevation = latest.elevation.toFixed(4)\r\n    if (latest.latitude) reading.bearing = latest.latitude.toFixed(7)\r\n    if (latest.longitude) reading.slopeDist = latest.longitude.toFixed(7)\r\n    return reading\r\n  }, [])\r\n\r\n  // ─── GNSS position callback ───────────────────────────\r\n  const handleGNSSPosition = useCallback((_pos: NMEAPosition) => {\r\n    // Update instrument store via the panel — already handled inside GNSSConnectionPanel\r\n    // This callback is for any additional side effects\r\n  }, [])\r\n\r\n  // ─── Render ───────────────────────────────────────────\r\n\r\n  return (\r\n    <div className=\"min-h-screen bg-gray-950 text-white flex flex-col\">\r\n      {/* Header */}\r\n      <header className=\"bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center justify-between sticky top-0 z-20\">\r\n        <div className=\"flex items-center gap-3\">\r\n          <Link href=\"/dashboard\" className=\"text-gray-400 hover:text-white\">\r\n            <ArrowLeft className=\"w-5 h-5\" />\r\n          </Link>\r\n          <div>\r\n            <h1 className=\"text-base font-bold\">Field Collection</h1>\r\n            <p className=\"text-xs text-gray-400 truncate max-w-[180px]\">{projectName}</p>\r\n          </div>\r\n        </div>\r\n        <div className=\"flex items-center gap-2\">\r\n          {/* GNSS toggle */}\r\n          <button\r\n            onClick={() => setShowGNSS(!showGNSS)}\r\n            className={`p-2 rounded-lg transition-colors ${\r\n              isConnected\r\n                ? 'bg-green-900/40 text-green-400 ring-1 ring-green-500/30'\r\n                : 'bg-gray-800 text-gray-400'\r\n            }`}\r\n            title=\"GNSS Connection\"\r\n          >\r\n            <Satellite className=\"w-5 h-5\" />\r\n          </button>\r\n          {/* Sync */}\r\n          <button\r\n            onClick={handleSync}\r\n            disabled={isSyncing || !isOnline}\r\n            className={`p-2 rounded-lg transition-colors ${\r\n              isSyncing ? 'bg-blue-900/40 text-blue-400' : isOnline ? 'bg-gray-800 text-gray-400' : 'bg-red-900/40 text-red-400'\r\n            }`}\r\n            title=\"Sync\"\r\n          >\r\n            <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />\r\n          </button>\r\n          {/* Online status */}\r\n          {isOnline ? (\r\n            <Wifi className=\"w-5 h-5 text-green-500\" />\r\n          ) : (\r\n            <WifiOff className=\"w-5 h-5 text-red-500\" />\r\n          )}\r\n        </div>\r\n      </header>\r\n\r\n      {/* GNSS Panel (slide-down) */}\r\n      {showGNSS && (\r\n        <div className=\"border-b border-gray-800 bg-gray-900/50 backdrop-blur-md\">\r\n          <GNSSConnectionPanel\r\n            onPosition={handleGNSSPosition}\r\n            showCoordinateSystem={true}\r\n            autoReconnect={true}\r\n            className=\"border-0 rounded-none shadow-none\"\r\n          />\r\n        </div>\r\n      )}\r\n\r\n      {/* Stats Bar */}\r\n      <div className=\"bg-gray-900/50 px-4 py-2 flex justify-between items-center text-xs border-b border-gray-800\">\r\n        <div className=\"flex items-center gap-3\">\r\n          <span className=\"text-gray-500\">\r\n            Pending: <span className=\"text-yellow-400 font-mono\">{pendingCount}</span>\r\n          </span>\r\n          {isConnected && (\r\n            <span className=\"flex items-center gap-1 text-green-400\">\r\n              <span className=\"w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse\" />\r\n              Instrument connected\r\n            </span>\r\n          )}\r\n        </div>\r\n        {lastSync && (\r\n          <span className=\"text-gray-600\">\r\n            Synced: {lastSync}\r\n          </span>\r\n        )}\r\n      </div>\r\n\r\n      {/* Main Content */}\r\n      <main className=\"flex-1 overflow-y-auto\">\r\n        {/* Survey Type Selector */}\r\n        <div className=\"p-4\">\r\n          <div className=\"text-xs text-gray-500 uppercase tracking-wider font-medium mb-2\">Survey Type</div>\r\n          <div className=\"flex gap-2 overflow-x-auto pb-1\">\r\n            {(Object.entries(SURVEY_TYPES) as [MobileSurveyType, typeof SURVEY_TYPES[MobileSurveyType]][]).map(([key, meta]) => {\r\n              const Icon = meta.icon\r\n              return (\r\n                <button\r\n                  key={key}\r\n                  onClick={() => setActiveSurveyType(key)}\r\n                  className={[\r\n                    'flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all',\r\n                    activeSurveyType === key\r\n                      ? `${meta.color} text-white shadow-lg`\r\n                      : 'bg-gray-800 text-gray-400 hover:bg-gray-750',\r\n                  ].join(' ')}\r\n                >\r\n                  <Icon className=\"w-4 h-4\" />\r\n                  {meta.label}\r\n                </button>\r\n              )\r\n            })}\r\n          </div>\r\n        </div>\r\n\r\n        {/* Add Observation FAB */}\r\n        <div className=\"px-4 mb-4\">\r\n          <button\r\n            onClick={() => setShowForm(true)}\r\n            className=\"w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-lg shadow-blue-600/20\"\r\n          >\r\n            <Plus className=\"w-5 h-5\" />\r\n            New {SURVEY_TYPES[activeSurveyType].label} Reading\r\n          </button>\r\n        </div>\r\n\r\n        {/* Quick Instrument Read */}\r\n        {isConnected && (\r\n          <div className=\"px-4 mb-4\">\r\n            <button\r\n              onClick={() => setShowForm(true)}\r\n              className=\"w-full py-3 border border-green-500/30 bg-green-900/10 text-green-400 rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-green-900/20 transition-colors\"\r\n            >\r\n              <Bluetooth className=\"w-4 h-4\" />\r\n              Pull from Instrument →\r\n            </button>\r\n          </div>\r\n        )}\r\n\r\n        {/* Recent Observations */}\r\n        {recentObservations.length > 0 && (\r\n          <div className=\"px-4 pb-4\">\r\n            <div className=\"text-xs text-gray-500 uppercase tracking-wider font-medium mb-2\">Recent Observations</div>\r\n            <div className=\"space-y-1.5\">\r\n              {recentObservations.map((obs) => (\r\n                <div\r\n                  key={obs.id}\r\n                  className=\"flex items-center justify-between py-2.5 px-3 bg-gray-900 rounded-lg border border-gray-800\"\r\n                >\r\n                  <div className=\"flex items-center gap-3\">\r\n                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${\r\n                      obs.observationType === 'gps'\r\n                        ? 'bg-blue-900/40 text-blue-400'\r\n                        : obs.observationType === 'level'\r\n                        ? 'bg-sky-900/40 text-sky-400'\r\n                        : 'bg-purple-900/40 text-purple-400'\r\n                    }`}>\r\n                      {obs.observationType === 'gps' ? 'GPS' : obs.observationType === 'level' ? 'LV' : 'TS'}\r\n                    </div>\r\n                    <div>\r\n                      <p className=\"font-medium text-sm text-gray-200\">{obs.pointName}</p>\r\n                      <p className=\"text-xs text-gray-500\">\r\n                        {new Date(obs.timestamp || 0).toLocaleTimeString()}\r\n                      </p>\r\n                    </div>\r\n                  </div>\r\n                  <span className={`text-xs px-2 py-0.5 rounded-full ${\r\n                    obs.synced\r\n                      ? 'bg-green-900/30 text-green-400'\r\n                      : 'bg-yellow-900/30 text-yellow-400'\r\n                  }`}>\r\n                    {obs.synced ? 'Synced' : 'Pending'}\r\n                  </span>\r\n                </div>\r\n              ))}\r\n            </div>\r\n          </div>\r\n        )}\r\n\r\n        {/* Empty state */}\r\n        {recentObservations.length === 0 && (\r\n          <div className=\"px-4 py-12 text-center\">\r\n            <MapPin className=\"w-12 h-12 text-gray-700 mx-auto mb-3\" />\r\n            <p className=\"text-gray-500 text-sm\">No observations yet</p>\r\n            <p className=\"text-gray-600 text-xs mt-1\">\r\n              Tap &ldquo;New Reading&rdquo; to start collecting data\r\n            </p>\r\n          </div>\r\n        )}\r\n      </main>\r\n\r\n      {/* Universal Mobile Observation Form (bottom sheet) */}\r\n      {showForm && (\r\n        <UniversalMobileObservationForm\r\n          surveyType={activeSurveyType}\r\n          stationName={recentObservations[0]?.pointName}\r\n          onAdd={handleAddObservation}\r\n          onClose={() => setShowForm(false)}\r\n          lastStation={recentObservations[0]?.pointName}\r\n          onPullInstrumentReading={isConnected ? handlePullFromInstrument : undefined}\r\n        />\r\n      )}\r\n    </div>\r\n  )\r\n}\r\n\r\nexport default function MobileFieldPage() {\r\n  return (\r\n    <Suspense\r\n      fallback={\r\n        <div className=\"min-h-screen bg-gray-950 p-4 text-sm text-gray-400 flex items-center justify-center\">\r\n          <RefreshCw className=\"w-5 h-5 animate-spin mr-2\" />\r\n          Loading field collection…\r\n        </div>\r\n      }\r\n    >\r\n      <MobileFieldContent />\r\n    </Suspense>\r\n  )\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -16249,189 +15978,13 @@
   },
   {
     "filePath": "src/app/tools/page.tsx",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'FeatureKey' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 9,
-        "column": 15,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 9,
-        "endColumn": 25,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedImportDeclaration",
-            "data": {
-              "varName": "FeatureKey"
-            },
-            "fix": {
-              "range": [
-                446,
-                513
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused import declaration."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'PlanId' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 10,
-        "column": 15,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 10,
-        "endColumn": 21,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedImportDeclaration",
-            "data": {
-              "varName": "PlanId"
-            },
-            "fix": {
-              "range": [
-                513,
-                571
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused import declaration."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'Pickaxe' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 39,
-        "column": 3,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 39,
-        "endColumn": 10,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "Pickaxe"
-            },
-            "fix": {
-              "range": [
-                1013,
-                1025
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"Pickaxe\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'Ship' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 47,
-        "column": 3,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 47,
-        "endColumn": 7,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "Ship"
-            },
-            "fix": {
-              "range": [
-                1128,
-                1137
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"Ship\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'GateInfoLocal' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 69,
-        "column": 6,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 69,
-        "endColumn": 19
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'isAdmin' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 323,
-        "column": 17,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 323,
-        "endColumn": 24
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'loading' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 323,
-        "column": 38,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 323,
-        "endColumn": 45
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'isNowFav' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 338,
-        "column": 11,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 338,
-        "endColumn": 19
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'userPlanRank' is defined but never used. Allowed unused args must match /^_/u.",
-        "line": 561,
-        "column": 3,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 561,
-        "endColumn": 15
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'requiredPlanRank' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 581,
-        "column": 9,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 581,
-        "endColumn": 25
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 10,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client'\r\n\r\nimport { useState, useEffect, useCallback, useMemo } from 'react'\r\nimport Link from 'next/link'\r\nimport { PageHeader } from '@/components/shared/PageHeader'\r\nimport { useSubscription } from '@/lib/subscription/subscriptionContext'\r\nimport { trackToolUsed } from '@/lib/analytics/events'\r\nimport { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'\r\nimport type { FeatureKey } from '@/lib/subscription/featureGates'\r\nimport type { PlanId } from '@/lib/subscription/catalog'\r\nimport type { ComponentType } from 'react'\r\nimport {\r\n  BookOpenText,\r\n  ChartArea,\r\n  ChartColumnIncreasing,\r\n  ChartNoAxesCombined,\r\n  ClipboardCheck,\r\n  Compass,\r\n  Construction,\r\n  Download,\r\n  DraftingCompass,\r\n  Drone,\r\n  Eye,\r\n  FileCheck,\r\n  FileBadge,\r\n  FileChartColumn,\r\n  FileCog,\r\n  FileSpreadsheet,\r\n  FileStack,\r\n  GitBranch,\r\n  Globe,\r\n  Grid3X3,\r\n  LandPlot,\r\n  MapPinned,\r\n  Milestone,\r\n  Mountain,\r\n  Layers,\r\n  NotebookPen,\r\n  Pickaxe,\r\n  PlaneTakeoff,\r\n  RadioTower,\r\n  Ruler,\r\n  RulerDimensionLine,\r\n  Satellite,\r\n  ScanLine,\r\n  Search,\r\n  Ship,\r\n  Spline,\r\n  SquareDashedMousePointer,\r\n  Star,\r\n  TrendingUp,\r\n  Waypoints,\r\n  X,\r\n  Lock,\r\n  Clock,\r\n  ArrowRightLeft,\r\n} from 'lucide-react'\r\n\r\n/* ══════════════════════════════════════════════════════════════════════\r\n *  TOOL FEATURE GATE MAP\r\n *  Maps each tool route to the minimum plan + feature key required.\r\n *  If a tool is NOT in this map, it's available on ALL tiers (free+).\r\n *\r\n *  P0-2 (2026-07-24): Moved to src/lib/subscription/toolGates.ts as the\r\n *  single source of truth. The catalog page imports it for badge display;\r\n *  each gated tool page wraps its content in <ToolGate> for enforcement.\r\n * ══════════════════════════════════════════════════════════════════════ */\r\nimport { TOOL_GATES, PLAN_RANK, type GateInfo } from '@/lib/subscription/toolGates'\r\ntype GateInfoLocal = GateInfo // alias to keep the rest of this file unchanged\r\n\r\nconst TOOL_ICONS: Record<string, ComponentType<{ className?: string }>> = {\r\n  '/tools/beacon-certificate': FileBadge,\r\n  '/tools/billable-documents': FileStack,\r\n  '/tools/gnss-observation-log': Satellite,\r\n  '/tools/statutory-workbook': FileSpreadsheet,\r\n  '/tools/survey-report-builder': FileChartColumn,\r\n  '/tools/mobilisation-report': ClipboardCheck,\r\n  '/tools/level-book': NotebookPen,\r\n  '/tools/setting-out': MapPinned,\r\n  '/tools/missing-line': GitBranch,\r\n  '/tools/control-marks-register': RadioTower,\r\n  '/tools/pile-grid': Grid3X3,\r\n  '/tools/leveling': ChartNoAxesCombined,\r\n  '/tools/two-peg-test': Ruler,\r\n  '/tools/height-of-object': RulerDimensionLine,\r\n  '/tools/distance': RulerDimensionLine,\r\n  '/tools/bearing': Compass,\r\n  '/tools/area': LandPlot,\r\n  '/tools/grade': TrendingUp,\r\n  '/tools/traverse': Waypoints,\r\n  '/tools/traverse-field-book': BookOpenText,\r\n  '/tools/coordinates': DraftingCompass,\r\n  '/tools/cassini-utm': ArrowRightLeft,\r\n  '/tools/cogo': DraftingCompass,\r\n  '/tools/gnss': Satellite,\r\n  '/tools/road-design': Construction,\r\n  '/tools/earthworks': Mountain,\r\n  '/tools/curves': Spline,\r\n  '/tools/vertical-curve-designer': TrendingUp,\r\n  '/tools/tacheometry': ScanLine,\r\n  '/tools/drone': Drone,\r\n  '/tools/orthophoto-viewer': Eye,\r\n  '/tools/gcp-validation': FileCheck,\r\n  '/tools/contour-generator': Layers,\r\n  '/tools/volume-comparison': ChartNoAxesCombined,\r\n  '/tools/point-cloud-import': ScanLine,\r\n  '/tools/topo-drawing': SquareDashedMousePointer,\r\n  '/tools/slope-analysis': ChartArea,\r\n  '/tools/machine-control': PlaneTakeoff,\r\n  '/tools/progress-monitor': ChartColumnIncreasing,\r\n  '/tools/beacon-reference': RadioTower,\r\n  '/tools/survey-regulations': BookOpenText,\r\n  '/tools/us-survey-reference': Globe,\r\n  '/tools/detail-tolerances': Ruler,\r\n  '/tools/superelevation': TrendingUp,\r\n  '/tools/sight-distance': Eye,\r\n  '/tools/pipe-gradient': Construction,\r\n  '/tools/chainage': Milestone,\r\n  '/tools/cross-sections': ChartNoAxesCombined,\r\n  '/tools/civil-export': Download,\r\n  '/tools/gis-export': Download,\r\n  '/tools/gcp-export': Download,\r\n  '/tools/survey-plan-demo': MapPinned,\r\n  '/tools/mutation-plan': MapPinned,\r\n  '/tools/gnss-baseline': Satellite,\r\n}\r\n\r\n/* ══════════════════════════════════════════════════════════════════════\r\n *  RECENTLY USED TOOLS (localStorage)\r\n * ══════════════════════════════════════════════════════════════════════ */\r\nconst STORAGE_KEY = 'metardu-recent-tools'\r\nconst MAX_RECENT = 6\r\n\r\nfunction getRecentTools(): string[] {\r\n  try {\r\n    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]') as string[]\r\n  } catch {\r\n    return []\r\n  }\r\n}\r\n\r\nfunction addRecentTool(href: string) {\r\n  try {\r\n    const recent = getRecentTools().filter(h => h !== href)\r\n    recent.unshift(href)\r\n    localStorage.setItem(STORAGE_KEY, JSON.stringify(recent.slice(0, MAX_RECENT)))\r\n  } catch { /* ignore */ }\r\n}\r\n\r\n/* ══════════════════════════════════════════════════════════════════════\r\n *  FAVORITE TOOLS (localStorage)\r\n * ══════════════════════════════════════════════════════════════════════ */\r\nconst FAV_STORAGE_KEY = 'metardu-fav-tools'\r\n\r\nfunction getFavTools(): string[] {\r\n  try {\r\n    return JSON.parse(localStorage.getItem(FAV_STORAGE_KEY) || '[]') as string[]\r\n  } catch {\r\n    return []\r\n  }\r\n}\r\n\r\nfunction toggleFavTool(href: string): boolean {\r\n  try {\r\n    const favs = getFavTools()\r\n    const isFav = favs.includes(href)\r\n    const updated = isFav ? favs.filter(h => h !== href) : [href, ...favs]\r\n    localStorage.setItem(FAV_STORAGE_KEY, JSON.stringify(updated))\r\n    return !isFav\r\n  } catch {\r\n    return false\r\n  }\r\n}\r\n\r\n/* ══════════════════════════════════════════════════════════════════════\r\n *  TOOL DEFINITIONS (structured data for search/filter)\r\n * ══════════════════════════════════════════════════════════════════════ */\r\ninterface ToolDef {\r\n  href: string\r\n  title: string\r\n  description: string\r\n  badge?: string\r\n  section: string\r\n  keywords: string\r\n}\r\n\r\nconst TOOL_DEFS: ToolDef[] = [\r\n  // Documents & Certificates\r\n  { href: '/tools/beacon-certificate', title: 'Beacon Certificate', description: 'Signed beacon description sheet | Reg. 20 Survey Regulations 1994', badge: 'NEW', section: 'Documents & Certificates', keywords: 'beacon certificate signed description sheet reg 20' },\r\n  { href: '/tools/billable-documents', title: 'Billable Documents', description: 'Subdivision, road reserve, valuation, title search, and setback certificates', badge: 'NEW', section: 'Documents & Certificates', keywords: 'billable subdivision road reserve valuation title search setback certificate' },\r\n  { href: '/tools/gnss-observation-log', title: 'GNSS Observation Log', description: 'Occupation schedule & baseline report | ISO 17123-8', badge: 'NEW', section: 'Documents & Certificates', keywords: 'gnss observation log occupation schedule baseline iso 17123' },\r\n  { href: '/tools/statutory-workbook', title: 'Statutory Workbook', description: '9-sheet field abstract and computation workbook', badge: 'NEW', section: 'Documents & Certificates', keywords: 'statutory workbook field abstract computation 9-sheet' },\r\n  { href: '/tools/detail-tolerances', title: 'Detail Tolerances', description: 'RDM 1.1 Table 5.2 detailed survey tolerances (printable)', section: 'Documents & Certificates', keywords: 'detail tolerances rdm table 5.2 survey' },\r\n  { href: '/tools/survey-report-builder', title: 'Survey Report', description: 'RDM 1.1 Table 5.4 topographic survey report', section: 'Documents & Certificates', keywords: 'survey report builder rdm table 5.4 topographic' },\r\n  { href: '/tools/mobilisation-report', title: 'Mobilisation Report', description: 'RDM 1.1 Table 5.3 field mobilisation sheet', section: 'Documents & Certificates', keywords: 'mobilisation report rdm table 5.3 field sheet' },\r\n\r\n  // Field Layout\r\n  { href: '/tools/setting-out', title: 'Setting Out', description: 'Stakeout from known coords | RDM 1.1', section: 'Field Layout', keywords: 'setting out stakeout known coordinates rdm' },\r\n  { href: '/tools/missing-line', title: 'Missing Line', description: 'Distance & bearing between two points', section: 'Field Layout', keywords: 'missing line distance bearing two points' },\r\n  { href: '/tools/control-marks-register', title: 'Control Marks Register', description: 'RDM 1.1 s5.6.3 mark register', section: 'Field Layout', keywords: 'control marks register rdm 5.6.3 mark' },\r\n  { href: '/tools/pile-grid', title: 'Pile / Column Grid', description: 'Foundation grid coordinates & staking | Basak §8.5', badge: 'NEW', section: 'Field Layout', keywords: 'pile column grid foundation staking basak' },\r\n\r\n  // Leveling\r\n  { href: '/tools/leveling', title: 'Leveling', description: 'Quick differential levelling | 10√K closure', section: 'Leveling', keywords: 'leveling differential levelling closure 10√K' },\r\n  { href: '/tools/level-book', title: 'Level Book', description: 'HPC / Rise & Fall field book | 10√K closure', section: 'Leveling', keywords: 'level book hpc rise fall field closure' },\r\n  { href: '/tools/two-peg-test', title: 'Two Peg Test', description: 'Instrument collimation error check', section: 'Leveling', keywords: 'two peg test collimation error instrument' },\r\n  { href: '/tools/height-of-object', title: 'Height of Object', description: 'Trigonometric height measurement', section: 'Leveling', keywords: 'height object trigonometric measurement' },\r\n\r\n  // Calculations\r\n  { href: '/tools/distance', title: 'Distance & Bearing', description: 'WCB & distance from coordinates', section: 'Calculations', keywords: 'distance bearing wcb coordinates' },\r\n  { href: '/tools/bearing', title: 'Bearing', description: 'Forward & back bearing computation', section: 'Calculations', keywords: 'bearing forward back computation' },\r\n  { href: '/tools/area', title: 'Area', description: 'Area from coordinate list', section: 'Calculations', keywords: 'area coordinate list computation' },\r\n  { href: '/tools/grade', title: 'Gradient', description: 'Gradient & slope percentage', section: 'Calculations', keywords: 'gradient grade slope percentage' },\r\n\r\n  // Traverse & Adjustment\r\n  { href: '/tools/traverse', title: 'Traverse', description: 'Bowditch/Transit closed traverse | RDM 1.1 grading', section: 'Traverse & Adjustment', keywords: 'traverse bowditch transit closed rdm grading' },\r\n  { href: '/tools/traverse-field-book', title: 'Traverse Field Book', description: 'Field observations with angular closure', section: 'Traverse & Adjustment', keywords: 'traverse field book observations angular closure' },\r\n  { href: '/tools/coordinates', title: 'Coordinates', description: 'Survey Regulations 1994 | Kenya UTM Zones 36S/37S', section: 'Traverse & Adjustment', keywords: 'coordinates kenya utm zones 36s 37s survey regulations' },\r\n  { href: '/tools/cassini-utm', title: 'Cassini ↔ UTM Converter', description: 'Convert legacy Cassini-Soldner (Clarke 1858) to UTM with preset Kenya district origins', badge: 'NEW', section: 'Traverse & Adjustment', keywords: 'cassini soldner utm converter clarke 1858 kenya district origin legacy' },\r\n  { href: '/tools/cogo', title: 'COGO Calculator', description: 'Coordinate geometry computations', section: 'Traverse & Adjustment', keywords: 'cogo coordinate geometry calculator' },\r\n  { href: '/tools/gnss', title: 'GNSS', description: 'GNSS observation & baseline processing', section: 'Traverse & Adjustment', keywords: 'gnss observation baseline processing' },\r\n\r\n  // Road Design\r\n  { href: '/tools/road-design', title: 'Road Design', description: 'Full road design workflow | RDM 1.1 (2025)', section: 'Road Design', keywords: 'road design workflow rdm' },\r\n  { href: '/tools/earthworks', title: 'Earthworks', description: 'Cut/fill volumes | Prismoidal formula | RDM 1.1', section: 'Road Design', keywords: 'earthworks cut fill volumes prismoidal formula rdm' },\r\n  { href: '/tools/curves', title: 'Horizontal Curves', description: 'Horizontal/vertical curve elements | RDM 1.1', section: 'Road Design', keywords: 'curves horizontal vertical elements rdm' },\r\n  { href: '/tools/vertical-curve-designer', title: 'Vertical Curve Designer', description: 'Multi-VIP parabolic alignment with AASHTO K-factor & SSD compliance checking | Tier 2', badge: 'NEW', section: 'Road Design', keywords: 'vertical curve parabolic k factor ssd aashto alignment vip' },\r\n  { href: '/tools/tacheometry', title: 'Tacheometry', description: 'Stadia/EDM distance & elevation | RDM 1.1 Section 5.6', section: 'Road Design', keywords: 'tacheometry stadia edm distance elevation rdm 5.6' },\r\n  { href: '/tools/superelevation', title: 'Superelevation', description: 'e = V²/127R calculator per KRDM', section: 'Road Design', keywords: 'superelevation v2 127r krdm calculator' },\r\n  { href: '/tools/sight-distance', title: 'Sight Distance', description: 'SSD & OSD calculator per KRDM/KeRRA', section: 'Road Design', keywords: 'sight distance ssd osd krdm kerra calculator' },\r\n  { href: '/tools/pipe-gradient', title: 'Pipe Gradient', description: \"Manning's equation pipe gradient check with drainage standards\", section: 'Road Design', keywords: 'pipe gradient mannings equation drainage' },\r\n  { href: '/tools/chainage', title: 'Chainage', description: 'Chainage calculator for road projects', section: 'Road Design', keywords: 'chainage calculator road projects' },\r\n\r\n  // Earthworks & Volumes\r\n  { href: '/tools/cross-sections', title: 'Cross Sections', description: 'Road cross-section generation and analysis', section: 'Earthworks & Volumes', keywords: 'cross sections road generation analysis' },\r\n\r\n  // Specialized Surveys\r\n  { href: '/tools/drone', title: 'Drone/UAV', description: 'UAV survey & GCP processing', section: 'Specialized Surveys', keywords: 'drone uav survey gcp processing' },\r\n  { href: '/tools/orthophoto-viewer', title: 'GeoTIFF / Orthophoto Viewer', description: 'Upload orthophotos from Pix4D/Agisoft, trace boundaries on the map, export DXF & KML', badge: 'NEW', section: 'Drone-to-Cadastral Bridge', keywords: 'geotiff orthophoto viewer trace boundaries pix4d agisoft dxf kml' },\r\n  { href: '/tools/gcp-validation', title: 'GCP Residual Validation', description: 'Import residuals from Agisoft/Pix4D, compare against known GCPs, flag per Kenya accuracy classes', badge: 'NEW', section: 'Drone-to-Cadastral Bridge', keywords: 'gcp residual validation agisoft pix4d accuracy class kenya isk' },\r\n  { href: '/tools/point-cloud-import', title: 'Point Cloud Import', description: 'Import XYZ/CSV point clouds from CloudCompare/Agisoft into slope analysis & TIN volume engine', badge: 'NEW', section: 'Drone-to-Cadastral Bridge', keywords: 'point cloud import xyz csv cloudcompare agisoft slope tin volume' },\r\n  { href: '/tools/contour-generator', title: 'Contour Generator', description: 'Generate contour lines from point cloud data with TIN interpolation, SVG map preview, DXF & KML export', badge: 'NEW', section: 'Drone-to-Cadastral Bridge', keywords: 'contour generator point cloud tin marching triangles dxf kml svg' },\r\n  { href: '/tools/volume-comparison', title: 'Volume Comparison', description: 'Compare two surveys — cut/fill volumes between existing and as-built surfaces using TIN or IDW grid methods', badge: 'NEW', section: 'Drone-to-Cadastral Bridge', keywords: 'volume comparison cut fill survey as-built tin idw earthworks' },\r\n  { href: '/tools/topo-drawing', title: 'Topo Drawing Composer', description: 'Feature codes & DXF topographic drawings', badge: 'NEW', section: 'Specialized Surveys', keywords: 'topo drawing composer feature codes dxf topographic' },\r\n  { href: '/tools/slope-analysis', title: 'Slope & Area Analysis', description: 'DTM slope classification, cut/fill, area', badge: 'NEW', section: 'Specialized Surveys', keywords: 'slope area analysis dtm classification cut fill' },\r\n  { href: '/tools/gnss-baseline', title: 'GNSS Baseline', description: 'GNSS baseline file processing | RINEX, Topcon, Trimble', section: 'Specialized Surveys', keywords: 'gnss baseline rinex topcon trimble processing' },\r\n  { href: '/tools/survey-plan-demo', title: 'Survey Plan Viewer', description: 'CAD-style boundary identification plan renderer', section: 'Specialized Surveys', keywords: 'survey plan viewer cad boundary identification renderer' },\r\n  { href: '/tools/mutation-plan', title: 'Mutation Survey Plan (Form No. 3)', description: 'Generate Form No. 3 mutation scheme plans for subdivision submissions to Director of Surveys', badge: 'NEW', section: 'Documents & Certificates', keywords: 'mutation form 3 survey plan subdivision scheme' },\r\n\r\n  // Engineering\r\n  { href: '/tools/machine-control', title: 'Machine Control Export', description: 'Trimble, Leica, Topcon export formats', badge: 'NEW', section: 'Engineering', keywords: 'machine control export trimble leica topcon' },\r\n  { href: '/tools/progress-monitor', title: 'Progress Monitor', description: 'Construction progress tracking & reports', badge: 'NEW', section: 'Engineering', keywords: 'progress monitor construction tracking reports' },\r\n\r\n  // Data Export\r\n  { href: '/tools/civil-export', title: 'Civil Engineering Export', description: 'Export for Civil 3D, 12d, QGIS, ArcGIS, CloudCompare', section: 'Data Export', keywords: 'civil engineering export 3d 12d qgis arcgis cloudcompare' },\r\n  { href: '/tools/gis-export', title: 'GIS Export', description: 'GeoJSON, KML, LandXML, CSV with UTM to WGS84 conversion', section: 'Data Export', keywords: 'gis export geojson kml landxml csv utm wgs84' },\r\n  { href: '/tools/gcp-export', title: 'GCP Export', description: 'Ground control points for Pix4D, DroneDeploy, Metashape, ODM', section: 'Data Export', keywords: 'gcp export ground control points pix4d dronedeploy metashape odm' },\r\n\r\n  // Reference\r\n  { href: '/tools/beacon-reference', title: 'Beacon Reference', description: 'Kenya Survey Regulations 1994 beacon symbols & descriptions', section: 'Reference', keywords: 'beacon reference kenya survey regulations symbols descriptions' },\r\n  { href: '/tools/survey-regulations', title: 'Kenya Survey Standards', description: 'Permitted errors, datums, UTM zones, accuracy classes', section: 'Reference', keywords: 'kenya survey standards permitted errors datums utm zones accuracy' },\r\n  { href: '/tools/us-survey-reference', title: 'US Survey Standards', description: 'BLM Manual, FWS Land Survey Handbook, DOJ Title Standards', section: 'Reference', keywords: 'us survey standards blm manual fws doj title' },\r\n]\r\n\r\nconst SECTION_ORDER = [\r\n  'Documents & Certificates',\r\n  'Field Layout',\r\n  'Leveling',\r\n  'Calculations',\r\n  'Traverse & Adjustment',\r\n  'Road Design',\r\n  'Earthworks & Volumes',\r\n  'Specialized Surveys',\r\n  'Drone-to-Cadastral Bridge',\r\n  'Engineering',\r\n  'Data Export',\r\n  'Reference',\r\n]\r\n\r\n/* ══════════════════════════════════════════════════════════════════════\r\n *  NEW BADGE EXPIRY (time-based)\r\n * ══════════════════════════════════════════════════════════════════════ */\r\nconst NEW_BADGE_EXPIRY_DAYS = 30\r\nconst NEW_BADGE_START: Record<string, string> = {\r\n  '/tools/beacon-certificate': '2025-05-15',\r\n  '/tools/billable-documents': '2025-05-15',\r\n  '/tools/gnss-observation-log': '2025-05-15',\r\n  '/tools/statutory-workbook': '2025-05-15',\r\n  '/tools/pile-grid': '2025-05-15',\r\n  '/tools/topo-drawing': '2025-05-20',\r\n  '/tools/slope-analysis': '2025-05-20',\r\n  '/tools/machine-control': '2025-05-25',\r\n  '/tools/progress-monitor': '2025-05-25',\r\n  '/tools/mutation-plan': '2026-06-01',\r\n  '/tools/orthophoto-viewer': '2026-06-01',\r\n  '/tools/gcp-validation': '2026-06-01',\r\n  '/tools/point-cloud-import': '2026-06-01',\r\n  '/tools/contour-generator': '2026-06-01',\r\n  '/tools/volume-comparison': '2026-06-01',\r\n  '/tools/vertical-curve-designer': '2026-07-02',\r\n  '/tools/cassini-utm': '2026-06-02',\r\n}\r\n\r\nfunction isActiveNewBadge(href: string): boolean {\r\n  const startStr = NEW_BADGE_START[href]\r\n  if (!startStr) return false\r\n  const startDate = new Date(startStr)\r\n  const now = new Date()\r\n  const diffDays = (now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)\r\n  return diffDays >= 0 && diffDays <= NEW_BADGE_EXPIRY_DAYS\r\n}\r\n\r\nfunction getEffectiveBadge(tool: ToolDef): string | undefined {\r\n  if (!tool.badge) return undefined\r\n  if (tool.badge === 'NEW' && !isActiveNewBadge(tool.href)) return undefined\r\n  return tool.badge\r\n}\r\n\r\n/* ══════════════════════════════════════════════════════════════════════\r\n *  MAIN COMPONENT\r\n * ══════════════════════════════════════════════════════════════════════ */\r\nexport default function ToolsPage() {\r\n  const { plan, isAdmin, hasFeature, loading } = useSubscription()\r\n  const [searchQuery, setSearchQuery] = useState('')\r\n  const [recentTools, setRecentTools] = useState<string[]>([])\r\n  const [favTools, setFavTools] = useState<string[]>([])\r\n  const [mounted, setMounted] = useState(false)\r\n  const [activeSection, setActiveSection] = useState<string>('all')\r\n\r\n  // Hydration-safe: only read localStorage after mount\r\n  useEffect(() => {\r\n    setRecentTools(getRecentTools())\r\n    setFavTools(getFavTools())\r\n    setMounted(true)\r\n  }, [])\r\n\r\n  const handleToggleFav = useCallback((href: string) => {\r\n    const isNowFav = toggleFavTool(href)\r\n    setFavTools(getFavTools())\r\n  }, [])\r\n\r\n  // Filter tools by section and search query\r\n  const filteredTools = useMemo(() => {\r\n    let tools = TOOL_DEFS\r\n    if (activeSection !== 'all') {\r\n      tools = tools.filter(t => t.section === activeSection)\r\n    }\r\n    if (searchQuery.trim()) {\r\n      const q = searchQuery.toLowerCase().trim()\r\n      tools = tools.filter(t =>\r\n        t.title.toLowerCase().includes(q) ||\r\n        t.description.toLowerCase().includes(q) ||\r\n        t.keywords.toLowerCase().includes(q) ||\r\n        t.section.toLowerCase().includes(q)\r\n      )\r\n    }\r\n    return tools\r\n  }, [searchQuery, activeSection])\r\n\r\n  // Group filtered tools by section\r\n  const groupedTools = useMemo(() => {\r\n    const groups: Record<string, ToolDef[]> = {}\r\n    for (const tool of filteredTools) {\r\n      if (!groups[tool.section]) groups[tool.section] = []\r\n      groups[tool.section].push(tool)\r\n    }\r\n    // Return in defined section order\r\n    return SECTION_ORDER\r\n      .filter(s => groups[s]?.length)\r\n      .map(s => ({ section: s, tools: groups[s] }))\r\n  }, [filteredTools])\r\n\r\n  // Recent tools (only show tools that exist in TOOL_DEFS)\r\n  const recentToolDefs = useMemo(() => {\r\n    if (!mounted) return []\r\n    return recentTools\r\n      .map(href => TOOL_DEFS.find(t => t.href === href))\r\n      .filter((t): t is ToolDef => !!t)\r\n  }, [recentTools, mounted])\r\n\r\n  // Favorite tools\r\n  const favToolDefs = useMemo(() => {\r\n    if (!mounted) return []\r\n    return favTools\r\n      .map(href => TOOL_DEFS.find(t => t.href === href))\r\n      .filter((t): t is ToolDef => !!t)\r\n  }, [favTools, mounted])\r\n\r\n  const userPlanRank = PLAN_RANK[plan] ?? 0\r\n\r\n  return (\r\n    <div className=\"max-w-7xl mx-auto px-4 py-8 md:py-24 lg:pb-32\">\r\n      <Breadcrumb className=\"mb-4\">\r\n        <BreadcrumbList>\r\n          <BreadcrumbItem>\r\n            <BreadcrumbLink href=\"/dashboard\">Dashboard</BreadcrumbLink>\r\n          </BreadcrumbItem>\r\n          <BreadcrumbSeparator />\r\n          <BreadcrumbItem>\r\n            <BreadcrumbPage>Quick Tools</BreadcrumbPage>\r\n          </BreadcrumbItem>\r\n        </BreadcrumbList>\r\n      </Breadcrumb>\r\n\r\n      <PageHeader\r\n        title=\"Quick Tools\"\r\n        subtitle=\"No project required — enter values and get instant results\"\r\n      />\r\n\r\n      {/* ── CATEGORY FILTER TABS ── */}\r\n      <div className=\"flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-none\">\r\n        <button\r\n          onClick={() => setActiveSection('all')}\r\n          className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${\r\n            activeSection === 'all'\r\n              ? 'bg-[var(--accent)] text-black'\r\n              : 'bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-muted)] hover:text-white hover:border-[var(--accent)]/30'\r\n          }`}\r\n        >\r\n          All Tools\r\n        </button>\r\n        {SECTION_ORDER.map(s => (\r\n          <button\r\n            key={s}\r\n            onClick={() => setActiveSection(s)}\r\n            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${\r\n              activeSection === s\r\n                ? 'bg-[var(--accent)] text-black'\r\n                : 'bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-muted)] hover:text-white hover:border-[var(--accent)]/30'\r\n            }`}\r\n          >\r\n            {s}\r\n          </button>\r\n        ))}\r\n      </div>\r\n\r\n      {/* ── SEARCH BAR ────────────────────────────────────────────── */}\r\n      <div className=\"relative mb-6\">\r\n        <Search className=\"absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]\" />\r\n        <input\r\n          type=\"text\"\r\n          value={searchQuery}\r\n          onChange={(e) => setSearchQuery(e.target.value)}\r\n          aria-label=\"Search tools\" placeholder=\"Search tools by name, category, or keyword...\"\r\n          className=\"w-full h-10 pl-10 pr-10 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] transition-colors\"\r\n        />\r\n        {searchQuery && (\r\n          <button\r\n            onClick={() => setSearchQuery('')}\r\n            className=\"absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-white transition-colors\"\r\n          >\r\n            <X className=\"h-4 w-4\" />\r\n          </button>\r\n        )}\r\n      </div>\r\n\r\n      <div className=\"space-y-8\">\r\n\r\n        {/* ── RECENTLY USED ─────────────────────────────────────────── */}\r\n        {mounted && recentToolDefs.length > 0 && !searchQuery && (\r\n          <section>\r\n            <h2 className=\"text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3 flex items-center gap-2\">\r\n              <Clock className=\"h-3.5 w-3.5\" />\r\n              Recently Used\r\n            </h2>\r\n            <div className=\"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4\">\r\n              {recentToolDefs.map(tool => (\r\n                <ToolLink\r\n                  key={tool.href}\r\n                  href={tool.href}\r\n                  title={tool.title}\r\n                  description={tool.description}\r\n                  badge={getEffectiveBadge(tool)}\r\n                  gate={TOOL_GATES[tool.href]}\r\n                  userPlanRank={userPlanRank}\r\n                  hasFeature={hasFeature}\r\n                  isFav={favTools.includes(tool.href)}\r\n                  onToggleFav={handleToggleFav}\r\n                  onNavigate={addRecentTool}\r\n                />\r\n              ))}\r\n            </div>\r\n          </section>\r\n        )}\r\n\r\n        {/* ── FAVORITES ─────────────────────────────────────────────── */}\r\n        {mounted && favToolDefs.length > 0 && !searchQuery && (\r\n          <section>\r\n            <h2 className=\"text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3 flex items-center gap-2\">\r\n              <Star className=\"h-3.5 w-3.5\" />\r\n              Favorites\r\n            </h2>\r\n            <div className=\"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4\">\r\n              {favToolDefs.map(tool => (\r\n                <ToolLink\r\n                  key={tool.href}\r\n                  href={tool.href}\r\n                  title={tool.title}\r\n                  description={tool.description}\r\n                  badge={getEffectiveBadge(tool)}\r\n                  gate={TOOL_GATES[tool.href]}\r\n                  userPlanRank={userPlanRank}\r\n                  hasFeature={hasFeature}\r\n                  isFav={true}\r\n                  onToggleFav={handleToggleFav}\r\n                  onNavigate={addRecentTool}\r\n                />\r\n              ))}\r\n            </div>\r\n          </section>\r\n        )}\r\n\r\n        {/* ── SEARCH RESULTS / ALL TOOLS BY SECTION ─────────────────── */}\r\n        {searchQuery && filteredTools.length === 0 && (\r\n          <div className=\"text-center py-12\">\r\n            <p className=\"text-[var(--text-muted)] text-sm\">No tools found matching &quot;{searchQuery}&quot;</p>\r\n            <button onClick={() => setSearchQuery('')} className=\"mt-2 text-[var(--accent)] text-sm hover:underline\">\r\n              Clear search\r\n            </button>\r\n          </div>\r\n        )}\r\n\r\n        {groupedTools.map(({ section, tools }) => (\r\n          <section key={section}>\r\n            <h2 className=\"text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3\">\r\n              {section}\r\n            </h2>\r\n            <div className=\"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4\">\r\n              {tools.map(tool => (\r\n                <ToolLink\r\n                  key={tool.href}\r\n                  href={tool.href}\r\n                  title={tool.title}\r\n                  description={tool.description}\r\n                  badge={getEffectiveBadge(tool)}\r\n                  gate={TOOL_GATES[tool.href]}\r\n                  userPlanRank={userPlanRank}\r\n                  hasFeature={hasFeature}\r\n                  isFav={favTools.includes(tool.href)}\r\n                  onToggleFav={handleToggleFav}\r\n                  onNavigate={addRecentTool}\r\n                />\r\n              ))}\r\n            </div>\r\n          </section>\r\n        ))}\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n\r\n/* ══════════════════════════════════════════════════════════════════════\r\n *  TOOL LINK COMPONENT (with feature gating + favorites)\r\n * ══════════════════════════════════════════════════════════════════════ */\r\nfunction ToolLink({\r\n  href,\r\n  title,\r\n  description,\r\n  badge,\r\n  gate,\r\n  userPlanRank,\r\n  hasFeature,\r\n  isFav,\r\n  onToggleFav,\r\n  onNavigate,\r\n}: {\r\n  href: string\r\n  title: string\r\n  description?: string\r\n  badge?: string\r\n  gate?: GateInfo\r\n  userPlanRank: number\r\n  hasFeature: (feature: string) => boolean\r\n  isFav: boolean\r\n  onToggleFav: (href: string) => void\r\n  onNavigate: (href: string) => void\r\n}) {\r\n  const Icon = TOOL_ICONS[href] ?? FileCog\r\n\r\n  const isLocked = gate ? !hasFeature(gate.feature) : false\r\n  const requiredPlanRank = gate ? PLAN_RANK[gate.minPlan] : 0\r\n\r\n  const handleClick = () => {\r\n    if (!isLocked) {\r\n      onNavigate(href)\r\n      trackToolUsed(href)\r\n    }\r\n  }\r\n\r\n  return (\r\n    <div className=\"relative group\">\r\n      <Link\r\n        href={isLocked ? '#' : href}\r\n        onClick={handleClick}\r\n        className={`card-interactive p-4 transition-colors block relative rounded-xl border bg-[var(--bg-card)] ${\r\n          isLocked\r\n            ? 'border-[var(--border-color)] cursor-not-allowed'\r\n            : 'border-[var(--border-color)] hover:border-[var(--accent)]'\r\n        }`}\r\n      >\r\n        {/* Top-right badges */}\r\n        <div className=\"absolute top-2 right-2 flex items-center gap-1\">\r\n          {badge && !isLocked && (\r\n            <span className=\"text-[9px] font-bold font-mono px-1.5 py-0.5 rounded bg-[var(--accent)] text-black leading-none\">\r\n              {badge}\r\n            </span>\r\n          )}\r\n          {isLocked && gate && (\r\n            <span className=\"flex items-center gap-1 text-[9px] font-bold font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 leading-none\">\r\n              <Lock className=\"h-2.5 w-2.5\" />\r\n              {gate.minPlan.toUpperCase()}\r\n            </span>\r\n          )}\r\n        </div>\r\n\r\n        {/* Favorite button */}\r\n        <button\r\n          onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleFav(href) }}\r\n          className={`absolute top-2 left-2 z-10 transition-opacity ${\r\n            isFav ? 'opacity-100 text-amber-400' : 'opacity-0 group-hover:opacity-60 text-[var(--text-muted)] hover:!opacity-100 hover:text-amber-400'\r\n          }`}\r\n          title={isFav ? 'Remove from favorites' : 'Add to favorites'}\r\n        >\r\n          <Star className={`h-3.5 w-3.5 ${isFav ? 'fill-current' : ''}`} />\r\n        </button>\r\n\r\n        <div className=\"mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--border-color)] bg-[var(--bg-tertiary)] text-[var(--accent)]\">\r\n          <Icon className=\"h-5 w-5\" />\r\n        </div>\r\n        <p className={`font-semibold text-sm pr-8 ${isLocked ? 'text-[var(--text-muted)]' : ''}`}>{title}</p>\r\n        {description && <p className=\"text-xs text-[var(--text-muted)] mt-1\">{description}</p>}\r\n\r\n        {/* Upgrade prompt for locked tools */}\r\n        {isLocked && gate && (\r\n          <p className=\"text-[10px] text-amber-300 mt-2 flex items-center gap-1\">\r\n            <Lock className=\"h-3 w-3\" />\r\n            Requires {gate.minPlan.charAt(0).toUpperCase() + gate.minPlan.slice(1)} plan — {gate.label}\r\n          </p>\r\n        )}\r\n      </Link>\r\n    </div>\r\n  )\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -29270,200 +28823,13 @@
   },
   {
     "filePath": "src/components/topo/TopoDrawingComposer.tsx",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'CheckCircle2' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 17,
-        "column": 3,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 17,
-        "endColumn": 15,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "CheckCircle2"
-            },
-            "fix": {
-              "range": [
-                234,
-                251
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"CheckCircle2\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'AlertCircle' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 18,
-        "column": 3,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 18,
-        "endColumn": 14,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "AlertCircle"
-            },
-            "fix": {
-              "range": [
-                251,
-                267
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"AlertCircle\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'FeatureCategory' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 26,
-        "column": 8,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 26,
-        "endColumn": 23,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedVar",
-            "data": {
-              "varName": "FeatureCategory"
-            },
-            "fix": {
-              "range": [
-                426,
-                451
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused variable \"FeatureCategory\"."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'Separator' is defined but never used. Allowed unused vars must match /^_/u.",
-        "line": 39,
-        "column": 10,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 39,
-        "endColumn": 19,
-        "suggestions": [
-          {
-            "messageId": "removeUnusedImportDeclaration",
-            "data": {
-              "varName": "Separator"
-            },
-            "fix": {
-              "range": [
-                895,
-                950
-              ],
-              "text": ""
-            },
-            "desc": "Remove unused import declaration."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'showPreview' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 621,
-        "column": 10,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 621,
-        "endColumn": 21
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'setShowPreview' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 621,
-        "column": 23,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 621,
-        "endColumn": 37
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'setShowLayerPreview' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 622,
-        "column": 28,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 622,
-        "endColumn": 47
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'id' is defined but never used. Allowed unused args must match /^_/u.",
-        "line": 628,
-        "column": 43,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 628,
-        "endColumn": 45
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'description' is defined but never used. Allowed unused args must match /^_/u.",
-        "line": 628,
-        "column": 47,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 628,
-        "endColumn": 58
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'id' is defined but never used. Allowed unused args must match /^_/u.",
-        "line": 721,
-        "column": 63,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 721,
-        "endColumn": 65
-      },
-      {
-        "ruleId": "@typescript-eslint/no-unused-vars",
-        "severity": 1,
-        "message": "'description' is defined but never used. Allowed unused args must match /^_/u.",
-        "line": 721,
-        "column": 67,
-        "nodeType": "Identifier",
-        "messageId": "unusedVar",
-        "endLine": 721,
-        "endColumn": 78
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 11,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client';\r\n\r\nimport React, { useState, useMemo, useCallback, useRef } from 'react'\r\nimport {\r\n  Upload,\r\n  Download,\r\n  FilePlus,\r\n  Settings2,\r\n  Eye,\r\n  BarChart3,\r\n  Trash2,\r\n  Link2,\r\n  Plus,\r\n  X,\r\n  ChevronDown,\r\n  ChevronUp,\r\n  CheckCircle2,\r\n  AlertCircle,\r\n  Layers,\r\n} from 'lucide-react'\r\nimport Drawing from 'dxf-writer'\r\nimport {\r\n  type SurveyPointWithCode,\r\n  type FeatureCodeDef,\r\n  type LayerMappingResult,\r\n  type FeatureCategory,\r\n  getAllGroups,\r\n  getFeatureCode,\r\n  mapPointsToLayers,\r\n  aciToHex,\r\n  DXF_LINE_TYPE_PATTERNS,\r\n} from '@/lib/topo/featureCodes'\r\nimport FeatureCodeBrowser from './FeatureCodeBrowser'\r\nimport { Button } from '@/components/ui/button'\r\nimport { Input } from '@/components/ui/input'\r\nimport { Badge } from '@/components/ui/badge'\r\nimport { Checkbox } from '@/components/ui/checkbox'\r\nimport { ScrollArea } from '@/components/ui/scroll-area'\r\nimport { Separator } from '@/components/ui/separator'\r\nimport {\r\n  Dialog,\r\n  DialogContent,\r\n  DialogHeader,\r\n  DialogTitle,\r\n  DialogDescription,\r\n} from '@/components/ui/dialog'\r\n\r\n// ─── Types ──────────────────────────────────────────────────────────────────\r\n\r\ninterface SurveyPointRow extends SurveyPointWithCode {\r\n  id: string          // local react key\r\n  description?: string\r\n}\r\n\r\ninterface DrawingSettings {\r\n  scale: number\r\n  includeSpotHeights: boolean\r\n  includeTitleBlock: boolean\r\n  contourInterval: number\r\n  gridTickInterval: number\r\n  includeLabels: boolean\r\n  includeLegend: boolean\r\n}\r\n\r\ninterface DrawingStats {\r\n  totalPoints: number\r\n  totalLayers: number\r\n  joinableLineCount: number\r\n  pointsByCategory: Record<string, number>\r\n}\r\n\r\n// ─── Default settings ───────────────────────────────────────────────────────\r\n\r\nconst DEFAULT_SETTINGS: DrawingSettings = {\r\n  scale: 500,\r\n  includeSpotHeights: true,\r\n  includeTitleBlock: true,\r\n  contourInterval: 1.0,\r\n  gridTickInterval: 50,\r\n  includeLabels: true,\r\n  includeLegend: true,\r\n}\r\n\r\n// ─── Scale options ──────────────────────────────────────────────────────────\r\n\r\nconst SCALE_OPTIONS = [100, 250, 500, 1000, 2500]\r\n\r\n// ─── Demo data generator ───────────────────────────────────────────────────\r\n\r\nfunction generateDemoPoints(): SurveyPointRow[] {\r\n  const baseE = 371000\r\n  const baseN = 9845000\r\n\r\n  const rows: Array<{ code: string; count: number; pattern: 'line' | 'scatter' }> = [\r\n    { code: 'BND', count: 6, pattern: 'line' },\r\n    { code: 'BLD', count: 5, pattern: 'line' },\r\n    { code: 'BLD', count: 4, pattern: 'line' },\r\n    { code: 'RD', count: 8, pattern: 'line' },\r\n    { code: 'RD-CTR', count: 8, pattern: 'line' },\r\n    { code: 'ELV', count: 5, pattern: 'line' },\r\n    { code: 'ELV-POL', count: 5, pattern: 'scatter' },\r\n    { code: 'SH', count: 12, pattern: 'scatter' },\r\n    { code: 'TRV', count: 8, pattern: 'scatter' },\r\n    { code: 'RIV', count: 7, pattern: 'line' },\r\n    { code: 'BM', count: 2, pattern: 'scatter' },\r\n    { code: 'CTRL', count: 2, pattern: 'scatter' },\r\n    { code: 'WTR', count: 5, pattern: 'line' },\r\n    { code: 'SLB', count: 4, pattern: 'scatter' },\r\n  ]\r\n\r\n  const points: SurveyPointRow[] = []\r\n  let ptNum = 1\r\n\r\n  for (const group of rows) {\r\n    const def = getFeatureCode(group.code)\r\n    for (let i = 0; i < group.count; i++) {\r\n      const de = Math.random() * 80 - 40\r\n      const dn = Math.random() * 80 - 40\r\n      const z = 1200 + Math.random() * 50\r\n\r\n      points.push({\r\n        id: `demo-${ptNum}`,\r\n        pointNumber: `${ptNum}`,\r\n        easting: group.pattern === 'line'\r\n          ? baseE + 10 * i + (Math.random() * 4 - 2)\r\n          : baseE + de,\r\n        northing: group.pattern === 'line'\r\n          ? baseN + 5 * i + (Math.random() * 3 - 1.5)\r\n          : baseN + dn,\r\n        elevation: Math.round(z * 1000) / 1000,\r\n        code: group.code,\r\n        description: def?.description ?? '',\r\n      })\r\n      ptNum++\r\n    }\r\n  }\r\n  return points\r\n}\r\n\r\n// ─── DXF generation ─────────────────────────────────────────────────────────\r\n\r\nfunction generateTopoDXF(\r\n  points: SurveyPointWithCode[],\r\n  settings: DrawingSettings,\r\n  projectName = 'Topographic Survey',\r\n): string {\r\n  const drawing = new Drawing()\r\n  drawing.setUnits('Meters')\r\n\r\n  // Register line types\r\n  for (const [, pattern] of Object.entries(DXF_LINE_TYPE_PATTERNS)) {\r\n    if (pattern.elements.length > 0) {\r\n      drawing.addLineType(pattern.name, pattern.name, pattern.elements)\r\n    }\r\n  }\r\n\r\n  // Register layers from mapped results\r\n  const layerResults = mapPointsToLayers(points)\r\n  const registeredLayers = new Set<string>()\r\n\r\n  // Standard annotation layers\r\n  drawing.addLayer('ANNOTATIONS', 3, 'CONTINUOUS')\r\n  drawing.addLayer('SPOT_HEIGHTS', 3, 'CONTINUOUS')\r\n  drawing.addLayer('BORDER', 7, 'CONTINUOUS')\r\n  drawing.addLayer('NORTH_ARROW', 7, 'CONTINUOUS')\r\n  drawing.addLayer('SCALE_BAR', 7, 'CONTINUOUS')\r\n  drawing.addLayer('TITLE_BLOCK', 7, 'CONTINUOUS')\r\n  drawing.addLayer('LEGEND', 7, 'CONTINUOUS')\r\n  drawing.addLayer('GRID', 8, 'DASHED')\r\n\r\n  registeredLayers.add('ANNOTATIONS')\r\n  registeredLayers.add('SPOT_HEIGHTS')\r\n  registeredLayers.add('BORDER')\r\n  registeredLayers.add('NORTH_ARROW')\r\n  registeredLayers.add('SCALE_BAR')\r\n  registeredLayers.add('TITLE_BLOCK')\r\n  registeredLayers.add('LEGEND')\r\n  registeredLayers.add('GRID')\r\n\r\n  // Register each feature layer\r\n  for (const lr of layerResults) {\r\n    if (!registeredLayers.has(lr.layer)) {\r\n      drawing.addLayer(lr.layer, lr.color, lr.lineType)\r\n      registeredLayers.add(lr.layer)\r\n    }\r\n  }\r\n\r\n  if (points.length === 0) return drawing.toDxfString()\r\n\r\n  // ─── Compute extents ──────────────────────────────────────────────────\r\n  let minX = Infinity, maxX = -Infinity\r\n  let minY = Infinity, maxY = -Infinity\r\n  for (const p of points) {\r\n    if (p.easting < minX) minX = p.easting\r\n    if (p.easting > maxX) maxX = p.easting\r\n    if (p.northing < minY) minY = p.northing\r\n    if (p.northing > maxY) maxY = p.northing\r\n  }\r\n  const padding = Math.max(maxX - minX, maxY - minY) * 0.15\r\n  minX -= padding; maxX += padding\r\n  minY -= padding; maxY += padding\r\n\r\n  // ─── Grid ticks ───────────────────────────────────────────────────────\r\n  drawing.setActiveLayer('GRID')\r\n  const gridInterval = settings.gridTickInterval\r\n  const gridStartX = Math.floor(minX / gridInterval) * gridInterval\r\n  const gridStartY = Math.floor(minY / gridInterval) * gridInterval\r\n  for (let x = gridStartX; x <= maxX; x += gridInterval) {\r\n    drawing.drawLine(x, minY, x, minY + 2)\r\n    drawing.drawLine(x, maxY - 2, x, maxY)\r\n  }\r\n  for (let y = gridStartY; y <= maxY; y += gridInterval) {\r\n    drawing.drawLine(minX, y, minX + 2, y)\r\n    drawing.drawLine(maxX - 2, y, maxX, y)\r\n  }\r\n\r\n  // ─── Spot heights (cross marks + RL labels) ───────────────────────────\r\n  if (settings.includeSpotHeights) {\r\n    drawing.setActiveLayer('SPOT_HEIGHTS')\r\n    const spotHeightCode = getFeatureCode('SH')\r\n    for (const p of points) {\r\n      if (p.code.toUpperCase() === 'SH' || (spotHeightCode && p.code.toUpperCase() === 'SH')) {\r\n        const tick = (maxX - minX) * 0.005\r\n        // Cross symbol\r\n        drawing.drawLine(p.easting - tick, p.northing, p.easting + tick, p.northing)\r\n        drawing.drawLine(p.easting, p.northing - tick, p.easting, p.northing + tick)\r\n        // RL label\r\n        if (p.elevation !== undefined) {\r\n          drawing.drawText(\r\n            p.easting + tick * 1.5,\r\n            p.northing + tick * 0.5,\r\n            (maxX - minX) * 0.008,\r\n            0,\r\n            p.elevation.toFixed(3),\r\n          )\r\n        }\r\n      }\r\n    }\r\n  }\r\n\r\n  // ─── Feature-coded points & polylines ─────────────────────────────────\r\n  for (const lr of layerResults) {\r\n    drawing.setActiveLayer(lr.layer)\r\n\r\n    // Draw polylines (joined sequential lines)\r\n    for (const poly of lr.polylines) {\r\n      if (poly.length >= 2) {\r\n        for (let i = 0; i < poly.length - 1; i++) {\r\n          drawing.drawLine(poly[i].e, poly[i].n, poly[i + 1].e, poly[i + 1].n)\r\n        }\r\n      }\r\n    }\r\n\r\n    // Draw point markers\r\n    for (const pt of lr.points) {\r\n      drawing.drawPoint(pt.e, pt.n)\r\n    }\r\n  }\r\n\r\n  // ─── Labels (ANNOTATIONS layer) ───────────────────────────────────────\r\n  if (settings.includeLabels) {\r\n    drawing.setActiveLayer('ANNOTATIONS')\r\n    for (const lr of layerResults) {\r\n      for (const pt of lr.points) {\r\n        if (pt.label) {\r\n          drawing.drawText(\r\n            pt.e + (maxX - minX) * 0.006,\r\n            pt.n + (maxY - minY) * 0.006,\r\n            (maxX - minX) * 0.007,\r\n            0,\r\n            pt.label,\r\n          )\r\n        }\r\n      }\r\n    }\r\n  }\r\n\r\n  // ─── Border ───────────────────────────────────────────────────────────\r\n  drawing.setActiveLayer('BORDER')\r\n  drawing.drawLine(minX, minY, maxX, minY)\r\n  drawing.drawLine(maxX, minY, maxX, maxY)\r\n  drawing.drawLine(maxX, maxY, minX, maxY)\r\n  drawing.drawLine(minX, maxY, minX, minY)\r\n  // Inner border\r\n  const inset = (maxX - minX) * 0.01\r\n  drawing.drawLine(minX + inset, minY + inset, maxX - inset, minY + inset)\r\n  drawing.drawLine(maxX - inset, minY + inset, maxX - inset, maxY - inset)\r\n  drawing.drawLine(maxX - inset, maxY - inset, minX + inset, maxY - inset)\r\n  drawing.drawLine(minX + inset, maxY - inset, minX + inset, minY + inset)\r\n\r\n  // ─── North arrow ──────────────────────────────────────────────────────\r\n  drawing.setActiveLayer('NORTH_ARROW')\r\n  const arrowX = maxX - (maxX - minX) * 0.06\r\n  const arrowY = maxY - (maxY - minY) * 0.06\r\n  const arrowLen = (maxX - minX) * 0.04\r\n  drawing.drawLine(arrowX, arrowY - arrowLen, arrowX, arrowY + arrowLen)\r\n  drawing.drawLine(arrowX, arrowY + arrowLen, arrowX - arrowLen * 0.2, arrowY + arrowLen * 0.6)\r\n  drawing.drawLine(arrowX, arrowY + arrowLen, arrowX + arrowLen * 0.2, arrowY + arrowLen * 0.6)\r\n  drawing.drawText(arrowX, arrowY + arrowLen * 1.3, (maxX - minX) * 0.012, 0, 'N')\r\n\r\n  // ─── Scale bar ────────────────────────────────────────────────────────\r\n  drawing.setActiveLayer('SCALE_BAR')\r\n  const sbX = minX + inset\r\n  const sbY = minY - inset * 2\r\n  const scaleBarLen = (maxX - minX) * 0.15\r\n  drawing.drawLine(sbX, sbY, sbX + scaleBarLen, sbY)\r\n  drawing.drawLine(sbX, sbY - inset * 0.3, sbX, sbY + inset * 0.3)\r\n  drawing.drawLine(sbX + scaleBarLen, sbY - inset * 0.3, sbX + scaleBarLen, sbY + inset * 0.3)\r\n  drawing.drawText(\r\n    sbX + scaleBarLen / 2,\r\n    sbY - inset * 0.8,\r\n    (maxX - minX) * 0.008,\r\n    0,\r\n    `Scale 1:${settings.scale}`,\r\n  )\r\n\r\n  // ─── Title block ──────────────────────────────────────────────────────\r\n  if (settings.includeTitleBlock) {\r\n    drawing.setActiveLayer('TITLE_BLOCK')\r\n    const tbX = minX + inset * 2\r\n    const tbY = minY - inset * 5\r\n    const titleSize = (maxX - minX) * 0.012\r\n    const subSize = (maxX - minX) * 0.008\r\n\r\n    drawing.drawText(tbX, tbY, titleSize, 0, 'REPUBLIC OF KENYA — TOPOGRAPHIC SURVEY')\r\n    drawing.drawText(tbX, tbY - titleSize * 2, subSize, 0, `Project: ${projectName}`)\r\n    drawing.drawText(tbX, tbY - titleSize * 3.5, subSize, 0, `Scale: 1:${settings.scale}`)\r\n    drawing.drawText(tbX, tbY - titleSize * 5, subSize, 0, `Total Points: ${points.length}  |  Layers: ${layerResults.length}`)\r\n    drawing.drawText(\r\n      tbX,\r\n      tbY - titleSize * 6.5,\r\n      subSize * 0.85,\r\n      0,\r\n      `Date: ${new Date().toISOString().split('T')[0]}  |  Generated by METARDU`,\r\n    )\r\n    drawing.drawText(\r\n      tbX,\r\n      tbY - titleSize * 8,\r\n      subSize * 0.85,\r\n      0,\r\n      `Coordinate System: Arc 1960 / UTM Zone ${minX > 500000 ? '37S' : '36N'}`,\r\n    )\r\n  }\r\n\r\n  // ─── Legend ───────────────────────────────────────────────────────────\r\n  if (settings.includeLegend && layerResults.length > 0) {\r\n    drawing.setActiveLayer('LEGEND')\r\n    const lgX = maxX - (maxX - minX) * 0.2\r\n    const lgY = maxY - inset * 2\r\n    const rowH = (maxY - minY) * 0.025\r\n    const textH = (maxX - minX) * 0.007\r\n\r\n    drawing.drawText(lgX, lgY, textH * 1.4, 0, 'LEGEND')\r\n\r\n    let row = 0\r\n    // Group legend entries by first code per layer\r\n    for (const lr of layerResults) {\r\n      const y = lgY - rowH * (row + 1)\r\n      if (y < minY + inset * 5) break // Leave room below legend\r\n      // Color swatch (small line)\r\n      drawing.drawLine(lgX, y, lgX + (maxX - minX) * 0.015, y)\r\n      // Layer name\r\n      drawing.drawText(\r\n        lgX + (maxX - minX) * 0.02,\r\n        y,\r\n        textH,\r\n        0,\r\n        `${lr.layer} (${lr.points.length} pts)`,\r\n      )\r\n      row++\r\n    }\r\n  }\r\n\r\n  return drawing.toDxfString()\r\n}\r\n\r\n// ─── Download helper ────────────────────────────────────────────────────────\r\n\r\nfunction downloadDXF(dxfString: string, filename: string) {\r\n  const blob = new Blob([dxfString], { type: 'application/dxf' })\r\n  const url = URL.createObjectURL(blob)\r\n  const a = document.createElement('a')\r\n  a.href = url\r\n  a.download = filename\r\n  document.body.appendChild(a)\r\n  a.click()\r\n  document.body.removeChild(a)\r\n  URL.revokeObjectURL(url)\r\n}\r\n\r\n// ─── Stats calculator ──────────────────────────────────────────────────────\r\n\r\nfunction computeStats(\r\n  points: SurveyPointRow[],\r\n  layerResults: LayerMappingResult[],\r\n): DrawingStats {\r\n  const catCount: Record<string, number> = {}\r\n  let joinableLines = 0\r\n\r\n  for (const p of points) {\r\n    const def = getFeatureCode(p.code)\r\n    const cat = def?.category ?? 'other'\r\n    catCount[cat] = (catCount[cat] || 0) + 1\r\n  }\r\n\r\n  for (const lr of layerResults) {\r\n    joinableLines += lr.polylines.length\r\n  }\r\n\r\n  return {\r\n    totalPoints: points.length,\r\n    totalLayers: layerResults.length,\r\n    joinableLineCount: joinableLines,\r\n    pointsByCategory: catCount,\r\n  }\r\n}\r\n\r\n// ─── CSV parser ─────────────────────────────────────────────────────────────\r\n\r\nfunction parseCSV(text: string): SurveyPointRow[] {\r\n  const lines = text.trim().split('\\n').map(l => l.trim()).filter(Boolean)\r\n  if (lines.length < 2) return []\r\n\r\n  const header = lines[0].toUpperCase()\r\n  const points: SurveyPointRow[] = []\r\n\r\n  // Detect column order from header\r\n  const cols = header.split(/[,;\\t]+/)\r\n  const eIdx = cols.findIndex(c => c.includes('EAST') || c.includes('E') || c.includes('X'))\r\n  const nIdx = cols.findIndex(c => c.includes('NORTH') || c.includes('N') || c.includes('Y'))\r\n  const rlIdx = cols.findIndex(c => c.includes('RL') || c.includes('ELEV') || c.includes('Z') || c.includes('H'))\r\n  const codeIdx = cols.findIndex(c => c.includes('CODE') || c.includes('FC') || c.includes('FEATURE'))\r\n  const ptIdx = cols.findIndex(c => c.includes('POINT') || c.includes('NO') || c.includes('ID') || c.includes('NUM'))\r\n  const descIdx = cols.findIndex(c => c.includes('DESC') || c.includes('REMARK'))\r\n\r\n  for (let i = 1; i < lines.length; i++) {\r\n    const vals = lines[i].split(/[,;\\t]+/).map(v => v.trim())\r\n    if (vals.length < 2) continue\r\n\r\n    const easting = eIdx >= 0 ? parseFloat(vals[eIdx]) : parseFloat(vals[0])\r\n    const northing = nIdx >= 0 ? parseFloat(vals[nIdx]) : parseFloat(vals[1])\r\n    if (isNaN(easting) || isNaN(northing)) continue\r\n\r\n    points.push({\r\n      id: `csv-${i}`,\r\n      pointNumber: ptIdx >= 0 && vals[ptIdx] ? vals[ptIdx] : `${i}`,\r\n      easting,\r\n      northing,\r\n      elevation: rlIdx >= 0 ? parseFloat(vals[rlIdx]) || undefined : undefined,\r\n      code: codeIdx >= 0 ? (vals[codeIdx] || 'UNK').toUpperCase() : 'UNK',\r\n      description: descIdx >= 0 ? vals[descIdx] : '',\r\n    })\r\n  }\r\n  return points\r\n}\r\n\r\n// ─── SVG preview ────────────────────────────────────────────────────────────\r\n\r\nfunction SvgPreview({ points }: { points: SurveyPointRow[] }) {\r\n  if (points.length === 0) {\r\n    return (\r\n      <div className=\"flex items-center justify-center h-full text-sm text-zinc-500\">\r\n        Import points to see preview\r\n      </div>\r\n    )\r\n  }\r\n\r\n  const w = 360\r\n  const h = 220\r\n  const margin = 16\r\n\r\n  let minX = Infinity, maxX = -Infinity\r\n  let minY = Infinity, maxY = -Infinity\r\n  for (const p of points) {\r\n    if (p.easting < minX) minX = p.easting\r\n    if (p.easting > maxX) maxX = p.easting\r\n    if (p.northing < minY) minY = p.northing\r\n    if (p.northing > maxY) maxY = p.northing\r\n  }\r\n  const worldW = maxX - minX || 1\r\n  const worldH = maxY - minY || 1\r\n\r\n  const toSvgX = (e: number) => margin + ((e - minX) / worldW) * (w - 2 * margin)\r\n  const toSvgY = (n: number) => margin + ((maxY - n) / worldH) * (h - 2 * margin)\r\n\r\n  // Get unique codes and assign colors\r\n  const codeColorMap = new Map<string, string>()\r\n  const palette = [\r\n    '#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#8b5cf6',\r\n    '#06b6d4', '#f97316', '#ec4899', '#14b8a6', '#6366f1',\r\n    '#84cc16', '#e879f9', '#facc15', '#fb923c', '#a78bfa',\r\n  ]\r\n  let colorIdx = 0\r\n  for (const p of points) {\r\n    if (!codeColorMap.has(p.code)) {\r\n      codeColorMap.set(p.code, palette[colorIdx % palette.length])\r\n      colorIdx++\r\n    }\r\n  }\r\n\r\n  return (\r\n    <svg viewBox={`0 0 ${w} ${h}`} className=\"w-full h-full bg-zinc-950 rounded\" style={{ '--bg-tertiary': '#09090b' } as React.CSSProperties}>\r\n      {/* Grid lines */}\r\n      <g stroke=\"#27272a\" strokeWidth=\"0.5\">\r\n        {Array.from({ length: 5 }).map((_, i) => {\r\n          const x = margin + (i / 4) * (w - 2 * margin)\r\n          return <line key={`gv${i}`} x1={x} y1={margin} x2={x} y2={h - margin} />\r\n        })}\r\n        {Array.from({ length: 4 }).map((_, i) => {\r\n          const y = margin + (i / 3) * (h - 2 * margin)\r\n          return <line key={`gh${i}`} x1={margin} y1={y} x2={w - margin} y2={y} />\r\n        })}\r\n      </g>\r\n      {/* Points */}\r\n      {points.map(p => {\r\n        const sx = toSvgX(p.easting)\r\n        const sy = toSvgY(p.northing)\r\n        const color = codeColorMap.get(p.code) || '#666'\r\n        return (\r\n          <circle key={p.id} cx={sx} cy={sy} r={2.5} fill={color} opacity={0.85}>\r\n            <title>{`${p.pointNumber ?? ''} ${p.code} (${p.easting.toFixed(1)}, ${p.northing.toFixed(1)})`}</title>\r\n          </circle>\r\n        )\r\n      })}\r\n      {/* Legend (compact) */}\r\n      <g transform={`translate(${w - margin - 80}, ${margin + 4})`}>\r\n        {Array.from(codeColorMap.entries()).map(([code, color], idx) => (\r\n          <g key={code} transform={`translate(0, ${idx * 11})`}>\r\n            <circle cx={4} cy={4} r={3} fill={color} />\r\n            <text x={10} y={7} fill=\"#a1a1aa\" fontSize={8} fontFamily=\"monospace\">{code}</text>\r\n          </g>\r\n        ))}\r\n      </g>\r\n    </svg>\r\n  )\r\n}\r\n\r\n// ─── Manual add row ─────────────────────────────────────────────────────────\r\n\r\nfunction ManualAddRow({ onAdd }: { onAdd: (pt: SurveyPointRow) => void }) {\r\n  const [ptNum, setPtNum] = useState('')\r\n  const [easting, setEasting] = useState('')\r\n  const [northing, setNorthing] = useState('')\r\n  const [rl, setRl] = useState('')\r\n  const [code, setCode] = useState('SH')\r\n\r\n  const handleAdd = useCallback(() => {\r\n    const e = parseFloat(easting)\r\n    const n = parseFloat(northing)\r\n    if (isNaN(e) || isNaN(n)) return\r\n\r\n    onAdd({\r\n      id: `manual-${Date.now()}`,\r\n      pointNumber: ptNum || undefined,\r\n      easting: e,\r\n      northing: n,\r\n      elevation: rl ? parseFloat(rl) || undefined : undefined,\r\n      code: code.toUpperCase(),\r\n      description: getFeatureCode(code)?.description ?? '',\r\n    })\r\n\r\n    setPtNum('')\r\n    setEasting('')\r\n    setNorthing('')\r\n    setRl('')\r\n  }, [ptNum, easting, northing, rl, code, onAdd])\r\n\r\n  return (\r\n    <div className=\"flex flex-wrap items-center gap-1.5 p-2 bg-zinc-900/50 border border-zinc-800 rounded-md\">\r\n      <Input\r\n        placeholder=\"#\"\r\n        value={ptNum}\r\n        onChange={e => setPtNum(e.target.value)}\r\n        className=\"h-7 w-14 text-xs bg-zinc-800 border-zinc-700 text-zinc-300\"\r\n      />\r\n      <Input\r\n        placeholder=\"Easting\"\r\n        value={easting}\r\n        onChange={e => setEasting(e.target.value)}\r\n        className=\"h-7 w-28 text-xs bg-zinc-800 border-zinc-700 text-zinc-300\"\r\n      />\r\n      <Input\r\n        placeholder=\"Northing\"\r\n        value={northing}\r\n        onChange={e => setNorthing(e.target.value)}\r\n        className=\"h-7 w-28 text-xs bg-zinc-800 border-zinc-700 text-zinc-300\"\r\n      />\r\n      <Input\r\n        placeholder=\"RL\"\r\n        value={rl}\r\n        onChange={e => setRl(e.target.value)}\r\n        className=\"h-7 w-20 text-xs bg-zinc-800 border-zinc-700 text-zinc-300\"\r\n      />\r\n      <Input\r\n        placeholder=\"Code\"\r\n        value={code}\r\n        onChange={e => setCode(e.target.value)}\r\n        className=\"h-7 w-20 text-xs bg-zinc-800 border-zinc-700 text-zinc-300 font-mono\"\r\n      />\r\n      <Button size=\"sm\" variant=\"outline\" onClick={handleAdd} className=\"h-7 text-xs\">\r\n        <Plus size={12} />\r\n        Add\r\n      </Button>\r\n    </div>\r\n  )\r\n}\r\n\r\n// ─── Main component ────────────────────────────────────────────────────────\r\n\r\ninterface TopoDrawingComposerProps {\r\n  projectId?: string\r\n}\r\n\r\nexport default function TopoDrawingComposer({ projectId }: TopoDrawingComposerProps) {\r\n  const [points, setPoints] = useState<SurveyPointRow[]>([])\r\n  const [settings, setSettings] = useState<DrawingSettings>(DEFAULT_SETTINGS)\r\n  const [codeDialogOpen, setCodeDialogOpen] = useState(false)\r\n  const [editingPointId, setEditingPointId] = useState<string | null>(null)\r\n  const [showSettings, setShowSettings] = useState(false)\r\n  const [showStats, setShowStats] = useState(true)\r\n  const [showPreview, setShowPreview] = useState(true)\r\n  const [showLayerPreview, setShowLayerPreview] = useState(true)\r\n  const [activeTab, setActiveTab] = useState<'points' | 'layers' | 'preview'>('points')\r\n  const fileInputRef = useRef<HTMLInputElement>(null)\r\n\r\n  // ─── Derived state ─────────────────────────────────────────────────────\r\n  const layerResults = useMemo(\r\n    () => mapPointsToLayers(points.map(({ id, description, ...rest }) => rest)),\r\n    [points],\r\n  )\r\n\r\n  const stats = useMemo(\r\n    () => computeStats(points, layerResults),\r\n    [points, layerResults],\r\n  )\r\n\r\n  // Group layers by category for preview\r\n  const layersByCategory = useMemo(() => {\r\n    const groups = getAllGroups()\r\n    const result: Array<{ category: string; categoryName: string; layers: LayerMappingResult[] }> = []\r\n\r\n    // Build a direct layer-name to category map (O(n) instead of O(n*m*find))\r\n    const layerCatMap = new Map<string, string>()\r\n    for (const p of points) {\r\n      const def = getFeatureCode(p.code)\r\n      if (def && !layerCatMap.has(def.dxfLayer)) {\r\n        layerCatMap.set(def.dxfLayer, def.category)\r\n      }\r\n    }\r\n\r\n    for (const group of groups) {\r\n      const matching = layerResults.filter(lr => {\r\n        const cat = layerCatMap.get(lr.layer)\r\n        if (!cat) return lr.layer.toLowerCase().includes(group.category)\r\n        return cat === group.category\r\n      })\r\n      if (matching.length === 0) continue\r\n      result.push({\r\n        category: group.category,\r\n        categoryName: group.name,\r\n        layers: matching,\r\n      })\r\n    }\r\n    return result\r\n  }, [layerResults, points])\r\n\r\n  // ─── Actions ───────────────────────────────────────────────────────────\r\n\r\n  const handleImportCSV = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {\r\n    const file = e.target.files?.[0]\r\n    if (!file) return\r\n\r\n    const reader = new FileReader()\r\n    reader.onload = () => {\r\n      const parsed = parseCSV(reader.result as string)\r\n      if (parsed.length > 0) {\r\n        setPoints(prev => [...prev, ...parsed])\r\n      }\r\n    }\r\n    reader.readAsText(file)\r\n    e.target.value = ''\r\n  }, [])\r\n\r\n  const handleLoadDemo = useCallback(() => {\r\n    setPoints(generateDemoPoints())\r\n  }, [])\r\n\r\n  const handleClearPoints = useCallback(() => {\r\n    setPoints([])\r\n  }, [])\r\n\r\n  const handleRemovePoint = useCallback((id: string) => {\r\n    setPoints(prev => prev.filter(p => p.id !== id))\r\n  }, [])\r\n\r\n  const handleAddPoint = useCallback((pt: SurveyPointRow) => {\r\n    setPoints(prev => [...prev, pt])\r\n  }, [])\r\n\r\n  const handleCodeSelect = useCallback((code: FeatureCodeDef) => {\r\n    if (editingPointId) {\r\n      setPoints(prev =>\r\n        prev.map(p =>\r\n          p.id === editingPointId\r\n            ? { ...p, code: code.code, description: code.description }\r\n            : p,\r\n        ),\r\n      )\r\n    }\r\n    setCodeDialogOpen(false)\r\n    setEditingPointId(null)\r\n  }, [editingPointId])\r\n\r\n  const handleOpenCodeDialog = useCallback((pointId: string) => {\r\n    setEditingPointId(pointId)\r\n    setCodeDialogOpen(true)\r\n  }, [])\r\n\r\n  const handleExportDXF = useCallback(() => {\r\n    if (points.length === 0) return\r\n    const surveyPoints: SurveyPointWithCode[] = points.map(({ id, description, ...rest }) => rest)\r\n    const dxf = generateTopoDXF(surveyPoints, settings, projectId ?? 'Topographic Survey')\r\n    const date = new Date().toISOString().split('T')[0]\r\n    downloadDXF(dxf, `topo_${projectId ?? 'survey'}_${date}.dxf`)\r\n  }, [points, settings, projectId])\r\n\r\n  // ─── Render ────────────────────────────────────────────────────────────\r\n\r\n  return (\r\n    <div className=\"w-full max-w-7xl mx-auto space-y-4\" style={{ '--bg-tertiary': '#09090b', '--border-color': '#3f3f46', '--accent': '#3b82f6', '--text-muted': '#71717a' } as React.CSSProperties}>\r\n      {/* Header */}\r\n      <div className=\"flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-zinc-900 border border-zinc-700 rounded-lg\">\r\n        <div className=\"flex items-center gap-3\">\r\n          <Layers size={20} className=\"text-blue-400\" />\r\n          <div>\r\n            <h2 className=\"text-lg font-semibold text-zinc-100\">Topo Drawing Composer</h2>\r\n            <p className=\"text-xs text-zinc-500\">\r\n              {points.length > 0\r\n                ? `${points.length} points across ${stats.totalLayers} layers`\r\n                : 'Import survey points to begin'}\r\n            </p>\r\n          </div>\r\n        </div>\r\n        <div className=\"flex items-center gap-2 flex-wrap\">\r\n          <Button variant=\"outline\" size=\"sm\" onClick={() => fileInputRef.current?.click()} className=\"text-xs border-zinc-600 text-zinc-300 hover:bg-zinc-800\">\r\n            <Upload size={14} />\r\n            Import CSV\r\n          </Button>\r\n          <input ref={fileInputRef} type=\"file\" accept=\".csv,.txt\" onChange={handleImportCSV} className=\"hidden\" />\r\n          <Button variant=\"outline\" size=\"sm\" onClick={handleLoadDemo} className=\"text-xs border-zinc-600 text-zinc-300 hover:bg-zinc-800\">\r\n            <FilePlus size={14} />\r\n            Load Demo\r\n          </Button>\r\n          {points.length > 0 && (\r\n            <>\r\n              <Button variant=\"outline\" size=\"sm\" onClick={handleClearPoints} className=\"text-xs border-red-800/50 text-red-400 hover:bg-red-900/20\">\r\n                <Trash2 size={14} />\r\n                Clear\r\n              </Button>\r\n              <Button variant=\"outline\" size=\"sm\" onClick={handleExportDXF} className=\"text-xs border-blue-600/50 text-blue-400 hover:bg-blue-900/20 hover:text-blue-300\">\r\n                <Download size={14} />\r\n                Export DXF\r\n              </Button>\r\n            </>\r\n          )}\r\n        </div>\r\n      </div>\r\n\r\n      {/* Tab bar */}\r\n      <div className=\"flex gap-1 bg-zinc-900 border border-zinc-700 rounded-lg p-1\">\r\n        {[\r\n          { key: 'points' as const, label: 'Points', icon: <FilePlus size={14} /> },\r\n          { key: 'layers' as const, label: 'Layers', icon: <Layers size={14} /> },\r\n          { key: 'preview' as const, label: 'Preview', icon: <Eye size={14} /> },\r\n        ].map(tab => (\r\n          <button\r\n            key={tab.key}\r\n            onClick={() => setActiveTab(tab.key)}\r\n            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${\r\n              activeTab === tab.key\r\n                ? 'bg-blue-500/20 text-blue-400'\r\n                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800'\r\n            }`}\r\n          >\r\n            {tab.icon}\r\n            {tab.label}\r\n            {tab.key === 'layers' && stats.totalLayers > 0 && (\r\n              <Badge variant=\"secondary\" className=\"text-[9px] h-4 px-1 bg-zinc-800 text-zinc-400\">\r\n                {stats.totalLayers}\r\n              </Badge>\r\n            )}\r\n          </button>\r\n        ))}\r\n      </div>\r\n\r\n      <div className=\"grid grid-cols-1 lg:grid-cols-3 gap-4\">\r\n        {/* ── Left column: main content ──────────────────────────────── */}\r\n        <div className=\"lg:col-span-2 space-y-4\">\r\n\r\n          {/* TAB: Points */}\r\n          {activeTab === 'points' && (\r\n            <div className=\"space-y-3\">\r\n              {/* Manual add row */}\r\n              <ManualAddRow onAdd={handleAddPoint} />\r\n\r\n              {/* Points table */}\r\n              <div className=\"border border-zinc-700 rounded-lg overflow-hidden bg-zinc-900\">\r\n                <div className=\"overflow-x-auto max-h-[420px] overflow-y-auto\">\r\n                  <table className=\"w-full text-xs\">\r\n                    <thead className=\"sticky top-0 z-10 bg-zinc-800\">\r\n                      <tr className=\"text-zinc-400 border-b border-zinc-700\">\r\n                        <th className=\"px-2 py-2 text-left font-medium\">#</th>\r\n                        <th className=\"px-2 py-2 text-right font-medium\">Easting</th>\r\n                        <th className=\"px-2 py-2 text-right font-medium\">Northing</th>\r\n                        <th className=\"px-2 py-2 text-right font-medium\">RL</th>\r\n                        <th className=\"px-2 py-2 text-left font-medium\">Code</th>\r\n                        <th className=\"px-2 py-2 text-left font-medium\">Description</th>\r\n                        <th className=\"px-2 py-2 text-center font-medium w-8\"></th>\r\n                      </tr>\r\n                    </thead>\r\n                    <tbody>\r\n                      {points.length === 0 && (\r\n                        <tr>\r\n                          <td colSpan={7} className=\"px-4 py-12 text-center text-zinc-500\">\r\n                            No points imported. Use CSV import, load demo data, or add manually.\r\n                          </td>\r\n                        </tr>\r\n                      )}\r\n                      {points.map((p, idx) => {\r\n                        const def = getFeatureCode(p.code)\r\n                        return (\r\n                          <tr\r\n                            key={p.id}\r\n                            className=\"border-b border-zinc-800/60 hover:bg-zinc-800/40 transition-colors\"\r\n                          >\r\n                            <td className=\"px-2 py-1.5 text-zinc-500\">{p.pointNumber ?? idx + 1}</td>\r\n                            <td className=\"px-2 py-1.5 text-right font-mono text-zinc-300\">\r\n                              {p.easting.toFixed(3)}\r\n                            </td>\r\n                            <td className=\"px-2 py-1.5 text-right font-mono text-zinc-300\">\r\n                              {p.northing.toFixed(3)}\r\n                            </td>\r\n                            <td className=\"px-2 py-1.5 text-right font-mono text-zinc-400\">\r\n                              {p.elevation !== undefined ? p.elevation.toFixed(3) : '—'}\r\n                            </td>\r\n                            <td className=\"px-2 py-1.5\">\r\n                              <button\r\n                                onClick={() => handleOpenCodeDialog(p.id)}\r\n                                className=\"flex items-center gap-1.5 px-1.5 py-0.5 rounded text-xs font-mono font-semibold transition-colors hover:bg-zinc-700\"\r\n                                style={{\r\n                                  color: def ? (aciToHex(def.color) === '#FFFFFF' ? '#94a3b8' : aciToHex(def.color)) : '#71717a',\r\n                                }}\r\n                                title=\"Click to change code\"\r\n                              >\r\n                                {p.code}\r\n                                {def?.joinLines && <Link2 size={10} className=\"text-blue-400/50\" />}\r\n                              </button>\r\n                            </td>\r\n                            <td className=\"px-2 py-1.5 text-zinc-400 truncate max-w-[160px]\">\r\n                              {p.description || def?.description || '—'}\r\n                            </td>\r\n                            <td className=\"px-2 py-1.5 text-center\">\r\n                              <button\r\n                                onClick={() => handleRemovePoint(p.id)}\r\n                                className=\"text-zinc-600 hover:text-red-400 transition-colors\"\r\n                                title=\"Remove point\"\r\n                              >\r\n                                <X size={12} />\r\n                              </button>\r\n                            </td>\r\n                          </tr>\r\n                        )\r\n                      })}\r\n                    </tbody>\r\n                  </table>\r\n                </div>\r\n              </div>\r\n            </div>\r\n          )}\r\n\r\n          {/* TAB: Layers */}\r\n          {activeTab === 'layers' && (\r\n            <div className=\"border border-zinc-700 rounded-lg bg-zinc-900 overflow-hidden\">\r\n              <ScrollArea className=\"max-h-[500px]\">\r\n                <div className=\"p-3 space-y-3\">\r\n                  {layersByCategory.length === 0 && (\r\n                    <div className=\"py-8 text-center text-sm text-zinc-500\">\r\n                      Import points to see layer breakdown\r\n                    </div>\r\n                  )}\r\n                  {layersByCategory.map(group => (\r\n                    <div key={group.category}>\r\n                      <div className=\"flex items-center gap-2 mb-1.5\">\r\n                        <span className=\"text-[10px] font-semibold uppercase tracking-wider text-zinc-500\">\r\n                          {group.categoryName}\r\n                        </span>\r\n                        <div className=\"flex-1 h-px bg-zinc-800\" />\r\n                      </div>\r\n                      <div className=\"space-y-1\">\r\n                        {group.layers.map(lr => (\r\n                          <div\r\n                            key={lr.layer}\r\n                            className=\"flex items-center gap-2 px-2 py-1.5 rounded bg-zinc-800/40 hover:bg-zinc-800/70 transition-colors\"\r\n                          >\r\n                            <span\r\n                              className=\"w-3 h-3 rounded-sm shrink-0 border border-zinc-600\"\r\n                              style={{ backgroundColor: aciToHex(lr.color) === '#FFFFFF' ? '#52525b' : aciToHex(lr.color) }}\r\n                            />\r\n                            <span className=\"font-mono text-xs text-zinc-300 flex-1\">{lr.layer}</span>\r\n                            <Badge variant=\"secondary\" className=\"text-[9px] h-4 px-1.5 bg-zinc-700 text-zinc-300\">\r\n                              {lr.points.length} pts\r\n                            </Badge>\r\n                            {lr.polylines.length > 0 && (\r\n                              <Badge variant=\"secondary\" className=\"text-[9px] h-4 px-1.5 bg-blue-900/30 text-blue-400\">\r\n                                {lr.polylines.length} lines\r\n                              </Badge>\r\n                            )}\r\n                            <span className=\"text-[10px] text-zinc-600 font-mono\">{lr.lineType}</span>\r\n                          </div>\r\n                        ))}\r\n                      </div>\r\n                    </div>\r\n                  ))}\r\n                </div>\r\n              </ScrollArea>\r\n            </div>\r\n          )}\r\n\r\n          {/* TAB: Preview */}\r\n          {activeTab === 'preview' && (\r\n            <div className=\"border border-zinc-700 rounded-lg bg-zinc-900 overflow-hidden\">\r\n              <div className=\"p-4 h-[400px]\">\r\n                <SvgPreview points={points} />\r\n              </div>\r\n            </div>\r\n          )}\r\n        </div>\r\n\r\n        {/* ── Right column: settings & stats ─────────────────────────── */}\r\n        <div className=\"space-y-4 lg:max-h-[calc(100vh-220px)] lg:overflow-y-auto lg:pr-1\">\r\n\r\n          {/* Drawing Settings */}\r\n          <div className=\"border border-zinc-700 rounded-lg bg-zinc-900 overflow-hidden\">\r\n            <button\r\n              onClick={() => setShowSettings(!showSettings)}\r\n              className=\"flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-zinc-200 hover:bg-zinc-800/50 transition-colors\"\r\n            >\r\n              <span className=\"flex items-center gap-2\">\r\n                <Settings2 size={14} className=\"text-zinc-400\" />\r\n                Drawing Settings\r\n              </span>\r\n              {showSettings ? <ChevronUp size={14} /> : <ChevronDown size={14} />}\r\n            </button>\r\n            {showSettings && (\r\n              <div className=\"px-4 pb-4 space-y-3 border-t border-zinc-800\">\r\n                {/* Scale */}\r\n                <div className=\"pt-3\">\r\n                  <div className=\"text-[10px] uppercase tracking-wider text-zinc-500 font-medium\">Drawing Scale</div>\r\n                  <div className=\"flex gap-1 mt-1.5\">\r\n                    {SCALE_OPTIONS.map(s => (\r\n                      <button\r\n                        key={s}\r\n                        onClick={() => setSettings(prev => ({ ...prev, scale: s }))}\r\n                        className={`flex-1 px-2 py-1 rounded text-xs font-mono transition-colors border ${\r\n                          settings.scale === s\r\n                            ? 'bg-blue-500/20 border-blue-500/50 text-blue-400'\r\n                            : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600'\r\n                        }`}\r\n                      >\r\n                        1:{s}\r\n                      </button>\r\n                    ))}\r\n                  </div>\r\n                </div>\r\n\r\n                {/* Checkboxes */}\r\n                <div className=\"space-y-2\">\r\n                  <div className=\"flex items-center gap-2 cursor-pointer\">\r\n                    <Checkbox\r\n                      aria-label=\"Include spot height labels\"\r\n                      checked={settings.includeSpotHeights}\r\n                      onCheckedChange={v => setSettings(prev => ({ ...prev, includeSpotHeights: !!v }))}\r\n                      className=\"border-zinc-600\"\r\n                    />\r\n                    <span className=\"text-xs text-zinc-300\">Include spot height labels</span>\r\n                  </div>\r\n                  <div className=\"flex items-center gap-2 cursor-pointer\">\r\n                    <Checkbox\r\n                      aria-label=\"Include title block\"\r\n                      checked={settings.includeTitleBlock}\r\n                      onCheckedChange={v => setSettings(prev => ({ ...prev, includeTitleBlock: !!v }))}\r\n                      className=\"border-zinc-600\"\r\n                    />\r\n                    <span className=\"text-xs text-zinc-300\">Include title block</span>\r\n                  </div>\r\n                  <div className=\"flex items-center gap-2 cursor-pointer\">\r\n                    <Checkbox\r\n                      aria-label=\"Include point labels\"\r\n                      checked={settings.includeLabels}\r\n                      onCheckedChange={v => setSettings(prev => ({ ...prev, includeLabels: !!v }))}\r\n                      className=\"border-zinc-600\"\r\n                    />\r\n                    <span className=\"text-xs text-zinc-300\">Include point labels</span>\r\n                  </div>\r\n                  <div className=\"flex items-center gap-2 cursor-pointer\">\r\n                    <Checkbox\r\n                      aria-label=\"Include legend\"\r\n                      checked={settings.includeLegend}\r\n                      onCheckedChange={v => setSettings(prev => ({ ...prev, includeLegend: !!v }))}\r\n                      className=\"border-zinc-600\"\r\n                    />\r\n                    <span className=\"text-xs text-zinc-300\">Include legend</span>\r\n                  </div>\r\n                </div>\r\n\r\n                {/* Contour & Grid intervals */}\r\n                <div className=\"grid grid-cols-2 gap-3\">\r\n                  <div>\r\n                    <label htmlFor=\"tdc-contour-interval\" className=\"text-[10px] uppercase tracking-wider text-zinc-500 font-medium\">Contour Interval (m)</label>\r\n                    <Input\r\n                      id=\"tdc-contour-interval\"\r\n                      type=\"number\"\r\n                      step=\"0.5\"\r\n                      min=\"0.25\"\r\n                      value={settings.contourInterval}\r\n                      onChange={e => setSettings(prev => ({ ...prev, contourInterval: parseFloat(e.target.value) || 1 }))}\r\n                      className=\"h-8 mt-1 text-xs bg-zinc-800 border-zinc-700 text-zinc-300\"\r\n                    />\r\n                  </div>\r\n                  <div>\r\n                    <label htmlFor=\"tdc-grid-tick\" className=\"text-[10px] uppercase tracking-wider text-zinc-500 font-medium\">Grid Tick (m)</label>\r\n                    <Input\r\n                      id=\"tdc-grid-tick\"\r\n                      type=\"number\"\r\n                      step=\"10\"\r\n                      min=\"10\"\r\n                      value={settings.gridTickInterval}\r\n                      onChange={e => setSettings(prev => ({ ...prev, gridTickInterval: parseFloat(e.target.value) || 50 }))}\r\n                      className=\"h-8 mt-1 text-xs bg-zinc-800 border-zinc-700 text-zinc-300\"\r\n                    />\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            )}\r\n          </div>\r\n\r\n          {/* Stats */}\r\n          <div className=\"border border-zinc-700 rounded-lg bg-zinc-900 overflow-hidden\">\r\n            <button\r\n              onClick={() => setShowStats(!showStats)}\r\n              className=\"flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-zinc-200 hover:bg-zinc-800/50 transition-colors\"\r\n            >\r\n              <span className=\"flex items-center gap-2\">\r\n                <BarChart3 size={14} className=\"text-zinc-400\" />\r\n                Statistics\r\n              </span>\r\n              {showStats ? <ChevronUp size={14} /> : <ChevronDown size={14} />}\r\n            </button>\r\n            {showStats && (\r\n              <div className=\"px-4 pb-4 border-t border-zinc-800 pt-3 space-y-2\">\r\n                <div className=\"grid grid-cols-3 gap-2\">\r\n                  <div className=\"text-center p-2 rounded bg-zinc-800/50\">\r\n                    <div className=\"text-lg font-bold text-blue-400\">{stats.totalPoints}</div>\r\n                    <div className=\"text-[10px] text-zinc-500\">Points</div>\r\n                  </div>\r\n                  <div className=\"text-center p-2 rounded bg-zinc-800/50\">\r\n                    <div className=\"text-lg font-bold text-emerald-400\">{stats.totalLayers}</div>\r\n                    <div className=\"text-[10px] text-zinc-500\">Layers</div>\r\n                  </div>\r\n                  <div className=\"text-center p-2 rounded bg-zinc-800/50\">\r\n                    <div className=\"text-lg font-bold text-amber-400\">{stats.joinableLineCount}</div>\r\n                    <div className=\"text-[10px] text-zinc-500\">Lines</div>\r\n                  </div>\r\n                </div>\r\n\r\n                {Object.keys(stats.pointsByCategory).length > 0 && (\r\n                  <div className=\"space-y-1 mt-2\">\r\n                    <div className=\"text-[10px] uppercase tracking-wider text-zinc-500 font-medium\">Points by Category</div>\r\n                    {Object.entries(stats.pointsByCategory)\r\n                      .sort(([, a], [, b]) => b - a)\r\n                      .map(([cat, count]) => (\r\n                        <div key={cat} className=\"flex items-center gap-2\">\r\n                          <span className=\"text-xs text-zinc-400 capitalize flex-1\">{cat}</span>\r\n                          <div className=\"w-16 h-1.5 bg-zinc-800 rounded-full overflow-hidden\">\r\n                            <div\r\n                              className=\"h-full bg-blue-500/60 rounded-full\"\r\n                              style={{ width: `${Math.min(100, (count / stats.totalPoints) * 100)}%` }}\r\n                            />\r\n                          </div>\r\n                          <span className=\"text-xs text-zinc-500 font-mono w-6 text-right\">{count}</span>\r\n                        </div>\r\n                      ))}\r\n                  </div>\r\n                )}\r\n              </div>\r\n            )}\r\n          </div>\r\n\r\n          {/* Layer Preview Summary */}\r\n          {showLayerPreview && layerResults.length > 0 && (\r\n            <div className=\"border border-zinc-700 rounded-lg bg-zinc-900 overflow-hidden\">\r\n              <div className=\"px-4 py-3\">\r\n                <div className=\"flex items-center gap-2 mb-2\">\r\n                  <Layers size={14} className=\"text-zinc-400\" />\r\n                  <span className=\"text-sm font-medium text-zinc-200\">Layer Preview</span>\r\n                  <Badge variant=\"secondary\" className=\"text-[9px] h-4 px-1.5 bg-zinc-800 text-zinc-400 ml-auto\">\r\n                    {layerResults.length} layers\r\n                  </Badge>\r\n                </div>\r\n                <ScrollArea className=\"max-h-[300px]\">\r\n                  <div className=\"space-y-1 pr-2\">\r\n                    {layerResults.map(lr => (\r\n                      <div key={lr.layer} className=\"flex items-center gap-2 text-xs\">\r\n                        <span\r\n                          className=\"w-2 h-2 rounded-sm shrink-0\"\r\n                          style={{\r\n                            backgroundColor:\r\n                              aciToHex(lr.color) === '#FFFFFF' ? '#52525b' : aciToHex(lr.color),\r\n                          }}\r\n                        />\r\n                        <span className=\"font-mono text-zinc-400 flex-1 truncate\">{lr.layer}</span>\r\n                        <span className=\"text-zinc-600\">{lr.points.length}</span>\r\n                      </div>\r\n                    ))}\r\n                    \r\n                  </div>\r\n                </ScrollArea>\r\n              </div>\r\n            </div>\r\n          )}\r\n        </div>\r\n      </div>\r\n\r\n      {/* ─── Code picker dialog ──────────────────────────────────────── */}\r\n      <Dialog open={codeDialogOpen} onOpenChange={setCodeDialogOpen}>\r\n        <DialogContent className=\"sm:max-w-[520px] bg-zinc-900 border-zinc-700 p-0\">\r\n          <DialogHeader className=\"p-4 pb-0\">\r\n            <DialogTitle className=\"text-zinc-100\">Select Feature Code</DialogTitle>\r\n            <DialogDescription className=\"text-zinc-500 text-xs\">\r\n              Choose a feature code to assign to the selected point\r\n            </DialogDescription>\r\n          </DialogHeader>\r\n          <div className=\"p-4\">\r\n            <FeatureCodeBrowser\r\n              onSelect={handleCodeSelect}\r\n              selectedCode={editingPointId ? points.find(p => p.id === editingPointId)?.code : undefined}\r\n              compact={false}\r\n            />\r\n          </div>\r\n        </DialogContent>\r\n      </Dialog>\r\n    </div>\r\n  )\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -61034,6 +60400,22 @@
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
     "source": "/**\r\n * METARDU Global UI State Store (Zustand)\r\n * ==========================================\r\n * Lightweight transient UI state — sidebar toggles, selected rows,\r\n * active panels, modals, theme preferences, etc.\r\n *\r\n * This store is intentionally UI-focused. Survey data (points, parcels,\r\n * observations) lives in dedicated domain stores that interface with\r\n * Web Workers and Yjs CRDTs for offline-first sync.\r\n */\r\n\r\nimport { create } from 'zustand'\r\nimport { subscribeWithSelector } from 'zustand/middleware'\r\n\r\n// ─── Types ────────────────────────────────────────────────────────────────\r\n\r\nexport type SidebarPanel = 'none' | 'layers' | 'points' | 'properties' | 'measurements' | 'fieldbook'\r\nexport type BottomPanel = 'none' | 'observations' | 'coordinates' | 'journal' | 'console'\r\nexport type EditorTool = 'select' | 'point' | 'line' | 'polygon' | 'rectangle' | 'circle' | 'measure'\r\n\r\nexport interface Notification {\r\n  id: string\r\n  type: 'info' | 'success' | 'warning' | 'error'\r\n  title: string\r\n  message?: string\r\n  duration?: number // ms, 0 = persistent\r\n  createdAt: number\r\n}\r\n\r\nexport interface MapViewport {\r\n  center: [number, number]\r\n  zoom: number\r\n  rotation: number\r\n  projection: string\r\n}\r\n\r\n// ─── UI Store Interface ──────────────────────────────────────────────────\r\n\r\nexport interface UIState {\r\n  // Sidebar & Panels\r\n  leftSidebarOpen: boolean\r\n  leftSidebarWidth: number\r\n  leftSidebarPanel: SidebarPanel\r\n  rightSidebarOpen: boolean\r\n  rightSidebarWidth: number\r\n  bottomPanelOpen: boolean\r\n  bottomPanelHeight: number\r\n  bottomPanelTab: BottomPanel\r\n\r\n  // Active Tool\r\n  activeTool: EditorTool\r\n\r\n  // Selection State\r\n  selectedPointIds: string[]\r\n  selectedFeatureId: string | null\r\n  highlightedPointId: string | null\r\n\r\n  // Map Viewport (synced from OL map)\r\n  viewport: MapViewport | null\r\n\r\n  // Theme\r\n  colorScheme: 'dark' | 'light'\r\n  highContrast: boolean\r\n\r\n  // Command Palette\r\n  commandPaletteOpen: boolean\r\n\r\n  // Notifications (toast queue)\r\n  notifications: Notification[]\r\n\r\n  // Loading States\r\n  globalLoading: boolean\r\n  loadingMessage: string | null\r\n\r\n  // ─── Actions ──────────────────────────────────────────────────────────\r\n\r\n  // Sidebar\r\n  toggleLeftSidebar: () => void\r\n  setLeftSidebarOpen: (open: boolean) => void\r\n  setLeftSidebarWidth: (width: number) => void\r\n  setLeftSidebarPanel: (panel: SidebarPanel) => void\r\n  toggleRightSidebar: () => void\r\n  setRightSidebarOpen: (open: boolean) => void\r\n  setRightSidebarWidth: (width: number) => void\r\n  toggleBottomPanel: () => void\r\n  setBottomPanelOpen: (open: boolean) => void\r\n  setBottomPanelHeight: (height: number) => void\r\n  setBottomPanelTab: (tab: BottomPanel) => void\r\n\r\n  // Tool\r\n  setActiveTool: (tool: EditorTool) => void\r\n\r\n  // Selection\r\n  setSelectedPointIds: (ids: string[]) => void\r\n  addSelectedPointId: (id: string) => void\r\n  removeSelectedPointId: (id: string) => void\r\n  clearSelection: () => void\r\n  setSelectedFeatureId: (id: string | null) => void\r\n  setHighlightedPointId: (id: string | null) => void\r\n\r\n  // Map\r\n  setViewport: (viewport: MapViewport) => void\r\n\r\n  // Theme\r\n  toggleColorScheme: () => void\r\n  setColorScheme: (scheme: 'dark' | 'light') => void\r\n  setHighContrast: (enabled: boolean) => void\r\n\r\n  // Command Palette\r\n  openCommandPalette: () => void\r\n  closeCommandPalette: () => void\r\n\r\n  // Notifications\r\n  addNotification: (notification: Omit<Notification, 'id' | 'createdAt'>) => string\r\n  removeNotification: (id: string) => void\r\n  clearNotifications: () => void\r\n\r\n  // Loading\r\n  setGlobalLoading: (loading: boolean, message?: string | null) => void\r\n}\r\n\r\n// ─── Store ───────────────────────────────────────────────────────────────\r\n\r\nlet notificationCounter = 0\r\n\r\nexport const useUIStore = create<UIState>()(\r\n  subscribeWithSelector((set, get) => ({\r\n    // ─── Initial State ──────────────────────────────────────────────────\r\n\r\n    leftSidebarOpen: true,\r\n    leftSidebarWidth: 300,\r\n    leftSidebarPanel: 'points',\r\n    rightSidebarOpen: false,\r\n    rightSidebarWidth: 320,\r\n    bottomPanelOpen: false,\r\n    bottomPanelHeight: 220,\r\n    bottomPanelTab: 'observations',\r\n\r\n    activeTool: 'select',\r\n\r\n    selectedPointIds: [],\r\n    selectedFeatureId: null,\r\n    highlightedPointId: null,\r\n\r\n    viewport: null,\r\n\r\n    colorScheme: 'dark',\r\n    highContrast: false,\r\n\r\n    commandPaletteOpen: false,\r\n\r\n    notifications: [],\r\n\r\n    globalLoading: false,\r\n    loadingMessage: null,\r\n\r\n    // ─── Sidebar Actions ────────────────────────────────────────────────\r\n\r\n    toggleLeftSidebar: () => set(s => ({ leftSidebarOpen: !s.leftSidebarOpen })),\r\n    setLeftSidebarOpen: (open) => set({ leftSidebarOpen: open }),\r\n    setLeftSidebarWidth: (width) => set({ leftSidebarWidth: Math.max(200, Math.min(500, width)) }),\r\n    setLeftSidebarPanel: (panel) => set(s => ({\r\n      leftSidebarPanel: panel,\r\n      leftSidebarOpen: panel !== 'none'\r\n    })),\r\n\r\n    toggleRightSidebar: () => set(s => ({ rightSidebarOpen: !s.rightSidebarOpen })),\r\n    setRightSidebarOpen: (open) => set({ rightSidebarOpen: open }),\r\n    setRightSidebarWidth: (width) => set({ rightSidebarWidth: Math.max(240, Math.min(480, width)) }),\r\n\r\n    toggleBottomPanel: () => set(s => ({ bottomPanelOpen: !s.bottomPanelOpen })),\r\n    setBottomPanelOpen: (open) => set({ bottomPanelOpen: open }),\r\n    setBottomPanelHeight: (height) => set({ bottomPanelHeight: Math.max(120, Math.min(500, height)) }),\r\n    setBottomPanelTab: (tab) => set(s => ({\r\n      bottomPanelTab: tab,\r\n      bottomPanelOpen: true\r\n    })),\r\n\r\n    // ─── Tool Actions ───────────────────────────────────────────────────\r\n\r\n    setActiveTool: (tool) => set({ activeTool: tool }),\r\n\r\n    // ─── Selection Actions ──────────────────────────────────────────────\r\n\r\n    setSelectedPointIds: (ids) => set({ selectedPointIds: ids }),\r\n    addSelectedPointId: (id) => set(s => ({\r\n      selectedPointIds: s.selectedPointIds.includes(id)\r\n        ? s.selectedPointIds\r\n        : [...s.selectedPointIds, id]\r\n    })),\r\n    removeSelectedPointId: (id) => set(s => ({\r\n      selectedPointIds: s.selectedPointIds.filter(pid => pid !== id)\r\n    })),\r\n    clearSelection: () => set({\r\n      selectedPointIds: [],\r\n      selectedFeatureId: null,\r\n      highlightedPointId: null\r\n    }),\r\n    setSelectedFeatureId: (id) => set({ selectedFeatureId: id }),\r\n    setHighlightedPointId: (id) => set({ highlightedPointId: id }),\r\n\r\n    // ─── Map Actions ────────────────────────────────────────────────────\r\n\r\n    setViewport: (viewport) => set({ viewport }),\r\n\r\n    // ─── Theme Actions ──────────────────────────────────────────────────\r\n\r\n    toggleColorScheme: () => set(s => ({ colorScheme: s.colorScheme === 'dark' ? 'light' : 'dark' })),\r\n    setColorScheme: (scheme) => set({ colorScheme: scheme }),\r\n    setHighContrast: (enabled) => set({ highContrast: enabled }),\r\n\r\n    // ─── Command Palette ────────────────────────────────────────────────\r\n\r\n    openCommandPalette: () => set({ commandPaletteOpen: true }),\r\n    closeCommandPalette: () => set({ commandPaletteOpen: false }),\r\n\r\n    // ─── Notification Actions ───────────────────────────────────────────\r\n\r\n    addNotification: (notification) => {\r\n      const id = `notif-${Date.now()}-${notificationCounter++}`\r\n      const entry: Notification = {\r\n        ...notification,\r\n        id,\r\n        createdAt: Date.now(),\r\n      }\r\n      set(s => ({ notifications: [...s.notifications, entry] }))\r\n\r\n      // Auto-dismiss if duration is set\r\n      if (notification.duration && notification.duration > 0) {\r\n        setTimeout(() => {\r\n          get().removeNotification(id)\r\n        }, notification.duration)\r\n      }\r\n\r\n      return id\r\n    },\r\n\r\n    removeNotification: (id) => set(s => ({\r\n      notifications: s.notifications.filter(n => n.id !== id)\r\n    })),\r\n\r\n    clearNotifications: () => set({ notifications: [] }),\r\n\r\n    // ─── Loading Actions ────────────────────────────────────────────────\r\n\r\n    setGlobalLoading: (loading, message = null) => set({\r\n      globalLoading: loading,\r\n      loadingMessage: loading ? message : null\r\n    }),\r\n  }))\r\n)\r\n",
+    "usedDeprecatedRules": [
+      {
+        "ruleId": "no-mixed-spaces-and-tabs",
+        "replacedBy": []
+      }
+    ]
+  },
+  {
+    "filePath": "src/test-utils/defined.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
