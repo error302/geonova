@@ -73,11 +73,6 @@ function Toast({
   const [phase, setPhase] = useState<'entering' | 'visible' | 'exiting'>('entering');
   const [dismissed, setDismissed] = useState(false);
 
-  // Smooth progress bar for auto-dismiss
-  const [progress, setProgress] = useState(100);
-  const animRef = useRef<number>(0);
-  const startTimeRef = useRef<number>(0);
-
   const duration = notification.duration ?? 5000;
   const hasAutoDismiss = duration > 0;
 
@@ -89,36 +84,24 @@ function Toast({
     return () => cancelAnimationFrame(frame);
   }, []);
 
-  // ── Progress bar animation ──────────────────────────────────────────
-  useEffect(() => {
-    if (!hasAutoDismiss || phase === 'exiting') return;
-
-    startTimeRef.current = performance.now();
-
-    const tick = (now: number) => {
-      const elapsed = now - startTimeRef.current;
-      const remaining = Math.max(0, 1 - elapsed / duration);
-      setProgress(remaining * 100);
-
-      if (remaining > 0) {
-        animRef.current = requestAnimationFrame(tick);
-      } else {
-        triggerExit();
-      }
-    };
-
-    animRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(animRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, hasAutoDismiss, duration]);
-
   // ── Exit handler ────────────────────────────────────────────────────
   const triggerExit = () => {
     if (dismissed) return;
     setDismissed(true);
     setPhase('exiting');
-    cancelAnimationFrame(animRef.current);
   };
+
+  // ── Progress bar timer ──────────────────────────────────────────────
+  useEffect(() => {
+    if (!hasAutoDismiss || phase === 'exiting') return;
+
+    const timerId = setTimeout(() => {
+      triggerExit();
+    }, duration);
+
+    return () => clearTimeout(timerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, hasAutoDismiss, duration]);
 
   const handleClose = () => {
     triggerExit();
@@ -172,8 +155,11 @@ function Toast({
       {hasAutoDismiss && (
         <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/5">
           <div
-            className={cn('h-full transition-[width] duration-100 ease-linear', style.progress)}
-            style={{ width: `${progress}%` }}
+            className={cn('h-full ease-linear', style.progress)}
+            style={{
+              width: phase === 'entering' ? '100%' : '0%',
+              transition: phase === 'visible' ? `width ${duration}ms linear` : 'none'
+            }}
           />
         </div>
       )}
