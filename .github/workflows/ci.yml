@@ -206,20 +206,40 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    # E2E_SHARDING (2026-08-08): 2-way shard matrix.  Each runner:
+    # E2E_SHARDING (2026-08-12): 4 balanced file-group shards (deterministic
+    # spec lists, not Playwright's --shard — its sorted-test chunking splits
+    # this suite 102/55/86/39). Profile measured on the dev server (run
+    # 31535984679, per-test durations from the list reporter):
+    #   navigation-pages 94 tests (~237s+) — the elephant: 46 routes each
+    #   cold-compiled per project on first hit, so it gets its own shard.
+    #   project-crud 36 (99s) · auth-flow 32 (123s) · fieldbook 30 (63s) ·
+    #   login 24 (49s) · landing 24 (51s) · responsive-a11y 22 ·
+    #   security-perf 20.
+    # Groups balance wall time by measured per-test rates:
+    #   G1 navigation-pages (94) · G2 project-crud+login (60) ·
+    #   G3 auth-flow+fieldbook (62) · G4 landing+responsive-a11y+security-perf (66).
+    # A 2-way split ran ~35 min per shard and was cancelled at the job limit;
+    # each group is ~1/2 that load and finishes inside the timeout.
     #   1. Runs the dev server (npx next dev -p 3099) — the standalone server
     #      silently drops the edge middleware (auth redirects, CSP, rate limits)
     #      and crashes in the sandbox when middleware is compiled into it.
     #   2. Postgres service container is available for health checks and any
     #      API calls that need the database.
-    #   3. Executes its assigned shard of the 8 spec files.
-    # E2E_TIMEOUT (2026-08-10): 30 min — the dev server is slower (~15 min
-    # passing path) but middleware works correctly.
+    #   3. Executes its assigned spec group.
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2]
+        shard: [1, 2, 3, 4]
+        include:
+          - shard: 1
+            specs: 'e2e/navigation-pages.spec.ts'
+          - shard: 2
+            specs: 'e2e/project-crud.spec.ts e2e/login.spec.ts'
+          - shard: 3
+            specs: 'e2e/auth-flow.spec.ts e2e/fieldbook.spec.ts'
+          - shard: 4
+            specs: 'e2e/landing.spec.ts e2e/responsive-a11y.spec.ts e2e/security-perf.spec.ts'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -231,7 +251,7 @@ jobs:
       # edge-sandbox crashes with middleware. The build artifact is not needed.
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
-      - name: Run Playwright E2E tests (shard ${{ matrix.shard }}/2)
+      - name: Run Playwright E2E tests (group ${{ matrix.shard }}/4)
         env:
           NEXT_PUBLIC_SENTRY_DSN: ''
           DISABLE_PWA: 'true'
@@ -249,7 +269,7 @@ jobs:
           GOOGLE_CLIENT_SECRET: 'e2e-google-client-secret'
           AZURE_AD_CLIENT_ID: 'e2e-azure-client-id'
           AZURE_AD_CLIENT_SECRET: 'e2e-azure-client-secret'
-        run: npx playwright test --reporter=list --shard=${{ matrix.shard }}/2
+        run: npx playwright test --reporter=list ${{ matrix.specs }}
       - name: Upload shard report
         if: always()
         uses: actions/upload-artifact@v4
