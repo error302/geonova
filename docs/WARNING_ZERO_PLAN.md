@@ -38,12 +38,13 @@ Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 1,106
   - `E2E Tests` — `0183c82d` switched the E2E webServer to the standalone server (the `output: 'standalone'` + `next start` combo silently bypassed middleware — root cause of the protected-route failures), injected the OAuth env the specs need, aligned stale spec copy to the current UI, and raised the timeout. Shards were running clean at the last check; verify the next CI run's E2E verdict.
 - **⚠ WIP file — never commit as part of a typing batch:**
   `src/components/survey/GNSSRoverConnection.tsx` is the concurrent session's mid-edit file (has tsc errors, and it *reduces* warning counts while uncommitted). Re-baseline floors **with this file stashed** so floors match committed code — otherwise CI fails with "live > floor" (the premature-baseline trap; see §7 rule 4).
-- **Session worktree:** `write_file` lands in `.freebuff/worktrees/d90ebaf2-f825-4569-b94c-966f3d5aa130`; the real checkout is `C:/Users/user/Desktop/METARDU`. Sync edits across with `cp` (see §7 rule 6). Files are **CRLF** in the worktree, LF in primary — git normalizes; scripts must not assert exact line endings.
+- **Session worktree:** `write_file` lands in `.freebuff/worktrees/d90ebaf2-f825-4569-b94c-966f3d5aa130`; the real checkout is `C:/Users/user/Desktop/METARDU`. **Run `node scripts/sync-mirror.mjs` before editing** — it byte-copies every tracked file that drifted from HEAD into the mirror (EOL-insensitive compare, WIP set skipped), so the mirror never carries an old untyped/syntax-broken copy. Manual `cp` is only needed for the active WIP set (see §7 rule 6). Files are **CRLF** in the worktree, LF in primary — git normalizes; scripts must not assert exact line endings.
 
 ### First commands for any new session
 
 ```bash
 cd C:/Users/user/Desktop/METARDU
+node scripts/sync-mirror.mjs             # converge the .freebuff mirror to HEAD (WIP set skipped, see §7 rule 6)
 git status --short                     # expect ONLY GNSSRoverConnection.tsx (WIP) or nothing
 git log --oneline origin/main..HEAD    # confirm what's still unpushed
 node scripts/lint-ratchets.mjs --report   # confirm gate green + live floors (exit 0)
@@ -189,7 +190,7 @@ The original B1–B5 roadmap has **landed**: row-typing is 100%, member-access f
 3. Per-file eslint → target family at **0** for the batch files.
 4. **Anti-premature-baseline trap:** if `GNSSRoverConnection.tsx` (or any WIP) is modified, `git stash push -- src/components/survey/GNSSRoverConnection.tsx` before re-baselining, then `git stash pop`. Floors must match *committed* code.
 5. `node scripts/lint-ratchets.mjs --update-<family>` for each family that moved (one flag per invocation) + `--update` for the total; then `--report` → gate must be green and floors ≤ previous.
-6. **Worktree sync:** edits made via file tools land in `.freebuff/worktrees/d90ebaf2-f825-4569-b94c-966f3d5aa130` — copy them to the primary (`cp "$WT/... " ...`) so the commit (made in the primary) includes them. Files are CRLF in the worktree / LF in primary; `git diff --ignore-space-at-eol` or `cmp -s` after normalization.
+6. **Worktree sync:** start each session with `node scripts/sync-mirror.mjs` to converge the mirror (`node scripts/sync-mirror.mjs --dry-run` to preview). It byte-copies tracked files that drifted from HEAD into `.freebuff/worktrees/d90ebaf2-f825-4569-b94c-966f3d5aa130` (EOL-insensitive compare; the WIP set from `git status` is skipped in both trees), so the mirror can never carry an old untyped/syntax-broken version. For the **active WIP set** (files the concurrent session is mid-edit on, plus untracked `_tmp-*.py` scripts), keep the manual `cp "$WT/..." ...` — sync-mirror deliberately leaves those alone. Edits you make via file tools land in the mirror; copy them to the primary before committing. Files are CRLF in the worktree / LF in primary; `git diff --ignore-space-at-eol` or `cmp -s` after normalization.
 7. Run related jest suites for touched libs; fix regressions.
 8. Commit per batch (conventional message, floor drops in the body: `refactor(types): … — member-access 1133→1105`). Never commit `GNSSRoverConnection.tsx` as part of a typing batch.
 9. Push (fast-forward to `origin/main`), watch the ci.yml run to completion; every code gate must stay green.
