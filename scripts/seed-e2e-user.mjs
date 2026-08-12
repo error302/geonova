@@ -25,20 +25,49 @@ if (!DATABASE_URL) {
 const E2E_USER_ID = '00000000-0000-0000-0000-000000000001'
 const E2E_EMAIL = 'test@metardu.test'
 
+// E2E_SEED_GUARD (2026-08-12): `--verify` checks the seeded row actually
+// landed and exits non-zero otherwise — wired into CI as a fast-fail step
+// before the E2E shards run (a silent seed regression re-introduces the
+// shard-2/4 "invalid input syntax for type uuid: \"\"" hang that used to
+// burn the full 30-min job timeout).
+const VERIFY_ONLY = process.argv.includes('--verify')
+
 const client = new Client({ connectionString: DATABASE_URL })
 await client.connect()
 try {
-  const res = await client.query(
-    `INSERT INTO users (id, email, password_hash, full_name, role, created_at, updated_at)
-     VALUES ($1, $2, $3, 'Test Surveyor', 'surveyor', NOW(), NOW())
-     ON CONFLICT (id) DO UPDATE
-       SET email = EXCLUDED.email, updated_at = NOW()`,
-    [E2E_USER_ID, E2E_EMAIL, 'e2e-dummy-password-hash-never-used-for-login'],
-  )
-  console.log(
-    `[seed-e2e-user] ensured ${E2E_EMAIL} (${E2E_USER_ID}) — %s row(s)`,
-    res.rowCount ?? 0,
-  )
+  if (VERIFY_ONLY) {
+    const res = await client.query(
+      'SELECT id, email FROM users WHERE id = $1 AND email = $2',
+      [E2E_USER_ID, E2E_EMAIL],
+    )
+    if ((res.rowCount ?? 0) !== 1) {
+      console.error(
+        `[seed-e2e-user] VERIFY FAILED — E2E seed user row missing ` +
+          `(users.id=${E2E_USER_ID}, email=${E2E_EMAIL}). Without it the ` +
+          `minted-session specs (project-crud, fieldbook) hit the "invalid ` +
+          `input syntax for type uuid" error and the shard hangs until the ` +
+          `job timeout. Run without --verify to (re)seed, or fix ` +
+          `scripts/seed-e2e-user.mjs.`,
+      )
+      process.exitCode = 1
+    } else {
+      console.log(
+        `[seed-e2e-user] verified ${E2E_EMAIL} (${E2E_USER_ID}) — row present`,
+      )
+    }
+  } else {
+    const res = await client.query(
+      `INSERT INTO users (id, email, password_hash, full_name, role, created_at, updated_at)
+       VALUES ($1, $2, $3, 'Test Surveyor', 'surveyor', NOW(), NOW())
+       ON CONFLICT (id) DO UPDATE
+         SET email = EXCLUDED.email, updated_at = NOW()`,
+      [E2E_USER_ID, E2E_EMAIL, 'e2e-dummy-password-hash-never-used-for-login'],
+    )
+    console.log(
+      `[seed-e2e-user] ensured ${E2E_EMAIL} (${E2E_USER_ID}) — %s row(s)`,
+      res.rowCount ?? 0,
+    )
+  }
 } finally {
   await client.end()
 }

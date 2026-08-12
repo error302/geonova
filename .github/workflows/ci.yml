@@ -287,6 +287,16 @@ jobs:
         run: node scripts/seed-e2e-user.mjs
         env:
           DATABASE_URL: 'postgresql://ci:ci@127.0.0.1:5432/metardu_e2e'
+      # E2E_SEED_GUARD (2026-08-12): fail fast if the seeded users row is
+      # missing before the shards run. The shard-2/4 hang (30-min job timeout,
+      # "invalid input syntax for type uuid: \"\"") came from the seed not
+      # landing; a silent seed regression (removed step, schema drift, id
+      # mismatch) would re-introduce it. The script's --verify mode SELECTs the
+      # row and exits non-zero on absence.
+      - name: Assert E2E seed user row exists
+        run: node scripts/seed-e2e-user.mjs --verify
+        env:
+          DATABASE_URL: 'postgresql://ci:ci@127.0.0.1:5432/metardu_e2e'
       # Dev server handles middleware correctly; the standalone server had
       # edge-sandbox crashes with middleware. The build artifact is not needed.
       - name: Install Playwright browsers
