@@ -37,6 +37,7 @@ import { bearingDistanceToDelta } from '@/lib/geodesy/coordinates';
 import { forwardTraverse, bowditchAdjustment, evaluateTraverseClosure } from '../traverse';
 import { DATUM_REGISTRY, getDatumByCountry } from '@/lib/geodesy/datums';
 import { Point2D } from '../types';
+import { defined } from '@/test-utils/defined'
 
 // ─── F/R 583/58 Station Coordinates (Arc 1960, UTM Zone 37S) ─────────────────
 
@@ -302,10 +303,10 @@ describe('F/R 583/58 — Theoretical Beacon Placement', () => {
   it('RD21 to AB3: 102.2m on 287 14 04', () => {
     const bearing = parseDMSString('287° 14\' 04"');
     expect(bearing).not.toBeNull();
-    const deltas = bearingDistanceToDelta(bearing!, 102.2);
+    const deltas = bearingDistanceToDelta(defined(bearing), 102.2);
     expect(deltas.deltaN).toBeCloseTo(30.28, 1);
     expect(deltas.deltaE).toBeCloseTo(-97.61, 1);
-    const computed = polarPoint(STATIONS.RD21, bearing!, 102.2);
+    const computed = polarPoint(STATIONS.RD21, defined(bearing), 102.2);
     expect(computed.northing).toBeCloseTo(114400.63, 1);
     expect(computed.easting).toBeCloseTo(-4279.98, 1);
   });
@@ -313,7 +314,7 @@ describe('F/R 583/58 — Theoretical Beacon Placement', () => {
   it('AB3 to AB4a: 74.49m on 287 14 04', () => {
     const bearing = parseDMSString('287° 14\' 04"');
     expect(bearing).not.toBeNull();
-    const computed = polarPoint(STATIONS.AB3, bearing!, 74.49);
+    const computed = polarPoint(STATIONS.AB3, defined(bearing), 74.49);
     expect(computed.northing).toBeCloseTo(114422.70, 1);
     expect(computed.easting).toBeCloseTo(-4351.13, 1);
   });
@@ -321,7 +322,7 @@ describe('F/R 583/58 — Theoretical Beacon Placement', () => {
   it('AB4a to AB4: 6m on 287 14 04', () => {
     const bearing = parseDMSString('287° 14\' 04"');
     expect(bearing).not.toBeNull();
-    const computed = polarPoint(STATIONS.AB4a, bearing!, 6);
+    const computed = polarPoint(STATIONS.AB4a, defined(bearing), 6);
     expect(computed.northing).toBeCloseTo(114424.48, 1);
     expect(computed.easting).toBeCloseTo(-4356.86, 1);
   });
@@ -329,7 +330,7 @@ describe('F/R 583/58 — Theoretical Beacon Placement', () => {
   it('AB4 to AB4b: 6m on 174 04 11', () => {
     const bearing = parseDMSString('174° 04\' 11"');
     expect(bearing).not.toBeNull();
-    const computed = polarPoint(STATIONS.AB4, bearing!, 6);
+    const computed = polarPoint(STATIONS.AB4, defined(bearing), 6);
     expect(computed.northing).toBeCloseTo(114418.51, 1);
     expect(computed.easting).toBeCloseTo(-4356.24, 1);
   });
@@ -337,7 +338,7 @@ describe('F/R 583/58 — Theoretical Beacon Placement', () => {
   it('AB4b to AB1: 228.8m on 174 04 11', () => {
     const bearing = parseDMSString('174° 04\' 11"');
     expect(bearing).not.toBeNull();
-    const computed = polarPoint(STATIONS.AB4b, bearing!, 228.8);
+    const computed = polarPoint(STATIONS.AB4b, defined(bearing), 228.8);
     expect(computed.northing).toBeCloseTo(114190.94, 1);
     expect(computed.easting).toBeCloseTo(-4332.60, 1);
   });
@@ -345,7 +346,7 @@ describe('F/R 583/58 — Theoretical Beacon Placement', () => {
   it('AB1 to AB2: 74m on 84 04 11', () => {
     const bearing = parseDMSString('84° 04\' 11"');
     expect(bearing).not.toBeNull();
-    const computed = polarPoint(STATIONS.AB1, bearing!, 74);
+    const computed = polarPoint(STATIONS.AB1, defined(bearing), 74);
     expect(computed.northing).toBeCloseTo(114198.58, 1);
     expect(computed.easting).toBeCloseTo(-4259.00, 1);
   });
@@ -353,7 +354,7 @@ describe('F/R 583/58 — Theoretical Beacon Placement', () => {
   it('AB2 to AB3: 203.14m on 354 04 11 (closure back to AB3)', () => {
     const bearing = parseDMSString('354° 04\' 11"');
     expect(bearing).not.toBeNull();
-    const computed = polarPoint(STATIONS.AB2, bearing!, 203.14);
+    const computed = polarPoint(STATIONS.AB2, defined(bearing), 203.14);
     expect(computed.northing).toBeCloseTo(114400.63, 0); // within ~10mm
     expect(computed.easting).toBeCloseTo(-4279.98, 0);
   });
@@ -687,10 +688,10 @@ describe('F/R 583/58 — Arc 1960 Datum Parameters', () => {
     const arc1960 = kenyaDatums.find(function(d) { return d.name === 'Arc 1960'; });
 
     expect(arc1960).toBeDefined();
-    expect(arc1960!.ellipsoid).toBe('Clarke 1880 (RGS)');
-    expect(arc1960!.semiMajorAxis).toBe(6378249.145);
-    expect(arc1960!.inverseFlattening).toBe(293.465);
-    expect(arc1960!.countries).toContain('Kenya');
+    expect(defined(arc1960).ellipsoid).toBe('Clarke 1880 (RGS)');
+    expect(defined(arc1960).semiMajorAxis).toBe(6378249.145);
+    expect(defined(arc1960).inverseFlattening).toBe(293.465);
+    expect(defined(arc1960).countries).toContain('Kenya');
   });
 
   it('should have correct Helmert transformation parameters for Arc 1960', () => {
@@ -749,10 +750,10 @@ describe('F/R 583/58 — Bearing String Formatting and Parsing', () => {
     const original = '287° 14\' 04"';
     const parsed = parseDMSString(original);
     expect(parsed).not.toBeNull();
-    const formatted = bearingToString(parsed!);
+    const formatted = bearingToString(defined(parsed));
     const reparsed = parseDMSString(formatted);
     expect(reparsed).not.toBeNull();
-    expect(reparsed!).toBeCloseTo(parsed!, 3);
+    expect(defined(reparsed)).toBeCloseTo(defined(parsed), 3);
   });
 });
 

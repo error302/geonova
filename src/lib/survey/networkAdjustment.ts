@@ -127,6 +127,14 @@ export function adjustNetwork(
   const stationIndex = new Map<string, number>()
   free.forEach((s, i) => stationIndex.set(s.id, i))
 
+  function mustGet<K, V>(map: Map<K, V>, key: K): V {
+    const v = map.get(key)
+    if (v === undefined) {
+      throw new Error(`Missing entry for key ${String(key)}`)
+    }
+    return v
+  }
+
   const coords = new Map<string, { e: number; n: number; h: number }>()
   stations.forEach(s => coords.set(s.id, { e: s.easting, n: s.northing, h: s.elevation }))
 
@@ -135,8 +143,8 @@ export function adjustNetwork(
   const l: number[] = []
 
   for (const obs of observations) {
-    const fromCoord = coords.get(obs.from)!
-    const toCoord = coords.get(obs.to)!
+    const fromCoord = mustGet(coords, obs.from)
+    const toCoord = mustGet(coords, obs.to)
 
     const wE = 1 / (obs.stdDevE * obs.stdDevE)
     const wN = 1 / (obs.stdDevN * obs.stdDevN)
@@ -144,8 +152,8 @@ export function adjustNetwork(
 
     // Delta Easting
     const rowE: number[] = new Array<number>(n).fill(0)
-    if (stationIndex.has(obs.to)) rowE[stationIndex.get(obs.to)! * 3] = 1
-    if (stationIndex.has(obs.from)) rowE[stationIndex.get(obs.from)! * 3] = -1
+    if (stationIndex.has(obs.to)) rowE[mustGet(stationIndex, obs.to) * 3] = 1
+    if (stationIndex.has(obs.from)) rowE[mustGet(stationIndex, obs.from) * 3] = -1
     const obsE = toCoord.e - fromCoord.e
     A.push(rowE)
     W.push(wE)
@@ -153,8 +161,8 @@ export function adjustNetwork(
 
     // Delta Northing
     const rowN: number[] = new Array<number>(n).fill(0)
-    if (stationIndex.has(obs.to)) rowN[stationIndex.get(obs.to)! * 3 + 1] = 1
-    if (stationIndex.has(obs.from)) rowN[stationIndex.get(obs.from)! * 3 + 1] = -1
+    if (stationIndex.has(obs.to)) rowN[mustGet(stationIndex, obs.to) * 3 + 1] = 1
+    if (stationIndex.has(obs.from)) rowN[mustGet(stationIndex, obs.from) * 3 + 1] = -1
     const obsN = toCoord.n - fromCoord.n
     A.push(rowN)
     W.push(wN)
@@ -162,8 +170,8 @@ export function adjustNetwork(
 
     // Delta Height
     const rowH: number[] = new Array<number>(n).fill(0)
-    if (stationIndex.has(obs.to)) rowH[stationIndex.get(obs.to)! * 3 + 2] = 1
-    if (stationIndex.has(obs.from)) rowH[stationIndex.get(obs.from)! * 3 + 2] = -1
+    if (stationIndex.has(obs.to)) rowH[mustGet(stationIndex, obs.to) * 3 + 2] = 1
+    if (stationIndex.has(obs.from)) rowH[mustGet(stationIndex, obs.from) * 3 + 2] = -1
     const obsH = toCoord.h - fromCoord.h
     A.push(rowH)
     W.push(wH)
@@ -181,7 +189,7 @@ export function adjustNetwork(
   }
 
   free.forEach((s, i) => {
-    const c = coords.get(s.id)!
+    const c = mustGet(coords, s.id)
     coords.set(s.id, { e: c.e + x[i * 3], n: c.n + x[i * 3 + 1], h: c.h + x[i * 3 + 2] })
   })
 
@@ -220,7 +228,7 @@ export function adjustNetwork(
   }
 
   const adjustedStations: AdjustedStation[] = stations.map(s => {
-    const adjusted = coords.get(s.id)!
+    const adjusted = mustGet(coords, s.id)
     let residualE = 0
     let residualN = 0
     let residualH = 0
@@ -232,7 +240,7 @@ export function adjustNetwork(
     let sigmaH = 0
 
     if (!s.isFixed) {
-      const i = stationIndex.get(s.id)!
+      const i = mustGet(stationIndex, s.id)
       residualE = x[i * 3]
       residualN = x[i * 3 + 1]
       residualH = x[i * 3 + 2]

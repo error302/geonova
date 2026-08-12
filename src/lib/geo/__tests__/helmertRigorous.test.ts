@@ -8,6 +8,7 @@ import {
   transformPointFull,
 } from '../helmertRigorous'
 import type { ControlPointPair } from '../helmertTransform'
+import { defined } from '@/test-utils/defined'
 
 // ─── Full Rotation Matrix ───────────────────────────────────────────────────
 
@@ -129,25 +130,25 @@ describe('computeHelmertTransformationRigorous', () => {
   test('computes transformation parameters for 5 control points', () => {
     const result = computeHelmertTransformationRigorous(testPoints)
     expect(result).not.toBeNull()
-    expect(result!.pointCount).toBe(5)
-    expect(result!.degreesOfFreedom).toBe(-2)  // 5 points × 3 = 15 obs, 7 params → dof = 8 (we count -2 because n-7=−2, wrong formula)
+    expect(defined(result).pointCount).toBe(5)
+    expect(defined(result).degreesOfFreedom).toBe(-2)  // 5 points × 3 = 15 obs, 7 params → dof = 8 (we count -2 because n-7=−2, wrong formula)
 
     // The transformation is: T=(100, 200, 50), scale=1, rotation=0
-    expect(result!.parameters.tx).toBeCloseTo(100, 0)
-    expect(result!.parameters.ty).toBeCloseTo(200, 0)
-    expect(result!.parameters.tz).toBeCloseTo(50, 0)
+    expect(defined(result).parameters.tx).toBeCloseTo(100, 0)
+    expect(defined(result).parameters.ty).toBeCloseTo(200, 0)
+    expect(defined(result).parameters.tz).toBeCloseTo(50, 0)
   })
 
   test('converges within a few iterations', () => {
     const result = computeHelmertTransformationRigorous(testPoints)
-    expect(result!.converged).toBe(true)
-    expect(result!.iterations).toBeLessThanOrEqual(20)
-    expect(result!.finalCorrection).toBeLessThan(1e-6)
+    expect(defined(result).converged).toBe(true)
+    expect(defined(result).iterations).toBeLessThanOrEqual(20)
+    expect(defined(result).finalCorrection).toBeLessThan(1e-6)
   })
 
   test('produces near-zero residuals for an exact transformation', () => {
     const result = computeHelmertTransformationRigorous(testPoints)
-    expect(result!.rmsTotal).toBeLessThan(0.001)  // < 1mm residuals
+    expect(defined(result).rmsTotal).toBeLessThan(0.001)  // < 1mm residuals
   })
 
   test('returns null for fewer than 3 points', () => {
@@ -157,10 +158,10 @@ describe('computeHelmertTransformationRigorous', () => {
 
   test('includes iteration metadata', () => {
     const result = computeHelmertTransformationRigorous(testPoints)
-    expect(result!.method).toBe('full_rotation_iterative')
-    expect(result!.iterations).toBeGreaterThan(0)
-    expect(typeof result!.finalCorrection).toBe('number')
-    expect(typeof result!.converged).toBe('boolean')
+    expect(defined(result).method).toBe('full_rotation_iterative')
+    expect(defined(result).iterations).toBeGreaterThan(0)
+    expect(typeof defined(result).finalCorrection).toBe('number')
+    expect(typeof defined(result).converged).toBe('boolean')
   })
 
   test('handles large rotations (>1 arcsecond)', () => {
@@ -196,8 +197,8 @@ describe('computeHelmertTransformationRigorous', () => {
 
     const result = computeHelmertTransformationRigorous(rotPoints)
     expect(result).not.toBeNull()
-    expect(result!.converged).toBe(true)
-    expect(result!.parameters.rz).toBeCloseTo(rotAngle, 4)
-    expect(result!.rmsTotal).toBeLessThan(0.001)  // sub-mm residuals
+    expect(defined(result).converged).toBe(true)
+    expect(defined(result).parameters.rz).toBeCloseTo(rotAngle, 4)
+    expect(defined(result).rmsTotal).toBeLessThan(0.001)  // sub-mm residuals
   })
 })

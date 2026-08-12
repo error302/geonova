@@ -43,6 +43,7 @@ import {
   CLARKE_1858_B_M,
 } from '../constants'
 import type { CommonPoint, CassiniFeetPoint, UTMPoint } from '../types'
+import { defined } from '@/test-utils/defined'
 
 // ─── 1. Constants ───────────────────────────────────────────────────────
 
@@ -92,7 +93,7 @@ describe('P1-6: Kenya topo sheet registry', () => {
     // they convert Clarke 1858 feet → Arc 1960 metres.
     const xlsSheetIds = ['148/1', '148/2', '148/2.1', '148/3', '148/4', '148/4.1']
     for (const id of xlsSheetIds) {
-      const sheet = findTopoSheet(id)!
+      const sheet = defined(findTopoSheet(id))
       expect(sheet.P).toBeGreaterThan(0.304)
       expect(sheet.P).toBeLessThan(0.306)
     }
@@ -101,8 +102,8 @@ describe('P1-6: Kenya topo sheet registry', () => {
   test('findTopoSheet returns the sheet for a known ID', () => {
     const sheet = findTopoSheet('148/1')
     expect(sheet).toBeDefined()
-    expect(sheet!.id).toBe('148/1')
-    expect(sheet!.commonPoints.length).toBeGreaterThanOrEqual(3)
+    expect(defined(sheet).id).toBe('148/1')
+    expect(defined(sheet).commonPoints.length).toBeGreaterThanOrEqual(3)
   })
 
   test('findTopoSheet returns undefined for unknown ID', () => {
@@ -114,8 +115,8 @@ describe('P1-6: Kenya topo sheet registry', () => {
     for (const id of xlsSheetIds) {
       const sheet = findTopoSheet(id)
       expect(sheet).toBeDefined()
-      expect(sheet!.A).toBeDefined()
-      expect(sheet!.B).toBeDefined()
+      expect(defined(sheet).A).toBeDefined()
+      expect(defined(sheet).B).toBeDefined()
     }
   })
 })
@@ -163,7 +164,7 @@ describe('P1-6: KAT — control point forward transform (Cassini feet → UTM)',
 
   for (const { id, points } of xlsSheetsWithPoints) {
     describe(`Sheet ${id}`, () => {
-      const sheet = findTopoSheet(id)!
+      const sheet = defined(findTopoSheet(id))
 
       for (const cp of points) {
         test(`${cp.station}: Cassini (${cp.cassE.toFixed(1)}, ${cp.cassN.toFixed(1)})ft → UTM (${cp.utmE.toFixed(1)}, ${cp.utmN.toFixed(1)})m`, () => {
@@ -197,7 +198,7 @@ describe('P1-6: KAT — control point forward transform (Cassini feet → UTM)',
 // before a round-trip test can pass. Tracked as a follow-up.
 
 describe.skip('P1-6: Round-trip — Cassini feet → UTM → Cassini feet (SKIPPED: inverse sign bug)', () => {
-  const sheet = findTopoSheet('148/1')!
+  const sheet = defined(findTopoSheet('148/1'))
   const TOLERANCE_FT = 15
 
   test('all 3 control points of sheet 148/1 round-trip within 15 ft', () => {
@@ -260,10 +261,10 @@ describe('P1-6: Helmert 4-param computation', () => {
     ]
     const params = computeHelmert4Params(points)
     expect(params).not.toBeNull()
-    expect(params!.P).toBeCloseTo(1, 6)
-    expect(params!.Q).toBeCloseTo(0, 6)
-    expect(params!.Cx).toBeCloseTo(0, 6)
-    expect(params!.Cy).toBeCloseTo(0, 6)
+    expect(defined(params).P).toBeCloseTo(1, 6)
+    expect(defined(params).Q).toBeCloseTo(0, 6)
+    expect(defined(params).Cx).toBeCloseTo(0, 6)
+    expect(defined(params).Cy).toBeCloseTo(0, 6)
   })
 
   test('pure translation (no scale, no rotation)', () => {
@@ -276,10 +277,10 @@ describe('P1-6: Helmert 4-param computation', () => {
     ]
     const params = computeHelmert4Params(points)
     expect(params).not.toBeNull()
-    expect(params!.P).toBeCloseTo(1, 4)
-    expect(params!.Q).toBeCloseTo(0, 4)
-    expect(params!.Cx).toBeCloseTo(dx, 4)
-    expect(params!.Cy).toBeCloseTo(dy, 4)
+    expect(defined(params).P).toBeCloseTo(1, 4)
+    expect(defined(params).Q).toBeCloseTo(0, 4)
+    expect(defined(params).Cx).toBeCloseTo(dx, 4)
+    expect(defined(params).Cy).toBeCloseTo(dy, 4)
   })
 
   test('throws for fewer than 2 points (underdetermined)', () => {

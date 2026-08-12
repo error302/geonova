@@ -14,6 +14,7 @@ import {
   type NetworkPoint,
   type NetworkObservation,
 } from '../networkAdjustment'
+import { defined } from '@/test-utils/defined'
 
 function approxEqual(a: number, b: number, tol = 1e-6): boolean {
   return Math.abs(a - b) < tol
@@ -50,9 +51,9 @@ describe('networkAdjustment — GNSS baseline integration', () => {
     expect(result.ok).toBe(true)
     const b = result.adjustedPoints.find((p) => p.name === 'B')
     expect(b).toBeDefined()
-    expect(approxEqual(b!.easting, 50, 0.01)).toBe(true)
-    expect(approxEqual(b!.northing, 50, 0.01)).toBe(true)
-    expect(approxEqual(b!.rl ?? 0, 100, 0.01)).toBe(true)
+    expect(approxEqual(defined(b).easting, 50, 0.01)).toBe(true)
+    expect(approxEqual(defined(b).northing, 50, 0.01)).toBe(true)
+    expect(approxEqual(defined(b).rl ?? 0, 100, 0.01)).toBe(true)
   })
 
   test('GNSS baseline with correlated covariance adjusts correctly', () => {
@@ -92,9 +93,9 @@ describe('networkAdjustment — GNSS baseline integration', () => {
     expect(result.ok).toBe(true)
     const b = result.adjustedPoints.find((p) => p.name === 'B')
     expect(b).toBeDefined()
-    expect(approxEqual(b!.easting, 50, 0.01)).toBe(true)
-    expect(approxEqual(b!.northing, 50, 0.01)).toBe(true)
-    expect(approxEqual(b!.rl ?? 0, 100, 0.01)).toBe(true)
+    expect(approxEqual(defined(b).easting, 50, 0.01)).toBe(true)
+    expect(approxEqual(defined(b).northing, 50, 0.01)).toBe(true)
+    expect(approxEqual(defined(b).rl ?? 0, 100, 0.01)).toBe(true)
   })
 
   test('multiple GNSS baselines form a 3D network', () => {
@@ -133,9 +134,9 @@ describe('networkAdjustment — GNSS baseline integration', () => {
     expect(result.ok).toBe(true)
     const p = result.adjustedPoints.find((x) => x.name === 'P')
     expect(p).toBeDefined()
-    expect(approxEqual(p!.easting, 50, 0.01)).toBe(true)
-    expect(approxEqual(p!.northing, 50, 0.01)).toBe(true)
-    expect(approxEqual(p!.rl ?? 0, 100, 0.01)).toBe(true)
+    expect(approxEqual(defined(p).easting, 50, 0.01)).toBe(true)
+    expect(approxEqual(defined(p).northing, 50, 0.01)).toBe(true)
+    expect(approxEqual(defined(p).rl ?? 0, 100, 0.01)).toBe(true)
   })
 
   test('mixed GNSS baseline + terrestrial distance converges', () => {
@@ -168,8 +169,8 @@ describe('networkAdjustment — GNSS baseline integration', () => {
     expect(result.ok).toBe(true)
     const b = result.adjustedPoints.find((p) => p.name === 'B')
     expect(b).toBeDefined()
-    expect(approxEqual(b!.easting, 60, 0.01)).toBe(true)
-    expect(approxEqual(b!.northing, 60, 0.01)).toBe(true)
+    expect(approxEqual(defined(b).easting, 60, 0.01)).toBe(true)
+    expect(approxEqual(defined(b).northing, 60, 0.01)).toBe(true)
   })
 
   test('rejects GNSS baseline in 2D mode', () => {
@@ -237,8 +238,8 @@ describe('networkAdjustment — GNSS baseline integration', () => {
     expect(b).toBeDefined()
     // With identity covariance, the adjustment should pull B exactly to the
     // observed baseline (since there's only 1 observation per parameter).
-    expect(approxEqual(b!.easting, 50, 0.001)).toBe(true)
-    expect(approxEqual(b!.northing, 50, 0.001)).toBe(true)
-    expect(approxEqual(b!.rl ?? 0, 100, 0.001)).toBe(true)
+    expect(approxEqual(defined(b).easting, 50, 0.001)).toBe(true)
+    expect(approxEqual(defined(b).northing, 50, 0.001)).toBe(true)
+    expect(approxEqual(defined(b).rl ?? 0, 100, 0.001)).toBe(true)
   })
 })

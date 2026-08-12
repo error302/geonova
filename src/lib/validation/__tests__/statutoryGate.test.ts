@@ -23,6 +23,7 @@ import {
   RULE_VERSION,
   type StatutoryGateInput,
 } from '../statutoryGate'
+import { defined } from '@/test-utils/defined'
 
 // ─── Helpers ────────────────────────────────────────────────────────────
 
@@ -81,9 +82,9 @@ describe('Statutory Validation Gate', () => {
         (v) => v.rule === 'rdm_1_1.traverse_precision'
       )
       expect(precisionViolation).toBeDefined()
-      expect(precisionViolation!.severity).toBe('block')
-      expect(precisionViolation!.actual).toBe(2000)
-      expect(precisionViolation!.allowable).toBe(5000)
+      expect(defined(precisionViolation).severity).toBe('block')
+      expect(defined(precisionViolation).actual).toBe(2000)
+      expect(defined(precisionViolation).allowable).toBe(5000)
     })
 
     it('blocks when surveyor name is missing', () => {
@@ -117,7 +118,7 @@ describe('Statutory Validation Gate', () => {
         (v) => v.rule === 'sok_standard.surveyor_license_format'
       )
       expect(formatViolation).toBeDefined()
-      expect(formatViolation!.severity).toBe('warn')
+      expect(defined(formatViolation).severity).toBe('warn')
       // Should not block — warn only
       const blockViolations = result.violations.filter((v) => v.severity === 'block')
       expect(blockViolations.some((v) => v.rule === 'sok_standard.surveyor_license_format')).toBe(false)
@@ -461,7 +462,7 @@ describe('Statutory Validation Gate', () => {
         (v) => v.rule === 'sok_standard.beacon_nomenclature'
       )
       expect(nomenclatureViolation).toBeDefined()
-      expect(nomenclatureViolation!.severity).toBe('warn')
+      expect(defined(nomenclatureViolation).severity).toBe('warn')
     })
 
     it('does not warn on standard KP/MB/IRP/RMB beacon names', () => {
@@ -592,9 +593,9 @@ describe('Statutory Validation Gate', () => {
         (v) => v.rule === 'rdm_1_1.min_curve_radius'
       )
       expect(curveViolation).toBeDefined()
-      expect(curveViolation!.severity).toBe('block')
-      expect(curveViolation!.actual).toBe(150)
-      expect(curveViolation!.allowable).toBeGreaterThan(200)
+      expect(defined(curveViolation).severity).toBe('block')
+      expect(defined(curveViolation).actual).toBe(150)
+      expect(defined(curveViolation).allowable).toBeGreaterThan(200)
       expect(result.passed).toBe(false)
     })
 
@@ -628,9 +629,9 @@ describe('Statutory Validation Gate', () => {
         (v) => v.rule === 'rdm_1_1.sight_distance'
       )
       expect(ssdViolation).toBeDefined()
-      expect(ssdViolation!.severity).toBe('block')
-      expect(ssdViolation!.actual).toBe(80)
-      expect(ssdViolation!.allowable).toBeGreaterThan(100)
+      expect(defined(ssdViolation).severity).toBe('block')
+      expect(defined(ssdViolation).actual).toBe(80)
+      expect(defined(ssdViolation).allowable).toBeGreaterThan(100)
       expect(result.passed).toBe(false)
     })
 
@@ -663,7 +664,7 @@ describe('Statutory Validation Gate', () => {
         (v) => v.rule === 'kenha.superelevation_high'
       )
       expect(superViolation).toBeDefined()
-      expect(superViolation!.severity).toBe('warn')
+      expect(defined(superViolation).severity).toBe('warn')
       // Should not produce a block-level superelevation violation
       expect(
         result.violations.some((v) => v.rule === 'kenha.superelevation_absolute_max')
@@ -684,7 +685,7 @@ describe('Statutory Validation Gate', () => {
         (v) => v.rule === 'kenha.superelevation_absolute_max'
       )
       expect(superViolation).toBeDefined()
-      expect(superViolation!.severity).toBe('block')
+      expect(defined(superViolation).severity).toBe('block')
       expect(result.passed).toBe(false)
     })
 
@@ -720,7 +721,7 @@ describe('Statutory Validation Gate', () => {
         (v) => v.rule === 'rdm_1_1.min_curve_radius'
       )
       expect(curveViolation).toBeDefined()
-      expect(curveViolation!.allowable).toBeGreaterThan(240)
+      expect(defined(curveViolation).allowable).toBeGreaterThan(240)
     })
   })
 
