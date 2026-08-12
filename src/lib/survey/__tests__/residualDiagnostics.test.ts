@@ -147,14 +147,14 @@ describe('andersonDarlingTest', () => {
 
 describe('durbinWatsonTest', () => {
   it('DW ≈ 2 for uncorrelated residuals', () => {
-    // Generate uncorrelated residuals
+    // Deterministic pseudo-random residuals (seeded LCG, Numerical Recipes
+    // constants) so the assertion never flakes on CI — the sequence is
+    // uncorrelated by construction and produces the same DW every run.
     const residuals: number[] = []
-    let lastVal = 0
+    let seed = 42
     for (let i = 0; i < 100; i++) {
-      // Each residual is independent of the previous
-      const z = (Math.random() - 0.5) * 2
-      residuals.push(z)
-      lastVal = z
+      seed = (seed * 1664525 + 1013904223) >>> 0
+      residuals.push(((seed / 0xffffffff) - 0.5) * 2)
     }
     const result = durbinWatsonTest(residuals)
     expect(result.statistic).toBeGreaterThan(1.5)
