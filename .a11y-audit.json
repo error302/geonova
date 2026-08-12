@@ -593,93 +593,34 @@
     "filePath": "src/app/analytics/page.tsx",
     "messages": [
       {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 150,
-        "column": 26,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 150,
-        "endColumn": 44
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 150,
-        "column": 26,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 150,
-        "endColumn": 40,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                5496,
-                5497
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 150,
-        "column": 26,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 150,
-        "endColumn": 34,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                5490,
-                5491
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
         "ruleId": "@typescript-eslint/no-unused-vars",
         "severity": 1,
         "message": "'recentProjects' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 181,
+        "line": 182,
         "column": 17,
         "nodeType": "Identifier",
         "messageId": "unusedVar",
-        "endLine": 181,
+        "endLine": 182,
         "endColumn": 31
       },
       {
         "ruleId": "react-hooks/exhaustive-deps",
         "severity": 1,
-        "message": "React Hook useEffect has a missing dependency: 'session'. Either include it or remove the dependency array.",
-        "line": 208,
+        "message": "React Hook useEffect has a missing dependency: 'session.user'. Either include it or remove the dependency array.",
+        "line": 209,
         "column": 6,
         "nodeType": "ArrayExpression",
-        "endLine": 208,
+        "endLine": 209,
         "endColumn": 41,
         "suggestions": [
           {
-            "desc": "Update the dependencies array to be: [session?.user?.id, status, period, session]",
+            "desc": "Update the dependencies array to be: [session.user.id, status, period, session.user]",
             "fix": {
               "range": [
-                8101,
-                8136
+                8139,
+                8174
               ],
-              "text": "[session?.user?.id, status, period, session]"
+              "text": "[session.user.id, status, period, session.user]"
             }
           }
         ]
@@ -688,10 +629,10 @@
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 5,
+    "warningCount": 2,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "'use client';\r\n\r\nimport { useState, useEffect } from 'react'\r\nimport { useSession } from 'next-auth/react'\r\nimport {\r\n  AreaChart, Area, XAxis, YAxis, CartesianGrid,\r\n  PieChart, Pie, Cell,\r\n} from 'recharts'\r\nimport { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'\r\nimport { Loader2 } from 'lucide-react'\r\nimport { logger } from '@/lib/logger'\r\n\r\n// ---------------------------------------------------------------------------\r\n// Types\r\n// ---------------------------------------------------------------------------\r\n\r\ninterface AnalyticsData {\r\n  totalProjects: number\r\n  activeProjects: number\r\n  completedSurveys: number\r\n  totalPoints: number\r\n  storageUsed: number\r\n  apiCalls: number\r\n  userActivity: { date: string; count: number }[]\r\n  projectTypes: { type: string; count: number }[]\r\n  // Previous period data for delta computation\r\n  prevTotalProjects: number\r\n  prevActiveProjects: number\r\n  prevCompletedSurveys: number\r\n}\r\n\r\nconst emptyData: AnalyticsData = {\r\n  totalProjects: 0,\r\n  activeProjects: 0,\r\n  completedSurveys: 0,\r\n  totalPoints: 0,\r\n  storageUsed: 0,\r\n  apiCalls: 0,\r\n  userActivity: [],\r\n  projectTypes: [],\r\n  prevTotalProjects: 0,\r\n  prevActiveProjects: 0,\r\n  prevCompletedSurveys: 0,\r\n}\r\n\r\n// ---------------------------------------------------------------------------\r\n// Helpers\r\n// ---------------------------------------------------------------------------\r\n\r\nfunction computeDelta(current: number, previous: number): string | null {\r\n  if (previous === 0 && current === 0) return null\r\n  if (previous === 0) return current > 0 ? '+100%' : null\r\n  const change = ((current - previous) / previous) * 100\r\n  const sign = change >= 0 ? '+' : ''\r\n  return `${sign}${change.toFixed(0)}%`\r\n}\r\n\r\nfunction deltaColor(delta: string | null): string {\r\n  if (!delta) return 'text-[var(--text-muted)]'\r\n  return delta.startsWith('+') ? 'text-green-400' : 'text-red-400'\r\n}\r\n\r\nconst TYPE_COLORS = ['#60a5fa', '#4ade80', '#f59e0b', '#a78bfa', '#f472b6', '#94a3b8']\r\n\r\nconst activityChartConfig: ChartConfig = {\r\n  count: { label: 'Projects Created', color: 'hsl(var(--accent))' },\r\n}\r\n\r\nconst typeChartConfig: ChartConfig = {\r\n  cadastral: { label: 'Cadastral', color: '#60a5fa' },\r\n  topographic: { label: 'Topographic', color: '#4ade80' },\r\n  engineering: { label: 'Engineering', color: '#f59e0b' },\r\n  control: { label: 'Control', color: '#a78bfa' },\r\n  other: { label: 'Other', color: '#94a3b8' },\r\n}\r\n\r\n// ---------------------------------------------------------------------------\r\n// Component\r\n// ---------------------------------------------------------------------------\r\n\r\nexport default function AnalyticsPage() {\r\n  const { data: session, status } = useSession()\r\n  const [period, setPeriod] = useState('7d')\r\n  const [data, setData] = useState<AnalyticsData>(emptyData)\r\n  const [loading, setLoading] = useState(true)\r\n\r\n  useEffect(() => {\r\n    if (status === 'loading') return\r\n    if (!session?.user?.id) {\r\n      setLoading(false)\r\n      return\r\n    }\r\n\r\n    async function fetchAnalytics() {\r\n      try {\r\n        // Use the admin dashboard API for richer data if admin,\r\n        // otherwise fall back to direct DB query via Supabase\r\n        const isAdmin = (session?.user as { role?: string })?.role === 'super_admin' ||\r\n          (session?.user as { role?: string })?.role === 'admin'\r\n\r\n        if (isAdmin) {\r\n          const res = await fetch('/api/admin/dashboard')\r\n          if (res.ok) {\r\n            const json = (await res.json()) as {\r\n              data?: {\r\n                projects?: {\r\n                  total?: number\r\n                  byStatus?: Record<string, number>\r\n                }\r\n                parcels?: number\r\n                submissionsThisMonth?: number\r\n                revenue?: { byMonth?: Array<{ month: string; total: number }> }\r\n              }\r\n            }\r\n            const d = (json.data ?? json) as {\r\n              projects?: {\r\n                total?: number\r\n                byStatus?: Record<string, number>\r\n              }\r\n              parcels?: number\r\n              submissionsThisMonth?: number\r\n              revenue?: { byMonth?: Array<{ month: string; total: number }> }\r\n            }\r\n            setData({\r\n              totalProjects: d.projects?.total ?? 0,\r\n              activeProjects: d.projects?.byStatus?.active ?? d.projects?.total ?? 0,\r\n              completedSurveys: d.projects?.byStatus?.completed ?? 0,\r\n              totalPoints: d.parcels ?? 0,\r\n              // AUDIT FIX: Don't fabricate storage from parcel count.\r\n              storageUsed: 0,\r\n              apiCalls: d.submissionsThisMonth ?? 0,\r\n              userActivity: (d.revenue?.byMonth ?? []).map((m: { month: string; total: number }) => ({\r\n                date: m.month,\r\n                count: m.total,\r\n              })),\r\n              projectTypes: Object.entries(d.projects?.byStatus ?? {}).map(([type, count]) => ({\r\n                type,\r\n                count: count as number,\r\n              })),\r\n              // AUDIT FIX: Don't fabricate 'previous period' deltas.\r\n              prevTotalProjects: 0,\r\n              prevActiveProjects: 0,\r\n              prevCompletedSurveys: 0,\r\n            })\r\n          }\r\n        } else {\r\n          // Regular user — query their own projects\r\n          const { createClient } = await import('@/lib/api-client/client')\r\n          const dbClient = createClient()\r\n          const userId = session!.user!.id!\r\n\r\n          const [projectsRes, pointsRes] = await Promise.all([\r\n            dbClient.from('projects').select('id, survey_type, created_at').eq('user_id', userId),\r\n            dbClient.from('survey_points').select('id, created_at').eq('user_id', userId),\r\n          ])\r\n\r\n          type ProjectRow = { id: string; survey_type: string | null; created_at: string }\r\n          type PointRow = { id: string; created_at: string }\r\n          const projects = (projectsRes.data ?? []) as ProjectRow[]\r\n          const points = (pointsRes.data ?? []) as PointRow[]\r\n\r\n          // Build activity based on period\r\n          const days = period === '7d' ? 7 : period === '30d' ? 30 : period === '90d' ? 90 : 365\r\n          const lastNDays: { date: string; count: number }[] = []\r\n          for (let i = days - 1; i >= 0; i--) {\r\n            const d = new Date()\r\n            d.setDate(d.getDate() - i)\r\n            const dateStr = d.toISOString().split('T')[0]\r\n            const count = projects.filter((p) => p.created_at?.startsWith(dateStr)).length\r\n            lastNDays.push({ date: dateStr, count })\r\n          }\r\n\r\n          const projectTypesMap: Record<string, number> = {}\r\n          projects.forEach((p) => {\r\n            const type = p.survey_type ?? 'Other'\r\n            projectTypesMap[type] = (projectTypesMap[type] ?? 0) + 1\r\n          })\r\n\r\n          // Compute previous period deltas\r\n          const halfPoint = Math.floor(projects.length / 2)\r\n          const recentProjects = projects.slice(0, halfPoint)\r\n          const olderProjects = projects.slice(halfPoint)\r\n\r\n          setData({\r\n            totalProjects: projects.length,\r\n            activeProjects: projects.length,\r\n            completedSurveys: projects.filter((p) => p.survey_type !== null).length,\r\n            totalPoints: points.length,\r\n            // AUDIT FIX (2026-07-03): Don't fabricate storage from points count.\r\n            storageUsed: 0,\r\n            // AUDIT FIX: apiCalls=0 was hardcoded. We don't track per-user API calls yet.\r\n            apiCalls: 0,\r\n            userActivity: lastNDays,\r\n            projectTypes: Object.entries(projectTypesMap).map(([type, count]) => ({ type, count })),\r\n            prevTotalProjects: olderProjects.length,\r\n            prevActiveProjects: olderProjects.length,\r\n            prevCompletedSurveys: olderProjects.filter((p) => p.survey_type !== null).length,\r\n          })\r\n        }\r\n      } catch (err) {\r\n        logger.error('Analytics fetch failed:', { error: err })\r\n      } finally {\r\n        setLoading(false)\r\n      }\r\n    }\r\n\r\n    fetchAnalytics()\r\n  }, [session?.user?.id, status, period])\r\n\r\n  if (loading) {\r\n    return (\r\n      <div className=\"min-h-screen bg-[var(--bg-primary)] flex items-center justify-center\">\r\n        <Loader2 className=\"w-8 h-8 text-[var(--accent)] animate-spin\" />\r\n      </div>\r\n    )\r\n  }\r\n\r\n  const deltas = {\r\n    totalProjects: computeDelta(data.totalProjects, data.prevTotalProjects),\r\n    activeProjects: computeDelta(data.activeProjects, data.prevActiveProjects),\r\n    completedSurveys: computeDelta(data.completedSurveys, data.prevCompletedSurveys),\r\n    apiCalls: null as string | null,\r\n  }\r\n\r\n  return (\r\n    <div className=\"min-h-screen bg-[var(--bg-primary)]\">\r\n      <div className=\"max-w-7xl mx-auto px-4 py-8\">\r\n        <div className=\"flex flex-wrap justify-between items-center mb-8 gap-4\">\r\n          <div>\r\n            <h1 className=\"text-3xl font-bold text-[var(--text-primary)]\">Analytics</h1>\r\n            <p className=\"text-[var(--text-muted)]\">Track your METARDU usage</p>\r\n          </div>\r\n          <select\r\n            value={period}\r\n            onChange={(e) => setPeriod(e.target.value)}\r\n            className=\"p-2 border border-[var(--border-color)] rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)]\"\r\n          >\r\n            <option value=\"7d\">Last 7 days</option>\r\n            <option value=\"30d\">Last 30 days</option>\r\n            <option value=\"90d\">Last 90 days</option>\r\n            <option value=\"1y\">Last year</option>\r\n          </select>\r\n        </div>\r\n\r\n        {/* Stat cards with computed deltas */}\r\n        <div className=\"grid grid-cols-2 md:grid-cols-4 gap-4 mb-8\">\r\n          {[\r\n            { label: 'Total Projects', value: data.totalProjects, delta: deltas.totalProjects },\r\n            { label: 'Active Projects', value: data.activeProjects, delta: deltas.activeProjects },\r\n            { label: 'Completed Surveys', value: data.completedSurveys, delta: deltas.completedSurveys },\r\n            { label: 'API Calls', value: data.apiCalls, delta: deltas.apiCalls },\r\n          ].map((card) => (\r\n            <div key={card.label} className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n              <p className=\"text-sm text-[var(--text-muted)] mb-1\">{card.label}</p>\r\n              <p className=\"text-3xl font-bold text-[var(--text-primary)]\">\r\n                {typeof card.value === 'number' ? card.value.toLocaleString() : card.value}\r\n              </p>\r\n              {card.delta ? (\r\n                <p className={`text-xs mt-1 ${deltaColor(card.delta)}`}>\r\n                  {card.delta.startsWith('+') ? '↑' : '↓'} {card.delta} from last period\r\n                </p>\r\n              ) : (\r\n                <p className=\"text-xs text-[var(--text-muted)] mt-1\">No prior data</p>\r\n              )}\r\n            </div>\r\n          ))}\r\n        </div>\r\n\r\n        {/* Charts */}\r\n        <div className=\"grid md:grid-cols-2 gap-6 mb-8\">\r\n          {/* User Activity — Recharts AreaChart */}\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-4 text-[var(--text-primary)]\">User Activity</h2>\r\n            <ChartContainer config={activityChartConfig} className=\"min-h-[240px] w-full\">\r\n              <AreaChart data={data.userActivity} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>\r\n                <defs>\r\n                  <linearGradient id=\"activityGrad\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\r\n                    <stop offset=\"5%\" stopColor=\"hsl(var(--accent))\" stopOpacity={0.3} />\r\n                    <stop offset=\"95%\" stopColor=\"hsl(var(--accent))\" stopOpacity={0} />\r\n                  </linearGradient>\r\n                </defs>\r\n                <CartesianGrid strokeDasharray=\"3 3\" stroke=\"var(--border-color)\" opacity={0.3} />\r\n                <XAxis\r\n                  dataKey=\"date\"\r\n                  tick={{ fontSize: 11, fill: 'var(--text-muted)' }}\r\n                  tickFormatter={(v: string) => v.split('-').slice(1).join('/')}\r\n                />\r\n                <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />\r\n                <ChartTooltip content={<ChartTooltipContent />} />\r\n                <Area\r\n                  type=\"monotone\"\r\n                  dataKey=\"count\"\r\n                  stroke=\"hsl(var(--accent))\"\r\n                  strokeWidth={2}\r\n                  fill=\"url(#activityGrad)\"\r\n                />\r\n              </AreaChart>\r\n            </ChartContainer>\r\n          </div>\r\n\r\n          {/* Projects by Type — Donut Chart */}\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-4 text-[var(--text-primary)]\">Projects by Type</h2>\r\n            {data.projectTypes.length > 0 ? (\r\n              <div className=\"flex items-start gap-4\">\r\n                <ChartContainer config={typeChartConfig} className=\"min-h-[200px] w-[200px]\">\r\n                  <PieChart>\r\n                    <Pie\r\n                      data={data.projectTypes}\r\n                      cx=\"50%\"\r\n                      cy=\"50%\"\r\n                      innerRadius={45}\r\n                      outerRadius={80}\r\n                      paddingAngle={2}\r\n                      dataKey=\"count\"\r\n                      stroke=\"none\"\r\n                    >\r\n                      {data.projectTypes.map((_, index) => (\r\n                        <Cell key={`cell-${index}`} fill={TYPE_COLORS[index % TYPE_COLORS.length]} />\r\n                      ))}\r\n                    </Pie>\r\n                    <ChartTooltip content={<ChartTooltipContent />} />\r\n                  </PieChart>\r\n                </ChartContainer>\r\n                <div className=\"space-y-2 text-sm flex-1\">\r\n                  {data.projectTypes.map((pt, i) => {\r\n                    const percentage = data.totalProjects > 0 ? (pt.count / data.totalProjects) * 100 : 0\r\n                    return (\r\n                      <div key={pt.type} className=\"flex items-center gap-2\">\r\n                        <div\r\n                          className=\"w-3 h-3 rounded-sm shrink-0\"\r\n                          style={{ backgroundColor: TYPE_COLORS[i % TYPE_COLORS.length] }}\r\n                        />\r\n                        <span className=\"text-[var(--text-secondary)] capitalize\">{pt.type}</span>\r\n                        <span className=\"text-[var(--text-primary)] font-medium ml-auto\">\r\n                          {pt.count}\r\n                          <span className=\"text-[var(--text-muted)] text-xs ml-1\">\r\n                            ({Math.round(percentage)}%)\r\n                          </span>\r\n                        </span>\r\n                      </div>\r\n                    )\r\n                  })}\r\n                </div>\r\n              </div>\r\n            ) : (\r\n              <p className=\"text-sm text-[var(--text-muted)]\">No project type data</p>\r\n            )}\r\n          </div>\r\n        </div>\r\n\r\n        {/* Storage, API, and Team info */}\r\n        {/* AUDIT FIX (2026-07-03): Storage/API widgets were fabricated.\r\n            Now show honest 'not yet available' when no real data. */}\r\n        <div className=\"grid md:grid-cols-3 gap-4\">\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">Storage</h2>\r\n            <div className=\"relative pt-4\">\r\n              {data.storageUsed > 0 ? (\r\n                <>\r\n                  <div className=\"w-full bg-[var(--bg-tertiary)] rounded-full h-4\">\r\n                    <div\r\n                      className=\"bg-green-500 h-4 rounded-full transition-all\"\r\n                      style={{ width: `${Math.min((data.storageUsed / 5) * 100, 100)}%` }}\r\n                    />\r\n                  </div>\r\n                  <p className=\"text-sm text-[var(--text-muted)] mt-2\">\r\n                    {data.storageUsed} GB of 5 GB used\r\n                  </p>\r\n                </>\r\n              ) : (\r\n                <p className=\"text-sm text-[var(--text-muted)]\">\r\n                  Storage tracking is not yet available. File-size accounting will be added in a future update.\r\n                </p>\r\n              )}\r\n            </div>\r\n          </div>\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">API Usage</h2>\r\n            <div className=\"relative pt-4\">\r\n              {data.apiCalls > 0 ? (\r\n                <>\r\n                  <div className=\"w-full bg-[var(--bg-tertiary)] rounded-full h-4\">\r\n                    <div\r\n                      className=\"bg-blue-500 h-4 rounded-full transition-all\"\r\n                      style={{ width: `${Math.min((data.apiCalls / 50000) * 100, 100)}%` }}\r\n                    />\r\n                  </div>\r\n                  <p className=\"text-sm text-[var(--text-muted)] mt-2\">\r\n                    {data.apiCalls.toLocaleString()} of 50,000 calls\r\n                  </p>\r\n                </>\r\n              ) : (\r\n                <p className=\"text-sm text-[var(--text-muted)]\">\r\n                  Per-user API call tracking is not yet available. Contact your administrator for platform-wide stats.\r\n                </p>\r\n              )}\r\n            </div>\r\n          </div>\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">Survey Points</h2>\r\n            <p className=\"text-3xl font-bold text-[var(--text-primary)]\">{data.totalPoints.toLocaleString()}</p>\r\n            <p className=\"text-sm text-[var(--text-muted)]\">Total points recorded</p>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n",
+    "source": "'use client';\r\n\r\nimport { useState, useEffect } from 'react'\r\nimport { useSession } from 'next-auth/react'\r\nimport {\r\n  AreaChart, Area, XAxis, YAxis, CartesianGrid,\r\n  PieChart, Pie, Cell,\r\n} from 'recharts'\r\nimport { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'\r\nimport { Loader2 } from 'lucide-react'\r\nimport { logger } from '@/lib/logger'\r\n\r\n// ---------------------------------------------------------------------------\r\n// Types\r\n// ---------------------------------------------------------------------------\r\n\r\ninterface AnalyticsData {\r\n  totalProjects: number\r\n  activeProjects: number\r\n  completedSurveys: number\r\n  totalPoints: number\r\n  storageUsed: number\r\n  apiCalls: number\r\n  userActivity: { date: string; count: number }[]\r\n  projectTypes: { type: string; count: number }[]\r\n  // Previous period data for delta computation\r\n  prevTotalProjects: number\r\n  prevActiveProjects: number\r\n  prevCompletedSurveys: number\r\n}\r\n\r\nconst emptyData: AnalyticsData = {\r\n  totalProjects: 0,\r\n  activeProjects: 0,\r\n  completedSurveys: 0,\r\n  totalPoints: 0,\r\n  storageUsed: 0,\r\n  apiCalls: 0,\r\n  userActivity: [],\r\n  projectTypes: [],\r\n  prevTotalProjects: 0,\r\n  prevActiveProjects: 0,\r\n  prevCompletedSurveys: 0,\r\n}\r\n\r\n// ---------------------------------------------------------------------------\r\n// Helpers\r\n// ---------------------------------------------------------------------------\r\n\r\nfunction computeDelta(current: number, previous: number): string | null {\r\n  if (previous === 0 && current === 0) return null\r\n  if (previous === 0) return current > 0 ? '+100%' : null\r\n  const change = ((current - previous) / previous) * 100\r\n  const sign = change >= 0 ? '+' : ''\r\n  return `${sign}${change.toFixed(0)}%`\r\n}\r\n\r\nfunction deltaColor(delta: string | null): string {\r\n  if (!delta) return 'text-[var(--text-muted)]'\r\n  return delta.startsWith('+') ? 'text-green-400' : 'text-red-400'\r\n}\r\n\r\nconst TYPE_COLORS = ['#60a5fa', '#4ade80', '#f59e0b', '#a78bfa', '#f472b6', '#94a3b8']\r\n\r\nconst activityChartConfig: ChartConfig = {\r\n  count: { label: 'Projects Created', color: 'hsl(var(--accent))' },\r\n}\r\n\r\nconst typeChartConfig: ChartConfig = {\r\n  cadastral: { label: 'Cadastral', color: '#60a5fa' },\r\n  topographic: { label: 'Topographic', color: '#4ade80' },\r\n  engineering: { label: 'Engineering', color: '#f59e0b' },\r\n  control: { label: 'Control', color: '#a78bfa' },\r\n  other: { label: 'Other', color: '#94a3b8' },\r\n}\r\n\r\n// ---------------------------------------------------------------------------\r\n// Component\r\n// ---------------------------------------------------------------------------\r\n\r\nexport default function AnalyticsPage() {\r\n  const { data: session, status } = useSession()\r\n  const [period, setPeriod] = useState('7d')\r\n  const [data, setData] = useState<AnalyticsData>(emptyData)\r\n  const [loading, setLoading] = useState(true)\r\n\r\n  useEffect(() => {\r\n    if (status === 'loading') return\r\n    if (!session?.user?.id) {\r\n      setLoading(false)\r\n      return\r\n    }\r\n    const sessionUserId = session.user.id\r\n\r\n    async function fetchAnalytics() {\r\n      try {\r\n        // Use the admin dashboard API for richer data if admin,\r\n        // otherwise fall back to direct DB query via Supabase\r\n        const isAdmin = (session?.user as { role?: string })?.role === 'super_admin' ||\r\n          (session?.user as { role?: string })?.role === 'admin'\r\n\r\n        if (isAdmin) {\r\n          const res = await fetch('/api/admin/dashboard')\r\n          if (res.ok) {\r\n            const json = (await res.json()) as {\r\n              data?: {\r\n                projects?: {\r\n                  total?: number\r\n                  byStatus?: Record<string, number>\r\n                }\r\n                parcels?: number\r\n                submissionsThisMonth?: number\r\n                revenue?: { byMonth?: Array<{ month: string; total: number }> }\r\n              }\r\n            }\r\n            const d = (json.data ?? json) as {\r\n              projects?: {\r\n                total?: number\r\n                byStatus?: Record<string, number>\r\n              }\r\n              parcels?: number\r\n              submissionsThisMonth?: number\r\n              revenue?: { byMonth?: Array<{ month: string; total: number }> }\r\n            }\r\n            setData({\r\n              totalProjects: d.projects?.total ?? 0,\r\n              activeProjects: d.projects?.byStatus?.active ?? d.projects?.total ?? 0,\r\n              completedSurveys: d.projects?.byStatus?.completed ?? 0,\r\n              totalPoints: d.parcels ?? 0,\r\n              // AUDIT FIX: Don't fabricate storage from parcel count.\r\n              storageUsed: 0,\r\n              apiCalls: d.submissionsThisMonth ?? 0,\r\n              userActivity: (d.revenue?.byMonth ?? []).map((m: { month: string; total: number }) => ({\r\n                date: m.month,\r\n                count: m.total,\r\n              })),\r\n              projectTypes: Object.entries(d.projects?.byStatus ?? {}).map(([type, count]) => ({\r\n                type,\r\n                count: count as number,\r\n              })),\r\n              // AUDIT FIX: Don't fabricate 'previous period' deltas.\r\n              prevTotalProjects: 0,\r\n              prevActiveProjects: 0,\r\n              prevCompletedSurveys: 0,\r\n            })\r\n          }\r\n        } else {\r\n          // Regular user — query their own projects\r\n          const { createClient } = await import('@/lib/api-client/client')\r\n          const dbClient = createClient()\r\n          const userId = sessionUserId\r\n\r\n          const [projectsRes, pointsRes] = await Promise.all([\r\n            dbClient.from('projects').select('id, survey_type, created_at').eq('user_id', userId),\r\n            dbClient.from('survey_points').select('id, created_at').eq('user_id', userId),\r\n          ])\r\n\r\n          type ProjectRow = { id: string; survey_type: string | null; created_at: string }\r\n          type PointRow = { id: string; created_at: string }\r\n          const projects = (projectsRes.data ?? []) as ProjectRow[]\r\n          const points = (pointsRes.data ?? []) as PointRow[]\r\n\r\n          // Build activity based on period\r\n          const days = period === '7d' ? 7 : period === '30d' ? 30 : period === '90d' ? 90 : 365\r\n          const lastNDays: { date: string; count: number }[] = []\r\n          for (let i = days - 1; i >= 0; i--) {\r\n            const d = new Date()\r\n            d.setDate(d.getDate() - i)\r\n            const dateStr = d.toISOString().split('T')[0]\r\n            const count = projects.filter((p) => p.created_at?.startsWith(dateStr)).length\r\n            lastNDays.push({ date: dateStr, count })\r\n          }\r\n\r\n          const projectTypesMap: Record<string, number> = {}\r\n          projects.forEach((p) => {\r\n            const type = p.survey_type ?? 'Other'\r\n            projectTypesMap[type] = (projectTypesMap[type] ?? 0) + 1\r\n          })\r\n\r\n          // Compute previous period deltas\r\n          const halfPoint = Math.floor(projects.length / 2)\r\n          const recentProjects = projects.slice(0, halfPoint)\r\n          const olderProjects = projects.slice(halfPoint)\r\n\r\n          setData({\r\n            totalProjects: projects.length,\r\n            activeProjects: projects.length,\r\n            completedSurveys: projects.filter((p) => p.survey_type !== null).length,\r\n            totalPoints: points.length,\r\n            // AUDIT FIX (2026-07-03): Don't fabricate storage from points count.\r\n            storageUsed: 0,\r\n            // AUDIT FIX: apiCalls=0 was hardcoded. We don't track per-user API calls yet.\r\n            apiCalls: 0,\r\n            userActivity: lastNDays,\r\n            projectTypes: Object.entries(projectTypesMap).map(([type, count]) => ({ type, count })),\r\n            prevTotalProjects: olderProjects.length,\r\n            prevActiveProjects: olderProjects.length,\r\n            prevCompletedSurveys: olderProjects.filter((p) => p.survey_type !== null).length,\r\n          })\r\n        }\r\n      } catch (err) {\r\n        logger.error('Analytics fetch failed:', { error: err })\r\n      } finally {\r\n        setLoading(false)\r\n      }\r\n    }\r\n\r\n    fetchAnalytics()\r\n  }, [session?.user?.id, status, period])\r\n\r\n  if (loading) {\r\n    return (\r\n      <div className=\"min-h-screen bg-[var(--bg-primary)] flex items-center justify-center\">\r\n        <Loader2 className=\"w-8 h-8 text-[var(--accent)] animate-spin\" />\r\n      </div>\r\n    )\r\n  }\r\n\r\n  const deltas = {\r\n    totalProjects: computeDelta(data.totalProjects, data.prevTotalProjects),\r\n    activeProjects: computeDelta(data.activeProjects, data.prevActiveProjects),\r\n    completedSurveys: computeDelta(data.completedSurveys, data.prevCompletedSurveys),\r\n    apiCalls: null as string | null,\r\n  }\r\n\r\n  return (\r\n    <div className=\"min-h-screen bg-[var(--bg-primary)]\">\r\n      <div className=\"max-w-7xl mx-auto px-4 py-8\">\r\n        <div className=\"flex flex-wrap justify-between items-center mb-8 gap-4\">\r\n          <div>\r\n            <h1 className=\"text-3xl font-bold text-[var(--text-primary)]\">Analytics</h1>\r\n            <p className=\"text-[var(--text-muted)]\">Track your METARDU usage</p>\r\n          </div>\r\n          <select\r\n            value={period}\r\n            onChange={(e) => setPeriod(e.target.value)}\r\n            className=\"p-2 border border-[var(--border-color)] rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)]\"\r\n          >\r\n            <option value=\"7d\">Last 7 days</option>\r\n            <option value=\"30d\">Last 30 days</option>\r\n            <option value=\"90d\">Last 90 days</option>\r\n            <option value=\"1y\">Last year</option>\r\n          </select>\r\n        </div>\r\n\r\n        {/* Stat cards with computed deltas */}\r\n        <div className=\"grid grid-cols-2 md:grid-cols-4 gap-4 mb-8\">\r\n          {[\r\n            { label: 'Total Projects', value: data.totalProjects, delta: deltas.totalProjects },\r\n            { label: 'Active Projects', value: data.activeProjects, delta: deltas.activeProjects },\r\n            { label: 'Completed Surveys', value: data.completedSurveys, delta: deltas.completedSurveys },\r\n            { label: 'API Calls', value: data.apiCalls, delta: deltas.apiCalls },\r\n          ].map((card) => (\r\n            <div key={card.label} className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n              <p className=\"text-sm text-[var(--text-muted)] mb-1\">{card.label}</p>\r\n              <p className=\"text-3xl font-bold text-[var(--text-primary)]\">\r\n                {typeof card.value === 'number' ? card.value.toLocaleString() : card.value}\r\n              </p>\r\n              {card.delta ? (\r\n                <p className={`text-xs mt-1 ${deltaColor(card.delta)}`}>\r\n                  {card.delta.startsWith('+') ? '↑' : '↓'} {card.delta} from last period\r\n                </p>\r\n              ) : (\r\n                <p className=\"text-xs text-[var(--text-muted)] mt-1\">No prior data</p>\r\n              )}\r\n            </div>\r\n          ))}\r\n        </div>\r\n\r\n        {/* Charts */}\r\n        <div className=\"grid md:grid-cols-2 gap-6 mb-8\">\r\n          {/* User Activity — Recharts AreaChart */}\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-4 text-[var(--text-primary)]\">User Activity</h2>\r\n            <ChartContainer config={activityChartConfig} className=\"min-h-[240px] w-full\">\r\n              <AreaChart data={data.userActivity} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>\r\n                <defs>\r\n                  <linearGradient id=\"activityGrad\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\r\n                    <stop offset=\"5%\" stopColor=\"hsl(var(--accent))\" stopOpacity={0.3} />\r\n                    <stop offset=\"95%\" stopColor=\"hsl(var(--accent))\" stopOpacity={0} />\r\n                  </linearGradient>\r\n                </defs>\r\n                <CartesianGrid strokeDasharray=\"3 3\" stroke=\"var(--border-color)\" opacity={0.3} />\r\n                <XAxis\r\n                  dataKey=\"date\"\r\n                  tick={{ fontSize: 11, fill: 'var(--text-muted)' }}\r\n                  tickFormatter={(v: string) => v.split('-').slice(1).join('/')}\r\n                />\r\n                <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />\r\n                <ChartTooltip content={<ChartTooltipContent />} />\r\n                <Area\r\n                  type=\"monotone\"\r\n                  dataKey=\"count\"\r\n                  stroke=\"hsl(var(--accent))\"\r\n                  strokeWidth={2}\r\n                  fill=\"url(#activityGrad)\"\r\n                />\r\n              </AreaChart>\r\n            </ChartContainer>\r\n          </div>\r\n\r\n          {/* Projects by Type — Donut Chart */}\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-4 text-[var(--text-primary)]\">Projects by Type</h2>\r\n            {data.projectTypes.length > 0 ? (\r\n              <div className=\"flex items-start gap-4\">\r\n                <ChartContainer config={typeChartConfig} className=\"min-h-[200px] w-[200px]\">\r\n                  <PieChart>\r\n                    <Pie\r\n                      data={data.projectTypes}\r\n                      cx=\"50%\"\r\n                      cy=\"50%\"\r\n                      innerRadius={45}\r\n                      outerRadius={80}\r\n                      paddingAngle={2}\r\n                      dataKey=\"count\"\r\n                      stroke=\"none\"\r\n                    >\r\n                      {data.projectTypes.map((_, index) => (\r\n                        <Cell key={`cell-${index}`} fill={TYPE_COLORS[index % TYPE_COLORS.length]} />\r\n                      ))}\r\n                    </Pie>\r\n                    <ChartTooltip content={<ChartTooltipContent />} />\r\n                  </PieChart>\r\n                </ChartContainer>\r\n                <div className=\"space-y-2 text-sm flex-1\">\r\n                  {data.projectTypes.map((pt, i) => {\r\n                    const percentage = data.totalProjects > 0 ? (pt.count / data.totalProjects) * 100 : 0\r\n                    return (\r\n                      <div key={pt.type} className=\"flex items-center gap-2\">\r\n                        <div\r\n                          className=\"w-3 h-3 rounded-sm shrink-0\"\r\n                          style={{ backgroundColor: TYPE_COLORS[i % TYPE_COLORS.length] }}\r\n                        />\r\n                        <span className=\"text-[var(--text-secondary)] capitalize\">{pt.type}</span>\r\n                        <span className=\"text-[var(--text-primary)] font-medium ml-auto\">\r\n                          {pt.count}\r\n                          <span className=\"text-[var(--text-muted)] text-xs ml-1\">\r\n                            ({Math.round(percentage)}%)\r\n                          </span>\r\n                        </span>\r\n                      </div>\r\n                    )\r\n                  })}\r\n                </div>\r\n              </div>\r\n            ) : (\r\n              <p className=\"text-sm text-[var(--text-muted)]\">No project type data</p>\r\n            )}\r\n          </div>\r\n        </div>\r\n\r\n        {/* Storage, API, and Team info */}\r\n        {/* AUDIT FIX (2026-07-03): Storage/API widgets were fabricated.\r\n            Now show honest 'not yet available' when no real data. */}\r\n        <div className=\"grid md:grid-cols-3 gap-4\">\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">Storage</h2>\r\n            <div className=\"relative pt-4\">\r\n              {data.storageUsed > 0 ? (\r\n                <>\r\n                  <div className=\"w-full bg-[var(--bg-tertiary)] rounded-full h-4\">\r\n                    <div\r\n                      className=\"bg-green-500 h-4 rounded-full transition-all\"\r\n                      style={{ width: `${Math.min((data.storageUsed / 5) * 100, 100)}%` }}\r\n                    />\r\n                  </div>\r\n                  <p className=\"text-sm text-[var(--text-muted)] mt-2\">\r\n                    {data.storageUsed} GB of 5 GB used\r\n                  </p>\r\n                </>\r\n              ) : (\r\n                <p className=\"text-sm text-[var(--text-muted)]\">\r\n                  Storage tracking is not yet available. File-size accounting will be added in a future update.\r\n                </p>\r\n              )}\r\n            </div>\r\n          </div>\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">API Usage</h2>\r\n            <div className=\"relative pt-4\">\r\n              {data.apiCalls > 0 ? (\r\n                <>\r\n                  <div className=\"w-full bg-[var(--bg-tertiary)] rounded-full h-4\">\r\n                    <div\r\n                      className=\"bg-blue-500 h-4 rounded-full transition-all\"\r\n                      style={{ width: `${Math.min((data.apiCalls / 50000) * 100, 100)}%` }}\r\n                    />\r\n                  </div>\r\n                  <p className=\"text-sm text-[var(--text-muted)] mt-2\">\r\n                    {data.apiCalls.toLocaleString()} of 50,000 calls\r\n                  </p>\r\n                </>\r\n              ) : (\r\n                <p className=\"text-sm text-[var(--text-muted)]\">\r\n                  Per-user API call tracking is not yet available. Contact your administrator for platform-wide stats.\r\n                </p>\r\n              )}\r\n            </div>\r\n          </div>\r\n          <div className=\"bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-6\">\r\n            <h2 className=\"text-lg font-semibold mb-2 text-[var(--text-primary)]\">Survey Points</h2>\r\n            <p className=\"text-3xl font-bold text-[var(--text-primary)]\">{data.totalPoints.toLocaleString()}</p>\r\n            <p className=\"text-sm text-[var(--text-muted)]\">Total points recorded</p>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -39605,216 +39546,24 @@
         ]
       },
       {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 107,
-        "column": 24,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 107,
-        "endColumn": 36,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                3935,
-                3936
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 107,
-        "column": 46,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 107,
-        "endColumn": 52,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                3951,
-                3952
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 108,
-        "column": 24,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 108,
-        "endColumn": 36,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                4016,
-                4017
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 108,
-        "column": 47,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 108,
-        "endColumn": 53,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                4033,
-                4034
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 147,
-        "column": 24,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 147,
-        "endColumn": 29,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                5535,
-                5536
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 147,
-        "column": 39,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 147,
-        "endColumn": 45,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                5551,
-                5552
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 148,
-        "column": 24,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 148,
-        "endColumn": 29,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                5609,
-                5610
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 148,
-        "column": 40,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 148,
-        "endColumn": 46,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                5626,
-                5627
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
         "ruleId": "@typescript-eslint/no-unused-vars",
         "severity": 1,
         "message": "'result' is assigned a value but never used. Allowed unused vars must match /^_/u.",
-        "line": 194,
+        "line": 195,
         "column": 11,
         "nodeType": "Identifier",
         "messageId": "unusedVar",
-        "endLine": 194,
+        "endLine": 195,
         "endColumn": 17
       }
     ],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 10,
+    "warningCount": 2,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Tests for the sequential adjustment module.\r\n *\r\n * Verifies:\r\n *  - State initialization from a base network\r\n *  - Adding observations incrementally produces same result as full re-run\r\n *  - Removing observations works\r\n *  - Adding/removing points triggers full rebuild\r\n *  - State serialization round-trips correctly\r\n *  - Convergence detection works\r\n */\r\n\r\nimport {\r\n  initSequentialState,\r\n  addObservations,\r\n  removeObservations,\r\n  addPoint,\r\n  removePoint,\r\n  serializeState,\r\n  deserializeState,\r\n  isConverged,\r\n} from '../sequentialAdjustment'\r\nimport { adjustNetwork, type NetworkPoint, type NetworkObservation } from '../networkAdjustment'\r\n\r\nfunction approxEqual(a: number, b: number, tol = 1e-6): boolean {\r\n  return Math.abs(a - b) < tol\r\n}\r\n\r\ndescribe('sequentialAdjustment — initialization', () => {\r\n  test('initializes state with correct dimensions for 2D', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'B', easting: 100, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n      { type: 'distance', from: 'B', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, observations, { dimension: '2D' })\r\n\r\n    expect(state.paramPerPoint).toBe(2)\r\n    expect(state.paramCount).toBe(2) // 1 adjustable point × 2\r\n    expect(state.dimension).toBe('2D')\r\n    expect(state.pointIndex.size).toBe(1)\r\n    expect(state.pointIndex.has('P')).toBe(true)\r\n    expect(state.points.length).toBe(3)\r\n    expect(state.observations.length).toBe(2)\r\n  })\r\n\r\n  test('initializes state with correct dimensions for 3D', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, rl: 100, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50, rl: 100 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      {\r\n        type: 'gnss_baseline', from: 'A', to: 'P', value: 0, sigma: 0.005,\r\n        deltaE: 50, deltaN: 50, deltaU: 0,\r\n        covariance3x3: [0.000025, 0, 0.000025, 0, 0, 0.000025],\r\n      },\r\n    ]\r\n\r\n    const state = initSequentialState(points, observations, { dimension: '3D' })\r\n\r\n    expect(state.paramPerPoint).toBe(3)\r\n    expect(state.paramCount).toBe(3)\r\n    expect(state.dimension).toBe('3D')\r\n  })\r\n})\r\n\r\ndescribe('sequentialAdjustment — incremental updates', () => {\r\n  test('adding observations matches full re-run', () => {\r\n    // Base network: 2 fixed + 1 unknown, 2 distance observations\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'B', easting: 100, northing: 0, fixed: true },\r\n      { name: 'C', easting: 50, northing: -100, fixed: true },\r\n      { name: 'P', easting: 50.5, northing: 49.5 },\r\n    ]\r\n    const baseObs: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n      { type: 'distance', from: 'B', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, baseObs, { convergenceMm: 0.01 })\r\n\r\n    // Add a third observation\r\n    const newObs: NetworkObservation[] = [\r\n      { type: 'distance', from: 'C', to: 'P', value: 150, sigma: 0.005 },\r\n    ]\r\n\r\n    const updateResult = addObservations(state, newObs)\r\n\r\n    // Compare to full re-run\r\n    const fullResult = adjustNetwork(points, [...baseObs, ...newObs], { convergenceMm: 0.01 })\r\n\r\n    expect(updateResult.result.ok).toBe(true)\r\n    expect(fullResult.ok).toBe(true)\r\n\r\n    const pSequential = updateResult.result.adjustedPoints.find((x) => x.name === 'P')\r\n    const pFull = fullResult.adjustedPoints.find((x) => x.name === 'P')\r\n\r\n    expect(pSequential).toBeDefined()\r\n    expect(pFull).toBeDefined()\r\n    expect(approxEqual(pSequential!.easting, pFull!.easting, 0.001)).toBe(true)\r\n    expect(approxEqual(pSequential!.northing, pFull!.northing, 0.001)).toBe(true)\r\n  })\r\n\r\n  test('adding multiple observations incrementally', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'B', easting: 100, northing: 0, fixed: true },\r\n      { name: 'C', easting: 50, northing: -100, fixed: true },\r\n      { name: 'P', easting: 50.5, northing: 49.5 },\r\n    ]\r\n    const baseObs: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, baseObs, { freeNetwork: false, convergenceMm: 0.01 })\r\n\r\n    // Add two more observations one at a time\r\n    addObservations(state, [\r\n      { type: 'distance', from: 'B', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ])\r\n    const final = addObservations(state, [\r\n      { type: 'distance', from: 'C', to: 'P', value: 150, sigma: 0.005 },\r\n    ])\r\n\r\n    const fullResult = adjustNetwork(\r\n      points,\r\n      [\r\n        { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n        { type: 'distance', from: 'B', to: 'P', value: 70.71, sigma: 0.005 },\r\n        { type: 'distance', from: 'C', to: 'P', value: 150, sigma: 0.005 },\r\n      ],\r\n      { convergenceMm: 0.01 },\r\n    )\r\n\r\n    const pSeq = final.result.adjustedPoints.find((x) => x.name === 'P')\r\n    const pFull = fullResult.adjustedPoints.find((x) => x.name === 'P')\r\n\r\n    expect(pSeq).toBeDefined()\r\n    expect(pFull).toBeDefined()\r\n    expect(approxEqual(pSeq!.easting, pFull!.easting, 0.001)).toBe(true)\r\n    expect(approxEqual(pSeq!.northing, pFull!.northing, 0.001)).toBe(true)\r\n  })\r\n})\r\n\r\ndescribe('sequentialAdjustment — point management', () => {\r\n  test('addPoint triggers full rebuild', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, observations, { freeNetwork: true })\r\n    const newPoint: NetworkPoint = { name: 'Q', easting: 60, northing: 60 }\r\n    const result = addPoint(state, newPoint)\r\n\r\n    expect(result.fullRelinearization).toBe(true)\r\n    expect(state.points.length).toBe(3)\r\n    expect(state.points.some((p) => p.name === 'Q')).toBe(true)\r\n  })\r\n\r\n  test('addPoint rejects duplicate name', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = []\r\n    const state = initSequentialState(points, observations, { freeNetwork: true })\r\n\r\n    expect(() => addPoint(state, { name: 'A', easting: 99, northing: 99 })).toThrow('already exists')\r\n  })\r\n\r\n  test('removePoint also removes observations referencing it', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'B', easting: 100, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n      { type: 'distance', from: 'B', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n    const state = initSequentialState(points, observations, { freeNetwork: true })\r\n\r\n    const result = removePoint(state, 'P')\r\n\r\n    expect(state.points.length).toBe(2)\r\n    expect(state.points.some((p) => p.name === 'P')).toBe(false)\r\n    expect(state.observations.length).toBe(0) // both referenced P\r\n  })\r\n})\r\n\r\ndescribe('sequentialAdjustment — serialization', () => {\r\n  test('serialize → deserialize round-trips correctly', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const original = initSequentialState(points, observations, { freeNetwork: true })\r\n    original.totalIterations = 5\r\n    original.lastUpdatedAt = '2026-01-01T00:00:00Z'\r\n\r\n    const serialized = serializeState(original)\r\n    const restored = deserializeState(serialized)\r\n\r\n    expect(restored.points.length).toBe(original.points.length)\r\n    expect(restored.observations.length).toBe(original.observations.length)\r\n    expect(restored.paramPerPoint).toBe(original.paramPerPoint)\r\n    expect(restored.paramCount).toBe(original.paramCount)\r\n    expect(restored.dimension).toBe(original.dimension)\r\n    expect(restored.totalIterations).toBe(5)\r\n    expect(restored.lastUpdatedAt).toBe('2026-01-01T00:00:00Z')\r\n    expect(restored.pointIndex.size).toBe(original.pointIndex.size)\r\n    expect(restored.currentCoords.size).toBe(original.currentCoords.size)\r\n  })\r\n\r\n  test('serialized state is JSON-safe', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, observations)\r\n    const serialized = serializeState(state)\r\n\r\n    // Should be JSON-serializable (no Maps, no SparseMatrix objects)\r\n    const json = JSON.stringify(serialized)\r\n    expect(json.length).toBeGreaterThan(0)\r\n\r\n    const parsed = JSON.parse(json) as { points?: unknown; N: { rowPtr?: unknown } }\r\n    expect(parsed.points).toBeDefined()\r\n    expect(parsed.N).toBeDefined()\r\n    expect(parsed.N.rowPtr).toBeDefined()\r\n  })\r\n})\r\n\r\ndescribe('sequentialAdjustment — convergence', () => {\r\n  test('isConverged returns true after stable adjustment', () => {\r\n    // Use 2 fixed points and start P at the exact true position\r\n    const trueP = { e: 50, n: 50 }\r\n    const distAP = Math.sqrt(trueP.e ** 2 + trueP.n ** 2)\r\n    const distBP = Math.sqrt((trueP.e - 100) ** 2 + trueP.n ** 2)\r\n\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'B', easting: 100, northing: 0, fixed: true },\r\n      { name: 'P', easting: trueP.e, northing: trueP.n }, // exact\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: distAP, sigma: 0.005 },\r\n      { type: 'distance', from: 'B', to: 'P', value: distBP, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, observations, { convergenceMm: 0.001 })\r\n    addObservations(state, [])\r\n\r\n    // With exact initial coords, corrections should be ~0\r\n    expect(isConverged(state, 0.1)).toBe(true)\r\n  })\r\n})\r\n",
+    "source": "/**\r\n * Tests for the sequential adjustment module.\r\n *\r\n * Verifies:\r\n *  - State initialization from a base network\r\n *  - Adding observations incrementally produces same result as full re-run\r\n *  - Removing observations works\r\n *  - Adding/removing points triggers full rebuild\r\n *  - State serialization round-trips correctly\r\n *  - Convergence detection works\r\n */\r\n\r\nimport {\r\n  initSequentialState,\r\n  addObservations,\r\n  removeObservations,\r\n  addPoint,\r\n  removePoint,\r\n  serializeState,\r\n  deserializeState,\r\n  isConverged,\r\n} from '../sequentialAdjustment'\r\nimport { adjustNetwork, type NetworkPoint, type NetworkObservation } from '../networkAdjustment'\r\nimport { defined } from '@/test-utils/defined'\r\n\r\nfunction approxEqual(a: number, b: number, tol = 1e-6): boolean {\r\n  return Math.abs(a - b) < tol\r\n}\r\n\r\ndescribe('sequentialAdjustment — initialization', () => {\r\n  test('initializes state with correct dimensions for 2D', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'B', easting: 100, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n      { type: 'distance', from: 'B', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, observations, { dimension: '2D' })\r\n\r\n    expect(state.paramPerPoint).toBe(2)\r\n    expect(state.paramCount).toBe(2) // 1 adjustable point × 2\r\n    expect(state.dimension).toBe('2D')\r\n    expect(state.pointIndex.size).toBe(1)\r\n    expect(state.pointIndex.has('P')).toBe(true)\r\n    expect(state.points.length).toBe(3)\r\n    expect(state.observations.length).toBe(2)\r\n  })\r\n\r\n  test('initializes state with correct dimensions for 3D', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, rl: 100, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50, rl: 100 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      {\r\n        type: 'gnss_baseline', from: 'A', to: 'P', value: 0, sigma: 0.005,\r\n        deltaE: 50, deltaN: 50, deltaU: 0,\r\n        covariance3x3: [0.000025, 0, 0.000025, 0, 0, 0.000025],\r\n      },\r\n    ]\r\n\r\n    const state = initSequentialState(points, observations, { dimension: '3D' })\r\n\r\n    expect(state.paramPerPoint).toBe(3)\r\n    expect(state.paramCount).toBe(3)\r\n    expect(state.dimension).toBe('3D')\r\n  })\r\n})\r\n\r\ndescribe('sequentialAdjustment — incremental updates', () => {\r\n  test('adding observations matches full re-run', () => {\r\n    // Base network: 2 fixed + 1 unknown, 2 distance observations\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'B', easting: 100, northing: 0, fixed: true },\r\n      { name: 'C', easting: 50, northing: -100, fixed: true },\r\n      { name: 'P', easting: 50.5, northing: 49.5 },\r\n    ]\r\n    const baseObs: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n      { type: 'distance', from: 'B', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, baseObs, { convergenceMm: 0.01 })\r\n\r\n    // Add a third observation\r\n    const newObs: NetworkObservation[] = [\r\n      { type: 'distance', from: 'C', to: 'P', value: 150, sigma: 0.005 },\r\n    ]\r\n\r\n    const updateResult = addObservations(state, newObs)\r\n\r\n    // Compare to full re-run\r\n    const fullResult = adjustNetwork(points, [...baseObs, ...newObs], { convergenceMm: 0.01 })\r\n\r\n    expect(updateResult.result.ok).toBe(true)\r\n    expect(fullResult.ok).toBe(true)\r\n\r\n    const pSequential = updateResult.result.adjustedPoints.find((x) => x.name === 'P')\r\n    const pFull = fullResult.adjustedPoints.find((x) => x.name === 'P')\r\n\r\n    expect(pSequential).toBeDefined()\r\n    expect(pFull).toBeDefined()\r\n    expect(approxEqual(defined(pSequential).easting, defined(pFull).easting, 0.001)).toBe(true)\r\n    expect(approxEqual(defined(pSequential).northing, defined(pFull).northing, 0.001)).toBe(true)\r\n  })\r\n\r\n  test('adding multiple observations incrementally', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'B', easting: 100, northing: 0, fixed: true },\r\n      { name: 'C', easting: 50, northing: -100, fixed: true },\r\n      { name: 'P', easting: 50.5, northing: 49.5 },\r\n    ]\r\n    const baseObs: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, baseObs, { freeNetwork: false, convergenceMm: 0.01 })\r\n\r\n    // Add two more observations one at a time\r\n    addObservations(state, [\r\n      { type: 'distance', from: 'B', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ])\r\n    const final = addObservations(state, [\r\n      { type: 'distance', from: 'C', to: 'P', value: 150, sigma: 0.005 },\r\n    ])\r\n\r\n    const fullResult = adjustNetwork(\r\n      points,\r\n      [\r\n        { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n        { type: 'distance', from: 'B', to: 'P', value: 70.71, sigma: 0.005 },\r\n        { type: 'distance', from: 'C', to: 'P', value: 150, sigma: 0.005 },\r\n      ],\r\n      { convergenceMm: 0.01 },\r\n    )\r\n\r\n    const pSeq = final.result.adjustedPoints.find((x) => x.name === 'P')\r\n    const pFull = fullResult.adjustedPoints.find((x) => x.name === 'P')\r\n\r\n    expect(pSeq).toBeDefined()\r\n    expect(pFull).toBeDefined()\r\n    expect(approxEqual(defined(pSeq).easting, defined(pFull).easting, 0.001)).toBe(true)\r\n    expect(approxEqual(defined(pSeq).northing, defined(pFull).northing, 0.001)).toBe(true)\r\n  })\r\n})\r\n\r\ndescribe('sequentialAdjustment — point management', () => {\r\n  test('addPoint triggers full rebuild', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, observations, { freeNetwork: true })\r\n    const newPoint: NetworkPoint = { name: 'Q', easting: 60, northing: 60 }\r\n    const result = addPoint(state, newPoint)\r\n\r\n    expect(result.fullRelinearization).toBe(true)\r\n    expect(state.points.length).toBe(3)\r\n    expect(state.points.some((p) => p.name === 'Q')).toBe(true)\r\n  })\r\n\r\n  test('addPoint rejects duplicate name', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = []\r\n    const state = initSequentialState(points, observations, { freeNetwork: true })\r\n\r\n    expect(() => addPoint(state, { name: 'A', easting: 99, northing: 99 })).toThrow('already exists')\r\n  })\r\n\r\n  test('removePoint also removes observations referencing it', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'B', easting: 100, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n      { type: 'distance', from: 'B', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n    const state = initSequentialState(points, observations, { freeNetwork: true })\r\n\r\n    const result = removePoint(state, 'P')\r\n\r\n    expect(state.points.length).toBe(2)\r\n    expect(state.points.some((p) => p.name === 'P')).toBe(false)\r\n    expect(state.observations.length).toBe(0) // both referenced P\r\n  })\r\n})\r\n\r\ndescribe('sequentialAdjustment — serialization', () => {\r\n  test('serialize → deserialize round-trips correctly', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const original = initSequentialState(points, observations, { freeNetwork: true })\r\n    original.totalIterations = 5\r\n    original.lastUpdatedAt = '2026-01-01T00:00:00Z'\r\n\r\n    const serialized = serializeState(original)\r\n    const restored = deserializeState(serialized)\r\n\r\n    expect(restored.points.length).toBe(original.points.length)\r\n    expect(restored.observations.length).toBe(original.observations.length)\r\n    expect(restored.paramPerPoint).toBe(original.paramPerPoint)\r\n    expect(restored.paramCount).toBe(original.paramCount)\r\n    expect(restored.dimension).toBe(original.dimension)\r\n    expect(restored.totalIterations).toBe(5)\r\n    expect(restored.lastUpdatedAt).toBe('2026-01-01T00:00:00Z')\r\n    expect(restored.pointIndex.size).toBe(original.pointIndex.size)\r\n    expect(restored.currentCoords.size).toBe(original.currentCoords.size)\r\n  })\r\n\r\n  test('serialized state is JSON-safe', () => {\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'P', easting: 50, northing: 50 },\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: 70.71, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, observations)\r\n    const serialized = serializeState(state)\r\n\r\n    // Should be JSON-serializable (no Maps, no SparseMatrix objects)\r\n    const json = JSON.stringify(serialized)\r\n    expect(json.length).toBeGreaterThan(0)\r\n\r\n    const parsed = JSON.parse(json) as { points?: unknown; N: { rowPtr?: unknown } }\r\n    expect(parsed.points).toBeDefined()\r\n    expect(parsed.N).toBeDefined()\r\n    expect(parsed.N.rowPtr).toBeDefined()\r\n  })\r\n})\r\n\r\ndescribe('sequentialAdjustment — convergence', () => {\r\n  test('isConverged returns true after stable adjustment', () => {\r\n    // Use 2 fixed points and start P at the exact true position\r\n    const trueP = { e: 50, n: 50 }\r\n    const distAP = Math.sqrt(trueP.e ** 2 + trueP.n ** 2)\r\n    const distBP = Math.sqrt((trueP.e - 100) ** 2 + trueP.n ** 2)\r\n\r\n    const points: NetworkPoint[] = [\r\n      { name: 'A', easting: 0, northing: 0, fixed: true },\r\n      { name: 'B', easting: 100, northing: 0, fixed: true },\r\n      { name: 'P', easting: trueP.e, northing: trueP.n }, // exact\r\n    ]\r\n    const observations: NetworkObservation[] = [\r\n      { type: 'distance', from: 'A', to: 'P', value: distAP, sigma: 0.005 },\r\n      { type: 'distance', from: 'B', to: 'P', value: distBP, sigma: 0.005 },\r\n    ]\r\n\r\n    const state = initSequentialState(points, observations, { convergenceMm: 0.001 })\r\n    addObservations(state, [])\r\n\r\n    // With exact initial coords, corrections should be ~0\r\n    expect(isConverged(state, 0.1)).toBe(true)\r\n  })\r\n})\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -54680,183 +54429,13 @@
   },
   {
     "filePath": "src/lib/survey/curves/__tests__/spiralAlignment.test.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 104,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 104,
-        "endColumn": 22,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                3456,
-                3457
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 105,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 105,
-        "endColumn": 22,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                3507,
-                3508
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 200,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 200,
-        "endColumn": 14,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                6874,
-                6875
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 201,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 201,
-        "endColumn": 14,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                6919,
-                6920
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 202,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 202,
-        "endColumn": 14,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                6958,
-                6959
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 209,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 209,
-        "endColumn": 14,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                7248,
-                7249
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 216,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 216,
-        "endColumn": 14,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                7518,
-                7519
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 7,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Tests for spiralAlignment.ts\r\n *\r\n * Verifies:\r\n *   - TS/SC/CS/ST chainage computation\r\n *   - Tangent length T = k + (R+p)·tan(Δ/2)\r\n *   - Circular curve length Lc = R·(Δ - 2θs)\r\n *   - Total length = 2·Ls + Lc\r\n *   - Station interpolation at TS, SC, CS, ST\r\n *   - Coordinate array shape for OpenLayers\r\n *   - CSV export\r\n *   - Error handling (zero Δ, spirals too long, etc.)\r\n */\r\n\r\nimport {\r\n  computeSpiralAlignment,\r\n  stationSpiralAlignment,\r\n  stationAtDistance,\r\n  alignmentToCoordinateArray,\r\n  spiralAlignmentToCSV,\r\n  type SpiralAlignmentInput,\r\n} from '../spiralAlignment'\r\n\r\nconst SAMPLE_INPUT: SpiralAlignmentInput = {\r\n  radius: 300,\r\n  intersectionAngleDeg: 30,\r\n  spiralLength: 60,\r\n  piChainage: 1000,\r\n}\r\n\r\ndescribe('computeSpiralAlignment — chainages', () => {\r\n  it('computes TS < SC < CS < ST in order', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    expect(a.tsChainage).toBeLessThan(a.scChainage)\r\n    expect(a.scChainage).toBeLessThan(a.csChainage)\r\n    expect(a.csChainage).toBeLessThan(a.stChainage)\r\n  })\r\n\r\n  it('places SC exactly Ls after TS', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    expect(a.scChainage - a.tsChainage).toBeCloseTo(SAMPLE_INPUT.spiralLength, 2)\r\n  })\r\n\r\n  it('places ST exactly Ls after CS', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    expect(a.stChainage - a.csChainage).toBeCloseTo(SAMPLE_INPUT.spiralLength, 2)\r\n  })\r\n\r\n  it('places CS exactly Lc after SC', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    expect(a.csChainage - a.scChainage).toBeCloseTo(a.Lc, 2)\r\n  })\r\n\r\n  it('totalLength = 2·Ls + Lc', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    expect(a.totalLength).toBeCloseTo(2 * SAMPLE_INPUT.spiralLength + a.Lc, 2)\r\n  })\r\n\r\n  it('stChainage - tsChainage = totalLength', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    expect(a.stChainage - a.tsChainage).toBeCloseTo(a.totalLength, 2)\r\n  })\r\n})\r\n\r\ndescribe('computeSpiralAlignment — geometry', () => {\r\n  it('T = k + (R + p)·tan(Δ/2)', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const expectedT = a.k + (SAMPLE_INPUT.radius + a.p) * Math.tan(a.deltaRad / 2)\r\n    expect(a.T).toBeCloseTo(expectedT, 2)\r\n  })\r\n\r\n  it('Lc = R·(Δ - 2θs)', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const expectedLc = SAMPLE_INPUT.radius * (a.deltaRad - 2 * a.thetaSRad)\r\n    expect(a.Lc).toBeCloseTo(expectedLc, 2)\r\n  })\r\n\r\n  it('θs = Ls / (2R)', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const expectedTheta = SAMPLE_INPUT.spiralLength / (2 * SAMPLE_INPUT.radius)\r\n    expect(a.thetaSRad).toBeCloseTo(expectedTheta, 6)\r\n  })\r\n\r\n  it('produces positive T, Lc, totalLength', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    expect(a.T).toBeGreaterThan(0)\r\n    expect(a.Lc).toBeGreaterThan(0)\r\n    expect(a.totalLength).toBeGreaterThan(0)\r\n  })\r\n\r\n  it('reports world coordinates when PI coords are supplied', () => {\r\n    const a = computeSpiralAlignment({\r\n      ...SAMPLE_INPUT,\r\n      piEasting: 5000,\r\n      piNorthing: 6000,\r\n      approachBearingDeg: 90, // East\r\n    })\r\n    expect(a.tsCoord).not.toBeNull()\r\n    expect(a.scCoord).not.toBeNull()\r\n    expect(a.csCoord).not.toBeNull()\r\n    expect(a.stCoord).not.toBeNull()\r\n    // TS is behind PI along approach tangent\r\n    // Approach bearing 90° = East, so TS is WEST of PI\r\n    expect(a.tsCoord!.easting).toBeLessThan(5000)\r\n    expect(a.tsCoord!.northing).toBeCloseTo(6000, 1)\r\n  })\r\n\r\n  it('returns null coords when PI coords are not supplied', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    expect(a.tsCoord).toBeNull()\r\n    expect(a.scCoord).toBeNull()\r\n    expect(a.csCoord).toBeNull()\r\n    expect(a.stCoord).toBeNull()\r\n    expect(a.piCoord).toBeNull()\r\n  })\r\n})\r\n\r\ndescribe('computeSpiralAlignment — error handling', () => {\r\n  it('throws on non-positive radius', () => {\r\n    expect(() =>\r\n      computeSpiralAlignment({ ...SAMPLE_INPUT, radius: 0 })\r\n    ).toThrow(/Radius must be positive/)\r\n    expect(() =>\r\n      computeSpiralAlignment({ ...SAMPLE_INPUT, radius: -10 })\r\n    ).toThrow(/Radius must be positive/)\r\n  })\r\n\r\n  it('throws on negative spiral length', () => {\r\n    expect(() =>\r\n      computeSpiralAlignment({ ...SAMPLE_INPUT, spiralLength: -1 })\r\n    ).toThrow(/Spiral length/)\r\n  })\r\n\r\n  it('throws on zero intersection angle', () => {\r\n    expect(() =>\r\n      computeSpiralAlignment({ ...SAMPLE_INPUT, intersectionAngleDeg: 0 })\r\n    ).toThrow(/Intersection angle must be non-zero/)\r\n  })\r\n\r\n  it('throws when spirals are too long for the intersection angle', () => {\r\n    // θs = Ls/(2R) = 100/(2·50) = 1 rad = 57.3°\r\n    // 2θs = 114.6° > Δ = 30°\r\n    expect(() =>\r\n      computeSpiralAlignment({\r\n        ...SAMPLE_INPUT,\r\n        radius: 50,\r\n        spiralLength: 100,\r\n      })\r\n    ).toThrow(/no room for circular curve/)\r\n  })\r\n})\r\n\r\ndescribe('stationSpiralAlignment', () => {\r\n  it('samples stations at the requested interval', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const stations = stationSpiralAlignment(a, 20)\r\n    expect(stations.length).toBeGreaterThan(5)\r\n    expect(stations[0].chainage).toBeCloseTo(a.tsChainage, 1)\r\n    expect(stations[stations.length - 1].chainage).toBeCloseTo(a.stChainage, 1)\r\n  })\r\n\r\n  it('labels each station with its segment', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const stations = stationSpiralAlignment(a, 5)\r\n    const segments = new Set(stations.map(s => s.segment))\r\n    expect(segments.has('entry-spiral')).toBe(true)\r\n    expect(segments.has('circular')).toBe(true)\r\n    expect(segments.has('exit-spiral')).toBe(true)\r\n  })\r\n\r\n  it('places the first station at TS with zero distance', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const stations = stationSpiralAlignment(a, 20)\r\n    expect(stations[0].distanceFromTS).toBe(0)\r\n    expect(stations[0].chainage).toBeCloseTo(a.tsChainage, 1)\r\n  })\r\n\r\n  it('places the last station at ST', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const stations = stationSpiralAlignment(a, 20)\r\n    expect(stations[stations.length - 1].distanceFromTS).toBeCloseTo(a.totalLength, 0)\r\n  })\r\n})\r\n\r\ndescribe('stationAtDistance', () => {\r\n  it('returns null for negative distance', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    expect(stationAtDistance(a, -10)).toBeNull()\r\n  })\r\n\r\n  it('returns null for distance beyond totalLength', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    expect(stationAtDistance(a, a.totalLength + 10)).toBeNull()\r\n  })\r\n\r\n  it('returns a station at distance 0 with segment \"entry-spiral\"', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const s = stationAtDistance(a, 0)\r\n    expect(s).not.toBeNull()\r\n    expect(s!.segment).toBe('entry-spiral')\r\n    expect(s!.distanceFromTS).toBe(0)\r\n    expect(s!.offset).toBe(0) // at TS, offset is 0\r\n  })\r\n\r\n  it('returns a station at Ls with segment \"circular\" (SC point)', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const s = stationAtDistance(a, SAMPLE_INPUT.spiralLength + 0.001)\r\n    expect(s).not.toBeNull()\r\n    expect(s!.segment).toBe('circular')\r\n  })\r\n\r\n  it('returns a station at totalLength with segment \"exit-spiral\" (ST point)', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const s = stationAtDistance(a, a.totalLength)\r\n    expect(s).not.toBeNull()\r\n    expect(s!.segment).toBe('exit-spiral')\r\n  })\r\n\r\n  it('monotonically increases deflection angle along the alignment', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const stations = stationSpiralAlignment(a, 10)\r\n    for (let i = 1; i < stations.length; i++) {\r\n      // Allow equal values at segment boundaries (rounding)\r\n      expect(stations[i].deflectionDeg).toBeGreaterThanOrEqual(\r\n        stations[i - 1].deflectionDeg - 0.1\r\n      )\r\n    }\r\n  })\r\n})\r\n\r\ndescribe('alignmentToCoordinateArray', () => {\r\n  it('returns an array of [easting, northing] pairs', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const coords = alignmentToCoordinateArray(a, 10)\r\n    expect(coords.length).toBeGreaterThan(5)\r\n    for (const c of coords) {\r\n      expect(Array.isArray(c)).toBe(true)\r\n      expect(c.length).toBe(2)\r\n      expect(typeof c[0]).toBe('number')\r\n      expect(typeof c[1]).toBe('number')\r\n    }\r\n  })\r\n\r\n  it('uses world coordinates when PI coords are supplied', () => {\r\n    const a = computeSpiralAlignment({\r\n      ...SAMPLE_INPUT,\r\n      piEasting: 1000,\r\n      piNorthing: 2000,\r\n    })\r\n    const coords = alignmentToCoordinateArray(a, 20)\r\n    // First coord should be the TS in world coords\r\n    expect(coords[0][0]).not.toBe(0)\r\n    expect(coords[0][1]).not.toBe(0)\r\n  })\r\n})\r\n\r\ndescribe('spiralAlignmentToCSV', () => {\r\n  it('produces a CSV with header and one row per station', () => {\r\n    const a = computeSpiralAlignment(SAMPLE_INPUT)\r\n    const stations = stationSpiralAlignment(a, 20)\r\n    const csv = spiralAlignmentToCSV(stations)\r\n    const lines = csv.split('\\n')\r\n    expect(lines[0]).toContain('Chainage_m')\r\n    expect(lines[0]).toContain('Deflection_deg')\r\n    expect(lines.length).toBe(stations.length + 1)\r\n    for (let i = 1; i < lines.length; i++) {\r\n      expect(lines[i].split(',').length).toBe(7)\r\n    }\r\n  })\r\n})\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -54866,207 +54445,13 @@
   },
   {
     "filePath": "src/lib/survey/curves/__tests__/verticalCurveDesigner.test.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 290,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 290,
-        "endColumn": 14,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                10366,
-                10367
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 291,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 291,
-        "endColumn": 14,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                10406,
-                10407
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 301,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 301,
-        "endColumn": 14,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                10875,
-                10876
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 302,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 302,
-        "endColumn": 14,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                10913,
-                10914
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 324,
-        "column": 21,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 324,
-        "endColumn": 31,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                11813,
-                11814
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 324,
-        "column": 40,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 324,
-        "endColumn": 46,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                11828,
-                11829
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 326,
-        "column": 21,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 326,
-        "endColumn": 27,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                11924,
-                11925
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 326,
-        "column": 36,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 326,
-        "endColumn": 45,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                11942,
-                11943
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 8,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Tests for verticalCurveDesigner.ts\r\n *\r\n * Verifies:\r\n *   - AASHTO SSD lookup and formula\r\n *   - K-factor compliance (pass / warn / fail tiers)\r\n *   - Multi-VIP alignment chaining\r\n *   - Curve overlap clipping and tangent warnings\r\n *   - Station interpolation across tangents and curves\r\n *   - CSV export round-trip\r\n */\r\n\r\nimport {\r\n  computeSSD,\r\n  getDesignSpeedEntry,\r\n  checkCurveCompliance,\r\n  computeVerticalAlignment,\r\n  stationAtChainage,\r\n  stationAlignment,\r\n  alignmentToCSV,\r\n  complianceToCSV,\r\n  DESIGN_SPEED_TABLE,\r\n  type VIPInput,\r\n} from '../verticalCurveDesigner'\r\nimport { computeVerticalCurve } from '../vertical'\r\n\r\ndescribe('computeSSD', () => {\r\n  it('matches AASHTO Green Book 2018 SSD table for 80 km/h on level grade', () => {\r\n    const ssd = computeSSD(80, 0)\r\n    // AASHTO 2018 Exhibit 3-2: SSD for 80 km/h = 130 m\r\n    expect(ssd).toBeGreaterThan(125)\r\n    expect(ssd).toBeLessThan(135)\r\n  })\r\n\r\n  it('matches AASHTO SSD for 50 km/h on level grade', () => {\r\n    const ssd = computeSSD(50, 0)\r\n    // AASHTO 2018: SSD for 50 km/h = 65 m\r\n    expect(ssd).toBeGreaterThan(60)\r\n    expect(ssd).toBeLessThan(70)\r\n  })\r\n\r\n  it('reduces SSD on uphill grade (positive gradePercent)', () => {\r\n    const level = computeSSD(80, 0)\r\n    const uphill = computeSSD(80, 6)\r\n    expect(uphill).toBeLessThan(level)\r\n  })\r\n\r\n  it('increases SSD on downhill grade (negative gradePercent)', () => {\r\n    const level = computeSSD(80, 0)\r\n    const downhill = computeSSD(80, -6)\r\n    expect(downhill).toBeGreaterThan(level)\r\n  })\r\n\r\n  it('clamps extreme downhill grade to avoid divide-by-zero', () => {\r\n    const ssd = computeSSD(80, -50)\r\n    expect(Number.isFinite(ssd)).toBe(true)\r\n    expect(ssd).toBeGreaterThan(0)\r\n  })\r\n})\r\n\r\ndescribe('getDesignSpeedEntry', () => {\r\n  it('returns exact match when speed exists', () => {\r\n    expect(getDesignSpeedEntry(80).speed).toBe(80)\r\n    expect(getDesignSpeedEntry(80).kCrestMin).toBe(26)\r\n    expect(getDesignSpeedEntry(80).kSagMin).toBe(16)\r\n  })\r\n\r\n  it('falls back to nearest lower speed for non-standard speed', () => {\r\n    // 75 km/h falls back to 70\r\n    const entry = getDesignSpeedEntry(75)\r\n    expect(entry.speed).toBe(70)\r\n  })\r\n\r\n  it('falls back to lowest speed for speeds below the table', () => {\r\n    const entry = getDesignSpeedEntry(10)\r\n    expect(entry.speed).toBe(20)\r\n  })\r\n})\r\n\r\ndescribe('checkCurveCompliance', () => {\r\n  it('marks a crest curve with K above required as pass', () => {\r\n    // 80 km/h, crest: K_min = 26. Need A<0 (crest). g1=+2, g2=-2 → A=-4.\r\n    const curve = computeVerticalCurve({\r\n      g1: 2,\r\n      g2: -2,\r\n      length: 200, // A=-4, K = 200/4 = 50\r\n      pvcElevation: 100,\r\n      pvcChainage: 1000,\r\n    })\r\n    expect(curve.curveType).toBe('crest')\r\n    const c = checkCurveCompliance(curve, 80)\r\n    expect(c.severity).toBe('ok')\r\n    expect(c.passes).toBe(true)\r\n    expect(c.kRequired).toBe(26)\r\n    expect(c.kActual).toBe(50)\r\n  })\r\n\r\n  it('marks a crest curve with K between 0.75× and 1× required as warn', () => {\r\n    // 80 km/h crest, K_min = 26. Need A<0. g1=+1, g2=-1 → A=-2, K=22 (0.846×).\r\n    const curve = computeVerticalCurve({\r\n      g1: 1,\r\n      g2: -1,\r\n      length: 44, // A=-2, K=22\r\n      pvcElevation: 100,\r\n      pvcChainage: 1000,\r\n    })\r\n    expect(curve.curveType).toBe('crest')\r\n    const c = checkCurveCompliance(curve, 80)\r\n    expect(c.severity).toBe('warn')\r\n    expect(c.passes).toBe(false)\r\n    expect(c.kActual).toBe(22)\r\n  })\r\n\r\n  it('marks a crest curve with K below 0.75× required as fail', () => {\r\n    // 80 km/h crest, K_min = 26. Need A<0. g1=+1, g2=-1 → A=-2, K=15 (0.577×).\r\n    const curve = computeVerticalCurve({\r\n      g1: 1,\r\n      g2: -1,\r\n      length: 30, // A=-2, K=15\r\n      pvcElevation: 100,\r\n      pvcChainage: 1000,\r\n    })\r\n    expect(curve.curveType).toBe('crest')\r\n    const c = checkCurveCompliance(curve, 80)\r\n    expect(c.severity).toBe('fail')\r\n    expect(c.passes).toBe(false)\r\n  })\r\n\r\n  it('uses sag K table for sag curves (positive A)', () => {\r\n    // 80 km/h sag: K_min = 16. Build K = 30 → pass.\r\n    const curve = computeVerticalCurve({\r\n      g1: 2,\r\n      g2: 5, // A = +3, sag\r\n      length: 90, // K = 30\r\n      pvcElevation: 100,\r\n      pvcChainage: 1000,\r\n    })\r\n    const c = checkCurveCompliance(curve, 80)\r\n    expect(curve.curveType).toBe('sag')\r\n    expect(c.kRequired).toBe(16)\r\n    expect(c.passes).toBe(true)\r\n  })\r\n\r\n  it('exposes SSD and available sight distance values', () => {\r\n    const curve = computeVerticalCurve({\r\n      g1: -3,\r\n      g2: 3,\r\n      length: 200, // A=6, K=33.3\r\n      pvcElevation: 100,\r\n      pvcChainage: 1000,\r\n    })\r\n    const c = checkCurveCompliance(curve, 80)\r\n    expect(c.ssd).toBe(130) // matches AASHTO table for 80 km/h\r\n    expect(c.availableSightDistance).toBeGreaterThan(0)\r\n  })\r\n})\r\n\r\ndescribe('computeVerticalAlignment', () => {\r\n  it('returns empty alignment for fewer than 2 VIPs', () => {\r\n    const result = computeVerticalAlignment([], 80)\r\n    expect(result.curves).toEqual([])\r\n    expect(result.warnings.length).toBeGreaterThan(0)\r\n  })\r\n\r\n  it('returns no curves when only 2 VIPs (no interior VIP)', () => {\r\n    const vips: VIPInput[] = [\r\n      { id: 'VIP0', chainage: 0, reducedLevel: 100 },\r\n      { id: 'VIP1', chainage: 1000, reducedLevel: 110 },\r\n    ]\r\n    const result = computeVerticalAlignment(vips, 80)\r\n    expect(result.curves).toEqual([])\r\n    expect(result.startChainage).toBe(0)\r\n    expect(result.endChainage).toBe(1000)\r\n  })\r\n\r\n  it('computes a single curve for 3 VIPs (one interior)', () => {\r\n    const vips: VIPInput[] = [\r\n      { id: 'A', chainage: 0, reducedLevel: 100 },\r\n      { id: 'B', chainage: 500, reducedLevel: 110 }, // +2% grade in, +1% grade out → A = -1 → crest\r\n      { id: 'C', chainage: 1000, reducedLevel: 115 },\r\n    ]\r\n    const result = computeVerticalAlignment(vips, 80)\r\n    expect(result.curves).toHaveLength(1)\r\n    const c = result.curves[0]\r\n    expect(c.curveType).toBe('crest')\r\n    expect(c.g1).toBeCloseTo(2.0, 4)\r\n    expect(c.g2).toBeCloseTo(1.0, 4)\r\n    expect(c.A).toBeCloseTo(-1.0, 4)\r\n    expect(c.curve.pvcChainage).toBeLessThan(500)\r\n    expect(c.curve.pvtChainage).toBeGreaterThan(500)\r\n  })\r\n\r\n  it('uses kOverride when supplied', () => {\r\n    const vips: VIPInput[] = [\r\n      { id: 'A', chainage: 0, reducedLevel: 100 },\r\n      { id: 'B', chainage: 500, reducedLevel: 110, kOverride: 50 },\r\n      { id: 'C', chainage: 1000, reducedLevel: 115 },\r\n    ]\r\n    const result = computeVerticalAlignment(vips, 80)\r\n    const c = result.curves[0]\r\n    // A = -1, kOverride = 50 → L = 50 × 1 = 50\r\n    expect(c.length).toBeCloseTo(50, 1)\r\n    expect(c.compliance.kActual).toBeCloseTo(50, 1)\r\n  })\r\n\r\n  it('uses lengthOverride when supplied (wins over kOverride)', () => {\r\n    const vips: VIPInput[] = [\r\n      { id: 'A', chainage: 0, reducedLevel: 100 },\r\n      { id: 'B', chainage: 500, reducedLevel: 110, kOverride: 50, lengthOverride: 120 },\r\n      { id: 'C', chainage: 1000, reducedLevel: 115 },\r\n    ]\r\n    const result = computeVerticalAlignment(vips, 80)\r\n    expect(result.curves[0].length).toBeCloseTo(120, 1)\r\n  })\r\n\r\n  it('clips curves that would overlap the previous curve', () => {\r\n    // Two interior VIPs very close together, both with large kOverride\r\n    const vips: VIPInput[] = [\r\n      { id: 'A', chainage: 0, reducedLevel: 100 },\r\n      { id: 'B', chainage: 500, reducedLevel: 110, kOverride: 200 }, // L = 200\r\n      { id: 'C', chainage: 520, reducedLevel: 100, kOverride: 200 }, // would overlap\r\n      { id: 'D', chainage: 1020, reducedLevel: 90 },\r\n    ]\r\n    const result = computeVerticalAlignment(vips, 80)\r\n    expect(result.curves.length).toBeGreaterThanOrEqual(1)\r\n    // Second curve should be clipped or skipped\r\n    const clipped = result.warnings.some(w => w.includes('clipped') || w.includes('overlaps'))\r\n    expect(clipped).toBe(true)\r\n  })\r\n\r\n  it('warns about short tangents between successive curves', () => {\r\n    // Two interior VIPs 40 m apart with small K so curves don't overlap.\r\n    // Grades: A→B = +2%, B→C = -12.5%, C→D = -1%.\r\n    // At B (ch=500): A = -14.5, K=3 → L = 43.5, PVT = 521.75\r\n    // At C (ch=540): A = +11.5, K=3 → L = 34.5, PVC = 522.75\r\n    // Tangent = 1 m → fires short-tangent warning (< 30 m).\r\n    const vips: VIPInput[] = [\r\n      { id: 'A', chainage: 0, reducedLevel: 100 },\r\n      { id: 'B', chainage: 500, reducedLevel: 110, kOverride: 3 },\r\n      { id: 'C', chainage: 540, reducedLevel: 105, kOverride: 3 },\r\n      { id: 'D', chainage: 1040, reducedLevel: 100 },\r\n    ]\r\n    const result = computeVerticalAlignment(vips, 80)\r\n    const tangentWarn = result.warnings.some(w => w.includes('Tangent between'))\r\n    expect(tangentWarn).toBe(true)\r\n  })\r\n\r\n  it('reports allPass=false when any curve fails compliance', () => {\r\n    const vips: VIPInput[] = [\r\n      { id: 'A', chainage: 0, reducedLevel: 100 },\r\n      { id: 'B', chainage: 500, reducedLevel: 110, kOverride: 5 }, // K=5, well below crest 26\r\n      { id: 'C', chainage: 1000, reducedLevel: 115 },\r\n    ]\r\n    const result = computeVerticalAlignment(vips, 80)\r\n    expect(result.allPass).toBe(false)\r\n    expect(result.curves[0].compliance.severity).toBe('fail')\r\n  })\r\n\r\n  it('reports allPass=true when every curve passes', () => {\r\n    const vips: VIPInput[] = [\r\n      { id: 'A', chainage: 0, reducedLevel: 100 },\r\n      { id: 'B', chainage: 500, reducedLevel: 110, kOverride: 80 },\r\n      { id: 'C', chainage: 1000, reducedLevel: 115 },\r\n    ]\r\n    const result = computeVerticalAlignment(vips, 80)\r\n    expect(result.allPass).toBe(true)\r\n  })\r\n})\r\n\r\ndescribe('stationAtChainage / stationAlignment', () => {\r\n  function buildAlignment() {\r\n    const vips: VIPInput[] = [\r\n      { id: 'A', chainage: 0, reducedLevel: 100 },\r\n      { id: 'B', chainage: 500, reducedLevel: 110, kOverride: 50 },\r\n      { id: 'C', chainage: 1000, reducedLevel: 115 },\r\n    ]\r\n    return computeVerticalAlignment(vips, 80)\r\n  }\r\n\r\n  it('returns null for chainage outside the alignment', () => {\r\n    const a = buildAlignment()\r\n    expect(stationAtChainage(a, -10)).toBeNull()\r\n    expect(stationAtChainage(a, 2000)).toBeNull()\r\n  })\r\n\r\n  it('returns a tangent station before the curve', () => {\r\n    const a = buildAlignment()\r\n    const s = stationAtChainage(a, 100)\r\n    expect(s).not.toBeNull()\r\n    expect(s!.segment).toBe('tangent')\r\n    expect(s!.elevation).toBeCloseTo(102, 1) // linear interp 0→100, 500→110: at ch=100, elev=102\r\n  })\r\n\r\n  it('returns a curve station inside the curve', () => {\r\n    const a = buildAlignment()\r\n    // Curve at VIP B (ch=500), L=50, A=-1 → PVC=475, PVT=525.\r\n    // Curve is offset from VIP by |A|·L/800 = 0.0625 m (crest sits below VIP).\r\n    // Curve elev at ch=500 = 110 - 0.0625 = 109.9375.\r\n    const s = stationAtChainage(a, 500)\r\n    expect(s).not.toBeNull()\r\n    expect(s!.segment).toBe('curve')\r\n    expect(s!.elevation).toBeCloseTo(109.9375, 2)\r\n  })\r\n\r\n  it('samples stations at the requested interval', () => {\r\n    const a = buildAlignment()\r\n    const stations = stationAlignment(a, 100)\r\n    expect(stations.length).toBeGreaterThan(5)\r\n    expect(stations[0].chainage).toBeCloseTo(0, 0)\r\n    expect(stations[stations.length - 1].chainage).toBeCloseTo(1000, 0)\r\n  })\r\n\r\n  it('returns consistent grade continuity across PVC and PVT', () => {\r\n    const a = buildAlignment()\r\n    const beforePvc = stationAtChainage(a, 474)\r\n    const atPvc = stationAtChainage(a, 475)\r\n    const atPvt = stationAtChainage(a, 525)\r\n    const afterPvt = stationAtChainage(a, 526)\r\n    expect(beforePvc).not.toBeNull()\r\n    expect(atPvc).not.toBeNull()\r\n    expect(atPvt).not.toBeNull()\r\n    expect(afterPvt).not.toBeNull()\r\n    // Grade should be continuous at PVC (g1 entering = g1 in curve)\r\n    expect(Math.abs(beforePvc!.grade - atPvc!.grade)).toBeLessThan(0.5)\r\n    // Grade should be continuous at PVT\r\n    expect(Math.abs(atPvt!.grade - afterPvt!.grade)).toBeLessThan(0.5)\r\n  })\r\n})\r\n\r\ndescribe('CSV export', () => {\r\n  it('alignmentToCSV produces a parseable CSV with header', () => {\r\n    const vips: VIPInput[] = [\r\n      { id: 'A', chainage: 0, reducedLevel: 100 },\r\n      { id: 'B', chainage: 500, reducedLevel: 110, kOverride: 50 },\r\n      { id: 'C', chainage: 1000, reducedLevel: 115 },\r\n    ]\r\n    const a = computeVerticalAlignment(vips, 80)\r\n    const stations = stationAlignment(a, 100)\r\n    const csv = alignmentToCSV(stations)\r\n    const lines = csv.split('\\n')\r\n    expect(lines[0]).toContain('Chainage_m')\r\n    expect(lines.length).toBe(stations.length + 1)\r\n    // Each data row should have 7 fields\r\n    for (let i = 1; i < lines.length; i++) {\r\n      expect(lines[i].split(',').length).toBe(7)\r\n    }\r\n  })\r\n\r\n  it('complianceToCSV includes one row per curve plus header', () => {\r\n    const vips: VIPInput[] = [\r\n      { id: 'A', chainage: 0, reducedLevel: 100 },\r\n      { id: 'B', chainage: 500, reducedLevel: 110, kOverride: 50 },\r\n      { id: 'C', chainage: 1000, reducedLevel: 115 },\r\n    ]\r\n    const a = computeVerticalAlignment(vips, 80)\r\n    const csv = complianceToCSV(a)\r\n    const lines = csv.split('\\n')\r\n    expect(lines[0]).toContain('VIP_Index,VIP_ID,Curve_Type')\r\n    expect(lines.length).toBe(a.curves.length + 1)\r\n  })\r\n})\r\n\r\ndescribe('DESIGN_SPEED_TABLE coverage', () => {\r\n  it('covers speeds from 20 to 130 km/h', () => {\r\n    const speeds = DESIGN_SPEED_TABLE.map(d => d.speed)\r\n    expect(speeds).toContain(20)\r\n    expect(speeds).toContain(130)\r\n    expect(speeds.length).toBeGreaterThanOrEqual(11)\r\n  })\r\n\r\n  it('has monotonically increasing K values with speed', () => {\r\n    for (let i = 1; i < DESIGN_SPEED_TABLE.length; i++) {\r\n      expect(DESIGN_SPEED_TABLE[i].kCrestMin).toBeGreaterThanOrEqual(\r\n        DESIGN_SPEED_TABLE[i - 1].kCrestMin\r\n      )\r\n      expect(DESIGN_SPEED_TABLE[i].kSagMin).toBeGreaterThanOrEqual(\r\n        DESIGN_SPEED_TABLE[i - 1].kSagMin\r\n      )\r\n    }\r\n  })\r\n})\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
@@ -56986,144 +56371,13 @@
   },
   {
     "filePath": "src/lib/survey/__tests__/lsaIterative.test.ts",
-    "messages": [
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 50,
-        "column": 18,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 50,
-        "endColumn": 70
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 92,
-        "column": 18,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 92,
-        "endColumn": 70
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 126,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 126,
-        "endColumn": 37,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                3580,
-                3581
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 127,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 127,
-        "endColumn": 37,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                3644,
-                3645
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 159,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 159,
-        "endColumn": 31,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                4473,
-                4474
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 160,
-        "column": 12,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 160,
-        "endColumn": 31,
-        "suggestions": [
-          {
-            "messageId": "suggestOptionalChain",
-            "fix": {
-              "range": [
-                4538,
-                4539
-              ],
-              "text": "?"
-            },
-            "desc": "Consider using the optional chain operator `?.` instead. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator."
-          }
-        ]
-      },
-      {
-        "ruleId": "@typescript-eslint/no-non-null-assertion",
-        "severity": 1,
-        "message": "Forbidden non-null assertion.",
-        "line": 237,
-        "column": 18,
-        "nodeType": "TSNonNullExpression",
-        "messageId": "noNonNull",
-        "endLine": 237,
-        "endColumn": 70
-      }
-    ],
+    "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
     "fatalErrorCount": 0,
-    "warningCount": 7,
+    "warningCount": 0,
     "fixableErrorCount": 0,
     "fixableWarningCount": 0,
-    "source": "/**\r\n * Tests for the Iterative LSA (non-linear least squares) module\r\n */\r\n\r\nimport {\r\n  adjustNetworkIterative,\r\n  type NetworkStation,\r\n  type GenericObservation,\r\n} from '../lsaIterative'\r\n\r\ndescribe('adjustNetworkIterative', () => {\r\n  const fixedStation: NetworkStation = {\r\n    id: 'stn-1',\r\n    name: 'A',\r\n    easting: 500000,\r\n    northing: 9900000,\r\n    elevation: 1500,\r\n    isFixed: true,\r\n  }\r\n\r\n  const freeStation: NetworkStation = {\r\n    id: 'stn-2',\r\n    name: 'B',\r\n    easting: 500100,  // ~100m east + 100m north of fixed\r\n    northing: 9900100,\r\n    elevation: 1510,\r\n    isFixed: false,\r\n  }\r\n\r\n  test('converges for coordinate difference observations', () => {\r\n    const obs: GenericObservation = {\r\n      type: 'coordinate_diff',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      deltaE: 100,\r\n      deltaN: 100,\r\n      deltaH: 10,\r\n      stdDevE: 0.005,\r\n      stdDevN: 0.005,\r\n      stdDevH: 0.010,\r\n    }\r\n    const result = adjustNetworkIterative([fixedStation, freeStation], [obs])\r\n\r\n    expect(result.converged).toBe(true)\r\n    expect(result.iterations).toBeLessThanOrEqual(5)\r\n    expect(result.finalCorrection).toBeLessThan(1e-6)\r\n    expect(result.adjustedStations).toHaveLength(2)\r\n\r\n    // Free station should be at the observed position\r\n    const free = result.adjustedStations.find(s => s.id === 'stn-2')!\r\n    expect(free.easting).toBeCloseTo(500100, 4)\r\n    expect(free.northing).toBeCloseTo(9900100, 4)\r\n    expect(free.elevation).toBeCloseTo(1510, 4)\r\n  })\r\n\r\n  test('handles slope distance observations', () => {\r\n    // Free station is 100m east, 100m north, 10m up from fixed\r\n    // Distance = sqrt(100² + 100² + 10²) = ~141.42m\r\n    const free2: NetworkStation = {\r\n      id: 'stn-2',\r\n      name: 'B',\r\n      easting: 500100,\r\n      northing: 9900100,\r\n      elevation: 1510,\r\n      isFixed: false,\r\n    }\r\n\r\n    const obs: GenericObservation = {\r\n      type: 'slope_distance',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      distance: Math.sqrt(100 * 100 + 100 * 100 + 10 * 10),\r\n      stdDevDistance: 0.003,\r\n    }\r\n\r\n    // Add a coordinate diff as well to constrain the position\r\n    const obs2: GenericObservation = {\r\n      type: 'coordinate_diff',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      deltaE: 100,\r\n      deltaN: 100,\r\n      deltaH: 10,\r\n      stdDevE: 0.005,\r\n      stdDevN: 0.005,\r\n      stdDevH: 0.010,\r\n    }\r\n\r\n    const result = adjustNetworkIterative([fixedStation, free2], [obs, obs2])\r\n\r\n    expect(result.converged).toBe(true)\r\n    const free = result.adjustedStations.find(s => s.id === 'stn-2')!\r\n    expect(free.easting).toBeCloseTo(500100, 2)\r\n    expect(free.northing).toBeCloseTo(9900100, 2)\r\n  })\r\n\r\n  test('computes statistical report when dof > 0', () => {\r\n    // Two observations of the same baseline → redundancy\r\n    const obs1: GenericObservation = {\r\n      type: 'coordinate_diff',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      deltaE: 100.000,\r\n      deltaN: 100.000,\r\n      deltaH: 10.000,\r\n      stdDevE: 0.005,\r\n      stdDevN: 0.005,\r\n      stdDevH: 0.010,\r\n    }\r\n    const obs2: GenericObservation = {\r\n      type: 'coordinate_diff',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      deltaE: 100.005,  // 5mm discrepancy\r\n      deltaN: 99.998,\r\n      deltaH: 10.002,\r\n      stdDevE: 0.005,\r\n      stdDevN: 0.005,\r\n      stdDevH: 0.010,\r\n    }\r\n\r\n    const result = adjustNetworkIterative([fixedStation, freeStation], [obs1, obs2])\r\n\r\n    expect(result.degreesOfFreedom).toBeGreaterThan(0)\r\n    expect(result.statisticalReport).toBeDefined()\r\n    expect(result.statisticalReport!.globalTest).toBeDefined()\r\n    expect(result.statisticalReport!.reliability).toBeDefined()\r\n  })\r\n\r\n  test('computes residual diagnostics when enabled', () => {\r\n    const obs1: GenericObservation = {\r\n      type: 'coordinate_diff',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      deltaE: 100.000,\r\n      deltaN: 100.000,\r\n      deltaH: 10.000,\r\n      stdDevE: 0.005,\r\n      stdDevN: 0.005,\r\n      stdDevH: 0.010,\r\n    }\r\n    const obs2: GenericObservation = {\r\n      type: 'coordinate_diff',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      deltaE: 100.005,\r\n      deltaN: 99.998,\r\n      deltaH: 10.002,\r\n      stdDevE: 0.005,\r\n      stdDevN: 0.005,\r\n      stdDevH: 0.010,\r\n    }\r\n\r\n    const result = adjustNetworkIterative([fixedStation, freeStation], [obs1, obs2], {\r\n      includeDiagnostics: true,\r\n    })\r\n\r\n    expect(result.diagnostics).toBeDefined()\r\n    expect(result.diagnostics!.kolmogorovSmirnov).toBeDefined()\r\n    expect(result.diagnostics!.andersonDarling).toBeDefined()\r\n  })\r\n\r\n  test('throws when no fixed stations', () => {\r\n    const obs: GenericObservation = {\r\n      type: 'coordinate_diff',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      deltaE: 100,\r\n      deltaN: 100,\r\n      deltaH: 10,\r\n    }\r\n    expect(() => adjustNetworkIterative([freeStation], [obs])).toThrow(\r\n      'At least one fixed control station is required',\r\n    )\r\n  })\r\n\r\n  test('throws when no observations', () => {\r\n    expect(() => adjustNetworkIterative([fixedStation, freeStation], [])).toThrow(\r\n      'At least one observation is required',\r\n    )\r\n  })\r\n\r\n  test('warns when only 1 fixed station (swinging traverse)', () => {\r\n    const obs: GenericObservation = {\r\n      type: 'coordinate_diff',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      deltaE: 100,\r\n      deltaN: 100,\r\n      deltaH: 10,\r\n    }\r\n    const result = adjustNetworkIterative([fixedStation, freeStation], [obs])\r\n    expect(result.warnings.some(w => w.includes('swinging traverse'))).toBe(true)\r\n  })\r\n\r\n  test('handles horizontal direction observations', () => {\r\n    // Direction from stn-1 to stn-2: atan2(100, 100) = π/4 = 45°\r\n    const obs: GenericObservation = {\r\n      type: 'horizontal_direction',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      direction: Math.PI / 4,  // 45° from North\r\n      stdDevDirection: 5e-6,   // ~1 arcsecond\r\n    }\r\n    // Add coordinate diffs to constrain position\r\n    const obs2: GenericObservation = {\r\n      type: 'coordinate_diff',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      deltaE: 100,\r\n      deltaN: 100,\r\n      deltaH: 10,\r\n    }\r\n    const result = adjustNetworkIterative([fixedStation, freeStation], [obs, obs2])\r\n    expect(result.converged).toBe(true)\r\n  })\r\n\r\n  test('produces error ellipses for free stations', () => {\r\n    const obs1: GenericObservation = {\r\n      type: 'coordinate_diff',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      deltaE: 100,\r\n      deltaN: 100,\r\n      deltaH: 10,\r\n    }\r\n    const obs2: GenericObservation = {\r\n      type: 'coordinate_diff',\r\n      from: 'stn-1',\r\n      to: 'stn-2',\r\n      deltaE: 100.005,\r\n      deltaN: 99.998,\r\n      deltaH: 10.002,\r\n    }\r\n    const result = adjustNetworkIterative([fixedStation, freeStation], [obs1, obs2])\r\n\r\n    const free = result.adjustedStations.find(s => s.id === 'stn-2')!\r\n    expect(free.semiMajor).toBeGreaterThanOrEqual(0)\r\n    expect(free.semiMinor).toBeGreaterThanOrEqual(0)\r\n    expect(free.orientation).toBeGreaterThanOrEqual(0)\r\n    expect(free.sigmaE).toBeGreaterThanOrEqual(0)\r\n    expect(free.sigmaN).toBeGreaterThanOrEqual(0)\r\n  })\r\n})\r\n",
     "usedDeprecatedRules": [
       {
         "ruleId": "no-mixed-spaces-and-tabs",
