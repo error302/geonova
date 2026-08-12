@@ -13,7 +13,7 @@ export default function VerticalCurveCalculator() {
   const [lengthMode, setLengthMode] = useState<'L' | 'K'>('L')
   const [L, setL] = useState('200')
   const [K, setK] = useState('80')
-  const [interval, setInterval] = useState('20')
+  const [interval, setIntervalValueValue] = useState('20')
 
   function compute() {
     const input: VerticalCurveInput = {
@@ -89,7 +89,7 @@ export default function VerticalCurveCalculator() {
         </button>
         <div>
           <label className="text-xs text-[var(--text-muted)] mr-1" htmlFor="rl-table-interval-m">RL Table Interval (m)</label>
-          <input  id="rl-table-interval-m" aria-label="RL Table Interval (m)" value={interval} onChange={e => setInterval(e.target.value)} type="number" min="1"
+          <input  id="rl-table-interval-m" aria-label="RL Table Interval (m)" value={interval} onChange={e => setIntervalValueValue(e.target.value)} type="number" min="1"
             className="w-20 px-2 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
         {result && (

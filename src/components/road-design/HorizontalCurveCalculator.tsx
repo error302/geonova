@@ -17,7 +17,7 @@ export default function HorizontalCurveCalculator() {
   const [deltaS, setDeltaS] = useState('00')
   const [ipChainage, setIpChainage] = useState('2500.000')
 
-  const [interval, setInterval] = useState('20')
+  const [interval, setIntervalValueValue] = useState('20')
 
   function computeElements() {
     const input: HorizontalCurveInput = {
@@ -151,7 +151,7 @@ export default function HorizontalCurveCalculator() {
       {tab === 'setout' && (
         <div className="mt-2">
           <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="peg-interval-m">Peg Interval (m)</label>
-          <input  id="peg-interval-m" aria-label="Peg Interval (m)" value={interval} onChange={e => setInterval(e.target.value)} type="number" min="1" max="100"
+          <input  id="peg-interval-m" aria-label="Peg Interval (m)" value={interval} onChange={e => setIntervalValueValue(e.target.value)} type="number" min="1" max="100"
             className="w-24 px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-sm" />
         </div>
       )}

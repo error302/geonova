@@ -25,7 +25,7 @@ export default function TopoPage() {
 
   const [spotHeights, setSpotHeights] = useState<SpotHeight[]>([])
   const [contours, setContours] = useState<ContourLine[]>([])
-  const [interval, setInterval] = useState(1)
+  const [interval, setIntervalValueValue] = useState(1)
   const [resolution, setResolution] = useState(1)
   const [status, setStatus] = useState<'idle' | 'loading' | 'computing' | 'done' | 'error'>('idle')
   const [progress, setProgress] = useState(0)
@@ -194,7 +194,7 @@ export default function TopoPage() {
           <label className="text-xs text-[var(--text-muted)] block mb-1" htmlFor="contour-interval-m">Contour Interval (m)</label>
           <select id="contour-interval-m"
             value={interval}
-            onChange={(event) => setInterval(Number(event.target.value))}
+            onChange={(event) => setIntervalValueValue(Number(event.target.value))}
             className="bg-[var(--bg-secondary)] border rounded px-3 py-1.5 text-sm"
           >
             {INTERVAL_OPTIONS.map((value) => (

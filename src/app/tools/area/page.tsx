@@ -26,7 +26,7 @@ export default function AreaCalculator() {
   ]);
   const [method, setMethod] = useState<'coordinate' | 'trapezoidal' | 'simpsons'>('coordinate');
   const [offsets, setOffsets] = useState('10, 15, 18, 22, 20, 16');
-  const [interval, setInterval] = useState('20');
+  const [interval, setIntervalValueValue] = useState('20');
   const [steps, setSteps] = useState<SolutionStep[] | null>(null);
   const [calcError, setCalcError] = useState<string | null>(null);
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
@@ -134,7 +134,7 @@ export default function AreaCalculator() {
                 </div>
                 <div>
                   <label className="label" htmlFor="interval-m">Interval (m)</label>
-                  <input id="interval-m" className="input" value={interval} onChange={e => setInterval(e.target.value)} placeholder="20" />
+                  <input id="interval-m" className="input" value={interval} onChange={e => setIntervalValueValue(e.target.value)} placeholder="20" />
                 </div>
               </div>
             </div>

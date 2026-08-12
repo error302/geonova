@@ -30,7 +30,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
 
   const [points, setPoints] = useState<SpotHeight[]>([])
   const [contours, setContours] = useState<ContourLine[]>([])
-  const [interval, setInterval] = useState(1)
+  const [interval, setIntervalValueValue] = useState(1)
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
   const [engineMode, setEngineMode] = useState<EngineMode>(null)
@@ -158,7 +158,7 @@ export default function ContoursPage({ params }: { params: Promise<{ id: string 
             <label className="text-[var(--text-secondary)] text-sm" htmlFor="contour-interval">Contour interval</label>
             <select
                id="contour-interval" value={interval}
-              onChange={e => setInterval(Number(e.target.value))}
+              onChange={e => setIntervalValueValue(Number(e.target.value))}
               className="input w-32"
             >
               <option value={0.25}>0.25 m</option>

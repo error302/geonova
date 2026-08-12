@@ -7,7 +7,7 @@ import { buildAlignment, enToChainageOffset, organizeShotsByChainage, formatChai
 export default function CorridorPage() {
   const [piInput, setPiInput] = useState('')
   const [shotsInput, setShotsInput] = useState('')
-  const [interval, setInterval] = useState('20')
+  const [interval, setIntervalValueValue] = useState('20')
   const [crossSections, setCrossSections] = useState<CrossSectionGroup[]>([])
   const [alignmentLength, setAlignmentLength] = useState(0)
   const [error, setError] = useState('')
@@ -57,7 +57,7 @@ export default function CorridorPage() {
       </div>
 
       <div className="flex gap-4 items-end mb-4">
-        <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="cross-section-interval-m">Cross-section interval (m)</label><input id="cross-section-interval-m" value={interval} onChange={e => setInterval(e.target.value)} className={inputCls + ' w-32'} /></div>
+        <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="cross-section-interval-m">Cross-section interval (m)</label><input id="cross-section-interval-m" value={interval} onChange={e => setIntervalValueValue(e.target.value)} className={inputCls + ' w-32'} /></div>
         <button onClick={handleOrganize} className="px-4 py-2 bg-[var(--accent)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--accent-dim)]">Organize by Chainage</button>
       </div>
 

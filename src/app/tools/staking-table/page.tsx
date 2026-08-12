@@ -11,7 +11,7 @@ export default function StakingTablePage() {
   const [radius, setRadius] = useState(200)
   const [ipChainage, setIpChainage] = useState(1000)
   const [incomingBearing, setIncomingBearing] = useState(45)
-  const [interval, setInterval] = useState(20)
+  const [interval, setIntervalValueValue] = useState(20)
   const [offsets, setOffsets] = useState('-3.5,0,3.5')
   const [computed, setComputed] = useState<{ elements: CurveElements; chainageTable: ChainageTableEntry[]; stakingTable: StakingPoint[] } | null>(null)
 
@@ -36,7 +36,7 @@ export default function StakingTablePage() {
             <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="radius-m">Radius (m)</label><input id="radius-m" type="number" value={radius} onChange={e => setRadius(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
             <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="ip-chainage-m">IP Chainage (m)</label><input id="ip-chainage-m" type="number" value={ipChainage} onChange={e => setIpChainage(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
             <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="incoming-bearing">Incoming Bearing (°)</label><input id="incoming-bearing" type="number" step="0.1" value={incomingBearing} onChange={e => setIncomingBearing(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
-            <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="stake-interval-m">Stake Interval (m)</label><input id="stake-interval-m" type="number" value={interval} onChange={e => setInterval(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
+            <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="stake-interval-m">Stake Interval (m)</label><input id="stake-interval-m" type="number" value={interval} onChange={e => setIntervalValueValue(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
             <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="offsets-comma-sep-m">Offsets (comma-sep, m)</label><input id="offsets-comma-sep-m" type="text" value={offsets} onChange={e => setOffsets(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
           </div>
           <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Generate Staking Table</button>
