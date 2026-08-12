@@ -18,56 +18,56 @@ export interface Parcel {
 // ============ INDIA ============
 // Pending: India land registry API integration.
 
-export function searchIndiaRegistry(query: string): Parcel[] {
+export function searchIndiaRegistry(_query: string): Parcel[] {
   return []
 }
 
 // ============ BANGLADESH ============
 // Pending: Bangladesh land registry API integration.
 
-export function searchBangladeshRegistry(query: string): Parcel[] {
+export function searchBangladeshRegistry(_query: string): Parcel[] {
   return []
 }
 
 // ============ INDONESIA ============
 // Pending: Indonesia land registry API integration.
 
-export function searchIndonesiaRegistry(query: string): Parcel[] {
+export function searchIndonesiaRegistry(_query: string): Parcel[] {
   return []
 }
 
 // ============ MALAYSIA ============
 // Pending: Malaysia land registry API integration.
 
-export function searchMalaysiaRegistry(query: string): Parcel[] {
+export function searchMalaysiaRegistry(_query: string): Parcel[] {
   return []
 }
 
 // ============ BRAZIL ============
 // Pending: Brazil land registry API integration.
 
-export function searchBrazilRegistry(query: string): Parcel[] {
+export function searchBrazilRegistry(_query: string): Parcel[] {
   return []
 }
 
 // ============ COLOMBIA ============
 // Pending: Colombia land registry API integration.
 
-export function searchColombiaRegistry(query: string): Parcel[] {
+export function searchColombiaRegistry(_query: string): Parcel[] {
   return []
 }
 
 // ============ EGYPT ============
 // Pending: Egypt land registry API integration.
 
-export function searchEgyptRegistry(query: string): Parcel[] {
+export function searchEgyptRegistry(_query: string): Parcel[] {
   return []
 }
 
 // ============ MOROCCO ============
 // Pending: Morocco land registry API integration.
 
-export function searchMoroccoRegistry(query: string): Parcel[] {
+export function searchMoroccoRegistry(_query: string): Parcel[] {
   return []
 }
 

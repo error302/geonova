@@ -29,10 +29,10 @@ import {
   EyeOff,
   Printer,
 } from 'lucide-react'
-import type { SubdivisionMethod, SubdivisionParams, SubdivisionResult, SubdividedLot } from '@/types/subdivision'
+import type { SubdivisionMethod, SubdividedLot } from '@/types/subdivision'
 import type { Point2D } from '@/lib/engine/types'
 import { useSubdivision } from '@/hooks/useSubdivision'
-import { usePrint, PrintButton, PrintHeader } from '@/hooks/usePrint'
+import { usePrint, PrintHeader } from '@/hooks/usePrint'
 import type Map from 'ol/Map'
 
 interface SubdivisionPanelProps {
@@ -129,7 +129,7 @@ export default function SubdivisionPanel({
   })
 
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const { print, isPrinting, paperSize, setPaperSize, orientation, setOrientation } = usePrint({
+  const { print } = usePrint({
     title: 'Subdivision Report',
     subtitle: `Method: ${method} · ${result ? `${result.lots.length} lots` : 'No results'}`,
   })

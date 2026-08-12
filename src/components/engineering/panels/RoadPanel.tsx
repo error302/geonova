@@ -1,22 +1,21 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ENGINEERING_QA, type EngineeringSubtype, computeHorizontalCurve, computeVerticalCurve, computeVerticalCurve as verticalCurveElevation, crossSectionCutFill, prismoidalVolume, curveStakeoutPoint } from '@/lib/engine/engineering';
-import { formatBearingDMS, formatDistanceM } from '@/lib/drawing/dxfLayers';
+import { ENGINEERING_QA, type EngineeringSubtype, computeHorizontalCurve, computeVerticalCurve, crossSectionCutFill, prismoidalVolume } from '@/lib/engine/engineering';
 
 interface EngineeringPanelProps {
   projectId: string;
   subtype: EngineeringSubtype;
 }
 
-export function RoadPanel({ projectId, subtype }: EngineeringPanelProps) {
+export function RoadPanel({ projectId: _projectId, subtype: _subtype }: EngineeringPanelProps) {
   const [activeTab, setActiveTab] = useState<'alignment' | 'horizontal' | 'vertical' | 'cross' | 'earthworks' | 'settingout'>('alignment');
   const qa = ENGINEERING_QA.road;
 
   const [alignment, setAlignment] = useState<Array<{ chainage: number; easting: number; northing: number; elevation?: number; label: string }>>([]);
   const [horizontalCurves, setHorizontalCurves] = useState<Array<{ radius: number; delta: number; piChainage: number }>>([]);
   const [verticalCurves, setVerticalCurves] = useState<Array<{ pvIChainage: number; pvIElevation: number; gradeIn: number; gradeOut: number; length: number }>>([]);
-  const [crossSections, setCrossSections] = useState<Array<{ chainage: number; designLevel: number; levels: Array<{ offset: number; elevation: number }> }>>([]);
+  const [crossSections] = useState<Array<{ chainage: number; designLevel: number; levels: Array<{ offset: number; elevation: number }> }>>([]);
 
   const computedHorizontal = useMemo(() => {
     return horizontalCurves.map(c => computeHorizontalCurve(c.radius, c.delta, c.piChainage));
@@ -88,7 +87,7 @@ export function RoadPanel({ projectId, subtype }: EngineeringPanelProps) {
               </tr>
             </thead>
             <tbody>
-              {alignment.map((pt, i) => (
+              {alignment.map((pt) => (
                 <tr key={pt.label} className="border-b border-zinc-800">
                   <td className="py-2">{pt.chainage.toFixed(3)}</td>
                   <td className="py-2">{pt.easting.toFixed(3)}</td>

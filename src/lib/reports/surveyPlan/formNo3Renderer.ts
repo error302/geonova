@@ -26,17 +26,14 @@
 
 import type { MutationPlanData } from './formNo3Types'
 import {
-  DPI,
   PX_PER_MM,
   PX_PER_M,
   mmToPx,
-  mToPx,
   bearingFromDelta,
   distance,
   centroid,
   boundingBox,
   formatBearingDegMinSec,
-  shoelaceArea,
   STANDARD_SCALES,
   segmentAngle,
   offsetFromMidpoint,
@@ -45,8 +42,6 @@ import {
   escapeXml,
   C_BLACK,
   C_RED,
-  C_GRID_MAJOR,
-  C_GRID_MINOR,
 } from './symbols'
 
 // ─── Layout constants (all in mm) ──────────────────────────────────────────
@@ -236,7 +231,6 @@ function drawGridTicksAndLabels(s: RenderState, data: MutationPlanData): string 
 
   const tickLen = mmToPx(3)
   const marginInner = mmToPx(BORDER_INNER_INSET)
-  const labelOffset = mmToPx(5.5)
   const fontSize = mmToPx(2.2)
 
   let svg = ''
@@ -707,7 +701,6 @@ function drawAuthBlock(s: RenderState, data: MutationPlanData): string {
   let y = sepY + mmToPx(6)
   const leftPad = blockX + mmToPx(4)
   const rightPad = blockX + blockW - mmToPx(4)
-  const fieldPad = mmToPx(2)
 
   svg += `<text x="${leftPad}" y="${y}" font-family="${FONT_FORM}" font-size="${labelFontSize}" font-weight="bold" fill="#555">SURVEYOR DETAILS</text>`
   y += lineH
@@ -740,7 +733,7 @@ function drawAuthBlock(s: RenderState, data: MutationPlanData): string {
     ['Authenticated by', '________________________'],
   ]
 
-  authFields.forEach(([label, value]) => {
+  authFields.forEach(([label]) => {
     svg += `<text x="${leftPad}" y="${y}" font-family="${FONT_FORM}" font-size="${fieldFontSize}" fill="#555">${escapeXml(label)}:</text>`
     svg += `<text x="${rightPad}" y="${y}" text-anchor="end" font-family="${FONT_FORM}" font-size="${smallFontSize}" fill="#555">Date: ___________</text>`
     y += lineH
@@ -890,7 +883,7 @@ function drawTitleBlock(s: RenderState, data: MutationPlanData): string {
 
 // ─── Layer 14: North arrow & scale bar ─────────────────────────────────────
 
-function drawNorthArrowAndScaleBar(s: RenderState, data: MutationPlanData): string {
+function drawNorthArrowAndScaleBar(s: RenderState, _data: MutationPlanData): string {
   let svg = ''
 
   // ── North arrow (blue filled polygon) ──

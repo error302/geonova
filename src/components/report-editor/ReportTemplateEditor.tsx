@@ -29,9 +29,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import {
   Type, Map as MapIcon, Table, Navigation, Ruler,
-  Image, Grid3x3, Save, FolderOpen, Eye, Trash2,
-  Lock, Unlock, Copy, Download, Plus, Settings2,
-  Move, Maximize2,
+  Image, Grid3x3, Save, Eye, Trash2,
+  Lock, Unlock, Copy,
 } from 'lucide-react'
 
 type ElementType = 'text' | 'map' | 'table' | 'north_arrow' | 'scale_bar' | 'logo' | 'grid'
@@ -162,7 +161,6 @@ export function ReportTemplateEditor() {
     elements: [],
   })
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [draggingFrom, setDraggingFrom] = useState<ElementType | null>(null)
   const [draggingElement, setDraggingElement] = useState<{ id: string; offsetX: number; offsetY: number } | null>(null)
   const [resizing, setResizing] = useState<{ id: string; handle: string } | null>(null)
   const [showPreview, setShowPreview] = useState(false)

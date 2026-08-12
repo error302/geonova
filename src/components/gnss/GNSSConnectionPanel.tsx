@@ -18,12 +18,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Bluetooth, BluetoothOff, BluetoothSearching, Loader2, MapPin,
-  AlertTriangle, CheckCircle, Signal, RefreshCw, Wifi, WifiOff,
-  ChevronDown, ChevronUp, Crosshair, Satellite,
+  AlertTriangle, RefreshCw, Crosshair, Satellite,
 } from 'lucide-react';
 import { WebBluetoothGNSS } from '@/lib/gnss/bluetooth';
 import { CapacitorBLEGNSS, type CapacitorGNSSDevice } from '@/lib/gnss/capacitor-ble';
-import { parseNMEA, type NMEAPosition } from '@/lib/gnss/nmea-parser';
+import { type NMEAPosition } from '@/lib/gnss/nmea-parser';
 import { wgs84ToUTM, wgs84ToKenya } from '@/lib/gnss/coordinates';
 import {
   useInstrumentStore,
@@ -190,7 +189,7 @@ export function GNSSConnectionPanel({
     const service = isNative ? capacitorBLERef.current : webBluetoothRef.current;
     if (!service) return;
 
-    const unsubConn = service.onConnectionChange((connected, err) => {
+    const unsubConn = service.onConnectionChange((connected, _err) => {
       if (connected) {
         // Already handled in connect flow
       } else {

@@ -119,8 +119,8 @@ function runAdjustmentChain(
 }
 
 function misclosureCheck(
-  observations: TraverseObservation[],
-  closingPoint?: { easting: number; northing: number }
+  _observations: TraverseObservation[],
+  _closingPoint?: { easting: number; northing: number }
 ): { passed: boolean; misclosure: number; ratio: string; accuracy: string } {
   return {
     passed: true,
@@ -130,17 +130,9 @@ function misclosureCheck(
   }
 }
 
-function coordinateTransformation(
-  points: SurveyPoint[],
-  fromDatum: string,
-  toDatum: string
-): SurveyPoint[] {
-  return points
-}
-
 function computeVolumes(
-  points: SurveyPoint[],
-  surfaceType: 'existing' | 'design'
+  _points: SurveyPoint[],
+  _surfaceType: 'existing' | 'design'
 ): VolumeResult {
   return {
     cutVolume: 1250.5,
@@ -152,7 +144,7 @@ function computeVolumes(
 
 function generateSettingOutData(
   points: SurveyPoint[],
-  alignment?: { startEasting: number; startNorthing: number; bearing: number }
+  _alignment?: { startEasting: number; startNorthing: number; bearing: number }
 ): SettingOutPoints {
   return {
     points: points.map((p, i) => ({
@@ -238,7 +230,7 @@ export async function developFullPlan(
     throw new Error('PRO_REQUIRED: Upgrade to Pro for full plan generation')
   }
 
-  const { project, points, traverseObs, levelingObs } = await loadProjectData(projectId)
+  const { project, points, traverseObs } = await loadProjectData(projectId)
   
   if (!project) {
     throw new Error(`Project ${projectId} not found`)

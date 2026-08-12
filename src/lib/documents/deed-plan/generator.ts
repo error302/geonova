@@ -17,15 +17,10 @@
  * - PDF/A-1b compliant (archival)
  */
 
-import PDFDocument from 'pdfkit';
 import {
   createSurveyDocument,
-  drawLine,
   drawRect,
   drawText,
-  drawBeaconSymbol,
-  drawNorthArrow,
-  drawScaleBar,
   drawDigitalSignatureStamp,
   PAPER_SIZES,
   LINE_WEIGHTS,
@@ -34,7 +29,7 @@ import {
   type DocumentMetadata,
 } from '../pdf-engine';
 import { drawTitleBlock, type TitleBlockData } from './title-block';
-import { drawGridOverlay, type GridOverlayInput } from './grid-overlay';
+import { drawGridOverlay } from './grid-overlay';
 import { drawBoundaryLine, drawBeacon } from './symbology';
 
 // ─── Types ───────────────────────────────────────────────────────
@@ -95,13 +90,11 @@ export async function generateDeedPlan(input: DeedPlanInput): Promise<Buffer> {
     scale,
     titleData,
     metadata,
-    convergence,
     gridInterval,
     mapMargin = 10,
   } = input;
   
   const paper = PAPER_SIZES[paperSize];
-  const mmToPt = 2.8346;
   
   // Create PDF document (landscape orientation for deed plans)
   const doc = createSurveyDocument({

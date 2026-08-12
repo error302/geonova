@@ -2,21 +2,20 @@
 
 import { useState } from 'react';
 import { AlertTriangle } from 'lucide-react'
-import { ENGINEERING_QA, type EngineeringSubtype, computeHorizontalCurve, computeVerticalCurve, crossSectionCutFill, prismoidalVolume } from '@/lib/engine/engineering';
+import { ENGINEERING_QA, type EngineeringSubtype, computeHorizontalCurve, computeVerticalCurve } from '@/lib/engine/engineering';
 
 interface EngineeringPanelProps {
   projectId: string;
   subtype: EngineeringSubtype;
 }
 
-export function RailwayPanel({ projectId, subtype }: EngineeringPanelProps) {
+export function RailwayPanel({ projectId: _projectId, subtype: _subtype }: EngineeringPanelProps) {
   const [activeTab, setActiveTab] = useState<'alignment' | 'horizontal' | 'vertical' | 'cross' | 'earthworks'>('alignment');
   const qa = ENGINEERING_QA.railway;
 
   const [alignment, setAlignment] = useState<Array<{ chainage: number; easting: number; northing: number; elevation?: number }>>([]);
-  const [horizontalCurves, setHorizontalCurves] = useState<Array<{ radius: number; delta: number; piChainage: number }>>([]);
-  const [verticalCurves, setVerticalCurves] = useState<Array<{ pvIChainage: number; pvIElevation: number; gradeIn: number; gradeOut: number; length: number }>>([]);
-  const [crossSections, setCrossSections] = useState<Array<{ chainage: number; designLevel: number; levels: Array<{ offset: number; elevation: number }> }>>([]);
+  const [horizontalCurves] = useState<Array<{ radius: number; delta: number; piChainage: number }>>([]);
+  const [verticalCurves] = useState<Array<{ pvIChainage: number; pvIElevation: number; gradeIn: number; gradeOut: number; length: number }>>([]);
   const [trackGaugeMM, setTrackGaugeMM] = useState(1000);
   const [designSpeedKmh, setDesignSpeedKmh] = useState(80);
   const [maxGradientPercent, setMaxGradientPercent] = useState(2);
