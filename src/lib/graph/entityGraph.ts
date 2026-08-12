@@ -217,10 +217,9 @@ export class EntityGraph {
     // Register reverse edges (dep → this node is a dependent)
     if (node.dependencies) {
       for (const depId of node.dependencies) {
-        if (!this.dependents.has(depId)) {
-          this.dependents.set(depId, new Set())
-        }
-        this.dependents.get(depId)!.add(node.id)
+        const set = this.dependents.get(depId) ?? new Set<string>()
+        set.add(node.id)
+        this.dependents.set(depId, set)
       }
     }
   }
@@ -240,7 +239,9 @@ export class EntityGraph {
       )
     }
     // Remove forward edges (this node's dependencies)
-    const node = this.nodes.get(nodeId)!.node
+    const entry = this.nodes.get(nodeId)
+    if (!entry) return
+    const node = entry.node
     if (node.dependencies) {
       for (const depId of node.dependencies) {
         this.dependents.get(depId)?.delete(nodeId)
@@ -383,7 +384,8 @@ export class EntityGraph {
   async recomputeAll(): Promise<void> {
     const order = this.topologicalSort()
     for (const nodeId of order) {
-      const state = this.nodes.get(nodeId)!
+      const state = this.nodes.get(nodeId)
+      if (!state) continue
       if (state.dirty || state.payload === undefined) {
         await this.recompute(nodeId)
       }
@@ -443,7 +445,8 @@ export class EntityGraph {
     const result = new Set<string>()
     const queue = [nodeId]
     while (queue.length > 0) {
-      const current = queue.shift()!
+      const current = queue.shift()
+      if (current === undefined) break
       const deps = this.dependents.get(current) ?? new Set()
       for (const d of deps) {
         if (!result.has(d)) {
@@ -497,7 +500,9 @@ export class EntityGraph {
     const visited = new Set<string>()
     const queue: Array<{ id: string; path: string[] }> = [{ id: fromId, path: [fromId] }]
     while (queue.length > 0) {
-      const { id, path } = queue.shift()!
+      const item = queue.shift()
+      if (!item) continue
+      const { id, path } = item
       if (visited.has(id)) continue
       visited.add(id)
       const state = this.nodes.get(id)
@@ -530,7 +535,8 @@ export class EntityGraph {
 
     const result: string[] = []
     while (queue.length > 0) {
-      const id = queue.shift()!
+      const id = queue.shift()
+      if (id === undefined) break
       result.push(id)
       const deps = this.dependents.get(id) ?? new Set()
       for (const depId of deps) {

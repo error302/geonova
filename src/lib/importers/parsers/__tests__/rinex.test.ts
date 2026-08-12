@@ -1,4 +1,5 @@
 import { parseRinexHeader, parseRinex } from '../rinex'
+import { defined } from '@/test-utils/defined'
 
 // Helper: pad a RINEX record to 80 characters with label at positions 60-80
 function R(content: string, label: string): string {
@@ -111,9 +112,9 @@ describe('RINEX Parser', () => {
       expect(header.receiverType).toBe('TRIMBLE NETR9')
       expect(header.antennaType).toBe('TRM57971.00')
       expect(header.approxPosECEF).toBeDefined()
-      expect(header.approxPosECEF!.x).toBeCloseTo(2112620.543, 0)
+      expect(defined(header.approxPosECEF).x).toBeCloseTo(2112620.543, 0)
       expect(header.antennaDelta).toBeDefined()
-      expect(header.antennaDelta!.h).toBeCloseTo(0.064, 3)
+      expect(defined(header.antennaDelta).h).toBeCloseTo(0.064, 3)
       expect(header.timeOfFirstObs).toBeDefined()
     })
 
@@ -156,7 +157,7 @@ describe('RINEX Parser', () => {
       expect(result.format).toBe('rinex')
       expect(result.points).toHaveLength(1)
       expect(result.points[0].point_no).toBe('NAIROBI1')
-      expect(result.points[0].raw!.ecef_x).toBeCloseTo(2112620.543, 0)
+      expect(defined(result.points[0].raw).ecef_x).toBeCloseTo(2112620.543, 0)
       expect(result.header.markerName).toBe('NAIROBI1')
       expect(result.version).toBe('2.1')
     })
@@ -223,9 +224,9 @@ describe('RINEX Parser', () => {
       const result = parseRinex(RINEX_2_WITH_OBS)
       expect(result.points.length).toBeGreaterThanOrEqual(1)
       const point = result.points[0]
-      expect(point.raw!.version).toBe('2.1')
-      expect(point.raw!.epoch_count).toBeGreaterThan(0)
-      expect(point.raw!.observation_count).toBeGreaterThan(0)
+      expect(defined(point.raw).version).toBe('2.1')
+      expect(defined(point.raw).epoch_count).toBeGreaterThan(0)
+      expect(defined(point.raw).observation_count).toBeGreaterThan(0)
     })
 
     test('RINEX 3 header extracts interval', () => {

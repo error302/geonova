@@ -33,6 +33,14 @@ interface SheetData {
   corners: SheetCorner[]
 }
 
+/** Guard: every sheet corner must carry its Cassini coordinates. */
+function cassOf(c: SheetCorner): { cassE: number; cassN: number } {
+  if (c.cassE === null || c.cassN === null) {
+    throw new Error(`Sheet corner ${c.id} missing Cassini coordinates`)
+  }
+  return { cassE: c.cassE, cassN: c.cassN }
+}
+
 interface NationalSheetCornersJSON {
   metadata: {
     source: string
@@ -82,13 +90,16 @@ function hasDuplicateCorners(sheet: SheetData): boolean {
 
   // Compare first corner with the rest — if all are within 1 unit, it's a duplicate
   const ref = corners[0]
-  return corners.every(
-    (c) =>
+  const rc = cassOf(ref)
+  return corners.every((c) => {
+    const cc = cassOf(c)
+    return (
       Math.abs(c.utmE - ref.utmE) < 1 &&
       Math.abs(c.utmN - ref.utmN) < 1 &&
-      Math.abs(c.cassE! - ref.cassE!) < 1 &&
-      Math.abs(c.cassN! - ref.cassN!) < 1,
-  )
+      Math.abs(cc.cassE - rc.cassE) < 1 &&
+      Math.abs(cc.cassN - rc.cassN) < 1
+    )
+  })
 }
 
 /**
@@ -99,13 +110,16 @@ function hasDuplicateCorners(sheet: SheetData): boolean {
  */
 function cornersToCommonPoints(sheet: SheetData): CommonPoint[] {
   const labels = ['C1', 'C2', 'C3', 'C4']
-  return sheet.corners.map((c, i) => ({
-    station: labels[i],
-    cassN: c.cassN!,
-    cassE: c.cassE!,
-    utmN: c.utmN,
-    utmE: c.utmE,
-  }))
+  return sheet.corners.map((c, i) => {
+    const { cassN, cassE } = cassOf(c)
+    return {
+      station: labels[i],
+      cassN,
+      cassE,
+      utmN: c.utmN,
+      utmE: c.utmE,
+    }
+  })
 }
 
 /**

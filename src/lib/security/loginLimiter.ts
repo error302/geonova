@@ -59,9 +59,17 @@ function hasUpstashConfig(): boolean {
   return !!(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)
 }
 
+function upstashEnv(): { url: string; token: string } {
+  const url = process.env.UPSTASH_REDIS_REST_URL
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN
+  if (!url || !token) {
+    throw new Error('UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN must be set')
+  }
+  return { url, token }
+}
+
 async function upstashGet(key: string): Promise<LoginAttempt | null> {
-  const url = process.env.UPSTASH_REDIS_REST_URL!
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN!
+  const { url, token } = upstashEnv()
 
   const res = await fetch(`${url}/GET`, {
     method: 'POST',
@@ -83,8 +91,7 @@ async function upstashGet(key: string): Promise<LoginAttempt | null> {
 }
 
 async function upstashSet(key: string, record: LoginAttempt): Promise<void> {
-  const url = process.env.UPSTASH_REDIS_REST_URL!
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN!
+  const { url, token } = upstashEnv()
 
   await fetch(`${url}/SET`, {
     method: 'POST',
@@ -97,8 +104,7 @@ async function upstashSet(key: string, record: LoginAttempt): Promise<void> {
 }
 
 async function upstashDel(key: string): Promise<void> {
-  const url = process.env.UPSTASH_REDIS_REST_URL!
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN!
+  const { url, token } = upstashEnv()
 
   await fetch(`${url}/DEL`, {
     method: 'POST',

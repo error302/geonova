@@ -7,6 +7,7 @@ import {
   parsePileGridCSV,
   generatePileGridDXF,
 } from '@/lib/engineering/pileGrid';
+import { defined } from '@/test-utils/defined'
 
 // ─── Test fixtures ──────────────────────────────────────────────────────────
 
@@ -79,13 +80,13 @@ describe('generatePileGrid()', () => {
     const pile90_01 = result90.piles.find(p => p.row === 0 && p.column === 1);
     expect(pile90_01).not.toBeNull();
 
-    expect(pile0_01!.gridOffsetE).toBeCloseTo(6, 2);
-    expect(pile0_01!.gridOffsetN).toBeCloseTo(0, 2);
+    expect(defined(pile0_01).gridOffsetE).toBeCloseTo(6, 2);
+    expect(defined(pile0_01).gridOffsetN).toBeCloseTo(0, 2);
     // At 90°: lx=6, ly=0 → rx = 6*cos90 + 0*sin90 = 0, ry = -6*sin90 + 0*cos90 = -6
     // Wait, actually: ry = -lx*sin(theta) + ly*cos(theta) = -6*1 + 0*0 = -6
     // That gives northing = 2000 + (-6) = 1994
     // But offsetN = ry = -6, that's negative offset in N direction
-    expect(pile90_01!.gridOffsetE).toBeCloseTo(0, 2);
+    expect(defined(pile90_01).gridOffsetE).toBeCloseTo(0, 2);
   });
 
   it('bounding box is correct', () => {
@@ -120,8 +121,8 @@ describe('computeSettingOut()', () => {
     const so = computeSettingOut(result.piles, 1000, 2000, 1245, 1.5);
     const a1 = so.find(s => s.pile.label === 'A1');
     expect(a1).not.toBeNull();
-    expect(a1!.horizontalDistance).toBeCloseTo(0, 4);
-    expect(a1!.targetHeight).toBeCloseTo(1250 - 1245 - 1.5, 4); // 3.5
+    expect(defined(a1).horizontalDistance).toBeCloseTo(0, 4);
+    expect(defined(a1).targetHeight).toBeCloseTo(1250 - 1245 - 1.5, 4); // 3.5
   });
 
   it('target height = designRL - stationRL - HI', () => {
@@ -143,7 +144,7 @@ describe('computeSettingOut()', () => {
     const so = computeSettingOut(result.piles, 1000, 2005, 1245, 1.5);
     const b2 = so.find(s => s.pile.column === 1 && s.pile.row === 1);
     expect(b2).not.toBeNull();
-    expect(b2!.bearingDeg).toBeCloseTo(90, 1);
+    expect(defined(b2).bearingDeg).toBeCloseTo(90, 1);
   });
 });
 

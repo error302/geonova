@@ -224,11 +224,11 @@ export default function AnalysisTab({
             {fillVolume > 0 && (
               <div className="p-4 bg-[var(--bg-tertiary)] rounded border border-[var(--border-color)]">
                 <div className="text-xs text-[var(--text-secondary)] mb-1">Cut/Fill Ratio</div>
-                <div className="text-xl font-bold font-mono text-[var(--text-primary)]">{(cutVolume! / fillVolume!).toFixed(3)}</div>
+                <div className="text-xl font-bold font-mono text-[var(--text-primary)]">{((cutVolume ?? 0) / fillVolume).toFixed(3)}</div>
                 <div className="text-xs text-[var(--text-muted)] mt-0.5">
-                  {Math.abs(cutVolume! / fillVolume! - 1) < 0.05
+                  {Math.abs((cutVolume ?? 0) / fillVolume - 1) < 0.05
                     ? 'Nearly balanced — minimal import/export'
-                    : cutVolume! / fillVolume! > 1
+                    : (cutVolume ?? 0) / fillVolume > 1
                       ? 'Cut surplus — export material needed'
                       : 'Fill deficit — import material needed'}
                 </div>

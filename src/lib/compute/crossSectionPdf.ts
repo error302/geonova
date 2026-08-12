@@ -711,12 +711,12 @@ function drawCutFillShading(
     const x2 = cToX(p2.chainage)
     const yg1 = eToY(p1.elevation)
     const yg2 = eToY(p2.elevation)
-    const yd1 = eToY(p1.designLevel!)
-    const yd2 = eToY(p2.designLevel!)
+    const yd1 = eToY(p1.designLevel)
+    const yd2 = eToY(p2.designLevel)
 
     // Average cut/fill for this segment
     const avg =
-      (p1.elevation - p1.designLevel! + p2.elevation - p2.designLevel!) / 2
+      (p1.elevation - p1.designLevel + p2.elevation - p2.designLevel) / 2
 
     const color: RGB =
       avg > 0.005 ? CUT_SHADE : avg < -0.005 ? FILL_SHADE : VLTGRAY
@@ -762,7 +762,7 @@ function drawDesignLine(
   cToX: (c: number) => number,
   eToY: (e: number) => number,
 ): void {
-  const designPts = pts.filter((p) => p.designLevel != null)
+  const designPts = pts.filter((p): p is CrossSectionPoint & { designLevel: number } => p.designLevel != null)
   if (designPts.length < 2) return
 
   doc.setDrawColor(...DESIGN_CLR)
@@ -771,9 +771,9 @@ function drawDesignLine(
 
   for (let i = 0; i < designPts.length - 1; i++) {
     const x1 = cToX(designPts[i].chainage)
-    const y1 = eToY(designPts[i].designLevel!)
+    const y1 = eToY(designPts[i].designLevel)
     const x2 = cToX(designPts[i + 1].chainage)
-    const y2 = eToY(designPts[i + 1].designLevel!)
+    const y2 = eToY(designPts[i + 1].designLevel)
     doc.line(x1, y1, x2, y2)
   }
 

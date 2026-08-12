@@ -64,6 +64,11 @@ const STORE_CONFIGS: Record<string, DBConfig> = {
 class OfflineStorage {
   private db: IDBDatabase | null = null
 
+  private requireDb(): IDBDatabase {
+    if (!this.db) throw new Error('OfflineStorage not initialized - call init() first')
+    return this.db
+  }
+
   async init(): Promise<void> {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(DB_NAME, DB_VERSION)
@@ -97,7 +102,7 @@ class OfflineStorage {
     if (!this.db) await this.init()
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], 'readwrite')
+      const transaction = this.requireDb().transaction([storeName], 'readwrite')
       const store = transaction.objectStore(storeName)
 
       // Generate ID if not present
@@ -114,7 +119,7 @@ class OfflineStorage {
     if (!this.db) await this.init()
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], 'readonly')
+      const transaction = this.requireDb().transaction([storeName], 'readonly')
       const store = transaction.objectStore(storeName)
       const request = store.get(id)
 
@@ -127,7 +132,7 @@ class OfflineStorage {
     if (!this.db) await this.init()
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], 'readonly')
+      const transaction = this.requireDb().transaction([storeName], 'readonly')
       const store = transaction.objectStore(storeName)
 
       let request: IDBRequest
@@ -147,7 +152,7 @@ class OfflineStorage {
     if (!this.db) await this.init()
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], 'readwrite')
+      const transaction = this.requireDb().transaction([storeName], 'readwrite')
       const store = transaction.objectStore(storeName)
 
       const request = store.get(id)
@@ -174,7 +179,7 @@ class OfflineStorage {
     if (!this.db) await this.init()
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], 'readwrite')
+      const transaction = this.requireDb().transaction([storeName], 'readwrite')
       const store = transaction.objectStore(storeName)
       const request = store.delete(id)
 
@@ -276,7 +281,7 @@ class OfflineStorage {
 
     for (const storeName of storeNames) {
       await new Promise<void>((resolve, reject) => {
-        const transaction = this.db!.transaction([storeName], 'readwrite')
+        const transaction = this.requireDb().transaction([storeName], 'readwrite')
         const store = transaction.objectStore(storeName)
         const request = store.clear()
 
