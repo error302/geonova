@@ -24,6 +24,13 @@ import {
   type NetworkObservation,
 } from '../networkAdjustment'
 
+function defined<T>(value: T | null | undefined): T {
+  if (value === null || value === undefined) {
+    throw new Error('expected value to be defined')
+  }
+  return value
+}
+
 function approxEqual(a: number, b: number, tol = 1e-6): boolean {
   return Math.abs(a - b) < tol
 }
@@ -53,9 +60,9 @@ describe('unified 3D adjustment — slope distance', () => {
     expect(result.ok).toBe(true)
     const b = result.adjustedPoints.find((p) => p.name === 'B')
     expect(b).toBeDefined()
-    expect(approxEqual(b!.easting, 60, 0.1)).toBe(true)
-    expect(approxEqual(b!.northing, 60, 0.1)).toBe(true)
-    expect(approxEqual(b!.rl ?? 0, 110, 0.1)).toBe(true)
+    expect(approxEqual(defined(b).easting, 60, 0.1)).toBe(true)
+    expect(approxEqual(defined(b).northing, 60, 0.1)).toBe(true)
+    expect(approxEqual(defined(b).rl ?? 0, 110, 0.1)).toBe(true)
   })
 })
 
@@ -86,9 +93,9 @@ describe('unified 3D adjustment — zenith angle', () => {
     expect(result.ok).toBe(true)
     const b = result.adjustedPoints.find((p) => p.name === 'B')
     expect(b).toBeDefined()
-    expect(approxEqual(b!.easting, 60, 0.05)).toBe(true)
-    expect(approxEqual(b!.northing, 0, 0.05)).toBe(true)
-    expect(approxEqual(b!.rl ?? 0, 110, 0.1)).toBe(true)
+    expect(approxEqual(defined(b).easting, 60, 0.05)).toBe(true)
+    expect(approxEqual(defined(b).northing, 0, 0.05)).toBe(true)
+    expect(approxEqual(defined(b).rl ?? 0, 110, 0.1)).toBe(true)
   })
 })
 
@@ -115,9 +122,9 @@ describe('unified 3D adjustment — height difference', () => {
     expect(result.ok).toBe(true)
     const b = result.adjustedPoints.find((p) => p.name === 'B')
     expect(b).toBeDefined()
-    expect(approxEqual(b!.easting, 50, 0.05)).toBe(true)
-    expect(approxEqual(b!.northing, 0, 0.05)).toBe(true)
-    expect(approxEqual(b!.rl ?? 0, 105, 0.05)).toBe(true)
+    expect(approxEqual(defined(b).easting, 50, 0.05)).toBe(true)
+    expect(approxEqual(defined(b).northing, 0, 0.05)).toBe(true)
+    expect(approxEqual(defined(b).rl ?? 0, 105, 0.05)).toBe(true)
   })
 })
 
@@ -151,9 +158,9 @@ describe('unified 3D adjustment — mixed observations', () => {
     expect(result.ok).toBe(true)
     const p = result.adjustedPoints.find((x) => x.name === 'P')
     expect(p).toBeDefined()
-    expect(approxEqual(p!.easting, 50, 0.05)).toBe(true)
-    expect(approxEqual(p!.northing, 50, 0.05)).toBe(true)
-    expect(approxEqual(p!.rl ?? 0, 105, 0.1)).toBe(true)
+    expect(approxEqual(defined(p).easting, 50, 0.05)).toBe(true)
+    expect(approxEqual(defined(p).northing, 50, 0.05)).toBe(true)
+    expect(approxEqual(defined(p).rl ?? 0, 105, 0.1)).toBe(true)
   })
 
   test('3D adjustment produces sigmaE, sigmaN, sigmaRL', () => {
@@ -178,10 +185,10 @@ describe('unified 3D adjustment — mixed observations', () => {
     expect(result.ok).toBe(true)
     const p = result.adjustedPoints.find((x) => x.name === 'P')
     expect(p).toBeDefined()
-    expect(p!.sigmaE).toBeGreaterThanOrEqual(0)
-    expect(p!.sigmaN).toBeGreaterThanOrEqual(0)
-    expect(p!.sigmaRL).toBeDefined()
-    expect(p!.sigmaRL!).toBeGreaterThanOrEqual(0)
+    expect(defined(p).sigmaE).toBeGreaterThanOrEqual(0)
+    expect(defined(p).sigmaN).toBeGreaterThanOrEqual(0)
+    expect(defined(p).sigmaRL).toBeDefined()
+    expect(defined(p).sigmaRL ?? 0).toBeGreaterThanOrEqual(0)
   })
 })
 
@@ -208,7 +215,7 @@ describe('unified 3D adjustment — vs separate 2D + 1D', () => {
     const result3D = adjustNetwork(points, observations, { dimension: '3D' })
 
     expect(result3D.ok).toBe(true)
-    const p3D = result3D.adjustedPoints.find((x) => x.name === 'P')!
+    const p3D = defined(result3D.adjustedPoints.find((x) => x.name === 'P'))
     // 3D should pull P toward (50, 50, 105)
     expect(approxEqual(p3D.easting, 50, 0.1)).toBe(true)
     expect(approxEqual(p3D.northing, 50, 0.1)).toBe(true)

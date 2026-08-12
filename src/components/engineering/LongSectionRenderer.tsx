@@ -12,6 +12,10 @@ interface Station {
   designLevel?: number
 }
 
+interface DesignStation extends Station {
+  designLevel: number
+}
+
 interface VerticalIP {
   chainage: number
   reducedLevel: number
@@ -147,29 +151,29 @@ export default function LongSectionRenderer({
       ? `M${xS(stations[0].chainage)},${plotBottom} L${gp} L${xS(stations[stations.length - 1].chainage)},${plotBottom} Z`
       : ''
 
-    const ds = stations.filter(s => s.designLevel != null)
-    const dp = ds.map(s => `${xS(s.chainage)},${yS(s.designLevel!)}`).join(' ')
+    const ds = stations.filter((s): s is DesignStation => s.designLevel != null)
+    const dp = ds.map(s => `${xS(s.chainage)},${yS(s.designLevel)}`).join(' ')
 
     /* cut / fill quads */
     const cfs: { type: 'cut' | 'fill'; path: string }[] = []
     for (let i = 0; i < ds.length - 1; i++) {
-      const a = ds[i]!, b = ds[i + 1]!
-      const ax = xS(a.chainage), ayg = yS(a.groundLevel), ayd = yS(a.designLevel!)
-      const bx = xS(b.chainage), byg = yS(b.groundLevel), byd = yS(b.designLevel!)
+      const a = ds[i], b = ds[i + 1]
+      const ax = xS(a.chainage), ayg = yS(a.groundLevel), ayd = yS(a.designLevel)
+      const bx = xS(b.chainage), byg = yS(b.groundLevel), byd = yS(b.designLevel)
       cfs.push({
         path: `M${ax},${ayg} L${bx},${byg} L${bx},${byd} L${ax},${ayd} Z`,
-        type: ((a.groundLevel - a.designLevel!) + (b.groundLevel - b.designLevel!)) / 2 >= 0 ? 'cut' : 'fill',
+        type: ((a.groundLevel - a.designLevel) + (b.groundLevel - b.designLevel)) / 2 >= 0 ? 'cut' : 'fill',
       })
     }
 
     /* cut / fill text annotations */
     const cfa = ds.map(s => {
-      const diff = s.groundLevel - s.designLevel!
+      const diff = s.groundLevel - s.designLevel
       return {
         x: xS(s.chainage),
         gy: yS(s.groundLevel),
-        dy: yS(s.designLevel!),
-        my: (yS(s.groundLevel) + yS(s.designLevel!)) / 2,
+        dy: yS(s.designLevel),
+        my: (yS(s.groundLevel) + yS(s.designLevel)) / 2,
         type: diff >= 0 ? ('cut' as const) : ('fill' as const),
         amt: Math.abs(diff),
         ch: s.chainage,
@@ -179,9 +183,9 @@ export default function LongSectionRenderer({
     /* transition points (cut ↔ fill) */
     const tr: { x: number; y: number; type: 'cut' | 'fill' }[] = []
     for (let i = 1; i < ds.length; i++) {
-      const prev = ds[i - 1]!, cur = ds[i]!
-      const pd = prev.groundLevel - prev.designLevel!
-      const cd = cur.groundLevel - cur.designLevel!
+      const prev = ds[i - 1], cur = ds[i]
+      const pd = prev.groundLevel - prev.designLevel
+      const cd = cur.groundLevel - cur.designLevel
       if ((pd >= 0) !== (cd >= 0)) {
         const t = Math.abs(pd) / (Math.abs(pd) + Math.abs(cd))
         const tc = prev.chainage + t * (cur.chainage - prev.chainage)
@@ -200,19 +204,19 @@ export default function LongSectionRenderer({
 
   /* ---- table rows ---- */
   const tableRows = useMemo(() => {
-    const ds = stations.filter(s => s.designLevel != null)
+    const ds = stations.filter((s): s is DesignStation => s.designLevel != null)
     return ds.map((s, i) => {
       let grade = ''
       if (i > 0) {
-        const prev = ds[i - 1]!
+        const prev = ds[i - 1]
         const dist = s.chainage - prev.chainage
-        if (dist > 0) grade = ((s.designLevel! - prev.designLevel!) / dist * 100).toFixed(2) + '%'
+        if (dist > 0) grade = ((s.designLevel - prev.designLevel) / dist * 100).toFixed(2) + '%'
       }
-      const diff = s.groundLevel - s.designLevel!
+      const diff = s.groundLevel - s.designLevel
       return {
         chainage: s.chainage,
         groundRL: s.groundLevel.toFixed(3),
-        designRL: s.designLevel!.toFixed(3),
+        designRL: s.designLevel.toFixed(3),
         grade,
         cut: diff > 0 ? diff.toFixed(3) : '',
         fill: diff < 0 ? Math.abs(diff).toFixed(3) : '',

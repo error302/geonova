@@ -20,6 +20,13 @@
 import { MpesaService } from '@/lib/payments/mpesa'
 import { getPlan } from '@/lib/subscription/catalog'
 
+function defined<T>(value: T | null | undefined): T {
+  if (value === null || value === undefined) {
+    throw new Error('expected value to be defined')
+  }
+  return value
+}
+
 describe('P0-4: M-Pesa callback parsing + amount verification', () => {
   // Minimal MpesaService instance — parseCallback is a pure method
   // that doesn't use any instance state, so empty config is fine.
@@ -69,10 +76,10 @@ describe('P0-4: M-Pesa callback parsing + amount verification', () => {
     test('extracts amount + receipt number from success payload', () => {
       const result = mpesa.parseCallback(successPayload)
       expect(result).not.toBeNull()
-      expect(result!.amount).toBe(500)
-      expect(result!.transactionId).toBe('NLJ7RT61SV')
-      expect(result!.phone).toBe('254708374149')
-      expect(result!.status).toBe('completed')
+      expect(defined(result).amount).toBe(500)
+      expect(defined(result).transactionId).toBe('NLJ7RT61SV')
+      expect(defined(result).phone).toBe('254708374149')
+      expect(defined(result).status).toBe('completed')
     })
 
     test('returns null for failed callback (no CallbackMetadata)', () => {
@@ -99,8 +106,8 @@ describe('P0-4: M-Pesa callback parsing + amount verification', () => {
       }
       const result = mpesa.parseCallback(payload as Record<string, unknown>)
       expect(result).not.toBeNull()
-      expect(result!.amount).toBe(0)
-      expect(result!.transactionId).toBe('ABC123')
+      expect(defined(result).amount).toBe(0)
+      expect(defined(result).transactionId).toBe('ABC123')
     })
   })
 
@@ -116,13 +123,13 @@ describe('P0-4: M-Pesa callback parsing + amount verification', () => {
     test('Pro plan has a KES price that can be looked up', () => {
       const plan = getPlan('pro')
       expect(plan).toBeDefined()
-      expect(plan!.prices?.KES).toBeDefined()
-      expect(plan!.prices!.KES).toBeGreaterThan(0)
+      expect(defined(plan).prices?.KES).toBeDefined()
+      expect(defined(plan).prices?.KES ?? 0).toBeGreaterThan(0)
     })
 
     test('matching amount passes verification', () => {
       const plan = getPlan('pro')
-      const expectedAmount = plan!.prices!.KES
+      const expectedAmount = defined(plan).prices?.KES ?? 0
       const paidAmount = expectedAmount // exact match
 
       const matches =
@@ -137,7 +144,7 @@ describe('P0-4: M-Pesa callback parsing + amount verification', () => {
 
     test('underpayment (KES 1 for Pro plan) is flagged as mismatch', () => {
       const plan = getPlan('pro')
-      const expectedAmount = plan!.prices!.KES
+      const expectedAmount = defined(plan).prices?.KES ?? 0
       const paidAmount = 1 // user pays KES 1 instead of the Pro price
 
       const isMismatch =
@@ -152,7 +159,7 @@ describe('P0-4: M-Pesa callback parsing + amount verification', () => {
 
     test('overpayment is also flagged (defensive)', () => {
       const plan = getPlan('pro')
-      const expectedAmount = plan!.prices!.KES
+      const expectedAmount = defined(plan).prices?.KES ?? 0
       const paidAmount = expectedAmount * 2
 
       const isMismatch =
@@ -172,7 +179,7 @@ describe('P0-4: M-Pesa callback parsing + amount verification', () => {
       // which is a known limitation — but better than blocking legit
       // payments where Safaricom's payload was malformed.
       const plan = getPlan('pro')
-      const expectedAmount = plan!.prices!.KES
+      const expectedAmount = defined(plan).prices?.KES ?? 0
       const paidAmount = 0
 
       const isMismatch =

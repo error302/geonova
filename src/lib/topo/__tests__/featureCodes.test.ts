@@ -10,37 +10,44 @@ import {
   type SurveyPointWithCode,
 } from '@/lib/topo/featureCodes';
 
+function defined<T>(value: T | null | undefined): T {
+  if (value === null || value === undefined) {
+    throw new Error('expected value to be defined')
+  }
+  return value
+}
+
 // ─── getFeatureCode ─────────────────────────────────────────────────────────
 
 describe('getFeatureCode()', () => {
   it('returns correct definition for known code RD', () => {
     const fc = getFeatureCode('RD');
     expect(fc).not.toBeNull();
-    expect(fc!.code).toBe('RD');
-    expect(fc!.description).toBe('Road Carriageway Edge');
-    expect(fc!.category).toBe('transportation');
-    expect(fc!.dxfLayer).toBe('ROAD-EDGE');
+    expect(defined(fc).code).toBe('RD');
+    expect(defined(fc).description).toBe('Road Carriageway Edge');
+    expect(defined(fc).category).toBe('transportation');
+    expect(defined(fc).dxfLayer).toBe('ROAD-EDGE');
   });
 
   it('returns correct definition for BLD', () => {
     const fc = getFeatureCode('BLD');
     expect(fc).not.toBeNull();
-    expect(fc!.code).toBe('BLD');
-    expect(fc!.dxfLayer).toBe('STRUCT-BUILDING');
+    expect(defined(fc).code).toBe('BLD');
+    expect(defined(fc).dxfLayer).toBe('STRUCT-BUILDING');
   });
 
   it('returns correct definition for TRV', () => {
     const fc = getFeatureCode('TRV');
     expect(fc).not.toBeNull();
-    expect(fc!.code).toBe('TRV');
-    expect(fc!.dxfLayer).toBe('VEG-TREE');
+    expect(defined(fc).code).toBe('TRV');
+    expect(defined(fc).dxfLayer).toBe('VEG-TREE');
   });
 
   it('returns correct definition for BND', () => {
     const fc = getFeatureCode('BND');
     expect(fc).not.toBeNull();
-    expect(fc!.dxfLayer).toBe('BOUNDARY-CADASTRAL');
-    expect(fc!.lineType).toBe('DASHED');
+    expect(defined(fc).dxfLayer).toBe('BOUNDARY-CADASTRAL');
+    expect(defined(fc).lineType).toBe('DASHED');
   });
 
   it('returns undefined for unknown code', () => {
@@ -78,8 +85,8 @@ describe('getAllGroups()', () => {
     const groups = getAllGroups();
     const boundary = groups.find(g => g.category === 'boundary');
     expect(boundary).not.toBeNull();
-    expect(boundary!.name).toBe('Boundary');
-    expect(boundary!.codes.length).toBe(5);
+    expect(defined(boundary).name).toBe('Boundary');
+    expect(defined(boundary).codes.length).toBe(5);
   });
 });
 
@@ -127,11 +134,11 @@ describe('mapPointsToLayers()', () => {
 
     const roadLayer = layers.find(l => l.layer === 'ROAD-EDGE');
     expect(roadLayer).not.toBeNull();
-    expect(roadLayer!.points).toHaveLength(2);
+    expect(defined(roadLayer).points).toHaveLength(2);
 
     const bldLayer = layers.find(l => l.layer === 'STRUCT-BUILDING');
     expect(bldLayer).not.toBeNull();
-    expect(bldLayer!.points).toHaveLength(1);
+    expect(defined(bldLayer).points).toHaveLength(1);
   });
 
   it('generates polylines for codes with joinLines=true', () => {
@@ -143,8 +150,8 @@ describe('mapPointsToLayers()', () => {
     const layers = mapPointsToLayers(points);
     const roadLayer = layers.find(l => l.layer === 'ROAD-EDGE');
     expect(roadLayer).not.toBeNull();
-    expect(roadLayer!.polylines).toHaveLength(1);
-    expect(roadLayer!.polylines[0]).toHaveLength(3);
+    expect(defined(roadLayer).polylines).toHaveLength(1);
+    expect(defined(roadLayer).polylines[0]).toHaveLength(3);
   });
 
   it('no polylines for codes with joinLines=false', () => {
@@ -155,7 +162,7 @@ describe('mapPointsToLayers()', () => {
     const layers = mapPointsToLayers(points);
     const treeLayer = layers.find(l => l.layer === 'VEG-TREE');
     expect(treeLayer).not.toBeNull();
-    expect(treeLayer!.polylines).toHaveLength(0);
+    expect(defined(treeLayer).polylines).toHaveLength(0);
   });
 
   it('maps unknown codes to OTHER-UNKNOWN layer', () => {

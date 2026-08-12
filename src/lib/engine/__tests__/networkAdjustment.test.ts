@@ -16,6 +16,13 @@ import {
   type NetworkObservation,
 } from '../networkAdjustment'
 
+function defined<T>(value: T | null | undefined): T {
+  if (value === null || value === undefined) {
+    throw new Error('expected value to be defined')
+  }
+  return value
+}
+
 function approxEqual(a: number, b: number, tol = 1e-6): boolean {
   return Math.abs(a - b) < tol
 }
@@ -43,8 +50,8 @@ describe('networkAdjustment — basic constrained', () => {
     expect(result.ok).toBe(true)
     const p = result.adjustedPoints.find((x) => x.name === 'P')
     expect(p).toBeDefined()
-    expect(approxEqual(p!.easting, 50, 0.001)).toBe(true)
-    expect(approxEqual(p!.northing, 50, 0.001)).toBe(true)
+    expect(approxEqual(defined(p).easting, 50, 0.001)).toBe(true)
+    expect(approxEqual(defined(p).northing, 50, 0.001)).toBe(true)
   })
 
   test('2D traverse with bearing + distance', () => {
@@ -77,13 +84,13 @@ describe('networkAdjustment — basic constrained', () => {
     // P1 should be near (100, 0)
     const p1 = result.adjustedPoints.find((x) => x.name === 'P1')
     expect(p1).toBeDefined()
-    expect(approxEqual(p1!.easting, 100, 0.1)).toBe(true)
-    expect(approxEqual(p1!.northing, 0, 0.1)).toBe(true)
+    expect(approxEqual(defined(p1).easting, 100, 0.1)).toBe(true)
+    expect(approxEqual(defined(p1).northing, 0, 0.1)).toBe(true)
     // P2 should be near (100, 100)
     const p2 = result.adjustedPoints.find((x) => x.name === 'P2')
     expect(p2).toBeDefined()
-    expect(approxEqual(p2!.easting, 100, 0.1)).toBe(true)
-    expect(approxEqual(p2!.northing, 100, 0.1)).toBe(true)
+    expect(approxEqual(defined(p2).easting, 100, 0.1)).toBe(true)
+    expect(approxEqual(defined(p2).northing, 100, 0.1)).toBe(true)
   })
 })
 
@@ -107,8 +114,8 @@ describe('networkAdjustment — iterative relinearization', () => {
     expect(result.ok).toBe(true)
     const p = result.adjustedPoints.find((x) => x.name === 'P')
     expect(p).toBeDefined()
-    expect(approxEqual(p!.easting, 50, 0.001)).toBe(true)
-    expect(approxEqual(p!.northing, 50, 0.001)).toBe(true)
+    expect(approxEqual(defined(p).easting, 50, 0.001)).toBe(true)
+    expect(approxEqual(defined(p).northing, 50, 0.001)).toBe(true)
     expect(result.iterations).toBeLessThanOrEqual(10)
   })
 })
@@ -146,9 +153,9 @@ describe('networkAdjustment — free network (inner constraints)', () => {
     expect(b).toBeDefined()
     expect(c).toBeDefined()
 
-    const adjAB = Math.sqrt((b!.easting - a!.easting) ** 2 + (b!.northing - a!.northing) ** 2)
-    const adjAC = Math.sqrt((c!.easting - a!.easting) ** 2 + (c!.northing - a!.northing) ** 2)
-    const adjBC = Math.sqrt((c!.easting - b!.easting) ** 2 + (c!.northing - b!.northing) ** 2)
+    const adjAB = Math.sqrt((defined(b).easting - defined(a).easting) ** 2 + (defined(b).northing - defined(a).northing) ** 2)
+    const adjAC = Math.sqrt((defined(c).easting - defined(a).easting) ** 2 + (defined(c).northing - defined(a).northing) ** 2)
+    const adjBC = Math.sqrt((defined(c).easting - defined(b).easting) ** 2 + (defined(c).northing - defined(b).northing) ** 2)
 
     expect(approxEqual(adjAB, 100, 0.01)).toBe(true)
     expect(approxEqual(adjAC, 100, 0.01)).toBe(true)
@@ -186,8 +193,8 @@ describe('networkAdjustment — robust estimation', () => {
     expect(resultRobust.ok).toBe(true)
 
     // Robust should be closer to truth (50, 50)
-    const pNoRobust = resultNoRobust.adjustedPoints.find((x) => x.name === 'P')!
-    const pRobust = resultRobust.adjustedPoints.find((x) => x.name === 'P')!
+    const pNoRobust = defined(resultNoRobust.adjustedPoints.find((x) => x.name === 'P'))
+    const pRobust = defined(resultRobust.adjustedPoints.find((x) => x.name === 'P'))
 
     const errNoRobust = Math.sqrt((pNoRobust.easting - 50) ** 2 + (pNoRobust.northing - 50) ** 2)
     const errRobust = Math.sqrt((pRobust.easting - 50) ** 2 + (pRobust.northing - 50) ** 2)
@@ -196,7 +203,7 @@ describe('networkAdjustment — robust estimation', () => {
     expect(errRobust).toBeLessThanOrEqual(errNoRobust + 0.001)
     // Robust should have detected the outlier
     expect(resultRobust.robust).toBeDefined()
-    expect(resultRobust.robust!.downweightedCount).toBeGreaterThan(0)
+    expect(defined(resultRobust.robust).downweightedCount).toBeGreaterThan(0)
   })
 })
 

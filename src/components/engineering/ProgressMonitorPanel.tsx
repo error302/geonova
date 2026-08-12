@@ -509,7 +509,7 @@ function DashboardView({
         <div className="bg-zinc-900 rounded-xl border border-zinc-700 p-6">
           <h4 className="font-medium text-white mb-4">Milestones</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {summary.milestones.map((m, i) => (
+            {summary.milestones.map((m, _i) => (
               <div key={m.name} className="p-3 rounded-lg border border-zinc-800 bg-zinc-800/50">
                 <div className="text-sm text-zinc-200 font-medium truncate">{m.name}</div>
                 <div className="flex items-center gap-2 mt-1.5 text-xs text-zinc-400">
@@ -781,6 +781,8 @@ function CheckpointListView({
       {/* Checkpoint rows */}
       <div className="space-y-2 max-h-[600px] overflow-y-auto">
         {checkpoints.map(cp => {
+          const id = cp.id
+          if (!id) return null
           const isExpanded = expandedId === cp.id
           const isCritical = cp.status === 'delayed' || cp.status === 'rejected'
           const nextStatus = getNextStatus(cp.status)
@@ -798,7 +800,7 @@ function CheckpointListView({
               {/* Main row */}
               <div
                 className="px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-zinc-800/50 rounded-t-xl"
-                onClick={() => setExpandedId(isExpanded ? null : cp.id!)}
+                onClick={() => setExpandedId(isExpanded ? null : id)}
               >
                 {/* Ref */}
                 <div className="w-20 flex-shrink-0">
@@ -893,26 +895,26 @@ function CheckpointListView({
                           <div className="flex gap-2 mt-2">
                             <input
                               type="text"
-                              value={deviationInput[cp.id!] || ''}
-                              onChange={e => setDeviationInput(prev => ({ ...prev, [cp.id!]: e.target.value }))}
+                              value={deviationInput[id] || ''}
+                              onChange={e => setDeviationInput(prev => ({ ...prev, [id]: e.target.value }))}
                               aria-label="Add deviation note..."
                               className="flex-1 bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-xs text-zinc-300 placeholder-zinc-600"
                               onKeyDown={e => {
-                                if (e.key === 'Enter' && deviationInput[cp.id!]?.trim()) {
-                                  onUpdate(cp.id!, {
-                                    deviations: [...(cp.deviations || []), deviationInput[cp.id!].trim()],
+                                if (e.key === 'Enter' && deviationInput[id]?.trim()) {
+                                  onUpdate(id, {
+                                    deviations: [...(cp.deviations || []), deviationInput[id].trim()],
                                   })
-                                  setDeviationInput(prev => ({ ...prev, [cp.id!]: '' }))
+                                  setDeviationInput(prev => ({ ...prev, [id]: '' }))
                                 }
                               }}
                             />
                             <button
                               onClick={() => {
-                                if (deviationInput[cp.id!]?.trim()) {
-                                  onUpdate(cp.id!, {
-                                    deviations: [...(cp.deviations || []), deviationInput[cp.id!].trim()],
+                                if (deviationInput[id]?.trim()) {
+                                  onUpdate(id, {
+                                    deviations: [...(cp.deviations || []), deviationInput[id].trim()],
                                   })
-                                  setDeviationInput(prev => ({ ...prev, [cp.id!]: '' }))
+                                  setDeviationInput(prev => ({ ...prev, [id]: '' }))
                                 }
                               }}
                               className="px-2 py-1 bg-amber-600/20 border border-amber-700/40 text-amber-400 rounded text-xs hover:bg-amber-600/30 transition-colors"
@@ -932,7 +934,7 @@ function CheckpointListView({
                         <div className="flex flex-wrap gap-1.5">
                           {nextStatus && (
                             <button
-                              onClick={() => onStatusTransition(cp.id!, nextStatus)}
+                              onClick={() => onStatusTransition(id, nextStatus)}
                               className="px-3 py-1.5 bg-blue-600/20 border border-blue-600/40 text-blue-400 rounded-lg text-xs font-medium hover:bg-blue-600/30 transition-colors"
                             >
                               → {STATUS_CONFIG[nextStatus].label}
@@ -940,7 +942,7 @@ function CheckpointListView({
                           )}
                           {cp.status !== 'rejected' && (
                             <button
-                              onClick={() => onStatusTransition(cp.id!, 'rejected')}
+                              onClick={() => onStatusTransition(id, 'rejected')}
                               className="px-3 py-1.5 bg-red-600/20 border border-red-600/40 text-red-400 rounded-lg text-xs font-medium hover:bg-red-600/30 transition-colors"
                             >
                               Reject
@@ -948,14 +950,14 @@ function CheckpointListView({
                           )}
                           {cp.status !== 'delayed' && cp.status !== 'pending' && (
                             <button
-                              onClick={() => onStatusTransition(cp.id!, 'delayed')}
+                              onClick={() => onStatusTransition(id, 'delayed')}
                               className="px-3 py-1.5 bg-amber-600/20 border border-amber-600/40 text-amber-400 rounded-lg text-xs font-medium hover:bg-amber-600/30 transition-colors"
                             >
                               Mark Delayed
                             </button>
                           )}
                           <button
-                            onClick={() => onDelete(cp.id!)}
+                            onClick={() => onDelete(id)}
                             className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 text-zinc-400 rounded-lg text-xs font-medium hover:bg-red-900/30 hover:text-red-400 hover:border-red-800/40 transition-colors"
                           >
                             Delete
@@ -977,7 +979,7 @@ function CheckpointListView({
                                 </svg>
                                 <span className="text-xs text-zinc-300 truncate flex-1">{photo}</span>
                                 <button
-                                  onClick={() => onRemovePhoto(cp.id!, pi)}
+                                  onClick={() => onRemovePhoto(id, pi)}
                                   className="text-zinc-500 hover:text-red-400 transition-colors flex-shrink-0"
                                 >
                                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -992,14 +994,14 @@ function CheckpointListView({
                           <div className="flex gap-2">
                             <input
                               type="text"
-                              ref={el => { photoInputRefs.current[cp.id!] = el }}
+                              ref={el => { photoInputRefs.current[id] = el }}
                               value={photoUrl}
                               onChange={e => setPhotoUrl(e.target.value)}
                               aria-label="Photo URL or filename..."
                               className="flex-1 bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-xs text-zinc-300 placeholder-zinc-600"
                               onKeyDown={e => {
                                 if (e.key === 'Enter' && photoUrl.trim()) {
-                                  onAddPhoto(cp.id!, photoUrl.trim())
+                                  onAddPhoto(id, photoUrl.trim())
                                   setPhotoUrl('')
                                   setPhotoInputId(null)
                                 }
@@ -1008,7 +1010,7 @@ function CheckpointListView({
                             <button
                               onClick={() => {
                                 if (photoUrl.trim()) {
-                                  onAddPhoto(cp.id!, photoUrl.trim())
+                                  onAddPhoto(id, photoUrl.trim())
                                   setPhotoUrl('')
                                   setPhotoInputId(null)
                                 }
@@ -1026,7 +1028,7 @@ function CheckpointListView({
                           </div>
                         ) : (
                           <button
-                            onClick={() => setPhotoInputId(cp.id!)}
+                            onClick={() => setPhotoInputId(id)}
                             className="inline-flex items-center gap-1 px-2.5 py-1 bg-zinc-800 border border-zinc-700 text-zinc-400 rounded text-xs hover:bg-zinc-700 hover:text-white transition-colors"
                           >
                             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1048,7 +1050,7 @@ function CheckpointListView({
                           value={cp.actualPercentage ?? 0}
                           onChange={e => {
                             const val = parseInt(e.target.value)
-                            onUpdate(cp.id!, { actualPercentage: val })
+                            onUpdate(id, { actualPercentage: val })
                           }}
                           className="w-full h-1.5 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
                         />
