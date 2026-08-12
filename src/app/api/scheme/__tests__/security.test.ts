@@ -27,6 +27,7 @@ jest.mock('@/lib/monitoring/sentry', () => ({
 import { POST } from '../blocks/route'
 import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
+import { createAuthSession } from '@/test-utils/auth-session'
 import type { NextRequest } from 'next/server'
 
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
@@ -47,10 +48,7 @@ describe('Security - SQL Injection Resistance', () => {
   beforeEach(() => jest.clearAllMocks())
 
   it('should not allow SQL injection in block_number', async () => {
-    mockSession.mockResolvedValue({
-      user: { id: 'u1', email: 'test@test.com', name: 'Test' },
-      expires: new Date().toISOString(),
-    })
+    mockSession.mockResolvedValue(createAuthSession())
 
     const maliciousInput = "1'; DROP TABLE blocks; --"
     const req = makeNextRequest('http://localhost/api/scheme/blocks', {
@@ -79,10 +77,7 @@ describe('Security - SQL Injection Resistance', () => {
   })
 
   it('should sanitize block_name with special characters', async () => {
-    mockSession.mockResolvedValue({
-      user: { id: 'u1', email: 'test@test.com', name: 'Test' },
-      expires: new Date().toISOString(),
-    })
+    mockSession.mockResolvedValue(createAuthSession())
 
     // This should not crash — special chars should be parameterized
     mockDb.mockResolvedValue({ rows: [{ id: 'b1', block_number: '1' }], command: 'SELECT', rowCount: 1, oid: 0, fields: [] })
