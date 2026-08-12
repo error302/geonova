@@ -221,8 +221,8 @@ function buildBody(inp: GNSSLogInput): string {
 <tr>
   <td class="center">${i + 1}</td>
   <td class="bold mono">${blank(o.pointId)}</td>
-  <td class="right mono">${o.easting!.toFixed(3)}</td>
-  <td class="right mono">${o.northing!.toFixed(3)}</td>
+  <td class="right mono">${o.easting?.toFixed(3) ?? '—'}</td>
+  <td class="right mono">${o.northing?.toFixed(3) ?? '—'}</td>
   <td class="right mono">${o.ellHeight?.toFixed(3) ?? '—'}</td>
   <td class="right mono">${o.orthoHeight?.toFixed(3) ?? '—'}</td>
   <td class="right mono">${o.rmsH?.toFixed(3) ?? '—'}</td>

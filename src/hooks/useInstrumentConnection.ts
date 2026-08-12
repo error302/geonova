@@ -216,7 +216,8 @@ export function useInstrumentConnection(): UseInstrumentConnectionReturn {
 
       if (point) {
         setLastPoint(point)
-        setPoints(prev => [...prev, point!])
+        const latest = point
+        setPoints(prev => [...prev, latest])
         // Expose the latest reading globally so other components (e.g.
         // the mobile fieldbook's "Pull from instrument" button) can
         // read it without re-instantiating the connection.
@@ -347,7 +348,8 @@ export function useInstrumentConnection(): UseInstrumentConnectionReturn {
       }
       if (point) {
         setLastPoint(point)
-        setPoints(prev => [...prev, point!])
+        const latest = point
+        setPoints(prev => [...prev, latest])
         if (typeof window !== 'undefined') {
           ;(window as unknown as { __metarduLastInstrumentReading?: unknown }).__metarduLastInstrumentReading = {
             easting: point.easting,

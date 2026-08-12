@@ -250,8 +250,11 @@ export function compareEpochs(
   const stable: string[] = []
 
   for (const id of commonIds) {
-    const baseMon = baselineMap.get(id)!
-    const currMon = currentMap.get(id)!
+    const baseMon = baselineMap.get(id)
+    const currMon = currentMap.get(id)
+    if (!baseMon || !currMon) {
+      throw new Error(`Missing monitoring epoch for point ${id}`)
+    }
 
     // Propagate both to the common epoch (remove tectonic drift)
     // Use the RIGOROUS Rodrigues' rotation formula (no linearization error)

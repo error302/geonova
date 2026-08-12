@@ -119,7 +119,7 @@ export function CoordinateChip({
         <div className="flex-1 min-w-0">
           <span className="text-[9px] text-gray-600 uppercase tracking-wider">WGS84</span>
           <div className={`font-mono text-gray-300 ${compact ? 'text-[10px]' : 'text-xs'}`}>
-            {fmt(datums.wgs84!.lat, 6)}, {fmt(datums.wgs84!.lng, 6)}
+            {fmt(datums.wgs84?.lat ?? 0, 6)}, {fmt(datums.wgs84?.lng ?? 0, 6)}
           </div>
         </div>
       </div>

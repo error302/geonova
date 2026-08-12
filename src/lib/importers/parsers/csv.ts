@@ -36,7 +36,7 @@ registerParser({
         raw,
       };
 
-      if (Number.isNaN(point.easting!) || Number.isNaN(point.northing!)) {
+      if (Number.isNaN(point.easting ?? NaN) || Number.isNaN(point.northing ?? NaN)) {
         warnings.push(`Row ${i + 1}: missing or invalid easting/northing — skipped`);
         continue;
       }

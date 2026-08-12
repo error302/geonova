@@ -199,8 +199,8 @@ async function generateSettingOutPdf(
 
   const totalPoints = data.points.length;
   const pointsWithOffsets = data.points.filter(p => p.offsetE != null || p.offsetN != null).length;
-  const maxOffsetE = Math.max(...data.points.filter(p => p.offsetE != null).map(p => Math.abs(p.offsetE!)), 0);
-  const maxOffsetN = Math.max(...data.points.filter(p => p.offsetN != null).map(p => Math.abs(p.offsetN!)), 0);
+  const maxOffsetE = Math.max(...data.points.filter(p => p.offsetE != null).map(p => Math.abs(p.offsetE ?? 0)), 0);
+  const maxOffsetN = Math.max(...data.points.filter(p => p.offsetN != null).map(p => Math.abs(p.offsetN ?? 0)), 0);
 
   drawText(doc, 'SUMMARY', mx, y, TEXT_SIZES.coordinate, { bold: true });
   y += 4;

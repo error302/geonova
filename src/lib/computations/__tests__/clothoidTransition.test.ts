@@ -4,6 +4,7 @@ import {
   spiralCoordinate,
   clothoidSetOutTable,
 } from '../clothoidTransition'
+import { defined } from '@/test-utils/defined'
 
 const DEG = Math.PI / 180
 
@@ -308,7 +309,7 @@ describe('clothoidSetOutTable', () => {
     if (clothoidResult.circularArcLength > 0.01) {
       const arcRow = table.find((r) => r.point === '···')
       expect(arcRow).toBeDefined()
-      expect(arcRow!.remarks).toContain('Circular arc')
+      expect(defined(arcRow).remarks).toContain('Circular arc')
     }
   })
 
@@ -326,6 +327,6 @@ describe('clothoidSetOutTable', () => {
 
   it('should have TS chord = 0', () => {
     const tsRow = table.find((r) => r.point === 'TS')
-    expect(tsRow!.chord).toBe(0)
+    expect(defined(tsRow).chord).toBe(0)
   })
 })

@@ -106,7 +106,9 @@ export default function FieldMapPage() {
   const exportKML = useCallback(() => {
     const visibleLayers = layers.filter(l => l.visible && l.geojson);
     if (visibleLayers.length === 0) { alert('No visible layers to export.'); return; }
-    const geojson = visibleLayers[0].geojson!;
+    const firstLayer = visibleLayers[0]
+    if (!firstLayer?.geojson) return
+    const geojson = firstLayer.geojson
     const kmlContent = jsonToKML(geojson);
     const blob = new Blob([kmlContent], { type: 'application/vnd.google-earth.kml+xml' });
     downloadBlob(blob, 'metardu-export.kml');
@@ -116,7 +118,9 @@ export default function FieldMapPage() {
   const exportCSV = useCallback(() => {
     const visibleLayers = layers.filter(l => l.visible && l.geojson);
     if (visibleLayers.length === 0) { alert('No visible layers to export.'); return; }
-    const features = visibleLayers[0].geojson!.features;
+    const firstLayer = visibleLayers[0]
+    if (!firstLayer?.geojson) return
+    const features = firstLayer.geojson.features;
     const header = 'name,latitude,longitude\n';
     const rows = features.map((f: GeoJSON.Feature) => {
       const coords = f.geometry && f.geometry.type === 'Point' ? (f.geometry as GeoJSON.Point).coordinates : null;

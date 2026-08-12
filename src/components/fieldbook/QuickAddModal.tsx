@@ -59,7 +59,7 @@ export function QuickAddModal({ onAdd, onClose }: QuickAddModalProps) {
     if (gpsPhotos.length > 0) {
       const markers = gpsPhotos.map((p, i) => {
         const caption = p.caption ? ` "${p.caption}"` : '';
-        return `[photo${i + 1} @${p.exif!.latitude.toFixed(6)},${p.exif!.longitude.toFixed(6)}${caption}]`;
+        return `[photo${i + 1} @${p.exif?.latitude.toFixed(6) ?? ''},${p.exif?.longitude.toFixed(6) ?? ''}${caption}]`;
       });
       remarks = remarks ? `${remarks} ${markers.join(' ')}` : markers.join(' ');
     }

@@ -201,7 +201,8 @@ function parseXYZText(text: string): {
       continue;
     }
 
-    const mapping = colMapping!;
+    if (!colMapping) continue
+    const mapping = colMapping
     const eIdx = mapping.easting;
     const nIdx = mapping.northing;
     const zIdx = mapping.elevation;
@@ -494,7 +495,7 @@ export default function PointCloudImportPage() {
           elevation: p.elevation,
         }));
         const gridRes = slopeGridRes !== '' ? parseFloat(slopeGridRes) : undefined;
-        if (slopeGridRes !== '' && isNaN(gridRes!)) {
+        if (slopeGridRes !== '' && isNaN(gridRes ?? NaN)) {
           setSlopeError('Invalid grid resolution value.');
           setIsSlopeRunning(false);
           return;

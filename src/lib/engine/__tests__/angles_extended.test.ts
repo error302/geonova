@@ -1,4 +1,5 @@
 import { wcbToQuadrant, bearingToString, parseDMSString } from '../angles'
+import { defined } from '@/test-utils/defined'
 
 describe('wcbToQuadrant', () => {
   it('0° is N0E', () => expect(wcbToQuadrant(0)).toMatch(/N.*E|^N$/i))
@@ -28,7 +29,7 @@ describe('parseDMSString', () => {
   it('parses "45°30\'20\\"" format', () => {
     const r = parseDMSString("45°30'20\"")
     expect(r).not.toBeNull()
-    expect(r!).toBeCloseTo(45.5056, 3)
+    expect(defined(r)).toBeCloseTo(45.5056, 3)
   })
 
   it('returns null for invalid string', () => {
@@ -39,6 +40,6 @@ describe('parseDMSString', () => {
   it('parses plain decimal string', () => {
     const r = parseDMSString('123.456')
     expect(r).not.toBeNull()
-    expect(r!).toBeCloseTo(123.456, 3)
+    expect(defined(r)).toBeCloseTo(123.456, 3)
   })
 })

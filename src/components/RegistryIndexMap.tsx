@@ -349,7 +349,7 @@ export default function RegistryIndexMap({ isOpen, onClose, initialData }: Regis
                         onClick={() => setSheetIndex(s => ({...s, currentRow: r as number, currentCol: c as number}))}
                         className={`h-8 text-xs rounded border ${r===sheetIndex.currentRow&&c===sheetIndex.currentCol?'bg-black text-white':'bg-gray-100 hover:bg-gray-200'}`}
                       >
-                        {label ?? `${Number(r!)+1}-${Number(c!)+1}`}
+                        {label ?? `${Number(r ?? 0)+1}-${Number(c ?? 0)+1}`}
                       </button>
                     ))}
                   </div>

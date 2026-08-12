@@ -108,7 +108,7 @@ export function SpiralAlignmentTab() {
             type: 'Feature' as const,
             geometry: {
               type: 'Point' as const,
-              coordinates: [coord!.easting, coord!.northing],
+              coordinates: [coord?.easting ?? 0, coord?.northing ?? 0],
             },
             properties: { label, chainage },
           })),

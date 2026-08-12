@@ -356,7 +356,7 @@ export function computeTraverse(input: {
     formula: accClass.formula,
     allowable: accClass.allowable,
     openingPoint: { easting: input.openingEasting, northing: input.openingNorthing, rl: input.openingRL },
-    closingPoint: isClosed ? { easting: closingE!, northing: closingN! } : undefined,
+    closingPoint: isClosed ? { easting: closingE ?? 0, northing: closingN ?? 0 } : undefined,
     isClosed,
   }
 }

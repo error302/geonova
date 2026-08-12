@@ -109,11 +109,11 @@ export default async function VerifyPage({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Date:</span>
-                  <span className="font-medium">{formatDate(result.signedAt!)}</span>
+                  <span className="font-medium">{result.signedAt ? formatDate(result.signedAt) : '—'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Type:</span>
-                  <span className="font-medium">{getDocumentTypeLabel(result.documentType!)}</span>
+                  <span className="font-medium">{result.documentType ? getDocumentTypeLabel(result.documentType) : '—'}</span>
                 </div>
               </div>
               <div className="mt-6 pt-4 border-t text-center text-sm text-gray-500">

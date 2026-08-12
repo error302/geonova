@@ -52,7 +52,7 @@ export default function GenericCSVMapper({ rawContent, onMapped, onCancel }: Pro
         (point.raw as Record<string, unknown>)[h] = val;
       });
 
-      if (Number.isNaN(point.easting!) && Number.isNaN(point.northing!)) {
+      if (Number.isNaN(point.easting ?? NaN) && Number.isNaN(point.northing ?? NaN)) {
         warnings.push(`Row ${i + 1}: no valid coordinates after mapping — skipped`);
         continue;
       }

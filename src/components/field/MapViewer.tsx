@@ -43,13 +43,13 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
       const map = mapRef.current;
       if (!map) return;
       const view = map.getView();
-      view.animate({ zoom: view.getZoom()! + 1, duration: 250 });
+      view.animate({ zoom: (view.getZoom() ?? 0) + 1, duration: 250 });
     },
     zoomOut() {
       const map = mapRef.current;
       if (!map) return;
       const view = map.getView();
-      view.animate({ zoom: view.getZoom()! - 1, duration: 250 });
+      view.animate({ zoom: (view.getZoom() ?? 0) - 1, duration: 250 });
     },
     resetToKenya() {
       const map = mapRef.current;

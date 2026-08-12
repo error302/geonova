@@ -550,8 +550,8 @@ export function GNSSConnectionPanel({
                         <div
                           key={bar}
                           className={`w-1.5 rounded-sm ${
-                            bar <= rssiToBars(store.device!.rssi)
-                              ? rssiColor(store.device!.rssi)
+                            bar <= rssiToBars(store.device?.rssi ?? 0)
+                              ? rssiColor(store.device?.rssi ?? 0)
                               : 'bg-gray-300 dark:bg-gray-600'
                           }`}
                           style={{ height: `${bar * 25}%` }}

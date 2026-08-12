@@ -134,8 +134,8 @@ export function NetworkAdjustmentPanel({ projectId, projectData, surveyorProfile
           const newStations: Station[] = coordRecords.map((r, i) => ({
             id: `gsi-${r.pointId}`,
             name: r.pointId,
-            easting: r.easting!,
-            northing: r.northing!,
+            easting: r.easting ?? 0,
+            northing: r.northing ?? 0,
             elevation: r.elevation ?? 0,
             isFixed: i === 0,
           }))
