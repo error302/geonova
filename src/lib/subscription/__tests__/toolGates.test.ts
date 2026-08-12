@@ -8,6 +8,7 @@
  * info for known paths and null for unknown ones.
  */
 import { TOOL_GATES, PLAN_RANK, getToolGate } from '@/lib/subscription/toolGates'
+import { defined } from '@/test-utils/defined'
 
 describe('P0-2: toolGates registry', () => {
   test('all 9 gated tools are in the registry', () => {
@@ -41,9 +42,9 @@ describe('P0-2: toolGates registry', () => {
   test('getToolGate returns GateInfo for known gated path', () => {
     const gate = getToolGate('/tools/civil-export')
     expect(gate).not.toBeNull()
-    expect(gate!.minPlan).toBe('pro')
-    expect(gate!.feature).toBe('dxf_export')
-    expect(gate!.label).toBe('DXF Export')
+    expect(defined(gate).minPlan).toBe('pro')
+    expect(defined(gate).feature).toBe('dxf_export')
+    expect(defined(gate).label).toBe('DXF Export')
   })
 
   test('getToolGate returns null for free (ungated) tool', () => {

@@ -153,7 +153,9 @@ export function LongitudinalSection({
     if (formationPts.length >= 2) {
       const fPts: number[] = []
       formationPts.forEach(p => {
-        const { x, y } = toCanvas(p.chainage, p.formationLevel!)
+        const level = p.formationLevel
+        if (level === undefined) return
+        const { x, y } = toCanvas(p.chainage, level)
         fPts.push(x, y)
       })
       layer.add(new Konva.Line({
@@ -288,11 +290,14 @@ export function LongitudinalSection({
       for (let i = 0; i < formPts.length - 1; i++) {
         const p1 = formPts[i]
         const p2 = formPts[i + 1]
+        const level1 = p1.formationLevel
+        const level2 = p2.formationLevel
+        if (level1 === undefined || level2 === undefined) continue
         drawing.drawLine(
           (p1.chainage - minCh) * hScaleFactor,
-          (p1.formationLevel! - minGL) * vScaleFactor,
+          (level1 - minGL) * vScaleFactor,
           (p2.chainage - minCh) * hScaleFactor,
-          (p2.formationLevel! - minGL) * vScaleFactor
+          (level2 - minGL) * vScaleFactor
         )
       }
     }

@@ -383,17 +383,16 @@ export function getAtmosphericDefaults(
   settings: ProjectAtmosphericSettings = {}
 ): AtmosphericDefaults {
   // ── Tier 1: Use project-level settings if complete ──
-  const hasCompleteProjectData =
-    settings.temperature !== undefined &&
-    settings.pressure !== undefined &&
-    settings.elevation !== undefined;
+  const temperature = settings.temperature
+  const pressure = settings.pressure
+  const elevation = settings.elevation
 
-  if (hasCompleteProjectData) {
+  if (temperature !== undefined && pressure !== undefined && elevation !== undefined) {
     return {
-      temperature: settings.temperature!,
-      pressure: settings.pressure!,
+      temperature,
+      pressure,
       humidity: settings.humidity ?? 50,
-      elevation: settings.elevation!,
+      elevation,
       utmZone: settings.utmZone ?? autoDetectUTMZone(settings.longitude ?? 37),
       geoidUndulation: -12, // Kenya default
       refractionCoefficient: 0.13, // Kenya tropical daytime

@@ -1,4 +1,5 @@
 import { computeChainageTable, reverseChainageLinear } from '../chainage'
+import { defined } from '@/test-utils/defined'
 
 const ALIGNMENT = [
   { name: 'A', easting: 0,   northing: 0   },
@@ -63,8 +64,8 @@ describe('reverseChainageLinear', () => {
     })
     const pt = reverseChainageLinear({ targetChainage: 50, table })
     expect(pt).not.toBeNull()
-    expect(pt!.easting).toBeCloseTo(50, 3)
-    expect(pt!.northing).toBeCloseTo(0, 3)
+    expect(defined(pt).easting).toBeCloseTo(50, 3)
+    expect(defined(pt).northing).toBeCloseTo(0, 3)
   })
 
   it('returns null when chainage is out of range', () => {
@@ -84,6 +85,6 @@ describe('reverseChainageLinear', () => {
     })
     const pt = reverseChainageLinear({ targetChainage: 0, table })
     expect(pt).not.toBeNull()
-    expect(pt!.easting).toBeCloseTo(0, 3)
+    expect(defined(pt).easting).toBeCloseTo(0, 3)
   })
 })

@@ -442,12 +442,12 @@ export default function ProcessPage() {
             <div className="card-header flex items-center gap-3">
               <span className="text-2xl"></span>
               <span className="font-semibold">
-                {detectLabel(detectSurveyTypeFromDataset(interpretResult.dataset!))} Detected
+                {detectLabel(detectSurveyTypeFromDataset(interpretResult.dataset))} Detected
               </span>
             </div>
             <div className="card-body">
               <p className="text-sm text-[var(--text-primary)] mb-4">
-                {interpretResult.dataset!.observations.length} observations found
+                {interpretResult.dataset.observations.length} observations found
               </p>
 
               <div className="bg-[var(--bg-tertiary)] rounded p-3 overflow-x-auto">
@@ -460,7 +460,7 @@ export default function ProcessPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {interpretResult.dataset!.observations.slice(0, 5).map((obs: SurveyObservation, i: number) => (
+                    {interpretResult.dataset.observations.slice(0, 5).map((obs: SurveyObservation, i: number) => (
                       <tr key={obs.station || i} className="border-t border-[var(--border-color)]">
                         <td className="px-2 py-1">{obs.station}</td>
                         <td className="px-2 py-1 text-[var(--accent)]">{obs.type}</td>

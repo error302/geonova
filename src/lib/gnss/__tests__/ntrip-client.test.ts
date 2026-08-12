@@ -14,6 +14,7 @@ import {
   type NTRIPConnectionConfig,
   type NTRIPStatus,
 } from '@/lib/gnss/ntrip-client'
+import { defined } from '@/test-utils/defined'
 
 // ─── Mock WebSocket ────────────────────────────────────────────────────────
 
@@ -37,10 +38,9 @@ class MockWebSocket {
   private listeners: Map<string, Set<EventCallback>> = new Map()
 
   addEventListener(type: string, callback: EventCallback) {
-    if (!this.listeners.has(type)) {
-      this.listeners.set(type, new Set())
-    }
-    this.listeners.get(type)!.add(callback)
+    const callbacks = this.listeners.get(type) ?? new Set<EventCallback>()
+    callbacks.add(callback)
+    this.listeners.set(type, callbacks)
   }
 
   removeEventListener(type: string, callback: EventCallback) {
@@ -234,7 +234,7 @@ describe('detectRTCMMessageType', () => {
     const data = new Uint8Array([0xD3, 0x00, 0x03, 0x06, 0x40, 0x00])
     const result = detectRTCMMessageType(data)
     expect(result).not.toBeNull()
-    expect(result!.type).toBe(100)
+    expect(defined(result).type).toBe(100)
   })
 
   it('returns null for too short data', () => {
@@ -253,7 +253,7 @@ describe('detectRTCMMessageType', () => {
     const data = new Uint8Array([0xD3, 0x00, 0x03, 0x43, 0x20, 0x00])
     const result = detectRTCMMessageType(data)
     expect(result).not.toBeNull()
-    expect(result!.type).toBe(1074)
+    expect(defined(result).type).toBe(1074)
   })
 })
 

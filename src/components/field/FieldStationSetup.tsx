@@ -108,7 +108,7 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
             <input id="bearing"
               type="number"
               value={setup.backsightBearing?.deg || 0}
-              onChange={(e) => update('backsightBearing', { ...setup.backsightBearing!, deg: parseInt(e.target.value) || 0, min: setup.backsightBearing?.min || 0, sec: setup.backsightBearing?.sec || 0 })}
+              onChange={(e) => update('backsightBearing', { ...(setup.backsightBearing ?? {}), deg: parseInt(e.target.value) || 0, min: setup.backsightBearing?.min || 0, sec: setup.backsightBearing?.sec || 0 })}
               className="w-full px-2 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-xs font-mono"
             />
           </div>
@@ -118,7 +118,7 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
               type="number"
               min="0" max="59"
               value={setup.backsightBearing?.min || 0}
-              onChange={(e) => update('backsightBearing', { ...setup.backsightBearing!, deg: setup.backsightBearing?.deg || 0, min: parseInt(e.target.value) || 0, sec: setup.backsightBearing?.sec || 0 })}
+              onChange={(e) => update('backsightBearing', { ...setup.backsightBearing, deg: setup.backsightBearing?.deg || 0, min: parseInt(e.target.value) || 0, sec: setup.backsightBearing?.sec || 0 })}
               className="w-full px-2 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-xs font-mono"
             />
           </div>
@@ -128,7 +128,7 @@ export function FieldStationSetup({ onComplete, onCancel, initialSetup }: FieldS
               type="number"
               min="0" max="59"
               value={setup.backsightBearing?.sec || 0}
-              onChange={(e) => update('backsightBearing', { ...setup.backsightBearing!, deg: setup.backsightBearing?.deg || 0, min: setup.backsightBearing?.min || 0, sec: parseInt(e.target.value) || 0 })}
+              onChange={(e) => update('backsightBearing', { ...setup.backsightBearing, deg: setup.backsightBearing?.deg || 0, min: setup.backsightBearing?.min || 0, sec: parseInt(e.target.value) || 0 })}
               className="w-full px-2 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-[var(--text-primary)] text-xs font-mono"
             />
           </div>

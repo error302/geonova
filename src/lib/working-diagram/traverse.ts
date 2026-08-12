@@ -12,7 +12,10 @@ export function computePositions(
   if (hasCoords) {
     const map = new Map<string, Point2D>()
     beacons.forEach((b) => {
-      map.set(b.id, { x: b.easting!, y: b.northing! })
+      const easting = b.easting
+      const northing = b.northing
+      if (easting === undefined || northing === undefined) return
+      map.set(b.id, { x: easting, y: northing })
     })
     return map
   }
@@ -24,8 +27,9 @@ export function computePositions(
   map.set(beacons[0].id, cursor)
 
   for (const line of boundaries) {
-    if (!map.has(line.fromBeaconId)) continue
-    cursor = map.get(line.fromBeaconId)!
+    const from = map.get(line.fromBeaconId)
+    if (from === undefined) continue
+    cursor = from
     const bearingRad = (dmsToDeg(line.bearingDMS) * Math.PI) / 180
     const next: Point2D = {
       x: cursor.x + line.distanceMeters * Math.sin(bearingRad),

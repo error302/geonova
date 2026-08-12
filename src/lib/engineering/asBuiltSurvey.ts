@@ -178,9 +178,9 @@ export function compareDesignVsAsBuilt(
 
   // Prepare design point arrays for interpolation
   const designLevels = design.map(d => ({ chainage: d.chainage, level: d.designLevel }))
-  const designCoords = design.filter(d => d.designEasting && d.designNorthing).map(d => ({
-    chainage: d.chainage, easting: d.designEasting!, northing: d.designNorthing!,
-  }))
+  const designCoords = design
+    .filter((d): d is typeof d & { designEasting: number; designNorthing: number } => d.designEasting != null && d.designNorthing != null)
+    .map(d => ({ chainage: d.chainage, easting: d.designEasting, northing: d.designNorthing }))
 
   for (const ab of asBuilt) {
     const designLevel = interpolateLevel(designLevels, ab.chainage)
@@ -236,7 +236,9 @@ export function compareDesignVsAsBuilt(
   const isCompliant = passRate >= 95
 
   // Max horizontal deviation
-  const horizDevs = comparisons.filter(c => c.horizontalDeviation !== undefined).map(c => c.horizontalDeviation!)
+  const horizDevs = comparisons
+    .filter((c): c is typeof c & { horizontalDeviation: number } => c.horizontalDeviation !== undefined)
+    .map(c => c.horizontalDeviation)
   const maxHorizontalDeviation = horizDevs.length > 0 ? Math.max(...horizDevs) : 0
 
   // Generate issues

@@ -18,6 +18,7 @@ import {
   type EpochSet,
   type MonumentObservation,
 } from '../deformationMonitoring'
+import { defined } from '@/test-utils/defined'
 
 // ─── Fixtures ───────────────────────────────────────────────────────────────
 
@@ -103,7 +104,7 @@ describe('Deformation Monitoring — two-epoch comparison', () => {
     expect(report.alerts.length).toBeGreaterThan(0)
     const dm02Alert = report.alerts.find(a => a.monumentId === 'DM-02')
     expect(dm02Alert).toBeDefined()
-    expect(dm02Alert!.magnitudeMm).toBeGreaterThan(5) // > 5mm
+    expect(defined(dm02Alert).magnitudeMm).toBeGreaterThan(5) // > 5mm
   })
 
   it('generates CRITICAL alert when movement exceeds 3× tolerance', () => {
@@ -127,8 +128,8 @@ describe('Deformation Monitoring — two-epoch comparison', () => {
     expect(report.verdict).toBe('DEFORMING')
     const dm01Alert = report.alerts.find(a => a.monumentId === 'DM-01')
     expect(dm01Alert).toBeDefined()
-    expect(dm01Alert!.severity).toBe('critical')
-    expect(dm01Alert!.magnitudeMm).toBeGreaterThan(15) // > 15mm (3×5mm)
+    expect(defined(dm01Alert).severity).toBe('critical')
+    expect(defined(dm01Alert).magnitudeMm).toBeGreaterThan(15) // > 15mm (3×5mm)
   })
 
   it('reports missing and new monuments', () => {

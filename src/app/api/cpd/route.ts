@@ -61,11 +61,14 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 20, windowMs: 60_0
   // Non-admins can only view their own records. Admins can view any user.
   const requestedUserId = searchParams.get('userId')
   const userRole = (ctx.session?.user as { role?: string })?.role ?? 'surveyor'
+  const ownUserId = ctx.userId
+  if (!ownUserId) throw new Error('Missing authenticated user id')
   const userId = requestedUserId && ADMIN_ROLES.includes(userRole)
     ? requestedUserId
-    : ctx.userId!
+    : ownUserId
 
-  const year = searchParams.get('year') ? parseInt(searchParams.get('year')!, 10) : new Date().getFullYear()
+  const yearParam = searchParams.get('year')
+  const year = yearParam ? parseInt(yearParam, 10) : new Date().getFullYear()
 
   // ── Summary only (for dashboard widgets) ──
   if (action === 'summary') {
@@ -111,9 +114,11 @@ export const POST = apiHandler(
   },
   async (req, ctx) => {
     const body = ctx.body as z.infer<typeof ManualEntrySchema>
+    const userId = ctx.userId
+    if (!userId) throw new Error('Missing authenticated user id')
 
     const recordId = await addManualCPDEntry(
-      ctx.userId!,
+      userId,
       body.activity as CPDActivity,
       body.description,
       body.points,
