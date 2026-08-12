@@ -106,8 +106,10 @@ export function adjustLevelNetwork(
     const w = 1 / obs.distanceKm
 
     const row: number[] = new Array<number>(n).fill(0)
-    if (stationIndex.has(obs.to)) row[stationIndex.get(obs.to)!] = 1
-    if (stationIndex.has(obs.from)) row[stationIndex.get(obs.from)!] = -1
+    const toIdx = stationIndex.get(obs.to)
+    const fromIdx = stationIndex.get(obs.from)
+    if (toIdx !== undefined) row[toIdx] = 1
+    if (fromIdx !== undefined) row[fromIdx] = -1
 
     const obsH = toH - fromH
     A.push(row)
@@ -175,12 +177,14 @@ export function adjustLevelNetwork(
   }
 
   const adjustedStations: AdjustedLevelStation[] = stations.map(s => {
-    const adjH = elevations.get(s.id)!
+    const adjH = elevations.get(s.id)
+    if (adjH === undefined) throw new Error(`Station ${s.id} has no adjusted elevation`)
     let stdDev = 0
     let res = 0
 
     if (!s.isFixed) {
-      const idx = stationIndex.get(s.id)!
+      const idx = stationIndex.get(s.id)
+      if (idx === undefined) throw new Error(`Station ${s.id} missing from adjustment index`)
       res = x[idx]
       const qHH = Qxx[idx][idx]
       stdDev = sigmaZero * Math.sqrt(Math.max(qHH, 0))

@@ -7,6 +7,7 @@
  */
 
 import { incrementRevision, parseSubmissionNumber } from '../numbering'
+import { defined } from '@/test-utils/defined'
 
 describe('P2-1: SRVY2025-1 submission numbering', () => {
   describe('parseSubmissionNumber', () => {
@@ -86,10 +87,10 @@ describe('P2-1: SRVY2025-1 submission numbering', () => {
       const parsed = parseSubmissionNumber(incremented)
 
       expect(parsed).not.toBeNull()
-      expect(parsed!.revision).toBe(3)
-      expect(parsed!.sequence).toBe(7)
-      expect(parsed!.year).toBe(2025)
-      expect(parsed!.registrationNo).toBe('RS149')
+      expect(defined(parsed).revision).toBe(3)
+      expect(defined(parsed).sequence).toBe(7)
+      expect(defined(parsed).year).toBe(2025)
+      expect(defined(parsed).registrationNo).toBe('RS149')
     })
   })
 })

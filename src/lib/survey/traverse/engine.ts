@@ -144,10 +144,12 @@ export function bowditchAdjustment(
     const station = preliminary[i];
     
     if (station.isFixed) {
+      const fixedStation = stations.find(s => s.name === station.name)
+      if (!fixedStation || fixedStation.easting === undefined || fixedStation.northing === undefined) continue
       adjusted.push({
         name: station.name,
-        easting: stations.find(s => s.name === station.name)!.easting!,
-        northing: stations.find(s => s.name === station.name)!.northing!,
+        easting: fixedStation.easting,
+        northing: fixedStation.northing,
         correctionE: 0,
         correctionN: 0,
         isFixed: true,

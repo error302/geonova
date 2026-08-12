@@ -475,8 +475,9 @@ export function reduceGSIObservations(
 
   for (const obs of allObs) {
     const key = obs.pointNumber || `?${Math.random().toString(36).slice(2)}`
-    if (!byTarget.has(key)) byTarget.set(key, [])
-    byTarget.get(key)!.push(obs)
+    const list = byTarget.get(key) ?? []
+    list.push(obs)
+    byTarget.set(key, list)
   }
 
   // Build traverse legs: sorted by the order they appear in the file
@@ -505,9 +506,9 @@ export function reduceGSIObservations(
     let meanHz = obs.hzFaceLeft ?? 0
     if (obs.hzFaceLeft !== undefined && obs.hzFaceRight !== undefined) {
       // mean = (FL + FR ± 180°) / 2
-      let fr = obs.hzFaceRight!
-      if (fr < obs.hzFaceLeft!) fr += 360
-      meanHz = (obs.hzFaceLeft! + fr) / 2
+      let fr = obs.hzFaceRight
+      if (fr < obs.hzFaceLeft) fr += 360
+      meanHz = (obs.hzFaceLeft + fr) / 2
       if (meanHz >= 360) meanHz -= 360
     }
 

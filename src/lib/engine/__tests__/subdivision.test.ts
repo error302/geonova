@@ -5,6 +5,7 @@
 import { subdivide } from '@/lib/engine/subdivision'
 import type { Point2D } from '@/lib/engine/types'
 import type { SubdivisionParams } from '@/types/subdivision'
+import { defined } from '@/test-utils/defined'
 
 // ─── Test fixtures ───────────────────────────────────────────────────────────
 
@@ -62,8 +63,8 @@ describe('subdivide', () => {
       expect(result.method).toBe('single-split')
       expect(result.lots.length).toBe(2)
 
-      const lot1 = result.lots.find(l => l.lotNumber === 1)!
-      const lot2 = result.lots.find(l => l.lotNumber === 2)!
+      const lot1 = defined(result.lots.find(l => l.lotNumber === 1))
+      const lot2 = defined(result.lots.find(l => l.lotNumber === 2))
 
       // Each lot should be approximately 0.5 ha
       expect(lot1.areaHa).toBeGreaterThan(0)
@@ -85,8 +86,8 @@ describe('subdivide', () => {
       const result = subdivide(SQUARE_1HA, 'single-split', params)
 
       expect(result.lots.length).toBe(2)
-      const lot1 = result.lots.find(l => l.lotNumber === 1)!
-      const lot2 = result.lots.find(l => l.lotNumber === 2)!
+      const lot1 = defined(result.lots.find(l => l.lotNumber === 1))
+      const lot2 = defined(result.lots.find(l => l.lotNumber === 2))
       expect(lot1.areaHa).toBeGreaterThan(0)
       expect(lot2.areaHa).toBeGreaterThan(0)
       expect(lot1.areaHa + lot2.areaHa).toBeCloseTo(result.parentParcel.areaHa, 0)

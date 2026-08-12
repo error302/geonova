@@ -226,22 +226,16 @@ export async function findNearestBeacons(
     // Country filter
     if (country && beacon.country.toLowerCase() !== country.toLowerCase()) continue
 
-    const distanceKm = haversineDistanceKm(
-      latitude,
-      longitude,
-      beacon.latitude!,
-      beacon.longitude!
-    )
+    const lat = beacon.latitude
+    const lon = beacon.longitude
+    if (lat === undefined || lon === undefined) continue
+
+    const distanceKm = haversineDistanceKm(latitude, longitude, lat, lon)
 
     // Radius filter
     if (distanceKm > radiusKm) continue
 
-    const bearingDeg = bearingDegrees(
-      latitude,
-      longitude,
-      beacon.latitude!,
-      beacon.longitude!
-    )
+    const bearingDeg = bearingDegrees(latitude, longitude, lat, lon)
 
     results.push({ beacon, distanceKm, bearingDeg })
   }

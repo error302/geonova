@@ -1,4 +1,5 @@
 import { radiation, bearingIntersection, tienstraResection } from '../cogo'
+import { defined } from '@/test-utils/defined'
 
 describe('radiation', () => {
   it('computes point due north from station', () => {
@@ -33,8 +34,8 @@ describe('bearingIntersection', () => {
       { easting: 100, northing: 100 }, 180
     )
     expect(result).not.toBeNull()
-    expect(result!.point.easting).toBeCloseTo(100, 1)
-    expect(result!.point.northing).toBeCloseTo(0, 1)
+    expect(defined(result).point.easting).toBeCloseTo(100, 1)
+    expect(defined(result).point.northing).toBeCloseTo(0, 1)
   })
 
   it('returns null for parallel bearings', () => {
@@ -51,8 +52,8 @@ describe('bearingIntersection', () => {
       { easting: 600, northing: 500 }, 315
     )
     expect(result).not.toBeNull()
-    expect(Number.isFinite(result!.point.easting)).toBe(true)
-    expect(Number.isFinite(result!.point.northing)).toBe(true)
+    expect(Number.isFinite(defined(result).point.easting)).toBe(true)
+    expect(Number.isFinite(defined(result).point.northing)).toBe(true)
   })
 })
 
