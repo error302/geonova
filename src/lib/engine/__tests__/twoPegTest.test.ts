@@ -1,4 +1,5 @@
 import { twoPegTest } from '../twoPegTest'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('twoPegTest', () => {
   it('passes when collimation error is within limit', () => {
@@ -19,22 +20,22 @@ describe('twoPegTest', () => {
 
   it('true difference is average of both observed differences', () => {
     const r = twoPegTest({ A1: 1.600, B1: 1.400, A2: 1.610, B2: 1.412 })
-    expect(r.trueDiff).toBeCloseTo((r.obsDiff1 + r.obsDiff2) / 2, 6)
+    expect(approxEqual(r.trueDiff, (r.obsDiff1 + r.obsDiff2) / 2, 10 ** -6)).toBe(true)
   })
 
   it('collimation error is half the difference of observed diffs', () => {
     const r = twoPegTest({ A1: 1.600, B1: 1.400, A2: 1.610, B2: 1.412 })
-    expect(r.collimationError).toBeCloseTo((r.obsDiff1 - r.obsDiff2) / 2, 6)
+    expect(approxEqual(r.collimationError, (r.obsDiff1 - r.obsDiff2) / 2, 10 ** -6)).toBe(true)
   })
 
   it('zero collimation error when both positions give same difference', () => {
     const r = twoPegTest({ A1: 1.500, B1: 1.300, A2: 1.800, B2: 1.600 })
-    expect(r.collimationError).toBeCloseTo(0, 6)
+    expect(approxEqual(r.collimationError, 0, 10 ** -6)).toBe(true)
     expect(r.pass).toBe(true)
   })
 
   it('scales collimation per 100m correctly', () => {
     const r = twoPegTest({ A1: 1.500, B1: 1.490, A2: 1.500, B2: 1.492, baselineMeters: 50 })
-    expect(r.collimationPer100m).toBeCloseTo(r.collimationError * 2, 6)
+    expect(approxEqual(r.collimationPer100m, r.collimationError * 2, 10 ** -6)).toBe(true)
   })
 })

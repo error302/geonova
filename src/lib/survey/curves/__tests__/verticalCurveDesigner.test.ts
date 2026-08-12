@@ -23,6 +23,7 @@ import {
   type VIPInput,
 } from '../verticalCurveDesigner'
 import { computeVerticalCurve } from '../vertical'
+import { approxEqual } from '@/test-utils/approx'
 import { defined } from '@/test-utils/defined'
 
 describe('computeSSD', () => {
@@ -184,9 +185,9 @@ describe('computeVerticalAlignment', () => {
     expect(result.curves).toHaveLength(1)
     const c = result.curves[0]
     expect(c.curveType).toBe('crest')
-    expect(c.g1).toBeCloseTo(2.0, 4)
-    expect(c.g2).toBeCloseTo(1.0, 4)
-    expect(c.A).toBeCloseTo(-1.0, 4)
+    expect(approxEqual(c.g1, 2.0, 10 ** -4)).toBe(true)
+    expect(approxEqual(c.g2, 1.0, 10 ** -4)).toBe(true)
+    expect(approxEqual(c.A, -1.0, 10 ** -4)).toBe(true)
     expect(c.curve.pvcChainage).toBeLessThan(500)
     expect(c.curve.pvtChainage).toBeGreaterThan(500)
   })
@@ -200,8 +201,8 @@ describe('computeVerticalAlignment', () => {
     const result = computeVerticalAlignment(vips, 80)
     const c = result.curves[0]
     // A = -1, kOverride = 50 → L = 50 × 1 = 50
-    expect(c.length).toBeCloseTo(50, 1)
-    expect(c.compliance.kActual).toBeCloseTo(50, 1)
+    expect(approxEqual(c.length, 50, 10 ** -1)).toBe(true)
+    expect(approxEqual(c.compliance.kActual, 50, 10 ** -1)).toBe(true)
   })
 
   it('uses lengthOverride when supplied (wins over kOverride)', () => {
@@ -211,7 +212,7 @@ describe('computeVerticalAlignment', () => {
       { id: 'C', chainage: 1000, reducedLevel: 115 },
     ]
     const result = computeVerticalAlignment(vips, 80)
-    expect(result.curves[0].length).toBeCloseTo(120, 1)
+    expect(approxEqual(result.curves[0].length, 120, 10 ** -1)).toBe(true)
   })
 
   it('clips curves that would overlap the previous curve', () => {
@@ -289,7 +290,7 @@ describe('stationAtChainage / stationAlignment', () => {
     const s = stationAtChainage(a, 100)
     expect(s).not.toBeNull()
     expect(defined(s).segment).toBe('tangent')
-    expect(defined(s).elevation).toBeCloseTo(102, 1) // linear interp 0→100, 500→110: at ch=100, elev=102
+    expect(approxEqual(defined(s).elevation, 102, 10 ** -1)).toBe(true) // linear interp 0→100, 500→110: at ch=100, elev=102
   })
 
   it('returns a curve station inside the curve', () => {
@@ -300,15 +301,15 @@ describe('stationAtChainage / stationAlignment', () => {
     const s = stationAtChainage(a, 500)
     expect(s).not.toBeNull()
     expect(defined(s).segment).toBe('curve')
-    expect(defined(s).elevation).toBeCloseTo(109.9375, 2)
+    expect(approxEqual(defined(s).elevation, 109.9375, 10 ** -2)).toBe(true)
   })
 
   it('samples stations at the requested interval', () => {
     const a = buildAlignment()
     const stations = stationAlignment(a, 100)
     expect(stations.length).toBeGreaterThan(5)
-    expect(stations[0].chainage).toBeCloseTo(0, 0)
-    expect(stations[stations.length - 1].chainage).toBeCloseTo(1000, 0)
+    expect(approxEqual(stations[0].chainage, 0, 10 ** -0)).toBe(true)
+    expect(approxEqual(stations[stations.length - 1].chainage, 1000, 10 ** -0)).toBe(true)
   })
 
   it('returns consistent grade continuity across PVC and PVT', () => {

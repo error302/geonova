@@ -1,4 +1,5 @@
 import { curveStakeout, verticalCurve, compoundCurveElements, reverseCurveApprox } from '../curves'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('curveStakeout', () => {
   it('generates stakeout points along a curve', () => {
@@ -32,7 +33,7 @@ describe('verticalCurve', () => {
 
   it('first point RL equals startRL', () => {
     const pts = verticalCurve(1, -1, 100, 150.0, 10)
-    expect(pts[0].rl).toBeCloseTo(150.0, 3)
+    expect(approxEqual(pts[0].rl, 150.0, 10 ** -3)).toBe(true)
   })
 
   it('crest curve is lower in the middle than at start', () => {
@@ -65,6 +66,6 @@ describe('reverseCurveApprox', () => {
 
   it('totalLength = π(R1 + R2)', () => {
     const r = reverseCurveApprox({ R1: 200, R2: 200, AB: 600 })
-    expect(r.totalLength).toBeCloseTo(Math.PI * 400, 3)
+    expect(approxEqual(r.totalLength, Math.PI * 400, 10 ** -3)).toBe(true)
   })
 })

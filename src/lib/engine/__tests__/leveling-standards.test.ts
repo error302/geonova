@@ -1,3 +1,4 @@
+import { approxEqual } from '@/test-utils/approx'
 import {
   validateLevelingClosure,
   validateCFactor,
@@ -33,7 +34,7 @@ describe('validateLevelingClosure', () => {
       country: 'us',
       environment: 'first_order',
     })
-    expect(r.allowableMisclosure).toBeCloseTo(0.003, 3)
+    expect(approxEqual(r.allowableMisclosure, 0.003, 10 ** -3)).toBe(true)
     expect(r.isAcceptable).toBe(true)
   })
 
@@ -54,7 +55,7 @@ describe('validateLevelingClosure', () => {
       country: 'us',
       environment: 'fourth_order',
     })
-    expect(r.allowableMisclosure).toBeCloseTo(0.024, 2)
+    expect(approxEqual(r.allowableMisclosure, 0.024, 10 ** -2)).toBe(true)
     expect(r.isAcceptable).toBe(true)
   })
 
@@ -66,7 +67,7 @@ describe('validateLevelingClosure', () => {
       country: 'kenya',
       environment: 'third_order',
     })
-    expect(r.allowableMisclosure).toBeCloseTo(0.010, 2)
+    expect(approxEqual(r.allowableMisclosure, 0.010, 10 ** -2)).toBe(true)
     expect(r.isAcceptable).toBe(true)
   })
 
@@ -101,7 +102,7 @@ describe('validateCFactor', () => {
   it('K=1/100: PASSES if C ≤ 0.004', () => {
     const r = validateCFactor({ maxError: 4, horizontalDistance: 1000 })
     expect(r.isAcceptable).toBe(true)
-    expect(r.cFactor).toBeCloseTo(0.004, 4)
+    expect(approxEqual(r.cFactor, 0.004, 10 ** -4)).toBe(true)
   })
 
   it('K=1/100: FAILS if C > 0.004', () => {
@@ -117,7 +118,7 @@ describe('validateCFactor', () => {
 
   it('returns correct K value', () => {
     const r = validateCFactor({ maxError: 5, horizontalDistance: 1000, contourInterval: 200 })
-    expect(r.kValue).toBeCloseTo(1/200, 3)
+    expect(approxEqual(r.kValue, 1/200, 10 ** -3)).toBe(true)
   })
 })
 
@@ -131,7 +132,7 @@ describe('runTwoPegTest', () => {
       country: 'us',
     })
     expect(r.isAcceptable).toBe(true)
-    expect(r.collimationPer100m).toBeCloseTo(0, 6)
+    expect(approxEqual(r.collimationPer100m, 0, 10 ** -6)).toBe(true)
   })
 
   it('30 arc-second threshold: PASSES borderline', () => {
@@ -182,7 +183,7 @@ describe('getLevelingOrderForCountry', () => {
   it('US first_order: returns correct order', () => {
     const order = getLevelingOrderForCountry('us', 'first_order')
     expect(order.order).toBe('first_order')
-    expect(order.closureMetres).toBeCloseTo(0.003, 3)
+    expect(approxEqual(order.closureMetres, 0.003, 10 ** -3)).toBe(true)
   })
 
   it('US construction: returns fourth_order', () => {

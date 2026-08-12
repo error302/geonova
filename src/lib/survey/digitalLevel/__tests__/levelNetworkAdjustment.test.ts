@@ -1,3 +1,4 @@
+import { approxEqual } from '@/test-utils/approx'
 import {
   adjustLevelNetwork,
   computeObservations,
@@ -22,7 +23,7 @@ describe('adjustLevelNetwork', () => {
     expect(result.passed).toBeDefined()
     expect(result.adjustedLevels.length).toBe(3) // BM1, TP1, TP2
     expect(result.adjustedLevels[0].id).toBe('BM1')
-    expect(result.adjustedLevels[0].rl).toBeCloseTo(1500.000, 1)
+    expect(approxEqual(result.adjustedLevels[0].rl, 1500.000, 10 ** -1)).toBe(true)
   })
 
   test('computes misclosure for a closed loop', () => {
@@ -41,21 +42,21 @@ describe('adjustLevelNetwork', () => {
     const result = adjustLevelNetwork(observations, controlPoints, 'third')
     // Misclosure should be non-zero
     expect(result.misclosure).toBeDefined()
-    expect(result.totalDistance).toBeCloseTo(0.3) // 3 x 100m = 300m = 0.3km
+    expect(approxEqual(result.totalDistance, 0.3, 1e-2)).toBe(true) // 3 x 100m = 300m = 0.3km
     expect(result.degreesOfFreedom).toBeGreaterThan(0)
   })
 
   test('allowable misclosure per Kenya order standards', () => {
     // 4th order: 20*sqrt(L) mm, L in km
-    expect(allowableMisclosure(1.0, 'fourth')).toBeCloseTo(20.0, 1)
+    expect(approxEqual(allowableMisclosure(1.0, 'fourth'), 20.0, 10 ** -1)).toBe(true)
     // 1st order: 4*sqrt(L) mm
-    expect(allowableMisclosure(1.0, 'first')).toBeCloseTo(4.0, 1)
+    expect(approxEqual(allowableMisclosure(1.0, 'first'), 4.0, 10 ** -1)).toBe(true)
     // 2nd order: 6*sqrt(L)
-    expect(allowableMisclosure(1.0, 'second')).toBeCloseTo(6.0, 1)
+    expect(approxEqual(allowableMisclosure(1.0, 'second'), 6.0, 10 ** -1)).toBe(true)
     // 3rd order: 10*sqrt(L)
-    expect(allowableMisclosure(1.0, 'third')).toBeCloseTo(10.0, 1)
+    expect(approxEqual(allowableMisclosure(1.0, 'third'), 10.0, 10 ** -1)).toBe(true)
     // For L=4 km, 4th order: 20*sqrt(4) = 40mm
-    expect(allowableMisclosure(4.0, 'fourth')).toBeCloseTo(40.0, 1)
+    expect(approxEqual(allowableMisclosure(4.0, 'fourth'), 40.0, 10 ** -1)).toBe(true)
   })
 
   test('throws when no observations provided', () => {
@@ -85,7 +86,7 @@ describe('adjustLevelNetwork', () => {
     const result = adjustLevelNetwork(observations, controlPoints, 'third')
     const tp1 = result.adjustedLevels.find(function(p) { return p.id === 'TP1' })
     expect(tp1).toBeDefined()
-    expect(tp1!.rl).toBeCloseTo(1202.5, 0) // initial: 1200 + 2.5
+    expect(approxEqual(tp1!.rl, 1202.5, 10 ** -0)).toBe(true) // initial: 1200 + 2.5
   })
 
   test('all-fixed-stations edge case returns residuals', () => {
@@ -133,7 +134,7 @@ describe('computeObservations', () => {
     expect(observations).toHaveLength(2)
     expect(observations[0].fromId).toBe('BM1')
     expect(observations[0].toId).toBe('TP1')
-    expect(observations[0].heightDifference).toBeCloseTo(0.7, 5)
+    expect(approxEqual(observations[0].heightDifference, 0.7, 10 ** -5)).toBe(true)
     expect(observations[0].weight).toBeGreaterThan(0)
   })
 

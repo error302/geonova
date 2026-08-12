@@ -1,4 +1,5 @@
 import { surfaceCutFillVolumeGrid } from '../volume'
+import { approxEqual } from '@/test-utils/approx'
 
 const GRID_POINTS = (z: number) => Array.from({ length: 9 }, (_, i) => ({
   easting: (i % 3) * 10,
@@ -14,7 +15,7 @@ describe('surfaceCutFillVolumeGrid', () => {
       gridSpacing: 5,
     })
     expect(r.cutVolume).toBeGreaterThan(0)
-    expect(r.fillVolume).toBeCloseTo(0, 1)
+    expect(approxEqual(r.fillVolume, 0, 10 ** -1)).toBe(true)
   })
 
   it('all existing below design → all fill, no cut', () => {
@@ -24,7 +25,7 @@ describe('surfaceCutFillVolumeGrid', () => {
       gridSpacing: 5,
     })
     expect(r.fillVolume).toBeGreaterThan(0)
-    expect(r.cutVolume).toBeCloseTo(0, 1)
+    expect(approxEqual(r.cutVolume, 0, 10 ** -1)).toBe(true)
   })
 
   it('net volume = cut - fill', () => {
@@ -33,7 +34,7 @@ describe('surfaceCutFillVolumeGrid', () => {
       design: GRID_POINTS(5),
       gridSpacing: 5,
     })
-    expect(r.netVolume).toBeCloseTo(r.cutVolume - r.fillVolume, 4)
+    expect(approxEqual(r.netVolume, r.cutVolume - r.fillVolume, 10 ** -4)).toBe(true)
   })
 
   it('equal surfaces → zero net volume', () => {

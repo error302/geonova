@@ -1,3 +1,4 @@
+import { approxEqual } from '@/test-utils/approx'
 /**
  * Tests for Covariance Propagation (WithUncertainty<T>)
  */
@@ -39,7 +40,7 @@ describe('Constructors', () => {
     const c = coordinate2D(500000, 9900000, 0.005, 0.005, 0.00001)
     expect(c.value.e).toBe(500000)
     expect(c.value.n).toBe(9900000)
-    expect(c.covariance[0][0]).toBeCloseTo(0.000025, 8)
+    expect(approxEqual(c.covariance[0][0], 0.000025, 10 ** -8)).toBe(true)
     expect(c.covariance[0][1]).toBe(0.00001)
     expect(c.covariance[1][0]).toBe(0.00001)
   })
@@ -47,9 +48,9 @@ describe('Constructors', () => {
   it('coordinate3D creates a 3×3 covariance', () => {
     const c = coordinate3D(500000, 9900000, 1500, 0.005, 0.005, 0.010)
     expect(c.value.h).toBe(1500)
-    expect(c.covariance[0][0]).toBeCloseTo(0.000025, 8)
-    expect(c.covariance[1][1]).toBeCloseTo(0.000025, 8)
-    expect(c.covariance[2][2]).toBeCloseTo(0.0001, 8)
+    expect(approxEqual(c.covariance[0][0], 0.000025, 10 ** -8)).toBe(true)
+    expect(approxEqual(c.covariance[1][1], 0.000025, 10 ** -8)).toBe(true)
+    expect(approxEqual(c.covariance[2][2], 0.0001, 10 ** -8)).toBe(true)
   })
 
   it('certain creates zero covariance', () => {
@@ -64,11 +65,11 @@ describe('Confidence Intervals', () => {
     const s = scalar(100, 0.005)
     const ci = scalarCI(s, 0.95)
     expect(ci.mean).toBe(100)
-    expect(ci.stdDev).toBeCloseTo(0.005, 6)
+    expect(approxEqual(ci.stdDev, 0.005, 10 ** -6)).toBe(true)
     // z(0.975) ≈ 1.96
-    expect(ci.halfWidth).toBeCloseTo(1.96 * 0.005, 3)
-    expect(ci.lower).toBeCloseTo(100 - 1.96 * 0.005, 3)
-    expect(ci.upper).toBeCloseTo(100 + 1.96 * 0.005, 3)
+    expect(approxEqual(ci.halfWidth, 1.96 * 0.005, 10 ** -3)).toBe(true)
+    expect(approxEqual(ci.lower, 100 - 1.96 * 0.005, 10 ** -3)).toBe(true)
+    expect(approxEqual(ci.upper, 100 + 1.96 * 0.005, 10 ** -3)).toBe(true)
   })
 
   it('computes 99% CI (wider than 95%)', () => {
@@ -94,7 +95,7 @@ describe('Scalar Arithmetic', () => {
     const b = scalar(20, 0.2)
     const c = addScalars(a, b)
     expect(c.value).toBe(30)
-    expect(c.covariance[0][0]).toBeCloseTo(0.01 + 0.04, 6)  // 0.1² + 0.2²
+    expect(approxEqual(c.covariance[0][0], 0.01 + 0.04, 10 ** -6)).toBe(true)  // 0.1² + 0.2²
   })
 
   it('subtracts two scalars', () => {
@@ -102,7 +103,7 @@ describe('Scalar Arithmetic', () => {
     const b = scalar(10, 0.2)
     const c = subtractScalars(a, b)
     expect(c.value).toBe(20)
-    expect(c.covariance[0][0]).toBeCloseTo(0.01 + 0.04, 6)
+    expect(approxEqual(c.covariance[0][0], 0.01 + 0.04, 10 ** -6)).toBe(true)
   })
 
   it('multiplies two scalars (variance: y²σx² + x²σy²)', () => {
@@ -111,7 +112,7 @@ describe('Scalar Arithmetic', () => {
     const c = multiplyScalars(a, b)
     expect(c.value).toBe(6)
     // Var = 3²·0.01 + 2²·0.04 = 0.09 + 0.16 = 0.25
-    expect(c.covariance[0][0]).toBeCloseTo(0.25, 4)
+    expect(approxEqual(c.covariance[0][0], 0.25, 10 ** -4)).toBe(true)
   })
 
   it('divides two scalars', () => {
@@ -139,7 +140,7 @@ describe('Generic Propagation', () => {
     const result = propagate(input, ([x, y]) => [2 * x + 3 * y], 1)
     expect(result.value[0]).toBe(8)  // 2·1 + 3·2 = 8
     // Var = (2²·0.01 + 3²·0.04) = 0.04 + 0.36 = 0.40
-    expect(result.covariance[0][0]).toBeCloseTo(0.40, 4)
+    expect(approxEqual(result.covariance[0][0], 0.40, 10 ** -4)).toBe(true)
   })
 
   it('propagates uncertainty through a non-linear function', () => {
@@ -149,7 +150,7 @@ describe('Generic Propagation', () => {
     expect(result.value[0]).toBe(25)  // 9 + 16
     // ∂f/∂x = 2x = 6, ∂f/∂y = 2y = 8
     // Var = 6²·0.01 + 8²·0.01 = 0.36 + 0.64 = 1.0
-    expect(result.covariance[0][0]).toBeCloseTo(1.0, 1)
+    expect(approxEqual(result.covariance[0][0], 1.0, 10 ** -1)).toBe(true)
   })
 })
 
@@ -160,10 +161,10 @@ describe('Surveying-Specific Operations', () => {
     const p2 = coordinate2D(500100, 9900000, 0.005, 0.005)
     const d = distance2D(p1, p2)
 
-    expect(d.value).toBeCloseTo(100, 4)
+    expect(approxEqual(d.value, 100, 10 ** -4)).toBe(true)
     // Distance variance ≈ 2·σ² (for two equal-accuracy points at the same y)
     // Var = (∂d/∂E1)²·σ² + (∂d/∂E2)²·σ² = (-1)²·0.000025 + (1)²·0.000025 = 0.00005
-    expect(d.covariance[0][0]).toBeCloseTo(0.00005, 5)
+    expect(approxEqual(d.covariance[0][0], 0.00005, 10 ** -5)).toBe(true)
   })
 
   it('computes polygon area with propagated uncertainty', () => {
@@ -176,7 +177,7 @@ describe('Surveying-Specific Operations', () => {
     ]
     const area = polygonArea2D(vertices)
 
-    expect(area.value).toBeCloseTo(10000, 1)
+    expect(approxEqual(area.value, 10000, 10 ** -1)).toBe(true)
     expect(area.covariance[0][0]).toBeGreaterThan(0)
   })
 
@@ -189,7 +190,7 @@ describe('Surveying-Specific Operations', () => {
     ]
     const perim = polygonPerimeter2D(vertices)
 
-    expect(perim.value).toBeCloseTo(400, 1)  // 4 × 100m
+    expect(approxEqual(perim.value, 400, 10 ** -1)).toBe(true)  // 4 × 100m
     expect(perim.covariance[0][0]).toBeGreaterThan(0)
   })
 
@@ -211,7 +212,7 @@ describe('Surveying-Specific Operations', () => {
     const area2 = polygonArea2D(vertices2)
 
     // 10× larger σ → 100× larger variance
-    expect(area2.covariance[0][0] / area1.covariance[0][0]).toBeCloseTo(100, 0)
+    expect(approxEqual(area2.covariance[0][0] / area1.covariance[0][0], 100, 10 ** -0)).toBe(true)
   })
 })
 
@@ -227,7 +228,7 @@ describe('Real-World Surveying Scenario', () => {
     const area = polygonArea2D(vertices)
 
     // Area should be 5000 m²
-    expect(area.value).toBeCloseTo(5000, 1)
+    expect(approxEqual(area.value, 5000, 10 ** -1)).toBe(true)
 
     // Format with CI
     const formatted = formatScalarWithCI(area, { unit: 'm²', decimals: 2 })

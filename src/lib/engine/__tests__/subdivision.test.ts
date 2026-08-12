@@ -3,6 +3,7 @@
  */
 
 import { subdivide } from '@/lib/engine/subdivision'
+import { approxEqual } from '@/test-utils/approx'
 import type { Point2D } from '@/lib/engine/types'
 import type { SubdivisionParams } from '@/types/subdivision'
 import { defined } from '@/test-utils/defined'
@@ -69,10 +70,10 @@ describe('subdivide', () => {
       // Each lot should be approximately 0.5 ha
       expect(lot1.areaHa).toBeGreaterThan(0)
       expect(lot2.areaHa).toBeGreaterThan(0)
-      expect(lot1.areaHa + lot2.areaHa).toBeCloseTo(result.parentParcel.areaHa, 0)
+      expect(approxEqual(lot1.areaHa + lot2.areaHa, result.parentParcel.areaHa, 10 ** -0)).toBe(true)
 
       // Total should equal parent
-      expect(roundHa(totalLotsArea(result.lots))).toBeCloseTo(roundHa(result.parentParcel.areaHa), 3)
+      expect(approxEqual(roundHa(totalLotsArea(result.lots)), roundHa(result.parentParcel.areaHa), 10 ** -3)).toBe(true)
     })
 
     it('should split a square into two pieces with a horizontal line', () => {
@@ -90,7 +91,7 @@ describe('subdivide', () => {
       const lot2 = defined(result.lots.find(l => l.lotNumber === 2))
       expect(lot1.areaHa).toBeGreaterThan(0)
       expect(lot2.areaHa).toBeGreaterThan(0)
-      expect(lot1.areaHa + lot2.areaHa).toBeCloseTo(result.parentParcel.areaHa, 0)
+      expect(approxEqual(lot1.areaHa + lot2.areaHa, result.parentParcel.areaHa, 10 ** -0)).toBe(true)
     })
 
     it('should handle diagonal split', () => {
@@ -105,7 +106,7 @@ describe('subdivide', () => {
 
       expect(result.lots.length).toBe(2)
       // Each half should be 0.5 ha for a diagonal of a square
-      expect(roundHa(totalLotsArea(result.lots))).toBeCloseTo(roundHa(result.parentParcel.areaHa), 3)
+      expect(approxEqual(roundHa(totalLotsArea(result.lots)), roundHa(result.parentParcel.areaHa), 10 ** -3)).toBe(true)
     })
   })
 
@@ -126,7 +127,7 @@ describe('subdivide', () => {
       }
 
       // Total should equal parent
-      expect(roundHa(totalLotsArea(result.lots))).toBeCloseTo(roundHa(result.parentParcel.areaHa), 1)
+      expect(approxEqual(roundHa(totalLotsArea(result.lots)), roundHa(result.parentParcel.areaHa), 10 ** -1)).toBe(true)
     })
 
     it('should split a rectangle into 2 lots (1×2)', () => {
@@ -140,7 +141,7 @@ describe('subdivide', () => {
       for (const lot of result.lots) {
         expect(lot.areaHa).toBeGreaterThan(0)
       }
-      expect(roundHa(totalLotsArea(result.lots))).toBeCloseTo(roundHa(result.parentParcel.areaHa), 1)
+      expect(approxEqual(roundHa(totalLotsArea(result.lots)), roundHa(result.parentParcel.areaHa), 10 ** -1)).toBe(true)
     })
 
     it('should split a square into 6 lots (2×3)', () => {
@@ -252,7 +253,7 @@ describe('subdivide', () => {
       }
 
       // Check total covers most of parent
-      expect(roundHa(totalLotsArea(result.lots))).toBeCloseTo(roundHa(result.parentParcel.areaHa), 1)
+      expect(approxEqual(roundHa(totalLotsArea(result.lots)), roundHa(result.parentParcel.areaHa), 10 ** -1)).toBe(true)
     })
 
     it('should split 1ha into four ~0.25ha lots', () => {
@@ -270,7 +271,7 @@ describe('subdivide', () => {
 
       // Should return 1 lot with whatever area is available
       expect(result.lots.length).toBe(1)
-      expect(result.lots[0].areaHa).toBeCloseTo(1.0, 1)
+      expect(approxEqual(result.lots[0].areaHa, 1.0, 10 ** -1)).toBe(true)
     })
 
     it('should work with irregular polygon', () => {
@@ -303,7 +304,7 @@ describe('subdivide', () => {
       const params: SubdivisionParams = { rows: 2, cols: 2 }
       const result = subdivide(SQUARE_1HA, 'grid', params)
 
-      expect(result.parentParcel.areaHa).toBeCloseTo(1.0, 2)
+      expect(approxEqual(result.parentParcel.areaHa, 1.0, 10 ** -2)).toBe(true)
       expect(result.parentParcel.vertices.length).toBe(4)
     })
 

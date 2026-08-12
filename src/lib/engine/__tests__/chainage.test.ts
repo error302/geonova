@@ -1,4 +1,5 @@
 import { computeChainageTable, reverseChainageLinear } from '../chainage'
+import { approxEqual } from '@/test-utils/approx'
 import { defined } from '@/test-utils/defined'
 
 const ALIGNMENT = [
@@ -14,8 +15,8 @@ describe('computeChainageTable', () => {
       startChainage: 0,
       alignment: ALIGNMENT,
     })
-    expect(rows[0].chainage).toBeCloseTo(0, 4)
-    expect(rows[0].distance).toBeCloseTo(0, 4)
+    expect(approxEqual(rows[0].chainage, 0, 10 ** -4)).toBe(true)
+    expect(approxEqual(rows[0].distance, 0, 10 ** -4)).toBe(true)
   })
 
   it('cumulative chainage increases along alignment', () => {
@@ -41,8 +42,8 @@ describe('computeChainageTable', () => {
       startChainage: 500,
       alignment: [{ name: 'B', easting: 100, northing: 0 }],
     })
-    expect(rows[1].chainage).toBeCloseTo(600, 3)
-    expect(rows[1].distance).toBeCloseTo(100, 3)
+    expect(approxEqual(rows[1].chainage, 600, 10 ** -3)).toBe(true)
+    expect(approxEqual(rows[1].distance, 100, 10 ** -3)).toBe(true)
   })
 
   it('returns correct number of rows (start + alignment points)', () => {
@@ -64,8 +65,8 @@ describe('reverseChainageLinear', () => {
     })
     const pt = reverseChainageLinear({ targetChainage: 50, table })
     expect(pt).not.toBeNull()
-    expect(defined(pt).easting).toBeCloseTo(50, 3)
-    expect(defined(pt).northing).toBeCloseTo(0, 3)
+    expect(approxEqual(defined(pt).easting, 50, 10 ** -3)).toBe(true)
+    expect(approxEqual(defined(pt).northing, 0, 10 ** -3)).toBe(true)
   })
 
   it('returns null when chainage is out of range', () => {
@@ -85,6 +86,6 @@ describe('reverseChainageLinear', () => {
     })
     const pt = reverseChainageLinear({ targetChainage: 0, table })
     expect(pt).not.toBeNull()
-    expect(defined(pt).easting).toBeCloseTo(0, 3)
+    expect(approxEqual(defined(pt).easting, 0, 10 ** -3)).toBe(true)
   })
 })

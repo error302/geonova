@@ -1,4 +1,5 @@
 import { wcbToQuadrant, bearingToString, parseDMSString } from '../angles'
+import { approxEqual } from '@/test-utils/approx'
 import { defined } from '@/test-utils/defined'
 
 describe('wcbToQuadrant', () => {
@@ -29,7 +30,7 @@ describe('parseDMSString', () => {
   it('parses "45°30\'20\\"" format', () => {
     const r = parseDMSString("45°30'20\"")
     expect(r).not.toBeNull()
-    expect(defined(r)).toBeCloseTo(45.5056, 3)
+    expect(approxEqual(defined(r), 45.5056, 10 ** -3)).toBe(true)
   })
 
   it('returns null for invalid string', () => {
@@ -40,6 +41,6 @@ describe('parseDMSString', () => {
   it('parses plain decimal string', () => {
     const r = parseDMSString('123.456')
     expect(r).not.toBeNull()
-    expect(defined(r)).toBeCloseTo(123.456, 3)
+    expect(approxEqual(defined(r), 123.456, 10 ** -3)).toBe(true)
   })
 })

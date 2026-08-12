@@ -1,3 +1,4 @@
+import { approxEqual } from '@/test-utils/approx'
 import {
   getTopoConfigForCountry,
   getASPRSRMSE,
@@ -60,7 +61,7 @@ describe('ASPRS Planimetric Table', () => {
 
   it('1:1,000 scale, Class 1: 0.304ft RMSE', () => {
     const r = getASPRSRMSE("1\"=1,000'", 1)
-    expect(r).toBeCloseTo(0.304, 2)
+    expect(approxEqual(r, 0.304, 10 ** -2)).toBe(true)
   })
 })
 
@@ -78,51 +79,51 @@ describe('ASPRS Topographic Table', () => {
 
   it('1ft contour, Class 1: 0.067ft RMSE', () => {
     const r = getASPRSContourRMSE(1.0, 1)
-    expect(r).toBeCloseTo(0.067, 2)
+    expect(approxEqual(r, 0.067, 10 ** -2)).toBe(true)
   })
 })
 
 describe('getBoundaryTolerance', () => {
   it('Kenya: 0.10m tolerance', () => {
     const t = getBoundaryTolerance('kenya')
-    expect(t.tolerance).toBeCloseTo(0.10, 1)
+    expect(approxEqual(t.tolerance, 0.10, 10 ** -1)).toBe(true)
     expect(t.unit).toBe('metres')
   })
 
   it('Bahrain: 0.05m tolerance', () => {
     const t = getBoundaryTolerance('bahrain')
-    expect(t.tolerance).toBeCloseTo(0.05, 1)
+    expect(approxEqual(t.tolerance, 0.05, 10 ** -1)).toBe(true)
   })
 
   it('US: ALTA formula (20mm + 50ppm)', () => {
     const t = getBoundaryTolerance('us', 1000)
-    expect(t.tolerance).toBeCloseTo(0.020 + 0.00005 * 1000, 3)
+    expect(approxEqual(t.tolerance, 0.020 + 0.00005 * 1000, 10 ** -3)).toBe(true)
     expect(t.unit).toBe('metres')
   })
 
   it('UK: 0.10m tolerance', () => {
     const t = getBoundaryTolerance('uk')
-    expect(t.tolerance).toBeCloseTo(0.10, 1)
+    expect(approxEqual(t.tolerance, 0.10, 10 ** -1)).toBe(true)
   })
 
   it('NZ: 0.05m tolerance', () => {
     const t = getBoundaryTolerance('new_zealand')
-    expect(t.tolerance).toBeCloseTo(0.05, 1)
+    expect(approxEqual(t.tolerance, 0.05, 10 ** -1)).toBe(true)
   })
 })
 
 describe('NSSDA Accuracy', () => {
   it('horizontal accuracy = 2.447 × RMSE', () => {
-    expect(nssdaHorizontal(0.304)).toBeCloseTo(0.744, 2)  // 0.304 × 2.447 ≈ 0.744
+    expect(approxEqual(nssdaHorizontal(0.304), 0.744, 10 ** -2)).toBe(true)  // 0.304 × 2.447 ≈ 0.744
   })
 
   it('vertical accuracy = 1.96 × RMSE', () => {
-    expect(nssdaVertical(0.067)).toBeCloseTo(0.131, 2)  // 0.067 × 1.96 ≈ 0.131
+    expect(approxEqual(nssdaVertical(0.067), 0.131, 10 ** -2)).toBe(true)  // 0.067 × 1.96 ≈ 0.131
   })
 
   it('NSSDA gives 95% confidence', () => {
     const rmse = 1.0
-    expect(nssdaHorizontal(rmse)).toBeCloseTo(2.447, 2)
-    expect(nssdaVertical(rmse)).toBeCloseTo(1.96, 2)
+    expect(approxEqual(nssdaHorizontal(rmse), 2.447, 10 ** -2)).toBe(true)
+    expect(approxEqual(nssdaVertical(rmse), 1.96, 10 ** -2)).toBe(true)
   })
 })

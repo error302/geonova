@@ -3,6 +3,7 @@
  */
 
 import { computeStandardTLS, computeWeightedTLS } from '../totalLeastSquares'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('computeStandardTLS', () => {
   test('recovers exact solution when no errors', () => {
@@ -20,9 +21,9 @@ describe('computeStandardTLS', () => {
 
     const result = computeStandardTLS({ A, l })
 
-    expect(result.x[0]).toBeCloseTo(1, 4)
-    expect(result.x[1]).toBeCloseTo(2, 4)
-    expect(result.x[2]).toBeCloseTo(3, 4)
+    expect(approxEqual(result.x[0], 1, 10 ** -4)).toBe(true)
+    expect(approxEqual(result.x[1], 2, 10 ** -4)).toBe(true)
+    expect(approxEqual(result.x[2], 3, 10 ** -4)).toBe(true)
     expect(result.residuals.every(r => Math.abs(r) < 0.01)).toBe(true)
   })
 
@@ -113,8 +114,8 @@ describe('computeWeightedTLS', () => {
 
     const result = computeWeightedTLS({ A, l })
 
-    expect(result.x[0]).toBeCloseTo(1, 4)
-    expect(result.x[1]).toBeCloseTo(2, 4)
+    expect(approxEqual(result.x[0], 1, 10 ** -4)).toBe(true)
+    expect(approxEqual(result.x[1], 2, 10 ** -4)).toBe(true)
   })
 
   test('handles non-uniform weights', () => {
@@ -130,8 +131,8 @@ describe('computeWeightedTLS', () => {
 
     const result = computeWeightedTLS({ A, l, l_weights })
 
-    expect(result.x[0]).toBeCloseTo(1, 2)
-    expect(result.x[1]).toBeCloseTo(2, 2)
+    expect(approxEqual(result.x[0], 1, 10 ** -2)).toBe(true)
+    expect(approxEqual(result.x[1], 2, 10 ** -2)).toBe(true)
   })
 
   test('iterates to convergence', () => {
@@ -147,9 +148,9 @@ describe('computeWeightedTLS', () => {
     const result = computeWeightedTLS({ A, l })
 
     expect(result.method).toBe('iterative_wtls')
-    expect(result.x[0]).toBeCloseTo(1, 2)
-    expect(result.x[1]).toBeCloseTo(2, 2)
-    expect(result.x[2]).toBeCloseTo(3, 2)
+    expect(approxEqual(result.x[0], 1, 10 ** -2)).toBe(true)
+    expect(approxEqual(result.x[1], 2, 10 ** -2)).toBe(true)
+    expect(approxEqual(result.x[2], 3, 10 ** -2)).toBe(true)
   })
 
   test('returns method metadata', () => {

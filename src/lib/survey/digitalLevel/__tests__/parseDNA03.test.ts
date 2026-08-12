@@ -1,4 +1,5 @@
 import { parseDNA03 } from '../parseDNA03'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('parseDNA03', () => {
   test('parses DNA03 RDT format with measurement header', () => {
@@ -35,7 +36,7 @@ describe('parseDNA03', () => {
     const result = parseDNA03(content)
     expect(result.readings).toHaveLength(1)
     expect(result.readings[0].stationId).toBe('TP1')
-    expect(result.readings[0].staffReading).toBeCloseTo(1.65432, 5)
+    expect(approxEqual(result.readings[0].staffReading, 1.65432, 10 ** -5)).toBe(true)
   })
 
   test('extracts timestamp from comments', () => {
@@ -90,7 +91,7 @@ describe('parseDNA03', () => {
     const result = parseDNA03(content)
     expect(result.readings).toHaveLength(2)
     expect(result.readings[0].stationId).toBe('BM1')
-    expect(result.readings[0].staffReading).toBeCloseTo(1.65432, 5)
+    expect(approxEqual(result.readings[0].staffReading, 1.65432, 10 ** -5)).toBe(true)
     expect(result.readings[1].type).toBe('FS')
   })
 
@@ -106,6 +107,6 @@ describe('parseDNA03', () => {
 
     const result = parseDNA03(content)
     expect(result.observations).toHaveLength(2)
-    expect(result.observations[0].heightDifference).toBeCloseTo(0.7, 5)
+    expect(approxEqual(result.observations[0].heightDifference, 0.7, 10 ** -5)).toBe(true)
   })
 })

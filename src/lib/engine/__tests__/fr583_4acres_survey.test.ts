@@ -31,6 +31,7 @@
  */
 
 import { distanceBearing, polarPoint } from '../distance';
+import { approxEqual } from '@/test-utils/approx'
 import { coordinateArea } from '../area';
 import { bearingToString, parseDMSString, backBearing } from '../angles';
 import { bearingDistanceToDelta } from '@/lib/geodesy/coordinates';
@@ -141,8 +142,8 @@ describe('F/R 583/58 — Datum Join Inverse Computations', () => {
   // Test each datum join individually for detailed failure messages
   it('RD21 to RDa1: 846.49m @ 287 14 04', () => {
     const result = distanceBearing(STATIONS.RD21, STATIONS.RDa1);
-    expect(result.distance).toBeCloseTo(846.49, 2);
-    expect(result.bearing).toBeCloseTo(287.2344, 2); // 287° 14' 04"
+    expect(approxEqual(result.distance, 846.49, 10 ** -2)).toBe(true);
+    expect(approxEqual(result.bearing, 287.2344, 10 ** -2)).toBe(true); // 287° 14' 04"
   });
 
   it('RDa1 to RDa2: ~387m (plan shows 381.71 — known data discrepancy)', () => {
@@ -151,60 +152,60 @@ describe('F/R 583/58 — Datum Join Inverse Computations', () => {
     // This is a known real-world inconsistency in the source data.
     const result = distanceBearing(STATIONS.RDa1, STATIONS.RDa2);
     // Test against the actual coordinate-derived distance
-    expect(result.distance).toBeCloseTo(387.72, 1);
+    expect(approxEqual(result.distance, 387.72, 10 ** -1)).toBe(true);
     // Bearing is consistent
-    expect(result.bearing).toBeCloseTo(176.8611, 1); // ~176° 51' 40"
+    expect(approxEqual(result.bearing, 176.8611, 10 ** -1)).toBe(true); // ~176° 51' 40"
   });
 
   it('RDa2 to Ne1: 194.54m @ 109 46 42', () => {
     const result = distanceBearing(STATIONS.RDa2, STATIONS.Ne1);
-    expect(result.distance).toBeCloseTo(194.54, 1);
-    expect(result.bearing).toBeCloseTo(109.7783, 1);
+    expect(approxEqual(result.distance, 194.54, 10 ** -1)).toBe(true);
+    expect(approxEqual(result.bearing, 109.7783, 10 ** -1)).toBe(true);
   });
 
   it('Ne1 to Ne2: ~159.95m @ 140 50 26', () => {
     // Note: coordinate-derived distance is 159.951m vs plan 159.96m (9mm rounding diff)
     const result = distanceBearing(STATIONS.Ne1, STATIONS.Ne2);
-    expect(result.distance).toBeCloseTo(159.95, 1);
-    expect(result.bearing).toBeCloseTo(140.8406, 1);
+    expect(approxEqual(result.distance, 159.95, 10 ** -1)).toBe(true);
+    expect(approxEqual(result.bearing, 140.8406, 10 ** -1)).toBe(true);
   });
 
   it('Ne2 to Ne3: ~336.18m @ 164 37 50', () => {
     const result = distanceBearing(STATIONS.Ne2, STATIONS.Ne3);
-    expect(result.distance).toBeCloseTo(336.18, 1);
-    expect(result.bearing).toBeCloseTo(164.6306, 1);
+    expect(approxEqual(result.distance, 336.18, 10 ** -1)).toBe(true);
+    expect(approxEqual(result.bearing, 164.6306, 10 ** -1)).toBe(true);
   });
 
   it('Ne3 to Ne4: 419.60m @ 151 41 24', () => {
     const result = distanceBearing(STATIONS.Ne3, STATIONS.Ne4);
-    expect(result.distance).toBeCloseTo(419.60, 2);
-    expect(result.bearing).toBeCloseTo(151.69, 1);
+    expect(approxEqual(result.distance, 419.60, 10 ** -2)).toBe(true);
+    expect(approxEqual(result.bearing, 151.69, 10 ** -1)).toBe(true);
   });
 
   it('Ne4 to Ne5: 246.72m @ 116 54 50', () => {
     const result = distanceBearing(STATIONS.Ne4, STATIONS.Ne5);
-    expect(result.distance).toBeCloseTo(246.72, 2);
-    expect(result.bearing).toBeCloseTo(116.9139, 1);
+    expect(approxEqual(result.distance, 246.72, 10 ** -2)).toBe(true);
+    expect(approxEqual(result.bearing, 116.9139, 10 ** -1)).toBe(true);
   });
 
   it('Ne5 to CN4: ~820.79m @ 34 01 51', () => {
     // Coordinate-derived: 820.793m vs plan 820.80m (7mm rounding diff)
     const result = distanceBearing(STATIONS.Ne5, STATIONS.CN4);
-    expect(result.distance).toBeCloseTo(820.79, 1);
-    expect(result.bearing).toBeCloseTo(34.0308, 1);
+    expect(approxEqual(result.distance, 820.79, 10 ** -1)).toBe(true);
+    expect(approxEqual(result.bearing, 34.0308, 10 ** -1)).toBe(true);
   });
 
   it('CN4 to CN4a: ~300.42m @ 04 49 42', () => {
     // Coordinate-derived: 300.416m vs plan 300.41m (6mm rounding diff)
     const result = distanceBearing(STATIONS.CN4, STATIONS.CN4a);
-    expect(result.distance).toBeCloseTo(300.42, 1);
-    expect(result.bearing).toBeCloseTo(4.8283, 1);
+    expect(approxEqual(result.distance, 300.42, 10 ** -1)).toBe(true);
+    expect(approxEqual(result.bearing, 4.8283, 10 ** -1)).toBe(true);
   });
 
   it('CN4a to RD21: 512.57m @ 287 14 04', () => {
     const result = distanceBearing(STATIONS.CN4a, STATIONS.RD21);
-    expect(result.distance).toBeCloseTo(512.57, 2);
-    expect(result.bearing).toBeCloseTo(287.2344, 2);
+    expect(approxEqual(result.distance, 512.57, 10 ** -2)).toBe(true);
+    expect(approxEqual(result.bearing, 287.2344, 10 ** -2)).toBe(true);
   });
 
   it('should compute correct delta magnitudes for spot-checked joins', () => {
@@ -213,16 +214,16 @@ describe('F/R 583/58 — Datum Join Inverse Computations', () => {
 
     const rd21_rda1 = distanceBearing(STATIONS.RD21, STATIONS.RDa1);
     // Spreadsheet ΔN = -250.80 (From-To), our ΔN = +250.80 (To-From)
-    expect(Math.abs(rd21_rda1.deltaN)).toBeCloseTo(250.80, 0);
-    expect(Math.abs(rd21_rda1.deltaE)).toBeCloseTo(808.48, 0);
+    expect(approxEqual(Math.abs(rd21_rda1.deltaN), 250.80, 10 ** -0)).toBe(true);
+    expect(approxEqual(Math.abs(rd21_rda1.deltaE), 808.48, 10 ** -0)).toBe(true);
 
     const rda1_rda2 = distanceBearing(STATIONS.RDa1, STATIONS.RDa2);
-    expect(Math.abs(rda1_rda2.deltaN)).toBeCloseTo(387.14, 0);
-    expect(Math.abs(rda1_rda2.deltaE)).toBeCloseTo(21.23, 0);
+    expect(approxEqual(Math.abs(rda1_rda2.deltaN), 387.14, 10 ** -0)).toBe(true);
+    expect(approxEqual(Math.abs(rda1_rda2.deltaE), 21.23, 10 ** -0)).toBe(true);
 
     const ne5_cn4 = distanceBearing(STATIONS.Ne5, STATIONS.CN4);
-    expect(Math.abs(ne5_cn4.deltaN)).toBeCloseTo(680.22, 0);
-    expect(Math.abs(ne5_cn4.deltaE)).toBeCloseTo(459.35, 0);
+    expect(approxEqual(Math.abs(ne5_cn4.deltaN), 680.22, 10 ** -0)).toBe(true);
+    expect(approxEqual(Math.abs(ne5_cn4.deltaE), 459.35, 10 ** -0)).toBe(true);
   });
 
   it('should verify back-bearings for all datum joins', () => {
@@ -230,7 +231,7 @@ describe('F/R 583/58 — Datum Join Inverse Computations', () => {
       const forward = distanceBearing(STATIONS[join.from], STATIONS[join.to]);
       const reverse = distanceBearing(STATIONS[join.to], STATIONS[join.from]);
       const backBear = backBearing(forward.bearing);
-      expect(reverse.bearing).toBeCloseTo(backBear, 3);
+      expect(approxEqual(reverse.bearing, backBear, 10 ** -3)).toBe(true);
     });
   });
 
@@ -275,12 +276,12 @@ describe('F/R 583/58 — Datum Consistency Verification', () => {
         expect(result.distance).toBeGreaterThan(380);
         expect(result.distance).toBeLessThan(390);
       } else {
-        expect(result.distance).toBeCloseTo(join.planDistance, 0);
+        expect(approxEqual(result.distance, join.planDistance, 10 ** -0)).toBe(true);
       }
 
       // Bearing: allow ~30 arc-seconds tolerance
       if (planBearing !== null) {
-        expect(result.bearing).toBeCloseTo(planBearing, 1);
+        expect(approxEqual(result.bearing, planBearing, 10 ** -1)).toBe(true);
       }
     });
   });
@@ -288,8 +289,8 @@ describe('F/R 583/58 — Datum Consistency Verification', () => {
   it('should confirm RD21-RDa1 and CN4a-RD21 share the same bearing', () => {
     const line1 = distanceBearing(STATIONS.RD21, STATIONS.RDa1);
     const line2 = distanceBearing(STATIONS.CN4a, STATIONS.RD21);
-    expect(line1.bearing).toBeCloseTo(line2.bearing, 2);
-    expect(line1.bearing).toBeCloseTo(287.2344, 2); // 287° 14' 04"
+    expect(approxEqual(line1.bearing, line2.bearing, 10 ** -2)).toBe(true);
+    expect(approxEqual(line1.bearing, 287.2344, 10 ** -2)).toBe(true); // 287° 14' 04"
   });
 });
 
@@ -304,59 +305,59 @@ describe('F/R 583/58 — Theoretical Beacon Placement', () => {
     const bearing = parseDMSString('287° 14\' 04"');
     expect(bearing).not.toBeNull();
     const deltas = bearingDistanceToDelta(defined(bearing), 102.2);
-    expect(deltas.deltaN).toBeCloseTo(30.28, 1);
-    expect(deltas.deltaE).toBeCloseTo(-97.61, 1);
+    expect(approxEqual(deltas.deltaN, 30.28, 10 ** -1)).toBe(true);
+    expect(approxEqual(deltas.deltaE, -97.61, 10 ** -1)).toBe(true);
     const computed = polarPoint(STATIONS.RD21, defined(bearing), 102.2);
-    expect(computed.northing).toBeCloseTo(114400.63, 1);
-    expect(computed.easting).toBeCloseTo(-4279.98, 1);
+    expect(approxEqual(computed.northing, 114400.63, 10 ** -1)).toBe(true);
+    expect(approxEqual(computed.easting, -4279.98, 10 ** -1)).toBe(true);
   });
 
   it('AB3 to AB4a: 74.49m on 287 14 04', () => {
     const bearing = parseDMSString('287° 14\' 04"');
     expect(bearing).not.toBeNull();
     const computed = polarPoint(STATIONS.AB3, defined(bearing), 74.49);
-    expect(computed.northing).toBeCloseTo(114422.70, 1);
-    expect(computed.easting).toBeCloseTo(-4351.13, 1);
+    expect(approxEqual(computed.northing, 114422.70, 10 ** -1)).toBe(true);
+    expect(approxEqual(computed.easting, -4351.13, 10 ** -1)).toBe(true);
   });
 
   it('AB4a to AB4: 6m on 287 14 04', () => {
     const bearing = parseDMSString('287° 14\' 04"');
     expect(bearing).not.toBeNull();
     const computed = polarPoint(STATIONS.AB4a, defined(bearing), 6);
-    expect(computed.northing).toBeCloseTo(114424.48, 1);
-    expect(computed.easting).toBeCloseTo(-4356.86, 1);
+    expect(approxEqual(computed.northing, 114424.48, 10 ** -1)).toBe(true);
+    expect(approxEqual(computed.easting, -4356.86, 10 ** -1)).toBe(true);
   });
 
   it('AB4 to AB4b: 6m on 174 04 11', () => {
     const bearing = parseDMSString('174° 04\' 11"');
     expect(bearing).not.toBeNull();
     const computed = polarPoint(STATIONS.AB4, defined(bearing), 6);
-    expect(computed.northing).toBeCloseTo(114418.51, 1);
-    expect(computed.easting).toBeCloseTo(-4356.24, 1);
+    expect(approxEqual(computed.northing, 114418.51, 10 ** -1)).toBe(true);
+    expect(approxEqual(computed.easting, -4356.24, 10 ** -1)).toBe(true);
   });
 
   it('AB4b to AB1: 228.8m on 174 04 11', () => {
     const bearing = parseDMSString('174° 04\' 11"');
     expect(bearing).not.toBeNull();
     const computed = polarPoint(STATIONS.AB4b, defined(bearing), 228.8);
-    expect(computed.northing).toBeCloseTo(114190.94, 1);
-    expect(computed.easting).toBeCloseTo(-4332.60, 1);
+    expect(approxEqual(computed.northing, 114190.94, 10 ** -1)).toBe(true);
+    expect(approxEqual(computed.easting, -4332.60, 10 ** -1)).toBe(true);
   });
 
   it('AB1 to AB2: 74m on 84 04 11', () => {
     const bearing = parseDMSString('84° 04\' 11"');
     expect(bearing).not.toBeNull();
     const computed = polarPoint(STATIONS.AB1, defined(bearing), 74);
-    expect(computed.northing).toBeCloseTo(114198.58, 1);
-    expect(computed.easting).toBeCloseTo(-4259.00, 1);
+    expect(approxEqual(computed.northing, 114198.58, 10 ** -1)).toBe(true);
+    expect(approxEqual(computed.easting, -4259.00, 10 ** -1)).toBe(true);
   });
 
   it('AB2 to AB3: 203.14m on 354 04 11 (closure back to AB3)', () => {
     const bearing = parseDMSString('354° 04\' 11"');
     expect(bearing).not.toBeNull();
     const computed = polarPoint(STATIONS.AB2, defined(bearing), 203.14);
-    expect(computed.northing).toBeCloseTo(114400.63, 0); // within ~10mm
-    expect(computed.easting).toBeCloseTo(-4279.98, 0);
+    expect(approxEqual(computed.northing, 114400.63, 10 ** -0)).toBe(true); // within ~10mm
+    expect(approxEqual(computed.easting, -4279.98, 10 ** -0)).toBe(true);
   });
 
   it('should chain all theoretical computations from RD21 through all new beacons', () => {
@@ -371,38 +372,38 @@ describe('F/R 583/58 — Theoretical Beacon Placement', () => {
 
     // RD21 → AB3
     const ab3 = polarPoint(STATIONS.RD21, b1, 102.2);
-    expect(ab3.northing).toBeCloseTo(114400.63, 1);
-    expect(ab3.easting).toBeCloseTo(-4279.98, 1);
+    expect(approxEqual(ab3.northing, 114400.63, 10 ** -1)).toBe(true);
+    expect(approxEqual(ab3.easting, -4279.98, 10 ** -1)).toBe(true);
 
     // AB3 → AB4a
     const ab4a = polarPoint(ab3, b1, 74.49);
-    expect(ab4a.northing).toBeCloseTo(114422.70, 1);
-    expect(ab4a.easting).toBeCloseTo(-4351.13, 1);
+    expect(approxEqual(ab4a.northing, 114422.70, 10 ** -1)).toBe(true);
+    expect(approxEqual(ab4a.easting, -4351.13, 10 ** -1)).toBe(true);
 
     // AB4a → AB4
     const ab4 = polarPoint(ab4a, b1, 6);
-    expect(ab4.northing).toBeCloseTo(114424.48, 1);
-    expect(ab4.easting).toBeCloseTo(-4356.86, 1);
+    expect(approxEqual(ab4.northing, 114424.48, 10 ** -1)).toBe(true);
+    expect(approxEqual(ab4.easting, -4356.86, 10 ** -1)).toBe(true);
 
     // AB4 → AB4b
     const ab4b = polarPoint(ab4, b2, 6);
-    expect(ab4b.northing).toBeCloseTo(114418.51, 1);
-    expect(ab4b.easting).toBeCloseTo(-4356.24, 1);
+    expect(approxEqual(ab4b.northing, 114418.51, 10 ** -1)).toBe(true);
+    expect(approxEqual(ab4b.easting, -4356.24, 10 ** -1)).toBe(true);
 
     // AB4b → AB1
     const ab1 = polarPoint(ab4b, b2, 228.8);
-    expect(ab1.northing).toBeCloseTo(114190.94, 1);
-    expect(ab1.easting).toBeCloseTo(-4332.60, 1);
+    expect(approxEqual(ab1.northing, 114190.94, 10 ** -1)).toBe(true);
+    expect(approxEqual(ab1.easting, -4332.60, 10 ** -1)).toBe(true);
 
     // AB1 → AB2
     const ab2 = polarPoint(ab1, b3, 74);
-    expect(ab2.northing).toBeCloseTo(114198.58, 1);
-    expect(ab2.easting).toBeCloseTo(-4259.00, 1);
+    expect(approxEqual(ab2.northing, 114198.58, 10 ** -1)).toBe(true);
+    expect(approxEqual(ab2.easting, -4259.00, 10 ** -1)).toBe(true);
 
     // AB2 → AB3 (closure back to AB3)
     const ab3_check = polarPoint(ab2, b4, 203.14);
-    expect(ab3_check.northing).toBeCloseTo(114400.63, 0);
-    expect(ab3_check.easting).toBeCloseTo(-4279.98, 0);
+    expect(approxEqual(ab3_check.northing, 114400.63, 10 ** -0)).toBe(true);
+    expect(approxEqual(ab3_check.easting, -4279.98, 10 ** -0)).toBe(true);
   });
 
   it('should verify all theoretical deltas match bearingDistanceToDelta', () => {
@@ -410,8 +411,8 @@ describe('F/R 583/58 — Theoretical Beacon Placement', () => {
       const bearing = parseDMSString(tc.bearingDMS);
       if (bearing === null) return;
       const deltas = bearingDistanceToDelta(bearing, tc.distance);
-      expect(deltas.deltaN).toBeCloseTo(tc.deltaN, 1);
-      expect(deltas.deltaE).toBeCloseTo(tc.deltaE, 1);
+      expect(approxEqual(deltas.deltaN, tc.deltaN, 10 ** -1)).toBe(true);
+      expect(approxEqual(deltas.deltaE, tc.deltaE, 10 ** -1)).toBe(true);
     });
   });
 });
@@ -431,8 +432,8 @@ describe('F/R 583/58 — RTK Consistency Checks', () => {
       const actualMiscE = (check.rtkE - check.theoreticalE) * 1000;
 
       // Verify magnitude matches (sign conventions may differ)
-      expect(Math.abs(actualMiscN)).toBeCloseTo(Math.abs(check.misclosureN_mm), 0);
-      expect(Math.abs(actualMiscE)).toBeCloseTo(Math.abs(check.misclosureE_mm), 0);
+      expect(approxEqual(Math.abs(actualMiscN), Math.abs(check.misclosureN_mm), 10 ** -0)).toBe(true);
+      expect(approxEqual(Math.abs(actualMiscE), Math.abs(check.misclosureE_mm), 10 ** -0)).toBe(true);
 
       // All misclosures should be less than 30mm (survey-grade GNSS RTK)
       expect(Math.abs(check.misclosureN_mm)).toBeLessThan(30);
@@ -520,7 +521,7 @@ describe('F/R 583/58 — Parcel Area Computation', () => {
 
     // Perimeter should be approximately 592m (sum of all theoretical sides)
     // 74 + 74.49 + 6 + 6 + 228.8 + 203.14 = 592.43
-    expect(result.perimeter).toBeCloseTo(592.43, 0);
+    expect(approxEqual(result.perimeter, 592.43, 10 ** -0)).toBe(true);
   });
 
   it('should compute the full F/R boundary area (approximately 93.81 Ha)', () => {
@@ -605,7 +606,7 @@ describe('F/R 583/58 — Forward Traverse Around F/R Boundary', () => {
     });
 
     // Total distance ≈ 4219m (plan distances)
-    expect(result.totalDistance).toBeCloseTo(4219, -1);
+    expect(approxEqual(result.totalDistance, 4219, 10 ** 1)).toBe(true);
 
     // End point should be close to CN4
     const misclosureN = Math.abs(result.end.northing - STATIONS.CN4.northing);
@@ -651,7 +652,7 @@ describe('F/R 583/58 — Bowditch Adjustment of New Beacon Traverse', () => {
     });
 
     // Total perimeter ≈ 592m
-    expect(result.totalDistance).toBeCloseTo(592.43, 0);
+    expect(approxEqual(result.totalDistance, 592.43, 10 ** -0)).toBe(true);
 
     // The theoretical coordinates are already consistent, so misclosure should be small
     const linearMisclosure = result.linearError;
@@ -753,7 +754,7 @@ describe('F/R 583/58 — Bearing String Formatting and Parsing', () => {
     const formatted = bearingToString(defined(parsed));
     const reparsed = parseDMSString(formatted);
     expect(reparsed).not.toBeNull();
-    expect(defined(reparsed)).toBeCloseTo(defined(parsed), 3);
+    expect(approxEqual(defined(reparsed), defined(parsed), 10 ** -3)).toBe(true);
   });
 });
 
@@ -773,7 +774,7 @@ describe('F/R 583/58 — Side Length Summary', () => {
     // Longest side should be RD21-RDa1 (846.49m)
     const longest = sides.reduce(function(max, s) { return s.distance > max.distance ? s : max; }, sides[0]);
     expect(longest.from + '-' + longest.to).toBe('RD21-RDa1');
-    expect(longest.distance).toBeCloseTo(846.49, 1);
+    expect(approxEqual(longest.distance, 846.49, 10 ** -1)).toBe(true);
 
     // Shortest side should be one of the short theoretical lines or RDa2-Ne1
     const shortest = sides.reduce(function(min, s) { return s.distance < min.distance ? s : min; }, sides[0]);

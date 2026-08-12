@@ -1,4 +1,5 @@
 import { curveElements } from '../curves'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('horizontalCurve', () => {
   it('computes basic curve elements', () => {
@@ -12,12 +13,12 @@ describe('horizontalCurve', () => {
 
   it('tangent length for R=200, Δ=60° ≈ 115.47m', () => {
     const r = curveElements(200, 60)
-    expect(r.tangentLength).toBeCloseTo(115.47, 1)
+    expect(approxEqual(r.tangentLength, 115.47, 10 ** -1)).toBe(true)
   })
 
   it('curve length = R × Δ in radians', () => {
     const r = curveElements(100, 90)
-    expect(r.arcLength).toBeCloseTo(Math.PI * 100 / 2, 2)
+    expect(approxEqual(r.arcLength, Math.PI * 100 / 2, 10 ** -2)).toBe(true)
   })
 
   it('long chord < curve length', () => {

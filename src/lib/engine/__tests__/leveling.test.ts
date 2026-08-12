@@ -1,4 +1,5 @@
 import { riseAndFall, heightOfCollimation } from '../leveling'
+import { approxEqual } from '@/test-utils/approx'
 
 const LEVELING_INPUT = {
   readings: [
@@ -43,13 +44,13 @@ describe('riseAndFall', () => {
   it('allowable misclosure scales with distance (10mm√K per RDM 1.1)', () => {
     const r = riseAndFall(LEVELING_INPUT)
     // For 1km: allowable = 10√1 = 10mm = 0.010m per RDM 1.1 Table 5.1
-    expect(r.allowableMisclosure).toBeCloseTo(0.010, 4)
+    expect(approxEqual(r.allowableMisclosure, 0.010, 10 ** -4)).toBe(true)
   })
 
   it('opening RL is first reduced level', () => {
     const r = riseAndFall(LEVELING_INPUT)
     const first = r.readings.find((x) => x.reducedLevel !== undefined)
-    expect(first?.reducedLevel).toBeCloseTo(100.000, 3)
+    expect(approxEqual(first?.reducedLevel, 100.000, 10 ** -3)).toBe(true)
   })
 })
 
@@ -73,7 +74,7 @@ describe('heightOfCollimation', () => {
     const rfFinal = [...rf.readings].reverse().find((x) => x.reducedLevel !== undefined)?.reducedLevel
     const hocFinal = [...hoc.readings].reverse().find((x) => x.reducedLevel !== undefined)?.reducedLevel
     if (rfFinal !== undefined && hocFinal !== undefined) {
-      expect(hocFinal).toBeCloseTo(rfFinal, 2)
+      expect(approxEqual(hocFinal, rfFinal, 10 ** -2)).toBe(true)
     }
   })
 })

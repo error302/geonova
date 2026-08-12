@@ -5,6 +5,7 @@ import {
   clothoidSetOutTable,
 } from '../clothoidTransition'
 import { defined } from '@/test-utils/defined'
+import { approxEqual } from '@/test-utils/approx'
 
 const DEG = Math.PI / 180
 
@@ -22,14 +23,11 @@ describe('minTransitionLength', () => {
   it('should return the MAX of the three criteria', () => {
     const result = minTransitionLength(300, 80, 0.07, 7.0)
 
-    expect(result.min).toBeCloseTo(
-      Math.max(
+    expect(approxEqual(result.min, Math.max(
         result.criteria.acceleration,
         result.criteria.superElevation,
         result.criteria.travelTime,
-      ),
-      10,
-    )
+      ), 10 ** -10)).toBe(true)
   })
 
   it('should match the acceleration criterion formula: V³ / (3.6³ × 0.3 × R)', () => {
@@ -38,7 +36,7 @@ describe('minTransitionLength', () => {
     const expected = Math.pow(V, 3) / (Math.pow(3.6, 3) * 0.3 * R)
     const result = minTransitionLength(R, V, 0.07, 7.0)
 
-    expect(result.criteria.acceleration).toBeCloseTo(expected, 3)
+    expect(approxEqual(result.criteria.acceleration, expected, 10 ** -3)).toBe(true)
   })
 
   it('should match the travel time criterion: V / (3.6 × 3)', () => {
@@ -46,14 +44,14 @@ describe('minTransitionLength', () => {
     const expected = V / (3.6 * 3)
     const result = minTransitionLength(300, V, 0.07, 7.0)
 
-    expect(result.criteria.travelTime).toBeCloseTo(expected, 3)
+    expect(approxEqual(result.criteria.travelTime, expected, 10 ** -3)).toBe(true)
   })
 
   it('should return acceleration as the dominant criterion for high-speed, large-radius roads', () => {
     const result = minTransitionLength(300, 80, 0.07, 7.0)
 
     // At V=80, R=300, the acceleration criterion dominates
-    expect(result.min).toBeCloseTo(result.criteria.acceleration, 3)
+    expect(approxEqual(result.min, result.criteria.acceleration, 10 ** -3)).toBe(true)
   })
 })
 
@@ -79,7 +77,7 @@ describe('spiralCoordinate', () => {
 
     const coord = spiralCoordinate(L, R, A)
 
-    expect(coord.theta).toBeCloseTo(expectedTheta, 3)
+    expect(approxEqual(coord.theta, expectedTheta, 10 ** -3)).toBe(true)
   })
 
   it('should give x ≈ L for small L/A ratio (L=30, A≈77.46)', () => {
@@ -90,7 +88,7 @@ describe('spiralCoordinate', () => {
     const coord = spiralCoordinate(L, R, A)
 
     // For L/A ≈ 0.387, higher-order corrections are very small
-    expect(coord.x).toBeCloseTo(L, 1)
+    expect(approxEqual(coord.x, L, 10 ** -1)).toBe(true)
   })
 
   it('should return zero values for zero arc length', () => {
@@ -99,9 +97,9 @@ describe('spiralCoordinate', () => {
 
     const coord = spiralCoordinate(0, R, A)
 
-    expect(coord.x).toBeCloseTo(0, 10)
-    expect(coord.y).toBeCloseTo(0, 10)
-    expect(coord.theta).toBeCloseTo(0, 10)
+    expect(approxEqual(coord.x, 0, 10 ** -10)).toBe(true)
+    expect(approxEqual(coord.y, 0, 10 ** -10)).toBe(true)
+    expect(approxEqual(coord.theta, 0, 10 ** -10)).toBe(true)
   })
 
   it('should give larger y for larger arc length (spiral curves away)', () => {
@@ -131,13 +129,13 @@ describe('computeClothoid', () => {
     it('should compute spiralParamA = sqrt(R × Ls)', () => {
       const Ls = result.scChainage - result.tsChainage
       const expected = Math.sqrt(300 * Ls)
-      expect(result.spiralParamA).toBeCloseTo(expected, 1)
+      expect(approxEqual(result.spiralParamA, expected, 10 ** -1)).toBe(true)
     })
 
     it('should compute spiralAngleTau = Ls / (2R)', () => {
       const Ls = result.scChainage - result.tsChainage
       const expected = Ls / (2 * 300)
-      expect(result.spiralAngleTau).toBeCloseTo(expected, 3)
+      expect(approxEqual(result.spiralAngleTau, expected, 10 ** -3)).toBe(true)
     })
 
     it('should maintain TS < SC < CS < ST chainage ordering', () => {
@@ -148,7 +146,7 @@ describe('computeClothoid', () => {
 
     it('should have totalCurveLength ≈ ST − TS (within 0.01m)', () => {
       const chainageDiff = result.stChainage - result.tsChainage
-      expect(result.totalCurveLength).toBeCloseTo(chainageDiff, 1)
+      expect(approxEqual(result.totalCurveLength, chainageDiff, 10 ** -1)).toBe(true)
     })
 
     it('should have a positive modified tangent', () => {
@@ -242,17 +240,17 @@ describe('computeClothoid', () => {
 
     it('should have spiralParamA = sqrt(R × 60)', () => {
       const expected = Math.sqrt(300 * 60)
-      expect(result.spiralParamA).toBeCloseTo(expected, 1)
+      expect(approxEqual(result.spiralParamA, expected, 10 ** -1)).toBe(true)
     })
 
     it('should have spiralAngleTau = 60 / (2 × R)', () => {
       const expected = 60 / (2 * 300)
-      expect(result.spiralAngleTau).toBeCloseTo(expected, 3)
+      expect(approxEqual(result.spiralAngleTau, expected, 10 ** -3)).toBe(true)
     })
 
     it('should use the provided Ls as the spiral length', () => {
       const Ls = result.scChainage - result.tsChainage
-      expect(Ls).toBeCloseTo(60, 1)
+      expect(approxEqual(Ls, 60, 10 ** -1)).toBe(true)
     })
   })
 })
@@ -272,12 +270,12 @@ describe('clothoidSetOutTable', () => {
 
   it('should have the first point labelled TS', () => {
     expect(table[0].point).toBe('TS')
-    expect(table[0].chainage).toBeCloseTo(clothoidResult.tsChainage, 1)
+    expect(approxEqual(table[0].chainage, clothoidResult.tsChainage, 10 ** -1)).toBe(true)
   })
 
   it('should have the last point labelled ST', () => {
     expect(table[table.length - 1].point).toBe('ST')
-    expect(table[table.length - 1].chainage).toBeCloseTo(clothoidResult.stChainage, 1)
+    expect(approxEqual(table[table.length - 1].chainage, clothoidResult.stChainage, 10 ** -1)).toBe(true)
   })
 
   it('should have monotonically increasing chainages', () => {

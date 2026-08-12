@@ -8,13 +8,14 @@ import {
   type WeightFunction,
 } from '../robustEstimation'
 import type { NetworkStation, GenericObservation } from '../lsaIterative'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('computeRobustWeight', () => {
   test.each(['huber', 'igg3', 'tukey'] as WeightFunction[])(
     '%s returns weight 1 for u=0 (no error)',
     (fn) => {
       const w = computeRobustWeight(0, fn)
-      expect(w).toBeCloseTo(1, 6)
+      expect(approxEqual(w, 1, 10 ** -6)).toBe(true)
     },
   )
 
@@ -33,7 +34,7 @@ describe('computeRobustWeight', () => {
 
   it('Huber: weight = c/|u| outside the threshold', () => {
     const w = computeRobustWeight(2.69, 'huber', { huberC: 1.345 })
-    expect(w).toBeCloseTo(1.345 / 2.69, 4)
+    expect(approxEqual(w, 1.345 / 2.69, 10 ** -4)).toBe(true)
   })
 
   it('IGG3: weight = 0 for |u| > k1 (hard rejection)', () => {

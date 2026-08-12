@@ -1,8 +1,9 @@
 import { slopeDistance, horizontalDistance, verticalDistance, gradient, polarPoint } from '../distance'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('slopeDistance', () => {
   it('returns horizontal distance for 0° vertical angle', () => {
-    expect(slopeDistance(100, 0)).toBeCloseTo(100, 4)
+    expect(approxEqual(slopeDistance(100, 0), 100, 10 ** -4)).toBe(true)
   })
 
   it('slope distance is longer than horizontal for elevated angle', () => {
@@ -12,22 +13,22 @@ describe('slopeDistance', () => {
 
 describe('horizontalDistance', () => {
   it('level slope gives same horizontal distance', () => {
-    expect(horizontalDistance(100, 0)).toBeCloseTo(100, 4)
+    expect(approxEqual(horizontalDistance(100, 0), 100, 10 ** -4)).toBe(true)
   })
 
   it('inverse of slopeDistance', () => {
     const sd = slopeDistance(80, 20)
-    expect(horizontalDistance(sd, 20)).toBeCloseTo(80, 3)
+    expect(approxEqual(horizontalDistance(sd, 20), 80, 10 ** -3)).toBe(true)
   })
 })
 
 describe('verticalDistance', () => {
   it('returns zero for 0° angle', () => {
-    expect(verticalDistance(100, 0)).toBeCloseTo(0, 6)
+    expect(approxEqual(verticalDistance(100, 0), 0, 10 ** -6)).toBe(true)
   })
 
   it('returns slope distance for 90° angle', () => {
-    expect(verticalDistance(100, 90)).toBeCloseTo(100, 3)
+    expect(approxEqual(verticalDistance(100, 90), 100, 10 ** -3)).toBe(true)
   })
 
   it('positive for elevated angles', () => {
@@ -37,16 +38,16 @@ describe('verticalDistance', () => {
 
 describe('gradient', () => {
   it('5m rise over 100m gives 5%', () => {
-    expect(gradient(5, 100).percentage).toBeCloseTo(5, 4)
+    expect(approxEqual(gradient(5, 100).percentage, 5, 10 ** -4)).toBe(true)
   })
 
   it('negative rise gives negative gradient', () => {
-    expect(gradient(-10, 100).percentage).toBeCloseTo(-10, 4)
+    expect(approxEqual(gradient(-10, 100).percentage, -10, 10 ** -4)).toBe(true)
   })
 
   it('degrees and percentage are consistent', () => {
     const g = gradient(10, 100)
-    expect(Math.tan(g.degrees * Math.PI / 180) * 100).toBeCloseTo(10, 3)
+    expect(approxEqual(Math.tan(g.degrees * Math.PI / 180) * 100, 10, 10 ** -3)).toBe(true)
   })
 
   it('returns zero for zero horizontal distance', () => {
@@ -58,13 +59,13 @@ describe('gradient', () => {
 describe('polarPoint', () => {
   it('bearing 0° moves point north', () => {
     const r = polarPoint({ easting: 100, northing: 100 }, 0, 50)
-    expect(r.easting).toBeCloseTo(100, 3)
-    expect(r.northing).toBeCloseTo(150, 3)
+    expect(approxEqual(r.easting, 100, 10 ** -3)).toBe(true)
+    expect(approxEqual(r.northing, 150, 10 ** -3)).toBe(true)
   })
 
   it('bearing 90° moves point east', () => {
     const r = polarPoint({ easting: 100, northing: 100 }, 90, 50)
-    expect(r.easting).toBeCloseTo(150, 3)
-    expect(r.northing).toBeCloseTo(100, 3)
+    expect(approxEqual(r.easting, 150, 10 ** -3)).toBe(true)
+    expect(approxEqual(r.northing, 100, 10 ** -3)).toBe(true)
   })
 })

@@ -21,6 +21,7 @@ import {
   type SpiralAlignmentInput,
 } from '../spiralAlignment'
 import { defined } from '@/test-utils/defined'
+import { approxEqual } from '@/test-utils/approx'
 
 const SAMPLE_INPUT: SpiralAlignmentInput = {
   radius: 300,
@@ -39,27 +40,27 @@ describe('computeSpiralAlignment — chainages', () => {
 
   it('places SC exactly Ls after TS', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
-    expect(a.scChainage - a.tsChainage).toBeCloseTo(SAMPLE_INPUT.spiralLength, 2)
+    expect(approxEqual(a.scChainage - a.tsChainage, SAMPLE_INPUT.spiralLength, 10 ** -2)).toBe(true)
   })
 
   it('places ST exactly Ls after CS', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
-    expect(a.stChainage - a.csChainage).toBeCloseTo(SAMPLE_INPUT.spiralLength, 2)
+    expect(approxEqual(a.stChainage - a.csChainage, SAMPLE_INPUT.spiralLength, 10 ** -2)).toBe(true)
   })
 
   it('places CS exactly Lc after SC', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
-    expect(a.csChainage - a.scChainage).toBeCloseTo(a.Lc, 2)
+    expect(approxEqual(a.csChainage - a.scChainage, a.Lc, 10 ** -2)).toBe(true)
   })
 
   it('totalLength = 2·Ls + Lc', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
-    expect(a.totalLength).toBeCloseTo(2 * SAMPLE_INPUT.spiralLength + a.Lc, 2)
+    expect(approxEqual(a.totalLength, 2 * SAMPLE_INPUT.spiralLength + a.Lc, 10 ** -2)).toBe(true)
   })
 
   it('stChainage - tsChainage = totalLength', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
-    expect(a.stChainage - a.tsChainage).toBeCloseTo(a.totalLength, 2)
+    expect(approxEqual(a.stChainage - a.tsChainage, a.totalLength, 10 ** -2)).toBe(true)
   })
 })
 
@@ -67,19 +68,19 @@ describe('computeSpiralAlignment — geometry', () => {
   it('T = k + (R + p)·tan(Δ/2)', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
     const expectedT = a.k + (SAMPLE_INPUT.radius + a.p) * Math.tan(a.deltaRad / 2)
-    expect(a.T).toBeCloseTo(expectedT, 2)
+    expect(approxEqual(a.T, expectedT, 10 ** -2)).toBe(true)
   })
 
   it('Lc = R·(Δ - 2θs)', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
     const expectedLc = SAMPLE_INPUT.radius * (a.deltaRad - 2 * a.thetaSRad)
-    expect(a.Lc).toBeCloseTo(expectedLc, 2)
+    expect(approxEqual(a.Lc, expectedLc, 10 ** -2)).toBe(true)
   })
 
   it('θs = Ls / (2R)', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
     const expectedTheta = SAMPLE_INPUT.spiralLength / (2 * SAMPLE_INPUT.radius)
-    expect(a.thetaSRad).toBeCloseTo(expectedTheta, 6)
+    expect(approxEqual(a.thetaSRad, expectedTheta, 10 ** -6)).toBe(true)
   })
 
   it('produces positive T, Lc, totalLength', () => {
@@ -103,7 +104,7 @@ describe('computeSpiralAlignment — geometry', () => {
     // TS is behind PI along approach tangent
     // Approach bearing 90° = East, so TS is WEST of PI
     expect(defined(a.tsCoord).easting).toBeLessThan(5000)
-    expect(defined(a.tsCoord).northing).toBeCloseTo(6000, 1)
+    expect(approxEqual(defined(a.tsCoord).northing, 6000, 10 ** -1)).toBe(true)
   })
 
   it('returns null coords when PI coords are not supplied', () => {
@@ -156,8 +157,8 @@ describe('stationSpiralAlignment', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
     const stations = stationSpiralAlignment(a, 20)
     expect(stations.length).toBeGreaterThan(5)
-    expect(stations[0].chainage).toBeCloseTo(a.tsChainage, 1)
-    expect(stations[stations.length - 1].chainage).toBeCloseTo(a.stChainage, 1)
+    expect(approxEqual(stations[0].chainage, a.tsChainage, 10 ** -1)).toBe(true)
+    expect(approxEqual(stations[stations.length - 1].chainage, a.stChainage, 10 ** -1)).toBe(true)
   })
 
   it('labels each station with its segment', () => {
@@ -173,13 +174,13 @@ describe('stationSpiralAlignment', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
     const stations = stationSpiralAlignment(a, 20)
     expect(stations[0].distanceFromTS).toBe(0)
-    expect(stations[0].chainage).toBeCloseTo(a.tsChainage, 1)
+    expect(approxEqual(stations[0].chainage, a.tsChainage, 10 ** -1)).toBe(true)
   })
 
   it('places the last station at ST', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
     const stations = stationSpiralAlignment(a, 20)
-    expect(stations[stations.length - 1].distanceFromTS).toBeCloseTo(a.totalLength, 0)
+    expect(approxEqual(stations[stations.length - 1].distanceFromTS, a.totalLength, 10 ** -0)).toBe(true)
   })
 })
 

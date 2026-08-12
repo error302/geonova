@@ -1,4 +1,5 @@
 import { coordinateArea, trapezoidalArea, simpsonsArea } from '../area'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('coordinateArea', () => {
   it('computes area of a unit square', () => {
@@ -8,7 +9,7 @@ describe('coordinateArea', () => {
       { easting: 1, northing: 1 },
       { easting: 0, northing: 1 },
     ]
-    expect(coordinateArea(points).areaSqm).toBeCloseTo(1.0, 6)
+    expect(approxEqual(coordinateArea(points).areaSqm, 1.0, 10 ** -6)).toBe(true)
   })
 
   it('computes area of a 3-4-5 right triangle = 6 m²', () => {
@@ -17,7 +18,7 @@ describe('coordinateArea', () => {
       { easting: 3, northing: 0 },
       { easting: 0, northing: 4 },
     ]
-    expect(coordinateArea(points).areaSqm).toBeCloseTo(6.0, 4)
+    expect(approxEqual(coordinateArea(points).areaSqm, 6.0, 10 ** -4)).toBe(true)
   })
 
   it('area is positive regardless of winding order', () => {
@@ -28,8 +29,8 @@ describe('coordinateArea', () => {
       { easting: 10, northing: 0  },
     ]
     const ccw = [...cw].reverse()
-    expect(coordinateArea(cw).areaSqm).toBeCloseTo(100, 4)
-    expect(coordinateArea(ccw).areaSqm).toBeCloseTo(100, 4)
+    expect(approxEqual(coordinateArea(cw).areaSqm, 100, 10 ** -4)).toBe(true)
+    expect(approxEqual(coordinateArea(ccw).areaSqm, 100, 10 ** -4)).toBe(true)
   })
 
   it('10x10 square = 100 m² = 0.01 ha', () => {
@@ -38,8 +39,8 @@ describe('coordinateArea', () => {
       { easting: 10, northing: 10 }, { easting: 0, northing: 10 },
     ]
     const r = coordinateArea(points)
-    expect(r.areaSqm).toBeCloseTo(100, 4)
-    expect(r.areaHa).toBeCloseTo(0.01, 6)
+    expect(approxEqual(r.areaSqm, 100, 10 ** -4)).toBe(true)
+    expect(approxEqual(r.areaHa, 0.01, 10 ** -6)).toBe(true)
   })
 
   it('returns zero for < 3 points', () => {
@@ -51,19 +52,19 @@ describe('trapezoidalArea', () => {
   it('computes area under a flat line (all equal ordinates)', () => {
     // 5 ordinates, interval 5m → 4 strips × 5m × 10m = 200m²
     const r = trapezoidalArea([10, 10, 10, 10, 10], 5)
-    expect(r.areaSqm).toBeCloseTo(200, 4)
+    expect(approxEqual(r.areaSqm, 200, 10 ** -4)).toBe(true)
   })
 
   it('interval scales the area proportionally', () => {
     const a1 = trapezoidalArea([5, 5, 5], 10)
     const a2 = trapezoidalArea([5, 5, 5], 20)
-    expect(a2.areaSqm).toBeCloseTo(a1.areaSqm * 2, 4)
+    expect(approxEqual(a2.areaSqm, a1.areaSqm * 2, 10 ** -4)).toBe(true)
   })
 
   it('triangular profile gives correct area', () => {
     // Ordinates: 0, 10, 0 with interval 10 → area = 100m²
     const r = trapezoidalArea([0, 10, 0], 10)
-    expect(r.areaSqm).toBeCloseTo(100, 1)
+    expect(approxEqual(r.areaSqm, 100, 10 ** -1)).toBe(true)
   })
 })
 

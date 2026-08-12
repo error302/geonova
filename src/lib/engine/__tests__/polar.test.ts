@@ -1,22 +1,23 @@
 import { polar2D, polar3D } from '../polar'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('polar2D', () => {
   it('bearing 0° (north) moves point northward', () => {
     const r = polar2D({ station: { easting: 500, northing: 500 }, bearing: 0, horizontalDistance: 100 })
-    expect(r.easting).toBeCloseTo(500, 3)
-    expect(r.northing).toBeCloseTo(600, 3)
+    expect(approxEqual(r.easting, 500, 10 ** -3)).toBe(true)
+    expect(approxEqual(r.northing, 600, 10 ** -3)).toBe(true)
   })
 
   it('bearing 90° (east) moves point eastward', () => {
     const r = polar2D({ station: { easting: 500, northing: 500 }, bearing: 90, horizontalDistance: 100 })
-    expect(r.easting).toBeCloseTo(600, 3)
-    expect(r.northing).toBeCloseTo(500, 3)
+    expect(approxEqual(r.easting, 600, 10 ** -3)).toBe(true)
+    expect(approxEqual(r.northing, 500, 10 ** -3)).toBe(true)
   })
 
   it('bearing 180° (south) moves point southward', () => {
     const r = polar2D({ station: { easting: 500, northing: 500 }, bearing: 180, horizontalDistance: 100 })
-    expect(r.easting).toBeCloseTo(500, 3)
-    expect(r.northing).toBeCloseTo(400, 3)
+    expect(approxEqual(r.easting, 500, 10 ** -3)).toBe(true)
+    expect(approxEqual(r.northing, 400, 10 ** -3)).toBe(true)
   })
 
   it('45° bearing gives equal easting and northing increment', () => {
@@ -30,8 +31,8 @@ describe('polar3D', () => {
     const station = { easting: 100, northing: 200, elevation: 50 }
     const p2 = polar2D({ station, bearing: 60, horizontalDistance: 80 })
     const p3 = polar3D({ station, bearing: 60, slopeDistance: 80, verticalAngle: 0 })
-    expect(p3.easting).toBeCloseTo(p2.easting, 2)
-    expect(p3.northing).toBeCloseTo(p2.northing, 2)
+    expect(approxEqual(p3.easting, p2.easting, 10 ** -2)).toBe(true)
+    expect(approxEqual(p3.northing, p2.northing, 10 ** -2)).toBe(true)
   })
 
   it('positive vertical angle raises elevation', () => {

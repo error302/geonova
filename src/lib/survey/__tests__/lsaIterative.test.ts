@@ -8,6 +8,7 @@ import {
   type GenericObservation,
 } from '../lsaIterative'
 import { defined } from '@/test-utils/defined'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('adjustNetworkIterative', () => {
   const fixedStation: NetworkStation = {
@@ -49,9 +50,9 @@ describe('adjustNetworkIterative', () => {
 
     // Free station should be at the observed position
     const free = defined(result.adjustedStations.find(s => s.id === 'stn-2'))
-    expect(free.easting).toBeCloseTo(500100, 4)
-    expect(free.northing).toBeCloseTo(9900100, 4)
-    expect(free.elevation).toBeCloseTo(1510, 4)
+    expect(approxEqual(free.easting, 500100, 10 ** -4)).toBe(true)
+    expect(approxEqual(free.northing, 9900100, 10 ** -4)).toBe(true)
+    expect(approxEqual(free.elevation, 1510, 10 ** -4)).toBe(true)
   })
 
   test('handles slope distance observations', () => {
@@ -91,8 +92,8 @@ describe('adjustNetworkIterative', () => {
 
     expect(result.converged).toBe(true)
     const free = defined(result.adjustedStations.find(s => s.id === 'stn-2'))
-    expect(free.easting).toBeCloseTo(500100, 2)
-    expect(free.northing).toBeCloseTo(9900100, 2)
+    expect(approxEqual(free.easting, 500100, 10 ** -2)).toBe(true)
+    expect(approxEqual(free.northing, 9900100, 10 ** -2)).toBe(true)
   })
 
   test('computes statistical report when dof > 0', () => {

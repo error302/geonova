@@ -1,3 +1,4 @@
+import { approxEqual } from '@/test-utils/approx'
 import {
   slopeFromEDM,
   seaLevelCorrection,
@@ -11,7 +12,7 @@ import {
 describe('slopeFromEDM', () => {
   it('zenith 90°: horizontal = slope (horizontal line)', () => {
     const r = slopeFromEDM({ slopeDistanceMetres: 100, zenithAngle: 90 })
-    expect(r.horizontalDistance).toBeCloseTo(100, 2)
+    expect(approxEqual(r.horizontalDistance, 100, 10 ** -2)).toBe(true)
     expect(r.requiresTwoFace).toBe(false)
   })
 
@@ -35,13 +36,13 @@ describe('slopeFromEDM', () => {
 describe('seaLevelCorrection', () => {
   it('flat terrain: minimal correction', () => {
     const r = seaLevelCorrection({ horizontalDistance: 1000, meanElevationMetres: 0 })
-    expect(r.curvatureRefractionCorr).toBeCloseTo(0.078, 1)  // 1000²/(2R) ≈ 0.078m
+    expect(approxEqual(r.curvatureRefractionCorr, 0.078, 10 ** -1)).toBe(true)  // 1000²/(2R) ≈ 0.078m
     expect(r.seaLevelDistance).toBeLessThan(1000)
   })
 
   it('high elevation: larger correction', () => {
     const r = seaLevelCorrection({ horizontalDistance: 1000, meanElevationMetres: 2000 })
-    expect(r.curvatureRefractionCorr).toBeCloseTo(0.078, 1)  // curvature correction depends only on distance
+    expect(approxEqual(r.curvatureRefractionCorr, 0.078, 10 ** -1)).toBe(true)  // curvature correction depends only on distance
   })
 
   it('long distance: correction grows with D²', () => {
@@ -54,8 +55,8 @@ describe('seaLevelCorrection', () => {
 describe('gridCorrection', () => {
   it('scale factor 1.0: no change', () => {
     const r = gridCorrection({ seaLevelDistance: 1000, scaleFactor: 1.0 })
-    expect(r.gridDistance).toBeCloseTo(1000, 4)
-    expect(r.seaToGridCorr).toBeCloseTo(0, 4)
+    expect(approxEqual(r.gridDistance, 1000, 10 ** -4)).toBe(true)
+    expect(approxEqual(r.seaToGridCorr, 0, 10 ** -4)).toBe(true)
   })
 
   it('scale factor > 1: grid distance increases', () => {
@@ -113,7 +114,7 @@ describe('edmCombinedAtmosphericCorrection', () => {
   it('standard: isWithinSpec', () => {
     const r = edmCombinedAtmosphericCorrection(15, 1013.25, 5)
     expect(r.isWithinSpec).toBe(true)
-    expect(r.totalPPM).toBeCloseTo(0, 1)
+    expect(approxEqual(r.totalPPM, 0, 10 ** -1)).toBe(true)
   })
 
   it('hot dry: large positive PPM', () => {
@@ -140,7 +141,7 @@ describe('edmFullReduction', () => {
       edmSpecPPM: 5,
     })
     expect(r.slopeDistance).toBe(1000)
-    expect(r.horizontalDistance).toBeCloseTo(1000, 1)
+    expect(approxEqual(r.horizontalDistance, 1000, 10 ** -1)).toBe(true)
     expect(r.seaLevelDistance).toBeLessThan(r.horizontalDistance)
     expect(r.gridDistance).toBeGreaterThan(0)
     expect(r.ppm).toBeDefined()

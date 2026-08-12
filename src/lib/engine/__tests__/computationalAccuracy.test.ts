@@ -1,3 +1,4 @@
+import { approxEqual } from '@/test-utils/approx'
 /**
  * Tests for computationalAccuracy — Kahan summation, error propagation,
  * DMS conversion, Kenya bearing parsing, traverse precision standards.
@@ -39,7 +40,7 @@ describe('kahanSum', () => {
 
   it('matches simple summation for normal magnitudes', () => {
     const values = [1.5, 2.5, 3.5, 4.5]
-    expect(kahanSum(values)).toBeCloseTo(values.reduce((a, b) => a + b, 0), 10)
+    expect(approxEqual(kahanSum(values), values.reduce((a, b) => a + b, 0), 10 ** -10)).toBe(true)
   })
 
   it('reduces round-off error for mixed-magnitude sums', () => {
@@ -54,11 +55,11 @@ describe('kahanSum', () => {
 
 describe('propagateAdditionError', () => {
   it('adds errors in quadrature (RSS) for independent measurements', () => {
-    expect(propagateAdditionError(3, 4)).toBeCloseTo(5, 6)
+    expect(approxEqual(propagateAdditionError(3, 4), 5, 10 ** -6)).toBe(true)
   })
 
   it('returns the input for one zero error', () => {
-    expect(propagateAdditionError(5, 0)).toBeCloseTo(5, 6)
+    expect(approxEqual(propagateAdditionError(5, 0), 5, 10 ** -6)).toBe(true)
   })
 
   it('returns 0 for both zero errors', () => {
@@ -66,7 +67,7 @@ describe('propagateAdditionError', () => {
   })
 
   it('handles equal errors', () => {
-    expect(propagateAdditionError(1, 1)).toBeCloseTo(Math.sqrt(2), 6)
+    expect(approxEqual(propagateAdditionError(1, 1), Math.sqrt(2), 10 ** -6)).toBe(true)
   })
 })
 
@@ -91,7 +92,7 @@ describe('propagateMultiplicationError', () => {
     // combined rel = sqrt(0.01^2 + 0.01^2) = sqrt(0.0001 + 0.0001) = sqrt(0.0002) ≈ 0.014142
     // abs sigma = 200 * 0.014142 ≈ 2.828
     const result = propagateMultiplicationError(10, 0.1, 20, 0.2)
-    expect(result.sigma).toBeCloseTo(2.828427, 4)
+    expect(approxEqual(result.sigma, 2.828427, 10 ** -4)).toBe(true)
   })
 })
 
@@ -100,21 +101,21 @@ describe('decimalToDMS', () => {
     const r = decimalToDMS(0)
     expect(r.degrees).toBe(0)
     expect(r.minutes).toBe(0)
-    expect(r.seconds).toBeCloseTo(0, 6)
+    expect(approxEqual(r.seconds, 0, 10 ** -6)).toBe(true)
   })
 
   it('converts 90° to 90°0\'0"', () => {
     const r = decimalToDMS(90)
     expect(r.degrees).toBe(90)
     expect(r.minutes).toBe(0)
-    expect(r.seconds).toBeCloseTo(0, 6)
+    expect(approxEqual(r.seconds, 0, 10 ** -6)).toBe(true)
   })
 
   it('converts 45.5° to 45°30\'0"', () => {
     const r = decimalToDMS(45.5)
     expect(r.degrees).toBe(45)
     expect(r.minutes).toBe(30)
-    expect(r.seconds).toBeCloseTo(0, 6)
+    expect(approxEqual(r.seconds, 0, 10 ** -6)).toBe(true)
   })
 
   it('returns a formatted string', () => {
@@ -146,35 +147,35 @@ describe('dmsToDecimal', () => {
   })
 
   it('converts 45°30\'0" to 45.5', () => {
-    expect(dmsToDecimal(45, 30, 0)).toBeCloseTo(45.5, 6)
+    expect(approxEqual(dmsToDecimal(45, 30, 0), 45.5, 10 ** -6)).toBe(true)
   })
 
   it('converts 45°1\'0" to 45.016667', () => {
-    expect(dmsToDecimal(45, 1, 0)).toBeCloseTo(45 + 1 / 60, 6)
+    expect(approxEqual(dmsToDecimal(45, 1, 0), 45 + 1 / 60, 10 ** -6)).toBe(true)
   })
 
   it('is approximately the inverse of decimalToDMS', () => {
     const original = 123.456
     const dms = decimalToDMS(original)
     const back = dmsToDecimal(dms.degrees, dms.minutes, dms.seconds)
-    expect(back).toBeCloseTo(original, 4)
+    expect(approxEqual(back, original, 10 ** -4)).toBe(true)
   })
 })
 
 describe('parseKenyaBearing', () => {
   it('parses a plain decimal bearing', () => {
-    expect(parseKenyaBearing('45.5')).toBeCloseTo(45.5, 6)
+    expect(approxEqual(parseKenyaBearing('45.5'), 45.5, 10 ** -6)).toBe(true)
   })
 
   it('parses the Kenya DDD.MMSS format', () => {
     // 45.3015 = 45°30'15"
     // = 45 + 30/60 + 15/3600 = 45.504167°
-    expect(parseKenyaBearing('45.3015')).toBeCloseTo(45 + 30 / 60 + 15 / 3600, 6)
+    expect(approxEqual(parseKenyaBearing('45.3015'), 45 + 30 / 60 + 15 / 3600, 10 ** -6)).toBe(true)
   })
 
   it('parses the Kenya DDD.MM format (no seconds)', () => {
     // 45.30 = 45°30'00" = 45.5°
-    expect(parseKenyaBearing('45.30')).toBeCloseTo(45.5, 6)
+    expect(approxEqual(parseKenyaBearing('45.30'), 45.5, 10 ** -6)).toBe(true)
   })
 
   it('parses 0', () => {
@@ -188,7 +189,7 @@ describe('parseKenyaBearing', () => {
   it('strips degree/minute/second symbols', () => {
     // After stripping symbols, "45.5" parses as decimal
     const result = parseKenyaBearing("45.5°")
-    expect(result).toBeCloseTo(45.5, 6)
+    expect(approxEqual(result, 45.5, 10 ** -6)).toBe(true)
   })
 })
 
@@ -221,7 +222,7 @@ describe('TRAVERSE_PRECISION_STANDARDS', () => {
     const one = TRAVERSE_PRECISION_STANDARDS.urban.maxAngularMisclosure(1)
     const four = TRAVERSE_PRECISION_STANDARDS.urban.maxAngularMisclosure(4)
     // √4 = 2, so misclosure at 4 stations should be 2x at 1 station
-    expect(four / one).toBeCloseTo(2, 4)
+    expect(approxEqual(four / one, 2, 10 ** -4)).toBe(true)
   })
 })
 
@@ -264,29 +265,29 @@ describe('evaluateTraversePrecision', () => {
 describe('applyGridConvergence', () => {
   it('subtracts positive grid convergence (east of CM)', () => {
     // True = Grid - Convergence
-    expect(applyGridConvergence(90, 0.5)).toBeCloseTo(89.5, 6)
+    expect(approxEqual(applyGridConvergence(90, 0.5), 89.5, 10 ** -6)).toBe(true)
   })
 
   it('adds negative grid convergence (west of CM)', () => {
-    expect(applyGridConvergence(90, -0.5)).toBeCloseTo(90.5, 6)
+    expect(approxEqual(applyGridConvergence(90, -0.5), 90.5, 10 ** -6)).toBe(true)
   })
 
   it('returns the bearing unchanged for zero convergence', () => {
-    expect(applyGridConvergence(45, 0)).toBeCloseTo(45, 6)
+    expect(approxEqual(applyGridConvergence(45, 0), 45, 10 ** -6)).toBe(true)
   })
 
   it('wraps around 360° correctly', () => {
     // 1° - 2° = -1° → +360 = 359°
-    expect(applyGridConvergence(1, 2)).toBeCloseTo(359, 6)
+    expect(approxEqual(applyGridConvergence(1, 2), 359, 10 ** -6)).toBe(true)
   })
 
   it('wraps around 0° correctly', () => {
     // 359° - (-2°) = 361° → -360 = 1°
-    expect(applyGridConvergence(359, -2)).toBeCloseTo(1, 6)
+    expect(approxEqual(applyGridConvergence(359, -2), 1, 10 ** -6)).toBe(true)
   })
 
   it('returns 0 for 360° input with 0 convergence', () => {
     // 360 - 0 = 360, then 360 >= 360 → 0
-    expect(applyGridConvergence(360, 0)).toBeCloseTo(0, 6)
+    expect(approxEqual(applyGridConvergence(360, 0), 0, 10 ** -6)).toBe(true)
   })
 })

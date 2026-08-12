@@ -1,16 +1,17 @@
 import { midpoint, pointInPolygon, lineIntersection, angularMisclosureFromAngles } from '../geometry'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('midpoint', () => {
   it('midpoint of two points on x-axis', () => {
     const m = midpoint({ easting: 0, northing: 0 }, { easting: 10, northing: 0 })
-    expect(m.easting).toBeCloseTo(5, 6)
-    expect(m.northing).toBeCloseTo(0, 6)
+    expect(approxEqual(m.easting, 5, 10 ** -6)).toBe(true)
+    expect(approxEqual(m.northing, 0, 10 ** -6)).toBe(true)
   })
 
   it('midpoint of diagonal points', () => {
     const m = midpoint({ easting: 0, northing: 0 }, { easting: 10, northing: 10 })
-    expect(m.easting).toBeCloseTo(5, 6)
-    expect(m.northing).toBeCloseTo(5, 6)
+    expect(approxEqual(m.easting, 5, 10 ** -6)).toBe(true)
+    expect(approxEqual(m.northing, 5, 10 ** -6)).toBe(true)
   })
 })
 
@@ -43,8 +44,8 @@ describe('lineIntersection', () => {
     )
     expect(r.ok).toBe(true)
     if (r.ok) {
-      expect(r.value.point.easting).toBeCloseTo(0, 4)
-      expect(r.value.point.northing).toBeCloseTo(0, 4)
+      expect(approxEqual(r.value.point.easting, 0, 10 ** -4)).toBe(true)
+      expect(approxEqual(r.value.point.northing, 0, 10 ** -4)).toBe(true)
     }
   })
 
@@ -63,7 +64,7 @@ describe('angularMisclosureFromAngles', () => {
     const r = angularMisclosureFromAngles([90, 90, 90, 90])
     expect(r.ok).toBe(true)
     if (r.ok) {
-      expect(r.value.misclosure * 60).toBeCloseTo(0, 4)
+      expect(approxEqual(r.value.misclosure * 60, 0, 10 ** -4)).toBe(true)
     }
   })
 

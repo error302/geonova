@@ -1,3 +1,4 @@
+import { approxEqual } from '@/test-utils/approx'
 import {
   getTraverseValidation,
   formatAreaByCountry,
@@ -95,7 +96,7 @@ describe('getTraverseValidation', () => {
       linearError: 1.0,
       totalDistance: 10_000,
     })
-    expect(r.surplusPercent).toBeCloseTo(0, 0)
+    expect(approxEqual(r.surplusPercent, 0, 10 ** -0)).toBe(true)
   })
 
   it('returns positive surplus for comfortable pass', () => {
@@ -147,7 +148,7 @@ describe('formatAreaByCountry', () => {
 
   it('returns hectares and sqMetres correctly', () => {
     const r = formatAreaByCountry('other', 10_000)
-    expect(r.hectares).toBeCloseTo(1.0, 3)
+    expect(approxEqual(r.hectares, 1.0, 10 ** -3)).toBe(true)
     expect(r.sqMetres).toBe(10_000)
   })
 })

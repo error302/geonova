@@ -6,6 +6,7 @@ import {
   reciprocalStandardDeviation,
 } from '../reciprocalLevelling'
 import { ReciprocalObservation } from '../digitalLevelTypes'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('reciprocalLevelling', () => {
   describe('curvatureRefractionCorrection', () => {
@@ -16,7 +17,7 @@ describe('reciprocalLevelling', () => {
       // = 0.72 * 250000 / 12742000
       // = 180000 / 12742000 ≈ 0.01413m ≈ 14.1mm
       const correction = curvatureRefractionCorrection(500)
-      expect(correction).toBeCloseTo(0.01413, 4) // ~14mm
+      expect(approxEqual(correction, 0.01413, 10 ** -4)).toBe(true) // ~14mm
       expect(Math.abs(correction)).toBeGreaterThan(0) // correction is non-zero
     })
 
@@ -24,7 +25,7 @@ describe('reciprocalLevelling', () => {
       const c100 = curvatureRefractionCorrection(100)
       const c200 = curvatureRefractionCorrection(200)
       // 200m correction should be ~4x the 100m correction (d^2 scaling)
-      expect(c200 / c100).toBeCloseTo(4.0, 1)
+      expect(approxEqual(c200 / c100, 4.0, 10 ** -1)).toBe(true)
     })
 
     test('correction is zero for zero distance', () => {
@@ -36,7 +37,7 @@ describe('reciprocalLevelling', () => {
       // (1-0.28) * 1000000 / (2 * 6371000)
       // = 0.72 * 1000000 / 12742000 ≈ 0.0565m
       const correction = curvatureRefractionCorrection(1000)
-      expect(correction).toBeCloseTo(0.0565, 3)
+      expect(approxEqual(correction, 0.0565, 10 ** -3)).toBe(true)
     })
   })
 
@@ -52,7 +53,7 @@ describe('reciprocalLevelling', () => {
 
       const result = reduceReciprocalLevelling(obs)
       // mean = (1.500 - 0.800) / 2 = 0.350
-      expect(result.meanHeightDifference).toBeCloseTo(0.35, 3)
+      expect(approxEqual(result.meanHeightDifference, 0.35, 10 ** -3)).toBe(true)
       expect(result.stationA).toBe('A')
       expect(result.stationB).toBe('B')
     })
@@ -83,7 +84,7 @@ describe('reciprocalLevelling', () => {
       const result = reduceReciprocalLevelling(obs)
       expect(result.precision).toBeGreaterThan(0)
       // precision = |readingAtA - readingAtB| * 1000 / 2
-      expect(result.precision).toBeCloseTo(350, 0) // |1.5 - 0.8| * 500
+      expect(approxEqual(result.precision, 350, 10 ** -0)).toBe(true) // |1.5 - 0.8| * 500
     })
 
     test('equal readings give zero height difference', () => {
@@ -96,7 +97,7 @@ describe('reciprocalLevelling', () => {
       }
 
       const result = reduceReciprocalLevelling(obs)
-      expect(result.meanHeightDifference).toBeCloseTo(0, 5)
+      expect(approxEqual(result.meanHeightDifference, 0, 10 ** -5)).toBe(true)
     })
   })
 
@@ -128,7 +129,7 @@ describe('reciprocalLevelling', () => {
         { stationA: 'A', stationB: 'B', meanHeightDifference: 0.370, correctionForCurvatureAndRefraction: 0.014, meanStaffReadingA: 1.52, meanStaffReadingB: 0.78, precision: 370 },
       ]
       const mean = meanReciprocalHeightDifference(results)
-      expect(mean).toBeCloseTo(0.360, 3)
+      expect(approxEqual(mean, 0.360, 10 ** -3)).toBe(true)
     })
 
     test('returns zero for empty input', () => {
@@ -147,7 +148,7 @@ describe('reciprocalLevelling', () => {
       // Mean = 0.360, deviations = [-0.01, 0.01, 0.00]
       // variance = (0.0001 + 0.0001 + 0) / 2 = 0.0001
       // std = sqrt(0.0001) ≈ 0.01
-      expect(std).toBeCloseTo(0.01, 2)
+      expect(approxEqual(std, 0.01, 10 ** -2)).toBe(true)
     })
 
     test('returns zero for single result', () => {

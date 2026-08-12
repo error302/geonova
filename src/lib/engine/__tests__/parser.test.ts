@@ -1,4 +1,5 @@
 import { parseDelimitedFile, pointsToCSV, validatePoints } from '../parser'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('parseDelimitedFile', () => {
   it('parses a CSV with name,easting,northing,elevation', () => {
@@ -6,16 +7,16 @@ describe('parseDelimitedFile', () => {
     const r = parseDelimitedFile(csv)
     expect(r.points.length).toBe(3)
     expect(r.points[0].name).toBe('A')
-    expect(r.points[0].easting).toBeCloseTo(1000, 4)
-    expect(r.points[0].northing).toBeCloseTo(2000, 4)
-    expect(r.points[0].elevation).toBeCloseTo(150, 4)
+    expect(approxEqual(r.points[0].easting, 1000, 10 ** -4)).toBe(true)
+    expect(approxEqual(r.points[0].northing, 2000, 10 ** -4)).toBe(true)
+    expect(approxEqual(r.points[0].elevation, 150, 10 ** -4)).toBe(true)
   })
 
   it('handles tab-delimited format', () => {
     const tsv = 'P1\t500\t600\t100\nP2\t510\t610\t105'
     const r = parseDelimitedFile(tsv, '\t')
     expect(r.points.length).toBe(2)
-    expect(r.points[0].easting).toBeCloseTo(500, 4)
+    expect(approxEqual(r.points[0].easting, 500, 10 ** -4)).toBe(true)
   })
 
   it('skips blank lines', () => {

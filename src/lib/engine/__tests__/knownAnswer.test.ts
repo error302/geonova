@@ -13,6 +13,7 @@
  */
 
 import { bowditchAdjustment, transitAdjustment, evaluateTraverseClosure, TRAVERSE_PRECISION_STANDARDS } from '../traverse';
+import { approxEqual } from '@/test-utils/approx'
 import { coordinateArea } from '../area';
 import { bearingToString, angularMisclosure, decimalToDMS } from '../angles';
 import { DATUM_REGISTRY } from '@/lib/geodesy/datums';
@@ -68,23 +69,23 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
       });
 
       // Linear misclosure should be ~0.141m (√(0.1² + 0.1²))
-      expect(result.linearError).toBeCloseTo(Math.sqrt(0.02), 3);
+      expect(approxEqual(result.linearError, Math.sqrt(0.02), 10 ** -3)).toBe(true);
 
       // Corrections should be proportional: each leg 100/400 = 0.25
       // correctionE = 0.25 × 0.1 = 0.025, correctionN = 0.25 × 0.1 = 0.025
-      expect(result.legs[0].correctionE).toBeCloseTo(0.025, 3);
-      expect(result.legs[0].correctionN).toBeCloseTo(0.025, 3);
-      expect(result.legs[1].correctionE).toBeCloseTo(0.025, 3);
-      expect(result.legs[1].correctionN).toBeCloseTo(0.025, 3);
+      expect(approxEqual(result.legs[0].correctionE, 0.025, 10 ** -3)).toBe(true);
+      expect(approxEqual(result.legs[0].correctionN, 0.025, 10 ** -3)).toBe(true);
+      expect(approxEqual(result.legs[1].correctionE, 0.025, 10 ** -3)).toBe(true);
+      expect(approxEqual(result.legs[1].correctionN, 0.025, 10 ** -3)).toBe(true);
 
       // All legs have equal distance → equal corrections
-      expect(result.legs[0].correctionN).toBeCloseTo(result.legs[1].correctionN, 6);
-      expect(result.legs[0].correctionE).toBeCloseTo(result.legs[1].correctionE, 6);
+      expect(approxEqual(result.legs[0].correctionN, result.legs[1].correctionN, 10 ** -6)).toBe(true);
+      expect(approxEqual(result.legs[0].correctionE, result.legs[1].correctionE, 10 ** -6)).toBe(true);
 
       // After adjustment, closing point should be reached
       const lastLeg = result.legs[result.legs.length - 1];
-      expect(lastLeg.adjEasting).toBeCloseTo(0.1, 3);
-      expect(lastLeg.adjNorthing).toBeCloseTo(0.1, 3);
+      expect(approxEqual(lastLeg.adjEasting, 0.1, 10 ** -3)).toBe(true);
+      expect(approxEqual(lastLeg.adjNorthing, 0.1, 10 ** -3)).toBe(true);
     });
 
     /**
@@ -108,7 +109,7 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
       // Leg 1 is 3x longer than leg 2, so its correction should be 3x larger
       const ratio1 = Math.abs(result.legs[0].correctionN);
       const ratio2 = Math.abs(result.legs[1].correctionN);
-      expect(ratio1 / ratio2).toBeCloseTo(3, 3);
+      expect(approxEqual(ratio1 / ratio2, 3, 10 ** -3)).toBe(true);
     });
   });
 
@@ -136,26 +137,26 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
       // sumLat = 100 + 0 - 100 + 0 = 0
       // closingErrorE = -(-0.1) = 0.1
       // closingErrorN = 0
-      expect(result.closingErrorE).toBeCloseTo(0.1, 3);
-      expect(result.closingErrorN).toBeCloseTo(0, 3);
-      expect(result.linearError).toBeCloseTo(0.1, 3);
+      expect(approxEqual(result.closingErrorE, 0.1, 10 ** -3)).toBe(true);
+      expect(approxEqual(result.closingErrorN, 0, 10 ** -3)).toBe(true);
+      expect(approxEqual(result.linearError, 0.1, 10 ** -3)).toBe(true);
 
       // Transit distributes E-correction proportional to |ΔE| of each leg
       // Legs 1 and 3 have ΔE=0, so they get 0 E-correction
       // Legs 2 and 4 have |ΔE|=100 and |ΔE|=100.1
-      expect(result.legs[0].correctionE).toBeCloseTo(0, 6); // ΔE=0 for this leg
-      expect(result.legs[2].correctionE).toBeCloseTo(0, 6); // ΔE=0 for this leg
+      expect(approxEqual(result.legs[0].correctionE, 0, 10 ** -6)).toBe(true); // ΔE=0 for this leg
+      expect(approxEqual(result.legs[2].correctionE, 0, 10 ** -6)).toBe(true); // ΔE=0 for this leg
 
       // Legs 2 and 4 share the E-correction proportional to their |ΔE|
       // Leg 2 gets (100/200.1) × 0.1 ≈ 0.04998
       // Leg 4 gets (100.1/200.1) × 0.1 ≈ 0.05002
-      expect(result.legs[1].correctionE).not.toBeCloseTo(0, 3);
-      expect(result.legs[3].correctionE).not.toBeCloseTo(0, 3);
+      expect(approxEqual(result.legs[1].correctionE, 0, 10 ** -3)).toBe(false);
+      expect(approxEqual(result.legs[3].correctionE, 0, 10 ** -3)).toBe(false);
 
       // After adjustment, traverse should close (last point ≈ start)
       const lastLeg = result.legs[result.legs.length - 1];
-      expect(lastLeg.adjEasting).toBeCloseTo(0, 3);
-      expect(lastLeg.adjNorthing).toBeCloseTo(0, 3);
+      expect(approxEqual(lastLeg.adjEasting, 0, 10 ** -3)).toBe(true);
+      expect(approxEqual(lastLeg.adjNorthing, 0, 10 ** -3)).toBe(true);
     });
 
     /**
@@ -184,16 +185,14 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
       // Both should close the traverse
       const transitLast = transitResult.legs[transitResult.legs.length - 1];
       const bowditchLast = bowditchResult.legs[bowditchResult.legs.length - 1];
-      expect(transitLast.adjEasting).toBeCloseTo(0, 2);
-      expect(transitLast.adjNorthing).toBeCloseTo(0, 2);
-      expect(bowditchLast.adjEasting).toBeCloseTo(0, 2);
-      expect(bowditchLast.adjNorthing).toBeCloseTo(0, 2);
+      expect(approxEqual(transitLast.adjEasting, 0, 10 ** -2)).toBe(true);
+      expect(approxEqual(transitLast.adjNorthing, 0, 10 ** -2)).toBe(true);
+      expect(approxEqual(bowditchLast.adjEasting, 0, 10 ** -2)).toBe(true);
+      expect(approxEqual(bowditchLast.adjNorthing, 0, 10 ** -2)).toBe(true);
 
       // Corrections should differ between Transit and Bowditch
       // because Transit distributes by |Δ| while Bowditch distributes by distance
-      expect(transitResult.legs[0].correctionE).not.toBeCloseTo(
-        bowditchResult.legs[0].correctionE, 4
-      );
+      expect(approxEqual(transitResult.legs[0].correctionE, bowditchResult.legs[0].correctionE, 10 ** -4)).toBe(false);
     });
   });
 
@@ -210,9 +209,9 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
         { easting: 0, northing: 100 },
       ]);
 
-      expect(result.areaSqm).toBeCloseTo(20000, 1);
-      expect(result.areaHa).toBeCloseTo(2.0, 3);
-      expect(result.perimeter).toBeCloseTo(600, 1);
+      expect(approxEqual(result.areaSqm, 20000, 10 ** -1)).toBe(true);
+      expect(approxEqual(result.areaHa, 2.0, 10 ** -3)).toBe(true);
+      expect(approxEqual(result.perimeter, 600, 10 ** -1)).toBe(true);
     });
 
     /**
@@ -226,7 +225,7 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
         { easting: 50, northing: 86.603 },
       ]);
 
-      expect(result.areaSqm).toBeCloseTo(4330.15, 0);
+      expect(approxEqual(result.areaSqm, 4330.15, 10 ** -0)).toBe(true);
     });
 
     /**
@@ -240,9 +239,9 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
         { easting: 0, northing: 100 },
       ]);
 
-      expect(result.areaSqm).toBeCloseTo(10000, 1);
-      expect(result.areaHa).toBeCloseTo(1.0, 3);
-      expect(result.perimeter).toBeCloseTo(400, 1);
+      expect(approxEqual(result.areaSqm, 10000, 10 ** -1)).toBe(true);
+      expect(approxEqual(result.areaHa, 1.0, 10 ** -3)).toBe(true);
+      expect(approxEqual(result.perimeter, 400, 10 ** -1)).toBe(true);
     });
   });
 
@@ -285,15 +284,15 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
 
       // Verify angularMisclosure for a perfect 4-station traverse
       const result = angularMisclosure(360, 4);
-      expect(result.misclosure).toBeCloseTo(0, 10);
-      expect(result.correctionPerStation).toBeCloseTo(0, 10);
+      expect(approxEqual(result.misclosure, 0, 10 ** -10)).toBe(true);
+      expect(approxEqual(result.correctionPerStation, 0, 10 ** -10)).toBe(true);
     });
 
     it('angular misclosure of 30" over 4 stations is within tolerance', () => {
       // Tolerance = 60 × √4 = 120"
       // Misclosure of 30" is well within tolerance
       const result = angularMisclosure(360 + 30 / 3600, 4); // 360°00'30"
-      expect(result.misclosure).toBeCloseTo(30 / 3600, 8);
+      expect(approxEqual(result.misclosure, 30 / 3600, 10 ** -8)).toBe(true);
       expect(Math.abs(result.misclosure) * 3600).toBeLessThan(120); // Within tolerance
     });
   });
@@ -405,8 +404,8 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
         distances: [100],
         bearings: [0],
       });
-      expect(result.legs[0].rawDeltaN).toBeCloseTo(100, 6);
-      expect(result.legs[0].rawDeltaE).toBeCloseTo(0, 6);
+      expect(approxEqual(result.legs[0].rawDeltaN, 100, 10 ** -6)).toBe(true);
+      expect(approxEqual(result.legs[0].rawDeltaE, 0, 10 ** -6)).toBe(true);
     });
 
     it('due East = 90°', () => {
@@ -418,8 +417,8 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
         distances: [100],
         bearings: [90],
       });
-      expect(result.legs[0].rawDeltaN).toBeCloseTo(0, 6);
-      expect(result.legs[0].rawDeltaE).toBeCloseTo(100, 6);
+      expect(approxEqual(result.legs[0].rawDeltaN, 0, 10 ** -6)).toBe(true);
+      expect(approxEqual(result.legs[0].rawDeltaE, 100, 10 ** -6)).toBe(true);
     });
 
     it('due South = 180°', () => {
@@ -431,8 +430,8 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
         distances: [100],
         bearings: [180],
       });
-      expect(result.legs[0].rawDeltaN).toBeCloseTo(-100, 6);
-      expect(result.legs[0].rawDeltaE).toBeCloseTo(0, 6);
+      expect(approxEqual(result.legs[0].rawDeltaN, -100, 10 ** -6)).toBe(true);
+      expect(approxEqual(result.legs[0].rawDeltaE, 0, 10 ** -6)).toBe(true);
     });
 
     it('due West = 270°', () => {
@@ -444,8 +443,8 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
         distances: [100],
         bearings: [270],
       });
-      expect(result.legs[0].rawDeltaN).toBeCloseTo(0, 6);
-      expect(result.legs[0].rawDeltaE).toBeCloseTo(-100, 6);
+      expect(approxEqual(result.legs[0].rawDeltaN, 0, 10 ** -6)).toBe(true);
+      expect(approxEqual(result.legs[0].rawDeltaE, -100, 10 ** -6)).toBe(true);
     });
 
     it('NE at 45° produces equal ΔN and ΔE', () => {
@@ -457,8 +456,8 @@ describe('Known-Answer Tests (KATs) — Basak/Ghilani & Wolf', () => {
         distances: [100],
         bearings: [45],
       });
-      expect(result.legs[0].rawDeltaN).toBeCloseTo(result.legs[0].rawDeltaE, 6);
-      expect(result.legs[0].rawDeltaN).toBeCloseTo(70.711, 2);
+      expect(approxEqual(result.legs[0].rawDeltaN, result.legs[0].rawDeltaE, 10 ** -6)).toBe(true);
+      expect(approxEqual(result.legs[0].rawDeltaN, 70.711, 10 ** -2)).toBe(true);
     });
   });
 });

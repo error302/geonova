@@ -1,29 +1,30 @@
 import { radiation, bearingIntersection, tienstraResection } from '../cogo'
+import { approxEqual } from '@/test-utils/approx'
 import { defined } from '@/test-utils/defined'
 
 describe('radiation', () => {
   it('computes point due north from station', () => {
     const r = radiation({ easting: 1000, northing: 2000 }, 0, 100)
-    expect(r.point.easting).toBeCloseTo(1000, 3)
-    expect(r.point.northing).toBeCloseTo(2100, 3)
+    expect(approxEqual(r.point.easting, 1000, 10 ** -3)).toBe(true)
+    expect(approxEqual(r.point.northing, 2100, 10 ** -3)).toBe(true)
   })
 
   it('computes point due east from station', () => {
     const r = radiation({ easting: 1000, northing: 2000 }, 90, 100)
-    expect(r.point.easting).toBeCloseTo(1100, 3)
-    expect(r.point.northing).toBeCloseTo(2000, 3)
+    expect(approxEqual(r.point.easting, 1100, 10 ** -3)).toBe(true)
+    expect(approxEqual(r.point.northing, 2000, 10 ** -3)).toBe(true)
   })
 
   it('computes point at 45° correctly', () => {
     const r = radiation({ easting: 0, northing: 0 }, 45, 100)
-    expect(r.point.easting).toBeCloseTo(70.711, 2)
-    expect(r.point.northing).toBeCloseTo(70.711, 2)
+    expect(approxEqual(r.point.easting, 70.711, 10 ** -2)).toBe(true)
+    expect(approxEqual(r.point.northing, 70.711, 10 ** -2)).toBe(true)
   })
 
   it('preserves distance and bearing in result', () => {
     const r = radiation({ easting: 500, northing: 500 }, 135, 200)
-    expect(r.distance).toBeCloseTo(200, 4)
-    expect(r.bearing).toBeCloseTo(135, 4)
+    expect(approxEqual(r.distance, 200, 10 ** -4)).toBe(true)
+    expect(approxEqual(r.bearing, 135, 10 ** -4)).toBe(true)
   })
 })
 
@@ -34,8 +35,8 @@ describe('bearingIntersection', () => {
       { easting: 100, northing: 100 }, 180
     )
     expect(result).not.toBeNull()
-    expect(defined(result).point.easting).toBeCloseTo(100, 1)
-    expect(defined(result).point.northing).toBeCloseTo(0, 1)
+    expect(approxEqual(defined(result).point.easting, 100, 10 ** -1)).toBe(true)
+    expect(approxEqual(defined(result).point.northing, 0, 10 ** -1)).toBe(true)
   })
 
   it('returns null for parallel bearings', () => {

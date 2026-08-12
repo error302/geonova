@@ -14,6 +14,7 @@
  */
 
 import { computeTraverse } from '../traverseEngine'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('computeTraverse — WCB Propagation', () => {
   /**
@@ -52,20 +53,20 @@ describe('computeTraverse — WCB Propagation', () => {
     })
 
     // Verify WCBs
-    expect(result.legs[0].wcb).toBeCloseTo(90, 1)   // A→B due East
-    expect(result.legs[1].wcb).toBeCloseTo(180, 1)  // B→C due South
-    expect(result.legs[2].wcb).toBeCloseTo(270, 1)  // C→D due West
-    expect(result.legs[3].wcb).toBeCloseTo(0, 1)    // D→A due North (or 360°)
+    expect(approxEqual(result.legs[0].wcb, 90, 10 ** -1)).toBe(true)   // A→B due East
+    expect(approxEqual(result.legs[1].wcb, 180, 10 ** -1)).toBe(true)  // B→C due South
+    expect(approxEqual(result.legs[2].wcb, 270, 10 ** -1)).toBe(true)  // C→D due West
+    expect(approxEqual(result.legs[3].wcb, 0, 10 ** -1)).toBe(true)    // D→A due North (or 360°)
 
     // Verify coordinates
-    expect(result.coordinates[1].easting).toBeCloseTo(1100, 2)  // B
-    expect(result.coordinates[1].northing).toBeCloseTo(2000, 2)
-    expect(result.coordinates[2].easting).toBeCloseTo(1100, 2)  // C
-    expect(result.coordinates[2].northing).toBeCloseTo(1900, 2)
-    expect(result.coordinates[3].easting).toBeCloseTo(1000, 2)  // D
-    expect(result.coordinates[3].northing).toBeCloseTo(1900, 2)
-    expect(result.coordinates[4].easting).toBeCloseTo(1000, 2)  // A (close)
-    expect(result.coordinates[4].northing).toBeCloseTo(2000, 2)
+    expect(approxEqual(result.coordinates[1].easting, 1100, 10 ** -2)).toBe(true)  // B
+    expect(approxEqual(result.coordinates[1].northing, 2000, 10 ** -2)).toBe(true)
+    expect(approxEqual(result.coordinates[2].easting, 1100, 10 ** -2)).toBe(true)  // C
+    expect(approxEqual(result.coordinates[2].northing, 1900, 10 ** -2)).toBe(true)
+    expect(approxEqual(result.coordinates[3].easting, 1000, 10 ** -2)).toBe(true)  // D
+    expect(approxEqual(result.coordinates[3].northing, 1900, 10 ** -2)).toBe(true)
+    expect(approxEqual(result.coordinates[4].easting, 1000, 10 ** -2)).toBe(true)  // A (close)
+    expect(approxEqual(result.coordinates[4].northing, 2000, 10 ** -2)).toBe(true)
 
     // Should have near-zero misclosure
     expect(result.linearError).toBeLessThan(0.01)
@@ -94,16 +95,16 @@ describe('computeTraverse — WCB Propagation', () => {
     })
 
     // WCBs should be 45° and 135°
-    expect(result.legs[0].wcb).toBeCloseTo(45, 1)   // A→B NE
-    expect(result.legs[1].wcb).toBeCloseTo(135, 1)  // B→C SE
+    expect(approxEqual(result.legs[0].wcb, 45, 10 ** -1)).toBe(true)   // A→B NE
+    expect(approxEqual(result.legs[1].wcb, 135, 10 ** -1)).toBe(true)  // B→C SE
 
     // Verify coordinates
     // B: E = 0 + 100×sin(45°) ≈ 70.711, N = 0 + 100×cos(45°) ≈ 70.711
-    expect(result.coordinates[1].easting).toBeCloseTo(70.711, 1)
-    expect(result.coordinates[1].northing).toBeCloseTo(70.711, 1)
+    expect(approxEqual(result.coordinates[1].easting, 70.711, 10 ** -1)).toBe(true)
+    expect(approxEqual(result.coordinates[1].northing, 70.711, 10 ** -1)).toBe(true)
     // C: E = 70.711 + 100×sin(135°) ≈ 141.421, N = 70.711 + 100×cos(135°) ≈ 0
-    expect(result.coordinates[2].easting).toBeCloseTo(141.421, 0)
-    expect(result.coordinates[2].northing).toBeCloseTo(0, 0)
+    expect(approxEqual(result.coordinates[2].easting, 141.421, 10 ** -0)).toBe(true)
+    expect(approxEqual(result.coordinates[2].northing, 0, 10 ** -0)).toBe(true)
   })
 })
 
@@ -134,8 +135,8 @@ describe('computeTraverse — Bowditch Adjustment', () => {
 
     // After Bowditch adjustment, the traverse should close well
     const lastCoord = result.coordinates[result.coordinates.length - 1]
-    expect(lastCoord.easting).toBeCloseTo(0, 1)
-    expect(lastCoord.northing).toBeCloseTo(0, 1)
+    expect(approxEqual(lastCoord.easting, 0, 10 ** -1)).toBe(true)
+    expect(approxEqual(lastCoord.northing, 0, 10 ** -1)).toBe(true)
   })
 
   it('perfectly closed traverse has zero misclosure', () => {

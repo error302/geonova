@@ -23,6 +23,7 @@ import {
   type Vec3,
 } from '../breaklineExtraction'
 import { buildTINSurface, type SpotHeight, type Triangle } from '../contours'
+import { approxEqual } from '@/test-utils/approx'
 
 // ─── Vector Math ────────────────────────────────────────────────────────────
 
@@ -34,9 +35,9 @@ describe('triangleNormal', () => {
       p3: { name: 'c', easting: 0, northing: 1, elevation: 0 },
     }
     const n = triangleNormal(tri)
-    expect(n.z).toBeCloseTo(1, 6)
-    expect(n.x).toBeCloseTo(0, 6)
-    expect(n.y).toBeCloseTo(0, 6)
+    expect(approxEqual(n.z, 1, 10 ** -6)).toBe(true)
+    expect(approxEqual(n.x, 0, 10 ** -6)).toBe(true)
+    expect(approxEqual(n.y, 0, 10 ** -6)).toBe(true)
   })
 
   it('returns a unit vector', () => {
@@ -47,7 +48,7 @@ describe('triangleNormal', () => {
     }
     const n = triangleNormal(tri)
     const len = Math.sqrt(n.x * n.x + n.y * n.y + n.z * n.z)
-    expect(len).toBeCloseTo(1, 6)
+    expect(approxEqual(len, 1, 10 ** -6)).toBe(true)
   })
 
   it('returns (0,0,0) for a degenerate triangle', () => {
@@ -66,19 +67,19 @@ describe('triangleNormal', () => {
 describe('dihedralAngle', () => {
   it('returns 0° for parallel normals (coplanar triangles)', () => {
     const n: Vec3 = { x: 0, y: 0, z: 1 }
-    expect(dihedralAngle(n, n)).toBeCloseTo(0, 4)
+    expect(approxEqual(dihedralAngle(n, n), 0, 10 ** -4)).toBe(true)
   })
 
   it('returns 90° for perpendicular normals', () => {
     const n1: Vec3 = { x: 1, y: 0, z: 0 }
     const n2: Vec3 = { x: 0, y: 0, z: 1 }
-    expect(dihedralAngle(n1, n2)).toBeCloseTo(90, 4)
+    expect(approxEqual(dihedralAngle(n1, n2), 90, 10 ** -4)).toBe(true)
   })
 
   it('returns 180° for anti-parallel normals (folded flat back)', () => {
     const n1: Vec3 = { x: 0, y: 0, z: 1 }
     const n2: Vec3 = { x: 0, y: 0, z: -1 }
-    expect(dihedralAngle(n1, n2)).toBeCloseTo(180, 4)
+    expect(approxEqual(dihedralAngle(n1, n2), 180, 10 ** -4)).toBe(true)
   })
 
   it('returns the unsigned angle in [0, 180]', () => {
@@ -86,7 +87,7 @@ describe('dihedralAngle', () => {
     const n1: Vec3 = { x: 0, y: 0, z: 1 }
     const cos45 = Math.cos(Math.PI / 4)
     const n2: Vec3 = { x: cos45, y: 0, z: cos45 }
-    expect(dihedralAngle(n1, n2)).toBeCloseTo(45, 2)
+    expect(approxEqual(dihedralAngle(n1, n2), 45, 10 ** -2)).toBe(true)
   })
 })
 

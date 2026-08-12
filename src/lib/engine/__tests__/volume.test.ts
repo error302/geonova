@@ -1,4 +1,5 @@
 import { endAreaVolume, prismoidalVolume, volumeFromSections, cutFillVolumeFromSignedSections } from '../volume'
+import { approxEqual } from '@/test-utils/approx'
 
 const SECTIONS = [
   { chainage: 0,   area: 20.0 },
@@ -11,19 +12,19 @@ describe('endAreaVolume', () => {
   it('computes volume for two sections', () => {
     const r = endAreaVolume([{ chainage: 0, area: 20 }, { chainage: 50, area: 30 }])
     // V = L/2 × (A1+A2) = 50/2 × 50 = 1250
-    expect(r.totalVolume).toBeCloseTo(1250, 2)
+    expect(approxEqual(r.totalVolume, 1250, 10 ** -2)).toBe(true)
   })
 
   it('total volume equals sum of segment volumes', () => {
     const r = endAreaVolume(SECTIONS)
     const sumSegments = r.segments.reduce((s, seg) => s + seg.volume, 0)
-    expect(r.totalVolume).toBeCloseTo(sumSegments, 6)
+    expect(approxEqual(r.totalVolume, sumSegments, 10 ** -6)).toBe(true)
   })
 
   it('segment length L = chainage difference', () => {
     const r = endAreaVolume(SECTIONS)
-    expect(r.segments[0].L).toBeCloseTo(50, 4)
-    expect(r.segments[1].L).toBeCloseTo(50, 4)
+    expect(approxEqual(r.segments[0].L, 50, 10 ** -4)).toBe(true)
+    expect(approxEqual(r.segments[1].L, 50, 10 ** -4)).toBe(true)
   })
 
   it('returns method name end_area', () => {
@@ -54,7 +55,7 @@ describe('prismoidalVolume', () => {
     ]
     const pm = prismoidalVolume(three)
     // V = (100/6) × (10 + 4×20 + 10) = (100/6) × 100 = 1666.67m³
-    expect(pm.totalVolume).toBeCloseTo(1666.67, 0)
+    expect(approxEqual(pm.totalVolume, 1666.67, 10 ** -0)).toBe(true)
     expect(pm.method).toBe('prismoidal')
   })
 })
@@ -63,13 +64,13 @@ describe('volumeFromSections', () => {
   it('delegates to endAreaVolume when method is end_area', () => {
     const r1 = volumeFromSections(SECTIONS, 'end_area')
     const r2 = endAreaVolume(SECTIONS)
-    expect(r1.totalVolume).toBeCloseTo(r2.totalVolume, 6)
+    expect(approxEqual(r1.totalVolume, r2.totalVolume, 10 ** -6)).toBe(true)
   })
 
   it('delegates to prismoidalVolume when method is prismoidal', () => {
     const r1 = volumeFromSections(SECTIONS, 'prismoidal')
     const r2 = prismoidalVolume(SECTIONS)
-    expect(r1.totalVolume).toBeCloseTo(r2.totalVolume, 6)
+    expect(approxEqual(r1.totalVolume, r2.totalVolume, 10 ** -6)).toBe(true)
   })
 })
 
@@ -93,12 +94,12 @@ describe('cutFillVolumeFromSignedSections', () => {
       { chainage: 100, area: 5 },
     ]
     const r = cutFillVolumeFromSignedSections(mixed)
-    expect(r.netVolume).toBeCloseTo(r.cutVolume - r.fillVolume, 4)
+    expect(approxEqual(r.netVolume, r.cutVolume - r.fillVolume, 10 ** -4)).toBe(true)
   })
 
   it('all positive sections: fill = 0', () => {
     const r = cutFillVolumeFromSignedSections(SECTIONS)
-    expect(r.fillVolume).toBeCloseTo(0, 4)
+    expect(approxEqual(r.fillVolume, 0, 10 ** -4)).toBe(true)
     expect(r.cutVolume).toBeGreaterThan(0)
   })
 })

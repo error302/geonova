@@ -1,4 +1,5 @@
 import { parseTopconDL } from '../parseTopconDL'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('parseTopconDL', () => {
   test('parses space-separated Topcon DL format', () => {
@@ -26,7 +27,7 @@ describe('parseTopconDL', () => {
     const result = parseTopconDL(content, 'test_tab.dat')
     expect(result.readings).toHaveLength(2)
     expect(result.readings[0].stationId).toBe('BM1')
-    expect(result.readings[0].staffReading).toBeCloseTo(1.65432, 5)
+    expect(approxEqual(result.readings[0].staffReading, 1.65432, 10 ** -5)).toBe(true)
   })
 
   test('parses semicolon-separated format', () => {
@@ -34,7 +35,7 @@ describe('parseTopconDL', () => {
     const result = parseTopconDL(content, 'test_semi.dat')
     expect(result.readings).toHaveLength(2)
     expect(result.readings[0].stationId).toBe('BM1')
-    expect(result.readings[0].staffReading).toBeCloseTo(1.65432, 5)
+    expect(approxEqual(result.readings[0].staffReading, 1.65432, 10 ** -5)).toBe(true)
     expect(result.readings[1].type).toBe('FS')
   })
 
@@ -50,7 +51,7 @@ describe('parseTopconDL', () => {
     expect(result.observations).toHaveLength(2)
     expect(result.observations[0].fromId).toBe('BM1')
     expect(result.observations[0].toId).toBe('TP1')
-    expect(result.observations[0].heightDifference).toBeCloseTo(0.7, 5)
+    expect(approxEqual(result.observations[0].heightDifference, 0.7, 10 ** -5)).toBe(true)
   })
 
   test('detects model from DL-xxx pattern', () => {

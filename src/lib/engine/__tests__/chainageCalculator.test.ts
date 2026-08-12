@@ -8,6 +8,7 @@
  */
 
 import { formatChainage, parseChainage, findAssetsNearChainage } from '../chainageCalculator'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('formatChainage', () => {
   it('formats a whole-meter chainage as KM XX+XXX', () => {
@@ -53,7 +54,7 @@ describe('parseChainage', () => {
   })
 
   it('parses a fractional chainage', () => {
-    expect(parseChainage('1+234.56')).toBeCloseTo(1234.56, 5)
+    expect(approxEqual(parseChainage('1+234.56'), 1234.56, 10 ** -5)).toBe(true)
   })
 
   it('parses a plain number', () => {

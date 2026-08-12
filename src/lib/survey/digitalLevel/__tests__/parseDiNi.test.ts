@@ -1,4 +1,5 @@
 import { parseDiNi } from '../parseDiNi'
+import { approxEqual } from '@/test-utils/approx'
 
 describe('parseDiNi', () => {
   test('parses DiNi RAW format (pipe-delimited)', () => {
@@ -26,8 +27,8 @@ describe('parseDiNi', () => {
 
     // First reading
     expect(result.readings[0].stationId).toBe('BM1')
-    expect(result.readings[0].staffReading).toBeCloseTo(1.65432, 5)
-    expect(result.readings[0].distance).toBeCloseTo(25.432, 3)
+    expect(approxEqual(result.readings[0].staffReading, 1.65432, 10 ** -5)).toBe(true)
+    expect(approxEqual(result.readings[0].distance, 25.432, 10 ** -3)).toBe(true)
     expect(result.readings[0].type).toBe('BS')
 
     // FS reading
@@ -46,7 +47,7 @@ describe('parseDiNi', () => {
     expect(result.format).toBe('dini')
     expect(result.readings).toHaveLength(4)
     expect(result.readings[0].stationId).toBe('BM1')
-    expect(result.readings[0].staffReading).toBeCloseTo(1.65432, 5)
+    expect(approxEqual(result.readings[0].staffReading, 1.65432, 10 ** -5)).toBe(true)
     expect(result.readings[0].type).toBe('BS')
     expect(result.readings[1].type).toBe('FS')
   })
@@ -64,7 +65,7 @@ describe('parseDiNi', () => {
     // First obs: BM1 -> TP1, heightDiff = 1.5 - 0.8 = 0.7
     expect(result.observations[0].fromId).toBe('BM1')
     expect(result.observations[0].toId).toBe('TP1')
-    expect(result.observations[0].heightDifference).toBeCloseTo(0.7, 5)
+    expect(approxEqual(result.observations[0].heightDifference, 0.7, 10 ** -5)).toBe(true)
     expect(result.observations[0].weight).toBeGreaterThan(0)
   })
 
@@ -93,7 +94,7 @@ describe('parseDiNi', () => {
     const result = parseDiNi(content, 'test_weight.csv')
     expect(result.observations).toHaveLength(1)
     // distance = 1000m = 1km, weight = 1/(1^2) = 1
-    expect(result.observations[0].weight).toBeCloseTo(1.0, 2)
+    expect(approxEqual(result.observations[0].weight, 1.0, 10 ** -2)).toBe(true)
   })
 
   test('IS type readings do not create observations', () => {

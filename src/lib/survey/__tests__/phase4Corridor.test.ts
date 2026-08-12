@@ -1,3 +1,4 @@
+import { approxEqual } from '@/test-utils/approx'
 /**
  * Tests for Phase 4: Corridor Engine + Surface TIN
  */
@@ -49,44 +50,44 @@ describe('Corridor Engine', () => {
   describe('enToChainageOffset', () => {
     it('computes chainage and offset for a point on the centerline', () => {
       const result = enToChainageOffset(alignment, 1000, 1500)
-      expect(result.chainage).toBeCloseTo(500, 1)
-      expect(result.offset).toBeCloseTo(0, 3)
+      expect(approxEqual(result.chainage, 500, 10 ** -1)).toBe(true)
+      expect(approxEqual(result.offset, 0, 10 ** -3)).toBe(true)
     })
 
     it('computes positive offset for a point to the right (east)', () => {
       const result = enToChainageOffset(alignment, 1010, 1500)
-      expect(result.chainage).toBeCloseTo(500, 1)
-      expect(result.offset).toBeCloseTo(10, 1) // 10m east = right
+      expect(approxEqual(result.chainage, 500, 10 ** -1)).toBe(true)
+      expect(approxEqual(result.offset, 10, 10 ** -1)).toBe(true) // 10m east = right
     })
 
     it('computes negative offset for a point to the left (west)', () => {
       const result = enToChainageOffset(alignment, 990, 1500)
-      expect(result.chainage).toBeCloseTo(500, 1)
-      expect(result.offset).toBeCloseTo(-10, 1) // 10m west = left
+      expect(approxEqual(result.chainage, 500, 10 ** -1)).toBe(true)
+      expect(approxEqual(result.offset, -10, 10 ** -1)).toBe(true) // 10m west = left
     })
 
     it('computes chainage at the start point', () => {
       const result = enToChainageOffset(alignment, 1000, 1000)
-      expect(result.chainage).toBeCloseTo(0, 1)
+      expect(approxEqual(result.chainage, 0, 10 ** -1)).toBe(true)
     })
 
     it('computes chainage at the end point', () => {
       const result = enToChainageOffset(alignment, 1000, 2000)
-      expect(result.chainage).toBeCloseTo(1000, 1)
+      expect(approxEqual(result.chainage, 1000, 10 ** -1)).toBe(true)
     })
   })
 
   describe('chainageOffsetToEN', () => {
     it('converts chainage/offset back to EN', () => {
       const result = chainageOffsetToEN(alignment, 500, 10)
-      expect(result.easting).toBeCloseTo(1010, 1)
-      expect(result.northing).toBeCloseTo(1500, 1)
+      expect(approxEqual(result.easting, 1010, 10 ** -1)).toBe(true)
+      expect(approxEqual(result.northing, 1500, 10 ** -1)).toBe(true)
     })
 
     it('centerline offset=0 gives CL coordinate', () => {
       const result = chainageOffsetToEN(alignment, 500, 0)
-      expect(result.easting).toBeCloseTo(1000, 1)
-      expect(result.northing).toBeCloseTo(1500, 1)
+      expect(approxEqual(result.easting, 1000, 10 ** -1)).toBe(true)
+      expect(approxEqual(result.northing, 1500, 10 ** -1)).toBe(true)
     })
   })
 
@@ -187,7 +188,7 @@ describe('Surface TIN', () => {
     it('returns exact Z at a vertex', () => {
       const tin = buildTIN(points)
       const z = interpolateZ(tin, 0, 0)
-      expect(z).toBeCloseTo(10, 5)
+      expect(approxEqual(z, 10, 10 ** -5)).toBe(true)
     })
 
     it('returns null for a point outside the TIN', () => {
@@ -219,7 +220,7 @@ describe('Surface TIN', () => {
       const result = computeCutFill(designTIN, groundTIN, 10)
 
       expect(result.cutVolume).toBeGreaterThan(0)
-      expect(result.fillVolume).toBeCloseTo(0, 1)
+      expect(approxEqual(result.fillVolume, 0, 10 ** -1)).toBe(true)
       expect(result.netVolume).toBeGreaterThan(0) // net cut
       expect(result.cellCount).toBeGreaterThan(0)
     })
@@ -243,7 +244,7 @@ describe('Surface TIN', () => {
       const result = computeCutFill(buildTIN(designPoints), buildTIN(groundPoints), 10)
 
       expect(result.fillVolume).toBeGreaterThan(0)
-      expect(result.cutVolume).toBeCloseTo(0, 1)
+      expect(approxEqual(result.cutVolume, 0, 10 ** -1)).toBe(true)
       expect(result.netVolume).toBeLessThan(0) // net fill
     })
 
@@ -291,7 +292,7 @@ describe('Surface TIN', () => {
       const result = computeStockpileVolume(tin, 10, 10) // datum = 10
 
       expect(result.volume).toBeGreaterThan(0)
-      expect(result.avgHeight).toBeCloseTo(2, 0) // ~2m above datum
+      expect(approxEqual(result.avgHeight, 2, 10 ** -0)).toBe(true) // ~2m above datum
     })
   })
 })

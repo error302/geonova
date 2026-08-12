@@ -1,4 +1,5 @@
 import { bowditchAdjustment, transitAdjustment, forwardTraverse } from '../traverse'
+import { approxEqual } from '@/test-utils/approx'
 
 const STANDARD_TRAVERSE = {
   points: [
@@ -37,8 +38,8 @@ describe('bowditchAdjustment', () => {
     const r = bowditchAdjustment(STANDARD_TRAVERSE)
     const sumCorrE = r.legs.reduce((s, l) => s + l.correctionE, 0)
     const sumCorrN = r.legs.reduce((s, l) => s + l.correctionN, 0)
-    expect(sumCorrE).toBeCloseTo(r.closingErrorE, 4)
-    expect(sumCorrN).toBeCloseTo(r.closingErrorN, 4)
+    expect(approxEqual(sumCorrE, r.closingErrorE, 10 ** -4)).toBe(true)
+    expect(approxEqual(sumCorrN, r.closingErrorN, 10 ** -4)).toBe(true)
   })
 
   it('precision grade is a valid string', () => {
@@ -49,7 +50,7 @@ describe('bowditchAdjustment', () => {
   it('total distance is sum of all leg distances', () => {
     const r = bowditchAdjustment(STANDARD_TRAVERSE)
     const expected = STANDARD_TRAVERSE.distances.reduce((a, b) => a + b, 0)
-    expect(r.totalDistance).toBeCloseTo(expected, 4)
+    expect(approxEqual(r.totalDistance, expected, 10 ** -4)).toBe(true)
   })
 })
 
@@ -64,7 +65,7 @@ describe('transitAdjustment', () => {
     const rb = bowditchAdjustment(STANDARD_TRAVERSE)
     const rt = transitAdjustment(STANDARD_TRAVERSE)
     // Both start with same misclosure
-    expect(rb.linearError).toBeCloseTo(rt.linearError, 3)
+    expect(approxEqual(rb.linearError, rt.linearError, 10 ** -3)).toBe(true)
   })
 })
 
@@ -76,8 +77,8 @@ describe('forwardTraverse', () => {
       distances: [100],
       bearings: [90], // due east
     })
-    expect(r.end.easting).toBeCloseTo(1100, 3)
-    expect(r.end.northing).toBeCloseTo(2000, 3)
+    expect(approxEqual(r.end.easting, 1100, 10 ** -3)).toBe(true)
+    expect(approxEqual(r.end.northing, 2000, 10 ** -3)).toBe(true)
   })
 
   it('bearing 0° moves due north', () => {
@@ -87,8 +88,8 @@ describe('forwardTraverse', () => {
       distances: [200],
       bearings: [0],
     })
-    expect(r.end.northing).toBeCloseTo(700, 2)
-    expect(r.end.easting).toBeCloseTo(500, 2)
+    expect(approxEqual(r.end.northing, 700, 10 ** -2)).toBe(true)
+    expect(approxEqual(r.end.easting, 500, 10 ** -2)).toBe(true)
   })
 
   it('total distance sums all legs', () => {
@@ -98,6 +99,6 @@ describe('forwardTraverse', () => {
       distances: [100, 150, 200],
       bearings: [45, 90, 135],
     })
-    expect(r.totalDistance).toBeCloseTo(450, 4)
+    expect(approxEqual(r.totalDistance, 450, 10 ** -4)).toBe(true)
   })
 })

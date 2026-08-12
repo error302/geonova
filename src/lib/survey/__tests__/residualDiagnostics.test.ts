@@ -1,3 +1,4 @@
+import { approxEqual } from '@/test-utils/approx'
 /**
  * Tests for the Residual Diagnostics module
  * (Kolmogorov-Smirnov, Anderson-Darling, Durbin-Watson, moments)
@@ -17,15 +18,15 @@ describe('computeMoments', () => {
   it('computes mean and standard deviation correctly', () => {
     const residuals = [1, 2, 3, 4, 5]
     const m = computeMoments(residuals)
-    expect(m.mean).toBeCloseTo(3, 10)
-    expect(m.standardDeviation).toBeCloseTo(Math.sqrt(2), 6)
+    expect(approxEqual(m.mean, 3, 10 ** -10)).toBe(true)
+    expect(approxEqual(m.standardDeviation, Math.sqrt(2), 10 ** -6)).toBe(true)
     expect(m.n).toBe(5)
   })
 
   it('skewness is zero for a symmetric distribution', () => {
     const residuals = [-2, -1, 0, 1, 2]
     const m = computeMoments(residuals)
-    expect(m.skewness).toBeCloseTo(0, 6)
+    expect(approxEqual(m.skewness, 0, 10 ** -6)).toBe(true)
   })
 
   it('excess kurtosis is zero for a normal-like distribution', () => {
@@ -45,8 +46,8 @@ describe('computeMoments', () => {
       residuals.push(z)
     }
     const m = computeMoments(residuals)
-    expect(m.skewness).toBeCloseTo(0, 1)
-    expect(m.kurtosis).toBeCloseTo(0, 1)
+    expect(approxEqual(m.skewness, 0, 10 ** -1)).toBe(true)
+    expect(approxEqual(m.kurtosis, 0, 10 ** -1)).toBe(true)
   })
 
   it('positive skewness for a right-skewed distribution', () => {

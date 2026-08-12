@@ -1,3 +1,4 @@
+import { approxEqual } from '@/test-utils/approx'
 /**
  * Tests for LSA Statistical Testing module
  *
@@ -21,30 +22,30 @@ import {
 
 describe('normalCDF', () => {
   it('returns 0.5 at z=0', () => {
-    expect(normalCDF(0)).toBeCloseTo(0.5, 6)
+    expect(approxEqual(normalCDF(0), 0.5, 10 ** -6)).toBe(true)
   })
 
   it('returns ~0.9772 at z=2 (the standard 95% one-tailed value)', () => {
-    expect(normalCDF(2)).toBeCloseTo(0.9772, 3)
+    expect(approxEqual(normalCDF(2), 0.9772, 10 ** -3)).toBe(true)
   })
 
   it('returns ~0.0228 at z=-2', () => {
-    expect(normalCDF(-2)).toBeCloseTo(0.0228, 3)
+    expect(approxEqual(normalCDF(-2), 0.0228, 10 ** -3)).toBe(true)
   })
 })
 
 describe('inverseNormalCDF', () => {
   it('returns 0 at p=0.5', () => {
-    expect(inverseNormalCDF(0.5)).toBeCloseTo(0, 6)
+    expect(approxEqual(inverseNormalCDF(0.5), 0, 10 ** -6)).toBe(true)
   })
 
   it('returns 1.96 at p=0.975 (the standard 95% two-tailed critical value)', () => {
-    expect(inverseNormalCDF(0.975)).toBeCloseTo(1.96, 2)
+    expect(approxEqual(inverseNormalCDF(0.975), 1.96, 10 ** -2)).toBe(true)
   })
 
   it('is the inverse of normalCDF', () => {
     for (const p of [0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99]) {
-      expect(normalCDF(inverseNormalCDF(p))).toBeCloseTo(p, 4)
+      expect(approxEqual(normalCDF(inverseNormalCDF(p)), p, 10 ** -4)).toBe(true)
     }
   })
 })
@@ -54,17 +55,17 @@ describe('inverseNormalCDF', () => {
 describe('chiSquareCritical', () => {
   it('returns ~3.84 for dof=1, alpha=0.05 (the standard 95% value)', () => {
     // χ²(1, 0.95) = 3.841. Wilson-Hilferty is ~3% off at dof=1.
-    expect(chiSquareCritical(1, 0.05)).toBeCloseTo(3.84, 0)
+    expect(approxEqual(chiSquareCritical(1, 0.05), 3.84, 10 ** -0)).toBe(true)
   })
 
   it('returns ~11.07 for dof=5, alpha=0.05', () => {
     // χ²(5, 0.95) = 11.070
-    expect(chiSquareCritical(5, 0.05)).toBeCloseTo(11.07, 1)
+    expect(approxEqual(chiSquareCritical(5, 0.05), 11.07, 10 ** -1)).toBe(true)
   })
 
   it('returns ~16.92 for dof=9, alpha=0.05', () => {
     // χ²(9, 0.95) = 16.919
-    expect(chiSquareCritical(9, 0.05)).toBeCloseTo(16.92, 1)
+    expect(approxEqual(chiSquareCritical(9, 0.05), 16.92, 10 ** -1)).toBe(true)
   })
 
   it('increases with dof', () => {
@@ -74,7 +75,7 @@ describe('chiSquareCritical', () => {
 
 describe('chiSquarePValue', () => {
   it('returns 1 for chiSquare=0', () => {
-    expect(chiSquarePValue(0, 5)).toBeCloseTo(1, 3)
+    expect(approxEqual(chiSquarePValue(0, 5), 1, 10 ** -3)).toBe(true)
   })
 
   it('returns a small p-value for chiSquare=11.07, dof=5', () => {
@@ -133,7 +134,7 @@ describe('baardaWTest', () => {
 
   it('returns critical value ≈ 1.96 for α=0.05', () => {
     const results = baardaWTest([0], [0.0001], 1.0, [{ from: 'A', to: 'B', component: 'E' }], 0.05)
-    expect(results[0].criticalValue).toBeCloseTo(1.96, 1)
+    expect(approxEqual(results[0].criticalValue, 1.96, 10 ** -1)).toBe(true)
   })
 
   it('handles zero Qvv (uncontrollable observation) gracefully', () => {
@@ -161,7 +162,7 @@ describe('computeReliability', () => {
     // For α=0.05, power=0.80: δ₀ = z_(0.95) + z_(0.80) = 1.645 + 0.842 = 2.487
     const expectedDelta0 = 2.487
     const expectedMdb = 1.0 * Math.sqrt(0.0001) * expectedDelta0
-    expect(results[0].mdb).toBeCloseTo(expectedMdb, 2)
+    expect(approxEqual(results[0].mdb, expectedMdb, 10 ** -2)).toBe(true)
   })
 
   it('redundancy number = qvv (clamped to [0,1])', () => {
@@ -254,8 +255,8 @@ describe('computeQvvDiagonal', () => {
     const Qxx = [[0.5]]
     const QvvDiag = computeQvvDiagonal(A, W, Qxx)
     expect(QvvDiag).toHaveLength(2)
-    expect(QvvDiag[0]).toBeCloseTo(0.5, 6)
-    expect(QvvDiag[1]).toBeCloseTo(0.5, 6)
+    expect(approxEqual(QvvDiag[0], 0.5, 10 ** -6)).toBe(true)
+    expect(approxEqual(QvvDiag[1], 0.5, 10 ** -6)).toBe(true)
   })
 
   it('redundancy numbers sum to dof', () => {
@@ -271,6 +272,6 @@ describe('computeQvvDiagonal', () => {
     // Redundancy = sum(W[i] × QvvDiag[i])
     const redundancy = QvvDiag.reduce((sum, q, i) => sum + W[i] * q, 0)
     // dof = m - n = 3 - 2 = 1
-    expect(redundancy).toBeCloseTo(1, 4)
+    expect(approxEqual(redundancy, 1, 10 ** -4)).toBe(true)
   })
 })
