@@ -273,8 +273,6 @@ function computeTraverseAdjustment(input: TraverseAdjustInput) {
   if (legs.length === 0) return { adjustedLegs: [], misclosure: { linear: 0, angular: 0, bearing: 0, ratio: '0:1' } }
 
   let currentBearing = startBearing
-  const currentNorthing = startCoordinates.northing
-  const currentEasting = startCoordinates.easting
   let totalLatitude = 0
   let totalDeparture = 0
 
@@ -400,7 +398,7 @@ function generateIDWGrid(params: IDWParams): { grid: number[][], rows: number, c
         weightSum += w
       }
 
-      row.push(weightSum / weightSum)
+      row.push(weightedSum / weightSum)
     }
     grid.push(row)
   }
@@ -427,7 +425,7 @@ self.onmessage = function (event: MessageEvent) {
       }
 
       case 'TRANSFORM_COORDINATES': {
-        const { fromEpsg, toEpsg, coordinates } = payload as CoordTransformParams
+        const { coordinates } = payload as CoordTransformParams
         const results = coordinates.map((coord) => {
           if ('latitude' in coord && 'longitude' in coord) {
             // WGS84 → UTM

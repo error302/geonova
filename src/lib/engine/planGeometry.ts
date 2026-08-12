@@ -1,6 +1,6 @@
-import { Point2D, DistanceBearingResult } from './types'
+import { Point2D } from './types'
 import { distanceBearing } from './distance'
-import { toRadians, toDegrees, normalizeBearing } from './angles'
+
 import { coordinateArea } from './area'
 
 export type AdjustedStation = {
@@ -37,13 +37,6 @@ export interface PlanGeometry {
   scale: number
 }
 
-function formatBearingDMS(bearing: number): string {
-  const d = Math.floor(bearing)
-  const minFloat = (bearing - d) * 60
-  const m = Math.floor(minFloat)
-  const s = (minFloat - m) * 60
-  return `${String(d).padStart(3, '0')}°${String(m).padStart(2, '0')}'${String(Math.round(s)).padStart(2, '0')}"`
-}
 
 function formatDistanceM(distance: number): string {
   return distance.toFixed(3)

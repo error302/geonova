@@ -58,7 +58,7 @@ export async function generateShapefileZip(
  */
 function generatePointShapefile(
   points: ShapefileBeacon[],
-  name: string
+  _name: string
 ): ShapefileBuffers {
   // SHP Header (100 bytes) + Records
   const header = createShapefileHeader(1, points.length) // 1 = Point type
@@ -108,7 +108,7 @@ function generatePointShapefile(
  */
 function generatePolylineShapefile(
   lines: ShapefileBoundary[],
-  name: string
+  _name: string
 ): ShapefileBuffers {
   // Each line has 2 points
   const totalPoints = lines.length * 2
@@ -183,7 +183,7 @@ function generatePolylineShapefile(
  */
 function generatePolygonShapefile(
   parcels: ShapefileParcel[],
-  name: string
+  _name: string
 ): ShapefileBuffers {
   // Calculate sizes
   let totalPoints = 0
@@ -290,7 +290,6 @@ function createShapeIndex(
   view.setInt32(32, header.shapeType, true)
   
   // Index records
-  const offset = 100
   for (let i = 0; i < numRecords; i++) {
     const recordOffset = 100 + i * recordSize
     view.setInt32(100 + i * 8, recordOffset / 2, false) // Offset in 16-bit words
@@ -370,7 +369,7 @@ function createPolygonDBF(parcels: ShapefileParcel[]): ArrayBuffer {
  * Generate WKT projection file
  */
 function generatePRJ(projection: { zone: number; hemisphere: 'N' | 'S'; datum: string; ellipsoid: string }): string {
-  const hemi = projection.hemisphere === 'N' ? 'Northern' : 'Southern'
+
   const falseNorthing = projection.hemisphere === 'S' ? 10000000 : 0
   const centralMeridian = -183 + projection.zone * 6
   const datumUpper = (projection.datum || 'WGS84').toUpperCase()

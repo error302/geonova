@@ -12,7 +12,7 @@ import { LevelReading, LevelObservation, LevelImportResult } from './digitalLeve
  *   Measurement header: RNo Sta  RNo Sta   Ht.m  Diff.m  Comments
  *   Data rows:   1  BM1  2  TP1    1.65432  1.23456  BS to TP1
  */
-export function parseDNA03(content: string, filename?: string): LevelImportResult {
+export function parseDNA03(content: string, _filename?: string): LevelImportResult {
   const lines = content.split(/\r?\n/)
   const parseErrors: string[] = []
   const readings: LevelReading[] = []
@@ -30,7 +30,7 @@ export function parseDNA03(content: string, filename?: string): LevelImportResul
   const currentInstrumentHeight = 1.6 // default
 
   let inDataSection = false
-  const bsBuffer: LevelReading | null = null
+
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
@@ -125,7 +125,7 @@ export function parseDNA03(content: string, filename?: string): LevelImportResul
 function parseDNAMeasurementRow(
   line: string,
   instrumentHeight: number,
-  lineNo: number
+  _lineNo: number
 ): LevelReading | null {
   // Match pattern: number station number station number number comment
   // e.g., "1  BM1  2  TP1    1.65432     1.23456     BS to TP1"
@@ -136,7 +136,7 @@ function parseDNAMeasurementRow(
 
   const staffReading = parseFloat(match[5])
   const stationId = match[4]
-  const rNo1 = parseInt(match[1], 10)
+
   const comment = (match[7] || '').trim()
 
   // Determine reading type from context
@@ -176,7 +176,7 @@ function parseDNAMeasurementRow(
 function parseDNAAltRow(
   line: string,
   instrumentHeight: number,
-  lineNo: number
+  _lineNo: number
 ): LevelReading | null {
   const parts = line.split(/\s+/).filter(s => s.length > 0)
   if (parts.length < 2) return null

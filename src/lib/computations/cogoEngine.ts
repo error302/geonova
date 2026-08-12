@@ -35,7 +35,7 @@ export interface InverseResult {
 }
 
 export function inverseComputation(input: InverseInput): InverseResult {
-  const { e1, n1, e2, n2, label1 = 'P1', label2 = 'P2' } = input
+  const { e1, n1, e2, n2 } = input
 
   const deltaE = e2 - e1
   const deltaN = n2 - n1
@@ -156,7 +156,7 @@ export interface PolarResult {
 }
 
 export function polarComputation(input: PolarInput): PolarResult {
-  const { e1, n1, bearingDeg, bearingMin, bearingSec, distance, label1 = 'P1', label2 = 'P2' } = input
+  const { e1, n1, bearingDeg, bearingMin, bearingSec, distance } = input
 
   // Source: Ghilani & Wolf, Section 10.4 — E2 = E1 + D×sin(WCB), N2 = N1 + D×cos(WCB)
   const wcbDecimal = bearingDeg + bearingMin / 60 + bearingSec / 3600
@@ -919,7 +919,7 @@ export function arcBy3Points(input: Arc3PointInput): ArcResult {
   const ux = ((ax * ax + ay * ay) * (by - cy) + (bx * bx + by * by) * (cy - ay) + (cx * cx + cy * cy) * (ay - by)) / D
   const uy = ((ax * ax + ay * ay) * (cx - bx) + (bx * bx + by * by) * (ax - cx) + (cx * cx + cy * cy) * (bx - ax)) / D
 
-  const center = { easting: ux, northing: uy }
+
   const radius = Math.sqrt((ax - ux) ** 2 + (ay - uy) ** 2)
 
   // Determine if arc is clockwise or counterclockwise

@@ -151,7 +151,7 @@ export function computeSlopeIntercept(
     ...sorted.map(p => Math.abs(p.offset))
   )
   const maxSlopeOffset = maxAbsOffset + 10 // extra margin
-  const maxVertical = maxSlopeOffset / slopeRatio
+
 
   // Check intersection with each ground segment
   for (let i = 0; i < sorted.length - 1; i++) {
@@ -263,7 +263,6 @@ export function computeFormationLine(
     cutSlope,
     fillSlope,
     camber,
-    subgradeDepth,
   } = template
 
   const halfCW = carriagewayWidth / 2
@@ -469,11 +468,8 @@ export function computeCutFillArea(
   const polygon: ProfilePoint[] = []
 
   // Use the wider extent of both profiles
-  const minOffset = Math.min(sortedGround[0].offset, sortedFormation[0].offset)
-  const maxOffset = Math.max(
-    sortedGround[sortedGround.length - 1].offset,
-    sortedFormation[sortedFormation.length - 1].offset
-  )
+
+
 
   // Helper: interpolate level at a given offset from a profile
   function interpolateLevel(profile: ProfilePoint[], offset: number): number {
@@ -497,10 +493,7 @@ export function computeCutFillArea(
   }
 
   // Build combined polygon with offset-aligned points
-  const numSamples = Math.max(
-    sortedGround.length + sortedFormation.length,
-    20
-  )
+
 
   // Collect all unique offset values from both profiles
   const offsets = new Set<number>()

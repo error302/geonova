@@ -63,8 +63,8 @@
 
 import {
   fromTriplets,
-  fromDense,
-  sparseMatVec,
+
+
   ataDiag,
   atdbDiag,
   approximateMinimumDegree,
@@ -242,10 +242,6 @@ export interface NetworkAdjustmentResult {
 // ---------------------------------------------------------------------------
 // Geometry helpers
 // ---------------------------------------------------------------------------
-
-function toRad(deg: number): number {
-  return (deg * Math.PI) / 180
-}
 
 function toDeg(rad: number): number {
   return (rad * 180) / Math.PI
@@ -1336,8 +1332,8 @@ function computeResidualsAndStats(
   B: SparseMatrix | null,
   currentCoords: Map<string, { e: number; n: number; rl?: number }>,
   globalTestAlpha: number,
-  wTestAlpha: number,
-  wTestPower: number,
+  _wTestAlpha: number,
+  _wTestPower: number,
 ): {
   residuals: ObservationResidual[]
   referenceVariance: number

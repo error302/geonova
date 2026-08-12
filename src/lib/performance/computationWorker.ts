@@ -14,11 +14,6 @@
  *   worker.adjustTraverse(input).then(result => ...)
  */
 
-import { computeAreaWithPrecision } from '@/lib/engine/computationalAccuracy'
-import { bowditchAdjustment } from '@/lib/engine/traverse'
-import { computeCutFill } from '@/lib/engine/cutFillEngine'
-import type { TraverseInput } from '@/lib/engine/traverse'
-import type { GridSurface } from '@/lib/engine/cutFillEngine'
 import type { SurveyPoint } from '@/lib/map/turfHelpers'
 
 export class ComputationWorker {
