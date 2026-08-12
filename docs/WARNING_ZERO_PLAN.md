@@ -11,7 +11,7 @@
 
 ---
 
-## 0. STATUS CHECKPOINT — read this first (2026-08-09)
+## 0. STATUS CHECKPOINT — read this first (2026-08-12)
 
 ### Live floors vs committed (gate green, `lint-ratchets --report` exit 0)
 
@@ -30,14 +30,13 @@ Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 973 �
 ### Git / CI state
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
-- **HEAD:** `d41231d8` (explicit-any batch 4) — on `origin/main`; local work continues on `chore/lint-typing-page-batch`.
-- **Uncommitted (this batch):** explicit-any grind batch 5 — the full 1-warning tail, 62 files / 62 explicit-any → 0, plus `db.ts`'s `= any` default → `= QueryResultRow` (the last explicit-any in the repo). Setters `value: any` → `T[keyof T]`; `useState<any>` → typed (`BrowserSession['user']`, `unknown`); `Record<string, any>` → `LucideIcon`/`unknown`; dropped `: any` in map callbacks (element type flows); OL casts (`ol/ol.css` unquoted, TileSource, `setStyle` structural); `WorkerMessage<T = unknown>`, `lazy()` generic, i18n `unknown` walk, claForms `(data: never)` registry, zustand `getMap<unknown>`, `raw` union, instrumented-pool `Function` overload; fallout fixes for the `QueryResultRow` default across auditLog/rbac/parcelVault/generators/settings-profile. Floors member-access **30**, assignment **281**, explicit-any **0** (rule = error), argument 0, total **2,412**.
+- **HEAD:** `c010eb58` (docs checkpoint after non-null batch 11) — on `origin/main`; local work continues on `chore/lint-typing-page-batch`.
+- **Uncommitted (this batch):** none in flight — tree holds only `.a11y-audit.json` (a11y-sweep regeneration) + untracked `docs/Metardu_Repowise_Intelligence.md`, `scripts/sync-mirror.mjs`, `_tmp-*.py` helpers. Floors: member-access 0 · assignment 0 · explicit-any 0 · argument 0 · total **1,080** (all six `no-unsafe-*` rules flipped to `error`).
 - **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).
-  - `E2E Tests` — `0183c82d` switched the E2E webServer to the standalone server (the `output: 'standalone'` + `next start` combo silently bypassed middleware — root cause of the protected-route failures), injected the OAuth env the specs need, aligned stale spec copy to the current UI, and raised the timeout. Shards were running clean at the last check; verify the next CI run's E2E verdict.
-- **⚠ WIP file — never commit as part of a typing batch:**
-  `src/components/survey/GNSSRoverConnection.tsx` is the concurrent session's mid-edit file (has tsc errors, and it *reduces* warning counts while uncommitted). Re-baseline floors **with this file stashed** so floors match committed code — otherwise CI fails with "live > floor" (the premature-baseline trap; see §7 rule 4).
+  - `E2E Tests` — **fixed & green** (all four shards pass; standalone-server + OAuth env + seeded-user + spec-alignment fixes landed). Only `Deploy to Production` remains red (GCP SSH — infra).
+- **WIP:** none currently. If a concurrent session leaves files uncommitted, re-baseline floors **with them stashed** so floors match committed code — otherwise CI fails with "live > floor" (the premature-baseline trap; see §7 rule 4).
 - **Session worktree:** `write_file` lands in `.freebuff/worktrees/d90ebaf2-f825-4569-b94c-966f3d5aa130`; the real checkout is `C:/Users/user/Desktop/METARDU`. **Run `node scripts/sync-mirror.mjs` before editing** — it byte-copies every tracked file that drifted from HEAD into the mirror (EOL-insensitive compare, WIP set skipped), so the mirror never carries an old untyped/syntax-broken copy. Manual `cp` is only needed for the active WIP set (see §7 rule 6). Files are **CRLF** in the worktree, LF in primary — git normalizes; scripts must not assert exact line endings.
 
 ### First commands for any new session
@@ -45,10 +44,10 @@ Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 973 �
 ```bash
 cd C:/Users/user/Desktop/METARDU
 node scripts/sync-mirror.mjs             # converge the .freebuff mirror to HEAD (WIP set skipped, see §7 rule 6)
-git status --short                     # expect ONLY GNSSRoverConnection.tsx (WIP) or nothing
+git status --short                     # expect nothing (or the concurrent session’s WIP)
 git log --oneline origin/main..HEAD    # confirm what's still unpushed
 node scripts/lint-ratchets.mjs --report   # confirm gate green + live floors (exit 0)
-node scripts/argument-scan.mjs --batch 1  # next per-line worklist (or member/assignment)
+node scripts/warn-scan.mjs                 # regenerate the per-file census (next: non-null batch 12)
 ```
 
 If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read the report, never `--update` a floor to mask a WIP-induced drop.
@@ -57,94 +56,61 @@ If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read th
 
 ## 1. Remaining work, ordered for completion
 
-Order = **finish the family closest to zero first** (each finish removes a floor + shrinks the ceiling), then the next, then mechanical rules. Argument → explicit-any → member-access → assignment → mechanical → CI tightening.
+**Checklist state (live scan 2026-08-12, origin/main @ `c010eb58` — committed total 1,080):**
 
-### Phase 1 — `no-unsafe-argument` — ✅ **DONE (0 warnings, floor → 0)**
-
-Batch 3 drained every remaining 1-warning file in `argument-scan --batch 1` (73 files, type-the-source recipe); the last 3 warnings lived in concurrent-WIP files (`deedPlanExport.test.ts`, `GNSSRoverConnection.tsx`) — the Phase 2 batch-1 typed the former and the concurrent session's `d16f0f47` fixed the latter. `argument-scan --batch 1` now reports **0 warnings across 0 files**; floor locked to 0 in `scripts/argument-baseline.json`. Next per §6: flip the rule to `error` in the ESLint config (no more floor needed).
-
-Highest-leverage: every warning is a typed-call-site passing an `any` value. Recipe: type the *argument's* value at its source (fetch/JSON.parse/`useRef<any>`/`useState<any>`), or narrow the callee param. Ranked (regen: `node scripts/argument-scan.mjs --top 20`):
-
-| W | File |
-|---|---|
-| 4 | `src/lib/engine/__tests__/topographic.test.ts` |
-| 3 | `src/app/cpd/page.tsx` · `src/app/process/page.tsx` · `src/components/realtime/ProjectPresencePanel.tsx` · `src/components/search/CommandPalette.tsx` · `src/components/TraverseModal.tsx` · `src/components/UploadZone.tsx` · `src/components/version/VersionDiffViewer.tsx` · `src/components/workspace/LongitudinalSection.tsx` · `src/lib/compute/deedPlanRenderer.ts` · `src/lib/db/optimization.ts` · `src/lib/engine/networkAdjustment.ts` · `src/lib/engine/parser.ts` · `src/lib/gnss/__tests__/ntrip-client.test.ts` · `src/lib/mobile/offlineStorage.ts` (props) · `src/lib/parsers/parseBOQ.ts` · `src/lib/payments/paypal.ts` · `src/lib/realtime/useCollaboration.ts` (refs) · `src/lib/survey/traverse/least-squares.ts` |
-| 2 | `src/app/api/scheme/__tests__/security.test.ts` + tail |
-
-Batches of ~10 files per commit; finish with `--update-argument` (floor → 0) and flip the rule to `error` in `.eslintrc` when live = 0 (see §6).
-
-### Phase 2 — `no-explicit-any` (538 → 0, 227 files) — **batches 1–3 done (floor 348 → 156)**
-
-Batch 1 (earlier session) ground the top-density cluster — `vectorTileFactory.ts` + its two test files, `deedPlanExport.test.ts`, `leveling-standards.ts`, `governmentLicensing.ts`, `CrossSectionInput.tsx` — 68 explicit-any → 0. Batch 2 (prior session) took the next 10-file cluster to zero (`dataCleaner`, `leveling.test`, `engineering/compute`, `ntrip-client.test`, `useCollaboration`, `MotionComponents`, `templates/index`, `computationWorker`, `profileSvg`, `WorkerBridge` — 45 more). Batch 3 (this session) ground the 3-warning tier — 11 files, 33 explicit-any → 0, including the `useFieldBook` row-typing recipe (`FieldBookEntryRow` interface so the supabase-style `data: any` becomes typed, clearing ~10 unsafe warnings too) and the PerformanceMonitor `PerformanceEventTiming` casts. Recipe: typed-array callbacks (drop `: any` — element type flows), `unknown` for dead compatibility callbacks, real DOM/yjs types, structural casts where the DOM lib lacks the type (`LayoutShift` → `{ hadRecentInput, value }`). Floor explicit-any **156** (member-access batch 6 later took it to 151 via the `: any` params it removed). Next: regen the ranking — the 2-warning tier (~20 files) and the 1-warning tail remain.
-
-Ranked (regen: run a one-off eslint aggregation — `ESLint.lintFiles(['middleware.ts','src/**/*.{ts,tsx}'])` filtered to the rule id):
-
-| W | File |
-|---|---|
-| 19 | `src/lib/map/__tests__/vectorTileFactory.test.ts` |
-| 17 | `src/lib/map/__tests__/deedPlanExport.test.ts` |
-| 11 | `src/components/map/LayerControl.tsx` · `src/lib/api-client/parcelVault.ts` |
-| 9 | `src/lib/engine/leveling-standards.ts` · `src/lib/enterprise/governmentLicensing.ts` |
-| 8 | `src/lib/map/vectorTileFactory.ts` · `src/lib/serial/InstrumentSerialConnection.ts` |
-| 7 | `src/lib/integrations/equipment.ts` · `src/lib/mobile/offlineStorage.ts` |
-| 6 | `src/components/earthworks/CrossSectionInput.tsx` · `src/lib/compute/planChecker.ts` · `src/lib/realtime/useCollaboration.ts` |
-| 5 | `CleanedExport.tsx` · `ParcelNumberInput.tsx` · `StakeoutRadar.tsx` · `dataCleaner.ts` · `leveling.test.ts` · `engineering/compute.ts` · `ntrip-client.test.ts` · `traverse-csv.ts` · `aiPlanChecker.ts` · `fieldbooks.ts` · `solutionToPdf.ts` · `rimPdfGenerator.ts` |
-
-Recipe: `: any` → `unknown` + narrow, or the real type (row interface / OL type / zod-inferred). Tests with `(x as any)` casts: replace with precise literals or `satisfies`. **No new `any`** — this family's ratchet fails PRs that add them.
-
-### Phase 3 — `no-unsafe-member-access` (1,101 → 0, ~350 files)
-
-Batches 1–9 done (floor 1,220 → **43**): member-access 1,101 → 43 across the API-route tiers, the page tiers, the map/OL clusters, and now the 2-warning tier (batch 9: fetch payload casts, `db.query<Row>` generics, `splitTextToSize` → `string[]`, idb/dompurify/html2canvas library-boundary typings). Next: the 1-warning tail (~43 files) — then the rule flips to error.
-
-Top 22 (regen: `node scripts/member-scan.mjs --top 22`; per-line worklist: `--batch N`):
-
-| W | dom% | File |
-|---|---|---|
-| 12 | other | `src/app/cpd/page.tsx` · `src/components/field/FieldDataCollector.tsx` · `src/components/fieldguard/CleanedExport.tsx` · `src/lib/map/__tests__/vectorTileFactory.test.ts` |
-| 11 | fetch | `src/app/project/[id]/ProjectWorkspaceClient.tsx` |
-| 11 | other | `src/app/tools/survey-regulations/page.tsx` · `src/components/map/LayerControl.tsx` · `src/lib/subscription/subscriptionEngine.ts` · `src/lib/__tests__/tier1SecurityHelpers.test.ts` |
-| 11 | db | `src/components/setting-out/SettingOutTable.tsx` · `src/components/setting-out/StakeOutSheet.tsx` |
-| 10 | other | `src/app/analytics/page.tsx` · `src/app/project/new/page.tsx` · `src/app/project/[id]/engineering/steps/Step6Outputs.tsx` · `src/components/search/CommandPalette.tsx` · `src/lib/parsers/parse3D.ts` |
-| 10 | props | `src/app/project/[id]/scheme/map/page.tsx` |
-| 9 | other | `src/app/tools/contour-generator/page.tsx` · `src/components/cadastra/ValidationReport.tsx` · `src/components/shared/ParcelNumberInput.tsx` · `src/lib/api-client/parcelVault.ts` · `src/lib/compute/planChecker.ts` |
-
-Dominant any-sources (from scan): `db` 90 · `other-object` 47 · `events` 30 · `props` 10 · `ol` 9 · `builders` 7 · `refs` 2. Type the *source* once per file — the whole file collapses.
-
-### Phase 4 — `no-unsafe-assignment` (829 → 0, ~350 files)
-
-Batches 1–2 done (floor 925 → **326**).
-
-Top 20 (regen: `node scripts/assignment-scan.mjs --top 20`):
-
-| W | File |
-|---|---|
-| 11 | `src/lib/map/__tests__/deedPlanExport.test.ts` |
-| 10 | `src/lib/api-client/parcelVault.ts` |
-| 9 | `src/lib/parsers/parsePDF.ts` · `src/lib/payments/paypal.ts` |
-| 8 | `src/app/analytics/page.tsx` · `src/components/CSVUploadModal.tsx` · `src/components/survey/GNSSRoverConnection.tsx` ⚠WIP · `src/components/tools/ProcessingToolbox.tsx` · `src/hooks/useFieldBook.ts` · `src/lib/engine/sparseMatrix.ts` · `src/lib/map/__tests__/vectorTileFactory.test.ts` |
-| 7 | `src/app/profile/page.tsx` · `src/app/project/[id]/profiles/page.tsx` · `src/lib/engine/leastSquaresAdjustment.ts` · `src/lib/map/vectorTileFactory.ts` · `src/lib/survey/fetchSurveyorProfile.ts` |
-| 6 | `src/app/api/osm/context-geojson/route.ts` · `src/app/project/[id]/ProjectWorkspaceClient.tsx` · `src/app/project/[id]/topo/page.tsx` · `src/app/schedule/page.tsx` |
-
-### Phase 5 — mechanical rules (2,591 combined)
-
-| Rule | Count | Fix class | Top files |
+| Family | Live | Rule | Status |
 |---|---|---|---|
-| `no-unused-vars` | 1,106 | `_`-prefix unused bindings, drop dead imports/params | next tier per live scan (batch 1 done: mobile/field 13 · TopoDrawingComposer 11 · tools/page 10; cadastralPlanDXF 10 · scheme/page 9 up next) |
-| `no-non-null-assertion` | 161 | replace `!` with real narrowing/guards (tests: `defined()` helper + assert; prod: type-predicate filters / destructure guards) | next tier per live scan (batch 11 done: final 2-warning tier + 1-warning start (8 files); 47 live) |
-| `no-console` | 8 → 0 (done) | ✅ drained 2026-08-12 — routed through `lib/logger.ts` (chat/route 3, handler 2, africasTalking 2, fieldbook 1) | — |
-| `no-unsafe-call` | 0 (done) | ✅ flipped to `error` 2026-08-12 — committed tree drained 1 → 0 (`auth-v5.ts` req.headers cast); rule now errors | — |
-| `no-unsafe-return` | 171 | return `any` → typed return (engine math libs mostly) | `sparseMatrix.ts` 7 · `geodesy/gnss.ts` 7 · `levelNetworkAdjustment.ts` 6 · `totalLeastSquares.ts` 6 |
-| `react-hooks/exhaustive-deps` | 70 | careful per-effect dep fixes; use `eslint-disable-next-line` only with a justification (repo convention: 32 existing) | `useMapInteractions.ts` 16 · `useSubdivision.ts` 6 · `MobileMeasurementCapture.tsx` 4 |
-| `no-restricted-syntax` | 16 | project-specific banned patterns (e.g. `for..of` over `Object.keys`) — check the rule config | `nativeProjectionView.test.ts` 9 · `MapClient.tsx` 2 |
+| `no-unsafe-argument` | 0 | `error` | ✅ done |
+| `no-explicit-any` | 0 | `error` | ✅ done |
+| `no-unsafe-member-access` | 0 | `error` | ✅ done |
+| `no-unsafe-assignment` | 0 | `error` | ✅ done |
+| `no-unsafe-return` | 0 | `error` | ✅ done |
+| `no-unsafe-call` | 0 | `error` | ✅ done |
+| `no-console` | 0 | warn | ✅ drained |
+| row-typing (`db.query` untyped) | 0 / 532 | gate | ✅ done |
+| a11y findings | 0 | gate | ✅ done |
+| `no-unused-vars` | **973** | warn | ⏳ next |
+| `no-non-null-assertion` | **47** | warn | ⏳ |
+| `react-hooks/exhaustive-deps` | **44** | warn | ⏳ |
+| `no-restricted-syntax` | **16** | warn | ⏳ |
+| **total** | **1,080** | CI ceiling **1,350** | green |
+
+Order = finish the family closest to zero first (each finish removes a floor + shrinks the ceiling), then mechanical rules, then CI tightening. **All six `no-unsafe-*` families are done** — only the mechanical rules remain. Finish order: **non-null (47) → unused-vars (973) → exhaustive-deps (44) → no-restricted-syntax (16) → ceiling → 0**.
+
+### Phase 1 — `no-unsafe-argument` — ✅ **DONE (0 warnings, rule = error)**
+
+All batches drained (`argument-scan --batch 1` → 0 across 0 files); floor locked to 0 in `scripts/argument-baseline.json`; rule flipped to `error` in `.eslintrc`.
+
+### Phase 2 — `no-explicit-any` — ✅ **DONE (0 warnings, rule = error)**
+
+538 → 0 across 227 files (batches 1–5 + the 1-warning tail + `db.ts`'s `= any` default → `= QueryResultRow`); floor 0; rule = `error`.
+
+### Phase 3 — `no-unsafe-member-access` — ✅ **DONE (0 warnings, rule = error)**
+
+1,101 → 0 (batches 1–9 + the 1-warning tail, 30 → 0); floor 0; rule = `error`. Recipe that carried the family: type the *source* once per file — `db.query<Row>` generics, `res.json()` casts, `JSON.parse` assertions, `useRef`/`useState` real types, OL/structural casts at library boundaries.
+
+### Phase 4 — `no-unsafe-assignment` — ✅ **DONE (0 warnings, rule = error)**
+
+829 → 0 (batches 1–2 + 1b/1c + the tail, 281 → 0, floor 10 → 0); rule = `error`. Same type-the-source recipe as Phase 3.
+
+### Phase 5 — mechanical rules (1,080 combined)
+
+| Rule | Live | Fix class | Next tier |
+|---|---|---|---|
+| `no-non-null-assertion` | **47** | replace `!` with real narrowing/guards (tests: shared `defined()` helper + assert; prod: type-predicate filters / destructure guards / get-or-throw) | 1-warning tail, 47 files — batch 12 takes this to 0 (batches 1–11 drained 113 → 47) |
+| `no-unused-vars` | **973** | `_`-prefix unused bindings, drop dead imports/state/props | batches 1–3 drained 167 sites; next: 7-warning tier — `admin/page` · `SurveyReportBuilder` · `traverseEngine` · `generateDocx` · `fileRouter` · `formNo4Renderer` · `spiralAlignment` · `deformationMonitoring` |
+| `react-hooks/exhaustive-deps` | **44** | careful per-effect dep fixes; `eslint-disable-next-line` only with a justification (repo convention) | `useMapInteractions` 16 · `useSubdivision` 6 · `MobileMeasurementCapture` 4 |
+| `no-restricted-syntax` | **16** | project-specific banned patterns — check the rule config | `nativeProjectionView.test.ts` 9 · `MapClient.tsx` 2 |
+| `no-console` | 0 | ✅ drained — routed through `lib/logger.ts` | — |
+| `no-unsafe-call` | 0 | ✅ flipped to `error` 2026-08-12 | — |
+| `no-unsafe-return` | 0 | ✅ flipped to `error` 2026-08-12 | — |
 
 ### Phase 6 — CI tightening + completion
 
 1. Push every batch; watch the ci.yml run — all code gates must stay green.
-2. As each family hits 0: drop its floor to 0 (via `--update-<family>`) and flip the rule to `"error"` in the ESLint config so it can never regress.
-3. Tighten `--max-warnings`: 20,000 → 10,000 → 5,000 → 3,700 → 3,000 → 2,800 → 2,000 → 1,500 → 1,400 → **1,350 (now)** → 500 → **0** as the totals shrink. Keep the ceiling documented in the workflow files (see the earlier 10k tightening for the pattern).
-4. Fix the two known-red CI jobs (§0): E2E (env + timeout/sharding) and Deploy (GCP SSH — infra, needs credentials/VM work, out of code scope).
-
----
+2. As each family hits 0: drop its floor to 0 (via `--update-<family>`) and flip the rule to `"error"` in the ESLint config so it can never regress. Done for all six `no-unsafe-*` families; the four mechanical rules ride the `--max-warnings` ceiling (no floors).
+3. Tighten `--max-warnings`: 20,000 → 10,000 → 5,000 → 3,700 → 3,000 → 2,800 → 2,000 → 1,500 → 1,400 → 1,350 (now) → **500** → **0** as the totals shrink (total is 1,080). Keep the ceiling documented in the workflow files.
+4. E2E is green (all four shards — standalone-server + OAuth env + seeded-user fixes landed). The only known-red job left is **Deploy to Production** (GCP VM SSH — infra, needs credentials/VM work, out of code scope).
 
 ## 2. Root causes (why ~80% is the `no-unsafe-*` family)
 
