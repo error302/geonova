@@ -2,7 +2,7 @@
 
 **Goal:** clear every `@typescript-eslint` / JS warning so the CI `--max-warnings` ceiling can drop to `0` and each rule flips to `error`.
 
-**Progress:** 14,030 → **1,586** (measured 2026-08-12, `lint-ratchets --report` on origin/main). Row-typing (0/538), a11y (0 findings), member-access, explicit-any, argument, **assignment**, no-unsafe-return and no-unsafe-call are **done** (rules flipped to `error`); `no-unused-vars`/`no-non-null-assertion` + the mechanical rules remain.
+**Progress:** 14,030 → **1,552** (measured 2026-08-12, `lint-ratchets --report` on origin/main). Row-typing (0/538), a11y (0 findings), member-access, explicit-any, argument, **assignment**, no-unsafe-return and no-unsafe-call are **done** (rules flipped to `error`); `no-unused-vars`/`no-non-null-assertion` + the mechanical rules remain.
 
 > **This doc is the canonical checkpoint.** Every grind session starts by reading the
 > **STATUS CHECKPOINT** below and ends by updating it. If an agent is rate-limited or
@@ -25,7 +25,7 @@
 | a11y findings | 0 | **0** | ✅ done |
 | **total warnings** | **1,646** | CI ceiling **2,000** | green |
 
-Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 1,140 · `no-console` 0 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` 0 · `no-non-null-assertion` 386 · `no-restricted-syntax` 16. (Non-null grind started 2026-08-12: batch 1 fixed 115 sites in `featureCodes.test`, `mpesa.test`, `networkAdjustment.test`, `unified3dAdjustment.test`, `LongSectionRenderer`, `ProgressMonitorPanel` via a `defined()` guard helper / type-predicate filters / an `id` guard — real narrowing, not suppressions; batch 2 fixed 60 sites in `statutoryWorkbook`, `benchmarks`, `crossSectionGeometry.test`, `least-squares`, `ownership.test`, `traverseLayer.test` via `lastRow(ws)`/`findStation()` guards, captured closure consts, and the `defined()` test helper.) (`no-unsafe-return` ground to 0 and `no-unsafe-call`/`no-console` drained to 0 2026-08-12; both unsafe-return and unsafe-call flipped to `error`.)
+Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 1,106 · `no-console` 0 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` 0 · `no-non-null-assertion` 386 · `no-restricted-syntax` 16. (Unused-vars grind started 2026-08-12: batch 1 dropped 34 sites in `mobile/field/page.tsx`, `TopoDrawingComposer.tsx`, `tools/page.tsx` — dead imports/state/props removed, `_`-prefixed callback args, dead `userPlanRank` prop chain deleted.) (Non-null grind started 2026-08-12: batch 1 fixed 115 sites in `featureCodes.test`, `mpesa.test`, `networkAdjustment.test`, `unified3dAdjustment.test`, `LongSectionRenderer`, `ProgressMonitorPanel` via a `defined()` guard helper / type-predicate filters / an `id` guard — real narrowing, not suppressions; batch 2 fixed 60 sites in `statutoryWorkbook`, `benchmarks`, `crossSectionGeometry.test`, `least-squares`, `ownership.test`, `traverseLayer.test` via `lastRow(ws)`/`findStation()` guards, captured closure consts, and the `defined()` test helper.) (`no-unsafe-return` ground to 0 and `no-unsafe-call`/`no-console` drained to 0 2026-08-12; both unsafe-return and unsafe-call flipped to `error`.)
 
 ### Git / CI state
 
@@ -128,7 +128,7 @@ Top 20 (regen: `node scripts/assignment-scan.mjs --top 20`):
 
 | Rule | Count | Fix class | Top files |
 |---|---|---|---|
-| `no-unused-vars` | 1,163 | `_`-prefix unused bindings, drop dead imports/params | `mobile/field/page.tsx` 13 · `TopoDrawingComposer.tsx` 11 · `tools/page.tsx` 10 · `cadastralPlanDXF.ts` 10 · `project/[id]/scheme/page.tsx` 9 |
+| `no-unused-vars` | 1,106 | `_`-prefix unused bindings, drop dead imports/params | next tier per live scan (batch 1 done: mobile/field 13 · TopoDrawingComposer 11 · tools/page 10; cadastralPlanDXF 10 · scheme/page 9 up next) |
 | `no-non-null-assertion` | 386 | replace `!` with real narrowing/guards (tests: `defined()` helper + assert; prod: type-predicate filters / destructure guards) | next tier per live scan (batch 2 done: statutoryWorkbook 16 · benchmarks 10 · crossSectionGeometry.test 10 · least-squares 8 · ownership.test 8 · traverseLayer.test 8) |
 | `no-console` | 8 → 0 (done) | ✅ drained 2026-08-12 — routed through `lib/logger.ts` (chat/route 3, handler 2, africasTalking 2, fieldbook 1) | — |
 | `no-unsafe-call` | 0 (done) | ✅ flipped to `error` 2026-08-12 — committed tree drained 1 → 0 (`auth-v5.ts` req.headers cast); rule now errors | — |
