@@ -23,7 +23,7 @@
 | `no-unsafe-argument` | 0 | **0** | ✅ done (rule = error) |
 | row-typing (`db.query` untyped) | 0 / 532 | **0** | ✅ done |
 | a11y findings | 0 | **0** | ✅ done |
-| **total warnings** | **1,646** | CI ceiling **2,000** | green |
+| **total warnings** | **1,380** | CI ceiling **1,500** | green |
 
 Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 1,106 · `no-console` 0 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` 0 · `no-non-null-assertion` 214 · `no-restricted-syntax` 16. (Non-null batch 3 fixed 85 sites in `networkAdjustment.ts`, `helmertRigorous.test`, `cassini.test`, `fr583_4acres_survey.test`, `statutoryGate.test`, `gnssBaseline.test` via a `mustGet()` map guard + the shared `defined()` helper.) (Unused-vars grind started 2026-08-12: batch 1 dropped 34 sites in `mobile/field/page.tsx`, `TopoDrawingComposer.tsx`, `tools/page.tsx` — dead imports/state/props removed, `_`-prefixed callback args, dead `userPlanRank` prop chain deleted.) (Non-null grind started 2026-08-12: batch 1 fixed 115 sites in `featureCodes.test`, `mpesa.test`, `networkAdjustment.test`, `unified3dAdjustment.test`, `LongSectionRenderer`, `ProgressMonitorPanel` via a `defined()` guard helper / type-predicate filters / an `id` guard — real narrowing, not suppressions; batch 2 fixed 60 sites; batch 3 fixed 85 sites; batch 4 fixed 33 sites in `sequentialAdjustment.test`, `lsaIterative.test`, `spiralAlignment.test`, `verticalCurveDesigner.test`, `analytics/page.tsx`; batch 5 fixed 54 sites in `loginLimiter`, `offlineStorage`, `entityGraph`, `national_sheets`, `crossSectionPdf`, `AnalysisTab`, `traverseAccuracy.test`, `rinex.test`, `pileGrid.test` via `upstashEnv()`/`requireDb()`/`cassOf()` guards, get-or-guard narrowing, type-predicate filters, and the shared `defined()` helper) in `statutoryWorkbook`, `benchmarks`, `crossSectionGeometry.test`, `least-squares`, `ownership.test`, `traverseLayer.test` via `lastRow(ws)`/`findStation()` guards, captured closure consts, and the `defined()` test helper.) (`no-unsafe-return` ground to 0 and `no-unsafe-call`/`no-console` drained to 0 2026-08-12; both unsafe-return and unsafe-call flipped to `error`.)
 
@@ -141,7 +141,7 @@ Top 20 (regen: `node scripts/assignment-scan.mjs --top 20`):
 
 1. Push every batch; watch the ci.yml run — all code gates must stay green.
 2. As each family hits 0: drop its floor to 0 (via `--update-<family>`) and flip the rule to `"error"` in the ESLint config so it can never regress.
-3. Tighten `--max-warnings`: 10,000 → 5,000 (now) → 2,000 → 500 → **0** as the totals shrink. Keep the ceiling documented in the workflow files (see the earlier 10k tightening for the pattern).
+3. Tighten `--max-warnings`: 20,000 → 10,000 → 5,000 → 3,700 → 3,000 → 2,800 → 2,000 → **1,500 (now)** → 500 → **0** as the totals shrink. Keep the ceiling documented in the workflow files (see the earlier 10k tightening for the pattern).
 4. Fix the two known-red CI jobs (§0): E2E (env + timeout/sharding) and Deploy (GCP SSH — infra, needs credentials/VM work, out of code scope).
 
 ---
