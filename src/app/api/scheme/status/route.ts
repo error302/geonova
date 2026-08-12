@@ -67,7 +67,7 @@ export const POST = apiHandler({
     reason: 'Scheme status changed',
   },
 }, async (req, ctx) => {
-  const userRole = (ctx.session!.user as { role?: string }).role || 'surveyor'
+  const userRole = (ctx.session?.user as { role?: string } | undefined)?.role || 'surveyor'
 
   // Only admins can change scheme status
   if (!isAdmin(userRole)) {

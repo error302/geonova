@@ -114,7 +114,7 @@ export const GCP_FORMATS: { id: GCPFormat; label: string; ext: string; desc: str
 ]
 
 export function exportGCPs(points: GCPPoint[], format: GCPFormat): { content: string; ext: string } {
-  const fmt = GCP_FORMATS.find((f) => f.id === format)!
+  const fmt = GCP_FORMATS.find((f) => f.id === format) ?? GCP_FORMATS[0]
   const exportFns: Record<GCPFormat, (pts: GCPPoint[]) => string> = {
     pix4d:       exportPix4D,
     dronedeploy: exportDroneDeploy,

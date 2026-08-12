@@ -134,7 +134,7 @@ class OfflineMutationQueue {
   /** Enqueue a mutation for later sync. Generates a UUID if not provided. */
   async enqueue(m: Omit<QueuedMutation, 'id' | 'createdAt' | 'attempts'> & { id?: string }): Promise<QueuedMutation> {
     const mutation: QueuedMutation = {
-      id: m.id || (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID()! : `mut-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      id: m.id || (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : `mut-${Date.now()}-${Math.random().toString(36).slice(2)}`,
       url: m.url,
       method: m.method,
       body: m.body,

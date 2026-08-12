@@ -54,7 +54,10 @@ export const PATCH = apiHandler(
 
     // IDOR protection — verify the survey point's project belongs to the user
     const ownership = await requireSurveyPointOwnership(id, ctx.userId)
-    if (!ownership.ok) return ownership.error!
+    if (!ownership.ok) {
+  if (!ownership.error) throw new Error('Ownership check failed without an error response')
+  return ownership.error
+}
 
     // Fetch current row for optimistic lock check
     const { rows } = await db.query<SurveyPointRow>(

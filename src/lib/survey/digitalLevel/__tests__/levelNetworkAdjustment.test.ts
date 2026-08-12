@@ -1,4 +1,5 @@
 import { approxEqual } from '@/test-utils/approx'
+import { defined } from '@/test-utils/defined'
 import {
   adjustLevelNetwork,
   computeObservations,
@@ -86,7 +87,7 @@ describe('adjustLevelNetwork', () => {
     const result = adjustLevelNetwork(observations, controlPoints, 'third')
     const tp1 = result.adjustedLevels.find(function(p) { return p.id === 'TP1' })
     expect(tp1).toBeDefined()
-    expect(approxEqual(tp1!.rl, 1202.5, 10 ** -0)).toBe(true) // initial: 1200 + 2.5
+    expect(approxEqual(defined(tp1).rl, 1202.5, 10 ** -0)).toBe(true) // initial: 1200 + 2.5
   })
 
   test('all-fixed-stations edge case returns residuals', () => {

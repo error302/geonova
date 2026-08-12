@@ -77,7 +77,7 @@ export interface PortfolioReport {
 export const GET = apiHandler(
   { auth: true, rateLimit: { max: 10, windowMs: 60000 } },
   async (_req, ctx) => {
-    const userId = ctx.userId!
+    const userId = ctx.userId
 
     // Fetch the user's projects grouped by survey type
     const { rows: projects } = await db.query<ProjectRow>(

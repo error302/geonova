@@ -133,7 +133,11 @@ export function parseXYZText(text: string): {
       continue;
     }
 
-    const mapping = colMapping!;
+    if (!colMapping) {
+      errors.push({ row: i + 1, message: 'Column mapping not resolved' });
+      continue;
+    }
+    const mapping = colMapping;
     const easting = parseFloat(parts[mapping.easting]);
     const northing = parseFloat(parts[mapping.northing]);
     const elevation = parseFloat(parts[mapping.elevation]);

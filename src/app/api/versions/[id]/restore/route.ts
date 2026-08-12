@@ -64,7 +64,10 @@ export const POST = apiHandler({
 
   // IDOR protection — verify the version belongs to the requesting user
   const ownership = await requireVersionOwnership(version_id, ctx.userId)
-  if (!ownership.ok) return ownership.error!
+  if (!ownership.ok) {
+  if (!ownership.error) throw new Error('Ownership check failed without an error response')
+  return ownership.error
+}
 
   // Get the version to restore
   const { rows: versionRows } = await db.query<EntityVersionRow>(

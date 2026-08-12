@@ -78,7 +78,8 @@ function CivilExportPage() {
 
   const handleExport = () => {
     if (!filteredPoints.length || !project) return
-    const fmt = CIVIL_FORMATS.find((f) => f.id === format)!
+    const fmt = CIVIL_FORMATS.find((f) => f.id === format)
+    if (!fmt) return
     const { content, ext } = exportCivil(filteredPoints, format, project.name, project.utm_zone, project.hemisphere)
     download(content, `${project.name}_${fmt.label.replace(/[\s/]/g, '_')}.${ext}`)
   }

@@ -140,8 +140,12 @@ export const GET = apiHandler(
       }
       // Apply binning if requested
       const binKey = interval > 0 ? Math.round(ch / interval) * interval : ch
-      if (!chainageMap.has(binKey)) chainageMap.set(binKey, [])
-      chainageMap.get(binKey)!.push(p)
+      let binPts = chainageMap.get(binKey)
+      if (!binPts) {
+        binPts = []
+        chainageMap.set(binKey, binPts)
+      }
+      binPts.push(p)
     }
 
     // Build cross-section array sorted by chainage

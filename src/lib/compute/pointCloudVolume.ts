@@ -178,8 +178,12 @@ class SpatialIndex {
     this.cellSize = cellSize
     for (const p of points) {
       const key = this.cellKey(p.easting, p.northing)
-      if (!this.cells.has(key)) this.cells.set(key, [])
-      this.cells.get(key)!.push(p)
+      let cell = this.cells.get(key)
+      if (!cell) {
+        cell = []
+        this.cells.set(key, cell)
+      }
+      cell.push(p)
     }
   }
 

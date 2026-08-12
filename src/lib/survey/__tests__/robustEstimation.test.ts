@@ -9,6 +9,7 @@ import {
 } from '../robustEstimation'
 import type { NetworkStation, GenericObservation } from '../lsaIterative'
 import { approxEqual } from '@/test-utils/approx'
+import { defined } from '@/test-utils/defined'
 
 describe('computeRobustWeight', () => {
   test.each(['huber', 'igg3', 'tukey'] as WeightFunction[])(
@@ -146,7 +147,7 @@ describe('adjustNetworkRobust', () => {
       makeGoodObs(100.005, 99.998, 10.002),
     ]
     const result = adjustNetworkRobust([fixedStation, freeStation], observations)
-    const free = result.adjustedStations.find(s => s.id === 'stn-2')!
+    const free = defined(result.adjustedStations.find(s => s.id === 'stn-2'))
     expect(free.semiMajor).toBeGreaterThanOrEqual(0)
     expect(free.sigmaE).toBeGreaterThanOrEqual(0)
   })

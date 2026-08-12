@@ -685,7 +685,8 @@ export function subdivide(
 
   switch (method) {
     case 'single-split':
-      lots = subdivideSingleSplit(effectiveParent, params.splitLine!)
+      if (!params.splitLine) throw new Error('splitLine is required for single-split subdivision')
+      lots = subdivideSingleSplit(effectiveParent, params.splitLine)
       break
     case 'grid':
       lots = subdivideGrid(effectiveParent, params.rows ?? 2, params.cols ?? 2)

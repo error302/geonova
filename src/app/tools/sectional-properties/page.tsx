@@ -21,8 +21,12 @@ export default function SectionalPropertiesPage() {
     const floors: SectionalFloor[] = []
     const floorMap = new Map<number, typeof units>()
     for (const u of units) {
-      if (!floorMap.has(u.floor)) floorMap.set(u.floor, [])
-      floorMap.get(u.floor)!.push(u)
+      let floorUnits = floorMap.get(u.floor)
+      if (!floorUnits) {
+        floorUnits = []
+        floorMap.set(u.floor, floorUnits)
+      }
+      floorUnits.push(u)
     }
     for (const [floor, floorUnits] of floorMap) {
       const sectionUnits: SectionalUnit[] = floorUnits.map((u, i) => ({

@@ -353,10 +353,12 @@ export function organizeShotsByChainage(
   // Group by chainage station
   const groups = new Map<number, CrossSectionShot[]>()
   for (const css of crossSectionShots) {
-    if (!groups.has(css.chainageStation)) {
-      groups.set(css.chainageStation, [])
+    let group = groups.get(css.chainageStation)
+    if (!group) {
+      group = []
+      groups.set(css.chainageStation, group)
     }
-    groups.get(css.chainageStation)!.push(css)
+    group.push(css)
   }
 
   // Build CrossSectionGroup for each station

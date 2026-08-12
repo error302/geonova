@@ -71,7 +71,7 @@ export class PayPalService {
     this.accessToken = data.access_token
     this.tokenExpiry = Date.now() + (data.expires_in * 1000) - 60000
 
-    return this.accessToken!
+    return data.access_token
   }
 
   private currencyMinorUnitDigits(currency: string): number {

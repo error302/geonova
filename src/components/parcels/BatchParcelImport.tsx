@@ -92,8 +92,9 @@ export function BatchParcelImport({ projectId, onImport }: BatchParcelImportProp
 
       if (!parcelNum || !isFinite(easting) || !isFinite(northing)) continue
 
-      if (!parcelsMap.has(parcelNum)) {
-        parcelsMap.set(parcelNum, {
+      let parcelEntry = parcelsMap.get(parcelNum)
+      if (!parcelEntry) {
+        parcelEntry = {
           id: crypto.randomUUID(),
           parcelNumber: parcelNum,
           ownerName: colIdx.ownerName >= 0 ? cols[colIdx.ownerName] : undefined,
@@ -103,10 +104,11 @@ export function BatchParcelImport({ projectId, onImport }: BatchParcelImportProp
           vertices: [],
           valid: true,
           errors: [],
-        })
+        }
+        parcelsMap.set(parcelNum, parcelEntry)
       }
 
-      parcelsMap.get(parcelNum)!.vertices.push({ easting, northing })
+      parcelEntry.vertices.push({ easting, northing })
     }
 
     const parcels = Array.from(parcelsMap.values())

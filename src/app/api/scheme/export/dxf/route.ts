@@ -55,14 +55,16 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   const parcelData = new Map<string, { info: SchemeParcelRow; coords: SchemeCoord[] }>()
   parcels.forEach((row) => {
     const key = `${row.block_number}-${row.parcel_number}`
-    if (!parcelData.has(key)) {
-      parcelData.set(key, {
+    let entry = parcelData.get(key)
+    if (!entry) {
+      entry = {
         info: row,
         coords: [],
-      })
+      }
+      parcelData.set(key, entry)
     }
     if (row.easting !== null && row.northing !== null) {
-      parcelData.get(key)!.coords.push({
+      entry.coords.push({
         station: row.station_name,
         x: Number(row.easting),
         y: Number(row.northing),

@@ -298,7 +298,9 @@ export function processObservation(
     });
     
     if (crResult.isSignificant) {
-      warnings.push(crResult.warning!);
+      if (crResult.warning) {
+        warnings.push(crResult.warning);
+      }
     }
   }
   

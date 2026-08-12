@@ -33,7 +33,7 @@ function CheckoutContent() {
   const [mpesa, setMpesa] = useState<{ paymentId: string; checkoutRequestId: string } | null>(null)
 
   const plan = useMemo(
-    () => PLAN_CATALOG.find((p) => p.id === selectedPlanId)!,
+    () => PLAN_CATALOG.find((p) => p.id === selectedPlanId) ?? PLAN_CATALOG[0],
     [selectedPlanId]
   )
 

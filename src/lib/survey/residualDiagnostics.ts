@@ -459,7 +459,7 @@ function interpolateDWCritical(n: number, which: 'dL' | 'dU', alpha: number): nu
   ]
 
   // Linear interpolation in log(n) space
-  let val: number
+  let val = NaN
   if (n <= table[0].n) {
     val = which === 'dL' ? table[0].dL : table[0].dU
   } else if (n >= table[table.length - 1].n) {
@@ -481,7 +481,7 @@ function interpolateDWCritical(n: number, which: 'dL' | 'dU', alpha: number): nu
 
   // For α=0.01, dL is lower and dU is also lower; for α=0.10, both higher
   // This is a rough scaling — for production, use exact tables
-  return val! * alphaAdjust
+  return val * alphaAdjust
 }
 
 // ─── Full Diagnostics ───────────────────────────────────────────────────────

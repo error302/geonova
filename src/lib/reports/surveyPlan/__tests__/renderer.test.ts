@@ -1,5 +1,6 @@
 import { SurveyPlanRenderer } from '../renderer'
 import type { SurveyPlanData } from '../types'
+import { defined } from '@/test-utils/defined'
 
 const BASE_DATA: SurveyPlanData = {
   project: {
@@ -424,7 +425,7 @@ describe('SurveyPlanRenderer', () => {
         ...BASE_DATA,
         adjacentLots: [{
           id: 'Lot 2',
-          boundaryPoints: BASE_DATA.adjacentLots![0].boundaryPoints,
+          boundaryPoints: defined(BASE_DATA.adjacentLots)[0].boundaryPoints,
           planReference: 'PLAN M-459',
           side: 'right' as const,
         }],

@@ -263,9 +263,10 @@ export async function loadGateInputForProject(
             maxIdx = i
           }
         }
-        if (parsed[maxIdx].areaHectares !== null) {
+        const maxAreaHectares = parsed[maxIdx].areaHectares
+        if (maxAreaHectares != null) {
           parentParcel = {
-            areaHectares: parsed[maxIdx].areaHectares!,
+            areaHectares: maxAreaHectares,
             vertices: parsed[maxIdx].vertices,
           }
         }

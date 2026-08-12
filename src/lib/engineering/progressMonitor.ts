@@ -139,7 +139,7 @@ export function calculateProgressSummary(checkpoints: InspectionCheckpoint[]): P
     // Find earliest and latest actual dates to compute rate
     const dated = checkpoints
       .filter(c => c.actualDate)
-      .map(c => ({ date: new Date(c.actualDate!), pct: c.actualPercentage ?? 0 }))
+      .map(c => ({ date: new Date(c.actualDate ?? 0), pct: c.actualPercentage ?? 0 }))
       .sort((a, b) => a.date.getTime() - b.date.getTime());
 
     if (dated.length >= 2) {

@@ -215,7 +215,7 @@ export async function fieldToFinish(input: FieldToFinishInput): Promise<FieldToF
       scaleFactor: edmResult.lineScaleFactor,
     });
 
-    correctedBearings.push(obs.bearing!);
+    correctedBearings.push(obs.bearing ?? 0);
     correctedDistances.push(edmResult.gridDistance); // Use grid distance for traverse computation
   }
 

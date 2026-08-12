@@ -5,6 +5,7 @@
  */
 
 import { parseTopcon, TopconRecord } from '@/lib/import/totalStation/parseTopcon'
+import { defined } from '@/test-utils/defined'
 
 // ─── Sample Data ────────────────────────────────────────────────────────────
 
@@ -233,7 +234,7 @@ describe('parseTopcon', () => {
       // The parser checks isNaN(northing) and isNaN(easting), not elevation
       // So NaN elevation is stored as NaN — but the record is still created
       expect(result.records).toHaveLength(1)
-      expect(isNaN(result.records[0].elevation!)).toBe(true)
+      expect(isNaN(defined(result.records[0].elevation))).toBe(true)
     })
   })
 

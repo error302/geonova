@@ -104,7 +104,8 @@ export function generateTopoDXF(
   for (const [stringId, pts] of Array.from(lineStrings.entries())) {
     const match = stringId.match(/^([A-Z-]+)(\d*)$/)
     const baseCode = match ? match[1] : stringId
-    const def = codeMap.get(baseCode)!
+    const def = codeMap.get(baseCode)
+    if (!def) continue
 
     drawing.setActiveLayer(def.dxfLayer)
     

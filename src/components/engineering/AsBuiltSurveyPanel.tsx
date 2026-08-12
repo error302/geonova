@@ -27,7 +27,7 @@ export default function AsBuiltSurveyPanel({ roadClass, surfaceType = 'paved', d
   const [nanWarning, setNanWarning] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const tolerance = SURFACE_TYPES.find(s => s.key === activeSurface)!.tolerance
+  const tolerance = (SURFACE_TYPES.find(s => s.key === activeSurface) ?? SURFACE_TYPES[0]).tolerance
 
   const handleImport = () => {
     setCsvError(null)

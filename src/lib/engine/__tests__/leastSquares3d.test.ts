@@ -1,4 +1,5 @@
 import { adjustNetwork, Observation } from '../leastSquares'
+import { defined } from '@/test-utils/defined'
 
 describe('adjustNetwork — 2D angle observation', () => {
   it('adjusts a simple triangle with included angles', () => {
@@ -88,7 +89,7 @@ describe('adjustNetwork — 3D adjustment with slope distance + zenith angle', (
     })
     expect(result.ok).toBe(true)
     expect(result.adjustedPoints[0].rl).toBeDefined()
-    expect(Number.isFinite(result.adjustedPoints[0].rl!)).toBe(true)
+    expect(Number.isFinite(defined(result.adjustedPoints[0].rl))).toBe(true)
   })
 })
 

@@ -341,10 +341,12 @@ export class SpatialIndex<T> {
 
   add(point: { x: number; y: number; data: T }): void {
     const key = this.getCellKey(point.x, point.y)
-    if (!this.grid.has(key)) {
-      this.grid.set(key, [])
+    let bucket = this.grid.get(key)
+    if (!bucket) {
+      bucket = []
+      this.grid.set(key, bucket)
     }
-    this.grid.get(key)!.push(point)
+    bucket.push(point)
   }
 
   findNearest(x: number, y: number, maxResults: number = 10, maxDistance?: number): Array<{ x: number; y: number; data: T; distance: number }> {

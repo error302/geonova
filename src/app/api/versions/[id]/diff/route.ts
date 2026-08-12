@@ -33,7 +33,10 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   // IDOR protection — verify the version belongs to the requesting user
   const ownership = await requireVersionOwnership(id, ctx.userId)
-  if (!ownership.ok) return ownership.error!
+  if (!ownership.ok) {
+  if (!ownership.error) throw new Error('Ownership check failed without an error response')
+  return ownership.error
+}
 
   const { searchParams } = new URL(req.url)
 

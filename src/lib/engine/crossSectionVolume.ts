@@ -302,8 +302,12 @@ export function parseCrossSectionCSV(csv: string): CrossSection[] {
       const offset = parseFloat(parts[1].trim())
       const rl = parseFloat(parts[2].trim())
       if (!isNaN(chainage) && !isNaN(offset) && !isNaN(rl)) {
-        if (!sectionMap.has(chainage)) sectionMap.set(chainage, [])
-        sectionMap.get(chainage)!.push({ offset, rl })
+        let section = sectionMap.get(chainage)
+        if (!section) {
+          section = []
+          sectionMap.set(chainage, section)
+        }
+        section.push({ offset, rl })
       }
     }
   }

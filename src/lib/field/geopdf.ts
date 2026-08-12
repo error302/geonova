@@ -33,7 +33,8 @@ export async function renderPDFPageToDataURL(
   const canvas = document.createElement('canvas');
   canvas.width = viewport.width;
   canvas.height = viewport.height;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('2D canvas context unavailable');
 
   const renderParams: import('pdfjs-dist/types/src/display/api').RenderParameters = { canvasContext: ctx, canvas: ctx.canvas, viewport };
   await page.render(renderParams).promise;

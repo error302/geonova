@@ -39,7 +39,10 @@ export const GET = apiHandler(
     const { id } = ctx.params
 
     const ownership = await requireProjectOwnership(id, ctx.userId)
-    if (!ownership.ok) return ownership.error!
+    if (!ownership.ok) {
+  if (!ownership.error) throw new Error('Ownership check failed without an error response')
+  return ownership.error
+}
 
     const { rows } = await db.query<DeedPlanRow>(
       `SELECT id, survey_number, parcel_number, locality, area_sqm, scale,

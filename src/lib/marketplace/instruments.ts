@@ -72,7 +72,10 @@ export function getListings(filters?: {
   if (filters?.type) items = items.filter((l: InstrumentListing) => l.type === filters.type)
   if (filters?.category) items = items.filter((l: InstrumentListing) => l.category === filters.category)
   if (filters?.country) items = items.filter((l: InstrumentListing) => l.country === filters.country)
-  if (filters?.maxPrice) items = items.filter((l: InstrumentListing) => l.price <= filters.maxPrice!)
+  if (filters?.maxPrice) {
+    const maxPrice = filters.maxPrice
+    items = items.filter((l: InstrumentListing) => l.price <= maxPrice)
+  }
   return items
 }
 

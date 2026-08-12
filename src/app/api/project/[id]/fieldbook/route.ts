@@ -28,7 +28,10 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   // IDOR protection — verify project ownership
   const ownership = await requireProjectOwnership(id, ctx.userId)
-  if (!ownership.ok) return ownership.error!
+  if (!ownership.ok) {
+  if (!ownership.error) throw new Error('Ownership check failed without an error response')
+  return ownership.error
+}
 
   const { rows } = await db.query<ProjectFieldbookEntryRow>(
     `SELECT * FROM project_fieldbook_entries

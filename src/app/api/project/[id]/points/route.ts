@@ -68,7 +68,10 @@ export const GET = apiHandler(
 
     // T1.7: Verify project ownership before returning data (IDOR fix).
     const ownership = await requireProjectOwnership(id, ctx.userId)
-    if (!ownership.ok) return ownership.error!
+    if (!ownership.ok) {
+  if (!ownership.error) throw new Error('Ownership check failed without an error response')
+  return ownership.error
+}
 
     const { rows } = await db.query<SurveyPointFullRow>(
       `SELECT

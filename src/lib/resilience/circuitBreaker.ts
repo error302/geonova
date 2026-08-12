@@ -142,10 +142,12 @@ class CircuitBreaker {
 const breakers = new Map<string, CircuitBreaker>()
 
 export function getCircuitBreaker(name: string, options?: Partial<CircuitBreakerOptions>): CircuitBreaker {
-  if (!breakers.has(name)) {
-    breakers.set(name, new CircuitBreaker({ name, ...options }))
+  let breaker = breakers.get(name)
+  if (!breaker) {
+    breaker = new CircuitBreaker({ name, ...options })
+    breakers.set(name, breaker)
   }
-  return breakers.get(name)!
+  return breaker
 }
 
 export function getAllCircuitStates() {

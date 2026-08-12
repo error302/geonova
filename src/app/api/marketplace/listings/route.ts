@@ -73,7 +73,7 @@ export const GET = apiHandler({ auth: false, rateLimit: { max: 20, windowMs: 600
   const type = searchParams.get('type') ?? undefined
   const category = searchParams.get('category') ?? undefined
   const country = searchParams.get('country') ?? undefined
-  const maxPrice = searchParams.get('maxPrice') ? parseFloat(searchParams.get('maxPrice')!) : undefined
+  const maxPriceParam = searchParams.get('maxPrice'); const maxPrice = maxPriceParam ? parseFloat(maxPriceParam) : undefined
   const q = searchParams.get('q') ?? undefined
   const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100)
 

@@ -305,10 +305,12 @@ const sessions = new Map<string, FieldSession>()
 
 export function getFieldSession(projectId: string, surveyType: SurveyType = 'cadastral'): FieldSession {
   const key = `${projectId}:${surveyType}`
-  if (!sessions.has(key)) {
-    sessions.set(key, new FieldSession(projectId, surveyType))
+  let session = sessions.get(key)
+  if (!session) {
+    session = new FieldSession(projectId, surveyType)
+    sessions.set(key, session)
   }
-  return sessions.get(key)!
+  return session
 }
 
 // ─── React Hook ─────────────────────────────────────────────────────────────

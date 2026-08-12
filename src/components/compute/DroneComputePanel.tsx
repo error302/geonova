@@ -62,9 +62,9 @@ export default function DroneComputePanel({ projectId }: { projectId: string }) 
     for (let i = 0; i < uniqueX.length - 1; i++) {
       for (let j = 0; j < uniqueY.length - 1; j++) {
         const c = [grid.get(`${uniqueX[i]},${uniqueY[j]}`), grid.get(`${uniqueX[i+1]},${uniqueY[j]}`), grid.get(`${uniqueX[i+1]},${uniqueY[j+1]}`), grid.get(`${uniqueX[i]},${uniqueY[j+1]}`)];
-        if (c.every(Boolean)) {
+        if (c.every((v): v is number[] => Boolean(v))) {
           const cellArea = Math.abs(uniqueX[i+1] - uniqueX[i]) * Math.abs(uniqueY[j+1] - uniqueY[j]);
-          const avgH = c.reduce((s, p) => s + Math.max(p![2] - refPlane, 0), 0) / 4;
+          const avgH = c.reduce((s, p) => s + Math.max(p[2] - refPlane, 0), 0) / 4;
           vol += avgH * cellArea;
         }
       }

@@ -226,7 +226,8 @@ export async function syncPendingOperations(
             // No conflicts — auto-apply the merge, don't bother the user
             await applyMergedUpdate(dbClient, op, existing.data ?? null, baseData)
             results.synced++
-            await removeSyncedOperation(op.id!)
+            if (!op.id) throw new Error('Sync operation missing id')
+            await removeSyncedOperation(op.id)
             continue
           }
         }

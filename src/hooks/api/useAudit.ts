@@ -85,7 +85,7 @@ export function useAuditEvents(
   const query = useQuery<AuditEventsResponse, ApiError>({
     queryKey: auditKeys.events(projectId ?? '', limit),
     queryFn: () => {
-      const params = new URLSearchParams({ project_id: projectId!, limit: String(limit) })
+      const params = new URLSearchParams({ project_id: projectId ?? '', limit: String(limit) })
       return apiFetch<AuditEventsResponse>(`/api/fieldbook/audit?${params.toString()}`)
     },
     enabled,

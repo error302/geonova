@@ -155,7 +155,7 @@ export function useSubdivision({
     try {
       const fullParams: SubdivisionParams = { ...params }
       if (method === 'single-split') {
-        fullParams.splitLine = splitLine!
+        if (splitLine) fullParams.splitLine = splitLine
       }
 
       // Apply road reserve if enabled

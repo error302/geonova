@@ -71,7 +71,7 @@ export default function BeaconReferencePage() {
                     {BEACON_IMAGES[type as BeaconType] && (
                       <div className="mb-3 rounded-lg overflow-hidden border border-[var(--border-color)] bg-black/20">
                         <Image
-                          src={BEACON_IMAGES[type as BeaconType]!}
+                          src={BEACON_IMAGES[type as BeaconType] ?? ''}
                           alt={`${def.fullName} — field photograph`}
                           width={400}
                           height={300}
