@@ -92,10 +92,11 @@ export async function sendSMS(to: string, message: string): Promise<Notification
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const username = env.AFRICASTALKING_USERNAME!
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const apiKey = env.AFRICASTALKING_API_KEY!
+    const username = env.AFRICASTALKING_USERNAME
+    const apiKey = env.AFRICASTALKING_API_KEY
+    if (!username || !apiKey) {
+      return { success: false, error: 'Africa\'s Talking credentials not configured' }
+    }
     const senderId = env.AFRICASTALKING_SENDER_ID || 'METARDU'
 
     // Africa's Talking SMS API v1
@@ -146,10 +147,11 @@ export async function sendWhatsApp(to: string, message: string): Promise<Notific
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const username = env.AFRICASTALKING_USERNAME!
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const apiKey = env.AFRICASTALKING_API_KEY!
+    const username = env.AFRICASTALKING_USERNAME
+    const apiKey = env.AFRICASTALKING_API_KEY
+    if (!username || !apiKey) {
+      return { success: false, error: 'Africa\'s Talking credentials not configured' }
+    }
 
     // Africa's Talking WhatsApp sandbox API
     const response = await fetch(`https://api.africastalking.com/v1/africastalking/${username}/messages`, {

@@ -47,6 +47,14 @@ import {
 
 const OAUTH_NO_PASSWORD = 'OAUTH_NO_PASSWORD'
 
+// OAuth provider env — captured so the `!` assertions can go: the spread
+// gates below narrow these consts instead of asserting on process.env.
+const oauthGoogleClientId = process.env.GOOGLE_CLIENT_ID
+const oauthGoogleClientSecret = process.env.GOOGLE_CLIENT_SECRET
+const oauthAzureClientId = process.env.AZURE_AD_CLIENT_ID
+const oauthAzureClientSecret = process.env.AZURE_AD_CLIENT_SECRET
+const oauthAzureTenantId = process.env.AZURE_AD_TENANT_ID
+
 // ─── Session strategy: JWT with database fallback ───────────────────────────
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- staged v5 migration file (see header)
@@ -140,23 +148,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
 
     // OAuth providers — same as v4, config from env
-    ...(process.env.GOOGLE_CLIENT_ID
+    ...(oauthGoogleClientId
       ? [Google({
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          clientId: process.env.GOOGLE_CLIENT_ID!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+          clientId: oauthGoogleClientId,
+          clientSecret: oauthGoogleClientSecret ?? '',
         })]
       : []),
 
-    ...(process.env.AZURE_AD_CLIENT_ID
+    ...(oauthAzureClientId
       ? [AzureAD({
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          clientId: process.env.AZURE_AD_CLIENT_ID!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          tenantId: process.env.AZURE_AD_TENANT_ID!,
+          clientId: oauthAzureClientId,
+          clientSecret: oauthAzureClientSecret ?? '',
+          tenantId: oauthAzureTenantId ?? 'common',
         })]
       : []),
   ],
