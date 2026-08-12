@@ -250,10 +250,12 @@ export class CollaborationServer {
       this.collaborators.set(collaboratorId, collaborator)
 
       // Add to project room
-      if (!this.projectRooms.has(projectId)) {
-        this.projectRooms.set(projectId, new Set())
+      let room = this.projectRooms.get(projectId)
+      if (!room) {
+        room = new Set()
+        this.projectRooms.set(projectId, room)
       }
-      this.projectRooms.get(projectId)!.add(collaboratorId)
+      room.add(collaboratorId)
 
       // Notify room of new collaborator
       this.broadcastToProject(projectId, {
@@ -395,10 +397,12 @@ export class CollaborationServer {
   }
 
   private getResolver(projectId: string): ConflictResolver {
-    if (!this.conflictResolvers.has(projectId)) {
-      this.conflictResolvers.set(projectId, new ConflictResolver())
+    let resolver = this.conflictResolvers.get(projectId)
+    if (!resolver) {
+      resolver = new ConflictResolver()
+      this.conflictResolvers.set(projectId, resolver)
     }
-    return this.conflictResolvers.get(projectId)!
+    return resolver
   }
 
   private sendPresence(ws: WebSocket, projectId: string) {

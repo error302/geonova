@@ -89,10 +89,9 @@ export const GET = apiHandler(
       // Group points by network_id
       const pointsByNetwork = new Map<string, typeof points>()
       for (const p of points) {
-        if (!pointsByNetwork.has(p.network_id)) {
-          pointsByNetwork.set(p.network_id, [])
-        }
-        pointsByNetwork.get(p.network_id)!.push(p)
+        const networkPoints = pointsByNetwork.get(p.network_id)
+        if (networkPoints) networkPoints.push(p)
+        else pointsByNetwork.set(p.network_id, [p])
       }
       // Attach points to networks
       for (const n of networks) {

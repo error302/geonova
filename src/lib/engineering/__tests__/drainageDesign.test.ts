@@ -1,4 +1,5 @@
 import { manningPipeCapacity, rationalMethodCatchment, manningChannelCapacity, sizePipe, minPipeSlope, MANNING_N, RUNOFF_COEFFICIENTS, STANDARD_PIPE_SIZES } from '../drainageDesign'
+import { defined } from '@/test-utils/defined'
 
 describe('manningPipeCapacity', () => {
   it('300mm concrete pipe at 1% slope', () => {
@@ -108,8 +109,8 @@ describe('sizePipe', () => {
   it('selects appropriate diameter for small flow', () => {
     const result = sizePipe(0.01, 0.013, 0.01) // very small flow
     expect(result).not.toBeNull()
-    expect(result!.diameter).toBeLessThanOrEqual(300) // should be small pipe
-    expect(result!.isSelfCleansing || true) // may or may not be self-cleansing at this size
+    expect(defined(result).diameter).toBeLessThanOrEqual(300) // should be small pipe
+    expect(defined(result).isSelfCleansing || true) // may or may not be self-cleansing at this size
   })
 
   it('selects larger diameter for larger flow', () => {

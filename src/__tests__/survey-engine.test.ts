@@ -9,6 +9,7 @@
 // Previously imported from 'vitest' — converted for Jest compatibility.
 
 // ─── Atmospheric Corrections ─────────────────────────────────────
+import { defined } from '@/test-utils/defined'
 import {
   applyAtmosphericCorrection,
   computeVaporPressure,
@@ -407,7 +408,7 @@ describe('Coordinate Transformation', () => {
     
     expect(recovered.latitude).toBeCloseTo(original.latitude, 6);
     expect(recovered.longitude).toBeCloseTo(original.longitude, 6);
-    expect(recovered.height!).toBeCloseTo(original.height, 1);
+    expect(defined(recovered.height)).toBeCloseTo(original.height, 1);
   });
 
   it('should round-trip Arc 1960 ↔ WGS84', () => {

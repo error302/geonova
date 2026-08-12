@@ -1,4 +1,5 @@
 import { approxEqual } from '@/test-utils/approx'
+import { defined } from '@/test-utils/defined'
 /**
  * Tests for Phase 4: Corridor Engine + Surface TIN
  */
@@ -181,8 +182,8 @@ describe('Surface TIN', () => {
       const z = interpolateZ(tin, 50, 50)
       // Center of the square should be roughly the average
       expect(z).not.toBeNull()
-      expect(z!).toBeGreaterThan(9)
-      expect(z!).toBeLessThan(14)
+      expect(defined(z)).toBeGreaterThan(9)
+      expect(defined(z)).toBeLessThan(14)
     })
 
     it('returns exact Z at a vertex', () => {

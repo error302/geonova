@@ -1,4 +1,5 @@
 import { adjustNetwork, Station, Observation } from '../networkAdjustment'
+import { defined } from '@/test-utils/defined'
 
 describe('adjustNetwork', () => {
   const fixedStation: Station = {
@@ -69,7 +70,7 @@ describe('adjustNetwork', () => {
     const result = adjustNetwork([fixedStation, freeStation], [observation, observation2])
 
     expect(result.degreesOfFreedom).toBeGreaterThan(0)
-    const freeResult = result.adjustedStations.find(s => s.id === 'stn-2')!
+    const freeResult = defined(result.adjustedStations.find(s => s.id === 'stn-2'))
     expect(freeResult.semiMajor).toBeGreaterThanOrEqual(0)
     expect(freeResult.semiMinor).toBeGreaterThanOrEqual(0)
     expect(freeResult.orientation).toBeGreaterThanOrEqual(0)
@@ -78,7 +79,7 @@ describe('adjustNetwork', () => {
   test('fixed stations have zero residuals', () => {
     const result = adjustNetwork([fixedStation, freeStation], [observation])
 
-    const fixedResult = result.adjustedStations.find(s => s.isFixed)!
+    const fixedResult = defined(result.adjustedStations.find(s => s.isFixed))
     expect(fixedResult.residualE).toBe(0)
     expect(fixedResult.residualN).toBe(0)
   })

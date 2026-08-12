@@ -23,7 +23,8 @@ class YjsMeshNetwork {
   private persistences: Map<string, IndexeddbPersistence> = new Map()
 
   public getDoc(projectId: string): Y.Doc {
-    if (this.docs.has(projectId)) return this.docs.get(projectId)!
+    const existing = this.docs.get(projectId)
+    if (existing) return existing
 
     const doc = new Y.Doc()
     this.docs.set(projectId, doc)
@@ -113,7 +114,7 @@ export function subscribeToProjectChanges(
       const users = states
         .filter((state: { user?: { userId?: string } }) => state.user && state.user.userId !== user.id)
         .map(state => state.user as PresenceUser)
-      callbacks.onPresenceChange!(users)
+      callbacks.onPresenceChange?.(users)
     }
 
     awareness.on('change', handleAwarenessChange)
