@@ -24,7 +24,3 @@ export function asBearing(bearingText: string): number | null {
   }
   return normalizeBearing(parsed)
 }
-
-export function niceNow() {
-  return new Date().toISOString()
-}
