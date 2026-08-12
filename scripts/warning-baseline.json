@@ -1,5 +1,5 @@
 {
-  "@typescript-eslint/no-unused-vars": 1106,
+  "@typescript-eslint/no-unused-vars": 1055,
   "react-hooks/exhaustive-deps": 44,
   "@typescript-eslint/no-non-null-assertion": 189,
   "no-restricted-syntax": 16
