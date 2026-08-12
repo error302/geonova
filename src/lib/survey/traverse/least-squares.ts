@@ -220,6 +220,14 @@ class Matrix {
  * @param observations - Observations (distances, angles, azimuths)
  * @returns Adjusted coordinates with uncertainties
  */
+function findStation(stations: LSStation[], name: string): LSStation {
+  const s = stations.find((x) => x.name === name)
+  if (!s) {
+    throw new Error(`Unknown station: ${name}`)
+  }
+  return s
+}
+
 export function leastSquaresAdjustment(
   stations: LSStation[],
   observations: LSObservation[]
@@ -252,8 +260,8 @@ export function leastSquaresAdjustment(
     weights[i] = w;
     
     if (obs.type === 'distance') {
-      const fromStation = stations.find(s => s.name === obs.fromStation)!;
-      const toStation = stations.find(s => s.name === obs.toStation)!;
+      const fromStation = findStation(stations, obs.fromStation);
+      const toStation = findStation(stations, obs.toStation);
       
       const dE = toStation.easting - fromStation.easting;
       const dN = toStation.northing - fromStation.northing;
@@ -305,9 +313,12 @@ export function leastSquaresAdjustment(
       //   ∂θ/∂E_C = -dN_BC/dist_BC²
       //   ∂θ/∂N_C = dE_BC/dist_BC²
 
-      const atStation = stations.find(s => s.name === obs.atStation)!;
-      const fromStation = stations.find(s => s.name === obs.fromStation)!; // backsight
-      const toStation = stations.find(s => s.name === obs.toStation)!;     // foresight
+      if (!obs.atStation) {
+        throw new Error(`Angle observation ${i} is missing atStation`)
+      }
+      const atStation = findStation(stations, obs.atStation);
+      const fromStation = findStation(stations, obs.fromStation); // backsight
+      const toStation = findStation(stations, obs.toStation);     // foresight
 
       // Vectors and distances
       const dE_BA = fromStation.easting - atStation.easting;
@@ -377,8 +388,8 @@ export function leastSquaresAdjustment(
       //   ∂α/∂E_1 =  dN / dist²    ∂α/∂N_1 = -dE / dist²
       //   ∂α/∂E_2 = -dN / dist²    ∂α/∂N_2 =  dE / dist²
 
-      const fromStation = stations.find(s => s.name === obs.fromStation)!;
-      const toStation = stations.find(s => s.name === obs.toStation)!;
+      const fromStation = findStation(stations, obs.fromStation);
+      const toStation = findStation(stations, obs.toStation);
 
       const dE = toStation.easting - fromStation.easting;
       const dN = toStation.northing - fromStation.northing;
@@ -416,7 +427,7 @@ export function leastSquaresAdjustment(
       // Position observation (pseudo-observation for constraints)
       const stationIdx = stationIndex.get(obs.fromStation);
       if (stationIdx !== undefined) {
-        if (obs.value === stations.find(s => s.name === obs.fromStation)!.easting) {
+        if (obs.value === findStation(stations, obs.fromStation).easting) {
           A.set(i, stationIdx * 2, 1);
         } else {
           A.set(i, stationIdx * 2 + 1, 1);

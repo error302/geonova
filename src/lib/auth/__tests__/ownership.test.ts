@@ -14,6 +14,13 @@ jest.mock('@/lib/db', () => ({
   setCurrentOrgId: jest.fn(),
 }))
 
+function defined<T>(value: T | null | undefined): T {
+  if (value === null || value === undefined) {
+    throw new Error('expected value to be defined')
+  }
+  return value
+}
+
 // Mock NextResponse — the real implementation needs the Next.js runtime
 // which isn't available in Jest's jsdom environment. We replace it with
 // a minimal stub that records the body + status for assertions.
@@ -68,7 +75,7 @@ describe('requireProjectOwnership', () => {
     expect(result.ok).toBe(false)
     expect(result.error).toBeDefined()
     // Verify the error response is a 404
-    const resp = result.error!
+    const resp = defined(result.error)
     expect(resp.status).toBe(404)
   })
 
@@ -78,7 +85,7 @@ describe('requireProjectOwnership', () => {
     expect(result.ok).toBe(false)
     expect(result.projectUserId).toBe('user-2')
     expect(result.error).toBeDefined()
-    expect(result.error!.status).toBe(403)
+    expect(defined(result.error).status).toBe(403)
   })
 
   it('returns ok:true for legacy projects with null user_id (no lockout)', async () => {
@@ -118,14 +125,14 @@ describe('requireSurveyPointOwnership', () => {
     mockDb.mockResolvedValueOnce(rows([]))
     const result = await requireSurveyPointOwnership('missing', 'user-1')
     expect(result.ok).toBe(false)
-    expect(result.error!.status).toBe(404)
+    expect(defined(result.error).status).toBe(404)
   })
 
   it('returns ok:false with 403 when the survey point belongs to another user', async () => {
     mockDb.mockResolvedValueOnce(rows([{ user_id: 'user-2' }]))
     const result = await requireSurveyPointOwnership('sp-1', 'user-1')
     expect(result.ok).toBe(false)
-    expect(result.error!.status).toBe(403)
+    expect(defined(result.error).status).toBe(403)
   })
 
   it('joins survey_points to projects via project_id', async () => {
@@ -152,14 +159,14 @@ describe('requireVersionOwnership', () => {
     mockDb.mockResolvedValueOnce(rows([]))
     const result = await requireVersionOwnership('missing', 'user-1')
     expect(result.ok).toBe(false)
-    expect(result.error!.status).toBe(404)
+    expect(defined(result.error).status).toBe(404)
   })
 
   it('returns ok:false with 403 when the version belongs to another user', async () => {
     mockDb.mockResolvedValueOnce(rows([{ user_id: 'user-2' }]))
     const result = await requireVersionOwnership('v-1', 'user-1')
     expect(result.ok).toBe(false)
-    expect(result.error!.status).toBe(403)
+    expect(defined(result.error).status).toBe(403)
   })
 
   it('uses LEFT JOIN (version may not have a project_id for legacy entries)', async () => {
@@ -174,14 +181,14 @@ describe('Error response shape (consistency check)', () => {
   it('all 404 errors include a code: NOT_FOUND field', async () => {
     mockDb.mockResolvedValueOnce(rows([]))
     const result = await requireProjectOwnership('missing', 'user-1')
-    const json = (await result.error!.json()) as { code?: string }
+    const json = (await defined(result.error).json()) as { code?: string }
     expect(json.code).toBe('NOT_FOUND')
   })
 
   it('all 403 errors include a code: FORBIDDEN field', async () => {
     mockDb.mockResolvedValueOnce(rows([{ user_id: 'other' }]))
     const result = await requireProjectOwnership('p', 'user-1')
-    const json = (await result.error!.json()) as { code?: string }
+    const json = (await defined(result.error).json()) as { code?: string }
     expect(json.code).toBe('FORBIDDEN')
   })
 })

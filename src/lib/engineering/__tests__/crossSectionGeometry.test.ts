@@ -7,6 +7,13 @@ import {
 } from '../crossSectionGeometry'
 import type { ProfilePoint, RoadTemplate } from '../crossSectionGeometry'
 
+function defined<T>(value: T | null | undefined): T {
+  if (value === null || value === undefined) {
+    throw new Error('expected value to be defined')
+  }
+  return value
+}
+
 // ─── parseSlopeRatio ────────────────────────────────────────────────────────
 
 describe('parseSlopeRatio', () => {
@@ -44,7 +51,7 @@ describe('computeCamberProfile', () => {
     const profile = computeCamberProfile(7.0, 2.5, 100.0)
     const centre = profile.find((p) => Math.abs(p.offset) < 0.01)
     expect(centre).toBeDefined()
-    expect(centre!.level).toBeCloseTo(100.0, 3)
+    expect(defined(centre).level).toBeCloseTo(100.0, 3)
   })
 
   it('should have edges at lower level than centre (camber drops outward)', () => {
@@ -55,8 +62,8 @@ describe('computeCamberProfile', () => {
 
     expect(leftEdge).toBeDefined()
     expect(rightEdge).toBeDefined()
-    expect(leftEdge!.level).toBeLessThan(100.0)
-    expect(rightEdge!.level).toBeLessThan(100.0)
+    expect(defined(leftEdge).level).toBeLessThan(100.0)
+    expect(defined(rightEdge).level).toBeLessThan(100.0)
   })
 
   it('should be symmetric around centreline', () => {
@@ -93,8 +100,8 @@ describe('computeCamberProfile', () => {
     const leftEdge = profile.find((p) => Math.abs(p.offset - (-halfWidth)) < 0.01)
     const rightEdge = profile.find((p) => Math.abs(p.offset - halfWidth) < 0.01)
 
-    expect(leftEdge!.level).toBeCloseTo(expectedEdgeLevel, 3)
-    expect(rightEdge!.level).toBeCloseTo(expectedEdgeLevel, 3)
+    expect(defined(leftEdge).level).toBeCloseTo(expectedEdgeLevel, 3)
+    expect(defined(rightEdge).level).toBeCloseTo(expectedEdgeLevel, 3)
   })
 
   it('should return a single point for zero carriageway width', () => {
@@ -246,14 +253,14 @@ describe('computeFormationLine', () => {
 
     const centrePoint = formation.find((p) => Math.abs(p.offset) < 0.01)
     expect(centrePoint).toBeDefined()
-    expect(centrePoint!.level).toBeCloseTo(100, 3)
+    expect(defined(centrePoint).level).toBeCloseTo(100, 3)
 
     // All other carriageway points should be lower
     const carriagewayPoints = formation.filter(
       (p) => Math.abs(p.offset) <= 3.5 && Math.abs(p.offset) > 0.01,
     )
     for (const p of carriagewayPoints) {
-      expect(p.level).toBeLessThan(centrePoint!.level)
+      expect(p.level).toBeLessThan(defined(centrePoint).level)
     }
   })
 
@@ -273,7 +280,7 @@ describe('computeFormationLine', () => {
     const leftEdge = formation.find((p) => Math.abs(p.offset - (-3.5)) < 0.01)
     const leftShoulder = formation.find((p) => Math.abs(p.offset - (-5.5)) < 0.01)
 
-    expect(leftShoulder!.level).toBeLessThan(leftEdge!.level)
+    expect(defined(leftShoulder).level).toBeLessThan(defined(leftEdge).level)
   })
 
   it('should include slope intercept points when ground extends far enough', () => {
@@ -307,6 +314,6 @@ describe('computeFormationLine', () => {
     // Centre should still be at formation level
     const centrePoint = formation.find((p) => Math.abs(p.offset) < 0.01)
     expect(centrePoint).toBeDefined()
-    expect(centrePoint!.level).toBeCloseTo(100, 3)
+    expect(defined(centrePoint).level).toBeCloseTo(100, 3)
   })
 })

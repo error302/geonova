@@ -239,14 +239,16 @@ export async function searchBenchmarks(params: BenchmarkSearchParams): Promise<B
   let results = [...BENCHMARK_DATABASE]
   
   if (params.country) {
+    const country = params.country
     results = results.filter((b) => 
-      b.country.toLowerCase() === params.country!.toLowerCase()
+      b.country.toLowerCase() === country.toLowerCase()
     )
   }
   
   if (params.region) {
+    const region = params.region
     results = results.filter((b) => 
-      b.region?.toLowerCase().includes(params.region!.toLowerCase())
+      b.region?.toLowerCase().includes(region.toLowerCase())
     )
   }
   
@@ -255,18 +257,21 @@ export async function searchBenchmarks(params: BenchmarkSearchParams): Promise<B
   }
   
   if (params.latitude !== undefined && params.longitude !== undefined && params.radiusKm) {
-    const radiusDeg = params.radiusKm / 111
+    const latitude = params.latitude
+    const longitude = params.longitude
+    const radiusKm = params.radiusKm
+    const radiusDeg = radiusKm / 111
     results = results.filter((b) => {
       if (b.latitude === undefined || b.longitude === undefined) return false
-      const latDiff = Math.abs(b.latitude - params.latitude!)
-      const lonDiff = Math.abs(b.longitude - params.longitude!)
+      const latDiff = Math.abs(b.latitude - latitude)
+      const lonDiff = Math.abs(b.longitude - longitude)
       return latDiff <= radiusDeg && lonDiff <= radiusDeg
     })
     
     results.sort((a, b) => {
-      if (a.latitude === undefined || b.latitude === undefined) return 0
-      const distA = Math.pow(a.latitude - params.latitude!, 2) + Math.pow(a.longitude! - params.longitude!, 2)
-      const distB = Math.pow(b.latitude - params.latitude!, 2) + Math.pow(b.longitude! - params.longitude!, 2)
+      if (a.latitude === undefined || b.latitude === undefined || a.longitude === undefined || b.longitude === undefined) return 0
+      const distA = Math.pow(a.latitude - latitude, 2) + Math.pow(a.longitude - longitude, 2)
+      const distB = Math.pow(b.latitude - latitude, 2) + Math.pow(b.longitude - longitude, 2)
       return distA - distB
     })
   }

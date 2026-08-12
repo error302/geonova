@@ -8,6 +8,13 @@
 
 import { createTraverseLayer } from '../traverseLayer'
 
+function defined<T>(value: T | null | undefined): T {
+  if (value === null || value === undefined) {
+    throw new Error('expected value to be defined')
+  }
+  return value
+}
+
 // ---------------------------------------------------------------------------
 // Mock @/lib/map/projection — to3857 returns identity (pass-through)
 // ---------------------------------------------------------------------------
@@ -145,7 +152,7 @@ describe('createTraverseLayer', () => {
 
   it('with empty legs returns a layer with no features', async () => {
     const layer = await createTraverseLayer([])
-    const source = layer.getSource()!
+    const source = defined(layer.getSource())
     expect(source.getFeatures().length).toBe(0)
   })
 
@@ -163,7 +170,7 @@ describe('createTraverseLayer', () => {
     ]
 
     const layer = await createTraverseLayer(legs)
-    const source = layer.getSource()!
+    const source = defined(layer.getSource())
     const features = source.getFeatures()
     // 1 leg line + 1 arrow + 1 distance label + 2 station labels = 5
     expect(features.length).toBe(5)
@@ -190,7 +197,7 @@ describe('createTraverseLayer', () => {
     ]
 
     const layer = await createTraverseLayer(legs)
-    const features = layer.getSource()!.getFeatures()
+    const features = defined(layer.getSource()).getFeatures()
     // 2 legs × 3 features each (line, arrow, distance) + 3 unique stations = 9
     expect(features.length).toBe(9)
   })
@@ -216,7 +223,7 @@ describe('createTraverseLayer', () => {
     ]
 
     const layer = await createTraverseLayer(legs)
-    const features = layer.getSource()!.getFeatures()
+    const features = defined(layer.getSource()).getFeatures()
     // 2 legs × 3 + 2 unique stations = 8
     expect(features.length).toBe(8)
   })
@@ -234,7 +241,7 @@ describe('createTraverseLayer', () => {
     ]
 
     const layer = await createTraverseLayer(legs)
-    const features = layer.getSource()!.getFeatures()
+    const features = defined(layer.getSource()).getFeatures()
 
     // First feature is the leg line
     const lineFeature = features[0] as unknown as MockFeatureLike
@@ -261,7 +268,7 @@ describe('createTraverseLayer', () => {
       legs,
       { misclosureWarningThreshold: 15, misclosureErrorThreshold: 30 },
     )
-    const features = layer.getSource()!.getFeatures()
+    const features = defined(layer.getSource()).getFeatures()
     const lineFeature = features[0] as unknown as MockFeatureLike
     const styles = lineFeature.getStyle()
     const lineStyle = Array.isArray(styles) ? styles[styles.length - 1] : styles
@@ -285,7 +292,7 @@ describe('createTraverseLayer', () => {
       legs,
       { misclosureWarningThreshold: 15, misclosureErrorThreshold: 30 },
     )
-    const features = layer.getSource()!.getFeatures()
+    const features = defined(layer.getSource()).getFeatures()
     const lineFeature = features[0] as unknown as MockFeatureLike
     const styles = lineFeature.getStyle()
     expect(Array.isArray(styles)).toBe(true)
@@ -310,7 +317,7 @@ describe('createTraverseLayer', () => {
     ]
 
     const layer = await createTraverseLayer(legs, { showDistances: false })
-    const features = layer.getSource()!.getFeatures()
+    const features = defined(layer.getSource()).getFeatures()
     // 1 leg line + 1 arrow + 2 station labels = 4 (no distance label)
     expect(features.length).toBe(4)
   })

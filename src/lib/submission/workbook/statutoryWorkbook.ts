@@ -7,6 +7,14 @@
 import ExcelJS from 'exceljs'
 import { formatBearingDMS, formatDistanceM } from '@/lib/drawing/dxfLayers'
 
+function lastRow(ws: ExcelJS.Worksheet): ExcelJS.Row {
+  const row = ws.lastRow
+  if (!row) {
+    throw new Error('worksheet has no rows')
+  }
+  return row
+}
+
 type SurveyTypeKey = 'cadastral' | 'engineering' | 'topographic' | 'leveling' | 'control' | 'mining' | 'hydrographic' | 'drone' | 'gnss'
 
 export interface WorkbookInput {
@@ -185,10 +193,10 @@ function buildSheet1_ProjectDetails(wb: ExcelJS.Workbook, input: WorkbookInput):
 
   ws.addRow([])
   ws.addRow(['CERTIFICATION'])
-  const certRow = ws.lastRow!
+  const certRow = lastRow(ws)
   certRow.getCell(1).font = STYLE.subFont
   ws.addRow(['I certify that the computations in this workbook are correct and comply with the Kenya Survey Regulations 1994.'])
-  ws.mergeCells(`A${ws.lastRow!.number}:H${ws.lastRow!.number}`)
+  ws.mergeCells(`A${lastRow(ws).number}:H${lastRow(ws).number}`)
   ws.addRow([])
   ws.addRow(['Signature: ___________________________', '', 'Date: _______________', ''])
   ws.addRow([`${input.surveyor.name} — ${input.surveyor.iskNumber}`, '', '', ''])
@@ -249,14 +257,14 @@ function buildSheet3_TraverseComputation(wb: ExcelJS.Workbook, input: WorkbookIn
   sheetTitle(ws, 'METARDU COMPUTATION WORKBOOK', `Sheet 3 of 9 — Traverse Computation (${input.traverse.method === 'transit' ? 'Transit' : 'Bowditch'} Method)`)
   ws.addRow([])
   ws.addRow(['ANGULAR MISCLOSURE CHECK'])
-  ws.lastRow!.getCell(1).font = STYLE.subFont
+  lastRow(ws).getCell(1).font = STYLE.subFont
   ws.addRow([
     'Misclosure:', `${input.traverse.angularMisclosureSec.toFixed(1)}"`,
     'Tolerance:', `${input.traverse.angularToleranceSec.toFixed(1)}"`,
     'Station Count:', input.traverse.stations.length,
     'Result:', input.traverse.angularPassesQA ? 'PASS ' : 'FAIL [x]',
   ])
-  const angRow = ws.lastRow!
+  const angRow = lastRow(ws)
   angRow.getCell(8).font = input.traverse.angularPassesQA ? STYLE.passFont : STYLE.failFont
   ws.addRow([])
 
@@ -295,7 +303,7 @@ function buildSheet3_TraverseComputation(wb: ExcelJS.Workbook, input: WorkbookIn
 
   ws.addRow([])
   ws.addRow(['LINEAR MISCLOSURE CHECK'])
-  ws.lastRow!.getCell(1).font = STYLE.subFont
+  lastRow(ws).getCell(1).font = STYLE.subFont
   ws.addRow([
     'Linear Misclosure:', `${input.traverse.linearMisclosureM.toFixed(4)} m`,
     'Perimeter:', `${formatDistanceM(input.traverse.perimeterM)} m`,
@@ -303,7 +311,7 @@ function buildSheet3_TraverseComputation(wb: ExcelJS.Workbook, input: WorkbookIn
     'Minimum:', `1:${input.traverse.precisionMinimum.toLocaleString()}`,
     'Result:', input.traverse.linearPassesQA ? 'PASS ' : 'FAIL [x]',
   ])
-  const linRow = ws.lastRow!
+  const linRow = lastRow(ws)
   linRow.getCell(10).font = input.traverse.linearPassesQA ? STYLE.passFont : STYLE.failFont
 }
 
@@ -314,8 +322,8 @@ function buildSheet4_Coordinates(wb: ExcelJS.Workbook, input: WorkbookInput): vo
   sheetTitle(ws, 'METARDU COMPUTATION WORKBOOK', 'Sheet 4 of 9 — Adjusted Coordinates (SRID 21037 — Arc 1960 / UTM Zone 37S)')
   ws.addRow([])
   ws.addRow(['Coordinate Reference System: Arc 1960 / UTM Zone 37S  |  EPSG: 21037  |  Units: Metres'])
-  ws.mergeCells(`A${ws.lastRow!.number}:D${ws.lastRow!.number}`)
-  ws.lastRow!.getCell(1).font = { italic: true, size: 9, name: 'Calibri' }
+  ws.mergeCells(`A${lastRow(ws).number}:D${lastRow(ws).number}`)
+  lastRow(ws).getCell(1).font = { italic: true, size: 9, name: 'Calibri' }
   ws.addRow([])
 
   const headers = ['Beacon / Station', 'Easting (m)', 'Northing (m)', 'Elevation (m)']
@@ -388,8 +396,8 @@ function buildSheet6_AreaComputation(wb: ExcelJS.Workbook, input: WorkbookInput)
   sheetTitle(ws, 'METARDU COMPUTATION WORKBOOK', 'Sheet 6 of 9 — Area Computation (Coordinate / Shoelace Method)')
   ws.addRow([])
   ws.addRow(['Method: Coordinate (Shoelace) Method  |  2A = |Σ(Ei × Ni+1) - Σ(Ni × Ei+1)|'])
-  ws.mergeCells(`A${ws.lastRow!.number}:E${ws.lastRow!.number}`)
-  ws.lastRow!.getCell(1).font = { italic: true, size: 9, name: 'Calibri' }
+  ws.mergeCells(`A${lastRow(ws).number}:E${lastRow(ws).number}`)
+  lastRow(ws).getCell(1).font = { italic: true, size: 9, name: 'Calibri' }
   ws.addRow([])
 
   const headers = ['Station', 'Easting (m)', 'Northing (m)', 'E × N(i+1)', 'N × E(i+1)']
@@ -505,9 +513,9 @@ function buildSheet9_QASummary(wb: ExcelJS.Workbook, input: WorkbookInput): void
 
   ws.addRow([])
   ws.addRow(['SURVEYOR CERTIFICATION'])
-  ws.lastRow!.getCell(1).font = STYLE.subFont
+  lastRow(ws).getCell(1).font = STYLE.subFont
   ws.addRow([`I, ${input.surveyor.name} (${input.surveyor.iskNumber}), certify that the computations in this workbook are correct.`])
-  ws.mergeCells(`A${ws.lastRow!.number}:D${ws.lastRow!.number}`)
+  ws.mergeCells(`A${lastRow(ws).number}:D${lastRow(ws).number}`)
   ws.addRow([])
   ws.addRow(['Signature: _________________________', '', `Date: ${new Date().toLocaleDateString('en-GB')}`, ''])
 }
