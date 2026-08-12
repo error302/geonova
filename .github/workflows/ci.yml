@@ -275,6 +275,10 @@ jobs:
         run: npm run migrate
         env:
           DATABASE_URL: 'postgresql://ci:ci@127.0.0.1:5432/metardu_e2e'
+      - name: Seed E2E test user
+        run: node scripts/seed-e2e-user.mjs
+        env:
+          DATABASE_URL: 'postgresql://ci:ci@127.0.0.1:5432/metardu_e2e'
       # Dev server handles middleware correctly; the standalone server had
       # edge-sandbox crashes with middleware. The build artifact is not needed.
       - name: Install Playwright browsers

@@ -20,6 +20,7 @@ async function mockAuthSession(page: import('@playwright/test').Page) {
     maxAge: 60 * 60, // 1 hour
     token: {
       sub: 'test-user-id',
+      id: '00000000-0000-0000-0000-000000000001',
       name: 'Test Surveyor',
       email: 'test@metardu.test',
       role: 'surveyor',
