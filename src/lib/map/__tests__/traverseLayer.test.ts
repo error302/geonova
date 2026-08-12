@@ -8,12 +8,7 @@
 
 import { createTraverseLayer } from '../traverseLayer'
 
-function defined<T>(value: T | null | undefined): T {
-  if (value === null || value === undefined) {
-    throw new Error('expected value to be defined')
-  }
-  return value
-}
+import { defined } from '@/test-utils/defined'
 
 // ---------------------------------------------------------------------------
 // Mock @/lib/map/projection — to3857 returns identity (pass-through)

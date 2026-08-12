@@ -16,12 +16,7 @@ import {
   type NetworkObservation,
 } from '../networkAdjustment'
 
-function defined<T>(value: T | null | undefined): T {
-  if (value === null || value === undefined) {
-    throw new Error('expected value to be defined')
-  }
-  return value
-}
+import { defined } from '@/test-utils/defined'
 
 function approxEqual(a: number, b: number, tol = 1e-6): boolean {
   return Math.abs(a - b) < tol

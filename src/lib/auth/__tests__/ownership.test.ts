@@ -14,12 +14,7 @@ jest.mock('@/lib/db', () => ({
   setCurrentOrgId: jest.fn(),
 }))
 
-function defined<T>(value: T | null | undefined): T {
-  if (value === null || value === undefined) {
-    throw new Error('expected value to be defined')
-  }
-  return value
-}
+import { defined } from '@/test-utils/defined'
 
 // Mock NextResponse — the real implementation needs the Next.js runtime
 // which isn't available in Jest's jsdom environment. We replace it with

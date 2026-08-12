@@ -7,12 +7,7 @@ import {
 } from '../crossSectionGeometry'
 import type { ProfilePoint, RoadTemplate } from '../crossSectionGeometry'
 
-function defined<T>(value: T | null | undefined): T {
-  if (value === null || value === undefined) {
-    throw new Error('expected value to be defined')
-  }
-  return value
-}
+import { defined } from '@/test-utils/defined'
 
 // ─── parseSlopeRatio ────────────────────────────────────────────────────────
 

@@ -20,12 +20,7 @@
 import { MpesaService } from '@/lib/payments/mpesa'
 import { getPlan } from '@/lib/subscription/catalog'
 
-function defined<T>(value: T | null | undefined): T {
-  if (value === null || value === undefined) {
-    throw new Error('expected value to be defined')
-  }
-  return value
-}
+import { defined } from '@/test-utils/defined'
 
 describe('P0-4: M-Pesa callback parsing + amount verification', () => {
   // Minimal MpesaService instance — parseCallback is a pure method
