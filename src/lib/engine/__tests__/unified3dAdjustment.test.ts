@@ -25,10 +25,9 @@ import {
 } from '../networkAdjustment'
 
 import { defined } from '@/test-utils/defined'
+import { approxEqual } from '@/test-utils/approx'
 
-function approxEqual(a: number, b: number, tol = 1e-6): boolean {
-  return Math.abs(a - b) < tol
-}
+
 
 describe('unified 3D adjustment — slope distance', () => {
   test('3D slope distance + bearing + height_diff adjusts E, N, and RL', () => {

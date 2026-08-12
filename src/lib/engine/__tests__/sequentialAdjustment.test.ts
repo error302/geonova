@@ -22,10 +22,9 @@ import {
 } from '../sequentialAdjustment'
 import { adjustNetwork, type NetworkPoint, type NetworkObservation } from '../networkAdjustment'
 import { defined } from '@/test-utils/defined'
+import { approxEqual } from '@/test-utils/approx'
 
-function approxEqual(a: number, b: number, tol = 1e-6): boolean {
-  return Math.abs(a - b) < tol
-}
+
 
 describe('sequentialAdjustment — initialization', () => {
   test('initializes state with correct dimensions for 2D', () => {

@@ -25,6 +25,8 @@ import { POST, GET } from '../parcels/route'
 import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
 import { NextRequest } from 'next/server'
+import { createAuthSession } from '@/test-utils/auth-session'
+import { mr } from '@/test-utils/mock-rows'
 
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
 const mockSession = getServerSession as jest.MockedFunction<typeof getServerSession>
@@ -32,9 +34,7 @@ const mockSession = getServerSession as jest.MockedFunction<typeof getServerSess
 const TEST_PROJECT_UUID = '00000000-0000-0000-0000-000000000001'
 const TEST_BLOCK_UUID = '00000000-0000-0000-0000-000000000002'
 
-function mr<T>(rows: T[]) {
-  return { rows, command: '' as const, rowCount: rows.length, oid: 0 as const, fields: [] }
-}
+
 
 /** Schema-valid parcel row — parcelSchema in src/lib/validation/scheme.ts. */
 function validParcel(overrides: Record<string, unknown> = {}) {
@@ -55,9 +55,7 @@ function validParcel(overrides: Record<string, unknown> = {}) {
   }
 }
 
-function createAuthSession() {
-  return { user: { id: 'user-1', email: 'test@metardu.com', name: 'Test' }, expires: new Date().toISOString() }
-}
+
 
 describe('POST /api/scheme/parcels', () => {
   beforeEach(() => jest.clearAllMocks())

@@ -15,10 +15,9 @@ import {
   type NetworkObservation,
 } from '../networkAdjustment'
 import { defined } from '@/test-utils/defined'
+import { approxEqual } from '@/test-utils/approx'
 
-function approxEqual(a: number, b: number, tol = 1e-6): boolean {
-  return Math.abs(a - b) < tol
-}
+
 
 describe('networkAdjustment — GNSS baseline integration', () => {
   test('single GNSS baseline between fixed and unknown point in 3D', () => {

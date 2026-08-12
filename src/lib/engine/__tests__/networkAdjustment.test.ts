@@ -17,10 +17,9 @@ import {
 } from '../networkAdjustment'
 
 import { defined } from '@/test-utils/defined'
+import { approxEqual } from '@/test-utils/approx'
 
-function approxEqual(a: number, b: number, tol = 1e-6): boolean {
-  return Math.abs(a - b) < tol
-}
+
 
 describe('networkAdjustment — basic constrained', () => {
   test('simple 2D intersection: 2 fixed points, 1 unknown', () => {

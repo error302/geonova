@@ -41,29 +41,14 @@ import { POST } from '../route'
 import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
 import { NextRequest } from 'next/server'
-import type { QueryResultRow } from 'pg'
 import type { ParcelForOverlap } from '@/lib/rim/overlapDetection'
+import { createAuthSession } from '@/test-utils/auth-session'
+import { mr } from '@/test-utils/mock-rows'
 
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
 const mockSession = getServerSession as jest.MockedFunction<typeof getServerSession>
 
-/** Wrap mock rows into a pg QueryResult-like shape. */
-function mr(rows: QueryResultRow[]) {
-  return {
-    rows,
-    command: '' as const,
-    rowCount: rows.length,
-    oid: 0 as const,
-    fields: [] as Array<never>,
-  }
-}
 
-function createAuthSession() {
-  return {
-    user: { id: 'user-1', email: 'test@metardu.com', name: 'Test' },
-    expires: new Date().toISOString(),
-  }
-}
 
 // ─── Fixtures: 200 m × 200 m squares in UTM 37S (EPSG:21037) ──────────────
 const NEW_PARCEL: ParcelForOverlap = {

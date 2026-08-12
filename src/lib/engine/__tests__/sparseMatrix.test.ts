@@ -28,10 +28,9 @@ import {
   sparseInverseDiagonal,
   diagonal,
 } from '../sparseMatrix'
+import { approxEqual } from '@/test-utils/approx'
 
-function approxEqual(a: number, b: number, tol = 1e-9): boolean {
-  return Math.abs(a - b) < tol
-}
+
 
 function approxEqualVec(a: number[], b: number[], tol = 1e-9): boolean {
   if (a.length !== b.length) return false
@@ -81,7 +80,7 @@ describe('sparseMatrix — construction', () => {
     const reconstructed = toDense(M)
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
-        expect(approxEqual(reconstructed[i][j], dense[i][j])).toBe(true)
+        expect(approxEqual(reconstructed[i][j], dense[i][j], 1e-9)).toBe(true)
       }
     }
   })
@@ -253,7 +252,7 @@ describe('sparseMatrix — AMD ordering', () => {
     // Verify by checking that trace is preserved
     const origTrace = dense.reduce((s, row, i) => s + row[i], 0)
     const newTrace = diagonal(Mp).reduce((s, v) => s + v, 0)
-    expect(approxEqual(origTrace, newTrace)).toBe(true)
+    expect(approxEqual(origTrace, newTrace, 1e-9)).toBe(true)
   })
 })
 

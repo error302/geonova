@@ -28,21 +28,11 @@ import { POST } from '../route'
 import { db } from '@/lib/db'
 import { sendTemplatedEmail } from '@/lib/email-templates'
 import { NextRequest } from 'next/server'
-import type { QueryResultRow } from 'pg'
+import { mr } from '@/test-utils/mock-rows'
 
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
 const mockSend = sendTemplatedEmail as jest.MockedFunction<typeof sendTemplatedEmail>
 
-/** Wrap mock rows into a pg QueryResult-like shape. */
-function mr(rows: QueryResultRow[], rowCount = rows.length) {
-  return {
-    rows,
-    command: '' as const,
-    rowCount,
-    oid: 0 as const,
-    fields: [] as Array<never>,
-  }
-}
 
 interface TrialRow {
   user_id: string
