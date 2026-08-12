@@ -2,8 +2,6 @@ import {
   ParsedInput,
   ParsedInputType,
   ExtractedBuildingData,
-  BOQData,
-  ParseResult,
   MAX_FILE_SIZE,
   SUPPORTED_EXTENSIONS,
   PARSER_VERSION,
@@ -87,7 +85,7 @@ export async function routeFile(options: RouteFileOptions): Promise<ParsedInput>
   }
 }
 
-async function parseDXF(file: File, base: ParsedInput): Promise<ParsedInput> {
+async function parseDXF(file: File, _base: ParsedInput): Promise<ParsedInput> {
   const content = await file.text()
   return await parseDXFFileContent(content, file.name)
 }
@@ -107,7 +105,7 @@ async function parseIFC(file: File, base: ParsedInput): Promise<ParsedInput> {
   }
 }
 
-async function parsePDF(file: File, base: ParsedInput): Promise<ParsedInput> {
+async function parsePDF(file: File, _base: ParsedInput): Promise<ParsedInput> {
   return await parsePDFContent(file)
 }
 
@@ -119,15 +117,15 @@ async function parseImage(file: File, base: ParsedInput): Promise<ParsedInput> {
   }
 }
 
-async function parseGLTF(file: File, base: ParsedInput): Promise<ParsedInput> {
+async function parseGLTF(file: File, _base: ParsedInput): Promise<ParsedInput> {
   return await parseGLTFFile(file)
 }
 
-async function parseOBJ(file: File, base: ParsedInput): Promise<ParsedInput> {
+async function parseOBJ(file: File, _base: ParsedInput): Promise<ParsedInput> {
   return await parseOBJFile(file)
 }
 
-async function parseBOQ(file: File, base: ParsedInput): Promise<ParsedInput> {
+async function parseBOQ(file: File, _base: ParsedInput): Promise<ParsedInput> {
   return await parseBOQSpreadsheet(file)
 }
 

@@ -8,11 +8,7 @@ import { createHash } from 'crypto'
 import { SurveyPlanRenderer } from './renderer'
 import type { SurveyPlanData, PlanOptions, CoordinateScheduleEntry } from './types'
 import { getRoadReserveWidth } from './types'
-import {
-  DPI, PX_PER_MM, PX_PER_M,
-  PAGE_WIDTH_MM, PAGE_HEIGHT_MM,
-  mmToPx,
-} from './geometry'
+import { mmToPx } from './geometry'
 import {
   escapeXml,
   C_BLACK, C_GREEN, C_RED,
@@ -377,7 +373,7 @@ private drawFormNo4RightPanel(): string {
     ]
 
     let rowY = y + mmToPx(11.5)
-    rows.forEach((row, i) => {
+    rows.forEach((row) => {
       hx = x
       const cells = [row.rev, row.date, row.description.length > 25 ? row.description.slice(0, 23) + '..' : row.description, row.by]
       cells.forEach((cell, ci) => {
@@ -537,7 +533,7 @@ private drawFormNo4RightPanel(): string {
     const headers = ['Registration', 'Transaction', 'Authentication', 'Date', 'Records', 'Date']
     let x = margin
     
-    headers.forEach((header, i) => {
+    headers.forEach((header) => {
       svg += `<rect x="${x}" y="${footerY}" width="${colW}" height="${footerH}" fill="#f8f8f8" stroke="${C_BLACK}" stroke-width="0.5"/>`
       svg += `<text x="${x + colW/2}" y="${footerY + mmToPx(4)}" text-anchor="middle" font-family="JetBrains Mono, Courier New" font-size="5" font-weight="bold" fill="${C_BLACK}">${header}</text>`
       x += colW

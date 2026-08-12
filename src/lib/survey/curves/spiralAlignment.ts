@@ -221,7 +221,6 @@ export function computeSpiralAlignment(
     // For right-hand curve: center is at angle (90° + θs) from original tangent at TS.
     const centerLocalX = x - radius * Math.sin(thetaS)
     const centerLocalY = y + radius * Math.cos(thetaS)
-    const centerWorld = localToWorld(tsCoord, centerLocalX, centerLocalY, approachBrng)
     // SC relative to center: rotate by -arcAngle to get CS (for right-hand curve, clockwise)
     // Vector from center to SC (local frame)
     const scRelCx = x - centerLocalX
@@ -307,9 +306,7 @@ export function stationSpiralAlignment(
   interval: number = 10
 ): AlignmentStation[] {
   const stations: AlignmentStation[] = []
-  const { input, thetaSRad, deltaRad, T, tsChainage, totalLength } = alignment
-  const { radius, spiralLength: Ls, approachBearingDeg = 0 } = input
-  const approachBrng = approachBearingDeg * DEG
+  const { tsChainage, totalLength } = alignment
 
   const N = Math.floor(totalLength / interval)
   for (let i = 0; i <= N; i++) {

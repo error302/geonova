@@ -40,11 +40,7 @@
  *   }
  */
 
-import {
-  propagateToEpoch,
-  type EpochCoordinate,
-  type ReferenceFrame,
-} from '@/lib/geo/epochManager'
+import { type ReferenceFrame } from '@/lib/geo/epochManager'
 import { propagateToEpochRigorous } from '@/lib/geo/epochManagerRigorous'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -504,10 +500,10 @@ export function analyzeTimeSeries(
   const hValues = observations.map(o => o.deltaH)
   const hDispValues = observations.map(o => o.horizontalDisplacement)
 
-  const { slope: velE, r2: r2E } = linearRegression(tValues, eValues)
-  const { slope: velN, r2: r2N } = linearRegression(tValues, nValues)
-  const { slope: velH, r2: r2H } = linearRegression(tValues, hValues)
-  const { slope: velHdisp, r2: r2Hdisp } = linearRegression(tValues, hDispValues)
+  const { slope: velE } = linearRegression(tValues, eValues)
+  const { slope: velN } = linearRegression(tValues, nValues)
+  const { slope: velH } = linearRegression(tValues, hValues)
+  const { r2: r2Hdisp } = linearRegression(tValues, hDispValues)
 
   const velocityHorizontal = Math.sqrt(velE ** 2 + velN ** 2)
   const velocityBearing = (Math.atan2(velE, velN) * 180 / Math.PI + 360) % 360
@@ -593,7 +589,6 @@ function linearRegression(x: number[], y: number[]): { slope: number; intercept:
   const sumY = y.reduce((s, v) => s + v, 0)
   const sumXY = x.reduce((s, v, i) => s + v * y[i], 0)
   const sumX2 = x.reduce((s, v) => s + v * v, 0)
-  const sumY2 = y.reduce((s, v) => s + v * v, 0)
 
   const denom = n * sumX2 - sumX * sumX
   if (Math.abs(denom) < 1e-12) return { slope: 0, intercept: y[0], r2: 0 }

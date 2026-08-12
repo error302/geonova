@@ -4,11 +4,7 @@
 // Source: RDM 1.1 Kenya 2025, Table 2.4 — Accuracy Classification
 // Source: Survey Regulations 1994, Cap 299, Regulation 97
 
-import { dmsToDecimal, bearingToString } from '@/lib/engine/angles'
-
-function dmsStr(d: number, m: number, s: number): string {
-  return `${String(Math.floor(Math.abs(d))).padStart(3,'0')}° ${String(Math.floor(Math.abs(m))).padStart(2,'0')}' ${Math.abs(s).toFixed(3)}"`
-}
+import { dmsToDecimal } from '@/lib/engine/angles'
 
 function angleDMS(angleDeg: number): string {
   const norm = ((angleDeg % 360) + 360) % 360
@@ -220,10 +216,6 @@ export function computeTraverse(input: {
 
   const legs: TraverseComputationLeg[] = []
   let currentWCB = backsightRad
-  const prevStation = obs[0]?.bs || input.openingStation
-  let currentE = input.openingEasting
-  let currentN = input.openingNorthing
-  let currentRL = input.openingRL ?? 0
 
   const stations = [input.openingStation, ...obs.map((o) => o.station)]
 
@@ -242,10 +234,6 @@ export function computeTraverse(input: {
     // Source: Basak, Eq. 10.3 — Departure = HD × sin(WCB), Latitude = HD × cos(WCB)
     const dep = hd * Math.sin(wcb)
     const lat = hd * Math.cos(wcb)
-    currentE += dep
-    currentN += lat
-    currentRL += reduced[i].deltaH
-
     legs.push({
       from: stations[i],
       to: stations[i + 1] || obs[i].fs || `T${i + 1}`,
@@ -430,7 +418,6 @@ export function computeLevelBook(input: {
   let sumBS = 0, sumFS = 0, sumRise = 0, sumFall = 0
   let hi: number | null = null
   let currentRL = openingRL
-  let lastBS: number | null = null
 
   for (const row of rows) {
     const out: LevelBookRow = { station: row.station, distance: row.distance, remarks: row.remarks }
@@ -441,7 +428,6 @@ export function computeLevelBook(input: {
       hi = currentRL + row.bs
       out.hi = hi
       out.rl = hi
-      lastBS = row.bs
     }
 
     if (row.is !== undefined && row.is !== null && hi !== null) {

@@ -12,10 +12,6 @@ import {
   HeadingLevel,
   TableOfContents,
   AlignmentType,
-  Table,
-  TableRow,
-  TableCell,
-  WidthType,
 } from 'docx'
 import type { SectionContent } from '@/types/surveyReport'
 import type { SurveyType } from '@/types/project'
@@ -38,11 +34,8 @@ export async function generateDocx(options: DocxGenerationOptions): Promise<Buff
     title,
     reportNumber,
     sections: inputSections,
-    surveyType = 'cadastral',
     clientName = '',
     projectName = '',
-    projectLocation = '',
-    areaHectares,
     date = new Date().toLocaleDateString('en-GB'),
     useTemplate = true,
   } = options

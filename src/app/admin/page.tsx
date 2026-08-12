@@ -6,8 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   Users, FolderKanban, LandPlot, RadioTower,
-  DollarSign, Activity, Clock, Database,
-  HardDrive, Cpu, TrendingUp,
+  DollarSign, Activity, TrendingUp,
   UserPlus, ShieldCheck, Settings2, FileText,
   CreditCard, Loader2, AlertCircle, ChevronRight,
   Megaphone, Check, X,
@@ -15,7 +14,7 @@ import {
 import { z } from 'zod'
 import { apiGet, apiPost, apiPatch, ApiError } from '@/lib/api/client'
 import dynamic from 'next/dynamic'
-import { RevenueLineChart, SubscriptionDonutChart, Sparkline } from '@/components/admin/charts/AdminCharts'
+import { RevenueLineChart, SubscriptionDonutChart } from '@/components/admin/charts/AdminCharts'
 import SystemHealthPanel from '@/components/admin/SystemHealthPanel'
 
 const DashboardSearch = dynamic(
@@ -103,15 +102,6 @@ interface DashboardData {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function formatUptime(seconds: number): string {
-  const days = Math.floor(seconds / 86400)
-  const hrs = Math.floor((seconds % 86400) / 3600)
-  const mins = Math.floor((seconds % 3600) / 60)
-  if (days > 0) return `${days}d ${hrs}h`
-  if (hrs > 0) return `${hrs}h ${mins}m`
-  return `${mins}m`
-}
 
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('en-KE', {
@@ -367,7 +357,6 @@ export default function AdminDashboardPage() {
   if (!data) return null
 
   const userRole = (session?.user as { role?: string })?.role ?? ''
-  const isSuperAdmin = userRole === 'super_admin'
   const isAdminRole = userRole === 'admin' || userRole === 'super_admin'
   const canOverridePlans = isAdminRole
 
