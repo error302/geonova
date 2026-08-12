@@ -17,8 +17,8 @@
 
 import { useState, useMemo, useCallback } from 'react'
 import {
-  History, GitBranch, FileText, Clock, Check, X,
-  ArrowRight, Loader2, Download, RotateCcw, Eye,
+  History, GitBranch, Clock, Check,
+  RotateCcw, Eye,
   Plus, Minus, Edit3,
 } from 'lucide-react'
 
@@ -286,7 +286,7 @@ function VersionDiff({ v1, v2 }: { v1: PlanVersion; v2: PlanVersion }) {
               </tr>
             </thead>
             <tbody>
-              {diffs.map((diff, i) => (
+              {diffs.map((diff) => (
                 <tr key={diff.field} className="border-b border-[var(--border-color)]/50">
                   <td className="px-3 py-2 text-xs text-[var(--text-primary)] font-medium">{diff.field}</td>
                   <td className="px-3 py-2 text-xs text-gray-400 font-mono">

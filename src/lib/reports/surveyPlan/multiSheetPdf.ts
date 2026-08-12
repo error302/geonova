@@ -16,11 +16,10 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
 import type { SurveyPlanData, PlanOptions } from './types'
 import { SurveyPlanRenderer } from './renderer'
 import {
-  PX_PER_MM, PX_PER_M,
-  PAGE_WIDTH_MM, PAGE_HEIGHT_MM,
+  PX_PER_M,
   STANDARD_SCALES, mmToPx,
   boundingBox, formatBearingDegMinSec, distance,
-  bearingFromDelta, centroid,
+  bearingFromDelta,
 } from './geometry'
 import { escapeXml, C_BLACK } from './symbols'
 
@@ -164,12 +163,12 @@ function renderSheetSvg(
   const drawY = mmToPx(DRAWING_MARGIN_MM)
 
   // Scale functions for this viewport
-  const pxPerM = PX_PER_M / scale
-  const offsetX = (drawAreaW - (viewport.maxE - viewport.minE) * pxPerM) / 2
-  const offsetY = (drawAreaH - (viewport.maxN - viewport.minN) * pxPerM) / 2
 
-  const toSvgX = (m: number) => drawX + mmToPx(10) + offsetX + (m - viewport.minE) * pxPerM
-  const toSvgY = (m: number) => drawY + mmToPx(10) + offsetY + (viewport.maxN - m) * pxPerM
+
+
+
+
+
 
   // Use the base renderer for the main SVG, then apply a clip
   const renderer = new SurveyPlanRenderer(data, { ...options, scale })

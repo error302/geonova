@@ -1,19 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { Calculator, Loader2, Save, CheckCircle } from 'lucide-react';
+import { useState, useCallback } from 'react';
+import { Calculator, Save, CheckCircle } from 'lucide-react';
 import { logger } from '@/lib/logger'
 
-interface FieldBookRow {
-  fromStation: string;
-  toStation: string;
-  angle?: string;
-  bearing?: number;
-  distance?: number;
-  bs?: number;
-  is?: number;
-  fs?: number;
-}
+
 
 interface LevelRow {
   id: number;
@@ -45,7 +36,7 @@ export default function LevellingComputePanel({ projectId }: { projectId: string
   const compute = useCallback(() => {
     let cumulativeRL = tbmRL;
     return rows.map((row, i) => {
-      const rise = row.bs !== null && i > 0 ? null : null; // computed differently
+
       let rise2 = 0, fall2 = 0;
 
       if (row.bs !== null) {
@@ -58,7 +49,7 @@ export default function LevellingComputePanel({ projectId }: { projectId: string
       }
       if (row.fs !== null && row.bs === null) {
         // FS reading on same station or IS→FS transition
-        const prevBS = rows[i - 1]?.bs;
+
         const prevIS = rows[i - 1]?.is;
         if (prevIS !== null && prevIS !== undefined) {
           if (prevIS > row.fs) rise2 = prevIS - row.fs;
@@ -89,7 +80,7 @@ export default function LevellingComputePanel({ projectId }: { projectId: string
   const passesCheck = Math.abs(misclosure) <= allowableMisclosure;
 
   // Distribute adjustment proportionally
-  const adjustedRows = computedRows.map((row, i) => {
+  const adjustedRows = computedRows.map((row) => {
     const proportion = totalDistance > 0 ? (row.distance / totalDistance) : 0;
     const adjustment = -misclosure * proportion;
     return { ...row, adjustment, adjRL: (row.rl || 0) + adjustment };

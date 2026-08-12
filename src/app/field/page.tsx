@@ -30,7 +30,7 @@ import { logger } from '@/lib/logger'
 type Tab = 'points' | 'traverse' | 'leveling' | 'radiation' | 'offline' | 'map'
 type SyncStatus = 'synced' | 'pending' | 'offline'
 
-const STORAGE_KEY = 'metardu_pending_observations'
+
 
 interface FieldProject { id: string; name: string; survey_type?: string }
 interface FieldPoint { id?: string; name: string; easting: number; northing: number; is_control?: boolean }
@@ -42,9 +42,9 @@ interface RadiationPoint { id: string; pointName: string; bearing: { deg: string
 export default function FieldPage() {
   const router = useRouter()
   const { t } = useLanguage()
-  const [msg, setMsg] = useState<string | null>(null)
+  const [, setMsg] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<Tab>('traverse')
-  const [syncStatus, setSyncStatus] = useState<SyncStatus>('offline')
+  const [syncStatus] = useState<SyncStatus>('offline')
   const [projects, setProjects] = useState<FieldProject[]>([])
   const [selectedProject, setSelectedProject] = useState<string>('')
   const [loading, setLoading] = useState(true)
@@ -71,7 +71,7 @@ export default function FieldPage() {
   const [tMin, setTMin] = useState('')
   const [tSec, setTSec] = useState('')
   const [tLegs, setTLegs] = useState<FieldTraverseLeg[]>([])
-  const [tTotal, setTTotal] = useState(0)
+
 
   // Tolerance check state (Phase 1 — live field-side closure checking)
   const [toleranceResult, setToleranceResult] = useState<ToleranceCheckResult | null>(null)
@@ -671,7 +671,7 @@ export default function FieldPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {lReadings.map((r, i) => (
+                    {lReadings.map((r) => (
                       <tr key={r.id} className="border-t border-[var(--border-color)]">
                         <td className="px-2 py-1 text-[var(--text-primary)]">{r.station}</td>
                         <td className="px-2 py-1 text-right font-mono text-[var(--text-primary)]">{r.bs?.toFixed(3) || ''}</td>

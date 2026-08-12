@@ -66,15 +66,15 @@ export function RIMOverlay({ onOverlay }: RIMOverlayProps) {
       // For 3+ points: least squares affine
 
       const n = refPoints.length
-      let sumX = 0, sumY = 0, sumE = 0, sumN = 0
-      let sumXE = 0, sumYE = 0, sumXN = 0, sumYN = 0
+      let sumX = 0, sumY = 0
+
       let sumXX = 0, sumYY = 0, sumXY = 0
 
       for (const p of refPoints) {
         sumX += p.pixelX; sumY += p.pixelY
-        sumE += p.easting; sumN += p.northing
-        sumXE += p.pixelX * p.easting; sumYE += p.pixelY * p.easting
-        sumXN += p.pixelX * p.northing; sumYN += p.pixelY * p.northing
+
+
+
         sumXX += p.pixelX * p.pixelX; sumYY += p.pixelY * p.pixelY; sumXY += p.pixelX * p.pixelY
       }
 

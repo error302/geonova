@@ -4,10 +4,10 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { createClient } from '@/lib/api-client/client'
 import { bowditchAdjustment } from '@/lib/engine/traverse'
-import { dmsToDecimal, decimalToDMS, bearingToString } from '@/lib/engine/angles'
-import { distanceBearing } from '@/lib/engine/distance'
+import { dmsToDecimal, bearingToString } from '@/lib/engine/angles'
+
 import { useCountry } from '@/lib/country'
-import { getTraverseValidation } from '@/lib/engine/country-math'
+
 import type { TraverseLeg as EngineTraverseLeg } from '@/lib/engine/types'
 
 interface BlunderResult {
@@ -65,9 +65,9 @@ interface NamedPoint2D {
   northing: number
 }
 
-function TraverseDiagram({ stations, closingError }: {
+function TraverseDiagram({ stations }: {
   stations: NamedPoint2D[]
-  closingError: { e: number, n: number }
+
 }) {
   const width = 500
   const height = 400
@@ -224,8 +224,8 @@ interface RadialObservation {
   distance: string
 }
 
-function CountryPrecisionBadge({ country, totalDistance, linearError }: {
-  country: string; totalDistance: number; linearError: number
+function CountryPrecisionBadge({ totalDistance, linearError }: {
+  totalDistance: number; linearError: number
 }) {
   const { getTraverseOrder } = useCountry()
   const order = getTraverseOrder('default')
@@ -246,7 +246,7 @@ export default function TraverseModal({
   onTraverseComplete,
   onTraverseResult
 }: TraverseModalProps) {
-  const { country, standard, getTraverseOrder } = useCountry()
+  const { standard } = useCountry()
   const [controlPoints, setControlPoints] = useState<ControlPoint[]>([])
   const [loading, setLoading] = useState(false)
   const [step, setStep] = useState<'input' | 'results'>('input')
@@ -1226,7 +1226,7 @@ export default function TraverseModal({
               <span className="px-2 py-1 rounded text-xs bg-blue-900/50 text-blue-400">
                 {standard.isoCode} · {standard.name}
               </span>
-              <CountryPrecisionBadge country={country} totalDistance={results.totalDistance} linearError={results.linearError} />
+              <CountryPrecisionBadge totalDistance={results.totalDistance} linearError={results.linearError} />
             </div>
 
             {saveMessage && (
@@ -1287,7 +1287,7 @@ export default function TraverseModal({
                 <div className="flex justify-center">
                   <TraverseDiagram 
                     stations={diagramStations} 
-                    closingError={{ e: results.closingErrorE, n: results.closingErrorN }} 
+
                   />
                 </div>
               </div>

@@ -1,14 +1,14 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import { bearingToString, decimalToDMS } from '@/lib/engine/angles'
-import { computeTraverseAccuracy, getAccuracyBadgeLabel } from '@/lib/reports/traverseAccuracy'
-import { formatBearingDegMinSec } from '@/lib/reports/surveyPlan/geometry'
+import { bearingToString } from '@/lib/engine/angles'
+import { computeTraverseAccuracy } from '@/lib/reports/traverseAccuracy'
+
 import type {
   SurveyReportData,
   SurveyReportOptions,
   ReportPoint,
-  TraverseResult,
-  ParcelData,
+
+
   BeaconDescription,
   SpotLevel,
   Photo,
@@ -617,8 +617,8 @@ export function generateSurveyReport(
   opts: SurveyReportOptions = {},
   onBlob?: (blob: Blob, filename: string) => void
 ): void {
-  // Pass submission_number to footers
-  const pageFooterOpts = { submission_number: opts.submission_number }
+
+
   reset()
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
 

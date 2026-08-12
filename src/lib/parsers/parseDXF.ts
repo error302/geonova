@@ -1,5 +1,5 @@
-import { readFileSync } from 'fs'
-import type { ParsedInput, ExtractedBuildingData, ExtractedWall, ExtractedRoom, ExtractedAnnotation, ExtractedFloor, BoundingBox2D, Point2D } from './types'
+
+import type { ParsedInput, ExtractedBuildingData, ExtractedWall, ExtractedRoom, ExtractedAnnotation, BoundingBox2D, Point2D } from './types'
 import { calculateConfidence } from './fileRouter'
 
 interface DXFEntity {
@@ -167,7 +167,7 @@ function getEntityCoordinates(entity: DXFEntity): Point2D[] {
   return points
 }
 
-function inferWalls(entities: DXFEntity[], boundingBox: BoundingBox2D): ExtractedWall[] {
+function inferWalls(entities: DXFEntity[], _boundingBox: BoundingBox2D): ExtractedWall[] {
   const walls: ExtractedWall[] = []
   const wallLayers = ['WALLS', 'WALL', 'A-WALL', 'STRUCTURAL', 'MAIN', 'PARTITION']
   const lineEntities = entities.filter((e) => 
@@ -184,7 +184,7 @@ function inferWalls(entities: DXFEntity[], boundingBox: BoundingBox2D): Extracte
     
     if (length > 0.5) {
       const layer = line.layer?.toUpperCase() || ''
-      const isLoadBearing = wallLayers.some((l) => 
+      const isLoadBearing = wallLayers.some(() => 
         layer.includes('MAIN') || layer.includes('STRUCTURAL') || layer.includes('BEARING')
       )
       
@@ -227,8 +227,8 @@ function extractAnnotations(entities: DXFEntity[]): ExtractedAnnotation[] {
 function inferRoomsFromWalls(walls: ExtractedWall[], boundingBox: BoundingBox2D): ExtractedRoom[] {
   const rooms: ExtractedRoom[] = []
   
-  const centerE = (boundingBox.minEasting + boundingBox.maxEasting) / 2
-  const centerN = (boundingBox.minNorthing + boundingBox.maxNorthing) / 2
+
+
   
   rooms.push({
     id: 'room_1',
