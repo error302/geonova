@@ -56,8 +56,8 @@ import {
   AppError,
   AuthenticationError,
   AuthorizationError,
-  _NotFoundError,
-  _ConflictError,
+  NotFoundError,
+  ConflictError,
   ValidationError,
   RateLimitError,
 } from './errors'

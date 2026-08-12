@@ -16,7 +16,6 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import {
   chat,
-  _chatStream,
   checkSurveyDataQA,
   extractCoordinates,
   generateReportSection,
