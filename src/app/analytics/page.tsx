@@ -90,6 +90,7 @@ export default function AnalyticsPage() {
       setLoading(false)
       return
     }
+    const sessionUserId = session.user.id
 
     async function fetchAnalytics() {
       try {
@@ -147,7 +148,7 @@ export default function AnalyticsPage() {
           // Regular user — query their own projects
           const { createClient } = await import('@/lib/api-client/client')
           const dbClient = createClient()
-          const userId = session!.user!.id!
+          const userId = sessionUserId
 
           const [projectsRes, pointsRes] = await Promise.all([
             dbClient.from('projects').select('id, survey_type, created_at').eq('user_id', userId),

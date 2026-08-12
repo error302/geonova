@@ -20,6 +20,7 @@ import {
   spiralAlignmentToCSV,
   type SpiralAlignmentInput,
 } from '../spiralAlignment'
+import { defined } from '@/test-utils/defined'
 
 const SAMPLE_INPUT: SpiralAlignmentInput = {
   radius: 300,
@@ -101,8 +102,8 @@ describe('computeSpiralAlignment — geometry', () => {
     expect(a.stCoord).not.toBeNull()
     // TS is behind PI along approach tangent
     // Approach bearing 90° = East, so TS is WEST of PI
-    expect(a.tsCoord!.easting).toBeLessThan(5000)
-    expect(a.tsCoord!.northing).toBeCloseTo(6000, 1)
+    expect(defined(a.tsCoord).easting).toBeLessThan(5000)
+    expect(defined(a.tsCoord).northing).toBeCloseTo(6000, 1)
   })
 
   it('returns null coords when PI coords are not supplied', () => {
@@ -197,23 +198,23 @@ describe('stationAtDistance', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
     const s = stationAtDistance(a, 0)
     expect(s).not.toBeNull()
-    expect(s!.segment).toBe('entry-spiral')
-    expect(s!.distanceFromTS).toBe(0)
-    expect(s!.offset).toBe(0) // at TS, offset is 0
+    expect(defined(s).segment).toBe('entry-spiral')
+    expect(defined(s).distanceFromTS).toBe(0)
+    expect(defined(s).offset).toBe(0) // at TS, offset is 0
   })
 
   it('returns a station at Ls with segment "circular" (SC point)', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
     const s = stationAtDistance(a, SAMPLE_INPUT.spiralLength + 0.001)
     expect(s).not.toBeNull()
-    expect(s!.segment).toBe('circular')
+    expect(defined(s).segment).toBe('circular')
   })
 
   it('returns a station at totalLength with segment "exit-spiral" (ST point)', () => {
     const a = computeSpiralAlignment(SAMPLE_INPUT)
     const s = stationAtDistance(a, a.totalLength)
     expect(s).not.toBeNull()
-    expect(s!.segment).toBe('exit-spiral')
+    expect(defined(s).segment).toBe('exit-spiral')
   })
 
   it('monotonically increases deflection angle along the alignment', () => {

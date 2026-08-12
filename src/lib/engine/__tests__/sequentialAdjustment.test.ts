@@ -21,6 +21,7 @@ import {
   isConverged,
 } from '../sequentialAdjustment'
 import { adjustNetwork, type NetworkPoint, type NetworkObservation } from '../networkAdjustment'
+import { defined } from '@/test-utils/defined'
 
 function approxEqual(a: number, b: number, tol = 1e-6): boolean {
   return Math.abs(a - b) < tol
@@ -104,8 +105,8 @@ describe('sequentialAdjustment — incremental updates', () => {
 
     expect(pSequential).toBeDefined()
     expect(pFull).toBeDefined()
-    expect(approxEqual(pSequential!.easting, pFull!.easting, 0.001)).toBe(true)
-    expect(approxEqual(pSequential!.northing, pFull!.northing, 0.001)).toBe(true)
+    expect(approxEqual(defined(pSequential).easting, defined(pFull).easting, 0.001)).toBe(true)
+    expect(approxEqual(defined(pSequential).northing, defined(pFull).northing, 0.001)).toBe(true)
   })
 
   test('adding multiple observations incrementally', () => {
@@ -144,8 +145,8 @@ describe('sequentialAdjustment — incremental updates', () => {
 
     expect(pSeq).toBeDefined()
     expect(pFull).toBeDefined()
-    expect(approxEqual(pSeq!.easting, pFull!.easting, 0.001)).toBe(true)
-    expect(approxEqual(pSeq!.northing, pFull!.northing, 0.001)).toBe(true)
+    expect(approxEqual(defined(pSeq).easting, defined(pFull).easting, 0.001)).toBe(true)
+    expect(approxEqual(defined(pSeq).northing, defined(pFull).northing, 0.001)).toBe(true)
   })
 })
 

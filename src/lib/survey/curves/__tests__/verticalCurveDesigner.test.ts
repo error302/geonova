@@ -23,6 +23,7 @@ import {
   type VIPInput,
 } from '../verticalCurveDesigner'
 import { computeVerticalCurve } from '../vertical'
+import { defined } from '@/test-utils/defined'
 
 describe('computeSSD', () => {
   it('matches AASHTO Green Book 2018 SSD table for 80 km/h on level grade', () => {
@@ -287,8 +288,8 @@ describe('stationAtChainage / stationAlignment', () => {
     const a = buildAlignment()
     const s = stationAtChainage(a, 100)
     expect(s).not.toBeNull()
-    expect(s!.segment).toBe('tangent')
-    expect(s!.elevation).toBeCloseTo(102, 1) // linear interp 0→100, 500→110: at ch=100, elev=102
+    expect(defined(s).segment).toBe('tangent')
+    expect(defined(s).elevation).toBeCloseTo(102, 1) // linear interp 0→100, 500→110: at ch=100, elev=102
   })
 
   it('returns a curve station inside the curve', () => {
@@ -298,8 +299,8 @@ describe('stationAtChainage / stationAlignment', () => {
     // Curve elev at ch=500 = 110 - 0.0625 = 109.9375.
     const s = stationAtChainage(a, 500)
     expect(s).not.toBeNull()
-    expect(s!.segment).toBe('curve')
-    expect(s!.elevation).toBeCloseTo(109.9375, 2)
+    expect(defined(s).segment).toBe('curve')
+    expect(defined(s).elevation).toBeCloseTo(109.9375, 2)
   })
 
   it('samples stations at the requested interval', () => {
@@ -321,9 +322,9 @@ describe('stationAtChainage / stationAlignment', () => {
     expect(atPvt).not.toBeNull()
     expect(afterPvt).not.toBeNull()
     // Grade should be continuous at PVC (g1 entering = g1 in curve)
-    expect(Math.abs(beforePvc!.grade - atPvc!.grade)).toBeLessThan(0.5)
+    expect(Math.abs(defined(beforePvc).grade - defined(atPvc).grade)).toBeLessThan(0.5)
     // Grade should be continuous at PVT
-    expect(Math.abs(atPvt!.grade - afterPvt!.grade)).toBeLessThan(0.5)
+    expect(Math.abs(defined(atPvt).grade - defined(afterPvt).grade)).toBeLessThan(0.5)
   })
 })
 

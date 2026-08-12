@@ -7,6 +7,7 @@ import {
   type NetworkStation,
   type GenericObservation,
 } from '../lsaIterative'
+import { defined } from '@/test-utils/defined'
 
 describe('adjustNetworkIterative', () => {
   const fixedStation: NetworkStation = {
@@ -47,7 +48,7 @@ describe('adjustNetworkIterative', () => {
     expect(result.adjustedStations).toHaveLength(2)
 
     // Free station should be at the observed position
-    const free = result.adjustedStations.find(s => s.id === 'stn-2')!
+    const free = defined(result.adjustedStations.find(s => s.id === 'stn-2'))
     expect(free.easting).toBeCloseTo(500100, 4)
     expect(free.northing).toBeCloseTo(9900100, 4)
     expect(free.elevation).toBeCloseTo(1510, 4)
@@ -89,7 +90,7 @@ describe('adjustNetworkIterative', () => {
     const result = adjustNetworkIterative([fixedStation, free2], [obs, obs2])
 
     expect(result.converged).toBe(true)
-    const free = result.adjustedStations.find(s => s.id === 'stn-2')!
+    const free = defined(result.adjustedStations.find(s => s.id === 'stn-2'))
     expect(free.easting).toBeCloseTo(500100, 2)
     expect(free.northing).toBeCloseTo(9900100, 2)
   })
@@ -123,8 +124,8 @@ describe('adjustNetworkIterative', () => {
 
     expect(result.degreesOfFreedom).toBeGreaterThan(0)
     expect(result.statisticalReport).toBeDefined()
-    expect(result.statisticalReport!.globalTest).toBeDefined()
-    expect(result.statisticalReport!.reliability).toBeDefined()
+    expect(defined(result.statisticalReport).globalTest).toBeDefined()
+    expect(defined(result.statisticalReport).reliability).toBeDefined()
   })
 
   test('computes residual diagnostics when enabled', () => {
@@ -156,8 +157,8 @@ describe('adjustNetworkIterative', () => {
     })
 
     expect(result.diagnostics).toBeDefined()
-    expect(result.diagnostics!.kolmogorovSmirnov).toBeDefined()
-    expect(result.diagnostics!.andersonDarling).toBeDefined()
+    expect(defined(result.diagnostics).kolmogorovSmirnov).toBeDefined()
+    expect(defined(result.diagnostics).andersonDarling).toBeDefined()
   })
 
   test('throws when no fixed stations', () => {
@@ -234,7 +235,7 @@ describe('adjustNetworkIterative', () => {
     }
     const result = adjustNetworkIterative([fixedStation, freeStation], [obs1, obs2])
 
-    const free = result.adjustedStations.find(s => s.id === 'stn-2')!
+    const free = defined(result.adjustedStations.find(s => s.id === 'stn-2'))
     expect(free.semiMajor).toBeGreaterThanOrEqual(0)
     expect(free.semiMinor).toBeGreaterThanOrEqual(0)
     expect(free.orientation).toBeGreaterThanOrEqual(0)
