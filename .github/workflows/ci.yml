@@ -88,6 +88,15 @@ jobs:
       # per-family lint movement is visible without a manual run.
       - name: Whole-repo lint ratchets (blocking, prints drift tables)
         run: node scripts/lint-ratchets.mjs --write-audit --report
+      # SUPPRESSION GATE (2026-08-12): blocks the "fake green" attack where
+      # warnings are silenced with // eslint-disable comments instead of real
+      # fixes (this once dropped the warning count 1,646 -> 119 while adding
+      # 1,600+ disables across 560 files — every lint gate read "green" while
+      # code quality regressed). Pure-node token scan, hard-capped floor in
+      # scripts/suppression-baseline.json; --check lists the offending files
+      # and per-file delta vs the last commit so CI is self-diagnosing.
+      - name: Suppression gate (blocking, caps eslint-disable comments)
+        run: node scripts/suppression-gate.mjs --check
 
   row-typing:
     name: API Row-Typing Gate

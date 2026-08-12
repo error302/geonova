@@ -45,7 +45,7 @@
  * to avoid the duplicate-plugin conflict in worktrees.
  */
 import nodeFs, { readFileSync, writeFileSync, existsSync } from 'node:fs'
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
 import path from 'node:path'
 
@@ -354,6 +354,30 @@ const floorChecks = [
   checkFloor(ARGUMENT_RULE, ARGUMENT_BASELINE, 'argument'),
   checkRowTypingFloor(),
 ]
+// SUPPRESSION FLOOR (2026-08-12): surfacing in the ratchet --report keeps the
+// eslint-disable cap visible in the same drift table as the rule floors, so a
+// suppression creep (the "fake green" posture) shows up on every green push.
+// The hard gate itself is scripts/suppression-gate.mjs --check (see ci.yml);
+// this line is informational + display-only so the floor appears in --report.
+if (REPORT) {
+  try {
+    const runs = spawnSync(
+      process.execPath,
+      [path.resolve(process.cwd(), 'scripts/suppression-gate.mjs'), '--report'],
+      { encoding: 'utf8', cwd: process.cwd(), stdio: ['ignore', 'pipe', 'pipe'] }
+    )
+    if (runs.status === 0 || runs.stdout) {
+      for (const line of (runs.stdout || '').split('\n')) {
+        if (line.includes('eslint-disable floor')) console.error(line.trimEnd())
+      }
+      if (runs.stderr) {
+        for (const line of runs.stderr.split('\n')) {
+          if (line.includes('eslint-disable floor')) console.error(line.trimEnd())
+        }
+      }
+    }
+  } catch { /* suppression floor line is informational; never fail --report on it */ }
+}
 const floorOver = floorChecks.filter((f) => f.over)
 
 if (warnRegressions.length || a11yRegressions.length || floorOver.length) {

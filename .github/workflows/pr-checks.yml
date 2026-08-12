@@ -56,6 +56,13 @@ jobs:
       - name: ESLint (per-rule ratchets — one pass, both baselines, prints drift tables)
         run: node scripts/lint-ratchets.mjs --write-audit --report
 
+      - name: Suppression gate (blocking, caps eslint-disable comments)
+        # SUPPRESSION GATE (2026-08-12): blocks the "fake green" attack where
+        # warnings are silenced with // eslint-disable comments instead of real
+        # fixes. Hard-capped floor in scripts/suppression-baseline.json; lists
+        # offending files + per-file delta vs the last commit.
+        run: node scripts/suppression-gate.mjs --check
+
       - name: Aria-label gate (blocking, bans junk accessible names)
         # A11Y GATE (2026-08-03): bans placeholder-like / junk aria-labels
         # codebase-wide (placeholder-equals-name, generic phrases, punctuation,
