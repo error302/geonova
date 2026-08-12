@@ -194,7 +194,10 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:16
+        # postgis/postgis (not plain postgres): migration 000_canonical_schema.sql
+        # requires the PostGIS extension — the plain image made `npm run migrate`
+        # fail at step 1. Matches the repo's docker-compose image/version.
+        image: postgis/postgis:15-3.3-alpine
         env:
           POSTGRES_USER: ci
           POSTGRES_PASSWORD: ci
