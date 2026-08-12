@@ -2,7 +2,7 @@
 
 **Goal:** clear every `@typescript-eslint` / JS warning so the CI `--max-warnings` ceiling can drop to `0` and each rule flips to `error`.
 
-**Progress:** 14,030 → **1,790** (measured 2026-08-11, `lint-ratchets --report`). Row-typing (0/538), a11y (0 findings), member-access, explicit-any, argument, **assignment** and no-unsafe-return are **done** (rules flipped to `error`); `no-unused-vars`/`no-non-null-assertion` + the mechanical rules remain.
+**Progress:** 14,030 → **1,790** (measured 2026-08-11, `lint-ratchets --report`). Row-typing (0/538), a11y (0 findings), member-access, explicit-any, argument, **assignment**, no-unsafe-return and no-unsafe-call are **done** (rules flipped to `error`); `no-unused-vars`/`no-non-null-assertion` + the mechanical rules remain.
 
 > **This doc is the canonical checkpoint.** Every grind session starts by reading the
 > **STATUS CHECKPOINT** below and ends by updating it. If an agent is rate-limited or
@@ -25,7 +25,7 @@
 | a11y findings | 0 | **0** | ✅ done |
 | **total warnings** | **1,790** | CI ceiling **2,800** | green |
 
-Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 1,151 · `no-console` 8 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` 1 · `no-non-null-assertion` 570 · `no-restricted-syntax` 16. (`no-unsafe-return` ground to 0 2026-08-11; family done.)
+Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 1,151 · `no-console` 0 · `react-hooks/exhaustive-deps` 44 · `no-unsafe-call` 0 · `no-non-null-assertion` 570 · `no-restricted-syntax` 16. (`no-unsafe-return` ground to 0 and `no-unsafe-call`/`no-console` drained to 0 2026-08-12; both unsafe-return and unsafe-call flipped to `error`.)
 
 ### Git / CI state
 
@@ -130,8 +130,8 @@ Top 20 (regen: `node scripts/assignment-scan.mjs --top 20`):
 |---|---|---|---|
 | `no-unused-vars` | 1,163 | `_`-prefix unused bindings, drop dead imports/params | `mobile/field/page.tsx` 13 · `TopoDrawingComposer.tsx` 11 · `tools/page.tsx` 10 · `cadastralPlanDXF.ts` 10 · `project/[id]/scheme/page.tsx` 9 |
 | `no-non-null-assertion` | 570 | replace `!` with real narrowing/guards (tests: `expect(...).toBeDefined()` + assert) | `networkAdjustment.test.ts` 23 · `ProgressMonitorPanel.tsx` 21 · `LongSectionRenderer.tsx` 19 · `unified3dAdjustment.test.ts` 18 · `mpesa.test.ts` 17 · `statutoryWorkbook.ts` 16 |
-| `no-console` | 393 | `lib/logger.ts` structured logging or remove debug (keep `console.error` in server bootstrap per existing convention) | `api/webhooks/paypal/route.ts` 13 · `lib/auth.ts` 11 · `networkAdjustment.ts` 11 |
-| `no-unsafe-call` | 208 | calling members on `any` — same root sources as the unsafe families; drain after Phases 1–4 | `LayerControl.tsx` 11 · `totalStationSerial.ts` 9 · `contourGenerator.ts` 8 · `SettingOutTable/StakeOutSheet` 7 |
+| `no-console` | 8 → 0 (done) | ✅ drained 2026-08-12 — routed through `lib/logger.ts` (chat/route 3, handler 2, africasTalking 2, fieldbook 1) | — |
+| `no-unsafe-call` | 0 (done) | ✅ flipped to `error` 2026-08-12 — committed tree drained 1 → 0 (`auth-v5.ts` req.headers cast); rule now errors | — |
 | `no-unsafe-return` | 171 | return `any` → typed return (engine math libs mostly) | `sparseMatrix.ts` 7 · `geodesy/gnss.ts` 7 · `levelNetworkAdjustment.ts` 6 · `totalLeastSquares.ts` 6 |
 | `react-hooks/exhaustive-deps` | 70 | careful per-effect dep fixes; use `eslint-disable-next-line` only with a justification (repo convention: 32 existing) | `useMapInteractions.ts` 16 · `useSubdivision.ts` 6 · `MobileMeasurementCapture.tsx` 4 |
 | `no-restricted-syntax` | 16 | project-specific banned patterns (e.g. `for..of` over `Object.keys`) — check the rule config | `nativeProjectionView.test.ts` 9 · `MapClient.tsx` 2 |
