@@ -148,6 +148,7 @@ The original B1–B5 roadmap has **landed**: row-typing is 100%, member-access f
 - `scripts/api-row-sweep.mjs` — API-route `db.query<T>` census (`--check` CI gate, `--apply`, `--verify`, `--apply-all`, `--no-member-scan`, `--batch-plan`)
 - `scripts/warn-scan.mjs` — regenerates the per-file census (`scripts/warn-plan-data.json`)
 - `scripts/rule-census.mjs` — per-RULE warning census (one command; total matches the ratchet; writes `scripts/rule-census-data.json`)
+- `scripts/e2e-profile.mjs` — per-spec E2E shard profile from the latest ci.yml run via `gh` (per-shard wall + test time, per-spec duration table, retry/flaky accounting; `--run <id>` to target a specific run)
 - `scripts/a11y-audit.mjs` — WCAG sweep (0 findings, 1,856 files; `--write-audit` regenerates `.a11y-audit.json`)
 - Baselines: `scripts/{member-access,assignment,explicit-any,argument,row-typing,warning,a11y}-baseline.json`
 
