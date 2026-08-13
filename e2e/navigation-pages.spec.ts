@@ -1,13 +1,22 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Register Page', () => {
+// NAV_BATCHES (2026-08-13): the E2E job boots the Next DEV server
+// (CI_E2E_PROD=false), so every route load is a lazy cold compile — the 47
+// serial loads summed ~153s of G1's wall time (register's first compile
+// alone was 29.8s). Each describe below is a parallel batch: its tests run
+// concurrently in the single worker, so the dev compiler overlaps the route
+// compiles. Batches themselves run serially (top-level describe order) to
+// keep server/memory pressure bounded. Behavior is unchanged — the same
+// viewport-agnostic route-load / SEO / 404 assertions, same titles.
+
+test.describe('Entry & Navigation', () => {
+  test.describe.configure({ mode: 'parallel' })
+
   test('loads register page', async ({ page }) => {
     const response = await page.goto('/register')
     expect(response?.status()).not.toBe(404)
   })
-})
 
-test.describe('Navigation', () => {
   test('navbar exists on landing page', async ({ page }) => {
     await page.goto('/')
     const nav = page.locator('nav')
@@ -36,6 +45,8 @@ test.describe('Navigation', () => {
 })
 
 test.describe('Survey Tools Pages', () => {
+  test.describe.configure({ mode: 'parallel' })
+
   const toolPages = [
     { path: '/tools/traverse', name: 'Traverse' },
     { path: '/tools/leveling', name: 'Leveling' },
@@ -62,7 +73,9 @@ test.describe('Survey Tools Pages', () => {
   }
 })
 
-test.describe('Static Pages', () => {
+test.describe('Static Pages (1/2)', () => {
+  test.describe.configure({ mode: 'parallel' })
+
   const staticPages = [
     '/guide',
     '/docs/privacy',
@@ -74,6 +87,20 @@ test.describe('Static Pages', () => {
     '/docs/rdm-accuracy',
     '/docs/csv-import',
     '/docs/quick-start',
+  ]
+
+  for (const pg of staticPages) {
+    test(`${pg} loads without 404`, async ({ page }) => {
+      const response = await page.goto(pg, { waitUntil: 'commit' })
+      expect(response?.status()).not.toBe(404)
+    })
+  }
+})
+
+test.describe('Static Pages (2/2)', () => {
+  test.describe.configure({ mode: 'parallel' })
+
+  const staticPages = [
     '/docs/level-book',
     '/docs/traverse-field-book',
     '/land-law',
@@ -94,14 +121,14 @@ test.describe('Static Pages', () => {
   }
 })
 
-test.describe('404 Page', () => {
+test.describe('404 Page & SEO', () => {
+  test.describe.configure({ mode: 'parallel' })
+
   test('non-existent page shows 404', async ({ page }) => {
     const response = await page.goto('/this-page-does-not-exist-xyz')
     expect(response?.status()).toBe(404)
   })
-})
 
-test.describe('HTML Head & SEO', () => {
   test('homepage has viewport meta', async ({ page }) => {
     await page.goto('/')
     const viewport = page.locator('meta[name="viewport"]')
