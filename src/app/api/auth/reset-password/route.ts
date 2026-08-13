@@ -50,7 +50,8 @@ export async function POST(req: NextRequest) {
     }
 
     const tokenRow = tokenRes.rows[0] as { id: string; user_id: string }
-    const passwordHash = await bcrypt.hash(password, 10)
+    // SECURITY FIX: bumped bcrypt cost from 10 to 12 per OWASP 2023 guidance
+    const passwordHash = await bcrypt.hash(password, 12)
 
     const client = await db.getClient()
     try {

@@ -55,7 +55,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Current password is incorrect' }, { status: 400 })
     }
 
-    const passwordHash = await bcrypt.hash(parsed.data.password, 10)
+    // SECURITY FIX: bumped bcrypt cost from 10 to 12 per OWASP 2023 guidance
+    const passwordHash = await bcrypt.hash(parsed.data.password, 12)
     await db.query<never>(
       'UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2',
       [passwordHash, userId]

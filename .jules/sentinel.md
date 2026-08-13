@@ -1,0 +1,4 @@
+## 2024-08-13 - Incomplete application of bcrypt cost updates across all authentication routes
+**Vulnerability:** The bcrypt hashing cost was correctly bumped to 12 in `register` (`src/app/api/auth/register/route.ts`), but missed in `reset-password` and `update-password` routes (`src/app/api/auth/reset-password/route.ts`, `src/app/api/auth/update-password/route.ts`), leaving them hashing at a cost of 10.
+**Learning:** Security fixes applied to a specific behavior (hashing passwords) can easily become inconsistent if all instances of that behavior are not located and updated simultaneously across the codebase.
+**Prevention:** When applying algorithmic upgrades (like encryption rounds or hash costs), always search the entire codebase for similar usages (e.g., `grep -rn 'bcrypt.hash'`) to ensure comprehensive application. Alternatively, centralize such security configurations into a single utility module.
