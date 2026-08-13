@@ -117,6 +117,9 @@ const STATUS_CONFIG: Record<PhaseProgress['status'], { icon: React.ReactNode; co
   delayed: { icon: <AlertTriangle className="w-4 h-4" />, color: 'text-red-400', label: 'Delayed' },
 }
 
+const EMPTY_PHASES: PhaseProgress[] = []
+const EMPTY_TIMELINE: TimelineEvent[] = []
+
 function ProgressMonitorPage() {
   const { t } = useLanguage()
   const [activeTab, setActiveTab] = useState<'overview' | 'inspections'>('overview')
@@ -124,8 +127,8 @@ function ProgressMonitorPage() {
   const projectId = searchParams.get('project') || undefined
 
   // If project is linked, don't show demo data — let ProgressMonitorPanel load real data
-  const phases = projectId ? [] : DEMO_PHASES
-  const timeline = projectId ? [] : DEMO_TIMELINE
+  const phases = projectId ? EMPTY_PHASES : DEMO_PHASES
+  const timeline = projectId ? EMPTY_TIMELINE : DEMO_TIMELINE
 
   const overallProgress = useMemo(() => {
     const total = phases.reduce((sum, p) => sum + p.progress, 0)

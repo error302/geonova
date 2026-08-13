@@ -1038,9 +1038,11 @@ export default function MapClient() {
       }
     })()
 
+    const mapToClean = mapInstance.current
+    const toolToClean = editingToolRef.current
     return () => {
-      if (editingToolRef.current && mapInstance.current) {
-        try { mapInstance.current.removeInteraction(editingToolRef.current) } catch { /* */ }
+      if (toolToClean && mapToClean) {
+        try { mapToClean.removeInteraction(toolToClean) } catch { /* */ }
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1402,9 +1404,10 @@ export default function MapClient() {
     vertexEditingEnabled, snapEnabled, snapTolerance, vertexEditState, vertexEditingVertices,
     gpsPos21037,
     activeProjection, currentUtmEpsg, applyOneShotTool, showSheetLayout, isPrinting,
-    paperSize, orientation, offlineMapExtent, schemeProjectId,
+    paperSize, orientation, offlineMapExtent,
     hasFeature, canUndo, canRedo,
     setPanelOpen, setProjectSearch, setAudioMuted, setOfflineDialogOpen,
+    setOrientation, setPaperSize,
     setVertexEditingEnabled, setSnapEnabled, setSnapTolerance, setShowSheetLayout,
     interactions, toggleBasemap, toggleGPS,
     handleUpdateFeatureName, handleOpacityChange, handleCoordSearch,

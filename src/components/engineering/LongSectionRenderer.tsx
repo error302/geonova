@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -99,8 +99,8 @@ export default function LongSectionRenderer({
     return { minC: Math.min(...cs), maxC: Math.max(...cs), minE: lo, maxE: hi, rangeC: Math.max(...cs) - Math.min(...cs) || 1, rangeE: hi - lo || 1 }
   }, [stations])
 
-  const xS = (c: number) => ML + ((c - minC) / rangeC) * plotW
-  const yS = (e: number) => MT + plotH - ((e - minE) / rangeE) * plotH
+  const xS = useCallback((c: number) => ML + ((c - minC) / rangeC) * plotW, [ML, minC, rangeC, plotW])
+  const yS = useCallback((e: number) => MT + plotH - ((e - minE) / rangeE) * plotH, [MT, plotH, minE, rangeE])
 
   /* ---- vertical curve derivations ---- */
   const curves = useMemo(() =>
@@ -134,7 +134,7 @@ export default function LongSectionRenderer({
       vl.push({ x: xS(c), major: c % 100 === 0, chainage: c })
 
     return { hLines: hl, vLines: vl }
-  }, [minE, maxE, minC, maxC, chainageInterval])
+  }, [minE, maxE, minC, maxC, chainageInterval, xS, yS])
 
   /* ---- SVG path data ---- */
   const {
@@ -200,7 +200,7 @@ export default function LongSectionRenderer({
       .map(s => ({ x: xS(s.chainage), y: yS(s.groundLevel), rl: s.groundLevel }))
 
     return { groundPoly: gp, groundFill: gf, designPoly: dp, cutFillSegs: cfs, cfAnnotations: cfa, transitions: tr, groundRLLabels: grl }
-  }, [stations, minC, maxC, minE, maxE])
+  }, [stations, plotBottom, xS, yS])
 
   /* ---- table rows ---- */
   const tableRows = useMemo(() => {

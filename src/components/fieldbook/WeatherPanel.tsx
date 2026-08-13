@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CloudSun, Thermometer, Gauge, Droplets, RefreshCw, MapPin, Loader2 } from 'lucide-react';
 
 interface WeatherData {
@@ -39,36 +39,7 @@ export function WeatherPanel({ lat, lon, elevation, onWeatherChange, t }: Weathe
   const [manualPressure, setManualPressure] = useState('1013');
   const [manualHumidity, setManualHumidity] = useState('60');
 
-  // Auto-fetch on mount if GPS coordinates available
-  useEffect(() => {
-    if (lat !== undefined && lon !== undefined) {
-      fetchWeather();
-    } else {
-      // Use Kenya defaults
-      const defaults = {
-        temperature: elevation ? 30 - 0.0065 * elevation : 24,
-        pressure: elevation ? 1013.25 * Math.pow(1 - 0.0000225577 * elevation, 5.25588) : 1013.25,
-        humidity: 60,
-        source: elevation ? 'elevation-estimated' : 'kenya-default',
-        fetchedAt: new Date().toISOString(),
-      };
-      setWeather(defaults);
-      onWeatherChange?.(defaults);
-    }
-  }, [lat, lon, elevation]);
-
-  // Notify parent when manual values change
-  useEffect(() => {
-    if (manualMode) {
-      onWeatherChange?.({
-        temperature: parseFloat(manualTemp) || 24,
-        pressure: parseFloat(manualPressure) || 1013,
-        humidity: parseFloat(manualHumidity) || 60,
-      });
-    }
-  }, [manualMode, manualTemp, manualPressure, manualHumidity]);
-
-  const fetchWeather = async () => {
+  const fetchWeather = useCallback(async () => {
     if (!lat || !lon) return;
     setLoading(true);
     try {
@@ -94,7 +65,36 @@ export function WeatherPanel({ lat, lon, elevation, onWeatherChange, t }: Weathe
     } finally {
       setLoading(false);
     }
-  };
+  }, [lat, lon, onWeatherChange]);
+
+  // Auto-fetch on mount if GPS coordinates available
+  useEffect(() => {
+    if (lat !== undefined && lon !== undefined) {
+      fetchWeather();
+    } else {
+      // Use Kenya defaults
+      const defaults = {
+        temperature: elevation ? 30 - 0.0065 * elevation : 24,
+        pressure: elevation ? 1013.25 * Math.pow(1 - 0.0000225577 * elevation, 5.25588) : 1013.25,
+        humidity: 60,
+        source: elevation ? 'elevation-estimated' : 'kenya-default',
+        fetchedAt: new Date().toISOString(),
+      };
+      setWeather(defaults);
+      onWeatherChange?.(defaults);
+    }
+  }, [lat, lon, elevation, fetchWeather, onWeatherChange]);
+
+  // Notify parent when manual values change
+  useEffect(() => {
+    if (manualMode) {
+      onWeatherChange?.({
+        temperature: parseFloat(manualTemp) || 24,
+        pressure: parseFloat(manualPressure) || 1013,
+        humidity: parseFloat(manualHumidity) || 60,
+      });
+    }
+  }, [manualMode, manualTemp, manualPressure, manualHumidity, onWeatherChange]);
 
   const activeData = manualMode
     ? { temperature: parseFloat(manualTemp) || 24, pressure: parseFloat(manualPressure) || 1013, humidity: parseFloat(manualHumidity) || 60 }

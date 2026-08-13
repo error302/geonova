@@ -27,9 +27,14 @@ export function FieldBookMobile({ projectId, surveyType, surveyorId }: FieldBook
   const [showAddModal, setShowAddModal] = useState(false);
   const [lastSync, setLastSync] = useState<Date | null>(null);
 
+  const loadObservations = useCallback(async () => {
+    const obs = await getObservationsOffline(projectId);
+    setObservations(obs);
+  }, [projectId]);
+
   useEffect(() => {
     loadObservations();
-  }, [projectId]);
+  }, [projectId, loadObservations]);
 
   useEffect(() => {
     const cleanup = registerNetworkListeners(
@@ -38,11 +43,6 @@ export function FieldBookMobile({ projectId, surveyType, surveyorId }: FieldBook
     );
     return cleanup;
   }, []);
-
-  const loadObservations = async () => {
-    const obs = await getObservationsOffline(projectId);
-    setObservations(obs);
-  };
 
   const handleSync = useCallback(async () => {
     if (!online || syncing) return;
@@ -60,7 +60,7 @@ export function FieldBookMobile({ projectId, surveyType, surveyorId }: FieldBook
     } finally {
       setSyncing(false);
     }
-  }, [projectId, online, syncing]);
+  }, [projectId, online, syncing, loadObservations]);
 
   const handleAddObservation = async (obs: Omit<OfflineObservation, 'id' | 'project_id' | 'timestamp' | 'synced'>) => {
     const newObs: OfflineObservation = {

@@ -61,6 +61,26 @@ export function StakeoutRadar({ targetE, targetN, onClose, epsg = 'EPSG:21037' }
     }
   }, [epsg])
 
+  const playBeep = useCallback((frequency: number) => {
+    if (!soundOn) return
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)()
+      }
+      const ctx = audioCtxRef.current
+      const oscillator = ctx.createOscillator()
+      const gainNode = ctx.createGain()
+      oscillator.connect(gainNode)
+      gainNode.connect(ctx.destination)
+      oscillator.frequency.value = frequency
+      oscillator.type = 'sine'
+      gainNode.gain.setValueAtTime(0.1, ctx.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15)
+      oscillator.start(ctx.currentTime)
+      oscillator.stop(ctx.currentTime + 0.15)
+    } catch {}
+  }, [soundOn])
+
   // GPS Watch
   const startWatch = useCallback(() => {
     if (watching) return
@@ -103,7 +123,7 @@ export function StakeoutRadar({ targetE, targetN, onClose, epsg = 'EPSG:21037' }
       () => {},
       { enableHighAccuracy: true, timeout: 5000, maximumAge: 1000 }
     )
-  }, [watching, targetE, targetN, transformToUTM, soundOn])
+  }, [watching, targetE, targetN, transformToUTM, soundOn, playBeep])
 
   const stopWatch = useCallback(() => {
     if (watchIdRef.current != null) {
@@ -117,26 +137,6 @@ export function StakeoutRadar({ targetE, targetN, onClose, epsg = 'EPSG:21037' }
     startWatch()
     return () => stopWatch()
   }, [startWatch, stopWatch])
-
-  const playBeep = useCallback((frequency: number) => {
-    if (!soundOn) return
-    try {
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)()
-      }
-      const ctx = audioCtxRef.current
-      const oscillator = ctx.createOscillator()
-      const gainNode = ctx.createGain()
-      oscillator.connect(gainNode)
-      gainNode.connect(ctx.destination)
-      oscillator.frequency.value = frequency
-      oscillator.type = 'sine'
-      gainNode.gain.setValueAtTime(0.1, ctx.currentTime)
-      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15)
-      oscillator.start(ctx.currentTime)
-      oscillator.stop(ctx.currentTime + 0.15)
-    } catch {}
-  }, [soundOn])
 
   // --- AR Camera & Compass Integration ---
   
@@ -196,14 +196,14 @@ export function StakeoutRadar({ targetE, targetN, onClose, epsg = 'EPSG:21037' }
     }
   }
 
-  const stopAR = () => {
+  const stopAR = useCallback(() => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop())
       streamRef.current = null
     }
     window.removeEventListener('deviceorientationabsolute', handleOrientation, true)
     window.removeEventListener('deviceorientation', handleOrientation, true)
-  }
+  }, [handleOrientation])
 
   const toggleViewMode = () => {
     if (viewMode === 'radar') {
@@ -220,7 +220,7 @@ export function StakeoutRadar({ targetE, targetN, onClose, epsg = 'EPSG:21037' }
     return () => {
       stopAR()
     }
-  }, [handleOrientation])
+  }, [handleOrientation, stopAR])
 
   // --- Rendering ---
   

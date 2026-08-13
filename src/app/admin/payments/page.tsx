@@ -161,8 +161,8 @@ export default function AdminPaymentsPage() {
 
                 const data: PaymentsResponse = await res.json() as unknown as PaymentsResponse
         setPayments(data.payments || [])
-        setPagination(data.pagination || pagination)
-        setSummary(data.summary || summary)
+        setPagination((prev) => data.pagination || prev)
+        setSummary((prev) => data.summary || prev)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load payments')
       } finally {

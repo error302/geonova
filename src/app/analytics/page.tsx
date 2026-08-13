@@ -206,7 +206,7 @@ export default function AnalyticsPage() {
     }
 
     fetchAnalytics()
-  }, [session?.user?.id, status, period])
+  }, [session?.user, status, period])
 
   if (loading) {
     return (

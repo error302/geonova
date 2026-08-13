@@ -68,7 +68,29 @@ function MobileFieldContent() {
   // Instrument store
   const isConnected = useInstrumentStore((s) => s.status === 'connected' || s.status === 'streaming')
 
-  // ─── Initialize ───────────────────────────────────────
+  // ─── Data loading ─────────────────────────────────────
+  const loadProject = useCallback(async () => {
+    try {
+      const dbClient = createClient()
+            const { data } = await dbClient.from('projects').select('name').eq('id', projectId).single() as unknown as { data: { name: string } | null }
+      if ((data as { name?: string } | null)?.name) setProjectName((data as { name: string }).name)
+    } catch {
+      // Project might not exist or DB unreachable
+    }
+  }, [projectId])
+
+  const loadObservations = useCallback(async () => {
+    if (!projectId) return
+    const observations = await offlineStorage.getFieldObservations(projectId)
+    setRecentObservations(observations.slice(-10).reverse())
+  }, [projectId])
+
+  const loadStats = useCallback(async () => {
+    const stats = await offlineStorage.getStorageStats()
+    setPendingCount(stats.pendingSync)
+  }, [])
+
+  // ─── Initialize ────────────────────
   useEffect(() => {
     if (projectId) {
       loadProject()
@@ -91,30 +113,7 @@ function MobileFieldContent() {
       window.removeEventListener('offline', handleOffline)
       syncService.stopAutoSync()
     }
-  }, [projectId])
-
-  // ─── Data loading ─────────────────────────────────────
-  const loadProject = async () => {
-    try {
-      const dbClient = createClient()
-            const { data } = await dbClient.from('projects').select('name').eq('id', projectId).single() as unknown as { data: { name: string } | null }
-      if ((data as { name?: string } | null)?.name) setProjectName((data as { name: string }).name)
-    } catch {
-      // Project might not exist or DB unreachable
-    }
-  }
-
-  const loadObservations = async () => {
-    if (!projectId) return
-    const observations = await offlineStorage.getFieldObservations(projectId)
-    setRecentObservations(observations.slice(-10).reverse())
-  }
-
-  const loadStats = async () => {
-    const stats = await offlineStorage.getStorageStats()
-    setPendingCount(stats.pendingSync)
-  }
-
+  }, [projectId, loadProject, loadObservations, loadStats])
   // ─── Sync ─────────────────────────────────────────────
   const handleSync = async () => {
     if (!isOnline) return
@@ -160,7 +159,7 @@ function MobileFieldContent() {
       logger.error('Save error:', { error: error })
       alert('Failed to save observation')
     }
-  }, [projectId, activeSurveyType])
+  }, [projectId, activeSurveyType, loadObservations, loadStats])
 
   // ─── Pull from instrument ─────────────────────────────
   const handlePullFromInstrument = useCallback(async (): Promise<Partial<Record<string, string>>> => {
