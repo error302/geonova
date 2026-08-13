@@ -339,7 +339,6 @@ function computeStakingPoint(
     const distFromTP1 = chainage - elements.tp1Chainage
     const arcAngle = distFromTP1 / data.radius // radians along the arc
     const curveBearing = incomingBearing + deltaSign * (arcAngle * 180 / Math.PI)
-    const curveRad = (curveBearing * Math.PI) / 180
 
     // Point on curve = center + R × (sin(bearing), cos(bearing))
     // Center = TP1 + R perpendicular to incoming bearing
@@ -358,9 +357,6 @@ function computeStakingPoint(
   }
 
   // Compute offsets (perpendicular to bearing)
-  const perpBearing = bearing + 90
-  const perpRad = (perpBearing * Math.PI) / 180
-
   let offsetLeft = 0
   let offsetRight = 0
 

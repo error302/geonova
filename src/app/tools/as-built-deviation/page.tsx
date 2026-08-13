@@ -4,7 +4,6 @@ import { useState, useCallback, useMemo } from 'react'
 import { PageHeader } from '@/components/shared/PageHeader'
 import {
   checkDeviations,
-  interpolateDesignElevation,
   KENHA_TOLERANCES,
   getStatusColor,
   getStatusLabel,
@@ -12,7 +11,6 @@ import {
   type AsBuiltPoint,
   type DeviationReport,
 } from '@/lib/compute/asBuiltDeviation'
-import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 // Sample: 200m road section with design levels
 const SAMPLE_DESIGN: DesignStation[] = [
@@ -58,7 +56,6 @@ interface AsBuiltRow {
 }
 
 export default function AsBuiltDeviationPage() {
-  const { t } = useLanguage()
   const [toleranceIdx, setToleranceIdx] = useState(1) // Subbase default
   const [customPass, setCustomPass] = useState('10')
   const [customMarginal, setCustomMarginal] = useState('15')

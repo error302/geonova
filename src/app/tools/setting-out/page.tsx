@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Upload, Download, FileSpreadsheet, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Download, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { getAvailableFormats, exportStakeout, type InstrumentFormat } from '@/lib/survey/instrumentWriters'
 import { computeSettingOut, type SettingOutResult, type InstrumentStation, type Backsight } from '@/lib/computations/settingOutEngine'
 import { extractDesignPointsFromDXF } from '@/lib/survey/dxfDesignExtractor'

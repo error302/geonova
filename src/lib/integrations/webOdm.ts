@@ -26,7 +26,6 @@
 
 import { promises as fs } from 'fs'
 import path from 'path'
-import { randomUUID } from 'crypto'
 
 const WEBODM_URL = process.env.WEBODM_URL || ''
 const WEBODM_TOKEN = process.env.WEBODM_TOKEN || ''
@@ -83,7 +82,7 @@ export function isWebODMConfigured(): boolean {
 export async function createWebODMTask(
   photoPaths: string[],
   taskName: string,
-  options: WebODMTaskOptions = {},
+  _options: WebODMTaskOptions = {},
 ): Promise<string> {
   if (!isWebODMConfigured()) {
     throw new Error('WebODM is not configured. Set WEBODM_URL and WEBODM_TOKEN.')

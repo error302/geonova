@@ -16,10 +16,6 @@ const FILL_PATTERNS = [
   { value: 'dots', label: 'Dots' },
 ]
 
-const FILL_COLORS = [
-  '#f0f4e8', '#e8f4f0', '#f4e8f0', '#e8f0f4', '#f0e8f4',
-]
-
 export function SubAreaPanel({ subAreas, beacons, onAdd, onUpdate, onRemove }: Props) {
   const nextId = String.fromCharCode(65 + subAreas.length)
 
@@ -39,7 +35,7 @@ export function SubAreaPanel({ subAreas, beacons, onAdd, onUpdate, onRemove }: P
         <p className="text-sm text-gray-500">No sub-areas defined. Click Add to create one.</p>
       )}
 
-      {subAreas.map((area, idx) => (
+      {subAreas.map((area) => (
         <div key={area.id} className="border rounded p-3 space-y-2 bg-white">
           <div className="flex items-center justify-between">
             <span className="font-medium text-sm">Area {area.id}</span>

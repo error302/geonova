@@ -1,6 +1,6 @@
 import { detectFormat, getParser } from './registry';
 import { bowditchAdjustment } from '@/lib/engine/traverse';
-import { ParseResult, SupportedFormat, ParsedPoint } from '@/types/importer';
+import { ParsedPoint } from '@/types/importer';
 
 export { detectFormat, getParser } from './registry';
 

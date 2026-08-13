@@ -13,12 +13,11 @@
  * runs from the project workspace automatically.
  */
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   getAutomationChains,
   getAutomationSummary,
   type AutomationTrigger,
-  type AutomationStep,
 } from '@/lib/workflows/workflowAutomation'
 import type { SurveyType } from '@/types/project'
 import {

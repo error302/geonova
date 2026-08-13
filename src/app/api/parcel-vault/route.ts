@@ -1,8 +1,7 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
-import { db } from '@/lib/db'
 import { saveToVault, getUserVault, deleteVaultEntry } from '@/lib/parcelVault'
 import type { NLIMSParcel } from '@/types/nlims'
 

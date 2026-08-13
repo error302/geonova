@@ -56,12 +56,6 @@ export interface ProcessedPoint {
   satellites: number
 }
 
-const RINEX_CONSTANTS = {
-  C: 299792458, // speed of light m/s
-  L1_FREQ: 1575.42e6, // L1 frequency Hz
-  L2_FREQ: 1227.60e6, // L2 frequency Hz
-}
-
 export function detectGNSSFormat(content: string, filename: string): GNSSBaselineFile['format'] {
   const lowerFilename = filename.toLowerCase()
   
@@ -141,7 +135,7 @@ export function parseRINEXBaseline(content: string): BaselineResult {
 
 export function parseProprietaryBaseline(
   content: string, 
-  format: 'topcon' | 'trimble' | 'leica'
+  _format: 'topcon' | 'trimble' | 'leica'
 ): BaselineResult {
   const vectors: BaselineVector[] = []
   const refStation = 'REF'

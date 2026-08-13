@@ -15,7 +15,7 @@
  * - Bomford, G. (1980) "Geodesy"
  */
 
-import { computeMeanEarthRadius, WGS84_A, WGS84_E2 } from './curvature-refraction';
+import { computeMeanEarthRadius } from './curvature-refraction';
 
 // ─── Types ───────────────────────────────────────────────────────
 

@@ -81,7 +81,7 @@ export default function SurveyReport({
   totalDistance,
 }: SurveyReportProps) {
   const { t } = useLanguage()
-  const { standard, country, getTraverseOrder, getAreaRule } = useCountry()
+  const { standard, country, getTraverseOrder } = useCountry()
 
   const [surveyorName, setSurveyorName] = useState('')
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
@@ -111,8 +111,6 @@ export default function SurveyReport({
   const { print, isPrinting, paperSize, setPaperSize, orientation, setOrientation } = usePrint({ title: 'Survey Report' })
 
   if (!isOpen) return null
-
-  const rimData = { district: '', location: '', parcels: [] as Array<{ value: string }> }
 
   const areaResult = parcelAreaSqM > 0 ? formatAreaByCountry(country, parcelAreaSqM) : null
 

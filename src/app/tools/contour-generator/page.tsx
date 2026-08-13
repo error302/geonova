@@ -4,8 +4,6 @@ import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { Mountain } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import {
-  generateContours,
-  buildTINSurface,
   computeVolumeFromTIN,
   type SpotHeight,
   type ContourLine,

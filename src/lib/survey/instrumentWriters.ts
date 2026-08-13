@@ -28,7 +28,7 @@
  *   // Then: new Blob([gsiContent], { type: 'text/plain' })
  */
 
-import type { SettingOutResult, SettingOutRow } from '@/lib/computations/settingOutEngine'
+import type { SettingOutResult } from '@/lib/computations/settingOutEngine'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -260,7 +260,7 @@ export function exportStakeoutToJobXML(
   const stationName = options.stationName || 'STN1'
   const bsName = options.backsightName || 'BS1'
 
-  const pointXml = result.rows.map((row, i) => {
+  const pointXml = result.rows.map((row) => {
     return `      <Point name="${row.id}" code="STAKEOUT">
         <Coordinates north="${row.designN.toFixed(4)}" east="${row.designE.toFixed(4)}" elev="${row.designRL.toFixed(4)}"/>
         <StakeoutData horizontalAngle="${row.HzDecimal.toFixed(6)}" slopeDistance="${row.SD.toFixed(4)}" targetHeight="${row.TH.toFixed(3)}"/>

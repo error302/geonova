@@ -1,12 +1,11 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import {
   getUserCPDForYear,
   getTotalCPDForYear,
   getCPDSummary,
-  generateCPDCertificate,
   verifyCPDCertificate,
   addManualCPDEntry,
   getPendingCPDEntries,

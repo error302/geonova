@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
  * DELETE /api/admin/licenses/[licenseId]/seats   — Revoke seat (?seatId=xxx)
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import {
   assignLicenseSeat,
@@ -60,7 +60,7 @@ export const POST = apiHandler(
 
 export const DELETE = apiHandler(
   { auth: true, roles: ['super_admin'] , rateLimit: { max: 60, windowMs: 60000 } },
-  async (req, ctx) => {
+  async (req, _ctx) => {
     const url = new URL(req.url)
     const seatId = url.searchParams.get('seatId')
 

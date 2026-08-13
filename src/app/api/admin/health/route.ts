@@ -25,7 +25,7 @@ export const dynamic = 'force-dynamic'
  */
 export const GET = apiHandler(
   { auth: true, roles: ['super_admin', 'admin', 'org_admin'], rateLimit: { max: 120, windowMs: 60000 } },
-  async (req, ctx) => {
+  async (_req, _ctx) => {
     const startTime = Date.now()
 
     // ── Current health snapshot ──

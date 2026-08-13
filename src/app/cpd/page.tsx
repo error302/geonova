@@ -32,12 +32,12 @@ interface CpdActivityRow {
 
 export default function CPDPage() {
   const [loading, setLoading] = useState(true)
-  const [fetchError, setFetchError] = useState<string | null>(null)
+  const [, setFetchError] = useState<string | null>(null)
   const [activities, setActivities] = useState<CpdActivityRow[]>([])
   const [summary, setSummary] = useState<CPDSummary | null>(null)
   const [country, setCountry] = useState('Kenya')
   const [requirements, setRequirements] = useState<CPDRequirement[]>([])
-  const [totalPoints, setTotalPoints] = useState(0)
+  const [, setTotalPoints] = useState(0)
 
   useEffect(() => {
     const loadData = async () => {

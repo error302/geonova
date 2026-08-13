@@ -69,13 +69,6 @@ function arithToDMS(angle: number): { d: number; m: number; s: number } {
   return { d, m, s }
 }
 
-function angleDiff(a: number, b: number): number {
-  let diff = a - b
-  while (diff < 0) diff += 360
-  while (diff >= 360) diff -= 360
-  return diff
-}
-
 function inverseBearing(e1: number, n1: number, e2: number, n2: number): number {
   // Source: Ghilani & Wolf, Section 10.3
   const dE = e2 - e1
@@ -134,7 +127,6 @@ export function computeSettingOut(
     const VA_Deg = VA_Rad * 180 / Math.PI
     const { d: vad, m: vam, s: vas } = arithToDMS(Math.abs(VA_Deg))
     const sign = heightDiff >= 0 ? '+' : '−'
-    const VA = `${sign}${vad}°${String(vam).padStart(2, '0')}'${vas.toFixed(1).padStart(4, '0')}"`
     const VA_Display = `${sign}${vad}°${String(vam).padStart(2, '0')}'${vas.toFixed(1).padStart(4, '0')}"`
 
     // Slope distance

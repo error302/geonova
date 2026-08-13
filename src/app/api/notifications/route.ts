@@ -30,7 +30,7 @@ export const dynamic = 'force-dynamic'
  */
 export const GET = apiHandler(
   { auth: true, rateLimit: { max: 120, windowMs: 60000 } },
-  async (req, ctx) => {
+  async (req, _ctx) => {
     const user = await getAuthUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -149,7 +149,7 @@ export const PATCH = apiHandler(
  */
 export const DELETE = apiHandler(
   { auth: true, rateLimit: { max: 30, windowMs: 60000 } },
-  async (req, ctx) => {
+  async (req, _ctx) => {
     const user = await getAuthUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

@@ -14,7 +14,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import {
   Search, MapPin, Plus, Loader2, Copy, Check,
-  Ruler, Building2, Navigation, X,
+  Building2, Navigation, X,
 } from 'lucide-react'
 
 interface Beacon {
@@ -325,7 +325,7 @@ function AddBeaconForm({ onClose, onAdded }: { onClose: () => void; onAdded: () 
   const [easting, setEasting] = useState('')
   const [northing, setNorthing] = useState('')
   const [county, setCounty] = useState('')
-  const [locality, setLocality] = useState('')
+  const [locality] = useState('')
   const [condition, setCondition] = useState('good')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)

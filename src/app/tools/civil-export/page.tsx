@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/api-client/client'
 import { exportCivil, CIVIL_FORMATS, CivilFormat, CivilPoint } from '@/lib/export/civilHandoff'
 import { PageHeader } from '@/components/shared/PageHeader'
@@ -30,7 +30,7 @@ function CivilExportPage() {
   const [allPoints, setAllPoints] = useState<CivilPoint[]>([])
   const [format, setFormat]       = useState<CivilFormat>('civil3d')
   const [filter, setFilter]       = useState<'all' | 'control' | 'survey'>('all')
-  const [loading, setLoading]     = useState(false)
+  const [, setLoading] = useState(false)
   const [preview, setPreview]     = useState('')
 
   useEffect(() => {

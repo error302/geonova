@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
@@ -73,7 +73,7 @@ export const POST = apiHandler({ auth: true, schema: ProcessGNSSSchema, rateLimi
   })
 })
 
-function generateMockBaselines(stationLabels: string[]): Record<string, unknown>[] {
+function generateMockBaselines(_stationLabels: string[]): Record<string, unknown>[] {
   // No fabricated baseline data — return empty result
   return []
 }

@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { Plus, AlertTriangle, Check, X, Upload, Calendar } from 'lucide-react'
-import type { Equipment, EquipmentType, CalibrationRecord, CreateEquipmentRequest, CreateCalibrationRecordRequest } from '@/types/equipment'
+import type { Equipment, EquipmentType, CreateEquipmentRequest, CreateCalibrationRecordRequest } from '@/types/equipment'
 import { z } from 'zod'
-import { apiGet, apiPost, apiInvalidate, ApiError } from '@/lib/api/client'
+import { apiGet, apiPost, apiInvalidate } from '@/lib/api/client'
 
 // ─── API response schemas (Zod) ────────────────────────────────────────────
 const equipmentListResponseSchema = z.object({

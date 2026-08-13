@@ -71,7 +71,6 @@ const CONTENT_W = PAGE_W - MARGIN_L - MARGIN_R  // 186 mm
 const NAVY: [number, number, number] = [27, 58, 92]
 const LIGHT_GREY: [number, number, number] = [240, 242, 245]
 const WHITE: [number, number, number] = [255, 255, 255]
-const BLACK: [number, number, number] = [0, 0, 0]
 const BORDER_GREY: [number, number, number] = [190, 195, 200]
 
 // Status colour map (fill behind the status cell)
@@ -454,7 +453,6 @@ export function generateBeaconDescriptionPdf(
   // Final table border
   doc.setDrawColor(0, 0, 0)
   doc.setLineWidth(0.3)
-  const tableH = headerH + data.beacons.length * rowH
   // We draw border around the entire table from the header start.
   // Since we track `y` incrementally, we capture the header start:
   // The header was drawn at y_before_header. Let's use a simpler approach:

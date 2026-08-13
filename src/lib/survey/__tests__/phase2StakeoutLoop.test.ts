@@ -126,7 +126,6 @@ describe('DXF Design Extractor', () => {
 
   it('filters by layer when specified', () => {
     const result = extractDesignPointsFromDXF(MINIMAL_DXF, { layerFilter: ['STAKEOUT'] })
-    const stakeoutPoints = result.points.filter(p => p.description?.includes('STAKEOUT') || !p.description?.includes('Line'))
     // Should only get POINT entities from STAKEOUT layer
     expect(result.warnings.length).toBe(0)
   })
@@ -141,7 +140,6 @@ describe('DXF Design Extractor', () => {
   it('uses default RL and TH when not in DXF', () => {
     const result = extractDesignPointsFromDXF(MINIMAL_DXF, { defaultRL: 2000, defaultTH: 1.5 })
     // POINT entities have z=1500 in the DXF, but LINE entities don't have z
-    const linePoints = result.points.filter(p => p.description?.includes('Line'))
     // LINE z is 1500 from the DXF, so defaultRL doesn't apply there
     // But if we check the entitiesScanned:
     expect(result.entitiesScanned).toBeGreaterThan(0)

@@ -18,7 +18,7 @@ import { useState, useCallback, useMemo } from 'react'
 import {
   ShieldCheck, AlertTriangle, AlertCircle, CheckCircle2,
   Loader2, RefreshCw, FileText, MapPin, Ruler, Calculator,
-  Layers, Building2, Download,
+  Layers, Building2,
 } from 'lucide-react'
 import { runTopologyCheck, type ExistingParcel } from '@/lib/survey/topologyChecker'
 import { evaluateTraversePrecision, type TraverseCategory } from '@/lib/engine/computationalAccuracy'
@@ -71,7 +71,6 @@ const STATUS_CONFIG = {
 }
 
 export function QADashboard({
-  projectId,
   parcels = [],
   traverseData,
   parentAreaHa,

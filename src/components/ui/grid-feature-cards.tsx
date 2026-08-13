@@ -20,7 +20,7 @@ const DETERMINISTIC_PATTERN: number[][] = [
 
 export function FeatureCard({ feature, className, ...props }: FeatureCardProps) {
         const [mounted, setMounted] = useState(false);
-        const [pattern, setPattern] = useState(DETERMINISTIC_PATTERN);
+        const [pattern] = useState(DETERMINISTIC_PATTERN);
 
         useEffect(() => {
                 setMounted(true);
@@ -67,7 +67,7 @@ function GridPattern({
                         <rect width="100%" height="100%" strokeWidth={0} fill={`url(#${patternId})`} />
                         {squares && (
                                 <svg x={x} y={y} className="overflow-visible">
-                                        {squares.map(([x, y], index) => (
+                                        {squares.map(([x, y]) => (
                                                 <rect strokeWidth="0" key={`grid-71`} width={width + 1} height={height + 1} x={x * width} y={y * height} />
                                         ))}
                                 </svg>

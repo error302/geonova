@@ -126,7 +126,7 @@ export default function HorizontalCurveCalculator() {
         <details className="text-xs">
           <summary className="cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] font-medium mb-2">Show Computation Steps</summary>
           <div className="space-y-1">
-            {result.steps.map((step, i) => (
+            {result.steps.map((step) => (
               <div key={step.value} className="grid grid-cols-[1fr_auto_1fr_auto] gap-x-2 font-mono py-1 border-b border-[var(--border-color)]/20">
                 <span className="text-[var(--text-secondary)]">{step.description}</span>
                 <span className="text-[var(--text-muted)]">=</span>
@@ -159,7 +159,7 @@ export default function HorizontalCurveCalculator() {
   )
 }
 
-function SetOutDisplay({ radius, T, tcChainage, interval, deltaD, deltaM, deltaS }: { radius: number; T: number; tcChainage: number; interval: number; deltaD: number; deltaM: number; deltaS: number }) {
+function SetOutDisplay({ radius, T: _T, tcChainage, interval, deltaD, deltaM, deltaS }: { radius: number; T: number; tcChainage: number; interval: number; deltaD: number; deltaM: number; deltaS: number }) {
   const delta = (deltaD + deltaM / 60 + deltaS / 3600) * Math.PI / 180
   const ctChainage = tcChainage + (Math.PI * radius * delta / 180)
   const rows: Array<{ peg: string; chainage: number; chord: number; defAngle: string; totalDef: string; remarks: string }> = []

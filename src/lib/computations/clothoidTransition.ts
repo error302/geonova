@@ -119,7 +119,6 @@ const DEFAULT_SET_OUT_INTERVAL = 10
 // ─── HELPERS ───────────────────────────────────────────────────────────────────
 
 const DEG = 180 / Math.PI
-const RAD = Math.PI / 180
 
 /** Round to a given number of decimal places */
 function r(value: number, dp: number = 3): number {
@@ -447,7 +446,7 @@ export function computeClothoid(input: ClothoidInput): ClothoidResult {
  */
 export function clothoidSetOutTable(
   result: ClothoidResult,
-  interval?: number,
+  _interval?: number,
 ): Array<{
   point: string
   chainage: number

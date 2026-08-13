@@ -1,6 +1,5 @@
 import { useProjectStore, ProjectData } from '@/stores/projectStore'
 import { realtimeService } from './index'
-import * as Y from 'yjs'
 
 // Track active syncs to avoid duplicate listeners
 const activeSyncs = new Set<string>()
@@ -41,7 +40,7 @@ export function initProjectSync(projectId: string) {
   // 3. Zustand -> Yjs (Observe local changes and push to mesh)
   useProjectStore.subscribe(
     (state) => state.projects[projectId],
-    (project, prevProject) => {
+    (project) => {
       if (!project) return
       
       // We only want to push to Yjs if this change came from the local user

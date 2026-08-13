@@ -221,8 +221,7 @@ function findEXIFAPP1(buffer: ArrayBuffer): number {
 
     // Check for APP1 (0xFFE1)
     if (marker === 0xffe1) {
-      const segLength = view.getUint16(offset + 2);
-
+    
       // Verify "Exif\0\0" header
       if (offset + 4 + 6 <= view.byteLength) {
         const exifHeader = String.fromCharCode(
@@ -883,7 +882,6 @@ export function photosToSurveyPoints(
  */
 const WGS84_A = 6378137.0; // Semi-major axis (metres)
 const WGS84_F = 1 / 298.257223563; // Flattening
-const WGS84_B = WGS84_A * (1 - WGS84_F); // Semi-minor axis
 const WGS84_E2 = 2 * WGS84_F - WGS84_F * WGS84_F; // First eccentricity squared
 const WGS84_EP2 =
   WGS84_E2 / (1 - WGS84_E2); // Second eccentricity squared

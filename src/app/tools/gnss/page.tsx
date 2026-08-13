@@ -5,11 +5,9 @@ import { PageHeader } from '@/components/shared/PageHeader'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import { 
   geodeticToECEF,
-  ecefToGeodetic, 
   ecefToENU, 
   computeBaseline, 
   processGNSSNetwork,
-  utmToGeodetic
 } from '@/lib/geodesy/gnss';
 import type { BaselineResult, GNSSBaseStation, GNSSNetworkResult } from '@/lib/geodesy/gnss';
 import { logger } from '@/lib/logger'

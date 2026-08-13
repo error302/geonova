@@ -13,7 +13,6 @@
 import {
   initSequentialState,
   addObservations,
-  removeObservations,
   addPoint,
   removePoint,
   serializeState,
@@ -191,7 +190,7 @@ describe('sequentialAdjustment — point management', () => {
     ]
     const state = initSequentialState(points, observations, { freeNetwork: true })
 
-    const result = removePoint(state, 'P')
+    removePoint(state, 'P')
 
     expect(state.points.length).toBe(2)
     expect(state.points.some((p) => p.name === 'P')).toBe(false)

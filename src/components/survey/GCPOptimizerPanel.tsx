@@ -14,7 +14,7 @@
 import { useState, useCallback, useMemo } from 'react'
 import {
   Drone, MapPin, CheckCircle2, AlertTriangle, Download,
-  Plus, Loader2, Camera,
+  Loader2, Camera,
 } from 'lucide-react'
 import {
   generateGCPPlan,
@@ -24,7 +24,6 @@ import {
   DEFAULT_UTM_ZONE,
   DEFAULT_HEMISPHERE,
   type GCPPlan,
-  type GCPPoint,
 } from '@/lib/engine/gcpOptimizer'
 
 export function GCPOptimizerPanel() {

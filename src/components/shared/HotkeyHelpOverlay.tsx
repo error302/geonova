@@ -7,7 +7,7 @@
  * Automatically disappears on Escape or clicking outside.
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { X, Keyboard } from 'lucide-react';
 import { useHotkeys, getRegisteredHotkeys, formatHotkey } from '@/hooks/useHotkeys';
 

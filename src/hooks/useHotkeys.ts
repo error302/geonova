@@ -131,10 +131,8 @@ export function useHotkeys(
       if (isInput && !enableInInput) return;
 
       // Match the combo
-      const ctrlMatch = parsed.ctrl ? (e.ctrlKey || e.metaKey) : !e.ctrlKey && !e.metaKey;
       const shiftMatch = parsed.shift ? e.shiftKey : !e.shiftKey;
       const altMatch = parsed.alt ? e.altKey : !e.altKey;
-      const metaMatch = parsed.meta ? e.metaKey : !e.metaKey;
 
       // For 'mod', we already set ctrl or meta in parseCombo
       const modCtrlMatch = parsed.ctrl ? (e.ctrlKey || e.metaKey) : true;

@@ -345,9 +345,7 @@ export function useCassiniUtmState() {
 
   const handleCopySingle = useCallback(() => {
     if (!singleResult) return
-    const srcUnit = direction === 'cassini-to-utm' ? 'ft' : 'm'
-    const tgtUnit = direction === 'cassini-to-utm' ? 'm' : 'ft'
-    const lines = [
+        const lines = [
       `Cassini-Soldner ↔ UTM Conversion (Helmert 4-Parameter)`,
       `Topo Sheet: ${activeSheet.name}`,
       `Datum: Arc 1960 / UTM Zone 37S`,

@@ -8,7 +8,7 @@ interface EngineeringPanelProps {
   subtype: EngineeringSubtype;
 }
 
-export function PipelinePanel({ projectId, subtype }: EngineeringPanelProps) {
+export function PipelinePanel(_props: EngineeringPanelProps) {
   const [activeTab, setActiveTab] = useState<'route' | 'data' | 'profile' | 'settingout'>('route');
   const qa = ENGINEERING_QA.pipeline;
 

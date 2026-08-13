@@ -9,7 +9,6 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
 import {
   Download, Shield, CheckCircle2, Cpu, FileBox, Radio,
   Mountain, Ship, Terminal, FileCheck, ArrowRight, GitBranch,
@@ -56,7 +55,6 @@ const STATS = [
 ]
 
 export default function IndustrialPage() {
-  const [copied, setCopied] = useState(false)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">

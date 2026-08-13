@@ -5,14 +5,13 @@ export const dynamic = 'force-dynamic'
  * POST /api/admin/licenses        — Create new license (super_admin only)
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import {
   listGovernmentLicenses,
   createGovernmentLicense,
 } from '@/lib/enterprise/governmentLicensing'
 import { z } from 'zod'
-import { randomUUID } from 'crypto'
 
 const createLicenseSchema = z.object({
   departmentName: z.string().min(1, 'Department name is required'),

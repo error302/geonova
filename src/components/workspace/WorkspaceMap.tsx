@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState, Component } from 'react';
 import { useUIStore } from '@/stores/uiStore';
-import { useProjectStore } from '@/stores/projectStore';
 import { logger } from '@/lib/logger'
 import { SRID_21037 } from '@/lib/map/projection'
 
@@ -78,7 +77,6 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
   const [stationCount, setStationCount] = useState(0);
 
   // Sync active tool from uiStore
-  const activeTool = useUIStore(s => s.activeTool);
   const setViewport = useUIStore(s => s.setViewport);
   const selectedPointIds = useUIStore(s => s.selectedPointIds);
 

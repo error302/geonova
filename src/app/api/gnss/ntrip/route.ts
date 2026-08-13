@@ -21,10 +21,10 @@
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300  // 5 minutes max per connection
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { parseRTCM3Message, type NTRIPConfig } from '@/lib/gnss/ntripClient'
+import { parseRTCM3Message } from '@/lib/gnss/ntripClient'
 
 // AUDIT FIX (2026-07-05): SSRF protection. Previously this endpoint accepted
 // any host:port — an attacker could make the server connect to internal
@@ -126,7 +126,6 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  const config: NTRIPConfig = { host, port, mountpoint, username, password }
 
   // Use Server-Sent Events
   const encoder = new TextEncoder()

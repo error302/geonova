@@ -118,7 +118,6 @@ export function generateSubdivision(input: SubdivisionInput): SubdivisionResult 
 
   // ─── 3. Compute parent bounding box (rotated) ────────────────────────────
   const bbox = computeRotatedBBox(closedBoundary, rotation)
-  const totalWidth = bbox.maxAlong - bbox.minAlong // along road direction
   const totalDepth = bbox.maxPerp - bbox.minPerp   // perpendicular to road
 
   // ─── 4. Place road spine ─────────────────────────────────────────────────
@@ -446,7 +445,7 @@ function extractBeacons(plots: SubdividedPlot[]): BeaconCoordinate[] {
     for (const coord of plot.coordinates) {
       // Check if this beacon already exists (within tolerance)
       let found = false
-      for (const [key, beacon] of beaconMap) {
+      for (const [, beacon] of beaconMap) {
         const dist = Math.sqrt(
           (coord[0] - beacon.easting) ** 2 + (coord[1] - beacon.northing) ** 2,
         )

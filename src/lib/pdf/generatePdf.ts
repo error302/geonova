@@ -18,7 +18,6 @@ export async function generatePdf(options: PdfGenerationOptions): Promise<Buffer
     title,
     sections,
     paperSize = 'A4',
-    orientation = 'portrait',
   } = options
 
   const browser = await puppeteer.launch({
@@ -205,7 +204,7 @@ function generateReportHtml(title: string, sections: SectionContent[]): string {
   <div class="watermark">METARDU</div>
   <div class="content-wrapper">
     ${sections
-      .map((section, index) => {
+      .map((section) => {
         const isTitlePage = section.sectionNumber === 1
         return `
     <div class="section ${isTitlePage ? 'title-page' : ''}">

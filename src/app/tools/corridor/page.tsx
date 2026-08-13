@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { Route, AlertCircle, Map as MapIcon } from 'lucide-react'
-import { buildAlignment, enToChainageOffset, organizeShotsByChainage, formatChainage, type PIPoint, type FieldShot, type CrossSectionGroup } from '@/lib/survey/corridorEngine'
+import { buildAlignment, organizeShotsByChainage, type PIPoint, type FieldShot, type CrossSectionGroup } from '@/lib/survey/corridorEngine'
 
 export default function CorridorPage() {
   const [piInput, setPiInput] = useState('')

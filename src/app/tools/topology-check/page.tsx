@@ -3,7 +3,6 @@
 import { useState, useCallback } from 'react'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { validateCadastralBoundary, type ValidationResult, type ValidationIssue } from '@/lib/compute/topologyValidator'
-import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 interface CoordRow {
   id: number
@@ -11,7 +10,6 @@ interface CoordRow {
   northing: string
 }
 
-const EMPTY_ROW: CoordRow = { id: 0, easting: '', northing: '' }
 
 const KENYA_MIN_AREAS = [
   { label: 'Urban plot (commercial)', area: 100 },
@@ -22,7 +20,6 @@ const KENYA_MIN_AREAS = [
 ]
 
 export default function TopologyCheckPage() {
-  const { t } = useLanguage()
   const [rows, setRows] = useState<CoordRow[]>([
     { id: 1, easting: '274812.403', northing: '9856214.778' },
     { id: 2, easting: '274937.108', northing: '9856220.336' },

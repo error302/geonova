@@ -9,7 +9,7 @@ interface EngineeringPanelProps {
   subtype: EngineeringSubtype;
 }
 
-export function BridgePanel({ projectId, subtype }: EngineeringPanelProps) {
+export function BridgePanel(_props: EngineeringPanelProps) {
   const [activeTab, setActiveTab] = useState<'control' | 'spans' | 'structure' | 'settingout'>('control');
   const qa = ENGINEERING_QA.bridge;
 

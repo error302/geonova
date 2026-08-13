@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { checkSurveyPlan, type PlanCheckInput, type PlanCheckResult } from '@/lib/marketplace/aiPlanChecker'
 import {
-  AlertCircle, CheckCircle2, AlertTriangle, Upload, FileText, Shield,
+  AlertCircle, CheckCircle2, AlertTriangle, Shield,
 } from 'lucide-react'
 
 interface ImportedPoint {

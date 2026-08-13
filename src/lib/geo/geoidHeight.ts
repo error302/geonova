@@ -251,9 +251,6 @@ export const KENYA_GEOID_REFERENCE = [
 //      when the grid is loaded, falling back to EGM96 otherwise.
 
 const egm2008Grid: Float64Array | null = null
-const EGM2008_GRID_RESOLUTION = 2.5 / 60  // 2.5 arc-minutes in degrees
-const EGM2008_GRID_COLS = Math.round(360 / EGM2008_GRID_RESOLUTION)  // 8640
-const EGM2008_GRID_ROWS = Math.round(180 / EGM2008_GRID_RESOLUTION)  // 4320
 
 /**
  * Load the EGM2008 2.5′ binary grid file.
@@ -267,7 +264,7 @@ const EGM2008_GRID_ROWS = Math.round(180 / EGM2008_GRID_RESOLUTION)  // 4320
  * @returns true if loaded successfully, false otherwise
  */
 export async function loadEGM2008Grid(
-  filePath?: string
+  _filePath?: string
 ): Promise<boolean> {
   // This function is a stub — the actual file loading requires Node.js fs,
   // which is only available server-side. When the grid file is available,
@@ -306,32 +303,3 @@ export function isEGM2008Loaded(): boolean {
  *
  * @returns N in metres, or null if EGM2008 is not loaded.
  */
-function interpolateEGM2008(lat: number, lon: number): number | null {
-  if (!egm2008Grid) return null
-
-  // Normalize longitude to [0, 360)
-  let lonNorm = lon % 360
-  if (lonNorm < 0) lonNorm += 360
-
-  // Compute grid indices (floating point for interpolation)
-  const colF = lonNorm / EGM2008_GRID_RESOLUTION
-  const rowF = (90 - lat) / EGM2008_GRID_RESOLUTION
-
-  const col0 = Math.floor(colF) % EGM2008_GRID_COLS
-  const col1 = (col0 + 1) % EGM2008_GRID_COLS
-  const row0 = Math.max(0, Math.min(EGM2008_GRID_ROWS - 1, Math.floor(rowF)))
-  const row1 = Math.max(0, Math.min(EGM2008_GRID_ROWS - 1, row0 + 1))
-
-  const fx = colF - Math.floor(colF)
-  const fy = rowF - Math.floor(rowF)
-
-  // Bilinear interpolation
-  const n00 = egm2008Grid[row0 * EGM2008_GRID_COLS + col0]
-  const n10 = egm2008Grid[row0 * EGM2008_GRID_COLS + col1]
-  const n01 = egm2008Grid[row1 * EGM2008_GRID_COLS + col0]
-  const n11 = egm2008Grid[row1 * EGM2008_GRID_COLS + col1]
-
-  const n0 = n00 * (1 - fx) + n10 * fx
-  const n1 = n01 * (1 - fx) + n11 * fx
-  return n0 * (1 - fy) + n1 * fy
-}

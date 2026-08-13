@@ -22,7 +22,6 @@ import {
 } from '@/lib/survey/audit-store';
 import {
   AuditTrail,
-  type AuditEntry,
   type AuditOperation,
   type CorrectionRecord,
   type AccuracyCheckResult,
@@ -94,7 +93,6 @@ export async function GET(request: NextRequest) {
     const format = searchParams.get('format') || 'json';
 
     if (format === 'text') {
-      const trail = new AuditTrail();
       const entries = await getAuditEntriesByProject(projectId);
       // Reconstruct trail for export (entries already in order)
       const report = [

@@ -5,13 +5,11 @@ import { PageHeader } from '@/components/shared/PageHeader'
 import {
   reconstructBoundary,
   swingAndScale,
-  dmsToAzimuth,
   type DeedLeg,
   type ReconstructResult,
   type SwingScaleResult,
   type BearingFormat,
 } from '@/lib/compute/cogoReconstruct'
-import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 type LegRow = DeedLeg
 
@@ -24,7 +22,6 @@ const SAMPLE_LEGS: LegRow[] = [
 ]
 
 export default function CogoReconstructPage() {
-  const { t } = useLanguage()
   const [legs, setLegs] = useState<LegRow[]>(SAMPLE_LEGS)
   const [startE, setStartE] = useState('274812.403')
   const [startN, setStartN] = useState('9856214.778')

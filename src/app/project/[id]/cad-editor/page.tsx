@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { ArrowLeft, Loader2 } from 'lucide-react'
-import { db } from '@/lib/db'
 import type { CADDocument } from '@/components/cad-editor/CADEditor'
 
 // ponytail: lazy-load the CAD editor (it's a heavy SVG interaction component)
@@ -50,7 +49,6 @@ export default function CADEditorPage() {
         }
 
         const stations = result.data.stations
-        const observations = result.data.observations || []
 
         // Convert UTM coordinates to SVG coordinates
         // ponytail: simple linear transform — find bounding box, scale to fit A3

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react'
-import { Printer, Plus, Trash2, Satellite, Upload, FileText } from 'lucide-react'
+import { Printer, Plus, Trash2, Satellite, FileText } from 'lucide-react'
 import { PrintMetaPanel, type PrintMeta } from '@/components/shared/PrintMetaPanel'
 import { printGNSSObservationLog, type GNSSObservationEntry, type GNSSBaselineEntry, type GNSSLogInput } from '@/lib/print/gnssObservationLog'
 
@@ -56,7 +56,6 @@ const SAMPLE_BASELINES: GNSSBaselineEntry[] = [
 // ── Fix types ─────────────────────────────────────────────────────────────────
 
 const FIX_TYPES = ['FIX', 'FLOAT', 'DGNSS', 'AUTONOMOUS', 'RTK_FIX', 'RTK_FLOAT'] as const
-const ANT_METHODS = ['SLANT', 'VERTICAL', 'ARP'] as const
 const BASE_SOURCES = ['OWN_BASE', 'CORS', 'VRS', 'THIRD_PARTY'] as const
 
 // ── Component ─────────────────────────────────────────────────────────────────

@@ -28,7 +28,7 @@ interface ProjectNameRow {
 
 export const dynamic = 'force-dynamic'
 
-export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
+export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, _ctx) => {
   const { searchParams } = new URL(req.url)
   const projectId = searchParams.get('project_id')
   if (!projectId) {
@@ -107,7 +107,7 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
   dxfLines.push('0', 'SECTION', '2', 'ENTITIES')
 
   // Draw parcel boundaries
-  parcelData.forEach((data, key) => {
+  parcelData.forEach((data, _key) => {
     const coords = data.coords
 
     if (coords.length < 2) return

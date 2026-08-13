@@ -5,7 +5,6 @@ import { PageHeader } from '@/components/shared/PageHeader';
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import {
   Upload,
-  MapPin,
   Download,
   Trash2,
   PenTool,
@@ -285,7 +284,7 @@ export default function OrthophotoViewerPage() {
   // Map state
   const mapRef = useRef<HTMLDivElement>(null);
   const olMapRef = useRef<import('ol/Map').default | null>(null);
-  const [mapReady, setMapReady] = useState(false);
+  const [, setMapReady] = useState(false);
   const [geoTIFFLoaded, setGeoTIFFLoaded] = useState(false);
 
   // GeoTIFF state

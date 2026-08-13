@@ -42,8 +42,8 @@ const DEMO_SETTINGOUT: SettingOutPoint[] = [
 
 export default function ConstructionComputePanel({ projectId }: { projectId: string }) {
   const [activeTab, setActiveTab] = useState<'asbuilt' | 'settingout'>('asbuilt');
-  const [asbuilt, setAsbuilt] = useState<AsBuiltPoint[]>(DEMO_ASBUILT);
-  const [settingOut, setSettingOut] = useState<SettingOutPoint[]>(DEMO_SETTINGOUT);
+  const [asbuilt] = useState<AsBuiltPoint[]>(DEMO_ASBUILT);
+  const [settingOut] = useState<SettingOutPoint[]>(DEMO_SETTINGOUT);
   const [toleranceH, setToleranceH] = useState(0.020);
   const [toleranceV, setToleranceV] = useState(0.010);
   const [saved, setSaved] = useState(false);
@@ -72,10 +72,6 @@ export default function ConstructionComputePanel({ projectId }: { projectId: str
     const dZ = p.designZ - p.stationZ;
     return { ...p, distance, bearing: bearingNorm, dZ, horizDist: distance };
   });
-
-  const updateAsbuilt = (id: string, field: keyof AsBuiltPoint, value: number) => {
-    setAsbuilt(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p));
-  };
 
   const handleSave = async () => {
     try {

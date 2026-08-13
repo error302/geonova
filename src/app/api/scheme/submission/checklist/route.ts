@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
@@ -35,7 +35,7 @@ const OPTIONAL_DOCUMENTS = [
   { key: 'cla_form_7', label: 'CLA Form 7', description: 'Confirmation of mutation' },
 ]
 
-export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (request, ctx) => {
+export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (request, _ctx) => {
   const projectId = request.nextUrl.searchParams.get('project_id')
   if (!projectId) {
     return NextResponse.json({ error: 'project_id is required' }, { status: 400 })

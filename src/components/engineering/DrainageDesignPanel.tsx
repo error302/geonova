@@ -44,7 +44,7 @@ const selectCls = 'w-full border border-zinc-700 rounded-lg px-3 py-2 text-sm bg
 
 // ─── MAIN PANEL ───────────────────────────────────────────────────────────────
 
-export default function DrainageDesignPanel({ roadLength = 1000 }: { roadLength?: number }) {
+export default function DrainageDesignPanel({ roadLength: _roadLength = 1000 }: { roadLength?: number }) {
   const [tab, setTab] = useState<Tab>('pipe')
 
   return (
@@ -269,8 +269,6 @@ function CatchmentTab() {
     area: area <= 0 ? 'Catchment area must be > 0' : undefined,
     intensity: intensity <= 0 ? 'Rainfall intensity must be > 0' : undefined,
   }
-
-  const hasAnyError = Object.values(errors).some(Boolean)
 
   // ── Computed (NaN-safe) ──
   const result = area > 0 && intensity > 0

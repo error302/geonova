@@ -21,8 +21,6 @@ import {
   permuteSymmetric,
   symbolicFactorize,
   cholesky,
-  sparseForwardSolve,
-  sparseBackwardSolve,
   sparseCholeskySolve,
   sparseCholeskySolveOrdered,
   sparseInverseDiagonal,

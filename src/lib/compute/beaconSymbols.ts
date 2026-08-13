@@ -212,7 +212,6 @@ export function getBeaconSymbol(type: BeaconType, status: BeaconStatus = 'FOUND'
   const halfSize = size / 2
   const strokeWidth = Math.max(0.5, size / 16)
   const isFound = status === 'FOUND'
-  const isSet = status === 'SET'
   const isDestroyed = status === 'DESTROYED'
   const isNotFound = status === 'NOT_FOUND'
   const isReferenced = status === 'REFERENCED'
@@ -303,7 +302,6 @@ export function getBeaconSymbol(type: BeaconType, status: BeaconStatus = 'FOUND'
 
   const def = BEACON_DEFINITIONS[type]
   const fullName = def?.fullName || 'Unknown'
-  const regulation = def?.regulation || ''
 
   return `${baseSymbol}${statusModifier}${referenceLabel}<title>${fullName} — ${status}</title>`
 }

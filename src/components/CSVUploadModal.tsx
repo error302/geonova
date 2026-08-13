@@ -91,7 +91,7 @@ export default function CSVUploadModal({
 
       onUploadComplete()
       handleClose()
-    } catch (err) {
+    } catch {
       setError('Failed to import points')
     }
 
@@ -193,7 +193,7 @@ export default function CSVUploadModal({
                   </tr>
                 </thead>
                 <tbody>
-                  {parsedPoints.slice(0, 50).map((point, idx) => (
+                  {parsedPoints.slice(0, 50).map((point) => (
                     <tr key={point.name} className="border-t border-[var(--border-color)]">
                       <td className="px-3 py-2 font-mono text-[var(--text-primary)]">{point.name}</td>
                       <td className="px-3 py-2 font-mono text-[var(--text-primary)]">{point.easting.toFixed(4)}</td>

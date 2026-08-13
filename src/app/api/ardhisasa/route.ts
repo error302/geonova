@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { createArdhisasaClient, isArdhisasaConfigured, getArdhisasaStatus, type SurveySubmissionData, type RecordSearchQuery } from '@/lib/integrations/ardhisasaClient'
 
 export const dynamic = 'force-dynamic'
 
-export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (request, ctx) => {
+export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (request, _ctx) => {
   const { searchParams } = new URL(request.url)
   const action = searchParams.get('action')
 

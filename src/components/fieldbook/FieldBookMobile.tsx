@@ -19,7 +19,7 @@ interface FieldBookMobileProps {
   surveyorId: string;
 }
 
-export function FieldBookMobile({ projectId, surveyType, surveyorId }: FieldBookMobileProps) {
+export function FieldBookMobile({ projectId }: FieldBookMobileProps) {
   const [online, setOnline] = useState(isOnline());
   const [observations, setObservations] = useState<OfflineObservation[]>([]);
   const [syncing, setSyncing] = useState(false);

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ShieldCheck, AlertCircle, Plus, Clock, MapPin } from 'lucide-react'
+import { Plus, Clock, MapPin } from 'lucide-react'
 
 interface VerificationRow {
   id: string

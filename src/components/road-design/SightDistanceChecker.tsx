@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react'
-import { sightDistanceCheck, checkRadiusCompliance, getFrictionFactor, getMinRadius, type SightDistanceInput } from '@/lib/computations/roadDesignEngine'
+import { sightDistanceCheck, checkRadiusCompliance, getMinRadius, type SightDistanceInput } from '@/lib/computations/roadDesignEngine'
 
 export default function SightDistanceChecker() {
   const [designSpeed, setDesignSpeed] = useState('80')
@@ -112,7 +112,7 @@ export default function SightDistanceChecker() {
           <details className="text-xs">
             <summary className="cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] font-medium mb-2">Show Computation Steps</summary>
             <div className="space-y-1">
-              {result.steps.map((step, i) => (
+              {result.steps.map((step) => (
                 <div key={step.value} className="grid grid-cols-[1fr_auto_1fr_auto] gap-x-2 font-mono py-1 border-b border-[var(--border-color)]/20">
                   <span className="text-[var(--text-secondary)]">{step.description}</span>
                   <span className="text-[var(--text-muted)]">=</span>

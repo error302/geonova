@@ -142,7 +142,6 @@ function parseTopconGTS(content: string): ParseResult {
   const hasHeader = header.includes('pt') || header.includes('n') || header.includes('e')
 
   const dataLines = hasHeader ? lines.slice(1) : lines
-  let pointCount = 0
 
   for (const line of dataLines) {
     const parts = line.split(/[,\t\s]+/).filter((p) => p.trim())
@@ -163,7 +162,6 @@ function parseTopconGTS(content: string): ParseResult {
         code,
         rawData: {},
       })
-      pointCount++
     } else {
       warnings.push(`Line "${line}": Invalid numeric data — skipped`)
     }
@@ -188,7 +186,6 @@ function parseCSV(content: string): ParseResult {
     return { format: 'csv', points, errors, warnings, metadata }
   }
 
-  const header = lines[0].toLowerCase()
   const cols = lines[0].split(/[,\t]+/).map((c) => c.trim().toLowerCase().replace(/[^a-z0-9_]/g, ''))
 
   const pidIdx = cols.findIndex(c => c.includes('id') || c.includes('label') || c === 'pt' || c === 'point')

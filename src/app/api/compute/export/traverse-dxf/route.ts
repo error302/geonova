@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { generateTraverseDXF } from '@/lib/export/traverseDXF'
@@ -171,7 +171,6 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     for (const c of coords) {
       const stationName = `${c.station}`
       // Prefix with block-parcel to avoid name collisions across parcels
-      const uniqueKey = `${traverse.block_number}-${traverse.parcel_number}-${c.station}`
       const displayName = traverses.length > 1
         ? `${traverse.block_number}/${traverse.parcel_number}:${c.station}`
         : c.station

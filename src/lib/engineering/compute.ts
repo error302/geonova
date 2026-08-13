@@ -32,7 +32,7 @@ async function logComputation(
     try {
       const { createClient } = await import('@/lib/api-client/client');
       dbClient = createClient();
-    } catch (e) {
+    } catch {
       logger.warn('Compute logger: DbClient not available');
       return;
     }
@@ -273,7 +273,6 @@ export function verticalCurve(input: VerticalCurveInput): VerticalCurveResult {
   const isCrest = A < 0;
 
   // RDM 1.1 minimum K values for stopping sight distance
-  const minK = isCrest ? 0.6 * Math.pow(designSpeedKph, 2) / Math.abs(A) : 3;
 
   const chainage_VPC = chainage_VIP - curveLength / 2;
   const chainage_VPT = chainage_VIP + curveLength / 2;

@@ -3,8 +3,7 @@ import { coordinateArea } from '@/lib/engine/area';
 import { bowditchAdjustment } from '@/lib/engine/traverse';
 import { bearingToString } from '@/lib/engine/angles';
 import type { NamedPoint2D } from '@/lib/engine/types';
-import { computeLineScaleFactor, computeUTMPointScaleFactor } from '@/lib/survey/adapter';
-import type { LineScaleFactorResult } from '@/lib/survey/adapter';
+import { computeLineScaleFactor } from '@/lib/survey/adapter';
 
 export interface TraverseStation {
   station: string;

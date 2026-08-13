@@ -159,7 +159,7 @@ export const useUIStore = create<UIState>()(
     toggleLeftSidebar: () => set(s => ({ leftSidebarOpen: !s.leftSidebarOpen })),
     setLeftSidebarOpen: (open) => set({ leftSidebarOpen: open }),
     setLeftSidebarWidth: (width) => set({ leftSidebarWidth: Math.max(200, Math.min(500, width)) }),
-    setLeftSidebarPanel: (panel) => set(s => ({
+    setLeftSidebarPanel: (panel) => set(() => ({
       leftSidebarPanel: panel,
       leftSidebarOpen: panel !== 'none'
     })),
@@ -171,7 +171,7 @@ export const useUIStore = create<UIState>()(
     toggleBottomPanel: () => set(s => ({ bottomPanelOpen: !s.bottomPanelOpen })),
     setBottomPanelOpen: (open) => set({ bottomPanelOpen: open }),
     setBottomPanelHeight: (height) => set({ bottomPanelHeight: Math.max(120, Math.min(500, height)) }),
-    setBottomPanelTab: (tab) => set(s => ({
+    setBottomPanelTab: (tab) => set(() => ({
       bottomPanelTab: tab,
       bottomPanelOpen: true
     })),

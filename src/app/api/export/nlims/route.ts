@@ -128,7 +128,7 @@ function buildGateInputFromNLIMSParams(params: NLIMSExportParams): StatutoryGate
  */
 export const GET = apiHandler(
   { auth: true },
-  async (req, ctx) => {
+  async (_req, _ctx) => {
     return apiSuccess({
       schema: {
         version: '1.0.0',

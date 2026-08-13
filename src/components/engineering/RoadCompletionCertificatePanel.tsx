@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { AlertTriangle } from 'lucide-react'
-import { generateCertificate, CERTIFICATION_ITEMS, generateDefectSchedule } from '@/lib/generators/roadCompletionCertificate'
+import { generateCertificate, CERTIFICATION_ITEMS } from '@/lib/generators/roadCompletionCertificate'
 import type { RoadCompletionData, DefectItem } from '@/lib/generators/roadCompletionCertificate'
 // XSS guard (2026-08-03): certificate fields are user-entered and interpolated
 // into the print-window HTML — escape before document.write().
@@ -439,7 +439,7 @@ function CertificatePreview({ certificate }: { certificate: ReturnType<typeof ge
       </div>
 
       {/* Sections */}
-      {certificate.sections.map((section, i) => (
+      {certificate.sections.map((section) => (
         <div key={section.title}>
           <h4 className="font-bold text-xs text-zinc-400 uppercase tracking-wider border-b border-zinc-700 pb-1 mb-2">{section.title}</h4>
           <table className="w-full text-xs">

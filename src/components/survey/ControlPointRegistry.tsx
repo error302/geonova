@@ -15,7 +15,7 @@
  * - src/lib/online/benchmarks.ts (benchmark database)
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback } from 'react'
 import {
   Radio, MapPin, Search, Loader2, Navigation,
   Triangle, Building2, ChevronRight,
@@ -86,7 +86,7 @@ export function ControlPointRegistry() {
     setSearched(true)
     try {
       // 1. Search KENCORS stations (existing module)
-      const { KENCORS_STATIONS, nearestKenCORSStations } = await import('@/lib/map/kencors')
+      const { nearestKenCORSStations } = await import('@/lib/map/kencors')
       const corsResults: ControlPoint[] = nearestKenCORSStations(e, n, 10).map(s => ({
         id: s.id,
         name: s.name,

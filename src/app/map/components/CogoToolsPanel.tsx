@@ -22,7 +22,6 @@ import { radiation } from '@/lib/engine/cogo'
 import { bearingIntersection } from '@/lib/engine/cogo'
 import { distanceIntersection } from '@/lib/engine/cogo'
 import { tienstraResection } from '@/lib/engine/cogo'
-import { distanceBearing } from '@/lib/engine/distance'
 import { bearingToString, parseFieldAngle } from '@/lib/engine/angles'
 import type { Point2D } from '@/lib/engine/types'
 import { logger } from '@/lib/logger'
@@ -412,7 +411,7 @@ function CogoToolsPanelInner() {
       const { default: Fill } = await import('ol/style/Fill')
       const { default: Stroke } = await import('ol/style/Stroke')
       const { transform } = await import('ol/proj')
-      const { to21037, SRID_21037, SRID_3857 } = await import('@/lib/map/projection')
+      const { SRID_21037, SRID_3857 } = await import('@/lib/map/projection')
 
       // Transform from EPSG:21037 to map projection (3857)
       const coord3857 = transform([point.easting, point.northing], SRID_21037, SRID_3857)

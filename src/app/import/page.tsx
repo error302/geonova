@@ -25,7 +25,7 @@ interface Project {
 export default function ImportPage() {
   const dbClient = createClient()
   const [file, setFile] = useState<File | null>(null)
-  const [content, setContent] = useState<string>('')
+  const [, setContent] = useState<string>('')
   const [format, setFormat] = useState<TotalStationFormat>('unknown')
   const [points, setPoints] = useState<ParsedPoint[]>([])
   const [warnings, setWarnings] = useState<string[]>([])
@@ -33,7 +33,7 @@ export default function ImportPage() {
   const [selectedProject, setSelectedProject] = useState<string>('')
   const [importing, setImporting] = useState(false)
   const [imported, setImported] = useState<number | null>(null)
-  const [loadingProjects, setLoadingProjects] = useState(true)
+  const [, setLoadingProjects] = useState(true)
 
   useEffect(() => {
     async function loadProjects() {

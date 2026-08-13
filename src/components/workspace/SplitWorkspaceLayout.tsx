@@ -10,7 +10,7 @@ import {
   ChevronDown,
   ChevronUp,
   Activity,
-  Crosshair,
+
   AlertTriangle,
   CheckCircle2,
 } from 'lucide-react';
@@ -128,7 +128,7 @@ export default function SplitWorkspaceLayout({
           <div className="flex items-center justify-between h-full px-2 sm:px-4 gap-2 sm:gap-4">
             {/* Status entries */}
             <div className="flex items-center gap-2 sm:gap-5 min-w-0 overflow-x-auto scrollbar-none">
-              {statusBarEntries.map((entry, idx) => (
+              {statusBarEntries.map((entry) => (
                 <div
                   key={entry.label}
                   className="flex items-center gap-1.5 text-xs whitespace-nowrap flex-shrink-0"

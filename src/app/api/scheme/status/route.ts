@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
@@ -27,7 +27,7 @@ const VALID_TRANSITIONS: Record<string, string[]> = {
   approved: [], // Terminal — only DBA can reopen
 }
 
-export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, ctx) => {
+export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (req, _ctx) => {
   const { searchParams } = new URL(req.url)
   const projectId = searchParams.get('project_id')
   if (!projectId) {

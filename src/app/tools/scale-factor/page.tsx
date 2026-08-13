@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback } from 'react'
 import { PageHeader } from '@/components/shared/PageHeader'
 import {
   computeCombinedScaleFactor,
@@ -10,7 +10,6 @@ import {
   type ScaleFactorResult,
   type AreaConversionResult,
 } from '@/lib/geodesy/scaleFactor'
-import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 interface CoordRow {
   id: number
@@ -19,7 +18,6 @@ interface CoordRow {
 }
 
 export default function ScaleFactorPage() {
-  const { t } = useLanguage()
   const [latitude, setLatitude] = useState('-1.2864')
   const [longitude, setLongitude] = useState('36.8172')
   const [utmZone, setUtmZone] = useState('37')

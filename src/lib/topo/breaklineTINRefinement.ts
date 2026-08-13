@@ -51,7 +51,7 @@
  *   Science, 22(4).
  */
 
-import { buildTIN, type TIN, type SurfacePoint, type Triangle } from '@/lib/survey/surfaceTIN'
+import { buildTIN, type SurfacePoint, type Triangle } from '@/lib/survey/surfaceTIN'
 import type { Breakline, BreaklineTINResult } from './breaklineTIN'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -212,7 +212,6 @@ export function buildBreaklineTINWithGaps(
     // cross the breakline). The other side: BP1-BC-BP2.
 
     const usedBreaklinePairs = new Set<string>()
-    const triangleVertexIndices = new Set<number>([tri.a, tri.b, tri.c])
 
     // First, add breakline pairs as fixed edges
     for (const seg of crossingSegs) {

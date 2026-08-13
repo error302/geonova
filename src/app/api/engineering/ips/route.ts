@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { apiHandler } from '@/lib/apiHandler'
 import { db, setRlsContext } from '@/lib/db'
@@ -162,7 +162,6 @@ async function computeIPValues(
     const ipEasting = Number(ip.easting)
     const ipNorthing = Number(ip.northing)
     const ipRadius = Number(ip.radius)
-    const ipName = String(ip.name)
 
     // Compute bearing from previous IP to this IP
     let bearing: number | null = null

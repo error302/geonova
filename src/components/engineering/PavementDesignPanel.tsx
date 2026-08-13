@@ -50,7 +50,6 @@ const safeNum = (v: number, fallback: string = '—') =>
   Number.isFinite(v) && !Number.isNaN(v) ? v : fallback
 
 export default function PavementDesignPanel({
-  roadClass,
   carriagewayWidth = 7.0,
   roadLength: roadLengthProp = 1000,
 }: PavementDesignPanelProps) {
@@ -339,7 +338,7 @@ export default function PavementDesignPanel({
                 </tr>
               </thead>
               <tbody>
-                {result.layers.map((layer, i) => (
+                {result.layers.map((layer) => (
                   <tr key={layer.name} className="border-t border-zinc-800">
                     <td className="px-4 py-2 font-medium text-white">
                       <span className="inline-block w-3 h-3 rounded-sm mr-2" style={{ backgroundColor: layer.color }} />

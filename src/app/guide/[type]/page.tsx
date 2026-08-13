@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 interface PageProps {
   params: { type: string }
@@ -1225,8 +1224,7 @@ Classes:
 };
 
 export default function GuideTypePage({ params }: PageProps) {
-  const router = useRouter();
-  const type = params.type;
+    const type = params.type;
   const guide = guideData[type];
 
   const toolLinkByGuide: Record<string, { href: string; label: string }> = {
@@ -1395,7 +1393,7 @@ export default function GuideTypePage({ params }: PageProps) {
           </div>
         )}
 
-        {guide.steps.map((step, idx) => {
+        {guide.steps.map((step) => {
           const isComplete = completedSteps.includes(step.id);
           const content = mode === 'junior' ? step.juniorContent : step.seniorContent;
           

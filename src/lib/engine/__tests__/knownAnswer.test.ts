@@ -15,7 +15,7 @@
 import { bowditchAdjustment, transitAdjustment, evaluateTraverseClosure, TRAVERSE_PRECISION_STANDARDS } from '../traverse';
 import { approxEqual } from '@/test-utils/approx'
 import { coordinateArea } from '../area';
-import { bearingToString, angularMisclosure, decimalToDMS } from '../angles';
+import { angularMisclosure } from '../angles';
 import { DATUM_REGISTRY } from '@/lib/geodesy/datums';
 import { computeBoundaryLegs } from '../../compute/deedPlan';
 

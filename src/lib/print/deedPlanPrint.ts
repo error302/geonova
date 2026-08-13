@@ -123,7 +123,7 @@ function drawParcelSVG(points: BoundaryPoint[], legs: BoundaryLeg[], scale: numb
   }).join('\n')
 
   // Point labels
-  const labels = scaled.map((p, i) => {
+  const labels = scaled.map((p) => {
     const centX = scaled.reduce((a, b) => a + b.x, 0) / scaled.length
     const centY = scaled.reduce((a, b) => a + b.y, 0) / scaled.length
     const dx = p.x - centX
@@ -135,7 +135,7 @@ function drawParcelSVG(points: BoundaryPoint[], legs: BoundaryLeg[], scale: numb
   }).join('\n')
 
   // Bearing & distance labels on each leg
-  const legLabels = legs.map((leg, i) => {
+  const legLabels = legs.map((leg) => {
     const from = scaled.find(p => p.id === leg.fromPoint)
     const to   = scaled.find(p => p.id === leg.toPoint)
     if (!from || !to) return ''

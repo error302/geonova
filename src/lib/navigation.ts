@@ -1,7 +1,7 @@
 import {
   BadgeDollarSign, BarChart2, BookMarked,
   BookOpen, Box, Building2, CalendarDays, ChartNoAxesCombined,
-  ChartSpline, ClipboardCheck, CodeXml, Compass, Construction,
+  ChartSpline, CodeXml, Compass, Construction,
   CreditCard, DraftingCompass, FileBadge, FileChartColumn,
   FileSearch, FileSpreadsheet, FolderKanban,
   GitBranch, Globe, GraduationCap, HardDrive, IdCard, Landmark,
@@ -9,7 +9,7 @@ import {
   NotebookPen, Orbit, Radar, RadioTower, Route,
   Ruler, RulerDimensionLine, Satellite, Scale, ScanLine, ScanSearch, Settings2,
   ShieldCheck, Spline, Store, TrendingUp,
-  UserRound, Users, Waves, Waypoints, Workflow
+  UserRound, Users, Waypoints, Workflow
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 

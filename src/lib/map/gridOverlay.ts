@@ -12,6 +12,7 @@
  */
 
 import { to3857 } from '@/lib/map/projection';
+import type VectorSource from 'ol/source/Vector';
 
 /** Grid interval in meters */
 export type GridInterval = 100 | 500 | 1000 | 5000 | 'auto';
@@ -85,9 +86,6 @@ export async function updateGridOverlay(
   epsg: string = 'EPSG:21037',
 ): Promise<void> {
   const { transform } = await import('ol/proj');
-  const {
-    default: VectorSource,
-  } = await import('ol/source/Vector');
   const {
     default: Feature,
   } = await import('ol/Feature');
@@ -168,16 +166,6 @@ export async function updateGridOverlay(
     stroke: new Stroke({
       color: 'rgba(27, 58, 92, 0.7)',
       width: 1.5,
-    }),
-  });
-
-  // Label style
-  const labelStyle = new Style({
-    text: new Text({
-      font: '10px Calibri, sans-serif',
-      fill: new Fill({ color: '#1B3A5C' }),
-      stroke: new Stroke({ color: '#FFFFFF', width: 3 }),
-      padding: [2, 2, 2, 2],
     }),
   });
 

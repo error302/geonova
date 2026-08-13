@@ -10,7 +10,6 @@ import React, {
   type ReactNode,
 } from 'react';
 import { useUIStore } from '@/stores/uiStore';
-import { useProjectStore } from '@/stores/projectStore';
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -98,7 +97,6 @@ export function WorkspaceBridgeProvider({ children }: { children: ReactNode }) {
 
   const uiClearSelection = useUIStore(s => s.clearSelection);
   const uiSetSelectedPointIds = useUIStore(s => s.setSelectedPointIds);
-  const uiSetSelectedFeatureId = useUIStore(s => s.setSelectedFeatureId);
 
   const setSelection = useCallback((sel: BridgeSelection) => {
     setSelectionState(sel);

@@ -7,7 +7,7 @@
  * for a specific area before going offline (field work).
  */
 
-import { Download, Loader2, Check } from 'lucide-react'
+import { Download } from 'lucide-react'
 import { useMapContext } from '@/app/map/MapReactContext'
 
 export function OfflineDownloadButton() {

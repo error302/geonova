@@ -126,8 +126,6 @@ function generateDemoData(): DTMPoint[] {
       const n = baseN + r * spacing;
 
       // Gentle slope + hill + valley
-      const x = (c - 10) / 10;
-      const y = (r - 10) / 10;
 
       // Gentle overall slope (north to south)
       let z = 1500 - r * 0.8;

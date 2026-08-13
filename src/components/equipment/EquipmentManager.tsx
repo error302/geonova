@@ -323,7 +323,7 @@ function AddEquipmentForm({ onClose, onAdded }: { onClose: () => void; onAdded: 
   const [manufacturer, setManufacturer] = useState('')
   const [model, setModel] = useState('')
   const [serialNumber, setSerialNumber] = useState('')
-  const [notes, setNotes] = useState('')
+  const [notes] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -390,7 +390,7 @@ function AddCalibrationForm({ equipmentId, onClose, onAdded }: { equipmentId: st
   const [lab, setLab] = useState('')
   const [certNumber, setCertNumber] = useState('')
   const [results, setResults] = useState('pass')
-  const [notes, setNotes] = useState('')
+  const [notes] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

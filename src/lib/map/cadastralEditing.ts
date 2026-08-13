@@ -224,14 +224,6 @@ function formatBearingCardinal(deg: number): string {
  * @param coords - Array of coordinates [[x,y], ...].
  * @returns Total distance in map units.
  */
-function cumulativeDistance(coords: number[][]): number {
-  let total = 0;
-  for (let i = 1; i < coords.length; i++) {
-    total += planarDistance(coords[i - 1], coords[i]);
-  }
-  return total;
-}
-
 // ---------------------------------------------------------------------------
 // HistoryManager — undo / redo for editing operations
 // ---------------------------------------------------------------------------
@@ -792,7 +784,6 @@ export async function createSubdivisionInteraction(
   cleanup: () => void;
 }> {
   const {
-    source,
     targetFeature,
     snapTolerance = 10,
     sourceProjection = 'EPSG:3857',

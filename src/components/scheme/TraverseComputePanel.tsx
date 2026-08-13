@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Plus, Trash2, Save, Loader2, CheckCircle2, AlertCircle,
   X, ChevronDown, ChevronUp
@@ -398,7 +398,7 @@ export default function TraverseComputePanel({ parcelId }: { parcelId: number })
                     </tr>
                   </thead>
                   <tbody>
-                    {result.coordinates.map((c, i) => (
+                    {result.coordinates.map((c) => (
                       <tr key={c.station} className="border-b border-[var(--border-color)]/30">
                         <td className="px-3 py-1.5 font-mono text-[var(--accent)]">{c.station}</td>
                         <td className="px-3 py-1.5 font-mono">{c.easting.toFixed(4)}</td>

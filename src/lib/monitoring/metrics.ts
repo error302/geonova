@@ -232,10 +232,8 @@ export function trackHttpRequest(
 ): (statusCode: number) => void {
   httpActiveRequests.inc();
   const timer = httpRequestDuration.startTimer({ method, path });
-  const startTime = performance.now();
 
   return (statusCode: number) => {
-    const duration = (performance.now() - startTime) / 1000;
     timer({ status_code: String(statusCode) });
     httpRequestsTotal.inc({ method, path, status_code: String(statusCode) });
     httpActiveRequests.dec();
@@ -254,10 +252,8 @@ export function trackComputation(
   operation: string,
 ): (status: 'success' | 'error', accuracyPassed?: boolean) => void {
   const timer = surveyComputationDuration.startTimer({ operation });
-  const startTime = performance.now();
 
   return (status: 'success' | 'error', accuracyPassed?: boolean) => {
-    const duration = (performance.now() - startTime) / 1000;
     timer();
     surveyComputationsTotal.inc({ operation, status });
 

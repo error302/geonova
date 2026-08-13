@@ -24,7 +24,6 @@ export default function TwoPegTestCalculator() {
     allowable: '10',    // Allowable collimation error (mm per 100m)
   });
   const [steps, setSteps] = useState<SolutionStep[] | null>(null);
-  const [calcError, setCalcError] = useState<string | null>(null);
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {

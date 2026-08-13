@@ -108,7 +108,7 @@ export function getCPDRequirements(country?: string): CPDRequirement[] {
   return cpdRequirements.filter((r) => r.country.toLowerCase() === country.toLowerCase())
 }
 
-export function getUserActivities(userId: string): CPDActivity[] {
+export function getUserActivities(_userId: string): CPDActivity[] {
   // Pending: fetch from database once CPD backend is integrated.
   return []
 }
@@ -193,7 +193,7 @@ export function getActivityTypes() {
   ]
 }
 
-export function verifyCertificate(certificateNumber: string): CPDCertificate | null {
+export function verifyCertificate(_certificateNumber: string): CPDCertificate | null {
   // Pending: integrate with certificate verification backend.
   return null
 }

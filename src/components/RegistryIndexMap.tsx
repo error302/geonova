@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react'
-import { useLanguage } from '@/lib/i18n/LanguageContext'
 // XSS guard (2026-08-03): sheetId is built from user-entered district / location / registration-unit / sheet fields.
 // It lands in the print document's <title> (RCDATA breakout) — must be XML-escaped before interpolation.
 import { escapeXml } from '@/lib/xml/escape'
@@ -56,12 +55,11 @@ const PARCEL_COLORS = [
 ]
 
 export default function RegistryIndexMap({ isOpen, onClose, initialData }: RegistryIndexMapProps) {
-  const { t } = useLanguage()
   const printRef = useRef<HTMLDivElement>(null)
 
   const [district, setDistrict] = useState(initialData?.district ?? '')
   const [location, setLocation] = useState(initialData?.location ?? '')
-  const [subLocation, setSubLocation] = useState(initialData?.subLocation ?? '')
+  const [subLocation] = useState(initialData?.subLocation ?? '')
   const [registrationUnit, setRegistrationUnit] = useState(initialData?.registrationUnit ?? '')
   const [sheetNumber, setSheetNumber] = useState(initialData?.sheetNumber ?? '1')
   const [edition, setEdition] = useState(initialData?.edition ?? '1st EDITION')

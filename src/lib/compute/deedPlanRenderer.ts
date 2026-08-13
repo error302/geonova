@@ -57,7 +57,7 @@ export function renderDeedPlanSVG(
   bearingSchedule: BoundaryLeg[],
   closureCheck: ClosureCheck
 ): string {
-  const { boundaryPoints, scale, utmZone, hemisphere } = input
+  const { boundaryPoints, scale } = input
 
   // ---- Coordinate projection ----
   const coords = boundaryPoints.map((p) => ({ x: p.easting, y: p.northing }))

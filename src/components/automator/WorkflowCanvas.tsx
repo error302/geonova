@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import ReactFlow, { 
   addEdge, 
   Background, 
@@ -28,7 +28,7 @@ interface WorkflowCanvasProps {
 }
 
 export default function WorkflowCanvas({ onSave }: WorkflowCanvasProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState([])
+  const [nodes, , onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
   
   const onConnect = useCallback((params: Connection) => {

@@ -42,7 +42,7 @@ export async function convertToArc1960(
       return { success: true, coordinates: coords }
     }
     return { success: false, coordinates: [], error: data.error || 'Conversion failed' }
-  } catch (err) {
+  } catch {
     return { success: false, coordinates: [], error: 'Network error' }
   }
 }
@@ -72,7 +72,7 @@ export async function convertFromArc1960(
       return { success: true, coordinates: coords }
     }
     return { success: false, coordinates: [], error: data.error || 'Conversion failed' }
-  } catch (err) {
+  } catch {
     return { success: false, coordinates: [], error: 'Network error' }
   }
 }

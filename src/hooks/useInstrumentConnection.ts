@@ -93,9 +93,9 @@ export function useInstrumentConnection(): UseInstrumentConnectionReturn {
   const [instrumentInfo, setInstrumentInfo] = useState<InstrumentInfo | null>(null)
   const [points, setPoints] = useState<StreamedPoint[]>([])
   const [lastPoint, setLastPoint] = useState<StreamedPoint | null>(null)
-  const [bytesReceived, setBytesReceived] = useState(0)
+  const [bytesReceived] = useState(0)
   const [messagesParsed, setMessagesParsed] = useState(0)
-  const [errorCount, setErrorCount] = useState(0)
+  const [errorCount] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
   const connectionRef = useRef<InstrumentSerialConnection | null>(null)

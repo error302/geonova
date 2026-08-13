@@ -260,7 +260,6 @@ export function MapOverlaySlot({
   }
 
   // Edge margin constants (match the old values for visual continuity)
-  const smEdgeMargin = 16 // sm: right-4 / left-4
 
   if (anchor === 'top-left') {
     positionStyle.top = `${offset}px`
@@ -298,10 +297,8 @@ export function MapOverlaySlot({
 // coordinate bar which is a single full-width element), this helps.
 
 export function MapOverlayZone({
-  anchor,
   children,
 }: {
-  anchor: OverlayAnchor
   children: ReactNode
 }) {
   // This is just a semantic wrapper — the actual positioning is done by

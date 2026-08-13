@@ -13,10 +13,10 @@
  * Slides in from the right when a feature is clicked.
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import {
   X, MapPin, User, Ruler, Navigation, Copy,
-  Edit3, Trash2, ZoomIn, Building2, FileText,
+  Edit3, Trash2, ZoomIn, Building2,
   CheckCircle2, AlertTriangle, Clock,
 } from 'lucide-react'
 

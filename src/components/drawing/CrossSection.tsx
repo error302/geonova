@@ -43,7 +43,7 @@ export function CrossSection({
   projectData,
   surveyorProfile,
 }: CrossSectionProps) {
-  const [selectedStation, setSelectedStation] = useState<number | null>(null);
+  const [, setSelectedStation] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const validated = useMemo(() => {
@@ -164,7 +164,6 @@ export function CrossSection({
     });
 
     const baseLevel = 1600;
-    const hScale = 1 / 100;
     const vScale = 1 / 100;
 
     sections.forEach((station, i) => {

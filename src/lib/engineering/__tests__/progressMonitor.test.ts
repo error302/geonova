@@ -11,9 +11,7 @@ import {
 // ─── Test data ─────────────────────────────────────────────────────────────
 
 function makeCheckpoint(overrides: Partial<InspectionCheckpoint> = {}): InspectionCheckpoint {
-  const today = new Date().toISOString().split('T')[0];
   const pastDate = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0];
-  const futureDate = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
 
   return {
     id: 'cp-1',

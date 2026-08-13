@@ -18,8 +18,6 @@
  * If no data is available, show a prominent warning.
  */
 
-import { KENYA_CONDITIONS } from '../corrections/atmospheric';
-import { KENYA_GEOID_UNDULATION } from '../corrections/sea-level-reduction';
 
 // ─── Types ───────────────────────────────────────────────────────
 

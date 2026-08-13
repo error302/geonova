@@ -117,7 +117,7 @@ export function NetworkAdjustmentPanel({ projectId, projectData, surveyorProfile
       try {
         setImportStatus('Parsing GSI file...')
         const content = await file.text()
-        const { parseGSI, pairFaces } = await import('@/lib/import/totalStation/parseGSI')
+        const { parseGSI } = await import('@/lib/import/totalStation/parseGSI')
         const parsed = parseGSI(content)
 
         if (!parsed.ok || parsed.records.length === 0) {
@@ -128,7 +128,6 @@ export function NetworkAdjustmentPanel({ projectId, projectData, surveyorProfile
 
         // Extract coordinate records as stations
         const coordRecords = parsed.records.filter(r => r.easting !== undefined && r.northing !== undefined)
-        const obsRecords = parsed.records.filter(r => r.horizontalAngle !== undefined || r.slopeDistance !== undefined)
 
         if (coordRecords.length >= 2) {
           const newStations: Station[] = coordRecords.map((r, i) => ({

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { z } from 'zod'
@@ -34,7 +34,7 @@ const createSubmissionSchema = z.object({
   notes: z.string().optional(),
 })
 
-export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (request, ctx) => {
+export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (request, _ctx) => {
   const projectId = request.nextUrl.searchParams.get('project_id')
 
   if (!projectId) {

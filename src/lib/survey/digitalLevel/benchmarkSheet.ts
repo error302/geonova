@@ -9,7 +9,6 @@
 import {
   LevelAdjustmentResult,
   LevelControlPoint,
-  LevelObservation,
   AdjustedLevel,
   LEVEL_ORDER_LIMITS,
 } from './digitalLevelTypes'
@@ -91,7 +90,6 @@ export function generateBenchmarkSheet(
     return a.pointId.localeCompare(b.pointId)
   })
 
-  const orderInfo = LEVEL_ORDER_LIMITS[adjustmentResult.order] || LEVEL_ORDER_LIMITS['fourth']
 
   return {
     projectName: options?.projectName,
