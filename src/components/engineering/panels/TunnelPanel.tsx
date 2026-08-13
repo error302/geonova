@@ -1,12 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ENGINEERING_QA, type EngineeringSubtype } from '@/lib/engine/engineering';
-
-interface EngineeringPanelProps {
-  projectId: string;
-  subtype: EngineeringSubtype;
-}
+import { ENGINEERING_QA } from '@/lib/engine/engineering';
 
 function computeBearing(from: { easting: number; northing: number }, to: { easting: number; northing: number }): number {
   const dE = to.easting - from.easting;
@@ -22,7 +17,7 @@ function formatBearingDDMSS(bearing: number): string {
   return `${deg}°${String(min).padStart(2, '0')}'${sec}"`;
 }
 
-export function TunnelPanel({ projectId, subtype }: EngineeringPanelProps) {
+export function TunnelPanel() {
   const [activeTab, setActiveTab] = useState<'control' | 'geometry' | 'profile' | 'convergence'>('control');
   const qa = ENGINEERING_QA.tunnel;
 
@@ -283,7 +278,7 @@ export function TunnelPanel({ projectId, subtype }: EngineeringPanelProps) {
               </tr>
             </thead>
             <tbody>
-              {convergencePoints.map((pt, i) => (
+              {convergencePoints.map((pt) => (
                 <tr key={pt.label} className="border-b border-zinc-800">
                   <td className="py-2">{pt.chainage.toFixed(3)}</td>
                   <td className="py-2">{pt.label}</td>

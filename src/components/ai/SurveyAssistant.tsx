@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { smartChat } from '@/lib/ai/smartAiService'
 import { localLlmService } from '@/lib/ai/localLlmService'
 import type { InitProgressReport } from '@mlc-ai/web-llm'
-import { MessageSquare, Send, Bot, User, Wifi, WifiOff, Loader2, Sparkles, X, Cpu, AlertTriangle } from 'lucide-react'
+import { Send, Bot, User, Wifi, WifiOff, Loader2, Sparkles, AlertTriangle } from 'lucide-react'
 
 interface Message {
   role: 'user' | 'assistant'

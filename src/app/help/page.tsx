@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {
   Search, BookOpen, Map, FileText, Calculator, CreditCard,
   ChevronDown, ChevronRight, MessageSquare, Mail, Phone,
-  Wrench, Compass, Building2, Satellite, ShieldCheck,
+  Compass, ShieldCheck,
 } from 'lucide-react'
 
 interface FAQItem {

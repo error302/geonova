@@ -94,7 +94,7 @@ class DatabaseOptimizer {
       .limit(limit + 1) // Fetch one extra to check if there's more
 
     if (cursor) {
-      const [cursorValue, cursorId] = cursor.split('_')
+      const [cursorValue] = cursor.split('_')
       queryBuilder = queryBuilder.gt(orderBy, cursorValue)
     }
 
@@ -171,7 +171,6 @@ class DatabaseOptimizer {
       
       joins.forEach((join) => {
         const select = join.select.split(',').map(s => `${join.table}.${s.trim()}`).join(',')
-        const alias = join.alias || join.table
         queryBuilder = queryBuilder.select(`${join.table}(${select})`)
       })
 
@@ -268,7 +267,7 @@ export async function applyRecommendedIndexes(): Promise<{ applied: string[]; sk
   const applied: string[] = []
   const skipped: string[] = []
   
-  for (const [table, indexes] of Object.entries(recommendedIndexes)) {
+  for (const [, indexes] of Object.entries(recommendedIndexes)) {
     for (const sql of indexes) {
       try {
         await dbClient.rpc('execute_sql', { sql })

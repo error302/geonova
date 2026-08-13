@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { z } from 'zod';
 import { crossSectionVolume, massHaulDiagram, logEngineeringCompute } from '@/lib/engineering/compute';
-import { initialiseSokDXFLayers, DXF_LAYERS, TitleBlockData, TITLE_BLOCK_TEMPLATES } from '@/lib/drawing/dxfLayers';
+import { initialiseSokDXFLayers, DXF_LAYERS } from '@/lib/drawing/dxfLayers';
 
 const VolumeInputSchema = z.object({
   areas: z.array(z.number()).min(2),
@@ -138,7 +138,7 @@ function MassHaulDiagramSVG({ diagram, balancePoint }: { diagram: MassHaulPoint[
           <polyline points={linePoints} fill="none" stroke="#1f2937" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
 
           {/* Data points */}
-          {diagram.map((d, i) => (
+          {diagram.map((d) => (
             <circle
               key={d.station}
               cx={scaleX(d.station)} cy={scaleY(d.cumulative)}
@@ -222,7 +222,7 @@ interface VolumesPanelProps {
   } | null;
 }
 
-export function VolumesPanel({ projectId, projectData, surveyorProfile }: VolumesPanelProps) {
+export function VolumesPanel({ projectId, projectData: _projectData, surveyorProfile: _surveyorProfile }: VolumesPanelProps) {
   const [areas, setAreas] = useState<number[]>([5, 8, 12, 15, 10, 5, 3, -2, -5, -3]);
   const [stationInterval, setStationInterval] = useState(20);
   const [method, setMethod] = useState<'prismoidal' | 'end-area'>('prismoidal');
@@ -265,26 +265,6 @@ export function VolumesPanel({ projectId, projectData, surveyorProfile }: Volume
     const { default: Drawing } = await import('dxf-writer');
     const drawing = new Drawing();
     initialiseSokDXFLayers(drawing);
-
-    const tb: TitleBlockData = {
-      drawingTitle: TITLE_BLOCK_TEMPLATES.eng_volumes.drawingTitle,
-      lrNumber: projectData?.lr_number ?? 'N/A',
-      county: projectData?.county ?? 'N/A',
-      district: projectData?.district ?? 'N/A',
-      locality: projectData?.locality ?? 'N/A',
-      areaHa: 0,
-      perimeterM: 0,
-      surveyorName: surveyorProfile?.fullName ?? 'N/A',
-      registrationNumber: surveyorProfile?.registrationNumber ?? 'N/A',
-      firmName: surveyorProfile?.firmName ?? 'N/A',
-      date: new Date().toLocaleDateString('en-KE'),
-      submissionRef: 'N/A',
-      coordinateSystem: 'Arc 1960 / UTM Zone 37S (SRID: 21037)',
-      scale: '1:2500',
-      sheetNumber: '1 of 1',
-      revision: 'R00'
-    }
-    // renderTitleBlock(drawing, 'eng_volumes', tb)
 
     const baseY = 100;
     const scale = 2;
@@ -433,7 +413,7 @@ export function VolumesPanel({ projectId, projectData, surveyorProfile }: Volume
                   </tr>
                 </thead>
                 <tbody>
-                  {result.volumeTable.slice(0, 15).map((row, i) => (
+                  {result.volumeTable.slice(0, 15).map((row) => (
                     <tr key={row.station} className="border-b border-[var(--border-color)]/30">
                       <td className="py-1.5 px-4">{row.station.toFixed(0)}</td>
                       <td className="py-1.5 px-4 text-right text-red-400">{row.cutArea.toFixed(2)}</td>

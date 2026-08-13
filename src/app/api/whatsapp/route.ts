@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     }
 
     const identifier = getClientIdentifier(req)
-    const { allowed, remaining } = await rateLimit(identifier, 30, 60000)
+    const { allowed } = await rateLimit(identifier, 30, 60000)
 
     if (!allowed) {
       return new NextResponse(
@@ -76,7 +76,6 @@ export async function POST(req: NextRequest) {
     const params = new URLSearchParams(body)
     
     const message = params.get('Body')?.trim().toLowerCase()
-    const from = params.get('From')
     
     let response = ''
     
@@ -114,7 +113,7 @@ Quick tips:
 <Response><Message>${response}</Message></Response>`,
       { headers: { 'Content-Type': 'text/xml' } }
     )
-  } catch (error) {
+  } catch {
     return new NextResponse(
       `<?xml version="1.0" encoding="UTF-8"?>
 <Response><Message>Error processing request</Message></Response>`,

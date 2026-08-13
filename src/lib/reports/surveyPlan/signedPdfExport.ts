@@ -16,10 +16,7 @@
  * @module signedPdfExport
  */
 
-import { createHash } from 'crypto'
-import { PDFDocument } from 'pdf-lib'
 import type { SurveyPlanData, PlanOptions } from './types'
-import { SurveyPlanRenderer } from './renderer'
 import { renderToMultiPagePdf } from './multiSheetPdf'
 import {
   embedSignatureAppearance,

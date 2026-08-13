@@ -99,7 +99,7 @@ All batches drained (`argument-scan --batch 1` → 0 across 0 files); floor lock
 | Rule | Live | Fix class | Next tier |
 |---|---|---|---|
 | `no-non-null-assertion` | **0** | ✅ done — batches 1–12 drained 113 → 0, suppression sweep removed the last 9 hidden `!` sites; flipped to `error` 2026-08-12 | — |
-| `no-unused-vars` | **684** | `_`-prefix unused bindings, drop dead imports/state/props | batches 1–7 drained 355 sites; batches 1–8 drained 459 sites; next: batch 9 — 3-warning tier (61 files) — see the §5.2 worklists below |
+| `no-unused-vars` | **501** | `_`-prefix unused bindings, drop dead imports/state/props | batches 1–9 drained 642 sites; next: batch 10 — 2-warning tier (120 files) — see the §5.2 worklists below |
 | `react-hooks/exhaustive-deps` | **0** | `error` — keep deps honest; justified mount-once disables allowed (3 in repo) | ✅ drained (ED-1: 17 sites; ED-2: 27 sites) |
 | `no-restricted-syntax` | **0** | project-specific banned patterns — check the rule config | ✅ done — 16 → 0 (drained 2026-08-13) |
 | `no-console` | 0 | ✅ drained — routed through `lib/logger.ts` | — |
@@ -175,7 +175,7 @@ The original B1–B5 roadmap has **landed**: row-typing is 100%, member-access f
 ---
 ## Phase 5 worklists — pre-computed from the live census (2026-08-13, 684 unused-vars total)
 
-**Batch 9 — 3-warning tier: 61 files, 183 sites**
+**Batch 9 — 3-warning tier: 61 files, 183 sites — ✅ DONE (2026-08-13, 684 → 501)**
 - `src/app/api/engineering/data/route.ts` — NextRequest, EngineeringSubtype, ctx
 - `src/app/api/equipment/add/route.ts` — NextRequest, calibrationCertNumber, calibrationLab
 - `src/app/api/whatsapp/route.ts` — remaining, from, error

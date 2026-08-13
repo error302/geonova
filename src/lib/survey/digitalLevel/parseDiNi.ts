@@ -18,7 +18,7 @@ import { LevelReading, LevelObservation, LevelImportResult } from './digitalLeve
  *   BM1,1.65432,25.432,BS
  *   TP1,0.87654,30.121,FS
  */
-export function parseDiNi(content: string, filename?: string): LevelImportResult {
+export function parseDiNi(content: string, _filename?: string): LevelImportResult {
   const lines = content.split(/\r?\n/)
   const parseErrors: string[] = []
   const readings: LevelReading[] = []
@@ -134,7 +134,7 @@ export function parseDiNi(content: string, filename?: string): LevelImportResult
 function parseDiNiRawRow(
   line: string,
   instrumentHeight: number,
-  lineNo: number
+  _lineNo: number
 ): LevelReading | null {
   const parts = line.split('|').map(s => s.trim()).filter(s => s.length > 0)
   if (parts.length < 3) return null
@@ -172,7 +172,7 @@ function parseDiNiRawRow(
 function parseDiNiDatRow(
   line: string,
   instrumentHeight: number,
-  lineNo: number
+  _lineNo: number
 ): LevelReading | null {
   const parts = line.split(',').map(s => s.trim()).filter(s => s.length > 0)
   if (parts.length < 2) return null

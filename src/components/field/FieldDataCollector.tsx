@@ -54,22 +54,11 @@ export function FieldDataCollector({
   const [activeFeatureCode, setActiveFeatureCode] = useState<string>('')
   const [stakeoutTarget, setStakeoutTarget] = useState<{ e: number; n: number; z: number } | null>(null)
   const [isSunlightMode, setIsSunlightMode] = useState(false)
-  const [audioEnabled, setAudioEnabled] = useState(true)
 
   // Load existing measurements on mount
   useEffect(() => {
     session.loadMeasurements()
   }, [session])
-
-  // Voice synthesis guidance for stakeout
-  const announceStakeoutGuidance = useCallback((de: number, dn: number) => {
-    if (!audioEnabled || typeof window === 'undefined' || !('speechSynthesis' in window)) return
-    const text = `Delta East ${de >= 0 ? 'Right' : 'Left'} ${Math.abs(de).toFixed(1)} meters. Delta North ${dn >= 0 ? 'Forward' : 'Backward'} ${Math.abs(dn).toFixed(1)} meters.`
-    window.speechSynthesis.cancel() // stop prior phrase
-    const utterance = new SpeechSynthesisUtterance(text)
-    utterance.rate = 1.1
-    window.speechSynthesis.speak(utterance)
-  }, [audioEnabled])
 
   // Auto-sync when online
   useEffect(() => {
@@ -95,17 +84,6 @@ export function FieldDataCollector({
   const handleSync = useCallback(() => {
     session.syncNow()
   }, [session])
-
-  const handleStakeout = useCallback((target: { e: number; n: number; z: number }) => {
-    setStakeoutTarget(target)
-    session.activateStakeout({
-      easting: target.e,
-      northing: target.n,
-      elevation: target.z,
-    })
-    setActivePanel('stakeout')
-    announceStakeoutGuidance(target.e, target.n)
-  }, [session, announceStakeoutGuidance])
 
   // ─── Setup Screen ────────────────────────────────────────────────────────
   if (showSetup) {
@@ -366,7 +344,6 @@ function InstrumentPanelToggle({ onShow }: { onShow: () => void }) {
 
 function StakeoutPanel({
   target,
-  sessionState,
   onClose,
 }: {
   target: { e: number; n: number; z: number }

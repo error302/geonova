@@ -6,7 +6,6 @@ import {
   computeSettingOut,
   generatePileGridDXF,
   pileGridToCSV,
-  formatBearingDMS,
 } from '@/lib/engineering/pileGrid'
 import type {
   PileGridDefinition,
@@ -519,7 +518,7 @@ export default function PileGridPanel() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-zinc-800/60">
-                        {gridResult.piles.map((p, i) => (
+                        {gridResult.piles.map((p) => (
                           <tr key={p.label} className="hover:bg-zinc-800/40 transition-colors">
                             <td className="px-4 py-2 font-mono text-xs font-semibold text-blue-400">{p.label}</td>
                             <td className="px-4 py-2 text-right font-mono text-xs text-zinc-300">{p.easting.toFixed(4)}</td>
@@ -759,7 +758,7 @@ function PileGridSVG({ result }: { result: PileGridResult }) {
       />
 
       {/* Pile positions (green circles, scaled by diameter) */}
-      {piles.map((pile, i) => {
+      {piles.map((pile) => {
         const px = cx(pile.easting)
         const py = cy(pile.northing)
         const r = def.pileDiameter ? Math.max((def.pileDiameter / 2000) * scale * 0.5, 4) : 5

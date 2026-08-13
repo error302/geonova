@@ -15,10 +15,10 @@
  * - Existing parcel data (parent passes neighboring parcels)
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import {
-  AlertTriangle, AlertCircle, Info, CheckCircle2,
-  ChevronDown, ChevronUp, MapPin, ShieldAlert, ShieldCheck,
+  AlertTriangle, AlertCircle, Info,
+  ChevronDown, ChevronUp, ShieldAlert, ShieldCheck,
 } from 'lucide-react'
 import {
   runTopologyCheck,

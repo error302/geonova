@@ -1,12 +1,11 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { ParseResult, SupportedFormat } from '@/types/importer';
+import { ParseResult } from '@/types/importer';
 import ImportPreviewTable from './ImportPreviewTable';
 import GenericCSVMapper from './GenericCSVMapper';
 
 import '@/lib/importers/index';
-import { detectFormat, getParser } from '@/lib/importers/registry';
 import { smartImport, SmartImportResult } from '@/lib/importers/universalImporter';
 
 interface Props {

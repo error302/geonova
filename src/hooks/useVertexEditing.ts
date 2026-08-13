@@ -15,7 +15,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import type Map from 'ol/Map';
 import type { Feature } from 'ol';
 import type { Polygon as OlPolygon } from 'ol/geom';
-import { to21037, arrayTo3857, SRID_3857, SRID_21037 } from '@/lib/map/projection';
+import { to21037, arrayTo3857 } from '@/lib/map/projection';
 
 /* ------------------------------------------------------------------ */
 /*  Public types                                                       */
@@ -308,7 +308,6 @@ export function useVertexEditing({
         evt.stopPropagation();
         if (cancelled) return;
 
-        const pixel = evt.pixel as [number, number];
         const coord = evt.coordinate as [number, number];
         const geom = feature.getGeometry() as OlPolygon;
         const ring = geom.getCoordinates()[0] as number[][];

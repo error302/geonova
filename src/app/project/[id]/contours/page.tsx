@@ -3,7 +3,7 @@ import { useState, useEffect, use } from 'react'
 import { createClient } from '@/lib/api-client/client'
 import { generateContours, SpotHeight, ContourLine } from '@/lib/engine/contours'
 import MobileDesktopNotice from '@/components/MobileDesktopNotice'
-import { apiPost, ApiError } from '@/lib/api/client'
+import { apiPost } from '@/lib/api/client'
 import { z } from 'zod'
 
 // ponytail: response schemas — Phase 4 wave 4
@@ -245,8 +245,6 @@ function ContourMap({ points, contours }: { points: SpotHeight[]; contours: Cont
     return `rgb(${r},${g},${b})`
   }
 
-  const majorInterval = (elev: number) => elev % 5 === 0
-
   const handleExportDXF = async () => {
     const data = await apiPost('/api/compute', computeResponseSchema, {
       task: 'export_dxf',
@@ -277,7 +275,7 @@ function ContourMap({ points, contours }: { points: SpotHeight[]; contours: Cont
         })}
 
         {/* Contour lines */}
-        {contours.map((contour, i) => {
+        {contours.map((contour) => {
           const isMajor = contour.elevation % 5 === 0
           const pts = contour.points
           if (pts.length < 2) return null

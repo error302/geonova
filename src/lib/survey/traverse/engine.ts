@@ -250,7 +250,6 @@ function computeMisclosure(
 ): TraverseResult['misclosure'] {
   // For a closed traverse, the last computed position should
   // match the closing fixed point
-  const firstFixed = original.find(s => s.isFixed && s.easting !== undefined);
   const lastLeg = legs[legs.length - 1];
   
   // Find the last computed position
@@ -286,8 +285,8 @@ function computeMisclosure(
  *   Angular misclosure = Observed sum - Theoretical sum
  */
 function computeAngularClosure(
-  legs: TraverseLeg[],
-  fixedStations: TraverseStation[]
+  _legs: TraverseLeg[],
+  _fixedStations: TraverseStation[]
 ): number {
   // Simple check: sum of bearings should be consistent
   // For a full loop traverse, the sum of bearing differences

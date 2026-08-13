@@ -154,9 +154,9 @@ export async function computeVolumes(
 }
 
 export async function callPythonCompute<T>(
-  path: string,
-  body: unknown,
-  opts?: { timeoutMs?: number }
+  _path: string,
+  _body: unknown,
+  _opts?: { timeoutMs?: number }
 ): Promise<{ ok: true; value: T } | { ok: false; status: number; error: string; fallback?: boolean; details?: unknown }> {
   // If anything still calls this generic python compute bridge, it will fail gracefully.
   // We have stripped the python requirement from the architecture.

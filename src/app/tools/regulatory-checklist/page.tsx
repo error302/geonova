@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Scale, Wrench, FileCheck, Map, Award, Download, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Scale, Wrench, FileCheck, Award, Download } from 'lucide-react'
 
 interface ApprovedInstrument { brand: string; model: string; type: string }
 interface StandardScale { scale: string; label: string; maxAreaHa: number }

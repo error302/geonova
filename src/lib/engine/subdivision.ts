@@ -27,7 +27,6 @@ import type {
   SubdivisionResult,
   SubdividedLot,
   SplitLine,
-  RoadReserveInfo,
 } from '@/types/subdivision'
 
 // ─── Utility helpers ────────────────────────────────────────────────────────
@@ -205,7 +204,6 @@ function splitPolygonByLine(
   // Build polygon A: walk from ip1 to ip2 along boundary, then back along split line
   const polyA: Point2D[] = [ip1.point]
   let idx = ip1.edgeIdx
-  let tCurrent = ip1.t
 
   // Walk along boundary edges
   while (true) {
@@ -218,15 +216,13 @@ function splitPolygonByLine(
     // Add the end vertex of this edge
     polyA.push(open[j])
     idx = j
-    tCurrent = 0
-    // Safety: if we've gone all the way around
+      // Safety: if we've gone all the way around
     if (polyA.length > n + 5) break
   }
 
   // Build polygon B: walk from ip2 to ip1 along boundary, then back along split line
   const polyB: Point2D[] = [ip2.point]
   idx = ip2.edgeIdx
-  tCurrent = ip2.t
 
   while (true) {
     const j = (idx + 1) % n
@@ -236,7 +232,6 @@ function splitPolygonByLine(
     }
     polyB.push(open[j])
     idx = j
-    tCurrent = 0
     if (polyB.length > n + 5) break
   }
 
@@ -540,7 +535,7 @@ function buildRoadCorridor(
     offsetEnd: Point2D
   }>,
   n: number,
-  width: number
+  _width: number
 ): Point2D[] {
   if (edgeData.length === 0) return []
 

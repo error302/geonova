@@ -90,12 +90,11 @@ export const STANDARD_PIPE_SIZES = [100, 150, 200, 225, 300, 375, 450, 525, 600,
 // ─── PIPE HYDRAULICS ─────────────────────────────────────────────────────────
 
 export function manningPipeCapacity(input: PipeInput): PipeCapacity {
-  const { diameter, manningN, slope, flowDepth } = input
+  const { diameter, manningN, slope } = input
   const D = diameter / 1000 // mm to m
 
   // Full bore calculations
   const area = Math.PI * D * D / 4
-  const wettedPerimeter = Math.PI * D
   const hydraulicRadius = D / 4
 
   const velocity = (1 / manningN) * Math.pow(hydraulicRadius, 2 / 3) * Math.pow(slope, 0.5)
@@ -126,7 +125,7 @@ export function minPipeSlope(diameterMm: number, manningN: number, minVelocity: 
 // ─── CATCHMENT / RATIONAL METHOD ─────────────────────────────────────────────
 
 export function rationalMethodCatchment(input: CatchmentInput): CatchmentResult {
-  const { area, runoffCoefficient, rainfallIntensity, timeOfConcentration } = input
+  const { area, runoffCoefficient, rainfallIntensity } = input
 
   // Q = (C × I × A) / 360
   // Converts mm/hr × ha to m³/s: divide by 3.6 × 100

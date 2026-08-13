@@ -508,8 +508,6 @@ export function sightDistanceCheck(input: SightDistanceInput): SightDistanceResu
     }
   }
 
-  const isSSDCompliant = proposedSSD !== undefined ? proposedSSD >= ssdMin : ssdComputed >= ssdMin
-  const isPSDCompliant = true  // PSD is tabulated, no computed comparison
   const ssdStatus = ssdComputed >= ssdMin ? 'GREEN' : 'RED'
 
   const steps = [
@@ -574,7 +572,7 @@ export function checkRadiusCompliance(
   proposedRadius: number,
   designSpeed: number,
   terrain: string,
-  superelevation: number = 0.08
+  _superelevation: number = 0.08
 ): { compliant: boolean; minRadius: number; ratio: number; status: 'GREEN' | 'RED' } {
   const minRadius = getMinRadius(designSpeed, terrain)
   const compliant = proposedRadius >= minRadius

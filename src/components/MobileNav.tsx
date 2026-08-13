@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import {
   FolderKanban, LayoutDashboard, MapPinned, UserRound, UsersRound, Wrench, FileText,
-  CalendarDays, Radar, Store, ChevronRight, X, AlertTriangle, Clock,
+  CalendarDays, Radar, Store, ChevronRight, X,
   BookOpen, Compass, MapPin, ShieldCheck, type LucideIcon
 } from 'lucide-react'
 import { PRIMARY_NAV_ITEMS, isNavItemActive } from '@/lib/navigation-shell'
@@ -35,7 +35,7 @@ export default function MobileNav() {
   const pathname = usePathname()
   const [mounted, setMounted] = useState(false)
   const [showMore, setShowMore] = useState(false)
-  const { data: session, status: authStatus } = useSession()
+  const { data: session } = useSession()
   const isAuthenticated = !!session
 
   useEffect(() => { setMounted(true) }, [])

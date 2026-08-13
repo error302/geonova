@@ -14,7 +14,7 @@ import { LevelReading, LevelObservation, LevelImportResult } from './digitalLeve
  *   Space-separated: "BM1  BM  1.65432  25.4  BS"
  *   Or fixed-width columns from DL-102/DL-103
  */
-export function parseTopconDL(content: string, filename?: string): LevelImportResult {
+export function parseTopconDL(content: string, _filename?: string): LevelImportResult {
   const lines = content.split(/\r?\n/)
   const parseErrors: string[] = []
   const readings: LevelReading[] = []
@@ -127,7 +127,7 @@ export function parseTopconDL(content: string, filename?: string): LevelImportRe
 function parseTopconDataRow(
   line: string,
   instrumentHeight: number,
-  lineNo: number
+  _lineNo: number
 ): LevelReading | null {
   const parts = line.split(/[\s\t]+/).filter(s => s.length > 0)
   if (parts.length < 2) return null
@@ -180,7 +180,7 @@ function parseTopconDataRow(
 function parseTopconAltRow(
   line: string,
   instrumentHeight: number,
-  lineNo: number
+  _lineNo: number
 ): LevelReading | null {
   // Try semicolon separator (some Topcon exports)
   if (line.includes(';')) {

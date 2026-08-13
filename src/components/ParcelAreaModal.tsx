@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { coordinateArea } from '@/lib/engine/area'
-import { distanceBearing } from '@/lib/engine/distance'
 import type { SurveyPoint } from '@/types/surveyPoint'
 
 interface ParcelAreaModalProps {
@@ -12,7 +11,7 @@ interface ParcelAreaModalProps {
   onAreaResult?: (result: { squareMeters: number; hectares: number; acres: number; perimeter: number }) => void
 }
 
-export default function ParcelAreaModal({ isOpen, onClose, points, onAreaResult }: ParcelAreaModalProps) {
+export default function ParcelAreaModal({ isOpen, onClose, onAreaResult }: ParcelAreaModalProps) {
   const [selectedPoints, setSelectedPoints] = useState<SurveyPoint[]>([])
   const [result, setResult] = useState<{
     areaSqm: number
@@ -20,19 +19,6 @@ export default function ParcelAreaModal({ isOpen, onClose, points, onAreaResult 
     areaAcres: number
     perimeter: number
   } | null>(null)
-
-  const handlePointClick = (point: SurveyPoint) => {
-    // Check if clicking first point to close
-    if (selectedPoints.length >= 3 && selectedPoints[0].id === point.id) {
-      calculateArea()
-      return
-    }
-    
-    // Add point if not already selected
-    if (!selectedPoints.some((p) => p.id === point.id)) {
-      setSelectedPoints([...selectedPoints, point])
-    }
-  }
 
   const calculateArea = () => {
     if (selectedPoints.length < 3) return

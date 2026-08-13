@@ -7,8 +7,6 @@ import {
   ResizableHandle,
 } from '@/components/ui/resizable';
 import {
-  ChevronUp,
-  ChevronDown,
   Activity,
   Crosshair,
   AlertTriangle,
@@ -163,7 +161,7 @@ export default function EnhancedSplitLayout({
         <div className="flex items-center justify-between h-full px-2 sm:px-3 gap-2 sm:gap-3">
           {/* Left section: user-provided entries */}
           <div className="flex items-center gap-2 sm:gap-4 min-w-0 overflow-x-auto scrollbar-none">
-            {statusBarEntries.map((entry, idx) => (
+            {statusBarEntries.map((entry) => (
               <div
                 key={entry.label}
                 className="flex items-center gap-1 text-xs whitespace-nowrap flex-shrink-0"

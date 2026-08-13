@@ -1,12 +1,12 @@
 'use client';
 
-import { Save, CheckCircle, Globe } from 'lucide-react';
+import { Globe } from 'lucide-react';
 
 /**
  * Geodetic Compute Panel — wraps the existing NetworkAdjustmentPanel
  * for geodetic surveys. Adds baseline processing and accuracy classification.
  */
-export default function GeodeticComputePanel({ projectId }: { projectId: string }) {
+export default function GeodeticComputePanel() {
   return (
     <div className="space-y-4">
       <h3 className="text-sm font-semibold"><Globe className="w-4 h-4 inline mr-1" />Geodetic Computations</h3>

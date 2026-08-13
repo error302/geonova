@@ -11,12 +11,12 @@
 // METARDU Engine - Curve calculations
 
 import { CurveElements, CurveStakeoutResult, CurveStakeoutPoint } from './types';
-import { toRadians, toDegrees, bearingToString } from './angles';
+import { toRadians, bearingToString } from './angles';
 
 export function curveElements(
   radius: number,
   deflectionAngle: number,
-  isExternal?: boolean
+  _isExternal?: boolean
 ): CurveElements {
   const delta = toRadians(deflectionAngle);
   const halfDelta = delta / 2;
@@ -60,7 +60,6 @@ export function curveStakeout(
   interval: number = 20
 ): CurveStakeoutResult {
   const elements = curveElements(radius, deflectionAngle);
-  const delta = toRadians(deflectionAngle);
   
   // Calculate chainages
   const pcChainage = piChainage - elements.tangentLength;

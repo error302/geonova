@@ -78,7 +78,7 @@ let dbPromise: Promise<IDBPDatabase<METARDUDB>> | null = null
 export async function getDB(): Promise<IDBPDatabase<METARDUDB>> {
   if (!dbPromise) {
     dbPromise = openDB<METARDUDB>(DB_NAME, DB_VERSION, {
-      upgrade(db, oldVersion, newVersion) {
+      upgrade(db, _oldVersion, _newVersion) {
         // Sync queue with indexes
         if (!db.objectStoreNames.contains('sync_queue')) {
           const store = db.createObjectStore('sync_queue', { keyPath: 'id', autoIncrement: true })
@@ -176,11 +176,6 @@ export async function getPendingOperations(projectId?: string): Promise<SyncOper
 export async function removeSyncedOperation(id: number): Promise<void> {
   const db = await getDB()
   await db.delete('sync_queue', id)
-}
-
-// Exponential backoff retry
-async function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 // Enhanced sync with conflict resolution

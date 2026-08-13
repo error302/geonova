@@ -179,8 +179,7 @@ function SearchTrigger({ t }: { t: Translator }) {
 }
 
 export default function NavBar() {
-  const [installPrompt, setInstallPrompt] = useState<{ prompt: () => Promise<{ outcome: string }> } | null>(null)
-  const [showInstall, setShowInstall] = useState(false)
+  const [, setInstallPrompt] = useState<{ prompt: () => Promise<{ outcome: string }> } | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
@@ -193,7 +192,7 @@ export default function NavBar() {
   const userRole = user?.role ?? ''
   const isAdminUser = ['super_admin', 'admin', 'org_admin'].includes(userRole)
 
-  const { language, setLanguage, t, hydrated } = useLanguage()
+  const { language, setLanguage, t } = useLanguage()
   const pathname = usePathname()
   const router = useRouter()
 
@@ -278,21 +277,12 @@ export default function NavBar() {
     const handleBeforeInstall = (e: Event) => {
       e.preventDefault()
       setInstallPrompt(e as unknown as { prompt: () => Promise<{ outcome: string }> })
-      setShowInstall(true)
     }
     window.addEventListener('beforeinstallprompt', handleBeforeInstall)
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstall)
     }
   }, [])
-
-  const handleInstall = async () => {
-    if (!installPrompt) return
-    const prompt = await installPrompt.prompt()
-    if (prompt.outcome === 'accepted') {
-      setShowInstall(false)
-    }
-  }
 
   const handleSignOut = async () => {
     try {

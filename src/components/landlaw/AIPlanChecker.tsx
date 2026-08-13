@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react'
-import { FileCheck, AlertTriangle, CheckCircle, XCircle, Info, Download, RefreshCw } from 'lucide-react'
-import { runPlanCheck, type PlanInput, type Coordinate, type BeaconRecord } from '@/lib/compute/planChecker'
+import { FileCheck, AlertTriangle, CheckCircle, XCircle, Info, RefreshCw } from 'lucide-react'
+import { runPlanCheck, type PlanInput, type Coordinate } from '@/lib/compute/planChecker'
 import type { PlanCheckReport } from '@/types/landLaw'
 
 export default function AIPlanChecker() {
@@ -39,17 +39,6 @@ export default function AIPlanChecker() {
   const removeCoordinate = (index: number) => {
     const coords = (planData.coordinates || []).filter((_, i) => i !== index)
     setPlanData({ ...planData, coordinates: coords })
-  }
-
-  const addBeacon = () => {
-    const beacons = planData.beacons || []
-    setPlanData({
-      ...planData,
-      beacons: [
-        ...beacons,
-        { id: `B${beacons.length + 1}`, type: 'CB', coordinates: { easting: 0, northing: 0 }, description: '' }
-      ]
-    })
   }
 
   const handleRunCheck = () => {

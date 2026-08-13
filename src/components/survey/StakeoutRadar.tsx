@@ -33,7 +33,7 @@ interface Position {
 }
 
 export function StakeoutRadar({ targetE, targetN, onClose, epsg = 'EPSG:21037' }: StakeoutRadarProps) {
-  const [position, setPosition] = useState<Position | null>(null)
+  const [, setPosition] = useState<Position | null>(null)
   const [distance, setDistance] = useState<number | null>(null)
   const [bearing, setBearing] = useState<number | null>(null)
   const [soundOn, setSoundOn] = useState(true)
@@ -169,7 +169,7 @@ export function StakeoutRadar({ targetE, targetN, onClose, epsg = 'EPSG:21037' }
       if (videoRef.current) {
         videoRef.current.srcObject = stream
       }
-    } catch (err) {
+    } catch {
       setCameraError('Camera access denied or unavailable.')
       return
     }
@@ -191,7 +191,7 @@ export function StakeoutRadar({ targetE, targetN, onClose, epsg = 'EPSG:21037' }
         // Fallback for non-absolute browsers
         window.addEventListener('deviceorientation', handleOrientation, true)
       }
-    } catch (err) {
+    } catch {
       setCameraError('Compass not supported on this device.')
     }
   }

@@ -2,14 +2,13 @@
 
 import { useState, useEffect, useCallback, useRef, DragEvent } from 'react'
 import {
-  getListings, searchListings, postListing, deleteListing,
+  getListings, searchListings, postListing,
   sendInquiry, getInquiriesFor,
   InstrumentListing, ListingType, InstrumentCategory, Currency, Condition,
   CATEGORIES, CONDITIONS, BRANDS, COUNTRIES, CURRENCIES, fmtPrice,
 } from '@/lib/marketplace/instruments'
 import { compressImage, isImageFile, MAX_IMAGES, base64Bytes } from '@/lib/marketplace/imageUtils'
 import { useSubscription } from '@/lib/subscription/subscriptionContext'
-import { createClient } from '@/lib/api-client/client'
 
 // ── tiny helpers ─────────────────────────────────────────────────────────────
 
@@ -517,7 +516,7 @@ function PostModal({ onSave, onClose, verified }: { onSave: (l: InstrumentListin
 
 // ── Listing detail drawer ─────────────────────────────────────────────────────
 
-function ListingDetail({ listing, onClose, onRefresh }: {
+function ListingDetail({ listing, onClose }: {
   listing: InstrumentListing; onClose: () => void; onRefresh: () => void
 }) {
   const [inquiries, setInquiries] = useState(getInquiriesFor(listing.id))

@@ -313,7 +313,7 @@ function buildTables(allLayers: Array<{ name: string; color: number; lineType: s
  * - NORTH_ARROW: simple triangular arrow pointing up with "N" label
  * - SCALE_BAR: segmented bar with labeled distances
  */
-function buildBlocks(scale: number, sheetSize: string): string {
+function buildBlocks(scale: number, _sheetSize: string): string {
   const parts: string[] = [];
   parts.push('0', 'SECTION', '2', 'BLOCKS');
 
@@ -399,9 +399,6 @@ function buildBlocks(scale: number, sheetSize: string): string {
   const barH = SCALE_BAR_HEIGHT;
 
   // Determine a good real-world distance per segment in meters.
-  // Target: each segment should be between 30mm and 100mm on paper.
-  const targetSegmentMm = 60; // mm on paper per segment
-  const targetRealMeters = targetSegmentMm * scale / 1000;
 
   // Round to a nice number: 1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, etc.
   const niceSteps = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 5000, 10000];
@@ -704,7 +701,6 @@ function buildTitleBlock(
   const subtitleH = isLargeSheet ? 3 : 2.5;
   const bodyH = isLargeSheet ? 2.5 : 2;
   const smallH = isLargeSheet ? 2 : 1.8;
-  const footerH = isLargeSheet ? 1.8 : 1.5;
 
   // ── Top Row Text (TITLETEXT layer) ─────────────────────────────────────
 

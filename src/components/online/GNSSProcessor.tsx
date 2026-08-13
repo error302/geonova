@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Upload, FileText, MapPin, Download, Loader2 , AlertTriangle } from 'lucide-react'
+import { Upload, FileText, Loader2, AlertTriangle } from 'lucide-react'
 import type { GNSSBaseline } from '@/types/gnss'
 
 interface FileWithLabel {
@@ -11,7 +10,6 @@ interface FileWithLabel {
 }
 
 export default function GNSSProcessor({ projectId = '' }: { projectId?: string }) {
-  const router = useRouter()
   const [files, setFiles] = useState<FileWithLabel[]>([])
   const [processing, setProcessing] = useState(false)
   const [status, setStatus] = useState('')

@@ -10,7 +10,6 @@
  */
 
 import type { SubdivisionResult, SplitLine, RoadReserveInfo } from '@/types/subdivision'
-import type { Point2D } from '@/lib/engine/types'
 import { to3857, arrayTo3857 } from '@/lib/map/projection'
 
 /** Professional color palette for lot fills (RGBA with 0.25 alpha) */
@@ -25,17 +24,6 @@ const LOT_COLORS = [
   'rgba(167, 139, 250, 0.30)',  // violet
 ]
 
-/** Corresponding stroke colors (solid, more saturated) */
-const LOT_STROKE_COLORS = [
-  '#3B82F6', // blue
-  '#22C55E', // green
-  '#EAB308', // yellow
-  '#F43F5E', // pink
-  '#A78BFA', // purple
-  '#06B6D4', // cyan
-  '#F97316', // orange
-  '#8B5CF6', // violet
-]
 
 /**
  * Create a subdivision overlay layer for the map.
@@ -49,7 +37,6 @@ export async function createSubdivisionLayer(
     { default: VectorSource },
     { default: Feature },
     { default: Polygon },
-    { default: LineString },
     { default: PointGeom },
     { default: Style },
     { default: Stroke },
@@ -60,7 +47,6 @@ export async function createSubdivisionLayer(
     import('ol/source/Vector'),
     import('ol/Feature'),
     import('ol/geom/Polygon'),
-    import('ol/geom/LineString'),
     import('ol/geom/Point'),
     import('ol/style/Style'),
     import('ol/style/Stroke'),
@@ -94,7 +80,6 @@ export async function createSubdivisionLayer(
   for (const lot of result.lots) {
     const colorIdx = (lot.lotNumber - 1) % LOT_COLORS.length
     const fillColor = LOT_COLORS[colorIdx]
-    const strokeColor = LOT_STROKE_COLORS[colorIdx]
 
     // Close the polygon for rendering
     const closedLot = [...lot.vertices, lot.vertices[0]]

@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react'
 import { ModernPricingPage, PricingCardProps } from '@/components/ui/animated-glassy-pricing'
-import { PLAN_CATALOG, getPlanPrice, SUPPORTED_CURRENCIES, type CurrencyCode } from '@/lib/subscription/catalog'
+import { PLAN_CATALOG, getPlanPrice, type CurrencyCode } from '@/lib/subscription/catalog'
 import { logger } from '@/lib/logger'
 
 // Minimal typed surface for the PayPal v6 SDK global (window.paypal)
@@ -42,28 +42,8 @@ const formatPrice = (price: number, currency: CurrencyCode) => {
   return `${symbols[currency] || ''}${price.toLocaleString()}`
 }
 
-const faqs = [
-  {
-    q: 'Can I change plans anytime?',
-    a: 'Yes. Upgrade or downgrade at any time. Changes take effect immediately.',
-  },
-  {
-    q: 'What payment methods do you accept?',
-    a: 'M-Pesa (Kenya), Visa/Mastercard (Stripe), and PayPal for global payments.',
-  },
-  {
-    q: 'Is there a free trial?',
-    a: 'All paid plans include a 14-day free trial. No credit card required.',
-  },
-  {
-    q: 'Do you offer student discounts?',
-    a: 'Yes. Contact us with your student ID for 50% off any plan.',
-  },
-]
-
 export default function PricingPage() {
   const [currency, setCurrency] = useState<CurrencyCode>('KES')
-  const paypalContainerRef = useRef<HTMLDivElement>(null)
   const paypalLoadedRef = useRef(false)
 
   useEffect(() => { document.title = 'Pricing — METARDU' }, [])

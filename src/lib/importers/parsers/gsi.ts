@@ -225,19 +225,6 @@ function detectFace(vAngle: number | undefined, angleUnit: 'gon' | 'deg' | 'dms'
   return vAngle < 180 ? 'FL' : 'FR';
 }
 
-/** Mean of two angles, handling wraparound. */
-function meanAngle(a: number, b: number, fullCircle: number): number {
-  // For horizontal angle mean from FL/FR: mean = (FL + FR ± 180°) / 2
-  // Standard face reduction
-  let diff = b - a;
-  if (diff > fullCircle / 2) diff -= fullCircle;
-  if (diff < -fullCircle / 2) diff += fullCircle;
-  let mean = a + diff / 2;
-  if (mean < 0) mean += fullCircle;
-  if (mean >= fullCircle) mean -= fullCircle;
-  return mean;
-}
-
 // ─── Main Parser ──────────────────────────────────────────────────────────────
 
 function parseGSIContent(content: string): GSIParseResult {
@@ -383,7 +370,7 @@ function parseGSIContent(content: string): GSIParseResult {
 
 // ─── Face Pairing ─────────────────────────────────────────────────────────────
 
-function buildFacePairs(observations: GSIObservation[], angleUnit: 'gon' | 'deg' | 'dms'): GSIFacePair[] {
+function buildFacePairs(observations: GSIObservation[], _angleUnit: 'gon' | 'deg' | 'dms'): GSIFacePair[] {
   const pairs: GSIFacePair[] = [];
 
   // Group observations by point ID
@@ -407,8 +394,6 @@ function buildFacePairs(observations: GSIObservation[], angleUnit: 'gon' | 'deg'
 
       if (fl.hzAngle === undefined || fr.hzAngle === undefined) continue;
       if (fl.vAngle === undefined || fr.vAngle === undefined) continue;
-
-      const fullCircle = 360; // already converted from gon
 
       // Mean horizontal angle: (Hz_FL + Hz_FR ± 180°) / 2
       const frHzCorrected = fr.hzAngle >= 180 ? fr.hzAngle - 180 : fr.hzAngle + 180;

@@ -112,9 +112,6 @@ export type {
 import { processObservation, KENYA_DEFAULT_CONFIG } from '../pipeline/correction-pipeline';
 import type { RawObservation, ProcessedObservation, PipelineConfig } from '../pipeline/correction-pipeline';
 import { reduceSlopeByAngle } from '../corrections/slope-reduction';
-import { applySeaLevelReduction } from '../corrections/sea-level-reduction';
-import { applyGridScaleFactor } from '../corrections/grid-scale-factor';
-import { applyAtmosphericCorrection } from '../corrections/atmospheric';
 
 /**
  * EDM Reduction Result — compatible with old slopeFromEDM() interface

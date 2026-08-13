@@ -18,7 +18,6 @@
  * - Area schedules in capital letters, upright open style
  */
 
-import PDFDocument from 'pdfkit'
 import {
   createSurveyDocument,
   drawLine,
@@ -27,7 +26,6 @@ import {
   drawCompanyLogo,
   drawMetarduWatermark,
   drawDigitalSignatureStamp,
-  PAPER_SIZES,
   LINE_WEIGHTS,
   TEXT_SIZES,
 } from '../pdf-engine'
@@ -223,7 +221,6 @@ export async function generateMutationVectorLayout(data: MutationLayoutData): Pr
     doc.on('end', () => resolve(Buffer.concat(chunks)))
   })
 
-  const mmToPt = 2.8346
   const pageWidth = 420 // A3 landscape width in mm
   const pageHeight = 297
   const mx = 20 // left/right margin

@@ -61,21 +61,6 @@ export interface SDRParseResult {
 
 // ── SDR33 Fixed-Width Format (older instruments) ───────────────────────────────
 
-/** SDR33 column positions for fixed-width records */
-const SDR33_WIDTHS = {
-  REC_TYPE: [0, 1],      // M0/M1/M2/M3/M4/M5/M6
-  POINT_NO: [1, 15],     // 14-char point identifier
-  SD: [15, 25],          // Slope distance (0.001m units, or decimal metres)
-  HZ: [25, 37],          // Horizontal angle (DDD.MM.SS or decimal deg)
-  VA: [37, 49],          // Vertical angle (DDD.MM.SS or decimal deg)
-  IH: [49, 56],          // Instrument height (metres, 3dp)
-  TH: [56, 62],          // Target height (metres, 3dp)
-  CODE: [62, 72],        // Feature code / description
-  E: [15, 28],           // Easting (when M3)
-  N: [28, 42],           // Northing (when M3)
-  Z: [42, 56],           // Elevation (when M3)
-} as const
-
 function parseSDR33Fixed(line: string): SDRObservation | null {
   if (line.length < 10) return null
   const recType = line.charAt(0)
@@ -302,7 +287,7 @@ function detectFormat(firstLine: string): SDRParseResult['format'] {
 
 function groupByStationSDR(
   records: SDRObservation[],
-  errors: string[]
+  _errors: string[]
 ): SDRStation[] {
   if (records.length === 0) return []
 
@@ -394,7 +379,6 @@ export function parseSDR(sdrContent: string): SDRParseResult {
   )
 
   const stations = groupByStationSDR(records, errors)
-  const totalDistCount = records.filter(r => r.slopeDist !== undefined).length
 
   return {
     stations,

@@ -1,6 +1,5 @@
 'use client';
 
-import { ToolExportButtons } from '@/components/shared/ToolExportButtons'
 import { useState } from 'react';
 import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
 import type { SolutionStep } from '@/lib/engine/solution/solutionBuilder'
@@ -134,7 +133,7 @@ export default function ChainageCalculator() {
               <button onClick={addPoint} className="text-sm px-3 py-1 bg-[var(--bg-tertiary)] text-[var(--text-primary)] rounded hover:bg-[var(--border-hover)]">{t('toolUI.addPoint')}</button>
             </div>
             <div className="space-y-3">
-              {alignmentPoints.map((point, idx) => (
+              {alignmentPoints.map((point) => (
                 <div key={point.id} className="flex gap-2 items-center">
                   <input aria-label="Name" className="input w-16 text-center" value={point.name} onChange={e => updatePoint(point.id, 'name', e.target.value)} />
                   <input className="input flex-1" value={point.easting} onChange={e => updatePoint(point.id, 'easting', e.target.value)} aria-label="Easting (m)" placeholder="Easting" />
@@ -195,7 +194,7 @@ export default function ChainageCalculator() {
                   </tr>
                 </thead>
                 <tbody>
-                  {results.map((r, idx) => (
+                  {results.map((r) => (
                     <tr key={r.pointName} className="border-b border-[var(--border-color)]">
                       <td className="py-2 text-[var(--text-primary)] font-medium">{r.pointName}</td>
                       <td className="py-2 text-right font-mono text-[var(--text-primary)]">{r.easting.toFixed(3)}</td>

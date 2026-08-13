@@ -29,7 +29,7 @@ export default function USSurveyReferencePage() {
             Types of Legal Descriptions
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {LEGAL_DESCRIPTION_TYPES.map((type, i) => (
+            {LEGAL_DESCRIPTION_TYPES.map((type) => (
               <div key={type.name} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-4">
                 <div className="font-semibold">{type.name}</div>
                 <div className="text-sm text-[var(--text-muted)] mt-1">{type.description}</div>
@@ -71,7 +71,7 @@ export default function USSurveyReferencePage() {
           </h2>
           <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-4">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {CADASTRAL_SURVEY_STEPS.map((step, i) => (
+              {CADASTRAL_SURVEY_STEPS.map((step) => (
                 <div key={step.step} className="flex gap-2 items-start">
                   <span className="w-6 h-6 rounded-full bg-[var(--accent)] text-black text-xs font-bold flex items-center justify-center flex-shrink-0">
                     {step.step}
@@ -89,7 +89,7 @@ export default function USSurveyReferencePage() {
             Monumentation Standards
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {MONUMENT_TYPES.map((mon, i) => (
+            {MONUMENT_TYPES.map((mon) => (
               <div key={mon.name} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-4">
                 <div className="font-semibold">{mon.name}</div>
                 <div className="text-sm text-[var(--text-muted)] mt-1">{mon.description}</div>

@@ -107,7 +107,7 @@ export default function SurveyRegulationsPage() {
                 </tr>
               </thead>
               <tbody>
-                {TRAVERSE_ACCURACY_STANDARDS.map((std, i) => (
+                {TRAVERSE_ACCURACY_STANDARDS.map((std) => (
                   <tr key={std.name} className="border-b border-[var(--border-color)] last:border-0">
                     <td className="py-2">{std.name}</td>
                     <td className="py-2 font-mono">1 : {std.traversePrecision.toLocaleString()}</td>
@@ -134,7 +134,7 @@ export default function SurveyRegulationsPage() {
                 </tr>
               </thead>
               <tbody>
-                {LEVELING_ACCURACY_STANDARDS.map((std, i) => (
+                {LEVELING_ACCURACY_STANDARDS.map((std) => (
                   <tr key={std.name} className="border-b border-[var(--border-color)] last:border-0">
                     <td className="py-2">{std.name}</td>
                     <td className="py-2 font-mono">{std.levelingAllowable}</td>
@@ -189,7 +189,7 @@ export default function SurveyRegulationsPage() {
                 </tr>
               </thead>
               <tbody>
-                {SURVEY_REGULATIONS.slice(0, 20).map((reg, i) => (
+                {SURVEY_REGULATIONS.slice(0, 20).map((reg) => (
                   <tr key={reg.title} className="border-b border-[var(--border-color)] last:border-0">
                     <td className="py-2 font-mono">{reg.number}</td>
                     <td className="py-2">{reg.part}</td>

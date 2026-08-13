@@ -410,13 +410,11 @@ export function parseGSI(gsiContent: string): GSIParseResult {
   const wordSize = format === 'GSI-8' ? 8 : 16
 
   const observations: GSIObservation[] = []
-  let totalDistCount = 0
 
   for (const line of lines) {
     const obs = parseGSILine(line, wordSize)
     if (obs && obs.pointNumber) {
       observations.push(obs)
-      if (obs.slopeDist !== undefined || obs.horizDist !== undefined) totalDistCount++
     }
   }
 
@@ -448,7 +446,7 @@ export function parseGSI(gsiContent: string): GSIParseResult {
  */
 export function reduceGSIObservations(
   parseResult: GSIParseResult,
-  backsightBearing: { degrees: number; minutes: number; seconds: number }
+  _backsightBearing: { degrees: number; minutes: number; seconds: number }
 ): Array<{
   station: string
   bs: string
@@ -492,7 +490,6 @@ export function reduceGSIObservations(
     if (!obs.hzFaceLeft && !obs.horizDist) continue  // Skip if no angle or distance
 
     // Determine BS and FS from the observation
-    const bs = obs.pointNumber
     const fs = nextObs?.pointNumber || `P${i + 2}`
 
     // Get IH from the current station's metadata

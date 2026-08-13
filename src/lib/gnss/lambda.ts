@@ -68,19 +68,6 @@ export interface LambdaResult {
 type Matrix = number[][]
 type Vector = number[]
 
-function matMul(A: Matrix, B: Matrix): Matrix {
-  const m = A.length, n = B[0].length, k = B.length
-  const C: Matrix = Array.from({ length: m }, () => new Array<number>(n).fill(0))
-  for (let i = 0; i < m; i++) {
-    for (let j = 0; j < n; j++) {
-      let sum = 0
-      for (let l = 0; l < k; l++) sum += A[i][l] * B[l][j]
-      C[i][j] = sum
-    }
-  }
-  return C
-}
-
 function matTranspose(A: Matrix): Matrix {
   const m = A.length, n = A[0].length
   const T: Matrix = Array.from({ length: n }, () => new Array<number>(m).fill(0))
@@ -225,7 +212,6 @@ function integerSearch(
       // Complete integer vector — compute quadratic form
       let F = 0
       for (let j = 0; j < n; j++) {
-        const wj = zint[j] - z[j]
         // F = w^T D^{-1} w where w = L^{-1} (zint - z)
         // But we computed conditionally, so accumulate:
         // Actually, F = sum over j of (conditional residual)^2 / D[j]
@@ -386,7 +372,7 @@ export function lambdaResolve(input: LambdaInput): LambdaResult {
   const rounded = z.map(v => Math.round(v))
   const initialChi2 = computeQuadForm(rounded, z, L, D)
 
-  const { best, secondBest, bestF, secondBestF } = integerSearch(z, L, D, initialChi2)
+  const { best, bestF, secondBestF } = integerSearch(z, L, D, initialChi2)
 
   // Transform back to original ambiguity space: a_fixed = Z^{-T} * z_fixed
   // Since Z is integer unimodular, Z^{-1} = adj(Z) / det(Z) and det(Z) = ±1

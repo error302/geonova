@@ -236,12 +236,6 @@ export function calibrateTransformation(
   const sigmaZero = result.rmsTotal  // approximation
   // Better estimate: σ₀² = v^T v / (n - 7) for n points
   const n = pairs.length
-  const vTv = result.transformedPoints.reduce(
-    (s, tp) => s + tp.residualX ** 2 + tp.residualY ** 2 + tp.residualZ ** 2,
-    0,
-  )
-  const dof = 3 * n - 7
-  const sigmaZeroSquared = dof > 0 ? vTv / dof : sigmaZero * sigmaZero
 
   // Approximate covariance matrix (7×7)
   // For a proper computation we'd need the Jacobian from the Helmert solver,
@@ -320,8 +314,6 @@ export function calibrateTransformation(
 
   // Step 7: Register in the transformation registry
   if (registerInRegistry && options.provenance) {
-    const fromFrame = 'LOCAL_SOURCE'  // customizable in future
-    const toFrame = 'LOCAL_TARGET'
     registerLocalTransformation({
       id: `local-${options.provenance.projectName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`,
       name: `Local calibration — ${options.provenance.area}`,

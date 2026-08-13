@@ -1,6 +1,5 @@
 'use client';
 
-import { ToolExportButtons } from '@/components/shared/ToolExportButtons'
 import { useState } from 'react';
 import { PageHeader } from '@/components/shared/PageHeader'
 import SolutionStepsRenderer from '@/components/SolutionStepsRenderer'
@@ -14,7 +13,6 @@ export default function GradeCalculator() {
   const [elev2, setElev2] = useState('');
   const [distance, setDistance] = useState('');
   const [steps, setSteps] = useState<SolutionStep[] | null>(null);
-  const [calcError, setCalcError] = useState<string | null>(null);
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {

@@ -1,6 +1,5 @@
 'use client';
 
-import { ToolExportButtons } from '@/components/shared/ToolExportButtons'
 import { useState } from 'react';
 import { PageHeader } from '@/components/shared/PageHeader';
 import SolutionStepsRenderer from '@/components/SolutionStepsRenderer';
@@ -15,7 +14,6 @@ export default function BearingCalculator() {
   const [p2, setP2] = useState({ n: '', e: '' });
   const [forward, setForward] = useState('');
   const [steps, setSteps] = useState<SolutionStep[] | null>(null);
-  const [calcError, setCalcError] = useState<string | null>(null);
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {

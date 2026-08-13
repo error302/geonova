@@ -4,15 +4,6 @@ import { useState, useMemo } from 'react';
 import { Plane, Save, CheckCircle, BarChart3 } from 'lucide-react';
 import { logger } from '@/lib/logger'
 
-interface GCPResult {
-  name: string;
-  dE: number;
-  dN: number;
-  dZ: number;
-  horizontal: number;
-  total3D: number;
-}
-
 interface GCPInput {
   id: string;
   name: string;
@@ -31,7 +22,7 @@ const DEMO_GCPS: GCPInput[] = [
 ];
 
 export default function DroneComputePanel({ projectId }: { projectId: string }) {
-  const [gcps, setGcps] = useState<GCPInput[]>(DEMO_GCPS);
+  const [gcps] = useState<GCPInput[]>(DEMO_GCPS);
   const [gridPoints, setGridPoints] = useState('0,0,1.2\n5,0,1.5\n10,0,1.3\n0,5,1.4\n5,5,1.8\n10,5,1.6');
   const [refPlane, setRefPlane] = useState(1.0);
   const [saved, setSaved] = useState(false);
@@ -118,7 +109,7 @@ export default function DroneComputePanel({ projectId }: { projectId: string }) 
             </tr>
           </thead>
           <tbody>
-            {residuals.map((r, i) => (
+            {residuals.map((r, _i) => (
               <tr key={r.name} className="border-b border-zinc-800">
                 <td className="px-2 py-1 font-mono">{r.name}</td>
                 <td className="px-2 py-1 font-mono">{r.dE >= 0 ? '+' : ''}{r.dE.toFixed(4)}</td>

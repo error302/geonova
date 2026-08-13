@@ -4,7 +4,6 @@
  * Detect boundary discrepancies and conflicts
  */
 
-import { distanceBearing } from '@/lib/engine/distance'
 import { coordinateArea } from '@/lib/engine/area'
 import type { SurveyPoint } from '@/types/surveyPoint'
 
@@ -87,13 +86,11 @@ export function compareBoundaries(
   for (let i = 0; i < n; i++) {
     const current = registryBoundary.coordinates[i]
     const next = registryBoundary.coordinates[(i + 1) % n]
-    const regDist = Math.sqrt(Math.pow(next[0] - current[0], 2) + Math.pow(next[1] - current[1], 2))
     const regBearing = Math.atan2(next[0] - current[0], next[1] - current[1]) * 180 / Math.PI
     
     if (surveyBoundary.points[i + 1]) {
       const sCurrent = surveyBoundary.points[i]
       const sNext = surveyBoundary.points[i + 1]
-      const sDist = Math.sqrt(Math.pow(sNext.easting - sCurrent.easting, 2) + Math.pow(sNext.northing - sCurrent.northing, 2))
       const sBearing = Math.atan2(sNext.easting - sCurrent.easting, sNext.northing - sCurrent.northing) * 180 / Math.PI
       
       let diff = sBearing - regBearing

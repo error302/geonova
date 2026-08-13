@@ -3,9 +3,6 @@
 import { useState } from 'react'
 import { superelevationDesign, getFrictionFactor, type SuperelevationInput } from '@/lib/computations/roadDesignEngine'
 
-const ROAD_CLASSES = ['DR1', 'DR2', 'DR3', 'DR4', 'DR5', 'DR6', 'DR7']
-const TERRAIN_TYPES = ['flat', 'rolling', 'mountainous', 'escarpment']
-
 export default function SuperelevationCalculator() {
   const [designSpeed, setDesignSpeed] = useState('80')
   const [radius, setRadius] = useState('300')
@@ -81,7 +78,7 @@ export default function SuperelevationCalculator() {
           <details className="text-xs">
             <summary className="cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] font-medium mb-2">Show Computation Steps</summary>
             <div className="space-y-1">
-              {result.steps.map((step, i) => (
+              {result.steps.map((step) => (
                 <div key={step.value} className="grid grid-cols-[1fr_auto_1fr_auto] gap-x-2 font-mono py-1 border-b border-[var(--border-color)]/20">
                   <span className="text-[var(--text-secondary)]">{step.description}</span>
                   <span className="text-[var(--text-muted)]">=</span>

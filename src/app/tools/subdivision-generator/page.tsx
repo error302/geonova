@@ -1,13 +1,12 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback } from 'react'
 import { PageHeader } from '@/components/shared/PageHeader'
 import {
   generateSubdivision,
   KENYA_PLOT_PRESETS,
   KENYA_ROAD_PRESETS,
   type SubdivisionResult,
-  type SubdividedPlot,
 } from '@/lib/compute/subdivisionGenerator'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
@@ -26,7 +25,7 @@ const SAMPLE_PARENT: CoordRow[] = [
 ]
 
 export default function SubdivisionGeneratorPage() {
-  const { t } = useLanguage()
+  useLanguage()
   const [rows, setRows] = useState<CoordRow[]>(SAMPLE_PARENT)
   const [result, setResult] = useState<SubdivisionResult | null>(null)
   const [plotPreset, setPlotPreset] = useState(0) // 50×100 default

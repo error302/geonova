@@ -45,7 +45,6 @@ interface CrossSection {
 
 export default function ProfilesPage({ params }: PageProps) {
   const dbClient = createClient();
-  const [profileError, setProfileError] = useState<string|null>(null)
   const [project, setProject] = useState<Project | null>(null);
   const [points, setPoints] = useState<SurveyPoint[]>([]);
   const [loading, setLoading] = useState(true);
@@ -172,7 +171,6 @@ export default function ProfilesPage({ params }: PageProps) {
       setActiveTab('profile');
     } catch (err) {
       logger.error('Error creating alignment:', { error: err });
-      setProfileError('Failed to create alignment. Please try again.');
     }
   };
 
@@ -487,7 +485,7 @@ export default function ProfilesPage({ params }: PageProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {chainagePoints.map((cp, idx) => (
+                    {chainagePoints.map((cp) => (
                       <tr key={cp.id} className="border-b border-[var(--border-color)]">
                         <td className="py-2 text-[var(--text-primary)]">{cp.point_name}</td>
                         <td className="py-2 text-right font-mono text-[var(--accent)]">{formatChainage(cp.chainage)}</td>
@@ -616,7 +614,7 @@ function ProfileChart({ points }: { points: ChainagePoint[] }) {
   );
 }
 
-function CrossSectionTable({ crossSections, chainagePoints }: { crossSections: CrossSection[]; chainagePoints: ChainagePoint[] }) {
+function CrossSectionTable({ crossSections }: { crossSections: CrossSection[]; chainagePoints: ChainagePoint[] }) {
   const groupedSections: { [key: number]: CrossSection[] } = {};
   
   crossSections.forEach((cs) => {

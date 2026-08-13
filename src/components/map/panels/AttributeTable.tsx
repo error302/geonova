@@ -15,8 +15,7 @@
 
 import { useState, useMemo, useCallback } from 'react'
 import {
-  Search, ArrowUpDown, Trash2, Download, Plus,
-  CheckCircle2, AlertTriangle, MapPin,
+  Search, ArrowUpDown, Trash2, Download, MapPin,
 } from 'lucide-react'
 
 export interface AttributeRow {

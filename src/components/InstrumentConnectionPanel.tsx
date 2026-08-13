@@ -24,9 +24,7 @@ import { useInstrumentConnection, type StreamedPoint } from '@/hooks/useInstrume
 import { INSTRUMENT_PRESETS, BRAND_INFO, type InstrumentBrand } from '@/lib/serial'
 import {
   Cable,
-  Wifi,
   WifiOff,
-  Radio,
   Circle,
   Download,
   Settings,
@@ -66,7 +64,6 @@ interface InstrumentConnectionPanelProps {
 
 export function InstrumentConnectionPanel({
   onImportPoints,
-  onPointReceived,
   defaultTransport,
   className = '',
 }: InstrumentConnectionPanelProps) {

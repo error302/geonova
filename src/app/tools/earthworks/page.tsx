@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { PageHeader } from '@/components/shared/PageHeader'
 import CrossSectionInput from '@/components/earthworks/CrossSectionInput'
@@ -14,42 +13,6 @@ import { useLanguage } from '@/lib/i18n/LanguageContext'
  * - End-Area vs Prismoidal volume comparison
  * - Free-haul and overhaul distance analysis
  */
-
-interface SectionVolume {
-  station: string
-  cutArea: number
-  fillArea: number
-  endAreaVol: number
-  prismoidalVol: number
-}
-
-function computeVolumes(sections: { station: string; cutArea: number; fillArea: number; distance: number }[]): SectionVolume[] {
-  const result: SectionVolume[] = []
-  for (let i = 1; i < sections.length; i++) {
-    const prev = sections[i - 1]
-    const curr = sections[i]
-    const L = curr.distance
-
-    const avgCutEndArea = (prev.cutArea + curr.cutArea) / 2
-    const avgFillEndArea = (prev.fillArea + curr.fillArea) / 2
-
-    // Prismoidal: V = L/6 * (A1 + 4*Am + A2) where Am = midpoint area
-    // Simplified: using average as proxy for midpoint
-    const midCut = (prev.cutArea + curr.cutArea) / 2
-    const midFill = (prev.fillArea + curr.fillArea) / 2
-    const prismCut = L / 6 * (prev.cutArea + 4 * midCut + curr.cutArea)
-    const prismFill = L / 6 * (prev.fillArea + 4 * midFill + curr.fillArea)
-
-    result.push({
-      station: `${prev.station} — ${curr.station}`,
-      cutArea: avgCutEndArea,
-      fillArea: avgFillEndArea,
-      endAreaVol: avgCutEndArea * L - avgFillEndArea * L,
-      prismoidalVol: prismCut - prismFill,
-    })
-  }
-  return result
-}
 
 export default function EarthworksPage() {
   const { t } = useLanguage()

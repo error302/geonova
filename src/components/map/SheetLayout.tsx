@@ -138,15 +138,11 @@ function GridTicks({
   ticksBottom,
   ticksLeft,
   ticksRight,
-  containerWidth,
-  containerHeight,
 }: {
   ticksTop: GridTick[];
   ticksBottom: GridTick[];
   ticksLeft: GridTick[];
   ticksRight: GridTick[];
-  containerWidth: number;
-  containerHeight: number;
 }) {
   return (
     <>
@@ -368,7 +364,7 @@ export default function SheetLayout({
     left: GridTick[];
     right: GridTick[];
   }>({ top: [], bottom: [], left: [], right: [] });
-  const [viewExtent21037, setViewExtent21037] = useState<{
+  const [, setViewExtent21037] = useState<{
     minE: number;
     maxE: number;
     minN: number;
@@ -506,8 +502,6 @@ export default function SheetLayout({
         ticksBottom={gridTicks.bottom}
         ticksLeft={gridTicks.left}
         ticksRight={gridTicks.right}
-        containerWidth={containerSize.w}
-        containerHeight={containerSize.h}
       />
 
       {/* Title Block */}
