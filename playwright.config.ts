@@ -53,7 +53,8 @@ export default defineConfig({
       // viewport-agnostic "route loads / SEO meta / 404" checks — the mobile
       // re-run re-cold-compiles all 46 routes (~2 min of G1's wall time).
       // Responsive coverage lives in responsive-a11y.spec.ts; drop the
-      // duplicate here.
+      // duplicate here. The file itself now batches its route loads in
+      // parallel describes (NAV_BATCHES) to overlap the dev-server compiles.
       testIgnore: /navigation-pages\.spec\.ts/,
     },
   ],
