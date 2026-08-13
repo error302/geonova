@@ -2,7 +2,7 @@
 
 **Goal:** clear every `@typescript-eslint` / JS warning so the CI `--max-warnings` ceiling can drop to `0` and each rule flips to `error`.
 
-**Progress:** 14,030 → **848** (measured 2026-08-12, `lint-ratchets --report` on origin/main). Row-typing (0/538), a11y (0 findings), member-access, explicit-any, argument, **assignment**, no-unsafe-return, no-unsafe-call and **no-non-null-assertion** are **done** (rules flipped to `error`); `no-unused-vars` + the mechanical rules remain.
+**Progress:** 14,030 → **848** (measured 2026-08-13, `lint-ratchets --report` on origin/main). Row-typing (0/538), a11y (0 findings), member-access, explicit-any, argument, **assignment**, no-unsafe-return, no-unsafe-call and **no-non-null-assertion** are **done** (rules flipped to `error`); `no-unused-vars` + the mechanical rules remain.
 
 > **This doc is the canonical checkpoint.** Every grind session starts by reading the
 > **STATUS CHECKPOINT** below and ends by updating it. If an agent is rate-limited or
@@ -30,8 +30,8 @@ Other rules (no CI floor, `--max-warnings` ceiling only): `no-unused-vars` 788 �
 ### Git / CI state
 
 - **Branch:** `chore/lint-typing-page-batch` (work happens here; pushes go to `origin/main` via fast-forward).
-- **HEAD:** `45e3ec0f` (total re-baseline 888 → 848) — on `origin/main`; local work continues on `chore/lint-typing-page-batch`.
-- **Uncommitted (this batch):** none in flight — tree holds only `.a11y-audit.json` (a11y-sweep regeneration) + untracked `docs/Metardu_Repowise_Intelligence.md`, `scripts/sync-mirror.mjs`, `_tmp-*.py` helpers. Floors: member-access 0 · assignment 0 · explicit-any 0 · argument 0 · non-null 0 · total **888** (all six `no-unsafe-*` rules + `no-non-null-assertion` flipped to `error`).
+- **HEAD:** `3efadacb` (E2E: nav-pages mobile-skip, G1 wall 6m34s → 4m06s) — on `origin/main`; local work continues on `chore/lint-typing-page-batch`.
+- **Uncommitted (this batch):** none in flight — tree holds only `.a11y-audit.json` (a11y-sweep regeneration) + `_tmp-*.py` helpers. Floors: member-access 0 · assignment 0 · explicit-any 0 · argument 0 · non-null 0 · total **848** (all six `no-unsafe-*` rules + `no-non-null-assertion` flipped to `error`).
 - **Unpushed:** none — `origin/main` is at HEAD (argument batch + CI fix already pushed).
 - **Known-red CI (pre-existing, not typing work):**
   - `Deploy to Production` — GCP VM SSH timeout (infra; unrelated to code).
@@ -57,7 +57,7 @@ If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read th
 
 ## 1. Remaining work, ordered for completion
 
-**Checklist state (live scan 2026-08-12, origin/main @ `45e3ec0f` — committed total 848):**
+**Checklist state (live scan 2026-08-13, origin/main @ `3efadacb` — committed total 848):**
 
 | Family | Live | Rule | Status |
 |---|---|---|---|
@@ -76,7 +76,7 @@ If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read th
 | `no-restricted-syntax` | **16** | warn | ⏳ |
 | **total** | **848** | CI ceiling **1,000** | green |
 
-Order = finish the family closest to zero first (each finish removes a floor + shrinks the ceiling), then mechanical rules, then CI tightening. **All six `no-unsafe-*` families are done** — only the mechanical rules remain. Finish order: **unused-vars (917) → exhaustive-deps (44) → no-restricted-syntax (16) → ceiling → 0**.
+Order = finish the family closest to zero first (each finish removes a floor + shrinks the ceiling), then mechanical rules, then CI tightening. **All six `no-unsafe-*` families are done** — only the mechanical rules remain. Finish order: **unused-vars (788) → exhaustive-deps (44) → no-restricted-syntax (16) → ceiling → 0**.
 
 ### Phase 1 — `no-unsafe-argument` — ✅ **DONE (0 warnings, rule = error)**
 
@@ -94,12 +94,12 @@ All batches drained (`argument-scan --batch 1` → 0 across 0 files); floor lock
 
 829 → 0 (batches 1–2 + 1b/1c + the tail, 281 → 0, floor 10 → 0); rule = `error`. Same type-the-source recipe as Phase 3.
 
-### Phase 5 — mechanical rules (977 combined)
+### Phase 5 — mechanical rules (848 combined)
 
 | Rule | Live | Fix class | Next tier |
 |---|---|---|---|
 | `no-non-null-assertion` | **0** | ✅ done — batches 1–12 drained 113 → 0, suppression sweep removed the last 9 hidden `!` sites; flipped to `error` 2026-08-12 | — |
-| `no-unused-vars` | **973** | `_`-prefix unused bindings, drop dead imports/state/props | batches 1–3 drained 167 sites; next: 7-warning tier — `admin/page` · `SurveyReportBuilder` · `traverseEngine` · `generateDocx` · `fileRouter` · `formNo4Renderer` · `spiralAlignment` · `deformationMonitoring` |
+| `no-unused-vars` | **788** | `_`-prefix unused bindings, drop dead imports/state/props | batches 1–7 drained 355 sites; next: batch 8 — 4-warning tier (26 files): `community/page` · `CADEditor` · `Step6Outputs` · `MapViewer` · `CommandPalette` · `RealTimeQCPanel` · `helmertRigorous` · `gnss` · `offline/sync` · `parsePDF` · `earthworksEngine` · `field-to-finish` · … |
 | `react-hooks/exhaustive-deps` | **44** | careful per-effect dep fixes; `eslint-disable-next-line` only with a justification (repo convention) | `useMapInteractions` 16 · `useSubdivision` 6 · `MobileMeasurementCapture` 4 |
 | `no-restricted-syntax` | **16** | project-specific banned patterns — check the rule config | `nativeProjectionView.test.ts` 9 · `MapClient.tsx` 2 |
 | `no-console` | 0 | ✅ drained — routed through `lib/logger.ts` | — |
@@ -110,7 +110,7 @@ All batches drained (`argument-scan --batch 1` → 0 across 0 files); floor lock
 
 1. Push every batch; watch the ci.yml run — all code gates must stay green.
 2. As each family hits 0: drop its floor to 0 (via `--update-<family>`) and flip the rule to `"error"` in the ESLint config so it can never regress. Done for all six `no-unsafe-*` families; the four mechanical rules ride the `--max-warnings` ceiling (no floors).
-3. Tighten `--max-warnings`: 20,000 → 10,000 → 5,000 → 3,700 → 3,000 → 2,800 → 2,000 → 1,500 → 1,400 → 1,350 → 1,100 → 1,000 (now) → **500** → **0** as the totals shrink (total is 888). Keep the ceiling documented in the workflow files.
+3. Tighten `--max-warnings`: 20,000 → 10,000 → 5,000 → 3,700 → 3,000 → 2,800 → 2,000 → 1,500 → 1,400 → 1,350 → 1,100 → 1,000 (now) → **500** → **0** as the totals shrink (total is 848). Keep the ceiling documented in the workflow files.
 4. E2E is green (all four shards — standalone-server + OAuth env + seeded-user fixes landed). The only known-red job left is **Deploy to Production** (GCP VM SSH — infra, needs credentials/VM work, out of code scope).
 
 ## 2. Root causes (why ~80% is the `no-unsafe-*` family)
