@@ -18,7 +18,7 @@
     "@typescript-eslint/ban-ts-comment": "warn",
     "@typescript-eslint/prefer-as-const": "warn",
     "@typescript-eslint/no-require-imports": "warn",
-    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/exhaustive-deps": "error",
     "react-hooks/purity": "off",
     "react/display-name": "off",
     "react/prop-types": "off",
