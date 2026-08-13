@@ -97,6 +97,29 @@ jobs:
           test -d out && echo "✓ static export OK"
           test -f out/index.html && echo "✓ index.html present"
 
+  lint-ratchet-fast:
+    # RATCHET_FAIL_FAST (2026-08-13): whole-repo per-rule ratchet as its own
+    # early job so a drift (live count > committed baseline — the e8d9b317
+    # case) fails the commit's OWN run at the earliest point. ci.yml cancels
+    # in-flight runs on rapid pushes (cancel-in-progress), which could
+    # otherwise supersede the ESLint job before it reaches the ratchet step
+    # and push the failure to the next run. ~2 min (checkout + npm ci + one
+    # eslint pass), parallel to the other early jobs. The same ratchet still
+    # runs inside the ESLint job (with --write-audit); this job is the
+    # earliest, independent verdict.
+    name: Lint Ratchet (fail-fast)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - name: Whole-repo lint ratchets (blocking, per-rule baselines)
+        run: node scripts/lint-ratchets.mjs --report
+
   row-typing:
     name: API Row-Typing Gate
     # ROW-TYPING GATE (2026-08-07): dedicated job for api-row-sweep --check so
