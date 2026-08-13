@@ -80,6 +80,32 @@ class LocalLlmService {
    * Chat interface for offline inference with Survey Act Cap 299 system prompt context.
    */
   async chat(options: LocalChatOptions): Promise<string> {
+    // web-llm worker failures (device lost, context overflow, OOM) reject with a
+    // plain string. Retry once with a cold engine reset before giving up.
+    try {
+      return await this.chatOnce(options)
+    } catch (err) {
+      const firstMsg = this.normalizeError(err)
+      try {
+        await this.unload()
+        return await this.chatOnce(options)
+      } catch (err2) {
+        throw new Error(`Local AI engine failed: ${this.normalizeError(err2)} (first attempt: ${firstMsg})`)
+      }
+    }
+  }
+
+  private normalizeError(err: unknown): string {
+    if (typeof err === 'string') return err
+    if (err instanceof Error) return err.message
+    try {
+      return JSON.stringify(err)
+    } catch {
+      return String(err)
+    }
+  }
+
+  private async chatOnce(options: LocalChatOptions): Promise<string> {
     const engine = await this.initialize(DEFAULT_LOCAL_MODEL, options.onProgress)
 
     // Prepend Survey Act Cap 299 knowledge to system prompt

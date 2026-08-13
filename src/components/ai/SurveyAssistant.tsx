@@ -5,6 +5,7 @@ import { smartChat } from '@/lib/ai/smartAiService'
 import { localLlmService } from '@/lib/ai/localLlmService'
 import type { InitProgressReport } from '@mlc-ai/web-llm'
 import { Send, Bot, User, Wifi, WifiOff, Loader2, Sparkles, AlertTriangle } from 'lucide-react'
+import { logger } from '@/lib/logger'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -101,19 +102,27 @@ Ask me anything about Kenyan cadastral surveying, or try one of the suggestions 
         },
       })
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Unknown error'
+      // web-llm worker errors arrive as plain strings (not Error instances),
+      // so stringify them instead of defaulting to "Unknown error".
+      const raw = typeof err === 'string' ? err : err instanceof Error ? err.message : (() => {
+        try { return JSON.stringify(err) } catch { return String(err) }
+      })()
+      const errorMsg = (raw || '').trim() ? raw : 'Unknown error'
+      logger.error('[SurveyAssistant] Chat failed:', { error: err })
       setMessages((prev) => {
         const updated = [...prev]
         updated[updated.length - 1] = {
           role: 'assistant',
-          content: `⚠️ Error: ${errorMsg}\n\nPlease try again or check the WebGPU console for details.`,
+          content: `⚠️ Error: ${errorMsg}\n\nThis run could not use the AI engine (${
+            isOnline ? 'online NIM unavailable, WebGPU fallback failed' : 'offline WebGPU engine failed'
+          }). Please try again or check the browser console for details.`,
         }
         return updated
       })
     } finally {
       setLoading(false)
     }
-  }, [input, loading])
+  }, [input, loading, isOnline])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
