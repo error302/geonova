@@ -358,14 +358,14 @@ function computeTraverseAdjustment(input: TraverseAdjustInput) {
 
 // ─── IDW Interpolation Grid ─────────────────────────────────────────────
 
-interface IDWParams {
+export interface IDWParams {
   points: Array<{ x: number; y: number; value: number }>
   bounds: { minX: number; minY: number; maxX: number; maxY: number }
   resolution: number // grid cell size
   power?: number // IDW power (default 2)
 }
 
-function generateIDWGrid(params: IDWParams): { grid: number[][], rows: number, cols: number, bounds: typeof params.bounds } {
+export function generateIDWGrid(params: IDWParams): { grid: number[][], rows: number, cols: number, bounds: typeof params.bounds } {
   const { points, bounds, resolution, power = 2 } = params
   const cols = Math.ceil((bounds.maxX - bounds.minX) / resolution) + 1
   const rows = Math.ceil((bounds.maxY - bounds.minY) / resolution) + 1
