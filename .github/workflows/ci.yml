@@ -282,12 +282,24 @@ jobs:
         include:
           - shard: 1
             specs: 'e2e/navigation-pages.spec.ts'
+            # NAV_WORKERS (2026-08-13): the 47 route loads are lazy
+            # dev-server cold compiles; measured 8-way concurrent
+            # compiles finish in ~36% of serial (17.4s -> 6.3s for 8
+            # routes). With workers:1 the tests ran serially, so the
+            # compiles never overlapped. 8 workers spread the parallel
+            # describes in navigation-pages.spec.ts and let the dev
+            # compiler pipeline them. Other shards stay at 1 (their
+            # tests are DB/flow-heavy, not compile-heavy).
+            workers: 8
           - shard: 2
             specs: 'e2e/project-crud.spec.ts e2e/login.spec.ts'
+            workers: 1
           - shard: 3
             specs: 'e2e/auth-flow.spec.ts e2e/fieldbook.spec.ts'
+            workers: 1
           - shard: 4
             specs: 'e2e/landing.spec.ts e2e/responsive-a11y.spec.ts e2e/security-perf.spec.ts'
+            workers: 1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -347,7 +359,7 @@ jobs:
           GOOGLE_CLIENT_SECRET: 'e2e-google-client-secret'
           AZURE_AD_CLIENT_ID: 'e2e-azure-client-id'
           AZURE_AD_CLIENT_SECRET: 'e2e-azure-client-secret'
-        run: npx playwright test --reporter=list ${{ matrix.specs }}
+        run: npx playwright test --reporter=list --workers=${{ matrix.workers }} ${{ matrix.specs }}
       - name: Upload shard report
         if: always()
         uses: actions/upload-artifact@v4
