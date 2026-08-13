@@ -17,6 +17,7 @@ import type {
   WorkerRequestType,
   WorkerMessage,
 } from './compute.worker'
+import { getComputeWorkerUrl } from '@/workers/workerUrl'
 import { logger } from '@/lib/logger'
 
 type RequestId = string
@@ -46,7 +47,7 @@ class WorkerBridge {
     // Create worker from the compiled file
     // Next.js handles worker bundling via webpack config
     this.worker = new Worker(
-      new URL('./compute.worker.ts', import.meta.url),
+      getComputeWorkerUrl(),
       { type: 'module' }
     )
 

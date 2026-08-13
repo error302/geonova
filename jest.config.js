@@ -31,6 +31,7 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@/lib/workers/tinWorkerUrl$': '<rootDir>/tests/__mocks__/tinWorkerUrl.ts',
+    '^@/workers/workerUrl$': '<rootDir>/tests/__mocks__/workerUrl.ts',
     '^delaunator$': '<rootDir>/tests/__mocks__/delaunator.ts',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '^@/(.*)$': '<rootDir>/src/$1',
