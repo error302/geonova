@@ -139,19 +139,16 @@ export default function FieldModeToggle() {
         }
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
       sensor.addEventListener('error', () => {
         // Permission denied or sensor unavailable — silently disable
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       sensor.start()
     } catch {
       // Sensor API not available — no-op
     }
 
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       try { sensor?.stop?.() } catch { /* ignore */ }
       sensorRef.current = null
     }
