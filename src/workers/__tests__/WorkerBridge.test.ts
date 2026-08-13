@@ -41,6 +41,10 @@ afterEach(() => {
   // Tear down the bridge's worker reference + idle timers between tests so
   // each test starts from a fresh worker instance.
   workerBridge.dispose()
+  jest.useRealTimers()
+  // Reset the overridable idle window the fake-timer tests tweak.
+  const bridge = workerBridge as unknown as { IDLE_TIMEOUT: number }
+  bridge.IDLE_TIMEOUT = 30000
   jest.restoreAllMocks()
 })
 
@@ -277,4 +281,184 @@ describe('WorkerBridge (mocked Worker protocol)', () => {
 
     await expect(p).resolves.toEqual(payload)
   })
+  it('resolves parseCSVObservations with the PARSE_COMPLETE payload', async () => {
+    const csvText = 'station,north,east,code\nS1,100,200,PIN\nS2,300,400,PIN\n'
+    const p = workerBridge.parseCSVObservations(csvText)
 
+    expect(mockWorker.postMessage).toHaveBeenCalledTimes(1)
+    const [message] = mockWorker.postMessage.mock.calls[0] as unknown as [WorkerMessage]
+    expect(message.type).toBe('PARSE_CSV_OBSERVATIONS')
+    expect(message.payload).toEqual({ csvText, delimiter: ',' })
+
+    // Shape matches the worker's parseCSVObservations: the point subset of
+    // parseCSVPoints without the derived WGS84 lat/lng.
+    const payload = {
+      observations: [
+        { pointName: 'S1', northing: 100, easting: 200, elevation: null, code: 'PIN' },
+        { pointName: 'S2', northing: 300, easting: 400, elevation: null, code: 'PIN' },
+      ],
+      count: 2,
+    }
+    reply('PARSE_COMPLETE', payload)
+
+    await expect(p).resolves.toEqual(payload)
+  })
+
+  it('resolves parseCSVLeveling with the PARSE_COMPLETE payload', async () => {
+    const csvText = 'station,bs,is,fs,rl\nBM1,1.234,,,\nTP1,,,0.987,\n'
+    const p = workerBridge.parseCSVLeveling(csvText)
+
+    const [message] = mockWorker.postMessage.mock.calls[0] as unknown as [WorkerMessage]
+    expect(message.type).toBe('PARSE_CSV_LEVELING')
+    expect(message.payload).toEqual({ csvText, delimiter: ',' })
+
+    // Shape matches the worker's parseCSVLeveling (BS/IS/FS + optional RL).
+    const payload = {
+      readings: [
+        { pointName: 'BM1', bs: 1.234, is: null, fs: null, elevation: null },
+        { pointName: 'TP1', bs: null, is: null, fs: 0.987, elevation: null },
+      ],
+      count: 2,
+    }
+    reply('PARSE_COMPLETE', payload)
+
+    await expect(p).resolves.toEqual(payload)
+  })
+
+  it('resolves validateFieldBook with the VALIDATION_COMPLETE payload', async () => {
+    const entries = [
+      { pointName: 'A', distance: -5, bearing: 45 },
+      { pointName: 'B', distance: 10, bearing: 400 },
+      { pointName: 'C', distance: 10, bearing: 45 },
+    ]
+    const p = workerBridge.validateFieldBook(entries, 'cadastral')
+
+    const [message] = mockWorker.postMessage.mock.calls[0] as unknown as [WorkerMessage]
+    expect(message.type).toBe('VALIDATE_FIELD_BOOK')
+    expect(message.payload).toEqual({ entries, surveyType: 'cadastral' })
+
+    // Real validateFieldBook output for these rows (verified against the
+    // autoCalculate implementation: distance -5 and bearing 400 are errors).
+    const payload = {
+      errors: [
+        { rowIndex: 0, column: 'distance', message: 'Distance must be > 0', severity: 'error' },
+        { rowIndex: 1, column: 'bearing', message: 'Bearing must be 0-360\u00b0', severity: 'error' },
+      ],
+      warnings: [
+        { rowIndex: 0, column: 'distance', message: 'Distance must be > 0', severity: 'error' },
+        { rowIndex: 1, column: 'bearing', message: 'Bearing must be 0-360\u00b0', severity: 'error' },
+      ],
+    }
+    reply('VALIDATION_COMPLETE', payload)
+
+    await expect(p).resolves.toEqual(payload)
+  })
+
+  it('resolves computeLevelNetwork with the COMPUTE_COMPLETE payload', async () => {
+    const p = workerBridge.computeLevelNetwork({
+      observations: [
+        { fromId: 'A', toId: 'B', heightDifference: 1.5, distance: 100, weight: 1 },
+        { fromId: 'B', toId: 'C', heightDifference: -0.5, distance: 100, weight: 1 },
+      ],
+      controlPoints: [
+        { id: 'A', rl: 100, isFixed: true },
+        { id: 'C', rl: 101, isFixed: true },
+      ],
+      order: 'third',
+    })
+
+    const [message] = mockWorker.postMessage.mock.calls[0] as unknown as [WorkerMessage]
+    expect(message.type).toBe('COMPUTE_LEVEL_NETWORK')
+    expect(message.payload).toEqual({
+      observations: [
+        { fromId: 'A', toId: 'B', heightDifference: 1.5, distance: 100, weight: 1 },
+        { fromId: 'B', toId: 'C', heightDifference: -0.5, distance: 100, weight: 1 },
+      ],
+      controlPoints: [
+        { id: 'A', rl: 100, isFixed: true },
+        { id: 'C', rl: 101, isFixed: true },
+      ],
+      order: 'third',
+    })
+
+    // Real adjustLevelNetwork output for this A-B-C run (verified against
+    // the levelNetworkAdjustment implementation via a live probe).
+    const payload = {
+      adjustedLevels: [
+        { id: 'A', rl: 100, sigmaRL: 0 },
+        { id: 'B', rl: 101.5, sigmaRL: 0 },
+        { id: 'C', rl: 101, sigmaRL: 0 },
+      ],
+      residuals: [
+        { from: 'A', to: 'B', residual: 0, standardized: 0 },
+        { from: 'B', to: 'C', residual: 0, standardized: 0 },
+      ],
+      misclosure: 0,
+      allowableMisclosure: 4.47213595499958,
+      misclosurePerKm: 0,
+      totalDistance: 0.2,
+      referenceVariance: 0,
+      degreesOfFreedom: 1,
+      passed: true,
+      order: 'third',
+    }
+    reply('COMPUTE_COMPLETE', payload)
+
+    await expect(p).resolves.toEqual(payload)
+  })
+
+  it('resolves ping() to true when the worker replies PONG', async () => {
+    const p = workerBridge.ping()
+
+    const [message] = mockWorker.postMessage.mock.calls[0] as unknown as [WorkerMessage]
+    expect(message.type).toBe('PING')
+    expect(message.payload).toBeNull()
+
+    reply('PONG', null)
+
+    await expect(p).resolves.toBe(true)
+  })
+
+  it('resolves ping() to false when the worker replies ERROR', async () => {
+    const p = workerBridge.ping()
+
+    reply('ERROR', 'worker unavailable')
+
+    await expect(p).resolves.toBe(false)
+  })
+  it('rejects a request that exceeds the 60s default timeout (fake timers)', async () => {
+    jest.useFakeTimers({ doNotFake: ['queueMicrotask', 'nextTick'] })
+    // The 30s idle timer would otherwise tear the worker down and reject
+    // the request with "Worker terminated" first - lengthen it so only the
+    // per-request 60s timer can fire.
+    const bridge = workerBridge as unknown as { IDLE_TIMEOUT: number }
+    bridge.IDLE_TIMEOUT = 60 * 60 * 1000
+    const p = workerBridge.parseCSVPoints('never answered')
+
+    const assertion = expect(p).rejects.toThrow("Worker request 'PARSE_CSV_POINTS' timed out after 60000ms")
+
+    jest.advanceTimersByTime(60001)
+
+    await assertion
+  })
+
+  it('terminates the worker after the 30s idle timeout (fake timers)', async () => {
+    jest.useFakeTimers({ doNotFake: ['queueMicrotask', 'nextTick'] })
+    const p = workerBridge.parseCSVPoints('data')
+    reply('PARSE_COMPLETE', { points: [], count: 0 })
+    await p
+
+    // The worker must stay alive while requests are in flight / recently answered.
+    expect(mockWorker.terminate).not.toHaveBeenCalled()
+
+    // Advance past the 30s idle window - the bridge should tear the worker down.
+    jest.advanceTimersByTime(30001)
+    expect(mockWorker.terminate).toHaveBeenCalledTimes(1)
+
+    // A subsequent call lazily constructs a fresh worker - reply to the
+    // SECOND postMessage (the first id was already consumed).
+    const p2 = workerBridge.parseCSVPoints('data2')
+    expect(mockWorker.postMessage).toHaveBeenCalledTimes(2)
+    reply('PARSE_COMPLETE', { points: [], count: 0 }, 1)
+    await p2
+  })
