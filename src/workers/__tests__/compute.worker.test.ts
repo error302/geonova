@@ -280,3 +280,95 @@ describe('computeBearingDistance (whole-circle bearings from north)', () => {
     expect(b.distance).toBe(a.distance)
   })
 })
+
+describe('worker message handler (dispatch protocol)', () => {
+  const replies: unknown[] = []
+  const handler = self.onmessage as (event: MessageEvent) => void
+
+  beforeEach(() => {
+    replies.length = 0
+    jest.spyOn(self, 'postMessage').mockImplementation((msg: unknown) => {
+      replies.push(msg)
+    })
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  function dispatch(data: unknown) {
+    handler({ data } as MessageEvent)
+  }
+
+  it('routes PARSE_CSV_POINTS to parseCSVPoints and replies PARSE_COMPLETE with the id', () => {
+    dispatch({
+      type: 'PARSE_CSV_POINTS',
+      id: 'csv-1',
+      payload: { csvText: 'point,north,east\nP1,9857711.22,257113.28\n', delimiter: ',' },
+    })
+
+    expect(replies).toHaveLength(1)
+    const reply = replies[0] as {
+      type: string
+      id: string
+      payload: { points: Array<{ pointName: string; latitude: number; longitude: number }>; count: number }
+    }
+    expect(reply.type).toBe('PARSE_COMPLETE')
+    expect(reply.id).toBe('csv-1')
+    expect(reply.payload.count).toBe(1)
+    const [pt] = reply.payload.points
+    expect(pt.pointName).toBe('P1')
+    // N/E columns round-trip through arc1960UTM37SToWGS84 — the same
+    // recovery the direct-function test locks in, now via the protocol.
+    expect(pt.latitude).toBeCloseTo(-1.286389, 6)
+    expect(pt.longitude).toBeCloseTo(36.817223, 6)
+  })
+
+  it('routes COMPUTE_BEARING_DISTANCE to computeBearingDistance and replies COMPUTE_COMPLETE with the id', () => {
+    dispatch({
+      type: 'COMPUTE_BEARING_DISTANCE',
+      id: 'bd-7',
+      payload: { from: { northing: 0, easting: 0 }, to: { northing: 1000, easting: 0 } },
+    })
+
+    expect(replies).toHaveLength(1)
+    const reply = replies[0] as {
+      type: string
+      id: string
+      payload: { bearing: number; distance: number; dEasting: number; dNorthing: number }
+    }
+    expect(reply.type).toBe('COMPUTE_COMPLETE')
+    expect(reply.id).toBe('bd-7')
+    expect(reply.payload.bearing).toBe(0) // due north
+    expect(reply.payload.distance).toBe(1000)
+    expect(reply.payload.dEasting).toBe(0)
+    expect(reply.payload.dNorthing).toBe(1000)
+  })
+
+  it('replies PONG for PING with the request id', () => {
+    dispatch({ type: 'PING', id: 'ping-9', payload: null })
+
+    const reply = replies[0] as { type: string; id: string }
+    expect(reply.type).toBe('PONG')
+    expect(reply.id).toBe('ping-9')
+  })
+
+  it('replies ERROR for an unknown message type', () => {
+    dispatch({ type: 'NOPE', id: 'x-1', payload: null })
+
+    const reply = replies[0] as { type: string; id: string; payload: string }
+    expect(reply.type).toBe('ERROR')
+    expect(reply.id).toBe('x-1')
+    expect(reply.payload).toMatch(/Unknown message type: NOPE/)
+  })
+
+  it('replies ERROR when the handler throws (null COMPUTE_AREA payload)', () => {
+    dispatch({ type: 'COMPUTE_AREA', id: 'err-1', payload: { coordinates: null } })
+
+    const reply = replies[0] as { type: string; id: string; payload: string }
+    expect(reply.type).toBe('ERROR')
+    expect(reply.id).toBe('err-1')
+    expect(reply.payload).toMatch(/reading 'length'/)
+  })
+})
+
