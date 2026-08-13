@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import {
-  Database, Clock, HardDrive, Activity,
   Cpu, RefreshCw, ChevronDown, ChevronUp,
   AlertTriangle,
 } from 'lucide-react'
@@ -10,7 +9,6 @@ import {
   UptimeChart,
   ResponseTimeChart,
   ErrorRateChart,
-  Sparkline,
 } from '@/components/admin/charts/AdminCharts'
 
 // ---------------------------------------------------------------------------

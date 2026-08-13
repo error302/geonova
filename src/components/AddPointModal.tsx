@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react'
-import { geographicToUTM } from '@/lib/geodesy/coordinates'
 
 interface AddPointModalProps {
   isOpen: boolean
@@ -27,8 +26,6 @@ export default function AddPointModal({
   isOpen,
   onClose,
   projectId,
-  utmZone,
-  hemisphere,
   prefillEasting,
   prefillNorthing,
   onPointAdded,
@@ -54,7 +51,6 @@ export default function AddPointModal({
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
 
   const isEditMode = !!editPointId
-  const isLocked = isEditMode && editPointLocked
 
   useEffect(() => {
     // Reset form when modal opens/closes or edit point changes
@@ -189,7 +185,7 @@ export default function AddPointModal({
       // Clear success message after 2 seconds
       setTimeout(() => setSuccessMsg(null), 2000)
 
-    } catch (err) {
+    } catch {
       setError('Unexpected error. Please try again.')
       setLoading(false)
     }

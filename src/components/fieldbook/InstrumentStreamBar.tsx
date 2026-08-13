@@ -34,8 +34,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
-  Usb, Bluetooth, Radio, Crosshair, Loader2, Check,
-  MapPin, Satellite, Cable, Plus, Settings, Activity,
+  Crosshair, Loader2, Check,
+  MapPin, Satellite, Cable, Plus, Activity,
   AlertCircle, Zap, Circle,
 } from 'lucide-react'
 import { useHaptics } from './MobileFieldUX'
@@ -144,7 +144,7 @@ export function InstrumentStreamBar({
         const { GNSSBleConnection } = await import('@/lib/instruments/gnssBleConnection')
 
         const conn = new GNSSBleConnection(
-          (pos) => {
+          () => {
             // Live position updates (not saved as readings yet)
             // The surveyor taps "Collect" to save
           },

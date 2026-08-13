@@ -51,7 +51,7 @@ export function NotificationBell() {
   const [open, setOpen] = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
-  const [loading, setLoading] = useState(false)
+  const [loading] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const fetchNotifications = useCallback(async () => {
@@ -61,7 +61,7 @@ export function NotificationBell() {
       const data = await res.json() as { data?: { notifications?: Notification[]; unreadCount?: number } }
       setNotifications(data.data?.notifications || [])
       setUnreadCount(data.data?.unreadCount || 0)
-    } catch (err) {}
+    } catch {}
   }, [])
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export function NotificationBell() {
         router.push(actionUrl)
         setOpen(false)
       }
-    } catch (err) {}
+    } catch {}
   }, [router])
 
   const handleMarkAllRead = useCallback(async () => {
@@ -107,7 +107,7 @@ export function NotificationBell() {
       })
       setNotifications(prev => prev.map(n => ({ ...n, read_at: n.read_at || new Date().toISOString() })))
       setUnreadCount(0)
-    } catch (err) {}
+    } catch {}
   }, [])
 
   const handleDelete = useCallback(async (id: string, e: React.MouseEvent) => {
@@ -115,7 +115,7 @@ export function NotificationBell() {
     try {
       await fetch(`/api/notifications?id=${id}`, { method: 'DELETE' })
       setNotifications(prev => prev.filter(n => n.id !== id))
-    } catch (err) {}
+    } catch {}
   }, [])
 
   return (

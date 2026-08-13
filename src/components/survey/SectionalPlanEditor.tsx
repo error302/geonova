@@ -17,7 +17,7 @@
 import { useState, useCallback, useMemo } from 'react'
 import {
   Building2, Plus, Trash2, Calculator, CheckCircle2, AlertTriangle,
-  Download, Loader2, Layers, Home, Car, Briefcase, Factory,
+  Download, Layers, Home, Car, Briefcase, Factory,
 } from 'lucide-react'
 import {
   computeSectionalPlan,
@@ -37,12 +37,6 @@ const UNIT_TYPE_ICONS: Record<UnitType, typeof Home> = {
   storage: Briefcase,
 }
 
-const AREA_CATEGORY_LABELS: Record<AreaCategory, string> = {
-  unit: 'Unit',
-  exclusive_use: 'Exclusive Use',
-  common_property: 'Common Property',
-}
-
 const AREA_CATEGORY_COLORS: Record<AreaCategory, string> = {
   unit: 'text-blue-400 bg-blue-500/10 border-blue-500/30',
   exclusive_use: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
@@ -52,11 +46,11 @@ const AREA_CATEGORY_COLORS: Record<AreaCategory, string> = {
 export function SectionalPlanEditor() {
   const [buildingName, setBuildingName] = useState('')
   const [parentParcel, setParentParcel] = useState('')
-  const [parentTitle, setParentTitle] = useState('')
+  const [parentTitle] = useState('')
   const [parentArea, setParentArea] = useState('')
   const [totalFloors, setTotalFloors] = useState('1')
-  const [surveyorName, setSurveyorName] = useState('')
-  const [surveyorLicense, setSurveyorLicense] = useState('')
+  const [surveyorName] = useState('')
+  const [surveyorLicense] = useState('')
   const [units, setUnits] = useState<SectionalUnit[]>([
     {
       id: crypto.randomUUID(),

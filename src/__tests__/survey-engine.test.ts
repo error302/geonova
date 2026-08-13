@@ -13,10 +13,8 @@ import { defined } from '@/test-utils/defined'
 import {
   applyAtmosphericCorrection,
   computeVaporPressure,
-  getAtmosphericPPM,
   validateAtmosphericConditions,
   STANDARD_CONDITIONS,
-  KENYA_CONDITIONS,
 } from '../lib/survey/corrections/atmospheric';
 
 // ─── Curvature & Refraction ──────────────────────────────────────
@@ -37,7 +35,6 @@ import {
 import {
   applySeaLevelReduction,
   computeReductionFactor,
-  quickSeaLevelReduction,
 } from '../lib/survey/corrections/sea-level-reduction';
 
 // ─── Slope Reduction ─────────────────────────────────────────────
@@ -89,7 +86,6 @@ import {
 import {
   propagateSum,
   propagateScale,
-  propagateGeneral,
   propagateCoordinate,
 } from '../lib/survey/error-propagation/engine';
 
@@ -694,7 +690,7 @@ describe('Correction Pipeline Integration', () => {
   });
 
   it('should generate correction report', async () => {
-    const { processObservation, processObservations, generateCorrectionReport, KENYA_DEFAULT_CONFIG } = await import('../lib/survey/pipeline/correction-pipeline');
+    const { processObservations, generateCorrectionReport, KENYA_DEFAULT_CONFIG } = await import('../lib/survey/pipeline/correction-pipeline');
     
     const observations = [{
       fromStation: 'A',

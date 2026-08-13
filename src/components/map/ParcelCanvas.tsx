@@ -113,8 +113,6 @@ export default function ParcelCanvas({
   existingParcels = [],
   activeParcel = [],
   mode = 'draw',
-  originEasting = 0,
-  originNorthing = 0,
   onParcelComplete,
   onVerticesChange,
   showLiveArea = true,
@@ -199,7 +197,7 @@ export default function ParcelCanvas({
       setMouseWorld({ e, n })
     })
 
-    stage.on('click', (e) => {
+    stage.on('click', () => {
       if (mode !== 'draw') return
 
       const pos = stage.getPointerPosition()
@@ -292,7 +290,6 @@ export default function ParcelCanvas({
 
     if (mode === 'draw' && vertices.length >= 1) {
       const pts = vertices.map(v => w2c(v.easting, v.northing, t, height))
-      const flatPts = pts.flatMap(p => [p.x, p.y])
 
       const previewLine: number[] = []
       const last = pts[pts.length - 1]
@@ -428,11 +425,7 @@ export default function ParcelCanvas({
       })
 
       if (mode === 'edit') {
-        let dragStart = { e: 0, n: 0 }
         group.draggable(true)
-        group.on('dragstart', () => {
-          dragStart = { e: v.easting, n: v.northing }
-        })
         group.on('dragmove', () => {
           const pos = group.position()
           const newE = pos.x / t.scale + t.originE

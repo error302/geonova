@@ -11,7 +11,6 @@ import { levelingSolved } from '@/lib/engine/solution/wrappers/leveling'
 import type { LevelingResult } from '@/lib/engine/types'
 import { radiationSolved } from '@/lib/engine/solution/wrappers/radiation'
 import { 
-  detectSurveyType,
   SurveyDataset,
   SurveyObservation, 
   runWorkflow, 
@@ -64,7 +63,7 @@ import { createClient } from '@/lib/api-client/client'
 import { logger } from '@/lib/logger'
 
 export default function ProcessPage() {
-  const [processError, setProcessError] = useState<string | null>(null)
+  const [, setProcessError] = useState<string | null>(null)
   const [dragActive, setDragActive] = useState(false)
   const [fileContent, setFileContent] = useState<string | null>(null)
   const [interpretResult, setInterpretResult] = useState<CSVInterpretResult | null>(null)
@@ -127,10 +126,6 @@ export default function ProcessPage() {
       const result = interpretCSV(content)
       setInterpretResult(result)
       
-      if (result.ok && result.dataset) {
-        const detected = detectSurveyTypeFromDataset(result.dataset)
-        // survey type detected
-      }
     }
   }
 
@@ -155,15 +150,6 @@ export default function ProcessPage() {
     if (types.has('ANGLE') && types.has('DISTANCE')) return 'radiation'
     if (types.has('COORDINATE')) return 'coordinates'
     return 'unknown'
-  }
-
-  const processSurvey = () => {
-    setProcessing(true)
-    
-    setTimeout(() => {
-      setProcessing(false)
-      setProcessed(true)
-    }, 1500)
   }
 
   const runProcessWithWorkflow = () => {
@@ -260,7 +246,6 @@ export default function ProcessPage() {
       setWorkflowSolutions(solutions)
 
       if (result.success && result.results) {
-        const config = getToleranceConfig(selectedProfile)
         
         if (surveyType === 'traverse' && result.results) {
           const res = result.results as {
