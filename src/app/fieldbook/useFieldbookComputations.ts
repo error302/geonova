@@ -7,7 +7,6 @@ import { polar3DWithHeights } from '@/lib/engine/polar'
 import { asBearing, asNumber } from './helpers'
 import type {
   ControlRow,
-  ControlSetup,
   ControlStation,
   LevelRow,
   TravRow,

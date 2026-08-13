@@ -18,7 +18,6 @@ import {
   Download,
   X,
   ChevronLeft,
-  Layers,
 } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';

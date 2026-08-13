@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Wifi, WifiOff, CloudOff, Cloud } from 'lucide-react';
+import { Wifi, CloudOff, Cloud } from 'lucide-react';
 
 /**
  * Connectivity State Indicator

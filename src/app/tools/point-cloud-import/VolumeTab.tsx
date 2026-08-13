@@ -16,7 +16,6 @@
 import { useState, useCallback } from 'react'
 import {
   gridMethodVolume,
-  tinToTinVolume,
   stockpileVolume,
   crossCheckVolume,
   type Point3D,

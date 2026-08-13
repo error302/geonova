@@ -15,7 +15,7 @@
 
 import { useState } from 'react'
 import {
-  BookOpen, CheckCircle2, Circle, Upload, FileText,
+  BookOpen, CheckCircle2, Circle, Upload,
   ChevronRight, ChevronLeft, X, HelpCircle,
   ClipboardList, FolderOpen, PenTool, Calculator,
   FileCheck, Send,

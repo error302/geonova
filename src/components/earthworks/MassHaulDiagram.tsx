@@ -61,7 +61,6 @@ export default function MassHaulDiagram({ result }: Props) {
 
   // X axis ticks
   const numTicks = Math.min(10, massOrdinates.length)
-  const tickStep = chRange / numTicks
   const xTicks: number[] = []
   for (let i = 0; i <= numTicks; i++) {
     xTicks.push(minCh + (i / numTicks) * chRange)

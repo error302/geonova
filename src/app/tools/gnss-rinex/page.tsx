@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Upload, Satellite, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Satellite, AlertCircle, CheckCircle2 } from 'lucide-react'
 import type { GNSSPositionResult } from '@/lib/gnss/rinexProcessor'
 import { computeConfidenceEllipse } from '@/lib/gnss/rinexProcessor'
 

@@ -7,7 +7,6 @@ import { SurveyType } from '@/types/project';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { FileText, Map, Download, Loader2, Sparkles } from 'lucide-react';
-import { getActiveSurveyorProfile } from '@/lib/submission/surveyorProfile';
 import { useState } from 'react';
 import { apiPost, ApiError } from '@/lib/api/client';
 

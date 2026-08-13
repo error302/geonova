@@ -75,7 +75,7 @@ function getMarkerColor(type: string) {
 }
 
 export default function BeaconsPage() {
-  const [importMsg, setImportMsg] = React.useState<{text:string;ok:boolean}|null>(null)
+  const [, setImportMsg] = React.useState<{text:string;ok:boolean}|null>(null)
   // AUDIT FIX (2026-07-03): Removed 'activity' view — it placed projects
   // at Math.random() positions (pins jumped on every refresh). Only
   // the 'beacons' view is real.

@@ -5,7 +5,7 @@
  * POST — Send an inquiry to a listing (any authenticated user)
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { apiSuccess, apiError } from '@/lib/api/response'
 import { db } from '@/lib/db'

@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { PageHeader } from '@/components/shared/PageHeader'
-import { ToolExportButtons } from '@/components/shared/ToolExportButtons'
 import { computeCurveElements, generateChainageTable, generateStakingTable, type HorizontalCurveData, type CurveElements, type ChainageTableEntry, type StakingPoint } from '@/lib/engineering/stakingTable'
 
 export default function StakingTablePage() {

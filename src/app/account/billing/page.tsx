@@ -64,7 +64,7 @@ const STATUS_COLORS: Record<string, string> = {
 export default function BillingPage() {
   // AUDIT FIX (H-007, 2026-07-27): useMemo prevents infinite loop.
   const dbClient = useMemo(() => createClient(), [])
-  const [user, setUser] = useState<NonNullable<BrowserSession['user']> | null>(null)
+  const [, setUser] = useState<NonNullable<BrowserSession['user']> | null>(null)
   const [subscription, setSubscription] = useState<SubscriptionRecord | null>(null)
   const [payments, setPayments] = useState<PaymentRecord[]>([])
   const [loading, setLoading] = useState(true)

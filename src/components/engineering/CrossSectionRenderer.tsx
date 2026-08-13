@@ -312,15 +312,6 @@ export function CrossSectionRenderer({
     [camberProfile, toSvgX, toSvgY]
   )
 
-  // Full formation line polyline
-  const formationPolyline = useMemo(
-    () =>
-      formationLine
-        .map(p => `${toSvgX(p.offset).toFixed(1)},${toSvgY(p.level).toFixed(1)}`)
-        .join(' '),
-    [formationLine, toSvgX, toSvgY]
-  )
-
   // Slope lines — separate left and right slope segments
   const leftSlopePoints = useMemo(() => {
     const leftShoulder = formationLine.find(

@@ -13,7 +13,6 @@
  */
 
 import { useState, useMemo } from 'react';
-import { PageHeader } from '@/components/shared/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

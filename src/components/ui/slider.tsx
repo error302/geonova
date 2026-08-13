@@ -49,7 +49,7 @@ function Slider({
           )}
         />
       </SliderPrimitive.Track>
-      {Array.from({ length: _values.length }, (_, index) => (
+      {Array.from({ length: _values.length }, (_, _index) => (
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={`tick-55`}

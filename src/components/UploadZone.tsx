@@ -103,28 +103,6 @@ export default function UploadZone({
     const file = e.target.files?.[0]
     if (file) handleFile(file)
   }, [handleFile])
-
-  const getFileIcon = (filename: string) => {
-    const ext = filename.split('.').pop()?.toLowerCase()
-    const colors: Record<string, string> = {
-      dxf: 'text-blue-400',
-      dwg: 'text-blue-500',
-      ifc: 'text-purple-400',
-      pdf: 'text-red-400',
-      jpg: 'text-green-400',
-      jpeg: 'text-green-400',
-      png: 'text-green-400',
-      webp: 'text-green-400',
-      glb: 'text-amber-400',
-      gltf: 'text-amber-400',
-      obj: 'text-amber-500',
-      xlsx: 'text-emerald-400',
-      xls: 'text-emerald-500',
-      csv: 'text-emerald-600',
-    }
-    return colors[ext || ''] || 'text-gray-400'
-  }
-
   return (
     <div className="space-y-4">
       <div

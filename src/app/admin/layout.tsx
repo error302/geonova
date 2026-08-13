@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import AppSidebar from '@/components/layout/AppSidebar'
 import { PerformanceMonitor } from '@/components/admin/PerformanceMonitor'
 import MetarduLogo from '@/components/MetarduLogo'

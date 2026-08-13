@@ -56,7 +56,7 @@ export default function SettingOutTable({ result }: Props) {
         <details className="text-xs">
           <summary className="cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] font-medium">Show derivation for {rows[0].id}</summary>
           <div className="mt-2 space-y-1">
-            {rows[0].steps.map((step, i) => (
+            {rows[0].steps.map((step, _i) => (
               <div key={step.value} className="grid grid-cols-[1fr_auto_1fr_auto] gap-x-2 font-mono py-1 border-b border-[var(--border-color)]/20">
                 <span className="text-[var(--text-secondary)]">{step.description}</span>
                 <span className="text-[var(--text-muted)]">=</span>

@@ -23,7 +23,7 @@ export default function TacheometryCalculator() {
     c: '0'            // additive constant
   });
   const [steps, setSteps] = useState<SolutionStep[] | null>(null);
-  const [calcError, setCalcError] = useState<string | null>(null);
+  const [calcError] = useState<string | null>(null);
   const [solutionTitle, setSolutionTitle] = useState<string | undefined>(undefined);
 
   const calculate = () => {

@@ -155,7 +155,7 @@ function SurveyReportBuilderContent() {
 }
 
 export default function SurveyReportBuilderPage() {
-  const { t } = useLanguage()
+  const { t: _t } = useLanguage()
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">

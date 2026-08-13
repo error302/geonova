@@ -21,7 +21,7 @@ export default function SuperelevationPage() {
   const [radius, setRadius] = useState(200)
   const [numLanes, setNumLanes] = useState(2)
   const [laneWidth, setLaneWidth] = useState(3.5)
-  const [roadClass, setRoadClass] = useState('DR3')
+  const [roadClass] = useState('DR3')
 
   const input: SuperelevationInput = {
     designSpeed,

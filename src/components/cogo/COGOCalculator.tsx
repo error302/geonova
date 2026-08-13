@@ -43,7 +43,7 @@ function StepsDisplay({ steps, title }: { steps: InverseStep[]; title?: string }
     <div className="space-y-2">
       {title && <h3 className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">{title}</h3>}
       <div className="space-y-1">
-        {steps.map((step, i) => (
+        {steps.map((step, _i) => (
           <div key={step.value} className="grid grid-cols-[1fr_auto_1fr] md:grid-cols-[1fr_auto_1fr_auto] gap-x-1 md:gap-x-2 text-xs font-mono py-1 border-b border-[var(--border-color)]/20">
             <span className="text-[var(--text-secondary)]">{step.description}</span>
             <span className="text-[var(--text-muted)]">=</span>

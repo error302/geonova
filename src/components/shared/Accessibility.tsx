@@ -13,7 +13,7 @@
  * have the right to access information.
  */
 
-import { useEffect, useRef, useCallback, ReactNode } from 'react'
+import { useEffect, useRef, ReactNode } from 'react'
 
 interface AccessibilityWrapperProps {
   children: ReactNode

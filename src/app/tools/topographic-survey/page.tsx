@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useCallback } from 'react'
-import { Mountain, Download, FileSpreadsheet, AlertCircle, CheckCircle2, Layers, Search } from 'lucide-react'
+import { Download, FileSpreadsheet, AlertCircle, CheckCircle2, Layers, Search } from 'lucide-react'
 import { KENYA_TOPO_CODES } from '@/lib/topo/featureCodes'
 
 interface TopoPoint {

@@ -18,7 +18,7 @@ const SURFACE_TYPES: Array<{ key: 'paved' | 'gravel' | 'earth'; label: string; t
   { key: 'earth', label: 'Earth', tolerance: TOLERANCE_BANDS.earth },
 ]
 
-export default function AsBuiltSurveyPanel({ roadClass, surfaceType = 'paved', designPoints = [] }: AsBuiltSurveyPanelProps) {
+export default function AsBuiltSurveyPanel({ roadClass: _roadClass, surfaceType = 'paved', designPoints = [] }: AsBuiltSurveyPanelProps) {
   const [activeSurface, setActiveSurface] = useState<'paved' | 'gravel' | 'earth'>(surfaceType)
   const [csvInput, setCsvInput] = useState('')
   const [asBuiltPoints, setAsBuiltPoints] = useState<AsBuiltPoint[]>([])

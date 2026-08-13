@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
-import { checkRegulatoryCompliance, type ComplianceInput } from '@/lib/survey/regulatoryCompliance'
+import { checkRegulatoryCompliance } from '@/lib/survey/regulatoryCompliance'
 import { z } from 'zod'
 
 const schema = z.object({

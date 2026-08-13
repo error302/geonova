@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic'
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { getStripeService } from '@/lib/payments/stripe'
 import { getPublicAppUrl } from '@/lib/site'
 import { apiHandler } from '@/lib/apiHandler'

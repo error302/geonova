@@ -9,7 +9,7 @@ interface LevelBookProps {
   projectId?: string
 }
 
-export default function LevelBook({ projectId }: LevelBookProps) {
+export default function LevelBook({ projectId: _projectId }: LevelBookProps) {
   const [rows, setRows] = useState<Array<{
     station: string; bs: string; is: string; fs: string; distance: string; remarks: string
   }>>([

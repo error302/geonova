@@ -30,7 +30,7 @@ const newRow = (): PointRow => ({
 })
 
 export default function SiteCalibrationPage() {
-  const { t } = useLanguage()
+  const { t: _t } = useLanguage()
   const [points, setPoints] = useState<PointRow[]>([
     { id: 'p1', name: 'CP1', sx: '274812.403', sy: '9856214.778', sz: '1798.500', tx: '274712.201', ty: '9856314.521', tz: '1790.123' },
     { id: 'p2', name: 'CP2', sx: '274912.108', sy: '9856220.336', sz: '1799.200', tx: '274811.906', ty: '9856320.079', tz: '1790.823' },

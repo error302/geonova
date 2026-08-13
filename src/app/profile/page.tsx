@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/api-client/client'
-import { useRouter } from 'next/navigation'
 import { User } from 'lucide-react'
 
 interface Profile {
@@ -33,7 +32,6 @@ export default function ProfilePage() {
     preferred_language: 'en'
   })
 
-  const router = useRouter()
   const dbClient = createClient()
 
   useEffect(() => {

@@ -7,7 +7,6 @@ import {
   buildFeedbackPayload,
   markFeedbackSubmitted,
   canSubmitFeedback,
-  drainStoredErrors,
 } from '@/lib/feedback/feedbackCollector'
 import { ChangelogPanel } from '@/components/feedback/ChangelogPanel'
 

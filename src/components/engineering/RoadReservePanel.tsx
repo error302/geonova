@@ -360,11 +360,6 @@ export default function RoadReservePanel({
     [roadLengthNum, proposedNum, existingNum],
   )
 
-  const compliancePercent = useMemo(() => {
-    if (compliance.required === 0) return 0
-    return Math.min(100, (proposedNum / compliance.required) * 100)
-  }, [proposedNum, compliance.required])
-
   const handleProposedWidthChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const v = e.target.value

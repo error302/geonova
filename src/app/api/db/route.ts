@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic'
  * - Parameterized queries prevent SQL injection
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { apiHandler } from '@/lib/apiHandler'

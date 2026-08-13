@@ -48,7 +48,7 @@ export default function ProjectWorkspaceClient({ project, workflow }: Props) {
 
   // Workflow state machine data (fetched from API)
   const [workflowData, setWorkflowData] = useState<ProjectWorkflowData | null>(null);
-  const [workflowLoading, setWorkflowLoading] = useState(true);
+  const [, setWorkflowLoading] = useState(true);
 
   // Quality gate state
   const [qualityGateTarget, setQualityGateTarget] = useState<string | null>(null);

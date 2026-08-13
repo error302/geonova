@@ -21,7 +21,6 @@ import {
   getContentType,
   setAppVersion,
   projectsTotal,
-  activeUsers,
 } from '@/lib/monitoring/metrics';
 import { logger } from '@/lib/logger'
 

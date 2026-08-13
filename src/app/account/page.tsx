@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { createClient } from '@/lib/api-client/client'
 import { z } from 'zod'
 import { apiGet, apiPost, ApiError } from '@/lib/api/client'
 
@@ -24,7 +23,6 @@ interface Subscription {
 
 export default function AccountPage() {
   const { data: session, status } = useSession()
-  const dbClient = createClient()
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')

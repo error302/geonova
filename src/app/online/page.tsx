@@ -6,7 +6,6 @@ import { transformCoordinates, getSupportedSystems, type CoordinateSystem, type 
 import { calculateEDMCorrection } from '@/lib/online/weather'
 import { searchBenchmarks, getAvailableCountries, getBenchmarkTypes, Benchmark } from '@/lib/online/benchmarks'
 import GNSSProcessor from '@/components/online/GNSSProcessor'
-import CoordinateTransformer from '@/components/online/CoordinateTransformer'
 import ImageryViewer from '@/components/online/ImageryViewer'
 
 export default function OnlineServicesPage() {

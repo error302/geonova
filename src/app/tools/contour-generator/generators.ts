@@ -9,7 +9,7 @@ import { elevationToColor, computeHypsometricBands, fmt } from './helpers';
 
 type Bounds2D = { minE: number; maxE: number; minN: number; maxN: number };
 
-export function generateDXF(contours: ContourLine[], bounds: Bounds2D): string {
+export function generateDXF(contours: ContourLine[], _bounds: Bounds2D): string {
   const lines: string[] = [];
   lines.push('0');
   lines.push('SECTION');

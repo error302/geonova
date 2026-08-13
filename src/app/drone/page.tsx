@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { PageHeader } from '@/components/shared/PageHeader'
 import {
-  Upload, Cloud, Loader2, CheckCircle2, XCircle, Download,
+  Upload, Cloud, Loader2, CheckCircle2, XCircle,
   Map as MapIcon, Box, Mountain, FileCode, ChevronRight, RefreshCw,
 } from 'lucide-react'
 import Link from 'next/link'

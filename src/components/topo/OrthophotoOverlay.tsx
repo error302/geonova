@@ -16,7 +16,7 @@
  * contour plan — they can see if contours follow the actual terrain.
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { logger } from '@/lib/logger'
 
 export interface OrthophotoBounds {

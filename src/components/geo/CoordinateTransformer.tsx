@@ -111,7 +111,7 @@ export default function CoordinateTransformer({ projectId }: { projectId?: strin
               </tr>
             </thead>
             <tbody>
-              {results.map((r, i) => (
+              {results.map((r, _i) => (
                 <tr key={r.id} className={r.warning ? 'bg-yellow-50' : ''}>
                   <td className="border px-2 py-1">{r.id}</td>
                   <td className="border px-2 py-1">{r.x}</td>

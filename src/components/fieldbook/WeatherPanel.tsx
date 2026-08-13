@@ -31,7 +31,7 @@ interface WeatherPanelProps {
   t?: (key: string) => string;
 }
 
-export function WeatherPanel({ lat, lon, elevation, onWeatherChange, t }: WeatherPanelProps) {
+export function WeatherPanel({ lat, lon, elevation, onWeatherChange, t: _t }: WeatherPanelProps) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(false);
   const [manualMode, setManualMode] = useState(false);

@@ -201,7 +201,7 @@ export async function GET(request: NextRequest) {
     const observations = await getObservations(surveyId)
 
     return NextResponse.json({ observations, count: observations.length })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

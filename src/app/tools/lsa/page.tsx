@@ -37,7 +37,7 @@ let rowCounter = 0
 const nextId = () => `r${++rowCounter}`
 
 export default function LeastSquaresPage() {
-  const { t } = useLanguage()
+  const { t: _t } = useLanguage()
   const [stations, setStations] = useState<StationRow[]>([
     { id: nextId(), name: 'CP1', easting: '5000.000', northing: '10000.000', isControl: true },
     { id: nextId(), name: 'CP2', easting: '5100.000', northing: '10100.000', isControl: true },

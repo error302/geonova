@@ -39,7 +39,7 @@ export function DrainageStep3Outputs({
                 </tr>
               </thead>
               <tbody>
-                {manholes.map((m, i) => (
+                {manholes.map((m, _i) => (
                   <tr key={m.name} className="border-t border-zinc-800">
                     <td className="py-1.5 text-white">{m.name}</td>
                     <td className="py-1.5 text-right text-zinc-400">{m.coverLevel.toFixed(3)}</td>

@@ -19,9 +19,6 @@ import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 // ─── Type conversions ────────────────────────────────────────────────────────
 
-const toSurfacePoints = (spots: SpotHeight[]): SurfacePoint[] =>
-  spots.map(p => ({ easting: p.easting, northing: p.northing, elevation: p.elevation }));
-
 const toSpotHeights = (pts: { easting: number; northing: number; elevation: number }[]): SpotHeight[] =>
   pts.map((p, i) => ({ name: `P${i + 1}`, ...p }));
 

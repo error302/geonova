@@ -6,7 +6,7 @@ import { SurveyPlanRenderer } from '@/lib/reports/surveyPlan/renderer'
 import { FormNo4Renderer } from '@/lib/reports/surveyPlan/formNo4Renderer'
 import { SurveyPlanDataSchema } from '@/lib/validation/surveySchema'
 import ComplianceChecklistModal from '@/components/ComplianceChecklistModal'
-import { AlertCircle, FileCheck, Globe } from 'lucide-react'
+import { AlertCircle, FileCheck } from 'lucide-react'
 import { sanitizeHtml } from '@/lib/security/sanitize'
 import { logger } from '@/lib/logger'
 

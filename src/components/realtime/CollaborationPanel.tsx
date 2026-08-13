@@ -14,7 +14,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import {
   MessageSquare, Send, Users, ChevronDown, ChevronUp,
-  AlertTriangle, X,
+  AlertTriangle,
 } from 'lucide-react'
 import { PresenceIndicator } from './PresenceIndicator'
 import type { Collaborator } from '@/lib/realtime/useCollaboration'

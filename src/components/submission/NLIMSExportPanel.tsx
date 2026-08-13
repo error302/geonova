@@ -24,7 +24,7 @@ interface NLIMSExportPanelProps {
   projectId: string
 }
 
-export function NLIMSExportPanel({ projectId }: NLIMSExportPanelProps) {
+export function NLIMSExportPanel({ projectId: _projectId }: NLIMSExportPanelProps) {
   const [expanded, setExpanded] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [payload, setPayload] = useState<NLIMSSubmissionPayload | null>(null)

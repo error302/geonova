@@ -123,7 +123,7 @@ function StatCard({
 // ---------------------------------------------------------------------------
 
 export default function AdminPaymentsPage() {
-  const { data: session, status: sessionStatus } = useSession()
+  const { status: sessionStatus } = useSession()
   const router = useRouter()
 
   const [payments, setPayments] = useState<PaymentRecord[]>([])

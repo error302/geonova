@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/api-client/server';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import WorkingDiagramClient, { type ProjectInfo, type FieldbookEntry } from './WorkingDiagramClient';
 

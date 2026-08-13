@@ -15,7 +15,6 @@ import {
   getWorkspaceConfig,
   listWorkspaces,
   autoDetectWorkspace,
-  type WorkspaceId,
 } from '@/lib/workspaces/config'
 
 export const GET = apiHandler(

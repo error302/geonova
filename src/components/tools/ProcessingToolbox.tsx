@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation'
 import {
   Search, Star, Clock, ChevronRight, Calculator,
   Compass, Ruler, MapPin, FileText, Mountain,
-  Waves, Building2, Navigation, Layers,
+  Building2, Navigation, Layers,
   X, Activity, Satellite, FileCheck, AlertTriangle, Building, TrendingUp,
 } from 'lucide-react'
 

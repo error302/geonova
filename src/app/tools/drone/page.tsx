@@ -385,7 +385,7 @@ function DroneSurveyPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {gcps.filter((g) => g.status !== 'measured').map((g, idx) => (
+                {gcps.filter((g) => g.status !== 'measured').map((g, _idx) => (
                   <div key={g.id} className="p-4 bg-[var(--bg-tertiary)] rounded flex justify-between items-center">
                     <div>
                       <div className="font-semibold text-lg">{g.name}</div>

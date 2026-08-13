@@ -5,7 +5,6 @@ import {
   ChevronUp,
   ChevronDown,
   Trash2,
-  Activity,
   Loader2,
   AlertCircle,
   CheckCircle2,

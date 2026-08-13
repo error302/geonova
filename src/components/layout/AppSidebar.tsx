@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react'
 import {
   FolderKanban, Wrench, Compass, FileText,
   LayoutDashboard, Users, ShieldCheck, CreditCard,
-  Settings2, Activity, ChevronLeft, BarChart3,
+  Settings2, ChevronLeft, BarChart3,
   Map, Building2, HelpCircle, LayoutTemplate, Boxes,
   RoadIcon, Mountain, Sparkles,
 } from 'lucide-react'

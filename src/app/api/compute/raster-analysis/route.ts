@@ -7,7 +7,7 @@ import { callPythonCompute } from '@/lib/compute/pythonService'
 import { apiSuccess, apiError } from '@/lib/api/response'
 
 export async function POST(request: NextRequest) {
-  const { session, error } = await requireAuth()
+  const { error } = await requireAuth()
   if (error) return error
 
   const body: unknown = await request.json().catch(() => null)

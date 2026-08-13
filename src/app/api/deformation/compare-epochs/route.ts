@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
-import { compareEpochs, type EpochSet, type DeformationTolerance } from '@/lib/survey/deformationMonitoring'
+import { compareEpochs, type EpochSet } from '@/lib/survey/deformationMonitoring'
 import { z } from 'zod'
 
 const schema = z.object({

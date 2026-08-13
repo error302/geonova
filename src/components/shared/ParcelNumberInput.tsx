@@ -8,7 +8,7 @@ import {
   getUTMZoneForParcel,
   type ParsedParcelNumber 
 } from '@/lib/compute/parcelNumber'
-import { KENYA_COUNTIES, type RegistrationSection } from '@/lib/data/kenyaLocalities'
+import { KENYA_COUNTIES } from '@/lib/data/kenyaLocalities'
 
 interface ParcelNumberInputProps {
   value: string

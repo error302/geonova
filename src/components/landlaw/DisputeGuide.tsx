@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Gavel, FileText, Clock, DollarSign, ChevronRight, Building2 } from 'lucide-react'
 import { getDisputeProcedureByType, getAllDisputeTypes } from '@/lib/data/disputeProcedures'
-import type { DisputeProcedure, DisputeType } from '@/types/landLaw'
+import type { DisputeType } from '@/types/landLaw'
 import { DISPUTE_TYPE_LABELS } from '@/types/landLaw'
 
 export default function DisputeGuide() {

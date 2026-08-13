@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
  * Apply database indexes and clear caches
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import {
   getRecommendedIndexes,

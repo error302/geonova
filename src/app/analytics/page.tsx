@@ -179,7 +179,6 @@ export default function AnalyticsPage() {
 
           // Compute previous period deltas
           const halfPoint = Math.floor(projects.length / 2)
-          const recentProjects = projects.slice(0, halfPoint)
           const olderProjects = projects.slice(halfPoint)
 
           setData({

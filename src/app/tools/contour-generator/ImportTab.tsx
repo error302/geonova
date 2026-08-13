@@ -155,7 +155,7 @@ export function ImportTab({
                 </tr>
               </thead>
               <tbody>
-                {previewRows.map((p, i) => (
+                {previewRows.map((p, _i) => (
                   <tr key={p.name} className="border-b border-zinc-800">
                     <td className="py-2 px-3 font-semibold text-white">{p.name}</td>
                     <td className="py-2 px-3 text-right font-mono text-zinc-300">{fmt(p.easting)}</td>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/api-client/client'
 import { exportGCPs, GCP_FORMATS, GCPFormat, GCPPoint } from '@/lib/export/gcpExport'
 import { PageHeader } from '@/components/shared/PageHeader'

@@ -21,7 +21,6 @@ export const StakeoutPanel = memo(function StakeoutPanel() {
     stakeoutActive: active,
     stakeoutTarget,
     stakeoutState,
-    gpsPos21037,
     gpsPos,
     deactivateStakeout,
     audioMuted,

@@ -21,7 +21,7 @@ interface BatchRow {
 let batchId = 0
 
 export default function OrthometricHeightPage() {
-  const { t } = useLanguage()
+  const { t: _t } = useLanguage()
   const [mode, setMode] = useState<'single' | 'batch'>('single')
 
   // Single mode

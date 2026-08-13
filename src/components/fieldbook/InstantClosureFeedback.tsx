@@ -45,7 +45,7 @@ export function InstantClosureFeedback({
   closeN,
   mode,
   surveyType = 'cadastral',
-  t,
+  t: _t,
 }: InstantClosureFeedbackProps) {
   const feedback = useMemo((): ClosureFeedback | null => {
     // Parse observations

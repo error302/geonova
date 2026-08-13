@@ -47,7 +47,7 @@ export const SchemeLayerPanel = memo(function SchemeLayerPanel() {
     cancelTraverseParcel,
   } = useMapContext()
 
-  const [showTraverseWorkflow, setShowTraverseWorkflow] = useState(false)
+  const [, setShowTraverseWorkflow] = useState(false)
 
   if (!hasProjectId) return null
 

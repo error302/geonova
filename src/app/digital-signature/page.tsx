@@ -12,7 +12,7 @@ import {
 } from '@/lib/integrations/digitalSignature'
 
 export default function DigitalSignaturePage() {
-  const [validationMsg, setValidationMsg] = useState<string|null>(null)
+  const [, setValidationMsg] = useState<string|null>(null)
   const [activeTab, setActiveTab] = useState<'sign' | 'verify'>('sign')
   const [signForm, setSignForm] = useState({
     documentId: '',

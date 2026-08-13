@@ -106,7 +106,6 @@ export function parseXYZText(text: string): {
   }
 
   // Check the first data row to determine column count
-  const firstDataRowIdx = startIdx;
   let colCount = 3;
   for (let i = startIdx; i < lines.length; i++) {
     const trimmed = lines[i].trim();

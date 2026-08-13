@@ -10,7 +10,7 @@ const ALLOWED_TABLES = [
   'survey_points',
 ]
 
-export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (request, ctx) => {
+export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 60000 } }, async (request, _ctx) => {
   const table = request.nextUrl.searchParams.get('table')
   const projectId = request.nextUrl.searchParams.get('projectId')
 

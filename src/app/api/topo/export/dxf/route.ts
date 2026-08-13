@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
         'Content-Disposition': `attachment; filename="topo_${projectId}.dxf"`
       }
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'DXF generation failed' }, { status: 500 })
   }
 }

@@ -39,7 +39,7 @@ interface BoundaryLine {
   distance: number;
 }
 
-export default function ParcelBuilderModal({ projectId, points, onClose, onParcelCreated, onDraftBoundaryChange }: ParcelBuilderModalProps) {
+export default function ParcelBuilderModal({ projectId, points, onClose, onParcelCreated, onDraftBoundaryChange: _onDraftBoundaryChange }: ParcelBuilderModalProps) {
   const [parcelName, setParcelName] = useState('');
   const [selectedPoints, setSelectedPoints] = useState<BoundaryPoint[]>([]);
   const [isSelecting, setIsSelecting] = useState(true);

@@ -13,7 +13,7 @@ interface Props {
   points?: SectionPoint[];
 }
 
-export default function LongitudinalSection({ projectId, points = [] }: Props) {
+export default function LongitudinalSection({ projectId: _projectId, points = [] }: Props) {
   const [data, setData] = useState<SectionPoint[]>(points);
 
   const addRow = () =>

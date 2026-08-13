@@ -23,7 +23,6 @@
 
 export const dynamic = 'force-dynamic'
 
-import { NextResponse } from 'next/server'
 import { apiHandler, apiSuccess } from '@/lib/apiHandler'
 import { requireProjectOwnership } from '@/lib/auth/ownership'
 import {

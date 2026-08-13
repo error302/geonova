@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
  * DELETE /api/admin/licenses/[licenseId]       — Deactivate license
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import {

@@ -145,7 +145,7 @@ export function ResultsTab({
                   </tr>
                 </thead>
                 <tbody>
-                  {validationSummary.points.map((p, i) => (
+                  {validationSummary.points.map((p, _i) => (
                     <tr
                       key={p.name}
                       className={p.overallPass

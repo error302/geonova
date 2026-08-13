@@ -6,7 +6,7 @@
  * DELETE — Delete a listing (owner only)
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { apiSuccess, apiError } from '@/lib/api/response'
 import { db } from '@/lib/db'

@@ -19,7 +19,7 @@ export function MeasurementTool({ map }: MeasurementToolProps) {
     getFormattedResult,
   } = useMeasurement(map);
 
-  const [hoverTool, setHoverTool] = useState<MeasurementMode | null>(null);
+  const [, setHoverTool] = useState<MeasurementMode | null>(null);
 
   const tools: Array<{
     mode: MeasurementMode;

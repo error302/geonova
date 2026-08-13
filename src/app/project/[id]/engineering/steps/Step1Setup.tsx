@@ -14,7 +14,7 @@ import { ROAD_CLASSES } from '../shared'
  * Same props, same behavior.
  */
 export function Step1Setup({
-  project,
+  project: _project,
   data,
   onSave,
   mode,

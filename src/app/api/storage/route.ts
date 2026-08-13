@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
  * DELETE /api/storage?path=<path> — Delete a file
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { promises as fs } from 'fs'

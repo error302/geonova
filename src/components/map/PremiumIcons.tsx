@@ -173,7 +173,6 @@ export function TrashIcon({ className = 'w-5 h-5', active }: IconProps) {
 
 /* ── Bolt: Quick action / energy ────────────────────────────────────── */
 export function BoltIcon({ className = 'w-5 h-5', active }: IconProps) {
-  const fill = active ? 'url(#icon-gradient-primary)' : 'currentColor'
   return (
     <svg viewBox="0 0 20 20" fill="none" className={className}>
       {GRADIENT_DEFS}

@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
  * adjustment, and returns adjusted RLs with residuals and misclosure check.
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { z } from 'zod'
 import { adjustLevelNetwork } from '@/lib/survey/digitalLevel/levelNetworkAdjustment'

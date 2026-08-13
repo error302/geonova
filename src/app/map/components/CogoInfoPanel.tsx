@@ -17,7 +17,7 @@
  */
 
 import React, { useMemo, useState, memo } from 'react'
-import { ChevronDown, ChevronUp, X, Ruler, MapPin } from 'lucide-react'
+import { ChevronDown, ChevronUp, Ruler, MapPin } from 'lucide-react'
 import { useMapContext } from '@/app/map/MapReactContext'
 import { distanceBearing } from '@/lib/engine/distance'
 import { coordinateArea } from '@/lib/engine/area'

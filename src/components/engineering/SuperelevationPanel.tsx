@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { AlertTriangle } from 'lucide-react'
 import { superelevationCalc, type SuperelevationResult, logEngineeringCompute } from '@/lib/engineering/compute';
 import { z } from 'zod';
-import { initialiseDXFLayers, DXF_LAYERS, TitleBlockData, TITLE_BLOCK_TEMPLATES } from '@/lib/drawing/dxfLayers';
+import { initialiseDXFLayers, DXF_LAYERS } from '@/lib/drawing/dxfLayers';
 
 const SuperelevationInputSchema = z.object({
   R: z.number().positive().min(50).max(2000),
@@ -34,8 +34,8 @@ export default function SuperelevationPanel({
   initialRadius = 200, 
   initialSpeed = 80,
   projectId,
-  projectData,
-  surveyorProfile,
+  projectData: _projectData,
+  surveyorProfile: _surveyorProfile,
   standard = 'KRDM2017'
 }: SuperelevationPanelProps) {
   const [R, setR] = useState(initialRadius);
@@ -95,26 +95,6 @@ export default function SuperelevationPanel({
     const { default: Drawing } = await import('dxf-writer');
     const drawing = new Drawing();
     initialiseDXFLayers(drawing);
-    // Render title block via template system
-    const tb: TitleBlockData = {
-      drawingTitle: TITLE_BLOCK_TEMPLATES.eng_superelevation.drawingTitle,
-      lrNumber: projectData?.lr_number ?? 'N/A',
-      county: projectData?.county ?? 'N/A',
-      district: projectData?.district ?? 'N/A',
-      locality: projectData?.locality ?? 'N/A',
-      areaHa: 0,
-      perimeterM: 0,
-      surveyorName: surveyorProfile?.fullName ?? 'N/A',
-      registrationNumber: surveyorProfile?.registrationNumber ?? 'N/A',
-      firmName: surveyorProfile?.firmName ?? 'N/A',
-      date: new Date().toLocaleDateString('en-KE'),
-      submissionRef: 'N/A',
-      coordinateSystem: 'Arc 1960 / UTM Zone 37S (SRID: 21037)',
-      scale: '1:2500',
-      sheetNumber: '1 of 1',
-      revision: 'R00'
-    }
-    // renderTitleBlock(drawing, 'eng_superelevation', tb);
     
     drawing.setActiveLayer(DXF_LAYERS.PROFILE.name);
     

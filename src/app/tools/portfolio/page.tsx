@@ -38,7 +38,6 @@ export default function PortfolioPage() {
     } catch {} finally { setLoading(false) }
   }
 
-  const inputCls = "w-full px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)]"
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-sm text-[var(--text-muted)]">Loading portfolio...</div>
   if (!report) return <div className="min-h-screen flex items-center justify-center text-sm text-[var(--text-muted)]">Failed to load portfolio.</div>

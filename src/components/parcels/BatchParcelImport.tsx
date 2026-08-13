@@ -11,7 +11,6 @@ import {
   Upload, Loader2, CheckCircle2, AlertTriangle,
   Download, Table, Layers, Users,
 } from 'lucide-react'
-import { processWithProgress } from '@/lib/performance'
 
 interface GeoJSONParcelProps {
   parcel_number?: string

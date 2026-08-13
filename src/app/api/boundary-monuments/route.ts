@@ -185,7 +185,6 @@ export const POST = apiHandler(
     const body = ctx.body as z.infer<typeof createSchema>
 
     // Build the geometry if lat/lon provided
-    const geomSql = `NULL`
     const values: unknown[] = []
     const cols: string[] = []
     const placeholders: string[] = []

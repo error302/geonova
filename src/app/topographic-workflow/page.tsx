@@ -23,7 +23,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Upload, Mountain, TrendingUp, Box, Scissors, FileCode, Download,
-  CheckCircle2, Circle, ArrowRight, Loader2,
+  CheckCircle2, Circle, ArrowRight,
 } from 'lucide-react'
 import { PageHeader } from '@/components/shared/PageHeader'
 

@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { AlertTriangle } from 'lucide-react'
 import { z } from 'zod';
 import { horizontalCurve, logEngineeringCompute } from '@/lib/engineering/compute';
-import { initialiseDXFLayers, DXF_LAYERS, TitleBlockData, TITLE_BLOCK_TEMPLATES } from '@/lib/drawing/dxfLayers';
+import { initialiseDXFLayers, DXF_LAYERS } from '@/lib/drawing/dxfLayers';
 import { getMinRadius, getMinSSD, getMinSuperelevation } from '@/lib/standards/engineering';
 
 const HorizontalCurveInputSchema = z.object({
@@ -31,7 +31,7 @@ interface HorizontalCurvePanelProps {
   designSpeed?: number;
 }
 
-export function HorizontalCurvePanel({ projectId, projectData, surveyorProfile, standard = 'KRDM2017', designSpeed = 60 }: HorizontalCurvePanelProps) {
+export function HorizontalCurvePanel({ projectId, projectData: _projectData, surveyorProfile: _surveyorProfile, standard = 'KRDM2017', designSpeed = 60 }: HorizontalCurvePanelProps) {
   const [R, setR] = useState(200);
   const [deltaDeg, setDeltaDeg] = useState(35);
   const [chainageStart, setChainageStart] = useState(1000);
@@ -90,26 +90,6 @@ export function HorizontalCurvePanel({ projectId, projectData, surveyorProfile, 
     const { default: Drawing } = await import('dxf-writer');
     const drawing = new Drawing();
     initialiseDXFLayers(drawing);
-    const tb: TitleBlockData = {
-      drawingTitle: TITLE_BLOCK_TEMPLATES.eng_horizontal_curve.drawingTitle,
-      lrNumber: projectData?.lr_number ?? 'N/A',
-      county: projectData?.county ?? 'N/A',
-      district: projectData?.district ?? 'N/A',
-      locality: projectData?.locality ?? 'N/A',
-      areaHa: 0,
-      perimeterM: 0,
-      surveyorName: surveyorProfile?.fullName ?? 'N/A',
-      registrationNumber: surveyorProfile?.registrationNumber ?? 'N/A',
-      firmName: surveyorProfile?.firmName ?? 'N/A',
-      date: new Date().toLocaleDateString('en-KE'),
-      submissionRef: 'N/A',
-      coordinateSystem: 'Arc 1960 / UTM Zone 37S (SRID: 21037)',
-      scale: '1:2500',
-      sheetNumber: '1 of 1',
-      revision: 'R00'
-    }
-    // renderTitleBlock(drawing, 'eng_horizontal_curve', tb)
-
     drawing.setActiveLayer(DXF_LAYERS.CENTRELINE.name);
     
     const centerY = 100;

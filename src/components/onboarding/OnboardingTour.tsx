@@ -115,10 +115,6 @@ export function OnboardingTour() {
     }
   }, [])
 
-  const handleClose = useCallback(() => {
-    setActive(false)
-  }, [])
-
   const handleSkip = useCallback(() => {
     localStorage.setItem(STORAGE_KEY, new Date().toISOString())
     localStorage.setItem('metardu:onboarding-skipped', 'true')

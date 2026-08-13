@@ -26,7 +26,6 @@ export default function GCPValidationPage() {
     selectedClass,
     setSelectedClass,
     knownGCPs,
-    setKnownGCPs,
     residualText,
     setResidualText,
     residualFormat,

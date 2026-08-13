@@ -128,7 +128,7 @@ export function runValidation(
   knownGCPs: KnownGCP[],
   residuals: ResidualRow[],
   accuracyClass: AccuracyClass,
-  utmZone: number
+  _utmZone: number
 ): ValidationSummary | null {
   if (knownGCPs.length === 0 || residuals.length === 0) return null;
 

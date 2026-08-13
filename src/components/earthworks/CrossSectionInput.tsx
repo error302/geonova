@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, Fragment, useId } from 'react'
-import { computeCrossSection, computeEarthwork, parseEarthworkCSV, type CrossSectionInput, type CrossSectionComputed, type RoadTemplate, type EarthworkResult, type GroundShot } from '@/lib/computations/earthworksEngine'
+import { computeCrossSection, computeEarthwork, parseEarthworkCSV, type CrossSectionInput, type CrossSectionComputed, type RoadTemplate, type EarthworkResult } from '@/lib/computations/earthworksEngine'
 import CrossSectionDrawing from './CrossSectionDrawing'
 import EarthworkQuantitiesTable from './EarthworkQuantitiesTable'
 import MassHaulDiagram from './MassHaulDiagram'

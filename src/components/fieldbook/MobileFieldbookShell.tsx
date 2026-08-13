@@ -20,7 +20,7 @@ import { Wifi, WifiOff, CloudUpload, Plus, Trash2, ChevronUp, ChevronDown, Check
 import type { MobileSurveyType } from './UniversalMobileObservationForm'
 import { UniversalMobileObservationForm } from './UniversalMobileObservationForm'
 import type { CapturedBeaconPhoto } from './BeaconPhotoCapture'
-import { useHaptics, StickySummary, OfflineCacheIndicator } from './MobileFieldUX'
+import { StickySummary, OfflineCacheIndicator } from './MobileFieldUX'
 
 export type Row = { id: string; [key: string]: string }
 

@@ -26,7 +26,7 @@ export default function StatisticsTab({
   filterMaxElev,
   setFilterMinElev,
   setFilterMaxElev,
-  sortCol,
+  sortCol: _sortCol,
   handleSort,
   sortIndicator,
 }: StatisticsTabProps) {

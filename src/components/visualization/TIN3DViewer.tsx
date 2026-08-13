@@ -80,7 +80,6 @@ export function TIN3DViewer({ surface, points, width = 800, height = 500 }: TIN3
         const centerZ = (minZ + maxZ) / 2
         const rangeE = maxE - minE || 1
         const rangeN = maxN - minN || 1
-        const rangeZ = maxZ - minZ || 1
         const maxRange = Math.max(rangeE, rangeN)
 
         // ─── Color function (blue→green→yellow→red by elevation) ──────────

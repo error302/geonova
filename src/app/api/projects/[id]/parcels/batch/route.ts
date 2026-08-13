@@ -121,7 +121,7 @@ export const POST = apiHandler(
         // Insert parcel
         // AUDIT FIX (2026-07-03): geometry → geom, removed non-existent
         // owner_name/owner_id/lr_number (lr goes into lr_number_proposed).
-        const parcelResult = await db.query<ParcelRow>(
+        await db.query<ParcelRow>(
           `INSERT INTO parcels (project_id, parcel_number, lr_number_proposed, area_ha, geom, created_at)
            VALUES ($1, $2, $3, $4, ST_GeomFromText($5, 21037), NOW())
            RETURNING id`,
@@ -134,7 +134,6 @@ export const POST = apiHandler(
           ],
         )
 
-        const parcelId = parcelResult.rows[0].id
 
         // Insert beacons for each vertex
         // AUDIT FIX: survey_points has no parcel_id/point_type → use code='BEACON'

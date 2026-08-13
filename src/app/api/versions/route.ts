@@ -12,7 +12,7 @@ import { db } from '@/lib/db'
 import { z } from 'zod'
 
 /** Entity types that support versioning — moved to shared module to avoid Next.js route type inference */
-import { VERSIONED_ENTITY_TYPES, type VersionedEntityType } from '@/lib/validation/versionedEntities'
+import { VERSIONED_ENTITY_TYPES } from '@/lib/validation/versionedEntities'
 
 interface EntityVersionRow {
   id: string

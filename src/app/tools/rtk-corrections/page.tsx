@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { PageHeader } from '@/components/shared/PageHeader'
-import { Satellite, Wifi, WifiOff, Activity, Zap } from 'lucide-react'
+import { Satellite, Wifi, WifiOff, Activity } from 'lucide-react'
 import { CORS_NETWORKS, RTCM_TYPE_NAMES, type RTCMMessage } from '@/lib/gnss/ntripClient'
 
 export default function NTRIPClientPage() {

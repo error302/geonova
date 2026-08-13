@@ -14,7 +14,7 @@
  */
 
 import { memo } from 'react'
-import { Wifi, WifiOff, Bluetooth, Usb, Satellite, Battery, AlertCircle, CheckCircle, Loader2 } from 'lucide-react'
+import { Wifi, WifiOff, Bluetooth, Usb, Satellite, AlertCircle, CheckCircle, Loader2 } from 'lucide-react'
 import { useInstrumentStore } from '@/stores/instrumentStore'
 
 interface FieldConnectionBarProps {

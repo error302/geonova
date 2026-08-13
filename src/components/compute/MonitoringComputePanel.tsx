@@ -61,7 +61,7 @@ const DEMO_EPOCH2: EpochPoint[] = [
 ];
 
 export default function MonitoringComputePanel({ projectId }: { projectId: string }) {
-  const [epochs, setEpochs] = useState<EpochData[]>([
+  const [epochs] = useState<EpochData[]>([
     { epochName: 'Epoch 1', date: '2025-01-15', points: DEMO_EPOCH1 },
     { epochName: 'Epoch 2', date: '2025-06-15', points: DEMO_EPOCH2 },
   ]);

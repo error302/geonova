@@ -196,7 +196,7 @@ function VirtualizedTableInner<T>(props: VirtualizedTableProps<T>) {
     onSelectionChange,
     selectable = false,
     headerSticky = true,
-    rowKey,
+    rowKey: _rowKey,
     emptyMessage = 'No data to display',
     className,
     'aria-label': ariaLabel,

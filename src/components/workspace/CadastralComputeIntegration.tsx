@@ -9,7 +9,7 @@ export default function CadastralComputeIntegration({ projectId }: { projectId: 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<TraverseComputationResult | null>(null);
-  const [rows, setRows] = useState<FieldBookRow[]>([]);
+  const [, setRows] = useState<FieldBookRow[]>([]);
 
   useEffect(() => {
     async function loadAndCompute() {

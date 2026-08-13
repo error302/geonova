@@ -29,12 +29,6 @@ interface SnappingOptionsProps {
   onSnapTypeToggle?: (type: SnapType) => void
 }
 
-const SNAP_MODE_LABELS: Record<SnapMode, string> = {
-  vertex: 'Vertex only',
-  segment: 'Segment only',
-  vertex_segment: 'Vertex + Segment',
-}
-
 const SNAP_TYPE_LABELS: Record<SnapType, string> = {
   osm: 'Basemap features',
   parcels: 'Parcels',

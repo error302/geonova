@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react'
 import {
-  Upload, X, FileSpreadsheet, AlertCircle, CheckCircle2,
+  Upload, FileSpreadsheet, AlertCircle, CheckCircle2,
   Loader2, Info
 } from 'lucide-react'
 
