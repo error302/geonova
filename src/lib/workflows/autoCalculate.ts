@@ -20,7 +20,7 @@ function parseNumber(value: string | number | null | undefined): number | null {
 
 function calculateEngineeringRL(
   rows: FieldBookRow[],
-  changedRowIndex: number
+  _changedRowIndex: number
 ): FieldBookRow[] {
   const updated = [...rows];
   let hpc: number | null = null;
@@ -54,7 +54,7 @@ function calculateEngineeringRL(
 
 function calculateTopographicRL(
   rows: FieldBookRow[],
-  changedRowIndex: number
+  _changedRowIndex: number
 ): FieldBookRow[] {
   const updated = [...rows];
 
@@ -74,13 +74,6 @@ function calculateTopographicRL(
   }
 
   return updated;
-}
-
-function calculateMiningVolume(
-  rows: FieldBookRow[],
-  changedRowIndex: number
-): FieldBookRow[] {
-  return [...rows];
 }
 
 export function applyAutoCalculations(

@@ -23,8 +23,8 @@ import {
   type SurveyClass,
 } from '@/lib/survey/realTimeQC'
 import {
-  Activity, AlertTriangle, CheckCircle2, XCircle, Gauge,
-  TrendingDown, Layers, ShieldCheck,
+  AlertTriangle, CheckCircle2, XCircle, Gauge,
+  ShieldCheck,
 } from 'lucide-react'
 
 interface RealTimeQCPanelProps {
@@ -43,7 +43,7 @@ export function RealTimeQCPanel({
 }: RealTimeQCPanelProps) {
   const [monitor] = useState(() => new RunningClosureMonitor(surveyClass))
   const [legs, setLegs] = useState<Array<{ bearing: number; distance: number }>>([])
-  const [setupData, setSetupData] = useState({
+  const [setupData] = useState({
     instrumentHeight: 1.5,
     targetHeight: 1.5,
     temperature: 25,

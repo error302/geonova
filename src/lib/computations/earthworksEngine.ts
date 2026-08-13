@@ -141,7 +141,6 @@ function findCatchPoint(
 
     if (depth >= 0) {
       // Fill — extrapolate outward
-      const sideWidth = Math.abs(outer.offset - formationEdgeOffset)
       const requiredSideWidth = depth * fillSlopeH
       const catchOffset = formationEdgeOffset + direction * requiredSideWidth
       return {
@@ -252,7 +251,6 @@ export function computeCrossSection(
   // Compute cut and fill trapezoids between consecutive ground points
   // Filter points between catches and compute area above/below formation
   const cutPoints = allGroundPts.filter((pt) => pt.x >= leftX - 0.001 && pt.x <= rightX + 0.001)
-  const fillPoints = allGroundPts.filter((pt) => pt.x >= leftX - 0.001 && pt.x <= rightX + 0.001)
 
   let cutArea = 0
   let fillArea = 0
@@ -546,7 +544,6 @@ export function computeEarthwork(
   for (let i = 0; i < legs.length; i++) {
     const leg = legs[i]
     const nextSection = sections[i + 1]
-    const prevOrdinate = massOrdinates[massOrdinates.length - 1].ordinate
 
     // Adjusted cut (with shrinkage) - fill
     const deltaOrdinate = (leg.cutVolPrismoidal * shrinkageFactor) - leg.fillVolPrismoidal
@@ -606,7 +603,6 @@ export function parseEarthworkCSV(csv: string): CrossSectionInput[] {
 
     // Columns 4-11: L4_offset, L4_rl, L3_offset, L3_rl, L2_offset, L2_rl, L1_offset, L1_rl
     // Columns 12-19: R1_offset, R1_rl, R2_offset, R2_rl, R3_offset, R3_rl, R4_offset, R4_rl
-    const col = 4
 
     // Left shots (outer to inner: L4, L3, L2, L1)
     const leftPairs = [[4, 5], [6, 7], [8, 9], [10, 11]]

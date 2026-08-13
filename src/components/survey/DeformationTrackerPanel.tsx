@@ -13,8 +13,8 @@
 
 import { useState, useCallback, useMemo } from 'react'
 import {
-  Activity, Plus, Upload, AlertTriangle, CheckCircle2,
-  Clock, TrendingUp, Loader2, X,
+  Activity, Plus, AlertTriangle, CheckCircle2,
+  TrendingUp, X,
 } from 'lucide-react'
 import {
   computeDisplacement,
@@ -112,7 +112,6 @@ export function DeformationTrackerPanel() {
 
       if (stationReadings.length < 2) continue
 
-      const baseline = stationReadings[0]
       const latest = stationReadings[stationReadings.length - 1]
 
       // 2D displacement (E, N) in metres

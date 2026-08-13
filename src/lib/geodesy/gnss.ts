@@ -7,7 +7,6 @@
 
 // METARDU Engine - GNSS Baseline Processing
 
-import { Point2D, Point3D } from '@/lib/engine/types';
 import { toRadians, toDegrees } from '@/lib/engine/angles';
 
 export interface GNSSBaseStation {
@@ -206,7 +205,6 @@ export function processGNSSNetwork(
     baselines.push(baseline)
     
     // Convert to local ENU
-    const obsECEF = geodeticToECEF(0, 0, 0)  // placeholder
     const enu = ecefToENU(obs.x, obs.y, obs.z, originLat, originLon, originH)
     
     // Calculate uncertainties (simplified)
@@ -243,14 +241,13 @@ export function processGNSSNetwork(
 /**
  * Convert UTM coordinates to/from Geodetic
  */
-export function utmToGeodetic(easting: number, northing: number, zone: number, hemisphere: 'N' | 'S'): { lat: number; lon: number } {
+export function utmToGeodetic(easting: number, northing: number, zone: number, _hemisphere: 'N' | 'S'): { lat: number; lon: number } {
   const a = 6378137.0
   const f = 1 / 298.257223563
   const e = Math.sqrt(2 * f - f * f)
   const e1 = (1 - Math.sqrt(1 - e * e)) / (1 + Math.sqrt(1 - e * e))
   
   const x = easting - 500000
-  const y = hemisphere === 'S' ? northing - 10000000 : northing
   
   const M0 = 0
   const mu = M0 / (a * (1 - e * e / 4 - 3 * e * e * e * e / 64))

@@ -18,10 +18,10 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  Search, Command, ArrowRight, ArrowLeft, CornerDownLeft,
+  Search, Command, ArrowRight, CornerDownLeft,
   FolderKanban, Wrench, Map, FileText, Settings, LayoutDashboard,
   Calculator, Ruler, Compass, Users, CreditCard, BarChart3,
-  BookOpen, HelpCircle, Loader2,
+  BookOpen, Loader2,
 } from 'lucide-react'
 import { useDebounceValue } from '@/lib/performance'
 
@@ -329,7 +329,7 @@ export function CommandPalette() {
 // ─── Helper components ──────────────────────────────────────────────────
 
 function ResultRow({
-  selected, onClick, onHover, icon: Icon, title, subtitle, href, category,
+  selected, onClick, onHover, icon: Icon, title, subtitle, category,
 }: {
   selected: boolean
   onClick: () => void
@@ -377,7 +377,7 @@ function getResultIcon(type: string): typeof LayoutDashboard {
   }
 }
 
-function getHrefForType(type: string, id: string, meta?: Record<string, unknown>): string {
+function getHrefForType(type: string, id: string, _meta?: Record<string, unknown>): string {
   switch (type) {
     case 'projects': return `/project/${id}`
     case 'surveyors': return `/community/directory?id=${id}`

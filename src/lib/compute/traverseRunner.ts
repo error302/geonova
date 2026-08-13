@@ -4,7 +4,6 @@ import {
   forwardTraverse, 
   ForwardTraverseInput, 
   TraverseInput,
-  TRAVERSE_PRECISION_STANDARDS,
   evaluateTraverseClosure,
   type SurveyTypeKey
 } from '@/lib/engine/traverse';
@@ -73,7 +72,7 @@ function parseTraverseRows(rows: FieldBookRow[]): {
 }
 
 export function runTraverseComputation(input: TraverseComputeInput): TraverseComputationResult {
-  const { stations, distances, bearings, points } = parseTraverseRows(input.rows);
+  const { distances, bearings, points } = parseTraverseRows(input.rows);
 
   if (points.length === 0) {
     throw new Error('No valid traverse legs found in field book');
@@ -158,7 +157,7 @@ export function runTraverseComputation(input: TraverseComputeInput): TraverseCom
 }
 
 export function runForwardTraverse(input: TraverseComputeInput): ReturnType<typeof forwardTraverse> {
-  const { stations, distances, bearings, points } = parseTraverseRows(input.rows);
+  const { stations, distances, bearings } = parseTraverseRows(input.rows);
 
   const forwardInput: ForwardTraverseInput = {
     start: input.startPoint,
@@ -171,7 +170,7 @@ export function runForwardTraverse(input: TraverseComputeInput): ReturnType<type
 }
 
 export function runBowditchAdjustment(input: TraverseComputeInput): ReturnType<typeof bowditchAdjustment> {
-  const { stations, distances, bearings, points } = parseTraverseRows(input.rows);
+  const { distances, bearings, points } = parseTraverseRows(input.rows);
 
   if (points.length === 0) {
     throw new Error('No valid traverse legs found in field book');

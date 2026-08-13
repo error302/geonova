@@ -135,7 +135,7 @@ function computeSettingOut(
   return { bearing, stations, upstreamToe, downstreamToe, heightDiff, upstreamOffset, downstreamOffset };
 }
 
-export function DamPanel({ projectId, subtype }: EngineeringPanelProps) {
+export function DamPanel({ projectId: _projectId, subtype: _subtype }: EngineeringPanelProps) {
   const [activeTab, setActiveTab] = useState<'control' | 'geometry' | 'reservoir' | 'settingout'>('control');
   const qa = ENGINEERING_QA.dam;
 
@@ -402,7 +402,7 @@ export function DamPanel({ projectId, subtype }: EngineeringPanelProps) {
                         </tr>
                       </thead>
                       <tbody>
-                        {settingOut.upstreamToe.map((pt, i) => (
+                        {settingOut.upstreamToe.map((pt) => (
                           <tr key={pt.label} className="border-b border-zinc-800">
                             <td className="py-1 pr-3 font-mono text-xs">{pt.label}</td>
                             <td className="py-1 pr-3 text-right font-mono text-xs">{pt.easting.toFixed(3)}</td>
@@ -427,7 +427,7 @@ export function DamPanel({ projectId, subtype }: EngineeringPanelProps) {
                         </tr>
                       </thead>
                       <tbody>
-                        {settingOut.downstreamToe.map((pt, i) => (
+                        {settingOut.downstreamToe.map((pt) => (
                           <tr key={pt.label} className="border-b border-zinc-800">
                             <td className="py-1 pr-3 font-mono text-xs">{pt.label}</td>
                             <td className="py-1 pr-3 text-right font-mono text-xs">{pt.easting.toFixed(3)}</td>

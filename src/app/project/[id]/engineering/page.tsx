@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/api-client/client'
 import { z } from 'zod'
-import { apiGet, apiPost, ApiError } from '@/lib/api/client'
+import { apiGet, apiPost } from '@/lib/api/client'
 import type {
   EngineeringData,
   EngineeringMode,
@@ -138,8 +138,7 @@ export default function EngineeringWorkspacePage() {
   const [loadingEngineering, setLoadingEngineering] = useState(false)
   const [activeStep, setActiveStep] = useState<EngineeringStepId>('setup')
   const [saving, setSaving] = useState(false)
-  const [quickMode, setQuickMode] = useState(false)
-  const [alignmentId, setAlignmentId] = useState<string | null>(null)
+  const [, setAlignmentId] = useState<string | null>(null)
 
   // Sub-tab for quick compute panels
   const activeTab = searchParams.get('tab') || 'workflow'

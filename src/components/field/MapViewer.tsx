@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, forwardRef, useImperativeHandle, useCallback } from 'react';
+import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { MapLayer, FieldBeacon, FieldParcel, GeoPDFLayer, MBTilesSession } from '@/types/field';
 import { logger } from '@/lib/logger'
 
@@ -27,7 +27,7 @@ interface Props {
 }
 
 const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
-  { layers, beacons, parcels, geoPDFLayers, mbtilesSessions, onMapClick, onGPSUpdate, onPerimeterWalk, gpsLocation, gpsAccuracy },
+  { layers, beacons, parcels, geoPDFLayers, mbtilesSessions, onMapClick, gpsLocation, gpsAccuracy },
   ref
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -120,7 +120,6 @@ const MapViewer = forwardRef<MapHandle, Props>(function MapViewer(
         const { default: Stroke } = await import('ol/style/Stroke');
         const { default: TextStyle } = await import('ol/style/Text');
         const { fromLonLat, toLonLat } = await import('ol/proj');
-        const { default: Attribution } = await import('ol/control/Attribution');
         const olControl = await import('ol/control');
         const defaultControls = olControl.defaults;
 

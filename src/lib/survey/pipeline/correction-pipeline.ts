@@ -18,10 +18,10 @@
  */
 
 import { applyAtmosphericCorrection, type AtmosphericConditions, type EDMInstrument } from '../corrections/atmospheric';
-import { applyCurvatureRefractionCorrection, type CurvatureRefractionInput, KENYA_REFRACTION_COEFFICIENT } from '../corrections/curvature-refraction';
-import { computeLineScaleFactor, applyGridScaleFactor, type ProjectionType } from '../corrections/grid-scale-factor';
-import { applySeaLevelReduction, type SeaLevelReductionInput } from '../corrections/sea-level-reduction';
-import { reduceSlopeByAngle, reduceSlopeByHeight, type SlopeReductionResult } from '../corrections/slope-reduction';
+import { applyCurvatureRefractionCorrection, KENYA_REFRACTION_COEFFICIENT } from '../corrections/curvature-refraction';
+import { applyGridScaleFactor, type ProjectionType } from '../corrections/grid-scale-factor';
+import { applySeaLevelReduction } from '../corrections/sea-level-reduction';
+import { reduceSlopeByAngle, type SlopeReductionResult } from '../corrections/slope-reduction';
 import { computeConvergence, applyConvergenceToBearing } from '../corrections/projection-convergence';
 
 // ─── Types ───────────────────────────────────────────────────────

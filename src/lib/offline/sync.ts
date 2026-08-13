@@ -9,11 +9,8 @@
 
 import {
   getDB,
-  syncPendingOperations,
   isOnline as isOnlineV2,
   setupOnlineListener,
-  clearOfflineData,
-  type SyncOperation,
 } from './syncQueue'
 
 export interface SyncResult {
@@ -134,7 +131,7 @@ export function isOnline(): boolean {
  */
 export function registerNetworkListeners(
   onOnline: () => void,
-  onOffline: () => void
+  _onOffline: () => void
 ): () => void {
   return setupOnlineListener(onOnline)
 }

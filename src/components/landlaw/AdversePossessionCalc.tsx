@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react'
-import { Calculator, Plus, Trash2, CheckCircle, XCircle, AlertCircle, Clock, FileText } from 'lucide-react'
+import { Calculator, Trash2, CheckCircle, XCircle, Clock, FileText } from 'lucide-react'
 import { computeAdversePossession, getRequiredEvidenceTypes } from '@/lib/compute/adversePossession'
 import type { AdversePossessionAnalysis, AdversePossessionEvidenceInput } from '@/lib/compute/adversePossession'
 
@@ -219,7 +219,7 @@ export default function AdversePossessionCalc() {
 
               <div className="space-y-2">
                 <h4 className="font-medium text-gray-700">Requirements Analysis</h4>
-                {analysis.requirements.map((req, index) => (
+                {analysis.requirements.map((req) => (
                   <div key={req.name} className="p-3 border rounded-lg">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -247,7 +247,7 @@ export default function AdversePossessionCalc() {
 
               <div className="space-y-2">
                 <h4 className="font-medium text-gray-700">Analysis Steps</h4>
-                {analysis.steps.map((step, index) => (
+                {analysis.steps.map((step) => (
                   <div key={step.title} className="flex items-start gap-3 p-2">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
                       step.passed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'

@@ -26,7 +26,7 @@
  */
 
 import Drawing from 'dxf-writer'
-import { DXF_LAYERS, formatBearingDMS, initialiseSokDXFLayers } from '@/lib/drawing/dxfLayers'
+import { formatBearingDMS, initialiseSokDXFLayers } from '@/lib/drawing/dxfLayers'
 
 // ─── Public Types ────────────────────────────────────────────────────────────
 
@@ -263,12 +263,11 @@ function buildNorthArrow(x: number, y: number): string[] {
  * Build a scale bar using raw DXF entities.
  * Segments are sized based on the scale and sheet size.
  */
-function buildScaleBar(x: number, y: number, scale: number, sheetSize: string): string[] {
+function buildScaleBar(x: number, y: number, scale: number, _sheetSize: string): string[] {
   const parts: string[] = []
   const barH = 3 // mm
 
   // Target ~60mm per segment on paper
-  const targetRealMeters = 60 * scale / 1000
 
   // Pick a nice step
   const niceSteps = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 5000]
@@ -746,14 +745,4 @@ export function generateTraverseDXF(options: TraverseDXFOptions): string {
 
   // Fallback: append
   return coreDxf + '\n' + rawParts.join('\n') + '\n0\nEOF\n'
-}
-
-/**
- * Initialise standard DXF layers on a dxf-writer Drawing instance.
- * Re-exports the standard layer definitions from dxfLayers.ts and also
- * registers traverse-specific layers.
- * @deprecated Use initialiseSokDXFLayers() from dxfLayers.ts instead.
- */
-function initialiseDXFLayers(drawing: Drawing): void {
-  initialiseSokDXFLayers(drawing)
 }

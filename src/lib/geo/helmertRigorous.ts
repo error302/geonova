@@ -55,7 +55,7 @@
  *   Geodesy, 89(11).
  */
 
-import { computeHelmertTransformation, transformPoint, type ControlPointPair, type HelmertParameters, type HelmertResult } from './helmertTransform'
+import { computeHelmertTransformation, type ControlPointPair, type HelmertParameters, type HelmertResult } from './helmertTransform'
 
 // ─── Full Rotation Matrix ────────────────────────────────────────────────────
 
@@ -121,11 +121,6 @@ function helmertJacobian(
   params: HelmertParameters,
 ): number[][] {
   const h = 1e-7  // step size (good balance of truncation and round-off for doubles)
-  const f0 = transformPointFull(x, y, z, params)
-
-  // For each of the 7 parameters, perturb and evaluate
-  const paramsPlus = { ...params }
-  const paramsMinus = { ...params }
 
   const jac: number[][] = [
     [0, 0, 0, 0, 0, 0, 0],

@@ -9,8 +9,6 @@
 // METARDU Engine - Geometry utilities
 
 import { Point2D, SurveyResult } from './types';
-import { toRadians, toDegrees, normalizeBearing } from './angles';
-import { distanceBearing } from './distance';
 
 export interface AngularMisclosureResult {
   sumObservedAngles: number;

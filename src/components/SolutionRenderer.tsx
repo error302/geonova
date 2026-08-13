@@ -12,7 +12,7 @@ export default function SolutionRenderer({ solution }: { solution: Solution }) {
       <div className="card-body space-y-4">
         <Section title="Given">
           <div className="grid md:grid-cols-2 gap-2">
-            {solution.given.map((g, i) => (
+            {solution.given.map((g) => (
               <div key={g.label} className="flex items-baseline justify-between gap-3 p-2 rounded bg-gray-950/30 border border-[var(--border-color)]">
                 <div className="text-xs text-[var(--text-muted)]">{g.label}</div>
                 <div className="font-mono text-sm text-[var(--text-primary)] text-right">{g.value}</div>
@@ -31,7 +31,7 @@ export default function SolutionRenderer({ solution }: { solution: Solution }) {
 
         <Section title="Solution">
           <div className="space-y-3">
-            {solution.solution.map((s, i) => (
+            {solution.solution.map((s) => (
               <div key={s.title} className="rounded-lg border border-[var(--border-color)] bg-gray-950/20 p-3">
                 {s.title ? <div className="text-sm font-semibold text-amber-300 mb-2">{s.title}</div> : null}
                 <Row label="Formula" value={s.formula} />
@@ -46,7 +46,7 @@ export default function SolutionRenderer({ solution }: { solution: Solution }) {
         {solution.check && solution.check.length > 0 ? (
           <Section title="Check">
             <div className="space-y-2">
-              {solution.check.map((c, i) => (
+              {solution.check.map((c) => (
                 <div
                   key={c.label}
                   className={`flex items-baseline justify-between gap-3 p-2 rounded border ${
@@ -67,7 +67,7 @@ export default function SolutionRenderer({ solution }: { solution: Solution }) {
 
         <Section title="Result">
           <div className="space-y-2">
-            {solution.result.map((r, i) => (
+            {solution.result.map((r) => (
               <div key={r.label} className="flex items-baseline justify-between gap-3 p-2 rounded bg-gray-950/30 border border-[var(--border-color)]">
                 <div className="text-xs text-[var(--text-muted)]">{r.label}</div>
                 <div className="font-mono text-sm text-amber-200 text-right">{r.value}</div>

@@ -11,10 +11,9 @@
  * - Export CSV report
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback } from 'react'
 import {
   Mountain, Upload, Download, Loader2, CheckCircle2,
-  AlertTriangle, Table,
 } from 'lucide-react'
 import {
   computeCutFill,
@@ -66,7 +65,7 @@ export function CutFillPanel() {
       if (type === 'existing') setExistingSurface(surface)
       else setDesignSurface(surface)
       setResult(null)
-    } catch (err) {
+    } catch {
       setError('Failed to parse CSV file')
     }
   }, [parseSurfaceCSV])

@@ -11,14 +11,13 @@ import type { EngineeringProject } from '../shared'
  * for each station against the cross-section template.
  */
 export function Step6Outputs({
-  project,
+  project: _project,
   data
 }: {
   project: EngineeringProject
   data: RoadDesignData | null
 }) {
   const ips = data?.ips || []
-  const vips = data?.vips || []
   const stations = data?.stations || []
   const template = data?.crossSectionTemplate
 
@@ -37,7 +36,6 @@ export function Step6Outputs({
       const ip2 = ips[i + 1]
       const dx = ip2.easting - ip1.easting
       const dy = ip2.northing - ip1.northing
-      const dist = Math.sqrt(dx * dx + dy * dy)
       const bearing = Math.atan2(dx, dy) * (180 / Math.PI)
       const radius = ip2.radius || 100
       const deflection = bearing - (i > 0 ? Math.atan2(ips[i].easting - ips[i-1].easting, ips[i].northing - ips[i-1].northing) * (180 / Math.PI) : bearing)
@@ -115,7 +113,7 @@ export function Step6Outputs({
                 </tr>
               </thead>
               <tbody>
-                {curves.map((c, i) => (
+                {curves.map((c) => (
                   <tr key={c.name} className="border-t border-zinc-800">
                     <td className="py-1.5 text-white">{c.name}</td>
                     <td className="py-1.5 text-right text-zinc-400">{c.radius}m</td>

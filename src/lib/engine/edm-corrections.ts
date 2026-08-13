@@ -12,7 +12,6 @@
  */
 
 import type { SurveyingCountry } from '@/lib/country/standards'
-import { getCountryStandard } from '@/lib/country/standards'
 
 // ─── STAGE 1: SLOPE → HORIZONTAL ─────────────────────────────────────────────
 
@@ -46,7 +45,6 @@ export function slopeFromEDM(input: SlopeCorrectionInput): SlopeCorrectionOutput
     zenithAngle: za,
     temperatureC = 15,
     pressureHPa = 1013.25,
-    edmSpecMM = 5,
     edmSpecPPM = 5,
   } = input
 
@@ -105,7 +103,6 @@ export function seaLevelCorrection(input: SeaLevelCorrectionInput): SeaLevelCorr
   const {
     horizontalDistance,
     meanElevationMetres,
-    latitudeDegrees = 0,
     refractCoeff = 0.13,
   } = input
 
@@ -149,7 +146,7 @@ export interface GridCorrectionOutput {
 }
 
 export function gridCorrection(input: GridCorrectionInput): GridCorrectionOutput {
-  const { seaLevelDistance, scaleFactor, convergenceAngle = 0, easting } = input
+  const { seaLevelDistance, scaleFactor, convergenceAngle = 0 } = input
 
   const combinedSF = scaleFactor
   const gridDistance = seaLevelDistance * scaleFactor
@@ -261,7 +258,6 @@ export function edmFullReduction(input: EDMReductionInput): EDMReductionResult {
     pressureHPa = 1013.25,
     edmSpecMM = 5,
     edmSpecPPM = 5,
-    country,
   } = input
 
   const slope = slopeFromEDM({ slopeDistanceMetres: slopeDistance, zenithAngle, temperatureC, pressureHPa, edmSpecMM, edmSpecPPM })
@@ -280,8 +276,6 @@ export function edmFullReduction(input: EDMReductionInput): EDMReductionResult {
     ...grid.warnings,
   ]
 
-  const std = country ? getCountryStandard(country) : null
-  const defaultSlopeRule = std?.slopeCorrection.maxSlopeSingleFace ?? 10
 
   return {
     slopeDistance,

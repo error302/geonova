@@ -30,12 +30,11 @@
 //   // result.instantFeedback → closure check (available BEFORE full pipeline)
 // ──────────────────────────────────────────────────────────────────────────
 
-import { bowditchAdjustment, transitAdjustment, type TraverseInput, type SurveyTypeKey, TRAVERSE_PRECISION_STANDARDS, evaluateTraverseClosure } from '@/lib/engine/traverse';
+import { bowditchAdjustment, transitAdjustment, type TraverseInput, type SurveyTypeKey, evaluateTraverseClosure } from '@/lib/engine/traverse';
 import { toRadians } from '@/lib/engine/angles';
 import { reduceEDMObservation } from './adapter';
 import { computeArea, computeClosureCheck } from '@/lib/compute/deedPlan';
 import type { BoundaryPoint } from '@/types/deedPlan';
-import { processObservations, type RawObservation, KENYA_DEFAULT_CONFIG } from './pipeline/correction-pipeline';
 
 // ─── Types ───────────────────────────────────────────────────────────────
 

@@ -222,64 +222,12 @@ function NetworkIcon({ className }: { className?: string }) {
   )
 }
 
-/** Pin icon for pinned discussions */
-function PinIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
-      <path d="M9.828.722a.5.5 0 01.354.146l4.95 4.95a.5.5 0 010 .707c-.48.48-1.072.588-1.503.588-.178 0-.334-.018-.455-.038l-2.732 2.732.162.466a2.5 2.5 0 01-.565 2.598l-1.06 1.06a.5.5 0 01-.708 0L4.05 10.95l-3.04 3.04a.5.5 0 01-.707-.708l3.04-3.04-2.475-2.475a.5.5 0 010-.707l1.06-1.06a2.5 2.5 0 012.599-.565l.466.162 2.732-2.732a3.1 3.1 0 01-.038-.455c0-.43.108-1.023.588-1.503a.5.5 0 01.353-.146z" />
-    </svg>
-  )
-}
-
-/** Chat bubble SVG for reply count */
-function ChatBubbleIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 4h12a2 2 0 012 2v6a2 2 0 01-2 2H7l-3 3v-3H4a2 2 0 01-2-2V6a2 2 0 012-2z" />
-      <line x1="6" y1="8" x2="14" y2="8" opacity="0.5" />
-      <line x1="6" y1="11" x2="11" y2="11" opacity="0.5" />
-    </svg>
-  )
-}
-
 /** Shield icon for verified badge */
 function ShieldBadgeIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 20 20" fill="none">
       <path d="M10 1L3 4.5v5c0 4.42 3 8.14 7 9.5 4-1.36 7-5.08 7-9.5v-5L10 1z" fill="var(--accent)" opacity="0.15" stroke="var(--accent)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M7.5 10l1.5 1.5 3.5-3.5" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-/** Star rating SVG — supports filled, half, empty */
-function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
-  const stars = []
-  for (let i = 1; i <= 5; i++) {
-    const filled = rating >= i
-    const half = !filled && rating >= i - 0.5
-    stars.push(
-      <svg key={`item-${i}`} width={size} height={size} viewBox="0 0 20 20" fill={filled ? 'var(--accent)' : half ? 'url(#halfStar)' : 'none'} stroke="var(--accent)" strokeWidth="1.2">
-        {half && (
-          <defs>
-            <linearGradient id="halfStar">
-              <stop offset="50%" stopColor="var(--accent)" />
-              <stop offset="50%" stopColor="transparent" />
-            </linearGradient>
-          </defs>
-        )}
-        <path d="M10 1.5l2.47 5.01 5.53.8-4 3.9.94 5.49L10 14.27 5.06 16.7 6 11.21l-4-3.9 5.53-.8L10 1.5z" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    )
-  }
-  return <span className="inline-flex items-center gap-0.5">{stars}</span>
-}
-
-/** Hot/Flame indicator for active discussions */
-function HotIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
-      <path d="M8 1c.33 2.67-1.33 4-1.33 4s2 0 2.66 3.33c.34-1.66-.66-3-.66-3s2 .67 2 3.34C11 12 9.67 14 8 14c-2 0-3-1.67-3-3.67C5 7.67 8 5.67 8 1z" opacity="0.8" />
     </svg>
   )
 }

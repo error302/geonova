@@ -22,8 +22,8 @@ import React, { useState, useRef, useCallback, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
-  MousePointer2, Move, Type, Ruler, Compass, Download,
-  Undo2, Redo2, Trash2, Plus, Minus, RotateCw, Lock, Unlock, X
+  MousePointer2, Move, Type, Download,
+  Undo2, Redo2, Trash2, Plus, Minus, Lock, Unlock, X
 } from 'lucide-react'
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -125,7 +125,7 @@ export default function CADEditor({
   
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
-  const [editingText, setEditingText] = useState<string | null>(null)
+  const [, setEditingText] = useState<string | null>(null)
   const dragRef = useRef<{ type: string; id: string; startX: number; startY: number; origX: number; origY: number } | null>(null)
 
   const handleCommandSubmit = useCallback((e: React.FormEvent) => {

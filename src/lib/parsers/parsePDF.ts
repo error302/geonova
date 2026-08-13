@@ -1,4 +1,4 @@
-import type { ParsedInput, ExtractedBuildingData, ExtractedAnnotation, BoundingBox2D, ExtractedWall, ExtractedRoom, ExtractedFloor, Point2D } from './types'
+import type { ParsedInput, ExtractedBuildingData, ExtractedAnnotation, BoundingBox2D, ExtractedWall } from './types'
 import { calculateConfidence } from './fileRouter'
 
 export interface PDFParseOptions {
@@ -11,8 +11,7 @@ interface PDFTextItem {
   str?: string
 }
 
-export async function parsePDFContent(file: File, options: PDFParseOptions = {}): Promise<ParsedInput> {
-  const { scale = 2 } = options
+export async function parsePDFContent(file: File, _options: PDFParseOptions = {}): Promise<ParsedInput> {
 
   try {
     const pdfjsLib = await import('pdfjs-dist')

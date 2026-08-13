@@ -1,6 +1,6 @@
 import { db } from '@/lib/db'
-import type { SurveyJob, JobApplication, JobReview } from '@/types/jobs'
-import type { PeerReviewRequest, PeerReviewer } from '@/types/peerReview'
+import type { SurveyJob, JobApplication } from '@/types/jobs'
+import type { PeerReviewRequest } from '@/types/peerReview'
 import type { SurveyorProfile } from '@/lib/api-client/community'
 
 export interface CommunityStats {
@@ -58,7 +58,7 @@ function rowToProfile(row: DbRow): SurveyorProfile {
   } as SurveyorProfile
 }
 
-export async function getOpenJobs(filters?: {
+export async function getOpenJobs(_filters?: {
   jobType?: string
   county?: string
   minBudget?: number
@@ -166,7 +166,7 @@ export async function createOrUpdateProfile(userId: string, profile: Partial<Sur
   )
 }
 
-export async function getSurveyors(filters?: {
+export async function getSurveyors(_filters?: {
   county?: string
   specialization?: string
 }): Promise<SurveyorProfile[]> {

@@ -8,7 +8,7 @@ interface EngineeringPanelProps {
   subtype: EngineeringSubtype;
 }
 
-export function BuildingPanel({ projectId, subtype }: EngineeringPanelProps) {
+export function BuildingPanel({ projectId: _projectId, subtype: _subtype }: EngineeringPanelProps) {
   const [activeTab, setActiveTab] = useState<'control' | 'corners' | 'settingout' | 'floors'>('control');
   const qa = ENGINEERING_QA.building;
 
@@ -96,7 +96,7 @@ export function BuildingPanel({ projectId, subtype }: EngineeringPanelProps) {
               </tr>
             </thead>
             <tbody>
-              {buildingCorners.map((corner, i) => (
+              {buildingCorners.map((corner) => (
                 <tr key={corner.label} className="border-b border-zinc-800">
                   <td className="py-2">{corner.label}</td>
                   <td className="py-2">{corner.easting.toFixed(3)}</td>
@@ -153,7 +153,7 @@ export function BuildingPanel({ projectId, subtype }: EngineeringPanelProps) {
                 </tr>
               </thead>
               <tbody>
-                {buildingCorners.map((corner, i) => (
+                {buildingCorners.map((corner) => (
                   <tr key={corner.label} className="border-b border-zinc-800">
                     <td className="py-2">{corner.label}</td>
                     <td className="py-2">CP1</td>
