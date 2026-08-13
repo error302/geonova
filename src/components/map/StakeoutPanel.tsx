@@ -13,7 +13,7 @@
  * Previously received 9 props from MapClient — now reads from context directly.
  */
 
-import React, { memo, useState, useEffect, useRef } from 'react'
+import React, { memo, useState, useEffect, useRef, useMemo } from 'react'
 import { useMapContext } from '@/app/map/MapReactContext'
 
 export const StakeoutPanel = memo(function StakeoutPanel() {
@@ -30,9 +30,12 @@ export const StakeoutPanel = memo(function StakeoutPanel() {
   } = useMapContext()
 
   // Derive target in StakeoutTarget format
-  const target = stakeoutTarget
-    ? { easting: stakeoutTarget.e, northing: stakeoutTarget.n }
-    : null
+  const target = useMemo(
+    () => stakeoutTarget
+      ? { easting: stakeoutTarget.e, northing: stakeoutTarget.n }
+      : null,
+    [stakeoutTarget]
+  )
 
   const gpsAccuracy = gpsPos?.accuracy ?? 0
 

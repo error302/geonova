@@ -78,8 +78,11 @@ export function FieldRecordVault() {
     }
   }, [searchMode, query, easting, northing, radius])
 
+  // Mount-only auto-search - explicit Search button / Enter re-search, so
+  // `search` is deliberately omitted from deps.
   useEffect(() => {
     search()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

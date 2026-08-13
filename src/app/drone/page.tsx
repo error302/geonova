@@ -216,7 +216,7 @@ function ProcessingSection({ taskId }: { taskId: string }) {
     }, 5000)
 
     return () => clearInterval(interval)
-  }, [fetchTask, task?.status])
+  }, [fetchTask, task])
 
   const startProcessing = async () => {
     setProcessing(true)

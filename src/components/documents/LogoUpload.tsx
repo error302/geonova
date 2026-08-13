@@ -58,31 +58,7 @@ export default function LogoUpload({
   const isFree = plan === 'free';
 
   // Read file and create preview
-  const processFile = useCallback((file: File) => {
-    setError(null);
-
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      setError(`Invalid format. Allowed: ${ALLOWED_EXTENSIONS}`);
-      return;
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      setError('File too large. Maximum size: 2MB.');
-      return;
-    }
-
-    // Create preview URL
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreview(e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-
-    // Upload the file
-    uploadLogo(file);
-  }, []);
-
-  const uploadLogo = async (file: File) => {
+  const uploadLogo = useCallback(async (file: File) => {
     setUploading(true);
     setError(null);
 
@@ -122,7 +98,31 @@ export default function LogoUpload({
     } finally {
       setUploading(false);
     }
-  };
+  }, [onUploadSuccess]);
+
+  const processFile = useCallback((file: File) => {
+    setError(null);
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setError(`Invalid format. Allowed: ${ALLOWED_EXTENSIONS}`);
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      setError('File too large. Maximum size: 2MB.');
+      return;
+    }
+
+    // Create preview URL
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setPreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // Upload the file
+    uploadLogo(file);
+  }, [uploadLogo]);
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {

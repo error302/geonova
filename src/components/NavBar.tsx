@@ -272,7 +272,7 @@ export default function NavBar() {
       }
     }
     fetchPlan()
-  }, [session?.user?.id])
+  }, [user?.id])
 
   useEffect(() => {
     const handleBeforeInstall = (e: Event) => {

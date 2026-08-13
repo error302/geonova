@@ -64,5 +64,5 @@ export function useMapState(
       clearInterval(interval)
       saveViewState()
     }
-  }, [mapReady])
+  }, [mapReady, drawSourceRef, mapInstance])
 }

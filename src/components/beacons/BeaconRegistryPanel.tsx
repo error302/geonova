@@ -81,9 +81,11 @@ export function BeaconRegistryPanel() {
     }
   }, [mode, query, easting, northing, radius, county, beaconType])
 
-  // Auto-search on mount
+  // Auto-search on mount - intentionally mount-only (explicit Search button / Enter
+  // re-search), so `search` is deliberately omitted from deps.
   useEffect(() => {
     search()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleCopy = useCallback((beacon: Beacon) => {

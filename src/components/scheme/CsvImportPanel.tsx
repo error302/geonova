@@ -26,7 +26,7 @@ export default function CsvImportPanel({ projectId, blockId, blockName, onImport
   const [error, setError] = useState('')
   const [fileName, setFileName] = useState('')
 
-  const doImport = async (file: File) => {
+  const doImport = useCallback(async (file: File) => {
     setLoading(true)
     setError('')
     setResult(null)
@@ -54,7 +54,7 @@ export default function CsvImportPanel({ projectId, blockId, blockName, onImport
     } finally {
       setLoading(false)
     }
-  }
+  }, [projectId, blockId, onImportComplete])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -66,7 +66,7 @@ export default function CsvImportPanel({ projectId, blockId, blockName, onImport
     setDragging(false)
     const file = e.dataTransfer.files?.[0]
     if (file) doImport(file)
-  }, [])
+  }, [doImport])
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()

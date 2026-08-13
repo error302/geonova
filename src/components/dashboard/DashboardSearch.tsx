@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useCallback,
+  useMemo,
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
 import { useRouter } from 'next/navigation';
@@ -162,7 +163,7 @@ export default function DashboardSearch() {
   const abortRef = useRef<AbortController | null>(null);
 
   // ------ Flatten items for keyboard navigation ------
-  const flatItems = results ? flattenResults(results) : [];
+  const flatItems = useMemo(() => (results ? flattenResults(results) : []), [results]);
   const hasResults = flatItems.length > 0;
 
   // ------ Group tracking (which type starts at which flat index) ------

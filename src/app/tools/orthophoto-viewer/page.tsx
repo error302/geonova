@@ -714,7 +714,7 @@ export default function OrthophotoViewerPage() {
     setTimeout(exportKML, 200);
     setTimeout(exportGeoJSONFile, 400);
     setTimeout(exportCSV, 600);
-  }, [exportDXF, exportKML, exportGeoJSONFile, exportCSV]);
+  }, [exportDXF, exportKML, exportGeoJSONFile, exportCSV, polygons.length]);
 
   /* ════════════════════════════════════════════════════════════════════
    *  RENDER

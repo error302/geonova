@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { createClient } from '@/lib/api-client/client';
 import type { AdjustedStation } from '@/lib/engine/planGeometry';
 
@@ -49,7 +49,7 @@ export default function MapPage({ params }: MapPageProps) {
     clientName: string;
     county: string;
   } | null>(null);
-  const dbClient = createClient();
+  const dbClient = useMemo(() => createClient(), []);
 
   useEffect(() => {
     async function load() {
@@ -98,7 +98,7 @@ export default function MapPage({ params }: MapPageProps) {
     }
 
     load();
-  }, [params.id]);
+  }, [params.id, dbClient]);
 
   // ── Handle beacon click from the map ─────────────────────────────────────
   const handleBeaconClick = useCallback((label: string, easting: number, northing: number) => {

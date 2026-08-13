@@ -16,7 +16,7 @@
  * Warns if PDOP > 4.0 or fix is RTK Float (not acceptable for cadastral).
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import {
   Satellite, AlertTriangle, CheckCircle2, Activity,
   Download, RefreshCw,
@@ -148,7 +148,7 @@ export function GNSSQualityReport({ externalPosition }: {
   }, [])
 
   // Quality checks
-  const checks: QualityCheck[] = quality ? [
+  const checks: QualityCheck[] = useMemo(() => quality ? [
     {
       metric: 'Fix Quality',
       value: FIX_QUALITY_LABELS[quality.fixQuality].label,
@@ -213,7 +213,7 @@ export function GNSSQualityReport({ externalPosition }: {
               quality.correctionAge < 10 ? 'pass' : 'fail',
       description: 'Age of differential correction. Stale corrections indicate connection issues.',
     },
-  ] : []
+  ] : [], [quality])
 
   const overallStatus = checks.length > 0
     ? checks.some(c => c.status === 'fail') ? 'fail' :

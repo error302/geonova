@@ -572,6 +572,9 @@ export function useMapInit(params: UseMapInitParams) {
 
     initMap()
 
+    // Mount-once map initialization: adding the ~20 refs/setters/helpers in this
+    // effect body to deps would tear down and re-create the whole OpenLayers map
+    // whenever searchParams/params or any helper identity changes.
     return () => {
       cancelled = true
       if (map) {
@@ -585,6 +588,7 @@ export function useMapInit(params: UseMapInitParams) {
         cleanupRef.current = null
       }
     }
-  
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }

@@ -127,7 +127,7 @@ export function useViewportQuery({
     return () => {
       map.un('moveend', debouncedFetch)
     }
-  }, [mapReady, enabled, mapInstance, fetchViewport, debounceMs])
+  }, [mapReady, enabled, mapInstance, fetchViewport, debounceMs, debouncedFetch])
 
   return {
     isLoading,

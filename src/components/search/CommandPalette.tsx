@@ -176,6 +176,14 @@ export function CommandPalette() {
   }, [allResults.length])
 
   // Keyboard navigation
+  const handleSelect = useCallback((item: StaticNavItem | SearchResult) => {
+    const href = 'href' in item ? item.href : undefined
+    if (href) {
+      router.push(href)
+      setOpen(false)
+    }
+  }, [router])
+
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault()
@@ -188,15 +196,7 @@ export function CommandPalette() {
       const item = allResults[selectedIndex]
       if (item) handleSelect(item)
     }
-  }, [allResults, selectedIndex])
-
-  const handleSelect = useCallback((item: StaticNavItem | SearchResult) => {
-    const href = 'href' in item ? item.href : undefined
-    if (href) {
-      router.push(href)
-      setOpen(false)
-    }
-  }, [router])
+  }, [allResults, selectedIndex, handleSelect])
 
   // Scroll selected item into view
   useEffect(() => {

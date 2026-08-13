@@ -225,7 +225,7 @@ export function ReportTemplateEditor() {
       offsetX: mouseX - element.x,
       offsetY: mouseY - element.y,
     })
-  }, [canvasWidth, canvasHeight])
+  }, [canvasWidth])
 
   // ─── Resize element ────────────────────────────────────────────
   const handleResizeMouseDown = useCallback((e: React.MouseEvent, elementId: string, handle: string) => {

@@ -98,7 +98,7 @@ export function NeighborConsensusForm({
       },
       { enableHighAccuracy: true, timeout: 10000 },
     )
-  }, [beaconEasting, beaconNorthing])
+  }, [beaconEasting, beaconNorthing, epsg])
 
   // Auto-check location on mount
   useEffect(() => {

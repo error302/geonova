@@ -70,7 +70,7 @@ export default function SuperelevationPanel({
     }
 
     return { issues, passes };
-  }, [R, V, ePercent, minTransition, standard]);
+  }, [ePercent, minTransition, standard]);
 
   const result: SuperelevationResult | null = useMemo(() => {
     try {

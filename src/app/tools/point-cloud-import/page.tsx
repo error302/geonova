@@ -297,6 +297,44 @@ export default function PointCloudImportPage() {
 
   // ─── File upload handler ─────────────────────────────────────────────────
 
+  const processText = useCallback((text: string) => {
+    setIsParsing(true);
+    setParseErrors([]);
+    setSlopeResult(null);
+    setTinTriangles(null);
+    setCutFillResult(null);
+    setWarningMsg('');
+
+    try {
+      const result = parseXYZText(text);
+      setPoints(result.points);
+      setParseErrors(result.errors);
+      setImportStats({
+        totalLines: result.totalLines,
+        delimiter: result.delimiter === '\t' ? 'tab' : result.delimiter === ',' ? 'comma' : result.delimiter === ';' ? 'semicolon' : 'space',
+        hasHeader: result.hasHeader,
+        pointCount: result.points.length,
+      });
+
+      if (result.points.length === 0 && text.trim().length > 0) {
+        setWarningMsg('No valid points parsed. Check your data format and column mapping.');
+      }
+
+      // Count skipped lines
+      const skippedComment = text.split('\n').filter(l => l.trim().startsWith('#')).length;
+      const skippedEmpty = text.split('\n').filter(l => l.trim() === '').length;
+      if ((skippedComment > 0 || skippedEmpty > 0) && result.points.length > 0) {
+        const extras: string[] = [];
+        if (skippedComment > 0) extras.push(`${skippedComment} comment line(s)`);
+        if (skippedEmpty > 0) extras.push(`${skippedEmpty} empty line(s)`);
+      }
+    } catch (err) {
+      setParseErrors([{ row: 0, message: `Parse error: ${err instanceof Error ? err.message : 'Unknown error'}` }]);
+    } finally {
+      setIsParsing(false);
+    }
+  }, []);
+
   const handleFileUpload = useCallback(async (file: File) => {
     setFileName(file.name);
     setIsParsing(true);
@@ -345,45 +383,7 @@ export default function PointCloudImportPage() {
     } finally {
       setIsParsing(false);
     }
-  }, []);
-
-  const processText = useCallback((text: string) => {
-    setIsParsing(true);
-    setParseErrors([]);
-    setSlopeResult(null);
-    setTinTriangles(null);
-    setCutFillResult(null);
-    setWarningMsg('');
-
-    try {
-      const result = parseXYZText(text);
-      setPoints(result.points);
-      setParseErrors(result.errors);
-      setImportStats({
-        totalLines: result.totalLines,
-        delimiter: result.delimiter === '\t' ? 'tab' : result.delimiter === ',' ? 'comma' : result.delimiter === ';' ? 'semicolon' : 'space',
-        hasHeader: result.hasHeader,
-        pointCount: result.points.length,
-      });
-
-      if (result.points.length === 0 && text.trim().length > 0) {
-        setWarningMsg('No valid points parsed. Check your data format and column mapping.');
-      }
-
-      // Count skipped lines
-      const skippedComment = text.split('\n').filter(l => l.trim().startsWith('#')).length;
-      const skippedEmpty = text.split('\n').filter(l => l.trim() === '').length;
-      if ((skippedComment > 0 || skippedEmpty > 0) && result.points.length > 0) {
-        const extras: string[] = [];
-        if (skippedComment > 0) extras.push(`${skippedComment} comment line(s)`);
-        if (skippedEmpty > 0) extras.push(`${skippedEmpty} empty line(s)`);
-      }
-    } catch (err) {
-      setParseErrors([{ row: 0, message: `Parse error: ${err instanceof Error ? err.message : 'Unknown error'}` }]);
-    } finally {
-      setIsParsing(false);
-    }
-  }, []);
+  }, [processText]);
 
   const handleDropZone = useCallback((e: React.DragEvent) => {
     e.preventDefault();

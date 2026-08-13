@@ -92,7 +92,7 @@ export function CoordinateChip({
 
     transform()
     return () => { cancelled = true }
-  }, [lat, lng, showCassini])
+  }, [lat, lng, showCassini, epsg])
 
   const fmt = (n: number, decimals: number) => n.toFixed(decimals)
 

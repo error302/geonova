@@ -164,37 +164,6 @@ export function useMeasurement(map: Map | null) {
     sourceRef.current.addFeature(feature);
   }, []);
 
-  const startMeasurement = useCallback(async (mode: MeasurementMode) => {
-    if (!map) return;
-    
-    if (!sourceRef.current) {
-      await createLayer();
-    }
-    
-    clearSource();
-    
-    setState({
-      mode,
-      points: [],
-      result: null,
-      isActive: true,
-    });
-
-    const handleClick = (evt: import('ol/MapBrowserEvent').default) => {
-      const coord = evt.coordinate;
-      
-      const point: Point = {
-        easting: coord[0],
-        northing: coord[1],
-      };
-      
-      handlePointClick(point, mode);
-    };
-    
-    clickHandlerRef.current = handleClick;
-    map.on('click', handleClick);
-  }, [map, createLayer, clearSource]);
-
   const handlePointClick = useCallback((point: Point, mode: MeasurementMode) => {
     setState((prev) => {
       const newPoints = [...prev.points, point];
@@ -227,6 +196,37 @@ export function useMeasurement(map: Map | null) {
       };
     });
   }, [addPointToMap, addLineToMap, addPolygonToMap]);
+
+  const startMeasurement = useCallback(async (mode: MeasurementMode) => {
+    if (!map) return;
+    
+    if (!sourceRef.current) {
+      await createLayer();
+    }
+    
+    clearSource();
+    
+    setState({
+      mode,
+      points: [],
+      result: null,
+      isActive: true,
+    });
+
+    const handleClick = (evt: import('ol/MapBrowserEvent').default) => {
+      const coord = evt.coordinate;
+      
+      const point: Point = {
+        easting: coord[0],
+        northing: coord[1],
+      };
+      
+      handlePointClick(point, mode);
+    };
+    
+    clickHandlerRef.current = handleClick;
+    map.on('click', handleClick);
+  }, [map, createLayer, clearSource, handlePointClick]);
 
   const finishAreaMeasurement = useCallback(() => {
     if (state.points.length < 3) return;

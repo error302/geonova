@@ -90,7 +90,7 @@ export function FieldDataCollector({
       setShowSetup(false)
       setActivePanel('measure')
     }
-  }, [session])
+  }, [session, sessionState])
 
   const handleSync = useCallback(() => {
     session.syncNow()

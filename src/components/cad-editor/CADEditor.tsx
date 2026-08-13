@@ -333,7 +333,7 @@ export default function CADEditor({
     // ponytail: convert real-world meters to SVG pixels using the diagram's scale
     // For now, use a simple 50px = scaleMeters mapping
     return 50
-  }, [doc.scaleBar.scaleMeters])
+  }, [])
 
   const selectedBeacon = selected?.type === 'beacon' ? doc.beacons.find(b => b.id === selected.id) : null
   const selectedAnnotation = selected?.type === 'annotation' ? doc.annotations.find(a => a.id === selected.id) : null

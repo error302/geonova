@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { createClient } from '@/lib/api-client/client'
 import { logger } from '@/lib/logger'
 
@@ -15,19 +15,19 @@ interface Doc {
 export function SupportingDocUpload({ projectId }: { projectId: string }) {
   const [docs, setDocs] = useState<Doc[]>([])
   const [uploading, setUploading] = useState<string | null>(null)
-  const dbClient = createClient()
+  const dbClient = useMemo(() => createClient(), [])
 
-  useEffect(() => {
-    loadDocs()
-  }, [projectId])
-
-  async function loadDocs() {
+  const loadDocs = useCallback(async () => {
     const { data } = await dbClient
       .from('supporting_documents')
       .select('*')
             .eq('project_id', projectId) as unknown as { data: Doc[] | null }
     setDocs((data ?? []) as Doc[])
-  }
+  }, [projectId, dbClient])
+
+  useEffect(() => {
+    loadDocs()
+  }, [loadDocs])
 
   async function handleUpload(docId: string, docType: string, file: File) {
     setUploading(docId)

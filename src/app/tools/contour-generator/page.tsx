@@ -136,25 +136,6 @@ export default function ContourGeneratorPage() {
 
   // ─── File upload handler ──────────────────────────────────────────────────
 
-  const handleFileUpload = useCallback(async (file: File) => {
-    setFileName(file.name);
-    setIsParsing(true);
-    setParseErrors([]);
-    setContours([]);
-    setTinSurface(null);
-    setVolumeResult(null);
-
-    try {
-      const text = await file.text();
-      setRawText(text);
-      processText(text);
-    } catch (err) {
-      setParseErrors([{ row: 0, message: `Failed to read file: ${err instanceof Error ? err.message : 'Unknown error'}` }]);
-    } finally {
-      setIsParsing(false);
-    }
-  }, []);
-
   const processText = useCallback((text: string) => {
     setIsParsing(true);
     setParseErrors([]);
@@ -182,6 +163,25 @@ export default function ContourGeneratorPage() {
       setIsParsing(false);
     }
   }, []);
+
+  const handleFileUpload = useCallback(async (file: File) => {
+    setFileName(file.name);
+    setIsParsing(true);
+    setParseErrors([]);
+    setContours([]);
+    setTinSurface(null);
+    setVolumeResult(null);
+
+    try {
+      const text = await file.text();
+      setRawText(text);
+      processText(text);
+    } catch (err) {
+      setParseErrors([{ row: 0, message: `Failed to read file: ${err instanceof Error ? err.message : 'Unknown error'}` }]);
+    } finally {
+      setIsParsing(false);
+    }
+  }, [processText]);
 
   const handleDropZone = useCallback((e: React.DragEvent) => {
     e.preventDefault();

@@ -353,7 +353,7 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
       ro.disconnect();
       if (map) { try { map.setTarget(undefined); } catch {} mapRef.current = null; }
     };
-  }, [boundaryData]);
+  }, [boundaryData, epsg, projectName]);
 
   // ── Basemap toggle ──
   const toggleBasemap = (mode: 'osm' | 'satellite') => {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { PageHeader } from '@/components/shared/PageHeader'
 import {
   checkDeviations,
@@ -71,9 +71,9 @@ export default function AsBuiltDeviationPage() {
     SAMPLE_AS_BUILT.map((p, i) => ({ id: i + 1, pointId: p.id, chainage: String(p.chainage), elevation: p.elevation.toFixed(3), description: p.description || '' })),
   )
 
-  const tolerance = toleranceIdx === KENHA_TOLERANCES.length - 1
+  const tolerance = useMemo(() => toleranceIdx === KENHA_TOLERANCES.length - 1
     ? { label: 'Custom', passLimit: parseFloat(customPass) || 10, marginalLimit: parseFloat(customMarginal) || 15 }
-    : KENHA_TOLERANCES[toleranceIdx]
+    : KENHA_TOLERANCES[toleranceIdx], [toleranceIdx, customPass, customMarginal])
 
   const addDesignRow = () => setDesignRows(prev => [...prev, { id: prev.length + 1, chainage: '', elevation: '' }])
   const removeDesignRow = (id: number) => setDesignRows(prev => prev.filter(r => r.id !== id))
