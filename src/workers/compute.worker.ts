@@ -58,7 +58,7 @@ interface CoordTransformParams {
  * WGS84 to Arc1960 / UTM Zone 37S approximation
  * Uses simplified transformation parameters for Kenya
  */
-function wgs84ToArc1960UTM37S(lat: number, lng: number): { northing: number; easting: number } {
+export function wgs84ToArc1960UTM37S(lat: number, lng: number): { northing: number; easting: number } {
   // UTM Zone 37S parameters
   const a = 6378137.0       // WGS84 semi-major axis
   const f = 1 / 298.257223563
@@ -147,7 +147,7 @@ interface CSVPoint {
   longitude: number
 }
 
-function parseCSVPoints(csvText: string, delimiter = ','): CSVPoint[] {
+export function parseCSVPoints(csvText: string, delimiter = ','): CSVPoint[] {
   const lines = csvText.trim().split(/\r?\n/)
   if (lines.length < 2) return []
 
@@ -168,7 +168,11 @@ function parseCSVPoints(csvText: string, delimiter = ','): CSVPoint[] {
 
   for (const [key, aliases] of Object.entries(aliasMap)) {
     for (let i = 0; i < headers.length; i++) {
-      if (aliases.some(a => headers[i].includes(a))) {
+      const h = headers[i]
+      // Exact alias match, or substring match only for multi-char aliases.
+      // Single-letter aliases (n/e/x/y/h/z) must never match inside an
+      // unrelated header ('point' contains 'n'; 'north' contains 'h').
+      if (aliases.some(a => h === a || (a.length >= 3 && h.includes(a)))) {
         colMap[key] = i
         break
       }
@@ -210,7 +214,7 @@ function parseCSVPoints(csvText: string, delimiter = ','): CSVPoint[] {
 
 // ─── Bearing & Distance ─────────────────────────────────────────────────
 
-function computeBearingDistance(from: { northing: number; easting: number }, to: { northing: number; easting: number }) {
+export function computeBearingDistance(from: { northing: number; easting: number }, to: { northing: number; easting: number }) {
   const dE = to.easting - from.easting
   const dN = to.northing - from.northing
   const distance = Math.sqrt(dE * dE + dN * dN)
