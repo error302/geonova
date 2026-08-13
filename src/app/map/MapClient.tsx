@@ -106,6 +106,7 @@ import { OsmBuildingsLayer } from '@/app/map/components/OsmBuildingsLayer'
 import { VertexEditToolbarContext as VertexEditToolbar } from '@/components/map/VertexEditToolbar'
 import { ProjectionSwitcher } from '@/components/map/ProjectionSwitcher'
 import { switchMapView } from '@/lib/map/nativeProjectionView'
+import { SRID_21037, SRID_32737 } from '@/lib/map/projection'
 
 // ── Hooks ──
 import { useMapBasemaps } from '@/app/map/hooks/useMapBasemaps'
@@ -393,9 +394,9 @@ export default function MapClient() {
 
   // ── Interactions hook ──
   const currentUtmEpsg = useMemo(() => {
-    if (activeProjection.startsWith('EPSG:21037')) return 'EPSG:21037'
-    if (activeProjection.startsWith('EPSG:32737')) return 'EPSG:32737'
-    return 'EPSG:21037'
+    if (activeProjection.startsWith(SRID_21037)) return SRID_21037
+    if (activeProjection.startsWith(SRID_32737)) return SRID_32737
+    return SRID_21037
   }, [activeProjection])
 
   const applyOneShotTool = useCallback(() => {

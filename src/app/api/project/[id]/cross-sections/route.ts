@@ -66,7 +66,7 @@ interface SurveyPointRow {
  * must enter offset shots manually or via CSV upload in the tool UI.
  */
 
-interface SurveyPoint {
+interface CrossSectionSurveyPoint {
   id: string
   point_name: string
   easting: number
@@ -126,11 +126,11 @@ export const GET = apiHandler(
       [id]
     )
 
-    const points = rows as SurveyPoint[]
+    const points = rows as CrossSectionSurveyPoint[]
 
     // Group points by chainage
-    const chainageMap = new Map<number, SurveyPoint[]>()
-    const unmatched: SurveyPoint[] = []
+    const chainageMap = new Map<number, CrossSectionSurveyPoint[]>()
+    const unmatched: CrossSectionSurveyPoint[] = []
 
     for (const p of points) {
       const ch = parseChainageFromName(p.point_name)

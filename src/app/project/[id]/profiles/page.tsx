@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { computeChainageTable } from '@/lib/engine/chainage'
 import { generateLongitudinalProfileSvg } from '@/lib/reports/profileSvg'
 import { logger } from '@/lib/logger'
+import type { SurveyPoint } from '@/types/surveyPoint'
 
 interface PageProps {
   params: { id: string }
@@ -17,14 +18,6 @@ interface Project {
   location: string | null;
   utm_zone: number;
   hemisphere: string;
-}
-
-interface SurveyPoint {
-  id: string;
-  name: string;
-  easting: number;
-  northing: number;
-  elevation: number | null;
 }
 
 interface Alignment {

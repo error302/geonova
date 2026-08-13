@@ -1,19 +1,27 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"],
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript"
+  ],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
   "rules": {
     "react/no-unescaped-entities": "off",
     "@next/next/no-page-custom-font": "off",
-
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-unsafe-assignment": "error",
     "@typescript-eslint/no-unsafe-member-access": "error",
     "@typescript-eslint/no-unsafe-call": "error",
     "@typescript-eslint/no-unsafe-argument": "error",
     "@typescript-eslint/no-unsafe-return": "error",
-    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
     "@typescript-eslint/no-non-null-assertion": "error",
     "@typescript-eslint/ban-ts-comment": "warn",
     "@typescript-eslint/prefer-as-const": "warn",
@@ -29,7 +37,12 @@
     "no-unused-vars": "off",
     "no-console": "warn",
     "no-debugger": "warn",
-    "no-empty": ["warn", { "allowEmptyCatch": true }],
+    "no-empty": [
+      "warn",
+      {
+        "allowEmptyCatch": true
+      }
+    ],
     "no-irregular-whitespace": "warn",
     "no-case-declarations": "off",
     "no-fallthrough": "warn",
@@ -39,11 +52,7 @@
     "no-unreachable": "warn",
     "no-useless-escape": "warn",
     "no-restricted-syntax": [
-      "warn",
-      {
-        "selector": "TSInterfaceDeclaration[id.name='SurveyPoint']",
-        "message": "Do not declare a local 'SurveyPoint' interface. Import it from '@/types/surveyPoint' instead. If you need a different shape, use Point2D / Point3D / SurveyPointWithCode / SurveyPoint3D, or name your interface differently (e.g. 'SurveyPointRow')."
-      },
+      "error",
       {
         "selector": "CallExpression Literal[value=/^EPSG:21\\d{2}$/]",
         "message": "T1.5 (2026-07-09): Hardcoded EPSG:21xxx in a function call — use currentUtmEpsg from MapReactContext instead. Hardcoded CRS literals cause silent wrong-coordinate bugs outside UTM Zone 37S (Mombasa, Kisumu, Turkana). See MapClient.tsx currentUtmEpsg for the pattern."
@@ -51,10 +60,32 @@
       {
         "selector": "CallExpression Literal[value=/^EPSG:3273\\d$/]",
         "message": "T1.5 (2026-07-09): Hardcoded EPSG:3273x in a function call — use currentUtmEpsg from MapReactContext instead."
+      },
+      {
+        "selector": "TSInterfaceDeclaration[id.name='SurveyPoint']",
+        "message": "Do not declare a local 'SurveyPoint' interface. Import it from '@/types/surveyPoint' instead. If you need a different shape, use Point2D / Point3D / SurveyPointWithCode / SurveyPoint3D, or name your interface differently (e.g. 'SurveyPointRow')."
       }
     ]
   },
   "overrides": [
+    {
+      "files": [
+        "src/types/surveyPoint.ts"
+      ],
+      "rules": {
+        "no-restricted-syntax": [
+          "error",
+          {
+            "selector": "CallExpression Literal[value=/^EPSG:21\\d{2}$/]",
+            "message": "T1.5 (2026-07-09): Hardcoded EPSG:21xxx in a function call — use currentUtmEpsg from MapReactContext instead. Hardcoded CRS literals cause silent wrong-coordinate bugs outside UTM Zone 37S (Mombasa, Kisumu, Turkana). See MapClient.tsx currentUtmEpsg for the pattern."
+          },
+          {
+            "selector": "CallExpression Literal[value=/^EPSG:3273\\d$/]",
+            "message": "T1.5 (2026-07-09): Hardcoded EPSG:3273x in a function call — use currentUtmEpsg from MapReactContext instead."
+          }
+        ]
+      }
+    },
     {
       "files": [
         "src/lib/map/**/*.ts",

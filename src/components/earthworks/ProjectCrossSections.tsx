@@ -24,7 +24,7 @@ interface ProjectCrossSectionsProps {
   projectId: string
 }
 
-interface SurveyPoint {
+interface CrossSectionSurveyPoint {
   id: string
   point_name: string
   easting: number
@@ -70,8 +70,8 @@ export default function ProjectCrossSections({ projectId }: ProjectCrossSections
       try {
         const res = await fetch(`/api/project/${projectId}/points`)
         if (!res.ok) return
-        const json = await res.json() as { data?: SurveyPoint[] }
-        const points: SurveyPoint[] = json.data || []
+        const json = await res.json() as { data?: CrossSectionSurveyPoint[] }
+        const points: CrossSectionSurveyPoint[] = json.data || []
 
         // Try to match points to chainage stations
         const matched: { chainage: number; rl: number; name: string }[] = []

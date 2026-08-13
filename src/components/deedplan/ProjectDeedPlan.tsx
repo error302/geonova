@@ -26,7 +26,7 @@ interface ProjectDeedPlanProps {
   projectId: string
 }
 
-interface SurveyPoint {
+interface DeedPlanSurveyPoint {
   id: string
   point_name: string
   easting: number
@@ -41,7 +41,7 @@ interface SurveyPoint {
 const DEFAULT_MARK_TYPE: BeaconType = 'CONCRETE_BEACON'
 const DEFAULT_MARK_STATUS: BeaconStatus = 'SET'
 
-function surveyPointToBoundaryPoint(p: SurveyPoint): BoundaryPoint {
+function surveyPointToBoundaryPoint(p: DeedPlanSurveyPoint): BoundaryPoint {
   return {
     id: p.point_name || p.id,
     easting: p.easting,
@@ -69,8 +69,8 @@ export default function ProjectDeedPlan({ projectId }: ProjectDeedPlanProps) {
         if (!res.ok) {
           throw new Error(`Failed to load project points (${res.status})`)
         }
-        const json = await res.json() as { data?: SurveyPoint[] }
-        const surveyPoints: SurveyPoint[] = json.data || []
+        const json = await res.json() as { data?: DeedPlanSurveyPoint[] }
+        const surveyPoints: DeedPlanSurveyPoint[] = json.data || []
         const boundaryPoints = surveyPoints.map(surveyPointToBoundaryPoint)
         if (!cancelled) {
           setPoints(boundaryPoints)
