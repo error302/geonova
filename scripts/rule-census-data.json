@@ -1,5 +1,4 @@
 {
- "generatedAt": "2026-08-13T00:41:06.093Z",
  "total": 848,
  "byRule": {
   "@typescript-eslint/no-unused-vars": 788,

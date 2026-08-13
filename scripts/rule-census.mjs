@@ -62,7 +62,9 @@ for (const [rule, n] of sorted) {
 console.log(`TOTAL: ${total} warnings across ${sorted.length} rules`)
 
 if (writeOut) {
-  writeFileSync(outFile, JSON.stringify({ generatedAt: new Date().toISOString(), total, byRule }, null, 1) + '\n')
+  // Deterministic output (no timestamp) so the committed data file only
+  // changes when the counts change — not on every run.
+  writeFileSync(outFile, JSON.stringify({ total, byRule }, null, 1) + '\n')
   console.log(`WROTE: ${outFile}`)
 }
 
