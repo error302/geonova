@@ -99,7 +99,7 @@ All batches drained (`argument-scan --batch 1` → 0 across 0 files); floor lock
 | Rule | Live | Fix class | Next tier |
 |---|---|---|---|
 | `no-non-null-assertion` | **0** | ✅ done — batches 1–12 drained 113 → 0, suppression sweep removed the last 9 hidden `!` sites; flipped to `error` 2026-08-12 | — |
-| `no-unused-vars` | **684** | `_`-prefix unused bindings, drop dead imports/state/props | batches 1–7 drained 355 sites; batches 1–8 drained 459 sites; next: batch 9 — 3-warning tier (39 files) |
+| `no-unused-vars` | **684** | `_`-prefix unused bindings, drop dead imports/state/props | batches 1–7 drained 355 sites; batches 1–8 drained 459 sites; next: batch 9 — 3-warning tier (61 files) — see the §5.2 worklists below |
 | `react-hooks/exhaustive-deps` | **0** | `error` — keep deps honest; justified mount-once disables allowed (3 in repo) | ✅ drained (ED-1: 17 sites; ED-2: 27 sites) |
 | `no-restricted-syntax` | **16** | project-specific banned patterns — check the rule config | `nativeProjectionView.test.ts` 9 · `MapClient.tsx` 2 |
 | `no-console` | 0 | ✅ drained — routed through `lib/logger.ts` | — |
@@ -171,3 +171,191 @@ The original B1–B5 roadmap has **landed**: row-typing is 100%, member-access f
 - **This doc is the checkpoint** — a fresh agent runs §0's "first commands" and picks the next batch from §1. If a batch is mid-flight when a session dies, commit what's verified; the WIP (`_tmp-*.py` scripts, partial edits) can be re-derived from §1 worklists.
 - **Never `--update` a floor to absorb unrelated growth** — floors only move down after a genuine live drop on committed code.
 - **Known-red CI is documented, not blocking** — Deploy (GCP SSH) and E2E (env/timeout) are separate workstreams (§0); typing batches only need the code gates green.
+
+---
+## Phase 5 worklists — pre-computed from the live census (2026-08-13, 684 unused-vars total)
+
+**Batch 9 — 3-warning tier: 61 files, 183 sites**
+- `src/app/api/engineering/data/route.ts` — NextRequest, EngineeringSubtype, ctx
+- `src/app/api/equipment/add/route.ts` — NextRequest, calibrationCertNumber, calibrationLab
+- `src/app/api/whatsapp/route.ts` — remaining, from, error
+- `src/app/help/page.tsx` — Wrench, Building2, Satellite
+- `src/app/marketplace/page.tsx` — deleteListing, createClient, onRefresh
+- `src/app/pricing/page.tsx` — SUPPORTED_CURRENCIES, faqs, paypalContainerRef
+- `src/app/project/[id]/contours/page.tsx` — ApiError, majorInterval, i
+- `src/app/project/[id]/profiles/page.tsx` — profileError, idx, chainagePoints
+- `src/app/tools/bearing/page.tsx` — ToolExportButtons, calcError, setCalcError
+- `src/app/tools/chainage/page.tsx` — ToolExportButtons, idx
+- `src/app/tools/distance/page.tsx` — ToolExportButtons, calcError, setCalcError
+- `src/app/tools/earthworks/page.tsx` — useState, useMemo, computeVolumes
+- `src/app/tools/grade/page.tsx` — ToolExportButtons, calcError, setCalcError
+- `src/app/tools/height-of-object/page.tsx` — ToolExportButtons, calcError, setCalcError
+- `src/app/tools/regulatory-checklist/page.tsx` — Map, AlertCircle, CheckCircle2
+- `src/app/tools/subdivision-generator/page.tsx` — useMemo, SubdividedPlot, t
+- `src/app/tools/survey-regulations/page.tsx` — i
+- `src/app/tools/us-survey-reference/page.tsx` — i
+- `src/components/ai/SurveyAssistant.tsx` — MessageSquare, X, Cpu
+- `src/components/compute/DroneComputePanel.tsx` — GCPResult, setGcps, i
+- `src/components/compute/GeodeticComputePanel.tsx` — Save, CheckCircle, projectId
+- `src/components/engineering/panels/TunnelPanel.tsx` — projectId, subtype, i
+- `src/components/engineering/PileGridPanel.tsx` — formatBearingDMS, i
+- `src/components/engineering/VolumesPanel.tsx` — i, tb
+- `src/components/field/FieldDataCollector.tsx` — setAudioEnabled, handleStakeout, sessionState
+- `src/components/importer/UniversalImporter.tsx` — SupportedFormat, detectFormat, getParser
+- `src/components/InstrumentConnectionPanel.tsx` — Wifi, Radio, onPointReceived
+- `src/components/landlaw/AIPlanChecker.tsx` — Download, BeaconRecord, addBeacon
+- `src/components/map/panels/AttributeTable.tsx` — Plus, CheckCircle2, AlertTriangle
+- `src/components/map/SheetLayout.tsx` — containerWidth, containerHeight, viewExtent21037
+- `src/components/MobileNav.tsx` — AlertTriangle, Clock, authStatus
+- `src/components/NavBar.tsx` — showInstall, hydrated, handleInstall
+- `src/components/online/GNSSProcessor.tsx` — MapPin, Download, router
+- `src/components/ParcelAreaModal.tsx` — distanceBearing, points, handlePointClick
+- `src/components/road-design/SuperelevationCalculator.tsx` — ROAD_CLASSES, TERRAIN_TYPES, i
+- `src/components/survey/StakeoutRadar.tsx` — position, err
+- `src/components/survey/TopologyGuardrail.tsx` — useCallback, CheckCircle2, MapPin
+- `src/components/workspace/EnhancedSplitLayout.tsx` — ChevronUp, ChevronDown, idx
+- `src/hooks/useVertexEditing.ts` — SRID_3857, SRID_21037, pixel
+- `src/lib/computations/roadDesignEngine.ts` — isSSDCompliant, isPSDCompliant, superelevation
+- `src/lib/compute/pythonService.ts` — path, body, opts
+- `src/lib/compute/volumeRunner.ts` — endAreaVolume, prismoidalVolume, VolumeSection
+- `src/lib/db/optimization.ts` — cursorId, alias, table
+- `src/lib/documents/templates/mutation-vector-layout.ts` — PDFDocument, PAPER_SIZES, mmToPt
+- `src/lib/engine/curves.ts` — toDegrees, isExternal, delta
+- `src/lib/engine/subdivision.ts` — RoadReserveInfo, tCurrent, width
+- `src/lib/engineering/drainageDesign.ts` — flowDepth, wettedPerimeter, timeOfConcentration
+- `src/lib/export/dxfSheetLayout.ts` — sheetSize, targetRealMeters, footerH
+- `src/lib/geo/transformationCalibration.ts` — sigmaZeroSquared, fromFrame, toFrame
+- `src/lib/gnss/lambda.ts` — matMul, wj, secondBest
+- `src/lib/importers/parsers/gsi.ts` — meanAngle, angleUnit, fullCircle
+- `src/lib/map/subdivisionLayer.ts` — Point2D, LineString, strokeColor
+- `src/lib/offline/syncQueue.ts` — oldVersion, newVersion, sleep
+- `src/lib/parcel/parcelValidation.ts` — distanceBearing, regDist, sDist
+- `src/lib/reports/surveyPlan/signedPdfExport.ts` — createHash, PDFDocument, SurveyPlanRenderer
+- `src/lib/survey/adapter/index.ts` — applySeaLevelReduction, applyGridScaleFactor, applyAtmosphericCorrection
+- `src/lib/survey/digitalLevel/parseDiNi.ts` — filename, lineNo
+- `src/lib/survey/digitalLevel/parseTopconDL.ts` — filename, lineNo
+- `src/lib/survey/fieldData/gsiParser.ts` — totalDistCount, backsightBearing, bs
+- `src/lib/survey/fieldData/topconSDRParser.ts` — SDR33_WIDTHS, errors, totalDistCount
+- `src/lib/survey/traverse/engine.ts` — firstFixed, legs, fixedStations
+
+**Batch 10 — 2-warning tier: 120 files, 240 sites**
+- `src/app/ai-plan-checker/page.tsx` — Upload, FileText
+- `src/app/api/admin/health/route.ts` — req, ctx
+- `src/app/api/admin/licenses/[licenseId]/seats/route.ts` — NextRequest, ctx
+- `src/app/api/admin/licenses/route.ts` — NextRequest, randomUUID
+- `src/app/api/ardhisasa/route.ts` — NextRequest, ctx
+- `src/app/api/compute/export/traverse-dxf/route.ts` — NextRequest, uniqueKey
+- `src/app/api/cpd/route.ts` — NextRequest, generateCPDCertificate
+- `src/app/api/engineering/ips/route.ts` — NextRequest, ipName
+- `src/app/api/equipment/route.ts` — ctx
+- `src/app/api/export/nlims/route.ts` — req, ctx
+- `src/app/api/geo/cors/route.ts` — NextRequest, ctx
+- `src/app/api/gnss/ntrip/route.ts` — NextResponse, config
+- `src/app/api/gnss/process/route.ts` — NextRequest, stationLabels
+- `src/app/api/notifications/route.ts` — ctx
+- `src/app/api/parcel-vault/route.ts` — NextRequest, db
+- `src/app/api/rim-templates/route.ts` — NextRequest, ctx
+- `src/app/api/scheme/export/dxf/route.ts` — ctx, key
+- `src/app/api/scheme/status/route.ts` — NextRequest, ctx
+- `src/app/api/scheme/submission/checklist/route.ts` — NextRequest, ctx
+- `src/app/api/scheme/submission/track/route.ts` — NextRequest, ctx
+- `src/app/api/survey/audit/route.ts` — AuditEntry, trail
+- `src/app/api/workers/process/route.ts` — NextRequest, NextResponse
+- `src/app/cpd/page.tsx` — fetchError, totalPoints
+- `src/app/guide/[type]/page.tsx` — router, idx
+- `src/app/import/page.tsx` — content, loadingProjects
+- `src/app/industrial/page.tsx` — copied, setCopied
+- `src/app/map/components/CogoToolsPanel.tsx` — distanceBearing, to21037
+- `src/app/map/components/IdentifyPanel.tsx` — useEffect, FileText
+- `src/app/map/components/MapOverlayManager.tsx` — smEdgeMargin, anchor
+- `src/app/map/components/OfflineDownloadButton.tsx` — Loader2, Check
+- `src/app/project/[id]/cad-editor/page.tsx` — db, observations
+- `src/app/tools/as-built-deviation/page.tsx` — interpolateDesignElevation, t
+- `src/app/tools/cassini-utm/useCassiniUtmState.ts` — srcUnit, tgtUnit
+- `src/app/tools/civil-export/page.tsx` — useCallback, loading
+- `src/app/tools/cogo-reconstruct/page.tsx` — dmsToAzimuth, t
+- `src/app/tools/contour-generator/page.tsx` — generateContours, buildTINSurface
+- `src/app/tools/control-point-verification/page.tsx` — ShieldCheck, AlertCircle
+- `src/app/tools/corridor/page.tsx` — enToChainageOffset, formatChainage
+- `src/app/tools/gnss/page.tsx` — ecefToGeodetic, utmToGeodetic
+- `src/app/tools/missing-line/page.tsx` — calcError, setCalcError
+- `src/app/tools/orthophoto-viewer/page.tsx` — MapPin, mapReady
+- `src/app/tools/scale-factor/page.tsx` — useMemo, t
+- `src/app/tools/setting-out/page.tsx` — Upload, FileSpreadsheet
+- `src/app/tools/topology-check/page.tsx` — EMPTY_ROW, t
+- `src/app/tools/two-peg-test/page.tsx` — calcError, setCalcError
+- `src/components/admin/charts/AdminCharts.tsx` — Tooltip, ResponsiveContainer
+- `src/components/automator/WorkflowCanvas.tsx` — useState, setNodes
+- `src/components/beacons/BeaconRegistryPanel.tsx` — Ruler, setLocality
+- `src/components/compute/ConstructionComputePanel.tsx` — setSettingOut, updateAsbuilt
+- `src/components/compute/NetworkAdjustmentPanel.tsx` — pairFaces, obsRecords
+- `src/components/CSVUploadModal.tsx` — err, idx
+- `src/components/dashboard/QADashboard.tsx` — Download, projectId
+- `src/components/drawing/CrossSection.tsx` — selectedStation, hScale
+- `src/components/drawing/FormNo4Preview.tsx` — formatBearingDMS, formatDistanceM
+- `src/components/engineering/DrainageDesignPanel.tsx` — roadLength, hasAnyError
+- `src/components/engineering/panels/BridgePanel.tsx` — projectId, subtype
+- `src/components/engineering/panels/PipelinePanel.tsx` — projectId, subtype
+- `src/components/engineering/PavementDesignPanel.tsx` — roadClass, i
+- `src/components/engineering/RoadCompletionCertificatePanel.tsx` — generateDefectSchedule, i
+- `src/components/engineering/SlopeAnalysisPanel.tsx` — x, y
+- `src/components/equipment/EquipmentManager.tsx` — setNotes
+- `src/components/fieldbook/FieldBookMobile.tsx` — surveyType, surveyorId
+- `src/components/gnss/GNSSObservationLogBuilder.tsx` — Upload, ANT_METHODS
+- `src/components/registry/EquipmentTracker.tsx` — CalibrationRecord, ApiError
+- `src/components/RegistryIndexMap.tsx` — t, setSubLocation
+- `src/components/road-design/HorizontalCurveCalculator.tsx` — i, T
+- `src/components/road-design/SightDistanceChecker.tsx` — getFrictionFactor, i
+- `src/components/scheme/TraverseComputePanel.tsx` — useCallback, i
+- `src/components/setting-out/ChainageOffsetTable.tsx` — cutFill, mode
+- `src/components/shared/HotkeyHelpOverlay.tsx` — useEffect, useCallback
+- `src/components/survey/ControlPointRegistry.tsx` — useMemo, KENCORS_STATIONS
+- `src/components/survey/GCPOptimizerPanel.tsx` — Plus, GCPPoint
+- `src/components/SurveyReport.tsx` — getAreaRule, rimData
+- `src/components/ui/grid-feature-cards.tsx` — setPattern, index
+- `src/components/ui/multi-type-ripple-buttons.tsx` — index
+- `src/components/working-diagram/SubAreaPanel.tsx` — FILL_COLORS, idx
+- `src/components/workspace/AutomationPanel.tsx` — useEffect, AutomationStep
+- `src/components/workspace/SplitWorkspaceLayout.tsx` — Crosshair, idx
+- `src/components/workspace/WorkspaceMap.tsx` — useProjectStore, activeTool
+- `src/hooks/useHotkeys.ts` — ctrlMatch, metaMatch
+- `src/hooks/useInstrumentConnection.ts` — setBytesReceived, setErrorCount
+- `src/hooks/useWorkspaceBridge.tsx` — useProjectStore, uiSetSelectedFeatureId
+- `src/lib/api-client/community.ts` — JobReview, PeerReviewer
+- `src/lib/api/handler.ts` — NotFoundError, ConflictError
+- `src/lib/computations/clothoidTransition.ts` — RAD, interval
+- `src/lib/computations/settingOutEngine.ts` — angleDiff, VA
+- `src/lib/compute/beaconDescriptionPdf.ts` — BLACK, tableH
+- `src/lib/compute/beaconSymbols.ts` — isSet, regulation
+- `src/lib/compute/deedPlanRenderer.ts` — utmZone, hemisphere
+- `src/lib/compute/subdivisionGenerator.ts` — totalWidth, key
+- `src/lib/engine/__tests__/knownAnswer.test.ts` — bearingToString, decimalToDMS
+- `src/lib/engine/__tests__/sequentialAdjustment.test.ts` — removeObservations, result
+- `src/lib/engine/__tests__/sparseMatrix.test.ts` — sparseForwardSolve, sparseBackwardSolve
+- `src/lib/engineering/__tests__/progressMonitor.test.ts` — today, futureDate
+- `src/lib/engineering/compute.ts` — e, minK
+- `src/lib/engineering/exifPhoto.ts` — segLength, WGS84_B
+- `src/lib/engineering/stakingTable.ts` — curveRad, perpRad
+- `src/lib/generators/deedPlanGeometry.ts` — computeUTMPointScaleFactor, LineScaleFactorResult
+- `src/lib/geo/geoidHeight.ts` — filePath, interpolateEGM2008
+- `src/lib/importers/universalImporter.ts` — ParseResult, SupportedFormat
+- `src/lib/integrations/webOdm.ts` — randomUUID, options
+- `src/lib/map/cadastralEditing.ts` — cumulativeDistance, source
+- `src/lib/map/gridOverlay.ts` — VectorSource, labelStyle
+- `src/lib/marketplace/cpdCertificates.ts` — userId, certificateNumber
+- `src/lib/monitoring/metrics.ts` — duration
+- `src/lib/navigation.ts` — ClipboardCheck, Waves
+- `src/lib/online/gnssBaseline.ts` — RINEX_CONSTANTS, format
+- `src/lib/parsers/totalStation.ts` — pointCount, header
+- `src/lib/pdf/generatePdf.ts` — orientation, index
+- `src/lib/print/deedPlanPrint.ts` — i
+- `src/lib/realtime/zustand-yjs-sync.ts` — Y, prevProject
+- `src/lib/reports/coordinateConverter.ts` — err
+- `src/lib/survey/__tests__/phase2StakeoutLoop.test.ts` — stakeoutPoints, linePoints
+- `src/lib/survey/adapter/atmosphericDefaults.ts` — KENYA_CONDITIONS, KENYA_GEOID_UNDULATION
+- `src/lib/survey/corrections/sea-level-reduction.ts` — WGS84_A, WGS84_E2
+- `src/lib/survey/digitalLevel/benchmarkSheet.ts` — LevelObservation, orderInfo
+- `src/lib/survey/instrumentWriters.ts` — SettingOutRow, i
+- `src/lib/topo/breaklineTINRefinement.ts` — TIN, triangleVertexIndices
+- `src/stores/uiStore.ts` — s
+- `src/workers/WorkerBridge.ts` — WorkerResponseType, id
