@@ -57,7 +57,6 @@ describe('compareDesignVsAsBuilt', () => {
   })
 
   it('95% threshold for compliance', () => {
-    const n = 20
     const asBuilt = design.flatMap(d => {
       // 19 pass + 1 fail = 95% exactly (boundary)
       return Array.from({ length: 4 }, (_, i) => ({

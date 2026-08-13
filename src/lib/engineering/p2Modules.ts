@@ -35,13 +35,12 @@ export interface SuperelevationRunoutResult {
 export function computeSuperelevationRunout(
   designSpeed: number,
   radius: number,
-  laneWidth: number,
-  numLanes: number,
+  _laneWidth: number,
+  _numLanes: number,
   normalCrossSlope: number = 2,
   maxSuperelevation: number = 8,
   rateOfChange: number = 1 / 244,
 ): SuperelevationRunoutResult {
-  const roadWidth = laneWidth * numLanes
   const fullSuperelevation = Math.min(maxSuperelevation, (designSpeed ** 2 / (127 * radius)) * 100)
 
   // Tangent runout: time to remove the normal crown from the outer half

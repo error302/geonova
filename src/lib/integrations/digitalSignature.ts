@@ -5,8 +5,6 @@
 
 const ALGORITHM = { name: 'HMAC', hash: 'SHA-256' }
 const enc = new TextEncoder()
-const dec = new TextDecoder()
-
 export interface SignedDocument {
   documentId: string
   documentHash: string

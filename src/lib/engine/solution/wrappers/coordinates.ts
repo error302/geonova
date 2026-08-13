@@ -131,7 +131,6 @@ export function dmsToDecimalSolution(input: { dms: string; isLatitude: boolean }
     })
   }
 
-  const decimal = dmsToDecimal(dms)
   return dmsToDecimalSolved({ dms: input.dms, isLatitude: input.isLatitude }).solution
 }
 

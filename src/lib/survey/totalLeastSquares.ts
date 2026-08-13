@@ -210,7 +210,7 @@ export function computeStandardTLS(input: TLSInput): TLSResult {
   // Qxx for TLS is also different. The Schaffrin-Wieser (2008) formula:
   //   Qxx_TLS ≈ (1 + x^T·x) · (A^T·A)^(-1)  (approximation)
   const AtA_n = matMul(transpose(A), A)
-  const Qxx = invertMatrix(AtA_n, n).map((row, i) =>
+  const Qxx = invertMatrix(AtA_n, n).map((row, _i) =>
     row.map(v => v * (1 + xNorm2)),
   )
 

@@ -31,7 +31,6 @@ const WATER_VAPOR_CONSTANT = 0.0024
 
 export function calculateEDMCorrection(weather: WeatherData): WeatherResult {
   const { temperature, pressure, humidity, elevation } = weather
-  
   const tempK = temperature + 273.15
   
   const saturationVaporPressure = 6.1094 * Math.exp((17.625 * temperature) / (temperature + 243.04))
@@ -84,7 +83,6 @@ export function calculateEDMCorrection(weather: WeatherData): WeatherResult {
 }
 
 export function getRecommendedPPM(temperature: number, pressure: number): number {
-  const tempK = temperature + 273.15
   const result = calculateEDMCorrection({ temperature, pressure, humidity: 50 })
   return result.edmCorrection.ppm
 }

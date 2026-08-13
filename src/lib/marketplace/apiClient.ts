@@ -5,7 +5,7 @@
  * All data now persists to the instrument_listings table (migration 033).
  */
 
-import type { InstrumentListing, ListingType, InstrumentCategory, Condition, Currency } from './instruments'
+import type { InstrumentListing, ListingType, InstrumentCategory, Condition } from './instruments'
 
 export interface ListingFilters {
   type?: ListingType

@@ -36,7 +36,7 @@ function makeSquareTraverse(misclosureMm: number = 0): RawObservation[] {
   ]
 }
 
-function makeInput(surveyType: SurveyType, observations: RawObservation[], misclosureMm: number = 0): ToleranceCheckInput {
+function makeInput(surveyType: SurveyType, observations: RawObservation[], _misclosureMm: number = 0): ToleranceCheckInput {
   return {
     surveyType,
     observations,

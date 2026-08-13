@@ -343,7 +343,6 @@ export function adjustNetworkRobust(
     if (finalWeights[i] < 0.1) {
       const obs = observations[i]
       // Find the residual for this observation (first component for coord_diff)
-      const numComponents = obs.type === 'coordinate_diff' ? 3 : 1
       const startIdx = observations.slice(0, i).reduce(
         (sum, o) => sum + (o.type === 'coordinate_diff' ? 3 : 1), 0,
       )

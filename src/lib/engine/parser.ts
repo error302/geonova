@@ -11,12 +11,10 @@ export function parseDelimitedFile(content: string, delimiter: string = ','): Pa
   const points: NamedPoint3D[] = [];
   const warnings: string[] = [];
   
-  let hasHeader = false;
   let startLine = 0;
   
   const firstLine = lines[0].toUpperCase();
   if (firstLine.includes('EASTING') || firstLine.includes('POINT') || firstLine.includes('NORTHING')) {
-    hasHeader = true;
     startLine = 1;
   }
   

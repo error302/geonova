@@ -366,7 +366,6 @@ export function computeDisplacementConfidenceEllipses(
   referenceVariance: number,
   confidenceLevel: number = 0.95
 ): DisplacementConfidenceEllipse[] {
-  const alpha = 1 - confidenceLevel
   // F-quantile for 2 and ∞ degrees of freedom at (1-α)
   // F(2, ∞, 0.95) ≈ 3.00 (chi²₂/2 = 5.991/2 = 2.996)
   const fQuantile = chiSquareQuantileApprox(confidenceLevel, 2) / 2

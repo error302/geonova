@@ -352,8 +352,6 @@ export function generateCrossSectionPdf(
   let remIdx = showRowsP1
   while (remIdx < pts.length) {
     doc.addPage([PW, PH], 'landscape')
-    const contHeaderY = 10
-
     // Mini header bar
     doc.setFillColor(...NAVY)
     doc.rect(0, 0, PW, 16, 'F')

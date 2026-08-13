@@ -121,13 +121,6 @@ function fmtTime(iso: string): string {
   } catch { return iso }
 }
 
-function fmtDate(iso: string): string {
-  try {
-    const d = new Date(iso)
-    return d.toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' })
-  } catch { return iso }
-}
-
 function fixClass(fix: string): string {
   if (fix === 'FIX' || fix === 'RTK_FIX') return 'pass'
   if (fix === 'FLOAT' || fix === 'RTK_FLOAT') return 'warn'

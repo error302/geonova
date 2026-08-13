@@ -4,7 +4,7 @@
  *         edge cases, invalid data, empty input, etc.
  */
 
-import { parseTopcon, TopconRecord } from '@/lib/import/totalStation/parseTopcon'
+import { parseTopcon } from '@/lib/import/totalStation/parseTopcon'
 import { defined } from '@/test-utils/defined'
 
 // ─── Sample Data ────────────────────────────────────────────────────────────

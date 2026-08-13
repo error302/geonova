@@ -330,7 +330,6 @@ function drawBeaconSchedule(
   points: DeedPlanPoint[],
   x: number, y: number
 ): void {
-  const mmToPt = 2.8346;
   const rowHeight = 5;
   const headerHeight = 6;
   const colWidths = [30, 55, 55, 60];

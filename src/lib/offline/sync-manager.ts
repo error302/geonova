@@ -48,7 +48,6 @@ type StatusListener = (state: SyncState) => void;
 // ─── Constants ───────────────────────────────────────────────────────────
 
 const MAX_RETRY_ATTEMPTS = 5;
-const BASE_RETRY_DELAY_MS = 1000;
 const SYNC_DEBOUNCE_MS = 3000;
 const BATCH_SIZE = 20;
 

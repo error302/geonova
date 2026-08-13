@@ -237,7 +237,7 @@ export function applyAtmosphericCorrection(
 function computeSecondVelocityCorrection(
   wavelength: EDMWavelength,
   conditions: AtmosphericConditions,
-  vaporPressure: number
+  _vaporPressure: number
 ): number {
   const { temperature, pressure } = conditions;
   const T = 273.15 + temperature;

@@ -21,7 +21,7 @@
 
 import type { ContourResult, SpotHeight }    from './contourRenderer';
 import { renderContoursToSvg, renderSpotHeightsToSvg, type ViewTransform } from './contourRenderer';
-import { buildSymbolDefs, renderSymbol, type SurveySymbol }                from './surveySymbols';
+import { buildSymbolDefs, renderSymbol }                              from './surveySymbols';
 import { buildLineWeightLegend, LINE_STYLES, svgStrokeAttrs, lineWeightPx } from './lineWeights';
 import { buildArrowDefs, renderLinearDimension, renderLeaderLine }          from './dimensionLeaders';
 import type { SignatureRecord }               from '@/lib/integrations/digitalSignature';

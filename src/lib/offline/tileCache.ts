@@ -15,7 +15,6 @@ interface BoundingBox {
   west: number
 }
 
-const TILE_SIZE = 256
 const DEFAULT_ZOOM_RANGE = [1, 18]
 
 export function useTileCache() {

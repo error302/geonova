@@ -129,7 +129,6 @@ export function checkTolerance(
     }
 
     if (totalDistance > 0 && linearError > 0) {
-      const linearPrecision = totalDistance / linearError
       const allowableMm = (config.closingErrorMmPerKm * totalDistance) / 1000
       
       checks.push({

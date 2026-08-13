@@ -542,7 +542,6 @@ export function generateMutationForm(
   area?: AreaData,
   extraFields?: Record<string,string>
 ): string {
-  const today = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })
   const beacons = points.filter((p: PointData) => p.is_control)
   const ex = extraFields || {}
 

@@ -226,7 +226,7 @@ export async function assignLicenseSeat(
 }
 
 /** Revoke a license seat */
-export async function revokeLicenseSeat(seatId: string): Promise<void> {
+export async function revokeLicenseSeat(_seatId: string): Promise<void> {
   // Seats are tracked in-memory; this removes the seat association
 }
 

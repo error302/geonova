@@ -116,7 +116,6 @@ export function computeCurveStations(
   const stations: CurveStationResult[] = [];
   
   // PC station
-  const pcDeflection = 0;
   stations.push({
     chainage: pcChainage,
     deflectionAngle: 0,

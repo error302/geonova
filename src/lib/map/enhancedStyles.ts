@@ -18,7 +18,6 @@ import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 import Text from 'ol/style/Text'
 import Circle from 'ol/style/Circle'
-import Icon from 'ol/style/Icon'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 

@@ -14,7 +14,7 @@
 
 import { logger } from '@/lib/logger'
 import * as turf from '@turf/turf'
-import type { Feature, Polygon as GeoPolygon, MultiPolygon } from 'geojson'
+import type { Feature, Polygon as GeoPolygon } from 'geojson'
 
 export interface SplitResult {
   polygon1: [number, number][]

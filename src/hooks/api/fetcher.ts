@@ -22,8 +22,6 @@ export async function apiFetch<T>(
   input: RequestInfo | URL,
   init?: RequestInit
 ): Promise<T> {
-  const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url
-
   const response = await fetch(input, {
     ...init,
     headers: {

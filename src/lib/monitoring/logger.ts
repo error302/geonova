@@ -124,7 +124,7 @@ export function logApiRequest(
 export function logUserAction(
   action: string,
   details: Record<string, unknown>,
-  userId?: string
+  _userId?: string
 ) {
   logger.info(`User action: ${action}`, details)
 }

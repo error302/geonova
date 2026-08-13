@@ -2,7 +2,7 @@ import { SurveyDataset } from '../workflows/workflowEngine'
 
 export function detectSurveyType(
   headers: string[], 
-  rows: Record<string, string>[]
+  _rows: Record<string, string>[]
 ): SurveyDataset['surveyType'] {
   
   const h = headers.map((h) => h.toLowerCase().trim())

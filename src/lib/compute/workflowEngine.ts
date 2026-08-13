@@ -1,4 +1,4 @@
-import type { WorkflowNode, WorkflowEdge, ReportRequest, ReportResponse } from '@/types/workflow'
+import type { WorkflowNode, WorkflowEdge, ReportResponse } from '@/types/workflow'
 
 const BASE = process.env.NEXT_PUBLIC_URL || ''
 

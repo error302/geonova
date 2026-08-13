@@ -53,7 +53,6 @@ import {
   checkTraverseConformance,
   checkLevelingConformance,
   RDM_TRAVERSE_ACCURACY,
-  RDM_LEVELING_ACCURACY,
   type RDMConformanceResult,
 } from '@/lib/standards/rdm11'
 import { globalChiSquareTest } from '@/lib/survey/lsaStatisticalTesting'

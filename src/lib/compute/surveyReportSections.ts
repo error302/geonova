@@ -341,7 +341,7 @@ export function generateTopographicSurvey(input: SurveyReportInput): SectionCont
   return createSection('TOPOGRAPHIC_SURVEY', content, !!input.instrumentUsed)
 }
 
-export function generateDataProcessing(input: SurveyReportInput): SectionContent {
+export function generateDataProcessing(_input: SurveyReportInput): SectionContent {
   const content = `
     <h2>8. Data Processing</h2>
     

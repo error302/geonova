@@ -75,7 +75,6 @@ export async function callAI<T>(options: AICallOptions): Promise<AIResponse<T>> 
     }
 
     if (!response.ok) {
-      const errorText = await response.text()
       return {
         success: false,
         data: null,

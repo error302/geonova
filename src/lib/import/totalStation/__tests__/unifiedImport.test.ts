@@ -81,11 +81,6 @@ const JOBXML_SAMPLE = [
 ].join('\n')
 
 // Unknown / unrecognised sample (but CSV-like)
-const UNKNOWN_CSV_SAMPLE = [
-  'TP01,984321.456,1234567.890,1542.345',
-  'TP02,984322.100,1234568.200,1541.800',
-].join('\n')
-
 // Empty content
 const EMPTY_SAMPLE = ''
 

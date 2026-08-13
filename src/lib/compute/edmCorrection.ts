@@ -7,7 +7,7 @@ import type { EDMCorrectionInput, EDMCorrectionResult, CorrectionStep } from '@/
 export function computeEDMCorrection(input: EDMCorrectionInput): EDMCorrectionResult {
   const workings: CorrectionStep[] = []
   
-  const { measuredDistance, temperature, pressure, humidity, wavelength = 780, elevation, latitude } = input
+  const { measuredDistance, temperature, pressure, humidity, elevation, latitude } = input
   
   // Step 1: Calculate saturated vapor pressure (kPa)
   // Tetens formula: e_sat = 6.112 * exp(17.67 * T / (T + 243.5))

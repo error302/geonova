@@ -12,7 +12,7 @@
 
 // METARDU Engine - Coordinate conversions
 
-import { LatLon, UTMCoord, DMS } from '@/lib/engine/types';
+import { LatLon, UTMCoord } from '@/lib/engine/types';
 import { decimalToDMS } from '@/lib/engine/angles';
 import { getUTMZoneFromLatLng } from './utmZones';
 

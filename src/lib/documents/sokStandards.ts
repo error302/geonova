@@ -180,23 +180,18 @@ export function formatBearingQuadrant(decimalDegrees: number): string {
   let bearing = decimalDegrees % 360
   if (bearing < 0) bearing += 360
 
-  let quadrant: string
   let quadBearing: number
 
   if (bearing >= 0 && bearing < 90) {
-    quadrant = 'N'
     quadBearing = bearing
     return `N ${formatBearingDMS(quadBearing)} E`
   } else if (bearing >= 90 && bearing < 180) {
-    quadrant = 'S'
     quadBearing = 180 - bearing
     return `S ${formatBearingDMS(quadBearing)} E`
   } else if (bearing >= 180 && bearing < 270) {
-    quadrant = 'S'
     quadBearing = bearing - 180
     return `S ${formatBearingDMS(quadBearing)} W`
   } else {
-    quadrant = 'N'
     quadBearing = 360 - bearing
     return `N ${formatBearingDMS(quadBearing)} W`
   }

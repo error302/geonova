@@ -136,7 +136,7 @@ export async function getOfflineDB(): Promise<IDBPDatabase<MetarduOfflineDB>> {
   if (dbInstance) return dbInstance;
 
   dbInstance = await openDB<MetarduOfflineDB>(DB_NAME, DB_VERSION, {
-    upgrade(db, oldVersion, newVersion) {
+    upgrade(db, oldVersion, _newVersion) {
       // ── Version 1: Core stores ──
       if (oldVersion < 1) {
         const obsStore = db.createObjectStore('observations', { keyPath: 'id' });

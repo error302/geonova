@@ -69,7 +69,7 @@ export function interpretCSV(csvText: string): CSVInterpretResult {
       warnings
     }
     
-  } catch (err) {
+  } catch {
     return { ok: false, error: 'Failed to parse CSV file', warnings }
   }
 }

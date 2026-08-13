@@ -1,5 +1,5 @@
 import { createClient, type BrowserSession } from '@/lib/api-client/client'
-import type { SafetyIncident, SafetyReport } from '@/types/safety'
+import type { SafetyIncident } from '@/types/safety'
 
 export async function createIncident(params: {
   project_id: string

@@ -20,7 +20,6 @@
  *   - RDM 1.1 (2025) — Kenya tolerance limits
  */
 
-import type { Point2D } from '@/lib/engine/types'
 
 // ─── 1. Running Closure Monitor ─────────────────────────────────────────────
 

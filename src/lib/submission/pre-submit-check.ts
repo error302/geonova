@@ -305,7 +305,7 @@ function checkTraverseAccuracy(
 
 function checkAreaBoundary(
   project: Parameters<typeof preSubmitCheck>[0],
-  points?: Array<{ easting: number; northing: number }>,
+  _points?: Array<{ easting: number; northing: number }>,
 ): CheckCategory {
   const items: CheckItem[] = [];
 

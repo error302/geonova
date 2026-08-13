@@ -8,7 +8,7 @@
  */
 
 import { useInstrumentStore } from '@/stores/instrumentStore'
-import { checkTolerance, type ToleranceCheckResult } from '@/lib/survey/liveToleranceChecker'
+import { type ToleranceCheckResult } from '@/lib/survey/liveToleranceChecker'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 

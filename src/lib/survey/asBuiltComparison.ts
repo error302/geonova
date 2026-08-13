@@ -289,8 +289,6 @@ export function formatRowForDisplay(row: ComparisonRow): {
 } {
   const passColor = 'green'
   const failColor = 'red'
-  const naColor = 'gray'
-
   return {
     id: row.designId,
     dE: `${(row.deltaE * 1000).toFixed(1)}mm`,

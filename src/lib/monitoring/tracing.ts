@@ -218,7 +218,7 @@ export function getSpanStats(): {
  */
 export function setSentryTraceContext(trace: TraceContext) {
   try {
-    import('@/lib/monitoring/sentry').then(({ setUser, addBreadcrumb }) => {
+    import('@/lib/monitoring/sentry').then(({ addBreadcrumb }) => {
       addBreadcrumb({
         category: 'trace',
         message: `Trace ${trace.traceId}`,

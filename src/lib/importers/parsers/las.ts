@@ -112,8 +112,6 @@ function parsePoint(
   const z = view.getInt32(offset + 8, true) * header.scaleZ + header.offsetZ
 
   // Intensity (uint16 at offset 12)
-  const intensity = view.getUint16(offset + 12, true)
-
   // Classification (offset 20 for formats 0-5, offset 18 for formats 6-8 in LAS 1.4)
   let classification = 0
   let gpsTime: number | undefined

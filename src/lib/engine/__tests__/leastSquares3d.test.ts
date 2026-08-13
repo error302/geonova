@@ -1,4 +1,4 @@
-import { adjustNetwork, Observation } from '../leastSquares'
+import { adjustNetwork } from '../leastSquares'
 import { defined } from '@/test-utils/defined'
 
 describe('adjustNetwork — 2D angle observation', () => {

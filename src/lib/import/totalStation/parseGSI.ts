@@ -359,7 +359,6 @@ export function pairFaces(records: GSIRecord[]): FacePair[] {
 
       // Collimation error (C) in arc-seconds
       // C = (Hz_FL - (Hz_FR + 180°)) / 2
-      const collimation = ((fl.horizontalAngle ?? 0) - hzFR) * 3600 / 2
     }
 
     // Compute horizontal distance and height difference

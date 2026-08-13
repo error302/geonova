@@ -569,7 +569,7 @@ export function computeErrorEllipse(
   varE: number,
   varN: number,
   covEN: number,
-  confidence: number = 0.95,
+  _confidence: number = 0.95,
   degreesOfFreedom: number = 10
 ): { semiMajor: number; semiMinor: number; orientation: number } {
   // Eigenvalues of 2×2 covariance matrix

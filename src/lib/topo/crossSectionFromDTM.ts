@@ -18,7 +18,7 @@
  * generates the profile. No manual level booking needed.
  */
 
-import { type SpotHeight, type TINSurface, buildTINSurface, interpolateElevation } from '@/lib/engine/contours'
+import { type SpotHeight, buildTINSurface, interpolateElevation } from '@/lib/engine/contours'
 
 export interface CenterlinePoint {
   easting: number

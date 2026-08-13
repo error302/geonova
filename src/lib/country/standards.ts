@@ -325,60 +325,6 @@ const BAHRAIN_STD: CountrySurveyStandard = {
   ],
 }
 
-const KETRACO_STD: CountrySurveyStandard = {
-  country: 'kenya',
-  name: 'Kenya (KETRACO Transmission Lines)',
-  isoCode: 'KE',
-  currency: 'KES',
-  datum: 'Arc 1960',
-  ellipsoid: 'Clarke 1880',
-  utmZones: [36, 37],
-  utmHemisphere: 'N',
-  traverseOrders: [
-    {
-      order: 'transmission_control',
-      minPrecision: 10_000,
-      description: 'Cadastral control for transmission line corridor surveys',
-      regulation: 'KETRACO Annex 6 — minimum 1:10,000 control precision',
-    },
-  ],
-  defaultTraverseOrder: 'transmission_control',
-  areaPrecision: KENYA_STD.areaPrecision,
-  slopeCorrection: KENYA_STD.slopeCorrection,
-  curvilinearBoundary: {
-    maxTacheometricDistance: 200,
-    maxOffsetSmall: 50,
-    maxOffsetLarge: 75,
-    regulation: 'KETRACO Annex 6',
-  },
-  beacon: {
-    mustReferenceUnderground: true,
-    verifyWithKnownPoints: true,
-    verifyMethod: 'traverse',
-    regulation: 'KETRACO Annex 6 — beacon referencing required',
-  },
-  fieldNoteRules: KENYA_STD.fieldNoteRules,
-  surveyorReport: {
-    required: true,
-    mustInclude: [
-      'Control survey precision achieved',
-      'Aerial mapping specifications (GSD, corridor width)',
-      'Deliverables: AutoCAD DXF + ESRI GIS formats',
-      'PAP (Project Affected Persons) database in Excel',
-      'Cadastral maps for all parcels in corridor',
-      'Land Information Schedule',
-    ],
-    counterSignRequired: true,
-    regulation: 'KETRACO Annex 6 — deliverable requirements',
-  },
-  generalNotes: [
-    'Aerial mapping: 30cm GSD, 2km corridor width',
-    'Lidar: ≥2cm precision',
-    'Topographic maps: Scale 1:2500, contour interval 2.0m',
-    'Cadastral maps for all parcels in TL corridor required',
-  ],
-}
-
 const NZ_STD: CountrySurveyStandard = {
   country: 'new_zealand',
   name: 'New Zealand',

@@ -9,7 +9,7 @@
 // METARDU Engine - COGO (Coordinate Geometry)
 
 import { Point2D, COGOIntersection, COGORadiation, COOResection } from './types';
-import { toRadians, toDegrees } from './angles';
+import { toRadians } from './angles';
 import { distanceBearing } from './distance';
 
 export function bearingIntersection(

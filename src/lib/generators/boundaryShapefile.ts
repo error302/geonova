@@ -20,7 +20,7 @@ export async function generateBoundaryShapefile(
     preAdjustedClosure: preAdjusted?.closure,
   });
 
-  const beacons = geom.stations.map((s, i) => ({
+  const beacons = geom.stations.map((s, _i) => ({
     name: s.station,
     e: s.easting,
     n: s.northing,

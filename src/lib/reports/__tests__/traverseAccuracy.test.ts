@@ -1,4 +1,4 @@
-import { computeTraverseAccuracy, getAccuracyBadgeLabel } from '../traverseAccuracy'
+import { computeTraverseAccuracy } from '../traverseAccuracy'
 import { defined } from '@/test-utils/defined'
 
 describe('computeTraverseAccuracy', () => {

@@ -34,9 +34,6 @@ registerParser({
 
     // Coordinate-only South file: integer pt#, name, numeric E, N, RL, quoted code, type
     // Pattern: 1,BM1,984321.456,1234567.890,1542.345,"BM1",0
-    const coordLineMatch = /^\s*\d+\s*,/.test(firstLine) &&
-      !/^\s*\d+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+/.test(firstLine.replace(/"[^"]*"/g, '').replace(/'[^']*'/g, '')) === false;
-
     // More reliable: check if any line matches the full South coordinate pattern
     const lines = trimmed.split('\n').slice(0, 10);
     const southCoordRegex = /^\s*\d+\s*,\s*\w+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+/;

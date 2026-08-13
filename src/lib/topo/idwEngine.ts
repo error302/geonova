@@ -55,7 +55,7 @@ export function runIDW(
 export function runIDWSync(
   points: SurveyPoint[] | IDWSample[],
   options: IDWOptions = {},
-  onProgress?: ProgressCallback
+  _onProgress?: ProgressCallback
 ): IDWGrid {
   // Normalise to IDWSample so the kernel below only deals with one shape.
   const samples: IDWSample[] = (points as Array<SurveyPoint | IDWSample>).map(

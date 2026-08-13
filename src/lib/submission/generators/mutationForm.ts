@@ -103,7 +103,7 @@ export function generateMutationForm(input: MutationFormInput): Uint8Array {
   y += 6
 
   doc.setFont('helvetica', 'normal')
-  input.resultingParcels.forEach((parcel, i) => {
+  input.resultingParcels.forEach((parcel, _i) => {
     doc.text(parcel.parcelNumber, colX[0], y)
     doc.text(parcel.areaHa.toFixed(4), colX[1], y)
     doc.text(parcel.owner ?? '—', colX[2], y)

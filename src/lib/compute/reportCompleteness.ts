@@ -8,7 +8,7 @@ import type {
 
 export function computeReportCompleteness(
   input: SurveyReportInput,
-  sections: SectionContent[]
+  _sections: SectionContent[]
 ): ReportCompletenessResult {
   const sectionCompleteness: Record<ReportSection, number> = {
     TITLE_PAGE: calculateTitlePageCompleteness(input),

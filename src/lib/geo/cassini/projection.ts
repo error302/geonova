@@ -25,7 +25,6 @@ export function meridionalArc(phi: number, ell: EllipsoidParams): number {
 export function footpointLatitude(M: number, ell: EllipsoidParams): number {
   const { a, e2 } = ell
   const oneMinusE2 = 1 - e2
-
   let phi = M / (a * ell.A0)
 
   for (let i = 0; i < 50; i++) {
@@ -204,7 +203,6 @@ export function cassiniForward(
   lon0: number = 37 * Math.PI / 180,
 ): { E_m: number; N_m: number } {
   const { a, e2, ep2 } = ell
-  const oneMinusE2 = 1 - e2
 
   const sinLat = Math.sin(lat)
   const cosLat = Math.cos(lat)
@@ -217,8 +215,6 @@ export function cassiniForward(
   const N1 = a / Math.sqrt(1 - e2 * sin2Lat)
   const T1 = tan2Lat
   const C1 = ep2 * cosLat * cosLat
-  const R1 = a * oneMinusE2 / Math.pow(1 - e2 * sin2Lat, 1.5)
-
   const A = cosLat * dlon
   const A2 = A * A
   const A3 = A2 * A

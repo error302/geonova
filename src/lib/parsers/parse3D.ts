@@ -1,4 +1,4 @@
-import type { ParsedInput, ExtractedBuildingData, ExtractedWall, ExtractedFloor, BoundingBox2D, ExtractedAnnotation } from './types'
+import type { ParsedInput, ExtractedBuildingData, ExtractedWall, ExtractedFloor, BoundingBox2D } from './types'
 import { calculateConfidence } from './fileRouter'
 
 export async function parseGLTFFile(file: File): Promise<ParsedInput> {

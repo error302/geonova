@@ -285,7 +285,7 @@ function buildBody(inp: EarthworksBoQInput): string {
   }
 
   // ── 6. Mass Haul Summary ────────────────────────────────
-  const massRows = result.massOrdinates.map((m, i) => `
+  const massRows = result.massOrdinates.map((m, _i) => `
 <tr>
   <td class="mono">${fmtCh(m.chainage)}</td>
   <td class="right mono">${fmtNum(m.cumCut)}</td>

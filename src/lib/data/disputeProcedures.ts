@@ -1,4 +1,4 @@
-import { DisputeProcedure, DisputeType, DisputeStage } from '@/types/landLaw'
+import { DisputeProcedure, DisputeType } from '@/types/landLaw'
 
 export const DISPUTE_PROCEDURES: DisputeProcedure[] = [
   {

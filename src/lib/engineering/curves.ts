@@ -68,7 +68,6 @@ export function simpleCircularCurve(input: SimpleCurveInput): SimpleCurveResult 
 
   // Always include CT
   if (settingOutTable[settingOutTable.length - 1]?.chainage !== chainage_CT) {
-    const arc = L
     const deflection = Delta / 2
     const chord = C
     settingOutTable.push({

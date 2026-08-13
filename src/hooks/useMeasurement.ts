@@ -85,7 +85,6 @@ export function useMeasurement(map: Map | null) {
       source,
       style: (feature: FeatureLike) => {
         const geometry = feature.getGeometry();
-        const type = feature.get('type') as string;
         
         if (geometry instanceof OlPoint) {
           return new Style({

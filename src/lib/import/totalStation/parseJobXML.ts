@@ -57,7 +57,7 @@ export function parseJobXML(content: string): {
 
     return { ok: true, records, warnings, jobName }
 
-  } catch (err) {
+  } catch {
     return { 
       ok: false, 
       records: [], 

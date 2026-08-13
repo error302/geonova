@@ -126,7 +126,6 @@ describe('computeSettingOut()', () => {
   });
 
   it('target height = designRL - stationRL - HI', () => {
-    const pile = basicDef;
     const designRL = 1250;
     const stationRL = 1240;
     const HI = 1.5;

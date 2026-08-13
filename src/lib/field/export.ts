@@ -1,4 +1,4 @@
-import { FieldProject, FieldExportOptions } from '@/types/field';
+import { FieldProject } from '@/types/field';
 
 export function projectToGeoJSON(project: FieldProject): GeoJSON.FeatureCollection {
   const features: GeoJSON.Feature[] = [];

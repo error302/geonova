@@ -27,7 +27,6 @@ import { shoelaceArea } from '@/lib/engine/area'
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
-const EARTH_RADIUS_M = 6_371_000 // Mean Earth radius (spherical approximation)
 const UTM_SCALE_AT_CENTRAL_MERIDIAN = 0.9996 // Standard UTM scale factor
 
 // ─── Types ──────────────────────────────────────────────────────────────────

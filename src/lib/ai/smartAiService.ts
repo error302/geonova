@@ -7,7 +7,7 @@
  * - When offline in remote trench: routes to localLlmService (WebLLM - Survey Act Cap 299)
  */
 
-import { localLlmService, LocalChatOptions } from './localLlmService'
+import { localLlmService } from './localLlmService'
 import type { InitProgressReport } from '@mlc-ai/web-llm'
 import { logger } from '@/lib/logger'
 

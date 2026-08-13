@@ -19,7 +19,7 @@
  */
 
 import { parseNMEA, type NMEAPosition } from './nmea-parser';
-import { type GNSSDevice, type PositionCallback, type ConnectionCallback } from './bluetooth';
+import { type PositionCallback, type ConnectionCallback } from './bluetooth';
 import { logger } from '@/lib/logger'
 
 export interface CapacitorGNSSDevice {

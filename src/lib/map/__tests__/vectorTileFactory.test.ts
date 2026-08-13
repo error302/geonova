@@ -159,7 +159,6 @@ describe('estimateTileCount', () => {
   it('handles extent exactly at tile boundaries', () => {
     // At zoom 1, each tile is halfEarth wide/tall
     const halfEarth = 20037508.342789244
-    const tileSize1 = 2 * halfEarth
     // One tile at the top-left quadrant
     const oneTileExtent = [-halfEarth, 0, 0, halfEarth]
     expect(estimateTileCount(oneTileExtent, 1)).toBe(1)

@@ -1,6 +1,6 @@
 import { jsPDF } from 'jspdf'
 import type { SubmissionPackage } from '../types'
-import { PlanGeometry, computePlanGeometry } from '@/lib/engine/planGeometry'
+import { computePlanGeometry } from '@/lib/engine/planGeometry'
 import { formatPlanDate, formatBearingDMS, formatDistanceM } from '@/lib/drawing/dxfLayers'
 
 function stationsToAdjusted(pkg: SubmissionPackage) {

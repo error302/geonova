@@ -184,7 +184,7 @@ function estimateTotalPages(stationCount: number): number {
 // Draw the Republic of Kenya / DoLS header
 // ---------------------------------------------------------------------------
 
-function drawPageHeader(doc: jsPDF, input: FormC22Input, _today: string): void {
+function drawPageHeader(doc: jsPDF, _input: FormC22Input, _today: string): void {
   const cx = PAGE_W / 2;
 
   doc.setDrawColor(0, 0, 0);

@@ -31,7 +31,7 @@ class RedisCache {
       })
       await this.client.connect()
       this.isConnected = true
-    } catch (error) {
+    } catch {
       this.disabled = true
       this.client = null
       if (process.env.NODE_ENV !== 'production') {

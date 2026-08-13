@@ -7,13 +7,6 @@ import type {
 
 import { TRAVERSE_PRECISION_STANDARDS, angularClosureTolerance } from '@/lib/engine/traverse'
 
-const LEVELLING_TOLERANCE: Record<string, number> = {
-  first_order: 3,
-  second_order: 6,
-  third_order: 12,
-  fourth_order: 20,
-}
-
 const SUBTYPE_TO_SURVEY_TYPE: Record<string, keyof typeof TRAVERSE_PRECISION_STANDARDS> = {
   cadastral_subdivision: 'cadastral',
   cadastral_amalgamation: 'cadastral',

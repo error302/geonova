@@ -17,7 +17,6 @@
 
 import {
   computeEntryHash,
-  canonicalJSON,
   type AuditPayload,
 } from '../auditHash'
 

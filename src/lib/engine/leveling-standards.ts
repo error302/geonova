@@ -270,7 +270,7 @@ export function runTwoPegTest(input: TwoPegTestInput): LevelingTwoPegResult {
     A1, B1, A2, B2,
     baselineMeters = 100,
     allowableSeconds = 30,        // USACE default: 30 arc-seconds
-    country,
+    country: _country,
     daysSinceLastTest = 0,
   } = input
 

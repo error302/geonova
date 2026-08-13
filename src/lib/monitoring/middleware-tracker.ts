@@ -108,7 +108,7 @@ export function normalizePath(pathname: string): string {
 
   // Normalize dynamic segments
   const segments = pathname.split('/').filter(Boolean);
-  const normalized = segments.map((segment, index) => {
+  const normalized = segments.map((segment, _index) => {
     // UUID pattern
     if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(segment)) {
       return '[id]';

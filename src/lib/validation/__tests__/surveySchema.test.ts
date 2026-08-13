@@ -1,4 +1,4 @@
-import { BoundaryPointSchema, ControlPointSchema, SurveyPlanDataSchema } from '../surveySchema'
+import { BoundaryPointSchema, ControlPointSchema } from '../surveySchema'
 
 describe('Survey Validation Schemas', () => {
   describe('BoundaryPointSchema', () => {

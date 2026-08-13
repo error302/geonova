@@ -10,8 +10,6 @@ export { ParcelStatusEnum, SchemeStatusEnum }
 
 const KENYA_EASTING = { min: 166000, max: 1066000 }
 const KENYA_NORTHING = { min: 9140000, max: 10200000 }
-const UTM_ZONES = ['36S', '37S', '36N', '37N', '35S', '35N']
-
 export const SurveyTypeEnum = z.enum([
   'cadastral_subdivision', 'cadastral_amalgamation', 'cadastral_resurvey', 'cadastral_mutation',
   'engineering_road', 'engineering_bridge', 'engineering_dam', 'engineering_pipeline',

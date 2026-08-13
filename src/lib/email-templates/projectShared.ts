@@ -8,7 +8,6 @@ import { renderEmailLayout } from './layout'
 import {
   Heading,
   Paragraph,
-  RichParagraph,
   PrimaryButton,
   Accent,
   Link,

@@ -17,7 +17,7 @@
  */
 
 import { getArea, getLength } from 'ol/sphere'
-import type { Geometry, Polygon, LineString } from 'ol/geom'
+import type { Polygon, LineString } from 'ol/geom'
 import type { ProjectionLike } from 'ol/proj'
 
 export interface GeodesicMetrics {

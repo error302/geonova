@@ -14,7 +14,6 @@
  */
 
 import {
-  EntityGraph,
   createEntityGraph,
   CycleError,
   NodeNotFoundError,

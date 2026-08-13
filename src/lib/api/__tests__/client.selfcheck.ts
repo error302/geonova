@@ -10,8 +10,6 @@ import { z } from 'zod'
 import assert from 'node:assert'
 
 const ProjectSchema = z.object({ id: z.string(), name: z.string() })
-type Project = z.infer<typeof ProjectSchema>
-
 const origFetch = globalThis.fetch
 
 function installMock(opts: { status: number; body: unknown; headers?: Record<string, string> }) {

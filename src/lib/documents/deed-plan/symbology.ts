@@ -184,7 +184,7 @@ export function drawBuilding(
   doc: PDFKit.PDFDocument,
   x: number, y: number,
   width: number, height: number,
-  angle: number = 0
+  _angle: number = 0
 ): void {
   // Building outline
   drawRect(doc, x, y, width, height, 0.25);

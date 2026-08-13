@@ -131,7 +131,7 @@ describe('NTRIPClient', () => {
     })
 
     it('all presets have required fields', () => {
-      for (const [key, preset] of Object.entries(KENYA_NTRIP_PRESETS)) {
+      for (const [_key, preset] of Object.entries(KENYA_NTRIP_PRESETS)) {
         expect(preset.name).toBeTruthy()
         expect(preset.host).toBeTruthy()
         expect(preset.port).toBeGreaterThan(0)

@@ -21,7 +21,7 @@
 
 import { generateContours, type SpotHeight, type ContourLine } from '@/lib/engine/contours'
 import { classifyPointCloud, extractGroundPoints } from '@/lib/topo/pointCloudClassification'
-import { generateTINWithBreaklines, type BreaklineSegment } from '@/lib/compute/tinWithBreaklines'
+import { type BreaklineSegment } from '@/lib/compute/tinWithBreaklines'
 
 export interface RealTimeContourState {
   /** Total points received so far */

@@ -660,7 +660,7 @@ export function addSchemeClickInteraction(
 
     if (!feature) return
 
-    const { feature: f, layer } = feature as { feature: OLFeature; layer: OLLayer }
+    const { feature: f } = feature as { feature: OLFeature; layer: OLLayer }
     const featureType = f.get('type')
 
     let popupType: 'parcel' | 'beacon' | 'block' = 'parcel'

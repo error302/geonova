@@ -346,8 +346,6 @@ export function generateClaForm2(data: ClaForm2Data): Uint8Array {
   if (y > 260) { doc.addPage(); addFooter(doc, doc.getNumberOfPages()); y = 20 }
   const wCols = [MARGIN_L, MARGIN_L + 8, MARGIN_L + 75, MARGIN_L + 110, MARGIN_L + 145]
   const wHeaders = ['No.', 'Witness Name', 'ID Number', 'Phone']
-  const wColWidths = [8, 67, 35, 35]
-
   // Header row
   doc.setFillColor(...DARK_BLUE)
   doc.rect(MARGIN_L, y, CONTENT_W, 7, 'F')

@@ -374,7 +374,7 @@ export async function assembleSubmissionPackage(
       registryMapSheet: project.registry_map_sheet ?? '',
       mutationType: 'subdivision' as const,
       reasonForMutation: project.mutation_reason ?? 'Subdivision',
-      affectedBeacons: adjustedCoordinates.map((st, i) => ({
+      affectedBeacons: adjustedCoordinates.map((st, _i) => ({
         beaconId: st.label,
         action: 'new' as const,
         easting: st.easting,

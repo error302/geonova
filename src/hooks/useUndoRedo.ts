@@ -21,7 +21,7 @@
  *   })
  */
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback } from 'react';
 import { useHotkeys } from '@/hooks/useHotkeys';
 
 export interface Command {
