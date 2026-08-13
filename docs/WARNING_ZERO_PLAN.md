@@ -47,7 +47,8 @@ node scripts/sync-mirror.mjs             # converge the .freebuff mirror to HEAD
 git status --short                     # expect nothing (or the concurrent session’s WIP)
 git log --oneline origin/main..HEAD    # confirm what's still unpushed
 node scripts/lint-ratchets.mjs --report   # confirm gate green + live floors (exit 0)
-node scripts/warn-scan.mjs                 # regenerate the per-file census (next: unused-vars batch 7)
+node scripts/warn-scan.mjs                 # regenerate the per-file census (next: unused-vars batch 8)
+node scripts/rule-census.mjs                # regenerate the per-RULE breakdown (matches the ratchet total)
 ```
 
 If the gate is red, §7 rule 4 (stash-rebaseline) is the usual cause — read the report, never `--update` a floor to mask a WIP-induced drop.
@@ -146,6 +147,7 @@ The original B1–B5 roadmap has **landed**: row-typing is 100%, member-access f
 - `scripts/lint-gate.mjs --paths-from-changed <base>` — fast PR changed-files gate (all floors)
 - `scripts/api-row-sweep.mjs` — API-route `db.query<T>` census (`--check` CI gate, `--apply`, `--verify`, `--apply-all`, `--no-member-scan`, `--batch-plan`)
 - `scripts/warn-scan.mjs` — regenerates the per-file census (`scripts/warn-plan-data.json`)
+- `scripts/rule-census.mjs` — per-RULE warning census (one command; total matches the ratchet; writes `scripts/rule-census-data.json`)
 - `scripts/a11y-audit.mjs` — WCAG sweep (0 findings, 1,856 files; `--write-audit` regenerates `.a11y-audit.json`)
 - Baselines: `scripts/{member-access,assignment,explicit-any,argument,row-typing,warning,a11y}-baseline.json`
 
