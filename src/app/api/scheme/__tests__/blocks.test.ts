@@ -17,10 +17,8 @@ jest.mock('next-auth', () => ({
   getServerSession: jest.fn(),
 }))
 
-jest.mock('@/lib/security/rateLimit', () => ({
-  rateLimit: jest.fn().mockResolvedValue({ allowed: true, remaining: 10 }),
-  getClientIdentifier: jest.fn().mockReturnValue('test-client'),
-}))
+jest.mock('@/lib/security/rateLimit', () =>
+  jest.requireActual<typeof import('@/test-utils/rate-limit')>('@/test-utils/rate-limit').mockRateLimitModule())
 
 jest.mock('@/lib/logger', () => ({
   auditLog: jest.fn(),
@@ -40,6 +38,7 @@ import { getServerSession } from 'next-auth'
 import { NextRequest } from 'next/server'
 import { createAuthSession } from '@/test-utils/auth-session'
 import { mr } from '@/test-utils/mock-rows'
+import { makeRequest } from '@/test-utils/request'
 
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
 const mockSession = getServerSession as jest.MockedFunction<typeof getServerSession>
@@ -49,10 +48,10 @@ const TEST_UUID = '00000000-0000-0000-0000-000000000001'
 
 
 function createMockRequest(body: unknown): NextRequest {
-  return new NextRequest('http://localhost/api/scheme/blocks', {
+  return makeRequest('/api/scheme/blocks', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body,
   })
 }
 
@@ -132,14 +131,14 @@ describe('GET /api/scheme/blocks', () => {
 
   it('should reject unauthenticated requests', async () => {
     mockSession.mockResolvedValue(null)
-    const req = new NextRequest(`http://localhost/api/scheme/blocks?project_id=${TEST_UUID}`)
+    const req = makeRequest(`/api/scheme/blocks?project_id=${TEST_UUID}`)
     const res = await GET(req)
     expect(res.status).toBe(401)
   })
 
   it('should require project_id parameter', async () => {
     mockSession.mockResolvedValue(createAuthSession())
-    const req = new NextRequest('http://localhost/api/scheme/blocks')
+    const req = makeRequest('/api/scheme/blocks')
     const res = await GET(req)
     const data: unknown = await res.json()
     expect(res.status).toBe(400)
@@ -156,7 +155,7 @@ describe('GET /api/scheme/blocks', () => {
         { id: 'b2', block_number: '2', block_name: 'B', parcel_count: 3, completed_count: 0 },
       ]))
 
-    const req = new NextRequest(`http://localhost/api/scheme/blocks?project_id=${TEST_UUID}`)
+    const req = makeRequest(`/api/scheme/blocks?project_id=${TEST_UUID}`)
     const res = await GET(req)
     const data = (await res.json()) as { data: { parcel_count: number }[] }
 

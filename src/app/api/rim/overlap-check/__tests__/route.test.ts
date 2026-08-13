@@ -28,10 +28,8 @@ jest.mock('next-auth', () => ({
   getServerSession: jest.fn(),
 }))
 
-jest.mock('@/lib/security/rateLimit', () => ({
-  rateLimit: jest.fn().mockResolvedValue({ allowed: true, remaining: 10 }),
-  getClientIdentifier: jest.fn().mockReturnValue('test-client'),
-}))
+jest.mock('@/lib/security/rateLimit', () =>
+  jest.requireActual<typeof import('@/test-utils/rate-limit')>('@/test-utils/rate-limit').mockRateLimitModule())
 
 jest.mock('@/lib/logger', () => ({
   auditLog: jest.fn(),
@@ -40,10 +38,10 @@ jest.mock('@/lib/logger', () => ({
 import { POST } from '../route'
 import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
-import { NextRequest } from 'next/server'
 import type { ParcelForOverlap } from '@/lib/rim/overlapDetection'
 import { createAuthSession } from '@/test-utils/auth-session'
 import { mr } from '@/test-utils/mock-rows'
+import { makeRequest } from '@/test-utils/request'
 
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
 const mockSession = getServerSession as jest.MockedFunction<typeof getServerSession>
@@ -109,7 +107,7 @@ describe('POST /api/rim/overlap-check', () => {
   })
 
   it('ignores shared RIM boundaries (edge-touching parcels) at the API gate', async () => {
-    const req = new NextRequest('http://localhost/api/rim/overlap-check', {
+    const req = makeRequest('/api/rim/overlap-check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: postBody(NEW_PARCEL, [EDGE_TOUCHING_PARCEL]),
@@ -127,7 +125,7 @@ describe('POST /api/rim/overlap-check', () => {
   })
 
   it('flags genuine overlaps at the API gate', async () => {
-    const req = new NextRequest('http://localhost/api/rim/overlap-check', {
+    const req = makeRequest('/api/rim/overlap-check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: postBody(NEW_PARCEL, [OVERLAPPING_PARCEL]),
@@ -150,7 +148,7 @@ describe('POST /api/rim/overlap-check', () => {
 
   it('rejects a malformed payload with 400 VALIDATION_ERROR', async () => {
     // existingParcels entry is missing its required `vertices` array
-    const req = new NextRequest('http://localhost/api/rim/overlap-check', {
+    const req = makeRequest('/api/rim/overlap-check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -169,7 +167,7 @@ describe('POST /api/rim/overlap-check', () => {
 
   it('requires authentication (401 when no session)', async () => {
     mockSession.mockResolvedValue(null)
-    const req = new NextRequest('http://localhost/api/rim/overlap-check', {
+    const req = makeRequest('/api/rim/overlap-check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: postBody(NEW_PARCEL, [EDGE_TOUCHING_PARCEL]),

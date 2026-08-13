@@ -27,8 +27,8 @@ jest.mock('@/lib/email-templates', () => ({
 import { POST } from '../route'
 import { db } from '@/lib/db'
 import { sendTemplatedEmail } from '@/lib/email-templates'
-import { NextRequest } from 'next/server'
 import { mr } from '@/test-utils/mock-rows'
+import { makeRequest } from '@/test-utils/request'
 
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
 const mockSend = sendTemplatedEmail as jest.MockedFunction<typeof sendTemplatedEmail>
@@ -64,7 +64,7 @@ function trialRow(overrides: Partial<TrialRow> = {}): TrialRow {
 }
 
 function authedRequest() {
-  return new NextRequest('http://localhost/api/cron/trial-reminders', {
+  return makeRequest('/api/cron/trial-reminders', {
     method: 'POST',
     headers: { authorization: 'Bearer test-admin-key' },
   })
@@ -89,7 +89,7 @@ describe('POST /api/cron/trial-reminders', () => {
   })
 
   it('rejects with 401 on a wrong bearer key', async () => {
-    const req = new NextRequest('http://localhost/api/cron/trial-reminders', {
+    const req = makeRequest('/api/cron/trial-reminders', {
       method: 'POST',
       headers: { authorization: 'Bearer wrong-key' },
     })

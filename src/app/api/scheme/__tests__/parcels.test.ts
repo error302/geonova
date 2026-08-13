@@ -12,10 +12,8 @@ jest.mock('next-auth', () => ({
   getServerSession: jest.fn(),
 }))
 
-jest.mock('@/lib/security/rateLimit', () => ({
-  rateLimit: jest.fn().mockResolvedValue({ allowed: true, remaining: 10 }),
-  getClientIdentifier: jest.fn().mockReturnValue('test-client'),
-}))
+jest.mock('@/lib/security/rateLimit', () =>
+  jest.requireActual<typeof import('@/test-utils/rate-limit')>('@/test-utils/rate-limit').mockRateLimitModule())
 
 jest.mock('@/lib/logger', () => ({
   auditLog: jest.fn(),
@@ -24,9 +22,9 @@ jest.mock('@/lib/logger', () => ({
 import { POST, GET } from '../parcels/route'
 import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
-import { NextRequest } from 'next/server'
 import { createAuthSession } from '@/test-utils/auth-session'
 import { mr } from '@/test-utils/mock-rows'
+import { makeRequest } from '@/test-utils/request'
 
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
 const mockSession = getServerSession as jest.MockedFunction<typeof getServerSession>
@@ -62,7 +60,7 @@ describe('POST /api/scheme/parcels', () => {
 
   it('should require block_id', async () => {
     mockSession.mockResolvedValue(createAuthSession())
-    const req = new NextRequest('http://localhost/api/scheme/parcels', {
+    const req = makeRequest('/api/scheme/parcels', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ parcel_number: '1' }),
@@ -77,7 +75,7 @@ describe('POST /api/scheme/parcels', () => {
 
   it('should require parcel_number', async () => {
     mockSession.mockResolvedValue(createAuthSession())
-    const req = new NextRequest('http://localhost/api/scheme/parcels', {
+    const req = makeRequest('/api/scheme/parcels', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ block_id: TEST_BLOCK_UUID }),
@@ -99,7 +97,7 @@ describe('POST /api/scheme/parcels', () => {
       .mockResolvedValueOnce(mr([]))                                                                                          // dup check
       .mockResolvedValueOnce(mr([validParcel()])) // INSERT
 
-    const req = new NextRequest('http://localhost/api/scheme/parcels', {
+    const req = makeRequest('/api/scheme/parcels', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ block_id: TEST_BLOCK_UUID, parcel_number: '101', area_ha: 0.5 }),
@@ -124,7 +122,7 @@ describe('GET /api/scheme/parcels', () => {
         validParcel({ id: '00000000-0000-0000-0000-000000000005', parcel_number: '102', status: 'pending', block_number: 'B1', block_name: 'Block 1' }),
       ]))
 
-    const req = new NextRequest(`http://localhost/api/scheme/parcels?block_id=${TEST_BLOCK_UUID}`)
+    const req = makeRequest(`/api/scheme/parcels?block_id=${TEST_BLOCK_UUID}`)
     const res = await GET(req)
     const data = (await res.json()) as { data: unknown[] }
     expect(res.status).toBe(200)
@@ -133,7 +131,7 @@ describe('GET /api/scheme/parcels', () => {
 
   it('should require block_id or project_id', async () => {
     mockSession.mockResolvedValue(createAuthSession())
-    const req = new NextRequest('http://localhost/api/scheme/parcels')
+    const req = makeRequest('/api/scheme/parcels')
     const res = await GET(req)
     const data: unknown = await res.json()
     expect(res.status).toBe(400)

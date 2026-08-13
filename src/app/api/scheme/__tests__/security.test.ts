@@ -11,10 +11,9 @@ jest.mock('next-auth', () => ({
   getServerSession: jest.fn(),
 }))
 
-jest.mock('@/lib/security/rateLimit', () => ({
-  rateLimit: jest.fn().mockResolvedValue({ allowed: true, remaining: 60 }),
-  getClientIdentifier: jest.fn().mockReturnValue('test-ip'),
-}))
+jest.mock('@/lib/security/rateLimit', () =>
+  jest.requireActual<typeof import('@/test-utils/rate-limit')>('@/test-utils/rate-limit').mockRateLimitModule({ remaining: 60, clientId: 'test-ip' })
+)
 
 jest.mock('@/lib/logger', () => ({
   auditLog: jest.fn(),
