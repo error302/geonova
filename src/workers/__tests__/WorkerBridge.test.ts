@@ -140,3 +140,141 @@ describe('WorkerBridge (mocked Worker protocol)', () => {
     expect(mockWorker.terminate).toHaveBeenCalled()
   })
 })
+  it('resolves transformCoordinates with the TRANSFORM_COMPLETE payload', async () => {
+    const p = workerBridge.transformCoordinates({
+      fromEpsg: 4326,
+      toEpsg: 21037,
+      coordinates: [
+        { lat: -1.286389, lng: 36.817223 },
+        { northing: 9858214.65, easting: 219404.4 },
+      ],
+    })
+
+    expect(mockWorker.postMessage).toHaveBeenCalledTimes(1)
+    const [message] = mockWorker.postMessage.mock.calls[0] as unknown as [WorkerMessage]
+    expect(message.type).toBe('TRANSFORM_COORDINATES')
+    expect(message.payload).toEqual({
+      fromEpsg: 4326,
+      toEpsg: 21037,
+      coordinates: [
+        { lat: -1.286389, lng: 36.817223 },
+        { northing: 9858214.65, easting: 219404.4 },
+      ],
+    })
+
+    const payload = {
+      coordinates: [
+        { northing: 9858214.65, easting: 219404.4 },
+        { lat: -1.286389, lng: 36.817223 },
+      ],
+      count: 2,
+    }
+    reply('TRANSFORM_COMPLETE', payload)
+
+    await expect(p).resolves.toEqual(payload)
+  })
+
+  it('resolves computeArea with the COMPUTE_COMPLETE payload', async () => {
+    const p = workerBridge.computeArea([
+      { northing: 0, easting: 0 },
+      { northing: 0, easting: 100 },
+      { northing: 100, easting: 100 },
+      { northing: 100, easting: 0 },
+    ])
+
+    expect(mockWorker.postMessage).toHaveBeenCalledTimes(1)
+    const [message] = mockWorker.postMessage.mock.calls[0] as unknown as [WorkerMessage]
+    expect(message.type).toBe('COMPUTE_AREA')
+    expect(message.payload).toEqual({
+      coordinates: [
+        { northing: 0, easting: 0 },
+        { northing: 0, easting: 100 },
+        { northing: 100, easting: 100 },
+        { northing: 100, easting: 0 },
+      ],
+    })
+
+    // 100 m x 100 m square - the worker's computeArea rounds to 2 decimals.
+    const payload = { areaSqM: 10000, areaHa: 1, areaAc: 2.47 }
+    reply('COMPUTE_COMPLETE', payload)
+
+    await expect(p).resolves.toEqual(payload)
+  })
+
+  it('resolves computeTraverseAdjustment with the COMPUTE_COMPLETE payload', async () => {
+    const p = workerBridge.computeTraverseAdjustment({
+      legs: [
+        { fromStation: 'A', toStation: 'B', angle: 90, distance: 100 },
+        { fromStation: 'B', toStation: 'C', angle: 90, distance: 100 },
+      ],
+      startCoordinates: { northing: 0, easting: 0 },
+      startBearing: 0,
+      closed: false,
+    })
+
+    expect(mockWorker.postMessage).toHaveBeenCalledTimes(1)
+    const [message] = mockWorker.postMessage.mock.calls[0] as unknown as [WorkerMessage]
+    expect(message.type).toBe('COMPUTE_TRAVERSE_ADJUSTMENT')
+
+    // Shape matches the worker's Bowditch output (leg fields + adjusted
+    // fields + misclosure), which is what WorkerBridge.send<T> promises.
+    const payload = {
+      adjustedLegs: [
+        {
+          fromStation: 'A',
+          toStation: 'B',
+          angle: 90,
+          distance: 100,
+          computedBearing: 0,
+          dLatitude: 100,
+          dDeparture: 0,
+          adjustedBearing: 0,
+          adjustedDistance: 100,
+          adjustedDLatitude: 100,
+          adjustedDDeparture: 0,
+        },
+      ],
+      misclosure: { linear: 0, angular: 0, bearing: 0, ratio: 'Perfect' },
+    }
+    reply('COMPUTE_COMPLETE', payload)
+
+    await expect(p).resolves.toEqual(payload)
+  })
+
+  it('resolves generateIDWGrid with the COMPUTE_COMPLETE payload', async () => {
+    const p = workerBridge.generateIDWGrid({
+      points: [
+        { x: 0, y: 0, value: 100 },
+        { x: 100, y: 100, value: 200 },
+      ],
+      bounds: { minX: 0, minY: 0, maxX: 100, maxY: 100 },
+      resolution: 50,
+    })
+
+    expect(mockWorker.postMessage).toHaveBeenCalledTimes(1)
+    const [message] = mockWorker.postMessage.mock.calls[0] as unknown as [WorkerMessage]
+    expect(message.type).toBe('GENERATE_IDW_GRID')
+    expect(message.payload).toEqual({
+      points: [
+        { x: 0, y: 0, value: 100 },
+        { x: 100, y: 100, value: 200 },
+      ],
+      bounds: { minX: 0, minY: 0, maxX: 100, maxY: 100 },
+      resolution: 50,
+    })
+
+    // rows/cols derive from bounds + resolution in the worker (2 x 3 here).
+    const payload = {
+      grid: [
+        [100, 150, 200],
+        [150, 150, 150],
+      ],
+      rows: 2,
+      cols: 3,
+      bounds: { minX: 0, minY: 0, maxX: 100, maxY: 100 },
+    }
+    reply('COMPUTE_COMPLETE', payload)
+
+    await expect(p).resolves.toEqual(payload)
+  })
+
