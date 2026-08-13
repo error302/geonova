@@ -107,6 +107,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        DATABASE_URL: postgresql://build:build@localhost/build
+        AUTH_SECRET: build-placeholder-not-used-at-runtime
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://metardu.space}
+        NEXT_PUBLIC_PAYPAL_CLIENT_ID: ${NEXT_PUBLIC_PAYPAL_CLIENT_ID:-}
     container_name: metardu-app
     ports:
       - "3000:3000"
@@ -122,6 +127,15 @@ services:
       - HOSTNAME=0.0.0.0
       - DISABLE_PWA=${DISABLE_PWA:-false}
       - NODE_ENV=production
+      # PayPal recurring subscriptions (server-side; hydrated from .env)
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID:-}
+      - PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET:-}
+      - PAYPAL_MODE=${PAYPAL_MODE:-sandbox}
+      - PAYPAL_WEBHOOK_ID=${PAYPAL_WEBHOOK_ID:-}
+      - PAYPAL_PLAN_PRO=${PAYPAL_PLAN_PRO:-}
+      - PAYPAL_PLAN_TEAM=${PAYPAL_PLAN_TEAM:-}
+      - PAYPAL_PLAN_FIRM=${PAYPAL_PLAN_FIRM:-}
+      - PAYPAL_PLAN_ENTERPRISE=${PAYPAL_PLAN_ENTERPRISE:-}
     depends_on:
       metardu-postgres:
         condition: service_healthy

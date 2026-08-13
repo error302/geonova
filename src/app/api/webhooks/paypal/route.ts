@@ -27,6 +27,7 @@ interface PayPalWebhookEvent {
   event_type: string
   resource?: {
     id?: string
+    billing_agreement_id?: string
     supplementary_data?: {
       related_ids?: { order_id?: string }
     }
@@ -352,6 +353,72 @@ export async function POST(request: NextRequest) {
           )
         } else {
           // No status change to apply — subscription stays as-is.
+        }
+      }
+    }
+
+    // ─── Handle BILLING.SUBSCRIPTION.ACTIVATED ────────────────────────
+    // Recurring subscription approved and activated. Mark the matching
+    // payment_history row complete and grant the plan (auto-charges now live).
+    if (eventType === 'BILLING.SUBSCRIPTION.ACTIVATED') {
+      const subscriptionId = event.resource?.id
+      if (subscriptionId) {
+        const { rows: payRows } = await db.query<PaymentHistoryRow>(
+          'SELECT id, user_id, plan_id FROM payment_history WHERE transaction_id = $1 LIMIT 1',
+          [subscriptionId]
+        )
+        if (payRows.length > 0) {
+          const pay = payRows[0]
+          await db.query<never>(
+            `UPDATE payment_history SET status = 'completed' WHERE id = $1`,
+            [pay.id]
+          )
+          const { rows: existing } = await db.query<UserSubscriptionRow>(
+            'SELECT id FROM user_subscriptions WHERE user_id = $1 LIMIT 1',
+            [pay.user_id]
+          )
+          const now = new Date().toISOString()
+          const periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+          if (existing.length > 0) {
+            await db.query<never>(
+              `UPDATE user_subscriptions
+               SET plan_id = $1, status = 'active', payment_method = 'paypal',
+                   current_period_start = $2, current_period_end = $3
+               WHERE id = $4`,
+              [pay.plan_id, now, periodEnd, existing[0].id]
+            )
+          } else {
+            await db.query<never>(
+              `INSERT INTO user_subscriptions
+               (user_id, plan_id, status, payment_method, currency, current_period_start, current_period_end)
+               VALUES ($1, $2, 'active', 'paypal', 'USD', $3, $4)`,
+              [pay.user_id, pay.plan_id, now, periodEnd]
+            )
+          }
+        } else {
+          logger.warn(`[PayPal Webhook] No payment_history record found for subscription ${subscriptionId}`)
+        }
+      }
+    }
+
+    // ─── Handle PAYMENT.SALE.COMPLETED (recurring renewal charge) ─────
+    // Fired on every successful auto-charge. Extend the subscription period.
+    if (eventType === 'PAYMENT.SALE.COMPLETED') {
+      const subscriptionId = event.resource?.billing_agreement_id
+      if (subscriptionId) {
+        const { rows: payRows } = await db.query<Pick<PaymentHistoryRow, 'user_id'>>(
+          `SELECT ph.user_id FROM payment_history ph WHERE ph.transaction_id = $1 LIMIT 1`,
+          [subscriptionId]
+        )
+        if (payRows.length > 0) {
+          await db.query<never>(
+            `UPDATE user_subscriptions
+             SET status = 'active',
+                 current_period_start = NOW(),
+                 current_period_end = NOW() + INTERVAL '30 days'
+             WHERE user_id = $1`,
+            [payRows[0].user_id]
+          )
         }
       }
     }

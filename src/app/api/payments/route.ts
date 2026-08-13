@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getPublicAppUrl } from '@/lib/site'
 import { getStripeService } from '@/lib/payments/stripe'
-import { getPayPalService } from '@/lib/payments/paypal'
+import { getPayPalService, getPayPalPlanId } from '@/lib/payments/paypal'
 import { getMpesaService } from '@/lib/payments/mpesa'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
@@ -170,13 +170,18 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
       const paypal = getPayPalService()
       if (!paypal) return NextResponse.json({ error: 'PayPal not configured' }, { status: 500 })
 
+      // Recurring billing — PayPal auto-charges each billing cycle.
       // PayPal only supports ~25 currencies (USD, EUR, GBP, etc.) — NOT KES, UGX, TZS, NGN, GHS, INR, IDR, BRL.
-      // When the local currency is unsupported, convert to USD using the plan catalog.
       const PAYPAL_UNSUPPORTED = new Set(['KES', 'UGX', 'TZS', 'NGN', 'GHS', 'INR', 'IDR', 'BRL'])
       const paypalCurrency: CurrencyCode = PAYPAL_UNSUPPORTED.has(priced.currency) ? 'USD' : priced.currency
       const paypalAmount = priced.plan.prices[paypalCurrency]
       if (paypalAmount === undefined || paypalAmount <= 0) {
         return NextResponse.json({ error: `PayPal pricing not available for ${paypalCurrency}` }, { status: 400 })
+      }
+
+      const payPalPlanId = getPayPalPlanId(planId)
+      if (!payPalPlanId) {
+        return NextResponse.json({ error: 'Recurring PayPal plan not configured. Contact support.' }, { status: 500 })
       }
 
       // Update the payment_history record to reflect the PayPal currency/amount
@@ -187,26 +192,25 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
         )
       }
 
-      const order = await paypal.createOrder({
-        amount: paypalAmount,
-        currency: paypalCurrency,
-        description: `METARDU ${priced.plan.name} subscription`,
-        returnUrl: `${appUrl}/subscription/success?provider=paypal&paymentId=${paymentId}&planId=${planId}`,
-        cancelUrl: `${appUrl}/subscription/cancel?provider=paypal&paymentId=${paymentId}&planId=${planId}`,
-      })
+      // Create the recurring subscription and redirect the user to PayPal approval.
+      const sub = await paypal.createSubscription(
+        payPalPlanId,
+        { email: start.data.email || '' },
+        {
+          returnUrl: `${appUrl}/subscription/success?provider=paypal&paymentId=${paymentId}&planId=${planId}`,
+          cancelUrl: `${appUrl}/subscription/cancel?provider=paypal&paymentId=${paymentId}&planId=${planId}`,
+        }
+      )
 
-      if (!order?.id) {
-        return NextResponse.json({ error: 'PayPal returned an invalid order' }, { status: 502 })
+      if (!sub?.subscriptionId || !sub?.approvalUrl) {
+        return NextResponse.json({ error: 'PayPal returned an invalid subscription' }, { status: 502 })
       }
-
-      const approval = order.links?.find((l) => l.rel === 'approve')?.href
-      if (!approval) return NextResponse.json({ error: 'PayPal did not return approval link' }, { status: 502 })
 
       await db.query<never>(
         'UPDATE payment_history SET transaction_id = $1 WHERE id = $2 AND user_id = $3',
-        [order.id, paymentId, userId]
+        [sub.subscriptionId, paymentId, userId]
       )
-      return NextResponse.json({ kind: 'redirect', provider: 'paypal', url: approval, paymentId })
+      return NextResponse.json({ kind: 'redirect', provider: 'paypal', url: sub.approvalUrl, paymentId })
     }
 
     if (provider === 'mpesa') {
@@ -355,6 +359,46 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
 
           await activateSubscription({ planId: s.data.planId, payment_method: 'paypal', currency: currencyCode, amount: Number(amountStr), transaction_id: s.data.orderId, status: 'completed', paymentId: s.data.paymentId })
           return NextResponse.json({ status: 'completed' })
+        }
+        case 'subscription-status': {
+          const s = z.object({
+            paymentId: z.string().uuid(),
+            planId: z.enum(['free', 'pro', 'team', 'firm', 'enterprise']),
+          }).safeParse(params)
+          if (!s.success) return NextResponse.json({ error: 'Invalid request.' }, { status: 400 })
+
+          const { rows: payRows } = await db.query<PaymentHistoryRow>(
+            'SELECT id, plan_id, currency, amount, transaction_id, status FROM payment_history WHERE id = $1 AND user_id = $2 LIMIT 1',
+            [s.data.paymentId, userId]
+          )
+          const pay = payRows[0] ?? null
+          if (!pay) return NextResponse.json({ error: 'Payment not found.' }, { status: 404 })
+          if (pay.status === 'completed') return NextResponse.json({ status: 'completed' })
+          if (pay.status === 'failed') return NextResponse.json({ status: 'failed' })
+
+          // Still pending — ask PayPal whether the subscription is active yet.
+          const subscriptionId = pay.transaction_id
+          if (subscriptionId) {
+            try {
+              const sub = await paypal.getSubscriptionStatus(subscriptionId)
+              if (sub.status?.toLowerCase() === 'active') {
+                await activateSubscription({ planId: s.data.planId, payment_method: 'paypal', currency: 'USD', amount: Number(pay.amount), transaction_id: subscriptionId, status: 'completed', paymentId: s.data.paymentId })
+                return NextResponse.json({ status: 'completed' })
+              }
+              if (['approval_pending', 'approved'].includes(sub.status?.toLowerCase() ?? '')) {
+                return NextResponse.json({ status: 'pending' })
+              }
+              if (['suspended', 'cancelled', 'expired'].includes(sub.status?.toLowerCase() ?? '')) {
+                await activateSubscription({ planId: s.data.planId, payment_method: 'paypal', currency: 'USD', amount: 0, transaction_id: subscriptionId, status: 'failed', paymentId: s.data.paymentId })
+                return NextResponse.json({ status: 'failed' })
+              }
+              return NextResponse.json({ status: 'pending' })
+            } catch {
+              // Paypal unreachable — keep polling on the client.
+              return NextResponse.json({ status: 'pending' })
+            }
+          }
+          return NextResponse.json({ status: 'pending' })
         }
         default:
           return NextResponse.json({ error: 'Unknown paypal action' }, { status: 400 })

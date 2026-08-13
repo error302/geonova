@@ -14,7 +14,7 @@ export default function SubscriptionSuccessPage({
   const paymentId = String(searchParams.paymentId || '')
   const planId = String(searchParams.planId || '')
   const stripeSessionId = String(searchParams.session_id || '')
-  const paypalOrderId = String(searchParams.token || searchParams.orderId || '')
+  const paypalOrderId = String(searchParams.token || searchParams.orderId || searchParams.subscription_id || '')
 
   const [status, setStatus] = useState<Status>('processing')
   const [message, setMessage] = useState<string>('Verifying payment…')
@@ -22,7 +22,7 @@ export default function SubscriptionSuccessPage({
   const canVerify = useMemo(() => {
     if (!provider || !paymentId || !planId) return false
     if (provider === 'stripe') return !!stripeSessionId
-    if (provider === 'paypal') return !!paypalOrderId
+    if (provider === 'paypal') return true // webhook confirms; poll status until done
     return false
   }, [provider, paymentId, planId, stripeSessionId, paypalOrderId])
 
@@ -38,7 +38,7 @@ export default function SubscriptionSuccessPage({
         const payload =
           provider === 'stripe'
             ? { provider: 'stripe', action: 'confirm-session', sessionId: stripeSessionId, paymentId, planId }
-            : { provider: 'paypal', action: 'capture-order', orderId: paypalOrderId, paymentId, planId }
+            : { provider: 'paypal', action: 'subscription-status', paymentId, planId }
 
         const res = await fetch('/api/payments', {
           method: 'POST',

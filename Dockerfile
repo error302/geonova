@@ -26,9 +26,11 @@ ENV NODE_OPTIONS="--max-old-space-size=4096"
 ARG DATABASE_URL="postgresql://build:build@localhost/build"
 ARG AUTH_SECRET="build-placeholder-not-used-at-runtime"
 ARG NEXT_PUBLIC_APP_URL="https://metardu.space"
+ARG NEXT_PUBLIC_PAYPAL_CLIENT_ID=""
 ENV DATABASE_URL=$DATABASE_URL
 ENV AUTH_SECRET=$AUTH_SECRET
 ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+ENV NEXT_PUBLIC_PAYPAL_CLIENT_ID=$NEXT_PUBLIC_PAYPAL_CLIENT_ID
 # AUDIT FIX (C10, 2026-07-02): Removed IGNORE_TYPE_ERRORS=true — TypeScript
 # errors now block production builds. tsc --noEmit passes clean as of
 # this commit. If type errors are reintroduced, fix them; do not re-enable.

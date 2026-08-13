@@ -167,7 +167,29 @@ export class PayPalService {
     return (await response.json()) as PayPalOrder
   }
 
-  async createSubscription(planId: string, subscriber: { email: string; name?: string }): Promise<{ subscriptionId: string; approvalUrl: string }> {
+  async getSubscriptionStatus(subscriptionId: string): Promise<{
+    id: string
+    status: string
+    quantity?: string
+  }> {
+    const accessToken = await this.getAccessToken()
+    const response = await fetch(`${this.baseUrl}/v1/billing/subscriptions/${subscriptionId}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+    if (!response.ok) {
+      const error = (await response.json().catch(() => ({}))) as { message?: string }
+      throw new Error(error.message || 'Failed to get PayPal subscription')
+    }
+    return (await response.json()) as { id: string; status: string; quantity?: string }
+  }
+
+  async createSubscription(
+    planId: string,
+    subscriber: { email: string; name?: string },
+    callbacks?: { returnUrl: string; cancelUrl: string }
+  ): Promise<{ subscriptionId: string; approvalUrl: string }> {
     const accessToken = await this.getAccessToken()
 
     const response = await fetch(`${this.baseUrl}/v1/billing/subscriptions`, {
@@ -188,8 +210,8 @@ export class PayPalService {
           brand_name: 'METARDU',
           landing_page: 'NO_PREFERENCE',
           user_action: 'SUBSCRIBE_NOW',
-          return_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/success`,
-          cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/cancel`
+          return_url: callbacks?.returnUrl || `${process.env.NEXT_PUBLIC_APP_URL}/subscription/success`,
+          cancel_url: callbacks?.cancelUrl || `${process.env.NEXT_PUBLIC_APP_URL}/subscription/cancel`
         }
       })
     })
@@ -256,4 +278,14 @@ export function getPayPalService(): PayPalService | null {
     clientSecret,
     mode
   })
+}
+
+/**
+ * Resolve a METARDU plan id to its recurring PayPal billing plan id.
+ * Mapping lives in env: PAYPAL_PLAN_PRO / _TEAM / _FIRM / _ENTERPRISE.
+ * Returns null when the plan has no recurring billing plan configured.
+ */
+export function getPayPalPlanId(planId: string): string | null {
+  const key = `PAYPAL_PLAN_${planId.toUpperCase()}`
+  return process.env[key] || null
 }
