@@ -6,6 +6,7 @@ import {
   ShieldCheck, ChevronDown,
 } from 'lucide-react'
 import { PricingSection } from '@/components/landing/PricingSection'
+import { SRID_21037 } from '@/lib/map/projection'
 
 /* ────────────────────────────────────────────────────────────── */
 /*  Data                                                          */
@@ -149,7 +150,7 @@ export default function LandingPage() {
               url: 'https://metardu.space/checkout?plan=pro',
             },
             areaServed: 'KE',
-            knowsAbout: ['Survey Act Cap. 299', 'RDM 1.1', 'NLIMS', 'ArdhiSasa', 'EPSG:21037'],
+            knowsAbout: ['Survey Act Cap. 299', 'RDM 1.1', 'NLIMS', 'ArdhiSasa', SRID_21037],
           }),
         }}
       />

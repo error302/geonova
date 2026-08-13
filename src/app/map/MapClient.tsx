@@ -106,7 +106,7 @@ import { OsmBuildingsLayer } from '@/app/map/components/OsmBuildingsLayer'
 import { VertexEditToolbarContext as VertexEditToolbar } from '@/components/map/VertexEditToolbar'
 import { ProjectionSwitcher } from '@/components/map/ProjectionSwitcher'
 import { switchMapView } from '@/lib/map/nativeProjectionView'
-import { SRID_21037, SRID_32737 } from '@/lib/map/projection'
+import { SRID_21037, SRID_32737, SRID_3857, SRID_4326 } from '@/lib/map/projection'
 
 // ── Hooks ──
 import { useMapBasemaps } from '@/app/map/hooks/useMapBasemaps'
@@ -831,7 +831,7 @@ export default function MapClient() {
             // Transform to UTM for geometry operations
             const proj = await import('ol/proj')
             const lineCoordsUTM = lineCoords3857.map((c: number[]) =>
-              proj.transform(c, 'EPSG:3857', 'EPSG:21037'),
+              proj.transform(c, SRID_3857, currentUtmEpsg),
             )
 
             if (activeDigitizingTool === 'split') {
@@ -850,7 +850,7 @@ export default function MapClient() {
               const targetPolygon = polygons[0]
               const polyCoords3857 = (targetPolygon.getGeometry() as import('ol/geom/Polygon').default).getCoordinates()[0]
               const polyCoordsUTM = polyCoords3857.map((c: number[]) =>
-                proj.transform(c, 'EPSG:3857', 'EPSG:21037'),
+                proj.transform(c, SRID_3857, currentUtmEpsg),
               )
 
               const { splitPolygonWithLine } = await import('@/lib/map/editingTools')
@@ -863,8 +863,8 @@ export default function MapClient() {
               }
 
               // Transform results back to 3857
-              const p1_3857 = result.polygon1.map(([e, n]) => proj.transform([e, n], 'EPSG:21037', 'EPSG:3857'))
-              const p2_3857 = result.polygon2.map(([e, n]) => proj.transform([e, n], 'EPSG:21037', 'EPSG:3857'))
+              const p1_3857 = result.polygon1.map(([e, n]) => proj.transform([e, n], currentUtmEpsg, SRID_3857))
+              const p2_3857 = result.polygon2.map(([e, n]) => proj.transform([e, n], currentUtmEpsg, SRID_3857))
 
               const { default: Feature } = await import('ol/Feature')
               const { default: Polygon } = await import('ol/geom/Polygon')
@@ -892,7 +892,7 @@ export default function MapClient() {
               const targetPolygon = polygons[0]
               const polyCoords3857 = (targetPolygon.getGeometry() as import('ol/geom/Polygon').default).getCoordinates()[0]
               const polyCoordsUTM = polyCoords3857.map((c: number[]) =>
-                proj.transform(c, 'EPSG:3857', 'EPSG:21037'),
+                proj.transform(c, SRID_3857, currentUtmEpsg),
               )
 
               const { reshapePolygon } = await import('@/lib/map/editingTools')
@@ -904,7 +904,7 @@ export default function MapClient() {
                 return
               }
 
-              const reshaped3857 = result.map(([e, n]) => proj.transform([e, n], 'EPSG:21037', 'EPSG:3857'))
+              const reshaped3857 = result.map(([e, n]) => proj.transform([e, n], currentUtmEpsg, SRID_3857))
 
               const { default: Feature } = await import('ol/Feature')
               const { default: Polygon } = await import('ol/geom/Polygon')
@@ -939,7 +939,7 @@ export default function MapClient() {
           const proj = await import('ol/proj')
           const polyCoordsUTM = selectedFeatures.map((f: import('ol/Feature').default) => {
             const coords3857 = (f.getGeometry() as import('ol/geom/Polygon').default).getCoordinates()[0]
-            return coords3857.map((c: number[]) => proj.transform(c, 'EPSG:3857', 'EPSG:21037'))
+            return coords3857.map((c: number[]) => proj.transform(c, SRID_3857, currentUtmEpsg))
           })
 
           const merged = mergePolygons(polyCoordsUTM as [number, number][][])
@@ -949,7 +949,7 @@ export default function MapClient() {
             return
           }
 
-          const merged3857 = merged.map(([e, n]) => proj.transform([e, n], 'EPSG:21037', 'EPSG:3857'))
+          const merged3857 = merged.map(([e, n]) => proj.transform([e, n], currentUtmEpsg, SRID_3857))
 
           const { default: Feature } = await import('ol/Feature')
           const { default: Polygon } = await import('ol/geom/Polygon')
@@ -976,10 +976,10 @@ export default function MapClient() {
 
           const proj = await import('ol/proj')
           const coords3857 = (geom as import('ol/geom/Polygon').default).getCoordinates()[0]
-          const coordsUTM = coords3857.map((c: number[]) => proj.transform(c, 'EPSG:3857', 'EPSG:21037'))
+          const coordsUTM = coords3857.map((c: number[]) => proj.transform(c, SRID_3857, currentUtmEpsg))
 
           const rotated = rotatePolygon(coordsUTM as [number, number][], 15)
-          const rotated3857 = rotated.map(([e, n]) => proj.transform([e, n], 'EPSG:21037', 'EPSG:3857'))
+          const rotated3857 = rotated.map(([e, n]) => proj.transform([e, n], currentUtmEpsg, SRID_3857))
 
           const { default: Polygon } = await import('ol/geom/Polygon')
           selectedFeature.setGeometry(new Polygon([rotated3857]))
@@ -1000,7 +1000,7 @@ export default function MapClient() {
           const isPolygon = geom.getType() === 'Polygon'
           const coords3857 = isPolygon ? (geom as import('ol/geom/Polygon').default).getCoordinates()[0] : (geom as import('ol/geom/LineString').default).getCoordinates()
           const proj = await import('ol/proj')
-          const coordsUTM = coords3857.map((c: number[]) => proj.transform(c, 'EPSG:3857', 'EPSG:21037'))
+          const coordsUTM = coords3857.map((c: number[]) => proj.transform(c, SRID_3857, currentUtmEpsg))
 
           const offset = createOffset(coordsUTM as [number, number][], offsetDistance, isPolygon)
           if (!offset) {
@@ -1009,7 +1009,7 @@ export default function MapClient() {
             return
           }
 
-          const offset3857 = offset.map(([e, n]) => proj.transform([e, n], 'EPSG:21037', 'EPSG:3857'))
+          const offset3857 = offset.map(([e, n]) => proj.transform([e, n], currentUtmEpsg, SRID_3857))
 
           const { default: Feature } = await import('ol/Feature')
           let newFeature: import('ol/Feature').default
@@ -1257,7 +1257,7 @@ export default function MapClient() {
       try {
         const { transform } = await import('ol/proj')
         if (cancelled) return
-        const [e, n] = transform([currentGpsPos.lon, currentGpsPos.lat], 'EPSG:4326', 'EPSG:21037') as [number, number]
+        const [e, n] = transform([currentGpsPos.lon, currentGpsPos.lat], SRID_4326, currentUtmEpsg) as [number, number]
         setGpsPos21037({ easting: e, northing: n, accuracy: currentGpsPos.accuracy })
       } catch {
         if (!cancelled) setGpsPos21037({ easting: 0, northing: 0, accuracy: currentGpsPos.accuracy })
@@ -1265,7 +1265,7 @@ export default function MapClient() {
     }
     transformGpsPos()
     return () => { cancelled = true }
-  }, [gpsPos])
+  }, [gpsPos, currentUtmEpsg])
 
   // ── Update stakeout overlay on each GPS position change ──
   useEffect(() => {

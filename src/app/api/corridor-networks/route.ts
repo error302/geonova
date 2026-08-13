@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 import { z } from 'zod'
+import { SRID_21037 } from '@/lib/map/projection'
 
 interface CorridorNetworkRow {
   id: string
@@ -112,7 +113,7 @@ const createSchema = z.object({
   utm_zone: z.number().int().min(1).max(60).default(37),
   hemisphere: z.string().default('S'),
   datum: z.string().default('Arc 1960'),
-  epsg_code: z.string().default('EPSG:21037'),
+  epsg_code: z.string().default(SRID_21037),
   established_by: z.string().optional(),
   control_points: z.array(z.object({
     point_name: z.string(),

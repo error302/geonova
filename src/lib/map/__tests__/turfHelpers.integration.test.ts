@@ -33,6 +33,8 @@ import {
   type SurveyPoint,
 } from '../turfHelpers'
 
+import { SRID_21037 } from '@/lib/map/projection'
+
 // ─── Fixtures: 200 m × 200 m squares in UTM 37S ──────────────────────────
 /** 200 × 200 m square; area 40,000 m² (≈ 40,122 m² as turf.area measures it). */
 const NEW_PARCEL: SurveyPoint[] = [
@@ -85,7 +87,7 @@ const EDGE_TOUCHING_PARCEL: SurveyPoint[] = [
 // ─── Helpers ─────────────────────────────────────────────────────────────
 /** Area (m²) of a vertex ring computed through the real turf pipeline. */
 async function areaOf(vertices: SurveyPoint[]): Promise<number> {
-  return calculateParcelAreaSqM(vertices, 'EPSG:21037')
+  return calculateParcelAreaSqM(vertices, SRID_21037)
 }
 
 /** Assert `value` equals `target` within the 1 cm round-trip tolerance. */

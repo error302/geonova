@@ -28,6 +28,7 @@ import { ArrowLeft, Download } from 'lucide-react'
 import type Feature from 'ol/Feature'
 import type { FeatureLike } from 'ol/Feature'
 import { registerProjections } from '@/lib/map/projection'
+import { SRID_21037 } from '@/lib/map/projection'
 
 const STATUS_COLORS: Record<string, string> = {
   pending: '#6b7280',
@@ -178,7 +179,7 @@ export default function SchemeMapPage() {
         if (data.features && data.features.length > 0) {
           const format = new GeoJSON()
           const features = format.readFeatures(data, {
-            dataProjection: 'EPSG:21037', // Arc 1960 / UTM Zone 37S (Kenya cadastral datum)
+            dataProjection: SRID_21037, // Arc 1960 / UTM Zone 37S (Kenya cadastral datum)
             featureProjection: 'EPSG:3857', // Web Mercator
           })
           vectorSource.addFeatures(features)

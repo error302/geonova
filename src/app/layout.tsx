@@ -7,6 +7,7 @@ import AppShell from '@/components/layout/AppShell'
 import QueryProvider from '@/lib/api/QueryProvider'
 import { getPublicAppUrl } from '@/lib/site'
 import { WebVitals } from './web-vitals'
+import { SRID_21037 } from '@/lib/map/projection'
 
 const publicAppUrl = getPublicAppUrl()
 
@@ -173,7 +174,7 @@ export default function RootLayout({
                     url: publicAppUrl,
                     description: 'Professional land-surveying platform built in Kenya for the East African market.',
                     areaServed: 'KE',
-                    knowsAbout: ['Survey Act Cap. 299', 'RDM 1.1', 'NLIMS', 'ArdhiSasa', 'EPSG:21037'],
+                    knowsAbout: ['Survey Act Cap. 299', 'RDM 1.1', 'NLIMS', 'ArdhiSasa', SRID_21037],
                   }),
                 }}
               />

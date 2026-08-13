@@ -26,6 +26,7 @@ import type OLMapType from 'ol/Map'
 import type { SelectEvent } from 'ol/interaction/Select'
 import type { BasemapModules } from './useMapBasemaps'
 import type { DragAndDropEvent } from 'ol/interaction/DragAndDrop'
+import { SRID_21037 } from '@/lib/map/projection'
 
 interface UseMapInitParams {
   mapRef: React.RefObject<HTMLDivElement | null>
@@ -294,7 +295,7 @@ export function useMapInit(params: UseMapInitParams) {
               const adjustedStations = bd?.adjustedStations || bd?.stations || []
               if (adjustedStations.length === 0) continue
 
-              const projCode = 'EPSG:21037'
+              const projCode = params.currentUtmEpsg || SRID_21037
               const validCoords = adjustedStations
                 .map((s) => [parseFloat(String(s.easting || s.E || s.e)), parseFloat(String(s.northing || s.N || s.n))])
                 .filter((c: number[]) => !isNaN(c[0]) && !isNaN(c[1]))
@@ -359,7 +360,7 @@ export function useMapInit(params: UseMapInitParams) {
               coordinateFormat: (coord?: import('ol/coordinate').Coordinate) => {
                 if (!coord || coord[0] == null || coord[1] == null || isNaN(coord[0]) || isNaN(coord[1])) return ''
                 try {
-                  const utmEpsg = params.currentUtmEpsg || 'EPSG:21037'
+                  const utmEpsg = params.currentUtmEpsg || SRID_21037
                   // T1.5b FIX (2026-07-10): Transform to BOTH geographic (EPSG:4326) and
                   // the active UTM zone. Previously, lon/lat were stored as raw EPSG:3857
                   // Web Mercator meters — labeled "Lon/Lat" but actually eastings/northings

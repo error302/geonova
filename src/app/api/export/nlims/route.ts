@@ -3,6 +3,7 @@ import { apiHandler, apiSuccess } from '@/lib/apiHandler'
 import { exportToNLIMS, validateNLIMSExport, type NLIMSExportParams } from '@/lib/export/nlimsExporter'
 import { runStatutoryGate, formatGateResult, type StatutoryGateInput } from '@/lib/validation/statutoryGate'
 import { logger } from '@/lib/logger'
+import { SRID_21037 } from '@/lib/map/projection'
 
 export const dynamic = 'force-dynamic'
 
@@ -137,7 +138,7 @@ export const GET = apiHandler(
         coordinateSystem: {
           datum: 'Arc 1960',
           projection: 'UTM Zone 37S',
-          epsg: 'EPSG:21037',
+          epsg: SRID_21037,
           precision: '3 decimal places (mm)',
         },
         areaTolerance: { default: '0.001 ha (10 m²)' },

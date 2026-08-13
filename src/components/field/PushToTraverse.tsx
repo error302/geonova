@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { FieldBeacon } from '@/types/field';
 import { beaconsToTraverseStations, buildTraverseURL, detectUTMZone } from '@/lib/field/pushToTraverse';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
+import { SRID_21036, SRID_21037 } from '@/lib/map/projection'
 
 interface Props {
   beacons: FieldBeacon[];
@@ -11,7 +12,7 @@ interface Props {
 
 export default function PushToTraverse({ beacons }: Props) {
   const router = useRouter();
-  const [crs, setCRS] = useState<'EPSG:21036' | 'EPSG:21037'>('EPSG:21037');
+  const [crs, setCRS] = useState<typeof SRID_21036 | typeof SRID_21037>(SRID_21037);
   const [error, setError] = useState<string | null>(null);
 
   if (beacons.length < 2) {
@@ -40,7 +41,7 @@ export default function PushToTraverse({ beacons }: Props) {
         <label className="text-xs text-gray-400 block mb-1" htmlFor="target-coordinate-system">Target coordinate system</label>
         <select
            id="target-coordinate-system" value={crs}
-          onChange={e => setCRS(e.target.value as 'EPSG:21036' | 'EPSG:21037')}
+          onChange={e => setCRS(e.target.value as typeof SRID_21036 | typeof SRID_21037)}
           className="bg-gray-700 text-sm px-3 py-1.5 rounded border border-gray-600 text-white w-full">
           <option value="EPSG:21037">Arc 1960 / UTM Zone 37S (East Kenya — Nairobi, Coast, Eastern)</option>
           <option value="EPSG:21036">Arc 1960 / UTM Zone 36S (West Kenya — Rift Valley, Nyanza, Western)</option>
@@ -54,7 +55,7 @@ export default function PushToTraverse({ beacons }: Props) {
             <div key={b.id} className="flex justify-between font-mono">
               <span className="text-yellow-400">{b.label}</span>
               <span>{b.coordinate.lat.toFixed(6)}, {b.coordinate.lng.toFixed(6)}</span>
-              <span className="text-gray-500">→ {zone === 'EPSG:21036' ? 'Arc1960 36S' : 'Arc1960 37S'}</span>
+              <span className="text-gray-500">→ {zone === SRID_21036 ? 'Arc1960 36S' : 'Arc1960 37S'}</span>
             </div>
           );
         })}

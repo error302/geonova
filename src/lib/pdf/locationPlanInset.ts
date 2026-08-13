@@ -14,6 +14,7 @@ import { createCanvas } from 'canvas';
 import type { CanvasRenderingContext2D as CanvasCtx } from 'canvas';
 import proj4 from 'proj4';
 import type { jsPDF as JsPDF } from 'jspdf';
+import { SRID_21037 } from '@/lib/map/projection'
 
 // ─── PROJ Definition (SRID 21037) ───────────────────────────────────────────
 
@@ -22,7 +23,7 @@ const ARC1960_UTM37S =
   '+proj=utm +zone=37 +south +ellps=clrk80 +towgs84=-160,-6,-302,-0.807,0.339,-1.619,-2.554 +units=m +no_defs +type=crs';
 
 // Register once so proj4 can resolve by name if needed elsewhere
-proj4.defs('EPSG:21037', ARC1960_UTM37S);
+proj4.defs(SRID_21037, ARC1960_UTM37S);
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

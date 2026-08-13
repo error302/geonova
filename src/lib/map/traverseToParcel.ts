@@ -15,6 +15,7 @@
  * All OpenLayers imports are dynamic for SSR compatibility.
  */
 import { logger } from '@/lib/logger'
+import { SRID_21037 } from '@/lib/map/projection'
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -164,7 +165,7 @@ export async function createParcelFromTraverse(
       source: 'traverse',
       point_count: result.pointCount,
       perimeter_m: result.perimeter,
-      crs: 'EPSG:21037',
+      crs: SRID_21037,
     }),
   })
 

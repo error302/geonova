@@ -16,6 +16,7 @@
  */
 
 import proj4 from 'proj4';
+import { SRID_21037 } from '@/lib/map/projection'
 
 // ─── PROJ Definitions ───────────────────────────────────────────────────────
 
@@ -42,7 +43,7 @@ const ARC1960_UTM37S = '+proj=utm +zone=37 +south +ellps=clrk80 +towgs84=-160,-6
 const ARC1960_GEO = '+proj=longlat +ellps=clrk80 +towgs84=-160,-6,-302,-0.807,0.339,-1.619,-2.554 +no_defs +type=crs';
 
 // Register custom projections with proj4
-proj4.defs('EPSG:21037', ARC1960_UTM37S);
+proj4.defs(SRID_21037, ARC1960_UTM37S);
 proj4.defs('EPSG:4210', ARC1960_GEO);
 
 // ─── Interfaces ─────────────────────────────────────────────────────────────

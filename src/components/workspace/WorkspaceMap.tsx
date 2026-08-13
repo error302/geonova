@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState, Component } from 'react';
 import { useUIStore } from '@/stores/uiStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { logger } from '@/lib/logger'
+import { SRID_21037 } from '@/lib/map/projection'
 
 // ── Types ─────────────────────────────────────────────────────────────
 
@@ -268,7 +269,7 @@ export default function WorkspaceMap({ projectName, boundaryData, epsg = 'EPSG:2
                         document.createTextNode(' '),
                         span(n.toFixed(1), 'text-[#D17B47] font-mono'),
                         document.createTextNode(' '),
-                        span('EPSG:21037', 'text-gray-600 text-[9px]')
+                        span(SRID_21037, 'text-gray-600 text-[9px]')
                       );
                     }
                   }
