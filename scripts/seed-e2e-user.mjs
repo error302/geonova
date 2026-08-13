@@ -14,6 +14,7 @@
  *
  * Usage: DATABASE_URL=postgresql://... node scripts/seed-e2e-user.mjs
  */
+import { readFileSync } from 'node:fs'
 import { Client } from 'pg'
 
 const DATABASE_URL = process.env.DATABASE_URL
@@ -54,6 +55,20 @@ try {
       console.log(
         `[seed-e2e-user] verified ${E2E_EMAIL} (${E2E_USER_ID}) — row present`,
       )
+    }
+    // E2E_SEED_ID_DRIFT (2026-08-13): also assert the minted-session specs
+    // embed the SAME fixed id. The row-exists check above proves the users
+    // row landed, but an id drift between the seed and the cookie specs
+    // (specs minting a different UUID) would pass it yet still hang shard
+    // 2/4 with "invalid input syntax for type uuid". Static check — no DB.
+    for (const specFile of ['e2e/project-crud.spec.ts', 'e2e/fieldbook.spec.ts']) {
+      const spec = readFileSync(specFile, 'utf8')
+      if (!spec.includes(E2E_USER_ID)) {
+        console.error(
+          `[seed-e2e-user] VERIFY FAILED — ${specFile} does not embed the seeded id ${E2E_USER_ID}. Id drift between seed and minted-session specs would re-introduce the shard-2/4 hang. Align scripts/seed-e2e-user.mjs with the spec cookie ids.`,
+        )
+        process.exitCode = 1
+      }
     }
   } else {
     const res = await client.query(
