@@ -19,6 +19,16 @@ import type {
 } from './compute.worker'
 import { getComputeWorkerUrl } from '@/workers/workerUrl'
 import { logger } from '@/lib/logger'
+import type { FieldBookRow } from '@/types/fieldbook'
+import type { SurveyType } from '@/types/project'
+import type { FieldBookWarning } from '@/lib/workflows/autoCalculate'
+import type {
+  LevelObservation,
+  LevelControlPoint,
+  LevelAdjustmentResult,
+} from '@/lib/survey/digitalLevel/digitalLevelTypes'
+
+
 
 type RequestId = string
 
@@ -263,11 +273,22 @@ class WorkerBridge {
   /**
    * Validate a field book entry
    */
-  async validateFieldBook(entries: unknown[]) {
-    return this.send<{ errors: unknown[]; warnings: unknown[] }>(
+  async validateFieldBook(entries: FieldBookRow[], surveyType: SurveyType = 'cadastral') {
+    return this.send<{ errors: FieldBookWarning[]; warnings: FieldBookWarning[] }>(
       'VALIDATE_FIELD_BOOK',
-      { entries }
+      { entries, surveyType }
     )
+  }
+
+  /**
+   * Compute a weighted least-squares adjustment of a leveling network
+   */
+  async computeLevelNetwork(params: {
+    observations: LevelObservation[]
+    controlPoints: LevelControlPoint[]
+    order?: string
+  }) {
+    return this.send<LevelAdjustmentResult>('COMPUTE_LEVEL_NETWORK', params, 120000)
   }
 
   /**

@@ -39,6 +39,13 @@ export interface WorkerMessage<T = unknown> {
   id: string
 }
 
+import { validateFieldBook } from '@/lib/workflows/autoCalculate'
+import type { FieldBookRow } from '@/types/fieldbook'
+import type { SurveyType } from '@/types/project'
+import { adjustLevelNetwork } from '@/lib/survey/digitalLevel/levelNetworkAdjustment'
+import type { LevelObservation, LevelControlPoint } from '@/lib/survey/digitalLevel/digitalLevelTypes'
+
+
 // ─── Coordinate Transform Implementation ─────────────────────────────────
 // Simple Transverse Mercator / UTM inverse and forward using proj4 formulas
 // For production, we use the actual proj4 library, but in the worker we
@@ -210,6 +217,93 @@ export function parseCSVPoints(csvText: string, delimiter = ','): CSVPoint[] {
   }
 
   return points
+}
+
+// ─── CSV Observations & Leveling ─────────────────────────────────────────
+
+interface CSVObservation {
+  pointName: string
+  northing: number
+  easting: number
+  elevation: number | null
+  code: string
+}
+
+/**
+ * Parse a CSV of total-station observations. Observations are points, so this
+ * reuses the point parser and drops the derived WGS84 coords.
+ */
+function parseCSVObservations(csvText: string, delimiter = ','): CSVObservation[] {
+  return parseCSVPoints(csvText, delimiter).map(p => ({
+    pointName: p.pointName,
+    northing: p.northing,
+    easting: p.easting,
+    elevation: p.elevation,
+    code: p.code,
+  }))
+}
+
+interface CSVLevelReading {
+  pointName: string
+  bs: number | null
+  is: number | null
+  fs: number | null
+  elevation: number | null
+}
+
+/**
+ * Parse a CSV of leveling staff readings (BS/IS/FS + optional RL).
+ */
+function parseCSVLeveling(csvText: string, delimiter = ','): CSVLevelReading[] {
+  const lines = csvText.trim().split(/\r?\n/)
+  if (lines.length < 2) return []
+
+  const headers = lines[0].toLowerCase().split(delimiter).map(h => h.trim().replace(/"/g, ''))
+  const colMap: Record<string, number> = {}
+  const aliasMap: Record<string, string[]> = {
+    pointName: ['point', 'name', 'point_name', 'station', 'id', 'pt'],
+    bs: ['bs', 'backsight', 'back_sight', 'back'],
+    is: ['is', 'intermediate', 'intermediate_sight'],
+    fs: ['fs', 'foresight', 'fore_sight', 'fore'],
+    elevation: ['elev', 'elevation', 'rl', 'z', 'height', 'level', 'h'],
+  }
+
+  for (const [key, aliases] of Object.entries(aliasMap)) {
+    for (let hi = 0; hi < headers.length; hi++) {
+      const h = headers[hi]
+      // Same single-letter guard as parseCSVPoints.
+      if (aliases.some(alias => h === alias || (alias.length >= 3 && h.includes(alias)))) {
+        colMap[key] = hi
+        break
+      }
+    }
+  }
+
+  const readings: CSVLevelReading[] = []
+  for (let li = 1; li < lines.length; li++) {
+    const line = lines[li].trim()
+    if (!line) continue
+
+    const values = line.split(delimiter).map(v => v.trim().replace(/"/g, ''))
+    const readNumber = (col: number | undefined): number | null => {
+      if (col === undefined) return null
+      const v = values[col]
+      if (v === undefined || v === '') return null
+      const n = parseFloat(v)
+      return isNaN(n) ? null : n
+    }
+
+    const pointName = colMap.pointName !== undefined ? values[colMap.pointName] || `PT${li}` : `PT${li}`
+    readings.push({
+      pointName,
+      bs: readNumber(colMap.bs),
+      is: readNumber(colMap.is),
+      fs: readNumber(colMap.fs),
+      elevation: readNumber(colMap.elevation),
+    })
+  }
+
+  return readings
 }
 
 // ─── Bearing & Distance ─────────────────────────────────────────────────
@@ -425,6 +519,39 @@ self.onmessage = function (event: MessageEvent) {
         const { csvText, delimiter } = payload as { csvText: string; delimiter?: string }
         const points = parseCSVPoints(csvText, delimiter || ',')
         self.postMessage({ type: 'PARSE_COMPLETE', payload: { points, count: points.length }, id })
+        break
+      }
+
+      case 'PARSE_CSV_OBSERVATIONS': {
+        const { csvText, delimiter } = payload as { csvText: string; delimiter?: string }
+        const observations = parseCSVObservations(csvText, delimiter || ',')
+        self.postMessage({ type: 'PARSE_COMPLETE', payload: { observations, count: observations.length }, id })
+        break
+      }
+
+      case 'PARSE_CSV_LEVELING': {
+        const { csvText, delimiter } = payload as { csvText: string; delimiter?: string }
+        const readings = parseCSVLeveling(csvText, delimiter || ',')
+        self.postMessage({ type: 'PARSE_COMPLETE', payload: { readings, count: readings.length }, id })
+        break
+      }
+
+      case 'VALIDATE_FIELD_BOOK': {
+        const { entries, surveyType } = payload as { entries: FieldBookRow[]; surveyType?: SurveyType }
+        const warnings = validateFieldBook(surveyType || 'cadastral', entries || [])
+        const errors = warnings.filter(w => w.severity === 'error')
+        self.postMessage({ type: 'VALIDATION_COMPLETE', payload: { errors, warnings }, id })
+        break
+      }
+
+      case 'COMPUTE_LEVEL_NETWORK': {
+        const { observations, controlPoints, order } = payload as {
+          observations: LevelObservation[]
+          controlPoints: LevelControlPoint[]
+          order?: string
+        }
+        const result = adjustLevelNetwork(observations, controlPoints, order)
+        self.postMessage({ type: 'COMPUTE_COMPLETE', payload: result, id })
         break
       }
 
