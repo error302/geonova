@@ -222,14 +222,16 @@ jobs:
     # spec lists, not Playwright's --shard — its sorted-test chunking splits
     # this suite 102/55/86/39). Profile re-measured 2026-08-12 on the dev
     # server (run 31634155135, list reporter; per-shard summaries authoritative):
-    #   navigation-pages 94 (~282s) — the elephant: 46 routes each
-    #   cold-compiled per project on first hit, so it gets its own shard.
+    #   navigation-pages 47 (~145s) — the elephant: 46 routes cold-
+    #   compiled on first hit, so it gets its own shard. (NAV_MOBILE_SKIP
+    #   2026-08-13: mobile project dropped for this spec — viewport-agnostic
+    #   404/SEO checks; responsive coverage lives in responsive-a11y.spec.ts.)
     #   project-crud 36 (~133s) · auth-flow 31 (~90s) · login 24 (~82s) ·
     #   landing 24 (~86s) · fieldbook 20 (~59s) · responsive-a11y 22 (~47s) ·
     #   security-perf 20 (~41s). (fieldbook trimmed 30 -> 20 during the
     #   E2E-fix session, so G3 is 51 tests, not 62.)
     # Groups balance wall time by measured per-test rates:
-    #   G1 navigation-pages (94) · G2 project-crud+login (60) ·
+    #   G1 navigation-pages (47) · G2 project-crud+login (60) ·
     #   G3 auth-flow+fieldbook (51) · G4 landing+responsive-a11y+security-perf (66).
     # A 2-way split ran ~35 min per shard and was cancelled at the job limit;
     # each group is ~1/2 that load and finishes inside the timeout.
@@ -242,7 +244,9 @@ jobs:
     # E2E_FAST (2026-08-12): measured shard wall time on the green 4-group
     # split is 4.4-6.8 min across runs 31627937210/31632150721/31634155135
     # (nav-pages shard 1 worst 6.8 min — under the 8-min balance bar, so no
-    # rebalance needed; G2 5.2-5.7 · G3 4.4-4.7 · G4 4.6-4.9). Retries
+    # rebalance needed; G2 5.2-5.7 · G3 4.4-4.7 · G4 4.6-4.9). After the
+    # mobile skip for navigation-pages (2026-08-13) G1 re-measured ~4.5 min.
+    # Retries
     # lowered to 1 in playwright.config.ts. The
     # 20-min cap is 3x the measured time — cancels fast on a regression
     # instead of churning toward the old 30-min wall.

@@ -49,6 +49,12 @@ export default defineConfig({
     {
       name: 'mobile-chrome',
       use: { ...devices['Pixel 5'] },
+      // NAV_MOBILE_SKIP (2026-08-13): navigation-pages.spec.ts is 47
+      // viewport-agnostic "route loads / SEO meta / 404" checks — the mobile
+      // re-run re-cold-compiles all 46 routes (~2 min of G1's wall time).
+      // Responsive coverage lives in responsive-a11y.spec.ts; drop the
+      // duplicate here.
+      testIgnore: /navigation-pages\.spec\.ts/,
     },
   ],
   webServer: {
