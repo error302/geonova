@@ -189,6 +189,59 @@ aren't (e.g. `survey/networkAdjustment.ts` has a Supabase side effect — ENG-7)
   and `public/landing/CREDITS.md` for when the rate limit clears. Run the fetch
   script, then point section backgrounds at the new files (see script header).
 
+### 2026-08-14 — Deployed + live verification
+- Committed `7d7ff799` and pushed to `main`; GitHub Actions "Deploy to Production"
+  succeeded in 7m31s. Live site now runs the fixes.
+- **Verified live:** Cloudflare beacon CSP error gone, manifest warnings gone,
+  landing images load 200.
+- **Remaining live issue:** React #418/#423 hydration errors persist on
+  `metardu.space` because **Cloudflare Rocket Loader** is enabled on the zone
+  (confirmed via `rocket-loader.min.js` in console + MIME error). Rocket Loader
+  rewrites Next.js's inline RSC scripts, breaking hydration even though the
+  code-side font-flipper fix is deployed (local dev has 0 errors).
+  - **Fix (dashboard, not code):** Cloudflare → metardu.space → Speed →
+    Optimization → Content Optimization → **Rocket Loader → Off**. Then reload.
+  - **CONFIRMED 2026-08-14:** Loading the live page with `**/cdn-cgi/scripts/**`
+    aborted in Playwright removes ALL #418/#423 errors → Rocket Loader is 100%
+    the cause. The zone-settings API token was scoped out (10000 on
+    `/zones/{id}/settings/rocket_loader`), so the dashboard toggle is required.
+  - **FINAL CAUSE (2026-08-14):** After Rocket Loader was switched off, hydration
+    errors persisted. Blocking `email-decode.min.js` alone cleared them →
+    **Cloudflare Email Address Obfuscation** is the real cause. It rewrites the
+    footer `mailto:` links into `/cdn-cgi/l/email-protection#...` in the edge HTML
+    and decodes them client-side, which breaks React hydration. Fix: Cloudflare →
+    metardu.space → **Email → Email Address Obfuscation → OFF**. Both Rocket Loader
+    and Email Obfuscation are known to break Next.js 14 hydration.
+  - Code-side (done): `data-cfasync="false"` could be added to critical inline
+    scripts as a hardening measure, but disabling Rocket Loader is the correct fix.
+
+### 2026-08-14 — Dashboard navbar + auth-page fixes + mobile-export fix
+- **Bug: no navbar on `/dashboard`.** `/dashboard` lived at `src/app/dashboard/`,
+  OUTSIDE the `(dashboard)` route group. `AppShell` (L48) hides the top NavBar for
+  dashboard routes expecting the group's `layout.tsx` sidebar, so the page had
+  neither. Fix: `git mv src/app/dashboard/*` → `src/app/(dashboard)/dashboard/`.
+  Verified locally in Playwright: `/dashboard` now renders the AppSidebar.
+- **Bug: login/register rendered white-on-white** (invisible) in light/field mode.
+  Pages are dark-glass designs with hardcoded white text but use `var(--bg-*)`
+  tokens that flip to near-white outside dark mode. Fix: `.auth-page` scope block
+  in `globals.css` pins the dark palette (incl. `!important` neutralization of the
+  field/outdoor-mode element sweeps) and is applied to login/register page roots
+  + the login Suspense fallback spinner.
+- Commit `57c5bf75` pushed → Deploy to Production succeeded (run 31833478906).
+  Live-verified: `/login` 200 with `auth-page` in SSR markup; `/dashboard` 307 →
+  `/login?next=%2Fdashboard` (route resolves).
+- **Hydration fix is live:** live home page footer `Contact Support` now carries
+  `suppressHydrationWarning` server-side; only `<html>/<body>` carry it on login.
+- **CI regression my move caused:** moving the dashboard into the route group
+  broke `scripts/mobile-build.mjs` — its stash list still referenced the old
+  `src/app/dashboard` path, so the `force-dynamic` dashboard page leaked into the
+  Capacitor static export and `next build` failed ("couldn't be exported").
+  Fix: stash `(dashboard)/dashboard` instead (`157619c1`). CI run 31836012941 all
+  green; local `node scripts/mobile-build.mjs` verified with fresh stash.
+- Remaining known infra quirk: Deploy's external "Verify live deployment" always
+  logs `HTTP 000000` (runner egress) while the in-VM `/api/public/health` returns
+  200 — harmless false-negative.
+
 ## Related
 - [[METARDU Home]]
 - [[METARDU Desktop]]
