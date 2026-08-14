@@ -49,10 +49,10 @@ h1, h2, h3 { text-wrap: balance; }
      headers and footer text. Still clearly dimmer than --text-secondary #A0A0A0. */
   --text-muted: #8A8A8A;
 
-  /* --- Accent (Keep the surveyor orange, but adapt to deep dark) ----- */
-  --accent: #FF7733;
-  --accent-dim: #CC5500;
-  --accent-subtle: rgba(255, 119, 51, 0.12);
+  /* --- Accent (burnt sienna — canonical brand orange #D17B47) -------- */
+  --accent: #D17B47;
+  --accent-dim: #B35C2B;
+  --accent-subtle: rgba(209, 123, 71, 0.12);
 
   /* --- Semantic -------------------------------------------------------- */
   --success: #6EE7B7;
@@ -79,52 +79,33 @@ h1, h2, h3 { text-wrap: balance; }
   --shadcn-card-foreground: 0 0% 100%;
   --shadcn-popover: 0 0% 4%;          /* #0A0A0A */
   --shadcn-popover-foreground: 0 0% 100%;
-  --shadcn-primary: 20 100% 60%;          /* #FF7733 */
+  --shadcn-primary: 23 60% 55%;           /* #D17B47 */
   --shadcn-primary-foreground: 0 0% 2%;
   --shadcn-secondary: 0 0% 7%;
   --shadcn-secondary-foreground: 0 0% 100%;
   --shadcn-muted: 0 0% 7%;
   --shadcn-muted-foreground: 0 0% 63%;  /* #A0A0A0 */
-  --shadcn-accent: 20 100% 60%;
+  --shadcn-accent: 23 60% 55%;
   --shadcn-accent-foreground: 0 0% 2%;
   --shadcn-destructive: 0 95% 82%;       /* #FCA5A5 */
   --shadcn-destructive-foreground: 0 0% 2%;
   --shadcn-border: 0 0% 100% / 0.08;           /* rgba(255,255,255,0.08) */
   --shadcn-input: 0 0% 100% / 0.08;
-  --shadcn-ring: 20 100% 60%;
+  --shadcn-ring: 23 60% 55%;
   --shadcn-radius: 1rem;               /* Softer squircles */
-  --shadcn-chart-1: 20 100% 60%;
+  --shadcn-chart-1: 23 60% 55%;
   --shadcn-chart-2: 156 73% 67%;
   --shadcn-chart-3: 46 97% 65%;
   --shadcn-chart-4: 212 96% 78%;
   --shadcn-chart-5: 270 95% 75%;
 
-  /* Unprefixed shadcn tokens — wire --shadcn-* to the names tailwind.config.ts expects. */
-  --background: #050505;
-  --foreground: #FFFFFF;
-  --card: #080808;
-  --card-foreground: #FFFFFF;
-  --popover: #0A0A0A;
-  --popover-foreground: #FFFFFF;
-  --primary: #FF7733;
-  --primary-foreground: #050505;
-  --secondary: #111111;
-  --secondary-foreground: #FFFFFF;
-  --muted: #111111;
-  --muted-foreground: #A0A0A0;
-  --accent: #FF7733;
-  --accent-foreground: #050505;
-  --destructive: #FCA5A5;
-  --destructive-foreground: #050505;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #FF7733;
+  /* Border radius — consumed directly by tailwind.config.ts `borderRadius`.
+     (No unprefixed color tokens live here anymore: tailwind reads the
+     --shadcn-* HSL tokens above, and component CSS reads --accent/--bg-*
+     hex tokens above. Keeping both in the same namespace caused `--accent`
+     to be simultaneously a hex color AND hsl() components, which broke
+     .btn-primary. Decoupled as of 2026-08-14.) */
   --radius: 1rem;
-  --chart-1: #FF7733;
-  --chart-2: #6EE7B7;
-  --chart-3: #FCD34D;
-  --chart-4: #93C5FD;
-  --chart-5: #C084FC;
 }
 
 /* ========================================================================
@@ -181,27 +162,6 @@ html[data-theme="light"] {
   --shadcn-border: 60 4% 86%;
   --shadcn-input: 60 4% 86%;
   --shadcn-ring: 18 60% 45%;
-
-  /* Unprefixed shadcn tokens for light mode */
-  --background: 60 6% 98%;
-  --foreground: 20 14% 9%;
-  --card: 0 0% 100%;
-  --card-foreground: 20 14% 9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 20 14% 9%;
-  --primary: 18 60% 45%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 60 6% 95%;
-  --secondary-foreground: 20 14% 9%;
-  --muted: 60 6% 95%;
-  --muted-foreground: 30 5% 40%;
-  --accent: 18 60% 45%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 50% 45%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 60 4% 86%;
-  --input: 60 4% 86%;
-  --ring: 18 60% 45%;
 }
 
 /* ========================================================================
@@ -501,7 +461,7 @@ html.field-mode small {
 
   /* Editorial serif for display headings — applied via .font-display utility or h1.display */
   h1.display, .font-display, .font-serif {
-    font-family: "Instrument Serif", "Newsreader", Georgia, serif;
+    font-family: var(--font-instrument), var(--font-newsreader), Georgia, serif;
     letter-spacing: -0.025em;
     line-height: 1.05;
     font-weight: 400;
@@ -509,7 +469,7 @@ html.field-mode small {
 
   /* Monospace for coordinates, bearings, tabular data */
   .font-mono, code, kbd, pre, .font-tabular {
-    font-family: "JetBrains Mono", "Geist Mono", monospace;
+    font-family: var(--font-jetbrains), "Geist Mono", monospace;
     font-variant-numeric: tabular-nums;
   }
 
@@ -1064,7 +1024,7 @@ html.outdoor-mode [class*="text-red"], html.outdoor-mode [class*="text-purple"] 
 
 /* Glassmorphism panels */
 .glass-panel {
-  background: rgba(13, 13, 20, 0.75);
+  background: rgba(8, 8, 8, 0.75);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1100,7 +1060,7 @@ html.outdoor-mode [class*="text-red"], html.outdoor-mode [class*="text-purple"] 
 /* Animated gradient border */
 .gradient-border {
   position: relative;
-  background: rgba(13, 13, 20, 0.9);
+  background: rgba(8, 8, 8, 0.9);
   border-radius: 16px;
 }
 .gradient-border::before {

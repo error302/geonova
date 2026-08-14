@@ -32,31 +32,37 @@ const FEATURES = [
     icon: Waypoints,
     title: 'Traverse Adjustment',
     description: 'Bowditch, Transit, and Least Squares adjustment with RDM 1.1 accuracy grading. Full bearing/distance computation with closure checks.',
+    image: '/landing/showcase-field.webp',
   },
   {
     icon: FileBadge,
     title: 'Deed Plan Generation',
     description: 'Survey Act Cap. 299 compliant Form No. 4 with SVG, PDF, and DXF output. SHA-256 verified, Director of Surveys authentication block.',
+    image: '/landing/theodolite-blueprint.webp',
   },
   {
     icon: Mountain,
     title: 'Topographic Surveys',
     description: 'TIN generation, contour extraction, volume computation. Web Worker TIN for large datasets. Auto breakline detection from mesh analysis.',
+    image: '/landing/hero-topo.webp',
   },
   {
     icon: DraftingCompass,
     title: 'COGO Engine',
     description: 'Intersection, resection, radiation, bearing-distance. Full coordinate geometry with solution steps shown for every calculation.',
+    image: '/landing/showcase-map.webp',
   },
   {
     icon: Satellite,
     title: 'GNSS Baseline Processing',
     description: 'Upload RINEX files and get adjusted coordinates via RTKLIB integration. No external software needed — process baselines right in the browser.',
+    image: '/landing/feature-fieldbook.webp',
   },
   {
     icon: FileChartColumn,
     title: 'Statutory Documents',
     description: 'RDM 1.1 survey reports, Form C-22, CLA forms, computation workbooks. NLIMS-ready exports with ArdhiSasa integration.',
+    image: '/landing/showcase-workflow.webp',
   },
 ]
 
@@ -176,12 +182,12 @@ function HeroSection() {
           fill
           priority
           sizes="(max-width: 768px) 100vw, 1920px"
-          quality={80}
+          quality={85}
           className="object-cover object-right"
-          style={{ filter: 'brightness(0.75) contrast(1.05)' }}
+          style={{ filter: 'brightness(0.85) contrast(1.05)' }}
         />
-        {/* Left-to-right scrim: legible copy on the left, texture visible on the right */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-primary)]/95 via-[var(--bg-primary)]/70 to-[var(--bg-primary)]/20" />
+        {/* Left-to-right scrim: legible copy on the left, terrain visible on the right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-primary)]/85 via-[var(--bg-primary)]/45 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--bg-primary)] to-transparent" />
       </div>
 
@@ -287,9 +293,9 @@ function FeaturesSection() {
           fill
           sizes="100vw"
           className="object-cover object-center"
-          style={{ opacity: 0.18, mixBlendMode: 'screen', filter: 'contrast(1.2) brightness(0.9)' }}
+          style={{ opacity: 0.4, mixBlendMode: 'screen', filter: 'contrast(1.25) brightness(0.95)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)] via-[var(--bg-primary)]/40 to-[var(--bg-primary)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)] via-[var(--bg-primary)]/30 to-[var(--bg-primary)]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
@@ -317,13 +323,14 @@ function FeaturesSection() {
                 className="group relative p-8 rounded-2xl bg-[var(--bg-secondary)]/80 backdrop-blur-sm border border-[var(--border-color)] overflow-hidden hover:border-[var(--accent)]/40 transition-all duration-300 hover:-translate-y-1"
               >
                 <Image
-                  src="/landing/feature-fieldbook.webp"
+                  src={feature.image}
                   alt=""
                   fill
                   sizes="(max-width: 768px) 100vw, 480px"
-                  className="object-cover object-top pointer-events-none opacity-0 group-hover:opacity-[0.12] transition-opacity duration-500 group-hover:scale-110 group-hover:transition-[opacity,transform]"
-                  style={{ filter: 'brightness(0.5) saturate(0.8)' }}
+                  className="object-cover object-top pointer-events-none opacity-[0.14] group-hover:opacity-[0.22] transition-opacity duration-500 group-hover:scale-110 group-hover:transition-[opacity,transform]"
+                  style={{ filter: 'brightness(0.55) saturate(0.85)' }}
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-secondary)] via-transparent to-[var(--bg-secondary)]/60 pointer-events-none" aria-hidden />
                 <div className="relative">
                   <div className="w-12 h-12 rounded-xl bg-[var(--accent)]/10 flex items-center justify-center mb-5 group-hover:bg-[var(--accent)]/20 transition-colors">
                     <Icon className="w-6 h-6 text-[var(--accent)]" aria-hidden />
@@ -429,8 +436,21 @@ function ShowcaseSection() {
 
 function WorkflowSection() {
   return (
-    <section id="workflow" aria-labelledby="workflow-heading" className="py-32 md:py-40 bg-[var(--bg-secondary)] border-y border-[var(--border-color)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+    <section id="workflow" aria-labelledby="workflow-heading" className="relative py-32 md:py-40 bg-[var(--bg-secondary)] border-y border-[var(--border-color)] overflow-hidden">
+      {/* Field-survey background — visible but subtle behind the content */}
+      <div className="absolute inset-0 pointer-events-none select-none" aria-hidden>
+        <Image
+          src="/landing/feature-fieldbook.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+          style={{ opacity: 0.22, filter: 'brightness(0.5) saturate(0.7)' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-secondary)] via-[var(--bg-secondary)]/40 to-[var(--bg-secondary)]" />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="text-center mb-16">
           <p className="text-[var(--accent)] text-sm font-semibold uppercase tracking-widest mb-4">
             Workflow

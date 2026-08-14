@@ -207,11 +207,11 @@ export function OnboardingTour() {
         aria-modal="true"
         aria-labelledby="tour-title"
       >
-        <div className="bg-[#0d0d14]/95 backdrop-blur-2xl border border-[#D17B47]/30 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="bg-[var(--bg-card)]/95 backdrop-blur-2xl border border-[var(--accent)]/30 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
           {/* Progress bar */}
           <div className="h-1 bg-white/[0.06]">
             <div
-              className="h-full bg-[#D17B47] transition-all duration-300"
+              className="h-full bg-[var(--accent)] transition-all duration-300"
               style={{ width: `${((step + 1) / TOUR_STEPS.length) * 100}%` }}
             />
           </div>
@@ -219,13 +219,13 @@ export function OnboardingTour() {
           {/* Header */}
           <div className="flex items-center justify-between px-5 pt-4 pb-2">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
+              <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider font-semibold">
                 Step {step + 1} of {TOUR_STEPS.length}
               </span>
             </div>
             <button
               onClick={handleSkip}
-              className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+              className="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--border-color)] transition-colors"
               title="Skip tour"
               aria-label="Skip onboarding tour"
             >
@@ -236,12 +236,12 @@ export function OnboardingTour() {
           {/* Content */}
           <div className="px-5 pb-5 space-y-3">
             <div className="flex items-start gap-3">
-              <div className="shrink-0 w-12 h-12 rounded-xl bg-[#D17B47]/10 border border-[#D17B47]/20 flex items-center justify-center">
-                <Icon className="w-6 h-6 text-[#D17B47]" />
+              <div className="shrink-0 w-12 h-12 rounded-xl bg-[var(--accent-subtle)] border border-[var(--accent)]/20 flex items-center justify-center">
+                <Icon className="w-6 h-6 text-[var(--accent)]" />
               </div>
               <div className="flex-1 pt-1">
-                <h3 id="tour-title" className="text-base font-bold text-white">{currentStep.title}</h3>
-                <p className="text-xs text-gray-400 mt-1 leading-relaxed">{currentStep.description}</p>
+                <h3 id="tour-title" className="text-base font-bold text-[var(--text-primary)]">{currentStep.title}</h3>
+                <p className="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">{currentStep.description}</p>
               </div>
             </div>
 
@@ -251,7 +251,7 @@ export function OnboardingTour() {
                 <div
                   key={i}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === step ? 'w-6 bg-[#D17B47]' : i < step ? 'w-1.5 bg-[#D17B47]/50' : 'w-1.5 bg-white/10'
+                    i === step ? 'w-6 bg-[var(--accent)]' : i < step ? 'w-1.5 bg-[var(--accent)]/50' : 'w-1.5 bg-[var(--border-color)]'
                   }`}
                 />
               ))}
@@ -261,7 +261,7 @@ export function OnboardingTour() {
             <div className="flex items-center justify-between pt-2">
               <button
                 onClick={handleSkip}
-                className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors"
+                className="text-[11px] text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
               >
                 Skip tour
               </button>
@@ -269,7 +269,7 @@ export function OnboardingTour() {
                 {!isFirst && (
                   <button
                     onClick={handleBack}
-                    className="flex items-center gap-1 px-3 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-gray-300 hover:bg-white/[0.08] transition-colors"
+                    className="flex items-center gap-1 px-3 h-8 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-xs text-[var(--text-secondary)] hover:bg-[var(--border-color)] transition-colors"
                   >
                     <ChevronLeft className="w-3.5 h-3.5" />
                     Back
@@ -277,7 +277,7 @@ export function OnboardingTour() {
                 )}
                 <button
                   onClick={handleNext}
-                  className="flex items-center gap-1 px-4 h-8 rounded-lg bg-[#D17B47] hover:bg-[#FFB84D] text-black text-xs font-semibold transition-colors"
+                  className="flex items-center gap-1 px-4 h-8 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-[var(--bg-primary)] text-xs font-semibold transition-colors"
                 >
                   {isLast ? (
                     <>

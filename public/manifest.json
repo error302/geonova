@@ -5,21 +5,14 @@
   "short_name": "METARDU Access",
   "description": "Professional land surveying platform with METARDU Access mobile field collection. Traverse adjustment, leveling, COGO, deed plans, GNSS stakeout, NLIMS export, and field-to-finish workflow compliant with Survey Act Cap. 299.",
   "start_url": "/dashboard?source=pwa",
-  "scope_extensions": [
-    "/field",
-    "/tools",
-    "/map",
-    "/projects",
-    "/documents"
-  ],
   "display": "standalone",
   "display_override": [
     "window-controls-overlay",
     "standalone",
     "minimal-ui"
   ],
-  "background_color": "#0a0a0f",
-  "theme_color": "#e8841a",
+  "background_color": "#050505",
+  "theme_color": "#D17B47",
   "orientation": "any",
   "lang": "en",
   "dir": "ltr",
@@ -121,7 +114,7 @@
       "name": "Toolbox",
       "short_name": "Tools",
       "description": "Search 40+ survey calculation tools",
-      "url": "/tools/all?source=pwa_shortcut",
+      "url": "/tools?source=pwa_shortcut",
       "icons": [
         {
           "src": "/metardu-icon.png",

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { Instrument_Serif, JetBrains_Mono, Newsreader } from 'next/font/google'
 
 import './globals.css'
 import AuthProvider from '@/components/AuthProvider'
@@ -8,6 +9,20 @@ import QueryProvider from '@/lib/api/QueryProvider'
 import { getPublicAppUrl } from '@/lib/site'
 import { WebVitals } from './web-vitals'
 import { SRID_21037 } from '@/lib/map/projection'
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-instrument',
+  display: 'swap',
+})
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+})
+const newsreader = Newsreader({ subsets: ['latin'], variable: '--font-newsreader', display: 'swap' })
 
 const publicAppUrl = getPublicAppUrl()
 
@@ -96,7 +111,11 @@ export default function RootLayout({
   // 'unsafe-inline' in script-src (required for Next 14 RSC anyway); the
   // nonce-based CSP returns with the Next 15 upgrade.
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${instrumentSerif.variable} ${jetbrainsMono.variable} ${newsreader.variable}`}
+    >
       <head>
         <meta charSet="utf-8" />
         <meta name="google" content="notranslate" />
@@ -115,36 +134,14 @@ export default function RootLayout({
         <link rel="icon" href="/metardu-icon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="shortcut icon" href="/metardu-icon.png" />
+        {/* Geist (Vercel's sans) isn't in next/font's frozen index for Next 14.2,
+            so it's loaded from Google Fonts as a plain stylesheet (no media flip
+            script — that caused a hydration mismatch). */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Fonts are loaded non-blocking so the render-blocking stylesheet
-            no longer delays first paint (big FCP win on mobile). The sheet
-            starts with media="print" (non-blocking), then a tiny inline
-            script flips it to all — React 18 can't use the onLoad="..."
-            string trick (that's React 19), and the CSP allows unsafe-inline
-            for scripts. display=swap in the URL keeps text visible in a
-            fallback while fonts arrive. */}
         <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
-          media="print"
-          data-font-stylesheet
-        />
-        <noscript>
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
-          />
-        </noscript>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: "!function(){var l=document.querySelector('link[data-font-stylesheet]');if(l){l.media='all';}}();",
-          }}
         />
       </head>
       <body className="antialiased" suppressHydrationWarning>

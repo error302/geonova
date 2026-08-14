@@ -156,12 +156,31 @@ function extractDownSql(sql) {
 // ── Schema Migrations Table Management ───────────────────────────────────────
 
 /**
+ * Ensure Supabase-compatibility roles (`authenticated`, `anon`,
+ * `service_role`) exist. Some migrations (e.g. 044_boundary_monuments.sql)
+ * still GRANT to the `authenticated` role, which only exists in a
+ * Supabase-hosted Postgres. A fresh plain-Postgres deploy fails with
+ * `role "authenticated" does not exist` without this bootstrap step.
+ */
+async function ensureCompatibilityRoles(pool) {
+  for (const role of ['authenticated', 'anon', 'service_role']) {
+    const { rows } = await pool.query(
+      'SELECT 1 FROM pg_roles WHERE rolname = $1',
+      [role]
+    )
+    if (rows.length === 0) {
+      await pool.query(`CREATE ROLE "${role}"`)
+      log(`Created compatibility role: ${role}`)
+    }
+  }
+}
+
+/**
  * Ensure the schema_migrations table exists with the canonical schema.
  * If the table already exists with an older schema (e.g., using `filename`
  * instead of `version`, or missing `checksum`), migrate it in-place.
  */
 async function ensureMigrationsTable(pool) {
-  // Check if table exists
   const { rows: tables } = await pool.query(
     `SELECT table_name FROM information_schema.tables
      WHERE table_schema = 'public' AND table_name = 'schema_migrations'`
@@ -414,6 +433,12 @@ async function main() {
 
     // Ensure the tracking table exists with the correct schema
     await ensureMigrationsTable(pool)
+
+    // Ensure Supabase-compatibility roles exist. Several migrations (e.g.
+    // 044_boundary_monuments.sql) still GRANT to the `authenticated` role,
+    // which only exists in a Supabase-hosted Postgres. A fresh plain-Postgres
+    // deploy fails with `role "authenticated" does not exist` without this.
+    await ensureCompatibilityRoles(pool)
 
     // Get all migration files and already-applied records
     const allMigrations = getMigrationFiles()

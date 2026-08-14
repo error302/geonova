@@ -26,22 +26,51 @@ interface NavItem {
   hash?: string
 }
 
-const userNavItems: NavItem[] = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/cadastral-workflow', label: 'Cadastral', icon: Compass },
-  { href: '/engineering-workflow', label: 'Engineering', icon: RoadIcon },
-  { href: '/topographic-workflow', label: 'Topographic', icon: Mountain },
-  { href: '/projects', label: 'Projects', icon: FolderKanban },
-  { href: '/process', label: 'Corrections', icon: Wrench },
-  { href: '/tools/all', label: 'Toolbox', icon: Boxes },
-  { href: '/tools/cogo', label: 'COGO', icon: Compass },
-  { href: '/map', label: 'Map', icon: Map },
-  { href: '/documents', label: 'Documents', icon: FileText },
-  { href: '/report-templates', label: 'Templates', icon: LayoutTemplate },
-  { href: '/sectional', label: 'Sectional', icon: Building2 },
-  { href: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/assistant', label: 'Assistant', icon: Sparkles },
-  { href: '/help', label: 'Help', icon: HelpCircle },
+interface NavSection {
+  label?: string
+  items: NavItem[]
+}
+
+const userNavSections: NavSection[] = [
+  {
+    items: [
+      { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    ],
+  },
+  {
+    label: 'Workflows',
+    items: [
+      { href: '/cadastral-workflow', label: 'Cadastral', icon: Compass },
+      { href: '/engineering-workflow', label: 'Engineering', icon: RoadIcon },
+      { href: '/topographic-workflow', label: 'Topographic', icon: Mountain },
+      { href: '/sectional', label: 'Sectional', icon: Building2 },
+    ],
+  },
+  {
+    label: 'Tools',
+    items: [
+      { href: '/tools', label: 'Toolbox', icon: Boxes },
+      { href: '/tools/cogo', label: 'COGO', icon: Compass },
+      { href: '/process', label: 'Corrections', icon: Wrench },
+      { href: '/map', label: 'Map', icon: Map },
+    ],
+  },
+  {
+    label: 'Data',
+    items: [
+      { href: '/projects', label: 'Projects', icon: FolderKanban },
+      { href: '/documents', label: 'Documents', icon: FileText },
+      { href: '/report-templates', label: 'Templates', icon: LayoutTemplate },
+      { href: '/analytics', label: 'Analytics', icon: BarChart3 },
+    ],
+  },
+  {
+    label: 'Account',
+    items: [
+      { href: '/assistant', label: 'Assistant', icon: Sparkles },
+      { href: '/help', label: 'Help', icon: HelpCircle },
+    ],
+  },
 ]
 
 const adminNavItems: NavItem[] = [
@@ -67,7 +96,8 @@ export default function AppSidebar({ variant, className, onNavigate }: AppSideba
   const pathname = usePathname()
   const { data: session } = useSession()
 
-  const navItems = variant === 'admin' ? adminNavItems : userNavItems
+  const navSections: NavSection[] =
+    variant === 'admin' ? [{ items: adminNavItems }] : userNavSections
   const userRole = (session?.user as { role?: string })?.role ?? ''
 
   return (
@@ -89,33 +119,44 @@ export default function AppSidebar({ variant, className, onNavigate }: AppSideba
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-        {navItems.map((item) => {
-          const isActive = item.exact
-            ? pathname === item.href
-            : item.hash
-              ? pathname === item.href && typeof window !== 'undefined' && window.location.hash === item.hash
-              : pathname.startsWith(item.href)
+      <nav className="flex-1 p-3 space-y-2 overflow-y-auto">
+        {navSections.map((section, sectionIndex) => (
+          <div key={section.label ?? `section-${sectionIndex}`}>
+            {section.label && (
+              <p className="px-3 pt-2 pb-1 text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                {section.label}
+              </p>
+            )}
+            <div className="space-y-0.5">
+              {section.items.map((item) => {
+                const isActive = item.exact
+                  ? pathname === item.href
+                  : item.hash
+                    ? pathname === item.href && typeof window !== 'undefined' && window.location.hash === item.hash
+                    : pathname.startsWith(item.href)
 
-          const href = item.hash ? `${item.href}${item.hash}` : item.href
+                const href = item.hash ? `${item.href}${item.hash}` : item.href
 
-          return (
-            <Link
-              key={`${item.href}${item.hash ?? ''}`}
-              href={href}
-              onClick={onNavigate}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors no-underline',
-                isActive
-                  ? 'bg-[var(--accent)] text-[var(--bg-primary)] font-medium'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)]',
-              )}
-            >
-              <item.icon className="w-4 h-4 shrink-0" />
-              {item.label}
-            </Link>
-          )
-        })}
+                return (
+                  <Link
+                    key={`${item.href}${item.hash ?? ''}`}
+                    href={href}
+                    onClick={onNavigate}
+                    className={cn(
+                      'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors no-underline',
+                      isActive
+                        ? 'bg-[var(--accent)] text-[var(--bg-primary)] font-medium'
+                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)]',
+                    )}
+                  >
+                    <item.icon className="w-4 h-4 shrink-0" />
+                    {item.label}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Footer */}
