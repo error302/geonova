@@ -98,7 +98,7 @@ function NetworkCard({ net }: { net: typeof NETWORKS[NetworkId] }) {
           {net.website.replace('https://', '')} →
         </a>
         {net.contactEmail && (
-          <a href={`mailto:${net.contactEmail}`} className="text-xs text-[var(--accent)] hover:underline">
+          <a href={`mailto:${net.contactEmail}`} suppressHydrationWarning className="text-xs text-[var(--accent)] hover:underline">
             {net.contactEmail}
           </a>
         )}

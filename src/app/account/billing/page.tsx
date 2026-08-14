@@ -304,7 +304,7 @@ export default function BillingPage() {
 
           <Section title="Billing Address">
             <p className="text-[var(--text-secondary)] text-sm">
-              Contact <a href="mailto:billing@metardu.app" className="text-[var(--accent)] hover:underline">billing@metardu.app</a> to update your billing address or request invoices.
+              Contact <a href="mailto:billing@metardu.app" suppressHydrationWarning className="text-[var(--accent)] hover:underline">billing@metardu.app</a> to update your billing address or request invoices.
             </p>
           </Section>
         </div>

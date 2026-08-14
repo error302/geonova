@@ -101,6 +101,7 @@ export default function PricingCard({
       ) : planId === 'team' ? (
         <a
           href={linkHref}
+          suppressHydrationWarning
           className="block w-full py-3 rounded-lg font-medium text-center transition-colors bg-[var(--bg-tertiary)] text-white hover:bg-[var(--bg-tertiary)]"
         >
           {cta}

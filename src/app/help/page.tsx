@@ -222,7 +222,7 @@ export default function HelpPage() {
       <div className="mt-8 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5">
         <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-3">Still need help?</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <a href="mailto:support@metardu.com" className="flex items-center gap-2 p-3 rounded-lg bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)] hover:border-[var(--accent)]/30 transition-colors">
+          <a href="mailto:support@metardu.com" suppressHydrationWarning className="flex items-center gap-2 p-3 rounded-lg bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)] hover:border-[var(--accent)]/30 transition-colors">
             <Mail className="w-4 h-4 text-[var(--accent)] shrink-0" />
             <div>
               <p className="text-xs font-medium text-[var(--text-primary)]">Email Support</p>

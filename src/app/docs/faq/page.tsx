@@ -131,6 +131,7 @@ export default function FAQPage() {
           <div className="flex gap-4 justify-center">
             <a
               href="mailto:support@metardu.app"
+              suppressHydrationWarning
               className="px-6 py-3 bg-[var(--accent)] text-black font-semibold rounded-lg hover:bg-[var(--accent-dim)]"
             >
               Contact Support

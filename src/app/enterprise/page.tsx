@@ -26,6 +26,7 @@ export default function EnterprisePage() {
         </p>
         <a
           href="mailto:enterprise@metardu.com"
+          suppressHydrationWarning
           className="inline-block bg-orange-500 text-white px-4 py-2 rounded font-medium hover:bg-orange-600"
         >
           Join Waitlist

@@ -80,6 +80,7 @@ export default function Footer() {
                 </a>
                 <a
                   href="mailto:hello@metardu.app"
+                  suppressHydrationWarning
                   className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors p-1"
                   aria-label="Email"
                 >
@@ -104,6 +105,7 @@ export default function Footer() {
                       <Link
                         href={link.href}
                         prefetch={false}
+                        suppressHydrationWarning={link.href.startsWith('mailto:')}
                         className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors font-medium inline-block py-1.5"
                       >
                         {link.label}

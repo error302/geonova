@@ -114,6 +114,7 @@ export default function DocsPage() {
             </Link>
             <a
               href="mailto:support@metardu.app"
+              suppressHydrationWarning
               className="px-6 py-3 border border-[var(--accent)] text-[var(--accent)] font-semibold rounded-lg hover:bg-[var(--accent)]/10"
             >
               Contact Support
