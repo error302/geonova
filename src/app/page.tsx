@@ -130,6 +130,7 @@ export default function LandingPage() {
       <TrustStrip />
       <StatsBar />
       <FeaturesSection />
+      <ShowcaseSection />
       <WorkflowSection />
       <ToolsSection />
       <PricingSection />
@@ -176,10 +177,12 @@ function HeroSection() {
           priority
           sizes="(max-width: 768px) 100vw, 1920px"
           quality={80}
-          className="object-cover"
-          style={{ filter: 'brightness(0.35) contrast(1.1)' }}
+          className="object-cover object-right"
+          style={{ filter: 'brightness(0.75) contrast(1.05)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)]/80 via-[var(--bg-primary)]/60 to-[var(--bg-primary)]" />
+        {/* Left-to-right scrim: legible copy on the left, texture visible on the right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-primary)]/95 via-[var(--bg-primary)]/70 to-[var(--bg-primary)]/20" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--bg-primary)] to-transparent" />
       </div>
 
       <div className="relative z-10 flex-1 flex items-center pt-12">
@@ -311,17 +314,110 @@ function FeaturesSection() {
             return (
               <li
                 key={i}
-                className="group p-8 rounded-2xl bg-[var(--bg-secondary)]/80 backdrop-blur-sm border border-[var(--border-color)] hover:border-[var(--accent)]/40 transition-all duration-300 hover:-translate-y-1"
+                className="group relative p-8 rounded-2xl bg-[var(--bg-secondary)]/80 backdrop-blur-sm border border-[var(--border-color)] overflow-hidden hover:border-[var(--accent)]/40 transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 rounded-xl bg-[var(--accent)]/10 flex items-center justify-center mb-5 group-hover:bg-[var(--accent)]/20 transition-colors">
-                  <Icon className="w-6 h-6 text-[var(--accent)]" aria-hidden />
+                <Image
+                  src="/landing/feature-fieldbook.webp"
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 100vw, 480px"
+                  className="object-cover object-top pointer-events-none opacity-0 group-hover:opacity-[0.12] transition-opacity duration-500 group-hover:scale-110 group-hover:transition-[opacity,transform]"
+                  style={{ filter: 'brightness(0.5) saturate(0.8)' }}
+                />
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-xl bg-[var(--accent)]/10 flex items-center justify-center mb-5 group-hover:bg-[var(--accent)]/20 transition-colors">
+                    <Icon className="w-6 h-6 text-[var(--accent)]" aria-hidden />
+                  </div>
+                  <h3 className="text-lg font-bold text-[var(--text-primary)] mb-3">{feature.title}</h3>
+                  <p className="text-sm text-[var(--text-primary)]/70 leading-relaxed">{feature.description}</p>
                 </div>
-                <h3 className="text-lg font-bold text-[var(--text-primary)] mb-3">{feature.title}</h3>
-                <p className="text-sm text-[var(--text-primary)]/70 leading-relaxed">{feature.description}</p>
               </li>
             )
           })}
         </ul>
+      </div>
+    </section>
+  )
+}
+
+/* ============================================================= */
+/*  SHOWCASE                                                     */
+/* ============================================================= */
+
+function ShowcaseSection() {
+  return (
+    <section id="showcase" aria-labelledby="showcase-heading" className="py-32 md:py-40 bg-[var(--bg-secondary)] border-y border-[var(--border-color)] overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="text-center mb-16">
+          <p className="text-[var(--accent)] text-sm font-semibold uppercase tracking-widest mb-4">
+            See it in action
+          </p>
+          <h2 id="showcase-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+            One workspace,{' '}
+            <span className="text-[var(--accent)]">field to finish</span>
+          </h2>
+          <p className="max-w-2xl mx-auto text-[var(--text-primary)]/70 text-base lg:text-lg">
+            Import observations, close traverses, draft deed plans, and produce
+            NLIMS-ready documents — without leaving the browser or losing connectivity.
+          </p>
+        </div>
+
+        <div className="space-y-12">
+          {/* Wide cadastral map shot */}
+          <figure className="group relative">
+            <div className="absolute -inset-3 bg-gradient-to-r from-[var(--accent)]/10 via-transparent to-transparent rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-opacity" aria-hidden />
+            <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl">
+              <Image
+                src="/landing/showcase-field.webp"
+                alt="METARDU cadastral map workspace showing parcel boundaries and survey layers"
+                width={1536}
+                height={1024}
+                sizes="(max-width: 768px) 100vw, 1200px"
+                quality={80}
+                className="rounded-xl object-cover"
+              />
+            </div>
+            <figcaption className="mt-4 text-sm text-[var(--text-primary)]/60 text-center">
+              Cadastral map workspace — parcels, RIM overlays, stakeout and layer control.
+            </figcaption>
+          </figure>
+
+          {/* Two-up: workflow diagram + map layout */}
+          <div className="grid md:grid-cols-5 gap-6">
+            <figure className="group relative md:col-span-3">
+              <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl h-full">
+                <Image
+                  src="/landing/showcase-workflow.webp"
+                  alt="METARDU survey workflow overview"
+                  width={1774}
+                  height={887}
+                  sizes="(max-width: 768px) 100vw, 900px"
+                  quality={80}
+                  className="rounded-xl object-cover"
+                />
+              </div>
+              <figcaption className="mt-4 text-sm text-[var(--text-primary)]/60 text-center">
+                Guided project workflow — setup, field book, compute, review, submission.
+              </figcaption>
+            </figure>
+            <figure className="group relative md:col-span-2">
+              <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl h-full">
+                <Image
+                  src="/landing/showcase-map.webp"
+                  alt="METARDU interactive map with survey layers"
+                  width={603}
+                  height={1200}
+                  sizes="(max-width: 768px) 100vw, 500px"
+                  quality={80}
+                  className="rounded-xl object-cover"
+                />
+              </div>
+              <figcaption className="mt-4 text-sm text-[var(--text-primary)]/60 text-center">
+                Interactive map panel — coordinates, layers, and measurement tools.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
       </div>
     </section>
   )
