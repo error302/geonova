@@ -136,6 +136,8 @@ services:
       - PAYPAL_PLAN_TEAM=${PAYPAL_PLAN_TEAM:-}
       - PAYPAL_PLAN_FIRM=${PAYPAL_PLAN_FIRM:-}
       - PAYPAL_PLAN_ENTERPRISE=${PAYPAL_PLAN_ENTERPRISE:-}
+      # NVIDIA NIM AI (Survey Assistant, report generation, field-photo OCR)
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY:-}
     depends_on:
       metardu-postgres:
         condition: service_healthy
