@@ -174,7 +174,7 @@ function LoginForm() {
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
+    <div className="relative min-h-screen w-full overflow-hidden auth-page">
       {/* ──────────────────────────────────────────────────────────────
           LIGHT TOPOGRAPHIC MAP BACKGROUND
           Subtle overlays preserve the delicate contour detail while
@@ -516,7 +516,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
+        <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center auth-page">
           <div className="w-6 h-6 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
         </div>
       }

@@ -85,7 +85,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex auth-page">
       {/* Left panel */}
       <div className="hidden md:flex md:w-1/2 bg-gray-900 text-white flex-col justify-center p-12">
         <a href="/" className="text-4xl font-bold mb-4 text-[var(--accent)]">METARDU</a>

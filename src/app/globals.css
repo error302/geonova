@@ -165,7 +165,100 @@ html[data-theme="light"] {
 }
 
 /* ========================================================================
-   1c. FIELD MODE — pure white + pure black for direct sunlight
+    1d. AUTH PAGES — force dark frosted-glass regardless of saved theme
+   Login/register are designed as dark glass cards with white text. In
+   light or field mode the --bg-* vars flip to near-white and the
+   hardcoded white text becomes invisible (white-on-white). Scope the
+   dark palette to the .auth-page root so the auth flow always renders.
+   ======================================================================== */
+.auth-page {
+  --bg-primary: #050505;
+  --bg-secondary: #0A0A0A;
+  --bg-tertiary: #111111;
+  --bg-card: #080808;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #A0A0A0;
+  --text-muted: #8A8A8A;
+
+  --accent: #D17B47;
+  --accent-dim: #B35C2B;
+  --accent-subtle: rgba(209, 123, 71, 0.12);
+
+  --success: #6EE7B7;
+  --error: #FCA5A5;
+  --warning: #FCD34D;
+  --primary-blue: #93C5FD;
+
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+
+  --card: #080808;
+  --popover: #0A0A0A;
+  --border: rgba(255, 255, 255, 0.08);
+  --popover-foreground: #FFFFFF;
+  color-scheme: dark;
+}
+
+/* Neutralize field-mode/outdoor-mode !important overrides inside auth pages */
+html.field-mode .auth-page,
+html.outdoor-mode .auth-page {
+  --bg-primary: #050505 !important;
+  --bg-secondary: #0A0A0A !important;
+  --bg-tertiary: #111111 !important;
+  --bg-card: #080808 !important;
+  --border-color: rgba(255, 255, 255, 0.08) !important;
+  --text-primary: #FFFFFF !important;
+  --text-secondary: #A0A0A0 !important;
+  --text-muted: #8A8A8A !important;
+  --accent: #D17B47 !important;
+  --accent-dim: #B35C2B !important;
+}
+html.field-mode .auth-page p,
+html.field-mode .auth-page li,
+html.field-mode .auth-page span,
+html.field-mode .auth-page label,
+html.field-mode .auth-page small {
+  color: #FFFFFF !important;
+}
+html.field-mode .auth-page h1,
+html.field-mode .auth-page h2,
+html.field-mode .auth-page h3 {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+}
+html.field-mode .auth-page input,
+html.field-mode .auth-page textarea,
+html.field-mode .auth-page select {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  border-radius: 8px;
+}
+html.field-mode .auth-page input::placeholder,
+html.field-mode .auth-page textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+html.field-mode .auth-page button {
+  min-height: 0 !important;
+  border-width: 1px !important;
+}
+
+/* Neutralize the brutal global outdoor-mode color sweep within auth pages */
+html.outdoor-mode .auth-page,
+html.outdoor-mode .auth-page * {
+  color: #FFFFFF !important;
+}
+html.outdoor-mode .auth-page *:not(.lucide):not(svg):not(path) {
+  color: #FFFFFF !important;
+}
+
+/* ========================================================================
+    1c. FIELD MODE — pure white + pure black for direct sunlight
    Triggered by [data-theme="field"] on <html>
    ======================================================================== */
 
