@@ -713,6 +713,7 @@ export default function PointCloudImportPage() {
                 ref={fileInputRef}
                 type="file"
                 accept=".csv,.txt,.xyz,.ply"
+                aria-label="Upload point cloud file (CSV, TXT, XYZ, PLY)"
                 className="hidden"
                 onChange={handleFileInput}
               />

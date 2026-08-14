@@ -24,7 +24,7 @@ export default function SubscriptionSuccessPage({
     if (provider === 'stripe') return !!stripeSessionId
     if (provider === 'paypal') return true // webhook confirms; poll status until done
     return false
-  }, [provider, paymentId, planId, stripeSessionId, paypalOrderId])
+  }, [provider, paymentId, planId, stripeSessionId])
 
   useEffect(() => {
     if (!canVerify) {

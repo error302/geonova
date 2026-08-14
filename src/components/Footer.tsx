@@ -1,8 +1,8 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 
-/* ────────────────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /*  Data                                                          */
-/* ────────────────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const FOOTER_LINKS = {
   Apps: [
@@ -31,24 +31,24 @@ const LEGAL_LINKS = [
   { label: 'Data Protection', href: '/docs/data-protection' },
 ] as const
 
-/* ────────────────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /*  Component                                                     */
-/* ────────────────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
     <footer className="border-t border-[var(--border-color)] bg-[var(--bg-primary)]">
-      {/* ─── Main footer content ──────────────────────────────── */}
+      {/* â”€â”€â”€ Main footer content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-10 sm:py-12 lg:py-16">
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-8 lg:gap-8">
-            {/* Brand column — spans 2 on lg+ */}
+            {/* Brand column â€” spans 2 on lg+ */}
             <div className="col-span-2">
               <Link href="/" className="inline-block mb-3 sm:mb-4">
                 <h3 className="text-xl sm:text-2xl font-bold tracking-tight">
-                  META<span className="text-[var(--accent)]">RDU</span>
+                  META<span className="text-[var(--accent-dim)]">RDU</span>
                 </h3>
               </Link>
               <p className="text-[var(--text-secondary)] text-sm leading-relaxed max-w-xs mb-4 sm:mb-6">
@@ -60,7 +60,7 @@ export default function Footer() {
                   href="https://x.com/itsdosho"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-[var(--accent)] transition-colors p-1"
+                  className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors p-1"
                   aria-label="Twitter / X"
                 >
                   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
@@ -71,7 +71,7 @@ export default function Footer() {
                   href="https://github.com/error302"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-[var(--accent)] transition-colors p-1"
+                  className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors p-1"
                   aria-label="GitHub"
                 >
                   <svg viewBox="0 0 20 20" className="w-5 h-5" fill="currentColor">
@@ -80,7 +80,7 @@ export default function Footer() {
                 </a>
                 <a
                   href="mailto:hello@metardu.app"
-                  className="text-gray-400 hover:text-[var(--accent)] transition-colors p-1"
+                  className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors p-1"
                   aria-label="Email"
                 >
                   <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4">
@@ -104,7 +104,7 @@ export default function Footer() {
                       <Link
                         href={link.href}
                         prefetch={false}
-                        className="text-sm text-gray-300 hover:text-[var(--accent)] transition-colors font-medium"
+                        className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors font-medium inline-block py-1.5"
                       >
                         {link.label}
                       </Link>
@@ -116,37 +116,37 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar — copyright */}
+        {/* Bottom bar â€” copyright */}
         <div className="py-6 sm:py-8 border-t border-[var(--border-color)] flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-          <p className="text-xs text-gray-400 text-center sm:text-left">
+          <p className="text-xs text-[var(--text-muted)] text-center sm:text-left">
             &copy; {year} METARDU. All rights reserved.
           </p>
         </div>
       </div>
 
-      {/* ─── Legal disclaimer section ────────────────────────────── */}
+      {/* â”€â”€â”€ Legal disclaimer section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="border-t border-[var(--border-color)] py-4 sm:py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-gray-400">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-[var(--text-muted)]">
           <div className="flex flex-wrap justify-center gap-x-1 gap-y-1">
             <span>METARDU v1.0 &mdash; Professional Surveying Platform &mdash; EPSG:21037 (Arc 1960 / UTM Zone 37S)</span>
             <span>&middot;</span>
             {LEGAL_LINKS.map((link, i) => (
               <span key={link.label} className="flex items-center gap-1">
                 {i > 0 && <span>&middot;</span>}
-                <Link href={link.href} prefetch={false} className="text-[var(--accent)] hover:underline">
+                <Link href={link.href} prefetch={false} className="text-[var(--text-secondary)] hover:underline">
                   {link.label}
                 </Link>
               </span>
             ))}
           </div>
-          <div className="mt-2 text-xs sm:text-xs text-gray-400 max-w-4xl mx-auto leading-relaxed px-2">
+          <div className="mt-2 text-xs sm:text-xs text-[var(--text-muted)] max-w-4xl mx-auto leading-relaxed px-2">
             METARDU is a computation tool, not a substitute for professional surveyor judgment. All outputs
             (coordinates, areas, deed plans, mutation forms, reports) must be independently verified by a
             licensed surveyor registered with ISK/EBK before use for legal, construction, or registration
             purposes. No output constitutes a certified survey under the Survey Act Cap 299 unless separately
             authenticated by the Survey of Kenya.
           </div>
-          <div className="mt-1 sm:mt-2 text-xs text-gray-400">
+          <div className="mt-1 sm:mt-2 text-xs text-[var(--text-muted)]">
             SRID: EPSG:21037 Arc 1960 / UTM Zone 37S
           </div>
         </div>
