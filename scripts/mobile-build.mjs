@@ -53,7 +53,7 @@ const STASH_SUBTREES = [
   'deed-plan',
   'working-diagram',
   'subscription/success',
-  'dashboard',
+  '(dashboard)/dashboard',
   'settings/profile',
   // opengraph-image (metadata route): `next/og`'s ImageResponse WASM cannot
   // run during static export prerender (web-only social sharing preview).
