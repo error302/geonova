@@ -358,6 +358,36 @@ export function checkLevelingConformance(
   return { passed: allPassed, checks, overallGrade: achievedOrder }
 }
 
+/**
+ * Return the tightest RDM 1.1 order whose precision ratio is satisfied.
+ * Ratios are "1:N" where larger N = tighter. Returns null if the ratio falls
+ * below Fourth Order (1:1,000).
+ */
+export function findRDMOrderForRatio(ratio: number): TraverseAccuracyStandard | null {
+  for (const std of RDM_TRAVERSE_ACCURACY) {
+    if (ratio >= std.ratioNumeric) return std
+  }
+  return null
+}
+
+/**
+ * Cross-reference the engine's 8-way survey-type taxonomy
+ * (`TRAVERSE_PRECISION_STANDARDS` in `@/lib/engine/traverse`) with the 6 RDM
+ * 1.1 orders above. Each survey type's minimum ratio maps to the tightest RDM
+ * order it satisfies, so a single precision check can report both the
+ * statutory survey-type gate AND the equivalent RDM order.
+ */
+export const SURVEY_TYPE_TO_RDM_ORDER: Record<string, string> = {
+  geodetic: 'Second Order Class II',       // 1:10,000
+  deformation: 'Second Order Class II',    // 1:10,000
+  cadastral: 'Third Order',                // 1:5,000
+  mining: 'Third Order',                   // 1:5,000
+  engineering: 'Fourth Order',             // 1:3,000 → tightest RDM order met is Fourth (1:1,000)
+  topographic: 'Fourth Order',             // 1:1,000
+  hydrographic: 'Fourth Order',            // 1:1,000
+  drone: 'Fourth Order',                   // 1:1,000
+} as const
+
 // ─── Re-exports for backward compatibility ─────────────────────────────────
 // (Code that imported the old stub exports still works — the exports
 // above are already `export const`, so no re-export needed.)

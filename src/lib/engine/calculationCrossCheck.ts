@@ -290,12 +290,19 @@ export function crossCheckClosure(
  * Cross-check leveling by computing reduced levels via two independent
  * methods:
  *   1. Rise & Fall method: RL_next = RL_prev + (BS - FS)
- *   2. Height of Collimation: RL = HCP - FS (where HCP = RL + BS)
+ *   2. Height of Collimation: HCP = RL_prev + BS;  RL_next = HCP - FS
  *
- * Both methods should produce identical reduced levels. Disagreement
- * indicates an arithmetic error in the field book reduction.
+ * Both methods must use the SAME instrument setup (BS and FS belong to one
+ * setup; the foresight of setup k is the backsight of setup k+1 at the turning
+ * point). A reading is a single setup: { backsight, foresight, reducedLevel }
+ * where `reducedLevel` is the RL of the *backsight* point (already known).
  *
- * @param readings Array of { backsight, foresight, reducedLevel } in metres
+ * The check verifies the recorded RL of each turning point (the foresight
+ * target) against the value recomputed two independent ways.
+ *
+ * @param readings Array of { backsight, foresight, reducedLevel }. Each entry is
+ *                 one setup; `reducedLevel` is the RL of the BS point, and the
+ *                 setup's FS reads the NEXT entry's BS point.
  * @param tolerance Tolerance in metres (default: 0.0005 = 0.5mm)
  */
 export function crossCheckLeveling(
@@ -308,22 +315,21 @@ export function crossCheckLeveling(
     const prev = readings[i - 1]
     const curr = readings[i]
 
-    // Method 1: Rise & Fall
-    // Rise (or Fall) = BS_prev - FS_prev
+    // Method 1: Rise & Fall — the rise/fall belongs to the SAME setup as BS.
     // RL_curr = RL_prev + (BS_prev - FS_prev)
     const riseFall = prev.backsight - prev.foresight
     const rfMethod = prev.reducedLevel + riseFall
 
-    // Method 2: Height of Collimation
-    // HCP = RL_prev + BS_prev
-    // RL_curr = HCP - FS_curr (but we need the FS at the same setup)
-    // For a simple check: HCP_prev = RL_prev + BS_prev
-    // RL_curr = HCP_prev - FS_curr_prev_setup
-    // This requires knowing which setup each reading belongs to.
-    // For a simplified cross-check, just verify the RL increment:
-    const hcMethod = prev.reducedLevel + (prev.backsight - curr.foresight)
+    // Method 2: Height of Collimation — also from the SAME setup.
+    // HCP = RL_prev + BS_prev;  RL_curr = HCP - FS_prev
+    const hcp = prev.reducedLevel + prev.backsight
+    const hcMethod = hcp - prev.foresight
 
-    const difference = Math.abs(rfMethod - hcMethod)
+    // The recorded value to verify against is the current setup's BS-point RL.
+    const recorded = curr.reducedLevel
+    const diffRF = Math.abs(rfMethod - recorded)
+    const diffHC = Math.abs(hcMethod - recorded)
+    const difference = Math.max(diffRF, diffHC)
     const passed = difference <= tolerance
 
     results.push({
@@ -335,8 +341,8 @@ export function crossCheckLeveling(
       tolerance,
       unit: 'm',
       message: passed
-        ? `RL verified at station ${i + 1}: ${rfMethod.toFixed(4)}m (R&F) vs ${hcMethod.toFixed(4)}m (HCP)`
-        : `RL mismatch at station ${i + 1}: R&F=${rfMethod.toFixed(4)}m, HCP=${hcMethod.toFixed(4)}m, diff=${difference.toFixed(6)}m. Check field book arithmetic.`,
+        ? `RL verified at station ${i + 1}: ${rfMethod.toFixed(4)}m (R&F) and ${hcMethod.toFixed(4)}m (HCP) both match recorded ${recorded.toFixed(4)}m`
+        : `RL mismatch at station ${i + 1}: R&F=${rfMethod.toFixed(4)}m, HCP=${hcMethod.toFixed(4)}m vs recorded ${recorded.toFixed(4)}m (max diff ${difference.toFixed(6)}m). Check field book arithmetic or setup attribution.`,
       severity: 'error',
     })
   }

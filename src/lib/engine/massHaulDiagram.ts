@@ -176,15 +176,22 @@ export function computeMassHaul(
   const borrowVolume = minCumulative < 0 ? Math.abs(minCumulative) : 0
   const wasteVolume = maxCumulative > 0 ? maxCumulative : 0
 
-  // Average haul distance (simplified: total haul area / total volume)
+  // Average haul distance = total haul (∫|cumulative volume|·dx, the area
+  // between the mass curve and the balance axis) ÷ volume actually moved.
+  //
+  // The volume moved is NOT total cut + total fill (that counts every cubic
+  // metre handled, most of which never travels far). It is the material that
+  // crosses a balance point — i.e. borrow + waste — which equals the peak
+  // excursion of the cumulative curve. Using cut+fill here understates haul
+  // distance by an order of magnitude on balanced jobs.
   let haulArea = 0
   for (let i = 1; i < stations.length; i++) {
     const dx = stations[i].station - stations[i - 1].station
     const avgVol = (stations[i].cumulativeVolume + stations[i - 1].cumulativeVolume) / 2
     haulArea += Math.abs(avgVol * dx)
   }
-  const totalVol = totalAdjustedCut + totalAdjustedFill
-  const averageHaulDistance = totalVol > 0 ? haulArea / totalVol : 0
+  const volumeMoved = borrowVolume + wasteVolume
+  const averageHaulDistance = volumeMoved > 0 ? haulArea / volumeMoved : 0
 
   return {
     stations,

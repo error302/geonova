@@ -28,6 +28,12 @@ import {
 import { cassiniInverse, cassiniForward, tmForward, tmInverse } from './projection'
 import { utmToWGS84, toDMS } from './verify'
 
+/**
+ * @deprecated Use `cassiniFeetToUTMExactWithDatum` (Molodensky 3-param) or
+ *   `cassiniFeetToUTMExact7Param` (Bursa-Wolf 7-param) instead. This no-datum
+ *   variant assumes Clarke 1858 and Clarke 1880 share the same geodetic (φ, λ),
+ *   which is NOT true — it produces UTM coordinates that are 100–300 m off.
+ */
 export function cassiniFeetToUTMExact(
   points: CassiniFeetPoint[],
   options?: { zone?: number; centralMeridianDeg?: number; cassiniMeridianDeg?: number },
@@ -60,7 +66,8 @@ export function cassiniFeetToUTMExact(
         conformalE: applyConformalCorrection(cassE_ft),
         utmE: Math.round(utm.E * 1000) / 1000,
         utmN: Math.round(utm.N * 1000) / 1000,
-        warning: 'Exact projection chain — no datum shift (Clarke 1858→1880 same-φλ assumption). '
+        warning: 'DEPRECATED no-datum chain — UTM is 100–300 m off (Clarke 1858→1880 treated as same φ,λ). '
+          + 'Use cassiniFeetToUTMExactWithDatum (Molodensky) or cassiniFeetToUTMExact7Param (Bursa-Wolf). '
           + `Geodetic: ${latDeg.toFixed(6)}°, ${lonDeg.toFixed(6)}°`,
       }
     } catch (err) {

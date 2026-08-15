@@ -74,6 +74,7 @@ import {
   sparseForwardSolve,
   sparseBackwardSolve,
   sparseInverseDiagonal,
+  sparseQvvDiagonal,
   diagonal,
   addDiagonal,
   type SparseMatrix,
@@ -1073,6 +1074,7 @@ export function adjustNetwork(
   let iteration = 0
   let convergence = Infinity
   let lastFactor: SparseCholesky | null = null
+  let lastPerm: number[] | null = null
   let lastResiduals: ObservationResidual[] = []
   let lastReferenceVariance = 0
   let lastDegreesOfFreedom = 0
@@ -1128,6 +1130,7 @@ export function adjustNetwork(
         const symbolic = symbolicFactorize(Nreg)
         const factor = cholesky(Nreg, symbolic)
         lastFactor = factor
+        lastPerm = null
         corrections = solveBordered(Nreg, B, u, factor)
         if (process.env.NETWORK_DEBUG) logger.debug(`[networkAdjustment] iter ${iteration} bordered solve done: corrections[0]=${corrections[0]}, max=${Math.max(...corrections.map(Math.abs))}`)
       } else {
@@ -1138,6 +1141,7 @@ export function adjustNetwork(
         const symbolic = symbolicFactorize(Np)
         const factor = cholesky(Np, symbolic)
         lastFactor = factor
+        lastPerm = perm
         const yp = sparseForwardSolve(factor.L, up)
         const xp = sparseBackwardSolve(factor.L, yp)
         // Invert permutation
@@ -1180,6 +1184,7 @@ export function adjustNetwork(
         paramCount,
         paramPerPoint,
         lastFactor,
+        lastPerm,
         freeNetwork,
         B,
         currentCoords,
@@ -1328,6 +1333,7 @@ function computeResidualsAndStats(
   paramCount: number,
   paramPerPoint: number,
   factor: SparseCholesky | null,
+  perm: number[] | null,
   freeNetwork: boolean,
   B: SparseMatrix | null,
   currentCoords: Map<string, { e: number; n: number; rl?: number }>,
@@ -1355,6 +1361,21 @@ function computeResidualsAndStats(
 
   // Degrees of freedom
   const dof = observations.length - paramCount + constraintRank
+
+  // Exact per-observation Q_vv diagonal (ENG-9). For a constrained network the
+  // AMD-permuted factor gives the exact redundancy number r_i = P_i·(Q_vv)_ii
+  // via one forward/backward solve per row. For free networks the factor is the
+  // regularized N (no permutation) and the inner-constraint B is not part of it,
+  // so the exact Q_vv is unavailable — fall back to the average-redundancy
+  // approximation (documented below).
+  let qvvDiag: number[] | null = null
+  if (factor && !freeNetwork && perm) {
+    try {
+      qvvDiag = sparseQvvDiagonal(A, P, factor, perm)
+    } catch {
+      qvvDiag = null
+    }
+  }
 
   // A posteriori reference variance — need to compute via sumPVV
   // We need the residual vector v = A·x - w. But x is the correction that minimizes vᵀ P v.
@@ -1427,22 +1448,26 @@ function computeResidualsAndStats(
 
     sumPVV += P[i] * v * v
 
-    // Compute redundancy number r_i = 1 - P_i * (A N⁻¹ Aᵀ)_ii
-    // (A N⁻¹ Aᵀ)_ii requires the i-th row of A and the diagonal of N⁻¹
-    // For sparse efficiency, we'd compute the Q_vv diagonal directly.
-    // For now, use a simplified approximation: r_i ≈ (m - n) / m (average redundancy)
-    // TODO: compute exact Q_vv diagonal via Takahashi extended to off-diagonals
-    const avgRedundancy = Math.max(0, Math.min(1, dof / observations.length))
+    // Redundancy number r_i = 1 - P_i·(A·N⁻¹·Aᵀ)_ii = P_i·(Q_vv)_ii.
+    // When the exact Q_vv diagonal is available (constrained network), use it;
+    // otherwise fall back to the average redundancy (m-n)/m (free network).
+    let redundancy: number
+    if (qvvDiag) {
+      redundancy = Math.max(0, Math.min(1, P[i] * qvvDiag[i]))
+    } else {
+      const avgRedundancy = Math.max(0, Math.min(1, dof / observations.length))
+      redundancy = avgRedundancy
+    }
 
     // Standardized residual (approximate — uses a priori σ, not σ_v)
     const sigma_i = Math.sqrt(1 / P[i])
-    const standardized = v / (sigma_i * Math.sqrt(Math.max(avgRedundancy, 1e-6)))
+    const standardized = v / (sigma_i * Math.sqrt(Math.max(redundancy, 1e-6)))
 
     // MDB (Baarda): ∇₀l = δ₀ × σ_l / √r_i
     // δ₀ = non-centrality parameter for α, β (Baarda's λ₀)
     // For α=0.001, β=0.80: δ₀ ≈ 4.13
     const delta0 = 4.13
-    const mdb = delta0 * sigma_i / Math.sqrt(Math.max(avgRedundancy, 1e-6))
+    const mdb = delta0 * sigma_i / Math.sqrt(Math.max(redundancy, 1e-6))
 
     // w-test = |standardized residual|
     const wTest = Math.abs(standardized)
@@ -1459,7 +1484,7 @@ function computeResidualsAndStats(
       computed,
       residual: v,
       standardized,
-      redundancy: avgRedundancy,
+      redundancy,
       mdb,
       wTest,
       isOutlier,

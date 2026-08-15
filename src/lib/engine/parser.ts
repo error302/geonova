@@ -6,7 +6,31 @@ export interface ParseResult {
   warnings: string[];
 }
 
-export function parseDelimitedFile(content: string, delimiter: string = ','): ParseResult {
+export interface ParseOptions {
+  /** UTM zone (1-60). When provided, easting/northing are validated against
+   *  the correct 6°-zone span (including negative eastings on the zone's west
+   *  margin) instead of a naive 100000–900000 band. Default: no zone (range
+   *  check disabled — caller may be parsing Cassini feet or a local grid). */
+  utmZone?: number
+}
+
+/**
+ * A UTM zone spans 6° of longitude ≈ 668 km at the equator, centered on the
+ * 500,000 m false easting, so a valid in-zone easting falls in ~166,000–834,000.
+ * Out-of-zone (neighbouring margin) coordinates can legitimately reach the full
+ * 0–1,000,000 span, but a UTM easting is never negative and never exceeds
+ * 1,000,000. Use that span as the hard physical bound so degree-typed mistakes
+ * (e.g. 36.8) are caught while genuine projected coordinates are not.
+ */
+export function utmEastingRange(_zone: number): { min: number; max: number } {
+  return { min: 0, max: 1_000_000 }
+}
+
+export function parseDelimitedFile(
+  content: string,
+  delimiter: string = ',',
+  options: ParseOptions = {},
+): ParseResult {
   const lines = content.trim().split('\n');
   const points: NamedPoint3D[] = [];
   const warnings: string[] = [];
@@ -44,8 +68,11 @@ export function parseDelimitedFile(content: string, delimiter: string = ','): Pa
       continue;
     }
     
-    if (easting < 100000 || easting > 900000) {
-      warnings.push(`Row ${i + 1} (${name}): Easting ${easting} outside typical UTM range (100000-900000)`);
+    if (options.utmZone !== undefined) {
+      const { min, max } = utmEastingRange(options.utmZone)
+      if (easting < min || easting > max) {
+        warnings.push(`Row ${i + 1} (${name}): Easting ${easting} outside valid UTM zone ${options.utmZone} range (${min.toFixed(0)}-${max.toFixed(0)})`);
+      }
     }
     
     points.push({ name, easting, northing, elevation });
@@ -60,7 +87,7 @@ export function pointsToCSV(points: NamedPoint3D[]): string {
   return header + rows;
 }
 
-export function validatePoints(points: NamedPoint3D[]): string[] {
+export function validatePoints(points: NamedPoint3D[], options: ParseOptions = {}): string[] {
   const warnings: string[] = [];
   const names = new Set<string>();
   
@@ -70,8 +97,11 @@ export function validatePoints(points: NamedPoint3D[]): string[] {
     }
     names.add(p.name);
     
-    if (p.easting < 100000 || p.easting > 900000) {
-      warnings.push(`Point ${p.name}: Easting ${p.easting} outside UTM range`);
+    if (options.utmZone !== undefined) {
+      const { min, max } = utmEastingRange(options.utmZone)
+      if (p.easting < min || p.easting > max) {
+        warnings.push(`Point ${p.name}: Easting ${p.easting} outside valid UTM zone ${options.utmZone} range`);
+      }
     }
   }
   

@@ -43,28 +43,34 @@ export interface ComputationAuditRecord {
 }
 
 /**
- * Simple hash function for computation inputs/outputs.
- * Uses SubtleCrypto if available (browser/server), falls back to simple string hash.
- * NOT cryptographic — just for change detection.
+ * Hash function for computation inputs/outputs.
+ *
+ * Uses SubtleCrypto SHA-256 (browser + Node 18+ via globalThis.crypto).
+ *
+ * The previous djb2 string-hash fallback was 32-bit and trivially collidable,
+ * so it could NOT stand up to a Cap 299 liability challenge ("these inputs
+ * have not changed" needs a cryptographic hash). We now FAIL CLOSED: if no
+ * SubtleCrypto is available, we throw rather than emit a weak hash that could
+ * be presented as evidence. Every environment METARDU runs in (modern
+ * browsers over HTTPS, Node 18+ worker/app containers) provides SubtleCrypto.
  */
 export async function hashComputationData(data: unknown): Promise<string> {
   const str = JSON.stringify(data, Object.keys(data as object).sort());
 
-  if (typeof crypto !== 'undefined' && crypto.subtle) {
+  const subtle = (globalThis as { crypto?: Crypto }).crypto?.subtle
+  if (subtle) {
     const encoder = new TextEncoder();
     const dataBuffer = encoder.encode(str);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+    const hashBuffer = await subtle.digest('SHA-256', dataBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  // Fallback: simple string hash (djb2)
-  let hash = 5381;
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) + hash) + str.charCodeAt(i);
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return Math.abs(hash).toString(16).padStart(8, '0');
+  throw new Error(
+    'SubtleCrypto (SHA-256) is unavailable in this environment. ' +
+    'Refusing to emit a non-cryptographic audit hash — computation audit ' +
+    'trails require a collision-resistant hash for Cap 299 liability defense.',
+  );
 }
 
 /**

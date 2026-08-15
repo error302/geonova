@@ -75,9 +75,25 @@ describe('validatePoints', () => {
     expect(warnings[0]).toContain('A')
   })
 
-  it('warns on out-of-range UTM easting', () => {
-    const pts = [{ name: 'A', easting: 50000, northing: 9857000, elevation: 100 }]
-    const warnings = validatePoints(pts)
-    expect(warnings.length).toBeGreaterThan(0)
+  it('warns on out-of-range UTM easting when a zone is provided', () => {
+    // Negative easting is impossible in UTM (false easting is 500,000 m), and
+    // 1,200,000 m exceeds the 1,000,000 m ceiling of a 6° zone.
+    const tooLow = [{ name: 'A', easting: -50000, northing: 9857000, elevation: 100 }]
+    const tooHigh = [{ name: 'B', easting: 1200000, northing: 9857000, elevation: 100 }]
+    expect(validatePoints(tooLow, { utmZone: 37 }).length).toBeGreaterThan(0)
+    expect(validatePoints(tooHigh, { utmZone: 37 }).length).toBeGreaterThan(0)
+  })
+
+  it('accepts full-span UTM eastings near a zone margin', () => {
+    const pts = [{ name: 'A', easting: 834000, northing: 9857000, elevation: 100 }]
+    expect(validatePoints(pts, { utmZone: 36 })).toEqual([])
+  })
+
+  it('does not range-check when no zone is provided (Cassini/local grid)', () => {
+    const pts = [
+      { name: 'A', easting: 12000, northing: 3400, elevation: 100 },
+      { name: 'B', easting: -5000, northing: 8200, elevation: 102 },
+    ]
+    expect(validatePoints(pts)).toEqual([])
   })
 })

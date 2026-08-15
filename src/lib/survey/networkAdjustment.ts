@@ -3,16 +3,15 @@
  *   (the `adjustNetwork` function) instead. That module is the canonical
  *   enterprise-grade LSA with sparse Cholesky, free-network inner
  *   constraints, Huber robust estimation, full Baarda reliability,
- *   and 2D/3D support. This `survey/` copy has a Supabase DB side
- *   effect inside the engine module (anti-pattern — engine modules
- *   should be pure), and lacks sparse algebra. Kept only because
- *   `NetworkAdjustmentPanel`, `ErrorEllipseCanvas`, and
- *   `regulatoryCompliance.ts` import types from here. New code
- *   should not import from this module.
+ *   and 2D/3D support. This `survey/` copy lacks sparse algebra. Kept only
+ *   because `NetworkAdjustmentPanel`, `ErrorEllipseCanvas`, and
+ *   `regulatoryCompliance.ts` import types from here. New code should not
+ *   import from this module. (The former Supabase `network_adjustments`
+ *   side-effect was removed 2026-08-14 — persistence now happens in the
+ *   caller via the `/api/project/[id]/network-adjustment` route.)
  */
 
 import { z } from 'zod'
-import type { BrowserClient } from '@/lib/api-client/client'
 
 export const StationSchema = z.object({
   id: z.string().min(1, 'Station ID is required'),
@@ -37,25 +36,6 @@ export const ObservationSchema = z.object({
 })
 
 export type Observation = z.infer<typeof ObservationSchema>
-
-let dbClient: BrowserClient | null = null
-
-async function logNetworkAdjustment(stations: Station[], observations: Observation[]) {
-  if (typeof window === 'undefined') return
-  try {
-    const { createClient } = await import('@/lib/api-client/client')
-    dbClient = createClient()
-    const client = dbClient
-    if (!client) return
-    await client.from('network_adjustments').insert({
-      stations,
-      observations,
-      status: 'pending',
-    })
-  } catch {
-    // Non-blocking
-  }
-}
 
 export interface AdjustedStation extends Station {
   residualE: number
@@ -99,8 +79,6 @@ export function adjustNetwork(
   const observations = obsValidation.data
 
   const warnings: string[] = []
-
-  logNetworkAdjustment(stations, observations).catch(() => {})
 
   const fixed = stations.filter(s => s.isFixed)
   if (fixed.length === 0) {

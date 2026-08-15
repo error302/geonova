@@ -66,8 +66,14 @@ export function triangulate(points: SpotHeight[]): Triangle[] {
   let delaunay: Delaunator<Float64Array>
   try {
     delaunay = new Delaunator(coords)
-  } catch {
-    // Fallback: all points may be collinear
+  } catch (err) {
+    // Fallback: all points may be collinear (or contain NaN). Surface this so
+    // a silent empty TIN can't be mistaken for a real zero-area result.
+    const reason = err instanceof Error ? err.message : String(err)
+    console.warn(
+      `[contours] Delaunay triangulation failed (${reason}) — all points may be `
+      + `collinear or contain invalid coordinates. No triangles produced.`,
+    )
     return []
   }
 

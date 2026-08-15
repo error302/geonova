@@ -317,6 +317,28 @@ export function getDatumByCountryAndIndex(country: string, index: number): Datum
   return datums[index] ?? DATUM_REGISTRY['WGS84']
 }
 
+/**
+ * Auto-select the primary datum for a country and transform UTM grid
+ * coordinates to WGS84. This removes the need for callers to hand-pick a
+ * `sourceDatum` from `DATUM_REGISTRY` when they only know the country.
+ *
+ * Uses `getDatumByCountry(country)[0]` (the first/primary datum), falling
+ * back to WGS84 for unknown countries. See `transformToWGS84` for the
+ * underlying Bursa-Wolf (Position Vector, EPSG 9606) transform.
+ */
+export function transformToWGS84ByCountry(
+  easting: number,
+  northing: number,
+  zone: number,
+  hemisphere: 'N' | 'S',
+  country: string,
+  height: number = 0,
+): { easting: number; northing: number; note: string; datum: DatumParameters } {
+  const datum = getDatumByCountry(country)[0] ?? DATUM_REGISTRY['WGS84']
+  const result = transformToWGS84(easting, northing, zone, hemisphere, datum, height)
+  return { ...result, datum }
+}
+
 export function getDatumNames(): string[] {
   return Object.keys(DATUM_REGISTRY)
 }

@@ -336,4 +336,40 @@ describe('networkAdjustment — statistics', () => {
     expect(r.redundancy).toBeLessThanOrEqual(1)
     expect(r.mdb).toBeGreaterThan(0)
   })
+
+  test('ENG-9: constrained network produces per-observation redundancy (not a uniform average)', () => {
+    // A small constrained network with heterogeneous geometry: some legs are
+    // well-controlled (both ends fixed), others are not. The exact Q_vv diagonal
+    // must give *different* redundancy numbers per observation — the old
+    // average-redundancy approximation gave every row the same value.
+    const points: NetworkPoint[] = [
+      { name: 'A', easting: 0, northing: 0, fixed: true },
+      { name: 'B', easting: 100, northing: 0, fixed: true },
+      { name: 'P', easting: 50, northing: 80 },
+      { name: 'Q', easting: 50, northing: -20 },
+    ]
+    // 4 observations on 4 free parameters → dof=0 (all redundancy 0). Use 6
+    // observations so dof=2 and per-observation redundancy varies with geometry.
+    const observations: NetworkObservation[] = [
+      { type: 'distance', from: 'A', to: 'P', value: Math.hypot(50, 80), sigma: 0.005 },
+      { type: 'distance', from: 'B', to: 'P', value: Math.hypot(50, 80), sigma: 0.005 },
+      { type: 'distance', from: 'A', to: 'Q', value: Math.hypot(50, 20), sigma: 0.005 },
+      { type: 'distance', from: 'B', to: 'Q', value: Math.hypot(50, 20), sigma: 0.005 },
+      { type: 'distance', from: 'P', to: 'Q', value: 100, sigma: 0.005 },
+      { type: 'bearing', from: 'A', to: 'B', value: 90, sigma: 5 / 3600 },
+    ]
+
+    const result = adjustNetwork(points, observations)
+
+    expect(result.ok).toBe(true)
+    const redundancies = result.residuals.map((r) => r.redundancy)
+    const unique = new Set(redundancies.map((r) => r.toFixed(6)))
+    // Redundancy numbers must not all be identical (the old avg-redundancy bug).
+    expect(unique.size).toBeGreaterThan(1)
+    // Every redundancy stays within [0, 1].
+    redundancies.forEach((r) => {
+      expect(r).toBeGreaterThanOrEqual(0)
+      expect(r).toBeLessThanOrEqual(1)
+    })
+  })
 })

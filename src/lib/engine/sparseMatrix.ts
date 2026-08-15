@@ -725,6 +725,58 @@ export function sparseCholeskySolveOrdered(
 // ---------------------------------------------------------------------------
 
 /**
+ * Compute the diagonal of Q_vv = P⁻¹ − A·N⁻¹·Aᵀ exactly, using a pre-computed
+ * sparse Cholesky factor of N (or of the permuted Nᵖ = P·N·Pᵀ when `perm` is
+ * given). This is the "Takahashi extended to off-diagonals" result expressed
+ * via one forward/backward solve per observation row instead of a full sparse
+ * inverse — O(m · nnz(L)).
+ *
+ * Q_vv_ii = 1/P_i − a_iᵀ·N⁻¹·a_i, where a_i is row i of A.
+ *
+ * With the AMD permutation perm (perm[k] = original index at position k),
+ * solving is done in permuted coordinates: a'_i[k] = a_i[perm[k]], solve
+ * Nᵖ·z = a'_i, then a_iᵀ·N⁻¹·a_i = a'_iᵀ·z (permutations are orthogonal).
+ *
+ * @returns Q_vv diagonal, length m (= A.rows).
+ */
+export function sparseQvvDiagonal(
+  A: SparseMatrix,
+  P: number[],
+  factor: SparseCholesky,
+  perm?: number[],
+): number[] {
+  const m = A.rows
+  const n = A.cols
+  const qvv = new Array<number>(m)
+
+  for (let i = 0; i < m; i++) {
+    // Build dense row a_i from CSR
+    const a = new Array<number>(n).fill(0)
+    for (let idx = A.rowPtr[i]; idx < A.rowPtr[i + 1]; idx++) {
+      a[A.colIdx[idx]] = A.values[idx]
+    }
+
+    // Permute into factored coordinates if required
+    let ap = a
+    if (perm) {
+      ap = new Array<number>(n)
+      for (let k = 0; k < n; k++) ap[k] = a[perm[k]]
+    }
+
+    // Solve N·z = ap (or Nᵖ·z = ap)
+    const y = sparseForwardSolve(factor.L, ap)
+    const z = sparseBackwardSolve(factor.L, y)
+
+    let aNz = 0
+    for (let k = 0; k < n; k++) aNz += ap[k] * z[k]
+
+    qvv[i] = 1 / P[i] - aNz
+  }
+
+  return qvv
+}
+
+/**
  * Extract the diagonal of a sparse matrix.
  */
 export function diagonal(M: SparseMatrix): number[] {

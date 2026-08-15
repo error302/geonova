@@ -3,7 +3,7 @@
 > **Purpose**: A single, persistent, resumable plan for all agent-driven work on METARDU.
 > Updated after every committed change. When you stop, pick up from the next `pending` item.
 
-**Last updated**: 2026-07-24
+**Last updated**: 2026-08-14
 **Maintained by**: Agent (GLM via Super Z)
 **Source repos**: `error302/metardu` (this repo), plus supporting skill repos `agency-agents`, `ponytail`, `superpowers` (cloned locally at `/home/z/my-project/repos/`).
 
@@ -178,17 +178,17 @@ Findings from Task 2-engine deep-dive (see worklog section `2-engine`).
 | ID | Title | Status | Files | Effort | Notes |
 |----|-------|--------|-------|--------|-------|
 | ENG-1 | Fix `gcpOptimizer` zero-export bug (same as P0-1) | pending | `src/lib/engine/gcpOptimizer.ts` | small | |
-| ENG-2 | Enforce `cassiniFeetToUTMExact` 100-300m warning (function is exported, warning not enforced) | pending | `src/lib/geo/cassini/exact.ts:31` | small | Either remove, rename with deprecation prefix, or throw. |
-| ENG-3 | Fix `crossCheckLeveling` simplified setup-attribution | pending | `src/lib/engine/calculationCrossCheck.ts` | medium | Admits in-code that HCP comparison is "simplified". Needs proper setup-attribution model. |
-| ENG-4 | Fix `parser.ts` UTM range check (naive 100k-900k, wrong for UTM 37S Kenya where eastings can be negative) | pending | `src/lib/engine/parser.ts:49` | small | |
-| ENG-5 | Fix `massHaulDiagram.ts` average haul distance (conflates cut+fill, understates haul) | pending | `src/lib/engine/massHaulDiagram.ts:187` | small | Proper formula integrates \|cumulative volume\| over alignment length. |
-| ENG-6 | Fix `contours.ts` silent fallback (Delaunator fails → empty triangle array, no log) | pending | `src/lib/engine/contours.ts` | small | |
-| ENG-7 | Remove `survey/networkAdjustment.ts` DB side effect (Supabase client inside engine module) | pending | `src/lib/survey/networkAdjustment.ts:27` | small | Engine modules should be pure. Move DB logging to caller. |
-| ENG-8 | Unify `TRAVERSE_PRECISION_STANDARDS` (two parallel taxonomies in `traverse.ts` and `standards/rdm11.ts`) | pending | `src/lib/engine/traverse.ts`, `src/lib/standards/rdm11.ts` | medium | Cross-reference the 8 survey-type taxonomy with the 6 RDM order taxonomy. |
-| ENG-9 | Implement Takahashi off-diagonal Q_vv (TODO at `networkAdjustment.ts:1423`) | pending | `src/lib/engine/networkAdjustment.ts` | medium | Needed for cross-observation reliability analysis. |
-| ENG-10 | Auto-select datum based on country (currently `DATUM_REGISTRY` has 15+ datums but `helmertTransform` takes params explicitly) | pending | `src/lib/geodesy/datums.ts`, `src/lib/engine/computationalAccuracy.ts` | medium | |
-| ENG-11 | Provenance audit for synthetic Cassini data (`synthetic_148_subsheets.json`, etc.) | pending | `data/cassini/` | medium | No test asserts synthetic sheets match real-world coords within tolerance. |
-| ENG-12 | `auditTrail.ts` djb2 fallback is trivially collidable | pending | `src/lib/engine/auditTrail.ts` | small | For Cap 299 liability defense, require SubtleCrypto or fail closed. |
+| ENG-2 | Enforce `cassiniFeetToUTMExact` 100-300m warning (function is exported, warning not enforced) | done | `src/lib/geo/cassini/exact.ts` | small | `@deprecated` added pointing to the Molodensky/Bursa-Wolf variants; per-result warning now states the 100–300 m offset explicitly. |
+| ENG-3 | Fix `crossCheckLeveling` simplified setup-attribution | done | `src/lib/engine/calculationCrossCheck.ts` | medium | HCP method no longer mixes `prev.backsight` with `curr.foresight` (different setups). Both R&F and HCP now attribute BS/FS to the SAME setup and verify the recorded turning-point RL. |
+| ENG-4 | Fix `parser.ts` UTM range check (naive 100k-900k, wrong for UTM 37S Kenya where eastings can be negative) | done | `src/lib/engine/parser.ts` | small | Range check is now opt-in via `{ utmZone }`; when absent, no range check (Cassini/local grid safe). When present, uses the physical 0–1,000,000 m UTM easting span instead of the 100k–900k band. `CSVUploadModal`/`validatePoints` callers unaffected (default = no false positives). |
+| ENG-5 | Fix `massHaulDiagram.ts` average haul distance (conflates cut+fill, understates haul) | done | `src/lib/engine/massHaulDiagram.ts` | small | Divisor changed from `totalAdjustedCut + totalAdjustedFill` (total handled) to `borrowVolume + wasteVolume` (volume actually moved). Correct formula: ∫\|cumulative\|·dx ÷ peak excursion. |
+| ENG-6 | Fix `contours.ts` silent fallback (Delaunator fails → empty triangle array, no log) | done | `src/lib/engine/contours.ts` | small | Delaunay failure now emits a `console.warn` with the cause (collinear/NaN) instead of silently returning `[]`. |
+| ENG-7 | Remove `survey/networkAdjustment.ts` DB side effect (Supabase client inside engine module) | done | `src/lib/survey/networkAdjustment.ts` | small | Removed `logNetworkAdjustment` + the Supabase `network_adjustments` insert + `BrowserClient` import. Persistence already happens in `NetworkAdjustmentPanel.saveResult` via `/api/project/[id]/network-adjustment`. Module is now pure. |
+| ENG-8 | Unify `TRAVERSE_PRECISION_STANDARDS` (two parallel taxonomies in `traverse.ts` and `standards/rdm11.ts`) | done | `src/lib/standards/rdm11.ts` | medium | Added `findRDMOrderForRatio()` + `SURVEY_TYPE_TO_RDM_ORDER` mapping cross-referencing the 8 survey types with the 6 RDM orders. |
+| ENG-9 | Implement Takahashi off-diagonal Q_vv (TODO at `networkAdjustment.ts:1423`) | done | `src/lib/engine/networkAdjustment.ts`, `src/lib/engine/sparseMatrix.ts` | medium | Added `sparseQvvDiagonal()` (one forward/backward solve per observation row, O(m·nnz(L))) and wired it into `computeResidualsAndStats` for constrained networks via the AMD-permuted factor. Free networks retain the average-redundancy fallback (inner-constraint B not in the factor). Exact per-observation redundancy + w-test + MDB now reflect real geometry. |
+| ENG-10 | Auto-select datum based on country (currently `DATUM_REGISTRY` has 15+ datums but `helmertTransform` takes params explicitly) | done | `src/lib/geodesy/datums.ts` | medium | Added `transformToWGS84ByCountry()` — auto-selects the primary datum via `getDatumByCountry()[0]` and delegates to the existing Bursa-Wolf `transformToWGS84`. |
+| ENG-11 | Provenance audit for synthetic Cassini data (`synthetic_148_subsheets.json`, etc.) | done | `src/lib/geo/cassini/__tests__/cassiniProvenance.test.ts` | medium | New suite asserts every subsheet has 4 finite corners, UTM within Kenya zone 36/37 span (both hemispheres), and shared corners between adjacent subsheets agree within 5 cm (seamless lattice). |
+| ENG-12 | `auditTrail.ts` djb2 fallback is trivially collidable | done | `src/lib/engine/auditTrail.ts` | small | Removed the 32-bit djb2 fallback. `hashComputationData` now fails closed (throws) when `SubtleCrypto` is unavailable rather than emitting a non-cryptographic hash for Cap 299 evidence. |
 
 ---
 
