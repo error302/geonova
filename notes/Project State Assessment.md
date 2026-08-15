@@ -300,6 +300,21 @@ aren't (e.g. `survey/networkAdjustment.ts` has a Supabase side effect — ENG-7)
   P1-8 (API client Wave 2 — remaining fetches are binary downloads, excluded),
   P1-10 (type hygiene — named hotspots drained to 2/5/2 `any`), UI-M2 (dead workspace UI).
 - Deploy/CI green for all three commits (c9275cfc, 69d6a3f4, a0232bd8).
+- Removed duplicate `@keyframes shimmer` (UI-M1) shadowing the canonical animation.
+- Verified further stale-plan items: UI-13 (DashboardSearch) already wired into
+  dashboard/admin/header; UI-M1 glassmorphism block uses the warm-charcoal palette
+  already (only `.glass-panel`/`.btn-glow`/`.card-premium`/`.fade-in-up` are unused
+  utility classes, `.focus-ring` is used); P3-12 honest-error work largely done
+  (most sites use `err.message || 'Failed to X'`).
+
+## Remaining genuine work (needs user decisions)
+- **P1-1 NextAuth v4→v5** — HIGH RISK. The plan (`docs/nextauth-v5-migration-plan.md`)
+  explicitly requires a staging window, forced-re-login user comms, E2E cycle, and
+  maintenance window. NOT autonomous; needs a "quiet 2-week window" decision.
+- **P2-6 GNSS baseline** — decision: remove regex stub or implement double-difference+LAMBDA.
+- **P2-8/9/10** PostGIS / vector tiles / iOS — explicitly deferred (parcel counts < 5k).
+- **UI-M3 / UI-12** — competing Cmd+K/?-overlays/onboarding are partly done; remaining
+  consolidation is a product UX decision, not mechanical dedup.
 
 ## Related
 - [[METARDU Home]]
