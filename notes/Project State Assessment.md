@@ -257,6 +257,22 @@ aren't (e.g. `survey/networkAdjustment.ts` has a Supabase side effect — ENG-7)
   - ENG-12 `auditTrail.ts` fails closed on missing SubtleCrypto (no djb2)
 - Verification: full Jest 162 suites / 2476 tests + `tsc --noEmit` clean; lint-gate + lint-ratchets clean; CI run 31882730068 green; Deploy 31882730067 success.
 
+### 2026-08-15 — Phase 13 Milestone B (submission package manifest)
+- Milestone A was already shipped (submission model, numbering, surveyor profile).
+  This session adds Milestone B (package skeleton): `src/lib/submission/manifest.ts`
+  with `evaluatePackageCompleteness` + `buildPackageManifest` that map generated
+  artifacts onto the 8 benchmark `SUBMISSION_SECTIONS` and report ready/missing
+  required/missing optional in benchmark order. `assembleSubmission.ts` embeds the
+  report in `manifest.json`. 7 unit tests. CI 31887769687 green, Deploy 31887770226 success.
+- **Known schema drift (needs live-DB reconcile, not yet fixed):**
+  1. `revisionNumber.ts`/`assembleSubmission.ts`/`api/submission/sequence` write
+     `submission_sequences` (plural, migration 007, `current_sequence`), but the
+     canonical `numbering.ts` + migration 047 use `submission_sequence` (singular,
+     `last_sequence` + `increment_submission_sequence()`). Two competing tables.
+  2. `surveyor_profiles` (migration 000) has `isk_number`, but `surveyorProfile.ts`
+     queries `registration_number` (+ `seal_url`/`signature_url`) — column mismatch
+     that will 500 at runtime until reconciled.
+
 ## Related
 - [[METARDU Home]]
 - [[METARDU Desktop]]
