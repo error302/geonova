@@ -286,6 +286,21 @@ aren't (e.g. `survey/networkAdjustment.ts` has a Supabase side effect — ENG-7)
 - Deployed (run 31888814901); live `/api/public/health` returns `database: ok`
   on the fresh container → migration applied cleanly. CI 31888814913 green.
 
+### 2026-08-15 — Phase 13 dedup + stale-plan reconciliation
+- Deleted orphaned `workbook/generateWorkbook.ts` (211 LOC, `generateSubmissionWorkbook`
+  had zero callers — `statutoryWorkbook.ts` is the live one). Verified
+  `formNo4Renderer.ts` (coordinate tables, LR annotations, folio/register title
+  block), shapefile `.prj` WKT export, and `DWGImportGuidance.tsx` are already
+  implemented — Workstreams 5/6/8 largely complete.
+- Deleted orphaned `workspace/SplitWorkspaceLayout.tsx` (171 LOC) +
+  `organisms/WorkspaceShell.tsx` — `EnhancedSplitLayout`/`WorkspaceMap`/
+  `ComputationLog` are already wired into `ProjectWorkspaceClient.tsx` (UI-4/UI-M2).
+  Moved `StatusBarEntry` into `EnhancedSplitLayout`.
+- Verified several MASTER_PLAN "pending" items are already done and marked them:
+  P1-8 (API client Wave 2 — remaining fetches are binary downloads, excluded),
+  P1-10 (type hygiene — named hotspots drained to 2/5/2 `any`), UI-M2 (dead workspace UI).
+- Deploy/CI green for all three commits (c9275cfc, 69d6a3f4, a0232bd8).
+
 ## Related
 - [[METARDU Home]]
 - [[METARDU Desktop]]
