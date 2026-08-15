@@ -6,6 +6,7 @@ import { db } from '@/lib/db'
 import { getActiveSurveyorProfile } from './surveyorProfile'
 import { generateSubmissionRef } from './revisionNumber'
 import { validateSubmission } from './validateSubmission'
+import { buildPackageManifest } from './manifest'
 import { generateFormNo4DXF } from './generators/formNo4'
 import { generateStatutoryWorkbook } from './workbook/statutoryWorkbook'
 import { generateWorkingDiagramDXF } from './generators/workingDiagram'
@@ -307,6 +308,20 @@ export async function assembleSubmissionPackage(
   })
   const workingDiagram = generateWorkingDiagramDXF(pkg)
 
+  // Phase 13 Milestone B: benchmark-aligned package completeness report.
+  // Maps the artifacts generated above onto the 8 benchmark sections.
+  const benchmarkManifest = buildPackageManifest({
+    generatedArtifacts: {
+      working_diagram: 'working_diagram.dxf',
+      // computation_workbook.xlsx covers coordinate list, theoretical comps,
+      // consistency checks, and area computations (one statutory workbook).
+      coordinate_list: 'computation_workbook.xlsx',
+      theoretical_comps: 'computation_workbook.xlsx',
+      consistency_checks: 'computation_workbook.xlsx',
+      area_computations: 'computation_workbook.xlsx',
+    },
+  })
+
   const zip = new JSZip()
   zip.file('form_no_4.dxf', formNo4Dxf)
   zip.file('computation_workbook.xlsx', workbook)
@@ -402,7 +417,10 @@ export async function assembleSubmissionPackage(
     adjustmentMethod: pkg.traverse.adjustmentMethod,
     files: ['form_no_4.dxf', 'computation_workbook.xlsx', 'working_diagram.dxf', 'manifest.json'],
     supportingDocuments: pkg.supportingDocs.map(d => d.type).filter(Boolean),
-    qaResult: qa
+    qaResult: qa,
+    // Phase 13 Milestone B: benchmark-aligned section completeness report.
+    sections: benchmarkManifest.sections,
+    completeness: benchmarkManifest.completeness,
   }
   zip.file('manifest.json', JSON.stringify(manifest, null, 2))
 
