@@ -19,8 +19,11 @@ import { cn } from '@/lib/utils';
 import { useWorkspaceBridge } from '@/hooks/useWorkspaceBridge';
 import { useUIStore } from '@/stores/uiStore';
 
-// Re-use the type from the existing layout (don't use the component itself)
-import type { StatusBarEntry } from './SplitWorkspaceLayout';
+export interface StatusBarEntry {
+  label: string;
+  value: string;
+  status?: 'ok' | 'warning' | 'error' | 'idle';
+}
 
 /* ------------------------------------------------------------------ */
 /*  Props                                                              */
