@@ -56,7 +56,7 @@ interface ProjectSubmissionRow {
   revision_number: number
 }
 
-/** submission_sequences row (RETURNING current_sequence). */
+/** increment_submission_sequence() row (aliased current_sequence). */
 interface SubmissionSequenceRow {
   current_sequence: number
 }
@@ -448,13 +448,11 @@ export async function assembleSubmissionPackage(
 
   const revisionNumber = (existingRows[0]?.revision_number ?? -1) + 1
 
-  // Direct SQL replaces dbClient.rpc('increment_submission_sequence')
+  // Canonical atomic sequence increment (migration 047). Replaces the old
+  // INSERT INTO submission_sequences (plural) upsert — folded into the
+  // submission_sequence table in migration 048.
   const { rows: seqRows } = await db.query<SubmissionSequenceRow>(
-    `INSERT INTO submission_sequences (surveyor_profile_id, year, current_sequence)
-     VALUES ($1, $2, 1)
-     ON CONFLICT (surveyor_profile_id, year)
-     DO UPDATE SET current_sequence = submission_sequences.current_sequence + 1
-     RETURNING current_sequence`,
+    `SELECT increment_submission_sequence($1, $2) AS current_sequence`,
     [profile.id, currentYear]
   )
 

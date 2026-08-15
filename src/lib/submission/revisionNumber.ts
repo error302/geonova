@@ -31,17 +31,15 @@ export async function generateSubmissionRef(
   const revision = (rawRevision ?? -1) + 1
   const paddedRev = String(revision).padStart(2, '0')
 
-  // Direct SQL replaces the old dbClient.rpc('increment_submission_sequence')
-  const { rows } = await db.query(
-    `INSERT INTO submission_sequences (surveyor_profile_id, year, current_sequence)
-     VALUES ($1, $2, 1)
-     ON CONFLICT (surveyor_profile_id, year)
-     DO UPDATE SET current_sequence = submission_sequences.current_sequence + 1
-     RETURNING current_sequence`,
+  // Canonical atomic sequence increment (migration 047). Replaces the old
+  // INSERT INTO submission_sequences (plural) upsert — that legacy table was
+  // folded into submission_sequence and dropped in migration 048.
+  const { rows } = await db.query<{ seq: number }>(
+    `SELECT increment_submission_sequence($1, $2) AS seq`,
     [profRes.data.id, currentYear]
   )
 
-  const sequence = (rows[0] as unknown as { current_sequence?: number })?.current_sequence ?? 1
+  const sequence = rows[0]?.seq ?? 1
   const paddedSeq = String(sequence).padStart(3, '0')
 
   const ref = `${iskNumber}_${currentYear}_${paddedSeq}_R${paddedRev}`
