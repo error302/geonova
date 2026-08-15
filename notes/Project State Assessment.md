@@ -311,10 +311,18 @@ aren't (e.g. `survey/networkAdjustment.ts` has a Supabase side effect — ENG-7)
 - **P1-1 NextAuth v4→v5** — HIGH RISK. The plan (`docs/nextauth-v5-migration-plan.md`)
   explicitly requires a staging window, forced-re-login user comms, E2E cycle, and
   maintenance window. NOT autonomous; needs a "quiet 2-week window" decision.
-- **P2-6 GNSS baseline** — decision: remove regex stub or implement double-difference+LAMBDA.
-- **P2-8/9/10** PostGIS / vector tiles / iOS — explicitly deferred (parcel counts < 5k).
+- **P2-8/9/10** PostGIS / vector tiles / iOS — re-verified 2026-08-15: spatial is
+  all client-side Turf (no PostGIS), no `ios/` dir. Deferral holds (parcel counts
+  < 5k; iOS needs Apple credentials + macOS CI).
 - **UI-M3 / UI-12** — competing Cmd+K/?-overlays/onboarding are partly done; remaining
   consolidation is a product UX decision, not mechanical dedup.
+
+### 2026-08-15 — P2-6 GNSS regex stub removed
+- Deleted `parseRINEXBaseline`/`parseProprietaryBaseline`/`processBaselineFile`/
+  `computeCoordinatesFromBaseline`/`detectGNSSFormat` (fabricated placeholder results).
+  Real path already existed: `processBaseline()` → `/api/gnss/baseline-process`
+  (RTKLIB) + `src/lib/gnss/lambda.ts` (LAMBDA). `/tools/gnss-baseline` → redirect to
+  `/tools/gnss`. CI 31899944201 + Deploy 31899944243 green.
 
 ## Related
 - [[METARDU Home]]
