@@ -242,6 +242,21 @@ aren't (e.g. `survey/networkAdjustment.ts` has a Supabase side effect — ENG-7)
   logs `HTTP 000000` (runner egress) while the in-VM `/api/public/health` returns
   200 — harmless false-negative.
 
+### 2026-08-15 — Engine correctness batch (ENG-2…ENG-12)
+- Shipped the full Engine Workstream from MASTER_PLAN (`d73820a1` + `83ff4407`):
+  - ENG-2 `@deprecated` no-datum Cassini exact chain (100–300 m off) w/ explicit warning
+  - ENG-3 leveling cross-check now attributes BS/FS to the same setup
+  - ENG-4 parser UTM range check is opt-in (`utmZone`) and uses the physical 0–1,000,000 m span
+  - ENG-5 mass-haul average distance = ∫|cumulative|·dx ÷ (borrow+waste), not cut+fill
+  - ENG-6 Delaunay fallback logs via `logger.warn` (was silent, then `console.warn` — no-console is a zero-baseline ratchet error)
+  - ENG-7 removed Supabase side effect from `survey/networkAdjustment.ts` (pure now)
+  - ENG-8 `SURVEY_TYPE_TO_RDM_ORDER` cross-reference + `findRDMOrderForRatio`
+  - ENG-9 exact per-observation Q_vv diagonal (`sparseQvvDiagonal`, O(m·nnz(L))) for constrained networks via AMD-permuted factor
+  - ENG-10 `transformToWGS84ByCountry` auto-datum selection
+  - ENG-11 synthetic Cassini provenance suite (4 corners/subsheet, UTM bounds, seamless-lattice seam check)
+  - ENG-12 `auditTrail.ts` fails closed on missing SubtleCrypto (no djb2)
+- Verification: full Jest 162 suites / 2476 tests + `tsc --noEmit` clean; lint-gate + lint-ratchets clean; CI run 31882730068 green; Deploy 31882730067 success.
+
 ## Related
 - [[METARDU Home]]
 - [[METARDU Desktop]]
