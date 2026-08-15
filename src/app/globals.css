@@ -1184,11 +1184,8 @@ html.outdoor-mode [class*="text-red"], html.outdoor-mode [class*="text-purple"] 
   background: rgba(209, 123, 71, 0.4);
 }
 
-/* Shimmer effect for loading */
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
+/* Shimmer effect for loading — @keyframes shimmer is defined once in section 3
+   (canonical animations); a duplicate here previously shadowed it. */
 .shimmer {
   background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.02) 75%);
   background-size: 200% 100%;
