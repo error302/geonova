@@ -273,6 +273,19 @@ aren't (e.g. `survey/networkAdjustment.ts` has a Supabase side effect — ENG-7)
      queries `registration_number` (+ `seal_url`/`signature_url`) — column mismatch
      that will 500 at runtime until reconciled.
 
+### 2026-08-15 — Phase 13 schema reconciliation (048)
+- Fixed the two drifts above via `048_submission_schema_reconciliation.sql`:
+  1. Added `surveyor_profiles.registration_number`/`seal_url`/`signature_url`,
+     backfilling `registration_number` from `isk_number` (same identifier).
+     `getActiveSurveyorProfile()` no longer 500s at runtime.
+  2. Folded `submission_sequences` (007, `current_sequence`) into canonical
+     `submission_sequence` (047, `last_sequence`), taking MAX so numbering
+     progress is preserved, then dropped the plural table. `revisionNumber.ts`,
+     `assembleSubmission.ts`, and `api/submission/sequence` now call
+     `increment_submission_sequence()` directly.
+- Deployed (run 31888814901); live `/api/public/health` returns `database: ok`
+  on the fresh container → migration applied cleanly. CI 31888814913 green.
+
 ## Related
 - [[METARDU Home]]
 - [[METARDU Desktop]]
