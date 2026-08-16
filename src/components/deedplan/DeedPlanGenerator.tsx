@@ -6,6 +6,7 @@ import { DeedPlanInput, DeedPlanOutput, BoundaryPoint, BeaconType } from '@/type
 import { generateDeedPlan } from '@/lib/compute/deedPlanApi'
 import { saveDeedPlan } from '@/lib/api-client/deedPlans'
 import { printDeedPlan } from '@/lib/print/deedPlanPrint'
+import { sanitizeHtml } from '@/lib/security/sanitize'
 import {
   coordinate2D,
   polygonArea2D,
@@ -783,7 +784,8 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
           <div className="bg-white rounded-lg p-4 border overflow-auto">
             <div
               className="mx-auto"
-              dangerouslySetInnerHTML={{ __html: output.svg }}
+              // Sanitize dynamically generated SVG to prevent XSS
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(output.svg) }}
             />
           </div>
 
