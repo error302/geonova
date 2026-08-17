@@ -1,0 +1,5 @@
+## 2026-08-17 - Fix XSS in dynamic SVG rendering & DOMPurify configuration
+
+**Vulnerability:** DOMPurify was configured to restrict tags (`ALLOWED_TAGS`) and attributes (`ALLOWED_ATTR`), which failed to safely permit all necessary dynamic SVG elements, while dynamic SVGs were unsafely rendered using `dangerouslySetInnerHTML` in generator components (DeedPlan, MutationPlan). Also `sanitizeHtml` was inappropriately used on trusted static SVG enums (e.g. `getBeaconSymbolSVG` in BeaconPicker) resulting in hydration errors.
+**Learning:** `USE_PROFILES: { html: true, svg: true }` correctly manages the complexity of safe SVG rendering rather than manual attribute whitelists. Furthermore, security tools like DOMPurify must only be applied to dynamically generated or untrusted content, and not to safe server-rendered/static enums.
+**Prevention:** Configure DOMPurify to use `USE_PROFILES: { html: true, svg: true }` instead of manual lists, and ensure `sanitizeHtml` is always called when rendering dynamic/untrusted SVGs via `dangerouslySetInnerHTML`, but not on static internal enums/assets.
