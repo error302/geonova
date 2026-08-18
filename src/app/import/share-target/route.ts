@@ -10,8 +10,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { db } from '@/lib/db'
 import { promises as fs } from 'fs'
 import path from 'path'
@@ -23,7 +22,7 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
   }

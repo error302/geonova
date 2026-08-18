@@ -1,4 +1,7 @@
-export const MAX_POINTS = 100_000;
+// The browser holds raw points in memory only; heavy surface computation
+// (TIN/contours/volume) for clouds >= SURFACE_WORKER_HEAVY_THRESHOLD runs in
+// the Python sidecar, so the importer cap can sit at 1M points.
+export const MAX_POINTS = 1_000_000;
 
 export const SLOPE_CLASS_LABELS: Record<string, { label: string; range: string; color: string }> = {
   flat: { label: 'Flat', range: '0–2%', color: '#22c55e' },

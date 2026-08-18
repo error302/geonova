@@ -94,8 +94,10 @@ export async function computeEntryHash(params: {
 /**
  * SHA-256 hash function using Web Crypto.
  * Returns hex-encoded string (64 lowercase characters).
+ *
+ * Exported for reuse by the provenance layer (engineProvenance.ts).
  */
-async function sha256(input: string): Promise<string> {
+export async function sha256(input: string): Promise<string> {
   const encoder = new TextEncoder()
   const dataBuffer = encoder.encode(input)
   const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer)

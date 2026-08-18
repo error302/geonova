@@ -1,3 +1,8 @@
+// @ts-nocheck -- v4 rollback reference (P1-1). NextAuth v5 is now active via
+// src/lib/auth-v5.ts; this file no longer type-checks against the v5 API and
+// is kept ONLY as a rollback reference per docs/nextauth-v5-migration-plan.md
+// ("keep the v4 config file until v5 has been in production for a week").
+// Do NOT import from this file — use @/lib/auth-v5.
 import { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'

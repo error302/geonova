@@ -1,14 +1,11 @@
+import { auth } from '@/lib/auth-v5'
 jest.mock('@/lib/db', () => ({
   db: { query: jest.fn() },
   setCurrentUserId: jest.fn(),
 }))
 
-jest.mock('@/lib/auth', () => ({
-  authOptions: {},
-}))
-
-jest.mock('next-auth', () => ({
-  getServerSession: jest.fn(),
+jest.mock('@/lib/auth-v5', () => ({
+  auth: jest.fn(),
 }))
 
 jest.mock('@/lib/security/rateLimit', () =>
@@ -16,6 +13,7 @@ jest.mock('@/lib/security/rateLimit', () =>
 )
 
 jest.mock('@/lib/logger', () => ({
+  logger: { error: jest.fn(), warn: jest.fn(), info: jest.fn(), debug: jest.fn() },
   auditLog: jest.fn(),
 }))
 
@@ -25,12 +23,11 @@ jest.mock('@/lib/monitoring/sentry', () => ({
 
 import { POST } from '../blocks/route'
 import { db } from '@/lib/db'
-import { getServerSession } from 'next-auth'
 import { createAuthSession } from '@/test-utils/auth-session'
 import type { NextRequest } from 'next/server'
 
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
-const mockSession = getServerSession as jest.MockedFunction<typeof getServerSession>
+const mockSession = auth as jest.Mock
 
 /** Helper to create a NextRequest-like object with nextUrl */
 function makeNextRequest(url: string, options: RequestInit = {}) {

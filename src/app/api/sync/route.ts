@@ -27,8 +27,7 @@ export const dynamic = 'force-dynamic'
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { batchCreateObservations, getObservations } from '@/lib/db/queries/observations'
 import { createAuditLog } from '@/lib/db/queries/audit'
 import { db } from '@/lib/db'
@@ -46,7 +45,7 @@ interface ProjectRow {
 
 export async function POST(request: NextRequest) {
   // ── Auth: derive identity from session, never from body ───────────────
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session?.user?.id) {
     return NextResponse.json(
       { error: 'Authentication required' },
@@ -182,7 +181,7 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   // ── Auth: same fix as POST ────────────────────────────────────────────
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session?.user?.id) {
     return NextResponse.json(
       { error: 'Authentication required' },

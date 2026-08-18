@@ -2,8 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { setCurrentUserId } from '@/lib/db'
 import { callPythonCompute } from '@/lib/compute/pythonService'
 import { z } from 'zod'
@@ -18,7 +17,7 @@ const AutomatorRunSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session?.user) {
     return NextResponse.json({ error: 'Authentication required', code: 'UNAUTHORIZED' }, { status: 401 })
   }

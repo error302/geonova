@@ -388,7 +388,7 @@ export class AuditTrail {
       `  Project ID:     ${projectId}`,
       `  Generated:      ${new Date().toISOString()}`,
       `  Entries:        ${entries.length}`,
-      `  Chain Status:   ${chain.valid ? '✓ INTACT' : '✗ BROKEN'}`,
+      `  Chain Status:   ${chain.valid ? 'INTACT' : 'BROKEN'}`,
       `  Software:       METARDU v${this.softwareVersion}`,
       '',
       '───────────────────────────────────────────────────────────────',
@@ -416,7 +416,7 @@ export class AuditTrail {
 
       if (e.accuracyCheck) {
         const ac = e.accuracyCheck;
-        lines.push(`      Accuracy:   ${ac.passed ? '✓ PASS' : '✗ FAIL'} — ${ac.metric}`);
+        lines.push(`      Accuracy:   ${ac.passed ? 'PASS' : 'FAIL'} — ${ac.metric}`);
         lines.push(`                  Achieved: ${ac.achieved}, Required: ${ac.required}`);
         lines.push(`                  Standard: ${ac.standard}`);
         lines.push(`                  ${ac.details}`);

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Download, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Download, AlertCircle, CheckCircle2, X } from 'lucide-react'
 import { getAvailableFormats, exportStakeout, type InstrumentFormat } from '@/lib/survey/instrumentWriters'
 import { computeSettingOut, type SettingOutResult, type InstrumentStation, type Backsight } from '@/lib/computations/settingOutEngine'
 import { extractDesignPointsFromDXF } from '@/lib/survey/dxfDesignExtractor'
@@ -128,7 +128,7 @@ export default function SettingOutPage() {
 
       {warnings.length > 0 && (
         <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 mb-4 text-xs text-yellow-400">
-          {warnings.map((w, i) => <div key={i}>⚠ {w}</div>)}
+          {warnings.map((w, i) => <div key={i} className="flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5 shrink-0" /> {w}</div>)}
         </div>
       )}
       {error && <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-4 text-xs text-red-400 flex items-center gap-2"><AlertCircle className="w-4 h-4" /> {error}</div>}
@@ -196,7 +196,7 @@ export default function SettingOutPage() {
                       <td className="text-right font-mono">{(row.deltaN * 1000).toFixed(1)}</td>
                       <td className="text-right font-mono">{row.deltaRL !== null ? (row.deltaRL * 1000).toFixed(1) : '—'}</td>
                       <td className="text-right font-mono">{(row.horizontalOffset * 1000).toFixed(1)}</td>
-                      <td className="text-center">{row.passed ? '✓' : '✗'}</td>
+                      <td className="text-center">{row.passed ? <CheckCircle2 className="w-4 h-4 inline text-green-400" /> : <X className="w-4 h-4 inline text-red-400" />}</td>
                     </tr>
                   ))}
                 </tbody>

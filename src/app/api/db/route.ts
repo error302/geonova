@@ -15,8 +15,7 @@ export const dynamic = 'force-dynamic'
  */
 
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { apiHandler } from '@/lib/apiHandler'
 import { setCurrentUserId } from '@/lib/db'
 import { getPool } from '@/lib/db'
@@ -159,7 +158,7 @@ export const POST = apiHandler({ auth: false, rateLimit: { max: 120, windowMs: 6
     // /api/db uses apiHandler({ auth: false }) for conditional auth, so
     // ctx.session is NOT populated by the wrapper. Fetch the session here
     // directly so authenticated (non-public) tables are properly gated.
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session?.user) {
       return NextResponse.json(
         { data: null, error: { message: 'Not authenticated', code: 'AUTH_REQUIRED' } },

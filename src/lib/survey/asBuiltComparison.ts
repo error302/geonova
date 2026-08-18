@@ -295,7 +295,7 @@ export function formatRowForDisplay(row: ComparisonRow): {
     dN: `${(row.deltaN * 1000).toFixed(1)}mm`,
     dH: row.deltaRL !== null ? `${(row.deltaRL * 1000).toFixed(1)}mm` : '—',
     hOffset: `${(row.horizontalOffset * 1000).toFixed(1)}mm`,
-    status: row.passed ? '✓ PASS' : '✗ FAIL',
+    status: row.passed ? 'PASS' : 'FAIL',
     statusColor: row.passed ? passColor : failColor,
   }
 }

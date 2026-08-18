@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Scale, Wrench, FileCheck, Award, Download } from 'lucide-react'
+import { Scale, Wrench, FileCheck, Award, Download, CheckCircle2, X } from 'lucide-react'
 
 interface ApprovedInstrument { brand: string; model: string; type: string }
 interface StandardScale { scale: string; label: string; maxAreaHa: number }
@@ -118,7 +118,7 @@ export default function RegulatoryChecklistPage() {
         <button onClick={checkInstrument} className="px-4 py-2 bg-[var(--accent)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--accent-dim)]">Check Approval</button>
         {instrumentResult && (
           <div className={`mt-2 p-2 rounded text-xs ${instrumentResult.approved ? 'text-green-400 bg-green-500/10' : 'text-red-400 bg-red-500/10'}`}>
-            {instrumentResult.approved ? '✓' : '✗'} {instrumentResult.message}
+            {instrumentResult.approved ? <CheckCircle2 className="w-3.5 h-3.5 inline mr-1 align-text-bottom" /> : <X className="w-3.5 h-3.5 inline mr-1 align-text-bottom" />} {instrumentResult.message}
           </div>
         )}
         {data?.instruments && (
@@ -144,7 +144,7 @@ export default function RegulatoryChecklistPage() {
         </div>
         {scaleResult && (
           <div className="mt-2 p-2 rounded text-xs text-green-400 bg-green-500/10">
-            ✓ Recommended scale: <span className="font-bold">{scaleResult.label}</span> — {scaleResult.useCase}
+            <CheckCircle2 className="w-3.5 h-3.5 inline mr-1 align-text-bottom" /> Recommended scale: <span className="font-bold">{scaleResult.label}</span> — {scaleResult.useCase}
           </div>
         )}
         <div className="mt-2 grid grid-cols-3 gap-1 text-[10px] text-[var(--text-muted)]">
@@ -195,7 +195,7 @@ export default function RegulatoryChecklistPage() {
         {electiveResult && (
           <div className="mt-2 space-y-2">
             <div className={`p-2 rounded text-xs ${electiveResult.check.met ? 'text-green-400 bg-green-500/10' : 'text-red-400 bg-red-500/10'}`}>
-              {electiveResult.check.met ? '✓' : '✗'} {electiveResult.check.details}
+              {electiveResult.check.met ? <CheckCircle2 className="w-3.5 h-3.5 inline mr-1 align-text-bottom" /> : <X className="w-3.5 h-3.5 inline mr-1 align-text-bottom" />} {electiveResult.check.details}
             </div>
             {electiveResult.elective && (
               <div className="text-[10px] text-[var(--text-muted)]">

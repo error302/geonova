@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { apiHandler } from '@/lib/apiHandler'
 import { callPythonCompute } from '@/lib/compute/pythonService'
+import type { BaselineProcessResult } from '@/lib/online/gnssBaseline'
 
 /**
  * POST /api/gnss/baseline-process
@@ -48,6 +49,7 @@ const BaselineProcessSchema = z.object({
     frequency: z.enum(['l1', 'l2', 'l1+l2']).default('l1+l2'),
     elevationMask: z.number().min(0).max(90).default(15),
     ambiguityResolution: z.enum(['fix', 'float', 'off']).default('fix'),
+    qcMode: z.enum(['auto', 'rinex3_multignss', 'legacy']).default('auto'),
   }).default({}),
 })
 
@@ -64,18 +66,7 @@ export const POST = apiHandler(
 
     // Dispatch to Python worker (RTKLIB subprocess)
     // 5-minute timeout for RTKLIB processing
-    const result = await callPythonCompute<{
-      rover_latitude: number
-      rover_longitude: number
-      rover_height: number
-      sigma_north: number
-      sigma_east: number
-      sigma_up: number
-      quality: string
-      sat_count: number
-      ratio: number
-      raw_output: string
-    }>(
+    const result = await callPythonCompute<BaselineProcessResult>(
       '/compute',
       {
         task: 'gnss_baseline_process',
@@ -88,6 +79,7 @@ export const POST = apiHandler(
             frequency: options.frequency,
             elevation_mask: options.elevationMask,
             ambiguity_resolution: options.ambiguityResolution,
+            qc_mode: options.qcMode,
           },
         },
       },
@@ -107,12 +99,14 @@ export const POST = apiHandler(
 
     return NextResponse.json({
       baseline: result.value,
+      qc: result.value.qc,
       meta: {
         processedBy: 'RTKLIB (rnx2rtkp)',
         mode: options.mode,
         frequency: options.frequency,
         elevationMask: options.elevationMask,
         ambiguityResolution: options.ambiguityResolution,
+        qcMode: options.qcMode,
         processedAt: new Date().toISOString(),
       },
     })

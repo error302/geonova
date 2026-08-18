@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 
 /* ────────────────────────────────────────────────────────────── */
@@ -56,6 +56,15 @@ function MPesaBadge() {
 
 export function PricingSection() {
   const [annual, setAnnual] = useState(false)
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  const [active, setActive] = useState(0)
+
+  const handleScroll = () => {
+    const el = scrollerRef.current
+    if (!el) return
+    const idx = Math.round(el.scrollLeft / el.clientWidth)
+    setActive(idx)
+  }
 
   return (
     <section aria-labelledby="pricing-heading" className="py-32 md:py-40 bg-[var(--bg-secondary)] border-t border-[var(--border-color)]">
@@ -101,16 +110,20 @@ export function PricingSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-start max-w-5xl mx-auto">
+                <div
+          ref={scrollerRef}
+          onScroll={handleScroll}
+          className="md:grid md:grid-cols-3 gap-6 md:gap-8 items-start max-w-5xl mx-auto flex overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-4 -mx-4"
+        >
           {PRICING.map((plan, i) => {
             const price = annual ? plan.priceAnnual : plan.priceMonthly
             const periodLabel = annual ? '/year' : plan.period
             return (
               <div
                 key={i}
-                className={`relative p-8 rounded-2xl border transition-all ${
+                className={`relative p-8 rounded-2xl border transition-all min-w-[86%] sm:min-w-[60%] md:min-w-0 snap-center shrink-0 ${
                   plan.highlighted
-                    ? 'border-[var(--accent)]/50 bg-[var(--bg-primary)] shadow-[0_0_60px_-15px_rgba(209,123,71,0.2)] scale-[1.02]'
+                    ? 'border-[var(--accent)]/50 bg-[var(--bg-primary)] shadow-[0_0_60px_-15px_rgba(209,123,71,0.2)] md:scale-[1.02]'
                     : 'border-[var(--border-color)] bg-[var(--bg-primary)] hover:border-[var(--accent)]/40'
                 }`}
               >
@@ -158,6 +171,18 @@ export function PricingSection() {
               </div>
             )
           })}
+        </div>
+
+        {/* swipe indicator — mobile only */}
+        <div className="flex md:hidden justify-center gap-2 mt-6" aria-hidden>
+          {PRICING.map((_, i) => (
+            <span
+              key={i}
+              className={`h-2 w-2 rounded-full transition-colors ${
+                i === active ? 'bg-[var(--accent)]' : 'bg-[var(--border-color)]'
+              }`}
+            />
+          ))}
         </div>
 
         <p className="text-center text-xs text-[var(--text-primary)]/65 mt-8">

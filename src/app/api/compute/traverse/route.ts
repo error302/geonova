@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { z } from 'zod'
+import { buildTraverseProvenance } from '@/lib/provenance/engineProvenance'
 
 const traverseSchema = z.object({
   task: z.enum(['forward', 'adjust']),
@@ -65,11 +66,23 @@ export const POST = apiHandler(
         bearings,
       })
 
+      const provenance = await buildTraverseProvenance({
+        input: { startPoint, legs },
+        inputDescriptor: 'forward-traverse input: start point + legs (bearing/distance)',
+        method: 'forward-traverse',
+        residuals: {
+          precisionRatio: 'n/a — open traverse (no closure check)',
+          totalDistance: result.totalDistance,
+          stations: result.legs.length,
+        },
+      })
+
       return NextResponse.json({
         task: 'traverse_forward',
         legs: result.legs,
         totalDistance: result.totalDistance,
         endPoint: result.end,
+        provenance,
       })
     }
 
@@ -104,6 +117,20 @@ export const POST = apiHandler(
     const errorMm = adjusted.linearError * 1000
     const ratioStr = `1:${Math.round(closure.ratio)}`
 
+    const provenance = await buildTraverseProvenance({
+      input: traverseInput,
+      method: method as 'bowditch' | 'transit',
+      residuals: {
+        closingErrorE: adjusted.closingErrorE,
+        closingErrorN: adjusted.closingErrorN,
+        linearError: adjusted.linearError,
+        precisionRatio: closure.ratio,
+        precisionGrade: adjusted.precisionGrade,
+        totalDistance: adjusted.totalDistance,
+        passesQA: closure.passes,
+      },
+    })
+
     return NextResponse.json({
       task: 'traverse_adjust',
       method,
@@ -125,6 +152,7 @@ export const POST = apiHandler(
       message: closure.passes
         ? `${adjusted.precisionGrade.charAt(0).toUpperCase() + adjusted.precisionGrade.slice(1)} closure: ${ratioStr} (error ${errorMm.toFixed(1)}mm) - PASSES QA`
         : `Insufficient precision: ${ratioStr} (error ${errorMm.toFixed(1)}mm) - BELOW ${surveyType} MINIMUM 1:${closure.minimum}`,
+      provenance,
     })
   }
 )

@@ -5,9 +5,7 @@
  * Replaces all dbClient.auth.getUser() / dbClient.auth.getSession() calls.
  */
 
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-
+import { auth } from '@/lib/auth-v5'
 export interface AuthUser {
   id: string
   email: string
@@ -23,7 +21,7 @@ export interface AuthUser {
  *   if (!user) redirect('/login')
  */
 export async function getAuthUser(): Promise<AuthUser | null> {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session?.user?.email) return null
 
   return {
@@ -38,7 +36,7 @@ export async function getAuthUser(): Promise<AuthUser | null> {
  * Checks both 'admin' and 'super_admin' roles, as well as ADMIN_EMAILS.
  */
 export async function isAdmin(): Promise<boolean> {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session?.user) return false
 
   const userRole = (session.user as { role?: string }).role

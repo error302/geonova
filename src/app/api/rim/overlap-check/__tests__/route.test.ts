@@ -1,3 +1,4 @@
+import { auth } from '@/lib/auth-v5'
 /** @jest-environment node */
 /**
  * API-level tests for POST /api/rim/overlap-check.
@@ -20,31 +21,27 @@ jest.mock('@/lib/db', () => ({
   setCurrentOrgId: jest.fn(),
 }))
 
-jest.mock('@/lib/auth', () => ({
-  authOptions: {},
-}))
-
-jest.mock('next-auth', () => ({
-  getServerSession: jest.fn(),
+jest.mock('@/lib/auth-v5', () => ({
+  auth: jest.fn(),
 }))
 
 jest.mock('@/lib/security/rateLimit', () =>
   jest.requireActual<typeof import('@/test-utils/rate-limit')>('@/test-utils/rate-limit').mockRateLimitModule())
 
 jest.mock('@/lib/logger', () => ({
+  logger: { error: jest.fn(), warn: jest.fn(), info: jest.fn(), debug: jest.fn() },
   auditLog: jest.fn(),
 }))
 
 import { POST } from '../route'
 import { db } from '@/lib/db'
-import { getServerSession } from 'next-auth'
 import type { ParcelForOverlap } from '@/lib/rim/overlapDetection'
 import { createAuthSession } from '@/test-utils/auth-session'
 import { mr } from '@/test-utils/mock-rows'
 import { makeRequest } from '@/test-utils/request'
 
 const mockDb = db.query as jest.MockedFunction<typeof db.query>
-const mockSession = getServerSession as jest.MockedFunction<typeof getServerSession>
+const mockSession = auth as jest.Mock
 
 
 

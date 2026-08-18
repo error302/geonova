@@ -658,7 +658,7 @@ export function formatDeformationVector(v: DeformationVector): string {
     parts.push(v.isSignificant ? 'SIGNIFICANT' : 'not significant')
   }
   if (v.exceedsTolerance) {
-    parts.push('⚠ EXCEEDS TOLERANCE')
+    parts.push('EXCEEDS TOLERANCE')
   }
   return parts.join('  ')
 }

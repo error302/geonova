@@ -14,6 +14,12 @@ const config: Config = {
   ],
   theme: {
         extend: {
+                fontFamily: {
+                        sans: ['Geist', 'var(--font-geist)', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['var(--font-jetbrains)', 'Geist Mono', 'ui-monospace', 'monospace'],
+                        serif: ['var(--font-instrument)', 'var(--font-newsreader)', 'Georgia', 'serif'],
+                        display: ['var(--font-instrument)', 'var(--font-newsreader)', 'Georgia', 'serif'],
+                },
                 colors: {
                         background: 'hsl(var(--shadcn-background))',
                         foreground: 'hsl(var(--shadcn-foreground))',

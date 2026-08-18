@@ -2,8 +2,7 @@
 // (legacy Supabase proxy) to a server component with direct db.query().
 // Eliminates the client-side fetch roundtrip; data is in the initial HTML.
 
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { db, setCurrentUserId } from '@/lib/db'
 import Link from 'next/link'
 
@@ -19,7 +18,7 @@ interface AuditLog {
 }
 
 export default async function AuditLogsPage() {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session?.user?.id) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">

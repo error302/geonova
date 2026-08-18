@@ -4,6 +4,11 @@ import dynamic from 'next/dynamic';
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { createClient } from '@/lib/api-client/client';
 import type { AdjustedStation } from '@/lib/engine/planGeometry';
+import {
+  normalizeAdjustedStationsToEllipses,
+  type AdjustedStationsRow,
+  type MapErrorEllipseStation,
+} from '@/lib/map/errorEllipseLayer';
 
 const SurveyMap = dynamic(() => import('@/components/map/SurveyMap'), { ssr: false });
 
@@ -35,6 +40,9 @@ interface ProjectRow {
 
 export default function MapPage({ params }: MapPageProps) {
   const [stations, setStations] = useState<AdjustedStation[]>([]);
+  // G-23: error ellipses from the LSA network adjustment (covariance the
+  // adjustment already computes — loaded from network_adjustments).
+  const [errorEllipses, setErrorEllipses] = useState<MapErrorEllipseStation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedBeacon, setSelectedBeacon] = useState<{ label: string; easting: number; northing: number } | null>(null);
@@ -94,6 +102,26 @@ export default function MapPage({ params }: MapPageProps) {
       }));
 
       setStations(mapped);
+
+      // G-23: load the LSA network adjustment (if saved) and derive the 95%
+      // confidence error ellipses from the covariance the adjustment computed.
+      try {
+        const adjRes = await fetch(`/api/project/${params.id}/network-adjustment`, {
+          credentials: 'include',
+        });
+        if (adjRes.ok) {
+          const adjData = (await adjRes.json()) as {
+            data?: { adjusted_stations?: Array<AdjustedStationsRow> | null } | null;
+          };
+          const stored = adjData?.data?.adjusted_stations;
+          if (Array.isArray(stored)) {
+            setErrorEllipses(normalizeAdjustedStationsToEllipses(stored));
+          }
+        }
+      } catch {
+        // Ellipses are optional — a missing/errored adjustment must not break the map.
+      }
+
       setLoading(false);
     }
 
@@ -247,6 +275,7 @@ export default function MapPage({ params }: MapPageProps) {
           surveyorLicense={projectInfo?.surveyorLicense}
           clientName={projectInfo?.clientName}
           county={projectInfo?.county}
+          errorEllipses={errorEllipses}
         />
       </div>
     </div>

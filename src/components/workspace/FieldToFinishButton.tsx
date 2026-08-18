@@ -10,7 +10,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Zap, CheckCircle2, XCircle, AlertTriangle, Loader2, Ruler, MapPin, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Zap, CheckCircle2, XCircle, AlertTriangle, Loader2, Ruler, MapPin, FileText, ChevronDown, ChevronUp, Target, Triangle, Scale, File, type LucideIcon } from 'lucide-react';
+
+const PRE_SUBMIT_ICONS: Record<string, LucideIcon> = {
+  'file-text': FileText,
+  ruler: Ruler,
+  target: Target,
+  triangle: Triangle,
+  file: File,
+  scale: Scale,
+};
 
 interface FieldToFinishResult {
   status: 'ready' | 'warning' | 'failed';
@@ -249,10 +258,12 @@ export function FieldToFinishButton({ projectId, disabled }: FieldToFinishButton
               )}
 
               {/* Pre-Submission Categories */}
-              {result.preSubmit.categories.map((cat) => (
+              {result.preSubmit.categories.map((cat) => {
+                const CatIcon = PRE_SUBMIT_ICONS[cat.icon] ?? FileText;
+                return (
                 <div key={cat.name} className="text-xs">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <span>{cat.icon}</span>
+                    <CatIcon className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
                     <span className="font-medium text-[var(--text-secondary)]">{cat.name}</span>
                     <span className="text-muted-foreground">({cat.passed}/{cat.total})</span>
                   </div>
@@ -274,7 +285,8 @@ export function FieldToFinishButton({ projectId, disabled }: FieldToFinishButton
                     ))}
                   </div>
                 </div>
-              ))}
+                );
+              })}
 
               {/* Deed Plan Data */}
               {result.deedPlanData && (

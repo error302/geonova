@@ -81,8 +81,8 @@ export const FieldConnectionBar = memo(function FieldConnectionBar({
             {(latestPoint.quality ?? 0) >= 4 ? 'FIXED' : (latestPoint.quality ?? 0) >= 2 ? 'FLOAT' : 'NO FIX'}
           </span>
           {latestPoint.satellites != null && (
-            <span className="text-[var(--text-muted)] font-mono text-xs">
-              🛰 {latestPoint.satellites}
+            <span className="text-[var(--text-muted)] font-mono text-xs flex items-center gap-1">
+              <Satellite className="w-3.5 h-3.5" /> {latestPoint.satellites}
             </span>
           )}
           {latestPoint.hdop != null && (

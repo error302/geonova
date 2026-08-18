@@ -6,6 +6,7 @@ import {
   ShieldCheck, ChevronDown,
 } from 'lucide-react'
 import { PricingSection } from '@/components/landing/PricingSection'
+import { ShowcaseTabs } from '@/components/landing/ShowcaseTabs'
 import { SRID_21037 } from '@/lib/map/projection'
 
 /* ────────────────────────────────────────────────────────────── */
@@ -32,37 +33,37 @@ const FEATURES = [
     icon: Waypoints,
     title: 'Traverse Adjustment',
     description: 'Bowditch, Transit, and Least Squares adjustment with RDM 1.1 accuracy grading. Full bearing/distance computation with closure checks.',
-    image: '/landing/showcase-field.webp',
+    tint: 'from-[var(--accent)]/25 via-[var(--accent)]/5 to-transparent',
   },
   {
     icon: FileBadge,
     title: 'Deed Plan Generation',
     description: 'Survey Act Cap. 299 compliant Form No. 4 with SVG, PDF, and DXF output. SHA-256 verified, Director of Surveys authentication block.',
-    image: '/landing/theodolite-blueprint.webp',
+    tint: 'from-amber-500/20 via-orange-500/5 to-transparent',
   },
   {
     icon: Mountain,
     title: 'Topographic Surveys',
     description: 'TIN generation, contour extraction, volume computation. Web Worker TIN for large datasets. Auto breakline detection from mesh analysis.',
-    image: '/landing/hero-topo.webp',
+    tint: 'from-emerald-500/20 via-teal-500/5 to-transparent',
   },
   {
     icon: DraftingCompass,
     title: 'COGO Engine',
     description: 'Intersection, resection, radiation, bearing-distance. Full coordinate geometry with solution steps shown for every calculation.',
-    image: '/landing/showcase-map.webp',
+    tint: 'from-blue-500/20 via-sky-500/5 to-transparent',
   },
   {
     icon: Satellite,
     title: 'GNSS Baseline Processing',
     description: 'Upload RINEX files and get adjusted coordinates via RTKLIB integration. No external software needed — process baselines right in the browser.',
-    image: '/landing/feature-fieldbook.webp',
+    tint: 'from-cyan-500/20 via-sky-500/5 to-transparent',
   },
   {
     icon: FileChartColumn,
     title: 'Statutory Documents',
     description: 'RDM 1.1 survey reports, Form C-22, CLA forms, computation workbooks. NLIMS-ready exports with ArdhiSasa integration.',
-    image: '/landing/showcase-workflow.webp',
+    tint: 'from-violet-500/20 via-purple-500/5 to-transparent',
   },
 ]
 
@@ -322,13 +323,9 @@ function FeaturesSection() {
                 key={i}
                 className="group relative p-8 rounded-2xl bg-[var(--bg-secondary)]/80 backdrop-blur-sm border border-[var(--border-color)] overflow-hidden hover:border-[var(--accent)]/40 transition-all duration-300 hover:-translate-y-1"
               >
-                <Image
-                  src={feature.image}
-                  alt=""
-                  fill
-                  sizes="(max-width: 768px) 100vw, 480px"
-                  className="object-cover object-top pointer-events-none opacity-[0.14] group-hover:opacity-[0.22] transition-opacity duration-500 group-hover:scale-110 group-hover:transition-[opacity,transform]"
-                  style={{ filter: 'brightness(0.55) saturate(0.85)' }}
+                <div
+                  className={`absolute inset-0 pointer-events-none opacity-60 bg-gradient-to-br ${feature.tint} transition-opacity duration-500 group-hover:opacity-80`}
+                  aria-hidden
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-secondary)] via-transparent to-[var(--bg-secondary)]/60 pointer-events-none" aria-hidden />
                 <div className="relative">
@@ -369,62 +366,7 @@ function ShowcaseSection() {
           </p>
         </div>
 
-        <div className="space-y-12">
-          {/* Wide cadastral map shot */}
-          <figure className="group relative">
-            <div className="absolute -inset-3 bg-gradient-to-r from-[var(--accent)]/10 via-transparent to-transparent rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-opacity" aria-hidden />
-            <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl">
-              <Image
-                src="/landing/showcase-field.webp"
-                alt="METARDU cadastral map workspace showing parcel boundaries and survey layers"
-                width={1536}
-                height={1024}
-                sizes="(max-width: 768px) 100vw, 1200px"
-                quality={80}
-                className="rounded-xl object-cover"
-              />
-            </div>
-            <figcaption className="mt-4 text-sm text-[var(--text-primary)]/60 text-center">
-              Cadastral map workspace — parcels, RIM overlays, stakeout and layer control.
-            </figcaption>
-          </figure>
-
-          {/* Two-up: workflow diagram + map layout */}
-          <div className="grid md:grid-cols-5 gap-6">
-            <figure className="group relative md:col-span-3">
-              <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl h-full">
-                <Image
-                  src="/landing/showcase-workflow.webp"
-                  alt="METARDU survey workflow overview"
-                  width={1774}
-                  height={887}
-                  sizes="(max-width: 768px) 100vw, 900px"
-                  quality={80}
-                  className="rounded-xl object-cover"
-                />
-              </div>
-              <figcaption className="mt-4 text-sm text-[var(--text-primary)]/60 text-center">
-                Guided project workflow — setup, field book, compute, review, submission.
-              </figcaption>
-            </figure>
-            <figure className="group relative md:col-span-2">
-              <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl h-full">
-                <Image
-                  src="/landing/showcase-map.webp"
-                  alt="METARDU interactive map with survey layers"
-                  width={603}
-                  height={1200}
-                  sizes="(max-width: 768px) 100vw, 500px"
-                  quality={80}
-                  className="rounded-xl object-cover"
-                />
-              </div>
-              <figcaption className="mt-4 text-sm text-[var(--text-primary)]/60 text-center">
-                Interactive map panel — coordinates, layers, and measurement tools.
-              </figcaption>
-            </figure>
-          </div>
-        </div>
+        <ShowcaseTabs />
       </div>
     </section>
   )

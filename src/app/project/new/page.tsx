@@ -9,6 +9,7 @@ import { useCountry, ALL_COUNTRIES } from '@/lib/country'
 import type { SurveyingCountry } from '@/lib/country'
 import { SURVEY_TYPE_LABELS, SurveyType } from '@/types/project'
 import type { ProjectType } from '@/types/scheme'
+import { ScrollText, Route, Mountain, Zap } from 'lucide-react'
 
 export default function NewProjectPage() {
   const { country: defaultCountry, setCountry: setContextCountry } = useCountry()
@@ -180,7 +181,7 @@ export default function NewProjectPage() {
 
           {/* 1-Click Survey Type Presets */}
           <div className="mt-4 p-4 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl">
-            <span className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider block mb-2">⚡ 1-Click Survey Presets</span>
+            <span className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider block mb-2 flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-[var(--accent)]" /> 1-Click Survey Presets</span>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <button
                 type="button"
@@ -191,7 +192,7 @@ export default function NewProjectPage() {
                 }}
                 className="px-3 py-2 text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-500/20 text-left transition"
               >
-                📜 <strong>Cadastral Subdivision</strong>
+                <ScrollText className="w-4 h-4 inline-block mr-1 align-text-bottom" /> <strong>Cadastral Subdivision</strong>
                 <span className="block text-[10px] opacity-70 mt-0.5">Cap 299, Beacon tables, Mutation export</span>
               </button>
 
@@ -204,7 +205,7 @@ export default function NewProjectPage() {
                 }}
                 className="px-3 py-2 text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 text-left transition"
               >
-                🛣️ <strong>Road Engineering</strong>
+                <Route className="w-4 h-4 inline-block mr-1 align-text-bottom" /> <strong>Road Engineering</strong>
                 <span className="block text-[10px] opacity-70 mt-0.5">RDM 1.3 Curves, Cross-sections, Chainage</span>
               </button>
 
@@ -217,7 +218,7 @@ export default function NewProjectPage() {
                 }}
                 className="px-3 py-2 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/20 text-left transition"
               >
-                ⛰️ <strong>Topographic Survey</strong>
+                <Mountain className="w-4 h-4 inline-block mr-1 align-text-bottom" /> <strong>Topographic Survey</strong>
                 <span className="block text-[10px] opacity-70 mt-0.5">TIN Contours, Point cloud, DXF Plot</span>
               </button>
             </div>

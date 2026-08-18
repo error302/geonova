@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-
+import { auth } from '@/lib/auth-v5'
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const type = requestUrl.searchParams.get('type')
@@ -15,7 +13,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Check if user is authenticated via NextAuth
-  const session = await getServerSession(authOptions)
+  const session = await auth()
 
   if (session?.user) {
     // Authenticated → redirect to dashboard

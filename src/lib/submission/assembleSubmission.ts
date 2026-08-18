@@ -1,12 +1,17 @@
 import JSZip from 'jszip'
 import { createClient } from '@/lib/api-client/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { db } from '@/lib/db'
 import { getActiveSurveyorProfile } from './surveyorProfile'
 import { generateSubmissionRef } from './revisionNumber'
-import { validateSubmission } from './validateSubmission'
+import { validateSubmission, isGNSSBasedSubtype } from './validateSubmission'
 import { buildPackageManifest } from './manifest'
+import {
+  buildAreaProvenance,
+  buildGNSSProvenance,
+  buildTraverseProvenance,
+} from '@/lib/provenance/engineProvenance'
+import type { GNSSObservationReport } from './gnssObservationReport'
 import { generateFormNo4DXF } from './generators/formNo4'
 import { generateStatutoryWorkbook } from './workbook/statutoryWorkbook'
 import { generateWorkingDiagramDXF } from './generators/workingDiagram'
@@ -54,6 +59,52 @@ interface SurveyorProfileRow {
 /** project_submissions row (revision reads). */
 interface ProjectSubmissionRow {
   revision_number: number
+  generated_artifacts?: Record<string, unknown> | null
+}
+
+/**
+ * Extract the stored GNSS observation report's printable text from a
+ * submission record's generated_artifacts (set via
+ * POST /api/submission/gnss-observation-report). Returns null when absent.
+ */
+function extractStoredGNSSReport(
+  artifacts?: Record<string, unknown> | null
+): string | null {
+  const stored = artifacts?.['gnss_observation_report']
+  if (typeof stored === 'string') {
+    try {
+      const parsed = JSON.parse(stored) as { text?: string }
+      return parsed.text ?? null
+    } catch {
+      return stored
+    }
+  }
+  if (stored && typeof stored === 'object') {
+    return (stored as { text?: string }).text ?? null
+  }
+  return null
+}
+
+/**
+ * Extract the *structured* stored GNSS observation report (for provenance
+ * cross-verification — it embeds its own input hash). Null when absent or
+ * unparseable.
+ */
+function extractStoredGNSSReportRecord(
+  artifacts?: Record<string, unknown> | null
+): GNSSObservationReport | null {
+  const stored = artifacts?.['gnss_observation_report']
+  if (stored && typeof stored === 'object') {
+    return stored as GNSSObservationReport
+  }
+  if (typeof stored === 'string') {
+    try {
+      return JSON.parse(stored) as GNSSObservationReport
+    } catch {
+      return null
+    }
+  }
+  return null
 }
 
 /** increment_submission_sequence() row (aliased current_sequence). */
@@ -84,7 +135,8 @@ interface ProjectData {
 }
 
 export async function assembleSubmissionPackage(
-  projectId: string
+  projectId: string,
+  opts?: { gnssOverrideReason?: string }
 ): Promise<{ zipBuffer: Buffer; ref: string; qa: QAGateResult }> {
   const dbClient = await createClient()
   const surveyor = await getActiveSurveyorProfile()
@@ -184,6 +236,22 @@ export async function assembleSubmissionPackage(
     uploadedAt: doc.uploaded_at ?? null
   }))
 
+  // GNSS observation report (if saved via /api/submission/gnss-observation-report).
+  // Loaded BEFORE the QA gate so a FAILED session verdict can block assembly.
+  const { rows: existingSubRows } = await db.query<ProjectSubmissionRow>(
+    `SELECT id, revision_number, generated_artifacts
+     FROM project_submissions WHERE project_id = $1
+     ORDER BY created_at DESC LIMIT 1`,
+    [projectId]
+  )
+  const existingSubmission = existingSubRows[0]
+  const gnssObservationReportText = extractStoredGNSSReport(
+    existingSubmission?.generated_artifacts
+  )
+  const gnssObservationReportRecord = extractStoredGNSSReportRecord(
+    existingSubmission?.generated_artifacts
+  )
+
   const pkg: SubmissionPackage = {
     submissionRef: ref,
     projectId,
@@ -221,10 +289,11 @@ export async function assembleSubmissionPackage(
     },
     supportingDocs,
     generatedAt: new Date().toISOString(),
-    revision
+    revision,
+    gnss: gnssObservationReportRecord
   }
 
-  const qa = validateSubmission(pkg)
+  const qa = validateSubmission(pkg, opts)
   if (!qa.passed) {
     return { zipBuffer: Buffer.alloc(0), ref, qa }
   }
@@ -308,8 +377,44 @@ export async function assembleSubmissionPackage(
   })
   const workingDiagram = generateWorkingDiagramDXF(pkg)
 
+  // Court-grade provenance: every engine output feeding the package records
+  // its input hash, method, engine version, residuals, and timestamp so a
+  // boundary commission can re-run each computation on the same input.
+  const traverseProvenance = await buildTraverseProvenance({
+    // The adjustment consumed the raw observed legs (bearings/distances).
+    input: (proj.survey_points ?? []).map((pt: SurveyPointRow) => ({
+      name: pt.name ?? pt.point_name ?? null,
+      observedBearing: asNum(pt.observed_bearing),
+      observedDistance: asNum(pt.observed_distance, asNum(pt.distance)),
+    })),
+    inputDescriptor: 'traverse legs (observed bearings/distances) from survey_points',
+    method: (pkg.traverse.adjustmentMethod === 'transit' ? 'transit' : 'bowditch') as 'bowditch' | 'transit',
+    residuals: {
+      angularMisclosure: pkg.traverse.angularMisclosure,
+      linearMisclosure: pkg.traverse.linearMisclosure,
+      precisionRatio: pkg.traverse.precisionRatio,
+      closingErrorE: pkg.traverse.closingErrorE,
+      closingErrorN: pkg.traverse.closingErrorN,
+      totalDistance: pkg.traverse.perimeterM,
+    },
+    timestamp: pkg.generatedAt,
+  })
+  const areaProvenance = await buildAreaProvenance({
+    coordinates: adjustedCoordinates,
+    residuals: {
+      areaM2: computedAreaM2,
+      areaHa: computedAreaM2 / 10000,
+      perimeterM: asNum(proj.perimeter_m),
+    },
+    timestamp: pkg.generatedAt,
+  })
+  const gnssProvenance = gnssObservationReportRecord
+    ? await buildGNSSProvenance({ report: gnssObservationReportRecord, timestamp: pkg.generatedAt })
+    : null
+
   // Phase 13 Milestone B: benchmark-aligned package completeness report.
-  // Maps the artifacts generated above onto the 8 benchmark sections.
+  // Maps the artifacts generated above onto the 8 benchmark sections, and
+  // embeds the provenance ledger of the engine outputs feeding the package.
   const benchmarkManifest = buildPackageManifest({
     generatedArtifacts: {
       working_diagram: 'working_diagram.dxf',
@@ -319,13 +424,29 @@ export async function assembleSubmissionPackage(
       theoretical_comps: 'computation_workbook.xlsx',
       consistency_checks: 'computation_workbook.xlsx',
       area_computations: 'computation_workbook.xlsx',
+      // The GNSS observation report satisfies the rtk_result section; for
+      // GNSS-based subtypes (geodetic/drone/deformation) this is REQUIRED.
+      ...(gnssObservationReportText || gnssObservationReportRecord
+        ? { 'gnss-observation-report': 'gnss_observation_report.txt' }
+        : {}),
     },
+    // GNSS-based survey subtypes must ship the observation report; make the
+    // rtk_result section count toward completeness for them.
+    requiredGnss: isGNSSBasedSubtype(pkg.subtype),
+    provenance: [
+      traverseProvenance,
+      areaProvenance,
+      ...(gnssProvenance ? [gnssProvenance] : []),
+    ],
   })
 
   const zip = new JSZip()
   zip.file('form_no_4.dxf', formNo4Dxf)
   zip.file('computation_workbook.xlsx', workbook)
   zip.file('working_diagram.dxf', workingDiagram)
+  if (gnssObservationReportText) {
+    zip.file('gnss_observation_report.txt', gnssObservationReportText)
+  }
 
   // Supporting documents - PPA2 (always included)
   // ponytail: cast via unknown — the query result `project` is typed as
@@ -415,19 +536,28 @@ export async function assembleSubmissionPackage(
     perimeterM: pkg.traverse.perimeterM.toFixed(3),
     precisionRatio: pkg.traverse.precisionRatio,
     adjustmentMethod: pkg.traverse.adjustmentMethod,
-    files: ['form_no_4.dxf', 'computation_workbook.xlsx', 'working_diagram.dxf', 'manifest.json'],
+    files: [
+      'form_no_4.dxf',
+      'computation_workbook.xlsx',
+      'working_diagram.dxf',
+      ...(gnssObservationReportText ? ['gnss_observation_report.txt'] : []),
+      'manifest.json',
+    ],
     supportingDocuments: pkg.supportingDocs.map(d => d.type).filter(Boolean),
     qaResult: qa,
     // Phase 13 Milestone B: benchmark-aligned section completeness report.
     sections: benchmarkManifest.sections,
     completeness: benchmarkManifest.completeness,
+    // Court-grade provenance ledger: input hash, method, engine version,
+    // residuals, timestamp for every engine output in the package.
+    provenance: benchmarkManifest.provenance,
   }
   zip.file('manifest.json', JSON.stringify(manifest, null, 2))
 
   const zipBuffer = await zip.generateAsync({ type: 'nodebuffer' })
 
   // Get user from NextAuth session
-  const authSession = await getServerSession(authOptions)
+  const authSession = await auth()
   const userId = (authSession?.user as { id?: string } | undefined)?.id ?? ''
   
   const { rows: profileRows } = await db.query<SurveyorProfileRow>(
@@ -441,12 +571,8 @@ export async function assembleSubmissionPackage(
   }
 
   const currentYear = new Date().getFullYear()
-  const { rows: existingRows } = await db.query<ProjectSubmissionRow>(
-    'SELECT revision_number FROM project_submissions WHERE project_id = $1 ORDER BY revision_number DESC LIMIT 1',
-    [projectId]
-  )
 
-  const revisionNumber = (existingRows[0]?.revision_number ?? -1) + 1
+  const revisionNumber = (existingSubmission?.revision_number ?? -1) + 1
 
   // Canonical atomic sequence increment (migration 047). Replaces the old
   // INSERT INTO submission_sequences (plural) upsert — folded into the

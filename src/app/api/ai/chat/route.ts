@@ -12,8 +12,7 @@ export const dynamic = 'force-dynamic'
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import {
   chat,
   checkSurveyDataQA,
@@ -174,7 +173,7 @@ async function decrementAiCalls(userId: string, email?: string): Promise<{ remai
 export async function POST(request: NextRequest) {
   try {
     // 1. Auth check
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

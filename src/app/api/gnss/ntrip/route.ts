@@ -22,8 +22,7 @@ export const dynamic = 'force-dynamic'
 export const maxDuration = 300  // 5 minutes max per connection
 
 import { NextRequest } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { parseRTCM3Message } from '@/lib/gnss/ntripClient'
 
 // AUDIT FIX (2026-07-05): SSRF protection. Previously this endpoint accepted
@@ -78,7 +77,7 @@ async function resolveAndCheckHost(hostname: string): Promise<string | null> {
 
 export async function GET(request: NextRequest) {
   // ── Auth: require login (was previously anonymous) ──────────────────────
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session?.user?.id) {
     return new Response(JSON.stringify({ error: 'Authentication required' }), {
       status: 401,

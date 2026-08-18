@@ -83,7 +83,7 @@ export default function DeformationMonitoringPage() {
                     <td className="text-right font-mono">{(v.deltaH * 1000).toFixed(2)}</td>
                     <td className="text-right font-mono">{(v.horizontalDisplacement * 1000).toFixed(2)}</td>
                     <td className="text-right font-mono">{v.bearing.toFixed(1)}°</td>
-                    <td className="text-center">{v.isSignificant ? '✗ YES' : '✓ no'}</td>
+                    <td className="text-center">{v.isSignificant ? 'YES' : 'no'}</td>
                   </tr>
                 ))}
               </tbody>

@@ -7,21 +7,31 @@ import { assembleSubmissionPackage } from '@/lib/submission/assembleSubmission'
 
 const AssembleRequestSchema = z.object({
   projectId: z.string().uuid('Valid project ID is required'),
+  // Optional override for the GNSS session QC gate: required (non-empty)
+  // when the stored observation report verdict is FAILED, so the surveyor
+  // records why they are assembling anyway. The reason lands in the QA
+  // result and the package manifest.
+  gnssOverrideReason: z.string().trim().min(1).max(500).optional(),
 })
 
 export const POST = apiHandler(
   { auth: true, schema: AssembleRequestSchema, audit: 'submission_assembled' , rateLimit: { max: 60, windowMs: 60000 } },
   async (req, ctx) => {
-    const { projectId } = ctx.body as z.infer<typeof AssembleRequestSchema>
+    const { projectId, gnssOverrideReason } = ctx.body as z.infer<typeof AssembleRequestSchema>
 
-    const { zipBuffer, ref, qa } = await assembleSubmissionPackage(projectId)
+    const { zipBuffer, ref, qa } = await assembleSubmissionPackage(
+      projectId,
+      { gnssOverrideReason }
+    )
 
     if (!qa.passed) {
       return NextResponse.json(
         {
           error: 'QA gate failed',
-          blockers: qa.blockers.map(b => b.message),
-          warnings: qa.warnings.map(w => w.message)
+          // Full blocker/warning objects (code + message) so the client can
+          // detect the GNSS_QC_FAILED gate and offer the override flow.
+          blockers: qa.blockers,
+          warnings: qa.warnings
         },
         { status: 422 }
       )

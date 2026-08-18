@@ -9,8 +9,7 @@
  */
 
 import { db } from '@/lib/db'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import type { SurveyorProfile } from '@/types/submission'
 
 interface SurveyorProfileRow {
@@ -48,7 +47,7 @@ interface SurveyorProfileRow {
 export async function getActiveSurveyorProfile(userId?: string): Promise<SurveyorProfile | null> {
   // If userId not provided, derive from session
   if (!userId) {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     const sessionUserId = (session?.user as { id?: string })?.id
     if (!sessionUserId) return null
     userId = sessionUserId

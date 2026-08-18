@@ -259,8 +259,8 @@ export async function fieldToFinish(input: FieldToFinishInput): Promise<FieldToF
     standard: `1:${closureEval.minimum.toLocaleString()} (${input.surveyType})`,
     grade: getGrade(closureEval.ratio),
     message: closureEval.passes
-      ? `✓ Traverse closes at 1:${closureEval.ratio.toLocaleString()} — meets ${input.surveyType} standard (1:${closureEval.minimum.toLocaleString()})`
-      : `✗ Traverse DOES NOT close at 1:${closureEval.ratio.toLocaleString()} — ${input.surveyType} requires 1:${closureEval.minimum.toLocaleString()}. Check field observations.`,
+      ? `Traverse closes at 1:${closureEval.ratio.toLocaleString()} — meets ${input.surveyType} standard (1:${closureEval.minimum.toLocaleString()})`
+      : `Traverse DOES NOT close at 1:${closureEval.ratio.toLocaleString()} — ${input.surveyType} requires 1:${closureEval.minimum.toLocaleString()}. Check field observations.`,
   };
 
   // ── Step 6: Build adjusted points ──
@@ -410,8 +410,8 @@ export function instantClosureCheck(
     standard: '1:5,000 (cadastral minimum)',
     grade,
     message: passes
-      ? `✓ 1:${precisionRatio.toLocaleString()} — passes cadastral standard`
-      : `✗ 1:${precisionRatio.toLocaleString()} — FAILS cadastral minimum (1:5,000). ${linearMisclosure.toFixed(3)}m misclosure over ${perimeter.toFixed(1)}m`,
+      ? `1:${precisionRatio.toLocaleString()} — passes cadastral standard`
+      : `1:${precisionRatio.toLocaleString()} — FAILS cadastral minimum (1:5,000). ${linearMisclosure.toFixed(3)}m misclosure over ${perimeter.toFixed(1)}m`,
   };
 }
 

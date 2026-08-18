@@ -44,8 +44,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { setCurrentUserId } from '@/lib/db'
 import { captureError } from '@/lib/monitoring/sentry'
 import { rateLimit, getClientIdentifier } from '@/lib/security/rateLimit'
@@ -337,7 +336,7 @@ export function apiHandler<TInput = unknown>(
       let session: Session | null = null
 
       if (requireAuth) {
-        const s = await getServerSession(authOptions)
+        const s = await auth()
         if (!s?.user) {
           throw new AuthenticationError('Authentication required')
         }

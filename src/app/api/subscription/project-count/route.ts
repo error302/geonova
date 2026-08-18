@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { db } from '@/lib/db'
 import { isAdmin } from '@/lib/auth/session'
 import { logger } from '@/lib/logger'
@@ -21,7 +20,7 @@ export const dynamic = 'force-dynamic'
  */
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session?.user?.id) {
       return NextResponse.json({ count: 0 }, { status: 401 })
     }

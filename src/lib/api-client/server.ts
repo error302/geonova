@@ -3,14 +3,13 @@
  * Uses direct PostgreSQL via pg Pool.
  *
  * @deprecated Auth methods (.auth.getSession / .auth.getUser) are migration artifacts.
- * Use `getServerSession(authOptions)` or `requireAuth()` from `@/lib/auth/` instead.
+ * Use `auth()` or `requireAuth()` from `@/lib/auth/` instead.
  * DB methods (.from()) are actively used and safe.
  */
 
 import { QueryBuilder } from '@/lib/db/queryBuilder'
 import { getPool } from '@/lib/db'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { logger } from '@/lib/logger'
 
 // ponytail: Phase 6 — auth/storage/rpc return types use `unknown` (deprecated stubs).
@@ -38,7 +37,7 @@ export interface DbClient {
 
 export async function createClient(): Promise<DbClient> {
   const getCompatSession = async () => {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session?.user?.email) return null
     return {
       ...session,

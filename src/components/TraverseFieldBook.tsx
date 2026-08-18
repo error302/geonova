@@ -230,7 +230,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
     const html = `
 <html><head><title>Final Surveyor's Report</title>
 <style>
-  body { font-family: 'Times New Roman', serif; font-size: 13px; margin: 40px; color: #000; }
+  body { font-family: 'Newsreader', Georgia, serif; font-size: 13px; margin: 40px; color: #000; }
   .header { text-align: center; margin-bottom: 20px; }
   .header h1 { font-size: 18px; text-decoration: underline; margin-bottom: 5px; }
   .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }

@@ -147,8 +147,8 @@ export function FieldMeasureButton({
 
       {/* Last measurement summary */}
       {lastResult === 'success' && lastPointId && latestPoint && (
-        <div className="text-center text-xs text-[var(--success)] animate-fade-in">
-          ✓ {lastPointId}: {
+          <div className="text-center text-xs text-[var(--success)] animate-fade-in flex items-center justify-center gap-1">
+            <CheckCircle className="w-3.5 h-3.5 inline align-text-bottom" /> {lastPointId}: {
             latestPoint.source === 'nmea'
               ? `${latestPoint.latitude?.toFixed(6)}, ${latestPoint.longitude?.toFixed(6)}`
               : `${latestPoint.easting?.toFixed(3)}, ${latestPoint.northing?.toFixed(3)}`

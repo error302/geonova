@@ -13,7 +13,7 @@
  */
 
 import { memo } from 'react'
-import { Trash2, CloudCheck, CloudOff, Clock } from 'lucide-react'
+import { Trash2, CloudCheck, CloudOff, Clock, Satellite, FileText } from 'lucide-react'
 import type { FieldMeasurement } from '@/lib/field/fieldSession'
 
 interface FieldObservationListProps {
@@ -137,8 +137,8 @@ function ObservationRow({
 
         {/* GNSS quality */}
         {isGNSS && measurement.satellites != null && (
-          <div className="mt-0.5 text-xs text-[var(--text-muted)] font-mono">
-            🛰 {measurement.satellites} sats
+          <div className="mt-0.5 text-xs text-[var(--text-muted)] font-mono flex items-center gap-1">
+            <Satellite className="w-3.5 h-3.5 inline align-text-bottom" /> {measurement.satellites} sats
             {measurement.hdop != null && ` · HDOP ${measurement.hdop.toFixed(1)}`}
             {measurement.elevation != null && ` · H ${measurement.elevation.toFixed(2)}m`}
           </div>
@@ -146,8 +146,8 @@ function ObservationRow({
 
         {/* Notes */}
         {measurement.notes && (
-          <div className="mt-0.5 text-xs text-[var(--text-muted)] italic">
-            📝 {measurement.notes}
+          <div className="mt-0.5 text-xs text-[var(--text-muted)] italic flex items-center gap-1">
+            <FileText className="w-3.5 h-3.5 inline align-text-bottom" /> {measurement.notes}
           </div>
         )}
       </div>

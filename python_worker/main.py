@@ -429,6 +429,7 @@ async def gnss_baseline_process(params: dict):
     freq = options.get("frequency", "l1+l2")
     el_mask = options.get("elevation_mask", 15)
     ar_mode = options.get("ambiguity_resolution", "fix")
+    qc_mode = options.get("qc_mode", "auto")
 
     with tempfile.TemporaryDirectory() as tmpdir:
         base_path = f"{tmpdir}/base.obs"
@@ -467,16 +468,53 @@ async def gnss_baseline_process(params: dict):
         except Exception:
             output = result.stdout
 
-        return _parse_rtklib_output(output)
+        parsed = _parse_rtklib_output(output)
+
+        # ── Session QC (multipath / cycle slips / SNR / tracking) ──────────
+        # Computed from the raw RINEX observations in the worker so the
+        # baseline result carries the evidence a surveyor needs to prove
+        # session quality (and defend it in front of a boundary commission).
+        # QC is additive: a QC failure must never discard a valid baseline.
+        from gnss_processor import compute_session_qc
+
+        try:
+            parsed["qc"] = {
+                "base": compute_session_qc(
+                    base_content.encode("utf-8", errors="replace"), "BASE",
+                    qc_mode=qc_mode,
+                ),
+                "rover": compute_session_qc(
+                    rover_content.encode("utf-8", errors="replace"), "ROVER",
+                    qc_mode=qc_mode,
+                ),
+            }
+        except Exception as e:
+            parsed["qc"] = {
+                "error": f"Session QC failed: {e}",
+                "base": {"available": False, "error": str(e)},
+                "rover": {"available": False, "error": str(e)},
+            }
+
+        return parsed
 
 
 def _parse_rtklib_output(output: str) -> dict:
-    """Parse RTKLIB .pos output file."""
+    """Parse RTKLIB .pos output file.
+
+    Returns the final solution plus a fixed-vs-float epoch breakdown so the
+    observation report can show how much of the session was truly fixed
+    (for kinematic processing) or confirm the single static solution.
+    """
     lines = output.strip().split("\n")
     data_lines = [l for l in lines if not l.startswith("%") and l.strip()]
 
     if not data_lines:
         raise RuntimeError("RTKLIB produced no output. Check RINEX format.")
+
+    quality_map = {1: "FIX", 2: "FLOAT", 3: "SBAS", 4: "DGPS", 5: "SINGLE", 6: "PPP"}
+
+    epoch_solutions = {name: 0 for name in quality_map.values()}
+    epoch_solutions["UNKNOWN"] = 0
 
     last_line = data_lines[-1]
     parts = last_line.split()
@@ -485,6 +523,17 @@ def _parse_rtklib_output(output: str) -> dict:
         raise RuntimeError(f"Unexpected RTKLIB output format: {last_line[:200]}")
 
     try:
+        # Count solution-quality flags across every epoch line
+        for line in data_lines:
+            cols = line.split()
+            if len(cols) > 5:
+                try:
+                    flag = int(cols[5])
+                    name = quality_map.get(flag, "UNKNOWN")
+                    epoch_solutions[name] = epoch_solutions.get(name, 0) + 1
+                except (ValueError, IndexError):
+                    pass
+
         lat = float(parts[2])
         lon = float(parts[3])
         height = float(parts[4])
@@ -495,7 +544,6 @@ def _parse_rtklib_output(output: str) -> dict:
         sdu = float(parts[9]) if len(parts) > 9 else 0
         ratio = float(parts[15]) if len(parts) > 15 else 0
 
-        quality_map = {1: "FIX", 2: "FLOAT", 3: "SBAS", 4: "DGPS", 5: "SINGLE", 6: "PPP"}
         quality = quality_map.get(quality_flag, "UNKNOWN")
 
         return {
@@ -508,6 +556,17 @@ def _parse_rtklib_output(output: str) -> dict:
             "quality": quality,
             "sat_count": nsat,
             "ratio": ratio,
+            "epoch_solutions": epoch_solutions,
+            "solution_summary": {
+                "final_solution": quality,
+                "epochs": len(data_lines),
+                "fixed_epochs": epoch_solutions.get("FIX", 0),
+                "float_epochs": epoch_solutions.get("FLOAT", 0),
+                "fix_pct": round(
+                    epoch_solutions.get("FIX", 0) / len(data_lines) * 100.0, 1
+                ) if data_lines else 0.0,
+                "ratio": ratio,
+            },
             "raw_output": output[-2000:] if len(output) > 2000 else output,
         }
     except (ValueError, IndexError) as e:
@@ -537,6 +596,99 @@ async def gnss_process_rinex(params: dict[str, Any]) -> Any:
         method, n_epochs, station_name }
     """
     return await _process_rinex(params)
+
+
+# ============================================================
+# SURFACE ENGINE (Delaunay TIN / contours / cut-fill volume)
+# ============================================================
+# Million-point clouds: numpy/scipy Delaunay + marching triangles, ported 1:1
+# from src/lib/engine/contours.ts, src/lib/compute/tin.ts and
+# src/lib/compute/pointCloudVolume.ts. See surface_processor.py.
+
+from surface_processor import (
+    generate_tin as _surface_generate_tin,
+    generate_contours as _surface_generate_contours,
+    compute_grid_volume as _surface_grid_volume,
+    compute_stockpile_volume as _surface_stockpile_volume,
+    compute_cross_check as _surface_cross_check,
+)
+
+@register_task("surface_tin")
+async def surface_tin(params: dict[str, Any]) -> Any:
+    """
+    Build a Delaunay TIN from 3D points.
+
+    Params:
+      - points: [{ id?, x, y, z }, ...]
+
+    Returns:
+      { triangles: [{ a, b, c: { id, x, y, z }, area_m2, centroid }],
+        triangle_count, bounds }
+    """
+    points = params.get("points", [])
+    if not isinstance(points, list) or len(points) < 3:
+        raise ValueError("points (list of {x, y, z}) with >= 3 entries is required")
+    return _surface_generate_tin(points)
+
+
+@register_task("surface_contours")
+async def surface_contours(params: dict[str, Any]) -> Any:
+    """
+    Generate contour lines from spot heights (marching triangles).
+
+    Params:
+      - points: [{ x, y, z }, ...]
+      - interval: contour interval (m, default 1.0)
+      - index_interval: index-contour interval (default 5 × interval)
+      - breaklines: [{ start: {x,y,z}, end: {x,y,z} }, ...] (optional)
+
+    Returns:
+      { contours: [{ elevation, points: [[x, y], ...], is_index }],
+        triangle_count, bounds }
+    """
+    points = params.get("points", [])
+    if not isinstance(points, list) or len(points) < 3:
+        raise ValueError("points (list of {x, y, z}) with >= 3 entries is required")
+    return _surface_generate_contours(
+        points,
+        interval=params.get("interval", 1.0),
+        index_interval=params.get("index_interval"),
+        breaklines=params.get("breaklines", []),
+    )
+
+
+@register_task("surface_volume")
+async def surface_volume(params: dict[str, Any]) -> Any:
+    """
+    Compute cut/fill volume between two surfaces (or a stockpile vs a base plane).
+
+    Params:
+      - mode: 'cutfill' (default) | 'stockpile'
+      - surface1: [{ x, y, z }, ...] — existing/before surface
+      - surface2: [{ x, y, z }, ...] — design/after surface (cutfill only)
+      - cell_size: grid cell size in m (default 1.0)
+      - base_elevation: base plane RL for stockpile mode
+      - cross_check: bool — also compute the grid-vs-adaptive-cell cross check
+
+    Returns:
+      { cut, fill, net, area, method, cellSize, cutArea, fillArea,
+        balanceElevation, cross_check? }
+    """
+    mode = params.get("mode", "cutfill")
+    surface1 = params.get("surface1", [])
+    if not isinstance(surface1, list) or len(surface1) < 3:
+        raise ValueError("surface1 (list of {x, y, z}) with >= 3 entries is required")
+
+    if mode == "stockpile":
+        result = _surface_stockpile_volume(surface1, float(params.get("base_elevation", 0)))
+    else:
+        surface2 = params.get("surface2", [])
+        if not isinstance(surface2, list) or len(surface2) < 3:
+            raise ValueError("surface2 (list of {x, y, z}) is required for cutfill mode")
+        result = _surface_grid_volume(surface1, surface2, float(params.get("cell_size", 1.0)))
+        if params.get("cross_check"):
+            result["cross_check"] = _surface_cross_check(surface1, surface2)
+    return result
 
 
 if __name__ == "__main__":

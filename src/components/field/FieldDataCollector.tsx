@@ -24,7 +24,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { Settings, Target, List, Cloud, ChevronRight, X, Camera } from 'lucide-react'
+import { Settings, Target, List, Cloud, ChevronRight, X, Camera, Sun, CloudSun, Lightbulb } from 'lucide-react'
 import { FieldConnectionBar } from './FieldConnectionBar'
 import { FieldMeasureButton } from './FieldMeasureButton'
 import { FieldObservationList } from './FieldObservationList'
@@ -134,7 +134,7 @@ export function FieldDataCollector({
           }`}
           title="Toggle Sunlight High-Contrast Outdoor Mode"
         >
-          {isSunlightMode ? '☀️ Sunlight Mode ON' : '🌤️ Outdoor Mode'}
+                  {isSunlightMode ? (<><Sun className="w-4 h-4 inline mr-1" /> Sunlight Mode ON</>) : (<><CloudSun className="w-4 h-4 inline mr-1" /> Outdoor Mode</>)}
         </button>
         <button
           onClick={() => setShowSetup(true)}
@@ -375,7 +375,7 @@ function StakeoutPanel({
       </div>
 
       <p className="text-xs text-[var(--text-muted)]">
-        💡 Stakeout uses the StakeoutRadar component. Connect a GNSS rover and the radar
+        <Lightbulb className="w-3.5 h-3.5 inline mr-1 align-text-bottom text-[var(--accent)]" /> Stakeout uses the StakeoutRadar component. Connect a GNSS rover and the radar
         will guide you to the target with audio cues.
       </p>
 
@@ -436,7 +436,7 @@ function SyncPanel({
       </button>
 
       <p className="text-xs text-[var(--text-muted)]">
-        💡 Measurements are saved locally first (IndexedDB), then synced to the cloud
+        <Lightbulb className="w-3.5 h-3.5 inline mr-1 align-text-bottom text-[var(--accent)]" /> Measurements are saved locally first (IndexedDB), then synced to the cloud
         when online. You can work offline indefinitely — sync happens automatically.
       </p>
     </div>

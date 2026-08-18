@@ -12,8 +12,7 @@
  */
 
 import { redirect } from 'next/navigation'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { db } from '@/lib/db'
 import SettingsTabs from './components/SettingsTabs'
 import type { ProfileData } from './components/SettingsTabs'
@@ -26,7 +25,7 @@ export const metadata = {
 }
 
 export default async function ProfileSettingsPage() {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
   const userId = String(session.user.id)

@@ -21,6 +21,12 @@ import {
   type SubmissionSectionId,
   type SectionStatus,
 } from '@/types/submission'
+import {
+  ENGINE_VERSION,
+  buildProvenanceLedger,
+  type EngineProvenanceLedger,
+  type EngineProvenanceRecord,
+} from '@/lib/provenance/engineProvenance'
 
 /**
  * Canonical mapping from a generated-artifact key (the `generated_artifacts`
@@ -51,6 +57,8 @@ export const ARTIFACT_TO_SECTION: Record<string, SubmissionSectionId> = {
   // RTK / field result bundle (optional section)
   rtk_result: 'rtk_result',
   rtk_raw: 'rtk_result',
+  'gnss-observation-report': 'rtk_result',
+  gnss_observation_report: 'rtk_result',
 
   // Consistency checks
   consistency_checks: 'consistency_checks',
@@ -66,12 +74,28 @@ export interface PackageManifestInput {
   generatedArtifacts?: Record<string, string>
   /** section_ids already known to be satisfied (e.g. computed in-session) */
   readySections?: SubmissionSectionId[]
+  /**
+   * When true, the `rtk_result` (GNSS observation report) section counts as
+   * REQUIRED instead of optional — used for GNSS-based survey subtypes
+   * (geodetic control, drone, deformation) where the report is a mandatory
+   * package artifact. A package missing it is incomplete.
+   */
+  requiredGnss?: boolean
+  /**
+   * Court-grade provenance records for every engine computation whose output
+   * feeds the package (traverse adjustment, area, GNSS baseline, …). Each
+   * record carries input hash, method, engine version, residuals, timestamp.
+   */
+  provenance?: EngineProvenanceRecord[]
 }
 
 export interface PackageSectionReport {
   section: SubmissionSection
   status: SectionStatus
 }
+
+export { ENGINE_VERSION }
+export type { EngineProvenanceRecord }
 
 export interface PackageCompleteness {
   /** True when every REQUIRED section is present/ready. */
@@ -116,7 +140,10 @@ export function evaluatePackageCompleteness(
     sections.push({ section, status })
 
     if (status === 'missing') {
-      if (section.required) {
+      // `rtk_result` is optional by default (SUBMISSION_SECTIONS) but
+      // becomes REQUIRED for GNSS-based survey subtypes.
+      const required = section.required || (section.id === 'rtk_result' && input.requiredGnss === true)
+      if (required) {
         missingRequired.push({ id: section.id, label: section.label })
       } else {
         missingOptional.push({ id: section.id, label: section.label })
@@ -136,11 +163,13 @@ export function evaluatePackageCompleteness(
 /**
  * Build a manifest object suitable for writing to the submission record or
  * emitting as `manifest.json`. Returns the sections in benchmark order with a
- * summary of completeness and explicit missing items.
+ * summary of completeness and explicit missing items, plus the provenance
+ * ledger of engine outputs feeding the package.
  */
 export function buildPackageManifest(input: PackageManifestInput = {}): {
   sections: SubmissionSection[]
   completeness: PackageCompleteness
+  provenance: EngineProvenanceLedger
 } {
   const completeness = evaluatePackageCompleteness(input)
   return {
@@ -149,5 +178,6 @@ export function buildPackageManifest(input: PackageManifestInput = {}): {
       status: completeness.statusBySection[s.id],
     })),
     completeness,
+    provenance: buildProvenanceLedger(input.provenance ?? []),
   }
 }

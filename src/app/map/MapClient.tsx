@@ -117,7 +117,7 @@ import { useVertexEditing } from '@/hooks/useVertexEditing'
 import { usePrint, type PrintOptions } from '@/hooks/usePrint'
 import type { MapExtent } from './MapReactContext'
 import { MapProvider, type MapContextValue } from '@/app/map/MapReactContext'
-import { Target } from 'lucide-react'
+import { Target, Building2 } from 'lucide-react'
 
 // ── Dynamic imports for heavy components ──
 const OfflineTileDownloader = dynamic(
@@ -1544,7 +1544,7 @@ export default function MapClient() {
                   }`}
                   title="Toggle OpenStreetMap building footprints (requires Python worker + PBF file)"
                 >
-                  <span className="text-sm">🏗</span>
+                  <Building2 className="w-4 h-4" />
                   <span className="hidden sm:inline">OSM Buildings</span>
                 </button>
 

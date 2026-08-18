@@ -98,7 +98,7 @@ function injectPrintCSS(options: PrintOptions): void {
       font-size: 16pt;
       color: #1B3A5C;
       margin: 0 0 2mm 0;
-      font-family: 'Geist', 'Arial Narrow', sans-serif;
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .metardu-print-header p {

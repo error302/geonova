@@ -20,8 +20,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth as getSession } from '@/lib/auth-v5'
 import { rateLimit, getClientIdentifier } from '@/lib/security/rateLimit'
 import { logger, auditLog } from '@/lib/logger'
 import { setCurrentUserId, setCurrentOrgId } from '@/lib/db'
@@ -178,7 +177,7 @@ export function apiHandler(
 
       let session: Session | null = null
       if (auth) {
-        const s = await getServerSession(authOptions)
+        const s = await getSession()
         if (!s?.user) {
           return NextResponse.json(
             { error: 'Authentication required', code: 'UNAUTHORIZED' },

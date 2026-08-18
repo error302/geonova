@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react'
-import { AlertTriangle, CheckCircle2, ShieldAlert, Zap, Compass, Folder, Lock } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, ShieldAlert, Zap, Compass, Folder, Lock, Lightbulb } from 'lucide-react'
 import { adjustNetwork, Station, Observation, AdjustmentResult } from '@/lib/survey/networkAdjustment'
 import { adjustNetworkRobust, type RobustLSAResult, type WeightFunction } from '@/lib/survey/robustEstimation'
 import { generateNetworkDXF } from '@/lib/survey/networkAdjustmentDXF'
@@ -636,7 +636,7 @@ export function NetworkAdjustmentPanel({ projectId, projectData, surveyorProfile
 
               {robustResult.blunders.length > 0 && (
                 <p className="text-xs text-zinc-400 mt-3">
-                  💡 Blunders are down-weighted automatically. Re-check the observation field notes for the flagged legs —
+                  <Lightbulb className="w-3.5 h-3.5 inline mr-1 align-text-bottom text-[var(--accent)]" /> Blunders are down-weighted automatically. Re-check the observation field notes for the flagged legs —
                   look for swapped face, wrong target height, or transcription errors. After correcting, re-run the adjustment.
                 </p>
               )}

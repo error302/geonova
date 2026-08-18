@@ -16,8 +16,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { auth } from '@/lib/auth-v5';
 import { db } from '@/lib/db';
 import { getSubscription } from '@/lib/subscription/subscriptionEngine';
 import type { PlanId } from '@/lib/subscription/catalog';
@@ -42,7 +41,7 @@ function isPaidPlan(plan: PlanId): boolean {
 /** GET /api/documents/logo — Return current logo metadata */
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
@@ -82,7 +81,7 @@ export async function GET() {
 /** POST /api/documents/logo — Upload a new logo */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
@@ -157,7 +156,7 @@ export async function POST(request: NextRequest) {
 /** DELETE /api/documents/logo — Remove the company logo */
 export async function DELETE() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }

@@ -25,7 +25,7 @@ export default function SurveyAssistant() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `👋 Welcome to METARDU Survey Assistant. I'm powered by the offline WebGPU LLM (Phi-3-mini) with full Survey Act Cap 299, Survey Regulations LN 168/1994, and SRVY2025-1 Submission Standards knowledge.
+      content: `Welcome to METARDU Survey Assistant. I'm powered by the offline WebGPU LLM (Phi-3-mini) with full Survey Act Cap 299, Survey Regulations LN 168/1994, and SRVY2025-1 Submission Standards knowledge.
 
 Ask me anything about Kenyan cadastral surveying, or try one of the suggestions below.`,
     },
@@ -113,7 +113,7 @@ Ask me anything about Kenyan cadastral surveying, or try one of the suggestions 
         const updated = [...prev]
         updated[updated.length - 1] = {
           role: 'assistant',
-          content: `⚠️ Error: ${errorMsg}\n\nThis run could not use the AI engine (${
+          content: `Error: ${errorMsg}\n\nThis run could not use the AI engine (${
             isOnline ? 'online NIM unavailable, WebGPU fallback failed' : 'offline WebGPU engine failed'
           }). Please try again or check the browser console for details.`,
         }

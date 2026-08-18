@@ -11,6 +11,7 @@ import {
 } from '@/lib/geo/transformationCalibration'
 import { transformPointFull } from '@/lib/geo/helmertRigorous'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { AlertTriangle, CheckCircle } from 'lucide-react'
 
 interface PointRow {
   id: string
@@ -297,8 +298,8 @@ export default function SiteCalibrationPage() {
                           <td className="py-1.5 text-right font-mono font-medium">{(tp.residualMagnitude * 1000).toFixed(2)}</td>
                           <td className="py-1.5 text-center">
                             {tp.isOutlier
-                              ? <span className="text-[var(--error)]">⚠ OUTLIER</span>
-                              : <span className="text-[var(--success)]">✓</span>
+                              ? <span className="text-[var(--error)] flex items-center justify-center gap-1"><AlertTriangle className="w-3.5 h-3.5 inline" /> OUTLIER</span>
+                              : <span className="text-[var(--success)]"><CheckCircle className="w-3.5 h-3.5 inline" /></span>
                             }
                           </td>
                         </tr>

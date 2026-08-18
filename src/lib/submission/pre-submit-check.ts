@@ -127,8 +127,8 @@ export function preSubmitCheck(project: {
   const ready = blockers === 0 && score >= 80;
 
   const summary = ready
-    ? `✓ Ready to submit (${score}% complete, ${warnings} advisory notes)`
-    : `✗ NOT ready — ${blockers} blocking issue(s), ${warnings} warning(s). Fix blockers before submitting.`;
+    ? `Ready to submit (${score}% complete, ${warnings} advisory notes)`
+    : `NOT ready — ${blockers} blocking issue(s), ${warnings} warning(s). Fix blockers before submitting.`;
 
   return { ready, score, categories, summary, blockers, warnings };
 }
@@ -182,7 +182,7 @@ function checkProjectInfo(project: Parameters<typeof preSubmitCheck>[0]): CheckC
 
   return {
     name: 'Project Information',
-    icon: '📋',
+    icon: 'file-text',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,
@@ -199,7 +199,7 @@ function checkSurveyControl(points?: Array<{ name: string; type?: string }>): Ch
       detail: 'No survey points recorded',
       blocking: true,
     });
-    return { name: 'Survey Control', icon: '📐', items, passed: 0, total: 1 };
+    return { name: 'Survey Control', icon: 'ruler', items, passed: 0, total: 1 };
   }
 
   items.push({
@@ -227,7 +227,7 @@ function checkSurveyControl(points?: Array<{ name: string; type?: string }>): Ch
 
   return {
     name: 'Survey Control',
-    icon: '📐',
+    icon: 'ruler',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,
@@ -296,7 +296,7 @@ function checkTraverseAccuracy(
 
   return {
     name: 'Traverse Accuracy',
-    icon: '🎯',
+    icon: 'target',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,
@@ -362,7 +362,7 @@ function checkAreaBoundary(
 
   return {
     name: 'Area & Boundary',
-    icon: '📐',
+    icon: 'triangle',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,
@@ -382,7 +382,7 @@ function checkDocuments(project: Parameters<typeof preSubmitCheck>[0]): CheckCat
 
   return {
     name: 'Documents',
-    icon: '📄',
+    icon: 'file',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,
@@ -414,7 +414,7 @@ function checkCompliance(project: Parameters<typeof preSubmitCheck>[0]): CheckCa
 
   return {
     name: 'Compliance',
-    icon: '⚖️',
+    icon: 'scale',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,

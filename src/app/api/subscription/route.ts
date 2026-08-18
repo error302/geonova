@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { getSubscription } from '@/lib/subscription/subscriptionEngine'
 import type { PlanId } from '@/lib/subscription/catalog'
 import { z } from 'zod'
@@ -33,7 +32,7 @@ const SubscriptionActionSchema = z.object({
  */
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session?.user?.id) {
       return NextResponse.json({ plan: 'free', status: 'active' }, { status: 401 })
     }
@@ -81,7 +80,7 @@ export async function GET() {
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Authentication required', code: 'UNAUTHORIZED' }, { status: 401 })
     }

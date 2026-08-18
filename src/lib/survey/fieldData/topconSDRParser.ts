@@ -20,7 +20,7 @@
  *   - Fixed-width column format (older SDR33)
  *   - Space-delimited format (TopSurv CSV export)
  *
- * ⚠ NOTE: This parser is implemented against the SDR33 specification and
+ * NOTE: This parser is implemented against the SDR33 specification and
  *   standard TopSurv CSV conventions. It should handle the majority of
  *   Sokkia/Topcon instruments used in Kenya. If you encounter a file that
  *   fails to parse, please provide a sample (with sensitive data redacted)

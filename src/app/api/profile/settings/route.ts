@@ -22,8 +22,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { setCurrentUserId, db } from '@/lib/db'
 import { z } from 'zod'
 
@@ -79,7 +78,7 @@ const UpdateProfileSettingsSchema = z.object({
 }).strict()
 
 async function requireSession() {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session?.user?.id) return null
   const userId = String(session.user.id)
   setCurrentUserId(userId)

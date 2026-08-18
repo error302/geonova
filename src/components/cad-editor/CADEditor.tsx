@@ -615,7 +615,7 @@ export default function CADEditor({
           <p><b>Delete</b> — remove selected item</p>
         </div>
         <div className="pt-3 border-t border-gray-700">
-          <h4 className="text-xs font-semibold text-cyan-400 uppercase mb-1">💻 AutoCAD Command Line</h4>
+          <h4 className="text-xs font-semibold text-cyan-400 uppercase mb-1">AutoCAD Command Line</h4>
           <form onSubmit={handleCommandSubmit} className="mt-1">
             <div className="text-[11px] font-mono text-gray-300 mb-1 truncate bg-black/40 p-1 rounded border border-gray-700">
               {cmdLog}

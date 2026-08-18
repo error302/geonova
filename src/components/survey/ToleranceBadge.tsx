@@ -17,10 +17,10 @@
  */
 
 import React, { memo, useState } from 'react'
+import { AlertTriangle, CheckCircle, X, HelpCircle } from 'lucide-react'
 import {
   getToleranceBadgeColor,
   getToleranceBadgeLabel,
-  getToleranceIcon,
   type ToleranceCheckResult,
 } from '@/lib/survey/liveToleranceChecker'
 
@@ -46,7 +46,14 @@ export const ToleranceBadge = memo(function ToleranceBadge({
 
   const color = getToleranceBadgeColor(result.status)
   const label = getToleranceBadgeLabel(result.status)
-  const icon = getToleranceIcon(result.status)
+
+  const statusIcon: Record<string, typeof AlertTriangle> = {
+    pass: CheckCircle,
+    marginal: AlertTriangle,
+    fail: X,
+    insufficient_data: HelpCircle,
+  }
+  const Icon = statusIcon[result.status] || HelpCircle
 
   // Color classes
   const colorClasses: Record<string, string> = {
@@ -66,7 +73,7 @@ export const ToleranceBadge = memo(function ToleranceBadge({
         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border ${cls} text-[10px] font-mono font-bold transition-all hover:scale-105`}
         title={result.summary}
       >
-        <span className="text-sm leading-none">{icon}</span>
+        <span className="text-sm leading-none"><Icon className="w-4 h-4" /></span>
         <span>{label}</span>
         {result.precisionRatio && (
           <span className="text-[9px] opacity-70">1:{Math.round(result.precisionRatio).toLocaleString()}</span>
@@ -90,7 +97,7 @@ export const ToleranceBadge = memo(function ToleranceBadge({
         onClick={() => setShowDetails(!showDetails)}
         className="w-full flex items-center gap-2 px-3 py-2 text-left"
       >
-        <span className="text-lg leading-none">{icon}</span>
+        <span className="text-lg leading-none"><Icon className="w-5 h-5" /></span>
         <div className="flex-1 min-w-0">
           <div className="text-xs font-bold font-mono">{label}</div>
           <div className="text-[10px] opacity-80 truncate">{result.summary}</div>
@@ -139,7 +146,7 @@ export const ToleranceBadge = memo(function ToleranceBadge({
           {/* Worst leg */}
           {result.worstLeg && (
             <div className="p-2 rounded-md bg-red-500/10 border border-red-500/20">
-              <div className="text-red-400 font-bold mb-0.5">⚠ WORST LEG: {result.worstLeg.from} → {result.worstLeg.to}</div>
+              <div className="text-red-400 font-bold mb-0.5 flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5 inline" /> WORST LEG: {result.worstLeg.from} → {result.worstLeg.to}</div>
               <div className="text-gray-300">{result.worstLeg.diagnosis}</div>
               <div className="text-yellow-400 mt-1 font-medium">→ {result.worstLeg.recommendation}</div>
             </div>
@@ -162,7 +169,7 @@ export const ToleranceBadge = memo(function ToleranceBadge({
               {result.rdmChecks.checks.map((check, i) => (
                 <div key={i} className="flex items-start gap-1.5 mb-0.5">
                   <span className={check.passed ? 'text-green-400' : 'text-red-400'}>
-                    {check.passed ? '✓' : '✗'}
+                    {check.passed ? <CheckCircle className="w-3.5 h-3.5 inline" /> : <X className="w-3.5 h-3.5 inline" />}
                   </span>
                   <div className="flex-1">
                     <span className="opacity-70">{check.rule}:</span>{' '}

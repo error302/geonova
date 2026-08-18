@@ -116,7 +116,7 @@
     "konva": "^9.3.22",
     "lucide-react": "^1.8.0",
     "next": "^14.2.0",
-    "next-auth": "^4.24.15",
+    "next-auth": "^5.0.0-beta.32",
     "next-themes": "^0.4.6",
     "nodemailer": "^8.0.5",
     "ol": "^10.8.0",
@@ -137,6 +137,7 @@
     "reactflow": "^11.10.1",
     "recharts": "^2.15.4",
     "redis": "^5.12.1",
+    "sharp": "^0.33.5",
     "shp-write": "^0.3.2",
     "sonner": "^2.0.7",
     "svg2pdf.js": "^2.7.0",
@@ -149,8 +150,7 @@
     "y-webrtc": "^10.3.0",
     "yjs": "^13.6.31",
     "zod": "^3.22.4",
-    "zustand": "^5.0.0",
-    "sharp": "^0.33.5"
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.2.0",

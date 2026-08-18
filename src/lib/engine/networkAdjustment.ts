@@ -1,7 +1,7 @@
 /**
  * @module networkAdjustment
  *
- * ✅ CANONICAL (P1-5, 2026-07-24): This is the single source of truth
+ * CANONICAL (P1-5, 2026-07-24): This is the single source of truth
  *   for least-squares adjustment in METARDU. Four other LSA modules
  *   are deprecated and point here:
  *     - `engine/leastSquares.ts` (dense 2D-only, kept for KAT tests)

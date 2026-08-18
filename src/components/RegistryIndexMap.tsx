@@ -147,7 +147,7 @@ export default function RegistryIndexMap({ isOpen, onClose, initialData }: Regis
   <title>RIM - ${escapeXml(sheetId)}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Courier New', monospace; background: white; padding: 20px; }
+    body { font-family: 'JetBrains Mono', ui-monospace, monospace; background: white; padding: 20px; }
     .sheet {
       width: 210mm; min-height: 297mm;
       border: 2px solid #000;

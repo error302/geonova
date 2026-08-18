@@ -14,8 +14,7 @@
  *           if (error) return error
  *   AFTER:  export const GET = apiHandler({ auth: true }, async (req, ctx) => { ... })
  */
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { auth } from '@/lib/auth-v5'
 import { NextResponse } from 'next/server'
 import { db, setCurrentUserId } from '@/lib/db'
 import { logger } from '@/lib/logger'
@@ -25,7 +24,7 @@ import { logger } from '@/lib/logger'
  */
 export async function requireAuth() {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session?.user) {
       return {
         session: null,

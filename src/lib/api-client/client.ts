@@ -6,7 +6,7 @@
  *
  * @deprecated Auth methods on this client are migration artifacts from Supabase.
  * Use `useSession()` from 'next-auth/react' for client components,
- * or `getServerSession(authOptions)` for server components instead.
+ * or `auth()` for server components instead.
  * DB methods (.from()) are actively used and safe.
  * Storage methods should use /api/storage endpoint instead.
  */

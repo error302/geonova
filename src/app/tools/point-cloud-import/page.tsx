@@ -22,10 +22,10 @@ import { parsePly } from '@/lib/importers/parsers/ply';
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import { VolumeTab } from './VolumeTab';
 import { autoClassifyPoint } from '@/lib/topo/featureCodeAutomation';
+import { MAX_POINTS } from './constants';
+import { SURFACE_WORKER_HEAVY_THRESHOLD } from '@/lib/compute/surfaceService';
 
 // ─── Constants ──────────────────────────────────────────────────────────────
-
-const MAX_POINTS = 100_000;
 const SLOPE_CLASS_LABELS: Record<string, { label: string; range: string; color: string }> = {
   flat: { label: 'Flat', range: '0–2%', color: '#22c55e' },
   gentle: { label: 'Gentle', range: '2–5%', color: '#86efac' },
@@ -282,6 +282,8 @@ export default function PointCloudImportPage() {
 
   // TIN state
   const [tinTriangles, setTinTriangles] = useState<TINTriangle[] | null>(null);
+  const [tinSource, setTinSource] = useState<'local' | 'python-sidecar' | null>(null);
+  const [cutFillSource, setCutFillSource] = useState<'local' | 'python-sidecar' | null>(null);
   const [tinError, setTinError] = useState('');
   const [isTinRunning, setIsTinRunning] = useState(false);
   const [tinSurfaceArea, setTinSurfaceArea] = useState<number>(0);
@@ -403,16 +405,24 @@ export default function PointCloudImportPage() {
 
   // ─── Computed statistics ─────────────────────────────────────────────────
 
-  const boundingBox = points.length > 0
-    ? {
-        minE: Math.min(...points.map(p => p.easting)),
-        maxE: Math.max(...points.map(p => p.easting)),
-        minN: Math.min(...points.map(p => p.northing)),
-        maxN: Math.max(...points.map(p => p.northing)),
-        minZ: Math.min(...points.map(p => p.elevation)),
-        maxZ: Math.max(...points.map(p => p.elevation)),
-      }
-    : null;
+  // Loop-based extents: spread (Math.min(...points.map())) throws a RangeError
+  // past ~125k elements, so it breaks at the 1M-point cap.
+  const boundingBox = (() => {
+    if (points.length === 0) return null;
+    let minE = Infinity, maxE = -Infinity;
+    let minN = Infinity, maxN = -Infinity;
+    let minZ = Infinity, maxZ = -Infinity;
+    for (let i = 0; i < points.length; i++) {
+      const p = points[i];
+      if (p.easting < minE) minE = p.easting;
+      if (p.easting > maxE) maxE = p.easting;
+      if (p.northing < minN) minN = p.northing;
+      if (p.northing > maxN) maxN = p.northing;
+      if (p.elevation < minZ) minZ = p.elevation;
+      if (p.elevation > maxZ) maxZ = p.elevation;
+    }
+    return { minE, maxE, minN, maxN, minZ, maxZ };
+  })();
 
   const avgSpacing = (() => {
     if (points.length < 2) return 0;
@@ -538,29 +548,40 @@ export default function PointCloudImportPage() {
         // and DTM filtering (ground point classification) for accurate surfaces.
         // Falls back to basic generateTIN if breaklines aren't available.
         let triangles;
-        try {
-          // Try DTM filtering first (CSF ground classification)
-          const { classifyPointCloud, extractGroundPoints } = await import('@/lib/topo/pointCloudClassification');
-          if (tinPoints.length >= 20) {
-            const classified = classifyPointCloud(tinPoints.map(p => ({ x: p.x, y: p.y, z: p.z })));
-            const groundOnly = extractGroundPoints(classified);
-            if (groundOnly.length >= 3) {
-              const groundTinPoints = groundOnly.map((p, i) => ({
-                id: `ground-${i}`,
-                x: p.x, y: p.y, z: p.z,
-              }));
-              // Use breakline-enforced TIN (falls back to standard if no breaklines)
-              const { generateTINWithBreaklines } = await import('@/lib/compute/tinWithBreaklines');
-              triangles = generateTINWithBreaklines(groundTinPoints);
+        if (tinPoints.length >= SURFACE_WORKER_HEAVY_THRESHOLD) {
+          // Million-point clouds: compute the TIN in the Python sidecar
+          // (scipy Delaunay) — browser DTM classification + Delaunator cap
+          // out well below this size. Falls back to the local engine when
+          // the sidecar is unavailable.
+          const { generateTINHeavy } = await import('@/lib/compute/surfaceService');
+          const heavy = await generateTINHeavy(tinPoints);
+          triangles = heavy.triangles;
+          setTinSource(heavy.source === 'worker' ? 'python-sidecar' : 'local');
+        } else {
+          try {
+            // Try DTM filtering first (CSF ground classification)
+            const { classifyPointCloud, extractGroundPoints } = await import('@/lib/topo/pointCloudClassification');
+            if (tinPoints.length >= 20) {
+              const classified = classifyPointCloud(tinPoints.map(p => ({ x: p.x, y: p.y, z: p.z })));
+              const groundOnly = extractGroundPoints(classified);
+              if (groundOnly.length >= 3) {
+                const groundTinPoints = groundOnly.map((p, i) => ({
+                  id: `ground-${i}`,
+                  x: p.x, y: p.y, z: p.z,
+                }));
+                // Use breakline-enforced TIN (falls back to standard if no breaklines)
+                const { generateTINWithBreaklines } = await import('@/lib/compute/tinWithBreaklines');
+                triangles = generateTINWithBreaklines(groundTinPoints);
+              }
             }
+          } catch {
+            // DTM filtering or breakline module not available — fall back
           }
-        } catch {
-          // DTM filtering or breakline module not available — fall back
-        }
 
-        // Fallback: standard TIN without breaklines/DTM filtering
-        if (!triangles || triangles.length === 0) {
-          triangles = generateTIN(tinPoints);
+          // Fallback: standard TIN without breaklines/DTM filtering
+          if (!triangles || triangles.length === 0) {
+            triangles = generateTIN(tinPoints);
+          }
         }
 
         const surfaceArea = computeSurfaceArea(triangles);
@@ -587,15 +608,42 @@ export default function PointCloudImportPage() {
     setIsCutFillRunning(true);
     setCutFillError('');
 
-    setTimeout(() => {
+    setTimeout(async () => {
       try {
         const dtmPoints: DTMPoint[] = points.map(p => ({
           easting: p.easting,
           northing: p.northing,
           elevation: p.elevation,
         }));
+
+        if (points.length >= SURFACE_WORKER_HEAVY_THRESHOLD) {
+          // Large clouds: grid-method cut/fill in the Python sidecar.
+          // The per-cell display table is omitted for sidecar computation;
+          // totals are exact. Falls back to the local engine when the
+          // sidecar is unavailable.
+          const { computeVolumeHeavy } = await import('@/lib/compute/surfaceService');
+          const { result, source } = await computeVolumeHeavy({
+            surface1: dtmPoints,
+            mode: 'cutfill',
+            cellSize: 1.0,
+            baseElevation: datum,
+          });
+          setCutFillResult({
+            totalCutVolume: result.cut,
+            totalFillVolume: result.fill,
+            netVolume: result.net,
+            cutArea: result.cutArea ?? 0,
+            fillArea: result.fillArea ?? 0,
+            balancePoint: result.balanceElevation ?? datum,
+            points: [],
+          });
+          setCutFillSource(source === 'worker' ? 'python-sidecar' : 'local');
+          return;
+        }
+
         const result = computeCutFillDatum(dtmPoints, datum);
         setCutFillResult(result);
+        setCutFillSource('local');
       } catch (err) {
         setCutFillError(err instanceof Error ? err.message : 'Cut/fill computation failed.');
       } finally {
@@ -661,7 +709,7 @@ export default function PointCloudImportPage() {
       <ComputeLimitNotice
         maxPoints={MAX_POINTS}
         tool="Point cloud import"
-        message="The web importer keeps the first 100,000 points for speed and stability. Large scans, dense TINs, and batch processing run best in the METARDU desktop app — full engine locally, no caps, no uploads."
+        message={`The web importer keeps the first ${MAX_POINTS.toLocaleString()} points. Clouds above ${SURFACE_WORKER_HEAVY_THRESHOLD.toLocaleString()} points compute TIN/cut-fill in the Python sidecar when available, falling back to the local engine. For truly massive scans, the METARDU desktop app runs the full engine locally — no caps, no uploads.`}
       />
 
       {/* Tab bar */}
@@ -1192,8 +1240,14 @@ export default function PointCloudImportPage() {
             </div>
             <p className="text-sm text-[var(--text-secondary)] mb-4">
               Generates a Triangulated Irregular Network from the imported points.
-              Uses Delaunator for Delaunay triangulation.
+              Uses Delaunator for Delaunay triangulation (scipy in the Python sidecar
+              for million-point clouds).
             </p>
+            {tinSource === 'python-sidecar' && (
+              <p className="text-xs text-[var(--accent)] mb-3">
+                Computed in the Python sidecar — supports million-point clouds without the browser cap.
+              </p>
+            )}
             <button
               onClick={runTINGeneration}
               disabled={isTinRunning || points.length < 3}
@@ -1302,6 +1356,11 @@ export default function PointCloudImportPage() {
             <p className="text-sm text-[var(--text-secondary)] mb-4">
               Compute cut and fill volumes relative to a horizontal datum RL using the slope analysis engine (IDW grid).
             </p>
+            {cutFillSource === 'python-sidecar' && (
+              <p className="text-xs text-[var(--accent)] mb-3">
+                Computed in the Python sidecar — totals are exact; per-cell display table is omitted for large clouds.
+              </p>
+            )}
             <div className="flex gap-4 items-end flex-wrap">
               <div>
                 <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="datum-rl-m">Datum RL (m)</label>

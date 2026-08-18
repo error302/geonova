@@ -15,8 +15,6 @@
 
 import { useState, useCallback } from 'react'
 import {
-  gridMethodVolume,
-  stockpileVolume,
   crossCheckVolume,
   type Point3D,
   type VolumeResult,
@@ -34,6 +32,9 @@ export function VolumeTab({ points }: VolumeTabProps) {
   const [baseElevation, setBaseElevation] = useState(0)
   const [result, setResult] = useState<VolumeResult | null>(null)
   const [crossCheck, setCrossCheck] = useState<ReturnType<typeof crossCheckVolume> | null>(null)
+  // _source is written but never read yet — kept so the compute path always
+  // records whether the sidecar handled the volume.
+  const [_source, setSource] = useState<'local' | 'python-sidecar' | null>(null)
   const [loading, setLoading] = useState(false)
 
   const compute = useCallback(async () => {
@@ -43,22 +44,35 @@ export function VolumeTab({ points }: VolumeTabProps) {
       await new Promise(r => setTimeout(r, 50))
 
       const pts = points as Point3D[]
+      // Heavy volumes (>= 100k points) go to the Python sidecar grid-method
+      // engine; small/offline inputs use the local engine. Both return the
+      // same VolumeResult shape.
+      const { computeVolumeHeavy } = await import('@/lib/compute/surfaceService')
 
       if (mode === 'stockpile') {
-        const r = stockpileVolume(pts, baseElevation)
+        const { result: r, source: src } = await computeVolumeHeavy({
+          surface1: pts,
+          mode: 'stockpile',
+          baseElevation,
+        })
         setResult(r)
         setCrossCheck(null)
+        setSource(src === 'worker' ? 'python-sidecar' : 'local')
       } else {
         // Cut/Fill: we need two surfaces. For a single point cloud,
         // we use the grid method with the imported surface as "surface1"
         // and a flat base plane as "surface2".
         const baseSurface: Point3D[] = pts.map(p => ({ ...p, elevation: baseElevation }))
-        const r = gridMethodVolume(pts, baseSurface, cellSize)
+        const { result: r, crossCheck: cc, source: src } = await computeVolumeHeavy({
+          surface1: pts,
+          surface2: baseSurface,
+          mode: 'cutfill',
+          cellSize,
+          crossCheck: true,
+        })
         setResult(r)
-
-        // Also compute via TIN method for cross-check
-        const cc = crossCheckVolume(pts, baseSurface)
-        setCrossCheck(cc)
+        setCrossCheck(cc ?? null)
+        setSource(src === 'worker' ? 'python-sidecar' : 'local')
       }
     } finally {
       setLoading(false)

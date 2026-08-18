@@ -1,3 +1,5 @@
+import type { GNSSObservationReport } from './gnssObservationReport'
+
 export type SubmissionStatus =
   | 'draft'
   | 'qa_failed'
@@ -6,10 +8,29 @@ export type SubmissionStatus =
   | 'approved'
 
 export type SurveySubtype =
+  // Extended per-method subtypes (validateSubmission's SUBTYPE_TO_SURVEY_TYPE).
   | 'cadastral_subdivision'
   | 'cadastral_amalgamation'
   | 'cadastral_resurvey'
   | 'cadastral_mutation'
+  | 'topographic_site'
+  | 'topographic_corridor'
+  | 'engineering_road'
+  | 'engineering_bridge'
+  | 'engineering_dam'
+  | 'geodetic_control'
+  | 'mining'
+  | 'hydrographic'
+  | 'drone'
+  | 'deformation'
+  // Raw project survey types — assembleSubmission sources subtype directly
+  // from projects.survey_type, so these are valid runtime values too.
+  | 'cadastral'
+  | 'engineering'
+  | 'topographic'
+  | 'geodetic'
+  | 'drone'
+  | 'deformation'
 
 export interface SubmissionSurveyorIdentity {
   registrationNumber: string
@@ -77,6 +98,9 @@ export interface SubmissionPackage {
   meanElevation?: number
   // SRVY2025-1 submission
   controlClass?: 'FIRST' | 'SECOND' | 'THIRD' | 'FOURTH'
+  // Stored GNSS observation report (if saved via /api/submission/gnss-observation-report).
+  // The QA gate blocks assembly on a FAILED session unless an override reason is given.
+  gnss?: GNSSObservationReport | null
 }
 
 export interface QAGateResult {

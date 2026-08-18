@@ -12,6 +12,7 @@ import MapAccessibility from './MapAccessibility';
 import { useVertexEditing } from '@/hooks/useVertexEditing';
 import { LayerControl } from './LayerControl';
 import { exportMapPDF } from '@/lib/export/exportMapPDF';
+import type { MapErrorEllipseStation } from '@/lib/map/errorEllipseLayer';
 
 interface SurveyMapProps {
   projectId: string;
@@ -35,6 +36,12 @@ interface SurveyMapProps {
   mapContainerId?: string;
   /** T1.5 FIX (2026-07-09): UTM EPSG for coordinate transforms (default 'EPSG:21037') */
   epsg?: string;
+  /**
+   * G-23 (2026-08-18): 95% confidence error ellipses from the LSA network
+   * adjustment (covariance the adjustment already computes). When provided,
+   * an error-ellipse layer + toolbar toggle are shown on the map.
+   */
+  errorEllipses?: MapErrorEllipseStation[];
 }
 
 interface NearestStation extends KenCORSStation {
@@ -58,6 +65,7 @@ export default function SurveyMap({
   county,
   mapContainerId = 'metardu-map-container',
   epsg = 'EPSG:21037',
+  errorEllipses,
 }: SurveyMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<import('ol/Map').default | null>(null);
@@ -65,6 +73,13 @@ export default function SurveyMap({
   const [nearestStations, setNearestStations] = useState<NearestStation[]>([]);
   const [clickedCoord, setClickedCoord] = useState<{ easting: number; northing: number } | null>(null);
   const [_basemap, setBasemap] = useState<'osm' | 'satellite' | 'blank'>('osm');
+
+  // ── G-23: LSA error-ellipse layer state ────────────────────────
+  const errorEllipseLayerRef = useRef<import('ol/layer/Vector').default | null>(null);
+  const [showErrorEllipses, setShowErrorEllipses] = useState(
+    errorEllipses !== undefined && errorEllipses.length > 0
+  );
+  const [ellipseExaggeration, setEllipseExaggeration] = useState(100);
 
   // ── Sheet layout state ────────────────────────────────────────
   const [showSheetLayout, setShowSheetLayout] = useState(false);
@@ -176,6 +191,30 @@ export default function SurveyMap({
         createKenCORSLayer(kenCORSWithCoords),
       ]);
 
+      // G-23: error-ellipse layer (if the LSA adjustment provides covariance)
+      let errorEllipseLayer: import('ol/layer/Vector').default | null = null;
+      if (errorEllipses && errorEllipses.length > 0) {
+        const { createErrorEllipseLayer } = await import('@/lib/map/errorEllipseLayer');
+        errorEllipseLayer = await createErrorEllipseLayer({
+          stations: errorEllipses,
+          epsg,
+          exaggeration: ellipseExaggeration,
+          visible: showErrorEllipses,
+        });
+        errorEllipseLayerRef.current = errorEllipseLayer;
+      }
+
+      // Deterministic stacking: OSM(0) < KenCORS(1) < parcel(2) < ellipses(3)
+      // < beacons(4) < annotations(5) — lets the ellipse layer be added or
+      // removed later without disturbing layer order. Previously every layer
+      // relied on collection order (all zIndex 0); once any layer gets an
+      // explicit zIndex the rest must too, or they'd sink below it.
+      osmLayer.setZIndex(0);
+      kenCORSLayer.setZIndex(1);
+      parcelLayer.setZIndex(2);
+      errorEllipseLayer?.setZIndex(3);
+      beaconLayer.setZIndex(4);
+
       // Tag the OSM layer so LayerControl can find it
       osmLayer.set('basemapId', 'osm');
 
@@ -189,6 +228,7 @@ export default function SurveyMap({
         coords3857,
         stations21037,
       });
+      annotationLayer.setZIndex(5); // on top: bearings, distances, area labels
 
       if (cancelled) return;
 
@@ -197,7 +237,14 @@ export default function SurveyMap({
 
       map = new Map({
         target,
-        layers: [osmLayer, kenCORSLayer, parcelLayer, beaconLayer, annotationLayer],
+        layers: [
+          osmLayer,
+          kenCORSLayer,
+          parcelLayer,
+          ...(errorEllipseLayer ? [errorEllipseLayer] : []),
+          beaconLayer,
+          annotationLayer,
+        ],
         view: new View({
           center: savedState?.center ?? center3857,
           zoom: savedState?.zoom ?? 16,
@@ -272,6 +319,48 @@ export default function SurveyMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId, centroidEasting, centroidNorthing]);
 
+  // G-23: keep the error-ellipse layer in sync with visibility + exaggeration.
+  // Also covers the case where ellipses arrive after the map initialised (the
+  // layer is then created lazily and stacked below the beacons via zIndex).
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const hasEllipses = (errorEllipses?.length ?? 0) > 0;
+      let layer = errorEllipseLayerRef.current;
+      const map = mapInstanceRef.current;
+      if (!layer && hasEllipses && map) {
+        const { createErrorEllipseLayer } = await import('@/lib/map/errorEllipseLayer');
+        if (cancelled) return;
+        layer = await createErrorEllipseLayer({
+          stations: errorEllipses ?? [],
+          epsg,
+          exaggeration: ellipseExaggeration,
+          visible: showErrorEllipses,
+        });
+        layer.setZIndex(3);
+        map.addLayer(layer);
+        errorEllipseLayerRef.current = layer;
+      }
+      if (!layer) return;
+
+      layer.setVisible(showErrorEllipses && hasEllipses);
+      if (!showErrorEllipses || !hasEllipses) return;
+
+      const { buildErrorEllipseFeatures } = await import('@/lib/map/errorEllipseLayer');
+      if (cancelled) return;
+      const features = await buildErrorEllipseFeatures({
+        stations: errorEllipses ?? [],
+        epsg,
+        exaggeration: ellipseExaggeration,
+      });
+      if (cancelled) return;
+      const source = layer.getSource() as import('ol/source/Vector').default;
+      source.clear();
+      source.addFeatures(features);
+    })();
+    return () => { cancelled = true; };
+  }, [errorEllipses, epsg, showErrorEllipses, ellipseExaggeration]);
+
   const fitToParcel = useCallback(async () => {
     if (!mapInstanceRef.current || adjustedStations.length < 3) return;
     const { transform } = await import('ol/proj');
@@ -322,6 +411,37 @@ export default function SurveyMap({
           ⎙ Print / PDF
         </button>
         <div className="flex-1" />
+
+        {errorEllipses && errorEllipses.length > 0 && (
+          <div className="flex items-center gap-2 text-xs">
+            <button
+              onClick={() => setShowErrorEllipses(v => !v)}
+              className={`px-3 py-1.5 rounded text-xs font-medium border transition-colors ${
+                showErrorEllipses
+                  ? 'bg-[#1B3A5C] text-white border-[#1B3A5C]'
+                  : 'bg-white text-[#1B3A5C] border-[#1B3A5C] hover:bg-[#1B3A5C]/5'
+              }`}
+              title="Toggle 95% confidence LSA error ellipses (G-23)"
+            >
+              {showErrorEllipses ? 'Error Ellipses On' : 'Error Ellipses'}
+            </button>
+            {showErrorEllipses && (
+              <select
+                value={ellipseExaggeration}
+                onChange={e => setEllipseExaggeration(Number(e.target.value))}
+                className="px-2 py-1.5 border border-gray-300 rounded text-xs bg-white text-gray-700"
+                title="Exaggeration factor — ellipses are cm-level, so they are scaled up while preserving relative size and orientation"
+                aria-label="Error ellipse exaggeration factor"
+              >
+                <option value={1}>1× (true scale)</option>
+                <option value={10}>10×</option>
+                <option value={100}>100×</option>
+                <option value={1000}>1000×</option>
+              </select>
+            )}
+          </div>
+        )}
+
         <div className="flex items-center gap-3 text-xs text-gray-600">
           <span className="font-medium">Nearest KenCORS:</span>
           {nearestStations.map(st => (

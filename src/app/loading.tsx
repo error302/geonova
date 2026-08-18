@@ -183,7 +183,7 @@ export default function RootLoading() {
         }
 
         .wordmark {
-          font-family: ui-monospace, 'Courier New', monospace;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
           font-size: 12px;
           letter-spacing: 0.38em;
           font-weight: 700;
