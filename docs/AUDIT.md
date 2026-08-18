@@ -52,7 +52,7 @@ Items resolved since this audit was written. See `docs/MASTER_PLAN.md` for the f
 | H3 | Two `apiHandler` implementations | partially resolved | v2 is canonical (X-Request-Id, structured logs, auditChain). v1 error shape still exists in some legacy routes. |
 | H4 | Offline conflict resolution LWW destructive | ✅ RESOLVED | Three-way merge with common-ancestor diff. |
 | H5 | Capacitor config missing | open | `capacitor.config.ts` exists; `android/` dir needs scaffolding via `npm run mobile:setup`. |
-| H6 | NextAuth v5 migration not activated | ⏳ READY TO EXECUTE | `auth-v5.ts` complete, codemod staged, 44 files / 46 call-sites identified. 7-phase plan at `docs/nextauth-v5-migration-plan.md` (P1-1). |
+| H6 | NextAuth v5 migration not activated | ✅ EXECUTED — v5 active & runtime-verified; staging E2E before prod promote | `auth-v5.ts` ACTIVE (no `@ts-nocheck`), 44 files migrated; **UntrustedHost 500 fixed** with `trustHost: true`. v4 kept as `@ts-nocheck` rollback (not imported). |
 | H7 | No backup automation | ✅ RESOLVED | `metardu-backup` sidecar with dcron, GPG encryption, 30-day retention. |
 | H8 | Hardcoded credentials in docker-compose | ✅ RESOLVED | Production + staging use `${VAR:?...}`. Testing compose + 5 OSM source files fixed 2026-07-24 (P0-5). |
 | H9 | CPD UI uses stub | open | `marketplace/cpdCertificates.ts` returns `[]` instead of calling real `src/lib/cpd.ts`. |
@@ -266,24 +266,29 @@ conflict-resolution UI. Optimistic locking via `updated_at` checks is in
 
 ---
 
-### H6. NextAuth v5 migration file is `@ts-nocheck` and never imported ⏳ READY TO EXECUTE
+### H6. NextAuth v5 migration — now ACTIVE (executed 2026-08-15) ✅
 **File:** `src/lib/auth-v5.ts`
 
-**Resolution (2026-07-03):** The `@ts-nocheck` is intentional and correct —
-`next-auth@beta` is not installed, so v5 imports would fail without it.
-The v5 config (229 lines) is complete and ready for activation. All
-prerequisites are now in place: staging environment (deploy-staging.yml),
-rollback workflow (rollback.yml), pre-deploy DB backup (promote.yml),
-staging docker-compose. The 7-phase execution plan in
-`docs/nextauth-v5-migration-plan.md` can be run when there's a quiet window.
-This is a 2-week side-quest that requires installing the beta, running a
-codemod across 44 files, testing against staging, and having a rollback
-plan — doing it without those safety measures would risk locking out all
-users.
+**Status:** P1-1 executed. The v5 config is ACTIVE TypeScript (no `@ts-nocheck`)
+and is imported by 44 files / 46 call-sites (migrated via `scripts/auth-v5-codemod.js`).
+`src/app/api/auth/[...nextauth]/route.ts` mounts `export const { GET, POST } = handlers`.
+`src/lib/auth.ts` (v4) is retained as a `@ts-nocheck` rollback reference and is
+NOT imported by any route — keep it until v5 has been in production ~1 week.
 
-The staged v5 config has `@ts-nocheck` at the top and is never imported by any route. v4 is still active. The migration plan exists at `docs/nextauth-v5-migration-plan.md` but is not executed.
+**Runtime verification (local, 2026-08-15):** `next build` green; auth unit
+tests 28/28; `/api/auth/providers`, `/api/auth/csrf`, `/api/auth/session` all
+respond correctly; `/dashboard` 307-redirects to `/login` via middleware.
 
-**Fix:** Execute the 7-phase migration plan when there's a quiet window. Until then, at least remove the `@ts-nocheck` and fix the type errors so the file is ready.
+**Bug found & fixed:** Auth.js v5 returned `500 UntrustedHost` on every
+`/api/auth/*` request because the incoming Host didn't match `NEXTAUTH_URL` and
+`trustHost` was unset. Fixed by adding `trustHost: true` (app runs behind a
+trusted reverse proxy — nginx → Docker). This is the documented fix for
+`#untrustedhost`.
+
+**Remaining before prod promote:** full credentials + OAuth login E2E against a
+real DB on **staging** (`deploy-staging.yml`) — the local DB (`metardu-postgres`)
+is only reachable from the VM, not the dev machine. Then promote via
+`promote.yml` and monitor session cookie shape.
 
 ---
 

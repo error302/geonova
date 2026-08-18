@@ -316,6 +316,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
 
+  // Auth.js v5 rejects requests whose Host doesn't match AUTH_URL/NEXTAUTH_URL.
+  // The app runs behind a trusted reverse proxy (nginx → Docker), so we trust
+  // the forwarded Host header. Required to avoid UntrustedHost 500s on /api/auth/*.
+  trustHost: true,
+
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account?.provider === 'credentials') {

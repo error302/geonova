@@ -46,7 +46,7 @@ Per `docs/ROADMAP.md`:
 - ❌ `next-auth@beta` not installed
 - ❌ Codemod not applied
 - ❌ Prisma migration not run
-- ❌ v5 not activated
+- ✅ v5 ACTIVATED (P1-1 executed 2026-08-15); remaining: staging E2E + prod promote
 
 ---
 
