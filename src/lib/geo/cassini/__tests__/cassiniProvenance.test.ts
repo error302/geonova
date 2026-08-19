@@ -60,8 +60,8 @@ describe('synthetic Cassini subsheet data (provenance audit)', () => {
   })
 
   it('every subsheet has exactly 4 corners with finite coordinates', () => {
-    for (const [sheetId, subs] of Object.entries(ALL_SHEETS)) {
-      for (const [subId, corners] of Object.entries(subs)) {
+    for (const [_sheetId, subs] of Object.entries(ALL_SHEETS)) {
+      for (const [_subId, corners] of Object.entries(subs)) {
         expect(corners.length).toBe(4)
         for (const c of corners) {
           expect(Number.isFinite(c.cassX)).toBe(true)
@@ -74,8 +74,8 @@ describe('synthetic Cassini subsheet data (provenance audit)', () => {
   })
 
   it('every corner UTM falls within Kenya zone 36/37S span', () => {
-    for (const [sheetId, subs] of Object.entries(ALL_SHEETS)) {
-      for (const [subId, corners] of Object.entries(subs)) {
+    for (const [_sheetId, subs] of Object.entries(ALL_SHEETS)) {
+      for (const [_subId, corners] of Object.entries(subs)) {
         for (const c of corners) {
           expect(c.utmE).toBeGreaterThan(UTM_E_MIN)
           expect(c.utmE).toBeLessThan(UTM_E_MAX)
@@ -92,20 +92,20 @@ describe('synthetic Cassini subsheet data (provenance audit)', () => {
     const byUTM = new Map<string, { sheetId: string; subId: string; e: number; n: number }[]>()
     const key = (e: number, n: number) => `${Math.round(e * 100)},${Math.round(n * 100)}`
 
-    for (const [sheetId, subs] of Object.entries(ALL_SHEETS)) {
-      for (const [subId, corners] of Object.entries(subs)) {
+    for (const [_sheetId, subs] of Object.entries(ALL_SHEETS)) {
+      for (const [_subId, corners] of Object.entries(subs)) {
         for (const c of corners) {
-          const k = key(c.utmE, c.utmN)
-          const list = byUTM.get(k) ?? []
-          list.push({ sheetId, subId, e: c.utmE, n: c.utmN })
-          byUTM.set(k, list)
+          const _k = key(c.utmE, c.utmN)
+          const list = byUTM.get(_k) ?? []
+          list.push({ sheetId: _sheetId, subId: _subId, e: c.utmE, n: c.utmN })
+          byUTM.set(_k, list)
         }
       }
     }
 
     let seamViolations = 0
     let totalCorners = 0
-    for (const [k, entries] of byUTM.entries()) {
+    for (const [_k, entries] of byUTM.entries()) {
       totalCorners += entries.length
       if (entries.length < 2) continue
       const ref = entries[0]

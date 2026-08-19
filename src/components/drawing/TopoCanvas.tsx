@@ -38,10 +38,15 @@ function computeTopoTransform(
     return { scale: 1, originE: 0, originN: 0 }
   }
 
-  const minE = Math.min(...points.map(p => p.e))
-  const maxE = Math.max(...points.map(p => p.e))
-  const minN = Math.min(...points.map(p => p.n))
-  const maxN = Math.max(...points.map(p => p.n))
+  // Optimization: use a for loop instead of spread operators to prevent V8 "Maximum call stack size exceeded" errors
+  let minE = Infinity, maxE = -Infinity, minN = Infinity, maxN = -Infinity;
+  for (let i = 0; i < points.length; i++) {
+    const p = points[i];
+    if (p.e < minE) minE = p.e;
+    if (p.e > maxE) maxE = p.e;
+    if (p.n < minN) minN = p.n;
+    if (p.n > maxN) maxN = p.n;
+  }
 
   const rangeE = maxE - minE || 1
   const rangeN = maxN - minN || 1
@@ -107,9 +112,17 @@ export function TopoCanvas({
       }
     }
 
-    const zValues = spotHeights.map(p => p.z).filter(z => !isNaN(z))
-    const minZ = Math.min(...zValues)
-    const maxZ = Math.max(...zValues)
+    // Optimization: use a for loop instead of spread operators to prevent V8 "Maximum call stack size exceeded" errors
+    let minZ = Infinity, maxZ = -Infinity;
+    for (let i = 0; i < spotHeights.length; i++) {
+      const z = spotHeights[i].z;
+      if (!isNaN(z)) {
+        if (z < minZ) minZ = z;
+        if (z > maxZ) maxZ = z;
+      }
+    }
+    // If no valid z values, default to 0
+    if (minZ === Infinity) { minZ = 0; maxZ = 0; }
 
     function elevationColor(z: number): string {
       if (maxZ === minZ) return '#4a9eff'

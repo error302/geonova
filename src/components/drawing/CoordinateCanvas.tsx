@@ -56,13 +56,15 @@ function computeTransform(
     return { scale: 1, originE: 0, originN: 0 }
   }
 
-  const eastings = points.map(p => p.easting)
-  const northings = points.map(p => p.northing)
-
-  const minE = Math.min(...eastings)
-  const maxE = Math.max(...eastings)
-  const minN = Math.min(...northings)
-  const maxN = Math.max(...northings)
+  // Optimization: use a for loop instead of spread operators to prevent V8 "Maximum call stack size exceeded" errors
+  let minE = Infinity, maxE = -Infinity, minN = Infinity, maxN = -Infinity;
+  for (let i = 0; i < points.length; i++) {
+    const p = points[i];
+    if (p.easting < minE) minE = p.easting;
+    if (p.easting > maxE) maxE = p.easting;
+    if (p.northing < minN) minN = p.northing;
+    if (p.northing > maxN) maxN = p.northing;
+  }
 
   const rangeE = maxE - minE || 1
   const rangeN = maxN - minN || 1
@@ -139,10 +141,21 @@ export function CoordinateCanvas({
     if (showGrid) {
       const gridGroup = new Konva.Group()
       const gridInterval = 100
-      const minE = Math.min(...points.map(p => p.easting)) - 200
-      const maxE = Math.max(...points.map(p => p.easting)) + 200
-      const minN = Math.min(...points.map(p => p.northing)) - 200
-      const maxN = Math.max(...points.map(p => p.northing)) + 200
+
+      // Optimization: use a for loop instead of spread operators to prevent V8 "Maximum call stack size exceeded" errors
+      let pMinE = Infinity, pMaxE = -Infinity, pMinN = Infinity, pMaxN = -Infinity;
+      for (let i = 0; i < points.length; i++) {
+        const p = points[i];
+        if (p.easting < pMinE) pMinE = p.easting;
+        if (p.easting > pMaxE) pMaxE = p.easting;
+        if (p.northing < pMinN) pMinN = p.northing;
+        if (p.northing > pMaxN) pMaxN = p.northing;
+      }
+
+      const minE = pMinE - 200
+      const maxE = pMaxE + 200
+      const minN = pMinN - 200
+      const maxN = pMaxN + 200
 
       for (let e = Math.ceil(minE / gridInterval) * gridInterval; e <= maxE; e += gridInterval) {
         const start = worldToCanvas(e, minN, t, height)
