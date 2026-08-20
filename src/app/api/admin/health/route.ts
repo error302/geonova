@@ -108,7 +108,7 @@ export const GET = apiHandler(
       const errorsRes = await db.query<ErrorLogRow>(
         `SELECT message, created_at, endpoint FROM error_logs ORDER BY created_at DESC LIMIT 10`
       )
-      recentErrors = errorsRes.rows.map((row) => ({
+      recentErrors = errorsRes.rows.map((row: any) => ({
         message: row.message,
         timestamp: row.created_at,
         endpoint: row.endpoint ?? 'unknown',

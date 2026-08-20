@@ -115,7 +115,7 @@ export const GET = apiHandler(
     ])
 
     const totalRevenue = totalRevenueRes.rows[0]?.total ?? 0
-    const revenueByMonth = revenueByMonthRes.rows.map((row) => ({
+    const revenueByMonth = revenueByMonthRes.rows.map((row: any) => ({
       month: row.month,
       total: row.total,
     }))
@@ -130,7 +130,7 @@ export const GET = apiHandler(
        LIMIT 10`,
     )
 
-    const recentSignups = recentSignupsRes.rows.map((row) => ({
+    const recentSignups = recentSignupsRes.rows.map((row: any) => ({
       id: row.id,
       email: row.email,
       name: row.full_name || row.email?.split('@')[0],
@@ -169,7 +169,7 @@ export const GET = apiHandler(
        ORDER BY created_at DESC
        LIMIT 10`,
     )
-    const iskQueue = iskQueueRes.rows.map((row) => ({
+    const iskQueue = iskQueueRes.rows.map((row: any) => ({
       id: row.id,
       email: row.email,
       name: row.full_name || row.email?.split('@')[0],

@@ -82,7 +82,7 @@ export const GET = apiHandler(
 
     // Optionally load control points for each network
     if (withPoints && networks.length > 0) {
-      const networkIds = networks.map(n => n.id)
+      const networkIds = networks.map((n: any) => n.id)
       const { rows: points } = await db.query<CorridorPointRow>(
         `SELECT * FROM corridor_control_points WHERE network_id = ANY($1::uuid[]) ORDER BY chainage`,
         [networkIds],

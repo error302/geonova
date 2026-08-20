@@ -109,7 +109,7 @@ export const GET = apiHandler(
       [...params, limit, offset],
     )
 
-    const users = dataResult.rows.map((row) => ({
+    const users = dataResult.rows.map((row: any) => ({
       id: row.id,
       email: row.email,
       fullName: row.full_name || row.email?.split('@')[0],
