@@ -9,6 +9,7 @@ import { useCountry, ALL_COUNTRIES } from '@/lib/country'
 import type { SurveyingCountry } from '@/lib/country'
 import { SURVEY_TYPE_LABELS, SurveyType } from '@/types/project'
 import type { ProjectType } from '@/types/scheme'
+import { markOnboardingStepComplete } from '@/components/shared/OnboardingChecklist'
 
 export default function NewProjectPage() {
   const { country: defaultCountry, setCountry: setContextCountry } = useCountry()
@@ -135,10 +136,14 @@ export default function NewProjectPage() {
       }
       setContextCountry(selectedCountry)
 
+      // Tick the onboarding checklist — the project now exists.
+      markOnboardingStepComplete('create-project')
+
+      // Land in the survey workspace, not back on the dashboard.
       if (projectType === 'scheme') {
         router.push(`/project/${project.id}/scheme`)
       } else {
-        router.push(`/project/${project.id}`)
+        router.push(`/survey/${project.id}`)
       }
     } catch (err: unknown) {
       setError((err as Error).message || 'Network error — please try again')

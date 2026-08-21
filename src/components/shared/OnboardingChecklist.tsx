@@ -104,6 +104,18 @@ function saveState(state: OnboardingState) {
   }
 }
 
+/**
+ * Mark a checklist step complete from outside the component — e.g. the
+ * project-create form ticks 'create-project' as soon as a project is
+ * actually created, instead of waiting for the user to notice the checkbox.
+ */
+export function markOnboardingStepComplete(stepId: string) {
+  if (typeof window === 'undefined') return
+  const state = loadState()
+  if (state.completed[stepId]) return
+  saveState({ ...state, completed: { ...state.completed, [stepId]: true } })
+}
+
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */

@@ -198,7 +198,7 @@ export default function ProjectCard({ project, openLabel }: { project: ProjectCa
       target.closest('a') ||
       target.closest('button')
     ) return
-    router.push(`/project/${project.id}`)
+    router.push(`/survey/${project.id}`)
   }
 
   const handleDelete = useCallback(async () => {
@@ -274,7 +274,7 @@ export default function ProjectCard({ project, openLabel }: { project: ProjectCa
 
         <div className="pt-3 border-t border-[var(--border-color)] flex items-center justify-between">
           <Link
-            href={`/project/${project.id}`}
+            href={`/survey/${project.id}`}
             prefetch={false}
             onClick={e => e.stopPropagation()}
             className="text-xs text-[var(--accent)] font-medium hover:text-[var(--accent-dim)] transition-colors"

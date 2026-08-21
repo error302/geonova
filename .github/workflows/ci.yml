@@ -80,6 +80,18 @@ jobs:
       # Pure-node regex scan over src/ — fast, no deps, blocks CI on any hit.
       - name: Aria-label gate (blocking, bans junk accessible names)
         run: node scripts/aria-label-gate.mjs
+      # Tailwind 3.x emits NO rule for var()+/opacity arbitrary utilities —
+      # the class silently renders nothing (1,025 shipped dead, fixed
+      # 2026-08-21). Pure-node regex scan; blocks CI on any hit.
+      - name: Tailwind var-opacity gate (blocking, bans dead var()/N utilities)
+        run: node scripts/tailwind-var-opacity-gate.mjs
+      # Migrations are the schema source of truth. Fails when app code selects
+      # a column no migration defines — the bug class that silently broke
+      # /project/[id] for weeks (workflow_step was queried, never created).
+      # Known pre-existing drift lives in scripts/schema-drift-baseline.json
+      # (ratchet: entries must shrink, never grow).
+      - name: Schema-drift gate (blocking, code columns vs migrations)
+        run: node scripts/schema-drift-gate.mjs
       # Per-rule ratchets (warning-baseline.json + a11y-baseline.json) in ONE
       # eslint pass — blocks on ANY rule exceeding its baseline. A rule absent
       # from a baseline counts as 0, so brand-new violations fail CI.

@@ -206,7 +206,7 @@ export default function FieldModeToggle() {
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)]
           group
           ${isField
-            ? 'bg-[var(--accent)] text-black shadow-lg shadow-[var(--accent)]/25'
+            ? 'bg-[var(--accent)] text-black shadow-lg shadow-[color-mix(in_srgb,var(--accent)_25%,transparent)]'
             : 'bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]'
           }
         `}

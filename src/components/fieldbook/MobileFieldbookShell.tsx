@@ -250,7 +250,7 @@ export function MobileFieldbookShell({
                 className={[
                   'flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all active:scale-95',
                   active
-                    ? 'bg-[var(--accent)] text-black shadow-md shadow-[var(--accent)]/25'
+                    ? 'bg-[var(--accent)] text-black shadow-md shadow-[color-mix(in_srgb,var(--accent)_25%,transparent)]'
                     : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]',
                 ].join(' ')}
               >
@@ -764,7 +764,7 @@ export function MobileFieldbookShell({
       {/* ─── Floating Action Button (above measurement capture bar) ─── */}
       <button
         onClick={() => setShowForm(true)}
-        className="fixed bottom-24 right-5 z-40 grid place-items-center w-14 h-14 rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--accent-dim)] text-black shadow-2xl shadow-[var(--accent)]/40 active:scale-95 transition-all"
+        className="fixed bottom-24 right-5 z-40 grid place-items-center w-14 h-14 rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--accent-dim)] text-black shadow-2xl shadow-[color-mix(in_srgb,var(--accent)_40%,transparent)] active:scale-95 transition-all"
         aria-label={`Add ${TYPE_LABELS[surveyType].label} reading`}
       >
         <Plus className="w-6 h-6" strokeWidth={2.5} />

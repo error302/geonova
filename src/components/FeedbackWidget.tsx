@@ -183,7 +183,7 @@ export default function FeedbackWidget() {
                   onClick={() => setType(key)}
                   className={`flex-1 py-3 rounded-lg text-[10px] font-medium transition-all ${
                     type === key
-                      ? 'bg-[var(--accent)] text-black shadow-md shadow-[var(--accent)]/20'
+                      ? 'bg-[var(--accent)] text-black shadow-md shadow-[color-mix(in_srgb,var(--accent)_20%,transparent)]'
                       : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-white hover:bg-[var(--border-color)]'
                   }`}
                 >

@@ -554,7 +554,7 @@ export default function CommunityPage() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href="/community/directory"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-[var(--accent)] text-black hover:opacity-90 transition-opacity shadow-lg shadow-[var(--accent)]/20"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-[var(--accent)] text-black hover:opacity-90 transition-opacity shadow-lg shadow-[color-mix(in_srgb,var(--accent)_20%,transparent)]"
                 >
                   <Search className="w-4 h-4" /> Find Surveyor
                 </Link>
@@ -684,7 +684,7 @@ export default function CommunityPage() {
                   <Link
                     key={s.id}
                     href="/community/directory"
-                    className="group relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-all duration-300 hover:shadow-lg hover:shadow-[var(--accent)]/5"
+                    className="group relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-all duration-300 hover:shadow-lg hover:shadow-[color-mix(in_srgb,var(--accent)_5%,transparent)]"
                   >
                     <div className="flex items-start gap-4 mb-4">
                       <div

@@ -130,13 +130,13 @@ export function PWAInstallBanner() {
         aria-label={t('pwa.installTitle')}
         className="fixed left-1/2 -translate-x-1/2 bottom-4 sm:bottom-6 z-[60] w-[calc(100%-1.5rem)] max-w-md animate-[slideUp_0.3s_ease-out]"
       >
-        <div className="relative bg-[var(--bg-card)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rounded-2xl shadow-2xl shadow-[var(--accent)]/10 overflow-hidden">
+        <div className="relative bg-[var(--bg-card)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rounded-2xl shadow-2xl shadow-[color-mix(in_srgb,var(--accent)_10%,transparent)] overflow-hidden">
           {/* Top accent stripe */}
           <div className="h-1 w-full bg-gradient-to-r from-[var(--accent)] via-amber-400 to-orange-300" />
 
           <div className="p-4 flex items-start gap-3">
             {/* App icon */}
-            <div className="grid place-items-center w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-dim)] text-black shrink-0 shadow-lg shadow-[var(--accent)]/20">
+            <div className="grid place-items-center w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-dim)] text-black shrink-0 shadow-lg shadow-[color-mix(in_srgb,var(--accent)_20%,transparent)]">
               <Download className="w-6 h-6" strokeWidth={2.5} />
             </div>
 

@@ -318,7 +318,7 @@ export function UniversalMobileObservationForm({
             className={[
               'w-full py-4 rounded-xl font-semibold text-base transition-all flex items-center justify-center gap-2',
               isComplete && !saving
-                ? 'bg-[var(--accent)] text-black active:bg-[var(--accent-dim)] shadow-lg shadow-[var(--accent)]/20'
+                ? 'bg-[var(--accent)] text-black active:bg-[var(--accent-dim)] shadow-lg shadow-[color-mix(in_srgb,var(--accent)_20%,transparent)]'
                 : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-not-allowed',
             ].join(' ')}
           >
