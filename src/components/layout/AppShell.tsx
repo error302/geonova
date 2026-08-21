@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { ReactNode } from 'react'
+import { ReactNode, Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
@@ -43,12 +43,6 @@ function isAuthRoute(pathname: string): boolean {
   return pathname === '/login' || pathname === '/register' || pathname.startsWith('/login/') || pathname.startsWith('/register/')
 }
 
-function isDashboardRoute(pathname: string): boolean {
-  // Dashboard routes use sidebar navigation, not the top NavBar
-  return pathname === '/dashboard' || pathname.startsWith('/dashboard/') ||
-         pathname.startsWith('/survey/') || pathname.startsWith('/project/')
-}
-
 function isMapRoute(pathname: string): boolean {
   return pathname === '/map' || pathname.startsWith('/map/')
 }
@@ -66,6 +60,17 @@ function isMarketingRoute(pathname: string): boolean {
   return pathname === '/' || pathname === '/pricing' || pathname === '/enterprise'
 }
 
+/* ── Nav skeleton (Suspense fallback) ─────────────────────────────── */
+/* NavBar suspends during SSR on some routes (next-auth useSession ->
+   BAILOUT_TO_CLIENT_SIDE_RENDERING). Without an explicit boundary the
+   implicit bailout can silently render NOTHING after hydration (seen on
+   /dashboard: no navbar, no errors, chunk loads fine). An explicit
+   <Suspense> with a same-height fallback guarantees the slot always has
+   layout and the navbar mounts into it on the client. */
+function NavSkeleton() {
+  return <div className="h-16 border-b border-[var(--border-color)] bg-[var(--bg-primary)]" aria-hidden />
+}
+
 /* ── Shell Component ─────────────────────────────────────────────── */
 
 export default function AppShell({ children }: { children: ReactNode }) {
@@ -73,7 +78,6 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const fullScreen = isFullScreenRoute(pathname)
   const admin = isAdminRoute(pathname)
   const auth = isAuthRoute(pathname)
-  const dashboard = isDashboardRoute(pathname) // Uses sidebar nav, not top NavBar
   const mapPage = isMapRoute(pathname)
   const fieldbookPage = isFieldbookRoute(pathname)
   const marketing = isMarketingRoute(pathname)
@@ -116,7 +120,9 @@ export default function AppShell({ children }: { children: ReactNode }) {
         <LanguageProvider>
           <CountryProvider>
             <SubscriptionProvider>
-              <NavBar />
+              <Suspense fallback={<NavSkeleton />}>
+                <NavBar />
+              </Suspense>
               <main id="main-content" className="min-h-screen max-w-full overflow-x-hidden">
                 {children}
               </main>
@@ -200,17 +206,23 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <LanguageProvider>
         <CountryProvider>
           <SubscriptionProvider>
-            {/* AUDIT FIX: Hide top NavBar on dashboard routes — they use
-                sidebar navigation via (dashboard)/layout.tsx. Showing both
-                NavBar + sidebar header = double navigation bar. */}
-            {!dashboard && <NavBar />}
-            <main id="main-content" className={`min-h-screen max-w-full overflow-x-hidden ${dashboard ? '' : 'pb-40 md:pb-0 mobile-nav-spacer'}`}>
+            {/* NavBar renders on ALL app routes. (An earlier audit hid it on
+                /dashboard because that group used the AppSidebar layout — that
+                layout is gone, so hiding it here left the dashboard with no
+                navigation at all.) Suspense wrapper: NavBar suspends during
+                SSR on some routes (next-auth useSession ->
+                BAILOUT_TO_CLIENT_SIDE_RENDERING); the explicit boundary with
+                a same-height skeleton guarantees the slot never collapses. */}
+            <Suspense fallback={<NavSkeleton />}>
+              <NavBar />
+            </Suspense>
+            <main id="main-content" className="min-h-screen max-w-full overflow-x-hidden pb-40 md:pb-0 mobile-nav-spacer">
               {children}
             </main>
             <Footer />
             {!hideGlobalOverlays && <FeedbackWidget />}
             <HotkeyHelpOverlay />
-            {!dashboard && !hideGlobalOverlays && <MobileNav />}
+            {!hideGlobalOverlays && <MobileNav />}
             {!hideGlobalOverlays && <CommandPalette />}
             <NotificationToast />
             <OnboardingTour />
