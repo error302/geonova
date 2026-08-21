@@ -25,9 +25,9 @@ export const MapStatusBar = memo(function MapStatusBar() {
               <span className="text-[var(--text-muted)]">Lat</span>
               <span className="text-[var(--text-secondary)] w-[60px] md:w-[76px] text-right">{mouseCoord.lat.toFixed(6)}</span>
               <span className="hidden md:block w-px h-3.5 bg-[var(--bg-card)]/[0.06]" />
-              <span className="text-[color-mix(in_srgb,var(--accent)_70%,transparent)]">E</span>
+              <span className="text-[var(--accent)]">E</span>
               <span className="text-[var(--accent)] font-medium w-[64px] md:w-[80px] text-right">{mouseCoord.e.toFixed(1)}</span>
-              <span className="text-[color-mix(in_srgb,var(--accent)_70%,transparent)]">N</span>
+              <span className="text-[var(--accent)]">N</span>
               <span className="text-[var(--accent)] font-medium w-[64px] md:w-[80px] text-right">{mouseCoord.n.toFixed(1)}</span>
               <span className="text-[var(--text-muted)] text-[9px] md:text-[10px]">EPSG:21037</span>
             </div>

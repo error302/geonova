@@ -741,7 +741,7 @@ export const MapToolDock = memo(function MapToolDock() {
               <button key={cat.id} onClick={() => togglePanel(cat.id)} aria-label={cat.label}
                 className={`flex flex-col items-center justify-center gap-0.5 rounded-xl transition-all duration-200 w-12 h-12 shrink-0 relative
                   ${open ? 'bg-white/[0.08] border border-white/[0.12] text-[var(--text-primary)]'
-                    : active ? 'text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)]'
+                    : active ? 'text-[var(--text-primary)]'
                     : 'text-[var(--text-muted)]'}`}
                 style={open ? { boxShadow: `0 0 12px ${cat.accent}30` } : undefined}
               >
@@ -799,7 +799,7 @@ export const MapToolDock = memo(function MapToolDock() {
                     ${open
                       ? 'bg-[color-mix(in_srgb,var(--bg-secondary)_80%,transparent)] border border-white/[0.12] text-[var(--text-primary)]'
                       : active
-                        ? 'bg-[color-mix(in_srgb,var(--bg-secondary)_60%,transparent)] border border-white/[0.08] text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] hover:bg-[color-mix(in_srgb,var(--bg-secondary)_80%,transparent)]'
+                        ? 'bg-[color-mix(in_srgb,var(--bg-secondary)_60%,transparent)] border border-white/[0.08] text-[var(--text-primary)] hover:bg-[color-mix(in_srgb,var(--bg-secondary)_80%,transparent)]'
                         : 'bg-[color-mix(in_srgb,var(--bg-secondary)_40%,transparent)] border border-white/[0.05] text-[var(--text-muted)] hover:bg-[color-mix(in_srgb,var(--bg-secondary)_60%,transparent)] hover:text-[var(--text-secondary)]'}
                   `}
                   style={open ? { boxShadow: `0 0 14px ${cat.accent}35, inset 0 0 8px ${cat.accent}12`, borderColor: `${cat.accent}40` } : undefined}

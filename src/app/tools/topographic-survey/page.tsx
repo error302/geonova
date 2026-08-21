@@ -200,7 +200,7 @@ export default function TopographicSurveyPage() {
             <div key={def.code} className="text-[10px] px-2 py-1 rounded bg-[var(--bg-tertiary)] border border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
               <span className="font-mono font-bold text-[var(--accent)]">{def.code}</span>
               <span className="text-[var(--text-muted)] ml-1">{def.description}</span>
-              <span className="text-[color-mix(in_srgb,var(--text-muted)_50%,transparent)] ml-1">→ {def.dxfLayer}</span>
+              <span className="text-[var(--text-muted)] ml-1">→ {def.dxfLayer}</span>
             </div>
           ))}
         </div>

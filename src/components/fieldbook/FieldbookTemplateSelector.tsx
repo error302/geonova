@@ -280,7 +280,7 @@ function TemplateCard({
             </p>
           )}
           {template.regulationRef && !compact && (
-            <p className="text-[10px] text-[color-mix(in_srgb,var(--accent)_70%,transparent)] mt-1">
+            <p className="text-[10px] text-[var(--accent)] mt-1">
               [Book] {template.regulationRef}
             </p>
           )}

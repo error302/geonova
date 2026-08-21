@@ -444,7 +444,7 @@ function FormField({ label, value, onChange, disabled }: FormFieldProps) {
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           placeholder={`Enter ${label.toLowerCase()}…`}
-          className="w-full rounded-md border border-[var(--border-color)] bg-[var(--bg-primary)] px-3 py-1.5 text-sm text-[var(--text-primary)] placeholder:text-[color-mix(in_srgb,var(--text-muted)_50%,transparent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-colors"
+          className="w-full rounded-md border border-[var(--border-color)] bg-[var(--bg-primary)] px-3 py-1.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-colors"
         />
       )}
     </div>

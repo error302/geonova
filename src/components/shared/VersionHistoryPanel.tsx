@@ -398,7 +398,7 @@ export function VersionHistoryPanel({
                                           <td className="table-cell font-mono font-medium text-[var(--text-primary)]">
                                             {c.field}
                                           </td>
-                                          <td className="table-cell text-[color-mix(in_srgb,var(--error)_80%,transparent)]">
+                                          <td className="table-cell text-[var(--error)]">
                                             <span className="line-through opacity-70">
                                               {formatValue(c.old_value)}
                                             </span>

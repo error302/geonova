@@ -185,7 +185,7 @@ export function SnappingOptions({
         {/* Info */}
         <div className="flex items-start gap-1.5 p-2 rounded-lg bg-blue-500/5 border border-blue-500/10">
           <Settings2 className="w-3 h-3 text-[var(--primary-blue)] shrink-0 mt-0.5" />
-          <p className="text-[9px] text-[color-mix(in_srgb,var(--primary-blue)_70%,transparent)] leading-relaxed">
+          <p className="text-[9px] text-[var(--primary-blue)] leading-relaxed">
             Snapping ensures precise digitizing by aligning new features to existing vertices and edges.
             Lower tolerance = more precise but harder to snap. Higher tolerance = easier but less precise.
           </p>

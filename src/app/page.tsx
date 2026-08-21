@@ -204,7 +204,7 @@ function HeroSection() {
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg lg:text-xl text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] leading-relaxed mb-8 max-w-2xl">
+            <p className="text-base sm:text-lg lg:text-xl text-[var(--text-primary)] leading-relaxed mb-8 max-w-2xl">
               Traverse adjustment, deed plans, GNSS baseline processing, contour generation,
               and NLIMS-ready exports — all in one professional workspace. From field to finish,
               built for Kenyan surveyors.
@@ -245,8 +245,8 @@ function TrustStrip() {
         <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center">
           {TRUST_BADGES.map((badge, i) => (
             <li key={i} className="flex flex-col items-center">
-              <span className="text-sm font-bold text-[color-mix(in_srgb,var(--text-primary)_85%,transparent)] tracking-wider">{badge.label}</span>
-              <span className="text-[10px] uppercase tracking-wider text-[color-mix(in_srgb,var(--text-primary)_65%,transparent)]">{badge.sublabel}</span>
+              <span className="text-sm font-bold text-[var(--text-primary)] tracking-wider">{badge.label}</span>
+              <span className="text-[10px] uppercase tracking-wider text-[var(--text-primary)]">{badge.sublabel}</span>
             </li>
           ))}
         </ul>
@@ -268,7 +268,7 @@ function StatsBar() {
             <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[var(--text-primary)]">
               {stat.value}{stat.suffix}
             </div>
-            <div className="text-xs text-[color-mix(in_srgb,var(--text-primary)_65%,transparent)] mt-2 uppercase tracking-widest">
+            <div className="text-xs text-[var(--text-primary)] mt-2 uppercase tracking-widest">
               {stat.label}
             </div>
           </div>
@@ -308,7 +308,7 @@ function FeaturesSection() {
             <br />
             <span className="text-[var(--accent)]">professional surveying</span>
           </h2>
-          <p className="max-w-2xl mx-auto text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] text-base lg:text-lg">
+          <p className="max-w-2xl mx-auto text-[var(--text-primary)] text-base lg:text-lg">
             Six core modules purpose-built for the East African surveyor. From field observations
             to regulatory submission.
           </p>
@@ -336,7 +336,7 @@ function FeaturesSection() {
                     <Icon className="w-6 h-6 text-[var(--accent)]" aria-hidden />
                   </div>
                   <h3 className="text-lg font-bold text-[var(--text-primary)] mb-3">{feature.title}</h3>
-                  <p className="text-sm text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] leading-relaxed">{feature.description}</p>
+                  <p className="text-sm text-[var(--text-primary)] leading-relaxed">{feature.description}</p>
                 </div>
               </li>
             )
@@ -363,7 +363,7 @@ function ShowcaseSection() {
             One workspace,{' '}
             <span className="text-[var(--accent)]">field to finish</span>
           </h2>
-          <p className="max-w-2xl mx-auto text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] text-base lg:text-lg">
+          <p className="max-w-2xl mx-auto text-[var(--text-primary)] text-base lg:text-lg">
             Import observations, close traverses, draft deed plans, and produce
             NLIMS-ready documents — without leaving the browser or losing connectivity.
           </p>
@@ -384,7 +384,7 @@ function ShowcaseSection() {
                 className="rounded-xl object-cover"
               />
             </div>
-            <figcaption className="mt-4 text-sm text-[color-mix(in_srgb,var(--text-primary)_60%,transparent)] text-center">
+            <figcaption className="mt-4 text-sm text-[var(--text-primary)] text-center">
               Cadastral map workspace — parcels, RIM overlays, stakeout and layer control.
             </figcaption>
           </figure>
@@ -403,7 +403,7 @@ function ShowcaseSection() {
                   className="rounded-xl object-cover"
                 />
               </div>
-              <figcaption className="mt-4 text-sm text-[color-mix(in_srgb,var(--text-primary)_60%,transparent)] text-center">
+              <figcaption className="mt-4 text-sm text-[var(--text-primary)] text-center">
                 Guided project workflow — setup, field book, compute, review, submission.
               </figcaption>
             </figure>
@@ -419,7 +419,7 @@ function ShowcaseSection() {
                   className="rounded-xl object-cover"
                 />
               </div>
-              <figcaption className="mt-4 text-sm text-[color-mix(in_srgb,var(--text-primary)_60%,transparent)] text-center">
+              <figcaption className="mt-4 text-sm text-[var(--text-primary)] text-center">
                 Interactive map panel — coordinates, layers, and measurement tools.
               </figcaption>
             </figure>
@@ -459,7 +459,7 @@ function WorkflowSection() {
             Survey smarter in{' '}
             <span className="text-[var(--accent)]">3 steps</span>
           </h2>
-          <p className="max-w-xl mx-auto text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] text-base lg:text-lg">
+          <p className="max-w-xl mx-auto text-[var(--text-primary)] text-base lg:text-lg">
             From raw field observations to submission-ready documents.
           </p>
         </div>
@@ -473,8 +473,8 @@ function WorkflowSection() {
                 {step.number}
               </div>
               <h3 className="text-xl font-bold text-[var(--text-primary)] mb-3">{step.title}</h3>
-              <p className="text-sm text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] leading-relaxed">{step.description}</p>
-              <code className="block mt-3 text-xs font-mono text-[color-mix(in_srgb,var(--text-primary)_85%,transparent)] bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded px-3 py-2">
+              <p className="text-sm text-[var(--text-primary)] leading-relaxed">{step.description}</p>
+              <code className="block mt-3 text-xs font-mono text-[var(--text-primary)] bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded px-3 py-2">
                 {step.example}
               </code>
             </li>
@@ -516,7 +516,7 @@ function ToolsSection() {
                     <Icon className="w-5 h-5 text-[var(--accent)]" aria-hidden />
                   </div>
                   <h3 className="font-bold text-[var(--text-primary)] text-sm mb-1">{tool.title}</h3>
-                  <p className="text-xs text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)]">{tool.description}</p>
+                  <p className="text-xs text-[var(--text-primary)]">{tool.description}</p>
                 </Link>
               </li>
             )
@@ -557,9 +557,9 @@ function FAQSection() {
               <details className="group bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl overflow-hidden">
                 <summary className="flex items-center justify-between gap-4 p-5 cursor-pointer list-none focus-visible:outline-2 focus-visible:outline-[var(--accent)]">
                   <span className="font-semibold text-[var(--text-primary)] text-sm">{faq.q}</span>
-                  <ChevronDown className="w-4 h-4 text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] transition-transform group-open:rotate-180 flex-shrink-0" aria-hidden />
+                  <ChevronDown className="w-4 h-4 text-[var(--text-primary)] transition-transform group-open:rotate-180 flex-shrink-0" aria-hidden />
                 </summary>
-                <div className="px-5 pb-5 text-sm text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] leading-relaxed">
+                <div className="px-5 pb-5 text-sm text-[var(--text-primary)] leading-relaxed">
                   {faq.a}
                 </div>
               </details>
