@@ -302,3 +302,4 @@ this ______ day of ________________, 20____
 Signature: ___________________________
 Name: ${surveyorName}`
 }
+export const dynamic = 'force-dynamic'
