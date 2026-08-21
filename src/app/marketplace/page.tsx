@@ -32,7 +32,7 @@ function condBadge(c: Condition) {
 }
 
 function typeBadge(t: ListingType) {
-  if (t === 'sale')   return 'bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/20'
+  if (t === 'sale')   return 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] text-[var(--accent)] border-[color-mix(in_srgb,var(--accent)_20%,transparent)]'
   if (t === 'rent')   return 'bg-purple-900/40 text-purple-300 border-purple-700/40'
   return 'bg-amber-900/30 text-amber-400 border-amber-700/30'
 }
@@ -130,8 +130,8 @@ function ImagePicker({
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inputRef.current?.click() } }}
           className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
             dragOver
-              ? 'border-[var(--accent)] bg-[var(--accent)]/5'
-              : 'border-[var(--border-color)] hover:border-[var(--accent)]/50 hover:bg-[var(--bg-secondary)]'
+              ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]'
+              : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)] hover:bg-[var(--bg-secondary)]'
           }`}
         >
           {uploading ? (
@@ -239,7 +239,7 @@ function ImageGallery({ images }: { images: string[] }) {
           {images.map((src, i) => (
             <button key={`${src}-${i}`} onClick={() => setActive(i)}
               className={`w-14 h-14 rounded-lg overflow-hidden border-2 flex-shrink-0 transition-colors ${
-                i === active ? 'border-[var(--accent)]' : 'border-[var(--border-color)] hover:border-[var(--accent)]/50'
+                i === active ? 'border-[var(--accent)]' : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]'
               }`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={src} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
@@ -284,7 +284,7 @@ function ImageGallery({ images }: { images: string[] }) {
 
 function VerifiedBadge({ small = false }: { small?: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-1 bg-[var(--accent)]/15 text-[var(--accent)] border border-[var(--accent)]/30 rounded-full font-medium ${small ? 'text-[9px] px-1.5 py-0.5' : 'text-xs px-2 py-0.5'}`}>
+    <span className={`inline-flex items-center gap-1 bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rounded-full font-medium ${small ? 'text-[9px] px-1.5 py-0.5' : 'text-xs px-2 py-0.5'}`}>
       <svg className={small ? 'w-2.5 h-2.5' : 'w-3 h-3'} viewBox="0 0 24 24" fill="currentColor">
         <path fillRule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.307 4.491 4.491 0 01-1.307-3.497A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
       </svg>
@@ -299,7 +299,7 @@ function UpgradeToPost({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
       <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl w-full max-w-md p-8 text-center">
-        <div className="w-14 h-14 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center mx-auto mb-5">
+        <div className="w-14 h-14 rounded-xl bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] flex items-center justify-center mx-auto mb-5">
           <svg className="w-7 h-7 text-[var(--accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z" />
           </svg>
@@ -697,7 +697,7 @@ function ListingCard({ listing, onClick }: { listing: InstrumentListing; onClick
   return (
     <div role="button" tabIndex={0} onClick={onClick}
       onKeyDown={(e) => { if (e.key === 'Enter') onClick() }}
-      className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl overflow-hidden hover:border-[var(--accent)]/30 transition-colors cursor-pointer group">
+      className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl overflow-hidden hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-colors cursor-pointer group">
 
       {/* Cover photo or placeholder */}
       <div className="h-44 bg-[var(--bg-secondary)] overflow-hidden relative flex-shrink-0">
@@ -833,7 +833,7 @@ export default function MarketplacePage() {
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors border ${
                 filterType === key
                   ? 'bg-[var(--accent)] text-black border-[var(--accent)]'
-                  : 'bg-[var(--bg-secondary)] text-[var(--text-muted)] border-[var(--border-color)] hover:border-[var(--accent)]/40'
+                  : 'bg-[var(--bg-secondary)] text-[var(--text-muted)] border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]'
               }`}>
               {label}{count > 0 && <span className="ml-1.5 text-xs opacity-70">({count})</span>}
             </button>

@@ -76,11 +76,11 @@ export function SnappingOptions({
   if (!open) return null
 
   return (
-    <div className="absolute top-[340px] right-3 z-30 w-72 bg-[var(--bg-secondary)]/95 backdrop-blur-2xl border border-[var(--border-color)]/[0.08] rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-right-2 duration-200">
+    <div className="absolute top-[340px] right-3 z-30 w-72 bg-[color-mix(in_srgb,var(--bg-secondary)_95%,transparent)] backdrop-blur-2xl border border-[var(--border-color)]/[0.08] rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-right-2 duration-200">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-color)]/[0.06]">
         <div className="flex items-center gap-2">
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${enabled ? 'bg-[var(--success)]/10' : 'bg-[var(--bg-tertiary)]/10'}`}>
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${enabled ? 'bg-[color-mix(in_srgb,var(--success)_10%,transparent)]' : 'bg-[color-mix(in_srgb,var(--bg-tertiary)_10%,transparent)]'}`}>
             <Magnet className={`w-4 h-4 ${enabled ? 'text-[var(--success)]' : 'text-[var(--text-muted)]'}`} />
           </div>
           <div>
@@ -104,7 +104,7 @@ export function SnappingOptions({
           onClick={onToggleEnabled}
           className={`w-full flex items-center justify-between p-2.5 rounded-lg border transition-colors ${
             enabled
-              ? 'bg-[var(--success)]/5 border-emerald-500/30'
+              ? 'bg-[color-mix(in_srgb,var(--success)_5%,transparent)] border-emerald-500/30'
               : 'bg-[var(--bg-card)]/[0.02] border-[var(--border-color)]/[0.06]'
           }`}
         >
@@ -125,7 +125,7 @@ export function SnappingOptions({
                 disabled={!enabled}
                 className={`px-2 py-1.5 rounded-lg text-[9px] font-medium transition-colors disabled:opacity-30 ${
                   localMode === m
-                    ? 'bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)]'
+                    ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]'
                     : 'bg-[var(--bg-card)]/[0.02] border border-[var(--border-color)]/[0.06] text-[var(--text-secondary)] hover:text-[var(--text-secondary)]'
                 }`}
               >
@@ -185,7 +185,7 @@ export function SnappingOptions({
         {/* Info */}
         <div className="flex items-start gap-1.5 p-2 rounded-lg bg-blue-500/5 border border-blue-500/10">
           <Settings2 className="w-3 h-3 text-[var(--primary-blue)] shrink-0 mt-0.5" />
-          <p className="text-[9px] text-[var(--primary-blue)]/70 leading-relaxed">
+          <p className="text-[9px] text-[color-mix(in_srgb,var(--primary-blue)_70%,transparent)] leading-relaxed">
             Snapping ensures precise digitizing by aligning new features to existing vertices and edges.
             Lower tolerance = more precise but harder to snap. Higher tolerance = easier but less precise.
           </p>

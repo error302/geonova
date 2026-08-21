@@ -40,7 +40,7 @@ export const PricingCard = ({
     backdrop-blur-[14px] bg-gradient-to-br rounded-2xl shadow-xl flex-1 max-w-xs px-7 py-8 flex flex-col transition-all duration-300
     from-black/5 to-black/0 border border-black/10
     dark:from-white/10 dark:to-white/5 dark:border-white/10 dark:backdrop-brightness-[0.91]
-    ${isPopular ? 'md:scale-105 relative ring-2 ring-[var(--accent)]/30 dark:from-white/20 dark:to-white/10 dark:border-[var(--accent)]/40 shadow-2xl' : ''}
+    ${isPopular ? 'md:scale-105 relative ring-2 ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] dark:from-white/20 dark:to-white/10 dark:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] shadow-2xl' : ''}
   `;
   const buttonClasses = `
     mt-auto w-full py-2.5 rounded-xl font-semibold text-[14px] transition font-sans

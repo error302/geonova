@@ -235,78 +235,78 @@ export default function GNSSLogBuilder() {
             </thead>
             <tbody>
               {observations.map((obs, i) => (
-                <tr key={`${obs}-${i}`} className={i % 2 === 0 ? '' : 'bg-[var(--bg-tertiary)]/20'}>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                <tr key={`${obs}-${i}`} className={i % 2 === 0 ? '' : 'bg-[color-mix(in_srgb,var(--bg-tertiary)_20%,transparent)]'}>
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input aria-label="Point ID" value={obs.pointId} onChange={e => updateObs(i, 'pointId', e.target.value)}
                       className="w-20 px-1 py-1 bg-transparent text-[var(--text-primary)] font-bold" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input aria-label="Start Time" type="datetime-local" value={obs.startTime.slice(0, 16)}
                       onChange={e => handleTimeChange(i, 'startTime', e.target.value + ':00Z')}
                       className="w-36 px-1 py-1 bg-transparent text-[var(--text-primary)]" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input aria-label="End Time" type="datetime-local" value={obs.endTime.slice(0, 16)}
                       onChange={e => handleTimeChange(i, 'endTime', e.target.value + ':00Z')}
                       className="w-36 px-1 py-1 bg-transparent text-[var(--text-primary)]" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <span className="px-1 text-[var(--accent)] font-bold">{obs.durationMin}</span>
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input aria-label="Sats" type="number" value={obs.satellites} onChange={e => updateObs(i, 'satellites', parseInt(e.target.value) || 0)}
                       className="w-10 px-1 py-1 bg-transparent text-[var(--text-primary)]" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input aria-label="PDOP" type="number" step="0.1" value={obs.pdop} onChange={e => updateObs(i, 'pdop', parseFloat(e.target.value) || 0)}
                       className="w-12 px-1 py-1 bg-transparent text-[var(--text-primary)]" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input aria-label="HDOP" type="number" step="0.1" value={obs.hdop} onChange={e => updateObs(i, 'hdop', parseFloat(e.target.value) || 0)}
                       className="w-12 px-1 py-1 bg-transparent text-[var(--text-primary)]" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <select aria-label="Fix Type" value={obs.fixType} onChange={e => updateObs(i, 'fixType', e.target.value)}
                       className={`bg-transparent text-xs ${obs.fixType === 'RTK_FIX' || obs.fixType === 'FIX' ? 'text-green-400' : obs.fixType === 'FLOAT' || obs.fixType === 'RTK_FLOAT' ? 'text-yellow-400' : 'text-red-400'}`}>
                       {FIX_TYPES.map(f => <option key={f} value={f}>{f.replace(/_/g, ' ')}</option>)}
                     </select>
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input aria-label="Ant H (m)" type="number" step="0.001" value={obs.antennaHeight} onChange={e => updateObs(i, 'antennaHeight', parseFloat(e.target.value) || 0)}
                       className="w-16 px-1 py-1 bg-transparent text-[var(--text-primary)]" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <select aria-label="Meas" value={obs.antennaMeasurement} onChange={e => updateObs(i, 'antennaMeasurement', e.target.value)}
                       className="bg-transparent text-[var(--text-secondary)] text-xs">
                       {ANT_METHODS.map(m => <option key={m} value={m}>{m}</option>)}
                     </select>
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input type="number" step="0.001" value={obs.easting ?? ''} aria-label="E (m)" placeholder="—"
                       onChange={e => updateObs(i, 'easting', e.target.value ? parseFloat(e.target.value) : undefined)}
                       className="w-24 px-1 py-1 bg-transparent text-[var(--text-secondary)]" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input type="number" step="0.001" value={obs.northing ?? ''} aria-label="N (m)" placeholder="—"
                       onChange={e => updateObs(i, 'northing', e.target.value ? parseFloat(e.target.value) : undefined)}
                       className="w-24 px-1 py-1 bg-transparent text-[var(--text-secondary)]" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input type="number" step="0.001" value={obs.ellHeight ?? ''} aria-label="Ell Ht" placeholder="—"
                       onChange={e => updateObs(i, 'ellHeight', e.target.value ? parseFloat(e.target.value) : undefined)}
                       className="w-20 px-1 py-1 bg-transparent text-[var(--text-secondary)]" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input type="number" step="0.001" value={obs.rmsH ?? ''} aria-label="RMS H" placeholder="—"
                       onChange={e => updateObs(i, 'rmsH', e.target.value ? parseFloat(e.target.value) : undefined)}
                       className="w-14 px-1 py-1 bg-transparent text-[var(--text-secondary)]" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <input value={obs.notes ?? ''} onChange={e => updateObs(i, 'notes', e.target.value || undefined)}
                       aria-label="Notes" placeholder="field note"
                       className="w-28 px-1 py-1 bg-transparent text-[var(--text-muted)]" />
                   </td>
-                  <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                     <button onClick={() => removeObs(i)} aria-label="Remove point" className="text-red-400 hover:text-red-300 text-lg leading-none px-1 inline-flex items-center justify-center min-w-6 min-h-6">×</button>
                   </td>
                 </tr>
@@ -355,23 +355,23 @@ export default function GNSSLogBuilder() {
                   </thead>
                   <tbody>
                     {baselines.map((b, i) => (
-                      <tr key={`${b}-${i}`} className={i % 2 === 0 ? '' : 'bg-[var(--bg-tertiary)]/20'}>
-                        <td className="px-1 py-1 border border-[var(--border-color)]/40"><input aria-label="From" value={b.from} onChange={e => updateBsl(i, 'from', e.target.value)} className="w-16 px-1 py-1 bg-transparent text-[var(--text-primary)] font-bold" /></td>
-                        <td className="px-1 py-1 border border-[var(--border-color)]/40"><input aria-label="To" value={b.to} onChange={e => updateBsl(i, 'to', e.target.value)} className="w-16 px-1 py-1 bg-transparent text-[var(--text-primary)] font-bold" /></td>
-                        <td className="px-1 py-1 border border-[var(--border-color)]/40"><input aria-label="Delta E (m)" type="number" step="0.001" value={b.deltaE} onChange={e => updateBsl(i, 'deltaE', parseFloat(e.target.value) || 0)} className="w-20 px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
-                        <td className="px-1 py-1 border border-[var(--border-color)]/40"><input aria-label="Delta N (m)" type="number" step="0.001" value={b.deltaN} onChange={e => updateBsl(i, 'deltaN', parseFloat(e.target.value) || 0)} className="w-20 px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
-                        <td className="px-1 py-1 border border-[var(--border-color)]/40"><input aria-label="Delta U (m)" type="number" step="0.001" value={b.deltaU} onChange={e => updateBsl(i, 'deltaU', parseFloat(e.target.value) || 0)} className="w-20 px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
-                        <td className="px-1 py-1 border border-[var(--border-color)]/40"><input aria-label="Dist (m)" type="number" step="0.001" value={b.distance} onChange={e => updateBsl(i, 'distance', parseFloat(e.target.value) || 0)} className="w-20 px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
-                        <td className="px-1 py-1 border border-[var(--border-color)]/40"><input aria-label="Azimuth (°)" type="number" step="0.001" value={b.azimuth} onChange={e => updateBsl(i, 'azimuth', parseFloat(e.target.value) || 0)} className="w-20 px-1 py-1 bg-transparent text-[var(--text-secondary)]" /></td>
-                        <td className="px-1 py-1 border border-[var(--border-color)]/40">
+                      <tr key={`${b}-${i}`} className={i % 2 === 0 ? '' : 'bg-[color-mix(in_srgb,var(--bg-tertiary)_20%,transparent)]'}>
+                        <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]"><input aria-label="From" value={b.from} onChange={e => updateBsl(i, 'from', e.target.value)} className="w-16 px-1 py-1 bg-transparent text-[var(--text-primary)] font-bold" /></td>
+                        <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]"><input aria-label="To" value={b.to} onChange={e => updateBsl(i, 'to', e.target.value)} className="w-16 px-1 py-1 bg-transparent text-[var(--text-primary)] font-bold" /></td>
+                        <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]"><input aria-label="Delta E (m)" type="number" step="0.001" value={b.deltaE} onChange={e => updateBsl(i, 'deltaE', parseFloat(e.target.value) || 0)} className="w-20 px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                        <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]"><input aria-label="Delta N (m)" type="number" step="0.001" value={b.deltaN} onChange={e => updateBsl(i, 'deltaN', parseFloat(e.target.value) || 0)} className="w-20 px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                        <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]"><input aria-label="Delta U (m)" type="number" step="0.001" value={b.deltaU} onChange={e => updateBsl(i, 'deltaU', parseFloat(e.target.value) || 0)} className="w-20 px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                        <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]"><input aria-label="Dist (m)" type="number" step="0.001" value={b.distance} onChange={e => updateBsl(i, 'distance', parseFloat(e.target.value) || 0)} className="w-20 px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                        <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]"><input aria-label="Azimuth (°)" type="number" step="0.001" value={b.azimuth} onChange={e => updateBsl(i, 'azimuth', parseFloat(e.target.value) || 0)} className="w-20 px-1 py-1 bg-transparent text-[var(--text-secondary)]" /></td>
+                        <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]">
                           <select aria-label="Solution" value={b.solution} onChange={e => updateBsl(i, 'solution', e.target.value)}
                             className={`bg-transparent text-xs ${b.solution === 'FIX' ? 'text-green-400' : b.solution === 'FLOAT' ? 'text-yellow-400' : 'text-red-400'}`}>
                             {SOLUTIONS.map(s => <option key={s} value={s}>{s}</option>)}
                           </select>
                         </td>
-                        <td className="px-1 py-1 border border-[var(--border-color)]/40"><input type="number" step="0.1" value={b.ratio ?? ''} aria-label="Ratio" placeholder="—" onChange={e => updateBsl(i, 'ratio', e.target.value ? parseFloat(e.target.value) : undefined)} className="w-12 px-1 py-1 bg-transparent text-[var(--text-secondary)]" /></td>
-                        <td className="px-1 py-1 border border-[var(--border-color)]/40"><input aria-label="RMS (m)" type="number" step="0.0001" value={b.rms} onChange={e => updateBsl(i, 'rms', parseFloat(e.target.value) || 0)} className="w-16 px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
-                        <td className="px-1 py-1 border border-[var(--border-color)]/40"><button onClick={() => removeBsl(i)} aria-label="Remove baseline" className="text-red-400 hover:text-red-300 text-lg leading-none px-1 inline-flex items-center justify-center min-w-6 min-h-6">×</button></td>
+                        <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]"><input type="number" step="0.1" value={b.ratio ?? ''} aria-label="Ratio" placeholder="—" onChange={e => updateBsl(i, 'ratio', e.target.value ? parseFloat(e.target.value) : undefined)} className="w-12 px-1 py-1 bg-transparent text-[var(--text-secondary)]" /></td>
+                        <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]"><input aria-label="RMS (m)" type="number" step="0.0001" value={b.rms} onChange={e => updateBsl(i, 'rms', parseFloat(e.target.value) || 0)} className="w-16 px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                        <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]"><button onClick={() => removeBsl(i)} aria-label="Remove baseline" className="text-red-400 hover:text-red-300 text-lg leading-none px-1 inline-flex items-center justify-center min-w-6 min-h-6">×</button></td>
                       </tr>
                     ))}
                   </tbody>
@@ -399,7 +399,7 @@ export default function GNSSLogBuilder() {
       </div>
 
       {/* ── WHAT'S INCLUDED ──────────────────────────────────────────────────── */}
-      <div className="p-3 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)] text-xs space-y-1 text-[var(--text-muted)]">
+      <div className="p-3 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded border border-[var(--border-color)] text-xs space-y-1 text-[var(--text-muted)]">
         <p className="font-semibold text-[var(--text-primary)] mb-1.5">Log will include:</p>
         <p> Equipment details — receiver, antenna, base station, epoch/mask settings</p>
         <p> Table 1: Occupation Schedule — start/end, duration, satellites, PDOP, HDOP, fix type, antenna height</p>

@@ -136,7 +136,7 @@ export default function ProjectMutationPlan({ projectId }: ProjectMutationPlanPr
     <div>
       {deedPlanInfo && (
         <div className="max-w-7xl mx-auto px-4 mb-4">
-          <div className="border border-[var(--accent)]/30 bg-[var(--accent)]/5 p-3 rounded-md flex items-center gap-3">
+          <div className="border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] p-3 rounded-md flex items-center gap-3">
             <svg className="w-4 h-4 text-[var(--accent)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.16 6.02a3 3 0 11-1.59 5.79 3 3 0 011.59-5.79zM12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
             </svg>

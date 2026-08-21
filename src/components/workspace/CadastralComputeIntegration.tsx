@@ -147,7 +147,7 @@ export default function CadastralComputeIntegration({ projectId }: { projectId: 
             </thead>
             <tbody>
               {result.adjustedStations.legs.map((c, i) => (
-                <tr key={`${c}-${i}`} className="border-b border-[var(--border-color)]/30 hover:bg-[var(--bg-secondary)]">
+                <tr key={`${c}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)] hover:bg-[var(--bg-secondary)]">
                   <td className="px-3 py-2 font-mono text-[var(--accent)]">{c.to}</td>
                   <td className="px-3 py-2 font-mono text-right text-[var(--text-muted)]">{(c.adjEasting - c.correctionE).toFixed(4)}</td>
                   <td className="px-3 py-2 font-mono text-right text-[var(--text-muted)]">{(c.adjNorthing - c.correctionN).toFixed(4)}</td>

@@ -341,7 +341,7 @@ export function GNSSRoverConnection() {
         {position && (
           <div className="space-y-2">
             {/* Fix type badge */}
-            <div className="flex items-center justify-between p-2.5 rounded-lg bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)]">
+            <div className="flex items-center justify-between p-2.5 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] border border-[var(--border-color)]">
               <div className="flex items-center gap-2">
                 <Crosshair className={`w-4 h-4 ${fixColor}`} />
                 <span className={`text-sm font-semibold ${fixColor}`}>{fixLabel}</span>
@@ -359,19 +359,19 @@ export function GNSSRoverConnection() {
 
             {/* Coordinates */}
             <div className="grid grid-cols-2 gap-2">
-              <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+              <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
                 <span className="text-[9px] text-gray-500 uppercase tracking-wider">Latitude</span>
                 <div className="text-xs font-mono text-[var(--text-primary)]">{position.latitude.toFixed(8)}°</div>
               </div>
-              <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+              <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
                 <span className="text-[9px] text-gray-500 uppercase tracking-wider">Longitude</span>
                 <div className="text-xs font-mono text-[var(--text-primary)]">{position.longitude.toFixed(8)}°</div>
               </div>
-              <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+              <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
                 <span className="text-[9px] text-gray-500 uppercase tracking-wider">Altitude</span>
                 <div className="text-xs font-mono text-[var(--text-primary)]">{position.altitude.toFixed(3)} m</div>
               </div>
-              <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+              <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
                 <span className="text-[9px] text-gray-500 uppercase tracking-wider">NMEA Sentences</span>
                 <div className="text-xs font-mono text-[var(--text-primary)]">{nmeaCount}</div>
               </div>
@@ -411,10 +411,10 @@ function ConnTypeBtn({ active, onClick, icon: Icon, label, supported }: {
       disabled={!supported}
       className={`flex flex-col items-center gap-1 py-2.5 rounded-lg border transition-all ${
         active
-          ? 'bg-[var(--accent)]/10 border-[var(--accent)]/30 text-[var(--accent)]'
+          ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]'
           : supported
-            ? 'bg-[var(--bg-tertiary)]/50 border-[var(--border-color)] text-gray-400 hover:bg-[var(--bg-tertiary)]'
-            : 'bg-[var(--bg-tertiary)]/30 border-[var(--border-color)]/50 text-gray-600 cursor-not-allowed'
+            ? 'bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] border-[var(--border-color)] text-gray-400 hover:bg-[var(--bg-tertiary)]'
+            : 'bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)] border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-gray-600 cursor-not-allowed'
       }`}
     >
       <Icon className="w-4 h-4" />

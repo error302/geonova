@@ -182,7 +182,7 @@ export default function SurveyTab({
                 </thead>
                 <tbody>
                   {points.slice(0, 10).map((p, i) => (
-                    <tr key={`${p}-${i}`} className="border-b border-[var(--border-color)]/30">
+                    <tr key={`${p}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                       <td className="py-1.5 px-2 text-[var(--text-muted)]">{i + 1}</td>
                       <td className="py-1.5 px-2 text-right font-mono">{p.easting.toFixed(2)}</td>
                       <td className="py-1.5 px-2 text-right font-mono">{p.northing.toFixed(2)}</td>

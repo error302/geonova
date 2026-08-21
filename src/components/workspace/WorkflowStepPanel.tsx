@@ -111,7 +111,7 @@ function ComputeStepPanel({ surveyType, projectId }: { surveyType: SurveyType; p
           <ul className="text-sm text-[var(--text-secondary)] space-y-1.5 list-disc list-inside">
             {(computeItems[surveyType] ?? []).map((item) => <li key={item}>{item}</li>)}
           </ul>
-          <div className="mt-5 rounded-md bg-[var(--accent-subtle)] border border-[var(--accent)]/20 p-3 text-sm text-[var(--accent)]">
+          <div className="mt-5 rounded-md bg-[var(--accent-subtle)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] p-3 text-sm text-[var(--accent)]">
             Compute runners ship in current release. Ensure field book data is complete before advancing.
           </div>
         </div>

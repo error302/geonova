@@ -375,7 +375,7 @@ export function GNSSQualityReport({ externalPosition }: {
 
       {/* Live position */}
       {quality && (
-        <div className="px-4 py-2 border-t border-[var(--border-color)] bg-[var(--bg-tertiary)]/30">
+        <div className="px-4 py-2 border-t border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
           <div className="grid grid-cols-3 gap-2 text-[10px]">
             <div>
               <span className="text-gray-600">Lat:</span>

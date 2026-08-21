@@ -372,7 +372,7 @@ export default function ProjectWorkspaceClient({ project, workflow }: Props) {
               <div className="mt-6 flex justify-end gap-3">
                 <button
                   onClick={() => router.push(`/mobile/field?project=${project.id}`)}
-                  className="px-5 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm font-medium rounded hover:border-[var(--accent)]/40 transition-colors flex items-center gap-2"
+                  className="px-5 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-[var(--text-primary)] text-sm font-medium rounded hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] transition-colors flex items-center gap-2"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />

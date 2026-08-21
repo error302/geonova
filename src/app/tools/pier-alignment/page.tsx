@@ -22,7 +22,7 @@ export default function PierAlignmentPage() {
           ))}
           <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="pier-chainages-comma-sep-m">Pier Chainages (comma-sep, m)</label><input id="pier-chainages-comma-sep-m" value={chainages} onChange={e => setChainages(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
           <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="offset-distances-comma-sep-m">Offset Distances (comma-sep, m)</label><input id="offset-distances-comma-sep-m" value={offsets} onChange={e => setOffsets(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
-          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Compute Pier Alignment</button>
+          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] text-black font-semibold rounded-lg">Compute Pier Alignment</button>
         </div>
         <div>{result ? (
           <div className="space-y-4">

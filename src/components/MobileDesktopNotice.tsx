@@ -16,9 +16,9 @@ export default function MobileDesktopNotice({
   children,
 }: MobileDesktopNoticeProps) {
   return (
-    <div className="md:hidden rounded-xl border border-[var(--accent)]/20 bg-[var(--accent)]/5 px-4 py-3.5">
+    <div className="md:hidden rounded-xl border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] px-4 py-3.5">
       <div className="flex items-start gap-3">
-        <div className="shrink-0 w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+        <div className="shrink-0 w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
           <Monitor className="w-4 h-4 text-[var(--accent)]" />
         </div>
         <div className="flex-1 min-w-0">

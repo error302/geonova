@@ -25,7 +25,7 @@ export default function TitleComparisonPage() {
         <div className="space-y-4">
           <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="title-deed-dimensions-label-bearing-distance">Title Deed Dimensions (label, bearing, distance)</label><textarea id="title-deed-dimensions-label-bearing-distance" value={titleCsv} onChange={e => setTitleCsv(e.target.value)} rows={5} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
           <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="surveyed-dimensions-label-bearing-distance">Surveyed Dimensions (label, bearing, distance)</label><textarea id="surveyed-dimensions-label-bearing-distance" value={surveyedCsv} onChange={e => setSurveyedCsv(e.target.value)} rows={5} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
-          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Compare Dimensions</button>
+          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] text-black font-semibold rounded-lg">Compare Dimensions</button>
         </div>
         <div>
           {result ? (

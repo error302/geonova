@@ -162,7 +162,7 @@ export function WorkspaceSection({ title, subtitle, action, children, className 
 
 export function ActivityRow({ icon: Icon, title, meta, status, href }: ActivityRowProps) {
   const content = (
-    <div className="flex min-w-0 items-center gap-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] p-3 transition-colors hover:border-[var(--accent)]/35">
+    <div className="flex min-w-0 items-center gap-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] p-3 transition-colors hover:border-[color-mix(in_srgb,var(--accent)_35%,transparent)]">
       <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--accent)]">
         <Icon className="h-4 w-4" />
       </div>

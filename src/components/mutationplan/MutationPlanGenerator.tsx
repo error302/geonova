@@ -753,7 +753,7 @@ export default function MutationPlanGenerator({
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               step === s
                 ? 'bg-[var(--accent)] text-black'
-                : 'bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent)]/50'
+                : 'bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]'
             } ${s > step + 1 && !canGoNext() ? 'opacity-40 cursor-not-allowed' : ''}`}
           >
             <span className={`flex items-center justify-center h-5 w-5 rounded-full text-xs font-bold ${
@@ -905,7 +905,7 @@ export default function MutationPlanGenerator({
                 Plot Data ({plots.length} plots, Total Area: {totalArea.toFixed(4)} Ha)
               </h2>
               <div className="flex flex-wrap gap-2">
-                <label className="flex items-center gap-2 px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg hover:border-[var(--accent)]/50 text-sm text-zinc-300 cursor-pointer">
+                <label className="flex items-center gap-2 px-3 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)] text-sm text-zinc-300 cursor-pointer">
                   <FileUp className="h-4 w-4" />
                   Import CSV
                   <input type="file" accept=".csv" onChange={handleCSVImport} className="hidden" />
@@ -1175,7 +1175,7 @@ export default function MutationPlanGenerator({
           <div className="flex justify-between">
             <button
               onClick={prevStep}
-              className="flex items-center gap-2 px-6 py-3 border border-[var(--border-color)] rounded-lg text-zinc-300 hover:border-[var(--accent)]/50"
+              className="flex items-center gap-2 px-6 py-3 border border-[var(--border-color)] rounded-lg text-zinc-300 hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]"
             >
               <ChevronLeft className="h-4 w-4" />
               Back
@@ -1428,7 +1428,7 @@ export default function MutationPlanGenerator({
           <div className="lg:col-span-2 flex justify-between">
             <button
               onClick={prevStep}
-              className="flex items-center gap-2 px-6 py-3 border border-[var(--border-color)] rounded-lg text-zinc-300 hover:border-[var(--accent)]/50"
+              className="flex items-center gap-2 px-6 py-3 border border-[var(--border-color)] rounded-lg text-zinc-300 hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]"
             >
               <ChevronLeft className="h-4 w-4" />
               Back
@@ -1625,7 +1625,7 @@ export default function MutationPlanGenerator({
             <button
               onClick={handleDownloadPDF}
               disabled={!svgOutput}
-              className="flex items-center justify-center gap-2 px-6 py-4 border border-[var(--border-color)] rounded-lg text-zinc-300 hover:border-[var(--accent)]/50 disabled:opacity-40"
+              className="flex items-center justify-center gap-2 px-6 py-4 border border-[var(--border-color)] rounded-lg text-zinc-300 hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)] disabled:opacity-40"
             >
               <Printer className="h-5 w-5" />
               Download PDF (Print)
@@ -1633,7 +1633,7 @@ export default function MutationPlanGenerator({
             <button
               onClick={() => { const w = window.open('', '_blank'); if (w) { w.document.write(svgOutput); w.document.close(); } }}
               disabled={!svgOutput}
-              className="flex items-center justify-center gap-2 px-6 py-4 border border-[var(--border-color)] rounded-lg text-zinc-300 hover:border-[var(--accent)]/50 disabled:opacity-40"
+              className="flex items-center justify-center gap-2 px-6 py-4 border border-[var(--border-color)] rounded-lg text-zinc-300 hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)] disabled:opacity-40"
             >
               <Eye className="h-5 w-5" />
               Open in New Tab
@@ -1678,7 +1678,7 @@ export default function MutationPlanGenerator({
 
           <button
             onClick={prevStep}
-            className="flex items-center gap-2 px-6 py-3 border border-[var(--border-color)] rounded-lg text-zinc-300 hover:border-[var(--accent)]/50"
+            className="flex items-center gap-2 px-6 py-3 border border-[var(--border-color)] rounded-lg text-zinc-300 hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]"
           >
             <ChevronLeft className="h-4 w-4" />
             Back to Edit

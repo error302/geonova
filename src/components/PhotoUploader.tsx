@@ -90,8 +90,8 @@ export default function PhotoUploader({ projectId, photos, onChange, maxPhotos =
           onClick={() => inputRef.current?.click()}
           className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
             dragOver
-              ? 'border-[var(--accent)] bg-[var(--accent)]/5'
-              : 'border-[var(--border-color)] hover:border-[var(--accent)]/50'
+              ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]'
+              : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]'
           }`}
         >
           <input
@@ -121,7 +121,7 @@ export default function PhotoUploader({ projectId, photos, onChange, maxPhotos =
       {photos.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {photos.map((photo, i) => (
-            <div key={`${photo}-${i}`} className="border border-[var(--border-color)] rounded-lg p-3 bg-[var(--bg-tertiary)]/30">
+            <div key={`${photo}-${i}`} className="border border-[var(--border-color)] rounded-lg p-3 bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
               <div className="flex gap-2">
                 <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0 bg-[var(--bg-tertiary)]">
                   <Image src={photo.url} alt={photo.caption || ''} fill className="object-cover" />

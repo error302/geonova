@@ -312,7 +312,7 @@ export default function TraverseComputePanel({ parcelId }: { parcelId: number })
               </thead>
               <tbody>
                 {observations.map((obs, i) => (
-                  <tr key={obs.station} className="border-b border-[var(--border-color)]/30">
+                  <tr key={obs.station} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                     <td className="px-1 py-1 text-[var(--text-muted)]">{i + 1}</td>
                     <td className="px-1 py-1"><input type="text" value={obs.station} onChange={e => updateObs(i, 'station', e.target.value)} className={inputClass} aria-label="Station" placeholder="T2" /></td>
                     <td className="px-1 py-1"><input aria-label="BS" type="text" value={obs.bs} onChange={e => updateObs(i, 'bs', e.target.value)} className={inputClass} /></td>
@@ -399,7 +399,7 @@ export default function TraverseComputePanel({ parcelId }: { parcelId: number })
                   </thead>
                   <tbody>
                     {result.coordinates.map((c) => (
-                      <tr key={c.station} className="border-b border-[var(--border-color)]/30">
+                      <tr key={c.station} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                         <td className="px-3 py-1.5 font-mono text-[var(--accent)]">{c.station}</td>
                         <td className="px-3 py-1.5 font-mono">{c.easting.toFixed(4)}</td>
                         <td className="px-3 py-1.5 font-mono">{c.northing.toFixed(4)}</td>

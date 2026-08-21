@@ -159,7 +159,7 @@ export default function ChainageCalculator() {
                 <button onClick={calculateReverse} className="px-4 py-2 bg-[var(--bg-tertiary)] text-[var(--text-primary)] rounded hover:bg-[var(--border-hover)]">Find</button>
               </div>
               {reverseResult && (
-                <div className="mt-4 p-3 bg-[var(--bg-tertiary)]/50 rounded-lg">
+                <div className="mt-4 p-3 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded-lg">
                   <p className="text-sm text-[var(--text-secondary)]">Coordinates at {reverseChainage}m:</p>
                   <p className="font-mono text-[var(--text-primary)]">E: {reverseResult.easting.toFixed(4)} m</p>
                   <p className="font-mono text-[var(--text-primary)]">N: {reverseResult.northing.toFixed(4)} m</p>
@@ -209,7 +209,7 @@ export default function ChainageCalculator() {
               </table>
             </div>
 
-            <div className="mt-6 p-4 bg-[var(--bg-tertiary)]/30 rounded-lg">
+            <div className="mt-6 p-4 bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)] rounded-lg">
               <h4 className="text-sm font-semibold text-[var(--text-primary)] mb-2">Summary</h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <span className="text-[var(--text-secondary)]">Total Points:</span>

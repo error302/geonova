@@ -226,7 +226,7 @@ export default function NotificationsPage() {
               <div key={n.id}
                 className={`group relative bg-[var(--bg-card)] rounded-xl border transition-colors cursor-pointer ${
                   !n.read
-                    ? 'border-[var(--accent)]/30 bg-[var(--accent-subtle)]'
+                    ? 'border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[var(--accent-subtle)]'
                     : 'border-[var(--border-color)] hover:border-[var(--border-hover)]'
                 }`}
                 onClick={() => markRead(n.id)}>

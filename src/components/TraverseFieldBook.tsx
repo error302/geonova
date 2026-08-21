@@ -342,7 +342,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
 
       {activeTab === 'input' && (
         <div className="space-y-4">
-          <div className="grid grid-cols-3 gap-4 p-4 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)]">
+          <div className="grid grid-cols-3 gap-4 p-4 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded border border-[var(--border-color)]">
             <div>
               <label htmlFor="tfb-opening-station" className="block text-xs text-[var(--text-muted)] mb-1">Opening Station</label>
               <input id="tfb-opening-station" value={openingName} onChange={e => setOpeningName(e.target.value)} placeholder="CP1"
@@ -394,7 +394,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
           {/* Atmospheric Conditions & EDM Settings — for the correction pipeline */}
           <div className="border border-[var(--border-color)] rounded overflow-hidden">
             <button onClick={() => setAtmOpen(!atmOpen)}
-              className="w-full flex items-center justify-between px-4 py-2.5 bg-[var(--bg-tertiary)]/50 text-[var(--text-primary)] text-sm font-medium hover:bg-[var(--border-hover)] transition-colors">
+              className="w-full flex items-center justify-between px-4 py-2.5 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] text-[var(--text-primary)] text-sm font-medium hover:bg-[var(--border-hover)] transition-colors">
               <span className="flex items-center gap-2">
                 <span>Atmospheric Conditions &amp; EDM Settings</span>
                 <span className="text-[var(--text-muted)] font-normal text-xs">
@@ -409,7 +409,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
               <span className="text-[var(--text-muted)]">{atmOpen ? '▲' : '▼'}</span>
             </button>
             {atmOpen && (
-              <div className="space-y-3 p-4 bg-[var(--bg-tertiary)]/20">
+              <div className="space-y-3 p-4 bg-[color-mix(in_srgb,var(--bg-tertiary)_20%,transparent)]">
                 {/* Location preset selector */}
                 <div>
                   <label htmlFor="tfb-location-preset" className="block text-xs text-[var(--text-muted)] mb-1">Location Preset (auto-fills all fields)</label>
@@ -535,7 +535,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/30">
+                <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
                   <th className="px-1.5 py-2 text-left text-[var(--text-secondary)] w-8">#</th>
                   <th className="px-1.5 py-2 text-left text-[var(--text-secondary)]">Station</th>
                   <th className="px-1.5 py-2 text-left text-[var(--text-secondary)]">BS</th>
@@ -549,14 +549,14 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
                   <th className="px-1.5 py-2 text-right text-[var(--text-secondary)]">TH (m)</th>
                   <th className="w-6"></th>
                 </tr>
-                <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/30">
+                <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
                   <th></th><th></th><th></th><th></th>
                   {[1,2,3,4,5,6,7,8,9,10].map((i) => <th key={`item-${i}`} className="px-1 py-1 text-[10px] text-[var(--text-muted)]">{['','Deg','Min','Sec','','Deg','Min','Sec','','','','Deg','Min','Sec','','',''][i-1]}</th>)}
                 </tr>
               </thead>
               <tbody>
                 {observations.map((obs, i) => (
-                  <tr key={obs.station} className="border-b border-[var(--border-color)]/30">
+                  <tr key={obs.station} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                     <td className="px-1.5 py-1 text-[var(--text-muted)]">{i + 1}</td>
                     <td className="px-1 py-1"><input value={obs.station} onChange={e => updateObs(i, 'station', e.target.value)}
                       className="w-full px-1 py-1 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-[var(--text-primary)]" aria-label="Station" placeholder="T1" /></td>
@@ -623,15 +623,15 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
       {activeTab === 'compute' && result && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-[var(--bg-tertiary)]/50 rounded p-3">
+            <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-3">
               <p className="text-xs text-[var(--text-secondary)]">Total Perimeter</p>
               <p className="text-lg font-mono text-[var(--text-primary)]">{result.totalPerimeter.toFixed(3)} m</p>
             </div>
-            <div className="bg-[var(--bg-tertiary)]/50 rounded p-3">
+            <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-3">
               <p className="text-xs text-[var(--text-secondary)]">Linear Misclosure</p>
               <p className="text-lg font-mono text-[var(--text-primary)]">{result.linearError.toFixed(4)} m</p>
             </div>
-            <div className="bg-[var(--bg-tertiary)]/50 rounded p-3">
+            <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-3">
               <p className="text-xs text-[var(--text-secondary)]">Precision</p>
               <p className="text-lg font-mono text-[var(--text-primary)]">1 : {result.precisionRatio > 0 ? Math.round(result.precisionRatio).toLocaleString() : '—'}</p>
             </div>
@@ -646,7 +646,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/50">
+                <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
                   <th className="px-2 py-2 text-left">Line</th>
                   <th className="px-2 py-2 text-center">WCB</th>
                   <th className="px-2 py-2 text-right">SD (m)</th>
@@ -661,7 +661,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
               </thead>
               <tbody>
                 {result.legs.map((l, i) => (
-                  <tr key={`${l}-${i}`} className="border-b border-[var(--border-color)]/30">
+                  <tr key={`${l}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                     <td className="px-2 py-1.5 font-mono text-[var(--text-primary)]">{l.from} → {l.to}</td>
                     <td className="px-2 py-1.5 text-center font-mono text-[var(--text-secondary)]">{l.wcbDMS}</td>
                     <td className="px-2 py-1.5 text-right font-mono text-[var(--text-secondary)]">{l.sd.toFixed(3)}</td>
@@ -681,7 +681,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
           {/* EDM Corrections Panel */}
           <div className="border border-[var(--border-color)] rounded overflow-hidden">
             <button onClick={() => setEdmOpen(!edmOpen)}
-              className="w-full flex items-center justify-between px-4 py-2.5 bg-[var(--bg-tertiary)]/50 text-[var(--text-primary)] text-sm font-medium hover:bg-[var(--border-hover)] transition-colors">
+              className="w-full flex items-center justify-between px-4 py-2.5 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] text-[var(--text-primary)] text-sm font-medium hover:bg-[var(--border-hover)] transition-colors">
               <span>[Compass] EDM Corrections <span className="text-[var(--text-muted)] font-normal">(Survey Engine · IAG/ISO · UTM 37S)</span></span>
               <span className="text-[var(--text-muted)]">{edmOpen ? '▲' : '▼'}</span>
             </button>
@@ -689,7 +689,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/30">
+                    <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
                       <th className="px-2 py-2 text-left text-[var(--text-secondary)]">Line</th>
                       <th className="px-2 py-2 text-right text-[var(--text-secondary)]">SD (m)</th>
                       <th className="px-2 py-2 text-right text-[var(--text-secondary)]">HD (m)</th>
@@ -721,7 +721,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
                         projection: utmProjection,
                       })
                       return (
-                        <tr key={`${leg}-${i}`} className="border-b border-[var(--border-color)]/30">
+                        <tr key={`${leg}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                           <td className="px-2 py-1.5 font-mono text-[var(--text-primary)]">{leg.from} → {leg.to}</td>
                           <td className="px-2 py-1.5 text-right font-mono text-[var(--text-secondary)]">{leg.sd.toFixed(3)}</td>
                           <td className="px-2 py-1.5 text-right font-mono text-[var(--text-secondary)]">{edmResult.horizontalDistance.toFixed(3)}</td>
@@ -783,7 +783,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
           {/* Plot Traverse Section */}
           <div className="border border-[var(--border-color)] rounded overflow-hidden">
             <button onClick={() => setShowPlot(!showPlot)}
-              className="w-full flex items-center justify-between px-4 py-2.5 bg-[var(--bg-tertiary)]/50 text-[var(--text-primary)] text-sm font-medium hover:bg-[var(--border-hover)] transition-colors">
+              className="w-full flex items-center justify-between px-4 py-2.5 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] text-[var(--text-primary)] text-sm font-medium hover:bg-[var(--border-hover)] transition-colors">
               <span>[Map] Plot Traverse</span>
               <span className="text-[var(--text-muted)]">{showPlot ? '▲ Hide' : '▼ Show'}</span>
             </button>
@@ -869,7 +869,7 @@ export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) 
 
           <PrintMetaPanel meta={printMeta} onChange={setPrintMeta} />
 
-          <div className="p-4 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)] text-sm space-y-1.5">
+          <div className="p-4 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded border border-[var(--border-color)] text-sm space-y-1.5">
             <p className="font-semibold text-[var(--text-primary)]">Print Options:</p>
             <ul className="text-[var(--text-muted)] text-xs space-y-0.5 list-disc list-inside">
               <li><strong>Traverse Computation Sheet:</strong> Standard formal computation sheet with raw observations, Bowditch adjustment, and final coordinates. Includes Surveyor's Certificate block.</li>

@@ -16,7 +16,7 @@ export default function GradeAnalysisPage() {
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-4">
           <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="grade-profile-chainage-elevation-one-per-line">Grade Profile (chainage, elevation — one per line)</label><textarea id="grade-profile-chainage-elevation-one-per-line" value={csv} onChange={e => setCsv(e.target.value)} rows={8} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
-          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Analyze Grades</button>
+          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] text-black font-semibold rounded-lg">Analyze Grades</button>
         </div>
         <div>{result ? (
           <div className="space-y-4">

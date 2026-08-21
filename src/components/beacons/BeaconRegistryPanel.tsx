@@ -101,7 +101,7 @@ export function BeaconRegistryPanel() {
       <div className="card p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
               <MapPin className="w-4 h-4 text-[var(--accent)]" />
             </div>
             <div>
@@ -111,7 +111,7 @@ export function BeaconRegistryPanel() {
           </div>
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)] text-xs font-medium hover:bg-[var(--accent)]/20 transition-colors"
+            className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-xs font-medium hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             Add Beacon
@@ -119,11 +119,11 @@ export function BeaconRegistryPanel() {
         </div>
 
         {/* Mode toggle */}
-        <div className="flex gap-1 p-1 bg-[var(--bg-tertiary)]/50 rounded-lg">
+        <div className="flex gap-1 p-1 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded-lg">
           <button
             onClick={() => setMode('text')}
             className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              mode === 'text' ? 'bg-[var(--accent)]/15 text-[var(--accent)]' : 'text-gray-400 hover:text-gray-300'
+              mode === 'text' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)]' : 'text-gray-400 hover:text-gray-300'
             }`}
           >
             <Search className="w-3.5 h-3.5" />
@@ -132,7 +132,7 @@ export function BeaconRegistryPanel() {
           <button
             onClick={() => setMode('proximity')}
             className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              mode === 'proximity' ? 'bg-[var(--accent)]/15 text-[var(--accent)]' : 'text-gray-400 hover:text-gray-300'
+              mode === 'proximity' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)]' : 'text-gray-400 hover:text-gray-300'
             }`}
           >
             <Navigation className="w-3.5 h-3.5" />
@@ -150,7 +150,7 @@ export function BeaconRegistryPanel() {
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && search()}
               aria-label="Enter beacon number (e.g., KP/12/345, MB/001)..."
-              className="w-full h-10 pl-9 pr-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+              className="w-full h-10 pl-9 pr-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
             />
           </div>
         ) : (
@@ -162,7 +162,7 @@ export function BeaconRegistryPanel() {
                 value={easting}
                 onChange={e => setEasting(e.target.value)}
  placeholder="257412"
-                className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+                className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
               />
             </div>
             <div>
@@ -172,7 +172,7 @@ export function BeaconRegistryPanel() {
                 value={northing}
                 onChange={e => setNorthing(e.target.value)}
  placeholder="9857641"
-                className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+                className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
               />
             </div>
             <div>
@@ -181,7 +181,7 @@ export function BeaconRegistryPanel() {
                 type="number"
                 value={radius}
                 onChange={e => setRadius(e.target.value)}
-                className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono focus:border-[var(--accent)]/30 focus:outline-none"
+                className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
               />
             </div>
           </div>
@@ -194,12 +194,12 @@ export function BeaconRegistryPanel() {
             value={county}
             onChange={e => setCounty(e.target.value)}
             aria-label="County (optional)"
-            className="h-9 px-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+            className="h-9 px-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
           />
           <select
             value={beaconType}
             onChange={e => setBeaconType(e.target.value)}
-            className="h-9 px-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[var(--accent)]/30 focus:outline-none"
+            className="h-9 px-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
           >
             <option value="">All Types</option>
             <option value="concrete">Concrete Beacon</option>
@@ -260,9 +260,9 @@ export function BeaconRegistryPanel() {
             {results.map(beacon => (
               <div
                 key={beacon.id}
-                className="flex items-start gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)]/30 transition-colors group"
+                className="flex items-start gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-colors group"
               >
-                <div className="shrink-0 w-10 h-10 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+                <div className="shrink-0 w-10 h-10 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
                   <MapPin className="w-4 h-4 text-[var(--accent)]" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -303,7 +303,7 @@ export function BeaconRegistryPanel() {
                 </div>
                 <button
                   onClick={() => handleCopy(beacon)}
-                  className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-[var(--accent)] hover:bg-[var(--accent)]/5 opacity-0 group-hover:opacity-100 transition-all"
+                  className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] opacity-0 group-hover:opacity-100 transition-all"
                   title="Copy coordinates"
                 >
                   {copiedId === beacon.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -367,7 +367,7 @@ function AddBeaconForm({ onClose, onAdded }: { onClose: () => void; onAdded: () 
       <div className="grid grid-cols-2 gap-2">
         <div>
           <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="beacon-number">Beacon Number</label>
-          <input id="beacon-number" type="text" value={beaconNumber} onChange={e => setBeaconNumber(e.target.value)} placeholder="KP/12/345" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+          <input id="beacon-number" type="text" value={beaconNumber} onChange={e => setBeaconNumber(e.target.value)} placeholder="KP/12/345" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
         </div>
         <div>
           <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="type">Type</label>
@@ -384,16 +384,16 @@ function AddBeaconForm({ onClose, onAdded }: { onClose: () => void; onAdded: () 
       <div className="grid grid-cols-2 gap-2">
         <div>
           <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="easting-m">Easting (m)</label>
-          <input id="easting-m" type="number" step="0.001" value={easting} onChange={e => setEasting(e.target.value)} placeholder="257412.800" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+          <input id="easting-m" type="number" step="0.001" value={easting} onChange={e => setEasting(e.target.value)} placeholder="257412.800" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
         </div>
         <div>
           <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="northing-m">Northing (m)</label>
-          <input id="northing-m" type="number" step="0.001" value={northing} onChange={e => setNorthing(e.target.value)} placeholder="9857641.200" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+          <input id="northing-m" type="number" step="0.001" value={northing} onChange={e => setNorthing(e.target.value)} placeholder="9857641.200" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs font-mono text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <input type="text" value={county} onChange={e => setCounty(e.target.value)} placeholder="County" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+        <input type="text" value={county} onChange={e => setCounty(e.target.value)} placeholder="County" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
         <select value={condition} onChange={e => setCondition(e.target.value)} className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)]">
           <option value="good">Good Condition</option>
           <option value="disturbed">Disturbed</option>

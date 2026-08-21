@@ -165,7 +165,7 @@ export default function BeaconCertificateBuilder() {
             <div key={beacon.id} className="card overflow-hidden">
               {/* Beacon header row — always visible */}
               <button
-                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[var(--bg-secondary)]/50 transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] transition-colors"
                 onClick={() => setExpandedId(isOpen ? null : beacon.id)}
               >
                 {/* Number */}
@@ -238,7 +238,7 @@ export default function BeaconCertificateBuilder() {
                             className={`px-2.5 py-1 rounded text-xs font-mono border transition-colors ${
                               beacon.condition === c.value
                                 ? CONDITION_BADGE[c.value]
-                                : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--accent)]/40'
+                                : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]'
                             }`}
                           >
                             {c.label}
@@ -368,7 +368,7 @@ export default function BeaconCertificateBuilder() {
           <PrintMetaPanel meta={printMeta} onChange={setPrintMeta} />
 
           {/* Preview of what's included */}
-          <div className="p-4 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)] text-xs space-y-1.5">
+          <div className="p-4 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded border border-[var(--border-color)] text-xs space-y-1.5">
             <p className="font-semibold text-[var(--text-primary)] mb-2">The certificate will include:</p>
             <div className="text-[var(--text-muted)] space-y-1">
               <p> Standard document header (project · client · date · surveyor · reg no · instrument)</p>

@@ -57,7 +57,7 @@ export default function SurveyorDirectoryPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by name, firm, or ISK number..."
-            className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]/40"
+            className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]"
           />
         </div>
         <input
@@ -65,7 +65,7 @@ export default function SurveyorDirectoryPage() {
           value={countyFilter}
           onChange={e => setCountyFilter(e.target.value)}
           placeholder="Filter by county..."
-          className="sm:w-48 px-4 py-2.5 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]/40"
+          className="sm:w-48 px-4 py-2.5 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]"
         />
       </div>
 
@@ -92,7 +92,7 @@ export default function SurveyorDirectoryPage() {
           ))}
         </div>
       ) : surveyors.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[var(--border-color)] bg-[var(--bg-card)]/50 p-12 text-center">
+        <div className="rounded-2xl border border-dashed border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-card)_50%,transparent)] p-12 text-center">
           <Search className="w-10 h-10 text-[var(--text-muted)] mx-auto mb-3 opacity-50" />
           <h3 className="text-sm font-semibold text-[var(--text-primary)]">No surveyors found</h3>
           <p className="text-xs text-[var(--text-muted)] mt-1 max-w-md mx-auto">
@@ -116,7 +116,7 @@ export default function SurveyorDirectoryPage() {
             return (
               <div
                 key={s.id}
-                className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 hover:border-[var(--accent)]/30 transition-all"
+                className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-all"
               >
                 <div className="flex items-start gap-3 mb-3">
                   <div

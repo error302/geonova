@@ -34,7 +34,7 @@ export default function SettingOutTable({ result }: Props) {
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.id} className="hover:bg-[var(--bg-tertiary)]/30 border border-[var(--border-color)]/50">
+              <tr key={row.id} className="hover:bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)] border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                 <td className="px-3 py-2 text-[var(--text-primary)] font-semibold">{row.id}</td>
                 <td className="px-3 py-2 text-[var(--text-primary)] text-right">{row.designE.toFixed(3)}</td>
                 <td className="px-3 py-2 text-[var(--text-primary)] text-right">{row.designN.toFixed(3)}</td>
@@ -57,7 +57,7 @@ export default function SettingOutTable({ result }: Props) {
           <summary className="cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] font-medium">Show derivation for {rows[0].id}</summary>
           <div className="mt-2 space-y-1">
             {rows[0].steps.map((step, _i) => (
-              <div key={step.value} className="grid grid-cols-[1fr_auto_1fr_auto] gap-x-2 font-mono py-1 border-b border-[var(--border-color)]/20">
+              <div key={step.value} className="grid grid-cols-[1fr_auto_1fr_auto] gap-x-2 font-mono py-1 border-b border-[color-mix(in_srgb,var(--border-color)_20%,transparent)]">
                 <span className="text-[var(--text-secondary)]">{step.description}</span>
                 <span className="text-[var(--text-muted)]">=</span>
                 <span className="text-[var(--text-primary)]">{step.value}</span>

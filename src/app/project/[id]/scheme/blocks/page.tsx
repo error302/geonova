@@ -312,7 +312,7 @@ export default function BlocksPage() {
         ) : (
           <div className="space-y-2">
             {blocks.map((block) => (
-              <div key={block.id} className="bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-4 hover:border-[var(--accent)]/30 transition-colors">
+              <div key={block.id} className="bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] p-4 hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-colors">
                 {editingId === block.id ? (
                   /* Edit Mode */
                   <form onSubmit={handleUpdate} className="space-y-3">

@@ -201,9 +201,9 @@ function LoginForm() {
           style={{ zIndex: -1 }}
         />
         {/* Very subtle warm tint — lets contour lines shine through */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-primary)]/30 via-[var(--bg-secondary)]/20 to-[var(--bg-primary)]/35" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[color-mix(in_srgb,var(--bg-primary)_30%,transparent)] via-[color-mix(in_srgb,var(--bg-secondary)_20%,transparent)] to-[color-mix(in_srgb,var(--bg-primary)_35%,transparent)]" />
         {/* Bottom darkening so card/badges contrast cleanly */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/60 via-transparent to-[var(--bg-primary)]/15" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[color-mix(in_srgb,var(--bg-primary)_60%,transparent)] via-transparent to-[color-mix(in_srgb,var(--bg-primary)_15%,transparent)]" />
         {/* Soft vignette */}
         <div
           aria-hidden
@@ -223,7 +223,7 @@ function LoginForm() {
         >
           <MetarduLogo size={36} showWordmark={true} color="#FFFFFF" />
         </a>
-        <div className="hidden sm:flex items-center gap-2 text-xs text-white/90 px-3 py-1.5 rounded-full bg-[var(--bg-card)]/50 border border-white/20 backdrop-blur-md drop-shadow-md">
+        <div className="hidden sm:flex items-center gap-2 text-xs text-white/90 px-3 py-1.5 rounded-full bg-[color-mix(in_srgb,var(--bg-card)_50%,transparent)] border border-white/20 backdrop-blur-md drop-shadow-md">
           <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
           <span>East Africa Survey Platform</span>
         </div>
@@ -233,7 +233,7 @@ function LoginForm() {
       <main className="relative z-10 flex min-h-[calc(100vh-88px)] items-center justify-center px-4 sm:px-6 pb-12">
         <div className="w-full max-w-md">
           {/* Dark frosted-glass card — pops against the light topo map.
-              NOTE: bg-[var(--bg-card)]/80 silently compiles to a fully
+              NOTE: bg-[color-mix(in_srgb,var(--bg-card)_80%,transparent)] silently compiles to a fully
               transparent background (Tailwind can't apply an opacity
               modifier to a var() color), which washed the white card text
               out over the light map. Hard-code the auth-page dark card
@@ -320,7 +320,7 @@ function LoginForm() {
                           setEmailTouched(true)
                           setEmailError(validateEmail(email))
                         }}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none transition-all"
                         autoComplete="email"
                         placeholder="you@example.com"
                       />
@@ -343,7 +343,7 @@ function LoginForm() {
                             setPasswordTouched(true)
                             setPasswordError(validatePassword(password))
                           }}
-                          className="w-full px-4 py-3 pr-11 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
+                          className="w-full px-4 py-3 pr-11 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none transition-all"
                           autoComplete="current-password"
                           placeholder="••••••••"
                         />
@@ -367,7 +367,7 @@ function LoginForm() {
                           type="checkbox"
                           checked={rememberMe}
                           onChange={(e) => setRememberMe(e.target.checked)}
-                          className="w-4 h-4 rounded border-white/20 bg-white/5 text-[var(--accent)] focus:ring-[var(--accent)]/50"
+                          className="w-4 h-4 rounded border-white/20 bg-white/5 text-[var(--accent)] focus:ring-[color-mix(in_srgb,var(--accent)_50%,transparent)]"
                         />
                         <span className="text-sm text-white/70 group-hover:text-white/90 transition-colors">
                           Remember me
@@ -434,7 +434,7 @@ function LoginForm() {
                           setEmailTouched(true)
                           setEmailError(validateEmail(email))
                         }}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none transition-all"
                         autoComplete="email"
                         placeholder="you@example.com"
                       />
@@ -471,7 +471,7 @@ function LoginForm() {
 
               {view === 'sent' && (
                 <div className="text-center py-2">
-                  <div className="grid place-items-center w-16 h-16 rounded-full bg-[var(--accent)]/15 ring-1 ring-[var(--accent)]/30 mx-auto mb-5">
+                  <div className="grid place-items-center w-16 h-16 rounded-full bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] ring-1 ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] mx-auto mb-5">
                     <svg className="w-8 h-8 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>

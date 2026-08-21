@@ -41,8 +41,8 @@ export default class MapErrorBoundary extends React.Component<
     if (this.state.hasError) {
       return (
         <div className="h-[calc(100vh-4rem)] bg-black/60 backdrop-blur-sm flex items-center justify-center">
-          <div className="text-center max-w-lg px-6 bg-[var(--bg-secondary)]/90 rounded-xl py-6 shadow-2xl">
-            <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-[var(--error)]/10 flex items-center justify-center">
+          <div className="text-center max-w-lg px-6 bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] rounded-xl py-6 shadow-2xl">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-[color-mix(in_srgb,var(--error)_10%,transparent)] flex items-center justify-center">
               <svg className="w-6 h-6 text-[var(--error)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -56,7 +56,7 @@ export default class MapErrorBoundary extends React.Component<
             )}
             <button
               onClick={this.handleReload}
-              className="mt-4 px-5 py-2 bg-[var(--accent)] hover:bg-[var(--accent)]/80 text-[var(--text-primary)] text-sm rounded-lg transition-colors"
+              className="mt-4 px-5 py-2 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_80%,transparent)] text-[var(--text-primary)] text-sm rounded-lg transition-colors"
             >
               Reload Page
             </button>

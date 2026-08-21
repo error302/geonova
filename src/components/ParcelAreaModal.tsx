@@ -82,7 +82,7 @@ export default function ParcelAreaModal({ isOpen, onClose, onAreaResult }: Parce
 
         {/* Result */}
         {result && (
-          <div className="mb-4 p-4 bg-[var(--bg-tertiary)]/50 rounded-lg border border-[var(--border-color)]">
+          <div className="mb-4 p-4 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded-lg border border-[var(--border-color)]">
             <h3 className="text-lg font-semibold text-[var(--accent)] mb-3">Parcel Area</h3>
             <div className="space-y-2 font-mono">
               <div className="flex justify-between">

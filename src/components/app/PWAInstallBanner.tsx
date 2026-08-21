@@ -130,7 +130,7 @@ export function PWAInstallBanner() {
         aria-label={t('pwa.installTitle')}
         className="fixed left-1/2 -translate-x-1/2 bottom-4 sm:bottom-6 z-[60] w-[calc(100%-1.5rem)] max-w-md animate-[slideUp_0.3s_ease-out]"
       >
-        <div className="relative bg-[var(--bg-card)] border border-[var(--accent)]/30 rounded-2xl shadow-2xl shadow-[var(--accent)]/10 overflow-hidden">
+        <div className="relative bg-[var(--bg-card)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rounded-2xl shadow-2xl shadow-[var(--accent)]/10 overflow-hidden">
           {/* Top accent stripe */}
           <div className="h-1 w-full bg-gradient-to-r from-[var(--accent)] via-amber-400 to-orange-300" />
 
@@ -203,21 +203,21 @@ export function PWAInstallBanner() {
 
             <ol className="space-y-3">
               <li className="flex items-start gap-3">
-                <span className="grid place-items-center w-6 h-6 rounded-full bg-[var(--accent)]/15 text-[var(--accent)] text-xs font-bold shrink-0 mt-0.5">1</span>
+                <span className="grid place-items-center w-6 h-6 rounded-full bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)] text-xs font-bold shrink-0 mt-0.5">1</span>
                 <div>
                   <p className="text-sm text-[var(--text-primary)]">{t('pwa.safariStep1')}</p>
                   <Share className="w-4 h-4 text-[var(--accent)] mt-1" />
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <span className="grid place-items-center w-6 h-6 rounded-full bg-[var(--accent)]/15 text-[var(--accent)] text-xs font-bold shrink-0 mt-0.5">2</span>
+                <span className="grid place-items-center w-6 h-6 rounded-full bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)] text-xs font-bold shrink-0 mt-0.5">2</span>
                 <div>
                   <p className="text-sm text-[var(--text-primary)]">{t('pwa.safariStep2')}</p>
                   <PlusSquare className="w-4 h-4 text-[var(--accent)] mt-1" />
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <span className="grid place-items-center w-6 h-6 rounded-full bg-[var(--accent)]/15 text-[var(--accent)] text-xs font-bold shrink-0 mt-0.5">3</span>
+                <span className="grid place-items-center w-6 h-6 rounded-full bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)] text-xs font-bold shrink-0 mt-0.5">3</span>
                 <p className="text-sm text-[var(--text-primary)]">{t('pwa.safariStep3')}</p>
               </li>
             </ol>

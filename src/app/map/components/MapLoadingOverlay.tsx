@@ -19,7 +19,7 @@ export const MapLoadingOverlay = memo(function MapLoadingOverlay() {
 
   return (
     <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="text-center max-w-md px-6 bg-[var(--bg-secondary)]/90 rounded-xl py-5 shadow-2xl">
+      <div className="text-center max-w-md px-6 bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] rounded-xl py-5 shadow-2xl">
         {initError ? (
           <>
             <div className="text-[var(--error)] text-lg mb-2">Map Error</div>
@@ -27,13 +27,13 @@ export const MapLoadingOverlay = memo(function MapLoadingOverlay() {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={retryInit}
-                className="px-4 py-2 bg-[var(--bg-card)]/10 text-[var(--text-primary)] rounded-lg text-sm hover:bg-[var(--bg-card)]/20 transition-colors"
+                className="px-4 py-2 bg-[color-mix(in_srgb,var(--bg-card)_10%,transparent)] text-[var(--text-primary)] rounded-lg text-sm hover:bg-[color-mix(in_srgb,var(--bg-card)_20%,transparent)] transition-colors"
               >
                 Retry
               </button>
               <button
                 onClick={() => window.location.reload()}
-                className="px-4 py-2 bg-[var(--accent)] text-[var(--text-primary)] rounded-lg text-sm hover:bg-[var(--accent)]/80 transition-colors"
+                className="px-4 py-2 bg-[var(--accent)] text-[var(--text-primary)] rounded-lg text-sm hover:bg-[color-mix(in_srgb,var(--accent)_80%,transparent)] transition-colors"
               >
                 Reload Page
               </button>

@@ -94,7 +94,7 @@ export default function RegulatoryChecklistPage() {
     if (res.ok) { const d = (await res.json()) as { data: ElectiveCheckResult }; setElectiveResult(d.data) }
   }
 
-  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[var(--accent)]/30 focus:outline-none"
+  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-sm text-[var(--text-muted)]">Loading...</div>
 
@@ -104,7 +104,7 @@ export default function RegulatoryChecklistPage() {
       <p className="text-sm text-[var(--text-muted)] mb-6">Survey Regulations 1994 — instrument approval, field notes, scales, areas, certificates, and elective survey types</p>
 
       {/* Instrument Approval (Reg 55) */}
-      <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+      <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
         <h2 className="text-sm font-semibold mb-2 flex items-center gap-2"><Wrench className="w-4 h-4" /> Reg 55(2): Instrument Approval</h2>
         <div className="grid grid-cols-3 gap-2 mb-2">
           <input value={brand} onChange={e => setBrand(e.target.value)} className={inputCls} placeholder="Brand (e.g. Leica)" />
@@ -136,7 +136,7 @@ export default function RegulatoryChecklistPage() {
       </div>
 
       {/* Standard Scales (Reg 89) */}
-      <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+      <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
         <h2 className="text-sm font-semibold mb-2 flex items-center gap-2"><Scale className="w-4 h-4" /> Reg 89: Standard Plotting Scale</h2>
         <div className="flex gap-2 items-end mb-2">
           <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="area-ha">Area (ha)</label><input id="area-ha" value={areaHa} onChange={e => setAreaHa(e.target.value)} className={inputCls + ' w-32'} placeholder="0.5" /></div>
@@ -155,7 +155,7 @@ export default function RegulatoryChecklistPage() {
       </div>
 
       {/* Surveyor Certificate (Reg 97) */}
-      <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+      <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
         <h2 className="text-sm font-semibold mb-2 flex items-center gap-2"><FileCheck className="w-4 h-4" /> Reg 97: Surveyor Certificate</h2>
         <div className="grid grid-cols-2 gap-2 mb-2">
           <input value={surveyorName} onChange={e => setSurveyorName(e.target.value)} className={inputCls} placeholder="Surveyor Name" />
@@ -171,7 +171,7 @@ export default function RegulatoryChecklistPage() {
         {certResult && (
           <div className="mt-2">
             <pre className="text-[9px] text-[var(--text-secondary)] whitespace-pre-wrap font-mono bg-[var(--bg-tertiary)] p-3 rounded-lg max-h-60 overflow-y-auto">{certResult}</pre>
-            <button onClick={() => { const blob = new Blob([certResult], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'survey_certificate.txt'; a.click(); URL.revokeObjectURL(url) }} className="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[var(--accent)] text-[10px] font-semibold rounded-lg">
+            <button onClick={() => { const blob = new Blob([certResult], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'survey_certificate.txt'; a.click(); URL.revokeObjectURL(url) }} className="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-[10px] font-semibold rounded-lg">
               <Download className="w-3 h-3" /> Download Certificate
             </button>
           </div>
@@ -179,7 +179,7 @@ export default function RegulatoryChecklistPage() {
       </div>
 
       {/* Elective Survey Types (License Application) */}
-      <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+      <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
         <h2 className="text-sm font-semibold mb-2 flex items-center gap-2"><Award className="w-4 h-4" /> License Elective Survey Types</h2>
         <div className="grid grid-cols-2 gap-2 mb-2">
           <select value={electiveId} onChange={e => setElectiveId(e.target.value)} className={inputCls}>

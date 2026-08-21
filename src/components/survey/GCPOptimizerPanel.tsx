@@ -133,15 +133,15 @@ export function GCPOptimizerPanel() {
         <>
           {/* Summary */}
           <div className="grid grid-cols-3 gap-2">
-            <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
+            <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] text-center">
               <div className="text-lg font-bold text-[var(--accent)]">{plan.totalGCPs}</div>
               <div className="text-[9px] text-gray-400 uppercase">GCPs</div>
             </div>
-            <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
+            <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] text-center">
               <div className="text-lg font-bold text-emerald-400">±{plan.estimatedAccuracy}cm</div>
               <div className="text-[9px] text-gray-400 uppercase">Est. Accuracy</div>
             </div>
-            <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
+            <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] text-center">
               <div className="text-lg font-bold text-gray-300">{plan.coveragePercent.toFixed(0)}%</div>
               <div className="text-[9px] text-gray-400 uppercase">Coverage</div>
             </div>

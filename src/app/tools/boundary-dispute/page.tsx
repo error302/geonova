@@ -23,7 +23,7 @@ export default function BoundaryDisputePage() {
         <div className="space-y-4">
           <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="legal-boundary-easting-northing-one-per-line">Legal Boundary (easting, northing — one per line)</label><textarea id="legal-boundary-easting-northing-one-per-line" value={legalCsv} onChange={e => setLegalCsv(e.target.value)} rows={6} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
           <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="occupied-boundary-fence-wall-gps-easting-northing">Occupied Boundary (fence/wall GPS — easting, northing)</label><textarea id="occupied-boundary-fence-wall-gps-easting-northing" value={occupiedCsv} onChange={e => setOccupiedCsv(e.target.value)} rows={6} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white font-mono text-sm" /></div>
-          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Analyze Dispute</button>
+          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] text-black font-semibold rounded-lg">Analyze Dispute</button>
         </div>
         <div>
           {result ? (

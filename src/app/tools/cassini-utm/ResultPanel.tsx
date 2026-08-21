@@ -108,22 +108,22 @@ export function ResultPanel({
               </p>
               {direction === 'cassini-to-utm' ? (
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 rounded-lg bg-[var(--accent-subtle)] border border-[var(--accent)]/20">
+                  <div className="p-3 rounded-lg bg-[var(--accent-subtle)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)]">
                     <p className="text-[10px] text-[var(--accent)] uppercase">UTM Easting</p>
                     <p className="font-mono text-sm text-[var(--text-primary)]">{r3(singleResult.utmE)} m</p>
                   </div>
-                  <div className="p-3 rounded-lg bg-[var(--accent-subtle)] border border-[var(--accent)]/20">
+                  <div className="p-3 rounded-lg bg-[var(--accent-subtle)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)]">
                     <p className="text-[10px] text-[var(--accent)] uppercase">UTM Northing</p>
                     <p className="font-mono text-sm text-[var(--text-primary)]">{r3(singleResult.utmN)} m</p>
                   </div>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 rounded-lg bg-[var(--accent-subtle)] border border-[var(--accent)]/20">
+                  <div className="p-3 rounded-lg bg-[var(--accent-subtle)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)]">
                     <p className="text-[10px] text-[var(--accent)] uppercase">Cassini Easting</p>
                     <p className="font-mono text-sm text-[var(--text-primary)]">{r1(singleResult.cassiniE)} ft</p>
                   </div>
-                  <div className="p-3 rounded-lg bg-[var(--accent-subtle)] border border-[var(--accent)]/20">
+                  <div className="p-3 rounded-lg bg-[var(--accent-subtle)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)]">
                     <p className="text-[10px] text-[var(--accent)] uppercase">Cassini Northing</p>
                     <p className="font-mono text-sm text-[var(--text-primary)]">{r1(singleResult.cassiniN)} ft</p>
                   </div>
@@ -158,7 +158,7 @@ export function ResultPanel({
                   <Globe className="h-3 w-3 inline-block mr-1" />
                   WGS84 Geographic (approximate)
                 </p>
-                <div className="p-3 rounded-lg bg-[var(--accent-subtle)] border border-[var(--accent)]/20 space-y-2">
+                <div className="p-3 rounded-lg bg-[var(--accent-subtle)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] space-y-2">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <p className="text-[10px] text-[var(--accent)] uppercase">Latitude</p>

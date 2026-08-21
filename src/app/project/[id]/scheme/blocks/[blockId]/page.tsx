@@ -266,7 +266,7 @@ export default function BlockDetailPage() {
 
         {/* Create Parcel Form */}
         {showCreateParcel && (
-          <div className="mb-6 p-5 bg-[var(--bg-card)] rounded-xl border border-[var(--accent)]/30 space-y-4">
+          <div className="mb-6 p-5 bg-[var(--bg-card)] rounded-xl border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] space-y-4">
             <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
               <FileText className="w-4 h-4 text-[var(--accent)]" />
               New Parcel
@@ -384,7 +384,7 @@ export default function BlockDetailPage() {
                   </thead>
                   <tbody>
                     {parcels.map((parcel) => (
-                      <tr key={parcel.id} className="border-b border-[var(--border-color)]/50 hover:bg-[var(--bg-secondary)] transition-colors">
+                      <tr key={parcel.id} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] hover:bg-[var(--bg-secondary)] transition-colors">
                         {editingId === parcel.id ? (
                           <>
                             <td className="px-4 py-2">
@@ -444,7 +444,7 @@ export default function BlockDetailPage() {
                               <div className="flex justify-end gap-1">
                                 <button
                                   onClick={() => setSelectedParcelId(selectedParcelId === parcel.id ? null : parcel.id)}
-                                  className={`p-1.5 rounded-lg transition-colors text-[var(--text-muted)] ${selectedParcelId === parcel.id ? 'bg-[var(--accent)]/20 text-[var(--accent)]' : 'hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]'}`}
+                                  className={`p-1.5 rounded-lg transition-colors text-[var(--text-muted)] ${selectedParcelId === parcel.id ? 'bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[var(--accent)]' : 'hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent)]'}`}
                                   title="Compute Traverse"
                                 >
                                   <FileText className="w-3.5 h-3.5" />

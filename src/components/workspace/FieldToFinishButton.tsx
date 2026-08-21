@@ -188,7 +188,7 @@ export function FieldToFinishButton({ projectId, disabled }: FieldToFinishButton
           </div>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-3 gap-2 p-3 bg-[var(--bg-primary)]/40">
+          <div className="grid grid-cols-3 gap-2 p-3 bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)]">
             <div className="text-center">
               <div className="text-xs text-[var(--text-muted)]">Precision</div>
               <div className={`font-mono font-bold text-sm ${gradeColors[result.instantFeedback.grade] || 'text-red-400'}`}>
@@ -212,7 +212,7 @@ export function FieldToFinishButton({ projectId, disabled }: FieldToFinishButton
           {/* Expandable Details */}
           <button
             onClick={() => setExpanded(!expanded)}
-            className="w-full flex items-center justify-between px-3 py-2 text-xs text-[var(--text-muted)] hover:bg-[var(--bg-secondary)]/40 transition-colors border-t border-[var(--border-color)]"
+            className="w-full flex items-center justify-between px-3 py-2 text-xs text-[var(--text-muted)] hover:bg-[color-mix(in_srgb,var(--bg-secondary)_40%,transparent)] transition-colors border-t border-[var(--border-color)]"
           >
             <span>Details & Pre-Submission Check</span>
             {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}

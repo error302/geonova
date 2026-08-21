@@ -221,7 +221,7 @@ export default function EarthworksCalculator() {
               <th className="px-2 py-2 text-left border border-[var(--border-color)] text-[var(--text-muted)] font-medium" colSpan={8}>Right Shots (CL→outer)</th>
               <th className="px-2 py-2 border border-[var(--border-color)]"></th>
             </tr>
-            <tr className="bg-[var(--bg-tertiary)]/50">
+            <tr className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
               <th className="border border-[var(--border-color)]"></th>
               <th className="border border-[var(--border-color)]"></th>
               <th className="border border-[var(--border-color)]"></th>
@@ -234,24 +234,24 @@ export default function EarthworksCalculator() {
           </thead>
           <tbody>
             {sections.map((row) => (
-              <tr key={row.id} className="hover:bg-[var(--bg-tertiary)]/30">
-                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="Ch km" value={row.chainageKm} onChange={e => updateRow(row.id, 'chainageKm', e.target.value)} type="number" min="0" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
-                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="Ch m" value={row.chainageM} onChange={e => updateRow(row.id, 'chainageM', e.target.value)} type="number" min="0" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
-                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="CL RL" value={row.clRL} onChange={e => updateRow(row.id, 'clRL', e.target.value)} type="number" step="0.001" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
-                <td className="px-1 py-1 border border-[var(--border-color)]/50"><input aria-label="Form RL" value={row.formRL} onChange={e => updateRow(row.id, 'formRL', e.target.value)} type="number" step="0.001" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+              <tr key={row.id} className="hover:bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
+                <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]"><input aria-label="Ch km" value={row.chainageKm} onChange={e => updateRow(row.id, 'chainageKm', e.target.value)} type="number" min="0" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]"><input aria-label="Ch m" value={row.chainageM} onChange={e => updateRow(row.id, 'chainageM', e.target.value)} type="number" min="0" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]"><input aria-label="CL RL" value={row.clRL} onChange={e => updateRow(row.id, 'clRL', e.target.value)} type="number" step="0.001" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
+                <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]"><input aria-label="Form RL" value={row.formRL} onChange={e => updateRow(row.id, 'formRL', e.target.value)} type="number" step="0.001" className="w-full px-1 py-1 bg-transparent text-[var(--text-primary)]" /></td>
                 {[0, 1, 2, 3].map((i) => (
                   <Fragment key={'ls' + i}>
-                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.leftShots[i]?.off || ''} onChange={e => updateShot(row.id, 'left', i, 'off', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Left offset (m)" placeholder="Off" /></td>
-                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.leftShots[i]?.rl || ''} onChange={e => updateShot(row.id, 'left', i, 'rl', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Left RL (m)" placeholder="RL" /></td>
+                    <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]"><input value={row.leftShots[i]?.off || ''} onChange={e => updateShot(row.id, 'left', i, 'off', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Left offset (m)" placeholder="Off" /></td>
+                    <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]"><input value={row.leftShots[i]?.rl || ''} onChange={e => updateShot(row.id, 'left', i, 'rl', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Left RL (m)" placeholder="RL" /></td>
                   </Fragment>
                 ))}
                 {[0, 1, 2, 3].map((i) => (
                   <Fragment key={'rs' + i}>
-                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.rightShots[i]?.off || ''} onChange={e => updateShot(row.id, 'right', i, 'off', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Right offset (m)" placeholder="Off" /></td>
-                    <td className="px-1 py-1 border border-[var(--border-color)]/50"><input value={row.rightShots[i]?.rl || ''} onChange={e => updateShot(row.id, 'right', i, 'rl', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Right RL (m)" placeholder="RL" /></td>
+                    <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]"><input value={row.rightShots[i]?.off || ''} onChange={e => updateShot(row.id, 'right', i, 'off', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Right offset (m)" placeholder="Off" /></td>
+                    <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]"><input value={row.rightShots[i]?.rl || ''} onChange={e => updateShot(row.id, 'right', i, 'rl', e.target.value)} type="number" step="0.001" className="w-14 px-1 py-1 bg-transparent text-[var(--text-primary)]" aria-label="Right RL (m)" placeholder="RL" /></td>
                   </Fragment>
                 ))}
-                <td className="px-1 py-1 border border-[var(--border-color)]/50">
+                <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                   <button onClick={() => removeRow(row.id)} className="text-red-400 hover:text-red-300 text-xs px-1">[x]</button>
                 </td>
               </tr>

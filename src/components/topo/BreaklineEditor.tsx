@@ -396,7 +396,7 @@ export function BreaklineEditor({ points, breaklines, onChange }: BreaklineEdito
                               onClick={() => toggleSelectBreakline(i)}
                               className={`w-full text-left text-xs px-2 py-1.5 rounded flex items-center justify-between transition-colors border ${
                                 isSelected
-                                  ? 'bg-[var(--accent)]/20 border-[var(--accent)]'
+                                  ? 'bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] border-[var(--accent)]'
                                   : 'bg-[var(--bg-secondary)] ' + clsColor
                               }`}
                             >

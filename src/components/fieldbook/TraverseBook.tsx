@@ -190,7 +190,7 @@ export function TraverseBook({
               </div>
             </div>
           ) : (
-            <div className={`p-3 border rounded text-xs flex items-center gap-1.5 ${travMode === 'open' ? 'bg-red-900/20 border-red-600 text-red-400' : 'bg-[var(--bg-primary)]/40 border-[var(--border-color)] text-[var(--text-muted)]'}`}>
+            <div className={`p-3 border rounded text-xs flex items-center gap-1.5 ${travMode === 'open' ? 'bg-red-900/20 border-red-600 text-red-400' : 'bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] border-[var(--border-color)] text-[var(--text-muted)]'}`}>
               {travMode === 'closed'
                 ? t('traverse.closedHint')
                 : <><AlertTriangle className="w-3.5 h-3.5 inline shrink-0" /> Open traverse: No closing control — prohibited for cadastral surveys per Reg. 67 (swinging traverse). Use link or closed mode instead.</>
@@ -289,7 +289,7 @@ export function TraverseBook({
           <div className="border border-[var(--border-color)] rounded overflow-hidden">
             <button
               onClick={() => setEdmOpen(!edmOpen)}
-              className="w-full flex items-center justify-between px-4 py-2.5 bg-[var(--bg-primary)]/40 text-sm font-medium hover:bg-[var(--border-color)]/30 transition-colors"
+              className="w-full flex items-center justify-between px-4 py-2.5 bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] text-sm font-medium hover:bg-[color-mix(in_srgb,var(--border-color)_30%,transparent)] transition-colors"
             >
               <span>[Compass] EDM Corrections <span className="text-[var(--text-muted)] font-normal">(Survey Engine · IAG/ISO · UTM 37S)</span></span>
               <span className="text-[var(--text-muted)]">{edmOpen ? '▲' : '▼'}</span>
@@ -298,7 +298,7 @@ export function TraverseBook({
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-[var(--border-color)] bg-[var(--bg-primary)]/30">
+                    <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-primary)_30%,transparent)]">
                       <th className="px-2 py-2 text-left">Line</th>
                       <th className="px-2 py-2 text-right">SD (m)</th>
                       <th className="px-2 py-2 text-right">HD (m)</th>
@@ -310,7 +310,7 @@ export function TraverseBook({
                   </thead>
                   <tbody>
                     {edmRows.map((row, i) => row && (
-                      <tr key={`${row}-${i}`} className="border-b border-[var(--border-color)]/30">
+                      <tr key={`${row}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                         <td className="px-2 py-1.5 font-mono">{row.line}</td>
                         <td className="px-2 py-1.5 text-right font-mono">{row.sd.toFixed(3)}</td>
                         <td className="px-2 py-1.5 text-right font-mono">{row.hd.toFixed(3)}</td>
@@ -329,19 +329,19 @@ export function TraverseBook({
 
         {computed.ok && computed.mode !== 'open' && (
           <div className="grid md:grid-cols-4 gap-3">
-            <div className="p-3 bg-[var(--bg-primary)]/40 border border-[var(--border-color)] rounded">
+            <div className="p-3 bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] border border-[var(--border-color)] rounded">
               <div className="text-xs text-[var(--text-muted)]">{t('traverse.closingErrorE')}</div>
               <div className="font-mono">{Number(computed.adjusted.closingErrorE).toFixed(4)} m</div>
             </div>
-            <div className="p-3 bg-[var(--bg-primary)]/40 border border-[var(--border-color)] rounded">
+            <div className="p-3 bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] border border-[var(--border-color)] rounded">
               <div className="text-xs text-[var(--text-muted)]">{t('traverse.closingErrorN')}</div>
               <div className="font-mono">{Number(computed.adjusted.closingErrorN).toFixed(4)} m</div>
             </div>
-            <div className="p-3 bg-[var(--bg-primary)]/40 border border-[var(--border-color)] rounded">
+            <div className="p-3 bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] border border-[var(--border-color)] rounded">
               <div className="text-xs text-[var(--text-muted)]">{t('traverse.linearError')}</div>
               <div className="font-mono">{Number(computed.adjusted.linearError).toFixed(4)} m</div>
             </div>
-            <div className="p-3 bg-[var(--bg-primary)]/40 border border-[var(--border-color)] rounded">
+            <div className="p-3 bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] border border-[var(--border-color)] rounded">
               <div className="text-xs text-[var(--text-muted)]">{t('traverse.precision')}</div>
               <div className="font-mono">
                 1 : {Math.max(1, Math.round(Number(computed.adjusted.totalDistance) / Math.max(1e-12, Number(computed.adjusted.linearError)))).toLocaleString()}

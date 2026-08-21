@@ -253,7 +253,7 @@ export function HorizontalCurvePanel({ projectId, projectData: _projectData, sur
               </thead>
               <tbody>
                 {result.settingOutTable.slice(0, 15).map((row, i) => (
-                  <tr key={`${row}-${i}`} className="border-b border-[var(--border-color)]/30">
+                  <tr key={`${row}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                     <td className="py-1.5 px-4">{row.chainage.toFixed(3)}</td>
                     <td className="py-1.5 px-4 text-right">{row.deflectionFromTC.toFixed(4)}°</td>
                     <td className="py-1.5 px-4 text-right">{row.chordFromTC.toFixed(4)}</td>

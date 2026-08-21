@@ -208,7 +208,7 @@ export function ProcessingToolbox({ compact = false }: { compact?: boolean }) {
             value={query}
             onChange={e => setQuery(e.target.value)}
             aria-label="Search 60+ tools..."
-            className="w-full h-9 pl-9 pr-8 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+            className="w-full h-9 pl-9 pr-8 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
           />
           {query && (
             <button
@@ -231,7 +231,7 @@ export function ProcessingToolbox({ compact = false }: { compact?: boolean }) {
               onClick={() => setActiveCategory(cat)}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium whitespace-nowrap transition-colors ${
                 activeCategory === cat
-                  ? 'bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)]'
+                  ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]'
                   : 'text-gray-400 hover:text-gray-300 hover:bg-white/[0.04]'
               }`}
             >
@@ -288,7 +288,7 @@ export function ProcessingToolbox({ compact = false }: { compact?: boolean }) {
 
         {/* All tools grouped by category */}
         {Object.entries(grouped).map(([cat, tools]) => (
-          <div key={cat} className="p-3 border-b border-[var(--border-color)]/50">
+          <div key={cat} className="p-3 border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
             <div className="flex items-center gap-1.5 mb-2">
               {(() => {
                 const Icon = CATEGORY_ICONS[cat] || Calculator
@@ -341,7 +341,7 @@ function ToolRow({
       onClick={onClick}
       className="group flex items-center gap-2.5 p-2 rounded-lg cursor-pointer hover:bg-white/[0.04] transition-colors"
     >
-      <div className="shrink-0 w-8 h-8 rounded-lg bg-[var(--accent)]/5 border border-[var(--accent)]/10 flex items-center justify-center">
+      <div className="shrink-0 w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] border border-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
         <Icon className="w-4 h-4 text-[var(--accent)]" />
       </div>
       <div className="flex-1 min-w-0">

@@ -417,7 +417,7 @@ function ShakeUndoOverlay({
           </button>
           <button
             onClick={handleCancel}
-            className="flex-1 py-2.5 text-sm font-semibold bg-[var(--bg-secondary)] text-[var(--text-secondary)] rounded-xl border border-[var(--border-color)] hover:border-[var(--accent)]/30 transition"
+            className="flex-1 py-2.5 text-sm font-semibold bg-[var(--bg-secondary)] text-[var(--text-secondary)] rounded-xl border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition"
           >
             Cancel
           </button>

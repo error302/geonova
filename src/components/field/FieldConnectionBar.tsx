@@ -37,10 +37,10 @@ export const FieldConnectionBar = memo(function FieldConnectionBar({
 
   // Status colors
   const statusColor = !isConnected
-    ? 'bg-[var(--error)]/10 text-[var(--error)] border-[var(--error)]/30'
+    ? 'bg-[color-mix(in_srgb,var(--error)_10%,transparent)] text-[var(--error)] border-[color-mix(in_srgb,var(--error)_30%,transparent)]'
     : isStreaming
-      ? 'bg-[var(--success)]/10 text-[var(--success)] border-[var(--success)]/30'
-      : 'bg-[var(--warning)]/10 text-[var(--warning)] border-[var(--warning)]/30'
+      ? 'bg-[color-mix(in_srgb,var(--success)_10%,transparent)] text-[var(--success)] border-[color-mix(in_srgb,var(--success)_30%,transparent)]'
+      : 'bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] text-[var(--warning)] border-[color-mix(in_srgb,var(--warning)_30%,transparent)]'
 
   const TransportIcon = transport === 'web-bluetooth' ? Bluetooth : transport === 'web-serial' ? Usb : Satellite
 
@@ -73,10 +73,10 @@ export const FieldConnectionBar = memo(function FieldConnectionBar({
         <div className="flex items-center gap-2 text-sm">
           <span className={`px-2 py-0.5 rounded font-mono text-xs ${
             (latestPoint.quality ?? 0) >= 4
-              ? 'bg-[var(--success)]/20 text-[var(--success)]'
+              ? 'bg-[color-mix(in_srgb,var(--success)_20%,transparent)] text-[var(--success)]'
               : (latestPoint.quality ?? 0) >= 2
-                ? 'bg-[var(--warning)]/20 text-[var(--warning)]'
-                : 'bg-[var(--error)]/20 text-[var(--error)]'
+                ? 'bg-[color-mix(in_srgb,var(--warning)_20%,transparent)] text-[var(--warning)]'
+                : 'bg-[color-mix(in_srgb,var(--error)_20%,transparent)] text-[var(--error)]'
           }`}>
             {(latestPoint.quality ?? 0) >= 4 ? 'FIXED' : (latestPoint.quality ?? 0) >= 2 ? 'FLOAT' : 'NO FIX'}
           </span>
@@ -114,7 +114,7 @@ export const FieldConnectionBar = memo(function FieldConnectionBar({
           {isSyncing ? 'Syncing…' : isOnline ? 'Online' : 'Offline'}
         </span>
         {pendingSyncCount > 0 && (
-          <span className="bg-[var(--accent)]/20 text-[var(--accent)] px-1.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
+          <span className="bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[var(--accent)] px-1.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
             {pendingSyncCount}
           </span>
         )}

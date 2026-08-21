@@ -42,7 +42,7 @@ export function SubSheetCornerBanner({ activeSubSheet }: SubSheetCornerBannerPro
                 const absE = r ? Math.abs(r.residualE) : 0
                 const absN = r ? Math.abs(r.residualN) : 0
                 return (
-                  <tr key={`${c}-${i}`} className="border-b border-[var(--border-color)]/50">
+                  <tr key={`${c}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                     <td className="py-1 px-1.5 font-medium">C{i + 1}</td>
                     <td className="py-1 px-1.5 text-right font-mono">{c.cassX.toFixed(1)}</td>
                     <td className="py-1 px-1.5 text-right font-mono">{c.cassY.toFixed(1)}</td>
@@ -111,7 +111,7 @@ export function SubSheetGridPicker({
                     ? 'bg-[var(--bg-tertiary)] opacity-30 cursor-default'
                     : isActive
                       ? 'bg-emerald-500/30 border border-emerald-500/50 text-emerald-300 font-bold shadow-sm shadow-emerald-500/10'
-                      : 'bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--accent)]/10 hover:border-[var(--accent)]/30 hover:text-[var(--accent)] cursor-pointer'
+                      : 'bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] hover:text-[var(--accent)] cursor-pointer'
                 }`}
               >
                 {sub ? sub.subId : ''}

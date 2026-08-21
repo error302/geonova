@@ -161,7 +161,7 @@ export const GpsTrackPanel = memo(function GpsTrackPanel() {
   }
 
   return (
-    <div className="bg-[var(--bg-secondary)]/90 backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-lg w-56">
+    <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-lg w-56">
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2">
         <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ export const GpsTrackPanel = memo(function GpsTrackPanel() {
             <button
               onClick={startTracking}
               disabled={!gpsTracking}
-              className="flex-1 h-7 flex items-center justify-center gap-1.5 text-[10px] bg-[var(--accent)]/20 text-[var(--accent)] border border-[var(--accent)]/30 rounded hover:bg-[var(--accent)]/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex-1 h-7 flex items-center justify-center gap-1.5 text-[10px] bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[var(--accent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rounded hover:bg-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               title={gpsTracking ? 'Start track logging' : 'Enable GPS first'}
             >
               <Play className="w-3 h-3" />
@@ -188,7 +188,7 @@ export const GpsTrackPanel = memo(function GpsTrackPanel() {
           ) : (
             <button
               onClick={stopTracking}
-              className="flex-1 h-7 flex items-center justify-center gap-1.5 text-[10px] bg-[var(--error)]/20 text-[var(--error)] border border-red-500/30 rounded hover:bg-[var(--error)]/30 transition-colors"
+              className="flex-1 h-7 flex items-center justify-center gap-1.5 text-[10px] bg-[color-mix(in_srgb,var(--error)_20%,transparent)] text-[var(--error)] border border-red-500/30 rounded hover:bg-[color-mix(in_srgb,var(--error)_30%,transparent)] transition-colors"
               title="Stop track logging and save"
             >
               <Square className="w-3 h-3" />

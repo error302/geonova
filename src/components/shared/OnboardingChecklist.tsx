@@ -201,7 +201,7 @@ export default function OnboardingChecklist() {
 
       {/* ---- Congratulations banner ---- */}
       {allComplete && (
-        <div className="mx-5 mb-4 px-4 py-3 rounded-lg border border-[var(--success)]/20 bg-[var(--success)]/5 text-sm text-[var(--success)] flex items-center gap-3">
+        <div className="mx-5 mb-4 px-4 py-3 rounded-lg border border-[color-mix(in_srgb,var(--success)_20%,transparent)] bg-[color-mix(in_srgb,var(--success)_5%,transparent)] text-sm text-[var(--success)] flex items-center gap-3">
           <Trophy className="h-5 w-5 shrink-0" />
           <span>
             All onboarding steps complete! You&apos;re ready to make the most of METARDU.
@@ -272,7 +272,7 @@ export default function OnboardingChecklist() {
       </div>
 
       {/* ---- Footer ---- */}
-      <div className="flex items-center justify-between px-5 py-3 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
+      <div className="flex items-center justify-between px-5 py-3 border-t border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)]">
         <p className="text-xs text-[var(--text-muted)]">
           {allComplete
             ? 'You can dismiss this panel whenever you like.'

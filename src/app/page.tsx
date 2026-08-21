@@ -187,7 +187,7 @@ function HeroSection() {
           style={{ filter: 'brightness(0.85) contrast(1.05)' }}
         />
         {/* Left-to-right scrim: legible copy on the left, terrain visible on the right */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-primary)]/85 via-[var(--bg-primary)]/45 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[color-mix(in_srgb,var(--bg-primary)_85%,transparent)] via-[color-mix(in_srgb,var(--bg-primary)_45%,transparent)] to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--bg-primary)] to-transparent" />
       </div>
 
@@ -204,7 +204,7 @@ function HeroSection() {
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg lg:text-xl text-[var(--text-primary)]/70 leading-relaxed mb-8 max-w-2xl">
+            <p className="text-base sm:text-lg lg:text-xl text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] leading-relaxed mb-8 max-w-2xl">
               Traverse adjustment, deed plans, GNSS baseline processing, contour generation,
               and NLIMS-ready exports — all in one professional workspace. From field to finish,
               built for Kenyan surveyors.
@@ -245,8 +245,8 @@ function TrustStrip() {
         <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center">
           {TRUST_BADGES.map((badge, i) => (
             <li key={i} className="flex flex-col items-center">
-              <span className="text-sm font-bold text-[var(--text-primary)]/85 tracking-wider">{badge.label}</span>
-              <span className="text-[10px] uppercase tracking-wider text-[var(--text-primary)]/65">{badge.sublabel}</span>
+              <span className="text-sm font-bold text-[color-mix(in_srgb,var(--text-primary)_85%,transparent)] tracking-wider">{badge.label}</span>
+              <span className="text-[10px] uppercase tracking-wider text-[color-mix(in_srgb,var(--text-primary)_65%,transparent)]">{badge.sublabel}</span>
             </li>
           ))}
         </ul>
@@ -268,7 +268,7 @@ function StatsBar() {
             <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[var(--text-primary)]">
               {stat.value}{stat.suffix}
             </div>
-            <div className="text-xs text-[var(--text-primary)]/65 mt-2 uppercase tracking-widest">
+            <div className="text-xs text-[color-mix(in_srgb,var(--text-primary)_65%,transparent)] mt-2 uppercase tracking-widest">
               {stat.label}
             </div>
           </div>
@@ -295,7 +295,7 @@ function FeaturesSection() {
           className="object-cover object-center"
           style={{ opacity: 0.4, mixBlendMode: 'screen', filter: 'contrast(1.25) brightness(0.95)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)] via-[var(--bg-primary)]/30 to-[var(--bg-primary)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)] via-[color-mix(in_srgb,var(--bg-primary)_30%,transparent)] to-[var(--bg-primary)]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
@@ -308,7 +308,7 @@ function FeaturesSection() {
             <br />
             <span className="text-[var(--accent)]">professional surveying</span>
           </h2>
-          <p className="max-w-2xl mx-auto text-[var(--text-primary)]/70 text-base lg:text-lg">
+          <p className="max-w-2xl mx-auto text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] text-base lg:text-lg">
             Six core modules purpose-built for the East African surveyor. From field observations
             to regulatory submission.
           </p>
@@ -320,7 +320,7 @@ function FeaturesSection() {
             return (
               <li
                 key={i}
-                className="group relative p-8 rounded-2xl bg-[var(--bg-secondary)]/80 backdrop-blur-sm border border-[var(--border-color)] overflow-hidden hover:border-[var(--accent)]/40 transition-all duration-300 hover:-translate-y-1"
+                className="group relative p-8 rounded-2xl bg-[color-mix(in_srgb,var(--bg-secondary)_80%,transparent)] backdrop-blur-sm border border-[var(--border-color)] overflow-hidden hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] transition-all duration-300 hover:-translate-y-1"
               >
                 <Image
                   src={feature.image}
@@ -330,13 +330,13 @@ function FeaturesSection() {
                   className="object-cover object-top pointer-events-none opacity-[0.14] group-hover:opacity-[0.22] transition-opacity duration-500 group-hover:scale-110 group-hover:transition-[opacity,transform]"
                   style={{ filter: 'brightness(0.55) saturate(0.85)' }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-secondary)] via-transparent to-[var(--bg-secondary)]/60 pointer-events-none" aria-hidden />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-secondary)] via-transparent to-[color-mix(in_srgb,var(--bg-secondary)_60%,transparent)] pointer-events-none" aria-hidden />
                 <div className="relative">
-                  <div className="w-12 h-12 rounded-xl bg-[var(--accent)]/10 flex items-center justify-center mb-5 group-hover:bg-[var(--accent)]/20 transition-colors">
+                  <div className="w-12 h-12 rounded-xl bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center mb-5 group-hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] transition-colors">
                     <Icon className="w-6 h-6 text-[var(--accent)]" aria-hidden />
                   </div>
                   <h3 className="text-lg font-bold text-[var(--text-primary)] mb-3">{feature.title}</h3>
-                  <p className="text-sm text-[var(--text-primary)]/70 leading-relaxed">{feature.description}</p>
+                  <p className="text-sm text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] leading-relaxed">{feature.description}</p>
                 </div>
               </li>
             )
@@ -363,7 +363,7 @@ function ShowcaseSection() {
             One workspace,{' '}
             <span className="text-[var(--accent)]">field to finish</span>
           </h2>
-          <p className="max-w-2xl mx-auto text-[var(--text-primary)]/70 text-base lg:text-lg">
+          <p className="max-w-2xl mx-auto text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] text-base lg:text-lg">
             Import observations, close traverses, draft deed plans, and produce
             NLIMS-ready documents — without leaving the browser or losing connectivity.
           </p>
@@ -372,7 +372,7 @@ function ShowcaseSection() {
         <div className="space-y-12">
           {/* Wide cadastral map shot */}
           <figure className="group relative">
-            <div className="absolute -inset-3 bg-gradient-to-r from-[var(--accent)]/10 via-transparent to-transparent rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-opacity" aria-hidden />
+            <div className="absolute -inset-3 bg-gradient-to-r from-[color-mix(in_srgb,var(--accent)_10%,transparent)] via-transparent to-transparent rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-opacity" aria-hidden />
             <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl">
               <Image
                 src="/landing/showcase-field.webp"
@@ -384,7 +384,7 @@ function ShowcaseSection() {
                 className="rounded-xl object-cover"
               />
             </div>
-            <figcaption className="mt-4 text-sm text-[var(--text-primary)]/60 text-center">
+            <figcaption className="mt-4 text-sm text-[color-mix(in_srgb,var(--text-primary)_60%,transparent)] text-center">
               Cadastral map workspace — parcels, RIM overlays, stakeout and layer control.
             </figcaption>
           </figure>
@@ -403,7 +403,7 @@ function ShowcaseSection() {
                   className="rounded-xl object-cover"
                 />
               </div>
-              <figcaption className="mt-4 text-sm text-[var(--text-primary)]/60 text-center">
+              <figcaption className="mt-4 text-sm text-[color-mix(in_srgb,var(--text-primary)_60%,transparent)] text-center">
                 Guided project workflow — setup, field book, compute, review, submission.
               </figcaption>
             </figure>
@@ -419,7 +419,7 @@ function ShowcaseSection() {
                   className="rounded-xl object-cover"
                 />
               </div>
-              <figcaption className="mt-4 text-sm text-[var(--text-primary)]/60 text-center">
+              <figcaption className="mt-4 text-sm text-[color-mix(in_srgb,var(--text-primary)_60%,transparent)] text-center">
                 Interactive map panel — coordinates, layers, and measurement tools.
               </figcaption>
             </figure>
@@ -447,7 +447,7 @@ function WorkflowSection() {
           className="object-cover object-center"
           style={{ opacity: 0.22, filter: 'brightness(0.5) saturate(0.7)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-secondary)] via-[var(--bg-secondary)]/40 to-[var(--bg-secondary)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-secondary)] via-[color-mix(in_srgb,var(--bg-secondary)_40%,transparent)] to-[var(--bg-secondary)]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
@@ -459,22 +459,22 @@ function WorkflowSection() {
             Survey smarter in{' '}
             <span className="text-[var(--accent)]">3 steps</span>
           </h2>
-          <p className="max-w-xl mx-auto text-[var(--text-primary)]/70 text-base lg:text-lg">
+          <p className="max-w-xl mx-auto text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] text-base lg:text-lg">
             From raw field observations to submission-ready documents.
           </p>
         </div>
 
         <ol className="grid md:grid-cols-3 gap-8 md:gap-12 list-none p-0 relative">
           {/* dashed connector for md+ */}
-          <div aria-hidden className="hidden md:block absolute top-6 left-[16%] right-[16%] border-t-2 border-dashed border-[var(--accent)]/30" />
+          <div aria-hidden className="hidden md:block absolute top-6 left-[16%] right-[16%] border-t-2 border-dashed border-[color-mix(in_srgb,var(--accent)_30%,transparent)]" />
           {WORKFLOW_STEPS.map((step, i) => (
             <li key={i} className="relative text-center md:text-left bg-[var(--bg-secondary)] md:bg-transparent">
-              <div className="inline-flex md:flex items-center justify-center w-12 h-12 rounded-full bg-[var(--accent)]/15 border border-[var(--accent)]/40 text-[var(--accent)] font-bold text-base mb-4">
+              <div className="inline-flex md:flex items-center justify-center w-12 h-12 rounded-full bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_40%,transparent)] text-[var(--accent)] font-bold text-base mb-4">
                 {step.number}
               </div>
               <h3 className="text-xl font-bold text-[var(--text-primary)] mb-3">{step.title}</h3>
-              <p className="text-sm text-[var(--text-primary)]/70 leading-relaxed">{step.description}</p>
-              <code className="block mt-3 text-xs font-mono text-[var(--text-primary)]/85 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded px-3 py-2">
+              <p className="text-sm text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] leading-relaxed">{step.description}</p>
+              <code className="block mt-3 text-xs font-mono text-[color-mix(in_srgb,var(--text-primary)_85%,transparent)] bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded px-3 py-2">
                 {step.example}
               </code>
             </li>
@@ -510,13 +510,13 @@ function ToolsSection() {
               <li key={i}>
                 <Link
                   href="/tools"
-                  className="group block p-5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-[var(--accent)]/40 hover:bg-[var(--bg-tertiary)] transition-all no-underline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
+                  className="group block p-5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] hover:bg-[var(--bg-tertiary)] transition-all no-underline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center mb-4 group-hover:bg-[var(--accent)]/20 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center mb-4 group-hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] transition-colors">
                     <Icon className="w-5 h-5 text-[var(--accent)]" aria-hidden />
                   </div>
                   <h3 className="font-bold text-[var(--text-primary)] text-sm mb-1">{tool.title}</h3>
-                  <p className="text-xs text-[var(--text-primary)]/70">{tool.description}</p>
+                  <p className="text-xs text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)]">{tool.description}</p>
                 </Link>
               </li>
             )
@@ -557,9 +557,9 @@ function FAQSection() {
               <details className="group bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl overflow-hidden">
                 <summary className="flex items-center justify-between gap-4 p-5 cursor-pointer list-none focus-visible:outline-2 focus-visible:outline-[var(--accent)]">
                   <span className="font-semibold text-[var(--text-primary)] text-sm">{faq.q}</span>
-                  <ChevronDown className="w-4 h-4 text-[var(--text-primary)]/70 transition-transform group-open:rotate-180 flex-shrink-0" aria-hidden />
+                  <ChevronDown className="w-4 h-4 text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] transition-transform group-open:rotate-180 flex-shrink-0" aria-hidden />
                 </summary>
-                <div className="px-5 pb-5 text-sm text-[var(--text-primary)]/70 leading-relaxed">
+                <div className="px-5 pb-5 text-sm text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] leading-relaxed">
                   {faq.a}
                 </div>
               </details>

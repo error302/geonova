@@ -99,8 +99,8 @@ function ObservationRow({
               {measurement.fixQuality && (
                 <span className={`ml-2 px-1 rounded text-[10px] ${
                   measurement.fixQuality === 'fixed'
-                    ? 'bg-[var(--success)]/20 text-[var(--success)]'
-                    : 'bg-[var(--warning)]/20 text-[var(--warning)]'
+                    ? 'bg-[color-mix(in_srgb,var(--success)_20%,transparent)] text-[var(--success)]'
+                    : 'bg-[color-mix(in_srgb,var(--warning)_20%,transparent)] text-[var(--warning)]'
                 }`}>
                   {measurement.fixQuality.toUpperCase()}
                 </span>

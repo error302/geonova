@@ -27,7 +27,7 @@ export default function MassHaulPage() {
             <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="free-haul-limit-m">Free-Haul Limit (m)</label><input id="free-haul-limit-m" type="number" value={freeHaul} onChange={e => setFreeHaul(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
             <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="overhaul-rate-kes-m-m">Overhaul Rate (KES/m³·m)</label><input id="overhaul-rate-kes-m-m" type="number" value={overhaulRate} onChange={e => setOverhaulRate(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
           </div>
-          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Optimize Mass Haul</button>
+          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] text-black font-semibold rounded-lg">Optimize Mass Haul</button>
         </div>
         <div>
           {result ? (

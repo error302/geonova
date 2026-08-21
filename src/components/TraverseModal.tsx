@@ -756,7 +756,7 @@ export default function TraverseModal({
                   onClick={() => setTraverseType('closed')}
                   className={`p-3 rounded-lg border text-center transition-colors ${
                     traverseType === 'closed' 
-                      ? 'border-[var(--accent)] bg-[var(--accent)]/10' 
+                      ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' 
                       : 'border-[var(--border-color)] hover:border-gray-600'
                   }`}
                 >
@@ -767,7 +767,7 @@ export default function TraverseModal({
                   onClick={() => setTraverseType('link')}
                   className={`p-3 rounded-lg border text-center transition-colors ${
                     traverseType === 'link' 
-                      ? 'border-[var(--accent)] bg-[var(--accent)]/10' 
+                      ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' 
                       : 'border-[var(--border-color)] hover:border-gray-600'
                   }`}
                 >
@@ -778,7 +778,7 @@ export default function TraverseModal({
                   onClick={() => setTraverseType('open')}
                   className={`p-3 rounded-lg border text-center transition-colors ${
                     traverseType === 'open' 
-                      ? 'border-[var(--accent)] bg-[var(--accent)]/10' 
+                      ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' 
                       : 'border-[var(--border-color)] hover:border-gray-600'
                   }`}
                 >
@@ -789,7 +789,7 @@ export default function TraverseModal({
                   onClick={() => setTraverseType('radial')}
                   className={`p-3 rounded-lg border text-center transition-colors ${
                     traverseType === 'radial' 
-                      ? 'border-[var(--accent)] bg-[var(--accent)]/10' 
+                      ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' 
                       : 'border-[var(--border-color)] hover:border-gray-600'
                   }`}
                 >
@@ -797,7 +797,7 @@ export default function TraverseModal({
                 </button>
               </div>
               
-              <div className="text-sm text-[var(--text-secondary)] bg-[var(--bg-tertiary)]/50 rounded p-3">
+              <div className="text-sm text-[var(--text-secondary)] bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-3">
                 {traverseType === 'closed' && 'Link Traverse (Closed): Connects two different known control points. The traverse is Bowditch-adjusted to distribute the closing error. Both opening AND closing control points are mandatory and must be DIFFERENT — minimum 2 distinct known points per Survey Regulations Reg. 60 & 67. A 1-point traverse has no absolute position check.'}
                 {traverseType === 'link' && 'Link Traverse: Connects two known control points. Precision checked against closing control. Both opening AND closing control points are mandatory and must be DIFFERENT per Survey Regulations Reg. 60 & 67. Minimum 2 distinct known control points required.'}
                 {traverseType === 'open' && 'Open Traverse: Starts at known control, no closing control. Used for roads/pipelines where no check is available. Running coordinates only — NOT acceptable for cadastral surveys per Reg. 67 (swinging traverses prohibited).'}
@@ -1021,7 +1021,7 @@ export default function TraverseModal({
                   </thead>
                   <tbody>
                     {legs.map((leg) => (
-                      <tr key={leg.id} className="border-b border-[var(--border-color)]/50">
+                      <tr key={leg.id} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                         <td className="px-2 py-2">
                           <input
                             type="text"
@@ -1195,19 +1195,19 @@ export default function TraverseModal({
           <div className="space-y-6">
             {/* Summary Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-[var(--bg-tertiary)]/50 rounded p-3">
+              <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-3">
                 <p className="text-[var(--text-secondary)] text-xs">Closing Error E</p>
                 <p className="text-xl font-mono text-[var(--text-primary)]">{results.closingErrorE.toFixed(4)} m</p>
               </div>
-              <div className="bg-[var(--bg-tertiary)]/50 rounded p-3">
+              <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-3">
                 <p className="text-[var(--text-secondary)] text-xs">Closing Error N</p>
                 <p className="text-xl font-mono text-[var(--text-primary)]">{results.closingErrorN.toFixed(4)} m</p>
               </div>
-              <div className="bg-[var(--bg-tertiary)]/50 rounded p-3">
+              <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-3">
                 <p className="text-[var(--text-secondary)] text-xs">Linear Misclosure</p>
                 <p className="text-xl font-mono text-[var(--text-primary)]">{results.linearError.toFixed(4)} m</p>
               </div>
-              <div className="bg-[var(--bg-tertiary)]/50 rounded p-3">
+              <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-3">
                 <p className="text-[var(--text-secondary)] text-xs">Precision</p>
                 <p className="text-xl font-mono text-[var(--text-primary)]">1 : {results.precisionRatio > 0 ? Math.round(results.precisionRatio).toLocaleString() : '—'}</p>
               </div>
@@ -1243,7 +1243,7 @@ export default function TraverseModal({
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/50">
+                  <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
                     <th className="px-2 py-2 text-left text-[var(--text-primary)]">Line</th>
                     <th className="px-2 py-2 text-right text-[var(--text-primary)]">Distance</th>
                     <th className="px-2 py-2 text-left text-[var(--text-primary)]">Bearing</th>
@@ -1260,7 +1260,7 @@ export default function TraverseModal({
                     const blunder = blunderResults[idx]
                     const isBlunderRow = blunder?.isBlunder || blunder?.distanceMismatch
                     return (
-                      <tr key={`${leg}-${idx}`} className={`border-b border-[var(--border-color)]/50 ${isBlunderRow ? 'bg-red-900/30' : ''}`}>
+                      <tr key={`${leg}-${idx}`} className={`border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] ${isBlunderRow ? 'bg-red-900/30' : ''}`}>
                         <td className={`px-2 py-2 font-mono ${isBlunderRow ? 'text-red-400' : 'text-[var(--text-primary)]'}`}>
                           {leg.from} → {leg.to}
                           {isBlunderRow && <span className="ml-2 text-red-400"><AlertTriangle className="w-3.5 h-3.5 inline shrink-0" /></span>}
@@ -1295,7 +1295,7 @@ export default function TraverseModal({
 
             {/* Blunder Analysis */}
             {blunderResults.length > 0 && (
-              <div className="mt-4 p-3 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)]">
+              <div className="mt-4 p-3 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded border border-[var(--border-color)]">
                 <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-2">Blunder Detection Analysis</h3>
                 <div className="space-y-2">
                   {blunderResults.map((b, i) => (

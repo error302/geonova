@@ -56,7 +56,7 @@ export default function SubscriptionStatus({ subscription }: { subscription: Rec
   }
 
   return (
-    <div className="flex items-center justify-between mb-6 p-4 bg-[var(--bg-secondary)]/50 rounded-lg border border-[var(--border-color)]">
+    <div className="flex items-center justify-between mb-6 p-4 bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] rounded-lg border border-[var(--border-color)]">
       <div className="flex items-center gap-3">
         {getBadge()}
       </div>

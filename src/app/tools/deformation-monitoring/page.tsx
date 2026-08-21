@@ -24,7 +24,7 @@ export default function DeformationMonitoringPage() {
     } catch (e) { setError(e instanceof Error ? e.message : 'Invalid JSON') }
   }
 
-  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[var(--accent)]/30 focus:outline-none"
+  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
 
   return (
     <div className="min-h-screen p-6 max-w-6xl mx-auto">
@@ -32,11 +32,11 @@ export default function DeformationMonitoringPage() {
       <p className="text-sm text-[var(--text-muted)] mb-6">Compare monument positions between two epochs. Tectonic plate drift is automatically removed via ITRF2014 Somali plate velocity propagation.</p>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
           <h2 className="text-sm font-semibold mb-2">Baseline Epoch (JSON)</h2>
           <textarea value={baselineJson} onChange={e => setBaselineJson(e.target.value)} className={inputCls + ' h-48 font-mono'} placeholder='{"label":"Baseline 2024","epoch":2024.0,"monuments":[{"monumentId":"DM-01","latitude":-1.0,"longitude":37.0,"height":1500,"frame":"ITRF2014","epoch":2024.0,"sigmaE":0.002,"sigmaN":0.002}]}' />
         </div>
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
           <h2 className="text-sm font-semibold mb-2">Current Epoch (JSON)</h2>
           <textarea value={currentJson} onChange={e => setCurrentJson(e.target.value)} className={inputCls + ' h-48 font-mono'} placeholder='{"label":"Q2 2025","epoch":2025.5,"monuments":[...]}' />
         </div>
@@ -68,7 +68,7 @@ export default function DeformationMonitoringPage() {
             </div>
           )}
 
-          <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+          <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-2">Per-Monument Vectors</h3>
             <table className="w-full text-xs">
               <thead><tr className="text-[var(--text-muted)] border-b border-[var(--border-color)]">
@@ -76,7 +76,7 @@ export default function DeformationMonitoringPage() {
               </tr></thead>
               <tbody>
                 {report.vectors.map(v => (
-                  <tr key={v.monumentId} className={`border-b border-[var(--border-color)]/30 ${v.exceedsTolerance ? 'text-red-400' : 'text-[var(--text-secondary)]'}`}>
+                  <tr key={v.monumentId} className={`border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)] ${v.exceedsTolerance ? 'text-red-400' : 'text-[var(--text-secondary)]'}`}>
                     <td className="py-1 font-mono">{v.monumentId}</td>
                     <td className="text-right font-mono">{(v.deltaE * 1000).toFixed(2)}</td>
                     <td className="text-right font-mono">{(v.deltaN * 1000).toFixed(2)}</td>

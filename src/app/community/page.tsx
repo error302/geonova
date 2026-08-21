@@ -525,10 +525,10 @@ export default function CommunityPage() {
 
         {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)] via-transparent to-[var(--bg-primary)] opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent)]/5 via-transparent to-[var(--accent)]/5" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[color-mix(in_srgb,var(--accent)_5%,transparent)] via-transparent to-[color-mix(in_srgb,var(--accent)_5%,transparent)]" />
 
         {/* Parallax-shifted accent line */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--accent)]/30 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[color-mix(in_srgb,var(--accent)_30%,transparent)] to-transparent" />
 
         <div className="relative max-w-7xl mx-auto px-4 py-10 md:py-16">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -560,7 +560,7 @@ export default function CommunityPage() {
                 </Link>
                 <Link
                   href="/marketplace"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-primary)] hover:border-[var(--accent)]/40 transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border border-[var(--border-color)] bg-[var(--bg-card)] text-[var(--text-primary)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] transition-colors"
                 >
                   <FileCheck2 className="w-4 h-4" /> Equipment Market
                 </Link>
@@ -629,7 +629,7 @@ export default function CommunityPage() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className={`relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-gradient-to-br ${stat.gradient} p-4 md:p-5 transition-all duration-300 hover:border-[var(--accent)]/20`}
+              className={`relative overflow-hidden rounded-2xl border border-[var(--border-color)] bg-gradient-to-br ${stat.gradient} p-4 md:p-5 transition-all duration-300 hover:border-[color-mix(in_srgb,var(--accent)_20%,transparent)]`}
             >
               <div className={`${stat.iconColor} mb-3`}>{stat.icon}</div>
               <p className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] tabular-nums">
@@ -667,7 +667,7 @@ export default function CommunityPage() {
 
           {surveyors.length === 0 ? (
             /* Honest empty state — no fake surveyors */
-            <div className="rounded-2xl border border-dashed border-[var(--border-color)] bg-[var(--bg-card)]/50 p-10 text-center">
+            <div className="rounded-2xl border border-dashed border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-card)_50%,transparent)] p-10 text-center">
               <TheodoliteIcon className="w-10 h-10 text-[var(--text-muted)] mx-auto mb-3 opacity-50" />
               <h3 className="text-sm font-semibold text-[var(--text-primary)]">No surveyors listed yet</h3>
               <p className="text-xs text-[var(--text-muted)] mt-1 max-w-md mx-auto">
@@ -684,7 +684,7 @@ export default function CommunityPage() {
                   <Link
                     key={s.id}
                     href="/community/directory"
-                    className="group relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 hover:border-[var(--accent)]/30 transition-all duration-300 hover:shadow-lg hover:shadow-[var(--accent)]/5"
+                    className="group relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-all duration-300 hover:shadow-lg hover:shadow-[var(--accent)]/5"
                   >
                     <div className="flex items-start gap-4 mb-4">
                       <div
@@ -765,7 +765,7 @@ export default function CommunityPage() {
 
           {listings.length === 0 ? (
             /* Honest empty state — no fake equipment listings */
-            <div className="rounded-2xl border border-dashed border-[var(--border-color)] bg-[var(--bg-card)]/50 p-10 text-center">
+            <div className="rounded-2xl border border-dashed border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-card)_50%,transparent)] p-10 text-center">
               <BeaconIcon className="w-10 h-10 text-[var(--text-muted)] mx-auto mb-3 opacity-50" />
               <h3 className="text-sm font-semibold text-[var(--text-primary)]">No equipment listed yet</h3>
               <p className="text-xs text-[var(--text-muted)] mt-1 max-w-md mx-auto">
@@ -782,7 +782,7 @@ export default function CommunityPage() {
                 <Link
                   key={item.id}
                   href="/marketplace"
-                  className="group rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 hover:border-[var(--accent)]/30 transition-all duration-300"
+                  className="group rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-all duration-300"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
@@ -839,7 +839,7 @@ export default function CommunityPage() {
                         onMouseLeave={() => setHoveredRegion(null)}
                         className={`rounded-xl border p-3 transition-all duration-300 cursor-pointer ${
                           isHovered
-                            ? 'border-[var(--accent)]/30 bg-[var(--accent)]/5'
+                            ? 'border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]'
                             : 'border-[var(--border-color)] bg-[var(--bg-card)]'
                         }`}
                       >
@@ -938,7 +938,7 @@ export default function CommunityPage() {
                     <Link
                       key={item.id}
                       href="/marketplace"
-                      className="group flex items-start gap-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-tertiary)]/50 p-3 hover:border-[var(--accent)]/20 transition-all duration-300"
+                      className="group flex items-start gap-3 rounded-xl border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] p-3 hover:border-[color-mix(in_srgb,var(--accent)_20%,transparent)] transition-all duration-300"
                     >
                       {/* Type badge */}
                       <div className="flex flex-col items-center gap-1 shrink-0">
@@ -1045,7 +1045,7 @@ export default function CommunityPage() {
               text: 'Teams showcase coverage areas, equipment inventories, and specialty certifications.',
             },
           ].map((item) => (
-            <div key={item.label} className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 hover:border-[var(--accent)]/20 transition-all duration-300">
+            <div key={item.label} className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 hover:border-[color-mix(in_srgb,var(--accent)_20%,transparent)] transition-all duration-300">
               <div className="mb-3">{item.icon}</div>
               <h3 className="text-sm font-bold text-[var(--text-primary)]">{item.label}</h3>
               <p className="mt-1.5 text-xs leading-5 text-[var(--text-muted)]">{item.text}</p>

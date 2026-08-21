@@ -80,7 +80,7 @@ export function ResidualsTab({
             <option value="pix4d">Pix4D</option>
           </select>
           {detectedFormat && (
-            <span className="text-xs px-2 py-1 rounded bg-[var(--accent)]/20 text-[var(--accent)]">
+            <span className="text-xs px-2 py-1 rounded bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[var(--accent)]">
               Detected: {detectedFormat === 'agisoft' ? 'Agisoft Metashape' : 'Pix4D'}
             </span>
           )}
@@ -154,7 +154,7 @@ GCP-01,1234.5,567.8,120.485,484500,9863100,120.500,
           <div className="card-header flex justify-between items-center">
             <span className="label">Parsed Residuals ({parsedResiduals.length} rows)</span>
             {detectedFormat && (
-              <span className="text-xs px-2 py-1 rounded bg-[var(--accent)]/20 text-[var(--accent)]">
+              <span className="text-xs px-2 py-1 rounded bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[var(--accent)]">
                 {detectedFormat === 'agisoft' ? 'Agisoft Metashape' : 'Pix4D'} format
               </span>
             )}

@@ -331,7 +331,7 @@ function ViolationRow({ violation }: { violation: Violation }) {
   const source = sourceLabel[violation.source] ?? violation.source;
 
   return (
-    <li className={`rounded border ${severityClass} bg-[var(--bg-primary)]/50 p-3`}>
+    <li className={`rounded border ${severityClass} bg-[color-mix(in_srgb,var(--bg-primary)_50%,transparent)] p-3`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">

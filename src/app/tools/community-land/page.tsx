@@ -32,7 +32,7 @@ export default function CommunityLandPage() {
             <div><label className="block text-xs text-zinc-400 mb-1" htmlFor="farming">Farming %</label><input id="farming" type="number" value={farming} onChange={e => setFarming(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-sm" /></div>
             <div><label className="block text-xs text-zinc-400 mb-1" htmlFor="settlement">Settlement %</label><input id="settlement" type="number" value={settlement} onChange={e => setSettlement(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-white text-sm" /></div>
           </div>
-          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Compute Community Land</button>
+          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] text-black font-semibold rounded-lg">Compute Community Land</button>
         </div>
         <div>{result ? (
           <div className="space-y-4">

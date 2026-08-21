@@ -202,7 +202,7 @@ export function UniversalMobileObservationForm({
   }
 
   const inputClass =
-    'w-full px-4 py-3.5 text-base bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all'
+    'w-full px-4 py-3.5 text-base bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none transition-all'
   const labelClass = 'block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5'
 
   return (
@@ -214,9 +214,9 @@ export function UniversalMobileObservationForm({
         </div>
 
         {/* Header */}
-        <div className="px-4 py-3 flex items-center justify-between border-b border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
+        <div className="px-4 py-3 flex items-center justify-between border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)]">
           <div className="flex items-center gap-2.5">
-            <div className="grid place-items-center w-9 h-9 rounded-lg bg-[var(--accent)]/15 ring-1 ring-[var(--accent)]/30">
+            <div className="grid place-items-center w-9 h-9 rounded-lg bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] ring-1 ring-[color-mix(in_srgb,var(--accent)_30%,transparent)]">
               <meta.icon className={`w-5 h-5 ${meta.accent}`} />
             </div>
             <div>
@@ -279,7 +279,7 @@ export function UniversalMobileObservationForm({
                   'w-full p-3.5 rounded-xl flex items-center justify-center gap-2 text-sm font-medium transition-all border',
                   instrumentConnected
                     ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
-                    : 'border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:border-[var(--accent)]/40 hover:text-[var(--accent)]',
+                    : 'border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] hover:text-[var(--accent)]',
                 ].join(' ')}
               >
                 {readingFromInstrument ? (
@@ -311,7 +311,7 @@ export function UniversalMobileObservationForm({
         </div>
 
         {/* Sticky action bar — large touch targets */}
-        <div className="border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/80 backdrop-blur-md p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] space-y-2">
+        <div className="border-t border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_80%,transparent)] backdrop-blur-md p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] space-y-2">
           <button
             onClick={handleSubmit}
             disabled={!isComplete || saving}

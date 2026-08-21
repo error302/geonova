@@ -51,7 +51,7 @@ export function SurveyorCrosshair() {
 export function ConnectingLine() {
   return (
     <motion.div
-      className="h-px bg-[var(--accent)]/40"
+      className="h-px bg-[color-mix(in_srgb,var(--accent)_40%,transparent)]"
       initial={{ scaleX: 0 }}
       whileInView={{ scaleX: 1 }}
       viewport={{ once: true }}

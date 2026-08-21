@@ -16,7 +16,7 @@ export default function SuperRunoutPage() {
           {[['Design Speed (km/h)', speed, setSpeed], ['Radius (m)', radius, setRadius], ['Lane Width (m)', laneW, setLaneW], ['Number of Lanes', lanes, setLanes]].map(([label, val, set]) => (
             <div key={label as string}><label className="block text-sm text-zinc-400 mb-2">{label as string}<input type="number" step="0.1" value={val as number} onChange={e => (set as (n: number) => void)(+e.target.value)} className="mt-2 w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></label></div>
           ))}
-          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Compute Runout</button>
+          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] text-black font-semibold rounded-lg">Compute Runout</button>
         </div>
         <div>{result ? (
           <div className="space-y-4">

@@ -36,7 +36,7 @@ export default function BoundaryMonumentsPage() {
 
       <div className="flex gap-2 mb-4">
         <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search by monument number or boundary name..."
-          className="flex-1 h-9 px-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+          className="flex-1 h-9 px-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
         <button onClick={load} className="px-4 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-secondary)] hover:bg-[var(--border-hover)] flex items-center gap-1.5">
           <Search className="w-3.5 h-3.5" /> Search
         </button>
@@ -51,7 +51,7 @@ export default function BoundaryMonumentsPage() {
       ) : (
         <div className="grid gap-3">
           {monuments.map(m => (
-            <div key={m.id} className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+            <div key={m.id} className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
               <div className="flex justify-between items-start mb-2">
                 <div>
                   <div className="flex items-center gap-2">

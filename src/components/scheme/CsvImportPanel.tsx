@@ -123,8 +123,8 @@ export default function CsvImportPanel({ projectId, blockId, blockName, onImport
           onClick={() => fileRef.current?.click()}
           className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
             dragging
-              ? 'border-[var(--accent)] bg-[var(--accent)]/5'
-              : 'border-[var(--border-color)] hover:border-[var(--accent)]/50 hover:bg-[var(--bg-secondary)]'
+              ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]'
+              : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)] hover:bg-[var(--bg-secondary)]'
           }`}
         >
           <input

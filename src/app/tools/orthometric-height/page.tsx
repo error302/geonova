@@ -148,7 +148,7 @@ export default function OrthometricHeightPage() {
                   </thead>
                   <tbody>
                     {KENYA_GEOID_REFERENCE.map(ref => (
-                      <tr key={ref.name} className="border-b border-[var(--border-color)]/50">
+                      <tr key={ref.name} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                         <td className="py-1.5 font-mono text-[var(--accent)]">{ref.name}</td>
                         <td className="py-1.5 text-right font-mono text-[var(--text-primary)]">{ref.N}</td>
                         <td className="py-1.5 pl-4 font-mono text-[var(--text-muted)] text-[10px]">{ref.note}</td>
@@ -170,8 +170,8 @@ export default function OrthometricHeightPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="card border-[var(--accent)]/40">
-                  <div className="card-header bg-[var(--accent)]/5"><span className="label text-[var(--accent)]">Height conversion</span></div>
+                <div className="card border-[color-mix(in_srgb,var(--accent)_40%,transparent)]">
+                  <div className="card-header bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]"><span className="label text-[var(--accent)]">Height conversion</span></div>
                   <div className="card-body space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -203,7 +203,7 @@ export default function OrthometricHeightPage() {
                       </div>
                     </div>
 
-                    <div className="p-3 border border-[var(--warning)]/30 bg-[var(--warning)]/5 rounded-md">
+                    <div className="p-3 border border-[color-mix(in_srgb,var(--warning)_30%,transparent)] bg-[color-mix(in_srgb,var(--warning)_5%,transparent)] rounded-md">
                       <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                         <span className="font-mono text-[var(--warning)] text-[10px] tracking-[0.06em] uppercase">Engineering note:</span>{' '}
                         Use orthometric H for drainage, road gradients, and runway construction.
@@ -268,7 +268,7 @@ export default function OrthometricHeightPage() {
                     </thead>
                     <tbody>
                       {batchResults.map(r => (
-                        <tr key={r.id} className="border-b border-[var(--border-color)]/50">
+                        <tr key={r.id} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                           <td className="py-1.5 font-mono text-[var(--accent)]">{r.id}</td>
                           <td className="py-1.5 text-right font-mono text-[var(--text-primary)]">{r.input.ellipsoidalHeight.toFixed(3)}</td>
                           <td className="py-1.5 text-right font-mono text-[var(--text-muted)]">{r.result.geoidUndulation.toFixed(3)}</td>

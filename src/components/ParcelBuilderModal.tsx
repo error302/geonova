@@ -222,7 +222,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
                   <h4 className="text-sm font-semibold text-[var(--text-primary)] mb-2">Selected Boundary ({selectedPoints.length})</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedPoints.map((p, idx) => (
-                      <span key={p.id} className="px-2 py-1 bg-[var(--accent)]/20 text-[var(--accent)] rounded text-sm">
+                      <span key={p.id} className="px-2 py-1 bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[var(--accent)] rounded text-sm">
                         {p.name}
                         {idx < selectedPoints.length - 1 && ' → '}
                       </span>
@@ -303,7 +303,7 @@ export default function ParcelBuilderModal({ projectId, points, onClose, onParce
                   </div>
                 </div>
               ) : (
-                <div className="bg-[var(--bg-tertiary)]/50 rounded-xl p-6 text-center">
+                <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded-xl p-6 text-center">
                   <p className="text-[var(--text-muted)]">
                     {selectedPoints.length < 3
                       ? `Select at least 3 points (${3 - selectedPoints.length} more)`

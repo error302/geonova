@@ -68,7 +68,7 @@ export function PricingSection() {
             Start free,{' '}
             <span className="text-[var(--accent)]">scale as you grow</span>
           </h2>
-          <p className="max-w-xl mx-auto text-[var(--text-primary)]/70 text-base lg:text-lg">
+          <p className="max-w-xl mx-auto text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] text-base lg:text-lg">
             No hidden fees. Pay via M-Pesa, card, or PayPal.
           </p>
         </div>
@@ -84,7 +84,7 @@ export function PricingSection() {
               type="button"
               onClick={() => setAnnual(false)}
               className={`px-4 py-2 text-sm rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-[var(--accent)] ${
-                !annual ? 'bg-[var(--accent)] text-black font-semibold' : 'text-[var(--text-primary)]/70'
+                !annual ? 'bg-[var(--accent)] text-black font-semibold' : 'text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)]'
               }`}
             >
               Monthly
@@ -93,7 +93,7 @@ export function PricingSection() {
               type="button"
               onClick={() => setAnnual(true)}
               className={`px-4 py-2 text-sm rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-[var(--accent)] ${
-                annual ? 'bg-[var(--accent)] text-black font-semibold' : 'text-[var(--text-primary)]/70'
+                annual ? 'bg-[var(--accent)] text-black font-semibold' : 'text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)]'
               }`}
             >
               Annual <span className="text-xs opacity-80">· 2 months free</span>
@@ -110,8 +110,8 @@ export function PricingSection() {
                 key={i}
                 className={`relative p-8 rounded-2xl border transition-all ${
                   plan.highlighted
-                    ? 'border-[var(--accent)]/50 bg-[var(--bg-primary)] shadow-[0_0_60px_-15px_rgba(209,123,71,0.2)] scale-[1.02]'
-                    : 'border-[var(--border-color)] bg-[var(--bg-primary)] hover:border-[var(--accent)]/40'
+                    ? 'border-[color-mix(in_srgb,var(--accent)_50%,transparent)] bg-[var(--bg-primary)] shadow-[0_0_60px_-15px_rgba(209,123,71,0.2)] scale-[1.02]'
+                    : 'border-[var(--border-color)] bg-[var(--bg-primary)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]'
                 }`}
               >
                 {plan.highlighted && (
@@ -121,12 +121,12 @@ export function PricingSection() {
                 )}
 
                 <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1">{plan.tier}</h3>
-                <p className="text-sm text-[var(--text-primary)]/70 mb-4">{plan.description}</p>
+                <p className="text-sm text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] mb-4">{plan.description}</p>
                 <div className="flex items-baseline gap-1 mb-2">
                   <span className="text-4xl font-bold text-[var(--text-primary)]">
                     KSh {price.toLocaleString()}
                   </span>
-                  <span className="text-[var(--text-primary)]/70 text-sm">{periodLabel}</span>
+                  <span className="text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] text-sm">{periodLabel}</span>
                 </div>
                 <div className="mb-6">
                   <MPesaBadge />
@@ -134,7 +134,7 @@ export function PricingSection() {
 
                 <ul className="space-y-3 mb-8 list-none p-0">
                   {plan.features.map((feature, j) => (
-                    <li key={j} className="flex items-start gap-3 text-sm text-[var(--text-primary)]/85">
+                    <li key={j} className="flex items-start gap-3 text-sm text-[color-mix(in_srgb,var(--text-primary)_85%,transparent)]">
                       <span className="mt-0.5 text-[var(--accent)]" aria-hidden>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M20 6 9 17l-5-5" />
@@ -160,7 +160,7 @@ export function PricingSection() {
           })}
         </div>
 
-        <p className="text-center text-xs text-[var(--text-primary)]/65 mt-8">
+        <p className="text-center text-xs text-[color-mix(in_srgb,var(--text-primary)_65%,transparent)] mt-8">
           Need 20+ seats, a white-label license, or on-premise deployment?{' '}
           <Link href="/enterprise" className="text-[var(--accent)] underline underline-offset-2 hover:no-underline">Talk to us about Firm & Enterprise tiers.</Link>
         </p>

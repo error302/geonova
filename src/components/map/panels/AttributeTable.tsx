@@ -157,7 +157,7 @@ export function AttributeTable({ rows, onSelectRow, onDeleteRow, onExport }: Att
               value={query}
               onChange={e => setQuery(e.target.value)}
               aria-label="Filter..."
-              className="h-7 pl-7 pr-2 w-40 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+              className="h-7 pl-7 pr-2 w-40 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
             />
           </div>
 
@@ -233,8 +233,8 @@ export function AttributeTable({ rows, onSelectRow, onDeleteRow, onExport }: Att
                 <tr
                   key={row.id}
                   onClick={() => onSelectRow?.(row)}
-                  className={`border-b border-[var(--border-color)]/30 cursor-pointer transition-colors ${
-                    selectedRows.has(row.id) ? 'bg-[var(--accent)]/5' : 'hover:bg-white/[0.02]'
+                  className={`border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)] cursor-pointer transition-colors ${
+                    selectedRows.has(row.id) ? 'bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]' : 'hover:bg-white/[0.02]'
                   }`}
                 >
                   <td className="px-2 py-1.5" onClick={(e) => { e.stopPropagation(); toggleRowSelection(row.id) }}>

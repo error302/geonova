@@ -11,7 +11,7 @@ import {
 const NETWORK_COLORS: Record<NetworkId, string> = {
   MUYA:    'bg-blue-900/40 text-blue-300 border-blue-700/40',
   AGL:     'bg-green-900/40 text-green-300 border-green-700/40',
-  KENCORS: 'bg-[var(--accent)]/15 text-[var(--accent)] border-[var(--accent)]/30',
+  KENCORS: 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)]',
   KPLC:    'bg-purple-900/40 text-purple-300 border-purple-700/40',
 }
 
@@ -34,7 +34,7 @@ function StationCard({ station, distance, onSelect, selected }: {
       aria-pressed={selected}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }}
       className={`bg-[var(--bg-card)] border rounded-xl p-4 cursor-pointer transition-colors ${
-        selected ? 'border-[var(--accent)]/50 bg-[var(--accent)]/5' : 'border-[var(--border-color)] hover:border-[var(--accent)]/30'
+        selected ? 'border-[color-mix(in_srgb,var(--accent)_50%,transparent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]' : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)]'
       }`}>
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex items-center gap-2 min-w-0">
@@ -284,7 +284,7 @@ export default function KenCORSPage() {
             {/* Right: selected station detail or coverage note */}
             <div>
               {selectedSt ? (
-                <div className="bg-[var(--bg-card)] border border-[var(--accent)]/30 rounded-xl p-5 sticky top-4">
+                <div className="bg-[var(--bg-card)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rounded-xl p-5 sticky top-4">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="font-semibold text-[var(--text-primary)]">{selectedSt.name}</h2>
                     <div className={`w-2.5 h-2.5 rounded-full ${STATUS_DOT[selectedSt.status]}`} />
@@ -334,7 +334,7 @@ export default function KenCORSPage() {
                       'Select your coordinate system: WGS84 for direct GPS, or Arc 1960 UTM for Kenya surveys',
                     ].map((step, i) => (
                       <li key={`${step}-${i}`} className="flex gap-3">
-                        <span className="w-5 h-5 rounded-full bg-[var(--accent)]/20 text-[var(--accent)] text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="w-5 h-5 rounded-full bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[var(--accent)] text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                           {i + 1}
                         </span>
                         {step}

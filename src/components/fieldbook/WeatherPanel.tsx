@@ -104,7 +104,7 @@ export function WeatherPanel({ lat, lon, elevation, onWeatherChange, t: _t }: We
     <div className="border border-[var(--border-color)] rounded-lg overflow-hidden">
       <button
         onClick={() => setManualMode(!manualMode)}
-        className="w-full flex items-center justify-between px-3 py-2 bg-[var(--bg-primary)]/40 text-sm font-medium hover:bg-[var(--border-color)]/30 transition-colors"
+        className="w-full flex items-center justify-between px-3 py-2 bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] text-sm font-medium hover:bg-[color-mix(in_srgb,var(--border-color)_30%,transparent)] transition-colors"
       >
         <div className="flex items-center gap-2">
           <CloudSun className="w-4 h-4 text-blue-400" />

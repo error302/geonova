@@ -250,7 +250,7 @@ export function InstrumentStreamBar({
   const ModeIcon = modeIcon
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-[var(--bg-secondary)]/95 backdrop-blur-xl border-t border-[var(--border-color)]">
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-[color-mix(in_srgb,var(--bg-secondary)_95%,transparent)] backdrop-blur-xl border-t border-[var(--border-color)]">
       {/* Error banner */}
       {error && (
         <div className="px-4 py-1.5 bg-red-500/10 border-b border-red-500/20 flex items-center gap-2 text-xs text-red-400">
@@ -368,7 +368,7 @@ export function InstrumentStreamBar({
       {/* Last reading preview (compact) */}
       {lastReading && (
         <div className="px-4 pb-2 -mt-1">
-          <div className="flex items-center gap-3 text-[10px] text-[var(--text-muted)] bg-[var(--bg-tertiary)]/50 rounded-lg px-3 py-1.5">
+          <div className="flex items-center gap-3 text-[10px] text-[var(--text-muted)] bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded-lg px-3 py-1.5">
             <span className="text-emerald-400 flex items-center gap-1">
               <Check className="w-3 h-3" />
               Last:

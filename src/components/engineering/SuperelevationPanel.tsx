@@ -250,7 +250,7 @@ export default function SuperelevationPanel({
               </thead>
               <tbody>
                 {result.table.map((row, i) => (
-                  <tr key={`${row}-${i}`} className="border-b border-[var(--border-color)]/30">
+                  <tr key={`${row}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                     <td className="py-1.5 pr-4">{row.chainageOffset.toFixed(2)}</td>
                     <td className="py-1.5 pr-4">{row.eApplied.toFixed(2)}</td>
                     <td className="py-1.5">

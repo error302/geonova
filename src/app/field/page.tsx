@@ -407,7 +407,7 @@ export default function FieldPage() {
 
       {/* Main */}
       <main className="flex-1 overflow-y-auto p-3 pb-20">
-        <div className="mb-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)]/20 p-3">
+        <div className="mb-3 rounded-lg border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_20%,transparent)] p-3">
           <div className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">Workflow</div>
           <div className="text-sm text-[var(--text-primary)] mt-1">Field Mode = quick capture (phone/tablet). Field Book = textbook tables + checks + exports.</div>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -453,7 +453,7 @@ export default function FieldPage() {
 
             {/* Batch CSV input */}
             {showBatch && (
-              <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded p-3 space-y-2">
+              <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded p-3 space-y-2">
                 <div>
                   <label htmlFor="field-batch-csv" className="text-[10px] text-[var(--text-muted)]">CSV: Name, Easting, Northing, Elevation (optional)</label>
                   <textarea
@@ -505,7 +505,7 @@ export default function FieldPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between py-2 px-3 bg-[var(--bg-secondary)]/50 rounded border border-[var(--border-color)]">
+          <div className="flex items-center justify-between py-2 px-3 bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] rounded border border-[var(--border-color)]">
             <label className="text-[10px] text-[var(--text-secondary)]">{t('field.controlPoint')}</label>
               <button
                 onClick={() => setPCtrl(!pCtrl)}
@@ -527,7 +527,7 @@ export default function FieldPage() {
               <div className="space-y-1">
                 <div className="text-[10px] text-[var(--text-muted)]">Recent:</div>
                 {points.slice(0, 5).map((p) => (
-                  <div key={p.id} className="bg-[var(--bg-secondary)]/50 rounded px-2 py-1.5 flex justify-between items-center text-[10px]">
+                  <div key={p.id} className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] rounded px-2 py-1.5 flex justify-between items-center text-[10px]">
                     <span className="text-[var(--text-primary)]">{p.name}</span>
                     <span className="text-[var(--text-muted)] font-mono">{p.easting.toFixed(0)}, {p.northing.toFixed(0)}</span>
                   </div>
@@ -593,7 +593,7 @@ export default function FieldPage() {
             {tLegs.length > 0 && (
               <div className="space-y-1 max-h-64 overflow-y-auto">
                 {tLegs.map((leg, i) => (
-                  <div key={leg.id} className="bg-[var(--bg-secondary)]/50 rounded px-2 py-1.5 flex justify-between items-center text-[10px]">
+                  <div key={leg.id} className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] rounded px-2 py-1.5 flex justify-between items-center text-[10px]">
                     <span className="text-[var(--text-secondary)]">#{i + 1} {leg.fromStation} → {leg.toStation}</span>
                     <span className="text-[var(--text-primary)] font-mono">{leg.distance.toFixed(1)}m {leg.bearing.deg}°{leg.bearing.min}'{leg.bearing.sec.toFixed(0)}"</span>
                   </div>
@@ -660,7 +660,7 @@ export default function FieldPage() {
             )}
 
             {lReadings.length > 0 && (
-              <div className="bg-[var(--bg-secondary)]/50 rounded overflow-x-auto text-[10px]">
+              <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] rounded overflow-x-auto text-[10px]">
                 <table className="w-full min-w-[240px]">
                   <thead className="bg-[var(--bg-tertiary)]">
                     <tr>
@@ -741,7 +741,7 @@ export default function FieldPage() {
             {rPoints.length > 0 && (
               <div className="space-y-1 max-h-48 overflow-y-auto">
                 {rPoints.map((p) => (
-                  <div key={p.id} className="bg-[var(--bg-secondary)]/50 rounded px-2 py-1.5 flex justify-between items-center text-[10px]">
+                  <div key={p.id} className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] rounded px-2 py-1.5 flex justify-between items-center text-[10px]">
                     <span className="text-[var(--text-primary)]">{p.pointName}</span>
                     <span className="text-[var(--text-muted)] font-mono">
                       {p.bearing.deg}°{p.bearing.min}'{p.bearing.sec}"

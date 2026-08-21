@@ -13,7 +13,7 @@
  *  - Traverse-to-parcel preview/confirm/cancel workflow
  *
  * Positioned at the top-right of the map, styled to match the
- * existing dark glass-morphism UI (bg-[var(--bg-secondary)]/95, #D17B47 accents).
+ * existing dark glass-morphism UI (bg-[color-mix(in_srgb,var(--bg-secondary)_95%,transparent)], #D17B47 accents).
  *
  * Now consumes all state and actions from MapReactContext via useMapContext().
  * Previously received 18 props from MapClient — now reads from context directly.
@@ -57,7 +57,7 @@ export const SchemeLayerPanel = memo(function SchemeLayerPanel() {
       role="region"
       aria-label="Scheme layer controls"
     >
-      <div className="bg-[var(--bg-secondary)]/95 border border-[var(--border-color)]/[0.08] rounded-xl shadow-2xl backdrop-blur-xl overflow-hidden">
+      <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_95%,transparent)] border border-[var(--border-color)]/[0.08] rounded-xl shadow-2xl backdrop-blur-xl overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-3 py-2.5 border-b border-[var(--border-color)]/[0.06]">
           <div className="flex items-center gap-2">
@@ -75,9 +75,9 @@ export const SchemeLayerPanel = memo(function SchemeLayerPanel() {
             <button
               onClick={loadSchemeData}
               className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg
-                         bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[var(--accent)]
+                         bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]
                          text-xs font-semibold transition-all duration-200
-                         hover:bg-[var(--accent)]/25 hover:border-[var(--accent)]/50
+                         hover:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]
                          focus:outline-none focus:ring-1 focus:ring-[#D17B47]/50"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -101,7 +101,7 @@ export const SchemeLayerPanel = memo(function SchemeLayerPanel() {
           {/* Error State */}
           {error && !loading && (
             <div className="space-y-2">
-              <div className="text-[11px] text-[var(--error)] bg-[var(--error)]/10 rounded-lg px-2.5 py-1.5 border border-red-500/20">
+              <div className="text-[11px] text-[var(--error)] bg-[color-mix(in_srgb,var(--error)_10%,transparent)] rounded-lg px-2.5 py-1.5 border border-red-500/20">
                 {error}
               </div>
               <button
@@ -159,9 +159,9 @@ export const SchemeLayerPanel = memo(function SchemeLayerPanel() {
                       createParcelFromTraverse()
                     }}
                     className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg
-                               bg-[var(--success)]/10 border border-green-500/25 text-[var(--success)]
+                               bg-[color-mix(in_srgb,var(--success)_10%,transparent)] border border-green-500/25 text-[var(--success)]
                                text-xs font-semibold transition-all duration-200
-                               hover:bg-[var(--success)]/20 hover:border-green-500/40
+                               hover:bg-[color-mix(in_srgb,var(--success)_20%,transparent)] hover:border-green-500/40
                                focus:outline-none focus:ring-1 focus:ring-green-500/40"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -188,9 +188,9 @@ export const SchemeLayerPanel = memo(function SchemeLayerPanel() {
                     <button
                       onClick={confirmTraverseParcel}
                       className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg
-                                 bg-[var(--success)]/20 border border-green-500/30 text-[var(--success)]
+                                 bg-[color-mix(in_srgb,var(--success)_20%,transparent)] border border-green-500/30 text-[var(--success)]
                                  text-[11px] font-semibold transition-all duration-200
-                                 hover:bg-[var(--success)]/30 hover:text-[var(--success)]
+                                 hover:bg-[color-mix(in_srgb,var(--success)_30%,transparent)] hover:text-[var(--success)]
                                  focus:outline-none focus:ring-1 focus:ring-green-500/30"
                       title="Save traverse as parcel boundary"
                     >
@@ -202,9 +202,9 @@ export const SchemeLayerPanel = memo(function SchemeLayerPanel() {
                     <button
                       onClick={cancelTraverseParcel}
                       className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg
-                                 bg-[var(--error)]/10 border border-red-500/20 text-[var(--error)]
+                                 bg-[color-mix(in_srgb,var(--error)_10%,transparent)] border border-red-500/20 text-[var(--error)]
                                  text-[11px] font-medium transition-all duration-200
-                                 hover:bg-[var(--error)]/20 hover:text-[var(--error)]
+                                 hover:bg-[color-mix(in_srgb,var(--error)_20%,transparent)] hover:text-[var(--error)]
                                  focus:outline-none focus:ring-1 focus:ring-red-500/30"
                       title="Cancel — remove preview"
                     >
@@ -236,9 +236,9 @@ export const SchemeLayerPanel = memo(function SchemeLayerPanel() {
                 <button
                   onClick={removeScheme}
                   className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg
-                             bg-[var(--error)]/10 border border-red-500/20 text-[var(--error)]
+                             bg-[color-mix(in_srgb,var(--error)_10%,transparent)] border border-red-500/20 text-[var(--error)]
                              text-[11px] font-medium transition-all duration-200
-                             hover:bg-[var(--error)]/20 hover:text-[var(--error)]
+                             hover:bg-[color-mix(in_srgb,var(--error)_20%,transparent)] hover:text-[var(--error)]
                              focus:outline-none focus:ring-1 focus:ring-red-500/30"
                   title="Remove scheme layers"
                 >

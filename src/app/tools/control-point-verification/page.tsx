@@ -61,7 +61,7 @@ export default function ControlPointVerificationPage() {
     setShowForm(false); loadVerifications()
   }
 
-  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[var(--accent)]/30 focus:outline-none"
+  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
 
   const conditionColors: Record<string, string> = {
     good: 'text-green-400 bg-green-500/10', fair: 'text-yellow-400 bg-yellow-500/10',
@@ -85,7 +85,7 @@ export default function ControlPointVerificationPage() {
       </div>
 
       {showForm && (
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4 grid grid-cols-2 gap-3">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4 grid grid-cols-2 gap-3">
           <div><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="point-type">Point Type</label>
             <select id="point-type" value={pointType} onChange={e => setPointType(e.target.value)} className={inputCls}>
               <option value="survey_point">Survey Point</option><option value="beacon">Beacon</option><option value="boundary_monument">Boundary Monument</option>
@@ -116,7 +116,7 @@ export default function ControlPointVerificationPage() {
       ) : (
         <div className="space-y-3">
           {verifications.map(v => (
-            <div key={v.id} className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+            <div key={v.id} className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
               <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-[var(--accent)]" />

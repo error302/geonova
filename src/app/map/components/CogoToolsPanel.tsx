@@ -85,7 +85,7 @@ function ComputeButton({ onClick, disabled }: { onClick: () => void; disabled?: 
 /** Result display */
 function ResultDisplay({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-[var(--primary-blue)]/10 border border-blue-100 rounded-lg px-3 py-2 space-y-1">
+    <div className="bg-[color-mix(in_srgb,var(--primary-blue)_10%,transparent)] border border-blue-100 rounded-lg px-3 py-2 space-y-1">
       {children}
     </div>
   )
@@ -486,7 +486,7 @@ function CogoToolsPanelInner() {
                 className={`flex-1 flex items-center justify-center gap-1 px-1 py-1.5 text-[9px] font-semibold
                            transition-colors border-b-2 ${
                              activeTab === tab.id
-                               ? 'text-[#1B3A5C] border-[#1B3A5C] bg-[var(--primary-blue)]/10/50'
+                               ? 'text-[#1B3A5C] border-[#1B3A5C] bg-[color-mix(in_srgb,var(--primary-blue)_10%,transparent)]/50'
                                : 'text-[var(--text-secondary)] border-transparent hover:text-[var(--text-muted)] hover:bg-[var(--bg-secondary)]'
                            }`}
                 title={tab.label}
@@ -506,7 +506,7 @@ function CogoToolsPanelInner() {
           </div>
 
           {/* ── Footer hint ── */}
-          <div className="px-3 py-1.5 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
+          <div className="px-3 py-1.5 border-t border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)]">
             <div className="text-[9px] text-[var(--text-secondary)]">
               Bearings: DDD.MMSS (e.g. 47.2314 = 47° 23' 14") or decimal degrees
             </div>

@@ -168,7 +168,7 @@ function ScheduleFormModal({
             <div className="flex flex-wrap gap-1.5 mb-2">
               {EQUIPMENT_OPTIONS.filter(e => !form.equipment_needed.includes(e)).slice(0, 6).map(e => (
                 <button key={e} onClick={() => addEquipment(e)}
-                  className="text-xs px-2 py-0.5 rounded border border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--accent)]/50 hover:text-[var(--accent)] transition-colors">
+                  className="text-xs px-2 py-0.5 rounded border border-[var(--border-color)] text-[var(--text-muted)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)] hover:text-[var(--accent)] transition-colors">
                   + {e}
                 </button>
               ))}
@@ -176,7 +176,7 @@ function ScheduleFormModal({
             {form.equipment_needed.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {form.equipment_needed.map(e => (
-                  <span key={e} className="text-xs px-2 py-0.5 rounded bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20 flex items-center gap-1">
+                  <span key={e} className="text-xs px-2 py-0.5 rounded bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] text-[var(--accent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] flex items-center gap-1">
                     {e}
                     <button onClick={() => f('equipment_needed', form.equipment_needed.filter(x => x !== e))} className="hover:text-red-400">x</button>
                   </span>
@@ -217,8 +217,8 @@ function ScheduleFormModal({
                   <button key={d} onClick={() => toggleReminderDay(d)}
                     className={`text-xs px-3 py-1 rounded border transition-colors ${
                       form.reminder_days_before.includes(d)
-                        ? 'border-[var(--accent)]/50 bg-[var(--accent)]/10 text-[var(--accent)]'
-                        : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--accent)]/30'
+                        ? 'border-[color-mix(in_srgb,var(--accent)_50%,transparent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] text-[var(--accent)]'
+                        : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)]'
                     }`}>
                     {d === 1 ? '1 day before' : `${d} days before`}
                   </button>
@@ -437,8 +437,8 @@ export default function SchedulePage() {
           <button key={f} onClick={() => setFilter(f)}
             className={`px-4 py-1.5 text-sm rounded-lg border transition-colors whitespace-nowrap capitalize ${
               filter === f
-                ? 'border-[var(--accent)]/50 bg-[var(--accent)]/10 text-[var(--accent)]'
-                : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--accent)]/30'
+                ? 'border-[color-mix(in_srgb,var(--accent)_50%,transparent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] text-[var(--accent)]'
+                : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)]'
             }`}>
             {f === 'all' ? 'All Jobs' : f === 'overdue' ? `Overdue${stats?.overdue ? ` (${stats.overdue})` : ''}` : `${f}`}
           </button>
@@ -467,7 +467,7 @@ export default function SchedulePage() {
             <div key={schedule.id}
               className={`rounded-xl border p-4 transition-all ${
                 schedule.isOverdue ? 'border-red-500/30 bg-red-500/5' :
-                schedule.isToday ? 'border-[var(--accent)]/30 bg-[var(--accent)]/5' :
+                schedule.isToday ? 'border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]' :
                 'border-[var(--border-color)] bg-[var(--bg-card)]'
               }`}>
               <div className="flex items-start justify-between gap-3">

@@ -101,7 +101,7 @@ export function OnboardingTour({ onClose }: { onClose?: () => void }) {
   }
 
   return (
-    <div className="rounded-2xl border border-[var(--accent)]/20 bg-[var(--accent)]/5 p-6">
+    <div className="rounded-2xl border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-[var(--accent)]" />
@@ -126,13 +126,13 @@ export function OnboardingTour({ onClose }: { onClose?: () => void }) {
 
       {/* Current step */}
       <div className="flex items-start gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center shrink-0">
+        <div className="w-10 h-10 rounded-xl bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] flex items-center justify-center shrink-0">
           <Icon className="w-5 h-5 text-[var(--accent)]" />
         </div>
         <div className="flex-1">
           <h4 className="text-sm font-semibold text-[var(--text-primary)]">{current.title}</h4>
           <p className="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">{current.description}</p>
-          <div className="mt-2 flex items-start gap-1.5 text-xs text-[var(--accent)] bg-[var(--accent)]/10 rounded-lg p-2">
+          <div className="mt-2 flex items-start gap-1.5 text-xs text-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] rounded-lg p-2">
             <HelpCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
             <span>{current.tip}</span>
           </div>
@@ -248,7 +248,7 @@ export function DocumentChecklist({ surveyType }: { surveyType: 'cadastral' | 'e
         {docs.map((doc, i) => (
           <div
             key={doc.name}
-            className={`flex items-center gap-2 p-2 rounded-lg ${doc.uploaded ? 'bg-emerald-500/5' : 'bg-[var(--bg-tertiary)]/30'}`}
+            className={`flex items-center gap-2 p-2 rounded-lg ${doc.uploaded ? 'bg-emerald-500/5' : 'bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]'}`}
           >
             <button onClick={() => toggle(i)} className="shrink-0">
               {doc.uploaded
@@ -266,7 +266,7 @@ export function DocumentChecklist({ surveyType }: { surveyType: 'cadastral' | 'e
                   </span>
                 )}
                 {!doc.required && doc.name.includes('Generated') && (
-                  <span className="text-[8px] px-1 py-0.5 rounded bg-[var(--accent)]/10 text-[var(--accent)] font-semibold uppercase">
+                  <span className="text-[8px] px-1 py-0.5 rounded bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] text-[var(--accent)] font-semibold uppercase">
                     Auto
                   </span>
                 )}

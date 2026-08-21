@@ -161,7 +161,7 @@ export default function ImportPage() {
         </div>
 
         {imported !== null ? (
-          <div className="bg-[var(--success)]/10 border border-[var(--success)]/30 rounded-lg p-8 text-center">
+          <div className="bg-[color-mix(in_srgb,var(--success)_10%,transparent)] border border-[color-mix(in_srgb,var(--success)_30%,transparent)] rounded-lg p-8 text-center">
             <div className="w-12 h-12 mx-auto mb-4 border border-[var(--success)] flex items-center justify-center">
               <svg className="w-7 h-7 text-[var(--success)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />

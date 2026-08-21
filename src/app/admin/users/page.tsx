@@ -491,9 +491,9 @@ function PlanOverrideModal({
         <div className="p-5 space-y-5">
           {/* User info */}
           {user && (
-            <div className="rounded-lg border border-[var(--border-color)] bg-[var(--bg-tertiary)]/40 p-3">
+            <div className="rounded-lg border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_40%,transparent)] p-3">
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-9 h-9 rounded-full bg-[var(--accent)]/15 text-[var(--accent)]">
+                <div className="flex items-center justify-center w-9 h-9 rounded-full bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)]">
                   {planIcon(user.plan)}
                 </div>
                 <div className="min-w-0">
@@ -526,8 +526,8 @@ function PlanOverrideModal({
                   onClick={() => setSelectedPlan(plan)}
                   className={`flex items-center gap-2 rounded-lg border p-3 cursor-pointer transition-colors text-left ${
                     selectedPlan === plan
-                      ? 'border-[var(--accent)] bg-[var(--accent)]/10'
-                      : 'border-[var(--border-color)] bg-[var(--bg-tertiary)]/30 hover:border-[var(--accent)]/40'
+                      ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]'
+                      : 'border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]'
                   }`}
                 >
                   <span className={`shrink-0 ${planBadgeClass(plan).split(' ').find(c => c.startsWith('text-')) ?? ''}`}>
@@ -555,8 +555,8 @@ function PlanOverrideModal({
                   onClick={() => setDurationOption(opt.value)}
                   className={`flex items-center gap-1.5 rounded-lg border p-2.5 cursor-pointer transition-colors text-left text-sm ${
                     durationOption === opt.value
-                      ? 'border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--text-primary)]'
-                      : 'border-[var(--border-color)] bg-[var(--bg-tertiary)]/30 text-[var(--text-secondary)] hover:border-[var(--accent)]/40'
+                      ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] text-[var(--text-primary)]'
+                      : 'border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)] text-[var(--text-secondary)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]'
                   }`}
                 >
                   {opt.value === 'forever' && <CalendarDays className="w-3.5 h-3.5 shrink-0" />}
@@ -651,7 +651,7 @@ function PlanOverrideModal({
                 </div>
               </div>
 
-              <div className="rounded-lg bg-[var(--bg-tertiary)]/60 border border-[var(--border-color)] p-3 space-y-1.5">
+              <div className="rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_60%,transparent)] border border-[var(--border-color)] p-3 space-y-1.5">
                 <div className="flex justify-between text-xs">
                   <span className="text-[var(--text-muted)]">User</span>
                   <span className="text-[var(--text-primary)] font-medium">{user?.email}</span>

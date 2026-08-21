@@ -94,7 +94,7 @@ export default function JobForm({ surveyType, onSuccess }: JobFormProps): JSX.El
       {equipment.length > 0 && (
         <div>
           <div className="block text-sm font-medium text-gray-300 mb-2">Recommended Equipment</div>
-          <div className="bg-[var(--bg-tertiary)]/50 p-4 rounded-lg border border-[var(--border-color)]">
+          <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] p-4 rounded-lg border border-[var(--border-color)]">
             <div className="flex flex-wrap gap-2">
               {equipment.map((item, idx) => (
                 <span key={`${item}-${idx}`} className="text-xs bg-[#D17B47]/20 text-[#D17B47] px-2 py-1 rounded">

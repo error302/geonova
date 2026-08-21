@@ -114,15 +114,15 @@ export function LevelingBook({
 
         {computed.ok && (
           <div className="grid md:grid-cols-3 gap-3">
-            <div className="p-3 bg-[var(--bg-primary)]/40 border border-[var(--border-color)] rounded">
+            <div className="p-3 bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] border border-[var(--border-color)] rounded">
               <div className="text-xs text-[var(--text-muted)]">{t('leveling.arithmeticCheck')}</div>
               <div className={`font-mono ${computed.calc.arithmeticCheck ? 'text-green-400' : 'text-red-400'}`}>{computed.calc.arithmeticCheck ? t('common.pass') : t('common.fail')}</div>
             </div>
-            <div className="p-3 bg-[var(--bg-primary)]/40 border border-[var(--border-color)] rounded">
+            <div className="p-3 bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] border border-[var(--border-color)] rounded">
               <div className="text-xs text-[var(--text-muted)]">{t('leveling.misclosure')}</div>
               <div className="font-mono">{Number(computed.calc.misclosure).toFixed(4)} m</div>
             </div>
-            <div className="p-3 bg-[var(--bg-primary)]/40 border border-[var(--border-color)] rounded">
+            <div className="p-3 bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] border border-[var(--border-color)] rounded">
               <div className="text-xs text-[var(--text-muted)]">{t('leveling.allowable')}</div>
               <div className="font-mono">±{Number(computed.calc.allowableMisclosure).toFixed(4)} m</div>
             </div>

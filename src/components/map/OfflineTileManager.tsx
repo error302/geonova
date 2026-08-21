@@ -122,7 +122,7 @@ export function OfflineTileManager() {
       {/* ─── Storage Overview ──────────────────────────────────────── */}
       <div className="rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] p-5">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
             <HardDrive className="w-5 h-5 text-[var(--accent)]" />
           </div>
           <div>
@@ -235,7 +235,7 @@ export function OfflineTileManager() {
           {sources.map((source) => (
             <div
               key={source.sourceId}
-              className="group rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] p-4 transition-all hover:border-[var(--accent)]/20"
+              className="group rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] p-4 transition-all hover:border-[color-mix(in_srgb,var(--accent)_20%,transparent)]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">

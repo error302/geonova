@@ -649,14 +649,14 @@ export default function AdminDashboardPage() {
             <input
               type="text"
               aria-label="Announcement title" placeholder="Announcement title..."
-              className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-[var(--text-primary)] text-sm focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 outline-none transition-all"
+              className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-[var(--text-primary)] text-sm focus:border-[var(--accent)] focus:ring-1 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] outline-none transition-all"
               value={announcementTitle}
               onChange={e => setAnnouncementTitle(e.target.value)}
             />
             <textarea
               placeholder="Message body..."
               rows={3}
-              className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-[var(--text-primary)] text-sm resize-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 outline-none transition-all"
+              className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-[var(--text-primary)] text-sm resize-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] outline-none transition-all"
               value={announcementBody}
               onChange={e => setAnnouncementBody(e.target.value)}
             />
@@ -704,7 +704,7 @@ export default function AdminDashboardPage() {
           <div className="p-5 grid grid-cols-2 gap-3">
             <Link
               href="/admin/users"
-              className="flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)]/40 hover:bg-[var(--accent)]/5 transition-all group"
+              className="flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] hover:bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] transition-all group"
             >
               <Users className="w-5 h-5 text-[var(--accent)]" />
               <div>
@@ -717,7 +717,7 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/audit-logs"
-              className="flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)]/40 hover:bg-[var(--accent)]/5 transition-all group"
+              className="flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] hover:bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] transition-all group"
             >
               <ShieldCheck className="w-5 h-5 text-[var(--accent)]" />
               <div>
@@ -730,7 +730,7 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/admin/payments"
-              className="flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)]/40 hover:bg-[var(--accent)]/5 transition-all group"
+              className="flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] hover:bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] transition-all group"
             >
               <CreditCard className="w-5 h-5 text-[var(--accent)]" />
               <div>
@@ -743,7 +743,7 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/admin"
-              className="flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)]/40 hover:bg-[var(--accent)]/5 transition-all group"
+              className="flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] hover:bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] transition-all group"
             >
               <Settings2 className="w-5 h-5 text-[var(--accent)]" />
               <div>
@@ -771,7 +771,7 @@ export default function AdminDashboardPage() {
               <input
                 type="email"
                 aria-label="User email" placeholder="User email..."
-                className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-[var(--text-primary)] text-sm focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 outline-none transition-all"
+                className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-[var(--text-primary)] text-sm focus:border-[var(--accent)] focus:ring-1 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] outline-none transition-all"
                 value={overrideEmail}
                 onChange={e => setOverrideEmail(e.target.value)}
               />

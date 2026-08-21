@@ -69,10 +69,10 @@ export function CollaborationPanel({
       {/* Header */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-[var(--bg-tertiary)]/50 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] transition-colors"
       >
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
             <Users className="w-4 h-4 text-[var(--accent)]" />
           </div>
           <div className="text-left">
@@ -115,7 +115,7 @@ export function CollaborationPanel({
             ) : (
               messages.map(msg => (
                 <div key={msg.id} className="flex items-start gap-2">
-                  <div className="shrink-0 w-6 h-6 rounded-full bg-[var(--accent)]/10 flex items-center justify-center text-[9px] font-bold text-[var(--accent)]">
+                  <div className="shrink-0 w-6 h-6 rounded-full bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center text-[9px] font-bold text-[var(--accent)]">
                     {msg.userName.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -142,7 +142,7 @@ export function CollaborationPanel({
               onKeyDown={handleKeyPress}
               placeholder={isConnected ? 'Type a message...' : 'Disconnected'}
               disabled={!isConnected}
-              className="flex-1 h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none disabled:opacity-50"
+              className="flex-1 h-8 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none disabled:opacity-50"
             />
             <button
               onClick={handleSend}

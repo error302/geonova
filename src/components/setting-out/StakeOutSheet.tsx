@@ -67,17 +67,17 @@ export default function StakeOutSheet({ result }: Props) {
           </thead>
           <tbody>
             {rows.map((row, i) => (
-              <tr key={row.id} className={i % 2 === 0 ? 'bg-transparent' : 'bg-[var(--bg-tertiary)]/30'}>
-                <td className="px-2 py-1.5 border border-[var(--border-color)]/50 font-bold text-[var(--text-primary)]">{row.id}</td>
-                <td className="px-2 py-1.5 border border-[var(--border-color)]/50 text-right text-[var(--text-primary)]">{row.designE.toFixed(3)}</td>
-                <td className="px-2 py-1.5 border border-[var(--border-color)]/50 text-right text-[var(--text-primary)]">{row.designN.toFixed(3)}</td>
-                <td className="px-2 py-1.5 border border-[var(--border-color)]/50 text-right text-[var(--text-primary)]">{row.designRL.toFixed(3)}</td>
-                <td className="px-2 py-1.5 border border-[var(--border-color)]/50 text-right text-[var(--accent)] font-bold">{row.HzAngle}</td>
-                <td className="px-2 py-1.5 border border-[var(--border-color)]/50 text-right text-[var(--text-primary)]">{row.HD.toFixed(3)}</td>
-                <td className="px-2 py-1.5 border border-[var(--border-color)]/50 text-right text-[var(--text-primary)]">{row.heightDiff.toFixed(3)}</td>
-                <td className="px-2 py-1.5 border border-[var(--border-color)]/50 text-right text-[var(--text-secondary)]">{row.VA}</td>
-                <td className="px-2 py-1.5 border border-[var(--border-color)]/50 text-right text-[var(--text-secondary)]">{row.SD.toFixed(3)}</td>
-                <td className="px-2 py-1.5 border border-[var(--border-color)]/50 text-right text-[var(--text-muted)]">{row.TH.toFixed(3)}</td>
+              <tr key={row.id} className={i % 2 === 0 ? 'bg-transparent' : 'bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]'}>
+                <td className="px-2 py-1.5 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] font-bold text-[var(--text-primary)]">{row.id}</td>
+                <td className="px-2 py-1.5 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-right text-[var(--text-primary)]">{row.designE.toFixed(3)}</td>
+                <td className="px-2 py-1.5 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-right text-[var(--text-primary)]">{row.designN.toFixed(3)}</td>
+                <td className="px-2 py-1.5 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-right text-[var(--text-primary)]">{row.designRL.toFixed(3)}</td>
+                <td className="px-2 py-1.5 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-right text-[var(--accent)] font-bold">{row.HzAngle}</td>
+                <td className="px-2 py-1.5 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-right text-[var(--text-primary)]">{row.HD.toFixed(3)}</td>
+                <td className="px-2 py-1.5 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-right text-[var(--text-primary)]">{row.heightDiff.toFixed(3)}</td>
+                <td className="px-2 py-1.5 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-right text-[var(--text-secondary)]">{row.VA}</td>
+                <td className="px-2 py-1.5 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-right text-[var(--text-secondary)]">{row.SD.toFixed(3)}</td>
+                <td className="px-2 py-1.5 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-right text-[var(--text-muted)]">{row.TH.toFixed(3)}</td>
               </tr>
             ))}
           </tbody>
@@ -114,7 +114,7 @@ export default function StakeOutSheet({ result }: Props) {
       </div>
 
       {/* ── WHAT'S INCLUDED ─────────────────────────────────────────── */}
-      <div className="p-3 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)] text-xs space-y-1 text-[var(--text-muted)]">
+      <div className="p-3 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded border border-[var(--border-color)] text-xs space-y-1 text-[var(--text-muted)]">
         <p className="font-semibold text-[var(--text-primary)] mb-1.5">Schedule will include:</p>
         <p> Standard document header (project · client · date · surveyor · reg no · instrument)</p>
         <p> Instrument station: E, N, RL, IH — Backsight: E, N, WCB bearing</p>

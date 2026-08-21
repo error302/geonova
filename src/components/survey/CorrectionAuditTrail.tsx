@@ -68,7 +68,7 @@ export function CorrectionAuditTrail({
     <div className="border border-[var(--border-color)] rounded overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-2.5 bg-[var(--bg-tertiary)]/50 text-[var(--text-primary)] text-sm font-medium hover:bg-[var(--border-hover)] transition-colors"
+        className="w-full flex items-center justify-between px-4 py-2.5 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] text-[var(--text-primary)] text-sm font-medium hover:bg-[var(--border-hover)] transition-colors"
       >
         <span className="flex items-center gap-2">
           <span>{title}</span>
@@ -90,7 +90,7 @@ export function CorrectionAuditTrail({
       </button>
 
       {isOpen && (
-        <div className="divide-y divide-[var(--border-color)]/30">
+        <div className="divide-y divide-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
           {observations.map((obs, i) => {
             const isExpanded = expandedLegs.has(i)
             const hasSignificantCorrections = obs.correctionLog.some(
@@ -101,7 +101,7 @@ export function CorrectionAuditTrail({
               <div key={`${obs}-${i}`} className="text-xs">
                 <button
                   onClick={() => toggleLeg(i)}
-                  className="w-full flex items-center justify-between px-4 py-2 hover:bg-[var(--bg-primary)]/20 transition-colors"
+                  className="w-full flex items-center justify-between px-4 py-2 hover:bg-[color-mix(in_srgb,var(--bg-primary)_20%,transparent)] transition-colors"
                 >
                   <span className="font-mono flex items-center gap-2">
                     <span className="text-[var(--text-primary)]">{obs.fromStation} → {obs.toStation}</span>

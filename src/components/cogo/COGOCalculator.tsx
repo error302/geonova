@@ -44,7 +44,7 @@ function StepsDisplay({ steps, title }: { steps: InverseStep[]; title?: string }
       {title && <h3 className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">{title}</h3>}
       <div className="space-y-1">
         {steps.map((step, _i) => (
-          <div key={step.value} className="grid grid-cols-[1fr_auto_1fr] md:grid-cols-[1fr_auto_1fr_auto] gap-x-1 md:gap-x-2 text-xs font-mono py-1 border-b border-[var(--border-color)]/20">
+          <div key={step.value} className="grid grid-cols-[1fr_auto_1fr] md:grid-cols-[1fr_auto_1fr_auto] gap-x-1 md:gap-x-2 text-xs font-mono py-1 border-b border-[color-mix(in_srgb,var(--border-color)_20%,transparent)]">
             <span className="text-[var(--text-secondary)]">{step.description}</span>
             <span className="text-[var(--text-muted)]">=</span>
             <span className="text-[var(--text-primary)] text-right">{step.value}</span>
@@ -69,7 +69,7 @@ function CoordField({ label, value, onChange }: { label: string; value: string; 
 
 function ResultCard({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
-    <div className={`px-3 py-2 rounded border ${accent ? 'border-[var(--accent)] bg-[var(--accent)]/10' : 'border-[var(--border-color)] bg-[var(--bg-tertiary)]/50'}`}>
+    <div className={`px-3 py-2 rounded border ${accent ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' : 'border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]'}`}>
       <p className="text-xs text-[var(--text-secondary)]">{label}</p>
       <p className={`text-sm font-mono font-semibold ${accent ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'}`}>{value}</p>
     </div>
@@ -792,7 +792,7 @@ export default function COGOCalculator({ compact = false }: Props) {
               <div className="overflow-x-auto">
                 <table className="w-full text-xs font-mono">
                   <thead>
-                    <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/30">
+                    <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
                       <th className="px-2 py-1.5 text-left text-[var(--text-secondary)]">From</th>
                       <th className="px-2 py-1.5 text-left text-[var(--text-secondary)]">To</th>
                       <th className="px-2 py-1.5 text-right text-[var(--text-secondary)]">E×Nₙ₊₁</th>
@@ -801,7 +801,7 @@ export default function COGOCalculator({ compact = false }: Props) {
                   </thead>
                   <tbody>
                     {areaResult.diagonalRows.map((row, i) => (
-                      <tr key={`${row}-${i}`} className="border-b border-[var(--border-color)]/20">
+                      <tr key={`${row}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_20%,transparent)]">
                         <td className="px-2 py-1 text-[var(--text-primary)]">{row.from}</td>
                         <td className="px-2 py-1 text-[var(--text-primary)]">{row.to}</td>
                         <td className="px-2 py-1 text-right text-[var(--text-secondary)]">{row.posProduct.toFixed(2)}</td>
@@ -838,7 +838,7 @@ export default function COGOCalculator({ compact = false }: Props) {
               <div className="overflow-x-auto">
                 <table className="min-w-[600px] w-full text-xs font-mono">
                   <thead>
-                    <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/30">
+                    <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
                       <th className="px-2 py-1.5 text-left text-[var(--text-secondary)]">From</th>
                       <th className="px-2 py-1.5 text-left text-[var(--text-secondary)]">To</th>
                       <th className="px-2 py-1.5 text-right text-[var(--text-secondary)]">ΔE</th>
@@ -850,7 +850,7 @@ export default function COGOCalculator({ compact = false }: Props) {
                   </thead>
                   <tbody>
                     {joinResult.rows.map((row, i) => (
-                      <tr key={`${row}-${i}`} className="border-b border-[var(--border-color)]/20">
+                      <tr key={`${row}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_20%,transparent)]">
                         <td className="px-2 py-1 text-[var(--text-primary)]">{row.from}</td>
                         <td className="px-2 py-1 text-[var(--text-primary)]">{row.to}</td>
                         <td className="px-2 py-1 text-right text-[var(--text-secondary)]">{row.deltaE >= 0 ? '+' : ''}{row.deltaE.toFixed(4)}</td>

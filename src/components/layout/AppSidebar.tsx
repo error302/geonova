@@ -191,7 +191,7 @@ export default function AppSidebar({ variant, className, onNavigate }: AppSideba
             <Link
               href="/admin"
               onClick={onNavigate}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[var(--accent)] hover:bg-[var(--accent)]/5 transition-colors no-underline"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] transition-colors no-underline"
             >
               <ShieldCheck className="w-4 h-4" />
               Admin Panel

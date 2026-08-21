@@ -331,7 +331,7 @@ export default function LevelingCalculator() {
               </button>
 
               {showProfile && (
-                <div className="mt-4 bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+                <div className="mt-4 bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
                   <h3 className="font-semibold text-[var(--text-primary)] mb-4">Longitudinal Profile</h3>
                   <LevelingProfile readings={result.readings} />
                 </div>

@@ -319,7 +319,7 @@ export default function ProfilesPage({ params }: PageProps) {
                 ))}
               </div>
               {selectedPoints.length > 0 && (
-                <div className="mt-4 p-3 bg-[var(--bg-tertiary)]/50 rounded">
+                <div className="mt-4 p-3 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded">
                   <span className="text-sm text-[var(--text-secondary)]">Selected: </span>
                   <span className="text-[var(--accent)]">
                     {selectedPoints.map((p) => p.name).join(' → ')}
@@ -377,7 +377,7 @@ export default function ProfilesPage({ params }: PageProps) {
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-4">
-                          <div className="rounded-xl bg-[var(--bg-primary)]/40 border border-[var(--border-color)] p-4">
+                          <div className="rounded-xl bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] border border-[var(--border-color)] p-4">
                             <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2">Page</div>
                             <div className="flex gap-2">
                               <select value={svgPage} onChange={(e) => setSvgPage(e.target.value as 'A3' | 'A4')} className="flex-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded px-3 py-2 text-[var(--text-primary)]">
@@ -392,7 +392,7 @@ export default function ProfilesPage({ params }: PageProps) {
                             <p className="text-xs text-[var(--text-muted)] mt-2">Print at 100% for true scale.</p>
                           </div>
 
-                          <div className="rounded-xl bg-[var(--bg-primary)]/40 border border-[var(--border-color)] p-4">
+                          <div className="rounded-xl bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] border border-[var(--border-color)] p-4">
                             <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2">Scales</div>
                             <div className="grid grid-cols-2 gap-2">
                               <label className="text-xs text-[var(--text-secondary)]">
@@ -444,21 +444,21 @@ export default function ProfilesPage({ params }: PageProps) {
                   )}
                   
                   <div className="mt-6 grid grid-cols-4 gap-4">
-                    <div className="bg-[var(--bg-tertiary)]/50 p-3 rounded">
+                    <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] p-3 rounded">
                       <div className="text-xs text-[var(--text-muted)]">Start Chainage</div>
                       <div className="text-[var(--accent)] font-mono">{formatChainage(chainagePoints[0]?.chainage || 0)}</div>
                     </div>
-                    <div className="bg-[var(--bg-tertiary)]/50 p-3 rounded">
+                    <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] p-3 rounded">
                       <div className="text-xs text-[var(--text-muted)]">End Chainage</div>
                       <div className="text-[var(--accent)] font-mono">{formatChainage(chainagePoints[chainagePoints.length - 1]?.chainage || 0)}</div>
                     </div>
-                    <div className="bg-[var(--bg-tertiary)]/50 p-3 rounded">
+                    <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] p-3 rounded">
                       <div className="text-xs text-[var(--text-muted)]">Lowest Point</div>
                       <div className="text-[var(--text-primary)] font-mono">
                         {Math.min(...chainagePoints.map((p) => p.elevation)).toFixed(3)} m
                       </div>
                     </div>
-                    <div className="bg-[var(--bg-tertiary)]/50 p-3 rounded">
+                    <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] p-3 rounded">
                       <div className="text-xs text-[var(--text-muted)]">Highest Point</div>
                       <div className="text-[var(--text-primary)] font-mono">
                         {Math.max(...chainagePoints.map((p) => p.elevation)).toFixed(3)} m
@@ -647,7 +647,7 @@ function CrossSectionTable({ crossSections }: { crossSections: CrossSection[]; c
         const right = sections.find((s) => s.offset_direction === 'right');
         
         return (
-          <div key={ch} className="bg-[var(--bg-tertiary)]/50 rounded-lg p-4">
+          <div key={ch} className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded-lg p-4">
             <h4 className="text-[var(--accent)] font-mono mb-2">{formatChainage(parseFloat(ch))}</h4>
             <table className="w-full text-sm">
               <thead>
@@ -667,7 +667,7 @@ function CrossSectionTable({ crossSections }: { crossSections: CrossSection[]; c
                     {left ? left.elevation.toFixed(3) : '—'}
                   </td>
                 </tr>
-                <tr className="border-b border-[var(--border-color)] bg-[var(--accent)]/10">
+                <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]">
                   <td className="py-1 text-[var(--accent)] font-medium">Center</td>
                   <td className="py-1 text-right font-mono text-[var(--accent)]">0.000</td>
                   <td className="py-1 text-right font-mono text-[var(--accent)]">

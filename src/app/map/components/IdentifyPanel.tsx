@@ -54,10 +54,10 @@ interface IdentifyPanelProps {
 }
 
 const STATUS_CONFIG: Record<string, { color: string; bg: string; icon: typeof CheckCircle2 }> = {
-  registered: { color: 'text-[var(--success)]', bg: 'bg-[var(--success)]/10 border-emerald-500/30', icon: CheckCircle2 },
-  pending: { color: 'text-[var(--warning)]', bg: 'bg-[var(--warning)]/10 border-amber-500/30', icon: Clock },
-  disputed: { color: 'text-[var(--error)]', bg: 'bg-[var(--error)]/10 border-red-500/30', icon: AlertTriangle },
-  cancelled: { color: 'text-[var(--text-secondary)]', bg: 'bg-[var(--bg-tertiary)]/10 border-[var(--border-hover)]/30', icon: X },
+  registered: { color: 'text-[var(--success)]', bg: 'bg-[color-mix(in_srgb,var(--success)_10%,transparent)] border-emerald-500/30', icon: CheckCircle2 },
+  pending: { color: 'text-[var(--warning)]', bg: 'bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] border-amber-500/30', icon: Clock },
+  disputed: { color: 'text-[var(--error)]', bg: 'bg-[color-mix(in_srgb,var(--error)_10%,transparent)] border-red-500/30', icon: AlertTriangle },
+  cancelled: { color: 'text-[var(--text-secondary)]', bg: 'bg-[color-mix(in_srgb,var(--bg-tertiary)_10%,transparent)] border-[color-mix(in_srgb,var(--border-hover)_30%,transparent)]', icon: X },
 }
 
 const TYPE_ICONS: Record<string, typeof MapPin> = {
@@ -87,11 +87,11 @@ export function IdentifyPanel({ feature, onClose, onEdit, onDelete, onZoomTo }: 
   const StatusIcon = statusCfg?.icon
 
   return (
-    <div className="absolute top-[280px] right-3 z-30 w-80 max-h-[calc(100%-320px)] bg-[var(--bg-secondary)]/95 backdrop-blur-2xl border border-[var(--border-color)]/[0.08] rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in slide-in-from-right-2 duration-200">
+    <div className="absolute top-[280px] right-3 z-30 w-80 max-h-[calc(100%-320px)] bg-[color-mix(in_srgb,var(--bg-secondary)_95%,transparent)] backdrop-blur-2xl border border-[var(--border-color)]/[0.08] rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in slide-in-from-right-2 duration-200">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-color)]/[0.06] bg-gradient-to-r from-[#D17B47]/5 to-transparent">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
             <TypeIcon className="w-4 h-4 text-[var(--accent)]" />
           </div>
           <div>
@@ -226,7 +226,7 @@ export function IdentifyPanel({ feature, onClose, onEdit, onDelete, onZoomTo }: 
                   key={`${beacon}-${i}`}
                   className="flex items-center gap-2 p-1.5 rounded-lg bg-[var(--bg-card)]/[0.02] border border-[var(--border-color)]/[0.04] hover:bg-[var(--bg-card)]/[0.04] transition-colors cursor-pointer"
                 >
-                  <div className="w-5 h-5 rounded bg-[var(--accent)]/10 flex items-center justify-center shrink-0">
+                  <div className="w-5 h-5 rounded bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center shrink-0">
                     <MapPin className="w-2.5 h-2.5 text-[var(--accent)]" />
                   </div>
                   <span className="text-[10px] font-mono text-[var(--text-secondary)] flex-1 truncate">{beacon.beaconNumber}</span>
@@ -261,7 +261,7 @@ export function IdentifyPanel({ feature, onClose, onEdit, onDelete, onZoomTo }: 
         {onEdit && (
           <button
             onClick={() => onEdit(feature)}
-            className="flex-1 flex items-center justify-center gap-1 h-8 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-xs text-[var(--accent)] hover:bg-[var(--accent)]/20 transition-colors"
+            className="flex-1 flex items-center justify-center gap-1 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-xs text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] transition-colors"
           >
             <Edit3 className="w-3.5 h-3.5" />
             Edit
@@ -270,7 +270,7 @@ export function IdentifyPanel({ feature, onClose, onEdit, onDelete, onZoomTo }: 
         {onDelete && (
           <button
             onClick={() => onDelete(feature)}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--error)]/5 border border-red-500/20 text-[var(--error)] hover:bg-[var(--error)]/10 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[color-mix(in_srgb,var(--error)_5%,transparent)] border border-red-500/20 text-[var(--error)] hover:bg-[color-mix(in_srgb,var(--error)_10%,transparent)] transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>

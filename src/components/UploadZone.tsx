@@ -113,8 +113,8 @@ export default function UploadZone({
         className={`
           border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all
           ${isDragging 
-            ? 'border-[var(--accent)] bg-[var(--accent)]/10' 
-            : 'border-[var(--border-color)] hover:border-[var(--accent)] hover:bg-[var(--bg-secondary)]/50'}
+            ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' 
+            : 'border-[var(--border-color)] hover:border-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)]'}
         `}
       >
         <input
@@ -155,7 +155,7 @@ export default function UploadZone({
       )}
 
       {result && (
-        <div className="rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 p-4 space-y-3">
+        <div className="rounded-lg border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] p-4 space-y-3">
           <div className="flex items-center gap-2">
             {result.success ? (
               <CheckCircle className="w-5 h-5 text-green-400" />
@@ -171,7 +171,7 @@ export default function UploadZone({
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-            <div className="bg-[var(--bg-tertiary)]/50 rounded p-2">
+            <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-2">
               <div className="text-[var(--text-muted)] text-xs">Confidence</div>
               <div className="font-medium text-[var(--text-primary)]">
                 {Math.round(result.confidence * 100)}%
@@ -179,15 +179,15 @@ export default function UploadZone({
             </div>
             {result.building && (
               <>
-                <div className="bg-[var(--bg-tertiary)]/50 rounded p-2">
+                <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-2">
                   <div className="text-[var(--text-muted)] text-xs">Walls</div>
                   <div className="font-medium text-[var(--text-primary)]">{result.building.walls}</div>
                 </div>
-                <div className="bg-[var(--bg-tertiary)]/50 rounded p-2">
+                <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-2">
                   <div className="text-[var(--text-muted)] text-xs">Rooms</div>
                   <div className="font-medium text-[var(--text-primary)]">{result.building.rooms}</div>
                 </div>
-                <div className="bg-[var(--bg-tertiary)]/50 rounded p-2">
+                <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-2">
                   <div className="text-[var(--text-muted)] text-xs">Floors</div>
                   <div className="font-medium text-[var(--text-primary)]">{result.building.floors}</div>
                 </div>
@@ -195,11 +195,11 @@ export default function UploadZone({
             )}
             {result.boq && (
               <>
-                <div className="bg-[var(--bg-tertiary)]/50 rounded p-2">
+                <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-2">
                   <div className="text-[var(--text-muted)] text-xs">BOQ Items</div>
                   <div className="font-medium text-[var(--text-primary)]">{result.boq.items}</div>
                 </div>
-                <div className="bg-[var(--bg-tertiary)]/50 rounded p-2">
+                <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-2">
                   <div className="text-[var(--text-muted)] text-xs">Total</div>
                   <div className="font-medium text-[var(--text-primary)]">{result.boq.total.toLocaleString()}</div>
                 </div>

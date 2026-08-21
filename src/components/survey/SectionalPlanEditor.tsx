@@ -126,7 +126,7 @@ export function SectionalPlanEditor() {
       <div className="card p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
               <Building2 className="w-4 h-4 text-[var(--accent)]" />
             </div>
             <div>
@@ -137,7 +137,7 @@ export function SectionalPlanEditor() {
           <button
             onClick={handleExport}
             disabled={!validation.isValid}
-            className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)] text-xs font-medium hover:bg-[var(--accent)]/20 disabled:opacity-40"
+            className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-xs font-medium hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] disabled:opacity-40"
           >
             <Download className="w-3.5 h-3.5" />
             Export Form SP-1
@@ -148,19 +148,19 @@ export function SectionalPlanEditor() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div>
             <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="building-name">Building Name</label>
-            <input id="building-name" type="text" value={buildingName} onChange={e => setBuildingName(e.target.value)} placeholder="Sunset Apartments" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+            <input id="building-name" type="text" value={buildingName} onChange={e => setBuildingName(e.target.value)} placeholder="Sunset Apartments" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
           </div>
           <div>
             <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="parent-parcel-no">Parent Parcel No.</label>
-            <input id="parent-parcel-no" type="text" value={parentParcel} onChange={e => setParentParcel(e.target.value)} placeholder="LR 12345/678" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+            <input id="parent-parcel-no" type="text" value={parentParcel} onChange={e => setParentParcel(e.target.value)} placeholder="LR 12345/678" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
           </div>
           <div>
             <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="parent-area-ha">Parent Area (ha)</label>
-            <input id="parent-area-ha" type="number" step="0.0001" value={parentArea} onChange={e => setParentArea(e.target.value)} placeholder="0.0500" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+            <input id="parent-area-ha" type="number" step="0.0001" value={parentArea} onChange={e => setParentArea(e.target.value)} placeholder="0.0500" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
           </div>
           <div>
             <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="total-floors">Total Floors</label>
-            <input  id="total-floors" aria-label="Total Floors" type="number" min="1" value={totalFloors} onChange={e => setTotalFloors(e.target.value)} className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[var(--accent)]/30 focus:outline-none" />
+            <input  id="total-floors" aria-label="Total Floors" type="number" min="1" value={totalFloors} onChange={e => setTotalFloors(e.target.value)} className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
           </div>
         </div>
       </div>
@@ -204,7 +204,7 @@ export function SectionalPlanEditor() {
           <span className="text-sm font-semibold text-[var(--text-primary)]">Units & Areas</span>
           <button
             onClick={addUnit}
-            className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)] text-xs font-medium hover:bg-[var(--accent)]/20"
+            className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-xs font-medium hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)]"
           >
             <Plus className="w-3.5 h-3.5" />
             Add Unit
@@ -230,13 +230,13 @@ export function SectionalPlanEditor() {
                 const TypeIcon = UNIT_TYPE_ICONS[unit.unitType]
                 const catColor = AREA_CATEGORY_COLORS[unit.areaCategory]
                 return (
-                  <tr key={unit.id} className="border-b border-[var(--border-color)]/50 hover:bg-white/[0.02]">
+                  <tr key={unit.id} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] hover:bg-white/[0.02]">
                     <td className="px-2 py-2">
                       <input aria-label="Unitnumber"
                         type="text"
                         value={unit.unitNumber}
                         onChange={e => updateUnit(unit.id, { unitNumber: e.target.value })}
-                        className="w-20 h-7 px-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] font-mono focus:border-[var(--accent)]/30 focus:outline-none"
+                        className="w-20 h-7 px-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] font-mono focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
                       />
                     </td>
                     <td className="px-2 py-2">
@@ -261,7 +261,7 @@ export function SectionalPlanEditor() {
                         type="number"
                         value={unit.floorNumber}
                         onChange={e => updateUnit(unit.id, { floorNumber: parseInt(e.target.value) || 0 })}
-                        className="w-12 h-7 px-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] text-center font-mono focus:border-[var(--accent)]/30 focus:outline-none"
+                        className="w-12 h-7 px-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] text-center font-mono focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
                       />
                     </td>
                     <td className="px-2 py-2 text-right">
@@ -270,7 +270,7 @@ export function SectionalPlanEditor() {
                         step="0.01"
                         value={unit.floorAreaSqM}
                         onChange={e => updateUnit(unit.id, { floorAreaSqM: parseFloat(e.target.value) || 0 })}
-                        className="w-20 h-7 px-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] text-right font-mono focus:border-[var(--accent)]/30 focus:outline-none"
+                        className="w-20 h-7 px-1.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] text-right font-mono focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
                       />
                     </td>
                     <td className="px-2 py-2 text-center">

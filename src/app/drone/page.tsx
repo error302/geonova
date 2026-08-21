@@ -507,7 +507,7 @@ export default function DronePage() {
 
       <div className="mt-6 space-y-6">
         {/* Info banner */}
-        <div className="rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20 p-4 text-sm text-[var(--text-secondary)]">
+        <div className="rounded-xl bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] p-4 text-sm text-[var(--text-secondary)]">
           <p>
             <span className="font-semibold text-[var(--accent)]">How it works:</span>{' '}
             Upload your drone photos (JPG/PNG/TIFF), then METARDU sends them to WebODM

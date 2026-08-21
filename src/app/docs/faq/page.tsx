@@ -123,7 +123,7 @@ export default function FAQPage() {
           ))}
         </div>
 
-        <div className="mt-16 bg-gradient-to-r from-[#D17B47]/20 to-transparent border border-[var(--accent)]/30 rounded-xl p-8 text-center">
+        <div className="mt-16 bg-gradient-to-r from-[#D17B47]/20 to-transparent border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rounded-xl p-8 text-center">
           <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-4">Still Have Questions?</h2>
           <p className="text-[var(--text-secondary)] mb-6">
             Can't find what you're looking for? We're here to help.
@@ -138,7 +138,7 @@ export default function FAQPage() {
             </a>
             <Link
               href="/community"
-              className="px-6 py-3 border border-[var(--accent)] text-[var(--accent)] font-semibold rounded-lg hover:bg-[var(--accent)]/10"
+              className="px-6 py-3 border border-[var(--accent)] text-[var(--accent)] font-semibold rounded-lg hover:bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]"
             >
               Join Community
             </Link>

@@ -225,8 +225,8 @@ export default function ScaleFactorPage() {
 
               {/* Area result */}
               {areaResult && (
-                <div className="card border-[var(--accent)]/40">
-                  <div className="card-header bg-[var(--accent)]/5"><span className="label text-[var(--accent)]">Area conversion</span></div>
+                <div className="card border-[color-mix(in_srgb,var(--accent)_40%,transparent)]">
+                  <div className="card-header bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]"><span className="label text-[var(--accent)]">Area conversion</span></div>
                   <div className="card-body space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -252,7 +252,7 @@ export default function ScaleFactorPage() {
                       </div>
                     </div>
 
-                    <div className="p-3 border border-[var(--warning)]/30 bg-[var(--warning)]/5 rounded-md">
+                    <div className="p-3 border border-[color-mix(in_srgb,var(--warning)_30%,transparent)] bg-[color-mix(in_srgb,var(--warning)_5%,transparent)] rounded-md">
                       <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                         <span className="font-mono text-[var(--warning)] text-[10px] tracking-[0.06em] uppercase">Legal note:</span>{' '}
                         The deed plan must state the ground area, not the grid area. At this location and elevation,

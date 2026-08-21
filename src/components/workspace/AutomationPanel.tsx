@@ -76,7 +76,7 @@ export function AutomationPanel({ surveyType, currentStep = 1 }: AutomationPanel
     <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-4">
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center">
+        <div className="w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] flex items-center justify-center">
           <Zap className="w-4 h-4 text-[var(--accent)]" />
         </div>
         <div className="flex-1">
@@ -88,7 +88,7 @@ export function AutomationPanel({ surveyType, currentStep = 1 }: AutomationPanel
       </div>
 
       {/* Summary banner */}
-      <div className="bg-[var(--accent)]/5 border border-[var(--accent)]/15 rounded-lg p-3 mb-4">
+      <div className="bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] border border-[color-mix(in_srgb,var(--accent)_15%,transparent)] rounded-lg p-3 mb-4">
         <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
           {summary}
         </p>
@@ -181,7 +181,7 @@ export function AutomationPanel({ surveyType, currentStep = 1 }: AutomationPanel
 
       {/* Export readiness */}
       {currentStep >= 5 && (
-        <div className="mt-4 p-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-tertiary)]/50">
+        <div className="mt-4 p-3 rounded-lg border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-[var(--text-primary)]">Export Readiness</span>
             <span className="text-[10px] text-[var(--text-muted)]">

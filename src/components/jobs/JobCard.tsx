@@ -22,7 +22,7 @@ export default function JobCard({ job }: { job: MetarduJob }) {
 
   return (
     <Link href={`/jobs/${job.id}`} className="block">
-      <div className="border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 rounded-lg p-6 hover:border-[var(--accent)]/50 hover:shadow-md transition-all group">
+      <div className="border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] rounded-lg p-6 hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)] hover:shadow-md transition-all group">
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-lg font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition">
             {job.name}
@@ -55,7 +55,7 @@ export default function JobCard({ job }: { job: MetarduJob }) {
         
         {job.survey_type && (
           <div className="mt-4 pt-4 border-t border-[var(--border-color)]">
-            <span className="text-xs bg-[var(--accent)]/20 text-[var(--accent)] px-2 py-1 rounded">
+            <span className="text-xs bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[var(--accent)] px-2 py-1 rounded">
               {job.survey_type.replace('_', ' ').toUpperCase()}
             </span>
           </div>

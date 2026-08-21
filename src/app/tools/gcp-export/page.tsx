@@ -112,7 +112,7 @@ export default function GCPExportPage() {
         />
 
         {/* What is a GCP? — for context */}
-        <div className="bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-xl p-4 mb-6 text-sm">
+        <div className="bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] rounded-xl p-4 mb-6 text-sm">
           <p className="text-[var(--text-secondary)] leading-relaxed">
             <strong className="text-[var(--text-primary)]">Ground Control Points</strong> are precisely surveyed reference points 
             placed on the ground before a drone flight. They allow the photogrammetry software to 
@@ -157,7 +157,7 @@ export default function GCPExportPage() {
                   {points.map((pt) => (
                     <label key={pt.name} className={`flex items-center gap-3 p-2.5 rounded-lg border cursor-pointer transition-colors ${
                       selectedPoints.has(pt.name)
-                        ? 'bg-[var(--accent)]/5 border-[var(--accent)]/20'
+                        ? 'bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] border-[color-mix(in_srgb,var(--accent)_20%,transparent)]'
                         : 'bg-[var(--bg-secondary)] border-[var(--border-color)]'
                     }`}>
                       <input aria-label="Select point" type="checkbox" checked={selectedPoints.has(pt.name)}
@@ -195,8 +195,8 @@ export default function GCPExportPage() {
                 {GCP_FORMATS.map((f) => (
                   <label key={f.id} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                     format === f.id
-                      ? 'bg-[var(--accent)]/5 border-[var(--accent)]/30'
-                      : 'bg-[var(--bg-secondary)] border-[var(--border-color)] hover:border-[var(--accent)]/20'
+                      ? 'bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)]'
+                      : 'bg-[var(--bg-secondary)] border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_20%,transparent)]'
                   }`}>
                     <input aria-label="Format" type="radio" name="format" value={f.id} checked={format === f.id}
                       onChange={() => setFormat(f.id)} className="mt-0.5 flex-shrink-0" />

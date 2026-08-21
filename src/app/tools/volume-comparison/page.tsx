@@ -713,7 +713,7 @@ export default function VolumeComparisonPage() {
                   </thead>
                   <tbody>
                     {points.slice(0, 10).map((p, i) => (
-                      <tr key={`${p}-${i}`} className="border-b border-[var(--border-color)]/30">
+                      <tr key={`${p}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                         <td className="py-1.5 px-2 text-[var(--text-muted)]">{i + 1}</td>
                         <td className="py-1.5 px-2 text-right font-mono">{p.easting.toFixed(2)}</td>
                         <td className="py-1.5 px-2 text-right font-mono">{p.northing.toFixed(2)}</td>
@@ -1208,7 +1208,7 @@ export default function VolumeComparisonPage() {
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
               activeTab === tab.id
                 ? 'bg-[var(--accent)] text-black'
-                : 'bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent)]/50'
+                : 'bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]'
             }`}
           >
             {tab.label}
@@ -1216,7 +1216,7 @@ export default function VolumeComparisonPage() {
               <span className={`text-xs px-1.5 py-0.5 rounded-full ${
                 activeTab === tab.id
                   ? 'bg-black/20 text-black'
-                  : 'bg-[var(--accent)]/10 text-[var(--accent)]'
+                  : 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] text-[var(--accent)]'
               }`}>
                 {tab.badge}
               </span>

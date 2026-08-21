@@ -52,7 +52,7 @@ export default function EarthworkQuantitiesTable({ result, sections }: Props) {
             <tbody>
               {/* First section row */}
               {sections.length > 0 && (
-                <tr className="border border-[var(--border-color)]/50">
+                <tr className="border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                   <td className="px-1.5 py-1 text-[var(--text-primary)]">{fmtCh(sections[0].chainage)}</td>
                   <td className="px-1.5 py-1 text-[var(--text-primary)]">—</td>
                   <td className="px-1.5 py-1 text-[var(--text-secondary)] text-right">—</td>
@@ -69,7 +69,7 @@ export default function EarthworkQuantitiesTable({ result, sections }: Props) {
                 </tr>
               )}
               {result.legs.map((leg, i) => (
-                <tr key={`${leg}-${i}`} className="border border-[var(--border-color)]/50 hover:bg-[var(--bg-tertiary)]/30">
+                <tr key={`${leg}-${i}`} className="border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] hover:bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
                   <td className="px-1.5 py-1 text-[var(--text-primary)]">{fmtCh(leg.fromChainage)}</td>
                   <td className="px-1.5 py-1 text-[var(--text-primary)]">{fmtCh(leg.toChainage)}</td>
                   <td className="px-1.5 py-1 text-[var(--text-secondary)] text-right">{leg.distance.toFixed(3)}</td>

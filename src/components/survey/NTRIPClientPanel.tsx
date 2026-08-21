@@ -234,7 +234,7 @@ export function NTRIPClientPanel() {
         </button>
 
         {showAdvanced && (
-          <div className="space-y-2 p-3 rounded-lg bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)]">
+          <div className="space-y-2 p-3 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] border border-[var(--border-color)]">
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <label className="block text-[8px] text-gray-500 uppercase mb-0.5" htmlFor="host">Host</label>
@@ -303,11 +303,11 @@ export function NTRIPClientPanel() {
         {/* Connection stats */}
         {isConnected && (
           <div className="grid grid-cols-2 gap-2">
-            <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+            <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
               <span className="text-[9px] text-gray-500 uppercase tracking-wider">RTCM Messages</span>
               <div className="text-sm font-mono text-emerald-400">{rtcmMessages}</div>
             </div>
-            <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+            <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
               <span className="text-[9px] text-gray-500 uppercase tracking-wider">Last GGA Sent</span>
               <div className="text-sm font-mono text-gray-300">
                 {lastGgaSent ? lastGgaSent.toLocaleTimeString() : '—'}

@@ -348,7 +348,7 @@ export default function StatutoryWorkbookBuilder() {
                 className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
                   actFilter === act
                     ? 'bg-[var(--accent)] text-black border-[var(--accent)] font-semibold'
-                    : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--accent)]/40'
+                    : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]'
                 }`}
               >
                 {act}
@@ -373,7 +373,7 @@ export default function StatutoryWorkbookBuilder() {
               filteredRegs.map(reg => (
                 <div key={reg.id} className="card overflow-hidden">
                   <button
-                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[var(--bg-secondary)]/50 transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] transition-colors"
                     onClick={() => setExpandedId(expandedId === reg.id ? null : reg.id)}
                   >
                     {actIcon(reg.act)}

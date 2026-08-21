@@ -201,7 +201,7 @@ export default function LeastSquaresPage() {
       />
 
       {error && (
-        <div className="mb-4 p-3 border border-[var(--error)]/30 bg-[var(--error)]/5 rounded-md text-sm text-[var(--error)]">
+        <div className="mb-4 p-3 border border-[color-mix(in_srgb,var(--error)_30%,transparent)] bg-[color-mix(in_srgb,var(--error)_5%,transparent)] rounded-md text-sm text-[var(--error)]">
           {error}
         </div>
       )}
@@ -296,7 +296,7 @@ export default function LeastSquaresPage() {
               {/* Chi-square verdict */}
               <div className={`card ${result.passed ? 'border-[var(--success)]' : 'border-[var(--error)]'}`}>
                 <div className="card-body flex items-center gap-3">
-                  <div className={`w-10 h-10 flex items-center justify-center ${result.passed ? 'bg-[var(--success)]/15' : 'bg-[var(--error)]/15'}`}>
+                  <div className={`w-10 h-10 flex items-center justify-center ${result.passed ? 'bg-[color-mix(in_srgb,var(--success)_15%,transparent)]' : 'bg-[color-mix(in_srgb,var(--error)_15%,transparent)]'}`}>
                     {result.passed ? (
                       <svg className="w-6 h-6 text-[var(--success)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
                     ) : (
@@ -335,7 +335,7 @@ export default function LeastSquaresPage() {
                       </thead>
                       <tbody>
                         {result.adjustedStations.map(s => (
-                          <tr key={s.id} className="border-b border-[var(--border-color)]/50">
+                          <tr key={s.id} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                             <td className="py-1.5 font-mono text-[var(--accent)]">{s.name}</td>
                             <td className="py-1.5 text-right font-mono text-[var(--text-primary)]">{s.adjustedEasting.toFixed(4)}</td>
                             <td className="py-1.5 text-right font-mono text-[var(--text-primary)]">{s.adjustedNorthing.toFixed(4)}</td>
@@ -440,7 +440,7 @@ export default function LeastSquaresPage() {
                       </thead>
                       <tbody>
                         {result.residuals.map(r => (
-                          <tr key={r.observationId} className="border-b border-[var(--border-color)]/50">
+                          <tr key={r.observationId} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                             <td className="py-1 font-mono text-[var(--accent)]">{r.observationId}</td>
                             <td className="py-1 font-mono text-[var(--text-muted)]">{r.type}</td>
                             <td className="py-1 text-right font-mono">{r.observed.toFixed(6)}</td>

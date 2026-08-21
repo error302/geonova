@@ -152,7 +152,7 @@ export default function TopographicSurveyPage() {
     } catch (e) { setError(e instanceof Error ? e.message : 'Export failed') }
   }
 
-  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[var(--accent)]/30 focus:outline-none"
+  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
 
   return (
     <div className="min-h-screen p-6 max-w-6xl mx-auto">
@@ -161,7 +161,7 @@ export default function TopographicSurveyPage() {
 
       <div className="grid grid-cols-2 gap-4 mb-4">
         {/* Point Input */}
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
           <h2 className="text-sm font-semibold mb-2">1. Survey Points</h2>
           <p className="text-[10px] text-[var(--text-muted)] mb-1">Format: point_no, easting, northing, RL, code, description</p>
           <textarea value={pointInput} onChange={e => setPointInput(e.target.value)}
@@ -173,7 +173,7 @@ export default function TopographicSurveyPage() {
         </div>
 
         {/* Breakline Input */}
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
           <h2 className="text-sm font-semibold mb-2">2. Breaklines (optional)</h2>
           <p className="text-[10px] text-[var(--text-muted)] mb-1">Format: type,x1,y1,z1,x2,y2,z2,...</p>
           <textarea value={breaklineInput} onChange={e => setBreaklineInput(e.target.value)}
@@ -186,7 +186,7 @@ export default function TopographicSurveyPage() {
       </div>
 
       {/* Feature Code Library */}
-      <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+      <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
         <h2 className="text-sm font-semibold mb-2 flex items-center gap-2"><Layers className="w-4 h-4" /> Kenya Feature Code Library ({KENYA_TOPO_CODES.length} codes)</h2>
         <div className="flex gap-2 mb-2">
           <div className="relative flex-1">
@@ -197,17 +197,17 @@ export default function TopographicSurveyPage() {
         </div>
         <div tabIndex={0} role="region" aria-label="Survey grid" className="grid grid-cols-4 gap-1 max-h-32 overflow-y-auto">
           {filteredCodes.map(def => (
-            <div key={def.code} className="text-[10px] px-2 py-1 rounded bg-[var(--bg-tertiary)] border border-[var(--border-color)]/30">
+            <div key={def.code} className="text-[10px] px-2 py-1 rounded bg-[var(--bg-tertiary)] border border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
               <span className="font-mono font-bold text-[var(--accent)]">{def.code}</span>
               <span className="text-[var(--text-muted)] ml-1">{def.description}</span>
-              <span className="text-[var(--text-muted)]/50 ml-1">→ {def.dxfLayer}</span>
+              <span className="text-[color-mix(in_srgb,var(--text-muted)_50%,transparent)] ml-1">→ {def.dxfLayer}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Contour Generation */}
-      <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+      <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-semibold">3. Contour Generation</h2>
           <div className="flex gap-2 items-center">
@@ -253,18 +253,18 @@ export default function TopographicSurveyPage() {
       {/* Export */}
       <div className="flex gap-3">
         <button onClick={handleExportDXF} disabled={points.length === 0}
-          className="flex items-center gap-2 px-4 py-2 bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[var(--accent)] text-xs font-semibold rounded-lg hover:bg-[var(--accent)]/25 disabled:opacity-50">
+          className="flex items-center gap-2 px-4 py-2 bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-xs font-semibold rounded-lg hover:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)] disabled:opacity-50">
           <Download className="w-4 h-4" /> Export Topo DXF
         </button>
         <button onClick={handleExportSpotHeights} disabled={points.length === 0}
-          className="flex items-center gap-2 px-4 py-2 bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[var(--accent)] text-xs font-semibold rounded-lg hover:bg-[var(--accent)]/25 disabled:opacity-50">
+          className="flex items-center gap-2 px-4 py-2 bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-xs font-semibold rounded-lg hover:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)] disabled:opacity-50">
           <FileSpreadsheet className="w-4 h-4" /> Spot Height Schedule (Excel)
         </button>
       </div>
 
       {/* Points Table */}
       {points.length > 0 && (
-        <div className="mt-4 bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+        <div className="mt-4 bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
           <h3 className="text-sm font-semibold mb-2">Loaded Points ({points.length})</h3>
           <div className="overflow-x-auto max-h-60">
             <table className="w-full text-xs">
@@ -273,7 +273,7 @@ export default function TopographicSurveyPage() {
               </tr></thead>
               <tbody>
                 {points.map((p, i) => (
-                  <tr key={i} className="border-b border-[var(--border-color)]/30 text-[var(--text-secondary)]">
+                  <tr key={i} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)] text-[var(--text-secondary)]">
                     <td className="py-1 px-1 font-mono">{p.pointNumber}</td>
                     <td className="text-right font-mono">{p.easting.toFixed(3)}</td>
                     <td className="text-right font-mono">{p.northing.toFixed(3)}</td>

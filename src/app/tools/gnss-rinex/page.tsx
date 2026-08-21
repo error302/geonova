@@ -47,7 +47,7 @@ export default function GNSSRinexPage() {
     finally { setLoading(false) }
   }
 
-  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[var(--accent)]/30 focus:outline-none"
+  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
 
   const ellipse = result?.covariance ? computeConfidenceEllipse(result.covariance) : null
 
@@ -56,7 +56,7 @@ export default function GNSSRinexPage() {
       <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">GNSS RINEX Processing</h1>
       <p className="text-sm text-[var(--text-muted)] mb-6">Upload RINEX observation files for PPP (Precise Point Positioning) processing. Works without RTK — just a RINEX file + IGS precise ephemeris.</p>
 
-      <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+      <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="rinex-observation-file-rnx-obs">RINEX Observation File (*.rnx, *.obs)</label>
@@ -86,7 +86,7 @@ export default function GNSSRinexPage() {
       {error && <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-4 text-xs text-red-400 flex items-center gap-2"><AlertCircle className="w-4 h-4" /> {error}</div>}
 
       {result && (
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
           <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Satellite className="w-4 h-4" /> Position Result ({result.method})</h2>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">

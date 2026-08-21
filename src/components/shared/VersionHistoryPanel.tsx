@@ -250,7 +250,7 @@ export function VersionHistoryPanel({
         )}
 
         {!loading && error && (
-          <div className="flex items-center gap-2 px-4 py-3 text-sm text-[var(--error)] bg-[var(--error)]/10">
+          <div className="flex items-center gap-2 px-4 py-3 text-sm text-[var(--error)] bg-[color-mix(in_srgb,var(--error)_10%,transparent)]">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             {error}
           </div>
@@ -312,7 +312,7 @@ export function VersionHistoryPanel({
                               </Badge>
                             )}
                             {v.version === 1 && !isDeleted && (
-                              <Badge className="text-xs bg-[var(--success)]/20 text-[var(--success)] border-[var(--success)]/30">
+                              <Badge className="text-xs bg-[color-mix(in_srgb,var(--success)_20%,transparent)] text-[var(--success)] border-[color-mix(in_srgb,var(--success)_30%,transparent)]">
                                 Created
                               </Badge>
                             )}
@@ -398,7 +398,7 @@ export function VersionHistoryPanel({
                                           <td className="table-cell font-mono font-medium text-[var(--text-primary)]">
                                             {c.field}
                                           </td>
-                                          <td className="table-cell text-[var(--error)]/80">
+                                          <td className="table-cell text-[color-mix(in_srgb,var(--error)_80%,transparent)]">
                                             <span className="line-through opacity-70">
                                               {formatValue(c.old_value)}
                                             </span>
@@ -418,7 +418,7 @@ export function VersionHistoryPanel({
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  className="mt-2 text-xs border-[var(--accent)]/40 text-[var(--accent)] hover:bg-[var(--accent)]/10 hover:text-[var(--accent)]"
+                                  className="mt-2 text-xs border-[color-mix(in_srgb,var(--accent)_40%,transparent)] text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] hover:text-[var(--accent)]"
                                   onClick={(e) => {
                                     e.stopPropagation()
                                     setRestoreTarget(v)

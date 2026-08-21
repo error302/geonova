@@ -90,10 +90,10 @@ export default function WorkflowOverviewPanel({
                 key={stepDef.id}
                 className={`rounded-lg border p-3 transition-colors ${
                   stepInfo.status === 'active'
-                    ? `border-[var(--accent)]/40 ${colors.bg}`
+                    ? `border-[color-mix(in_srgb,var(--accent)_40%,transparent)] ${colors.bg}`
                     : stepInfo.status === 'complete'
                     ? 'border-green-500/20 bg-green-500/5'
-                    : 'border-[var(--border-color)] bg-[var(--bg-tertiary)]/30'
+                    : 'border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]'
                 }`}
               >
                 {/* Step header */}

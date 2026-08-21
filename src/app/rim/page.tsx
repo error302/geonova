@@ -150,7 +150,7 @@ export default function RimEditorPage() {
                   <button
                     key={project.id}
                     onClick={() => handleSelectProject(project.id)}
-                    className="flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] hover:border-[var(--accent)]/40 hover:bg-[var(--bg-tertiary)] transition-all text-left group"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] hover:bg-[var(--bg-tertiary)] transition-all text-left group"
                   >
                     <MapPin className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent)] shrink-0 transition-colors" />
                     <div className="min-w-0 flex-1">
@@ -171,7 +171,7 @@ export default function RimEditorPage() {
             )}
           </>
         ) : (
-          <div className="flex items-center gap-3 p-3 rounded-lg border border-[var(--accent)]/30 bg-[var(--accent-subtle)]">
+          <div className="flex items-center gap-3 p-3 rounded-lg border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[var(--accent-subtle)]">
             <MapPin className="w-4 h-4 text-[var(--accent)]" />
             <span className="text-sm font-medium text-[var(--text-primary)]">
               {projects.find((p) => p.id === selectedProjectId)?.name || 'Selected Project'}
@@ -225,14 +225,14 @@ export default function RimEditorPage() {
                     key={section.id}
                     className={`flex items-center gap-3 p-3 rounded-lg border transition-all cursor-pointer group ${
                       isActive
-                        ? 'border-[var(--accent)]/40 bg-[var(--accent-subtle)]'
+                        ? 'border-[color-mix(in_srgb,var(--accent)_40%,transparent)] bg-[var(--accent-subtle)]'
                         : 'border-[var(--border-color)] bg-[var(--bg-secondary)] hover:border-[var(--border-hover)] hover:bg-[var(--bg-tertiary)]'
                     }`}
                     onClick={() => !isActive && handleSelectSection(section)}
                   >
                     <div
                       className={`p-1.5 rounded-lg shrink-0 ${
-                        isActive ? 'bg-[var(--accent)]/20 text-[var(--accent)]' : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)]'
+                        isActive ? 'bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[var(--accent)]' : 'bg-[var(--bg-tertiary)] text-[var(--text-muted)]'
                       }`}
                     >
                       <Gem className="w-4 h-4" />

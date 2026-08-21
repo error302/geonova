@@ -225,7 +225,7 @@ export function NeighborConsensusForm({
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-color)]">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
             <ShieldCheck className="w-4 h-4 text-[var(--accent)]" />
           </div>
           <div>
@@ -288,7 +288,7 @@ export function NeighborConsensusForm({
               value={neighborName}
               onChange={e => setNeighborName(e.target.value)}
               placeholder="John Doe"
-              className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+              className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
@@ -299,7 +299,7 @@ export function NeighborConsensusForm({
                 value={neighborNationalId}
                 onChange={e => setNeighborNationalId(e.target.value)}
                 placeholder="12345678"
-                className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+                className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
               />
             </div>
             <div>
@@ -312,7 +312,7 @@ export function NeighborConsensusForm({
                 value={neighborPhone}
                 onChange={e => setNeighborPhone(e.target.value)}
                 placeholder="0712 345 678"
-                className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+                className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
               />
             </div>
           </div>
@@ -323,7 +323,7 @@ export function NeighborConsensusForm({
               value={neighborParcelNumber}
               onChange={e => setNeighborParcelNumber(e.target.value)}
               placeholder="LR/12345/679"
-              className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+              className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
             />
           </div>
         </div>

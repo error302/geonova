@@ -207,7 +207,7 @@ export function OnboardingTour() {
         aria-modal="true"
         aria-labelledby="tour-title"
       >
-        <div className="bg-[var(--bg-card)]/95 backdrop-blur-2xl border border-[var(--accent)]/30 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="bg-[color-mix(in_srgb,var(--bg-card)_95%,transparent)] backdrop-blur-2xl border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
           {/* Progress bar */}
           <div className="h-1 bg-white/[0.06]">
             <div
@@ -236,7 +236,7 @@ export function OnboardingTour() {
           {/* Content */}
           <div className="px-5 pb-5 space-y-3">
             <div className="flex items-start gap-3">
-              <div className="shrink-0 w-12 h-12 rounded-xl bg-[var(--accent-subtle)] border border-[var(--accent)]/20 flex items-center justify-center">
+              <div className="shrink-0 w-12 h-12 rounded-xl bg-[var(--accent-subtle)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] flex items-center justify-center">
                 <Icon className="w-6 h-6 text-[var(--accent)]" />
               </div>
               <div className="flex-1 pt-1">
@@ -251,7 +251,7 @@ export function OnboardingTour() {
                 <div
                   key={i}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === step ? 'w-6 bg-[var(--accent)]' : i < step ? 'w-1.5 bg-[var(--accent)]/50' : 'w-1.5 bg-[var(--border-color)]'
+                    i === step ? 'w-6 bg-[var(--accent)]' : i < step ? 'w-1.5 bg-[color-mix(in_srgb,var(--accent)_50%,transparent)]' : 'w-1.5 bg-[var(--border-color)]'
                   }`}
                 />
               ))}

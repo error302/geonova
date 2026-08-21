@@ -152,13 +152,13 @@ export function BowditchApplyButton({
 
           {/* Closure statistics */}
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+            <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
               <span className="text-[9px] text-gray-500 uppercase tracking-wider">Linear Error</span>
               <div className="font-mono text-gray-300 mt-0.5">
                 {result?.linearError != null ? `${result.linearError.toFixed(4)} m` : '—'}
               </div>
             </div>
-            <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+            <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
               <span className="text-[9px] text-gray-500 uppercase tracking-wider">Total Distance</span>
               <div className="font-mono text-gray-300 mt-0.5">
                 {result?.totalDistance != null ? `${result.totalDistance.toFixed(3)} m` : '—'}

@@ -146,7 +146,7 @@ function renderPopup(popupElement: HTMLDivElement, data: {
   popupElement.className = ''
 
   const card = document.createElement('div')
-  card.className = 'bg-[var(--bg-secondary)]/95 border border-[var(--accent)]/30 rounded-xl shadow-2xl backdrop-blur-xl p-4 min-w-[220px] max-w-[320px]'
+  card.className = 'bg-[color-mix(in_srgb,var(--bg-secondary)_95%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rounded-xl shadow-2xl backdrop-blur-xl p-4 min-w-[220px] max-w-[320px]'
 
   const header = document.createElement('div')
   header.className = 'flex items-start justify-between mb-2'
@@ -1498,7 +1498,7 @@ export default function MapClient() {
                       }
                     }
                   }}
-                  className="absolute bottom-20 left-16 z-20 sm:left-3 flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--bg-secondary)]/70 backdrop-blur-xl border border-[var(--border-color)]/[0.06] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent)]/30 transition-all shadow-lg"
+                  className="absolute bottom-20 left-16 z-20 sm:left-3 flex items-center justify-center w-12 h-12 rounded-xl bg-[color-mix(in_srgb,var(--bg-secondary)_70%,transparent)] backdrop-blur-xl border border-[var(--border-color)]/[0.06] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-all shadow-lg"
                   title="Launch stakeout radar for beacon recovery"
                   aria-label="Stakeout radar"
                 >
@@ -1539,8 +1539,8 @@ export default function MapClient() {
                   onClick={() => setShowOsmBuildings(!showOsmBuildings)}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all backdrop-blur-xl border ${
                     showOsmBuildings
-                      ? 'bg-[var(--accent)]/15 border-[var(--accent)]/30 text-[var(--accent)]'
-                      : 'bg-[var(--bg-secondary)]/60 border-[var(--border-color)]/[0.08] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]/80'
+                      ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]'
+                      : 'bg-[color-mix(in_srgb,var(--bg-secondary)_60%,transparent)] border-[var(--border-color)]/[0.08] text-[var(--text-secondary)] hover:bg-[color-mix(in_srgb,var(--bg-secondary)_80%,transparent)]'
                   }`}
                   title="Toggle OpenStreetMap building footprints (requires Python worker + PBF file)"
                 >

@@ -408,7 +408,7 @@ export default function ToolsPage() {
           className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
             activeSection === 'all'
               ? 'bg-[var(--accent)] text-black'
-              : 'bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-muted)] hover:text-white hover:border-[var(--accent)]/30'
+              : 'bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-muted)] hover:text-white hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)]'
           }`}
         >
           All Tools
@@ -420,7 +420,7 @@ export default function ToolsPage() {
             className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
               activeSection === s
                 ? 'bg-[var(--accent)] text-black'
-                : 'bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-muted)] hover:text-white hover:border-[var(--accent)]/30'
+                : 'bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-muted)] hover:text-white hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)]'
             }`}
           >
             {s}

@@ -113,7 +113,7 @@ export default function SightDistanceChecker() {
             <summary className="cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-primary)] font-medium mb-2">Show Computation Steps</summary>
             <div className="space-y-1">
               {result.steps.map((step) => (
-                <div key={step.value} className="grid grid-cols-[1fr_auto_1fr_auto] gap-x-2 font-mono py-1 border-b border-[var(--border-color)]/20">
+                <div key={step.value} className="grid grid-cols-[1fr_auto_1fr_auto] gap-x-2 font-mono py-1 border-b border-[color-mix(in_srgb,var(--border-color)_20%,transparent)]">
                   <span className="text-[var(--text-secondary)]">{step.description}</span>
                   <span className="text-[var(--text-muted)]">=</span>
                   <span className="text-[var(--text-primary)]">{step.value}</span>
@@ -125,7 +125,7 @@ export default function SightDistanceChecker() {
         </>
       )}
 
-      <hr className="border-[var(--border-color)]/50" />
+      <hr className="border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]" />
 
       <h3 className="text-sm font-semibold text-[var(--text-primary)]">Minimum Radius Compliance</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">

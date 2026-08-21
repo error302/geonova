@@ -31,7 +31,7 @@ export default function ChainageOffsetTable({ points, halfCarriageway = 3.5, sho
           <tbody>
             {points.map((row) => {
               return (
-                <tr key={row.id} className="border border-[var(--border-color)]/50 hover:bg-[var(--bg-tertiary)]/30">
+                <tr key={row.id} className="border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] hover:bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
                   <td className="px-3 py-2 text-[var(--text-primary)]">{row.id}</td>
                   <td className="px-3 py-2 text-[var(--text-primary)] text-right">{row.designRL.toFixed(3)}</td>
                   <td className="px-3 py-2 text-[var(--text-secondary)] text-right">{halfWidth.toFixed(3)}</td>

@@ -323,9 +323,9 @@ export default function PlanPromotionPanel() {
 
         {/* ── User Info Card ───────────────────────────────────────────── */}
         {user && (
-          <section className="rounded-lg border border-[var(--border-color)] bg-[var(--bg-tertiary)]/40 p-4 space-y-3">
+          <section className="rounded-lg border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_40%,transparent)] p-4 space-y-3">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-9 h-9 rounded-full bg-[var(--accent)]/15 text-[var(--accent)]">
+              <div className="flex items-center justify-center w-9 h-9 rounded-full bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)]">
                 {PLAN_ICONS[user.plan]}
               </div>
               <div className="min-w-0">
@@ -394,8 +394,8 @@ export default function PlanPromotionPanel() {
                   aria-label={PLAN_LABELS[plan]}
                   className={`flex items-center gap-2.5 rounded-lg border p-3 cursor-pointer transition-colors ${
                     selectedPlan === plan
-                      ? 'border-[var(--accent)] bg-[var(--accent)]/10'
-                      : 'border-[var(--border-color)] bg-[var(--bg-tertiary)]/30 hover:border-[var(--accent)]/40'
+                      ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]'
+                      : 'border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]'
                   }`}
                 >
                   <RadioGroupItem value={plan} id={`plan-${plan}`} />
@@ -434,8 +434,8 @@ export default function PlanPromotionPanel() {
                   key={opt}
                   className={`flex items-center gap-2 rounded-lg border p-2.5 cursor-pointer transition-colors ${
                     durationOption === opt
-                      ? 'border-[var(--accent)] bg-[var(--accent)]/10'
-                      : 'border-[var(--border-color)] bg-[var(--bg-tertiary)]/30 hover:border-[var(--accent)]/40'
+                      ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]'
+                      : 'border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]'
                   }`}
                 >
                   <RadioGroupItem value={opt} id={`dur-${opt}`} />
@@ -537,7 +537,7 @@ export default function PlanPromotionPanel() {
             <div className="overflow-x-auto rounded-lg border border-[var(--border-color)]">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/40">
+                  <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_40%,transparent)]">
                     <th className="text-left py-2 px-3 font-semibold text-[var(--text-muted)]">User</th>
                     <th className="text-left py-2 px-3 font-semibold text-[var(--text-muted)]">Plan</th>
                     <th className="text-left py-2 px-3 font-semibold text-[var(--text-muted)]">Duration</th>
@@ -549,7 +549,7 @@ export default function PlanPromotionPanel() {
                   {recentPromotions.map((rec) => (
                     <tr
                       key={rec.id}
-                      className="border-b border-[var(--border-color)] last:border-b-0 hover:bg-[var(--bg-tertiary)]/20 transition-colors"
+                      className="border-b border-[var(--border-color)] last:border-b-0 hover:bg-[color-mix(in_srgb,var(--bg-tertiary)_20%,transparent)] transition-colors"
                     >
                       <td className="py-2 px-3">
                         <div className="font-medium text-[var(--text-primary)] truncate max-w-[140px]">
@@ -604,7 +604,7 @@ export default function PlanPromotionPanel() {
           {user && (
             <div className="space-y-3 py-2">
               {/* User summary */}
-              <div className="rounded-lg bg-[var(--bg-tertiary)]/50 p-3 space-y-2 text-sm">
+              <div className="rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] p-3 space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-[var(--text-muted)]">User</span>
                   <span className="font-medium text-[var(--text-primary)]">{user.name || user.email}</span>

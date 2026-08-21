@@ -316,8 +316,8 @@ export default function WhiteLabelPage() {
                   <div
                     className={`relative flex-1 border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
                       dragOverLogo
-                        ? 'border-[var(--accent)] bg-[var(--accent)]/10'
-                        : 'border-[var(--border-color)] hover:border-[var(--accent)]/50'
+                        ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]'
+                        : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]'
                     }`}
                     onClick={() => logoInputRef.current?.click()}
                     onDragOver={(e) => handleDragOver(e, 'logo')}
@@ -376,8 +376,8 @@ export default function WhiteLabelPage() {
                   <div
                     className={`relative flex-1 border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
                       dragOverFavicon
-                        ? 'border-[var(--accent)] bg-[var(--accent)]/10'
-                        : 'border-[var(--border-color)] hover:border-[var(--accent)]/50'
+                        ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]'
+                        : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]'
                     }`}
                     onClick={() => faviconInputRef.current?.click()}
                     onDragOver={(e) => handleDragOver(e, 'favicon')}

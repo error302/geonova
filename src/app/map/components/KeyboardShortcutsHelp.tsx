@@ -49,7 +49,7 @@ export const KeyboardShortcutsHelp = memo(function KeyboardShortcutsHelp() {
       onClick={() => setVisible(false)}
     >
       <div
-        className="bg-[var(--bg-secondary)]/95 border border-[var(--border-color)]/[0.08] rounded-xl shadow-2xl backdrop-blur-xl p-5 min-w-[320px] max-w-[420px]"
+        className="bg-[color-mix(in_srgb,var(--bg-secondary)_95%,transparent)] border border-[var(--border-color)]/[0.08] rounded-xl shadow-2xl backdrop-blur-xl p-5 min-w-[320px] max-w-[420px]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

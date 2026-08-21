@@ -245,7 +245,7 @@ export function OfflineMapDownloader({ centerE, centerN, projectArea }: OfflineM
         <button
           onClick={downloadTiles}
           disabled={downloading}
-          className="flex-1 py-2.5 bg-[var(--accent)] text-black font-semibold rounded-lg hover:bg-[var(--accent)]/90 disabled:opacity-40 text-sm flex items-center justify-center gap-1.5"
+          className="flex-1 py-2.5 bg-[var(--accent)] text-black font-semibold rounded-lg hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] disabled:opacity-40 text-sm flex items-center justify-center gap-1.5"
         >
           {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
           {downloading ? 'Downloading...' : 'Download Tiles'}

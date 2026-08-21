@@ -187,7 +187,7 @@ export function MobileFieldbookShell({
   return (
     <div className="flex flex-col min-h-[calc(100vh-3.5rem)] bg-[var(--bg-primary)]">
       {/* ─── Sticky status bar ─── */}
-      <div className="sticky top-0 z-30 bg-[var(--bg-secondary)]/90 backdrop-blur-md border-b border-[var(--border-color)] px-4 py-2.5 flex items-center justify-between">
+      <div className="sticky top-0 z-30 bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] backdrop-blur-md border-b border-[var(--border-color)] px-4 py-2.5 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className={[
             'flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium',
@@ -238,7 +238,7 @@ export function MobileFieldbookShell({
       </div>
 
       {/* ─── Survey type chips ─── */}
-      <div className="sticky top-[44px] z-20 bg-[var(--bg-primary)]/95 backdrop-blur-sm border-b border-[var(--border-color)] px-4 py-2.5">
+      <div className="sticky top-[44px] z-20 bg-[color-mix(in_srgb,var(--bg-primary)_95%,transparent)] backdrop-blur-sm border-b border-[var(--border-color)] px-4 py-2.5">
         <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1 pb-1">
           {(Object.keys(TYPE_LABELS) as MobileSurveyType[]).map((t) => {
             const meta = TYPE_LABELS[t]
@@ -251,7 +251,7 @@ export function MobileFieldbookShell({
                   'flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all active:scale-95',
                   active
                     ? 'bg-[var(--accent)] text-black shadow-md shadow-[var(--accent)]/25'
-                    : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:border-[var(--accent)]/40',
+                    : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]',
                 ].join(' ')}
               >
                 <meta.icon className="w-3.5 h-3.5" />
@@ -313,7 +313,7 @@ export function MobileFieldbookShell({
         <div className="mb-4 bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] overflow-hidden shadow-sm">
           <button
             onClick={() => setSetupOpen(!setupOpen)}
-            className="w-full flex items-center justify-between px-4 py-3 bg-[var(--bg-secondary)]/50 text-sm font-semibold text-[var(--text-primary)]"
+            className="w-full flex items-center justify-between px-4 py-3 bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] text-sm font-semibold text-[var(--text-primary)]"
           >
             <span className="flex items-center gap-2">
               <Settings className="w-4 h-4 text-[var(--accent)]" />
@@ -323,7 +323,7 @@ export function MobileFieldbookShell({
           </button>
 
           {setupOpen && (
-            <div className="p-4 border-t border-[var(--border-color)] space-y-3 bg-[var(--bg-secondary)]/25">
+            <div className="p-4 border-t border-[var(--border-color)] space-y-3 bg-[color-mix(in_srgb,var(--bg-secondary)_25%,transparent)]">
               {surveyType === 'leveling' && (
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2 flex gap-2">
@@ -426,7 +426,7 @@ export function MobileFieldbookShell({
                     </div>
                   </div>
                   {travMode === 'link' && (
-                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-color)]/50">
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                       <div>
                         <label htmlFor="mfs-close-e" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Close E (m) *</label>
                         <input id="mfs-close-e"
@@ -485,13 +485,13 @@ export function MobileFieldbookShell({
                         ])
                         setActiveControlSetupId(id)
                       }}
-                      className="px-3 py-1.5 rounded-lg text-xs border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 text-[var(--accent)] font-semibold whitespace-nowrap"
+                      className="px-3 py-1.5 rounded-lg text-xs border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] text-[var(--accent)] font-semibold whitespace-nowrap"
                     >
                       + Setup
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-color)]/50">
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                     <div className="col-span-2">
                       <label htmlFor="mfs-station-name" className="text-[10px] uppercase font-semibold text-[var(--text-muted)]">Station Name</label>
                       <input id="mfs-station-name"
@@ -605,7 +605,7 @@ export function MobileFieldbookShell({
                     'relative bg-[var(--bg-card)] rounded-xl border transition-all overflow-hidden',
                     isDeleting
                       ? 'border-red-500/50 ring-2 ring-red-500/30'
-                      : 'border-[var(--border-color)] hover:border-[var(--accent)]/30',
+                      : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)]',
                   ].join(' ')}
                 >
                   <div className="flex items-stretch">
@@ -657,7 +657,7 @@ export function MobileFieldbookShell({
                         'flex flex-col items-center justify-center w-14 transition-colors',
                         isDeleting
                           ? 'bg-red-500/15 text-red-400'
-                          : 'bg-[var(--bg-secondary)]/30 text-[var(--text-muted)] hover:bg-red-500/10 hover:text-red-400',
+                          : 'bg-[color-mix(in_srgb,var(--bg-secondary)_30%,transparent)] text-[var(--text-muted)] hover:bg-red-500/10 hover:text-red-400',
                       ].join(' ')}
                       aria-label="Delete reading"
                     >
@@ -678,7 +678,7 @@ export function MobileFieldbookShell({
           <div className="mt-4 mb-4 bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] overflow-hidden shadow-sm">
             <button
               onClick={() => setResultsOpen(!resultsOpen)}
-              className="w-full flex items-center justify-between px-4 py-3 bg-[var(--bg-secondary)]/50 text-sm font-semibold text-[var(--text-primary)]"
+              className="w-full flex items-center justify-between px-4 py-3 bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] text-sm font-semibold text-[var(--text-primary)]"
             >
               <span className="flex items-center gap-2">
                 <Calculator className="w-4 h-4 text-[var(--accent)]" />
@@ -688,7 +688,7 @@ export function MobileFieldbookShell({
             </button>
 
             {resultsOpen && (
-              <div className="p-4 border-t border-[var(--border-color)] space-y-3 bg-[var(--bg-secondary)]/25">
+              <div className="p-4 border-t border-[var(--border-color)] space-y-3 bg-[color-mix(in_srgb,var(--bg-secondary)_25%,transparent)]">
                 {!computed.ok ? (
                   <div className="p-3 bg-red-950/20 border border-red-500/30 rounded-lg text-xs text-red-300 space-y-1">
                     <div className="font-semibold text-red-400"><AlertTriangle className="w-3.5 h-3.5 inline shrink-0" /> Calculation Errors:</div>

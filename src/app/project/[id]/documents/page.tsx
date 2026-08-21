@@ -677,7 +677,7 @@ export default function DocumentsPage({ params }: PageProps) {
         {/* Survey Plan tab */}
         {activeTab === 'plan' && (
           <div className="space-y-4">
-            <div className="bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-xl p-4 text-sm">
+            <div className="bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] rounded-xl p-4 text-sm">
               <p className="text-[var(--text-secondary)]">
                 <strong className="text-[var(--text-primary)]">Boundary Identification Plan</strong> — A professional A3 survey plan rendered from your project coordinates, ready to print and sign.
               </p>
@@ -764,7 +764,7 @@ export default function DocumentsPage({ params }: PageProps) {
         <>
 
         {/* Info banner */}
-        <div className="bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-xl p-4 mb-6 text-sm">
+        <div className="bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] rounded-xl p-4 mb-6 text-sm">
           <p className="text-[var(--text-secondary)]">
             <strong className="text-[var(--text-primary)]">{docs.filter((d) => d.required).length} required documents</strong> for a {(project.survey_type||'boundary').toLowerCase()} survey — pre-filled with your project data.
             Fill in the extra fields for each document, then click <strong>Generate &amp; Print</strong>. Each opens in a new tab ready to print as PDF.
@@ -786,7 +786,7 @@ export default function DocumentsPage({ params }: PageProps) {
             return (
               <div key={doc.id}
                 className={`bg-[var(--bg-card)] border rounded-xl overflow-hidden transition-colors ${
-                  isDone ? 'border-green-700/40' : isActive ? 'border-[var(--accent)]/40' : 'border-[var(--border-color)]'
+                  isDone ? 'border-green-700/40' : isActive ? 'border-[color-mix(in_srgb,var(--accent)_40%,transparent)]' : 'border-[var(--border-color)]'
                 }`}>
 
                 {/* Document header */}
@@ -805,7 +805,7 @@ export default function DocumentsPage({ params }: PageProps) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-semibold text-[var(--text-primary)]">{doc.title}</p>
-                      {doc.required && <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20">Required</span>}
+                      {doc.required && <span className="text-[10px] px-1.5 py-0.5 rounded bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] text-[var(--accent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)]">Required</span>}
                       {isDone && <span className="text-[10px] text-green-400"> Generated</span>}
                     </div>
                     <p className="text-xs text-[var(--text-muted)] mt-0.5">{doc.description}</p>

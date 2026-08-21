@@ -273,7 +273,7 @@ export default function FormC22Generator({ projectId }: Props) {
       <div className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-[var(--accent)]/10 text-[var(--accent)]">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] text-[var(--accent)]">
               <FileText className="w-5 h-5" />
             </div>
             <div>
@@ -444,7 +444,7 @@ function FormField({ label, value, onChange, disabled }: FormFieldProps) {
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           placeholder={`Enter ${label.toLowerCase()}…`}
-          className="w-full rounded-md border border-[var(--border-color)] bg-[var(--bg-primary)] px-3 py-1.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/50 focus:outline-none focus:ring-1 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-colors"
+          className="w-full rounded-md border border-[var(--border-color)] bg-[var(--bg-primary)] px-3 py-1.5 text-sm text-[var(--text-primary)] placeholder:text-[color-mix(in_srgb,var(--text-muted)_50%,transparent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] focus:border-[var(--accent)] transition-colors"
         />
       )}
     </div>

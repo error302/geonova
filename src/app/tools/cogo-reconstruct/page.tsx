@@ -247,7 +247,7 @@ export default function CogoReconstructPage() {
                       </thead>
                       <tbody>
                         {(swungResult?.points || result.points).map(p => (
-                          <tr key={p.vertex} className="border-b border-[var(--border-color)]/50">
+                          <tr key={p.vertex} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                             <td className="py-1.5 font-mono text-[var(--accent)]">{p.vertex}</td>
                             <td className="py-1.5 text-right font-mono text-[var(--text-primary)]">{p.easting.toFixed(3)}</td>
                             <td className="py-1.5 text-right font-mono text-[var(--text-primary)]">{p.northing.toFixed(3)}</td>

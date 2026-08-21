@@ -147,7 +147,7 @@ export default function VerticalCurveCalculator() {
               </thead>
               <tbody>
                 {result.rows.map((row, i) => (
-                  <tr key={`${row}-${i}`} className="border border-[var(--border-color)]/50 hover:bg-[var(--bg-tertiary)]/50">
+                  <tr key={`${row}-${i}`} className="border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] hover:bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
                     <td className="px-3 py-1.5 text-[var(--text-primary)]">{fmtCh(row.chainage)}</td>
                     <td className="px-3 py-1.5 text-[var(--text-primary)] text-right">{row.rl.toFixed(3)}</td>
                     <td className="px-3 py-1.5 text-[var(--text-secondary)] text-right">{row.x.toFixed(3)}</td>

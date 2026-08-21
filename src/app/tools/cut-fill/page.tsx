@@ -43,7 +43,7 @@ export default function CutFillPage() {
     } catch (e) { setError(e instanceof Error ? e.message : 'Failed') }
   }
 
-  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[var(--accent)]/30 focus:outline-none"
+  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
 
   return (
     <div className="min-h-screen p-6 max-w-4xl mx-auto">
@@ -62,17 +62,17 @@ export default function CutFillPage() {
 
       {mode === 'cut_fill' ? (
         <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+          <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
             <h2 className="text-sm font-semibold mb-2">Design Surface (Easting, Northing, RL)</h2>
             <textarea value={designInput} onChange={e => setDesignInput(e.target.value)} className={inputCls + ' h-40 font-mono'} placeholder="0,0,10&#10;100,0,10&#10;0,100,10&#10;100,100,10" />
           </div>
-          <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+          <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
             <h2 className="text-sm font-semibold mb-2">Ground Surface (Easting, Northing, RL)</h2>
             <textarea value={groundInput} onChange={e => setGroundInput(e.target.value)} className={inputCls + ' h-40 font-mono'} placeholder="0,0,12&#10;100,0,12&#10;0,100,12&#10;100,100,12" />
           </div>
         </div>
       ) : (
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
           <h2 className="text-sm font-semibold mb-2">Surface Points (Easting, Northing, RL)</h2>
           <textarea value={surfaceInput} onChange={e => setSurfaceInput(e.target.value)} className={inputCls + ' h-40 font-mono'} placeholder="0,0,12&#10;100,0,12&#10;0,100,12&#10;100,100,12" />
           <div className="mt-2"><label className="text-[10px] text-[var(--text-muted)] block mb-1" htmlFor="datum-rl-reference-level">Datum RL (reference level)</label><input id="datum-rl-reference-level" value={datumRL} onChange={e => setDatumRL(e.target.value)} className={inputCls + ' w-32'} /></div>
@@ -88,7 +88,7 @@ export default function CutFillPage() {
 
       {result && (
         <>
-          <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+          <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-semibold flex items-center gap-2"><Layers className="w-4 h-4" /> Volume Results</h2>
               <button
@@ -102,7 +102,7 @@ export default function CutFillPage() {
                   a.click()
                   URL.revokeObjectURL(url)
                 }}
-                className="text-[10px] px-2 py-1 rounded-md border border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent)]/40 hover:text-[var(--text-primary)] flex items-center gap-1"
+                className="text-[10px] px-2 py-1 rounded-md border border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] hover:text-[var(--text-primary)] flex items-center gap-1"
               >
                 <Download className="w-3 h-3" /> Export JSON
               </button>
@@ -111,7 +111,7 @@ export default function CutFillPage() {
               <div className="grid grid-cols-3 gap-4">
                 <div className="text-center p-3 bg-red-500/10 rounded-lg"><div className="text-2xl font-bold text-red-400">{result.cutVolume.toFixed(1)}</div><div className="text-[10px] text-[var(--text-muted)]">CUT (m³)</div></div>
                 <div className="text-center p-3 bg-blue-500/10 rounded-lg"><div className="text-2xl font-bold text-blue-400">{result.fillVolume.toFixed(1)}</div><div className="text-[10px] text-[var(--text-muted)]">FILL (m³)</div></div>
-                <div className="text-center p-3 bg-[var(--accent)]/10 rounded-lg"><div className="text-2xl font-bold text-[var(--accent)]">{result.netVolume > 0 ? '+' : ''}{result.netVolume.toFixed(1)}</div><div className="text-[10px] text-[var(--text-muted)]">NET ({result.netVolume > 0 ? 'CUT' : 'FILL'}) m³</div></div>
+                <div className="text-center p-3 bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] rounded-lg"><div className="text-2xl font-bold text-[var(--accent)]">{result.netVolume > 0 ? '+' : ''}{result.netVolume.toFixed(1)}</div><div className="text-[10px] text-[var(--text-muted)]">NET ({result.netVolume > 0 ? 'CUT' : 'FILL'}) m³</div></div>
                 <div className="col-span-3 grid grid-cols-3 gap-2 text-xs text-[var(--text-muted)]">
                   <div>Area: {result.area.toFixed(1)} m²</div>
                   <div>Cells: {result.cellCount}</div>
@@ -120,7 +120,7 @@ export default function CutFillPage() {
               </div>
             ) : (
               <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-3 bg-[var(--accent)]/10 rounded-lg"><div className="text-2xl font-bold text-[var(--accent)]">{result.volume.toFixed(1)}</div><div className="text-[10px] text-[var(--text-muted)]">VOLUME (m³)</div></div>
+                <div className="text-center p-3 bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] rounded-lg"><div className="text-2xl font-bold text-[var(--accent)]">{result.volume.toFixed(1)}</div><div className="text-[10px] text-[var(--text-muted)]">VOLUME (m³)</div></div>
                 <div className="text-center p-3 bg-[var(--bg-tertiary)] rounded-lg"><div className="text-2xl font-bold text-[var(--text-primary)]">{result.area.toFixed(1)}</div><div className="text-[10px] text-[var(--text-muted)]">AREA (m²)</div></div>
                 <div className="text-center p-3 bg-[var(--bg-tertiary)] rounded-lg"><div className="text-2xl font-bold text-[var(--text-primary)]">{result.avgHeight.toFixed(3)}</div><div className="text-[10px] text-[var(--text-muted)]">AVG HEIGHT (m)</div></div>
               </div>

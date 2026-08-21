@@ -131,7 +131,7 @@ export default function SiteCalibrationPage() {
       />
 
       {error && (
-        <div className="mb-4 p-3 border border-[var(--error)]/30 bg-[var(--error)]/5 rounded-md text-sm text-[var(--error)] font-mono">
+        <div className="mb-4 p-3 border border-[color-mix(in_srgb,var(--error)_30%,transparent)] bg-[color-mix(in_srgb,var(--error)_5%,transparent)] rounded-md text-sm text-[var(--error)] font-mono">
           {error}
         </div>
       )}
@@ -289,7 +289,7 @@ export default function SiteCalibrationPage() {
                     </thead>
                     <tbody>
                       {result.pointResiduals.map(tp => (
-                        <tr key={tp.id} className={`border-b border-[var(--border-color)]/50 ${tp.isOutlier ? 'bg-red-950/20' : ''}`}>
+                        <tr key={tp.id} className={`border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] ${tp.isOutlier ? 'bg-red-950/20' : ''}`}>
                           <td className="py-1.5 font-mono text-[var(--accent)]">{tp.id}</td>
                           <td className="py-1.5 text-right font-mono">{(tp.residualX * 1000).toFixed(2)}</td>
                           <td className="py-1.5 text-right font-mono">{(tp.residualY * 1000).toFixed(2)}</td>

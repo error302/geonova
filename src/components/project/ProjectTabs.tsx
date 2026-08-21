@@ -32,7 +32,7 @@ export default function ProjectTabs({ id, surveyType }: Props) {
   ]
 
   return (
-    <div className="border-b border-[var(--border-color)] bg-[var(--bg-card)]/80 backdrop-blur">
+    <div className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-card)_80%,transparent)] backdrop-blur">
       <div className="max-w-5xl mx-auto px-4">
         <nav aria-label="Project tabs" className="flex gap-2 overflow-x-auto py-3">
           {tabs.map((tab) => {

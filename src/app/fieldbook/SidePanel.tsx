@@ -155,7 +155,7 @@ export default function SidePanel({
                 key={fb.id}
                 onClick={() => loadFieldbook(fb)}
                 className={`w-full text-left px-3 py-2 rounded border ${
-                  fieldbookId === fb.id ? 'border-amber-500/50 bg-amber-500/10' : 'border-[var(--border-color)] bg-[var(--bg-primary)]/30 hover:border-amber-500/20'
+                  fieldbookId === fb.id ? 'border-amber-500/50 bg-amber-500/10' : 'border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-primary)_30%,transparent)] hover:border-amber-500/20'
                 }`}
               >
                 <div className="text-sm text-[var(--text-primary)] truncate">{fb.name || fb.id}</div>

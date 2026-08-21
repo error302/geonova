@@ -371,7 +371,7 @@ export function LongitudinalSection({
             </thead>
             <tbody>
               {stationLevels.slice(0, 15).map((row, i) => (
-                <tr key={`${row}-${i}`} className="border-b border-[var(--border-color)]/30">
+                <tr key={`${row}-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                   <td className="py-1.5 px-3">{row.chainage.toFixed(0)}</td>
                   <td className="py-1.5 px-3 text-right">{row.groundLevel.toFixed(2)}</td>
                   <td className="py-1.5 px-3 text-right">

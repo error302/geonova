@@ -140,7 +140,7 @@ function ChangelogItem({ entry }: { entry: ChangelogEntry }) {
         aria-expanded={expanded}
       >
         <div className="flex items-center gap-3 min-w-0">
-          <span className="text-[10px] font-bold text-[var(--accent)] bg-[var(--accent)]/10 px-1.5 py-0.5 rounded flex-shrink-0">
+          <span className="text-[10px] font-bold text-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] px-1.5 py-0.5 rounded flex-shrink-0">
             P{entry.phase}
           </span>
           <div className="min-w-0">

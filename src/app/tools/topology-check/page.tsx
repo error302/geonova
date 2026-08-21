@@ -207,7 +207,7 @@ export default function TopologyCheckPage() {
               <div className={`card ${result.isValid ? 'border-[var(--success)]' : 'border-[var(--error)]'}`}>
                 <div className="card-body">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 flex items-center justify-center ${result.isValid ? 'bg-[var(--success)]/15' : 'bg-[var(--error)]/15'}`}>
+                    <div className={`w-10 h-10 flex items-center justify-center ${result.isValid ? 'bg-[color-mix(in_srgb,var(--success)_15%,transparent)]' : 'bg-[color-mix(in_srgb,var(--error)_15%,transparent)]'}`}>
                       {result.isValid ? (
                         <svg className="w-6 h-6 text-[var(--success)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -258,8 +258,8 @@ export default function TopologyCheckPage() {
 
               {/* Errors */}
               {result.errors.length > 0 && (
-                <div className="card border-[var(--error)]/40">
-                  <div className="card-header bg-[var(--error)]/5">
+                <div className="card border-[color-mix(in_srgb,var(--error)_40%,transparent)]">
+                  <div className="card-header bg-[color-mix(in_srgb,var(--error)_5%,transparent)]">
                     <span className="label text-[var(--error)]">Blocking errors</span>
                   </div>
                   <div className="card-body space-y-3">
@@ -272,8 +272,8 @@ export default function TopologyCheckPage() {
 
               {/* Warnings */}
               {result.warnings.length > 0 && (
-                <div className="card border-[var(--warning)]/40">
-                  <div className="card-header bg-[var(--warning)]/5">
+                <div className="card border-[color-mix(in_srgb,var(--warning)_40%,transparent)]">
+                  <div className="card-header bg-[color-mix(in_srgb,var(--warning)_5%,transparent)]">
                     <span className="label text-[var(--warning)]">Warnings</span>
                   </div>
                   <div className="card-body space-y-3">

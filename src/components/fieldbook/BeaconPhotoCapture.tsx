@@ -129,7 +129,7 @@ export function BeaconPhotoCapture({ photos, onChange, maxPhotos = 4 }: BeaconPh
             type="button"
             onClick={() => inputRef.current?.click()}
             disabled={busy}
-            className="w-full p-4 border-2 border-dashed border-[var(--border-color)] rounded-xl flex items-center justify-center gap-2 text-[var(--text-secondary)] hover:border-[var(--accent)]/50 hover:text-[var(--accent)] hover:bg-[var(--accent)]/5 transition active:scale-[0.99] disabled:opacity-50"
+            className="w-full p-4 border-2 border-dashed border-[var(--border-color)] rounded-xl flex items-center justify-center gap-2 text-[var(--text-secondary)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)] hover:text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] transition active:scale-[0.99] disabled:opacity-50"
           >
             {busy ? (
               <>

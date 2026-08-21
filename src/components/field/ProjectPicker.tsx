@@ -89,7 +89,7 @@ export function ProjectPicker({ onPick, title, subtitle }: ProjectPickerProps) {
               <button
                 key={project.id}
                 onClick={() => onPick(project.id, project.survey_type)}
-                className="w-full flex items-center gap-3 p-4 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg hover:border-[var(--accent)]/30 hover:bg-[var(--bg-secondary)] transition-all text-left"
+                className="w-full flex items-center gap-3 p-4 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] hover:bg-[var(--bg-secondary)] transition-all text-left"
               >
                 <FolderKanban className="w-5 h-5 text-[var(--accent)] shrink-0" />
                 <div className="flex-1 min-w-0">

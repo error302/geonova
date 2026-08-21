@@ -52,7 +52,7 @@ export default function EncumbrancePage() {
               </div>
             ))}</div>
           </div>
-          <button onClick={analyze} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Analyze Encumbrances</button>
+          <button onClick={analyze} className="w-full py-3 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] text-black font-semibold rounded-lg">Analyze Encumbrances</button>
         </div>
         <div>
           {result ? (

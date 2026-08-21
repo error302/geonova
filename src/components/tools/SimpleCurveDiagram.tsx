@@ -235,14 +235,14 @@ export function SimpleCurveDiagram({
       </div>
 
       {showChainageTable && (
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl overflow-hidden">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl overflow-hidden">
           <div className="px-4 py-2 border-b border-[var(--border-color)]">
             <h4 className="text-xs font-semibold text-[var(--text-primary)]">Key Chainages</h4>
           </div>
           <table className="w-full text-xs">
             <tbody>
               {chainageRows.map((row) => (
-                <tr key={row.label} className="border-t border-[var(--border-color)]/30">
+                <tr key={row.label} className="border-t border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                   <td className="px-4 py-2 text-[var(--text-muted)]">{row.label}</td>
                   <td className="px-4 py-2 text-right font-mono text-[var(--text-primary)]">{row.value}</td>
                 </tr>

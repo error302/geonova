@@ -161,7 +161,7 @@ function CheckoutContent() {
                   type="button"
                   onClick={() => setSelectedPlanId(p.id)}
                   className={`w-full text-left p-4 border-2 rounded-lg transition min-h-[56px] ${
-                    selectedPlanId === p.id ? 'border-[var(--accent)] bg-[var(--accent)]/10' : 'border-[var(--border-color)] hover:border-[var(--border-hover)]'
+                    selectedPlanId === p.id ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' : 'border-[var(--border-color)] hover:border-[var(--border-hover)]'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-4">
@@ -224,7 +224,7 @@ function CheckoutContent() {
                   <label
                     key={pm.id}
                     className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer min-h-[44px] ${
-                      method === pm.type ? 'border-[var(--accent)] bg-[var(--accent)]/10' : 'border-[var(--border-color)]'
+                      method === pm.type ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' : 'border-[var(--border-color)]'
                     }`}
                   >
                     <input aria-label="Paymentmethod"

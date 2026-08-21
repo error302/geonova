@@ -119,7 +119,7 @@ export default function LevelBook({ projectId: _projectId }: LevelBookProps) {
       {activeTab === 'input' && (
         <div className="space-y-4">
           {/* Setup fields */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 md:p-4 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 md:p-4 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded border border-[var(--border-color)]">
             <div>
               <label className="block text-xs text-[var(--text-muted)] mb-1" htmlFor="opening-bm-rl-m">Opening BM RL (m)</label>
               <input id="opening-bm-rl-m" aria-label="Opening BM RL (m)" value={openingRL} onChange={e => setOpeningRL(e.target.value)}
@@ -144,7 +144,7 @@ export default function LevelBook({ projectId: _projectId }: LevelBookProps) {
           <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
             <table className="min-w-[700px] w-full text-xs">
               <thead>
-                <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/30">
+                <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
                   <th className="px-1.5 py-2 text-left text-[var(--text-muted)] w-8">#</th>
                   <th className="px-1.5 py-2 text-left text-[var(--text-secondary)]">Station</th>
                   <th className="px-1.5 py-2 text-right text-[var(--text-secondary)]">BS</th>
@@ -157,7 +157,7 @@ export default function LevelBook({ projectId: _projectId }: LevelBookProps) {
               </thead>
               <tbody>
                 {rows.map((row, i) => (
-                  <tr key={row.station} className="border-b border-[var(--border-color)]/30">
+                  <tr key={row.station} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                     <td className="px-1.5 py-1 text-[var(--text-muted)]">{i + 1}</td>
                     <td className="px-1 py-1">
                       <input value={row.station} onChange={e => updateRow(i, 'station', e.target.value)}
@@ -219,11 +219,11 @@ export default function LevelBook({ projectId: _projectId }: LevelBookProps) {
 
           {/* Closure summary cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-[var(--bg-tertiary)]/50 rounded p-3">
+            <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-3">
               <p className="text-xs text-[var(--text-secondary)]">ΣBS</p>
               <p className="text-lg font-mono">{result.sumBS.toFixed(3)} m</p>
             </div>
-            <div className="bg-[var(--bg-tertiary)]/50 rounded p-3">
+            <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded p-3">
               <p className="text-xs text-[var(--text-secondary)]">ΣFS</p>
               <p className="text-lg font-mono">{result.sumFS.toFixed(3)} m</p>
             </div>
@@ -247,7 +247,7 @@ export default function LevelBook({ projectId: _projectId }: LevelBookProps) {
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-[var(--border-color)] bg-[var(--bg-tertiary)]/50">
+                <tr className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
                   <th className="px-2 py-2 text-left">Station</th>
                   <th className="px-2 py-2 text-right">BS</th>
                   <th className="px-2 py-2 text-right">IS</th>
@@ -261,7 +261,7 @@ export default function LevelBook({ projectId: _projectId }: LevelBookProps) {
               </thead>
               <tbody>
                 {result.rows.map((row, i) => (
-                  <tr key={`item-${i}`} className="border-b border-[var(--border-color)]/30">
+                  <tr key={`item-${i}`} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                     <td className="px-2 py-1.5 font-mono">{row.station}</td>
                     <td className="px-2 py-1.5 text-right font-mono text-[var(--text-secondary)]">
                       {row.bs !== undefined ? row.bs.toFixed(3) : ''}
@@ -319,7 +319,7 @@ export default function LevelBook({ projectId: _projectId }: LevelBookProps) {
 
           <PrintMetaPanel meta={printMeta} onChange={setPrintMeta} />
 
-          <div className="p-4 bg-[var(--bg-tertiary)]/50 rounded border border-[var(--border-color)] text-sm space-y-1.5">
+          <div className="p-4 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded border border-[var(--border-color)] text-sm space-y-1.5">
             <p className="font-semibold text-[var(--text-primary)]">The printed sheet will include:</p>
             <ul className="text-[var(--text-muted)] text-xs space-y-0.5 list-disc list-inside">
               <li>Standard 6-field document header (project · client · date · surveyor · reg/ISK · instrument)</li>

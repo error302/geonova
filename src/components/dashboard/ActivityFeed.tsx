@@ -104,7 +104,7 @@ export function ActivityFeed({ limit = 10 }: { limit?: number }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
             <ActivityIcon className="w-4 h-4 text-[var(--accent)]" />
           </div>
           <div>

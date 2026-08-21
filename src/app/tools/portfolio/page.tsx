@@ -91,7 +91,7 @@ export default function PortfolioPage() {
       <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-3">Elective (select one)</h2>
       <div className="space-y-3 mb-6">
         {report.electives.map((req) => (
-          <div key={req.id} className={`p-4 rounded-xl border ${req.met ? 'bg-green-500/5 border-green-500/15' : 'bg-[var(--bg-secondary)]/50 border-[var(--border-color)]'}`}>
+          <div key={req.id} className={`p-4 rounded-xl border ${req.met ? 'bg-green-500/5 border-green-500/15' : 'bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border-[var(--border-color)]'}`}>
             <div className="flex justify-between items-start mb-1">
               <div>
                 <span className="text-sm font-semibold text-[var(--text-primary)]">{req.category}</span>
@@ -120,17 +120,17 @@ export default function PortfolioPage() {
       {/* Declaration Forms */}
       <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-3 flex items-center gap-2"><FileText className="w-4 h-4" /> Declaration Forms (Third Schedule)</h2>
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
           <h3 className="text-xs font-semibold text-[var(--text-primary)] mb-2">Form A — Declaration of Supervision</h3>
           <pre className="text-[9px] text-[var(--text-secondary)] whitespace-pre-wrap font-mono max-h-60 overflow-y-auto">{report.declarationFormA}</pre>
-          <button onClick={() => { const blob = new Blob([report.declarationFormA], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Form_A_Declaration.txt'; a.click(); URL.revokeObjectURL(url) }} className="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[var(--accent)] text-[10px] font-semibold rounded-lg hover:bg-[var(--accent)]/25">
+          <button onClick={() => { const blob = new Blob([report.declarationFormA], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Form_A_Declaration.txt'; a.click(); URL.revokeObjectURL(url) }} className="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-[10px] font-semibold rounded-lg hover:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)]">
             <Download className="w-3 h-3" /> Download Form A
           </button>
         </div>
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
           <h3 className="text-xs font-semibold text-[var(--text-primary)] mb-2">Form B — Declaration of Qualifications</h3>
           <pre className="text-[9px] text-[var(--text-secondary)] whitespace-pre-wrap font-mono max-h-60 overflow-y-auto">{report.declarationFormB}</pre>
-          <button onClick={() => { const blob = new Blob([report.declarationFormB], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Form_B_Declaration.txt'; a.click(); URL.revokeObjectURL(url) }} className="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[var(--accent)] text-[10px] font-semibold rounded-lg hover:bg-[var(--accent)]/25">
+          <button onClick={() => { const blob = new Blob([report.declarationFormB], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Form_B_Declaration.txt'; a.click(); URL.revokeObjectURL(url) }} className="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-[10px] font-semibold rounded-lg hover:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)]">
             <Download className="w-3 h-3" /> Download Form B
           </button>
         </div>

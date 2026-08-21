@@ -80,7 +80,7 @@ export function TemplatesModal({ rim }: { rim: RimState }) {
               {filteredTemplates.map((template) => (
                 <div
                   key={template.id}
-                  className="group p-4 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] hover:border-[var(--accent)]/30 hover:bg-[var(--bg-tertiary)] transition-all cursor-pointer"
+                  className="group p-4 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] hover:bg-[var(--bg-tertiary)] transition-all cursor-pointer"
                   onClick={() => handleCreateFromTemplate(template.id)}
                 >
                   <div className="flex items-start gap-3">

@@ -72,7 +72,7 @@ export function ToolGate({ toolPath, children }: ToolGateProps) {
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full text-center space-y-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/30">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)]">
           <Lock className="w-7 h-7 text-[var(--accent)]" aria-hidden />
         </div>
 
@@ -97,7 +97,7 @@ export function ToolGate({ toolPath, children }: ToolGateProps) {
           </Link>
           <Link
             href="/tools"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] font-medium hover:border-[var(--accent)]/30 transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] font-medium hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-colors"
           >
             Back to tools
           </Link>

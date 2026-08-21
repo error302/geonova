@@ -186,16 +186,16 @@ export function CutFillPanel() {
 
           {/* Additional stats */}
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+            <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
               <span className="text-gray-500">Cut area:</span> <span className="text-red-400">{result.cutArea.toFixed(0)} m²</span>
             </div>
-            <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+            <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
               <span className="text-gray-500">Fill area:</span> <span className="text-emerald-400">{result.fillArea.toFixed(0)} m²</span>
             </div>
-            <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+            <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
               <span className="text-gray-500">Max cut:</span> <span className="text-red-400">{result.maxCutDepth.toFixed(2)} m</span>
             </div>
-            <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50">
+            <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
               <span className="text-gray-500">Max fill:</span> <span className="text-emerald-400">{result.maxFillDepth.toFixed(2)} m</span>
             </div>
           </div>
@@ -222,7 +222,7 @@ function SurfaceImportCard({ label, surface, onUpload }: {
           </div>
         </div>
       ) : (
-        <label className="flex flex-col items-center justify-center h-16 border-2 border-dashed border-[var(--border-color)] rounded-lg cursor-pointer hover:border-[var(--accent)]/30">
+        <label className="flex flex-col items-center justify-center h-16 border-2 border-dashed border-[var(--border-color)] rounded-lg cursor-pointer hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)]">
           <Upload className="w-4 h-4 text-gray-500 mb-1" />
           <span className="text-[10px] text-gray-500">Upload CSV (E,N,Z)</span>
           <input

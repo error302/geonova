@@ -165,14 +165,14 @@ export default function SettingOutCalculator() {
               </thead>
               <tbody>
                 {points.map((p, i) => (
-                  <tr key={`${p}-${i}`} className="hover:bg-[var(--bg-tertiary)]/30">
+                  <tr key={`${p}-${i}`} className="hover:bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
                     {pointFields.map(f => (
-                      <td key={f} className="px-1 py-1 border border-[var(--border-color)]/50">
+                      <td key={f} className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                         <input aria-label={pointHeaders[pointFields.indexOf(f)] ?? f} value={p[f]} onChange={e => updatePoint(i, f, e.target.value)}
                           className="w-full px-2 py-1 bg-transparent text-[var(--text-primary)]" />
                     </td>
                   ))}
-                  <td className="px-1 py-1 border border-[var(--border-color)]/50">
+                  <td className="px-1 py-1 border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                     <button onClick={() => removePoint(i)} className="text-red-400 hover:text-red-300 text-xs px-1">[x]</button>
                   </td>
                 </tr>

@@ -284,7 +284,7 @@ export default function BillingPage() {
                   </thead>
                   <tbody>
                     {payments.map((pay) => (
-                      <tr key={pay.id} className="border-b border-[var(--border-color)]/50 text-[var(--text-primary)]">
+                      <tr key={pay.id} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-[var(--text-primary)]">
                         <td className="py-3">{formatDate(pay.created_at)}</td>
                         <td className="py-3 capitalize">{pay.plan_id}</td>
                         <td className="py-3">{formatAmount(pay.amount, pay.currency)}</td>

@@ -117,7 +117,7 @@ export function FieldbookAuditDrawer({ open, onClose, projectId }: FieldbookAudi
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
+        <div className="flex items-center justify-between p-4 border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)]">
           <div className="flex items-center gap-3">
             <div className="grid place-items-center w-10 h-10 rounded-lg bg-emerald-500/15 ring-1 ring-emerald-500/30">
               <ShieldCheck className="w-5 h-5 text-emerald-400" />
@@ -238,7 +238,7 @@ export function FieldbookAuditDrawer({ open, onClose, projectId }: FieldbookAudi
         </div>
 
         {/* Footer — integrity notice */}
-        <div className="p-3 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
+        <div className="p-3 border-t border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)]">
           <p className="text-[10px] text-[var(--text-muted)] flex items-center gap-1.5">
             <ShieldCheck className="w-3 h-3 text-emerald-400" />
             {t('audit.integrityValid')}

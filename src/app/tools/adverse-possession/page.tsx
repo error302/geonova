@@ -26,7 +26,7 @@ export default function AdversePossessionPage() {
               <label key={label as string} className="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer"><input type="checkbox" checked={val as boolean} onChange={e => (set as (b: boolean) => void)(e.target.checked)} className="rounded" /> {label as string}</label>
             ))}
           </div>
-          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Evaluate Claim</button>
+          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] text-black font-semibold rounded-lg">Evaluate Claim</button>
         </div>
         <div>{result ? (
           <div className="space-y-4">

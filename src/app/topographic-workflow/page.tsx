@@ -183,8 +183,8 @@ export default function TopographicWorkflowPage() {
               <div
                 className={`flex items-start gap-4 p-4 rounded-xl border transition-all ${
                   isDone
-                    ? 'bg-[var(--accent)]/5 border-[var(--accent)]/30'
-                    : 'bg-[var(--bg-card)] border-[var(--border-color)] hover:border-[var(--accent)]/20'
+                    ? 'bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)]'
+                    : 'bg-[var(--bg-card)] border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_20%,transparent)]'
                 }`}
               >
                 {/* Step number / checkmark */}
@@ -202,7 +202,7 @@ export default function TopographicWorkflowPage() {
 
                 {/* Icon */}
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
-                  isDone ? 'bg-[var(--accent)]/15' : 'bg-[var(--bg-tertiary)]'
+                  isDone ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)]' : 'bg-[var(--bg-tertiary)]'
                 }`}>
                   <Icon className={`w-5 h-5 ${isDone ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'}`} />
                 </div>

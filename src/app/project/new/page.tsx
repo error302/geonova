@@ -389,7 +389,7 @@ export default function NewProjectPage() {
               ))}
             </select>
             {currentCountry && (
-              <div className="mt-2 p-3 bg-[var(--bg-tertiary)] rounded-lg border border-[var(--border-color)]/50 text-xs text-[var(--text-secondary)]">
+              <div className="mt-2 p-3 bg-[var(--bg-tertiary)] rounded-lg border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] text-xs text-[var(--text-secondary)]">
                 Datum: <span className="text-[var(--text-primary)]">{datumLabels[selectedCountry]}</span>
               </div>
             )}

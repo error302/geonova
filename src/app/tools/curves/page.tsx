@@ -226,7 +226,7 @@ export default function CurvesCalculator() {
       ) : (
       <div className="grid md:grid-cols-2 gap-8">
         <div className="space-y-6">
-          <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-6">
+          <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-6">
             {curveType === 'simple' && (
               <>
                 <div className="grid grid-cols-2 gap-4">
@@ -379,7 +379,7 @@ export default function CurvesCalculator() {
         {vError && <div className="p-3 bg-red-900/30 border border-red-600 rounded text-red-400 text-sm">{vError}</div>}
 
         {result && curveType !== 'vertical' && (
-          <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-6">
+          <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-6">
             <SolutionStepsRenderer title={result.title} steps={result.steps} />
             {result.type === 'simple' && result.stakeout?.elements && (
               <div className="mt-6">
@@ -435,7 +435,7 @@ export default function CurvesCalculator() {
 
         {vResult && curveType === 'vertical' && (
           <div className="space-y-4">
-            <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-6">
+            <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-6">
               <SolutionStepsRenderer title="Vertical Curve Computation" steps={vResult.steps} />
             </div>
 
@@ -483,7 +483,7 @@ export default function CurvesCalculator() {
             </div>
 
             {vResult.peakPoint && (
-              <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+              <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
                 <h4 className="font-semibold text-sm mb-2">{vResult.isCrest ? 'Crest Peak' : 'Sag Low Point'}</h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div><p className="text-xs text-[var(--text-muted)]">Chainage</p><p className="font-mono text-sm">{vResult.peakPoint.chainage.toFixed(3)} m</p></div>
@@ -492,7 +492,7 @@ export default function CurvesCalculator() {
               </div>
             )}
 
-            <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl overflow-hidden">
+            <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl overflow-hidden">
               <div className="px-4 py-3 border-b border-[var(--border-color)]">
                 <h4 className="font-semibold text-sm">RL Table — 20m Intervals</h4>
               </div>
@@ -512,7 +512,7 @@ export default function CurvesCalculator() {
                       const isEVC = i === vResult.tableRows.length - 1;
                       const isPeak = !!(vResult.peakPoint && Math.abs(r.chainage - vResult.peakPoint.chainage) < 1);
                       return (
-                        <tr key={`item-${i}`} className={`border-t border-[var(--border-color)]/30 ${isPeak ? 'bg-[var(--accent)]/10' : ''}`}>
+                        <tr key={`item-${i}`} className={`border-t border-[color-mix(in_srgb,var(--border-color)_30%,transparent)] ${isPeak ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' : ''}`}>
                           <td className="px-3 py-1">{r.chainage.toFixed(3)}</td>
                           <td className="px-3 py-1">{r.x.toFixed(3)}</td>
                           <td className={`px-3 py-1 text-right font-semibold ${isBVC || isEVC || isPeak ? 'text-[var(--accent)]' : ''}`}>{r.RL.toFixed(4)}</td>

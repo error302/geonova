@@ -199,11 +199,11 @@ export function DeformationTrackerPanel() {
     <div className="space-y-4">
       {/* Header + summary */}
       <div className="grid grid-cols-4 gap-2">
-        <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
+        <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] text-center">
           <div className="text-lg font-bold text-gray-300">{stations.length}</div>
           <div className="text-[9px] text-gray-400 uppercase">Stations</div>
         </div>
-        <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
+        <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] text-center">
           <div className="text-lg font-bold text-gray-300">{currentEpoch}</div>
           <div className="text-[9px] text-gray-400 uppercase">Epochs</div>
         </div>
@@ -211,7 +211,7 @@ export function DeformationTrackerPanel() {
           <div className="text-lg font-bold text-amber-400">{flaggedCount}</div>
           <div className="text-[9px] text-gray-400 uppercase">Warnings</div>
         </div>
-        <div className="p-2 rounded-lg bg-[var(--bg-tertiary)]/50 text-center">
+        <div className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] text-center">
           <div className="text-lg font-bold text-gray-300">{readings.length}</div>
           <div className="text-[9px] text-gray-400 uppercase">Readings</div>
         </div>
@@ -281,7 +281,7 @@ export function DeformationTrackerPanel() {
                   const dYMm = r.deltaY * 1000
                   const dZMm = r.deltaZ * 1000
                   return (
-                    <tr key={r.id} className="border-b border-[var(--border-color)]/30">
+                    <tr key={r.id} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                       <td className="px-2 py-1.5 text-xs font-mono text-[var(--text-primary)]">{station?.stationName || '—'}</td>
                       <td className="px-2 py-1.5 text-center text-xs text-gray-400">{r.epochNumber}</td>
                       <td className="px-2 py-1.5 text-right text-xs font-mono text-gray-400">{dXMm.toFixed(2)}</td>

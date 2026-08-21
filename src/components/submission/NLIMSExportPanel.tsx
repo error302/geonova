@@ -101,7 +101,7 @@ export function NLIMSExportPanel({ projectId: _projectId }: NLIMSExportPanelProp
       {/* Header */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-[var(--bg-tertiary)]/50 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] transition-colors"
       >
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">

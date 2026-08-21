@@ -148,7 +148,7 @@ function CivilExportPage() {
               </h2>
               <div className="space-y-2">
                 {CIVIL_FORMATS.map((f) => (
-                  <label key={f.id} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${format === f.id ? 'bg-[var(--accent)]/5 border-[var(--accent)]/30' : 'bg-[var(--bg-secondary)] border-[var(--border-color)] hover:border-[var(--accent)]/20'}`}>
+                  <label key={f.id} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${format === f.id ? 'bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)]' : 'bg-[var(--bg-secondary)] border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_20%,transparent)]'}`}>
                     <input aria-label="Fmt" type="radio" name="fmt" value={f.id} checked={format === f.id} onChange={() => setFormat(f.id)} className="mt-0.5 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-[var(--text-primary)]">{f.label}</p>
@@ -237,7 +237,7 @@ function CivilExportPage() {
             </div>
 
             {/* Value prop for engineers */}
-            <div className="bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-xl p-4 text-sm">
+            <div className="bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] rounded-xl p-4 text-sm">
               <p className="text-[var(--text-secondary)] leading-relaxed">
                 <strong className="text-[var(--text-primary)]">For civil engineers:</strong> Survey data from METARDU is always correctly georeferenced in UTM with the datum declared. 
                 You won't receive DXF files in unknown coordinate systems or CSV with missing elevations. 

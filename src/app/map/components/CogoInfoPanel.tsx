@@ -169,7 +169,7 @@ function CogoInfoPanelInner() {
                 {legs.map((leg, idx) => (
                   <tr
                     key={`${leg}-${idx}`}
-                    className={idx % 2 === 0 ? 'bg-[var(--bg-card)]' : 'bg-[var(--bg-secondary)]/50'}
+                    className={idx % 2 === 0 ? 'bg-[var(--bg-card)]' : 'bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)]'}
                   >
                     <td className="px-2 py-1 text-[var(--text-muted)] font-mono">
                       V{leg.fromIndex + 1}&rarr;V{leg.toIndex + 1}
@@ -187,7 +187,7 @@ function CogoInfoPanelInner() {
           </div>
 
           {/* ── Summary ── */}
-          <div className="px-3 py-2 border-t border-[var(--border-color)] bg-[var(--primary-blue)]/10/60">
+          <div className="px-3 py-2 border-t border-[var(--border-color)] bg-[color-mix(in_srgb,var(--primary-blue)_10%,transparent)]/60">
             <div className="flex items-center justify-between text-xs">
               <span className="text-[var(--text-muted)] font-semibold">Perimeter</span>
               <span className="font-mono text-[#1B3A5C]">
@@ -242,7 +242,7 @@ function CogoInfoPanelInner() {
                   {legs.map((leg, idx) => (
                     <tr
                       key={`${leg}-${idx}`}
-                      className={idx % 2 === 0 ? 'bg-[var(--bg-card)]' : 'bg-[var(--bg-secondary)]/50'}
+                      className={idx % 2 === 0 ? 'bg-[var(--bg-card)]' : 'bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)]'}
                     >
                       <td className="px-2 py-0.5 text-[var(--text-muted)] font-mono">
                         V{leg.fromIndex + 1}&rarr;V{leg.toIndex + 1}
@@ -265,7 +265,7 @@ function CogoInfoPanelInner() {
 
           {/* ── Centroid (if area computed) ── */}
           {vertexEditingVertices.length >= 3 && showDetails && (
-            <div className="px-3 py-2 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/40">
+            <div className="px-3 py-2 border-t border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_40%,transparent)]">
               <div className="flex items-center gap-1 mb-1">
                 <MapPin className="w-3 h-3 text-[#1B3A5C]" />
                 <span className="text-[10px] text-[var(--text-muted)] font-semibold uppercase tracking-wider">

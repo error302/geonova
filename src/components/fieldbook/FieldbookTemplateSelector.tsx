@@ -249,8 +249,8 @@ function TemplateCard({
       className={[
         'rounded-xl border transition-all',
         isActive
-          ? 'border-[var(--accent)]/50 bg-[var(--accent)]/5 ring-1 ring-[var(--accent)]/20'
-          : 'border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[var(--accent)]/30',
+          ? 'border-[color-mix(in_srgb,var(--accent)_50%,transparent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] ring-1 ring-[color-mix(in_srgb,var(--accent)_20%,transparent)]'
+          : 'border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)]',
       ].join(' ')}
     >
       <button
@@ -260,7 +260,7 @@ function TemplateCard({
         <div className={[
           'grid place-items-center w-9 h-9 rounded-lg shrink-0',
           isActive
-            ? 'bg-[var(--accent)]/20 text-[var(--accent)]'
+            ? 'bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[var(--accent)]'
             : 'bg-[var(--bg-secondary)] text-[var(--text-muted)]',
         ].join(' ')}>
           <TemplateIcon type={template.iconType} className="w-4.5 h-4.5" />
@@ -280,7 +280,7 @@ function TemplateCard({
             </p>
           )}
           {template.regulationRef && !compact && (
-            <p className="text-[10px] text-[var(--accent)]/70 mt-1">
+            <p className="text-[10px] text-[color-mix(in_srgb,var(--accent)_70%,transparent)] mt-1">
               [Book] {template.regulationRef}
             </p>
           )}
@@ -310,7 +310,7 @@ function TemplateCard({
                     'flex items-center gap-1.5 px-2 py-1 rounded text-[10px]',
                     col.visible
                       ? 'bg-[var(--bg-secondary)] text-[var(--text-primary)]'
-                      : 'bg-[var(--bg-secondary)]/50 text-[var(--text-muted)] line-through',
+                      : 'bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] text-[var(--text-muted)] line-through',
                   ].join(' ')}
                 >
                   {col.visible ? (
@@ -415,7 +415,7 @@ export function FieldbookTemplateSelector({
             className={[
               'px-2.5 py-1 text-xs rounded-lg border transition',
               !showAll
-                ? 'bg-[var(--accent)]/10 border-[var(--accent)]/30 text-[var(--accent)] font-semibold'
+                ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] font-semibold'
                 : 'bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-muted)]',
             ].join(' ')}
           >
@@ -426,7 +426,7 @@ export function FieldbookTemplateSelector({
             className={[
               'px-2.5 py-1 text-xs rounded-lg border transition',
               showAll
-                ? 'bg-[var(--accent)]/10 border-[var(--accent)]/30 text-[var(--accent)] font-semibold'
+                ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] font-semibold'
                 : 'bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-muted)]',
             ].join(' ')}
           >

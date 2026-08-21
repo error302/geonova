@@ -91,7 +91,7 @@ export function FieldRecordVault() {
       <div className="card p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
               <FileText className="w-4 h-4 text-[var(--accent)]" />
             </div>
             <div>
@@ -101,7 +101,7 @@ export function FieldRecordVault() {
           </div>
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)] text-xs font-medium hover:bg-[var(--accent)]/20"
+            className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-xs font-medium hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)]"
           >
             <Plus className="w-3.5 h-3.5" />
             Contribute
@@ -109,11 +109,11 @@ export function FieldRecordVault() {
         </div>
 
         {/* Mode toggle */}
-        <div className="flex gap-1 p-1 bg-[var(--bg-tertiary)]/50 rounded-lg">
+        <div className="flex gap-1 p-1 bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] rounded-lg">
           <button
             onClick={() => setSearchMode('text')}
             className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              searchMode === 'text' ? 'bg-[var(--accent)]/15 text-[var(--accent)]' : 'text-gray-400'
+              searchMode === 'text' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)]' : 'text-gray-400'
             }`}
           >
             <Search className="w-3.5 h-3.5" />
@@ -122,7 +122,7 @@ export function FieldRecordVault() {
           <button
             onClick={() => setSearchMode('proximity')}
             className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              searchMode === 'proximity' ? 'bg-[var(--accent)]/15 text-[var(--accent)]' : 'text-gray-400'
+              searchMode === 'proximity' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)]' : 'text-gray-400'
             }`}
           >
             <MapPin className="w-3.5 h-3.5" />
@@ -140,7 +140,7 @@ export function FieldRecordVault() {
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && search()}
               aria-label="Search F/R number, locality, surveyor..."
-              className="w-full h-10 pl-9 pr-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+              className="w-full h-10 pl-9 pr-3 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
             />
           </div>
         ) : (
@@ -211,8 +211,8 @@ export function FieldRecordVault() {
                 height={400}
                 renderItem={(record) => (
                   <div className="p-1">
-                    <div className="flex items-start gap-3 p-2 rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)]/30 transition-colors">
-                      <div className="shrink-0 w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+                    <div className="flex items-start gap-3 p-2 rounded-lg border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-colors">
+                      <div className="shrink-0 w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
                         <FileText className="w-3.5 h-3.5 text-[var(--accent)]" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -241,9 +241,9 @@ export function FieldRecordVault() {
               {records.map(record => (
                 <div
                   key={record.id}
-                  className="flex items-start gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)]/30 transition-colors"
+                  className="flex items-start gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-colors"
                 >
-                  <div className="shrink-0 w-9 h-9 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+                  <div className="shrink-0 w-9 h-9 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
                     <FileText className="w-4 h-4 text-[var(--accent)]" />
                   </div>
                   <div className="flex-1 min-w-0">

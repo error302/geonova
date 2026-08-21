@@ -130,7 +130,7 @@ export function EquipmentManager() {
       <div className="card p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
               <Wrench className="w-4 h-4 text-[var(--accent)]" />
             </div>
             <div>
@@ -140,7 +140,7 @@ export function EquipmentManager() {
           </div>
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)] text-xs font-medium hover:bg-[var(--accent)]/20"
+            className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-xs font-medium hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)]"
           >
             <Plus className="w-3.5 h-3.5" />
             Add Equipment
@@ -235,12 +235,12 @@ export function EquipmentManager() {
 
                 {/* Expanded calibration history */}
                 {isExpanded && (
-                  <div className="border-t border-[var(--border-color)] p-4 bg-[var(--bg-tertiary)]/30">
+                  <div className="border-t border-[var(--border-color)] p-4 bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)]">
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-xs font-semibold text-[var(--text-primary)]">Calibration History</span>
                       <button
                         onClick={() => setShowCalForm(!showCalForm)}
-                        className="flex items-center gap-1 px-2 h-7 rounded bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)] text-[10px] font-medium"
+                        className="flex items-center gap-1 px-2 h-7 rounded bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-[10px] font-medium"
                       >
                         <Plus className="w-3 h-3" />
                         Add Calibration
@@ -359,7 +359,7 @@ function AddEquipmentForm({ onClose, onAdded }: { onClose: () => void; onAdded: 
       <div className="grid grid-cols-2 gap-2">
         <div>
           <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="name">Name</label>
-          <input id="name" type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Leica TS07" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+          <input id="name" type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Leica TS07" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
         </div>
         <div>
           <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="type">Type</label>
@@ -369,9 +369,9 @@ function AddEquipmentForm({ onClose, onAdded }: { onClose: () => void; onAdded: 
         </div>
       </div>
       <div className="grid grid-cols-3 gap-2">
-        <input type="text" value={manufacturer} onChange={e => setManufacturer(e.target.value)} placeholder="Manufacturer" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
-        <input type="text" value={model} onChange={e => setModel(e.target.value)} placeholder="Model" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
-        <input type="text" value={serialNumber} onChange={e => setSerialNumber(e.target.value)} placeholder="Serial No." className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+        <input type="text" value={manufacturer} onChange={e => setManufacturer(e.target.value)} placeholder="Manufacturer" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
+        <input type="text" value={model} onChange={e => setModel(e.target.value)} placeholder="Model" className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
+        <input type="text" value={serialNumber} onChange={e => setSerialNumber(e.target.value)} placeholder="Serial No." className="h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
       </div>
       {error && <p className="text-xs text-red-400">{error}</p>}
       <div className="flex gap-2">
@@ -420,7 +420,7 @@ function AddCalibrationForm({ equipmentId, onClose, onAdded }: { equipmentId: st
   }, [equipmentId, calDate, nextDate, lab, certNumber, results, notes, onAdded])
 
   return (
-    <div className="card p-3 mb-3 space-y-2 border-[var(--accent)]/20">
+    <div className="card p-3 mb-3 space-y-2 border-[color-mix(in_srgb,var(--accent)_20%,transparent)]">
       <div className="text-xs font-medium text-[var(--accent)]">Add Calibration Record</div>
       <div className="grid grid-cols-2 gap-2">
         <div>

@@ -110,7 +110,7 @@ export default function ProjectDeedPlan({ projectId }: ProjectDeedPlanProps) {
   if (error) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="border border-[var(--error)]/30 bg-[var(--error)]/5 p-4 rounded-md">
+        <div className="border border-[color-mix(in_srgb,var(--error)_30%,transparent)] bg-[color-mix(in_srgb,var(--error)_5%,transparent)] p-4 rounded-md">
           <p className="font-mono text-xs text-[var(--error)] tracking-[0.04em] uppercase mb-2">
             Could not load project points
           </p>
@@ -131,7 +131,7 @@ export default function ProjectDeedPlan({ projectId }: ProjectDeedPlanProps) {
     <div>
       {points.length > 0 && (
         <div className="max-w-7xl mx-auto px-4 mb-4">
-          <div className="border border-[var(--accent)]/30 bg-[var(--accent)]/5 p-3 rounded-md flex items-center gap-3">
+          <div className="border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] p-3 rounded-md flex items-center gap-3">
             <svg className="w-4 h-4 text-[var(--accent)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>

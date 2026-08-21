@@ -118,7 +118,7 @@ function TabButton({ active, onClick, children }: { active: boolean; onClick: ()
     <button
       onClick={onClick}
       className={`px-3 py-2 rounded-lg text-sm border transition-colors ${
-        active ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-[var(--bg-secondary)]/40 border-[var(--border-color)] text-[var(--text-secondary)] hover:border-amber-500/30'
+        active ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-[color-mix(in_srgb,var(--bg-secondary)_40%,transparent)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-amber-500/30'
       } whitespace-nowrap`}
     >
       {children}
@@ -171,7 +171,7 @@ function BowditchSummary({ adjusted, threshold = TRAVERSE_PRECISION_STANDARDS.ca
       </div>
 
       <div className="grid grid-cols-3 gap-3">
-        <div className="p-2.5 rounded-lg bg-[var(--bg-tertiary)]/50">
+        <div className="p-2.5 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
           <span className="text-[9px] text-gray-500 uppercase tracking-wider">Precision Ratio</span>
           <div className={`text-sm font-mono font-semibold mt-0.5 ${isAcceptable ? 'text-emerald-400' : 'text-red-400'}`}>
             {ratioDisplay}
@@ -180,7 +180,7 @@ function BowditchSummary({ adjusted, threshold = TRAVERSE_PRECISION_STANDARDS.ca
             Threshold: {thresholdDisplay}
           </div>
         </div>
-        <div className="p-2.5 rounded-lg bg-[var(--bg-tertiary)]/50">
+        <div className="p-2.5 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
           <span className="text-[9px] text-gray-500 uppercase tracking-wider">Linear Error</span>
           <div className="text-sm font-mono text-gray-300 mt-0.5">
             {linearError.toFixed(4)} m
@@ -189,7 +189,7 @@ function BowditchSummary({ adjusted, threshold = TRAVERSE_PRECISION_STANDARDS.ca
             dE: {adjusted.closingErrorE.toFixed(4)} | dN: {adjusted.closingErrorN.toFixed(4)}
           </div>
         </div>
-        <div className="p-2.5 rounded-lg bg-[var(--bg-tertiary)]/50">
+        <div className="p-2.5 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
           <span className="text-[9px] text-gray-500 uppercase tracking-wider">Total Distance</span>
           <div className="text-sm font-mono text-gray-300 mt-0.5">
             {totalDistance.toFixed(3)} m
@@ -1485,7 +1485,7 @@ export default function DigitalFieldBookPage() {
                           key={s.id}
                           onClick={() => setActiveControlSetupId(s.id)}
                           className={`px-3 py-2 rounded-lg text-sm border whitespace-nowrap transition-colors ${
-                            active ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-[var(--bg-secondary)]/40 border-[var(--border-color)] text-[var(--text-secondary)] hover:border-amber-500/30'
+                            active ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-[color-mix(in_srgb,var(--bg-secondary)_40%,transparent)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-amber-500/30'
                           }`}
                         >
                           {label}
@@ -1494,7 +1494,7 @@ export default function DigitalFieldBookPage() {
                     })}
 
                     <button
-                      className="px-3 py-2 rounded-lg text-sm border bg-[var(--bg-secondary)]/40 border-[var(--border-color)] text-[var(--text-secondary)] hover:border-amber-500/30 whitespace-nowrap"
+                      className="px-3 py-2 rounded-lg text-sm border bg-[color-mix(in_srgb,var(--bg-secondary)_40%,transparent)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-amber-500/30 whitespace-nowrap"
                       onClick={() => {
                         const id = crypto.randomUUID()
                         const suffix = controlSetups.length + 1

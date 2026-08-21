@@ -360,7 +360,7 @@ export default function DashboardSearch() {
 
     if (isLoading && !results) {
       return (
-        <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)]/80 backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300">
+        <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-2xl border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-card)_80%,transparent)] backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300">
           <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-[var(--text-muted)]">
             <Loader2 className="h-4 w-4 animate-spin" />
             <span>Searching...</span>
@@ -371,7 +371,7 @@ export default function DashboardSearch() {
 
     if (results && !hasResults && query.trim()) {
       return (
-        <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)]/80 backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300">
+        <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-2xl border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-card)_80%,transparent)] backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300">
           <div className="flex flex-col items-center justify-center px-4 py-8">
             <Search className="h-8 w-8 text-[var(--text-muted)] mb-2 opacity-50" />
             <p className="text-sm text-[var(--text-secondary)]">No results found</p>
@@ -389,7 +389,7 @@ export default function DashboardSearch() {
     let flatIdx = 0;
 
     return (
-      <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)]/80 backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300">
+      <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-2xl border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-card)_80%,transparent)] backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300">
         <div className="max-h-80 overflow-y-auto overscroll-contain">
           {order.map((type) => {
             const items = results[type];
@@ -402,7 +402,7 @@ export default function DashboardSearch() {
             const group = (
               <div key={type}>
                 {/* Group header */}
-                <div className="flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-primary)]/50 border-b border-[var(--border-color)]">
+                <div className="flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] bg-[color-mix(in_srgb,var(--bg-primary)_50%,transparent)] border-b border-[var(--border-color)]">
                   {GROUP_ICONS[type]}
                   {GROUP_LABELS[type]}
                   <span className="ml-auto text-[10px] font-normal text-[var(--text-muted)] opacity-70">
@@ -436,7 +436,7 @@ export default function DashboardSearch() {
                         className={cn(
                           'shrink-0 flex items-center justify-center w-8 h-8 rounded-md border',
                           isActive
-                            ? 'border-[var(--accent)]/30 bg-[var(--accent)]/10 text-[var(--accent)]'
+                            ? 'border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] text-[var(--accent)]'
                             : 'border-[var(--border-color)] bg-[var(--bg-tertiary)] text-[var(--text-muted)]',
                         )}
                       >
@@ -485,7 +485,7 @@ export default function DashboardSearch() {
         </div>
 
         {/* Footer hint */}
-        <div className="flex items-center justify-between px-4 py-3 border-t border-[var(--border-color)] bg-[var(--bg-primary)]/40 text-[10px] text-[var(--text-muted)]">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-primary)_40%,transparent)] text-[10px] text-[var(--text-muted)]">
           <span>{results ? Object.values(results).reduce<number>((sum, arr) => sum + (arr as unknown[]).length, 0) : 0} results</span>
           <div className="flex items-center gap-2">
             <kbd className="px-1 py-0.5 rounded border border-[var(--border-color)] bg-[var(--bg-tertiary)] text-[9px]">

@@ -131,7 +131,7 @@ export default function MobileNav() {
           >
             {/* Handle bar */}
             <div className="flex justify-center pt-3 pb-1">
-              <div className="w-10 h-1 rounded-full bg-[var(--text-muted)]/30" />
+              <div className="w-10 h-1 rounded-full bg-[color-mix(in_srgb,var(--text-muted)_30%,transparent)]" />
             </div>
 
             {/* Header */}
@@ -155,12 +155,12 @@ export default function MobileNav() {
                       onClick={() => setShowMore(false)}
                       className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
                         isActive
-                          ? 'bg-[var(--accent)]/10 border border-[var(--accent)]/20'
+                          ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)]'
                           : 'hover:bg-[var(--bg-tertiary)] border border-transparent'
                       }`}
                     >
                       <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                        isActive ? 'bg-[var(--accent)]/15' : 'bg-[var(--bg-tertiary)]'
+                        isActive ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)]' : 'bg-[var(--bg-tertiary)]'
                       }`}>
                         <page.icon className={`w-4.5 h-4.5 ${isActive ? 'text-[var(--accent)]' : page.color}`} strokeWidth={1.8} />
                       </div>
@@ -190,12 +190,12 @@ export default function MobileNav() {
                       onClick={() => setShowMore(false)}
                       className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
                         pathname === '/admin' || pathname.startsWith('/admin/')
-                          ? 'bg-[var(--accent)]/10 border border-[var(--accent)]/20'
+                          ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)]'
                           : 'hover:bg-[var(--bg-tertiary)] border border-transparent'
                       }`}
                     >
                       <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                        pathname === '/admin' ? 'bg-[var(--accent)]/15' : 'bg-[var(--bg-tertiary)]'
+                        pathname === '/admin' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)]' : 'bg-[var(--bg-tertiary)]'
                       }`}>
                         <ShieldCheck className={`w-4.5 h-4.5 ${pathname === '/admin' ? 'text-[var(--accent)]' : 'text-[var(--accent)]'}`} strokeWidth={1.8} />
                       </div>

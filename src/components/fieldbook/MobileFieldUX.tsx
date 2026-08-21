@@ -176,7 +176,7 @@ export function QuickActionBar({ onRepeatLast, onGPSPosition, onTimestamp, hasLa
   const haptics = useHaptics()
 
   return (
-    <div className="flex gap-2 px-4 py-2 bg-[var(--bg-secondary)]/50 border-b border-[var(--border-color)]">
+    <div className="flex gap-2 px-4 py-2 bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border-b border-[var(--border-color)]">
       <button
         onClick={() => { haptics('medium'); onRepeatLast() }}
         disabled={!hasLastReading}

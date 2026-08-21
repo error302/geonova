@@ -34,7 +34,7 @@ export default function GNSSPage() {
           />
         )}
 
-        <div className="p-4 bg-[var(--accent)]/10 border border-[var(--accent)]/20 rounded-lg">
+        <div className="p-4 bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] rounded-lg">
           <h3 className="font-medium text-[var(--accent)] mb-2">Instructions</h3>
           <ol className="text-sm text-[var(--text-secondary)] space-y-1 list-decimal list-inside">
             <li>Enable Bluetooth on your device</li>

@@ -155,7 +155,7 @@ export function ControlPointRegistry() {
       {/* Search panel */}
       <div className="card p-4 space-y-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
             <Radio className="w-4 h-4 text-[var(--accent)]" />
           </div>
           <div>
@@ -167,15 +167,15 @@ export function ControlPointRegistry() {
         <div className="grid grid-cols-3 gap-2">
           <div>
             <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="easting-m">Easting (m)</label>
-            <input id="easting-m" type="number" value={easting} onChange={e => setEasting(e.target.value)} placeholder="261518" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+            <input id="easting-m" type="number" value={easting} onChange={e => setEasting(e.target.value)} placeholder="261518" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
           </div>
           <div>
             <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="northing-m">Northing (m)</label>
-            <input id="northing-m" type="number" value={northing} onChange={e => setNorthing(e.target.value)} placeholder="9859340" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none" />
+            <input id="northing-m" type="number" value={northing} onChange={e => setNorthing(e.target.value)} placeholder="9859340" className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
           </div>
           <div>
             <label className="block text-[9px] text-gray-500 uppercase tracking-wider mb-1" htmlFor="radius-m">Radius (m)</label>
-            <input id="radius-m" aria-label="Radius (m)" type="number" value={radius} onChange={e => setRadius(e.target.value)} className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono focus:border-[var(--accent)]/30 focus:outline-none" />
+            <input id="radius-m" aria-label="Radius (m)" type="number" value={radius} onChange={e => setRadius(e.target.value)} className="w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] font-mono focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none" />
           </div>
         </div>
 
@@ -238,7 +238,7 @@ export function ControlPointRegistry() {
                   return (
                     <div
                       key={point.id}
-                      className="flex items-start gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[var(--accent)]/30 transition-colors group"
+                      className="flex items-start gap-3 p-3 rounded-lg border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-colors group"
                     >
                       <div className={`shrink-0 w-10 h-10 rounded-lg ${cfg.bg} flex items-center justify-center`}>
                         <Icon className={`w-4 h-4 ${cfg.color}`} />

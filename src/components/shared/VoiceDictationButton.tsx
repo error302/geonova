@@ -217,7 +217,7 @@ export function VoiceDictationButton({
           'focus:outline-none focus:ring-2 focus:ring-offset-1',
           listening
             ? 'bg-red-500/15 text-red-500 focus:ring-red-500/40'
-            : 'bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/10 focus:ring-[var(--accent)]/40',
+            : 'bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] focus:ring-[color-mix(in_srgb,var(--accent)_40%,transparent)]',
         ].join(' ')}
         aria-label={listening ? t('voiceDictation.stopDictation') : t('voiceDictation.startDictation')}
         title={listening ? t('voiceDictation.listening') : t('voiceDictation.tapToDictate')}

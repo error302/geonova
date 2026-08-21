@@ -1307,7 +1307,7 @@ export default function GuideTypePage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen text-[var(--text-primary)]">
-      <div className="border-b border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
+      <div className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)]">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
@@ -1357,7 +1357,7 @@ export default function GuideTypePage({ params }: PageProps) {
 
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
         {(guide.fieldChecklist || guide.stopRules) && (
-          <div className="bg-[var(--bg-tertiary)]/30 border border-[var(--border-color)] rounded-xl p-6">
+          <div className="bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)] border border-[var(--border-color)] rounded-xl p-6">
             {guide.fieldChecklist && (
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-3">Field Checklist (Supervisor-Free)</h2>
@@ -1400,7 +1400,7 @@ export default function GuideTypePage({ params }: PageProps) {
           return (
             <div
               key={step.id}
-              className={`bg-[var(--bg-secondary)]/50 border rounded-xl p-6 transition-all ${
+              className={`bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border rounded-xl p-6 transition-all ${
                 isComplete ? 'border-green-500/30' : 'border-[var(--border-color)]'
               }`}
             >

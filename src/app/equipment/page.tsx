@@ -397,7 +397,7 @@ export default function EquipmentPage() {
               <div key={eq.id}
                 role="button" tabIndex={0}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setDetailItem(eq); } }}
-                className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-5 cursor-pointer hover:border-[var(--accent)]/40 transition-colors"
+                className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-5 cursor-pointer hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] transition-colors"
                 onClick={() => setDetailItem(eq)}>
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">

@@ -95,7 +95,7 @@ export default function SettingOutPage() {
     } catch { setError('Failed to parse as-built CSV. Use: id,easting,northing,rl') }
   }
 
-  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
 
   return (
     <div className="min-h-screen p-6 max-w-6xl mx-auto">
@@ -103,7 +103,7 @@ export default function SettingOutPage() {
       <p className="text-sm text-[var(--text-muted)] mb-6">Import design from DXF → compute stakeout list → export to instrument → compare as-built</p>
 
       {/* Step 1: Import DXF */}
-      <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+      <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
         <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-3">1. Import Design from DXF</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -135,14 +135,14 @@ export default function SettingOutPage() {
 
       {/* Step 2: Stakeout List */}
       {result && (
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-sm font-semibold text-[var(--text-primary)]">2. Stakeout List ({result.totalPoints} points)</h2>
             <div className="flex gap-2 items-center">
               <select value={exportFormat} onChange={e => setExportFormat(e.target.value as InstrumentFormat)} className={inputCls + ' w-auto'}>
                 {getAvailableFormats().map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
               </select>
-              <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[var(--accent)] text-xs font-semibold rounded-lg hover:bg-[var(--accent)]/25">
+              <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-1.5 bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-xs font-semibold rounded-lg hover:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)]">
                 <Download className="w-3.5 h-3.5" /> Export
               </button>
             </div>
@@ -154,7 +154,7 @@ export default function SettingOutPage() {
               </tr></thead>
               <tbody>
                 {result.rows.map((row) => (
-                  <tr key={row.id} className="border-b border-[var(--border-color)]/30 text-[var(--text-secondary)]">
+                  <tr key={row.id} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)] text-[var(--text-secondary)]">
                     <td className="py-1.5 px-1 font-mono">{row.id}</td>
                     <td className="text-right font-mono">{row.HzAngle}</td>
                     <td className="text-right font-mono">{row.HD.toFixed(3)}</td>
@@ -173,7 +173,7 @@ export default function SettingOutPage() {
 
       {/* Step 3: As-Built Comparison */}
       {result && (
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
           <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-3">3. As-Built Comparison</h2>
           <p className="text-[10px] text-[var(--text-muted)] mb-2">Paste as-built shots (one per line: id,easting,northing,rl)</p>
           <textarea value={asBuiltInput} onChange={e => setAsBuiltInput(e.target.value)} placeholder="P1,264100.010,9861100.005,1500.002" className={inputCls + ' h-20 font-mono mb-2'} />
@@ -190,7 +190,7 @@ export default function SettingOutPage() {
                 </tr></thead>
                 <tbody>
                   {comparison.rows.map((row) => (
-                    <tr key={row.designId} className={`border-b border-[var(--border-color)]/30 ${row.passed ? 'text-[var(--text-secondary)]' : 'text-red-400'}`}>
+                    <tr key={row.designId} className={`border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)] ${row.passed ? 'text-[var(--text-secondary)]' : 'text-red-400'}`}>
                       <td className="py-1 font-mono">{row.designId}</td>
                       <td className="text-right font-mono">{(row.deltaE * 1000).toFixed(1)}</td>
                       <td className="text-right font-mono">{(row.deltaN * 1000).toFixed(1)}</td>

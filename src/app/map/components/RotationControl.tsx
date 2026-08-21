@@ -68,7 +68,7 @@ function RotationControlInner() {
         'relative w-10 h-10 rounded-lg border bg-[var(--bg-card)] shadow-sm transition-all',
         'flex items-center justify-center',
         isRotated
-          ? 'border-[#1B3A5C] hover:bg-[var(--primary-blue)]/10 cursor-pointer'
+          ? 'border-[#1B3A5C] hover:bg-[color-mix(in_srgb,var(--primary-blue)_10%,transparent)] cursor-pointer'
           : 'border-[var(--border-color)] cursor-default opacity-50',
       ].join(' ')}
       title={isRotated ? `Reset North (rotated ${rotationDeg}°)` : 'North (0°)'}

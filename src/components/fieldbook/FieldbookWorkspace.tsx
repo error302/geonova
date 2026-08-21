@@ -205,7 +205,7 @@ function LevelingLivePanel({ computed }: { computed: LiveComputed }) {
                 return (
                   <div
                     key={i}
-                    className="flex-1 bg-[var(--accent)]/60 rounded-t-sm min-w-[4px] transition-all"
+                    className="flex-1 bg-[color-mix(in_srgb,var(--accent)_60%,transparent)] rounded-t-sm min-w-[4px] transition-all"
                     style={{ height: `${Math.max(4, height)}%` }}
                     title={`${r.station}: ${fmt(rl)} m`}
                   />
@@ -320,7 +320,7 @@ function TraverseLivePanel({ computed }: { computed: LiveComputed }) {
           </div>
           <div className="max-h-48 overflow-y-auto custom-scrollbar space-y-1">
             {legs.map((leg: LiveLegRow, i: number) => (
-              <div key={i} className="flex items-center gap-2 text-[10px] py-1 border-b border-[var(--border-color)]/50 last:border-0">
+              <div key={i} className="flex items-center gap-2 text-[10px] py-1 border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] last:border-0">
                 <span className="w-16 text-[var(--text-primary)] font-semibold truncate">{leg.to || '—'}</span>
                 <span className="flex-1 font-mono text-[var(--accent)]">{fmt(leg.easting ?? leg.adjEasting)}</span>
                 <span className="flex-1 font-mono text-[var(--accent)]">{fmt(leg.northing ?? leg.adjNorthing)}</span>
@@ -377,7 +377,7 @@ function ControlLivePanel({ computed, stationInfo }: { computed: LiveComputed; s
           {computed.rows?.map((row: LiveComputedRow, i: number) => (
             <div
               key={i}
-              className="p-2 rounded-lg bg-[var(--bg-primary)]/50 border border-[var(--border-color)]/50"
+              className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-primary)_50%,transparent)] border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[var(--accent)]">{row.pointId || `P${i + 1}`}</span>
@@ -441,7 +441,7 @@ function HydroLivePanel({ computed }: { computed: LiveComputed }) {
         </div>
         <div className="max-h-64 overflow-y-auto custom-scrollbar space-y-1">
           {computed.rows?.map((row: LiveComputedRow, i: number) => (
-            <div key={i} className="flex items-center justify-between text-xs py-1 border-b border-[var(--border-color)]/50 last:border-0">
+            <div key={i} className="flex items-center justify-between text-xs py-1 border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] last:border-0">
               <span className="text-[var(--text-primary)] font-semibold">{row.soundingId || `S${i + 1}`}</span>
               <div className="flex items-center gap-3">
                 <span className="text-[var(--text-muted)]">Raw: <span className="font-mono">{row.depth}</span></span>
@@ -499,7 +499,7 @@ function MiningLivePanel({ computed, stationInfo }: { computed: LiveComputed; st
           {computed.rows?.map((row: LiveComputedRow, i: number) => (
             <div
               key={i}
-              className="p-2 rounded-lg bg-[var(--bg-primary)]/50 border border-[var(--border-color)]/50"
+              className="p-2 rounded-lg bg-[color-mix(in_srgb,var(--bg-primary)_50%,transparent)] border border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[var(--accent)]">{row.pointId || `P${i + 1}`}</span>
@@ -669,7 +669,7 @@ export function FieldbookWorkspace({
           'hidden lg:flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium',
           'fixed right-4 top-20 z-30',
           'bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm',
-          'hover:border-[var(--accent)]/40 transition-colors',
+          'hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] transition-colors',
         ].join(' ')}
         title={panelVisible ? 'Hide computation panel' : 'Show computation panel'}
       >

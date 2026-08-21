@@ -200,7 +200,7 @@ export default function GuidePage() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-4 hover:border-[var(--accent)]/50 transition-colors"
+                className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-4 hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)] transition-colors"
               >
                 <div className="text-xs font-mono text-[var(--accent)] mb-2">STEP {idx + 1}</div>
                 <h3 className="font-semibold mb-2">{item.title}</h3>
@@ -215,7 +215,7 @@ export default function GuidePage() {
           </div>
         </section>
 
-        <section className="mb-10 rounded-xl border border-[var(--border-color)] bg-[var(--bg-tertiary)]/30 p-5">
+        <section className="mb-10 rounded-xl border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)] p-5">
           <h2 className="text-lg font-semibold mb-3">Before issuing output</h2>
           <div className="grid gap-3 md:grid-cols-2">
             {readinessChecks.map((check) => (
@@ -236,7 +236,7 @@ export default function GuidePage() {
               <Link
                 key={guide.id}
                 href={`/guide/${guide.id}`}
-                className="block bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[var(--accent)]/50 rounded-xl p-6 transition-all hover:shadow-lg hover:shadow-[#D17B47]/10"
+                className="block bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)] rounded-xl p-6 transition-all hover:shadow-lg hover:shadow-[#D17B47]/10"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="text-4xl">{guide.icon}</div>
@@ -283,7 +283,7 @@ export default function GuidePage() {
           })}
         </div>
 
-        <div className="mt-12 bg-[var(--bg-tertiary)]/30 border border-[var(--border-color)] rounded-xl p-6">
+        <div className="mt-12 bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)] border border-[var(--border-color)] rounded-xl p-6">
           <h2 className="text-lg font-semibold mb-4">How Guides Work</h2>
           <div className="grid md:grid-cols-3 gap-6 text-sm text-[var(--text-secondary)]">
             <div>

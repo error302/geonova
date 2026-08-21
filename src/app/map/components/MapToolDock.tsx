@@ -106,7 +106,7 @@ function ActionBtn({ label, icon, isActive, onClick, danger, shortcut, disabled 
           : danger && isActive
             ? 'bg-red-500/10 border border-red-500/30 text-red-400'
             : isActive
-              ? 'bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)]'
+              ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]'
               : 'text-[var(--text-secondary)] hover:bg-white/[0.04] hover:text-[var(--text-primary)] border border-transparent'}
       `}
     >
@@ -136,7 +136,7 @@ function ToolBtn({ label, icon, isActive, onClick, shortcut }: {
         flex flex-col items-center justify-center gap-1 rounded-xl transition-all duration-150
         w-[50px] h-[50px] shrink-0 relative
         ${isActive
-          ? 'bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[var(--accent)]'
+          ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]'
           : 'bg-white/[0.02] border border-white/[0.05] text-[var(--text-secondary)] hover:bg-white/[0.05] hover:text-[var(--text-primary)]'}
       `}
     >
@@ -162,7 +162,7 @@ function ProjectBadge() {
   return (
     <a
       href={`/project/${projectId}`}
-      className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/20 text-[9px] font-semibold text-[var(--accent)] hover:bg-[var(--accent)]/20 transition-colors no-underline"
+      className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[9px] font-semibold text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] transition-colors no-underline"
       title="Go to linked project"
     >
       <Link2 className="w-2.5 h-2.5" />
@@ -192,7 +192,7 @@ const DockPanel = memo(function DockPanel({ label, accent, isOpen, onClose, chil
     <div
       ref={panelRef}
       className="w-[270px] flex flex-col rounded-2xl overflow-hidden
-        bg-[var(--bg-secondary)]/90 backdrop-blur-2xl
+        bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] backdrop-blur-2xl
         border border-white/[0.06]
         shadow-[0_8px_32px_rgba(0,0,0,0.45)]
         animate-[slideInLeft_0.18s_ease-out]"
@@ -361,7 +361,7 @@ const CaptureContent = memo(function CaptureContent() {
             <input aria-label="Offset distance" type="range" min="-50" max="50" step="1" value={ctx.offsetDistance} onChange={e => ctx.setOffsetDistance(parseFloat(e.target.value))} className="flex-1" />
             <span className="font-mono text-[10px] text-[var(--text-primary)] w-10 text-right">{ctx.offsetDistance}m</span>
           </div>
-          <button onClick={ctx.applyOneShotTool} className="w-full py-1.5 rounded-lg bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[10px] font-semibold text-[var(--accent)] hover:bg-[var(--accent)]/25 transition-colors">
+          <button onClick={ctx.applyOneShotTool} className="w-full py-1.5 rounded-lg bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[10px] font-semibold text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)] transition-colors">
             Create Offset
           </button>
         </div>
@@ -374,7 +374,7 @@ const CaptureContent = memo(function CaptureContent() {
             <input aria-label="Rotation angle" type="range" min="-180" max="360" step="1" value={ctx.rotateAngle} onChange={e => ctx.setRotateAngle(parseFloat(e.target.value))} className="flex-1" />
             <span className="font-mono text-[10px] text-[var(--text-primary)] w-10 text-right">{ctx.rotateAngle}°</span>
           </div>
-          <button onClick={ctx.applyOneShotTool} className="w-full py-1.5 rounded-lg bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[10px] font-semibold text-[var(--accent)] hover:bg-[var(--accent)]/25 transition-colors">
+          <button onClick={ctx.applyOneShotTool} className="w-full py-1.5 rounded-lg bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[10px] font-semibold text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)] transition-colors">
             Apply Rotation
           </button>
         </div>
@@ -382,14 +382,14 @@ const CaptureContent = memo(function CaptureContent() {
 
       {ctx.activeDigitizingTool === 'merge' && (
         <div className="mt-1 p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06]">
-          <button onClick={ctx.applyOneShotTool} className="w-full py-1.5 rounded-lg bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[10px] font-semibold text-[var(--accent)] hover:bg-[var(--accent)]/25 transition-colors">
+          <button onClick={ctx.applyOneShotTool} className="w-full py-1.5 rounded-lg bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[10px] font-semibold text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)] transition-colors">
             Merge Selected Polygons
           </button>
         </div>
       )}
 
       {ctx.activeDigitizingTool && ctx.activeDigitizingTool !== 'draw' && (
-        <div className="mt-1 p-2.5 rounded-lg bg-[var(--accent)]/[0.06] border border-[var(--accent)]/20 flex items-start gap-2">
+        <div className="mt-1 p-2.5 rounded-lg bg-[var(--accent)]/[0.06] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] flex items-start gap-2">
           <Info className="w-3 h-3 text-[var(--accent)] shrink-0 mt-0.5" />
           <p className="text-[10px] text-[var(--text-secondary)]">
             {ctx.activeDigitizingTool === 'split'   && 'Draw a line across the polygon to split it. The line must cross at 2 points.'}
@@ -418,7 +418,7 @@ const CaptureContent = memo(function CaptureContent() {
             onChange={(e) => ctx.updateFeatureName(e.target.value)}
             aria-label="Feature name"
             placeholder="Feature name…"
-            className="w-full h-7 bg-white/[0.03] border border-white/[0.07] rounded-md px-2 text-[11px] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]/40 transition-colors"
+            className="w-full h-7 bg-white/[0.03] border border-white/[0.07] rounded-md px-2 text-[11px] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] transition-colors"
           />
         </div>
       )}
@@ -615,7 +615,7 @@ const SurveyWorkflowBadge = memo(function SurveyWorkflowBadge({ openPanels }: { 
       {cats.map(c => (
         <div
           key={c.id}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full backdrop-blur-xl border border-white/[0.08] bg-[var(--bg-secondary)]/70"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full backdrop-blur-xl border border-white/[0.08] bg-[color-mix(in_srgb,var(--bg-secondary)_70%,transparent)]"
           style={{ boxShadow: `0 0 12px ${c.accent}20` }}
         >
           <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: c.accent }} />
@@ -707,7 +707,7 @@ export const MapToolDock = memo(function MapToolDock() {
           const catDef = CATEGORIES.find(c => c.id === cat) ?? CATEGORIES[0]
           return (
             <div
-              className="fixed inset-x-0 bottom-0 z-40 bg-[var(--bg-secondary)]/95 backdrop-blur-2xl border-t border-white/[0.08] rounded-t-2xl shadow-[0_-8px_40px_rgba(0,0,0,0.5)] transition-transform duration-300"
+              className="fixed inset-x-0 bottom-0 z-40 bg-[color-mix(in_srgb,var(--bg-secondary)_95%,transparent)] backdrop-blur-2xl border-t border-white/[0.08] rounded-t-2xl shadow-[0_-8px_40px_rgba(0,0,0,0.5)] transition-transform duration-300"
               style={{ maxHeight: '70vh' }}
             >
               <div className="flex justify-center pt-2 pb-1">
@@ -732,7 +732,7 @@ export const MapToolDock = memo(function MapToolDock() {
         })()}
 
         {/* Bottom horizontal dock bar */}
-        <div className="fixed bottom-0 inset-x-0 z-50 flex items-center justify-center gap-1 px-2 py-2 bg-[var(--bg-secondary)]/90 backdrop-blur-2xl border-t border-white/[0.06]">
+        <div className="fixed bottom-0 inset-x-0 z-50 flex items-center justify-center gap-1 px-2 py-2 bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] backdrop-blur-2xl border-t border-white/[0.06]">
           {CATEGORIES.map(cat => {
             const Icon = cat.icon
             const open = openPanels.has(cat.id)
@@ -741,7 +741,7 @@ export const MapToolDock = memo(function MapToolDock() {
               <button key={cat.id} onClick={() => togglePanel(cat.id)} aria-label={cat.label}
                 className={`flex flex-col items-center justify-center gap-0.5 rounded-xl transition-all duration-200 w-12 h-12 shrink-0 relative
                   ${open ? 'bg-white/[0.08] border border-white/[0.12] text-[var(--text-primary)]'
-                    : active ? 'text-[var(--text-primary)]/70'
+                    : active ? 'text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)]'
                     : 'text-[var(--text-muted)]'}`}
                 style={open ? { boxShadow: `0 0 12px ${cat.accent}30` } : undefined}
               >
@@ -765,7 +765,7 @@ export const MapToolDock = memo(function MapToolDock() {
       {/* Toggle hamburger */}
       <button
         onClick={() => { setDockVisible(v => !v); if (dockVisible) setOpenPanels(new Set()) }}
-        className="absolute top-3 left-3 z-30 w-10 h-10 flex items-center justify-center rounded-full bg-[var(--bg-secondary)]/60 backdrop-blur-xl border border-white/[0.08] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]/80 transition-all"
+        className="absolute top-3 left-3 z-30 w-10 h-10 flex items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--bg-secondary)_60%,transparent)] backdrop-blur-xl border border-white/[0.08] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[color-mix(in_srgb,var(--bg-secondary)_80%,transparent)] transition-all"
         title={dockVisible ? 'Hide tools (Esc)' : 'Show tools (press 1-6)'}
         aria-label={dockVisible ? 'Hide map tools' : 'Show map tools'}
       >
@@ -797,10 +797,10 @@ export const MapToolDock = memo(function MapToolDock() {
                     flex items-center justify-center rounded-xl transition-all duration-200
                     backdrop-blur-xl
                     ${open
-                      ? 'bg-[var(--bg-secondary)]/80 border border-white/[0.12] text-[var(--text-primary)]'
+                      ? 'bg-[color-mix(in_srgb,var(--bg-secondary)_80%,transparent)] border border-white/[0.12] text-[var(--text-primary)]'
                       : active
-                        ? 'bg-[var(--bg-secondary)]/60 border border-white/[0.08] text-[var(--text-primary)]/70 hover:bg-[var(--bg-secondary)]/80'
-                        : 'bg-[var(--bg-secondary)]/40 border border-white/[0.05] text-[var(--text-muted)] hover:bg-[var(--bg-secondary)]/60 hover:text-[var(--text-secondary)]'}
+                        ? 'bg-[color-mix(in_srgb,var(--bg-secondary)_60%,transparent)] border border-white/[0.08] text-[color-mix(in_srgb,var(--text-primary)_70%,transparent)] hover:bg-[color-mix(in_srgb,var(--bg-secondary)_80%,transparent)]'
+                        : 'bg-[color-mix(in_srgb,var(--bg-secondary)_40%,transparent)] border border-white/[0.05] text-[var(--text-muted)] hover:bg-[color-mix(in_srgb,var(--bg-secondary)_60%,transparent)] hover:text-[var(--text-secondary)]'}
                   `}
                   style={open ? { boxShadow: `0 0 14px ${cat.accent}35, inset 0 0 8px ${cat.accent}12`, borderColor: `${cat.accent}40` } : undefined}
                 >

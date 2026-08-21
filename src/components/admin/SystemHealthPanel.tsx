@@ -181,7 +181,7 @@ export default function SystemHealthPanel() {
         {/* Quick Status Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Database */}
-          <div className="flex items-center gap-3 p-2.5 rounded-lg bg-[var(--bg-tertiary)]/50">
+          <div className="flex items-center gap-3 p-2.5 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
             <div
               className={`w-2.5 h-2.5 rounded-full shrink-0 ${
                 d.database.status === 'healthy' ? 'bg-green-400' : 'bg-red-400'
@@ -201,7 +201,7 @@ export default function SystemHealthPanel() {
           </div>
 
           {/* Uptime */}
-          <div className="flex items-center gap-3 p-2.5 rounded-lg bg-[var(--bg-tertiary)]/50">
+          <div className="flex items-center gap-3 p-2.5 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
             <div className="w-2.5 h-2.5 rounded-full shrink-0 bg-green-400" />
             <div className="min-w-0">
               <p className="text-xs text-[var(--text-muted)]">Uptime</p>
@@ -215,7 +215,7 @@ export default function SystemHealthPanel() {
           </div>
 
           {/* Memory */}
-          <div className="flex items-center gap-3 p-2.5 rounded-lg bg-[var(--bg-tertiary)]/50">
+          <div className="flex items-center gap-3 p-2.5 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
             <div className="w-2.5 h-2.5 rounded-full shrink-0 bg-yellow-400" />
             <div className="min-w-0">
               <p className="text-xs text-[var(--text-muted)]">Memory</p>
@@ -226,7 +226,7 @@ export default function SystemHealthPanel() {
           </div>
 
           {/* API Response */}
-          <div className="flex items-center gap-3 p-2.5 rounded-lg bg-[var(--bg-tertiary)]/50">
+          <div className="flex items-center gap-3 p-2.5 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)]">
             <div className="w-2.5 h-2.5 rounded-full shrink-0 bg-blue-400" />
             <div className="min-w-0">
               <p className="text-xs text-[var(--text-muted)]">API Response</p>
@@ -250,7 +250,7 @@ export default function SystemHealthPanel() {
                   onClick={() => setUptimeRange('7d')}
                   className={`px-2 py-0.5 rounded text-xs font-medium transition-colors ${
                     uptimeRange === '7d'
-                      ? 'bg-[var(--accent)]/15 text-[var(--accent)]'
+                      ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)]'
                       : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
                   }`}
                 >
@@ -260,7 +260,7 @@ export default function SystemHealthPanel() {
                   onClick={() => setUptimeRange('30d')}
                   className={`px-2 py-0.5 rounded text-xs font-medium transition-colors ${
                     uptimeRange === '30d'
-                      ? 'bg-[var(--accent)]/15 text-[var(--accent)]'
+                      ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)]'
                       : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
                   }`}
                 >

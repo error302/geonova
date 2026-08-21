@@ -414,7 +414,7 @@ export function VolumesPanel({ projectId, projectData: _projectData, surveyorPro
                 </thead>
                 <tbody>
                   {result.volumeTable.slice(0, 15).map((row) => (
-                    <tr key={row.station} className="border-b border-[var(--border-color)]/30">
+                    <tr key={row.station} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)]">
                       <td className="py-1.5 px-4">{row.station.toFixed(0)}</td>
                       <td className="py-1.5 px-4 text-right text-red-400">{row.cutArea.toFixed(2)}</td>
                       <td className="py-1.5 px-4 text-right text-green-400">{row.fillArea.toFixed(2)}</td>

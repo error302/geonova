@@ -186,7 +186,7 @@ export default function FieldModeToggle() {
   /* ── Prevent hydration mismatch ────────────────────────────────────── */
   if (!mounted) {
     return (
-      <div className="w-10 h-10 rounded-lg bg-[var(--bg-tertiary)]/50 animate-pulse" />
+      <div className="w-10 h-10 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] animate-pulse" />
     )
   }
 
@@ -207,7 +207,7 @@ export default function FieldModeToggle() {
           group
           ${isField
             ? 'bg-[var(--accent)] text-black shadow-lg shadow-[var(--accent)]/25'
-            : 'bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent)]/40'
+            : 'bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)]'
           }
         `}
       >
@@ -226,7 +226,7 @@ export default function FieldModeToggle() {
       {/* First-use tooltip */}
       {showTooltip && (
         <div className="absolute top-full right-0 mt-2 z-50 w-64 animate-in fade-in slide-in-from-top-1 duration-200">
-          <div className="bg-[var(--bg-secondary)] border border-[var(--accent)]/30 rounded-xl p-3 shadow-xl">
+          <div className="bg-[var(--bg-secondary)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rounded-xl p-3 shadow-xl">
             <div className="flex items-start gap-2.5">
               <Sun className="w-5 h-5 text-[var(--accent)] flex-shrink-0 mt-0.5" strokeWidth={2} />
               <div className="flex-1 min-w-0">
@@ -276,7 +276,7 @@ export default function FieldModeToggle() {
           </div>
 
           {/* Arrow */}
-          <div className="absolute -top-1.5 right-4 w-3 h-3 bg-[var(--bg-secondary)] border-l border-t border-[var(--accent)]/30 rotate-45" />
+          <div className="absolute -top-1.5 right-4 w-3 h-3 bg-[var(--bg-secondary)] border-l border-t border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rotate-45" />
         </div>
       )}
 

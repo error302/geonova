@@ -55,10 +55,10 @@ export default function ReportsPage() {
             <Link
               key={report.name}
               href={report.href}
-              className="group p-6 rounded-xl bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[var(--accent)]/30 transition-all duration-300 hover:-translate-y-0.5 no-underline"
+              className="group p-6 rounded-xl bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-all duration-300 hover:-translate-y-0.5 no-underline"
             >
               <div className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-lg bg-[var(--accent-subtle)] flex items-center justify-center shrink-0 group-hover:bg-[var(--accent)]/20 transition-colors">
+                <div className="w-11 h-11 rounded-lg bg-[var(--accent-subtle)] flex items-center justify-center shrink-0 group-hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] transition-colors">
                   <Icon className="w-5 h-5 text-[var(--accent)]" />
                 </div>
                 <div className="flex-1 min-w-0">

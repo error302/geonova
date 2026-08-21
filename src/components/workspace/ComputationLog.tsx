@@ -256,7 +256,7 @@ export default function ComputationLog() {
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-[var(--border-color)]/50">
+            <div className="divide-y divide-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
               {computationLogs.map((entry) => (
                 <LogEntryRow key={entry.id} entry={entry} />
               ))}

@@ -48,7 +48,7 @@ export const MapOverlays = memo(function MapOverlays() {
             const view = mapInstance.current?.getView()
             view?.animate({ zoom: (view.getZoom() ?? 0) + 1 }, { duration: 200 })
           }}
-          className="w-10 h-10 bg-[var(--bg-secondary)]/90 backdrop-blur-sm border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] flex items-center justify-center hover:bg-[var(--accent)]/20 transition-colors"
+          className="w-10 h-10 bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] backdrop-blur-sm border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] flex items-center justify-center hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] transition-colors"
           title="Zoom In"
           aria-label="Zoom in"
         >
@@ -59,7 +59,7 @@ export const MapOverlays = memo(function MapOverlays() {
             const view = mapInstance.current?.getView()
             view?.animate({ zoom: Math.max(6, (view.getZoom() ?? 0) - 1) }, { duration: 200 })
           }}
-          className="w-10 h-10 bg-[var(--bg-secondary)]/90 backdrop-blur-sm border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] flex items-center justify-center hover:bg-[var(--accent)]/20 transition-colors"
+          className="w-10 h-10 bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] backdrop-blur-sm border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] flex items-center justify-center hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] transition-colors"
           title="Zoom Out"
           aria-label="Zoom out"
         >
@@ -70,7 +70,7 @@ export const MapOverlays = memo(function MapOverlays() {
       {/* GPS status badge - bottom left */}
       {gpsTracking && gpsPos && (
         <div
-          className="absolute z-[1000] bg-[var(--bg-secondary)]/90 backdrop-blur-sm border border-green-500/30 rounded-lg px-3 py-1.5 text-xs text-[var(--success)] font-mono"
+          className="absolute z-[1000] bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] backdrop-blur-sm border border-green-500/30 rounded-lg px-3 py-1.5 text-xs text-[var(--success)] font-mono"
           style={{ bottom: `calc(${isMobile ? '64px' : '0px'} + 56px)`, left: '16px' }}
         >
           GPS {'\u00B1'}{Math.round(gpsPos.accuracy)}m
@@ -82,7 +82,7 @@ export const MapOverlays = memo(function MapOverlays() {
         const info = stakeoutInfo()
         return (
           <div
-            className="absolute z-[1000] bg-[var(--bg-secondary)]/95 backdrop-blur-xl border border-[var(--accent)]/30 rounded-xl px-4 py-3 shadow-2xl"
+            className="absolute z-[1000] bg-[color-mix(in_srgb,var(--bg-secondary)_95%,transparent)] backdrop-blur-xl border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] rounded-xl px-4 py-3 shadow-2xl"
             style={{ bottom: `calc(${isMobile ? '64px' : '0px'} + 56px)`, right: '16px', width: isMobile ? '180px' : '220px' }}
           >
             <div className="flex items-center justify-between mb-2">
@@ -106,7 +106,7 @@ export const MapOverlays = memo(function MapOverlays() {
             {!gpsTracking && (
               <button
                 onClick={toggleGPS}
-                className="mt-2 w-full py-1.5 rounded-lg bg-[var(--success)]/20 border border-green-500/30 text-[var(--success)] text-[10px] font-medium hover:bg-[var(--success)]/30 transition-colors"
+                className="mt-2 w-full py-1.5 rounded-lg bg-[color-mix(in_srgb,var(--success)_20%,transparent)] border border-green-500/30 text-[var(--success)] text-[10px] font-medium hover:bg-[color-mix(in_srgb,var(--success)_30%,transparent)] transition-colors"
               >
                 Enable GPS
               </button>
@@ -118,7 +118,7 @@ export const MapOverlays = memo(function MapOverlays() {
       {/* Project count - top center */}
       {projectCount > 0 && (
         <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20">
-          <div className="bg-[var(--bg-secondary)]/90 backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-full px-3 py-1 shadow-lg">
+          <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-full px-3 py-1 shadow-lg">
             <span className="text-[11px] text-[var(--accent)] font-semibold">{projectCount} project{projectCount > 1 ? 's' : ''}</span>
           </div>
         </div>

@@ -38,7 +38,7 @@ export default function StakingTablePage() {
             <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="stake-interval-m">Stake Interval (m)</label><input id="stake-interval-m" type="number" value={interval} onChange={e => setInterval(+e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
             <div><label className="block text-sm text-zinc-400 mb-2" htmlFor="offsets-comma-sep-m">Offsets (comma-sep, m)</label><input id="offsets-comma-sep-m" type="text" value={offsets} onChange={e => setOffsets(e.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white" /></div>
           </div>
-          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg">Generate Staking Table</button>
+          <button onClick={compute} className="w-full py-3 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] text-black font-semibold rounded-lg">Generate Staking Table</button>
         </div>
         <div>
           {computed ? (

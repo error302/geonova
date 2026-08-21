@@ -118,7 +118,7 @@ export default function SightDistancePage() {
           {/* AUDIT FIX (2026-07-05): Explicit Compute button */}
           <button
             onClick={compute}
-            className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-black font-semibold rounded-lg transition-colors"
+            className="w-full py-3 bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,transparent)] text-black font-semibold rounded-lg transition-colors"
           >
             Compute Sight Distance
           </button>

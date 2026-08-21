@@ -139,7 +139,7 @@ function FallbackTable<T>({
               <tr
                 key={rowKey ? rowKey(row, idx) : idx}
                 className={`
-                  border-b border-[var(--border-color)]/30 transition-colors
+                  border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)] transition-colors
                   ${idx % 2 === 0 ? 'bg-[var(--bg-primary)]' : 'bg-[var(--bg-secondary)]'}
                   ${isSelected ? 'bg-[var(--accent-subtle)]' : ''}
                   ${onRowClick ? 'cursor-pointer hover:bg-[var(--accent-subtle)]' : ''}
@@ -274,7 +274,7 @@ function VirtualizedTableInner<T>(props: VirtualizedTableProps<T>) {
             cursor: onRowClick ? 'pointer' : undefined,
           }}
           className={`
-            border-b border-[var(--border-color)]/20 transition-colors
+            border-b border-[color-mix(in_srgb,var(--border-color)_20%,transparent)] transition-colors
             ${bgClass}
             ${onRowClick ? 'hover:bg-[var(--accent-subtle)]' : ''}
           `}

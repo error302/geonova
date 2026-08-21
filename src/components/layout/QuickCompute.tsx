@@ -150,16 +150,16 @@ export function QuickCompute() {
 
         {/* Panel */}
         <div
-          className={`w-full sm:w-80 bg-[var(--bg-secondary)]/98 backdrop-blur-xl border-l border-[var(--border-color)]/[0.06]
+          className={`w-full sm:w-80 bg-[color-mix(in_srgb,var(--bg-secondary)_98%,transparent)] backdrop-blur-xl border-l border-[var(--border-color)]/[0.06]
                       overflow-y-auto custom-scrollbar-quick
                       transition-transform duration-300 ease-out
                       ${open ? 'translate-x-0' : 'translate-x-full'}`}
         >
           {/* Panel header */}
-          <div className="sticky top-0 z-10 p-4 bg-[var(--bg-secondary)]/95 backdrop-blur-xl border-b border-[var(--border-color)]/[0.06]">
+          <div className="sticky top-0 z-10 p-4 bg-[color-mix(in_srgb,var(--bg-secondary)_95%,transparent)] backdrop-blur-xl border-b border-[var(--border-color)]/[0.06]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+                <div className="w-7 h-7 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
                   <BoltIcon className="w-4 h-4" active />
                 </div>
                 <h2 className="font-semibold text-white text-base tracking-wide">Quick Compute</h2>

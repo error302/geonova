@@ -528,7 +528,7 @@ export default function SchemeWorkspacePage() {
                       : 0
 
                     return (
-                      <tr key={block.id} className="border-b border-[var(--border-color)]/50 hover:bg-[var(--bg-secondary)] transition-colors">
+                      <tr key={block.id} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)] hover:bg-[var(--bg-secondary)] transition-colors">
                         <td className="px-5 py-3 font-mono text-[var(--accent)]">{block.block_number}</td>
                         <td className="px-5 py-3 text-[var(--text-primary)]">{block.block_name || '—'}</td>
                         <td className="px-5 py-3 text-[var(--text-secondary)]">{block.parcel_count}</td>

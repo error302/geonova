@@ -254,7 +254,7 @@ export default function AsBuiltDeviationPage() {
               {/* Verdict */}
               <div className={`card ${report.stats.passRate >= 95 ? 'border-[var(--success)]' : report.stats.passRate >= 80 ? 'border-[var(--warning)]' : 'border-[var(--error)]'}`}>
                 <div className="card-body flex items-center gap-3">
-                  <div className={`w-10 h-10 flex items-center justify-center ${report.stats.passRate >= 95 ? 'bg-[var(--success)]/15' : report.stats.passRate >= 80 ? 'bg-[var(--warning)]/15' : 'bg-[var(--error)]/15'}`}>
+                  <div className={`w-10 h-10 flex items-center justify-center ${report.stats.passRate >= 95 ? 'bg-[color-mix(in_srgb,var(--success)_15%,transparent)]' : report.stats.passRate >= 80 ? 'bg-[color-mix(in_srgb,var(--warning)_15%,transparent)]' : 'bg-[color-mix(in_srgb,var(--error)_15%,transparent)]'}`}>
                     {report.stats.passRate >= 95 ? (
                       <svg className="w-6 h-6 text-[var(--success)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -294,7 +294,7 @@ export default function AsBuiltDeviationPage() {
                       </thead>
                       <tbody>
                         {report.results.map(r => (
-                          <tr key={r.pointId} className="border-b border-[var(--border-color)]/50">
+                          <tr key={r.pointId} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                             <td className="py-1.5 font-mono text-[var(--accent)]">{r.pointId}</td>
                             <td className="py-1.5 text-right font-mono text-[var(--text-muted)]">{r.chainage.toFixed(1)}</td>
                             <td className="py-1.5 text-right font-mono text-[var(--text-primary)]">{r.asBuiltElevation.toFixed(3)}</td>

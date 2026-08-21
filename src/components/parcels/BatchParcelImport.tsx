@@ -315,7 +315,7 @@ MWAVUMBO/002,534860.000,9574230.000,Jane Smith,87654321,LR/12345/679,0.7500`
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
         className={`rounded-xl border-2 border-dashed p-8 text-center cursor-pointer transition-all ${
-          dragOver ? 'border-[var(--accent)] bg-[var(--accent)]/5' : 'border-[var(--border-color)] hover:border-[var(--accent)]/50'
+          dragOver ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]' : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]'
         }`}
       >
         <input
@@ -332,7 +332,7 @@ MWAVUMBO/002,534860.000,9574230.000,Jane Smith,87654321,LR/12345/679,0.7500`
           </div>
         ) : (
           <div className="flex flex-col items-center">
-            <div className="w-12 h-12 rounded-xl bg-[var(--accent)]/10 flex items-center justify-center mb-3">
+            <div className="w-12 h-12 rounded-xl bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center mb-3">
               <Upload className="w-6 h-6 text-[var(--accent)]" />
             </div>
             <p className="text-sm font-medium text-[var(--text-primary)]">
@@ -417,7 +417,7 @@ MWAVUMBO/002,534860.000,9574230.000,Jane Smith,87654321,LR/12345/679,0.7500`
               </thead>
               <tbody>
                 {parcels.map(parcel => (
-                  <tr key={parcel.id} className="border-b border-[var(--border-color)]/50">
+                  <tr key={parcel.id} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                     <td className="px-2 py-2 text-xs font-mono text-[var(--text-primary)]">{parcel.parcelNumber}</td>
                     <td className="px-2 py-2 text-xs text-gray-400">{parcel.ownerName || '—'}</td>
                     <td className="px-2 py-2 text-xs text-center text-gray-400">{parcel.vertices.length}</td>

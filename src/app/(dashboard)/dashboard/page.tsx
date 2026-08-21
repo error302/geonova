@@ -138,7 +138,7 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <div className="mb-8 rounded-xl border border-[var(--accent)]/20 bg-[var(--accent)]/5 p-5">
+      <div className="mb-8 rounded-xl border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] p-5">
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div>
             <h2 className="font-semibold text-[var(--text-primary)] mb-1">
@@ -199,7 +199,7 @@ export default async function DashboardPage() {
                 { step: '5', title: 'Submit', desc: 'Export shapefiles, field books, PDF for Director', icon: 'upload', color: 'from-rose-500/20 to-pink-500/20', link: '/project/new', cta: 'Start Project' },
               ].map((item) => (
                 <Link key={item.step} href={item.link} prefetch={false}
-                  className="group relative flex flex-col items-center text-center p-4 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-[var(--accent)]/40 hover:bg-[var(--bg-tertiary)] transition-all duration-200"
+                  className="group relative flex flex-col items-center text-center p-4 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] hover:bg-[var(--bg-tertiary)] transition-all duration-200"
                 >
                   <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-3 ring-1 ring-inset ring-white/5 group-hover:scale-110 transition-transform`}>
                     <StepIcon name={item.icon} />

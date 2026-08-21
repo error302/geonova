@@ -318,7 +318,7 @@ function WeatherNoteButton({ onWeatherNote }: { onWeatherNote?: (note: WeatherNo
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-[var(--accent)]/40 transition-colors"
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] transition-colors"
         title="Tag weather conditions"
       >
         <CloudSun className="w-3.5 h-3.5 text-[var(--accent)]" />
@@ -455,7 +455,7 @@ function ComputationPreviewCard({ preview }: { preview: ComputationPreview | nul
 
   return (
     <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl overflow-hidden shadow-sm">
-      <div className="flex items-center gap-2 px-3 py-2 bg-[var(--bg-secondary)]/50 border-b border-[var(--border-color)]">
+      <div className="flex items-center gap-2 px-3 py-2 bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border-b border-[var(--border-color)]">
         <Calculator className="w-3.5 h-3.5 text-[var(--accent)]" />
         <span className="text-xs font-semibold text-[var(--text-primary)]">
           Live Preview

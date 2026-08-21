@@ -38,7 +38,7 @@ export default function CorridorPage() {
     } catch (e) { setError(e instanceof Error ? e.message : 'Failed') }
   }, [piInput, shotsInput, interval])
 
-  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[var(--accent)]/30 focus:outline-none"
+  const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
 
   return (
     <div className="min-h-screen p-6 max-w-6xl mx-auto">
@@ -46,11 +46,11 @@ export default function CorridorPage() {
       <p className="text-sm text-[var(--text-muted)] mb-6">Define an alignment from PI points → auto-organize field shots into cross-sections by chainage station. Designed for KeNHA road corridors.</p>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
           <h2 className="text-sm font-semibold mb-2 flex items-center gap-2"><Route className="w-4 h-4" /> PI Points (id,easting,northing)</h2>
           <textarea value={piInput} onChange={e => setPiInput(e.target.value)} className={inputCls + ' h-40 font-mono'} placeholder="PI1,264000,9861000&#10;PI2,264100,9861100&#10;PI3,264200,9861200" />
         </div>
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
           <h2 className="text-sm font-semibold mb-2 flex items-center gap-2"><MapIcon className="w-4 h-4" /> Field Shots (easting,northing,rl)</h2>
           <textarea value={shotsInput} onChange={e => setShotsInput(e.target.value)} className={inputCls + ' h-40 font-mono'} placeholder="264000,9861000,1500&#10;264010,9861000,1500.1&#10;263990,9861000,1499.9" />
         </div>
@@ -64,7 +64,7 @@ export default function CorridorPage() {
       {error && <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-4 text-xs text-red-400 flex items-center gap-2"><AlertCircle className="w-4 h-4" /> {error}</div>}
 
       {crossSections.length > 0 && (
-        <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] rounded-xl p-4">
+        <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4">
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-sm font-semibold">Cross-Sections ({crossSections.length} stations)</h2>
             <span className="text-[10px] text-[var(--text-muted)]">Alignment length: {alignmentLength.toFixed(1)} m</span>
@@ -76,7 +76,7 @@ export default function CorridorPage() {
               </tr></thead>
               <tbody>
                 {crossSections.map(cs => (
-                  <tr key={cs.chainage} className="border-b border-[var(--border-color)]/30 text-[var(--text-secondary)]">
+                  <tr key={cs.chainage} className="border-b border-[color-mix(in_srgb,var(--border-color)_30%,transparent)] text-[var(--text-secondary)]">
                     <td className="py-1.5 px-1 font-mono font-bold text-[var(--accent)]">{cs.label}</td>
                     <td className="text-right font-mono">{cs.shots.length}</td>
                     <td className="text-right font-mono">{cs.leftOffset.toFixed(1)}</td>

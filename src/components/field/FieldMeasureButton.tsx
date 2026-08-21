@@ -108,15 +108,15 @@ export function FieldMeasureButton({
   let label = 'MEASURE'
 
   if (isCapturing) {
-    buttonClass += ' bg-[var(--accent)]/30 border-4 border-[var(--accent)] text-[var(--accent)]'
+    buttonClass += ' bg-[color-mix(in_srgb,var(--accent)_30%,transparent)] border-4 border-[var(--accent)] text-[var(--accent)]'
     icon = <Loader2 className="w-8 h-8 animate-spin" />
     label = 'CAPTURING…'
   } else if (lastResult === 'success') {
-    buttonClass += ' bg-[var(--success)]/30 border-4 border-[var(--success)] text-[var(--success)] scale-105'
+    buttonClass += ' bg-[color-mix(in_srgb,var(--success)_30%,transparent)] border-4 border-[var(--success)] text-[var(--success)] scale-105'
     icon = <CheckCircle className="w-8 h-8" />
     label = 'CAPTURED'
   } else if (lastResult === 'error') {
-    buttonClass += ' bg-[var(--error)]/30 border-4 border-[var(--error)] text-[var(--error)]'
+    buttonClass += ' bg-[color-mix(in_srgb,var(--error)_30%,transparent)] border-4 border-[var(--error)] text-[var(--error)]'
     icon = <AlertTriangle className="w-8 h-8" />
     label = 'FAILED'
   } else if (isDisabled) {
@@ -124,7 +124,7 @@ export function FieldMeasureButton({
     if (!isConnected) label = 'NO INSTRUMENT'
     else if (!stationSetup) label = 'SETUP FIRST'
   } else {
-    buttonClass += ' bg-[var(--accent)]/15 border-4 border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent)]/25 active:scale-95 cursor-pointer'
+    buttonClass += ' bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-4 border-[var(--accent)] text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)] active:scale-95 cursor-pointer'
   }
 
   return (

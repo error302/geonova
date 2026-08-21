@@ -76,7 +76,7 @@ export function VersionHistory({ versions, onRestore }: VersionHistoryProps) {
       <div className="card p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center">
               <History className="w-4 h-4 text-[var(--accent)]" />
             </div>
             <div>
@@ -87,7 +87,7 @@ export function VersionHistory({ versions, onRestore }: VersionHistoryProps) {
           {canCompare && (
             <button
               onClick={() => setShowDiff(!showDiff)}
-              className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)] text-xs font-medium hover:bg-[var(--accent)]/20"
+              className="flex items-center gap-1.5 px-3 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)] text-xs font-medium hover:bg-[color-mix(in_srgb,var(--accent)_20%,transparent)]"
             >
               <GitBranch className="w-3.5 h-3.5" />
               {showDiff ? 'Hide Diff' : 'Compare'}
@@ -120,8 +120,8 @@ export function VersionHistory({ versions, onRestore }: VersionHistoryProps) {
                   onClick={() => handleSelect(version.id)}
                   className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
                     isSelected
-                      ? 'border-[var(--accent)]/30 bg-[var(--accent)]/5'
-                      : 'border-[var(--border-color)] hover:border-[var(--accent)]/20'
+                      ? 'border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]'
+                      : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_20%,transparent)]'
                   }`}
                 >
                   {/* Version badge */}
@@ -287,7 +287,7 @@ function VersionDiff({ v1, v2 }: { v1: PlanVersion; v2: PlanVersion }) {
             </thead>
             <tbody>
               {diffs.map((diff) => (
-                <tr key={diff.field} className="border-b border-[var(--border-color)]/50">
+                <tr key={diff.field} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                   <td className="px-3 py-2 text-xs text-[var(--text-primary)] font-medium">{diff.field}</td>
                   <td className="px-3 py-2 text-xs text-gray-400 font-mono">
                     {diff.type === 'added' ? '—' : diff.v1Value}

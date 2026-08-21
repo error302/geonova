@@ -116,7 +116,7 @@ export default function AreaCalculator() {
                         <td className="text-left font-semibold">{String.fromCharCode(65 + i)}</td>
                         <td><input className="input" value={p.n} onChange={e => updatePoint(p.id, 'n', e.target.value)} onFocus={e => e.target.select()} aria-label="Northing (m)" placeholder="e.g. 5000" /></td>
                         <td><input className="input" value={p.e} onChange={e => updatePoint(p.id, 'e', e.target.value)} onFocus={e => e.target.select()} aria-label="Easting (m)" placeholder="e.g. 3000" /></td>
-                        <td><button onClick={() => removePoint(p.id)} className="text-[var(--error)] p-2 hover:bg-[var(--error)]/10 rounded">×</button></td>
+                        <td><button onClick={() => removePoint(p.id)} className="text-[var(--error)] p-2 hover:bg-[color-mix(in_srgb,var(--error)_10%,transparent)] rounded">×</button></td>
                       </tr>
                     ))}
                   </tbody>

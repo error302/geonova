@@ -234,7 +234,7 @@ export default function FieldBookWithSelection({
         <div className="flex items-center gap-1 flex-shrink-0">
           <button
             onClick={handleGoToFieldBook}
-            className="flex items-center gap-1 px-2 py-1 rounded text-xs text-[var(--accent)] hover:bg-[var(--accent)]/10 transition-colors font-medium"
+            className="flex items-center gap-1 px-2 py-1 rounded text-xs text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] transition-colors font-medium"
           >
             <BookOpen className="w-3 h-3" />
             <span>Go to Field Book</span>
@@ -317,9 +317,9 @@ export default function FieldBookWithSelection({
                     key={rowIdx}
                     onClick={() => handleRowClick(rowIdx)}
                     className={cn(
-                      'cursor-pointer transition-colors border-b border-[var(--border-color)]/40',
+                      'cursor-pointer transition-colors border-b border-[color-mix(in_srgb,var(--border-color)_40%,transparent)]',
                       isSelected
-                        ? 'bg-[var(--accent)]/10 border-l-2 border-l-[var(--accent)]'
+                        ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border-l-2 border-l-[var(--accent)]'
                         : 'hover:bg-[var(--bg-tertiary)] border-l-2 border-l-transparent',
                     )}
                   >

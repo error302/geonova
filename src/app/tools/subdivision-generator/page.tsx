@@ -248,8 +248,8 @@ export default function SubdivisionGeneratorPage() {
 
               {/* Warnings */}
               {result.warnings.length > 0 && (
-                <div className="card border-[var(--warning)]/40">
-                  <div className="card-header bg-[var(--warning)]/5"><span className="label text-[var(--warning)]">Warnings</span></div>
+                <div className="card border-[color-mix(in_srgb,var(--warning)_40%,transparent)]">
+                  <div className="card-header bg-[color-mix(in_srgb,var(--warning)_5%,transparent)]"><span className="label text-[var(--warning)]">Warnings</span></div>
                   <div className="card-body space-y-2">
                     {result.warnings.map((w, i) => (
                       <p key={`${w}-${i}`} className="text-xs text-[var(--text-secondary)] font-mono">{w}</p>
@@ -279,7 +279,7 @@ export default function SubdivisionGeneratorPage() {
                         </thead>
                         <tbody>
                           {result.plots.map(plot => (
-                            <tr key={plot.id} className="border-b border-[var(--border-color)]/50">
+                            <tr key={plot.id} className="border-b border-[color-mix(in_srgb,var(--border-color)_50%,transparent)]">
                               <td className="py-1.5 font-mono text-[var(--accent)]">{plot.label}</td>
                               <td className="py-1.5 text-right font-mono text-[var(--text-primary)]">{plot.areaSqM.toFixed(1)}</td>
                               <td className="py-1.5 text-right font-mono text-[var(--text-muted)]">{(plot.areaSqM / 10000).toFixed(4)}</td>

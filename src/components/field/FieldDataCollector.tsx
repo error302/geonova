@@ -334,7 +334,7 @@ function InstrumentPanelToggle({ onShow }: { onShow: () => void }) {
   return (
     <button
       onClick={onShow}
-      className="mt-6 flex items-center gap-2 px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent)]/30"
+      className="mt-6 flex items-center gap-2 px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)]"
     >
       <Settings className="w-4 h-4" /> Connect Instrument
       <ChevronRight className="w-4 h-4" />

@@ -114,21 +114,21 @@ export function ReportTab({
               </tr>
             </thead>
             <tbody>
-              <tr className={selectedClass.name === 'Class I' ? 'bg-[var(--accent)]/10' : ''}>
+              <tr className={selectedClass.name === 'Class I' ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' : ''}>
                 <td className="font-semibold">Class I</td>
                 <td>1:500</td>
                 <td className="font-mono">≤ 0.075</td>
                 <td className="font-mono">≤ 0.150</td>
                 <td className="text-[var(--text-muted)] text-sm">Engineering surveys, as-built, high-precision topographic</td>
               </tr>
-              <tr className={selectedClass.name === 'Class II' ? 'bg-[var(--accent)]/10' : ''}>
+              <tr className={selectedClass.name === 'Class II' ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' : ''}>
                 <td className="font-semibold">Class II</td>
                 <td>1:1000</td>
                 <td className="font-mono">≤ 0.150</td>
                 <td className="font-mono">≤ 0.300</td>
                 <td className="text-[var(--text-muted)] text-sm">General topographic, cadastral, planning surveys</td>
               </tr>
-              <tr className={selectedClass.name === 'Class III' ? 'bg-[var(--accent)]/10' : ''}>
+              <tr className={selectedClass.name === 'Class III' ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' : ''}>
                 <td className="font-semibold">Class III</td>
                 <td>1:2500</td>
                 <td className="font-mono">≤ 0.375</td>

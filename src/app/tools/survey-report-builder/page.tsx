@@ -62,7 +62,7 @@ function SurveyReportBuilderContent() {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center p-4">
         <div className="text-center max-w-sm">
-          <div className="w-16 h-16 rounded-2xl bg-[var(--accent)]/10 flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 rounded-2xl bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
             </svg>
@@ -116,8 +116,8 @@ function SurveyReportBuilderContent() {
                     onClick={() => setSelectedProjectId(p.id)}
                     className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
                       selectedProjectId === p.id
-                        ? 'border-[var(--accent)] bg-[var(--accent)]/5'
-                        : 'border-[var(--border-color)] hover:border-[var(--accent)]/50'
+                        ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]'
+                        : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]'
                     }`}
                   >
                     <div className="font-medium">{p.name}</div>

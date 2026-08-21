@@ -29,7 +29,7 @@ export default function EarthworksPage() {
       />
 
       {/* Info banner replacing hardcoded demo summary */}
-      <div className="mb-6 p-4 border border-[var(--accent)]/30 bg-[var(--accent)]/5 rounded-md">
+      <div className="mb-6 p-4 border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)] rounded-md">
         <p className="font-mono text-[10px] text-[var(--accent)] tracking-[0.08em] uppercase mb-1">How this works</p>
         <p className="text-sm text-[var(--text-secondary)]">
           Enter cross-section data below (or load from project via <code className="font-mono text-[var(--accent)]">?project=ID</code>).

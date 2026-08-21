@@ -147,7 +147,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
-      <header className="border-b border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
+      <header className="border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)]">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center">
           <a href="/dashboard" className="text-2xl font-bold text-[var(--accent)]">
             METARDU

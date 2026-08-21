@@ -29,7 +29,7 @@ export default function ControlSetupToolbar({
                 key={s.id}
                 onClick={() => setActiveControlSetupId(s.id)}
                 className={`px-3 py-2 rounded-lg text-sm border whitespace-nowrap transition-colors ${
-                  active ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-[var(--bg-secondary)]/40 border-[var(--border-color)] text-[var(--text-secondary)] hover:border-amber-500/30'
+                  active ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-[color-mix(in_srgb,var(--bg-secondary)_40%,transparent)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-amber-500/30'
                 }`}
               >
                 {label}
@@ -38,7 +38,7 @@ export default function ControlSetupToolbar({
           })}
 
           <button
-            className="px-3 py-2 rounded-lg text-sm border bg-[var(--bg-secondary)]/40 border-[var(--border-color)] text-[var(--text-secondary)] hover:border-amber-500/30 whitespace-nowrap"
+            className="px-3 py-2 rounded-lg text-sm border bg-[color-mix(in_srgb,var(--bg-secondary)_40%,transparent)] border-[var(--border-color)] text-[var(--text-secondary)] hover:border-amber-500/30 whitespace-nowrap"
             onClick={() => {
               const id = crypto.randomUUID()
               const suffix = controlSetups.length + 1

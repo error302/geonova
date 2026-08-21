@@ -381,7 +381,7 @@ export default function ProcessPage() {
           <div
             className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-colors ${
               dragActive 
-                ? 'border-[var(--accent)] bg-[var(--accent)]/10' 
+                ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]' 
                 : 'border-[var(--border-color)] hover:border-gray-600'
             }`}
             onDragEnter={handleDrag}
@@ -406,7 +406,7 @@ export default function ProcessPage() {
             />
           </div>
 
-          <div className="mt-8 p-6 bg-[var(--bg-secondary)]/50 rounded-xl border border-[var(--border-color)]">
+          <div className="mt-8 p-6 bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] rounded-xl border border-[var(--border-color)]">
             <h3 className="text-sm font-semibold text-[var(--text-secondary)] mb-4">Download Sample Files</h3>
             <div className="flex flex-wrap gap-3">
               <a href="/sample-files/traverse_sample.csv" className="px-4 py-2 bg-[var(--bg-tertiary)] hover:bg-[var(--border-hover)] text-[var(--text-primary)] rounded text-sm">
@@ -475,7 +475,7 @@ export default function ProcessPage() {
                           onClick={() => setSelectedProfile(profile)}
                           className={`p-3 rounded-lg border text-left transition-colors ${
                             selectedProfile === profile
-                              ? 'border-[var(--accent)] bg-[var(--accent)]/10'
+                              ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]'
                               : 'border-[var(--border-color)] hover:border-gray-600'
                           }`}
                         >

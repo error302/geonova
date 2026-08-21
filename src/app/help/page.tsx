@@ -128,7 +128,7 @@ export default function HelpPage() {
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[var(--accent)]/10 mb-4">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] mb-4">
           <BookOpen className="w-7 h-7 text-[var(--accent)]" />
         </div>
         <h1 className="text-3xl font-bold text-[var(--text-primary)]">Help & Support</h1>
@@ -145,7 +145,7 @@ export default function HelpPage() {
           value={query}
           onChange={e => setQuery(e.target.value)}
           aria-label="Search for help..."
-          className="w-full h-12 pl-10 pr-4 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-xl text-sm text-[var(--text-primary)] placeholder-gray-600 focus:border-[var(--accent)]/30 focus:outline-none"
+          className="w-full h-12 pl-10 pr-4 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-xl text-sm text-[var(--text-primary)] placeholder-gray-600 focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
         />
       </div>
 
@@ -159,8 +159,8 @@ export default function HelpPage() {
               onClick={() => setActiveCategory(cat)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 activeCategory === cat
-                  ? 'bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)]'
-                  : 'bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)] text-gray-400 hover:text-gray-300'
+                  ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]'
+                  : 'bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] border border-[var(--border-color)] text-gray-400 hover:text-gray-300'
               }`}
             >
               {Icon && <Icon className="w-3.5 h-3.5" />}
@@ -190,7 +190,7 @@ export default function HelpPage() {
               >
                 <button
                   onClick={() => setExpandedId(isExpanded ? null : id)}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[var(--bg-tertiary)]/50 transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] transition-colors text-left"
                 >
                   <Icon className="w-4 h-4 text-[var(--accent)] shrink-0" />
                   <span className="flex-1 text-sm font-medium text-[var(--text-primary)]">{faq.question}</span>
@@ -222,21 +222,21 @@ export default function HelpPage() {
       <div className="mt-8 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5">
         <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-3">Still need help?</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <a href="mailto:support@metardu.com" suppressHydrationWarning className="flex items-center gap-2 p-3 rounded-lg bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)] hover:border-[var(--accent)]/30 transition-colors">
+          <a href="mailto:support@metardu.com" suppressHydrationWarning className="flex items-center gap-2 p-3 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-colors">
             <Mail className="w-4 h-4 text-[var(--accent)] shrink-0" />
             <div>
               <p className="text-xs font-medium text-[var(--text-primary)]">Email Support</p>
               <p className="text-[10px] text-gray-500">support@metardu.com</p>
             </div>
           </a>
-          <a href="/community" className="flex items-center gap-2 p-3 rounded-lg bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)] hover:border-[var(--accent)]/30 transition-colors">
+          <a href="/community" className="flex items-center gap-2 p-3 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-colors">
             <MessageSquare className="w-4 h-4 text-[var(--accent)] shrink-0" />
             <div>
               <p className="text-xs font-medium text-[var(--text-primary)]">Community Forum</p>
               <p className="text-[10px] text-gray-500">Ask other surveyors</p>
             </div>
           </a>
-          <div className="flex items-center gap-2 p-3 rounded-lg bg-[var(--bg-tertiary)]/50 border border-[var(--border-color)]">
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-[color-mix(in_srgb,var(--bg-tertiary)_50%,transparent)] border border-[var(--border-color)]">
             <Phone className="w-4 h-4 text-gray-500 shrink-0" />
             <div>
               <p className="text-xs font-medium text-[var(--text-primary)]">Enterprise</p>
@@ -253,7 +253,7 @@ function QuickLink({ href, icon: Icon, label }: { href: string; icon: typeof Boo
   return (
     <Link
       href={href}
-      className="flex items-center gap-2 p-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[var(--accent)]/30 hover:bg-[var(--bg-tertiary)]/30 transition-colors"
+      className="flex items-center gap-2 p-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] hover:bg-[color-mix(in_srgb,var(--bg-tertiary)_30%,transparent)] transition-colors"
     >
       <Icon className="w-4 h-4 text-[var(--accent)]" />
       <span className="text-xs font-medium text-[var(--text-primary)]">{label}</span>

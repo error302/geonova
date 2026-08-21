@@ -51,8 +51,8 @@ export default function BeaconPicker({ value, status, onChange, disabled }: Beac
                 className={`
                   relative flex flex-col items-center justify-center p-2 rounded-lg border-2 transition-all
                   ${isSelected 
-                    ? 'border-[var(--accent)] bg-[var(--accent)]/5' 
-                    : 'border-[var(--border-color)] hover:border-[var(--accent)]/50'
+                    ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]' 
+                    : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)]'
                   }
                   ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                 `}
