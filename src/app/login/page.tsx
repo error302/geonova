@@ -232,8 +232,14 @@ function LoginForm() {
       {/* Main content */}
       <main className="relative z-10 flex min-h-[calc(100vh-88px)] items-center justify-center px-4 sm:px-6 pb-12">
         <div className="w-full max-w-md">
-          {/* Dark frosted-glass card — pops against the light topo map */}
-          <div className="relative rounded-2xl border border-white/10 bg-[var(--bg-card)]/80 backdrop-blur-2xl shadow-[0_24px_80px_-12px_rgba(0,0,0,0.7)] overflow-hidden">
+          {/* Dark frosted-glass card — pops against the light topo map.
+              NOTE: bg-[var(--bg-card)]/80 silently compiles to a fully
+              transparent background (Tailwind can't apply an opacity
+              modifier to a var() color), which washed the white card text
+              out over the light map. Hard-code the auth-page dark card
+              color with real alpha instead (.auth-page pins --bg-card to
+              #080808 in globals.css). */}
+          <div className="relative rounded-2xl border border-white/10 bg-[rgba(8,8,8,0.82)] backdrop-blur-2xl shadow-[0_24px_80px_-12px_rgba(0,0,0,0.7)] overflow-hidden">
             {/* Top accent stripe */}
             <div className="h-1 w-full bg-gradient-to-r from-[var(--accent)] via-orange-400 to-[var(--accent)]" />
 

@@ -188,7 +188,7 @@ export default function BeaconsPage() {
             const coords = document.createElement('div')
             // white-space:pre-line preserves the \n line break (textContent
             // would otherwise collapse it to a space, unlike the old <br/>).
-            coords.style.cssText = 'font-family:monospace;margin-top:8px;white-space:pre-line'
+            coords.style.cssText = 'font-family:var(--font-jetbrains),ui-monospace,monospace;margin-top:8px;white-space:pre-line'
             coords.textContent = `E: ${popupData.easting.toFixed(4)}\nN: ${popupData.northing.toFixed(4)}`
             wrap.append(coords)
 
