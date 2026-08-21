@@ -42,7 +42,7 @@ function computeMeanAngleDMS(obs: RawObservation): string {
   return sharedMeanAngleDMS(obs.hclDeg, obs.hclMin, obs.hclSec, obs.hcrDeg, obs.hcrMin, obs.hcrSec)
 }
 
-export function TraverseFieldBookInner({ onImport }: TraverseFieldBookProps) {
+export default function TraverseFieldBook({ onImport }: TraverseFieldBookProps) {
   const [observations, setObservations] = useState<RawObservation[]>([
     { station: '', bs: '', fs: '', hclDeg: '', hclMin: '', hclSec: '', hcrDeg: '', hcrMin: '', hcrSec: '', slopeDist: '', vaDeg: '', vaMin: '', vaSec: '', ih: '1.5', th: '1.5' },
   ])
@@ -77,7 +77,7 @@ export function TraverseFieldBookInner({ onImport }: TraverseFieldBookProps) {
   const [atmSource, setAtmSource] = useState<AtmosphericSource>(initialDefaults.source)
   const [atmVerified, setAtmVerified] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
-  
+
   const searchParams = useSearchParams()
 
   useEffect(() => {
@@ -92,7 +92,7 @@ export function TraverseFieldBookInner({ onImport }: TraverseFieldBookProps) {
       setObservations(mapped.length > 0 ? mapped : [
         { station: '', bs: '', fs: '', hclDeg: '', hclMin: '', hclSec: '', hcrDeg: '', hcrMin: '', hcrSec: '', slopeDist: '', vaDeg: '', vaMin: '', vaSec: '', ih: '1.5', th: '1.5' }
       ])
-      
+
       if (stations.length > 0) {
         setOpeningName(stations[0].label)
         setOpeningE(stations[0].easting.toString())
@@ -213,7 +213,7 @@ export function TraverseFieldBookInner({ onImport }: TraverseFieldBookProps) {
   const handlePrintDeed = () => {
     if (!result) return
     const r = result
-    
+
     // Area Computation using Shoelace on adjusted coordinates
     const coords = r.coordinates.filter(c => !c.station.startsWith('T'))
     let areaSqM = 0
@@ -894,14 +894,5 @@ export function TraverseFieldBookInner({ onImport }: TraverseFieldBookProps) {
         </div>
       )}
     </div>
-  )
-}
-
-import { Suspense } from 'react'
-export default function TraverseFieldBook(props: TraverseFieldBookProps) {
-  return (
-    <Suspense fallback={<div className="p-8 text-center text-[var(--text-muted)]">Loading Field Book…</div>}>
-      <TraverseFieldBookInner {...props} />
-    </Suspense>
   )
 }
