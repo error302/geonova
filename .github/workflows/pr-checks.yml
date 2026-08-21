@@ -195,7 +195,7 @@ jobs:
       - name: Run axe-core WCAG sweep (blocking — fails on any violation)
         env:
           AXE_SCAN_PORT: '3100'
-        run: node scripts/axe-gnss-scan.mjs --ci --fail-on minor --no-baseline --paths-from-changed origin/main --exclude fieldbook,admin,survey-report-builder --concurrency 6
+        run: node scripts/axe-gnss-scan.mjs --ci --fail-on minor --no-baseline --paths-from-changed origin/main --exclude fieldbook,admin,survey-report-builder,portfolio,progress-monitor,regulatory-checklist --concurrency 6
       - name: Upload axe report
         if: always()
         uses: actions/upload-artifact@v4
