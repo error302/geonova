@@ -44,9 +44,12 @@ const DEFAULT_MARK_STATUS: BeaconStatus = 'SET'
 function surveyPointToBoundaryPoint(p: DeedPlanSurveyPoint): BoundaryPoint {
   return {
     id: p.point_name || p.id,
-    easting: p.easting,
-    northing: p.northing,
-    elevation: p.elevation ?? undefined,
+    // Postgres numeric columns (numeric(14,4)) come back as strings via
+    // node-postgres unless cast — coerce to numbers so the deed-plan API
+    // zod schema (z.number()) validates instead of returning 400.
+    easting: Number(p.easting),
+    northing: Number(p.northing),
+    elevation: p.elevation != null ? Number(p.elevation) : undefined,
     markType: DEFAULT_MARK_TYPE,
     markStatus: DEFAULT_MARK_STATUS,
     description: p.description || p.code || undefined,

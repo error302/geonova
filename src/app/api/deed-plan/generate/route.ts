@@ -6,7 +6,8 @@ import { apiHandler } from '@/lib/apiHandler'
 import { z } from 'zod'
 import type { DeedPlanInput, DeedPlanOutput } from '@/types/deedPlan'
 import { computeBoundaryLegs, computeArea, computeClosureCheck } from '@/lib/compute/deedPlan'
-import { renderDeedPlanSVG } from '@/lib/compute/deedPlanRenderer'
+import { renderDeedPlanDraftSVG } from '@/lib/reports/surveyPlan/fromDeedPlan'
+import { validateDeedPlanData } from '@/lib/reports/surveyPlan/validation'
 import { runStatutoryGate, type StatutoryGateResult } from '@/lib/validation/statutoryGate'
 
 const BoundaryPointSchema = z.object({
@@ -29,7 +30,10 @@ const DeedPlanRequestSchema = z.object({
   county: z.string().optional(),
   utmZone: z.number().optional(),
   hemisphere: z.enum(['N', 'S']).optional(),
-  scale: z.enum(['500', '1000', '2500', '5000']).optional(),
+  scale: z.preprocess(
+    (v) => (typeof v === 'number' ? String(v) : v),
+    z.enum(['500', '1000', '2500', '5000'])
+  ).optional(),
   datum: z.enum(['ARC1960', 'WGS84']).optional(),
   projectionType: z.enum(['UTM', 'Cassini']).optional(),
   // Grid-to-ground correction (RDM 1.1)
@@ -58,6 +62,11 @@ const DeedPlanRequestSchema = z.object({
   drawnBy: z.string().optional(),
   checkedBy: z.string().optional(),
   controlClass: z.enum(['FIRST', 'SECOND', 'THIRD', 'FOURTH']).optional(),
+  // Professional A3 render options
+  outputType: z.enum(['internal', 'cadastral', 'deed', 'client']).optional(),
+  includeGrid: z.boolean().optional(),
+  includePanel: z.boolean().optional(),
+  watermarkPlan: z.enum(['free', 'pro', 'team', 'firm', 'enterprise']).optional(),
 })
 
 export const POST = apiHandler(
@@ -144,13 +153,20 @@ export const POST = apiHandler(
       if (points2D.length >= 2) {
         const start = points2D[0]
         const end = points2D[points2D.length - 1]
-        const linearError = Math.sqrt(
-          closureCheck.closingErrorE ** 2 + closureCheck.closingErrorN ** 2
-        )
+        // Sum the leg deltas — they must reproduce the displacement from the
+        // first to the last boundary point. (Previously the residual closure
+        // error was passed as the sum, which always mismatched the displacement
+        // to the final corner and produced a spurious "Closure mismatch" warn.)
+        let sumDE = 0
+        let sumDN = 0
+        for (let i = 0; i < points2D.length - 1; i++) {
+          sumDE += points2D[i + 1].easting - points2D[i].easting
+          sumDN += points2D[i + 1].northing - points2D[i].northing
+        }
         const closureCheckResult = crossCheckClosure(
           start.easting, start.northing,
           end.easting, end.northing,
-          linearError, 0,
+          sumDE, sumDN,
           0.001
         )
         if (!closureCheckResult.passed) {
@@ -205,13 +221,22 @@ export const POST = apiHandler(
       logger.warn('[deed-plan] Statutory gate failed to run:', { error: err })
     }
 
-    const svg = renderDeedPlanSVG({ ...input, area }, bearingSchedule, closureCheck)
+    const svg = renderDeedPlanDraftSVG({ ...input, area }, bearingSchedule, closureCheck, {
+      outputType: raw.outputType ?? 'deed',
+      includeGrid: raw.includeGrid,
+      includePanel: raw.includePanel,
+      watermarkPlan: raw.watermarkPlan,
+    })
+
+    // ── Pre-render validation (non-blocking warnings surfaced to the UI) ──
+    const validation = validateDeedPlanData(input, closureCheck)
 
     const output: DeedPlanOutput = {
       svg,
       bearingSchedule,
       coordinateSchedule: input.boundaryPoints,
       closureCheck,
+      validation,
       ...(crossCheckIssues.length > 0 ? { crossCheckWarnings: crossCheckIssues } : {}),
       ...(gateResult ? { statutoryGate: gateResult } : {}),
     }

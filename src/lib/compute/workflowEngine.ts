@@ -1,13 +1,11 @@
 import type { WorkflowNode, WorkflowEdge, ReportResponse } from '@/types/workflow'
 
-const BASE = process.env.NEXT_PUBLIC_URL || ''
-
 export async function executeWorkflow(
   nodes: WorkflowNode[],
   edges: WorkflowEdge[],
   projectData?: Record<string, unknown>
 ): Promise<{ status: string; results: Record<string, unknown>; errors: string[] }> {
-  const res = await fetch(`${BASE}/api/automator/run`, {
+  const res = await fetch('/api/automator/run', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nodes, edges, project_data: projectData || {} })
@@ -26,7 +24,7 @@ export async function generateReport(
   sections?: string[],
   style?: 'technical' | 'executive' | 'simple'
 ): Promise<ReportResponse> {
-  const res = await fetch(`${BASE}/api/automator/report`, {
+  const res = await fetch('/api/automator/report', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ project_data: projectData, sections, style })

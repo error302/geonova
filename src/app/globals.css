@@ -202,66 +202,6 @@ html[data-theme="light"] {
   color-scheme: dark;
 }
 
-/* Neutralize field-mode/outdoor-mode !important overrides inside auth pages */
-html.field-mode .auth-page,
-html.outdoor-mode .auth-page {
-  --bg-primary: #050505 !important;
-  --bg-secondary: #0A0A0A !important;
-  --bg-tertiary: #111111 !important;
-  --bg-card: #080808 !important;
-  --border-color: rgba(255, 255, 255, 0.08) !important;
-  --text-primary: #FFFFFF !important;
-  --text-secondary: #A0A0A0 !important;
-  --text-muted: #8A8A8A !important;
-  --accent: #D17B47 !important;
-  --accent-dim: #B35C2B !important;
-}
-html.field-mode .auth-page p,
-html.field-mode .auth-page li,
-html.field-mode .auth-page span,
-html.field-mode .auth-page label,
-html.field-mode .auth-page small {
-  color: #FFFFFF !important;
-}
-html.field-mode .auth-page h1,
-html.field-mode .auth-page h2,
-html.field-mode .auth-page h3 {
-  color: #FFFFFF !important;
-  font-weight: 700 !important;
-}
-html.field-mode .auth-page input,
-html.field-mode .auth-page textarea,
-html.field-mode .auth-page select {
-  background: rgba(255, 255, 255, 0.05) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  font-weight: 400 !important;
-  font-size: 14px !important;
-  border-radius: 8px;
-}
-html.field-mode .auth-page input::placeholder,
-html.field-mode .auth-page textarea::placeholder {
-  color: rgba(255, 255, 255, 0.3) !important;
-}
-html.field-mode .auth-page button {
-  min-height: 0 !important;
-  border-width: 1px !important;
-}
-
-/* Neutralize the brutal global outdoor-mode color sweep within auth pages */
-html.outdoor-mode .auth-page,
-html.outdoor-mode .auth-page * {
-  color: #FFFFFF !important;
-}
-html.outdoor-mode .auth-page *:not(.lucide):not(svg):not(path) {
-  color: #FFFFFF !important;
-}
-
-/* ========================================================================
-    1c. FIELD MODE — pure white + pure black for direct sunlight
-   Triggered by [data-theme="field"] on <html>
-   ======================================================================== */
-
 /* ========================================================================
    1b. FIELD MODE – Sunlight-readable high-contrast overrides
    Kept under html.field-mode for backward compat with OutdoorModeToggle.

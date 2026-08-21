@@ -105,9 +105,10 @@ async function findOrCreateOAuthUser(params: {
          provider = COALESCE(provider, $1),
          oauth_provider_id = COALESCE(oauth_provider_id, $2),
          oauth_avatar_url = COALESCE(oauth_avatar_url, $3),
+         role = $5,
          updated_at = NOW()
        WHERE id = $4`,
-      [provider, providerAccountId, image || null, user.id]
+      [provider, providerAccountId, image || null, user.id, role]
     )
 
     try {
@@ -134,11 +135,23 @@ async function findOrCreateOAuthUser(params: {
   }
 
   const displayName = name || normalisedEmail.split('@')[0]
+
+  // Determine role for new OAuth user — check if they are platform owner or admin
+  let initialRole = 'user'
+  const platformOwnerEmail = process.env.PLATFORM_OWNER_EMAIL?.toLowerCase()
+  if (platformOwnerEmail && normalisedEmail === platformOwnerEmail) {
+    initialRole = 'super_admin'
+  }
+  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean)
+  if (adminEmails.includes(normalisedEmail)) {
+    initialRole = 'super_admin'
+  }
+
   const insertResult = await db.query<NewUserRow>(
     `INSERT INTO users (email, password_hash, full_name, role, provider, oauth_provider_id, oauth_avatar_url)
-     VALUES ($1, $2, $3, 'user', $4, $5, $6)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
      RETURNING id, email, full_name, role, provider`,
-    [normalisedEmail, OAUTH_NO_PASSWORD, displayName, provider, providerAccountId, image || null]
+    [normalisedEmail, OAUTH_NO_PASSWORD, displayName, initialRole, provider, providerAccountId, image || null]
   )
 
   const newUser = insertResult.rows[0]
@@ -146,9 +159,9 @@ async function findOrCreateOAuthUser(params: {
   try {
     await db.query(
       `INSERT INTO surveyor_profiles (id, user_id, role, is_suspended)
-       VALUES (gen_random_uuid(), $1, 'user', false)
+       VALUES (gen_random_uuid(), $1, $2, false)
        ON CONFLICT (user_id) DO NOTHING`,
-      [newUser.id]
+      [newUser.id, initialRole === 'super_admin' ? 'admin' : 'surveyor']
     )
   } catch {
     // Non-critical
@@ -169,7 +182,7 @@ async function findOrCreateOAuthUser(params: {
     id: newUser.id,
     email: newUser.email,
     name: newUser.full_name || displayName,
-    role: 'user',
+    role: initialRole,
     isk_number: '',
     verified_isk: false,
     provider,
@@ -281,6 +294,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               )
             } catch {
               // Non-critical — continue login
+            }
+          }
+
+          // Persist resolved role back to database if it differs
+          if (role !== user.role) {
+            try {
+              await db.query('UPDATE users SET role = $1, updated_at = NOW() WHERE id = $2', [role, user.id])
+            } catch {
+              // Non-critical — session role is still correct
             }
           }
 

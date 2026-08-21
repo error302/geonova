@@ -9,6 +9,7 @@ import {
   formatBearingDegMinSec, shoelaceArea, shoelacePerimeter,
   rotatePoints, parseCornersCSV,
   offsetPointPerpendicular, computeFenceBoundary,
+  calculateGridInterval, GRID_INTERVALS,
 } from '../geometry'
 
 describe('constants', () => {
@@ -391,5 +392,31 @@ describe('computeFenceBoundary', () => {
     const result = computeFenceBoundary(pts, offsets)
     expect(result).toHaveLength(3)
     expect(result[0]).toEqual({ easting: 0, northing: 0 })
+  })
+})
+
+describe('calculateGridInterval', () => {
+  it('is always one of the standard GRID_INTERVALS', () => {
+    for (const scale of [100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000, 20000, 50000]) {
+      expect(GRID_INTERVALS).toContain(calculateGridInterval(scale))
+    }
+  })
+  it('selects a fine interval at large scales (close-up plans)', () => {
+    // 1:250 → ~15 px/m → ~4 m target → nearest standard is 10 m.
+    expect(calculateGridInterval(250)).toBe(10)
+    expect(calculateGridInterval(500)).toBe(10)
+  })
+  it('selects a mid interval at 1:1000', () => {
+    // 1:1000 → ~3.8 px/m → ~16 m target → nearest standard is 20 m.
+    expect(calculateGridInterval(1000)).toBe(20)
+  })
+  it('selects coarser intervals as the scale grows', () => {
+    expect(calculateGridInterval(5000)).toBe(100)
+    expect(calculateGridInterval(10000)).toBe(200)
+    expect(calculateGridInterval(50000)).toBe(1000)
+  })
+  it('degenerates safely to the finest interval for non-positive scales', () => {
+    expect(calculateGridInterval(0)).toBe(10)
+    expect(calculateGridInterval(-5)).toBe(10)
   })
 })

@@ -80,6 +80,15 @@ export default function SurveyMap({
     errorEllipses !== undefined && errorEllipses.length > 0
   );
   const [ellipseExaggeration, setEllipseExaggeration] = useState(100);
+  const [selectedEllipse, setSelectedEllipse] = useState<{
+    pointName: string;
+    semiMajor: number;
+    semiMinor: number;
+    orientation: number;
+    confidence: number;
+    formatted: string;
+    pixel: [number, number];
+  } | null>(null);
 
   // ── Sheet layout state ────────────────────────────────────────
   const [showSheetLayout, setShowSheetLayout] = useState(false);
@@ -284,6 +293,27 @@ export default function SurveyMap({
             }
           }
         }
+
+        // ── Check if an error ellipse was clicked ───────────────
+        const ellipseFeature = map.forEachFeatureAtPixel(evt.pixel, (f) => {
+          const feat = f as import('ol/Feature').default;
+          if (feat.get('layerType') === 'errorEllipse') return feat;
+          return undefined;
+        }, { hitTolerance: 8 });
+
+        if (ellipseFeature) {
+          setSelectedEllipse({
+            pointName: ellipseFeature.get('pointName') || 'Unknown',
+            semiMajor: ellipseFeature.get('semiMajor') || 0,
+            semiMinor: ellipseFeature.get('semiMinor') || 0,
+            orientation: ellipseFeature.get('orientation') || 0,
+            confidence: ellipseFeature.get('confidence') || 0.95,
+            formatted: ellipseFeature.get('formatted') || '',
+            pixel: evt.pixel as [number, number],
+          });
+        } else {
+          setSelectedEllipse(null);
+        }
       };
       map.on('click', mapClickHandler);
 
@@ -487,6 +517,100 @@ export default function SurveyMap({
             <span className="ml-2 text-gray-400">SRID 21037</span>
           </div>
         )}
+
+        {/* Error ellipse tooltip — shown when an ellipse is clicked */}
+        {selectedEllipse && (
+          <div
+            className="absolute z-20 pointer-events-none"
+            style={{
+              left: selectedEllipse.pixel[0] + 12,
+              top: selectedEllipse.pixel[1] - 8,
+            }}
+          >
+            <div className="bg-gray-900 text-white rounded-lg shadow-xl border border-gray-700 px-3 py-2.5 text-xs min-w-[200px]">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
+                <span className="font-bold text-amber-300">{selectedEllipse.pointName}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-gray-300">
+                <span className="text-gray-500">σ<sub>E</sub></span>
+                <span className="font-mono text-right">{selectedEllipse.semiMajor.toFixed(4)} m</span>
+                <span className="text-gray-500">σ<sub>N</sub></span>
+                <span className="font-mono text-right">{selectedEllipse.semiMinor.toFixed(4)} m</span>
+                <span className="text-gray-500">Semi-major</span>
+                <span className="font-mono text-right">
+                  {(selectedEllipse.semiMajor * 2.447).toFixed(4)} m
+                </span>
+                <span className="text-gray-500">Semi-minor</span>
+                <span className="font-mono text-right">
+                  {(selectedEllipse.semiMinor * 2.447).toFixed(4)} m
+                </span>
+                <span className="text-gray-500">Orientation</span>
+                <span className="font-mono text-right">{selectedEllipse.orientation.toFixed(1)}°</span>
+                <span className="text-gray-500">Confidence</span>
+                <span className="font-mono text-right">{(selectedEllipse.confidence * 100).toFixed(0)}%</span>
+              </div>
+              <div className="mt-1.5 pt-1.5 border-t border-gray-700 text-gray-400 text-[10px]">
+                {selectedEllipse.formatted}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Error ellipse legend — auto-fit, confidence + exaggeration aware */}
+        {showErrorEllipses && errorEllipses && errorEllipses.length > 0 && (() => {
+          // Compute representative values from actual ellipse data
+          const avgMajor = errorEllipses.reduce((s, e) => s + e.semiMajor, 0) / errorEllipses.length;
+          const avgMinor = errorEllipses.reduce((s, e) => s + e.semiMinor, 0) / errorEllipses.length;
+          const maxMajor = Math.max(...errorEllipses.map(e => e.semiMajor));
+          // Scale the SVG ellipse: rx/ry proportional to average ellipse size
+          const svgScale = Math.min(7, Math.max(2, 7 * (avgMajor / maxMajor)));
+          const svgScaleY = Math.min(4, Math.max(1.5, 4 * (avgMinor / maxMajor)));
+          return (
+            <div className="absolute bottom-3 right-3 z-10 ellipse-legend-print">
+              <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-xs">
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <svg width="18" height="14" viewBox="0 0 18 14" className="shrink-0">
+                    <ellipse
+                      cx="9" cy="7"
+                      rx={svgScale}
+                      ry={svgScaleY}
+                      fill="rgba(209, 123, 71, 0.2)"
+                      stroke="#B3452A"
+                      strokeWidth="1"
+                      strokeDasharray="3,2"
+                    />
+                    <line
+                      x1={9 - svgScale} y1={7}
+                      x2={9 + svgScale} y2={7}
+                      stroke="#B3452A"
+                      strokeWidth="0.5"
+                      strokeDasharray="1,1"
+                    />
+                  </svg>
+                  <span className="font-semibold text-gray-800">Error Ellipse</span>
+                </div>
+                <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-gray-600">
+                  <span>Confidence</span>
+                  <span className="font-mono text-right text-gray-800">95%</span>
+                  <span>Exaggeration</span>
+                  <span className="font-mono text-right text-gray-800">{ellipseExaggeration}×</span>
+                  <span>Avg. σ<sub>a</sub></span>
+                  <span className="font-mono text-right text-gray-800">{(avgMajor * 1000).toFixed(1)} mm</span>
+                  <span>Avg. σ<sub>b</sub></span>
+                  <span className="font-mono text-right text-gray-800">{(avgMinor * 1000).toFixed(1)} mm</span>
+                </div>
+                <div className="mt-1.5 pt-1.5 border-t border-gray-200 text-[10px] text-gray-400">
+                  {errorEllipses.length} station{errorEllipses.length > 1 ? 's' : ''} ·
+                  {' '}Ellipse = σ × {ellipseExaggeration}
+                  {ellipseExaggeration > 1 && (
+                    <> · 1 mm true → {ellipseExaggeration} mm on map</>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Sheet Layout Overlay */}
         {showSheetLayout && sheetLayoutReady && SheetLayoutComponent && (

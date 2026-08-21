@@ -1,12 +1,20 @@
 import type { DeedPlanInput, DeedPlanOutput } from '@/types/deedPlan'
 
-const BASE = process.env.NEXT_PUBLIC_URL || ''
+export interface DeedPlanRenderOptions {
+  outputType?: 'internal' | 'cadastral' | 'deed' | 'client'
+  includeGrid?: boolean
+  includePanel?: boolean
+  watermarkPlan?: 'free' | 'pro' | 'team' | 'firm' | 'enterprise'
+}
 
-export async function generateDeedPlan(input: DeedPlanInput): Promise<DeedPlanOutput> {
-  const res = await fetch(`${BASE}/api/deed-plan/generate`, {
+export async function generateDeedPlan(
+  input: DeedPlanInput,
+  options?: DeedPlanRenderOptions,
+): Promise<DeedPlanOutput> {
+  const res = await fetch('/api/deed-plan/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(input)
+    body: JSON.stringify({ ...input, ...options })
   })
 
   if (!res.ok) {

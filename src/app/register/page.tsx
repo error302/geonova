@@ -223,9 +223,9 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   disabled={loading || !agreeTerms || password !== confirmPassword}
-                  className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent-dim)] text-black font-semibold rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dim)] hover:from-amber-400 hover:to-[var(--accent)] text-white font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-[var(--accent)]/25"
                 >
-                  {loading && <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />}
+                  {loading && <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />}
                   {loading ? 'Creating account...' : 'Create Account'}
                 </button>
               </form>

@@ -12,8 +12,11 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY main.py .
-COPY gnss_processor.py .
+# Copy all Python modules — main.py imports these at startup:
+#   gnss_processor.py   — GNSS RINEX processing (SPP/PPP, session QC)
+#   surface_processor.py — Delaunay TIN, marching-triangle contours, grid volume
+#   spatial_cache.py    — spatial data caching layer
+COPY main.py gnss_processor.py surface_processor.py spatial_cache.py ./
 
 # Non-root user for security
 RUN groupadd --system --gid 1001 worker && \

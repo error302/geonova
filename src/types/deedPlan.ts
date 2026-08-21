@@ -110,6 +110,15 @@ export interface DeedPlanOutput {
   bearingSchedule: BoundaryLeg[]
   coordinateSchedule: BoundaryPoint[]
   closureCheck: ClosureCheck
+  /** Pre-render validation result (non-blocking warnings / blocking errors). */
+  validation?: DeedPlanValidationResult
+}
+
+export interface DeedPlanValidationResult {
+  valid: boolean
+  errors: string[]
+  warnings: string[]
+  missingFields: string[]
 }
 
 export interface ClosureCheck {

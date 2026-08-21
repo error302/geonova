@@ -268,7 +268,19 @@ const nextConfig = {
           // Catch-all vendor chunk for everything else from node_modules
           // (keeps the per-route bundle small)
           vendor: {
-            test: /[\\/]node_modules[\\/]/,
+            // Exclude CSS modules: a CSS file (e.g. next/font's @font-face
+            // stylesheet, whose resource lives under node_modules) caught by
+            // this group gets emitted as its own chunk that Next.js then
+            // injects as a <script> tag — "Refused to execute script ... .css".
+            // CSS is loaded via <link> instead; see vercel/next.js#72480.
+            test: (module) => {
+              const css =
+                module &&
+                (module.type === 'css/mini-extract' ||
+                  module.type === 'css' ||
+                  /\.css(\?|$)/.test(module.resource || module.identifier() || ''))
+              return !css && /[\\/]node_modules[\\/]/.test(module.resource || module.identifier() || '')
+            },
             name: 'vendor-common',
             chunks: 'all',
             priority: 1,

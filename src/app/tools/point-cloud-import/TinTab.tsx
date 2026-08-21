@@ -1,6 +1,17 @@
 'use client';
 
-import type { CutFillDatumResult } from '@/lib/engineering/slopeAnalysis';
+/**
+ * TinTab — TIN generation + Cut/Fill from point clouds.
+ *
+ * Self-contained component (like VolumeTab) that routes through
+ * surfaceService's heavy path: clouds >= 100k points compute in the
+ * Python sidecar (scipy Delaunay), smaller clouds use the local
+ * Delaunator engine. A source badge shows which path was used.
+ *
+ * Cut/fill also routes through computeVolumeHeavy for large clouds.
+ */
+
+import { useState, useCallback } from 'react';
 import type { TINTriangle } from '@/lib/compute/tin';
 import type { BoundingBox, ImportedPoint } from './types';
 import { fmt } from './helpers';
@@ -8,66 +19,211 @@ import { fmt } from './helpers';
 interface TinTabProps {
   points: ImportedPoint[];
   boundingBox: BoundingBox | null;
-  tinTriangles: TINTriangle[] | null;
-  tinError: string;
-  isTinRunning: boolean;
-  tinSurfaceArea: number;
-  runTINGeneration: () => void;
-  exportTINCSV: () => void;
-  datumRL: string;
-  setDatumRL: (s: string) => void;
-  cutFillResult: CutFillDatumResult | null;
-  cutFillError: string;
-  isCutFillRunning: boolean;
-  runCutFill: () => void;
-  exportCutFillCSV: () => void;
 }
 
-export default function TinTab({
-  points,
-  boundingBox,
-  tinTriangles,
-  tinError,
-  isTinRunning,
-  tinSurfaceArea,
-  runTINGeneration,
-  exportTINCSV,
-  datumRL,
-  setDatumRL,
-  cutFillResult,
-  cutFillError,
-  isCutFillRunning,
-  runCutFill,
-  exportCutFillCSV,
-}: TinTabProps) {
+export default function TinTab({ points, boundingBox }: TinTabProps) {
+  // ── TIN state ─────────────────────────────────────────────────────────────
+  const [triangles, setTriangles] = useState<TINTriangle[] | null>(null);
+  const [surfaceArea, setSurfaceArea] = useState(0);
+  const [error, setError] = useState('');
+  const [running, setRunning] = useState(false);
+  const [source, setSource] = useState<'local' | 'python-sidecar' | null>(null);
+
+  // ── Cut/Fill state ────────────────────────────────────────────────────────
+  const [datumRL, setDatumRL] = useState('');
+  const [cutFillResult, setCutFillResult] = useState<{
+    totalCutVolume: number;
+    totalFillVolume: number;
+    netVolume: number;
+    cutArea: number;
+    fillArea: number;
+    balancePoint: number;
+  } | null>(null);
+  const [cutFillError, setCutFillError] = useState('');
+  const [cutFillRunning, setCutFillRunning] = useState(false);
+  const [cutFillSource, setCutFillSource] = useState<'local' | 'python-sidecar' | null>(null);
+
+  // ── TIN generation ────────────────────────────────────────────────────────
+  const runTIN = useCallback(async () => {
+    if (points.length < 3) {
+      setError('At least 3 points are required for TIN generation.');
+      return;
+    }
+    setRunning(true);
+    setError('');
+
+    try {
+      const tinPoints = points.map((p, i) => ({
+        id: p.id || `tin-${i}`,
+        x: p.easting,
+        y: p.northing,
+        z: p.elevation,
+      }));
+
+      // Route through surfaceService's heavy path: >= 100k points go to
+      // the Python sidecar (scipy.spatial.Delaunay); smaller clouds use
+      // the local Delaunator engine. Falls back to local when sidecar is
+      // unavailable.
+      const { generateTINHeavy } = await import('@/lib/compute/surfaceService');
+      const heavy = await generateTINHeavy(tinPoints);
+
+      setTriangles(heavy.triangles);
+      setSource(heavy.source === 'worker' ? 'python-sidecar' : 'local');
+
+      // Compute surface area
+      const area = heavy.triangles.reduce((s, t) => s + t.area_m2, 0);
+      setSurfaceArea(area);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'TIN generation failed.');
+    } finally {
+      setRunning(false);
+    }
+  }, [points]);
+
+  // ── Export TIN CSV ────────────────────────────────────────────────────────
+  const exportTINCSV = useCallback(() => {
+    if (!triangles) return;
+    const header = 'Triangle,E1,N1,Z1,E2,N2,Z2,E3,N3,Z3,Area_m2';
+    const rows = triangles.map((t, i) => [
+      i + 1,
+      t.a.x.toFixed(4), t.a.y.toFixed(4), t.a.z.toFixed(4),
+      t.b.x.toFixed(4), t.b.y.toFixed(4), t.b.z.toFixed(4),
+      t.c.x.toFixed(4), t.c.y.toFixed(4), t.c.z.toFixed(4),
+      t.area_m2.toFixed(4),
+    ].join(','));
+    const csv = [header, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tin_mesh.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [triangles]);
+
+  // ── Cut/Fill computation ──────────────────────────────────────────────────
+  const runCutFill = useCallback(async () => {
+    if (points.length < 3) {
+      setCutFillError('At least 3 points are required for cut/fill computation.');
+      return;
+    }
+    const datum = parseFloat(datumRL);
+    if (isNaN(datum)) {
+      setCutFillError('Please enter a valid datum RL.');
+      return;
+    }
+    setCutFillRunning(true);
+    setCutFillError('');
+
+    try {
+      const dtmPoints = points.map(p => ({
+        easting: p.easting,
+        northing: p.northing,
+        elevation: p.elevation,
+      }));
+
+      // Route through surfaceService's heavy path for large clouds
+      const { computeVolumeHeavy } = await import('@/lib/compute/surfaceService');
+      const { result, source: src } = await computeVolumeHeavy({
+        surface1: dtmPoints,
+        mode: 'cutfill',
+        cellSize: 1.0,
+        baseElevation: datum,
+      });
+
+      setCutFillResult({
+        totalCutVolume: result.cut,
+        totalFillVolume: result.fill,
+        netVolume: result.net,
+        cutArea: result.cutArea ?? 0,
+        fillArea: result.fillArea ?? 0,
+        balancePoint: result.balanceElevation ?? datum,
+      });
+      setCutFillSource(src === 'worker' ? 'python-sidecar' : 'local');
+    } catch (err) {
+      setCutFillError(err instanceof Error ? err.message : 'Cut/fill computation failed.');
+    } finally {
+      setCutFillRunning(false);
+    }
+  }, [points, datumRL]);
+
+  // ── Export Cut/Fill CSV ───────────────────────────────────────────────────
+  const exportCutFillCSV = useCallback(() => {
+    if (!cutFillResult) return;
+    const lines = [
+      'Metric,Value',
+      `Cut Volume (m³),${cutFillResult.totalCutVolume.toFixed(3)}`,
+      `Fill Volume (m³),${cutFillResult.totalFillVolume.toFixed(3)}`,
+      `Net Volume (m³),${cutFillResult.netVolume.toFixed(3)}`,
+      `Cut Area (m²),${cutFillResult.cutArea.toFixed(2)}`,
+      `Fill Area (m²),${cutFillResult.fillArea.toFixed(2)}`,
+      `Balance Point (m),${cutFillResult.balancePoint.toFixed(3)}`,
+    ];
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cut_fill_results.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [cutFillResult]);
+
+  // ── Source badge ──────────────────────────────────────────────────────────
+  const SourceBadge = ({ src }: { src: 'local' | 'python-sidecar' | null }) => {
+    if (!src) return null;
+    return (
+      <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium ${
+        src === 'python-sidecar'
+          ? 'bg-[var(--accent)]/15 text-[var(--accent)]'
+          : 'bg-emerald-500/15 text-emerald-400'
+      }`}>
+        {src === 'python-sidecar' ? (
+          <>
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
+            Python sidecar
+          </>
+        ) : (
+          <>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            Local engine
+          </>
+        )}
+      </span>
+    );
+  };
+
   return (
     <div className="space-y-6">
-      {/* TIN generation */}
+      {/* ═══ TIN generation ═══ */}
       <div className="card">
-        <div className="card-header">
+        <div className="card-header flex justify-between items-center">
           <span className="label">TIN Generation (Delaunay Triangulation)</span>
+          <SourceBadge src={source} />
         </div>
         <p className="text-sm text-[var(--text-secondary)] mb-4">
           Generates a Triangulated Irregular Network from the imported points.
-          Uses Delaunator for Delaunay triangulation.
+          {points.length >= 100_000
+            ? ' Large cloud — routed to the Python sidecar (scipy Delaunay) when available.'
+            : ' Uses Delaunator for Delaunay triangulation.'}
         </p>
         <button
-          onClick={runTINGeneration}
-          disabled={isTinRunning || points.length < 3}
+          onClick={runTIN}
+          disabled={running || points.length < 3}
           className="btn btn-primary"
         >
-          {isTinRunning ? 'Generating TIN...' : 'Generate TIN'}
+          {running ? 'Generating TIN...' : 'Generate TIN'}
         </button>
       </div>
 
-      {tinError && (
+      {error && (
         <div className="p-4 bg-red-900/30 border border-red-600 rounded text-red-400 text-sm">
-          {tinError}
+          {error}
         </div>
       )}
 
-      {tinTriangles && (
+      {triangles && (
         <>
+          {/* TIN Results */}
           <div className="card">
             <div className="card-header flex justify-between items-center">
               <span className="label">TIN Results</span>
@@ -82,18 +238,18 @@ export default function TinTab({
               </div>
               <div className="p-4 bg-[var(--bg-tertiary)] rounded">
                 <span className="text-[var(--text-secondary)] text-sm block">Triangles</span>
-                <span className="font-mono text-xl text-[var(--accent)]">{tinTriangles.length.toLocaleString()}</span>
+                <span className="font-mono text-xl text-[var(--accent)]">{triangles.length.toLocaleString()}</span>
               </div>
               <div className="p-4 bg-[var(--bg-tertiary)] rounded">
                 <span className="text-[var(--text-secondary)] text-sm block">Plan Area (2D)</span>
                 <span className="font-mono text-xl">
-                  {tinTriangles.reduce((s, t) => s + t.area_m2, 0).toFixed(1)} m²
+                  {triangles.reduce((s, t) => s + t.area_m2, 0).toFixed(1)} m²
                 </span>
               </div>
               <div className="p-4 bg-[var(--bg-tertiary)] rounded">
                 <span className="text-[var(--text-secondary)] text-sm block">Surface Area (3D)</span>
                 <span className="font-mono text-xl">
-                  {tinSurfaceArea.toFixed(1)} m²
+                  {surfaceArea.toFixed(1)} m²
                 </span>
               </div>
             </div>
@@ -113,10 +269,9 @@ export default function TinTab({
                   const toX = (e: number) => 30 + ((e - boundingBox.minE) / rangeE) * 440;
                   const toY = (n: number) => 300 - ((n - boundingBox.minN) / rangeN) * 280;
                   const rangeZ = boundingBox.maxZ - boundingBox.minZ || 1;
-                  // Limit triangles rendered to first 2000 for performance
                   const maxTris = 2000;
-                  const step = Math.max(1, Math.floor(tinTriangles.length / maxTris));
-                  return tinTriangles
+                  const step = Math.max(1, Math.floor(triangles.length / maxTris));
+                  return triangles
                     .filter((_, i) => i % step === 0)
                     .map((tri, i) => {
                       const avgZ = (tri.a.z + tri.b.z + tri.c.z) / 3;
@@ -140,9 +295,9 @@ export default function TinTab({
                 <span className="text-xs text-[var(--text-muted)]">Low Z</span>
                 <div className="w-32 h-3 rounded" style={{ background: 'linear-gradient(to right, rgb(0,100,200), rgb(200,255,0), rgb(200,0,0))' }} />
                 <span className="text-xs text-[var(--text-muted)]">High Z</span>
-                {tinTriangles.length > 2000 && (
+                {triangles.length > 2000 && (
                   <span className="text-xs text-[var(--text-muted)] ml-4">
-                    (showing ~2,000 of {tinTriangles.length.toLocaleString()} triangles)
+                    (showing ~2,000 of {triangles.length.toLocaleString()} triangles)
                   </span>
                 )}
               </div>
@@ -151,19 +306,23 @@ export default function TinTab({
         </>
       )}
 
-      {/* Cut/Fill computation */}
+      {/* ═══ Cut/Fill by Datum Plane ═══ */}
       <div className="card">
-        <div className="card-header">
+        <div className="card-header flex justify-between items-center">
           <span className="label">Cut / Fill by Datum Plane</span>
+          <SourceBadge src={cutFillSource} />
         </div>
         <p className="text-sm text-[var(--text-secondary)] mb-4">
-          Compute cut and fill volumes relative to a horizontal datum RL using the slope analysis engine (IDW grid).
+          Compute cut and fill volumes relative to a horizontal datum RL.
+          {points.length >= 100_000
+            ? ' Large cloud — routed to the Python sidecar grid-method engine.'
+            : ' Uses the slope analysis engine (IDW grid).'}
         </p>
         <div className="flex gap-4 items-end flex-wrap">
           <div>
             <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="datum-rl-m">Datum RL (m)</label>
             <input
-               id="datum-rl-m" className="input w-32 font-mono"
+              id="datum-rl-m" className="input w-32 font-mono"
               type="number"
               step="0.1"
               aria-label="Datum RL (m)" placeholder="e.g. 1200"
@@ -173,10 +332,10 @@ export default function TinTab({
           </div>
           <button
             onClick={runCutFill}
-            disabled={isCutFillRunning || points.length < 3 || datumRL === ''}
+            disabled={cutFillRunning || points.length < 3 || datumRL === ''}
             className="btn btn-primary"
           >
-            {isCutFillRunning ? 'Computing...' : 'Compute Cut/Fill'}
+            {cutFillRunning ? 'Computing...' : 'Compute Cut/Fill'}
           </button>
           {boundingBox && (
             <span className="text-xs text-[var(--text-muted)]">

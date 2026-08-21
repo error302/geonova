@@ -76,7 +76,13 @@ export const GET = apiHandler(
     const { rows } = await db.query<SurveyPointFullRow>(
       `SELECT
          -- Identity
-         id, point_name, easting, northing, elevation,
+         id, point_name,
+         -- Postgres numeric(14,4) columns return as strings via node-postgres;
+         -- cast to float8 so downstream tools (deed plan, contour, mutation,
+         -- cross-sections, earthworks) receive numbers, not strings.
+         easting::float8 AS easting,
+         northing::float8 AS northing,
+         elevation::float8 AS elevation,
          code, description, is_control,
          -- CRS (migration 027)
          datum, projection, utm_zone, hemisphere, epoch_year,

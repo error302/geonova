@@ -33,9 +33,16 @@ class YjsMeshNetwork {
     const persistence = new IndexeddbPersistence(`metardu-sync-${projectId}`, doc)
     this.persistences.set(projectId, persistence)
 
-    // WebRTC Provider for P2P Local LAN sync (using public/local signaling)
+    // WebRTC Provider for P2P Local LAN sync (using public/local signaling).
+    // The ws://localhost:4444 fallback is only useful when a local relay runs
+    // on the same machine; gate it to dev so the built app doesn't attempt
+    // (and CSP-block) a ws:// connection on every page in production.
+    const signaling =
+      process.env.NODE_ENV === 'development'
+        ? ['wss://signaling.yjs.dev', 'ws://localhost:4444']
+        : ['wss://signaling.yjs.dev']
     const provider = new WebrtcProvider(`metardu-mesh-${projectId}`, doc, {
-      signaling: ['wss://signaling.yjs.dev', 'ws://localhost:4444'], // Add local fallback if deployed offline
+      signaling,
       password: 'metardu-secure-field'
     })
     this.providers.set(projectId, provider)

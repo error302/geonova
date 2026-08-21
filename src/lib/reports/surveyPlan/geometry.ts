@@ -227,6 +227,31 @@ export function chainageFromDistance(startChainage: number, distanceM: number): 
   return startChainage + distanceM
 }
 
+/** Standard grid line intervals (metres) available for the plan grid. */
+export const GRID_INTERVALS = [10, 20, 50, 100, 200, 500, 1000] as const
+
+/**
+ * Pick a "nice" grid line interval (metres) for a given plan scale so grid
+ * lines land at a readable pixel spacing (~60px) regardless of parcel size.
+ *
+ * At 1:500 a 50 m grid is sparse; at 1:5000 it is impractically dense. This
+ * selects the standard interval whose rendered spacing is closest to ~60 px.
+ */
+export function calculateGridInterval(scale: number): number {
+  const pxPerM = PX_PER_M / Math.max(scale, 1)
+  const targetM = 60 / pxPerM
+  let best: number = GRID_INTERVALS[0]
+  let bestScore = Infinity
+  for (const candidate of GRID_INTERVALS) {
+    const score = Math.abs(Math.log(candidate / targetM))
+    if (score < bestScore) {
+      bestScore = score
+      best = candidate
+    }
+  }
+  return best
+}
+
 export function computeChainageAlongAlignment(
   startChainage: number,
   points: Array<{ easting: number; northing: number }>

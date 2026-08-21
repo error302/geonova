@@ -37,6 +37,10 @@ const SurveyPlanExport = dynamic(() => import('@/components/SurveyPlanExport'), 
 const ShapefileExport = dynamic(() => import('@/components/ShapefileExport'), {
   ssr: false,
 })
+const CorridorEarthworks = dynamic(() => import('@/components/engineering/CorridorEarthworks'), {
+  ssr: false,
+  loading: () => <div className="py-8 text-center text-[var(--text-muted)]">Loading engineering tools…</div>,
+})
 
 // ── Typed row interfaces for the client-side queries below ───────────────────
 interface SubmissionNumberRow {
@@ -327,7 +331,7 @@ export default function DocumentsPage({ params }: PageProps) {
   const [area]         = useState<AreaData | undefined>()
   const [loading, setLoading]   = useState(true)
   const [surveyorDetails, setSurveyorDetails] = useState<Record<string,string>>({})
-  const [activeTab, setActiveTab] = useState<'docs' | 'plan'>('docs')
+  const [activeTab, setActiveTab] = useState<'docs' | 'plan' | 'engineering'>('docs')
   const [activeDoc, setActiveDoc] = useState<SurveyDocType | null>(null)
   const [extraFields, setExtraFields] = useState<Record<string,Record<string,string>>>({})
   const [submissionNumber, setSubmissionNumber] = useState<string>('')
@@ -672,6 +676,14 @@ export default function DocumentsPage({ params }: PageProps) {
             }`}>
             Survey Plan
           </button>
+          <button onClick={() => setActiveTab('engineering')}
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px ${
+              activeTab === 'engineering'
+                ? 'border-[var(--accent)] text-[var(--accent)]'
+                : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+            }`}>
+            Engineering
+          </button>
         </div>
 
         {/* Survey Plan tab */}
@@ -758,6 +770,9 @@ export default function DocumentsPage({ params }: PageProps) {
         </div>
           </div>
         )}
+
+        {/* Engineering deliverables tab */}
+        {activeTab === 'engineering' && <CorridorEarthworks />}
 
         {/* Document package tab */}
         {activeTab === 'docs' && (

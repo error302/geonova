@@ -1,8 +1,6 @@
 import type { RawSurveyPoint, CleanDataResponse, CleanDataRequest } from '@/types/fieldguard'
 import { logger } from '@/lib/logger'
 
-const BASE = process.env.NEXT_PUBLIC_URL || ''
-
 function buildLocalFallback(points: RawSurveyPoint[]): CleanDataResponse {
   if (points.length === 0) {
     return {
@@ -103,7 +101,7 @@ export async function cleanSurveyData(
   }
 
   try {
-    const res = await fetch(`${BASE}/api/ai/clean-data`, {
+    const res = await fetch('/api/ai/clean-data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ points, data_type, options } as CleanDataRequest)

@@ -53,6 +53,79 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     ]
   )
 
+  // ── Propagate error ellipses back to survey_points ────────────────────
+  // This makes the map (errorEllipseLayer) and NLIMS export share one
+  // source of truth: the survey_points table carries the covariance that
+  // the LSA adjustment computes.
+  try {
+    const adjustedStations = body.adjusted_stations as Array<{
+      name?: string;
+      pointName?: string;
+      easting?: number;
+      northing?: number;
+      stdDevE?: number;
+      stdDevN?: number;
+      errorEllipse?: { semiMajor: number; semiMinor: number; orientation: number };
+    }> | null;
+
+    if (Array.isArray(adjustedStations) && adjustedStations.length > 0) {
+      // Batch: collect all point names, find which exist, then insert/update
+      const stationData = adjustedStations
+        .filter((st) => st.errorEllipse && (st.name || st.pointName) && st.easting != null && st.northing != null)
+        .map((st) => ({
+          name: (st.name || st.pointName)!,
+          easting: st.easting!,
+          northing: st.northing!,
+          stdDevE: st.stdDevE ?? null,
+          stdDevN: st.stdDevN ?? null,
+          semiMajor: st.errorEllipse!.semiMajor,
+          semiMinor: st.errorEllipse!.semiMinor,
+          orientation: st.errorEllipse!.orientation,
+        }));
+
+      if (stationData.length > 0) {
+        const names = stationData.map((s) => s.name);
+        const existing = await db.query<{ point_name: string }>(
+          `SELECT point_name FROM survey_points WHERE project_id = $1 AND point_name = ANY($2)`,
+          [id, names]
+        );
+        const existingNames = new Set(existing.rows.map((r) => r.point_name));
+
+        for (const st of stationData) {
+          if (existingNames.has(st.name)) {
+            await db.query(
+              `UPDATE survey_points SET
+                 easting = $1, northing = $2,
+                 std_dev_e = $3, std_dev_n = $4,
+                 error_ellipse_major = $5, error_ellipse_minor = $6,
+                 error_ellipse_orient = $7, confidence_level = 95,
+                 source = 'lsa_adjustment', updated_at = NOW()
+               WHERE project_id = $8 AND point_name = $9`,
+              [st.easting, st.northing, st.stdDevE, st.stdDevN,
+               st.semiMajor, st.semiMinor, st.orientation, id, st.name]
+            );
+          } else {
+            await db.query(
+              `INSERT INTO survey_points
+                 (project_id, point_name, easting, northing,
+                  std_dev_e, std_dev_n,
+                  error_ellipse_major, error_ellipse_minor, error_ellipse_orient,
+                  confidence_level, source, updated_at)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 95, 'lsa_adjustment', NOW())`,
+              [id, st.name, st.easting, st.northing, st.stdDevE, st.stdDevN,
+               st.semiMajor, st.semiMinor, st.orientation]
+            );
+          }
+        }
+      }
+    }
+  } catch (ellipseErr) {
+    // Non-fatal: the adjustment is saved even if ellipse propagation fails.
+    // Log but don't fail the request — the adjusted_stations JSONB still
+    // carries the ellipses for the map layer.
+    console.error('[network-adjustment] ellipse propagation failed:', ellipseErr);
+  }
+
   return NextResponse.json({ ok: true })
 })
 

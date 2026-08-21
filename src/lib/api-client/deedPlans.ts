@@ -1,5 +1,6 @@
 import { createClient, type BrowserSession } from '@/lib/api-client/client'
 import type { DeedPlanInput, DeedPlanOutput, DeedPlanDocument } from '@/types/deedPlan'
+import { computeArea } from '@/lib/compute/deedPlan'
 
 export async function saveDeedPlan(
   projectId: string,
@@ -21,7 +22,7 @@ export async function saveDeedPlan(
       drawing_number: input.drawingNumber,
       parcel_number: input.parcelNumber,
       locality: input.locality,
-      area_sqm: input.area,
+      area_sqm: input.area || computeArea(input.boundaryPoints),
       scale: input.scale,
       datum: input.datum,
       input_data: input,

@@ -14,7 +14,7 @@
  * Green = pass, Amber = warning, Red = fail
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import {
   ShieldCheck, AlertTriangle, AlertCircle, CheckCircle2,
   Loader2, RefreshCw, FileText, MapPin, Ruler, Calculator,
@@ -70,8 +70,12 @@ const STATUS_CONFIG = {
   pending: { icon: Loader2, color: 'text-gray-400', bg: 'bg-gray-500/10', border: 'border-gray-500/30', label: 'PENDING' },
 }
 
+// Stable empty-array default: a fresh `[]` literal per render changes the
+// useCallback identity below, re-triggering the auto-run effect every render.
+const EMPTY_PARCELS: ExistingParcel[] = []
+
 export function QADashboard({
-  parcels = [],
+  parcels = EMPTY_PARCELS,
   traverseData,
   parentAreaHa,
   surveyCategory = 'urban',
@@ -243,8 +247,9 @@ export function QADashboard({
     setRunning(false)
   }, [parcels, parentAreaHa, traverseData, surveyCategory])
 
-  // Auto-run on mount
-  useMemo(() => {
+  // Auto-run on mount (useEffect — calling setState during render via
+  // useMemo caused React error #301 "too many re-renders")
+  useEffect(() => {
     runAllChecks()
   }, [runAllChecks])
 

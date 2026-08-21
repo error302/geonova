@@ -91,7 +91,10 @@ export class QueryBuilder<T = Record<string, unknown>> {
   }
 
   select(columns: string = '*', options?: { count?: string; head?: boolean }): this {
-    this.operation = 'select'
+    // Supabase semantics: `.insert().select()` / `.update().select()` request
+    // RETURNING of the affected rows. Do NOT reset a write operation back to
+    // 'select', or the write is silently dropped and a bare SELECT runs
+    // instead (empty table -> PGRST116 "Row not found").
     this.selectColumns = columns
     if (options?.count === 'exact') this.countOnly = true
     if (options?.head) this.headOnly = true

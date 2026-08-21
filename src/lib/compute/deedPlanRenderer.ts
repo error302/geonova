@@ -543,7 +543,10 @@ function buildRightPanel(
 // PANEL HELPER FUNCTIONS
 // ============================================================
 function secHdr(x: number, y: number, t: string): string {
-  return `<text x="${x}" y="${y}" class="sh">${t}</text>\n`
+  // AUDIT FIX (2026-08-20): escapeXml() — raw '&' (e.g. "DATUM & PROJECTION")
+  // produced invalid XML, which broke rasterizing the SVG in an <img> for the
+  // PNG/print export (the whole SVG fails to parse → img.onerror).
+  return `<text x="${x}" y="${y}" class="sh">${escapeXml(t)}</text>\n`
 }
 
 function row(x: number, y: number, label: string, val: string): string {

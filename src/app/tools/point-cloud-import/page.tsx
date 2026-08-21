@@ -6,21 +6,16 @@ import { PageHeader } from '@/components/shared/PageHeader';
 import { ComputeLimitNotice } from '@/components/tools/ComputeLimitNotice';
 import {
   analyzeSlopeFromPoints,
-  computeCutFillDatum,
   slopeAnalysisToCSV,
   type DTMPoint,
   type SlopeAnalysisResult,
-  type CutFillDatumResult,
 } from '@/lib/engineering/slopeAnalysis';
-import {
-  generateTIN,
-  computeSurfaceArea,
-  type TINPoint,
-  type TINTriangle,
-} from '@/lib/compute/tin';
-import { parsePly } from '@/lib/importers/parsers/ply';
+// tin types now managed internally by TinTab
+import { parseCSVStreamed, type StreamProgress } from '@/lib/importers/streamingCSVParser';
+import { parsePLYStreamed } from '@/lib/importers/streamingPLYParser';
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import { VolumeTab } from './VolumeTab';
+import TinTab from './TinTab';
 import { autoClassifyPoint } from '@/lib/topo/featureCodeAutomation';
 import { MAX_POINTS } from './constants';
 import { SURFACE_WORKER_HEAVY_THRESHOLD } from '@/lib/compute/surfaceService';
@@ -267,6 +262,7 @@ export default function PointCloudImportPage() {
   } | null>(null);
   const [isParsing, setIsParsing] = useState(false);
   const [warningMsg, setWarningMsg] = useState('');
+  const [ingestProgress, setIngestProgress] = useState<StreamProgress | null>(null);
 
   // Statistics state
   const [sortCol, setSortCol] = useState<SortColumn>('name');
@@ -281,18 +277,8 @@ export default function PointCloudImportPage() {
   const [slopeGridRes, setSlopeGridRes] = useState('');
 
   // TIN state
-  const [tinTriangles, setTinTriangles] = useState<TINTriangle[] | null>(null);
-  const [tinSource, setTinSource] = useState<'local' | 'python-sidecar' | null>(null);
-  const [cutFillSource, setCutFillSource] = useState<'local' | 'python-sidecar' | null>(null);
-  const [tinError, setTinError] = useState('');
-  const [isTinRunning, setIsTinRunning] = useState(false);
-  const [tinSurfaceArea, setTinSurfaceArea] = useState<number>(0);
 
   // Cut/fill state
-  const [datumRL, setDatumRL] = useState('');
-  const [cutFillResult, setCutFillResult] = useState<CutFillDatumResult | null>(null);
-  const [cutFillError, setCutFillError] = useState('');
-  const [isCutFillRunning, setIsCutFillRunning] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -302,8 +288,6 @@ export default function PointCloudImportPage() {
     setIsParsing(true);
     setParseErrors([]);
     setSlopeResult(null);
-    setTinTriangles(null);
-    setCutFillResult(null);
     setWarningMsg('');
 
     try {
@@ -342,49 +326,63 @@ export default function PointCloudImportPage() {
     setWarningMsg('');
     setParseErrors([]);
     setSlopeResult(null);
-    setTinTriangles(null);
-    setCutFillResult(null);
+    setIngestProgress({ bytesLoaded: 0, totalBytes: file.size, percent: 0, pointsLoaded: 0, done: false });
 
     try {
       const ext = file.name.toLowerCase().split('.').pop();
 
       if (ext === 'ply') {
-        // Use existing PLY parser
-        const result = await parsePly(file);
+        // Streaming PLY parser — chunked ingestion for large clouds
+        const result = await parsePLYStreamed(file, setIngestProgress);
         const imported: ImportedPoint[] = result.points.map((p, i) => {
-          // AUDIT FIX (2026-07-05): Auto-classify feature codes on import
           const classification = p.code ? autoClassifyPoint(p.code) : null
           return {
             id: `pt-${i}`,
             name: p.code || classification?.matchedCode?.code || `P${i + 1}`,
             easting: p.easting,
             northing: p.northing,
-            elevation: p.rl,
+            elevation: p.elevation,
           }
         });
-        if (imported.length > MAX_POINTS) {
-          setWarningMsg(`PLY file contains ${result.metadata.totalPoints.toLocaleString()} points. Only the first ${MAX_POINTS.toLocaleString()} will be processed.`);
+        if (result.totalVertices > MAX_POINTS) {
+          setWarningMsg(`PLY file contains ${result.totalVertices.toLocaleString()} points. Only the first ${MAX_POINTS.toLocaleString()} will be processed.`);
         }
         setPoints(imported);
         setImportStats({
-          totalLines: result.metadata.totalPoints,
+          totalLines: result.totalVertices,
           delimiter: 'space',
           hasHeader: false,
           pointCount: imported.length,
         });
-        setRawText(`[PLY format: ${result.metadata.totalPoints} vertices loaded]`);
+        setRawText(`[PLY format: ${result.totalVertices.toLocaleString()} vertices — ${imported.length.toLocaleString()} loaded]`);
       } else {
-        // CSV / TXT / XYZ
-        const text = await file.text();
-        setRawText(text);
-        processText(text);
+        // Streaming CSV/TXT/XYZ parser — chunked ingestion
+        const result = await parseCSVStreamed(file, setIngestProgress);
+        const imported: ImportedPoint[] = result.points;
+
+        if (result.points.length >= MAX_POINTS) {
+          setWarningMsg(`File exceeded ${MAX_POINTS.toLocaleString()} points. Only the first ${MAX_POINTS.toLocaleString()} were loaded.`);
+        } else if (result.points.length === 0 && file.size > 0) {
+          setWarningMsg('No valid points parsed. Check your data format and column mapping.');
+        }
+
+        setPoints(imported);
+        setParseErrors(result.errors);
+        setImportStats({
+          totalLines: result.totalLines,
+          delimiter: result.delimiter === '	' ? 'tab' : result.delimiter === ',' ? 'comma' : result.delimiter === ';' ? 'semicolon' : 'space',
+          hasHeader: result.hasHeader,
+          pointCount: imported.length,
+        });
+        setRawText(result.totalLines > 0 ? `[${result.totalLines.toLocaleString()} lines — ${imported.length.toLocaleString()} points loaded]` : '');
       }
     } catch (err) {
       setParseErrors([{ row: 0, message: `Failed to read file: ${err instanceof Error ? err.message : 'Unknown error'}` }]);
     } finally {
       setIsParsing(false);
+      setTimeout(() => setIngestProgress(null), 2000);
     }
-  }, [processText]);
+  }, []);
 
   const handleDropZone = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -527,165 +525,9 @@ export default function PointCloudImportPage() {
 
   // ─── TIN & Volume ──────────────────────────────────────────────────────────
 
-  const runTINGeneration = useCallback(() => {
-    if (points.length < 3) {
-      setTinError('At least 3 points are required for TIN generation.');
-      return;
-    }
-    setIsTinRunning(true);
-    setTinError('');
 
-    setTimeout(async () => {
-      try {
-        const tinPoints: TINPoint[] = points.map((p, i) => ({
-          id: p.id || `tin-${i}`,
-          x: p.easting,
-          y: p.northing,
-          z: p.elevation,
-        }));
 
-        // AUDIT FIX (2026-07-05): Use breakline-enforced TIN generation
-        // and DTM filtering (ground point classification) for accurate surfaces.
-        // Falls back to basic generateTIN if breaklines aren't available.
-        let triangles;
-        if (tinPoints.length >= SURFACE_WORKER_HEAVY_THRESHOLD) {
-          // Million-point clouds: compute the TIN in the Python sidecar
-          // (scipy Delaunay) — browser DTM classification + Delaunator cap
-          // out well below this size. Falls back to the local engine when
-          // the sidecar is unavailable.
-          const { generateTINHeavy } = await import('@/lib/compute/surfaceService');
-          const heavy = await generateTINHeavy(tinPoints);
-          triangles = heavy.triangles;
-          setTinSource(heavy.source === 'worker' ? 'python-sidecar' : 'local');
-        } else {
-          try {
-            // Try DTM filtering first (CSF ground classification)
-            const { classifyPointCloud, extractGroundPoints } = await import('@/lib/topo/pointCloudClassification');
-            if (tinPoints.length >= 20) {
-              const classified = classifyPointCloud(tinPoints.map(p => ({ x: p.x, y: p.y, z: p.z })));
-              const groundOnly = extractGroundPoints(classified);
-              if (groundOnly.length >= 3) {
-                const groundTinPoints = groundOnly.map((p, i) => ({
-                  id: `ground-${i}`,
-                  x: p.x, y: p.y, z: p.z,
-                }));
-                // Use breakline-enforced TIN (falls back to standard if no breaklines)
-                const { generateTINWithBreaklines } = await import('@/lib/compute/tinWithBreaklines');
-                triangles = generateTINWithBreaklines(groundTinPoints);
-              }
-            }
-          } catch {
-            // DTM filtering or breakline module not available — fall back
-          }
 
-          // Fallback: standard TIN without breaklines/DTM filtering
-          if (!triangles || triangles.length === 0) {
-            triangles = generateTIN(tinPoints);
-          }
-        }
-
-        const surfaceArea = computeSurfaceArea(triangles);
-        setTinTriangles(triangles);
-        setTinSurfaceArea(surfaceArea);
-      } catch (err) {
-        setTinError(err instanceof Error ? err.message : 'TIN generation failed.');
-      } finally {
-        setIsTinRunning(false);
-      }
-    }, 50);
-  }, [points]);
-
-  const runCutFill = useCallback(() => {
-    if (points.length < 3) {
-      setCutFillError('At least 3 points are required for cut/fill computation.');
-      return;
-    }
-    const datum = parseFloat(datumRL);
-    if (isNaN(datum)) {
-      setCutFillError('Please enter a valid datum RL.');
-      return;
-    }
-    setIsCutFillRunning(true);
-    setCutFillError('');
-
-    setTimeout(async () => {
-      try {
-        const dtmPoints: DTMPoint[] = points.map(p => ({
-          easting: p.easting,
-          northing: p.northing,
-          elevation: p.elevation,
-        }));
-
-        if (points.length >= SURFACE_WORKER_HEAVY_THRESHOLD) {
-          // Large clouds: grid-method cut/fill in the Python sidecar.
-          // The per-cell display table is omitted for sidecar computation;
-          // totals are exact. Falls back to the local engine when the
-          // sidecar is unavailable.
-          const { computeVolumeHeavy } = await import('@/lib/compute/surfaceService');
-          const { result, source } = await computeVolumeHeavy({
-            surface1: dtmPoints,
-            mode: 'cutfill',
-            cellSize: 1.0,
-            baseElevation: datum,
-          });
-          setCutFillResult({
-            totalCutVolume: result.cut,
-            totalFillVolume: result.fill,
-            netVolume: result.net,
-            cutArea: result.cutArea ?? 0,
-            fillArea: result.fillArea ?? 0,
-            balancePoint: result.balanceElevation ?? datum,
-            points: [],
-          });
-          setCutFillSource(source === 'worker' ? 'python-sidecar' : 'local');
-          return;
-        }
-
-        const result = computeCutFillDatum(dtmPoints, datum);
-        setCutFillResult(result);
-        setCutFillSource('local');
-      } catch (err) {
-        setCutFillError(err instanceof Error ? err.message : 'Cut/fill computation failed.');
-      } finally {
-        setIsCutFillRunning(false);
-      }
-    }, 50);
-  }, [points, datumRL]);
-
-  const exportCutFillCSV = useCallback(() => {
-    if (!cutFillResult) return;
-    const lines: string[] = [];
-    lines.push('Easting,Northing,ExistingRL,DesignRL,Difference');
-    for (const p of cutFillResult.points) {
-      lines.push(`${p.easting.toFixed(4)},${p.northing.toFixed(4)},${p.existingRL.toFixed(4)},${p.designRL.toFixed(4)},${p.difference.toFixed(4)}`);
-    }
-    lines.push('');
-    lines.push('SUMMARY');
-    lines.push(`Cut Volume (m³),${cutFillResult.totalCutVolume.toFixed(3)}`);
-    lines.push(`Fill Volume (m³),${cutFillResult.totalFillVolume.toFixed(3)}`);
-    lines.push(`Net Volume (m³),${cutFillResult.netVolume.toFixed(3)}`);
-    lines.push(`Cut Area (m²),${cutFillResult.cutArea.toFixed(2)}`);
-    lines.push(`Fill Area (m²),${cutFillResult.fillArea.toFixed(2)}`);
-    lines.push(`Balance Point (m),${cutFillResult.balancePoint.toFixed(3)}`);
-    downloadCSV('cutfill_analysis.csv', lines.join('\n'));
-  }, [cutFillResult]);
-
-  const exportTINCSV = useCallback(() => {
-    if (!tinTriangles) return;
-    const lines: string[] = [];
-    lines.push('Triangle,A_X,A_Y,A_Z,B_X,B_Y,B_Z,C_X,C_Y,C_Z,Area_m2,Centroid_X,Centroid_Y,Centroid_Z');
-    tinTriangles.forEach((tri, i) => {
-      lines.push([
-        i + 1,
-        tri.a.x.toFixed(4), tri.a.y.toFixed(4), tri.a.z.toFixed(4),
-        tri.b.x.toFixed(4), tri.b.y.toFixed(4), tri.b.z.toFixed(4),
-        tri.c.x.toFixed(4), tri.c.y.toFixed(4), tri.c.z.toFixed(4),
-        tri.area_m2.toFixed(4),
-        tri.centroid.x.toFixed(4), tri.centroid.y.toFixed(4), tri.centroid.z.toFixed(4),
-      ].join(','));
-    });
-    downloadCSV('tin_triangles.csv', lines.join('\n'));
-  }, [tinTriangles]);
 
   // ─── Render helpers ────────────────────────────────────────────────────────
 
@@ -769,6 +611,41 @@ export default function PointCloudImportPage() {
             {fileName && (
               <div className="text-sm text-[var(--text-secondary)]">
                 File: <span className="font-mono text-[var(--accent)]">{fileName}</span>
+              </div>
+            )}
+
+            {/* Ingestion progress bar */}
+            {ingestProgress && !ingestProgress.done && (
+              <div className="mt-4">
+                <div className="flex justify-between text-xs text-[var(--text-secondary)] mb-1">
+                  <span>Reading {ingestProgress.bytesLoaded > 1024 * 1024
+                    ? `${(ingestProgress.bytesLoaded / (1024 * 1024)).toFixed(1)} MB`
+                    : `${(ingestProgress.bytesLoaded / 1024).toFixed(0)} KB`
+                  } of {ingestProgress.totalBytes > 1024 * 1024
+                    ? `${(ingestProgress.totalBytes / (1024 * 1024)).toFixed(1)} MB`
+                    : `${(ingestProgress.totalBytes / 1024).toFixed(0)} KB`
+                  }...</span>
+                  <span>{ingestProgress.pointsLoaded.toLocaleString()} points parsed</span>
+                </div>
+                <div className="w-full h-2 bg-[var(--bg-tertiary)] rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-[var(--accent)] rounded-full transition-all duration-300 ease-out"
+                    style={{ width: `${Math.max(2, ingestProgress.percent)}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-[var(--text-muted)] mt-1">
+                  Streaming ingestion — UI stays responsive
+                </p>
+              </div>
+            )}
+
+            {/* Completion summary */}
+            {ingestProgress && ingestProgress.done && (
+              <div className="mt-3 text-xs text-[var(--text-secondary)]">
+                Loaded {ingestProgress.pointsLoaded.toLocaleString()} points
+                {ingestProgress.totalBytes > 1024 * 1024 && (
+                  <> from {(ingestProgress.totalBytes / (1024 * 1024)).toFixed(1)} MB file</>
+                )}
               </div>
             )}
           </div>
@@ -1232,240 +1109,11 @@ export default function PointCloudImportPage() {
 
       {/* ═══════════════════ TAB 4: TIN & Volume ═══════════════════ */}
       {activeTab === 'tin' && (
-        <div className="space-y-6">
-          {/* TIN generation */}
-          <div className="card">
-            <div className="card-header">
-              <span className="label">TIN Generation (Delaunay Triangulation)</span>
-            </div>
-            <p className="text-sm text-[var(--text-secondary)] mb-4">
-              Generates a Triangulated Irregular Network from the imported points.
-              Uses Delaunator for Delaunay triangulation (scipy in the Python sidecar
-              for million-point clouds).
-            </p>
-            {tinSource === 'python-sidecar' && (
-              <p className="text-xs text-[var(--accent)] mb-3">
-                Computed in the Python sidecar — supports million-point clouds without the browser cap.
-              </p>
-            )}
-            <button
-              onClick={runTINGeneration}
-              disabled={isTinRunning || points.length < 3}
-              className="btn btn-primary"
-            >
-              {isTinRunning ? 'Generating TIN...' : 'Generate TIN'}
-            </button>
-          </div>
-
-          {tinError && (
-            <div className="p-4 bg-red-900/30 border border-red-600 rounded text-red-400 text-sm">
-              {tinError}
-            </div>
-          )}
-
-          {tinTriangles && (
-            <>
-              <div className="card">
-                <div className="card-header flex justify-between items-center">
-                  <span className="label">TIN Results</span>
-                  <button onClick={exportTINCSV} className="btn btn-secondary text-sm">
-                    Export TIN CSV
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="p-4 bg-[var(--bg-tertiary)] rounded">
-                    <span className="text-[var(--text-secondary)] text-sm block">Input Points</span>
-                    <span className="font-mono text-xl">{points.length.toLocaleString()}</span>
-                  </div>
-                  <div className="p-4 bg-[var(--bg-tertiary)] rounded">
-                    <span className="text-[var(--text-secondary)] text-sm block">Triangles</span>
-                    <span className="font-mono text-xl text-[var(--accent)]">{tinTriangles.length.toLocaleString()}</span>
-                  </div>
-                  <div className="p-4 bg-[var(--bg-tertiary)] rounded">
-                    <span className="text-[var(--text-secondary)] text-sm block">Plan Area (2D)</span>
-                    <span className="font-mono text-xl">
-                      {tinTriangles.reduce((s, t) => s + t.area_m2, 0).toFixed(1)} m²
-                    </span>
-                  </div>
-                  <div className="p-4 bg-[var(--bg-tertiary)] rounded">
-                    <span className="text-[var(--text-secondary)] text-sm block">Surface Area (3D)</span>
-                    <span className="font-mono text-xl">
-                      {tinSurfaceArea.toFixed(1)} m²
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* TIN mesh preview */}
-              <div className="card">
-                <div className="card-header">
-                  <span className="label">TIN Mesh Preview</span>
-                </div>
-                {boundingBox && (
-                  <svg viewBox="0 0 500 350" className="w-full bg-[var(--bg-secondary)] rounded" style={{ maxHeight: '350px' }}>
-                    <rect x="30" y="20" width="440" height="280" fill="none" stroke="var(--border-color)" strokeWidth="1" />
-                    {(() => {
-                      const rangeE = boundingBox.maxE - boundingBox.minE || 1;
-                      const rangeN = boundingBox.maxN - boundingBox.minN || 1;
-                      const toX = (e: number) => 30 + ((e - boundingBox.minE) / rangeE) * 440;
-                      const toY = (n: number) => 300 - ((n - boundingBox.minN) / rangeN) * 280;
-                      const rangeZ = boundingBox.maxZ - boundingBox.minZ || 1;
-                      // Limit triangles rendered to first 2000 for performance
-                      const maxTris = 2000;
-                      const step = Math.max(1, Math.floor(tinTriangles.length / maxTris));
-                      return tinTriangles
-                        .filter((_, i) => i % step === 0)
-                        .map((tri, i) => {
-                          const avgZ = (tri.a.z + tri.b.z + tri.c.z) / 3;
-                          const t = (avgZ - boundingBox.minZ) / rangeZ;
-                          const r = Math.round(t < 0.5 ? t * 2 * 200 : 200);
-                          const g = Math.round(t < 0.5 ? 100 + t * 2 * 155 : 255 - (t - 0.5) * 2 * 155);
-                          const b = Math.round(t < 0.5 ? 200 - t * 2 * 200 : 0);
-                          const color = `rgb(${r},${g},${b})`;
-                          const pts = `${toX(tri.a.x).toFixed(1)},${toY(tri.a.y).toFixed(1)} ${toX(tri.b.x).toFixed(1)},${toY(tri.b.y).toFixed(1)} ${toX(tri.c.x).toFixed(1)},${toY(tri.c.y).toFixed(1)}`;
-                          return <polygon key={`${tri}-${i}`} points={pts} fill={color} fillOpacity="0.6" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" />;
-                        });
-                    })()}
-                    <text x="30" y="315" fill="var(--text-muted)" fontSize="10">E: {fmt(boundingBox.minE, 1)}</text>
-                    <text x="390" y="315" fill="var(--text-muted)" fontSize="10">{fmt(boundingBox.maxE, 1)}</text>
-                    <text x="30" y="15" fill="var(--text-muted)" fontSize="10">N: {fmt(boundingBox.maxN, 1)}</text>
-                    <text x="390" y="335" fill="var(--text-muted)" fontSize="10">{fmt(boundingBox.minN, 1)}</text>
-                  </svg>
-                )}
-                {boundingBox && (
-                  <div className="flex items-center gap-2 mt-2 justify-center">
-                    <span className="text-xs text-[var(--text-muted)]">Low Z</span>
-                    <div className="w-32 h-3 rounded" style={{ background: 'linear-gradient(to right, rgb(0,100,200), rgb(200,255,0), rgb(200,0,0))' }} />
-                    <span className="text-xs text-[var(--text-muted)]">High Z</span>
-                    {tinTriangles.length > 2000 && (
-                      <span className="text-xs text-[var(--text-muted)] ml-4">
-                        (showing ~2,000 of {tinTriangles.length.toLocaleString()} triangles)
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-
-          {/* Cut/Fill computation */}
-          <div className="card">
-            <div className="card-header">
-              <span className="label">Cut / Fill by Datum Plane</span>
-            </div>
-            <p className="text-sm text-[var(--text-secondary)] mb-4">
-              Compute cut and fill volumes relative to a horizontal datum RL using the slope analysis engine (IDW grid).
-            </p>
-            {cutFillSource === 'python-sidecar' && (
-              <p className="text-xs text-[var(--accent)] mb-3">
-                Computed in the Python sidecar — totals are exact; per-cell display table is omitted for large clouds.
-              </p>
-            )}
-            <div className="flex gap-4 items-end flex-wrap">
-              <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1" htmlFor="datum-rl-m">Datum RL (m)</label>
-                <input
-                  className="input w-32 font-mono"
-                  type="number"
-                  step="0.1"
-                  placeholder="e.g. 1200"
-                  value={datumRL}
-                  onChange={e => setDatumRL(e.target.value)}
-                />
-              </div>
-              <button
-                onClick={runCutFill}
-                disabled={isCutFillRunning || points.length < 3 || datumRL === ''}
-                className="btn btn-primary"
-              >
-                {isCutFillRunning ? 'Computing...' : 'Compute Cut/Fill'}
-              </button>
-              {boundingBox && (
-                <span className="text-xs text-[var(--text-muted)]">
-                  Elev. range: {fmt(boundingBox.minZ, 1)} – {fmt(boundingBox.maxZ, 1)} m
-                </span>
-              )}
-            </div>
-          </div>
-
-          {cutFillError && (
-            <div className="p-4 bg-red-900/30 border border-red-600 rounded text-red-400 text-sm">
-              {cutFillError}
-            </div>
-          )}
-
-          {cutFillResult && (
-            <div className="card">
-              <div className="card-header flex justify-between items-center">
-                <span className="label">Cut/Fill Results</span>
-                <button onClick={exportCutFillCSV} className="btn btn-secondary text-sm">
-                  Export CSV
-                </button>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="p-4 bg-[var(--bg-tertiary)] rounded">
-                  <span className="text-[var(--text-secondary)] text-sm block">Cut Volume</span>
-                  <span className="font-mono text-xl text-orange-400">
-                    {cutFillResult.totalCutVolume.toFixed(1)} m³
-                  </span>
-                </div>
-                <div className="p-4 bg-[var(--bg-tertiary)] rounded">
-                  <span className="text-[var(--text-secondary)] text-sm block">Fill Volume</span>
-                  <span className="font-mono text-xl text-blue-400">
-                    {cutFillResult.totalFillVolume.toFixed(1)} m³
-                  </span>
-                </div>
-                <div className="p-4 bg-[var(--bg-tertiary)] rounded">
-                  <span className="text-[var(--text-secondary)] text-sm block">Net Volume</span>
-                  <span className={`font-mono text-xl ${cutFillResult.netVolume >= 0 ? 'text-orange-400' : 'text-blue-400'}`}>
-                    {cutFillResult.netVolume >= 0 ? '+' : ''}{cutFillResult.netVolume.toFixed(1)} m³
-                  </span>
-                  <span className="text-xs text-[var(--text-muted)] block">{cutFillResult.netVolume >= 0 ? '(net cut)' : '(net fill)'}</span>
-                </div>
-                <div className="p-4 bg-[var(--bg-tertiary)] rounded">
-                  <span className="text-[var(--text-secondary)] text-sm block">Balance Point</span>
-                  <span className="font-mono text-xl text-[var(--accent)]">
-                    {cutFillResult.balancePoint.toFixed(3)} m
-                  </span>
-                  <span className="text-xs text-[var(--text-muted)] block">RL where cut ≈ fill</span>
-                </div>
-                <div className="p-4 bg-[var(--bg-tertiary)] rounded">
-                  <span className="text-[var(--text-secondary)] text-sm block">Cut Area</span>
-                  <span className="font-mono text-lg">{cutFillResult.cutArea.toFixed(1)} m²</span>
-                </div>
-                <div className="p-4 bg-[var(--bg-tertiary)] rounded">
-                  <span className="text-[var(--text-secondary)] text-sm block">Fill Area</span>
-                  <span className="font-mono text-lg">{cutFillResult.fillArea.toFixed(1)} m²</span>
-                </div>
-              </div>
-
-              {/* Cut/Fill visual bar */}
-              <div className="mt-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-sm text-[var(--text-secondary)]">Cut vs Fill Distribution:</span>
-                </div>
-                <div className="flex h-8 rounded overflow-hidden">
-                  {(() => {
-                    const total = cutFillResult.totalCutVolume + cutFillResult.totalFillVolume || 1;
-                    const cutPct = (cutFillResult.totalCutVolume / total) * 100;
-                    const fillPct = (cutFillResult.totalFillVolume / total) * 100;
-                    return (
-                      <>
-                        <div className="bg-orange-500 flex items-center justify-center text-xs text-white" style={{ width: `${Math.max(cutPct, 1)}%` }}>
-                          {cutPct > 5 ? `Cut ${cutPct.toFixed(1)}%` : ''}
-                        </div>
-                        <div className="bg-blue-500 flex items-center justify-center text-xs text-white" style={{ width: `${Math.max(fillPct, 1)}%` }}>
-                          {fillPct > 5 ? `Fill ${fillPct.toFixed(1)}%` : ''}
-                        </div>
-                      </>
-                    );
-                  })()}
-                </div>
-              </div>
-            </div>
-          )}
+        <div className="max-w-4xl mx-auto">
+          <TinTab points={points} boundingBox={boundingBox} />
         </div>
       )}
+
 
       {/* ── Volume (Cut/Fill) Tab ── */}
       {activeTab === 'volume' && (

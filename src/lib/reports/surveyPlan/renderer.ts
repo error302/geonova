@@ -11,6 +11,7 @@ import {
   segmentAngle, offsetFromMidpoint,
   centroid, boundingBox, calcScaleLabel, calcScaleBarMetres,
   formatBearingDegMinSec,
+  calculateGridInterval,
   offsetPointPerpendicular, rotatePoints,
   formatChainage, computeChainageAlongAlignment,
 } from './geometry'
@@ -24,6 +25,7 @@ import {
   C_BLACK, C_GREEN, C_RED, C_GRID_MINOR, C_GRID_MAJOR,
   C_LOT_FILL, C_WARNING_BG,
 } from './symbols'
+import { solveAndRenderBoundaryLabels } from './labelPlacement'
 
 export class SurveyPlanRenderer {
   protected data: SurveyPlanData
@@ -116,21 +118,25 @@ export class SurveyPlanRenderer {
   protected drawGrid(): string {
     const parcel = this.data.parcel
     const bb = boundingBox(parcel.boundaryPoints)
-    
-    // Use nice round numbers for grid lines (every 50m)
-    const gridMinE = Math.floor(bb.minE / 50) * 50
-    const gridMaxE = Math.ceil(bb.maxE / 50) * 50
-    const gridMinN = Math.floor(bb.minN / 50) * 50
-    const gridMaxN = Math.ceil(bb.maxN / 50) * 50
+
+    // Scale-aware grid interval — keeps line density readable at any scale
+    // (was a hardcoded 50 m, which is sparse on small plans and dense on large).
+    const interval = calculateGridInterval(this.scale)
+    const majorEvery = 2
+
+    const gridMinE = Math.floor(bb.minE / interval) * interval
+    const gridMaxE = Math.ceil(bb.maxE / interval) * interval
+    const gridMinN = Math.floor(bb.minN / interval) * interval
+    const gridMaxN = Math.ceil(bb.maxN / interval) * interval
     
     let svg = ''
     
     // Vertical lines (Easting)
-    for (let e = gridMinE; e <= gridMaxE; e += 50) {
+    for (let e = gridMinE; e <= gridMaxE; e += interval) {
       const x = this.toSvgX(e)
       const y1 = this.toSvgY(gridMinN)
       const y2 = this.toSvgY(gridMaxN)
-      const isMajor = e % 100 === 0
+      const isMajor = (Math.round(e / interval) % majorEvery) === 0
       const stroke = isMajor ? C_GRID_MAJOR : C_GRID_MINOR
       const width = isMajor ? 0.8 : 0.4
       const dash = isMajor ? 'none' : '2,4'
@@ -144,11 +150,11 @@ export class SurveyPlanRenderer {
     }
     
     // Horizontal lines (Northing)
-    for (let n = gridMinN; n <= gridMaxN; n += 50) {
+    for (let n = gridMinN; n <= gridMaxN; n += interval) {
       const y = this.toSvgY(n)
       const x1 = this.toSvgX(gridMinE)
       const x2 = this.toSvgX(gridMaxE)
-      const isMajor = n % 100 === 0
+      const isMajor = (Math.round(n / interval) % majorEvery) === 0
       const stroke = isMajor ? C_GRID_MAJOR : C_GRID_MINOR
       const width = isMajor ? 0.8 : 0.4
       const dash = isMajor ? 'none' : '2,4'
@@ -192,34 +198,7 @@ export class SurveyPlanRenderer {
   }
 
   protected drawBoundaryLabels(): string {
-    const pts = this.rotatedPoints
-    let svg = ''
-    for (let i = 0; i < pts.length; i++) {
-      const from = pts[i]
-      const to = pts[(i + 1) % pts.length]
-      const dist = distance(from.easting, from.northing, to.easting, to.northing)
-      const bearing = bearingFromDelta(to.easting - from.easting, to.northing - from.northing)
-      const angleDeg = segmentAngle(from.easting, from.northing, to.easting, to.northing)
-      const [bx, by] = offsetFromMidpoint(from.easting, from.northing, to.easting, to.northing, 4 / PX_PER_M)
-      
-      const bearingStr = formatBearingDegMinSec(bearing)
-      const distStr = dist.toFixed(2) + ' m'
-      const bearingWidth = bearingStr.length * 5.5
-      const distWidth = distStr.length * 5
-      const tw = Math.max(bearingWidth, distWidth) + 8
-      const th = 24
-      
-      let textAngle = angleDeg
-      if (textAngle > 90 || textAngle < -90) textAngle += 180
-      
-      svg += `<g transform="translate(${bx},${by})">`
-      svg += `<g transform="rotate(${textAngle})">`
-      svg += `<rect x="${-tw/2}" y="${-th/2}" width="${tw}" height="${th}" fill="white" opacity="0.85" stroke="none"/>`
-      svg += `<text x="0" y="-3" text-anchor="middle" font-family="JetBrains Mono, Courier New" font-size="8.5" font-weight="bold" fill="#000000">${escapeXml(bearingStr)}</text>`
-      svg += `<text x="0" y="8" text-anchor="middle" font-family="JetBrains Mono, Courier New" font-size="8" fill="#222222">${escapeXml(distStr)}</text>`
-      svg += `</g></g>`
-    }
-    return svg
+    return solveAndRenderBoundaryLabels(this.rotatedPoints, this.toSvgX, this.toSvgY)
   }
 
   protected drawMonuments(): string {

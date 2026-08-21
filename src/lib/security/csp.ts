@@ -52,7 +52,10 @@ export function getCspHeaders(_nonce: string) {
       // 'unsafe-inline' alone the inline scripts work and the export stays
       // green. Reintroduce the nonce together with the Next.js 15 upgrade,
       // when Next injects nonces into RSC scripts automatically.
-      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} 'wasm-unsafe-eval' https://static.cloudflareinsights.com`,
+      // PayPal SDK v6 (pricing/checkout): script + objects + frame (popup/iframe
+      // used by presentationMode:"auto"). Without these the checkout silently
+      // fails — the SDK never loads and the PayPal button stays hidden.
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} 'wasm-unsafe-eval' https://static.cloudflareinsights.com https://www.paypal.com https://*.paypal.com https://www.paypalobjects.com https://*.paypalobjects.com`,
       `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net`,
       `font-src 'self' https://fonts.gstatic.com`,
       `img-src 'self' data: blob: https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://*.mapbox.com https://server.arcgisonline.com https://*.arcgisonline.com https://*.basemaps.cartocdn.com`,
@@ -61,7 +64,7 @@ export function getCspHeaders(_nonce: string) {
       // a CSP directive — 'bluetooth' is not a valid CSP source and Chrome
       // logs "Unrecognized Content-Security-Policy directive" for it.
       `worker-src 'self' blob:`,
-      `frame-src 'none'`,
+      `frame-src https://www.paypal.com https://*.paypal.com https://www.paypalobjects.com https://*.paypalobjects.com`,
       `object-src 'none'`,
       `base-uri 'self'`,
       `form-action 'self'`,

@@ -117,6 +117,7 @@ import { useVertexEditing } from '@/hooks/useVertexEditing'
 import { usePrint, type PrintOptions } from '@/hooks/usePrint'
 import type { MapExtent } from './MapReactContext'
 import { MapProvider, type MapContextValue } from '@/app/map/MapReactContext'
+import { SurveyWorkspace } from '@/app/map/components/workspace/SurveyWorkspace'
 import { Target, Building2 } from 'lucide-react'
 
 // ── Dynamic imports for heavy components ──
@@ -1434,77 +1435,17 @@ export default function MapClient() {
         role="application"
         aria-label="Survey map — use arrow keys to pan, plus/minus to zoom. Press question mark for keyboard shortcuts."
       >
+        {/* Survey Workspace chrome wrapping the map viewport */}
+        <SurveyWorkspace>
         {/* Map container */}
-        <div className="w-full h-full relative">
-          <div ref={mapRef} className="w-full h-full" aria-label="Interactive survey map" />
+        <div className="w-full h-full relative overflow-hidden">
+          <div ref={mapRef} className="w-full h-full" aria-label="Interactive survey map canvas" />
 
           {/* ── Overlays (only when map is ready) ── */}
           {mapReady && (
             <>
-              <MapOverlays />
-
-              <MapCoordSearch />
-
-              {/* ── Floating Tool Dock (consolidated left-edge dock) ── */}
-              <MapToolDock />
-
-              {/* ── Mobile Gesture Lock (bottom-left, above status bar) ── */}
-              <MapInteractionToggle mapInstance={mapInstance} />
-
-              {/* ── Snapping Options Panel (top-right, below zoom) ── */}
-              <SnappingOptions
-                open={showSnappingOptions}
-                onClose={() => setShowSnappingOptions(false)}
-                enabled={snappingEnabled}
-                onToggleEnabled={() => setSnappingEnabled(!snappingEnabled)}
-                mode={snappingMode}
-                onModeChange={setSnappingMode}
-                tolerance={snappingTolerance}
-                onToleranceChange={setSnappingTolerance}
-                snapTypes={snappingTypes}
-                onSnapTypeToggle={(type) => {
-                  const next = new Set(snappingTypes)
-                  if (next.has(type)) next.delete(type)
-                  else next.add(type)
-                  setSnappingTypes(next)
-                }}
-              />
-
-              {/* ── Identify Panel (right side, below layer controls) ── */}
-              <IdentifyPanel
-                feature={identifiedFeature}
-                onClose={() => setIdentifiedFeature(null)}
-                onZoomTo={(feature) => {
-                  if (feature.centroidE && feature.centroidN) {
-                    mapInstance.current?.getView().animate({
-                      center: [feature.centroidE, feature.centroidN],
-                      zoom: 18,
-                      duration: 500,
-                    })
-                  }
-                }}
-              />
-
-              {/* ── Stakeout Radar button (bottom-left, next to gesture lock) ── */}
-              {!showStakeoutRadar && (
-                <button
-                  onClick={() => {
-                    const view = mapInstance.current?.getView()
-                    if (view) {
-                      const center = view.getCenter()
-                      if (center) {
-                        setStakeoutRadarTarget({ e: center[0], n: center[1] })
-                        setShowStakeoutRadar(true)
-                      }
-                    }
-                  }}
-                  className="absolute bottom-20 left-16 z-20 sm:left-3 flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--bg-secondary)]/70 backdrop-blur-xl border border-[var(--border-color)]/[0.06] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent)]/30 transition-all shadow-lg"
-                  title="Launch stakeout radar for beacon recovery"
-                  aria-label="Stakeout radar"
-                >
-                  <Target className="w-5 h-5" />
-                </button>
-              )}
+              {/* Toasts and Notifications */}
+              <MapNotifications />
 
               {/* ── Stakeout Radar (full-screen when active) ── */}
               {showStakeoutRadar && stakeoutRadarTarget && (
@@ -1515,57 +1456,10 @@ export default function MapClient() {
                 />
               )}
 
-              {/* ── Offline Download button (bottom-left, above radar) ── */}
-              {/* ── Offline Tile Download Button (bottom-right) ── */}
-              <OfflineDownloadButton />
-
-              <MapStatusBar />
-
-              <MapNotifications />
-
-              {/* Scheme Layer Panel (right side, zero-prop) */}
-              <SchemeLayerPanel />
-
-              {/* ── Right side controls ── */}
-              <div className="absolute top-14 right-3 z-20 sm:top-16 sm:right-4 flex flex-col gap-2 items-end">
-                {/* Projection Switcher (zero-prop) */}
-                <ProjectionSwitcher />
-
-                {/* Rotation Control (north reset) */}
-                <RotationControl />
-
-                {/* OSM Buildings Toggle */}
-                <button
-                  onClick={() => setShowOsmBuildings(!showOsmBuildings)}
-                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all backdrop-blur-xl border ${
-                    showOsmBuildings
-                      ? 'bg-[var(--accent)]/15 border-[var(--accent)]/30 text-[var(--accent)]'
-                      : 'bg-[var(--bg-secondary)]/60 border-[var(--border-color)]/[0.08] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]/80'
-                  }`}
-                  title="Toggle OpenStreetMap building footprints (requires Python worker + PBF file)"
-                >
-                  <Building2 className="w-4 h-4" />
-                  <span className="hidden sm:inline">OSM Buildings</span>
-                </button>
-
-                {/* Always-on North Arrow (rotates with map) */}
-                <NorthArrowOverlay mapInstance={mapInstance} />
-              </div>
-
               {/* OSM Buildings Overlay Layer */}
               {mapInstance.current && (
                 <OsmBuildingsLayer map={mapInstance.current} visible={showOsmBuildings} />
               )}
-
-              {/* ── Vertex Edit Toolbar (bottom-left, near map controls) ── */}
-              <div className="absolute bottom-24 left-3 z-20">
-                <VertexEditToolbar />
-              </div>
-
-              {/* ── Print button (bottom-right) ── */}
-              <div className="absolute bottom-10 right-3 z-20 no-print print-hide flex items-center gap-2">
-                <MapPrintButton />
-              </div>
 
               {/* ── Sheet Layout Overlay (print-only — no manual toggle) ── */}
               {showSheetLayout && (
@@ -1582,6 +1476,7 @@ export default function MapClient() {
           {/* Loading / Error overlay (zero-prop, reads from context) */}
           <MapLoadingOverlay />
         </div>
+        </SurveyWorkspace>
 
         {/* Keyboard shortcuts modal (global overlay) */}
         <KeyboardShortcutsHelp />

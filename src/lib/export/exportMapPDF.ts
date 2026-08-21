@@ -67,8 +67,32 @@ function injectPrintCSS(mapContainerId: string, paperSize: string, orientation: 
         break-inside: avoid;
       }
 
-      /* Hide other overlays that might clutter */
-      .sheet-layout-overlay ~ * {
+      /* Hide UI chrome that shouldn't print (toolbar, controls, coordinates) */
+      #${mapContainerId} > div:first-child {
+        display: none !important;
+      }
+      #${mapContainerId} .absolute:not(.ellipse-legend-print):not(.sheet-layout-overlay) {
+        display: none !important;
+      }
+
+      /* Ensure error ellipse legend prints with correct colors */
+      .ellipse-legend-print {
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+      }
+
+      /* Show error ellipse legend + tooltip during print */
+      .ellipse-legend-print {
+        display: block !important;
+        position: absolute !important;
+        bottom: 10mm !important;
+        right: 10mm !important;
+        z-index: 25 !important;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+      }
+
+      .ellipse-tooltip-print {
         display: none !important;
       }
 

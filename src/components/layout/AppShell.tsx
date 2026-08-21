@@ -43,12 +43,6 @@ function isAuthRoute(pathname: string): boolean {
   return pathname === '/login' || pathname === '/register' || pathname.startsWith('/login/') || pathname.startsWith('/register/')
 }
 
-function isDashboardRoute(pathname: string): boolean {
-  // Dashboard routes use sidebar navigation, not the top NavBar
-  return pathname === '/dashboard' || pathname.startsWith('/dashboard/') ||
-         pathname.startsWith('/survey/') || pathname.startsWith('/project/')
-}
-
 function isMapRoute(pathname: string): boolean {
   return pathname === '/map' || pathname.startsWith('/map/')
 }
@@ -73,7 +67,6 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const fullScreen = isFullScreenRoute(pathname)
   const admin = isAdminRoute(pathname)
   const auth = isAuthRoute(pathname)
-  const dashboard = isDashboardRoute(pathname) // Uses sidebar nav, not top NavBar
   const mapPage = isMapRoute(pathname)
   const fieldbookPage = isFieldbookRoute(pathname)
   const marketing = isMarketingRoute(pathname)
@@ -200,17 +193,14 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <LanguageProvider>
         <CountryProvider>
           <SubscriptionProvider>
-            {/* AUDIT FIX: Hide top NavBar on dashboard routes — they use
-                sidebar navigation via (dashboard)/layout.tsx. Showing both
-                NavBar + sidebar header = double navigation bar. */}
-            {!dashboard && <NavBar />}
-            <main id="main-content" className={`min-h-screen max-w-full overflow-x-hidden ${dashboard ? '' : 'pb-40 md:pb-0 mobile-nav-spacer'}`}>
+            <NavBar />
+            <main id="main-content" className="min-h-screen max-w-full overflow-x-hidden pb-40 md:pb-0 mobile-nav-spacer">
               {children}
             </main>
             <Footer />
             {!hideGlobalOverlays && <FeedbackWidget />}
             <HotkeyHelpOverlay />
-            {!dashboard && !hideGlobalOverlays && <MobileNav />}
+            {!hideGlobalOverlays && <MobileNav />}
             {!hideGlobalOverlays && <CommandPalette />}
             <NotificationToast />
             <OnboardingTour />

@@ -15,6 +15,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import {
   FolderKanban, FileText, MapPin, Calculator, FileCheck2,
   Users, CreditCard, Settings, Activity as ActivityIcon,
@@ -74,6 +75,10 @@ function timeAgo(dateStr: string): string {
 }
 
 export function ActivityFeed({ limit = 10 }: { limit?: number }) {
+  const pathname = usePathname()
+  // On the full /activity page this widget already shows everything, so the
+  // "View all" link would just self-link to the current route.
+  const showViewAll = pathname !== '/activity'
   const [activities, setActivities] = useState<Activity[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -112,12 +117,14 @@ export function ActivityFeed({ limit = 10 }: { limit?: number }) {
             <p className="text-[10px] text-gray-500">What happened in your projects</p>
           </div>
         </div>
-        <Link
-          href="/activity"
-          className="text-[10px] text-[var(--accent)] hover:underline flex items-center gap-0.5"
-        >
-          View all <ChevronRight className="w-3 h-3" />
-        </Link>
+        {showViewAll && (
+          <Link
+            href="/activity"
+            className="text-[10px] text-[var(--accent)] hover:underline flex items-center gap-0.5"
+          >
+            View all <ChevronRight className="w-3 h-3" />
+          </Link>
+        )}
       </div>
 
       {/* Activity list */}

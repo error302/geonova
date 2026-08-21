@@ -200,17 +200,15 @@ function LoginForm() {
           className="absolute inset-0 bg-[var(--bg-secondary)]"
           style={{ zIndex: -1 }}
         />
-        {/* Very subtle warm tint — lets contour lines shine through */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-primary)]/30 via-[var(--bg-secondary)]/20 to-[var(--bg-primary)]/35" />
-        {/* Bottom darkening so card/badges contrast cleanly */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/60 via-transparent to-[var(--bg-primary)]/15" />
+        {/* Subtle contrast tint — lets contour lines shine through */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/15 to-black/40" />
         {/* Soft vignette */}
         <div
           aria-hidden
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse at center, transparent 45%, rgba(26,24,22,0.35) 100%)',
+              'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.5) 100%)',
           }}
         />
       </div>
@@ -223,70 +221,70 @@ function LoginForm() {
         >
           <MetarduLogo size={36} showWordmark={true} color="#FFFFFF" />
         </a>
-        <div className="hidden sm:flex items-center gap-2 text-xs text-white/90 px-3 py-1.5 rounded-full bg-[var(--bg-card)]/50 border border-white/20 backdrop-blur-md drop-shadow-md">
-          <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
-          <span>East Africa Survey Platform</span>
+        <div className="hidden sm:flex items-center gap-2 text-xs text-zinc-200 px-3 py-1.5 rounded-full bg-[#131418]/80 border border-white/20 backdrop-blur-md shadow-md">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#D17B47]" />
+          <span className="font-medium">East Africa Survey Platform</span>
         </div>
       </header>
 
       {/* Main content */}
       <main className="relative z-10 flex min-h-[calc(100vh-88px)] items-center justify-center px-4 sm:px-6 pb-12">
         <div className="w-full max-w-md">
-          {/* Dark frosted-glass card — pops against the light topo map */}
-          <div className="relative rounded-2xl border border-white/10 bg-[var(--bg-card)]/80 backdrop-blur-2xl shadow-[0_24px_80px_-12px_rgba(0,0,0,0.7)] overflow-hidden">
+          {/* Dark card — solid contrast against topographic map */}
+          <div className="relative rounded-2xl border border-white/15 bg-[#131418]/95 backdrop-blur-xl shadow-[0_24px_80px_-12px_rgba(0,0,0,0.85)] overflow-hidden">
             {/* Top accent stripe */}
-            <div className="h-1 w-full bg-gradient-to-r from-[var(--accent)] via-orange-400 to-[var(--accent)]" />
+            <div className="h-1.5 w-full bg-gradient-to-r from-[#D17B47] via-amber-500 to-[#D17B47]" />
 
             <div className="px-6 sm:px-8 py-8 sm:py-10">
               {view === 'login' && (
                 <>
                   <div className="mb-8">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-white">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                       Welcome back
                     </h2>
-                    <p className="text-sm text-white/60 mt-1.5">
+                    <p className="text-sm text-zinc-400 mt-1.5">
                       Sign in to your METARDU account
                     </p>
                   </div>
 
-                  {/* ── OAuth Buttons (shown first for prominence) ── */}
+                  {/* ── OAuth Buttons ── */}
                   <div className="space-y-3">
                     <button
                       type="button"
                       onClick={() => handleOAuthSignIn('google')}
                       disabled={oauthLoading !== null}
-                      className="w-full py-3 px-4 bg-white/[0.07] border border-white/15 hover:bg-white/[0.12] hover:border-white/25 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                      className="w-full py-3 px-4 bg-[#1e2026] border border-white/15 hover:bg-[#272932] hover:border-white/30 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-sm"
                     >
                       {oauthLoading === 'google' ? (
                         <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       ) : (
                         <GoogleIcon className="w-5 h-5 shrink-0" />
                       )}
-                      {oauthLoading === 'google' ? 'Connecting...' : 'Continue with Google'}
+                      <span className="font-medium">{oauthLoading === 'google' ? 'Connecting...' : 'Continue with Google'}</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => handleOAuthSignIn('azure-ad')}
                       disabled={oauthLoading !== null}
-                      className="w-full py-3 px-4 bg-white/[0.07] border border-white/15 hover:bg-white/[0.12] hover:border-white/25 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                      className="w-full py-3 px-4 bg-[#1e2026] border border-white/15 hover:bg-[#272932] hover:border-white/30 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-sm"
                     >
                       {oauthLoading === 'azure-ad' ? (
                         <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       ) : (
                         <MicrosoftIcon className="w-5 h-5 shrink-0" />
                       )}
-                      {oauthLoading === 'azure-ad' ? 'Connecting...' : 'Continue with Microsoft'}
+                      <span className="font-medium">{oauthLoading === 'azure-ad' ? 'Connecting...' : 'Continue with Microsoft'}</span>
                     </button>
                   </div>
 
                   {/* ── Divider ── */}
                   <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-white/10" />
+                      <div className="w-full border-t border-white/15" />
                     </div>
                     <div className="relative flex justify-center text-xs">
-                      <span className="px-3 bg-transparent text-white/40 uppercase tracking-wider">
+                      <span className="px-3 bg-[#131418] text-zinc-400 font-semibold uppercase tracking-wider">
                         or sign in with email
                       </span>
                     </div>
@@ -295,15 +293,15 @@ function LoginForm() {
                   {/* ── Credentials Form ── */}
                   <form onSubmit={handleLogin} className="space-y-5">
                     {error && (
-                      <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-300 text-sm flex items-start gap-2">
-                        <span className="mt-0.5"><AlertTriangle className="w-3.5 h-3.5 inline shrink-0" /></span>
-                        <span>{error}</span>
+                      <div className="p-3.5 bg-red-500/15 border border-red-500/40 rounded-lg text-red-200 text-sm flex items-start gap-2.5">
+                        <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
+                        <span className="leading-snug">{error}</span>
                       </div>
                     )}
 
                     <div>
-                      <label htmlFor="login-email" className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
-                        Email
+                      <label htmlFor="login-email" className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-2">
+                        Email Address
                       </label>
                       <input
                         id="login-email"
@@ -314,17 +312,17 @@ function LoginForm() {
                           setEmailTouched(true)
                           setEmailError(validateEmail(email))
                         }}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
+                        className="w-full px-4 py-3 bg-[#1e2026] border border-white/15 rounded-lg text-white placeholder-zinc-500 focus:border-[#D17B47] focus:bg-[#252830] focus:ring-2 focus:ring-[#D17B47]/30 focus:outline-none transition-all"
                         autoComplete="email"
                         placeholder="you@example.com"
                       />
                       {emailTouched && emailError && (
-                        <p className="text-red-300 text-xs mt-1.5">{emailError}</p>
+                        <p className="text-red-400 text-xs mt-1.5 font-medium">{emailError}</p>
                       )}
                     </div>
 
                     <div>
-                      <label htmlFor="login-password" className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
+                      <label htmlFor="login-password" className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-2">
                         Password
                       </label>
                       <div className="relative">
@@ -337,33 +335,34 @@ function LoginForm() {
                             setPasswordTouched(true)
                             setPasswordError(validatePassword(password))
                           }}
-                          className="w-full px-4 py-3 pr-11 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
+                          className="w-full px-4 py-3 pr-11 bg-[#1e2026] border border-white/15 rounded-lg text-white placeholder-zinc-500 focus:border-[#D17B47] focus:bg-[#252830] focus:ring-2 focus:ring-[#D17B47]/30 focus:outline-none transition-all"
                           autoComplete="current-password"
                           placeholder="••••••••"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/80 transition-colors p-1"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors p-1"
                           aria-label={showPassword ? 'Hide password' : 'Show password'}
                         >
                           {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                       </div>
                       {passwordTouched && passwordError && (
-                        <p className="text-red-300 text-xs mt-1.5">{passwordError}</p>
+                        <p className="text-red-400 text-xs mt-1.5 font-medium">{passwordError}</p>
                       )}
                     </div>
 
                     <div className="flex items-center justify-between">
                       <label className="flex items-center gap-2 cursor-pointer group">
-                        <input aria-label="Rememberme"
+                        <input
+                          aria-label="Remember me"
                           type="checkbox"
                           checked={rememberMe}
                           onChange={(e) => setRememberMe(e.target.checked)}
-                          className="w-4 h-4 rounded border-white/20 bg-white/5 text-[var(--accent)] focus:ring-[var(--accent)]/50"
+                          className="w-4 h-4 rounded border-white/20 bg-[#1e2026] text-[#D17B47] focus:ring-[#D17B47]/50 accent-[#D17B47]"
                         />
-                        <span className="text-sm text-white/70 group-hover:text-white/90 transition-colors">
+                        <span className="text-sm text-zinc-300 group-hover:text-white transition-colors">
                           Remember me
                         </span>
                       </label>
@@ -373,7 +372,7 @@ function LoginForm() {
                           setView('forgot')
                           setError('')
                         }}
-                        className="text-sm text-[var(--accent)] hover:text-amber-300 hover:underline transition-colors"
+                        className="text-sm font-medium text-[#D17B47] hover:text-amber-400 hover:underline transition-colors"
                       >
                         Forgot password?
                       </button>
@@ -382,20 +381,20 @@ function LoginForm() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-3.5 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dim)] hover:from-amber-400 hover:to-[var(--accent)] text-black font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-[var(--accent)]/25"
+                      className="w-full py-3.5 bg-gradient-to-r from-[#D17B47] to-[#B35C2B] hover:from-[#e08953] hover:to-[#c46935] text-white font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-[#D17B47]/25"
                     >
                       {loading && (
-                        <span className="w-4 h-4 border-2 border-black/40 border-t-black rounded-full animate-spin" />
+                        <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
                       )}
                       {loading ? 'Signing in...' : 'Sign In'}
                     </button>
                   </form>
 
-                  <p className="text-center mt-6 text-white/60 text-sm">
+                  <p className="text-center mt-6 text-zinc-400 text-sm">
                     Don&apos;t have an account?{' '}
                     <a
                       href="/register"
-                      className="text-[var(--accent)] hover:text-amber-300 hover:underline font-medium transition-colors"
+                      className="text-[#D17B47] hover:text-amber-400 hover:underline font-semibold transition-colors"
                     >
                       Create one
                     </a>
@@ -406,18 +405,18 @@ function LoginForm() {
               {view === 'forgot' && (
                 <>
                   <div className="mb-8">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-white">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                       Reset your password
                     </h2>
-                    <p className="text-sm text-white/60 mt-1.5">
+                    <p className="text-sm text-zinc-400 mt-1.5">
                       Enter your email and we&apos;ll send you a reset link.
                     </p>
                   </div>
 
                   <form onSubmit={handleForgotPassword} className="space-y-5">
                     <div>
-                      <label htmlFor="forgot-email" className="block text-xs font-medium uppercase tracking-wider text-white/60 mb-2">
-                        Email
+                      <label htmlFor="forgot-email" className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-2">
+                        Email Address
                       </label>
                       <input
                         id="forgot-email"
@@ -428,22 +427,22 @@ function LoginForm() {
                           setEmailTouched(true)
                           setEmailError(validateEmail(email))
                         }}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[var(--accent)]/30 focus:outline-none transition-all"
+                        className="w-full px-4 py-3 bg-[#1e2026] border border-white/15 rounded-lg text-white placeholder-zinc-500 focus:border-[#D17B47] focus:bg-[#252830] focus:ring-2 focus:ring-[#D17B47]/30 focus:outline-none transition-all"
                         autoComplete="email"
                         placeholder="you@example.com"
                       />
                       {emailTouched && emailError && (
-                        <p className="text-red-300 text-xs mt-1.5">{emailError}</p>
+                        <p className="text-red-400 text-xs mt-1.5 font-medium">{emailError}</p>
                       )}
                     </div>
 
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-3.5 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dim)] hover:from-amber-400 hover:to-[var(--accent)] text-black font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-[var(--accent)]/25"
+                      className="w-full py-3.5 bg-gradient-to-r from-[#D17B47] to-[#B35C2B] hover:from-[#e08953] hover:to-[#c46935] text-white font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-[#D17B47]/25"
                     >
                       {loading && (
-                        <span className="w-4 h-4 border-2 border-black/40 border-t-black rounded-full animate-spin" />
+                        <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
                       )}
                       {loading ? 'Sending...' : 'Send Reset Link'}
                     </button>
@@ -456,7 +455,7 @@ function LoginForm() {
                       setEmailTouched(false)
                       setPasswordTouched(false)
                     }}
-                    className="flex items-center gap-2 text-sm text-[var(--accent)] hover:text-amber-300 hover:underline mt-6 transition-colors"
+                    className="flex items-center gap-2 text-sm text-[#D17B47] hover:text-amber-400 hover:underline mt-6 transition-colors font-medium"
                   >
                     <ArrowLeft className="w-4 h-4" /> Back to sign in
                   </button>
@@ -465,14 +464,14 @@ function LoginForm() {
 
               {view === 'sent' && (
                 <div className="text-center py-2">
-                  <div className="grid place-items-center w-16 h-16 rounded-full bg-[var(--accent)]/15 ring-1 ring-[var(--accent)]/30 mx-auto mb-5">
-                    <svg className="w-8 h-8 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="grid place-items-center w-16 h-16 rounded-full bg-[#D17B47]/15 ring-1 ring-[#D17B47]/40 mx-auto mb-5">
+                    <svg className="w-8 h-8 text-[#D17B47]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <h2 className="text-2xl font-bold text-white mb-2">Check your email</h2>
-                  <p className="text-white/60 mb-1">We&apos;ve sent a password reset link to:</p>
-                  <p className="text-white font-medium mb-6">{email}</p>
+                  <p className="text-zinc-400 mb-1">We&apos;ve sent a password reset link to:</p>
+                  <p className="text-white font-semibold mb-6">{email}</p>
 
                   <button
                     onClick={() => {
@@ -481,7 +480,7 @@ function LoginForm() {
                       setEmailTouched(false)
                       setPasswordTouched(false)
                     }}
-                    className="flex items-center gap-2 text-sm text-[var(--accent)] hover:text-amber-300 hover:underline mx-auto transition-colors"
+                    className="flex items-center gap-2 text-sm text-[#D17B47] hover:text-amber-400 hover:underline mx-auto transition-colors font-medium"
                   >
                     <ArrowLeft className="w-4 h-4" /> Back to sign in
                   </button>
@@ -490,7 +489,7 @@ function LoginForm() {
             </div>
           </div>
 
-          {/* Trust badges below the card — float over world map */}
+          {/* Trust badges below the card */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
             {[
               { icon: CheckCircle2, text: 'Kenya Survey Compliant' },
@@ -499,10 +498,10 @@ function LoginForm() {
             ].map((item) => (
               <div
                 key={item.text}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md text-xs text-white/75"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#131418]/80 border border-white/15 backdrop-blur-md text-xs text-zinc-300 shadow-sm"
               >
-                <item.icon className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
-                <span>{item.text}</span>
+                <item.icon className="w-3.5 h-3.5 text-[#D17B47] shrink-0" />
+                <span className="font-medium">{item.text}</span>
               </div>
             ))}
           </div>

@@ -95,12 +95,15 @@ function computeAzmMisclosure(
 
 export default function TraverseCalculator() {
   const { t } = useLanguage()
-  // Traverse legs
+  // Sample: closed loop traverse A→B→C→D→A returning to the start control.
+  // A near-perfect loop (the measured closing leg 200.10 m @ 315° is fractionally
+  // out) so it reads "Closed" with a realistic ~1:18,000 precision that passes
+  // RDM 1.1 cadastral tolerance and shows the Bowditch / Transit adjustment.
   const [legs, setLegs] = useState<Leg[]>([
-    { id: 1, name: 'A', n: '5000', e: '3000', dist: '250.0',  bearingD: '45',  bearingM: '32', bearingS: '08' },
-    { id: 2, name: 'B', n: '',     e: '',     dist: '180.5',  bearingD: '120', bearingM: '07', bearingS: '24' },
-    { id: 3, name: 'C', n: '',     e: '',     dist: '220.75', bearingD: '200', bearingM: '20', bearingS: '44' },
-    { id: 4, name: 'D', n: '5020', e: '3050', dist: '190.25', bearingD: '290', bearingM: '34', bearingS: '04' },
+    { id: 1, name: 'A', n: '5000', e: '3000', dist: '200.00', bearingD: '45',  bearingM: '00', bearingS: '00' },
+    { id: 2, name: 'B', n: '',     e: '',     dist: '200.00', bearingD: '135', bearingM: '00', bearingS: '00' },
+    { id: 3, name: 'C', n: '',     e: '',     dist: '200.00', bearingD: '225', bearingM: '00', bearingS: '00' },
+    { id: 4, name: 'D', n: '5000', e: '3000', dist: '200.10', bearingD: '315', bearingM: '00', bearingS: '00' },
   ])
   const [method, setMethod]       = useState<'bowditch' | 'transit'>('bowditch')
   const [result, setResult]       = useState<(TraverseResult & { legs: MappedLeg[] }) | null>(null)
@@ -194,14 +197,31 @@ export default function TraverseCalculator() {
         return
       }
 
+      // Last known point is the closing control — pass it to the engine so the
+      // adjustment closes to it (loop returning to start, or link traverse).
+      // Without this, the engine closed the loop back to points[0] regardless.
+      const closingPoint = points.length >= 2
+        ? { northing: points[points.length - 1].northing, easting: points[points.length - 1].easting }
+        : undefined
+
       const r = method === 'bowditch'
-        ? bowditchAdjustment({ points, distances, bearings })
-        : transitAdjustment({ points, distances, bearings })
+        ? bowditchAdjustment({ points, distances, bearings, closingPoint })
+        : transitAdjustment({ points, distances, bearings, closingPoint })
+
+      // Engine derives leg from/to names from the sparse known-points array
+      // (e.g. only A and D), which produced "A → D, D → P3, …". Remap from
+      // the actual input table rows: leg i runs from row i to row i+1. The
+      // closing leg has no row after it, so fall back to the start row (A).
+      const namedLegs = r.legs.map((leg: TraverseLeg, i: number) => ({
+        ...leg,
+        from: legs[i]?.name || leg.from,
+        to: legs[i + 1]?.name || legs[0]?.name || leg.to,
+      }))
 
       // Map engine property names to display property names for compatibility
       const mappedResult = {
         ...r,
-        legs: r.legs.map((leg: TraverseLeg) => ({
+        legs: namedLegs.map((leg: TraverseLeg) => ({
           ...leg,
           departure: leg.rawDeltaE,
           latitude: leg.rawDeltaN,

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { FileText, Download, Save, CheckCircle, AlertCircle, Plus, Trash2, Printer, Ruler } from 'lucide-react'
 import { DeedPlanInput, DeedPlanOutput, BoundaryPoint, BeaconType } from '@/types/deedPlan'
-import { generateDeedPlan } from '@/lib/compute/deedPlanApi'
+import { generateDeedPlan, type DeedPlanRenderOptions } from '@/lib/compute/deedPlanApi'
 import { saveDeedPlan } from '@/lib/api-client/deedPlans'
 import { printDeedPlan } from '@/lib/print/deedPlanPrint'
+import { DEED_PLAN_OUTPUT_TYPES, type DeedPlanOutputType } from '@/lib/reports/surveyPlan/outputTypes'
 import {
   coordinate2D,
   polygonArea2D,
@@ -89,6 +90,21 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
     signatureDate: new Date().toISOString().split('T')[0]
   })
 
+  // ── Export dialog options ────────────────────────────────────────────────
+  const [exportType, setExportType] = useState<DeedPlanOutputType>('deed')
+  const [exportGrid, setExportGrid] = useState(true)
+  const [exportPanel, setExportPanel] = useState(true)
+  const [exportWatermark, setExportWatermark] = useState(true)
+
+  const previewSvgRef = useRef<HTMLDivElement>(null)
+
+  const exportRenderOptions = (): DeedPlanRenderOptions => ({
+    outputType: exportType,
+    includeGrid: exportGrid,
+    includePanel: exportPanel,
+    watermarkPlan: exportWatermark ? 'free' : 'enterprise',
+  })
+
   // Compute area with confidence interval from boundary points.
   // Uses covariance propagation: assumes each boundary point has ~5mm std dev
   // (typical for cadastral traverse). If the surveyor has LSA covariances,
@@ -104,13 +120,13 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
     return polygonArea2D(vertices)
   }, [input.boundaryPoints])
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (stayOnStep: 'preview' | 'export' = 'preview') => {
     setIsGenerating(true)
     setError(null)
     try {
-      const result = await generateDeedPlan(input)
+      const result = await generateDeedPlan(input, exportRenderOptions())
       setOutput(result)
-      setStep('preview')
+      setStep(stayOnStep)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate deed plan')
     } finally {
@@ -142,14 +158,19 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
   const handleDownloadPNG = async () => {
     if (!output) return
     try {
-      // A1 at 300 DPI: 9933 x 7016 pixels — use 12x for high quality
-      const SCALE = 12
-      const svgW = 841
-      const svgH = 594
-      const imgW = svgW * SCALE
-      const imgH = svgH * SCALE
+      // Use DOM-rendered SVG (browser-parsed, works with Image()) instead of raw API string
+      // which has self-closing tags that can cause img.onerror in some browsers.
+      const svgEl = previewSvgRef.current?.querySelector('svg')
+      const svgStr = svgEl?.outerHTML ?? output.svg
+      const dimMatch = svgStr.match(/width="([\d.]+)" height="([\d.]+)"/)
+      const svgW = dimMatch ? parseFloat(dimMatch[1]) : 1587.4
+      const svgH = dimMatch ? parseFloat(dimMatch[2]) : 1122.5
+      // Scale so the output is ~300 DPI on A3 (4961 x 3508 px).
+      const SCALE = Math.max(3, Math.round(4961 / svgW))
+      const imgW = Math.round(svgW * SCALE)
+      const imgH = Math.round(svgH * SCALE)
 
-      const svgBlob = new Blob([output.svg], { type: 'image/svg+xml;charset=utf-8' })
+      const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' })
       const url = URL.createObjectURL(svgBlob)
 
       const img = new Image()
@@ -194,7 +215,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
           const pngUrl = URL.createObjectURL(blob)
           const a = document.createElement('a')
           a.href = pngUrl
-          a.download = `${input.parcelNumber || 'deed-plan'}_A1_300dpi.png`
+          a.download = `${input.parcelNumber || 'deed-plan'}_A3_300dpi.png`
           a.click()
           URL.revokeObjectURL(pngUrl)
         }, 'image/png', 1.0)
@@ -206,6 +227,39 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
       img.src = url
     } catch {
       alert('PNG download failed. Try downloading as SVG instead.')
+    }
+  }
+
+  type JsPdf = import('jspdf').jsPDF
+  interface JsPdfWithSvg extends JsPdf {
+    addSvg(element: SVGElement, x: number, y: number, options: { width: number; height: number }): Promise<void>
+  }
+
+  const handleDownloadPDF = async () => {
+    if (!output) return
+    try {
+      const svgString = output.svg
+      const container = document.createElement('div')
+      container.innerHTML = svgString
+      const svgEl = container.querySelector('svg')
+      if (!svgEl) throw new Error('SVG element not found')
+
+      const [, { jsPDF }] = await Promise.all([
+        import('svg2pdf.js'),
+        import('jspdf'),
+      ])
+
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a3' }) as JsPdfWithSvg
+      await pdf.addSvg(svgEl, 0, 0, { width: 420, height: 297 })
+
+      const date = new Date().toISOString().slice(0, 10)
+      const title = DEED_PLAN_OUTPUT_TYPES.find((t) => t.id === exportType)?.label || 'Deed Plan'
+      pdf.save(`${input.parcelNumber || 'deed-plan'}_${title.replace(/\s+/g, '_')}_${date}.pdf`)
+    } catch (err) {
+      // eslint-disable-next-line no-console -- client error surface
+      console.error('PDF export error:', err)
+      const msg = err instanceof Error ? err.message : String(err)
+      alert(`Could not export the deed plan as PDF. ${msg}. Wait for the page to load, check the browser download blocker, then try again.`)
     }
   }
 
@@ -719,7 +773,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
               Print A3 Deed Plan
             </button>
             <button
-              onClick={handleGenerate}
+              onClick={() => handleGenerate('preview')}
               disabled={isGenerating}
               className="flex items-center gap-2 px-6 py-3 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] disabled:opacity-50 font-bold"
             >
@@ -733,6 +787,13 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
               )}
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Hidden SVG for PNG rasterization (always rendered when output exists) */}
+      {output && (
+        <div ref={previewSvgRef} style={{ display: 'none' }}>
+          <div dangerouslySetInnerHTML={{ __html: output.svg }} />
         </div>
       )}
 
@@ -779,29 +840,154 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
             </div>
           )}
 
-          {/* SVG Preview */}
-          <div className="bg-white rounded-lg p-4 border overflow-auto">
-            <div
-              className="mx-auto"
-              dangerouslySetInnerHTML={{ __html: output.svg }}
-            />
-          </div>
+          {/* Validation banner */}
+          {output.validation && (
+            <>
+              {output.validation.errors.length > 0 && (
+                <div className="flex items-start gap-3 p-4 rounded-lg border border-red-700/60 bg-red-950/30 text-red-300">
+                  <AlertCircle className="h-5 w-5 shrink-0 text-red-400" />
+                  <div className="text-sm">
+                    <div className="font-semibold">Missing information</div>
+                    <ul className="list-disc pl-5 mt-1 space-y-0.5">
+                      {output.validation.errors.map((e, i) => (
+                        <li key={i}>{e}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+              {output.validation.warnings.length > 0 && (
+                <div className="flex items-start gap-3 p-4 rounded-lg border border-amber-700/60 bg-amber-950/30 text-amber-200">
+                  <AlertCircle className="h-5 w-5 shrink-0 text-amber-400" />
+                  <div className="text-sm">
+                    <div className="font-semibold">Warnings</div>
+                    <ul className="list-disc pl-5 mt-1 space-y-0.5">
+                      {output.validation.warnings.map((w, i) => (
+                        <li key={i}>{w}</li>
+                      ))}
+</ul>
+                   </div>
+                 </div>
+               )}
+             </>
+           )}
 
-          <div className="flex gap-4">
-            <button
-              onClick={() => setStep('export')}
-              className="flex items-center gap-2 px-6 py-3 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] font-bold"
-            >
-              Continue to Export
-            </button>
-          </div>
+           {/* SVG Preview */}
+           {step === 'preview' && (
+             <div className="bg-white rounded-lg p-4 border overflow-auto">
+               <div
+                 className="mx-auto"
+                 dangerouslySetInnerHTML={{ __html: output.svg }}
+               />
+             </div>
+           )}
+
+           {step === 'preview' && (
+            <div className="flex gap-4">
+              <button
+                onClick={() => setStep('export')}
+                className="flex items-center gap-2 px-6 py-3 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] font-bold"
+              >
+                Continue to Export
+              </button>
+            </div>
+          )}
         </div>
       )}
 
       {/* EXPORT STEP */}
       {step === 'export' && output && (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Export options dialog */}
+          <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <h3 className="text-lg font-semibold">Export Options</h3>
+              <button
+                onClick={() => handleGenerate('export')}
+                disabled={isGenerating}
+                className="flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] font-semibold disabled:opacity-50"
+              >
+                <FileText className="h-4 w-4" />
+                {isGenerating ? 'Refreshing…' : 'Refresh Preview'}
+              </button>
+            </div>
+
+            {/* Output type */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+              {DEED_PLAN_OUTPUT_TYPES.map((t) => {
+                const selected = exportType === t.id
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => setExportType(t.id)}
+                    className={`text-left rounded-lg border p-4 transition-colors ${
+                      selected
+                        ? 'border-[var(--accent)] bg-[var(--accent)]/10'
+                        : 'border-[var(--border-color)] hover:border-[var(--accent)]'
+                    }`}
+                  >
+                    <div className={`text-sm font-semibold ${selected ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'}`}>
+                      {t.label}
+                    </div>
+                    <div className="text-xs text-[var(--text-muted)] mt-1">{t.description}</div>
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Toggles */}
+            <div className="flex flex-wrap gap-6 mt-5">
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={exportGrid}
+                  onChange={(e) => setExportGrid(e.target.checked)}
+                  className="h-4 w-4"
+                />
+                Include coordinate grid
+              </label>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={exportPanel}
+                  onChange={(e) => setExportPanel(e.target.checked)}
+                  className="h-4 w-4"
+                />
+                Include data panel
+              </label>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={exportWatermark}
+                  onChange={(e) => setExportWatermark(e.target.checked)}
+                  className="h-4 w-4"
+                />
+                Include METARDU watermark (free plan)
+              </label>
+            </div>
+
+            <p className="text-xs text-[var(--text-muted)] mt-3">
+              Output: <span className="font-mono">{DEED_PLAN_OUTPUT_TYPES.find((t) => t.id === exportType)?.title}</span> · A3 landscape · grid {exportGrid ? 'on' : 'off'} · panel {exportPanel ? 'on' : 'off'} · watermark {exportWatermark ? 'on' : 'off'}. Click <span className="font-semibold">Refresh Preview</span> to re-render.
+            </p>
+          </div>
+
+          {/* Export actions */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button
+              onClick={handleDownloadPDF}
+              className="flex items-center justify-center gap-2 px-6 py-4 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] font-bold"
+            >
+              <Download className="h-5 w-5" />
+              Export PDF (A3)
+            </button>
+            <button
+              onClick={handleDownloadPNG}
+              className="flex items-center justify-center gap-2 px-6 py-4 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] font-bold"
+            >
+              <Download className="h-5 w-5" />
+              Download PNG (A3 300dpi)
+            </button>
             <button
               onClick={handlePrintA3}
               className="flex items-center justify-center gap-2 px-6 py-4 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] font-bold"
@@ -809,13 +995,8 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
               <Printer className="h-5 w-5" />
               Print A3 Deed Plan
             </button>
-            <button
-              onClick={handleDownloadPNG}
-              className="flex items-center justify-center gap-2 px-6 py-4 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] font-bold"
-            >
-              <Download className="h-5 w-5" />
-              Download PNG (A1 300dpi)
-            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button
               onClick={handleDownloadSVG}
               className="flex items-center justify-center gap-2 px-6 py-4 bg-[var(--bg-tertiary)] text-[var(--text-primary)] border border-[var(--border-color)] rounded-lg hover:border-[var(--accent)]"
@@ -825,7 +1006,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
             </button>
             <button
               onClick={handleSave}
-              className="flex items-center justify-center gap-2 px-6 py-4 bg-[var(--accent)] text-black rounded-lg hover:bg-[var(--accent-dim)] font-bold"
+              className="flex items-center justify-center gap-2 px-6 py-4 bg-[var(--bg-tertiary)] text-[var(--text-primary)] border border-[var(--border-color)] rounded-lg hover:border-[var(--accent)]"
             >
               <Save className="h-5 w-5" />
               Save to Project

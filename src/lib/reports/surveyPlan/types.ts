@@ -84,6 +84,11 @@ export interface SurveyPlanData {
     fileReference?: string
     scale?: string
     firNumber?: string
+    // Abuttal descriptions (kept from the deed-plan form; shown in PLAN INFORMATION).
+    abuttalNorth?: string
+    abuttalSouth?: string
+    abuttalEast?: string
+    abuttalWest?: string
   }
   parcel: Parcel
   traverse?: Traverse
