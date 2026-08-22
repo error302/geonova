@@ -117,7 +117,7 @@ import { useVertexEditing } from '@/hooks/useVertexEditing'
 import { usePrint, type PrintOptions } from '@/hooks/usePrint'
 import type { MapExtent } from './MapReactContext'
 import { MapProvider, type MapContextValue } from '@/app/map/MapReactContext'
-import { Target } from 'lucide-react'
+import { Target, Building2 } from 'lucide-react'
 
 // ── Dynamic imports for heavy components ──
 const OfflineTileDownloader = dynamic(
