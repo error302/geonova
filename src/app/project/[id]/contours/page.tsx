@@ -24,8 +24,8 @@ interface SpotHeightRow {
   elevation?: number | null
 }
 
-export default function ContoursPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id: projectId } = use(params)
+export default function ContoursPage({ params }: { params: { id: string } }) {
+  const { id: projectId } = params
   const dbClient = createClient()
 
   const [points, setPoints] = useState<SpotHeight[]>([])

@@ -27,8 +27,8 @@ interface ProjectSettingsRow {
   locality?: string | null
 }
 
-export default function ProjectSettingsPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id: projectId } = use(params)
+export default function ProjectSettingsPage({ params }: { params: { id: string } }) {
+  const { id: projectId } = params
   const router = useRouter()
   const dbClient = createClient()
   
