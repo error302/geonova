@@ -3,6 +3,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Sun, Eye } from 'lucide-react'
+
+/* Invisible dismiss layer that does NOT block underlying UI: listens on the
+   document instead of covering the screen, so the user's first click both
+   closes the tooltip and reaches the map/tool they actually clicked. */
+function TooltipDismiss({ onMouseDown }: { onMouseDown: () => void }) {
+  useEffect(() => {
+    const h = () => onMouseDown()
+    document.addEventListener('pointerdown', h, { once: true })
+    return () => document.removeEventListener('pointerdown', h)
+  }, [onMouseDown])
+  return null
+}
 import { useUIStore } from '@/stores/uiStore'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
@@ -280,10 +292,11 @@ export default function FieldModeToggle() {
         </div>
       )}
 
-      {/* Click-away to dismiss tooltip */}
-      {showTooltip && (
-        <button type="button" aria-label="Dismiss tooltip" tabIndex={-1} className="fixed inset-0 z-40 cursor-pointer border-0 p-0" onClick={dismissTooltip} />
-      )}
+      {/* Click-away dismissal — via passive document listener instead of a
+          fullscreen backdrop button. The old invisible `fixed inset-0`
+          blocker swallowed the user's first click on whatever map/tool
+          control lay beneath it, making tools feel dead on first use. */}
+      {showTooltip && <TooltipDismiss onMouseDown={dismissTooltip} />}
     </div>
   )
 }
