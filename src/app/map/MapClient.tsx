@@ -1485,27 +1485,7 @@ export default function MapClient() {
                 }}
               />
 
-              {/* ── Stakeout Radar button (bottom-left, next to gesture lock) ── */}
-              {!showStakeoutRadar && (
-                <button
-                  onClick={() => {
-                    const view = mapInstance.current?.getView()
-                    if (view) {
-                      const center = view.getCenter()
-                      if (center) {
-                        setStakeoutRadarTarget({ e: center[0], n: center[1] })
-                        setShowStakeoutRadar(true)
-                      }
-                    }
-                  }}
-                  className="absolute bottom-[9.75rem] left-3 z-30 flex items-center justify-center w-12 h-12 rounded-xl bg-[color-mix(in_srgb,var(--bg-secondary)_70%,transparent)] backdrop-blur-xl border border-[var(--border-color)]/[0.06] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-all shadow-lg"
-                  title="Launch stakeout radar for beacon recovery"
-                  aria-label="Stakeout radar"
-                >
-                  <Target className="w-5 h-5" />
-                </button>
-              )}
-
+              {/* Stakeout Radar moved into the right-side control dock */}
               {/* ── Stakeout Radar (full-screen when active) ── */}
               {showStakeoutRadar && stakeoutRadarTarget && (
                 <StakeoutRadar
@@ -1544,12 +1524,36 @@ export default function MapClient() {
                   }`}
                   title="Toggle OpenStreetMap building footprints (requires Python worker + PBF file)"
                 >
-                  <span className="text-sm">🏗</span>
+<Building2 className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">OSM Buildings</span>
                 </button>
 
                 {/* Always-on North Arrow (rotates with map) */}
                 <NorthArrowOverlay mapInstance={mapInstance} />
+
+                {/* Stakeout Radar — beacon recovery from current map center */}
+                {!showStakeoutRadar && (
+                  <button
+                    onClick={() => {
+                      const view = mapInstance.current?.getView()
+                      if (view) {
+                        const center = view.getCenter()
+                        if (center) {
+                          setStakeoutRadarTarget({ e: center[0], n: center[1] })
+                          setShowStakeoutRadar(true)
+                        }
+                      }
+                    }}
+                    className="flex items-center justify-center w-9 h-9 rounded-lg bg-[color-mix(in_srgb,var(--bg-secondary)_60%,transparent)] backdrop-blur-xl border border-[var(--border-color)]/[0.08] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-all shadow-lg"
+                    title="Launch stakeout radar for beacon recovery"
+                    aria-label="Stakeout radar"
+                  >
+                    <Target className="w-4 h-4" />
+                  </button>
+                )}
+
+                {/* Print */}
+                <MapPrintButton />
               </div>
 
               {/* OSM Buildings Overlay Layer */}
@@ -1560,11 +1564,6 @@ export default function MapClient() {
               {/* ── Vertex Edit Toolbar (bottom-left, near map controls) ── */}
               <div className="absolute bottom-24 left-3 z-20">
                 <VertexEditToolbar />
-              </div>
-
-              {/* ── Print button (bottom-right) ── */}
-              <div className="absolute bottom-10 right-3 z-20 no-print print-hide flex items-center gap-2">
-                <MapPrintButton />
               </div>
 
               {/* ── Sheet Layout Overlay (print-only — no manual toggle) ── */}
