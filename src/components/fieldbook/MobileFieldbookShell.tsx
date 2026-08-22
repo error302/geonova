@@ -776,10 +776,11 @@ export function MobileFieldbookShell({
           surveyType={surveyType}
           stationName={stationName}
           lastStation={lastStation}
+          online={online}
+          unsyncedCount={unsyncedCount}
           onPullInstrumentReading={onPullInstrumentReading}
-          onAdd={async (row, photos) => {
+          onAdd={(row, photos) => {
             onAddRow({ ...row, _timestamp: new Date().toISOString() }, photos)
-            setShowForm(false)
           }}
           onClose={() => setShowForm(false)}
         />
