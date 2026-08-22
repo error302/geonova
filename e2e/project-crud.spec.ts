@@ -98,8 +98,11 @@ test.describe('Project CRUD — Create Project', () => {
     await page.goto('/project/new', { waitUntil: 'domcontentloaded' })
     await page.waitForTimeout(2000)
 
-    // Breadcrumb should link back to dashboard
-    await expect(page.locator('a[href="/dashboard"]').first()).toBeVisible({ timeout: 8000 })
+    // Breadcrumb should link back to dashboard. Scope to <main>: the global
+    // navbar also contains a /dashboard link whose desktop variant is
+    // display:none on mobile, so an unscoped .first() can resolve to a
+    // hidden element now that the top navbar renders on all app routes.
+    await expect(page.locator('main a[href="/dashboard"]').first()).toBeVisible({ timeout: 8000 })
   })
 })
 
