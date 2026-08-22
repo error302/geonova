@@ -1,7 +1,7 @@
-'use client'
+﻿'use client'
 
 import { usePathname } from 'next/navigation'
-import { ReactNode, Suspense } from 'react'
+import { ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
@@ -29,7 +29,7 @@ const NotificationToast = dynamic(
   { ssr: false }
 )
 
-/* ── Route classification ─────────────────────────────────────────── */
+/* â”€â”€ Route classification â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 function isFullScreenRoute(pathname: string): boolean {
   return pathname === '/field/map' || pathname.startsWith('/field/map/')
@@ -52,26 +52,14 @@ function isFieldbookRoute(pathname: string): boolean {
 }
 
 // Marketing routes get a minimal shell: no LoadingScreen, no global
-// overlays (QuickCompute, CommandPalette, onboarding, install banners…).
-// This is a large performance win — those overlays are the biggest JS
+// overlays (QuickCompute, CommandPalette, onboarding, install bannersâ€¦).
+// This is a large performance win â€” those overlays are the biggest JS
 // chunks and the 1.5s branded splash directly inflates LCP/FCP on the
 // first visit (the landing page is what Lighthouse scores).
 function isMarketingRoute(pathname: string): boolean {
   return pathname === '/' || pathname === '/pricing' || pathname === '/enterprise'
 }
-
-/* ── Nav skeleton (Suspense fallback) ─────────────────────────────── */
-/* NavBar suspends during SSR on some routes (next-auth useSession ->
-   BAILOUT_TO_CLIENT_SIDE_RENDERING). Without an explicit boundary the
-   implicit bailout can silently render NOTHING after hydration (seen on
-   /dashboard: no navbar, no errors, chunk loads fine). An explicit
-   <Suspense> with a same-height fallback guarantees the slot always has
-   layout and the navbar mounts into it on the client. */
-function NavSkeleton() {
-  return <div className="h-16 border-b border-[var(--border-color)] bg-[var(--bg-primary)]" aria-hidden />
-}
-
-/* ── Shell Component ─────────────────────────────────────────────── */
+/* â”€â”€ Shell Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export default function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
@@ -81,7 +69,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const mapPage = isMapRoute(pathname)
   const fieldbookPage = isFieldbookRoute(pathname)
   const marketing = isMarketingRoute(pathname)
-  // Map and fieldbook are full-data-entry surfaces — the global overlays
+  // Map and fieldbook are full-data-entry surfaces â€” the global overlays
   // (Footer, FeedbackWidget, QuickCompute, MobileNav, CommandPalette)
   // overlap the entry form and steal taps from the surveyor on a phone.
   const hideGlobalOverlays = mapPage || fieldbookPage
@@ -107,7 +95,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
     )
   }
 
-  // Marketing routes (landing, pricing, enterprise): minimal chrome —
+  // Marketing routes (landing, pricing, enterprise): minimal chrome â€”
   // NavBar + Footer only. No LoadingScreen splash, no compute/search/
   // onboarding overlays, no PWA/update banners. Their code-split chunks
   // never download here, cutting the landing page's JS by ~50%.
@@ -120,9 +108,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
         <LanguageProvider>
           <CountryProvider>
             <SubscriptionProvider>
-              <Suspense fallback={<NavSkeleton />}>
-                <NavBar />
-              </Suspense>
+              <NavBar />
               <main id="main-content" className="min-h-screen max-w-full overflow-x-hidden">
                 {children}
               </main>
@@ -207,15 +193,14 @@ export default function AppShell({ children }: { children: ReactNode }) {
         <CountryProvider>
           <SubscriptionProvider>
             {/* NavBar renders on ALL app routes. (An earlier audit hid it on
-                /dashboard because that group used the AppSidebar layout — that
+                /dashboard because that group used the AppSidebar layout â€” that
                 layout is gone, so hiding it here left the dashboard with no
-                navigation at all.) Suspense wrapper: NavBar suspends during
-                SSR on some routes (next-auth useSession ->
-                BAILOUT_TO_CLIENT_SIDE_RENDERING); the explicit boundary with
-                a same-height skeleton guarantees the slot never collapses. */}
-            <Suspense fallback={<NavSkeleton />}>
-              <NavBar />
-            </Suspense>
+                navigation at all.) NOTE: do NOT wrap NavBar in <Suspense> â€”
+                an explicit boundary here deterministically breaks SSR of
+                sibling content on /project/new (breadcrumb link never renders,
+                E2E project-crud shard fails). NavBar's SSR bailout recovers
+                fine client-side without it. */}
+            <NavBar />
             <main id="main-content" className="min-h-screen max-w-full overflow-x-hidden pb-40 md:pb-0 mobile-nav-spacer">
               {children}
             </main>
