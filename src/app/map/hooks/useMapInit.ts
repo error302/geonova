@@ -206,6 +206,8 @@ export function useMapInit(params: UseMapInitParams) {
         const { getStyleForFeature } = await import('@/lib/map/enhancedStyles')
 
         const drawLayer = new VectorLayer({
+          updateWhileAnimating: true,
+          renderBuffer: 4,
           source: drawSource,
           // Use a style function that adapts to feature type + zoom
           style: (feature: import('ol/Feature').FeatureLike, resolution: number) => {
@@ -229,6 +231,8 @@ export function useMapInit(params: UseMapInitParams) {
         const measureSource = new VectorSource()
         measureSourceRef.current = measureSource
         const measureLayer = new VectorLayer({
+          updateWhileAnimating: true,
+          renderBuffer: 4,
           source: measureSource,
           style: new Style({
             fill: new Fill({ color: 'rgba(96, 165, 250, 0.15)' }),
@@ -247,6 +251,8 @@ export function useMapInit(params: UseMapInitParams) {
           source: projectSource,
         })
         const clusterLayer = new VectorLayer({
+          updateWhileAnimating: true,
+          renderBuffer: 4,
           source: clusterSource,
           style: (feature: import('ol/Feature').FeatureLike) => {
             const size = (feature.get('features') as unknown[] | undefined)?.length || 1
@@ -374,14 +380,14 @@ export function useMapInit(params: UseMapInitParams) {
                   const lonSafe = (lon != null && !isNaN(lon)) ? lon : 0
                   const latSafe = (lat != null && !isNaN(lat)) ? lat : 0
                   const now = Date.now()
-                  if (now - mouseCoordThrottleRef.current > 100) {
+                  if (now - mouseCoordThrottleRef.current > 200) {
                     mouseCoordThrottleRef.current = now
                     setMouseCoord({ lon: lonSafe, lat: latSafe, e: eSafe, n: nSafe })
                   }
                   return `Lon: ${lonSafe.toFixed(6)}  Lat: ${latSafe.toFixed(6)}  E: ${eSafe.toFixed(1)}  N: ${nSafe.toFixed(1)}`
                 } catch {
                   const now = Date.now()
-                  if (now - mouseCoordThrottleRef.current > 100) {
+                  if (now - mouseCoordThrottleRef.current > 200) {
                     mouseCoordThrottleRef.current = now
                     setMouseCoord({ lon: 0, lat: 0, e: 0, n: 0 })
                   }
