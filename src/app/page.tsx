@@ -32,37 +32,37 @@ const FEATURES = [
     icon: Waypoints,
     title: 'Traverse Adjustment',
     description: 'Bowditch, Transit, and Least Squares adjustment with RDM 1.1 accuracy grading. Full bearing/distance computation with closure checks.',
-    image: '/landing/showcase-field.webp',
+    image: '/landing/feature-traverse.jpg',
   },
   {
     icon: FileBadge,
     title: 'Deed Plan Generation',
     description: 'Survey Act Cap. 299 compliant Form No. 4 with SVG, PDF, and DXF output. SHA-256 verified, Director of Surveys authentication block.',
-    image: '/landing/theodolite-blueprint.webp',
+    image: '/landing/feature-deedplan.jpg',
   },
   {
     icon: Mountain,
     title: 'Topographic Surveys',
     description: 'TIN generation, contour extraction, volume computation. Web Worker TIN for large datasets. Auto breakline detection from mesh analysis.',
-    image: '/landing/hero-topo.webp',
+    image: '/landing/feature-topography.jpg',
   },
   {
     icon: DraftingCompass,
     title: 'COGO Engine',
     description: 'Intersection, resection, radiation, bearing-distance. Full coordinate geometry with solution steps shown for every calculation.',
-    image: '/landing/showcase-map.webp',
+    image: '/landing/feature-cogo.jpg',
   },
   {
     icon: Satellite,
     title: 'GNSS Baseline Processing',
     description: 'Upload RINEX files and get adjusted coordinates via RTKLIB integration. No external software needed — process baselines right in the browser.',
-    image: '/landing/feature-fieldbook.webp',
+    image: '/landing/feature-gnss.jpg',
   },
   {
     icon: FileChartColumn,
     title: 'Statutory Documents',
     description: 'RDM 1.1 survey reports, Form C-22, CLA forms, computation workbooks. NLIMS-ready exports with ArdhiSasa integration.',
-    image: '/landing/showcase-workflow.webp',
+    image: '/landing/feature-statutory.jpg',
   },
 ]
 
@@ -177,14 +177,14 @@ function HeroSection() {
     >
       <div className="absolute inset-0">
         <Image
-          src="/landing/hero-topo.webp"
+          src="/landing/hero-rift-valley-topo.jpg"
           alt="METARDU Topographic Surveying Platform"
           fill
           priority
           sizes="(max-width: 768px) 100vw, 1920px"
           quality={85}
           className="object-cover object-right"
-          style={{ filter: 'brightness(0.85) contrast(1.05)' }}
+          style={{ filter: 'brightness(0.7) contrast(1.1)' }}
         />
         {/* Left-to-right scrim: legible copy on the left, terrain visible on the right */}
         <div className="absolute inset-0 bg-gradient-to-r from-[color-mix(in_srgb,var(--bg-primary)_85%,transparent)] via-[color-mix(in_srgb,var(--bg-primary)_45%,transparent)] to-transparent" />
@@ -375,12 +375,12 @@ function ShowcaseSection() {
             <div className="absolute -inset-3 bg-gradient-to-r from-[color-mix(in_srgb,var(--accent)_10%,transparent)] via-transparent to-transparent rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-opacity" aria-hidden />
             <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl">
               <Image
-                src="/landing/showcase-field.webp"
-                alt="METARDU cadastral map workspace showing parcel boundaries and survey layers"
-                width={1536}
-                height={1024}
+                src="/landing/showcase-cadastral-workspace.jpg"
+                alt="METARDU cadastral map workspace showing parcel boundaries, RIM overlays, and survey layers"
+                width={1920}
+                height={1080}
                 sizes="(max-width: 768px) 100vw, 1200px"
-                quality={80}
+                quality={90}
                 className="rounded-xl object-cover"
               />
             </div>
@@ -394,12 +394,12 @@ function ShowcaseSection() {
             <figure className="group relative md:col-span-3">
               <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl h-full">
                 <Image
-                  src="/landing/showcase-workflow.webp"
-                  alt="METARDU survey workflow overview"
-                  width={1774}
-                  height={887}
+                  src="/landing/showcase-traverse-workflow.jpg"
+                  alt="METARDU survey workflow and traverse computation workspace"
+                  width={1920}
+                  height={1080}
                   sizes="(max-width: 768px) 100vw, 900px"
-                  quality={80}
+                  quality={90}
                   className="rounded-xl object-cover"
                 />
               </div>
@@ -410,12 +410,12 @@ function ShowcaseSection() {
             <figure className="group relative md:col-span-2">
               <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl h-full">
                 <Image
-                  src="/landing/showcase-map.webp"
-                  alt="METARDU interactive map with survey layers"
-                  width={603}
+                  src="/landing/showcase-map-inspector.jpg"
+                  alt="METARDU interactive map tools and layer inspector panel"
+                  width={900}
                   height={1200}
                   sizes="(max-width: 768px) 100vw, 500px"
-                  quality={80}
+                  quality={90}
                   className="rounded-xl object-cover"
                 />
               </div>
