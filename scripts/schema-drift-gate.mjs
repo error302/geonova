@@ -146,6 +146,16 @@ function main() {
   const newDrift = drift.filter((d) => !baseline.has(`${d.table}.${d.col}`))
   const newUnknown = [...unknownTables.values()].filter((u) => !baseline.has(`${u.table}.*`))
 
+  // Prune mode: rewrite the baseline to exactly the CURRENT drift set —
+  // removes stale entries for columns that migrations now cover.
+  if (process.argv.includes('--update-baseline')) {
+    const entries = [...new Set([...drift.map((d) => `${d.table}.${d.col}`), ...[...unknownTables.keys()].map((t) => `${t}.*`)])]
+    const out = join(process.cwd(), 'scripts', 'schema-drift-baseline.json')
+    writeFileSync(out, JSON.stringify(entries.sort(), null, 2) + '\n')
+    console.log(`Baseline updated (${entries.length} entries) -> scripts/schema-drift-baseline.json`)
+    process.exit(0)
+  }
+
   if (newDrift.length === 0 && newUnknown.length === 0) {
     const known = drift.length + unknownTables.size
     console.log(`schema-drift-gate: OK — ${usages.length} selected columns; ${known} known drift entr(y|ies) baselined`)
