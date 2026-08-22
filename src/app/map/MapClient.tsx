@@ -94,6 +94,7 @@ import { RotationControl } from '@/app/map/components/RotationControl'
 import { NorthArrowOverlay } from '@/app/map/components/NorthArrowOverlay'
 import { MapOverlayProvider } from '@/app/map/components/MapOverlayManager'
 import { MapPrintButton } from '@/app/map/components/MapPrintButton'
+import MapRail from '@/app/map/components/MapRail'
 import { MapCoordSearch } from '@/app/map/components/MapCoordSearch'
 import { KeyboardShortcutsHelp } from '@/app/map/components/KeyboardShortcutsHelp'
 import { MapToolDock } from '@/app/map/components/MapToolDock'
@@ -117,7 +118,7 @@ import { useVertexEditing } from '@/hooks/useVertexEditing'
 import { usePrint, type PrintOptions } from '@/hooks/usePrint'
 import type { MapExtent } from './MapReactContext'
 import { MapProvider, type MapContextValue } from '@/app/map/MapReactContext'
-import { Target, Building2 } from 'lucide-react'
+import { Target, Building2, PenLine } from 'lucide-react'
 
 // ── Dynamic imports for heavy components ──
 const OfflineTileDownloader = dynamic(
@@ -320,6 +321,7 @@ export default function MapClient() {
 
   // ── OSM Buildings overlay toggle ──
   const [showOsmBuildings, setShowOsmBuildings] = useState(false)
+  const [activeRailTool, setActiveRailTool] = useState<string | null>(null)
 
   const {
     print: printMap,
@@ -1561,10 +1563,12 @@ export default function MapClient() {
                 <OsmBuildingsLayer map={mapInstance.current} visible={showOsmBuildings} />
               )}
 
-              {/* ── Vertex Edit Toolbar (bottom-left, near map controls) ── */}
-              <div className="absolute bottom-24 left-3 z-20">
-                <VertexEditToolbar />
-              </div>
+              {/* ── Tool rail (Phase 2): radio-switched tools, no overlap ── */}
+              <MapRail
+                items={[{ id: 'vertex', label: 'Vertex Editing', icon: PenLine, panel: <VertexEditToolbar /> }]}
+                activeId={activeRailTool}
+                onActivate={setActiveRailTool}
+              />
 
               {/* ── Sheet Layout Overlay (print-only — no manual toggle) ── */}
               {showSheetLayout && (
