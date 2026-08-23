@@ -5,6 +5,7 @@
 // Source: Survey Regulations 1994, Cap 299, Regulation 97
 
 import { dmsToDecimal } from '@/lib/engine/angles'
+import { bowditchCorrections } from '@/lib/engine/traverse'
 
 function angleDMS(angleDeg: number): string {
   const norm = ((angleDeg % 360) + 360) % 360
@@ -292,13 +293,18 @@ export function computeTraverse(input: {
     precisionRatio = totalDist / Math.max(linearError, 1e-12)
     C_mm = linearError * 1000
 
-    // Source: Ghilani & Wolf, Chapter 12 — Bowditch rule: correction_i = -(misclosure/ΣD) × D_i
-    // Source: Basak, Chapter 11 — Bowditch correction proportional to leg distance
-    for (const leg of legs) {
-      leg.depCorrection = -(eDep * (leg.hd / totalDist))
-      leg.latCorrection = -(eLat * (leg.hd / totalDist))
-      leg.adjDep = leg.departure + leg.depCorrection
-      leg.adjLat = leg.latitude + leg.latCorrection
+    // Bowditch rule via the shared kernel in engine/traverse (single
+    // implementation of correction_i = −(misclosure/ΣD) × D_i).
+    const { correctionE, correctionN } = bowditchCorrections(
+      legs.map((l) => l.hd),
+      eDep,
+      eLat
+    );
+    for (let i = 0; i < legs.length; i++) {
+      legs[i].depCorrection = correctionE[i];
+      legs[i].latCorrection = correctionN[i];
+      legs[i].adjDep = legs[i].departure + legs[i].depCorrection;
+      legs[i].adjLat = legs[i].latitude + legs[i].latCorrection;
     }
 
     // Verify: adjusted sums should now equal (closing − opening)
@@ -350,6 +356,7 @@ export function computeTraverse(input: {
 }
 
 export function computeBowditchAdjustment(legs: TraverseComputationLeg[], closingE: number, closingN: number): void {
+  if (legs.length === 0) return
   const totalDist = legs.reduce((s, l) => s + l.hd, 0)
   if (totalDist === 0) return
 
@@ -365,12 +372,17 @@ export function computeBowditchAdjustment(legs: TraverseComputationLeg[], closin
   const eE = sumDep - closingE  // departure misclosure
   const eN = sumLat - closingN  // latitude misclosure
 
-  // Source: Ghilani & Wolf — Bowditch correction: correction_i = −(misclosure/ΣD) × D_i
-  for (const leg of legs) {
-    leg.depCorrection = -(eE * (leg.hd / totalDist))
-    leg.latCorrection = -(eN * (leg.hd / totalDist))
-    leg.adjDep = leg.departure + leg.depCorrection
-    leg.adjLat = leg.latitude + leg.latCorrection
+  // Bowditch rule via the shared kernel in engine/traverse
+  const { correctionE, correctionN } = bowditchCorrections(
+    legs.map((l) => l.hd),
+    eE,
+    eN
+  );
+  for (let i = 0; i < legs.length; i++) {
+    legs[i].depCorrection = correctionE[i]
+    legs[i].latCorrection = correctionN[i]
+    legs[i].adjDep = legs[i].departure + legs[i].depCorrection
+    legs[i].adjLat = legs[i].latitude + legs[i].latCorrection
   }
 }
 

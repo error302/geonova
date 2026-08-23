@@ -156,6 +156,40 @@ export function forwardTraverse(input: ForwardTraverseInput): ForwardTraverseRes
   }
 }
 
+/**
+ * Bowditch (Compass) Rule — shared correction kernel.
+ *
+ * This is THE single implementation of the rule in METARDU. Both
+ * `bowditchAdjustment` (below) and `computations/traverseEngine.ts`
+ * (`computeTraverse` + `computeBowditchAdjustment`) delegate here.
+ *
+ *   correction_i = −(misclosure / ΣD) × D_i
+ *
+ * Source: Basak, Chapter 11 — corrections proportional to leg distance.
+ * Source: Ghilani & Wolf, Chapter 12 — Bowditch adjustment formula.
+ *
+ * @param distances horizontal leg distances (ΣD is computed internally)
+ * @param misclosureE departure misclosure (Σdep − ΔE_target)
+ * @param misclosureN latitude misclosure (Σlat − ΔN_target)
+ */
+export function bowditchCorrections(
+  distances: number[],
+  misclosureE: number,
+  misclosureN: number
+): { correctionE: number[]; correctionN: number[] } {
+  const totalDistance = distances.reduce((s, d) => s + d, 0);
+  if (totalDistance === 0) {
+    return {
+      correctionE: distances.map(() => 0),
+      correctionN: distances.map(() => 0),
+    };
+  }
+  return {
+    correctionE: distances.map((d) => -(misclosureE * (d / totalDistance))),
+    correctionN: distances.map((d) => -(misclosureN * (d / totalDistance))),
+  };
+}
+
 export function bowditchAdjustment(input: TraverseInput): TraverseResult {
   const { points, distances, bearings, closingPoint } = input;
   
@@ -215,20 +249,25 @@ export function bowditchAdjustment(input: TraverseInput): TraverseResult {
   // precisionRatio = perimeter / linearMisclosure (large number, e.g. 5000 means 1:5000)
   const precisionRatio = totalDistance > 0 ? totalDistance / linearError : Infinity;
   
-  // Apply Bowditch corrections
+  // Apply Bowditch corrections via the shared kernel.
+  // The kernel takes the misclosure (Σ − target); closingError here is
+  // (target − computed end) = −misclosure, hence the negation.
+  const { correctionE, correctionN } = bowditchCorrections(
+    distances,
+    -closingErrorE,
+    -closingErrorN
+  );
+
   let currentEasting = points[0].easting;
   let currentNorthing = points[0].northing;
   
   for (let i = 0; i < legs.length; i++) {
     const leg = legs[i];
-    const correctionN = (leg.distance / totalDistance) * closingErrorN;
-    const correctionE = (leg.distance / totalDistance) * closingErrorE;
+    leg.correctionN = correctionN[i];
+    leg.correctionE = correctionE[i];
     
-    leg.correctionN = correctionN;
-    leg.correctionE = correctionE;
-    
-    leg.adjDeltaN = leg.rawDeltaN + correctionN;
-    leg.adjDeltaE = leg.rawDeltaE + correctionE;
+    leg.adjDeltaN = leg.rawDeltaN + correctionN[i];
+    leg.adjDeltaE = leg.rawDeltaE + correctionE[i];
     
     currentNorthing += leg.adjDeltaN;
     currentEasting += leg.adjDeltaE;
