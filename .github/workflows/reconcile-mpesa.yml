@@ -6,9 +6,9 @@ name: M-Pesa Payment Reconciliation
 # Endpoint is safe to re-run (only touches rows still in 'pending').
 
 on:
-  schedule:
-    # Every 5 minutes.
-    - cron: '*/5 * * * *'
+  # Primary trigger is a VM-local crontab (scripts/reconcile-mpesa-cron.sh)
+  # hitting localhost — Cloudflare bot protection 403s GitHub runner IPs on
+  # the public URL. Keep dispatch for manual/backup runs.
   workflow_dispatch:
 
 jobs:
