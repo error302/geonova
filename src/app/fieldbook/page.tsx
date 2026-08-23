@@ -934,6 +934,9 @@ export default function DigitalFieldBookPage() {
 
   /** Add a row produced by the mobile universal form to the active survey state. */
   function handleMobileAddRow(row: Record<string, string>, photos: CapturedBeaconPhoto[] = []) {
+    // Guard: never store a completely blank station/point — prevents ghost #01 cards
+    const hasStation = (row.station ?? row.pointId ?? '').trim() !== ''
+    if (!hasStation) return
     const id = crypto.randomUUID()
     // Build a compact photo annotation appended to remarks so the surveyor
     // has an at-a-glance evidence trail. EXIF GPS coordinates are included

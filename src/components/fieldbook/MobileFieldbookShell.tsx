@@ -16,11 +16,12 @@
  */
 
 import { useState } from 'react'
-import { Wifi, WifiOff, CloudUpload, Plus, Trash2, ChevronUp, ChevronDown, CheckCircle2, AlertTriangle, Clock, History, Settings, Calculator, Ruler, Compass, MapPin } from 'lucide-react'
+import { Wifi, WifiOff, CloudUpload, Plus, ChevronUp, ChevronDown, CheckCircle2, AlertTriangle, Clock, History, Settings, Calculator, Ruler, Compass, MapPin } from 'lucide-react'
 import type { MobileSurveyType } from './UniversalMobileObservationForm'
 import { UniversalMobileObservationForm } from './UniversalMobileObservationForm'
 import type { CapturedBeaconPhoto } from './BeaconPhotoCapture'
 import { StickySummary, OfflineCacheIndicator } from './MobileFieldUX'
+import { SwipeableRow } from './FieldbookSwipeWrapper'
 
 export type Row = { id: string; [key: string]: string }
 
@@ -174,7 +175,6 @@ export function MobileFieldbookShell({
   setControlStation,
 }: MobileFieldbookShellProps) {
   const [showForm, setShowForm] = useState(false)
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const [setupOpen, setSetupOpen] = useState(false)
   const [resultsOpen, setResultsOpen] = useState(true)
 
@@ -596,17 +596,25 @@ export function MobileFieldbookShell({
               </span>
             </div>
 
-            {rows.map((row, idx) => {
-              const isDeleting = confirmDelete === row.id
-              return (
-                <div
+            {rows
+              .filter((row) => (row.station ?? row.pointId ?? '').trim() !== '')
+              .map((row, idx) => (
+                <SwipeableRow
                   key={row.id}
-                  className={[
-                    'relative bg-[var(--bg-card)] rounded-xl border transition-all overflow-hidden',
-                    isDeleting
-                      ? 'border-red-500/50 ring-2 ring-red-500/30'
-                      : 'border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)]',
-                  ].join(' ')}
+                  id={row.id}
+                  onDuplicate={(id) => {
+                    const src = rows.find((r) => r.id === id)
+                    if (!src) return
+                    const clone: Record<string, string> = {}
+                    for (const [k, v] of Object.entries(src)) clone[k] = typeof v === 'string' ? v : String(v)
+                    clone.id = ''
+                    onAddRow(clone, [])
+                  }}
+                  onDelete={onRemoveRow}
+                  onEdit={() => {}}
+                >
+                <div
+                  className="relative bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] hover:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] transition-all overflow-hidden"
                 >
                   <div className="flex items-stretch">
                     {/* Card body */}
@@ -642,34 +650,14 @@ export function MobileFieldbookShell({
                       )}
                     </div>
 
-                    {/* Delete button column */}
-                    <button
-                      onClick={() => {
-                        if (isDeleting) {
-                          onRemoveRow(row.id)
-                          setConfirmDelete(null)
-                        } else {
-                          setConfirmDelete(row.id)
-                          setTimeout(() => setConfirmDelete(null), 3000)
-                        }
-                      }}
-                      className={[
-                        'flex flex-col items-center justify-center w-14 transition-colors',
-                        isDeleting
-                          ? 'bg-red-500/15 text-red-400'
-                          : 'bg-[color-mix(in_srgb,var(--bg-secondary)_30%,transparent)] text-[var(--text-muted)] hover:bg-red-500/10 hover:text-red-400',
-                      ].join(' ')}
-                      aria-label="Delete reading"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      <span className="text-[9px] mt-0.5 uppercase tracking-wider">
-                        {isDeleting ? 'Tap again' : 'Delete'}
-                      </span>
-                    </button>
+                    {/* Hint nudge */}
+                    <div className="flex flex-col items-center justify-center w-6 bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)]">
+                      <span className="text-[8px] text-[var(--text-muted)] [writing-mode:vertical-lr] opacity-40">swipe</span>
+                    </div>
                   </div>
                 </div>
-              )
-            })}
+                </SwipeableRow>
+              ))}
           </div>
         )}
 

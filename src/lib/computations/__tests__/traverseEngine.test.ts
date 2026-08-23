@@ -42,13 +42,13 @@ describe('computeTraverse — WCB Propagation', () => {
       backsightBearingSec: 0,
       observations: [
         // At A: BS at North (0°), observed angle 90° CW → FS at East (WCB=90°)
-        { station: 'B', bs: 'BS', fs: 'C', hclDeg: '90', hclMin: '0', hclSec: '0', hcrDeg: '270', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'B', bs: 'BS', fs: 'C', hclDeg: '90', hclMin: '0', hclSec: '0', hcrDeg: '270', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
         // At B: observed angle 270° CW
-        { station: 'C', bs: 'A', fs: 'D', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'C', bs: 'A', fs: 'D', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
         // At C: observed angle 270° CW
-        { station: 'D', bs: 'B', fs: 'A', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'D', bs: 'B', fs: 'A', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
         // At D: observed angle 270° CW
-        { station: 'A', bs: 'C', fs: 'X', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'A', bs: 'C', fs: 'X', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
       ],
     })
 
@@ -88,9 +88,9 @@ describe('computeTraverse — WCB Propagation', () => {
       backsightBearingSec: 0,
       observations: [
         // A→B at 45° (NE), 100m
-        { station: 'B', bs: 'BS', fs: 'C', hclDeg: '45', hclMin: '0', hclSec: '0', hcrDeg: '225', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'B', bs: 'BS', fs: 'C', hclDeg: '45', hclMin: '0', hclSec: '0', hcrDeg: '225', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
         // B→C at 135° (SE), 100m
-        { station: 'C', bs: 'A', fs: 'X', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'C', bs: 'A', fs: 'X', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
       ],
     })
 
@@ -123,10 +123,10 @@ describe('computeTraverse — Bowditch Adjustment', () => {
       backsightBearingMin: 0,
       backsightBearingSec: 0,
       observations: [
-        { station: 'B', bs: 'BS', fs: 'C', hclDeg: '90', hclMin: '0', hclSec: '0', hcrDeg: '270', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
-        { station: 'C', bs: 'A', fs: 'D', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100.1', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
-        { station: 'D', bs: 'B', fs: 'A', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
-        { station: 'A', bs: 'C', fs: 'X', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100.1', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'B', bs: 'BS', fs: 'C', hclDeg: '90', hclMin: '0', hclSec: '0', hcrDeg: '270', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'C', bs: 'A', fs: 'D', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100.1', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'D', bs: 'B', fs: 'A', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'A', bs: 'C', fs: 'X', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100.1', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
       ],
     })
 
@@ -151,10 +151,10 @@ describe('computeTraverse — Bowditch Adjustment', () => {
       backsightBearingMin: 0,
       backsightBearingSec: 0,
       observations: [
-        { station: 'B', bs: 'BS', fs: 'C', hclDeg: '90', hclMin: '0', hclSec: '0', hcrDeg: '270', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
-        { station: 'C', bs: 'A', fs: 'D', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
-        { station: 'D', bs: 'B', fs: 'A', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
-        { station: 'A', bs: 'C', fs: 'X', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '0', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'B', bs: 'BS', fs: 'C', hclDeg: '90', hclMin: '0', hclSec: '0', hcrDeg: '270', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'C', bs: 'A', fs: 'D', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'D', bs: 'B', fs: 'A', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
+        { station: 'A', bs: 'C', fs: 'X', hclDeg: '270', hclMin: '0', hclSec: '0', hcrDeg: '90', hcrMin: '0', hcrSec: '0', slopeDist: '100', vaDeg: '90', vaMin: '0', vaSec: '0', ih: '1.5', th: '1.5' },
       ],
     })
 

@@ -290,7 +290,7 @@ export function UniversalMobileObservationForm({
     const sd = num(sdKey)
     const va = num(vaKey)
     if (sd !== null && va !== null) {
-      const hd = sd * Math.cos((va * Math.PI) / 180)
+      const hd = sd * Math.sin((va * Math.PI) / 180)
       return { label: 'HORIZ DIST', value: `${hd.toFixed(3)} m` }
     }
     return null

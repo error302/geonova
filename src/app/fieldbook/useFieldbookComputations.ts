@@ -147,9 +147,12 @@ export function useFieldbookComputations(input: FieldbookComputationsInput) {
       if (hi === null || hi < 0) errors.push(`Invalid instrument height at ${r.pointId || '(blank)'}`)
       if (ht === null || ht < 0) errors.push(`Invalid target height at ${r.pointId || '(blank)'}`)
 
+      // UI verticalAngle is zenith (90° = horizontal, Kenyan total-station standard)
+      // polar3D expects vertical-from-horizontal (0° = horizontal), so convert
+      const vFromHoriz = v !== null ? 90 - v : null
       const computed =
-        b !== null && v !== null && s !== null && hi !== null && ht !== null
-          ? polar3DWithHeights({ station: { easting: e0, northing: n0, elevation: z0 }, bearing: b, verticalAngle: v, slopeDistance: s, instrumentHeight: hi, targetHeight: ht })
+        b !== null && vFromHoriz !== null && s !== null && hi !== null && ht !== null
+          ? polar3DWithHeights({ station: { easting: e0, northing: n0, elevation: z0 }, bearing: b, verticalAngle: vFromHoriz, slopeDistance: s, instrumentHeight: hi, targetHeight: ht })
           : null
       return { ...r, computed, bearingNum: b }
     })
