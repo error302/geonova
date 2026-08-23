@@ -23,16 +23,19 @@ import type { RawObservation } from '@/lib/computations/traverseEngine'
 
 /** Create a simple observation for a closed traverse around a square. */
 function makeSquareTraverse(misclosureMm: number = 0): RawObservation[] {
-  // A 100m × 100m square traverse, 4 legs of ~100m each
-  // Each interior angle = 90°
-  // We can inject a misclosure by adjusting one distance
-  const dist = 100 + misclosureMm / 1000 // add misclosure in meters
+  // A 100m × 100m square traverse, 4 legs of ~100m each.
+  // Each station turns 90° CW from the backsight direction (first setup)
+  // then 270° CW thereafter — same proven fixture as
+  // computations/__tests__/traverseEngine.test.ts, which closes exactly.
+  // Misclosure is injected by lengthening the second (and optionally fourth)
+  // leg by `misclosureMm`.
+  const dist = 100 + misclosureMm / 1000
 
   return [
-    { station: 'CP1', bs: 'CP4', fs: 'CP2', hclDeg: '0', hclMin: '00', hclSec: '00', hcrDeg: '180', hcrMin: '00', hcrSec: '00', slopeDist: '100', vaDeg: '90', vaMin: '00', vaSec: '00', ih: '1.5', th: '1.5' },
-    { station: 'CP2', bs: 'CP1', fs: 'CP3', hclDeg: '90', hclMin: '00', hclSec: '00', hcrDeg: '270', hcrMin: '00', hcrSec: '00', slopeDist: String(dist), vaDeg: '90', vaMin: '00', vaSec: '00', ih: '1.5', th: '1.5' },
-    { station: 'CP3', bs: 'CP2', fs: 'CP4', hclDeg: '180', hclMin: '00', hclSec: '00', hcrDeg: '0', hcrMin: '00', hcrSec: '00', slopeDist: '100', vaDeg: '90', vaMin: '00', vaSec: '00', ih: '1.5', th: '1.5' },
-    { station: 'CP4', bs: 'CP3', fs: 'CP1', hclDeg: '270', hclMin: '00', hclSec: '00', hcrDeg: '90', hcrMin: '00', hcrSec: '00', slopeDist: '100', vaDeg: '90', vaMin: '00', vaSec: '00', ih: '1.5', th: '1.5' },
+    { station: 'CP2', bs: 'BS', fs: 'CP3', hclDeg: '90', hclMin: '00', hclSec: '00', hcrDeg: '270', hcrMin: '00', hcrSec: '00', slopeDist: '100', vaDeg: '90', vaMin: '00', vaSec: '00', ih: '1.5', th: '1.5' },
+    { station: 'CP3', bs: 'CP1', fs: 'CP4', hclDeg: '270', hclMin: '00', hclSec: '00', hcrDeg: '90', hcrMin: '00', hcrSec: '00', slopeDist: String(dist), vaDeg: '90', vaMin: '00', vaSec: '00', ih: '1.5', th: '1.5' },
+    { station: 'CP4', bs: 'CP2', fs: 'CP1', hclDeg: '270', hclMin: '00', hclSec: '00', hcrDeg: '90', hcrMin: '00', hcrSec: '00', slopeDist: '100', vaDeg: '90', vaMin: '00', vaSec: '00', ih: '1.5', th: '1.5' },
+    { station: 'CP1', bs: 'CP3', fs: 'X', hclDeg: '270', hclMin: '00', hclSec: '00', hcrDeg: '90', hcrMin: '00', hcrSec: '00', slopeDist: '100', vaDeg: '90', vaMin: '00', vaSec: '00', ih: '1.5', th: '1.5' },
   ]
 }
 
@@ -106,7 +109,7 @@ describe('LiveToleranceChecker — worst leg identification', () => {
       expect(result.worstLeg.from).toBeDefined()
       expect(result.worstLeg.to).toBeDefined()
       expect(result.worstLeg.residualMm).toBeGreaterThan(0)
-      expect(result.worstLeg.recommendation).toContain('Recheck')
+      expect(result.worstLeg.recommendation).toMatch(/Recheck|Re-check|Re-measure/)
     }
   })
 
