@@ -1,0 +1,36 @@
+name: M-Pesa Payment Reconciliation
+
+# Finalizes M-Pesa STK Push payments whose callback never arrived (customer
+# closed the browser, callback lost, etc.). Asks Daraja's STK Push Query API
+# for the authoritative result and activates/fails the payment accordingly.
+# Endpoint is safe to re-run (only touches rows still in 'pending').
+
+on:
+  schedule:
+    # Every 5 minutes.
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  reconcile:
+    name: Reconcile stale M-Pesa payments
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APP_URL: ${{ vars.PROD_APP_URL || 'https://metardu.space' }}
+    steps:
+      - name: Trigger M-Pesa reconciler
+        env:
+          API_ADMIN_KEY: ${{ secrets.API_ADMIN_KEY }}
+        run: |
+          HTTP_CODE=$(curl -sf -o /tmp/reconcile-mpesa.json -w "%{http_code}" --max-time 120 \
+            -X POST \
+            -H "Authorization: Bearer ${API_ADMIN_KEY}" \
+            -H "Content-Type: application/json" \
+            "${APP_URL}/api/cron/reconcile-mpesa" || echo "000")
+          echo "HTTP ${HTTP_CODE}"
+          cat /tmp/reconcile-mpesa.json 2>/dev/null || true
+          if [ "${HTTP_CODE}" != "200" ]; then
+            echo "Reconciler call failed (HTTP ${HTTP_CODE})" >&2
+            exit 1
+          fi

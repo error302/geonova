@@ -45,6 +45,59 @@ function CheckoutContent() {
     }
   }, [paymentMethods, method])
 
+  // ─── M-Pesa auto-polling (step 4) ────────────────────────────────────────
+  // Poll the authoritative Daraja status every 4s while the customer is on
+  // the "STK Push Sent" screen, so the plan activates the moment they enter
+  // their PIN — without them having to press "Verify Payment". Stops on a
+  // terminal status or after ~3 minutes (the manual button still works).
+  const [autoPollCount, setAutoPollCount] = useState(0)
+  const [autoVerifying, setAutoVerifying] = useState(false)
+  useEffect(() => {
+    if (step !== 4 || !mpesa) return
+    setAutoPollCount(0)
+    let cancelled = false
+    const MAX_POLLS = 45 // 45 × 4s ≈ 3 minutes
+
+    const tick = async () => {
+      if (cancelled) return
+      setAutoVerifying(true)
+      try {
+        const r = await checkMpesaPaymentStatus(mpesa)
+        if (cancelled) return
+        if (r.status === 'completed') {
+          window.location.href = '/dashboard'
+          return
+        }
+        if (r.status === 'failed') {
+          setError('Payment failed. Please try again.')
+          return
+        }
+      } catch {
+        // Transient network/Daraja errors — keep polling quietly.
+      } finally {
+        if (!cancelled) setAutoVerifying(false)
+      }
+    }
+
+    const interval = setInterval(() => {
+      setAutoPollCount((c) => {
+        if (c >= MAX_POLLS) {
+          clearInterval(interval)
+          return c
+        }
+        void tick()
+        return c + 1
+      })
+    }, 4000)
+
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, mpesa?.paymentId, mpesa?.checkoutRequestId])
+
+
   const formatPrice = (amount: number) => {
     const symbols: Partial<Record<CurrencyCode, string>> = {
       KES: 'KSh ',
@@ -311,7 +364,13 @@ function CheckoutContent() {
         {step === 4 && mpesa && (
           <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] p-6">
             <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-2">M-Pesa STK Push Sent</h2>
-            <p className="text-[var(--text-secondary)] mb-6">Complete payment on your phone, then verify to activate your plan.</p>
+            <p className="text-[var(--text-secondary)] mb-2">Enter your M-Pesa PIN on your phone. This page activates your plan automatically once the payment is confirmed.</p>
+            <p className="text-xs text-[var(--text-secondary)] mb-6 flex items-center gap-2">
+              {autoVerifying && (
+                <span className="inline-block w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" aria-hidden="true" />
+              )}
+              {autoVerifying ? 'Verifying payment…' : 'Waiting for confirmation…'}
+            </p>
 
             <button
               onClick={async () => {
