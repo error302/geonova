@@ -10,7 +10,7 @@ export interface DeedPlanInput {
   // Coordinates
   utmZone: number
   hemisphere: 'N' | 'S'
-  scale: 500 | 1000 | 2500 | 5000
+  scale: 250 | 500 | 1000 | 1250 | 2500 | 5000 | 10000
   datum: 'ARC1960' | 'WGS84'
   projectionType: 'UTM' | 'Cassini'
   // Grid-to-ground correction (required for accurate area per RDM 1.1)

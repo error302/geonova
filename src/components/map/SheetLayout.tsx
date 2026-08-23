@@ -251,7 +251,7 @@ function TitleBlock({
   return (
     <div
       className="absolute bottom-3 right-3 bg-white border-2 border-[#1B3A5C] rounded-sm shadow-md select-none pointer-events-none sheet-title-block"
-      style={{ fontFamily: 'Calibri, sans-serif', width: 280, fontSize: 11, lineHeight: 1.4 }}
+      style={{ fontFamily: 'Calibri, sans-serif', width: 'clamp(200px, 42vw, 280px)', fontSize: 11, lineHeight: 1.4 }}
     >
       {/* Header */}
       <div className="bg-[#1B3A5C] text-white text-center py-1 px-2">
@@ -317,7 +317,7 @@ function SurveyorsCertificate({
   return (
     <div
       className="absolute bottom-3 left-3 bg-white/95 border border-[#1B3A5C] rounded-sm shadow-md select-none pointer-events-none sheet-certificate"
-      style={{ fontFamily: 'Calibri, sans-serif', maxWidth: 320, fontSize: 10, lineHeight: 1.5, padding: '8px 10px' }}
+      style={{ fontFamily: 'Calibri, sans-serif', maxWidth: 'clamp(200px, 42vw, 320px)', fontSize: 10, lineHeight: 1.5, padding: '8px 10px' }}
     >
       <div className="font-bold text-[10px] text-[#1B3A5C] mb-1">SURVEYOR&apos;S CERTIFICATE</div>
       <p className="text-[9px] text-gray-700 leading-relaxed">

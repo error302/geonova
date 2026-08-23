@@ -168,7 +168,7 @@ export function renderDeedPlanSVG(
 
   <!-- ===================== AREA STATEMENT ===================== -->
   <g transform="translate(${DA_LEFT + 15}, ${effTop + effH - 28})">
-    <rect x="-5" y="-9" width="285" height="22" fill="white" fill-opacity="0.92" stroke="#ccc" stroke-width="0.3" rx="2"/>
+    <rect x="-5" y="-9" width="295" height="32" fill="white" fill-opacity="0.92" stroke="#ccc" stroke-width="0.3" rx="2"/>
     <text x="0" y="3" class="bt" font-weight="bold">AREA: ${areaHa.toFixed(3)} Ha | ${areaAc.toFixed(2)} Acres | ${input.area.toFixed(2)} m&#178;</text>
     <text x="0" y="12" class="st">Ground Area (Grid-to-Ground corrected)</text>
     <text x="0" y="19" class="st">Grid Area: ${input.gridArea ? input.gridArea.toFixed(2) + ' m²' : 'N/A'}</text>
@@ -232,6 +232,7 @@ function buildScaleBar(cx: number, cy: number, nominalScale: number): string {
   let divs: {label:string, m:number}[]
   if (nominalScale <= 500) divs = [{label:'0',m:0},{label:'10m',m:10},{label:'20m',m:20},{label:'30m',m:30},{label:'40m',m:40},{label:'50m',m:50}]
   else if (nominalScale <= 1000) divs = [{label:'0',m:0},{label:'20m',m:20},{label:'40m',m:40},{label:'60m',m:60},{label:'80m',m:80},{label:'100m',m:100}]
+  else if (nominalScale === 1250) divs = [{label:'0',m:0},{label:'25m',m:25},{label:'50m',m:50},{label:'75m',m:75},{label:'100m',m:100},{label:'125m',m:125}]
   else if (nominalScale <= 2500) divs = [{label:'0',m:0},{label:'50m',m:50},{label:'100m',m:100},{label:'150m',m:150},{label:'200m',m:200},{label:'250m',m:250}]
   else divs = [{label:'0',m:0},{label:'100m',m:100},{label:'200m',m:200},{label:'300m',m:300},{label:'400m',m:400},{label:'500m',m:500}]
 
@@ -321,8 +322,8 @@ function buildBoundaryLabels(
     const off = 7
     const lx = (mx + perpX*off).toFixed(2), ly = (my + perpY*off).toFixed(2)
     return `<g transform="translate(${lx},${ly}) rotate(${tAng.toFixed(2)})">
-      <text x="0" y="-3" font-size="4pt" text-anchor="middle" font-family="Arial" font-weight="bold">${escapeXml(leg.bearing)}</text>
-      <text x="0" y="4" font-size="3.5pt" text-anchor="middle" font-family="Arial">${leg.distance.toFixed(2)}m</text>
+      <text x="0" y="-3" font-size="4pt" text-anchor="middle" font-family="Arial" font-weight="bold" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">${escapeXml(leg.bearing)}</text>
+      <text x="0" y="4" font-size="3.5pt" text-anchor="middle" font-family="Arial" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">${leg.distance.toFixed(2)}m</text>
     </g>`
   }).join('\n')
 }
@@ -343,25 +344,25 @@ function buildAbuttals(
   const nPts = byN.slice(0, third)
   const nCx = nPts.reduce((a,p)=>a+toX(p.easting),0)/nPts.length
   const nCy = Math.min(...nPts.map(p=>toY(p.northing)))
-  s += `<text x="${nCx.toFixed(1)}" y="${(nCy-12).toFixed(1)}" class="at" text-anchor="middle">N: ${escapeXml(input.abuttalNorth)}</text>\n`
+  s += `<text x="${nCx.toFixed(1)}" y="${(nCy-12).toFixed(1)}" class="at" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="4" stroke-linejoin="round">N: ${escapeXml(input.abuttalNorth)}</text>\n`
 
   // South abuttal
   const sPts = byN.slice(-third)
   const sCx = sPts.reduce((a,p)=>a+toX(p.easting),0)/sPts.length
   const sCy = Math.max(...sPts.map(p=>toY(p.northing)))
-  s += `<text x="${sCx.toFixed(1)}" y="${(sCy+15).toFixed(1)}" class="at" text-anchor="middle">S: ${escapeXml(input.abuttalSouth)}</text>\n`
+  s += `<text x="${sCx.toFixed(1)}" y="${(sCy+15).toFixed(1)}" class="at" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="4" stroke-linejoin="round">S: ${escapeXml(input.abuttalSouth)}</text>\n`
 
   // East abuttal
   const ePts = byE.slice(0, third)
   const eCx = Math.max(...ePts.map(p=>toX(p.easting)))
   const eCy = ePts.reduce((a,p)=>a+toY(p.northing),0)/ePts.length
-  s += `<g transform="translate(${(eCx+14).toFixed(1)},${eCy.toFixed(1)}) rotate(-90)"><text class="at" text-anchor="middle">E: ${escapeXml(input.abuttalEast)}</text></g>\n`
+  s += `<g transform="translate(${(eCx+14).toFixed(1)},${eCy.toFixed(1)}) rotate(-90)"><text class="at" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="4" stroke-linejoin="round">E: ${escapeXml(input.abuttalEast)}</text></g>\n`
 
   // West abuttal
   const wPts = byE.slice(-third)
   const wCx = Math.min(...wPts.map(p=>toX(p.easting)))
   const wCy = wPts.reduce((a,p)=>a+toY(p.northing),0)/wPts.length
-  s += `<g transform="translate(${(wCx-14).toFixed(1)},${wCy.toFixed(1)}) rotate(-90)"><text class="at" text-anchor="middle">W: ${escapeXml(input.abuttalWest)}</text></g>\n`
+  s += `<g transform="translate(${(wCx-14).toFixed(1)},${wCy.toFixed(1)}) rotate(-90)"><text class="at" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="4" stroke-linejoin="round">W: ${escapeXml(input.abuttalWest)}</text></g>\n`
 
   return s
 }
@@ -373,7 +374,7 @@ function buildPointLabels(pts: BoundaryPoint[], toX:(e:number)=>number, toY:(n:n
   return pts.map((p) => {
     const sx = (toX(p.easting)+5).toFixed(2)
     const sy = (toY(p.northing)-5).toFixed(2)
-    return `<text x="${sx}" y="${sy}" class="bi">${escapeXml(p.id)}</text>`
+    return `<text x="${sx}" y="${sy}" class="bi" paint-order="stroke" stroke="white" stroke-width="4" stroke-linejoin="round">${escapeXml(p.id)}</text>`
   }).join('\n')
 }
 
@@ -476,7 +477,8 @@ function buildRightPanel(
   s += `<text x="${le}" y="${y}" class="st" font-weight="bold" fill="${ccCol}">${cc.passes ? '\u2713 CLOSURE ACCEPTABLE' : '\u2717 CLOSURE FAILED'}</text>\n`; y += 11
   s += hr(le, y, re); y += 6
 
-  // --- COORDINATE SCHEDULE TABLE ---
+  // --- COORDINATE SCHEDULE TABLE (truncated to avoid panel overflow / jumbled text) ---
+  const MAX_ROW_Y = VB_H - IB_Y - 42
   s += secHdr(le, y, 'COORDINATE SCHEDULE'); y += 10
   s += `<text x="${le+5}" y="${y}" class="th">PT</text>\n`
   s += `<text x="${le+30}" y="${y}" class="th">MARK</text>\n`
@@ -484,7 +486,10 @@ function buildRightPanel(
   s += `<text x="${le+170}" y="${y}" class="th">NORTHING</text>\n`
   y += 9
   s += hr(le, y, re); y += 2
-  for (const p of pts) {
+  const maxCoordRows = 14
+  const coordRows = pts.length > maxCoordRows ? pts.slice(0, maxCoordRows) : pts
+  for (const p of coordRows) {
+    if (y > MAX_ROW_Y) break
     const eRaw = (p as { easting?: number }).easting
     const nRaw = (p as { northing?: number }).northing
     const eVal = typeof eRaw === 'number' ? eRaw : 0
@@ -495,9 +500,13 @@ function buildRightPanel(
     s += `<text x="${le+170}" y="${y}" class="tt">${nVal.toFixed(4)}</text>\n`
     y += 8
   }
+  if (pts.length > maxCoordRows) {
+    s += `<text x="${le+5}" y="${y}" class="st" font-style="italic">… and ${pts.length - maxCoordRows} more — see full schedule</text>\n`
+    y += 8
+  }
   s += hr(le, y, re); y += 7
 
-  // --- BEARING SCHEDULE TABLE ---
+  // --- BEARING SCHEDULE TABLE (truncated likewise) ---
   s += secHdr(le, y, 'BEARING SCHEDULE'); y += 10
   s += `<text x="${le+5}" y="${y}" class="th">LEG</text>\n`
   s += `<text x="${le+30}" y="${y}" class="th">FROM</text>\n`
@@ -506,7 +515,10 @@ function buildRightPanel(
   s += `<text x="${le+185}" y="${y}" class="th">DIST(m)</text>\n`
   y += 9
   s += hr(le, y, re); y += 2
-  legs.forEach((l, i) => {
+  const maxBearRows = 14
+  const bearRows = legs.length > maxBearRows ? legs.slice(0, maxBearRows) : legs
+  bearRows.forEach((l, i) => {
+    if (y > MAX_ROW_Y) return
     s += `<text x="${le+5}" y="${y}" class="tt">${i+1}</text>\n`
     s += `<text x="${le+30}" y="${y}" class="tt">${escapeXml(l.fromPoint)}</text>\n`
     s += `<text x="${le+60}" y="${y}" class="tt">${escapeXml(l.toPoint)}</text>\n`
@@ -514,6 +526,10 @@ function buildRightPanel(
     s += `<text x="${le+185}" y="${y}" class="tt">${l.distance.toFixed(2)}</text>\n`
     y += 8
   })
+  if (legs.length > maxBearRows) {
+    s += `<text x="${le+5}" y="${y}" class="st" font-style="italic">… and ${legs.length - maxBearRows} more — see full schedule</text>\n`
+    y += 8
+  }
   s += hr(le, y, re); y += 7
 
   // --- SURVEYOR DETAILS ---

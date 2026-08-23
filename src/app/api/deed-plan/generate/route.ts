@@ -29,7 +29,7 @@ const DeedPlanRequestSchema = z.object({
   county: z.string().optional(),
   utmZone: z.number().optional(),
   hemisphere: z.enum(['N', 'S']).optional(),
-  scale: z.enum(['500', '1000', '2500', '5000']).optional(),
+  scale: z.enum(['250', '500', '1000', '1250', '2500', '5000', '10000']).optional(),
   datum: z.enum(['ARC1960', 'WGS84']).optional(),
   projectionType: z.enum(['UTM', 'Cassini']).optional(),
   // Grid-to-ground correction (RDM 1.1)
@@ -77,7 +77,7 @@ export const POST = apiHandler(
       county: raw.county || '',
       utmZone: raw.utmZone || 37,
       hemisphere: raw.hemisphere || 'S',
-      scale: (Number(raw.scale) || 1000) as 500 | 1000 | 2500 | 5000,
+      scale: (Number(raw.scale) || 1000) as 250 | 500 | 1000 | 1250 | 2500 | 5000 | 10000,
       datum: raw.datum || 'ARC1960',
       projectionType: (raw.projectionType || 'UTM') as 'UTM' | 'Cassini',
       boundaryPoints: raw.boundaryPoints.map((p, i) => ({

@@ -18,7 +18,7 @@ interface DeedPlanGeneratorProps {
   initialPoints?: BoundaryPoint[]
 }
 
-const SCALES = [500, 1000, 2500, 5000] as const
+const SCALES = [250, 500, 1000, 1250, 2500, 5000, 10000] as const
 const MARK_TYPES: BeaconType[] = ['PSC', 'SSC', 'BM', 'MASONRY_NAIL', 'IRON_PIN', 'CONCRETE_BEACON', 'INDICATORY', 'RIVET', 'TBM']
 const MARK_STATUSES = ['FOUND', 'SET', 'REFERENCED', 'DESTROYED', 'NOT_FOUND'] as const
 
