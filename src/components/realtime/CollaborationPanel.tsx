@@ -17,6 +17,7 @@ import {
   AlertTriangle,
 } from 'lucide-react'
 import { PresenceIndicator } from './PresenceIndicator'
+import { HydrationSafeTime } from '@/components/shared/HydrationSafeTime'
 import type { Collaborator } from '@/lib/realtime/useCollaboration'
 
 interface ChatMessage {
@@ -122,7 +123,7 @@ export function CollaborationPanel({
                     <div className="flex items-baseline gap-1.5">
                       <span className="text-[10px] font-medium text-[var(--text-primary)]">{msg.userName}</span>
                       <span className="text-[8px] text-gray-600">
-                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        <HydrationSafeTime ms={msg.timestamp} variant="time" />
                       </span>
                     </div>
                     <p className="text-[11px] text-[var(--text-secondary)] break-words">{msg.message}</p>

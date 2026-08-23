@@ -15,7 +15,8 @@ import { cn } from '@/lib/utils';
 import {
   useWorkspaceBridge,
   type ComputationLogEntry,
-} from '@/hooks/useWorkspaceBridge';
+} from '@/hooks/useWorkspaceBridge'
+import { HydrationSafeTime } from '@/components/shared/HydrationSafeTime';
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -71,6 +72,8 @@ function formatTime(d: Date): string {
 }
 
 /* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
 /*  Single log entry (memoised)                                        */
 /* ------------------------------------------------------------------ */
 
@@ -93,7 +96,7 @@ const LogEntryRow = memo(function LogEntryRow({ entry }: LogEntryRowProps) {
     >
       {/* Timestamp */}
       <span className="flex-shrink-0 text-xs font-mono text-[var(--text-muted)] pt-0.5 select-none w-16">
-        {formatTime(entry.timestamp)}
+        <HydrationSafeTime ms={new Date(entry.timestamp).getTime()} variant="time" />
       </span>
 
       {/* Level dot */}
