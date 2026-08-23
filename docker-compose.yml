@@ -140,6 +140,8 @@ services:
       # Without these the login role computation never yields super_admin.
       - ADMIN_EMAILS=${ADMIN_EMAILS:-}
       - PLATFORM_OWNER_EMAIL=${PLATFORM_OWNER_EMAIL:-}
+      # Cron job auth (trial reminders, M-Pesa reconciliation)
+      - API_ADMIN_KEY=${API_ADMIN_KEY:-}
       # NVIDIA NIM AI (Survey Assistant, report generation, field-photo OCR)
       - NVIDIA_API_KEY=${NVIDIA_API_KEY:-}
     depends_on:
