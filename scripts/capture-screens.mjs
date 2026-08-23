@@ -16,6 +16,9 @@ import { join } from 'node:path'
 
 const base = process.argv.includes('--base') ? process.argv[process.argv.indexOf('--base') + 1] : 'http://localhost:3000'
 const out = process.argv.includes('--out') ? process.argv[process.argv.indexOf('--out') + 1] : join(process.cwd(), 'public', 'landing', 'captures')
+// Optional: explicit browser binary when the local playwright registry is out of sync
+const execIdx = process.argv.indexOf('--exec')
+const executablePath = execIdx > -1 ? process.argv[execIdx + 1] : undefined
 
 const SHOTS = [
   { name: 'cadastral-workspace', path: '/survey/demo', clip: null },
@@ -24,7 +27,7 @@ const SHOTS = [
   { name: 'deed-plan', path: '/deed-plan', clip: null },
 ]
 
-const browser = await chromium.launch()
+const browser = await chromium.launch(executablePath ? { executablePath } : {})
 const page = await browser.newPage({ viewport: { width: 1600, height: 900 }, deviceScaleFactor: 2 })
 mkdirSync(out, { recursive: true })
 

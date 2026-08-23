@@ -559,7 +559,7 @@ function buildRightPanel(
 // PANEL HELPER FUNCTIONS
 // ============================================================
 function secHdr(x: number, y: number, t: string): string {
-  return `<text x="${x}" y="${y}" class="sh">${t}</text>\n`
+  return `<text x="${x}" y="${y}" class="sh">${escapeXml(t)}</text>\n`
 }
 
 function row(x: number, y: number, label: string, val: string): string {
