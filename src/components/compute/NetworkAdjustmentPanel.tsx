@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { AlertTriangle, CheckCircle2, ShieldAlert, Zap, Compass, Folder, Lock } from 'lucide-react'
-import { adjustNetwork, Station, Observation, AdjustmentResult } from '@/lib/survey/networkAdjustment'
+import { adjustNetwork, type Station, type Observation, type AdjustmentResult } from '@/lib/survey/coordinateDiffLsa'
 import { adjustNetworkRobust, type RobustLSAResult, type WeightFunction } from '@/lib/survey/robustEstimation'
 import { generateNetworkDXF } from '@/lib/survey/networkAdjustmentDXF'
 import { ErrorEllipseCanvas } from './ErrorEllipseCanvas'

@@ -1,4 +1,4 @@
-import { adjustNetwork, Station, Observation } from '../networkAdjustment'
+import { adjustNetwork, Station, Observation } from '../coordinateDiffLsa'
 import { defined } from '@/test-utils/defined'
 
 describe('adjustNetwork', () => {
