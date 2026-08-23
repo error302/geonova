@@ -39,7 +39,7 @@ interface FieldDef {
 const FIELD_SETS: Record<MobileSurveyType, FieldDef[]> = {
   leveling: [
     { key: 'station', label: 'Station / TP', placeholder: 'TP1', station: true, required: true },
-    { key: 'bs', label: 'Backsight (BS)', placeholder: '1.245', inputMode: 'decimal', step: '0.001', required: true },
+    { key: 'bs', label: 'Backsight (BS)', placeholder: '1.245', inputMode: 'decimal', step: '0.001' },
     { key: 'is', label: 'Intermediate (IS)', shortLabel: 'Intersight', placeholder: '1.502', inputMode: 'decimal', step: '0.001' },
     { key: 'fs', label: 'Foresight (FS)', placeholder: '0.873', inputMode: 'decimal', step: '0.001' },
     { key: 'remarks', label: 'Remarks', placeholder: 'Concrete BM, flush' },
@@ -168,10 +168,11 @@ export function UniversalMobileObservationForm({
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
+    if (savedShot) return
     setForm(buildInitial(false))
     setPhotos([])
     setStepIndex(0)
-  }, [buildInitial])
+  }, [buildInitial, savedShot])
 
   useEffect(() => {
     return () => {
@@ -458,10 +459,10 @@ export function UniversalMobileObservationForm({
                 onClick={handlePullFromInstrument}
                 disabled={readingFromInstrument}
                 className={[
-                  'w-full p-3.5 min-h-[48px] rounded-xl flex items-center justify-center gap-2 text-sm font-medium transition-all border',
+                  'w-full py-2.5 px-3 rounded-lg flex items-center justify-center gap-1.5 text-xs font-medium transition-all border',
                   instrumentConnected
                     ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
-                    : 'border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:border-[color-mix(in_srgb,var(--accent)_40%,transparent)] hover:text-[var(--accent)]',
+                    : 'border-[var(--border-color)] bg-transparent text-[var(--text-muted)] hover:border-[var(--border-color)] hover:text-[var(--text-secondary)]',
                 ].join(' ')}
               >
                 {readingFromInstrument ? (

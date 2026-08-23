@@ -1095,8 +1095,6 @@ export default function DigitalFieldBookPage() {
       }).__metarduLastInstrumentReading
 
       if (!lastReading) {
-        const go = confirm('No instrument reading available. Open the Field page to connect a total station / GNSS?')
-        if (go) window.location.href = '/field'
         return {}
       }
 
