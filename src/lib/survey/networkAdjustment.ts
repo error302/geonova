@@ -3,15 +3,18 @@
  *   (the `adjustNetwork` function) instead. That module is the canonical
  *   enterprise-grade LSA with sparse Cholesky, free-network inner
  *   constraints, Huber robust estimation, full Baarda reliability,
- *   and 2D/3D support. This `survey/` copy lacks sparse algebra. Kept only
- *   because `NetworkAdjustmentPanel`, `ErrorEllipseCanvas`, and
- *   `regulatoryCompliance.ts` import types from here. New code should not
- *   import from this module. (The former Supabase `network_adjustments`
- *   side-effect was removed 2026-08-14 — persistence now happens in the
- *   caller via the `/api/project/[id]/network-adjustment` route.)
+ *   and 2D/3D support.
+ *
+ * CONSOLIDATED (P1-5 phase 1): `adjustNetwork` below is now a thin adapter
+ * over the canonical engine implementation — the former local dense
+ * normal-equation solver (~230 LOC) has been deleted. The public contract
+ * (Station/Observation inputs, Zod validation, AdjustmentResult output,
+ * warning strings) is preserved for `NetworkAdjustmentPanel`,
+ * `ErrorEllipseCanvas`, `ExportToolbar`, and `regulatoryCompliance.ts`.
  */
 
 import { z } from 'zod'
+import { adjustNetwork as engineAdjustNetwork } from '@/lib/engine/networkAdjustment'
 
 export const StationSchema = z.object({
   id: z.string().min(1, 'Station ID is required'),
@@ -56,10 +59,26 @@ export interface AdjustmentResult {
   iterations: number
   passedTolerance: boolean
   warnings: string[]
-  /** T1.5g: LSA statistical report (global test, w-test, reliability) */
+  /**
+   * Optional LSA statistical report (global test, w-test, reliability).
+   * Not produced by this adapter — the canonical engine exposes Baarda
+   * reliability via `engine/networkAdjustment` residuals. Kept in the type
+   * because `regulatoryCompliance.ts` consumes it when callers supply a
+   * result from the full engine path.
+   */
   statisticalReport?: import('./lsaStatisticalTesting').StatisticalReport
 }
 
+
+/**
+ * Coordinate-difference network adjustment.
+ *
+ * Delegates to the canonical engine LSA (`@/lib/engine/networkAdjustment`).
+ * Each Station/Observation pair is mapped onto the engine's
+ * NetworkPoint / NetworkObservation (`gnss_baseline` observation type carries
+ * ΔE/ΔN/ΔU components; per-component variances are supplied through the
+ * diagonal 3×3 covariance so individual stdDevE/N/H weights are preserved).
+ */
 export function adjustNetwork(
   stationsInput: Station[],
   observationsInput: Observation[]
@@ -91,287 +110,130 @@ export function adjustNetwork(
     throw new Error('At least one baseline observation is required.')
   }
 
-  const free = stations.filter(s => !s.isFixed)
-  const n = free.length * 3 // 3D: E, N, H
-  const m = observations.length * 3 // 3 equations per baseline
-  const dof = m - n
+  const freeCount = stations.filter(s => !s.isFixed).length
+  const nParams = freeCount * 3 // 3D: E, N, H
+  const nEquations = observations.length * 3 // 3 equations per baseline
+  const dof = nEquations - nParams
 
   if (dof < 0) {
     throw new Error(
-      `Insufficient observations. Need at least ${Math.ceil(n / 3)} baselines for ${free.length} free stations.`
+      `Insufficient observations. Need at least ${Math.ceil(nParams / 3)} baselines for ${freeCount} free stations.`
     )
   }
 
-  const stationIndex = new Map<string, number>()
-  free.forEach((s, i) => stationIndex.set(s.id, i))
-
-  function mustGet<K, V>(map: Map<K, V>, key: K): V {
-    const v = map.get(key)
-    if (v === undefined) {
-      throw new Error(`Missing entry for key ${String(key)}`)
-    }
-    return v
-  }
-
-  const coords = new Map<string, { e: number; n: number; h: number }>()
-  stations.forEach(s => coords.set(s.id, { e: s.easting, n: s.northing, h: s.elevation }))
-
-  const A: number[][] = []
-  const W: number[] = []
-  const l: number[] = []
-
-  for (const obs of observations) {
-    const fromCoord = mustGet(coords, obs.from)
-    const toCoord = mustGet(coords, obs.to)
-
-    const wE = 1 / (obs.stdDevE * obs.stdDevE)
-    const wN = 1 / (obs.stdDevN * obs.stdDevN)
-    const wH = 1 / (obs.stdDevH * obs.stdDevH)
-
-    // Delta Easting
-    const rowE: number[] = new Array<number>(n).fill(0)
-    if (stationIndex.has(obs.to)) rowE[mustGet(stationIndex, obs.to) * 3] = 1
-    if (stationIndex.has(obs.from)) rowE[mustGet(stationIndex, obs.from) * 3] = -1
-    const obsE = toCoord.e - fromCoord.e
-    A.push(rowE)
-    W.push(wE)
-    l.push(obs.deltaE - obsE)
-
-    // Delta Northing
-    const rowN: number[] = new Array<number>(n).fill(0)
-    if (stationIndex.has(obs.to)) rowN[mustGet(stationIndex, obs.to) * 3 + 1] = 1
-    if (stationIndex.has(obs.from)) rowN[mustGet(stationIndex, obs.from) * 3 + 1] = -1
-    const obsN = toCoord.n - fromCoord.n
-    A.push(rowN)
-    W.push(wN)
-    l.push(obs.deltaN - obsN)
-
-    // Delta Height
-    const rowH: number[] = new Array<number>(n).fill(0)
-    if (stationIndex.has(obs.to)) rowH[mustGet(stationIndex, obs.to) * 3 + 2] = 1
-    if (stationIndex.has(obs.from)) rowH[mustGet(stationIndex, obs.from) * 3 + 2] = -1
-    const obsH = toCoord.h - fromCoord.h
-    A.push(rowH)
-    W.push(wH)
-    l.push(obs.deltaH - obsH)
-  }
-
-  const N = multiplyAtWA(A, W, n)
-  const t = multiplyAtWl(A, W, l, n)
-  
-  let x: number[]
-  try {
-    x = solveLinearSystem(N, t)
-  } catch (err: unknown) {
-    throw new Error('Failed to solve network equations: ' + (err as Error).message)
-  }
-
-  free.forEach((s, i) => {
-    const c = mustGet(coords, s.id)
-    coords.set(s.id, { e: c.e + x[i * 3], n: c.n + x[i * 3 + 1], h: c.h + x[i * 3 + 2] })
-  })
-
-  const residuals: number[] = []
-  for (let i = 0; i < A.length; i++) {
-    let ax = 0
-    for (let j = 0; j < n; j++) ax += A[i][j] * x[j]
-    residuals.push(ax - l[i])
-  }
-
-  const vWv = residuals.reduce((sum, v, i) => sum + W[i] * v * v, 0)
-  const sigmaZero = dof > 0 ? Math.sqrt(vWv / dof) : 0
-
+  // Zero redundancy: the MLE solution is the input configuration itself
+  // (observations fit exactly); there is nothing to adjust and no reliable
+  // variance estimate. Return unchanged coordinates with zero corrections.
   if (dof === 0) {
     warnings.push('Zero degrees of freedom — cannot compute reliable error estimates.')
+    return {
+      adjustedStations: stations.map(s => ({
+        ...s,
+        residualE: 0,
+        residualN: 0,
+        residualH: 0,
+        semiMajor: 0,
+        semiMinor: 0,
+        orientation: 0,
+        sigmaE: 0,
+        sigmaN: 0,
+        sigmaH: 0,
+      })),
+      sigmaZero: 0,
+      degreesOfFreedom: 0,
+      iterations: 1,
+      passedTolerance: true,
+      warnings,
+    }
   }
 
-  const Qxx = invertMatrix(N, n)
+  // Map onto the canonical engine types
+  const enginePoints = stations.map(s => ({
+    name: s.id,
+    easting: s.easting,
+    northing: s.northing,
+    rl: s.elevation,
+    fixed: s.isFixed,
+  }))
 
-  const maxAllowedResidualE = 3 * Math.max(...observations.map(o => o.stdDevE))
-  const maxAllowedResidualN = 3 * Math.max(...observations.map(o => o.stdDevN))
-  const maxAllowedResidualH = 3 * Math.max(...observations.map(o => o.stdDevH))
-  
-  const passedTolerance = residuals.every((r, i) => {
-    const mod = i % 3
-    if (mod === 0) return Math.abs(r) < maxAllowedResidualE
-    if (mod === 1) return Math.abs(r) < maxAllowedResidualN
-    return Math.abs(r) < maxAllowedResidualH
-  })
+  const engineObservations = observations.map(obs => ({
+    type: 'gnss_baseline' as const,
+    from: obs.from,
+    to: obs.to,
+    // Required by NetworkObservation but unused for gnss_baseline
+    value: 0,
+    sigma: 1,
+    deltaE: obs.deltaE,
+    deltaN: obs.deltaN,
+    deltaU: obs.deltaH,
+    // Diagonal covariance preserves per-component a priori weights exactly:
+    // [C_EE, C_EN, C_NN, C_EU, C_NU, C_UU], units m²
+    covariance3x3: [
+      obs.stdDevE * obs.stdDevE,
+      0,
+      obs.stdDevN * obs.stdDevN,
+      0,
+      0,
+      obs.stdDevH * obs.stdDevH,
+    ] as [number, number, number, number, number, number],
+  }))
 
-  if (!passedTolerance) {
-    warnings.push('One or more residuals exceed 3σ tolerance. Check for blunders in baseline observations.')
+  const result = engineAdjustNetwork(enginePoints, engineObservations, { dimension: '3D' })
+
+  if (!result.ok) {
+    throw new Error(result.error ?? 'Network adjustment failed.')
   }
-  if (sigmaZero > 2.0) {
-    warnings.push(`Reference standard deviation (σ₀ = ${sigmaZero.toFixed(3)}) is high. Network may contain blunders or incorrect standard deviations.`)
-  }
+  warnings.push(...result.warnings)
+
+  const pointByName = new Map(result.adjustedPoints.map(p => [p.name, p]))
 
   const adjustedStations: AdjustedStation[] = stations.map(s => {
-    const adjusted = mustGet(coords, s.id)
-    let residualE = 0
-    let residualN = 0
-    let residualH = 0
-    let semiMajor = 0
-    let semiMinor = 0
-    let orientation = 0
-    let sigmaE = 0
-    let sigmaN = 0
-    let sigmaH = 0
-
-    if (!s.isFixed) {
-      const i = mustGet(stationIndex, s.id)
-      residualE = x[i * 3]
-      residualN = x[i * 3 + 1]
-      residualH = x[i * 3 + 2]
-
-      const qEE = Qxx[i * 3][i * 3]
-      const qNN = Qxx[i * 3 + 1][i * 3 + 1]
-      const qHH = Qxx[i * 3 + 2][i * 3 + 2]
-      const qEN = Qxx[i * 3][i * 3 + 1]
-
-      sigmaE = sigmaZero * Math.sqrt(Math.max(qEE, 0))
-      sigmaN = sigmaZero * Math.sqrt(Math.max(qNN, 0))
-      sigmaH = sigmaZero * Math.sqrt(Math.max(qHH, 0))
-
-      const t2 = Math.atan2(2 * qEN, qEE - qNN) / 2
-      const A2 = (qEE + qNN) / 2 + Math.sqrt(Math.pow((qEE - qNN) / 2, 2) + qEN * qEN)
-      const B2 = (qEE + qNN) / 2 - Math.sqrt(Math.pow((qEE - qNN) / 2, 2) + qEN * qEN)
-      semiMajor = sigmaZero * Math.sqrt(Math.max(A2, 0))
-      semiMinor = sigmaZero * Math.sqrt(Math.max(B2, 0))
-      orientation = (t2 * 180 / Math.PI + 360) % 360
+    if (s.isFixed) {
+      return {
+        ...s,
+        residualE: 0,
+        residualN: 0,
+        residualH: 0,
+        semiMajor: 0,
+        semiMinor: 0,
+        orientation: 0,
+        sigmaE: 0,
+        sigmaN: 0,
+        sigmaH: 0,
+      }
     }
-
+    // The engine only returns adjusted (non-fixed) points
+    const adj = pointByName.get(s.id)
+    if (!adj) {
+      throw new Error(`Missing adjusted result for station ${s.id}`)
+    }
+    const ellipse = adj.errorEllipse
     return {
       ...s,
-      easting: adjusted.e,
-      northing: adjusted.n,
-      elevation: adjusted.h,
-      residualE,
-      residualN,
-      residualH,
-      semiMajor,
-      semiMinor,
-      orientation,
-      sigmaE,
-      sigmaN,
-      sigmaH,
+      easting: adj.easting,
+      northing: adj.northing,
+      elevation: adj.rl ?? s.elevation,
+      residualE: adj.correctionE,
+      residualN: adj.correctionN,
+      residualH: adj.correctionRL ?? 0,
+      semiMajor: ellipse?.semiMajor ?? 0,
+      semiMinor: ellipse?.semiMinor ?? 0,
+      orientation: ellipse?.orientation ?? 0,
+      sigmaE: adj.sigmaE,
+      sigmaN: adj.sigmaN,
+      sigmaH: adj.sigmaRL ?? 0,
     }
   })
-
-  // T1.5g FIX (2026-07-10): Compute LSA statistical report (global test + w-test + reliability)
-  let statisticalReport: AdjustmentResult['statisticalReport']
-  if (dof > 0 && residuals.length > 0) {
-    try {
-      // Lazy import keeps the LSA stats module out of the hot path.
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { computeStatisticalReport, computeQvvDiagonal } = require('./lsaStatisticalTesting') as typeof import('./lsaStatisticalTesting')
-
-      // Build observation labels for the w-test
-      const observationLabels = observations.flatMap(obs => [
-        { from: obs.from, to: obs.to, component: 'E' as const },
-        { from: obs.from, to: obs.to, component: 'N' as const },
-        { from: obs.from, to: obs.to, component: 'H' as const },
-      ])
-
-      // Compute Qvv diagonal (needed for w-test and reliability)
-      const QvvDiag = computeQvvDiagonal(A, W, Qxx)
-
-      statisticalReport = computeStatisticalReport(
-        sigmaZero,
-        dof,
-        residuals,
-        QvvDiag,
-        observationLabels,
-        0.05,
-      )
-
-      // Add statistical report warnings to the existing warnings
-      if (statisticalReport && statisticalReport.warnings.length > 0) {
-        warnings.push(...statisticalReport.warnings)
-      }
-    } catch {
-      // Statistical testing is non-blocking — if it fails, the adjustment is still valid
-    }
-  }
 
   return {
     adjustedStations,
-    sigmaZero,
+    sigmaZero: result.standardError,
+    // Preserve this module's historical DoF convention: raw observation
+    // equations minus unknowns (the engine subtracts datum constraint
+    // dimensions, which would under-report for coordinate-difference LSA).
     degreesOfFreedom: dof,
-    iterations: 1,
-    passedTolerance,
+    iterations: result.iterations,
+    passedTolerance: result.passed,
     warnings,
-    statisticalReport,
   }
-}
-
-function multiplyAtWA(A: number[][], W: number[], n: number): number[][] {
-  const result = Array.from({ length: n }, () => new Array<number>(n).fill(0))
-  for (let i = 0; i < n; i++)
-    for (let j = 0; j < n; j++)
-      for (let k = 0; k < A.length; k++)
-        result[i][j] += A[k][i] * W[k] * A[k][j]
-  return result
-}
-
-function multiplyAtWl(A: number[][], W: number[], l: number[], n: number): number[] {
-  const result = new Array<number>(n).fill(0)
-  for (let i = 0; i < n; i++)
-    for (let k = 0; k < A.length; k++)
-      result[i] += A[k][i] * W[k] * l[k]
-  return result
-}
-
-function solveLinearSystem(A: number[][], b: number[]): number[] {
-  const n = b.length
-  const M = A.map((row, i) => [...row, b[i]])
-
-  for (let col = 0; col < n; col++) {
-    let maxRow = col
-    for (let row = col + 1; row < n; row++)
-      if (Math.abs(M[row][col]) > Math.abs(M[maxRow][col])) maxRow = row
-    ;[M[col], M[maxRow]] = [M[maxRow], M[col]]
-
-    if (Math.abs(M[col][col]) < 1e-12)
-      throw new Error('Singular normal equation matrix — check network geometry.')
-
-    for (let row = col + 1; row < n; row++) {
-      const factor = M[row][col] / M[col][col]
-      for (let k = col; k <= n; k++) M[row][k] -= factor * M[col][k]
-    }
-  }
-
-  const x = new Array<number>(n).fill(0)
-  for (let i = n - 1; i >= 0; i--) {
-    x[i] = M[i][n]
-    for (let j = i + 1; j < n; j++) x[i] -= M[i][j] * x[j]
-    x[i] /= M[i][i]
-  }
-  return x
-}
-
-function invertMatrix(A: number[][], n: number): number[][] {
-  const M = A.map((row, i) => {
-    const aug: number[] = [...row, ...new Array<number>(n).fill(0)]
-    aug[n + i] = 1
-    return aug
-  })
-
-  for (let col = 0; col < n; col++) {
-    let maxRow = col
-    for (let row = col + 1; row < n; row++)
-      if (Math.abs(M[row][col]) > Math.abs(M[maxRow][col])) maxRow = row
-    ;[M[col], M[maxRow]] = [M[maxRow], M[col]]
-
-    const pivot = M[col][col]
-    if (Math.abs(pivot) < 1e-12) return Array.from({ length: n }, () => new Array<number>(n).fill(0))
-
-    for (let k = 0; k < 2 * n; k++) M[col][k] /= pivot
-    for (let row = 0; row < n; row++) {
-      if (row === col) continue
-      const factor = M[row][col]
-      for (let k = 0; k < 2 * n; k++) M[row][k] -= factor * M[col][k]
-    }
-  }
-
-  return M.map(row => row.slice(n))
 }
