@@ -97,7 +97,7 @@ import { MapPrintButton } from '@/app/map/components/MapPrintButton'
 import MapRail from '@/app/map/components/MapRail'
 import { MapCoordSearch } from '@/app/map/components/MapCoordSearch'
 import { KeyboardShortcutsHelp } from '@/app/map/components/KeyboardShortcutsHelp'
-import { MapToolDock } from '@/app/map/components/MapToolDock'
+import { MapToolDock, ReconContent, CaptureContent, ComputeContent, SetOutContent, LayersContent, ExportContent } from '@/app/map/components/MapToolDock'
 import { MapInteractionToggle } from '@/app/map/components/MapInteractionToggle'
 import { OfflineDownloadButton } from '@/app/map/components/OfflineDownloadButton'
 import { IdentifyPanel, type IdentifiedFeature } from '@/app/map/components/IdentifyPanel'
@@ -119,7 +119,7 @@ import { usePrint, type PrintOptions } from '@/hooks/usePrint'
 import type { MapExtent } from './MapReactContext'
 import { MapProvider, useMapContext, type MapContextValue } from '@/app/map/MapReactContext'
 import { StakeoutPanel } from '@/components/map/StakeoutPanel'
-import { Target, Building2, PenLine, Layers, Ruler } from 'lucide-react'
+import { Target, Building2, PenLine, Layers, Ruler, Binoculars, Crosshair, Calculator, Download } from 'lucide-react'
 
 // ── Dynamic imports for heavy components ──
 const OfflineTileDownloader = dynamic(
@@ -133,24 +133,6 @@ const SheetLayout = dynamic(
 )
 
 // ── MapRail panels (radio-switched via MapRail) ──
-function LayersRailPanel() {
-  const ctx = useMapContext()
-  return (
-    <div className="space-y-2">
-      <div className="grid grid-cols-2 gap-1.5">
-        <button onClick={() => ctx.toggleBasemap('osm')} className={`px-2 py-2 rounded-lg border text-[11px] font-medium ${ctx.basemap==='osm' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]' : 'border-white/[0.06] text-[var(--text-secondary)]'}`}>OSM</button>
-        <button onClick={() => ctx.toggleBasemap('satellite')} className={`px-2 py-2 rounded-lg border text-[11px] font-medium ${ctx.basemap==='satellite' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]' : 'border-white/[0.06] text-[var(--text-secondary)]'}`}>Satellite</button>
-        <button onClick={() => ctx.toggleBasemap('dark')} className={`px-2 py-2 rounded-lg border text-[11px] font-medium ${ctx.basemap==='dark' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]' : 'border-white/[0.06] text-[var(--text-secondary)]'}`}>Dark</button>
-        <button onClick={() => ctx.toggleBasemap('terrain')} className={`px-2 py-2 rounded-lg border text-[11px] font-medium ${ctx.basemap==='terrain' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]' : 'border-white/[0.06] text-[var(--text-secondary)]'}`}>Terrain</button>
-      </div>
-      <div className="pt-2 border-t border-white/[0.06] space-y-1">
-        <button onClick={ctx.loadSchemeData} className="w-full px-3 py-2 rounded-lg border border-white/[0.06] text-xs text-[var(--text-secondary)] hover:bg-white/[0.04]">{ctx.schemeLoading ? 'Loading…' : ctx.schemeLoaded ? `Scheme: ${ctx.schemeParcelCount} parcels` : 'Load Scheme'}</button>
-        <button onClick={() => ctx.setOfflineDialogOpen(true)} className="w-full px-3 py-2 rounded-lg border border-white/[0.06] text-xs text-[var(--text-secondary)] hover:bg-white/[0.04]">Download Tiles</button>
-      </div>
-    </div>
-  )
-}
-
 function MeasureRailPanel() {
   const ctx = useMapContext()
   return (
@@ -165,15 +147,6 @@ function MeasureRailPanel() {
   )
 }
 
-function StakeoutRailPanel() {
-  const ctx = useMapContext()
-  return (
-    <div className="space-y-2">
-      <button onClick={ctx.toggleStakeout} className={`w-full px-3 py-2.5 rounded-lg border text-xs font-semibold ${ctx.stakeoutActive ? 'bg-green-500/20 border-green-500/30 text-green-400' : 'bg-white/[0.02] border-white/[0.06] text-[var(--text-secondary)]'}`}>{ctx.stakeoutActive ? 'Stakeout Active — Tap to Stop' : 'Start Stakeout'}</button>
-      <StakeoutPanel />
-    </div>
-  )
-}
 
 /* ══════════════════════════════════════════════════════════════════════
  *  POPUP RENDERER
@@ -1491,8 +1464,8 @@ export default function MapClient() {
 
               <MapCoordSearch />
 
-              {/* ── Floating Tool Dock (consolidated left-edge dock) ── */}
-              <MapToolDock />
+              {/* ── Tool Dock — MOBILE ONLY (bottom-sheet UX) ── */}
+              {isMobile && <MapToolDock />}
 
               {/* ── Mobile Gesture Lock (bottom-left, above status bar) ── */}
               <MapInteractionToggle mapInstance={mapInstance} />
@@ -1607,17 +1580,25 @@ export default function MapClient() {
                 <OsmBuildingsLayer map={mapInstance.current} visible={showOsmBuildings} />
               )}
 
-              {/* ── Tool rail (Phase 2): radio-switched tools, no overlap ── */}
-              <MapRail
-                items={[
-                  { id: 'vertex', label: 'Vertex Editing', icon: PenLine, panel: <VertexEditToolbar /> },
-                  { id: 'layers', label: 'Layers', icon: Layers, panel: <LayersRailPanel /> },
-                  { id: 'measure', label: 'Measure', icon: Ruler, panel: <MeasureRailPanel /> },
-                  { id: 'stakeout', label: 'Stakeout', icon: Target, panel: <StakeoutRailPanel /> },
-                ]}
-                activeId={activeRailTool}
-                onActivate={setActiveRailTool}
-              />
+              {/* ── Tool rail (desktop): single radio-switched rail, no overlap.
+                   Absorbs the Dock's Recon/Capture/Compute/SetOut/Export panels;
+                   the Dock itself is mobile-only (bottom-sheet UX). ── */}
+              {!isMobile && (
+                <MapRail
+                  items={[
+                    { id: 'recon', label: 'Recon & Search', icon: Binoculars, panel: <ReconContent /> },
+                    { id: 'capture', label: 'Draw & Capture', icon: Crosshair, panel: <CaptureContent /> },
+                    { id: 'vertex', label: 'Vertex Editing', icon: PenLine, panel: <VertexEditToolbar /> },
+                    { id: 'compute', label: 'Compute (COGO / Traverse)', icon: Calculator, panel: <ComputeContent /> },
+                    { id: 'measure', label: 'Measure', icon: Ruler, panel: <MeasureRailPanel /> },
+                    { id: 'stakeout', label: 'Stakeout & GPS', icon: Target, panel: <SetOutContent /> },
+                    { id: 'layers', label: 'Layers', icon: Layers, panel: <LayersContent /> },
+                    { id: 'export', label: 'Export & Print', icon: Download, panel: <ExportContent /> },
+                  ]}
+                  activeId={activeRailTool}
+                  onActivate={setActiveRailTool}
+                />
+              )}
 
               {/* ── Sheet Layout Overlay (print-only — no manual toggle) ── */}
               {showSheetLayout && (

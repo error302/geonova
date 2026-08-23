@@ -253,7 +253,7 @@ function extractPolygonVertices(feature: import('ol/Feature').default | null): S
 // Panel content components
 // ---------------------------------------------------------------------------
 
-const ReconContent = memo(function ReconContent() {
+export const ReconContent = memo(function ReconContent() {
   const { handleCoordSearch, fitToKenya, fitToDrawn, gpsTracking, toggleGPS, featureCount } = useMapContext()
   const [searchInput, setSearchInput] = useState('')
 
@@ -298,7 +298,7 @@ const ReconContent = memo(function ReconContent() {
   )
 })
 
-const CaptureContent = memo(function CaptureContent() {
+export const CaptureContent = memo(function CaptureContent() {
   const ctx = useMapContext()
   const polygonVertices: SurveyPoint[] = extractPolygonVertices(ctx.selectedFeature)
 
@@ -433,7 +433,7 @@ const CaptureContent = memo(function CaptureContent() {
   )
 })
 
-const ComputeContent = memo(function ComputeContent() {
+export const ComputeContent = memo(function ComputeContent() {
   const { hasTraverse, traverseParcelPreviewActive, createParcelFromTraverse, confirmTraverseParcel, cancelTraverseParcel } = useMapContext()
 
   return (
@@ -464,7 +464,7 @@ const ComputeContent = memo(function ComputeContent() {
   )
 })
 
-const SetOutContent = memo(function SetOutContent() {
+export const SetOutContent = memo(function SetOutContent() {
   const { gpsTracking, toggleGPS, stakeoutActive, toggleStakeout, exportFeatures } = useMapContext()
 
   return (
@@ -501,7 +501,7 @@ const SetOutContent = memo(function SetOutContent() {
   )
 })
 
-const LayersContent = memo(function LayersContent() {
+export const LayersContent = memo(function LayersContent() {
   const {
     basemap, toggleBasemap, setOfflineDialogOpen,
     layerOpacity, handleOpacityChange,
@@ -554,7 +554,7 @@ const LayersContent = memo(function LayersContent() {
   )
 })
 
-const ExportContent = memo(function ExportContent() {
+export const ExportContent = memo(function ExportContent() {
   const { saveToProject, exportFeatures, clearDrawn, featureCount, printMap, isPrinting } = useMapContext()
   const searchParams = useSearchParams()
   const projectId = searchParams.get('projectId')
