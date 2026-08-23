@@ -117,8 +117,9 @@ import { useMapInteractions } from '@/app/map/hooks/useMapInteractions'
 import { useVertexEditing } from '@/hooks/useVertexEditing'
 import { usePrint, type PrintOptions } from '@/hooks/usePrint'
 import type { MapExtent } from './MapReactContext'
-import { MapProvider, type MapContextValue } from '@/app/map/MapReactContext'
-import { Target, Building2, PenLine } from 'lucide-react'
+import { MapProvider, useMapContext, type MapContextValue } from '@/app/map/MapReactContext'
+import { StakeoutPanel } from '@/components/map/StakeoutPanel'
+import { Target, Building2, PenLine, Layers, Ruler } from 'lucide-react'
 
 // ── Dynamic imports for heavy components ──
 const OfflineTileDownloader = dynamic(
@@ -130,6 +131,49 @@ const SheetLayout = dynamic(
   () => import('@/components/map/SheetLayout'),
   { ssr: false, loading: () => null }
 )
+
+// ── MapRail panels (radio-switched via MapRail) ──
+function LayersRailPanel() {
+  const ctx = useMapContext()
+  return (
+    <div className="space-y-2">
+      <div className="grid grid-cols-2 gap-1.5">
+        <button onClick={() => ctx.toggleBasemap('osm')} className={`px-2 py-2 rounded-lg border text-[11px] font-medium ${ctx.basemap==='osm' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]' : 'border-white/[0.06] text-[var(--text-secondary)]'}`}>OSM</button>
+        <button onClick={() => ctx.toggleBasemap('satellite')} className={`px-2 py-2 rounded-lg border text-[11px] font-medium ${ctx.basemap==='satellite' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]' : 'border-white/[0.06] text-[var(--text-secondary)]'}`}>Satellite</button>
+        <button onClick={() => ctx.toggleBasemap('dark')} className={`px-2 py-2 rounded-lg border text-[11px] font-medium ${ctx.basemap==='dark' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]' : 'border-white/[0.06] text-[var(--text-secondary)]'}`}>Dark</button>
+        <button onClick={() => ctx.toggleBasemap('terrain')} className={`px-2 py-2 rounded-lg border text-[11px] font-medium ${ctx.basemap==='terrain' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]' : 'border-white/[0.06] text-[var(--text-secondary)]'}`}>Terrain</button>
+      </div>
+      <div className="pt-2 border-t border-white/[0.06] space-y-1">
+        <button onClick={ctx.loadSchemeData} className="w-full px-3 py-2 rounded-lg border border-white/[0.06] text-xs text-[var(--text-secondary)] hover:bg-white/[0.04]">{ctx.schemeLoading ? 'Loading…' : ctx.schemeLoaded ? `Scheme: ${ctx.schemeParcelCount} parcels` : 'Load Scheme'}</button>
+        <button onClick={() => ctx.setOfflineDialogOpen(true)} className="w-full px-3 py-2 rounded-lg border border-white/[0.06] text-xs text-[var(--text-secondary)] hover:bg-white/[0.04]">Download Tiles</button>
+      </div>
+    </div>
+  )
+}
+
+function MeasureRailPanel() {
+  const ctx = useMapContext()
+  return (
+    <div className="space-y-2">
+      <div className="grid grid-cols-2 gap-1.5">
+        <button onClick={() => ctx.toggleMeasure(ctx.measureMode==='distance' ? 'none' : 'distance')} className={`px-3 py-2.5 rounded-lg border text-xs font-medium ${ctx.measureMode==='distance' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]' : 'border-white/[0.06] text-[var(--text-secondary)]'}`}>Distance</button>
+        <button onClick={() => ctx.toggleMeasure(ctx.measureMode==='area' ? 'none' : 'area')} className={`px-3 py-2.5 rounded-lg border text-xs font-medium ${ctx.measureMode==='area' ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]' : 'border-white/[0.06] text-[var(--text-secondary)]'}`}>Area</button>
+      </div>
+      {ctx.measureResult && <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm font-mono text-[var(--text-primary)]">{ctx.measureResult}</div>}
+      {!ctx.measureResult && <p className="text-[11px] text-[var(--text-muted)] px-1">Tap the map to measure. Distance shows bearing.</p>}
+    </div>
+  )
+}
+
+function StakeoutRailPanel() {
+  const ctx = useMapContext()
+  return (
+    <div className="space-y-2">
+      <button onClick={ctx.toggleStakeout} className={`w-full px-3 py-2.5 rounded-lg border text-xs font-semibold ${ctx.stakeoutActive ? 'bg-green-500/20 border-green-500/30 text-green-400' : 'bg-white/[0.02] border-white/[0.06] text-[var(--text-secondary)]'}`}>{ctx.stakeoutActive ? 'Stakeout Active — Tap to Stop' : 'Start Stakeout'}</button>
+      <StakeoutPanel />
+    </div>
+  )
+}
 
 /* ══════════════════════════════════════════════════════════════════════
  *  POPUP RENDERER
@@ -1565,7 +1609,12 @@ export default function MapClient() {
 
               {/* ── Tool rail (Phase 2): radio-switched tools, no overlap ── */}
               <MapRail
-                items={[{ id: 'vertex', label: 'Vertex Editing', icon: PenLine, panel: <VertexEditToolbar /> }]}
+                items={[
+                  { id: 'vertex', label: 'Vertex Editing', icon: PenLine, panel: <VertexEditToolbar /> },
+                  { id: 'layers', label: 'Layers', icon: Layers, panel: <LayersRailPanel /> },
+                  { id: 'measure', label: 'Measure', icon: Ruler, panel: <MeasureRailPanel /> },
+                  { id: 'stakeout', label: 'Stakeout', icon: Target, panel: <StakeoutRailPanel /> },
+                ]}
                 activeId={activeRailTool}
                 onActivate={setActiveRailTool}
               />
