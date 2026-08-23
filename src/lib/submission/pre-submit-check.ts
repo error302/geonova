@@ -182,7 +182,7 @@ function checkProjectInfo(project: Parameters<typeof preSubmitCheck>[0]): CheckC
 
   return {
     name: 'Project Information',
-    icon: '📋',
+    icon: 'CHK',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,
@@ -199,7 +199,7 @@ function checkSurveyControl(points?: Array<{ name: string; type?: string }>): Ch
       detail: 'No survey points recorded',
       blocking: true,
     });
-    return { name: 'Survey Control', icon: '📐', items, passed: 0, total: 1 };
+    return { name: 'Survey Control', icon: 'GEO', items, passed: 0, total: 1 };
   }
 
   items.push({
@@ -227,7 +227,7 @@ function checkSurveyControl(points?: Array<{ name: string; type?: string }>): Ch
 
   return {
     name: 'Survey Control',
-    icon: '📐',
+    icon: 'GEO',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,
@@ -296,7 +296,7 @@ function checkTraverseAccuracy(
 
   return {
     name: 'Traverse Accuracy',
-    icon: '🎯',
+    icon: 'ACC',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,
@@ -362,7 +362,7 @@ function checkAreaBoundary(
 
   return {
     name: 'Area & Boundary',
-    icon: '📐',
+    icon: 'GEO',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,
@@ -382,7 +382,7 @@ function checkDocuments(project: Parameters<typeof preSubmitCheck>[0]): CheckCat
 
   return {
     name: 'Documents',
-    icon: '📄',
+    icon: 'DOC',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,
@@ -414,7 +414,7 @@ function checkCompliance(project: Parameters<typeof preSubmitCheck>[0]): CheckCa
 
   return {
     name: 'Compliance',
-    icon: '⚖️',
+    icon: 'LGL',
     items,
     passed: items.filter((i) => i.status === 'pass').length,
     total: items.length,

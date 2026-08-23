@@ -82,7 +82,7 @@ export const FieldConnectionBar = memo(function FieldConnectionBar({
           </span>
           {latestPoint.satellites != null && (
             <span className="text-[var(--text-muted)] font-mono text-xs">
-              🛰 {latestPoint.satellites}
+              SAT {latestPoint.satellites}
             </span>
           )}
           {latestPoint.hdop != null && (

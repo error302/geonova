@@ -138,7 +138,7 @@ function ObservationRow({
         {/* GNSS quality */}
         {isGNSS && measurement.satellites != null && (
           <div className="mt-0.5 text-xs text-[var(--text-muted)] font-mono">
-            🛰 {measurement.satellites} sats
+            SAT {measurement.satellites} sats
             {measurement.hdop != null && ` · HDOP ${measurement.hdop.toFixed(1)}`}
             {measurement.elevation != null && ` · H ${measurement.elevation.toFixed(2)}m`}
           </div>
@@ -147,7 +147,7 @@ function ObservationRow({
         {/* Notes */}
         {measurement.notes && (
           <div className="mt-0.5 text-xs text-[var(--text-muted)] italic">
-            📝 {measurement.notes}
+            {measurement.notes}
           </div>
         )}
       </div>

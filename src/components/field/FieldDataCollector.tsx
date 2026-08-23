@@ -134,7 +134,7 @@ export function FieldDataCollector({
           }`}
           title="Toggle Sunlight High-Contrast Outdoor Mode"
         >
-          {isSunlightMode ? '☀️ Sunlight Mode ON' : '🌤️ Outdoor Mode'}
+          {isSunlightMode ? 'Sunlight Mode ON' : 'Outdoor Mode'}
         </button>
         <button
           onClick={() => setShowSetup(true)}
@@ -375,7 +375,7 @@ function StakeoutPanel({
       </div>
 
       <p className="text-xs text-[var(--text-muted)]">
-        💡 Stakeout uses the StakeoutRadar component. Connect a GNSS rover and the radar
+        Tip: Stakeout uses the StakeoutRadar component. Connect a GNSS rover and the radar
         will guide you to the target with audio cues.
       </p>
 
@@ -436,7 +436,7 @@ function SyncPanel({
       </button>
 
       <p className="text-xs text-[var(--text-muted)]">
-        💡 Measurements are saved locally first (IndexedDB), then synced to the cloud
+        Tip: Measurements are saved locally first (IndexedDB), then synced to the cloud
         when online. You can work offline indefinitely — sync happens automatically.
       </p>
     </div>

@@ -636,7 +636,7 @@ export function NetworkAdjustmentPanel({ projectId, projectData, surveyorProfile
 
               {robustResult.blunders.length > 0 && (
                 <p className="text-xs text-zinc-400 mt-3">
-                  💡 Blunders are down-weighted automatically. Re-check the observation field notes for the flagged legs —
+                  Tip: Blunders are down-weighted automatically. Re-check the observation field notes for the flagged legs —
                   look for swapped face, wrong target height, or transcription errors. After correcting, re-run the adjustment.
                 </p>
               )}

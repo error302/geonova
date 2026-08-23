@@ -196,19 +196,39 @@ function HeroSection() {
           <div className="max-w-3xl">
 
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6">
-              Surveying software
+              Field notes in.
               <br />
-              built for{' '}
               <span className="bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dim)] bg-clip-text text-transparent">
-                East Africa.
+                Deed plan out.
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg lg:text-xl text-[var(--text-primary)] leading-relaxed mb-8 max-w-2xl">
-              Traverse adjustment, deed plans, GNSS baseline processing, contour generation,
-              and NLIMS-ready exports — all in one professional workspace. From field to finish,
-              built for Kenyan surveyors.
+            <p className="text-base sm:text-lg lg:text-xl text-[var(--text-primary)] leading-relaxed mb-6 max-w-2xl">
+              Enter your observations once. METARDU closes the traverse by Bowditch, checks it
+              against RDM 1.1, drafts the Cap&nbsp;299 Form&nbsp;No.&nbsp;4, and assembles the NLIMS
+              submission — no Excel, no CAD, no retyping. The office paperwork that used to take
+              days now finishes before you leave the site.
             </p>
+
+            {/* Workflow strip — the before/after a surveyor feels immediately */}
+            <ol className="mb-8 grid grid-cols-1 sm:grid-cols-3 gap-2 max-w-2xl" aria-label="How METARDU simplifies your workflow">
+              {[
+                { n: '1', title: 'Record at the plot', note: 'Guided field book — online or offline' },
+                { n: '2', title: 'Computations run themselves', note: 'Bowditch, levelling, COGO — full working shown' },
+                { n: '3', title: 'Submission pack ready', note: 'Form No. 4, reports, NLIMS exports — audit-sealed' },
+              ].map((s) => (
+                <li
+                  key={s.n}
+                  className="rounded-lg border border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-secondary)_78%,transparent)] backdrop-blur-sm px-4 py-3"
+                >
+                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[var(--accent)] text-[var(--bg-primary)] text-xs font-bold mr-2">
+                    {s.n}
+                  </span>
+                  <span className="text-sm font-semibold text-[var(--text-primary)]">{s.title}</span>
+                  <span className="block mt-1 text-xs leading-snug text-[var(--text-primary)] opacity-75">{s.note}</span>
+                </li>
+              ))}
+            </ol>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link

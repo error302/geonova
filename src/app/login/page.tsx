@@ -239,7 +239,7 @@ function LoginForm() {
               out over the light map. Hard-code the auth-page dark card
               color with real alpha instead (.auth-page pins --bg-card to
               #080808 in globals.css). */}
-          <div className="relative rounded-2xl border border-white/10 bg-[rgba(8,8,8,0.82)] backdrop-blur-2xl shadow-[0_24px_80px_-12px_rgba(0,0,0,0.7)] overflow-hidden">
+          <div className="[--auth-border:rgba(255,255,255,0.10)] [--auth-field:rgba(255,255,255,0.05)] relative rounded-2xl border border-[var(--auth-border)] bg-[rgba(8,8,8,0.82)] backdrop-blur-2xl shadow-[0_24px_80px_-12px_rgba(0,0,0,0.7)] overflow-hidden">
             {/* Top accent stripe */}
             <div className="h-1 w-full bg-gradient-to-r from-[var(--accent)] via-orange-400 to-[var(--accent)]" />
 
@@ -289,7 +289,7 @@ function LoginForm() {
                   {/* ── Divider ── */}
                   <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-white/10" />
+                      <div className="w-full border-t border-[var(--auth-border)]" />
                     </div>
                     <div className="relative flex justify-center text-xs">
                       <span className="px-3 bg-transparent text-white/40 uppercase tracking-wider">
@@ -320,7 +320,7 @@ function LoginForm() {
                           setEmailTouched(true)
                           setEmailError(validateEmail(email))
                         }}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none transition-all"
+                        className="w-full px-4 py-3 bg-[var(--auth-field)] border border-[var(--auth-border)] rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none transition-all"
                         autoComplete="email"
                         placeholder="you@example.com"
                       />
@@ -343,7 +343,7 @@ function LoginForm() {
                             setPasswordTouched(true)
                             setPasswordError(validatePassword(password))
                           }}
-                          className="w-full px-4 py-3 pr-11 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none transition-all"
+                          className="w-full px-4 py-3 pr-11 bg-[var(--auth-field)] border border-[var(--auth-border)] rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none transition-all"
                           autoComplete="current-password"
                           placeholder="••••••••"
                         />
@@ -367,7 +367,7 @@ function LoginForm() {
                           type="checkbox"
                           checked={rememberMe}
                           onChange={(e) => setRememberMe(e.target.checked)}
-                          className="w-4 h-4 rounded border-white/20 bg-white/5 text-[var(--accent)] focus:ring-[color-mix(in_srgb,var(--accent)_50%,transparent)]"
+                          className="w-4 h-4 rounded border-white/20 bg-[var(--auth-field)] text-[var(--accent)] focus:ring-[color-mix(in_srgb,var(--accent)_50%,transparent)]"
                         />
                         <span className="text-sm text-white/70 group-hover:text-white/90 transition-colors">
                           Remember me
@@ -434,7 +434,7 @@ function LoginForm() {
                           setEmailTouched(true)
                           setEmailError(validateEmail(email))
                         }}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none transition-all"
+                        className="w-full px-4 py-3 bg-[var(--auth-field)] border border-[var(--auth-border)] rounded-lg text-white placeholder-white/30 focus:border-[var(--accent)] focus:bg-white/10 focus:ring-2 focus:ring-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none transition-all"
                         autoComplete="email"
                         placeholder="you@example.com"
                       />
@@ -505,7 +505,7 @@ function LoginForm() {
             ].map((item) => (
               <div
                 key={item.text}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md text-xs text-white/75"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-[var(--auth-border)] backdrop-blur-md text-xs text-white/75"
               >
                 <item.icon className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
                 <span>{item.text}</span>
