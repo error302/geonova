@@ -1,6 +1,6 @@
 import type { DeedPlanInput, DeedPlanOutput } from '@/types/deedPlan'
 
-const BASE = process.env.NEXT_PUBLIC_URL || ''
+const BASE = process.env.NEXT_PUBLIC_URL || 'https://metardu.space'
 
 export async function generateDeedPlan(input: DeedPlanInput): Promise<DeedPlanOutput> {
   const res = await fetch(`${BASE}/api/deed-plan/generate`, {
