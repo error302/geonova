@@ -95,8 +95,13 @@ function collectSelectedColumns() {
     let fm
     while ((fm = fromRe.exec(src)) !== null) {
       const table = fm[1]
-      // look ahead up to 400 chars for .select(
-      const window = src.slice(fm.index, fm.index + 500)
+      // look ahead up to 500 chars for .select(
+      let window = src.slice(fm.index, fm.index + 500)
+      // stop looking if we hit another .from(
+      const nextFrom = window.indexOf('.from(', 10)
+      if (nextFrom !== -1) {
+        window = window.slice(0, nextFrom)
+      }
       const sm = window.match(/\.select\(\s*["'`]([^"'`]+)["'`]/)
       if (!sm) continue
       const spec = sm[1]
