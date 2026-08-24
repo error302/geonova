@@ -214,3 +214,6 @@ scripts/ci-db-bootstrap.sql
 __pycache__/
 *.pyc
 tunnel-log.txt
+
+!public/landing/captures/*.png
+
