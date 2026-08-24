@@ -69,17 +69,9 @@ export const useLanguage = () => useContext(LanguageContext)
 
 export const languages = [
   { code: 'en' as Language, flag: 'UK', name: 'English' },
-  { code: 'sw' as Language, flag: 'KE', name: 'Kiswahili' },
-  { code: 'fr' as Language, flag: '', name: 'Français' },
-  { code: 'ar' as Language, flag: '', name: 'العربية' },
-  { code: 'pt' as Language, flag: '', name: 'Português' },
-  { code: 'es' as Language, flag: '', name: 'Español' },
   { code: 'zh' as Language, flag: 'CN', name: '中文' },
-  { code: 'ja' as Language, flag: '', name: '日本語' },
-  { code: 'ru' as Language, flag: '', name: 'Русский' },
   { code: 'hi' as Language, flag: 'IN', name: 'हिन्दी' },
-  { code: 'id' as Language, flag: '', name: 'Bahasa Indonesia' },
-  { code: 'am' as Language, flag: 'ET', name: 'አማርኛ' },
-  { code: 'ha' as Language, flag: 'NG', name: 'Hausa' },
-  { code: 'de' as Language, flag: '', name: 'Deutsch' },
+  { code: 'es' as Language, flag: '', name: 'Español' },
+  { code: 'ar' as Language, flag: '', name: 'العربية' },
+  { code: 'fr' as Language, flag: '', name: 'Français' },
 ]
