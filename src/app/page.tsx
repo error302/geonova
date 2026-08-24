@@ -376,6 +376,13 @@ function ShowcaseSection() {
     <section id="showcase" aria-labelledby="showcase-heading" className="py-32 md:py-40 bg-[var(--bg-secondary)] border-y border-[var(--border-color)] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_25%,transparent)] text-xs font-semibold text-[var(--accent)] mb-6">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            Survey Act Cap 299 compliant — RDM 1.1 (8/8 tests) ·{' '}
+            <a href="/docs?doc=kenya-precision-audit" className="underline underline-offset-2 hover:text-[var(--accent-dim)]">Audit</a>
+            <span className="hidden sm:inline text-[var(--text-muted)] mx-1">·</span>
+            <a href="/pricing?ref=guild" className="hidden sm:inline underline underline-offset-2 hover:text-[var(--accent-dim)]">Guild referral ?ref=YOUR-ISK</a>
+          </div>
           <p className="text-[var(--accent)] text-sm font-semibold uppercase tracking-widest mb-4">
             See it in action
           </p>

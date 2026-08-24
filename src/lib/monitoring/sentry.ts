@@ -27,6 +27,11 @@ export function initSentry() {
       replaysSessionSampleRate: 0.1,
       replaysOnErrorSampleRate: 1.0,
       beforeSend(event) {
+        // Silence known non-actionable build noise: /api/portfolio dynamic server usage
+        const digest = (event as unknown as { digest?: string })?.digest || (event.exception?.values?.[0] as unknown as { digest?: string })?.digest
+        const msg = event.exception?.values?.[0]?.value || ''
+        if (digest === 'DYNAMIC_SERVER_USAGE' && msg.includes('/api/portfolio')) return null
+        if (msg.includes("Route /api/portfolio couldn't be rendered statically")) return null
         // Scrub any API keys that might leak into error messages
         if (event.request?.headers) {
           delete event.request.headers['Authorization']

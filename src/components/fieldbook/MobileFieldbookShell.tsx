@@ -22,6 +22,7 @@ import { UniversalMobileObservationForm } from './UniversalMobileObservationForm
 import type { CapturedBeaconPhoto } from './BeaconPhotoCapture'
 import { StickySummary, OfflineCacheIndicator } from './MobileFieldUX'
 import { SwipeableRow } from './FieldbookSwipeWrapper'
+import FieldbookInstallPrompt from '@/components/FieldbookInstallPrompt'
 
 export type Row = { id: string; [key: string]: string }
 
@@ -186,6 +187,7 @@ export function MobileFieldbookShell({
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-3.5rem)] bg-[var(--bg-primary)]">
+      <FieldbookInstallPrompt />
       {/* ─── Sticky status bar ─── */}
       <div className="sticky top-0 z-30 bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] backdrop-blur-md border-b border-[var(--border-color)] px-4 py-2.5 flex items-center justify-between">
         <div className="flex items-center gap-2">

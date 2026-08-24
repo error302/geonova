@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { heightOfCollimation, riseAndFall } from '@/lib/engine/leveling'
 import { bowditchAdjustment, forwardTraverse } from '@/lib/engine/traverse'
 import { polar3DWithHeights } from '@/lib/engine/polar'
+import { zenithToVertical } from '@/lib/engine/verticalAngle'
 import { asBearing, asNumber } from './helpers'
 import type {
   ControlRow,
@@ -147,9 +148,8 @@ export function useFieldbookComputations(input: FieldbookComputationsInput) {
       if (hi === null || hi < 0) errors.push(`Invalid instrument height at ${r.pointId || '(blank)'}`)
       if (ht === null || ht < 0) errors.push(`Invalid target height at ${r.pointId || '(blank)'}`)
 
-      // UI verticalAngle is zenith (90° = horizontal, Kenyan total-station standard)
-      // polar3D expects vertical-from-horizontal (0° = horizontal), so convert
-      const vFromHoriz = v !== null ? 90 - v : null
+      // UI is zenith (90°=horizontal) → polar3D wants vertical-from-horizontal
+      const vFromHoriz = v !== null ? zenithToVertical(v) : null
       const computed =
         b !== null && vFromHoriz !== null && s !== null && hi !== null && ht !== null
           ? polar3DWithHeights({ station: { easting: e0, northing: n0, elevation: z0 }, bearing: b, verticalAngle: vFromHoriz, slopeDistance: s, instrumentHeight: hi, targetHeight: ht })

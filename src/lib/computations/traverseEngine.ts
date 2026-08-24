@@ -183,12 +183,11 @@ export function computeTraverse(input: {
     const vaSec = parseFloat(o.vaSec) || 0
     const va = dmsToDecimal({ degrees: vaDeg, minutes: vaMin, seconds: vaSec, direction: 'N' })
     const vaRad = va * Math.PI / 180
-    // Source: Ghilani & Wolf, Eq. 13.1 — HD = SD × sin(zenith), ΔH = SD × cos(zenith)
-    // VA here is zenith angle (0° at zenith, 90° horizontal — Kenyan total-station standard)
-    // Previous: HD used cos (treated VA as vertical-from-horizontal), giving 3.28m at 88.5° instead of ~125m
+    // Canonical: VA is zenith (90°=horizontal) — see verticalAngle.ts
     const hd = sd * Math.sin(vaRad)
     const ih = parseFloat(o.ih) || 0
     const th = parseFloat(o.th) || 0
+    // ΔH = SD·cos(zenith) + IH − TH (zenith → vertical)
     const deltaH = sd * Math.cos(vaRad) + ih - th
 
     return {

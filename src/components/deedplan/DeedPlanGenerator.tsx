@@ -6,6 +6,7 @@ import { DeedPlanInput, DeedPlanOutput, BoundaryPoint, BeaconType } from '@/type
 import { generateDeedPlan } from '@/lib/compute/deedPlanApi'
 import { saveDeedPlan } from '@/lib/api-client/deedPlans'
 import { printDeedPlan } from '@/lib/print/deedPlanPrint'
+import { trackDeedGenerate, trackDeedDownload } from '@/lib/analytics/events'
 import {
   coordinate2D,
   polygonArea2D,
@@ -109,6 +110,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
     setError(null)
     try {
       const result = await generateDeedPlan(input)
+      trackDeedGenerate(input.scale)
       setOutput(result)
       setStep('preview')
     } catch (err) {
@@ -130,6 +132,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
 
   const handleDownloadSVG = () => {
     if (!output) return
+    trackDeedDownload()
     const blob = new Blob([output.svg], { type: 'image/svg+xml' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')

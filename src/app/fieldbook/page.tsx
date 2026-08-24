@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { trackFieldbookSave } from '@/lib/analytics/events'
 
 // AUDIT FIX (H-003, 2026-07-27): useMemo to prevent infinite loop.
 // Previously `const dbClient = createClient()` ran on every render, creating
@@ -937,6 +938,7 @@ export default function DigitalFieldBookPage() {
     // Guard: never store a completely blank station/point — prevents ghost #01 cards
     const hasStation = (row.station ?? row.pointId ?? '').trim() !== ''
     if (!hasStation) return
+    trackFieldbookSave(type, 1)
     const id = crypto.randomUUID()
     // Build a compact photo annotation appended to remarks so the surveyor
     // has an at-a-glance evidence trail. EXIF GPS coordinates are included

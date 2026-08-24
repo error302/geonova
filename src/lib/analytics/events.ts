@@ -9,6 +9,10 @@ export type EventType =
   | 'upgrade_prompt_shown'
   | 'upgrade_clicked'
   | 'feedback_submitted'
+  | 'fieldbook_save'
+  | 'traverse_compute'
+  | 'deed_generate'
+  | 'deed_download'
 
 export async function trackEvent(
   event: EventType,
@@ -75,4 +79,17 @@ export function trackUpgradePromptShown(promptType: string) {
 
 export function trackUpgradeClicked(plan: string) {
   return trackEvent('upgrade_clicked', { plan })
+}
+
+export function trackFieldbookSave(surveyType: string, count: number) {
+  return trackEvent('fieldbook_save', { surveyType, count })
+}
+export function trackTraverseCompute(stations: number, closed: boolean) {
+  return trackEvent('traverse_compute', { stations, closed })
+}
+export function trackDeedGenerate(scale: number) {
+  return trackEvent('deed_generate', { scale })
+}
+export function trackDeedDownload() {
+  return trackEvent('deed_download', {})
 }
