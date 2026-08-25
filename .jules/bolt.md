@@ -1,0 +1,3 @@
+## 2026-07-03 - Performance Anti-Pattern: Spread Operator on Point Clouds
+**Learning:** Using the spread operator (`...`) with `Math.min()` or `Math.max()` on large arrays, such as point cloud datasets parsed or displayed in components like `TIN3DViewer.tsx`, causes V8 "Maximum call stack size exceeded" errors and excessive memory allocation. This happens because the spread operator passes every element of the array as a separate argument to the function, blowing up the stack.
+**Action:** When calculating bounds (min/max) on large datasets, always use traditional `for` loops or `reduce` instead to iterate in a single pass without large memory allocations and prevent stack overflows.

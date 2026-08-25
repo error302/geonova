@@ -69,12 +69,24 @@ export function TIN3DViewer({ surface, points, width = 800, height = 500 }: TIN3
         const pts = surface?.points || points || []
         if (pts.length === 0) return
 
-        const minE = Math.min(...pts.map(p => p.easting))
-        const maxE = Math.max(...pts.map(p => p.easting))
-        const minN = Math.min(...pts.map(p => p.northing))
-        const maxN = Math.max(...pts.map(p => p.northing))
-        const minZ = Math.min(...pts.map(p => p.elevation || 0))
-        const maxZ = Math.max(...pts.map(p => p.elevation || 0))
+        // ⚡ Bolt Optimization: Single-pass bound calculation
+        // Replaced multiple spread operators and `.map()` calls with a single loop
+        // to prevent V8 "Maximum call stack size exceeded" errors on large point clouds
+        // and avoid excessive memory allocations.
+        let minE = Infinity, maxE = -Infinity
+        let minN = Infinity, maxN = -Infinity
+        let minZ = Infinity, maxZ = -Infinity
+
+        for (let i = 0; i < pts.length; i++) {
+          const p = pts[i]
+          const z = p.elevation || 0
+          if (p.easting < minE) minE = p.easting
+          if (p.easting > maxE) maxE = p.easting
+          if (p.northing < minN) minN = p.northing
+          if (p.northing > maxN) maxN = p.northing
+          if (z < minZ) minZ = z
+          if (z > maxZ) maxZ = z
+        }
         const centerE = (minE + maxE) / 2
         const centerN = (minN + maxN) / 2
         const centerZ = (minZ + maxZ) / 2
