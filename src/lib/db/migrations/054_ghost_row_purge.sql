@@ -3,4 +3,4 @@
 -- (empty station/pointId) rendered as “—” ghosts in QA data.
 
 DELETE FROM survey_points WHERE trim(coalesce(point_name,'')) = '' AND coalesce(easting,0)=0 AND coalesce(northing,0)=0;
-DELETE FROM project_fieldbook_entries WHERE trim(coalesce(station,'')) = '';
+DELETE FROM project_fieldbook_entries WHERE trim(coalesce(station,'')) = '' AND coalesce(bs,'')='' AND coalesce(fs,'')='' AND coalesce(slope_dist,'')='' AND coalesce(slope_distance,'')='';
