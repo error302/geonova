@@ -25,9 +25,10 @@ export default function FieldbookInstallPrompt() {
     // Background-sync registration for fieldbook queue (IndexedDB metardu-offline)
     if ('serviceWorker' in navigator && 'SyncManager' in window) {
       navigator.serviceWorker.ready.then(reg => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const anyReg = reg as any
-        if (anyReg.sync) anyReg.sync.register('fieldbook-sync').catch(() => {})
+        const syncReg = reg as ServiceWorkerRegistration & { sync?: { register: (tag: string) => Promise<void> } }
+        if (syncReg.sync) {
+          syncReg.sync.register('fieldbook-sync').catch(() => {})
+        }
       }).catch(() => {})
     }
     return () => {
