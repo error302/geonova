@@ -26,9 +26,12 @@ export default function FieldbookInstallPrompt() {
     if ('serviceWorker' in navigator && 'SyncManager' in window) {
       navigator.serviceWorker.ready.then(reg => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-        const anyReg = reg as any
+        const anyReg = reg as any;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        if (anyReg.sync) anyReg.sync.register('fieldbook-sync').catch(() => {})
+        if (anyReg && anyReg.sync && typeof anyReg.sync.register === 'function') {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+          anyReg.sync.register('fieldbook-sync').catch(() => {});
+        }
       }).catch(() => {})
     }
     return () => {
