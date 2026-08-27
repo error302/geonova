@@ -1,0 +1,7 @@
+## 2024-08-27 - DOMPurify SVG Configuration and Usage Context
+
+**Vulnerability:** DOMPurify was misconfigured with a manual list of ALLOWED_TAGS and ALLOWED_ATTR. This list was brittle and could easily break legitimate SVG rendering by missing a required attribute (e.g. `cx`, `cy`) or tag. Furthermore, dynamically generated SVGs outputting to `dangerouslySetInnerHTML` were omitting `sanitizeHtml`, leading to a potential stored XSS vulnerability if an attacker injects a malicious payload in user inputs that end up in the SVG (like `projectInfo.name`). In addition, `sanitizeHtml` was unnecessarily being used on static, trusted enums (e.g., beacon symbols), which causes React hydration errors.
+
+**Learning:** When sanitizing SVG and HTML together in Next.js applications, manually curating an allowed list often results in missing critical visual attributes that break layout or functionality. DOMPurify provides `USE_PROFILES: { html: true, svg: true }` specifically to handle comprehensive, safe HTML and SVG tags together out-of-the-box. Additionally, `sanitizeHtml` provides no security benefit when rendering hardcoded enums (e.g. static beacon symbols) but introduces severe UI issues (hydration mismatch).
+
+**Prevention:** Always use `USE_PROFILES: { html: true, svg: true }` instead of manual allow-listing when both HTML and complex SVG strings are expected. Apply `sanitizeHtml` explicitly on dynamically generated SVGs that incorporate user input. Avoid wrapping static, trusted SVG/HTML in `sanitizeHtml` to avoid React hydration issues.
