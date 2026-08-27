@@ -29,7 +29,10 @@ const DeedPlanRequestSchema = z.object({
   county: z.string().optional(),
   utmZone: z.number().optional(),
   hemisphere: z.enum(['N', 'S']).optional(),
-  scale: z.enum(['250', '500', '1000', '1250', '2500', '5000', '10000']).optional(),
+  scale: z.preprocess(
+    (v) => (typeof v === 'number' ? String(v) : v),
+    z.enum(['250', '500', '1000', '1250', '2500', '5000', '10000']).optional(),
+  ),
   datum: z.enum(['ARC1960', 'WGS84']).optional(),
   projectionType: z.enum(['UTM', 'Cassini']).optional(),
   // Grid-to-ground correction (RDM 1.1)
