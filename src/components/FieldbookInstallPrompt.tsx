@@ -25,8 +25,9 @@ export default function FieldbookInstallPrompt() {
     // Background-sync registration for fieldbook queue (IndexedDB metardu-offline)
     if ('serviceWorker' in navigator && 'SyncManager' in window) {
       navigator.serviceWorker.ready.then(reg => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
         const anyReg = reg as any
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         if (anyReg.sync) anyReg.sync.register('fieldbook-sync').catch(() => {})
       }).catch(() => {})
     }
