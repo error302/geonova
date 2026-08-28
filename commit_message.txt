@@ -1,0 +1,7 @@
+fix: prevent schema-drift-gate from leaking select across queries and fix e2e tests
+
+1. The `schema-drift-gate.mjs` script was looking ahead 500 characters after a `.from(...)` to find a `.select(...)` statement. In files where a query (like a delete or insert) is immediately followed by another query (like a select from a *different* table), it would associate the first table with the second table's selected columns.
+This occurred in `src/lib/api-client/jobs.ts` where `.from('jobs').delete()` was closely followed by `.from('equipment_recommendations').select('equipment')`. The script matched `jobs` and looked ahead 500 characters, found `select('equipment')`, and falsely reported that `jobs.equipment` was selected but not in the schema.
+The fix is to slice the look-ahead window if another `.from(` is encountered before the `.select(`.
+
+2. The landing page e2e tests failed because the h1 text was changed from "Surveying software" to "Field notes in. Deed plan out." and the hero copy was changed. I updated `e2e/landing.spec.ts` and `e2e/responsive-a11y.spec.ts` to expect the new text.
