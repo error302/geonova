@@ -1,0 +1,5 @@
+## 2024-05-18 - XSS Prevention via DOMPurify for dangerouslySetInnerHTML
+
+**Vulnerability:** Found direct injection of SVG content into the DOM using `dangerouslySetInnerHTML` in MutationPlanGenerator and DeedPlanGenerator without sanitization. Since SVG can embed malicious scripts and event handlers, dynamic or user-influenced SVG poses an XSS risk.
+**Learning:** Even though SVGs are images, they are essentially XML documents that can execute JavaScript (e.g. `<script>` tags, `onload` handlers). In React, passing these raw strings to `dangerouslySetInnerHTML` will bypass standard XSS protections. Moreover, attempting to manually allowlist SVG attributes can lead to broken images, requiring the use of full profiles.
+**Prevention:** Always use the `sanitizeHtml` wrapper from `@/lib/security/sanitize` when rendering dynamically generated HTML/SVG. For SVGs, the wrapper configures DOMPurify with `USE_PROFILES: { html: true, svg: true }` to securely allow functional SVG attributes while stripping out scripts and malicious payloads.
