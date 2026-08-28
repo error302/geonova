@@ -15,7 +15,7 @@
  * - Static page navigation (tools, docs, settings)
  */
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo, memo } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Search, Command, ArrowRight, CornerDownLeft,
@@ -184,6 +184,10 @@ export function CommandPalette() {
     }
   }, [router])
 
+  const handleHover = useCallback((idx: number) => {
+    setSelectedIndex(idx)
+  }, [])
+
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault()
@@ -266,9 +270,11 @@ export function CommandPalette() {
               {apiResults.map((item, idx) => (
                 <ResultRow
                   key={`api-${item.id}`}
+                  item={item}
+                  index={idx}
                   selected={idx === selectedIndex}
-                  onClick={() => handleSelect(item)}
-                  onHover={() => setSelectedIndex(idx)}
+                  onSelect={handleSelect}
+                  onHover={handleHover}
                   icon={getResultIcon(item.type)}
                   title={item.title}
                   subtitle={item.subtitle || item.type}
@@ -291,9 +297,11 @@ export function CommandPalette() {
                 return (
                   <ResultRow
                     key={`nav-${item.href}`}
+                    item={item}
+                    index={actualIndex}
                     selected={actualIndex === selectedIndex}
-                    onClick={() => handleSelect(item)}
-                    onHover={() => setSelectedIndex(actualIndex)}
+                    onSelect={handleSelect}
+                    onHover={handleHover}
                     icon={item.icon}
                     title={item.title}
                     subtitle={item.subtitle}
@@ -328,12 +336,14 @@ export function CommandPalette() {
 
 // ─── Helper components ──────────────────────────────────────────────────
 
-function ResultRow({
-  selected, onClick, onHover, icon: Icon, title, subtitle, category,
+const ResultRow = memo(function ResultRow({
+  item, index, selected, onSelect, onHover, icon: Icon, title, subtitle, category,
 }: {
+  item: StaticNavItem | SearchResult
+  index: number
   selected: boolean
-  onClick: () => void
-  onHover: () => void
+  onSelect: (item: StaticNavItem | SearchResult) => void
+  onHover: (idx: number) => void
   icon: typeof LayoutDashboard
   title: string
   subtitle: string
@@ -342,8 +352,8 @@ function ResultRow({
 }) {
   return (
     <div
-      onClick={onClick}
-      onMouseEnter={onHover}
+      onClick={() => onSelect(item)}
+      onMouseEnter={() => onHover(index)}
       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
         selected ? 'bg-[#D17B47]/10' : 'hover:bg-white/[0.03]'
       }`}
@@ -365,7 +375,7 @@ function ResultRow({
       {selected && <ArrowRight className="w-3 h-3 text-[#D17B47] shrink-0" />}
     </div>
   )
-}
+})
 
 function getResultIcon(type: string): typeof LayoutDashboard {
   switch (type) {
