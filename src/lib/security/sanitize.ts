@@ -10,21 +10,7 @@ export function sanitizeHtml(dirty: string): string {
     const createDOMPurify = require('dompurify') as unknown as typeof import('dompurify') & { default?: typeof import('dompurify') };
     const DOMPurify = createDOMPurify.default || createDOMPurify;
     return DOMPurify.sanitize(dirty, {
-      ALLOWED_TAGS: [
-        'div', 'span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-        'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td',
-        'ul', 'ol', 'li', 'a', 'strong', 'em', 'b', 'i', 'u',
-        'br', 'hr', 'img', 'svg', 'style', 'blockquote', 'pre', 'code',
-        'sub', 'sup', 'section', 'article', 'header', 'footer', 'nav',
-      ],
-      ALLOWED_ATTR: [
-        'class', 'id', 'style', 'href', 'src', 'alt', 'title',
-        'width', 'height', 'viewBox', 'xmlns', 'd', 'fill', 'stroke',
-        'stroke-width', 'transform', 'x', 'y', 'cx', 'cy', 'r',
-        'border', 'cellpadding', 'cellspacing', 'colspan', 'rowspan',
-        'text-align', 'font-size', 'font-weight', 'font-style',
-        'background', 'color', 'padding', 'margin', 'vertical-align',
-      ],
+      USE_PROFILES: { html: true, svg: true }
     });
   }
   // Server-side fallback: strip all tags

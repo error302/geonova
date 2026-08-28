@@ -23,6 +23,8 @@ import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
 
+export const dynamic = 'force-dynamic'
+
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 interface ProjectRow {
