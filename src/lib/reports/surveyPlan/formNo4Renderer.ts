@@ -1,4 +1,7 @@
 /**
+ * @deprecated Canonical deed plan renderer is now src/lib/compute/deedPlanRenderer.ts
+ * This file remains for reference only — production is wired to deedPlanRenderer (see src/app/deed-plan/page.tsx).
+ * Do not patch both; retire this after the base SurveyPlanRenderer is consolidated.
  * Form No. 4 Survey Plan Renderer Extension
  * Kenya Land Office compliant survey plan rendering
  * Extends base SurveyPlanRenderer with Form No. 4 specific features

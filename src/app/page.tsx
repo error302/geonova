@@ -177,7 +177,7 @@ function HeroSection() {
     >
       <div className="absolute inset-0">
         <Image
-          src="/landing/hero-rift-valley-topo.jpg"
+          src="/landing/hero-rift-valley-topo.svg"
           alt="METARDU Topographic Surveying Platform"
           fill
           priority

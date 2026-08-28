@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" font-family="Inter, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#050505"/>
+      <stop offset="100%" stop-color="#0a0a0f"/>
+    </linearGradient>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#1a1a1a" stroke-width="0.5" opacity="0.3"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <!-- Contour lines - Rift Valley escarpment style -->
+  <g fill="none" stroke="#D17B47" stroke-linecap="round" stroke-linejoin="round" opacity="0.12">
+    <path d="M -100 200 Q 300 180 600 220 T 1200 210 T 1700 240 T 2020 200" stroke-width="1.2"/>
+    <path d="M -100 280 Q 400 260 700 300 T 1300 290 T 1800 320 T 2020 280" stroke-width="1"/>
+    <path d="M -100 360 Q 500 340 800 380 T 1400 360 T 1900 400 T 2020 360" stroke-width="1.5"/>
+    <path d="M -100 440 Q 600 420 900 460 T 1500 440 T 2000 480" stroke-width="1"/>
+    <path d="M -100 520 Q 700 500 1000 540 T 1600 520 T 2020 560" stroke-width="1.2"/>
+    <path d="M -100 600 Q 400 580 800 620 T 1400 600 T 2020 640" stroke-width="1"/>
+    <path d="M -100 680 Q 500 660 900 700 T 1500 680 T 2020 720" stroke-width="1"/>
+    <path d="M -100 760 Q 600 740 1000 780 T 1700 760 T 2020 800" stroke-width="1.5"/>
+    <path d="M -100 840 Q 400 820 800 860 T 1400 840 T 2020 880" stroke-width="1"/>
+    <path d="M -100 920 Q 700 900 1100 940 T 1800 920 T 2020 960" stroke-width="1"/>
+  </g>
+  <g fill="none" stroke="#D17B47" stroke-linecap="round" opacity="0.07">
+    <path d="M -100 240 Q 350 220 650 260 T 1250 250 T 1750 280" stroke-width="0.7"/>
+    <path d="M -100 320 Q 450 300 750 340 T 1350 320 T 1850 360" stroke-width="0.7"/>
+    <path d="M -100 400 Q 550 380 850 420 T 1450 400 T 1950 440" stroke-width="0.7"/>
+    <path d="M -100 480 Q 650 460 950 500 T 1550 480 T 2020 520" stroke-width="0.7"/>
+    <path d="M -100 560 Q 450 540 850 580 T 1450 560 T 1950 600" stroke-width="0.7"/>
+    <path d="M -100 640 Q 550 620 950 660 T 1550 640 T 2020 680" stroke-width="0.7"/>
+    <path d="M -100 720 Q 650 700 1050 740 T 1750 720 T 2020 760" stroke-width="0.7"/>
+    <path d="M -100 800 Q 450 780 850 820 T 1450 800 T 1950 840" stroke-width="0.7"/>
+    <path d="M -100 880 Q 600 860 1050 900 T 1800 880" stroke-width="0.7"/>
+  </g>
+  <!-- Coordinate grid labels - survey style -->
+  <g font-family="'Courier New', monospace" font-size="9" fill="#666" opacity="0.4">
+    <text x="80" y="30" text-anchor="start">E 36°00' N 0°30' • ARC1960 / UTM 37S</text>
+    <text x="1840" y="30" text-anchor="end">E 37°15' N 0°30'</text>
+    <text x="80" y="1050" text-anchor="start">E 36°00' S 1°15'</text>
+    <text x="1840" y="1050" text-anchor="end">E 37°15' S 1°15' • Rift Valley • 1:50,000</text>
+  </g>
+  <!-- Central survey marker -->
+  <g transform="translate(960, 540)">
+    <circle cx="0" cy="0" r="120" fill="none" stroke="#D17B47" stroke-width="0.8" opacity="0.15"/>
+    <circle cx="0" cy="0" r="80" fill="none" stroke="#D17B47" stroke-width="0.6" opacity="0.10"/>
+    <circle cx="0" cy="0" r="40" fill="none" stroke="#D17B47" stroke-width="0.5" opacity="0.08"/>
+    <!-- Crosshair -->
+    <line x1="-18" y1="0" x2="-6" y2="0" stroke="#D17B47" stroke-width="1.2" opacity="0.6"/>
+    <line x1="6" y1="0" x2="18" y2="0" stroke="#D17B47" stroke-width="1.2" opacity="0.6"/>
+    <line x1="0" y1="-18" x2="0" y2="-6" stroke="#D17B47" stroke-width="1.2" opacity="0.6"/>
+    <line x1="0" y1="6" x2="0" y2="18" stroke="#D17B47" stroke-width="1.2" opacity="0.6"/>
+    <circle cx="0" cy="0" r="2.5" fill="#D17B47" opacity="0.8"/>
+    <!-- Beacon labels -->
+    <text x="14" y="-10" font-family="'Courier New', monospace" font-size="7" fill="#D17B47" opacity="0.5">BEACON A • 21037:432,600E 9,850N</text>
+  </g>
+  <!-- Bottom gradient fade for text legibility -->
+  <rect x="0" y="780" width="1920" height="300" fill="url(#fade)"/>
+  <defs>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#050505" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#050505" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+  <!-- Vignette -->
+  <rect width="1920" height="1080" fill="none" stroke="#D17B47" stroke-width="1" opacity="0.04" rx="2"/>
+</svg>
