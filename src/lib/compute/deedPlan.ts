@@ -68,10 +68,11 @@ export function computeArea(points: BoundaryPoint[]): number {
 
 /**
  * Compute closure check for a polygon defined by boundary points.
- * FIXED: Previous version rounded intermediate values (closingErrorE, closingErrorN, perimeter)
- * to 2 decimal places (1cm), which cascades rounding errors into the precision ratio.
- * Now computes at full precision and rounds ONLY at the display layer.
- * Source: Kenya Survey Regulations 1994 — cadastral minimum 1:5000
+ * NOTE: This is GEOMETRIC closure (does the coordinate polygon mathematically close?),
+ * not field traverse closure. The sum around closedPoints is tautologically ~0;
+ * real field residuals (bearings/distances vs coords) belong in the Traverse
+ * Adjustment Report. See lib/computations/traverseEngine for field data.
+ * Source: Kenya Survey Regulations 1994 — cadastral minimum 1:5000 applies to field traverse, not geometric.
  */
 export function computeClosureCheck(points: BoundaryPoint[]): ClosureCheck {
   if (points.length < 3) {
@@ -105,17 +106,20 @@ export function computeClosureCheck(points: BoundaryPoint[]): ClosureCheck {
   const closingErrorN = Math.abs(totalLatitude)
   const linearMisclosure = Math.sqrt(closingErrorE * closingErrorE + closingErrorN * closingErrorN)
 
-  const precisionRatio = linearMisclosure > 0
+  // Tautology guard: closedPoints sum is mathematically zero; >0.5mm indicates floating error or self-intersection, not field residuals
+  const precisionRatio = linearMisclosure > 0.0005
     ? perimeter / linearMisclosure
     : Infinity
 
-  const formattedRatio = `1 : ${Math.round(precisionRatio).toLocaleString()}`
+  const formattedRatio = !Number.isFinite(precisionRatio)
+    ? '1 : ∞ (Geometric — field residuals in Traverse Report)'
+    : `1 : ${Math.round(precisionRatio).toLocaleString()}`
 
   return {
     closingErrorE: Math.round(closingErrorE * 1000) / 1000, // 1mm precision for display
     closingErrorN: Math.round(closingErrorN * 1000) / 1000, // 1mm precision for display
     perimeter: Math.round(perimeter * 1000) / 1000, // 1mm precision for display
     precisionRatio: formattedRatio,
-    passes: precisionRatio >= 5000 // Kenya cadastral minimum 1:5000
+    passes: linearMisclosure < 0.001 || precisionRatio >= 5000
   }
 }

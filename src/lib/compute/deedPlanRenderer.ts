@@ -485,7 +485,7 @@ function buildRightPanel(
   s += `<text x="${le+100}" y="${y}" class="th">EASTING</text>\n`
   s += `<text x="${le+170}" y="${y}" class="th">NORTHING</text>\n`
   y += 9
-  s += hr(le, y, re); y += 2
+  s += hr(le, y, re); y += 6
   const maxCoordRows = 14
   const coordRows = pts.length > maxCoordRows ? pts.slice(0, maxCoordRows) : pts
   for (const p of coordRows) {
@@ -514,7 +514,7 @@ function buildRightPanel(
   s += `<text x="${le+95}" y="${y}" class="th">BEARING</text>\n`
   s += `<text x="${le+185}" y="${y}" class="th">DIST(m)</text>\n`
   y += 9
-  s += hr(le, y, re); y += 2
+  s += hr(le, y, re); y += 6
   const maxBearRows = 14
   const bearRows = legs.length > maxBearRows ? legs.slice(0, maxBearRows) : legs
   bearRows.forEach((l, i) => {
