@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
           is_control: s.isControl || s.is_control || false,
           control_order: s.controlOrder || s.control_order || '',
         }))
-      : points.map(p => ({
+      : points.map((p: any) => ({
           name: p.point_name,
           easting: Number(p.easting),
           northing: Number(p.northing),

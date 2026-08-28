@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
 
   // ── 2. Skip users with zero activity — an empty digest is just noise ──
   const activeUsers = totals.filter(
-    (t) =>
+    (t: any) =>
       t.projects_active > 0 ||
       t.projects_completed > 0 ||
       t.points_collected > 0 ||
@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
   }
 
   // ── 3. Highlight projects: top 3 active projects per user by new activity ──
-  const userIds = activeUsers.map((t) => t.user_id)
+  const userIds = activeUsers.map((t: any) => t.user_id)
   const { rows: projectRows } = await db.query<DigestProjectRow>(
     `SELECT
        pr.user_id::text AS user_id,

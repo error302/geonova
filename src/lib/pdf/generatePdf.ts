@@ -38,7 +38,7 @@ export async function generatePdf(options: PdfGenerationOptions): Promise<Buffer
 
     // Set HTML content
     await page.setContent(html, {
-      waitUntil: 'networkidle0',
+      waitUntil: 'load',
     })
 
     // Wait for fonts and images to load
