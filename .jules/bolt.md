@@ -1,0 +1,3 @@
+## 2025-01-20 - Math.min/Math.max Memory Optimization
+**Learning:** Using the spread operator (`...`) with `Math.min()` or `Math.max()` on large datasets (like point clouds, IDW samples, or large coordinate arrays) causes V8 "Maximum call stack size exceeded" errors and excessive memory allocation (especially when combining with `.map()` to extract a single axis like `x` or `y`). This is a critical performance and stability anti-pattern in large scale survey/spatial data processing.
+**Action:** When calculating min/max bounds on large spatial arrays, avoid `.map()` and spread operators. Use a single standard `for` loop, tracking min/max values manually to avoid call stack limits and prevent unnecessary intermediate array allocations.
