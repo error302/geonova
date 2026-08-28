@@ -198,7 +198,7 @@ export default function SurveyPlanViewer({ data, options, className = '', submis
       <div ref={containerRef} className="flex-1 overflow-auto bg-[#e8e8e8] p-4">
         {loading ? (
           <div className="flex flex-col items-center justify-center h-full text-[var(--text-secondary)] gap-3">
-            <div className="w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
+            <div role="status" aria-label="Loading" className="w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
             <div className="font-mono text-xs uppercase tracking-widest">
               {useFormNo4 ? 'Generating Form No. 4 plan...' : 'Generating plan...'}
             </div>
