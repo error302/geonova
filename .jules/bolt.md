@@ -1,0 +1,3 @@
+## 2024-08-18 - Math.min/Math.max with Spread Operator on Large Arrays
+**Learning:** Using the spread operator (`...`) with `Math.min()` or `Math.max()` on large arrays (like point cloud data) can cause V8 "Maximum call stack size exceeded" errors and excessive memory allocation due to argument limits and O(N) array mapping.
+**Action:** Always use `for` loops or `.reduce()` to calculate bounds on large datasets instead of mapping to intermediate arrays and spreading them.
