@@ -64,10 +64,19 @@ export function gridMethodVolume(
 
   // Compute the bounding box of both surfaces combined
   const allPoints = [...surface1, ...surface2]
-  const minE = Math.min(...allPoints.map(p => p.easting))
-  const maxE = Math.max(...allPoints.map(p => p.easting))
-  const minN = Math.min(...allPoints.map(p => p.northing))
-  const maxN = Math.max(...allPoints.map(p => p.northing))
+
+  // OPTIMIZATION (Bolt): Using a single-pass for loop instead of Math.min(...arr)
+  // to avoid 'Maximum call stack size exceeded' errors and excessive memory
+  // allocation on large point cloud datasets.
+  let minE = Infinity, maxE = -Infinity
+  let minN = Infinity, maxN = -Infinity
+  for (let i = 0; i < allPoints.length; i++) {
+    const p = allPoints[i]
+    if (p.easting < minE) minE = p.easting
+    if (p.easting > maxE) maxE = p.easting
+    if (p.northing < minN) minN = p.northing
+    if (p.northing > maxN) maxN = p.northing
+  }
 
   const width = maxE - minE
   const height = maxN - minN
@@ -276,12 +285,18 @@ export function tinToTinVolume(
 }
 
 function getBounds(points: Point3D[]) {
-  return {
-    minE: Math.min(...points.map(p => p.easting)),
-    maxE: Math.max(...points.map(p => p.easting)),
-    minN: Math.min(...points.map(p => p.northing)),
-    maxN: Math.max(...points.map(p => p.northing)),
+  // OPTIMIZATION (Bolt): Single-pass for loop replaces Math.min(...arr)
+  // to prevent call stack overflow and reduce memory overhead on large arrays.
+  let minE = Infinity, maxE = -Infinity
+  let minN = Infinity, maxN = -Infinity
+  for (let i = 0; i < points.length; i++) {
+    const p = points[i]
+    if (p.easting < minE) minE = p.easting
+    if (p.easting > maxE) maxE = p.easting
+    if (p.northing < minN) minN = p.northing
+    if (p.northing > maxN) maxN = p.northing
   }
+  return { minE, maxE, minN, maxN }
 }
 
 // ─── Stockpile Volume (single surface + base plane) ─────────────────────────
