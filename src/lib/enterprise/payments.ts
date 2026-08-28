@@ -24,9 +24,9 @@ export type StartSubscriptionResult =
   | { kind: 'mpesa'; provider: 'mpesa'; paymentId: string; checkoutRequestId: string }
 
 const paymentMethods: PaymentMethod[] = [
-  { id: 'card', type: 'card', name: 'Visa / Mastercard', enabled: true, countries: ['*'] },
-  { id: 'mpesa', type: 'mpesa', name: 'M-Pesa (STK Push)', enabled: true, countries: ['Kenya'] },
-  { id: 'paypal', type: 'paypal', name: 'PayPal', enabled: true, countries: ['*'] },
+  { id: 'mpesa', type: 'mpesa', name: 'M-Pesa (Buy Goods Till 3370347 / STK Push)', enabled: true, countries: ['Kenya'] },
+  { id: 'paypal', type: 'paypal', name: 'PayPal / International Cards', enabled: true, countries: ['*'] },
+  { id: 'card', type: 'card', name: 'Direct Card Checkout', enabled: true, countries: ['*'] },
 ]
 
 export function getPaymentMethods(country?: string): PaymentMethod[] {

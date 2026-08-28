@@ -56,6 +56,7 @@ export interface MapContextValue {
   showAnnotations: boolean
   projectSearch: string
   isMobile: boolean
+  showOsmBuildings: boolean
 
   // ── Scheme layer state ──
   schemeLoading: boolean
@@ -165,6 +166,7 @@ export interface MapContextValue {
   toggleBasemap: (mode: BasemapMode) => void
   toggleGPS: () => void
   toggleStakeout: () => void
+  toggleOsmBuildings: () => void
   deleteSelected: () => void
   undo: () => void
   redo: () => void

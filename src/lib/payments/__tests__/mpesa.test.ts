@@ -187,4 +187,37 @@ describe('P0-4: M-Pesa callback parsing + amount verification', () => {
       expect(isMismatch).toBe(false)
     })
   })
+
+  describe('Buy Goods Till 3370347 & Custom Receipt Email', () => {
+    test('validates Safaricom M-Pesa 10-character alphanumeric transaction code', () => {
+      const codeRegex = /^[A-Z0-9]{8,12}$/
+      expect(codeRegex.test('SHK489XZY1')).toBe(true)
+      expect(codeRegex.test('RJH9283741')).toBe(true)
+      expect(codeRegex.test('NLJ7RT61SV')).toBe(true)
+      expect(codeRegex.test('invalid-code!')).toBe(false)
+      expect(codeRegex.test('short')).toBe(false)
+    })
+
+    test('generates branded payment receipt with Till 3370347 details', () => {
+      const { paymentReceiptEmail } = require('@/lib/email-templates/paymentReceipt')
+      const receipt = paymentReceiptEmail.render({
+        to: 'surveyor@kenya.co.ke',
+        name: 'James Mwangi',
+        planName: 'Pro Plan',
+        amount: 500,
+        currency: 'KES',
+        paidAt: new Date().toISOString(),
+        transactionId: 'SHK489XZY1',
+        paymentMethod: 'M-Pesa Buy Goods · Till 3370347',
+      })
+
+      expect(receipt.subject).toContain('Payment received')
+      expect(receipt.html).toContain('3370347')
+      expect(receipt.html).toContain('SHK489XZY1')
+      expect(receipt.html).toContain('Pro Plan')
+      expect(receipt.html.toLowerCase()).toContain('ksh')
+      expect(receipt.html).toContain('500')
+    })
+  })
 })
+

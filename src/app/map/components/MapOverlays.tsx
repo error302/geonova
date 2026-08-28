@@ -115,14 +115,7 @@ export const MapOverlays = memo(function MapOverlays() {
         )
       })()}
 
-      {/* Project count - top center */}
-      {projectCount > 0 && (
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20">
-          <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_90%,transparent)] backdrop-blur-xl border border-[var(--border-color)]/[0.06] rounded-full px-3 py-1 shadow-lg">
-            <span className="text-[11px] text-[var(--accent)] font-semibold">{projectCount} project{projectCount > 1 ? 's' : ''}</span>
-          </div>
-        </div>
-      )}
+      {/* Project count moved to MapStatusBar to fix collision with MapCoordSearch */}
     </>
   )
 })

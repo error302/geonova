@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation'
 import {
   Search, Star, Clock, ChevronRight, Calculator,
   Compass, Ruler, MapPin, FileText, Mountain,
-  Building2, Navigation, Layers,
+  Building2, Navigation, Layers, Globe,
   X, Activity, Satellite, FileCheck, AlertTriangle, Building, TrendingUp,
 } from 'lucide-react'
 
@@ -47,6 +47,7 @@ const TOOLS: Tool[] = [
   { id: 'tacheometry', name: 'Tacheometry', description: 'Tacheometric computations', category: 'Calculations', href: '/tools/tacheometry', icon: Calculator, keywords: ['tacheometry', 'stadia', 'hair'] },
 
   // Coordinate Systems
+  { id: 'geodetic-reduction', name: 'Physical Geodetic Reduction', description: '3-step physical geodesy — ground to ellipsoid to UTM grid with CSF & (t-T)', category: 'Coordinates', href: '/tools/geodetic-reduction', icon: Globe, keywords: ['geodetic', 'reduction', 'scale', 'factor', 'csf', 'sea level', 'ellipsoid', 'arc-to-chord', 'convergence'] },
   { id: 'coordinates', name: 'Coordinate Transform', description: 'WGS84 ↔ Arc 1960 ↔ Cassini', category: 'Coordinates', href: '/tools/coordinates', icon: Layers, keywords: ['coordinate', 'transform', 'wgs84', 'arc 1960', 'cassini', 'utm', 'datum'] },
   { id: 'cassini-utm', name: 'Cassini ↔ UTM', description: 'Legacy Cassini-Soldner to UTM conversion', category: 'Coordinates', href: '/tools/cassini-utm', icon: Layers, keywords: ['cassini', 'soldner', 'utm', 'colonial', 'legacy'] },
   { id: 'gnss', name: 'GNSS Tools', description: 'GNSS baseline, observation log', category: 'Coordinates', href: '/tools/gnss', icon: Satellite, keywords: ['gnss', 'gps', 'baseline', 'rinex'] },

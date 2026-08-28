@@ -18,6 +18,7 @@ import {
   X, MapPin, User, Ruler, Navigation, Copy,
   Edit3, Trash2, ZoomIn, Building2,
   CheckCircle2, AlertTriangle, Clock,
+  FileText, FileSpreadsheet,
 } from 'lucide-react'
 
 export interface IdentifiedFeature {
@@ -51,6 +52,8 @@ interface IdentifyPanelProps {
   onEdit?: (feature: IdentifiedFeature) => void
   onDelete?: (feature: IdentifiedFeature) => void
   onZoomTo?: (feature: IdentifiedFeature) => void
+  onGenerateDeedPlan?: (feature: IdentifiedFeature) => void
+  onGenerateForm3?: (feature: IdentifiedFeature) => void
 }
 
 const STATUS_CONFIG: Record<string, { color: string; bg: string; icon: typeof CheckCircle2 }> = {
@@ -67,7 +70,7 @@ const TYPE_ICONS: Record<string, typeof MapPin> = {
   point: MapPin,
 }
 
-export function IdentifyPanel({ feature, onClose, onEdit, onDelete, onZoomTo }: IdentifyPanelProps) {
+export function IdentifyPanel({ feature, onClose, onEdit, onDelete, onZoomTo, onGenerateDeedPlan, onGenerateForm3 }: IdentifyPanelProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = useCallback(() => {
@@ -240,8 +243,34 @@ export function IdentifyPanel({ feature, onClose, onEdit, onDelete, onZoomTo }: 
         )}
       </div>
 
-      {/* Actions */}
-      <div className="p-3 border-t border-[var(--border-color)]/[0.06] flex items-center gap-1.5">
+      {/* Contextual Statutory Actions (Deed Plan / Form 3) for Parcels */}
+      {feature.type === 'parcel' && (onGenerateDeedPlan || onGenerateForm3) && (
+        <div className="px-3 pt-2 pb-0 flex items-center gap-1.5 border-t border-[var(--border-color)]/[0.06]">
+          {onGenerateDeedPlan && (
+            <button
+              onClick={() => onGenerateDeedPlan(feature)}
+              className="flex-1 flex items-center justify-center gap-1.5 h-8 rounded-lg bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[11px] font-semibold text-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)] transition-colors shadow-sm"
+              title="Generate Survey of Kenya Deed Plan"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              Deed Plan
+            </button>
+          )}
+          {onGenerateForm3 && (
+            <button
+              onClick={() => onGenerateForm3(feature)}
+              className="flex-1 flex items-center justify-center gap-1.5 h-8 rounded-lg bg-[var(--bg-card)]/[0.06] border border-[var(--border-color)]/[0.08] text-[11px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)]/[0.12] transition-colors"
+              title="Generate Form 3 Computation Sheet"
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5" />
+              Form 3
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Standard Actions */}
+      <div className="p-3 flex items-center gap-1.5">
         <button
           onClick={handleCopy}
           className="flex-1 flex items-center justify-center gap-1 h-8 rounded-lg bg-[var(--bg-card)]/[0.04] border border-[var(--border-color)]/[0.06] text-xs text-[var(--text-secondary)] hover:bg-[var(--bg-card)]/[0.08] transition-colors"

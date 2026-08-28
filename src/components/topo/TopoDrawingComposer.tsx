@@ -16,17 +16,18 @@ import {
   ChevronUp,
   Layers,
 } from 'lucide-react'
-import Drawing from 'dxf-writer'
 import {
   type SurveyPointWithCode,
   type FeatureCodeDef,
   type LayerMappingResult,
   getAllGroups,
   getFeatureCode,
-  mapPointsToLayers,
   aciToHex,
-  DXF_LINE_TYPE_PATTERNS,
 } from '@/lib/topo/featureCodes'
+import { buildTopoEntities, entitiesToDxfString } from '@/lib/drawing/topoEntities'
+import { runIDW } from '@/lib/topo/idwEngine'
+import { generateContours, type ContourLine } from '@/lib/topo/contourGenerator'
+import TopoEntityCanvas from '@/components/drawing/TopoEntityCanvas'
 import FeatureCodeBrowser from './FeatureCodeBrowser'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -133,243 +134,10 @@ function generateDemoPoints(): SurveyPointRow[] {
   return points
 }
 
-// ─── DXF generation ─────────────────────────────────────────────────────────
+// ─── DXF generation now lives in src/lib/drawing/topoEntities.ts so previews,
+// exports and PDF rendering all consume one shared entity model. ─────────────
 
-function generateTopoDXF(
-  points: SurveyPointWithCode[],
-  settings: DrawingSettings,
-  projectName = 'Topographic Survey',
-): string {
-  const drawing = new Drawing()
-  drawing.setUnits('Meters')
-
-  // Register line types
-  for (const [, pattern] of Object.entries(DXF_LINE_TYPE_PATTERNS)) {
-    if (pattern.elements.length > 0) {
-      drawing.addLineType(pattern.name, pattern.name, pattern.elements)
-    }
-  }
-
-  // Register layers from mapped results
-  const layerResults = mapPointsToLayers(points)
-  const registeredLayers = new Set<string>()
-
-  // Standard annotation layers
-  drawing.addLayer('ANNOTATIONS', 3, 'CONTINUOUS')
-  drawing.addLayer('SPOT_HEIGHTS', 3, 'CONTINUOUS')
-  drawing.addLayer('BORDER', 7, 'CONTINUOUS')
-  drawing.addLayer('NORTH_ARROW', 7, 'CONTINUOUS')
-  drawing.addLayer('SCALE_BAR', 7, 'CONTINUOUS')
-  drawing.addLayer('TITLE_BLOCK', 7, 'CONTINUOUS')
-  drawing.addLayer('LEGEND', 7, 'CONTINUOUS')
-  drawing.addLayer('GRID', 8, 'DASHED')
-
-  registeredLayers.add('ANNOTATIONS')
-  registeredLayers.add('SPOT_HEIGHTS')
-  registeredLayers.add('BORDER')
-  registeredLayers.add('NORTH_ARROW')
-  registeredLayers.add('SCALE_BAR')
-  registeredLayers.add('TITLE_BLOCK')
-  registeredLayers.add('LEGEND')
-  registeredLayers.add('GRID')
-
-  // Register each feature layer
-  for (const lr of layerResults) {
-    if (!registeredLayers.has(lr.layer)) {
-      drawing.addLayer(lr.layer, lr.color, lr.lineType)
-      registeredLayers.add(lr.layer)
-    }
-  }
-
-  if (points.length === 0) return drawing.toDxfString()
-
-  // ─── Compute extents ──────────────────────────────────────────────────
-  let minX = Infinity, maxX = -Infinity
-  let minY = Infinity, maxY = -Infinity
-  for (const p of points) {
-    if (p.easting < minX) minX = p.easting
-    if (p.easting > maxX) maxX = p.easting
-    if (p.northing < minY) minY = p.northing
-    if (p.northing > maxY) maxY = p.northing
-  }
-  const padding = Math.max(maxX - minX, maxY - minY) * 0.15
-  minX -= padding; maxX += padding
-  minY -= padding; maxY += padding
-
-  // ─── Grid ticks ───────────────────────────────────────────────────────
-  drawing.setActiveLayer('GRID')
-  const gridInterval = settings.gridTickInterval
-  const gridStartX = Math.floor(minX / gridInterval) * gridInterval
-  const gridStartY = Math.floor(minY / gridInterval) * gridInterval
-  for (let x = gridStartX; x <= maxX; x += gridInterval) {
-    drawing.drawLine(x, minY, x, minY + 2)
-    drawing.drawLine(x, maxY - 2, x, maxY)
-  }
-  for (let y = gridStartY; y <= maxY; y += gridInterval) {
-    drawing.drawLine(minX, y, minX + 2, y)
-    drawing.drawLine(maxX - 2, y, maxX, y)
-  }
-
-  // ─── Spot heights (cross marks + RL labels) ───────────────────────────
-  if (settings.includeSpotHeights) {
-    drawing.setActiveLayer('SPOT_HEIGHTS')
-    const spotHeightCode = getFeatureCode('SH')
-    for (const p of points) {
-      if (p.code.toUpperCase() === 'SH' || (spotHeightCode && p.code.toUpperCase() === 'SH')) {
-        const tick = (maxX - minX) * 0.005
-        // Cross symbol
-        drawing.drawLine(p.easting - tick, p.northing, p.easting + tick, p.northing)
-        drawing.drawLine(p.easting, p.northing - tick, p.easting, p.northing + tick)
-        // RL label
-        if (p.elevation !== undefined) {
-          drawing.drawText(
-            p.easting + tick * 1.5,
-            p.northing + tick * 0.5,
-            (maxX - minX) * 0.008,
-            0,
-            p.elevation.toFixed(3),
-          )
-        }
-      }
-    }
-  }
-
-  // ─── Feature-coded points & polylines ─────────────────────────────────
-  for (const lr of layerResults) {
-    drawing.setActiveLayer(lr.layer)
-
-    // Draw polylines (joined sequential lines)
-    for (const poly of lr.polylines) {
-      if (poly.length >= 2) {
-        for (let i = 0; i < poly.length - 1; i++) {
-          drawing.drawLine(poly[i].e, poly[i].n, poly[i + 1].e, poly[i + 1].n)
-        }
-      }
-    }
-
-    // Draw point markers
-    for (const pt of lr.points) {
-      drawing.drawPoint(pt.e, pt.n)
-    }
-  }
-
-  // ─── Labels (ANNOTATIONS layer) ───────────────────────────────────────
-  if (settings.includeLabels) {
-    drawing.setActiveLayer('ANNOTATIONS')
-    for (const lr of layerResults) {
-      for (const pt of lr.points) {
-        if (pt.label) {
-          drawing.drawText(
-            pt.e + (maxX - minX) * 0.006,
-            pt.n + (maxY - minY) * 0.006,
-            (maxX - minX) * 0.007,
-            0,
-            pt.label,
-          )
-        }
-      }
-    }
-  }
-
-  // ─── Border ───────────────────────────────────────────────────────────
-  drawing.setActiveLayer('BORDER')
-  drawing.drawLine(minX, minY, maxX, minY)
-  drawing.drawLine(maxX, minY, maxX, maxY)
-  drawing.drawLine(maxX, maxY, minX, maxY)
-  drawing.drawLine(minX, maxY, minX, minY)
-  // Inner border
-  const inset = (maxX - minX) * 0.01
-  drawing.drawLine(minX + inset, minY + inset, maxX - inset, minY + inset)
-  drawing.drawLine(maxX - inset, minY + inset, maxX - inset, maxY - inset)
-  drawing.drawLine(maxX - inset, maxY - inset, minX + inset, maxY - inset)
-  drawing.drawLine(minX + inset, maxY - inset, minX + inset, minY + inset)
-
-  // ─── North arrow ──────────────────────────────────────────────────────
-  drawing.setActiveLayer('NORTH_ARROW')
-  const arrowX = maxX - (maxX - minX) * 0.06
-  const arrowY = maxY - (maxY - minY) * 0.06
-  const arrowLen = (maxX - minX) * 0.04
-  drawing.drawLine(arrowX, arrowY - arrowLen, arrowX, arrowY + arrowLen)
-  drawing.drawLine(arrowX, arrowY + arrowLen, arrowX - arrowLen * 0.2, arrowY + arrowLen * 0.6)
-  drawing.drawLine(arrowX, arrowY + arrowLen, arrowX + arrowLen * 0.2, arrowY + arrowLen * 0.6)
-  drawing.drawText(arrowX, arrowY + arrowLen * 1.3, (maxX - minX) * 0.012, 0, 'N')
-
-  // ─── Scale bar ────────────────────────────────────────────────────────
-  drawing.setActiveLayer('SCALE_BAR')
-  const sbX = minX + inset
-  const sbY = minY - inset * 2
-  const scaleBarLen = (maxX - minX) * 0.15
-  drawing.drawLine(sbX, sbY, sbX + scaleBarLen, sbY)
-  drawing.drawLine(sbX, sbY - inset * 0.3, sbX, sbY + inset * 0.3)
-  drawing.drawLine(sbX + scaleBarLen, sbY - inset * 0.3, sbX + scaleBarLen, sbY + inset * 0.3)
-  drawing.drawText(
-    sbX + scaleBarLen / 2,
-    sbY - inset * 0.8,
-    (maxX - minX) * 0.008,
-    0,
-    `Scale 1:${settings.scale}`,
-  )
-
-  // ─── Title block ──────────────────────────────────────────────────────
-  if (settings.includeTitleBlock) {
-    drawing.setActiveLayer('TITLE_BLOCK')
-    const tbX = minX + inset * 2
-    const tbY = minY - inset * 5
-    const titleSize = (maxX - minX) * 0.012
-    const subSize = (maxX - minX) * 0.008
-
-    drawing.drawText(tbX, tbY, titleSize, 0, 'REPUBLIC OF KENYA — TOPOGRAPHIC SURVEY')
-    drawing.drawText(tbX, tbY - titleSize * 2, subSize, 0, `Project: ${projectName}`)
-    drawing.drawText(tbX, tbY - titleSize * 3.5, subSize, 0, `Scale: 1:${settings.scale}`)
-    drawing.drawText(tbX, tbY - titleSize * 5, subSize, 0, `Total Points: ${points.length}  |  Layers: ${layerResults.length}`)
-    drawing.drawText(
-      tbX,
-      tbY - titleSize * 6.5,
-      subSize * 0.85,
-      0,
-      `Date: ${new Date().toISOString().split('T')[0]}  |  Generated by METARDU`,
-    )
-    drawing.drawText(
-      tbX,
-      tbY - titleSize * 8,
-      subSize * 0.85,
-      0,
-      `Coordinate System: Arc 1960 / UTM Zone ${minX > 500000 ? '37S' : '36N'}`,
-    )
-  }
-
-  // ─── Legend ───────────────────────────────────────────────────────────
-  if (settings.includeLegend && layerResults.length > 0) {
-    drawing.setActiveLayer('LEGEND')
-    const lgX = maxX - (maxX - minX) * 0.2
-    const lgY = maxY - inset * 2
-    const rowH = (maxY - minY) * 0.025
-    const textH = (maxX - minX) * 0.007
-
-    drawing.drawText(lgX, lgY, textH * 1.4, 0, 'LEGEND')
-
-    let row = 0
-    // Group legend entries by first code per layer
-    for (const lr of layerResults) {
-      const y = lgY - rowH * (row + 1)
-      if (y < minY + inset * 5) break // Leave room below legend
-      // Color swatch (small line)
-      drawing.drawLine(lgX, y, lgX + (maxX - minX) * 0.015, y)
-      // Layer name
-      drawing.drawText(
-        lgX + (maxX - minX) * 0.02,
-        y,
-        textH,
-        0,
-        `${lr.layer} (${lr.points.length} pts)`,
-      )
-      row++
-    }
-  }
-
-  return drawing.toDxfString()
-}
-
+// __DEL1__
 // ─── Download helper ────────────────────────────────────────────────────────
 
 function downloadDXF(dxfString: string, filename: string) {
@@ -450,86 +218,6 @@ function parseCSV(text: string): SurveyPointRow[] {
   return points
 }
 
-// ─── SVG preview ────────────────────────────────────────────────────────────
-
-function SvgPreview({ points }: { points: SurveyPointRow[] }) {
-  if (points.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-full text-sm text-zinc-500">
-        Import points to see preview
-      </div>
-    )
-  }
-
-  const w = 360
-  const h = 220
-  const margin = 16
-
-  let minX = Infinity, maxX = -Infinity
-  let minY = Infinity, maxY = -Infinity
-  for (const p of points) {
-    if (p.easting < minX) minX = p.easting
-    if (p.easting > maxX) maxX = p.easting
-    if (p.northing < minY) minY = p.northing
-    if (p.northing > maxY) maxY = p.northing
-  }
-  const worldW = maxX - minX || 1
-  const worldH = maxY - minY || 1
-
-  const toSvgX = (e: number) => margin + ((e - minX) / worldW) * (w - 2 * margin)
-  const toSvgY = (n: number) => margin + ((maxY - n) / worldH) * (h - 2 * margin)
-
-  // Get unique codes and assign colors
-  const codeColorMap = new Map<string, string>()
-  const palette = [
-    '#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#8b5cf6',
-    '#06b6d4', '#f97316', '#ec4899', '#14b8a6', '#6366f1',
-    '#84cc16', '#e879f9', '#facc15', '#fb923c', '#a78bfa',
-  ]
-  let colorIdx = 0
-  for (const p of points) {
-    if (!codeColorMap.has(p.code)) {
-      codeColorMap.set(p.code, palette[colorIdx % palette.length])
-      colorIdx++
-    }
-  }
-
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-full bg-zinc-950 rounded" style={{ '--bg-tertiary': '#09090b' } as React.CSSProperties}>
-      {/* Grid lines */}
-      <g stroke="#27272a" strokeWidth="0.5">
-        {Array.from({ length: 5 }).map((_, i) => {
-          const x = margin + (i / 4) * (w - 2 * margin)
-          return <line key={`gv${i}`} x1={x} y1={margin} x2={x} y2={h - margin} />
-        })}
-        {Array.from({ length: 4 }).map((_, i) => {
-          const y = margin + (i / 3) * (h - 2 * margin)
-          return <line key={`gh${i}`} x1={margin} y1={y} x2={w - margin} y2={y} />
-        })}
-      </g>
-      {/* Points */}
-      {points.map(p => {
-        const sx = toSvgX(p.easting)
-        const sy = toSvgY(p.northing)
-        const color = codeColorMap.get(p.code) || '#666'
-        return (
-          <circle key={p.id} cx={sx} cy={sy} r={2.5} fill={color} opacity={0.85}>
-            <title>{`${p.pointNumber ?? ''} ${p.code} (${p.easting.toFixed(1)}, ${p.northing.toFixed(1)})`}</title>
-          </circle>
-        )
-      })}
-      {/* Legend (compact) */}
-      <g transform={`translate(${w - margin - 80}, ${margin + 4})`}>
-        {Array.from(codeColorMap.entries()).map(([code, color], idx) => (
-          <g key={code} transform={`translate(0, ${idx * 11})`}>
-            <circle cx={4} cy={4} r={3} fill={color} />
-            <text x={10} y={7} fill="#a1a1aa" fontSize={8} fontFamily="monospace">{code}</text>
-          </g>
-        ))}
-      </g>
-    </svg>
-  )
-}
 
 // ─── Manual add row ─────────────────────────────────────────────────────────
 
@@ -619,10 +307,49 @@ export default function TopoDrawingComposer({ projectId }: TopoDrawingComposerPr
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // ─── Derived state ─────────────────────────────────────────────────────
-  const layerResults = useMemo(
-    () => mapPointsToLayers(points.map(({ id: _id, description: _description, ...rest }) => rest)),
+  // Contours: generated from any points that carry elevation (needs >= 4)
+  const contours = useMemo<ContourLine[]>(() => {
+    const zPts = points.filter(p => p.elevation !== undefined)
+    if (zPts.length < 4) return []
+    try {
+      const grid = runIDW(
+        zPts.map(p => ({ x: p.easting, y: p.northing, z: p.elevation as number })),
+        { resolution: Math.max(0.5, Math.min(5, Math.max(
+          Math.max(...zPts.map(p => p.easting)) - Math.min(...zPts.map(p => p.easting)),
+          Math.max(...zPts.map(p => p.northing)) - Math.min(...zPts.map(p => p.northing)),
+        ) / 80)) },
+      )
+      return generateContours(
+        {
+          grid: grid.grid,
+          gridMinE: grid.minX,
+          gridMinN: grid.minY,
+          gridResolution: grid.cellSize,
+          cols: grid.cols,
+          rows: grid.rows,
+        },
+        { interval: settings.contourInterval },
+      )
+    } catch {
+      return []
+    }
+  }, [points, settings.contourInterval])
+
+  const surveyPoints = useMemo(
+    () => points.map(({ id: _id, description: _description, ...rest }) => rest),
     [points],
   )
+
+  // One shared entity model → preview AND DXF stay identical
+  const drawing = useMemo(
+    () => buildTopoEntities(surveyPoints, settings, {
+      projectName: projectId ?? 'Topographic Survey',
+      contours,
+    }),
+    [surveyPoints, settings, projectId, contours],
+  )
+
+  const layerResults = drawing.layerResults
 
   const stats = useMemo(
     () => computeStats(points, layerResults),
@@ -713,11 +440,10 @@ export default function TopoDrawingComposer({ projectId }: TopoDrawingComposerPr
 
   const handleExportDXF = useCallback(() => {
     if (points.length === 0) return
-    const surveyPoints: SurveyPointWithCode[] = points.map(({ id: _id, description: _description, ...rest }) => rest)
-    const dxf = generateTopoDXF(surveyPoints, settings, projectId ?? 'Topographic Survey')
+    const dxf = entitiesToDxfString(drawing.entities, drawing.layers)
     const date = new Date().toISOString().split('T')[0]
     downloadDXF(dxf, `topo_${projectId ?? 'survey'}_${date}.dxf`)
-  }, [points, settings, projectId])
+  }, [points, drawing, projectId])
 
   // ─── Render ────────────────────────────────────────────────────────────
 
@@ -921,11 +647,32 @@ export default function TopoDrawingComposer({ projectId }: TopoDrawingComposerPr
             </div>
           )}
 
-          {/* TAB: Preview */}
+          {/* TAB: Preview — identical to DXF export (shared entity model) */}
           {activeTab === 'preview' && (
             <div className="border border-zinc-700 rounded-lg bg-zinc-900 overflow-hidden">
-              <div className="p-4 h-[400px]">
-                <SvgPreview points={points} />
+              <div className="px-4 pt-3 pb-2 flex items-center justify-between border-b border-zinc-800">
+                <span className="text-xs text-zinc-400">
+                  Drawing preview — matches DXF export
+                </span>
+                <div className="flex items-center gap-2 text-[10px] text-zinc-500">
+                  <span>1:{settings.scale}</span>
+                  <span>·</span>
+                  <span>{settings.contourInterval} m contours</span>
+                  {contours.length > 0 && (
+                    <>
+                      <span>·</span>
+                      <span>{contours.length} contour lines</span>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="p-3">
+                <TopoEntityCanvas
+                  entities={drawing.entities}
+                  layers={drawing.layers}
+                  extents={drawing.extents}
+                  height={480}
+                />
               </div>
             </div>
           )}

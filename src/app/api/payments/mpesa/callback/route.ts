@@ -5,6 +5,8 @@ import { z } from 'zod'
 import db from '@/lib/db'
 import { getMpesaService } from '@/lib/payments/mpesa'
 import { getPlan } from '@/lib/subscription/catalog'
+import { sendEmail } from '@/lib/email'
+import { paymentReceiptEmail } from '@/lib/email-templates/paymentReceipt'
 import { logger } from '@/lib/logger'
 
 interface PaymentIntentRow {
@@ -234,6 +236,38 @@ export async function POST(request: NextRequest) {
        VALUES ($1, $2, 'active', 'mpesa', 'KES', $3, $4)`,
       [paymentRow.user_id, planId, periodStart, periodEnd]
     )
+  }
+
+  // 11. Send automated branded HTML email receipt
+  try {
+    const userRes = await db.query<{ email: string; name?: string }>(
+      'SELECT email, name FROM users WHERE id = $1',
+      [paymentRow.user_id]
+    )
+    const user = userRes.rows[0]
+    if (user?.email) {
+      const plan = getPlan(planId)
+      const planName = plan?.name ? `${plan.name} Plan` : 'Pro Plan'
+      const receipt = paymentReceiptEmail.render({
+        to: user.email,
+        name: user.name || 'Surveyor',
+        planName,
+        amount: paidAmount || paymentRow.amount,
+        currency: 'KES',
+        paidAt: periodStart,
+        transactionId: receiptNumber || checkoutRequestId,
+        paymentMethod: 'M-Pesa STK Push (Till 3370347)',
+      })
+
+      await sendEmail({
+        to: user.email,
+        subject: receipt.subject,
+        html: receipt.html,
+        text: receipt.text,
+      })
+    }
+  } catch (emailErr) {
+    logger.warn('[mpesa-callback] Failed to send email receipt:', { error: emailErr })
   }
 
   return NextResponse.json({ ok: true })

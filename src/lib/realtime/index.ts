@@ -29,22 +29,69 @@ class YjsMeshNetwork {
     const doc = new Y.Doc()
     this.docs.set(projectId, doc)
 
-    // Offline persistence
-    const persistence = new IndexeddbPersistence(`metardu-sync-${projectId}`, doc)
-    this.persistences.set(projectId, persistence)
+    // Offline persistence via IndexedDB
+    if (typeof window !== 'undefined' && 'indexedDB' in window) {
+      try {
+        const persistence = new IndexeddbPersistence(`metardu-sync-${projectId}`, doc)
+        this.persistences.set(projectId, persistence)
+      } catch {
+        // Fallback gracefully if IndexedDB is disabled/blocked in iframe
+      }
+    }
 
-    // WebRTC Provider for P2P Local LAN sync (using public/local signaling)
-    const provider = new WebrtcProvider(`metardu-mesh-${projectId}`, doc, {
-      signaling: ['wss://signaling.yjs.dev', 'ws://localhost:4444'], // Add local fallback if deployed offline
-      password: 'metardu-secure-field'
-    })
-    this.providers.set(projectId, provider)
+    // WebRTC Provider for P2P Local LAN sync (using public & local signaling)
+    if (typeof window !== 'undefined') {
+      try {
+        const signalingServers = ['wss://signaling.yjs.dev', 'ws://localhost:4444']
+        const customSignaling = process.env.NEXT_PUBLIC_COLLAB_SIGNALING_URL
+        if (customSignaling) {
+          signalingServers.unshift(customSignaling)
+        }
+
+        const provider = new WebrtcProvider(`metardu-mesh-${projectId}`, doc, {
+          signaling: signalingServers,
+          password: 'metardu-secure-field',
+        })
+        this.providers.set(projectId, provider)
+      } catch {
+        // Fallback gracefully if WebRTC is blocked
+      }
+    }
 
     return doc
   }
 
   public getProvider(projectId: string): WebrtcProvider | undefined {
     return this.providers.get(projectId)
+  }
+
+  /**
+   * Broadcasts a newly captured survey point across all active mesh peers in real time
+   */
+  public broadcastPoint(projectId: string, point: { id: string; easting: number; northing: number; elevation?: number; code?: string; timestamp?: number }): void {
+    const doc = this.getDoc(projectId)
+    const yPoints = doc.getMap<unknown>('live_points')
+    doc.transact(() => {
+      yPoints.set(point.id, {
+        ...point,
+        timestamp: point.timestamp || Date.now(),
+      })
+    })
+  }
+
+  /**
+   * Retrieves all live synchronized points from the project's CRDT document
+   */
+  public getLivePoints(projectId: string): Array<{ id: string; easting: number; northing: number; elevation?: number; code?: string }> {
+    const doc = this.getDoc(projectId)
+    const yPoints = doc.getMap<unknown>('live_points')
+    const results: Array<{ id: string; easting: number; northing: number; elevation?: number; code?: string }> = []
+    yPoints.forEach((val) => {
+      if (val && typeof val === 'object') {
+        results.push(val as any)
+      }
+    })
+    return results
   }
 
   public async unsubscribe(projectId: string): Promise<void> {
@@ -87,17 +134,19 @@ export function subscribeToProjectChanges(
     onPresenceChange?: (users: PresenceUser[]) => void
   }
 ): { unsubscribe: () => Promise<void> } {
-  // This is a compatibility layer for the old HTTP polling interface.
-  // In the new architecture, Zustand automatically syncs with Yjs via the sync layer.
-  // We just handle presence here.
-
-  const provider = realtimeService.getProvider(projectId)
-  if (!provider) {
-    // Force init
-    realtimeService.getDoc(projectId)
-  }
-  
+  const doc = realtimeService.getDoc(projectId)
   const activeProvider = realtimeService.getProvider(projectId)
+
+  // Listen to points changes
+  if (callbacks.onPointsChange) {
+    const yPoints = doc.getMap('live_points')
+    const handlePointsChange = () => {
+      const pts = realtimeService.getLivePoints(projectId)
+      callbacks.onPointsChange?.(pts)
+    }
+    yPoints.observe(handlePointsChange)
+  }
+
   if (activeProvider && callbacks.onPresenceChange) {
     const awareness = activeProvider.awareness
 
@@ -105,31 +154,30 @@ export function subscribeToProjectChanges(
     awareness.setLocalStateField('user', {
       userId: user.id,
       userName: user.name || user.email || 'Unknown Surveyor',
-      color: '#' + Math.floor(Math.random()*16777215).toString(16),
-      onlineAt: new Date().toISOString()
+      color: '#' + Math.floor(Math.random() * 16777215).toString(16),
+      onlineAt: new Date().toISOString(),
     })
 
     const handleAwarenessChange = () => {
       const states = Array.from(awareness.getStates().values())
       const users = states
         .filter((state: { user?: { userId?: string } }) => state.user && state.user.userId !== user.id)
-        .map(state => state.user as PresenceUser)
+        .map((state) => state.user as PresenceUser)
       callbacks.onPresenceChange?.(users)
     }
 
     awareness.on('change', handleAwarenessChange)
-    
-    // Initial emit
     handleAwarenessChange()
 
     return {
       unsubscribe: async () => {
         awareness.off('change', handleAwarenessChange)
-      }
+      },
     }
   }
 
   return {
-    unsubscribe: async () => {}
+    unsubscribe: async () => {},
   }
 }
+

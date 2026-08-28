@@ -27,7 +27,7 @@ import {
   MapPin, PenTool, Hexagon, Circle,
   Undo2, Redo2, Trash2, Edit3,
   Navigation, Search,
-  Ruler, Satellite, Globe, Mountain, Moon,
+  Ruler, Satellite, Globe, Mountain, Moon, Building2,
   FileOutput, Printer,
   Eye, MapPinned,
   Scissors, GitMerge, RefreshCw, Magnet, Info,
@@ -38,6 +38,8 @@ import { CogoInfoPanel } from '@/app/map/components/CogoInfoPanel'
 import { CogoToolsPanel } from '@/app/map/components/CogoToolsPanel'
 import { BookmarkPanel } from '@/app/map/components/BookmarkPanel'
 import { GpsTrackPanel } from '@/app/map/components/GpsTrackPanel'
+import { InstantClosureFeedback } from '@/app/map/components/InstantClosureFeedback'
+import { SurveyWorkflowBadge } from '@/app/map/components/SurveyWorkflowBadge'
 import { StakeoutPanel } from '@/components/map/StakeoutPanel'
 import { TopologyGuardrail } from '@/components/survey/TopologyGuardrail'
 import { useSearchParams } from 'next/navigation'
@@ -444,6 +446,8 @@ export const ComputeContent = memo(function ComputeContent() {
       <SectionLabel hint="T">Traverse Readout</SectionLabel>
       <CogoInfoPanel />
 
+      <InstantClosureFeedback />
+
       <SectionLabel hint="P">Traverse → Parcel</SectionLabel>
       {hasTraverse && !traverseParcelPreviewActive ? (
         <ActionBtn label="Create Parcel from Traverse" icon={<Hexagon className="w-4 h-4" />} isActive={false} onClick={createParcelFromTraverse} shortcut="P" />
@@ -509,6 +513,7 @@ export const LayersContent = memo(function LayersContent() {
     toggleSchemeParcelVisibility, toggleSchemeBlockVisibility, toggleSchemeBeaconVisibility,
     schemeLoaded, schemeParcelCount, schemeBlockCount, schemeBeaconCount,
     zoomToScheme, removeScheme, loadSchemeData, schemeLoading,
+    showOsmBuildings, toggleOsmBuildings,
   } = useMapContext()
 
   return (
@@ -520,6 +525,14 @@ export const LayersContent = memo(function LayersContent() {
         <ToolBtn label="Dark"      icon={<Moon className="w-5 h-5" />}      isActive={basemap === 'dark'}      onClick={() => toggleBasemap('dark')} />
         <ToolBtn label="Terrain"   icon={<Mountain className="w-5 h-5" />}  isActive={basemap === 'terrain'}   onClick={() => toggleBasemap('terrain')} />
       </div>
+
+      <SectionLabel>3D Footprints</SectionLabel>
+      <ActionBtn
+        label={showOsmBuildings ? 'OSM Buildings (Active)' : 'OSM Buildings'}
+        icon={<Building2 className="w-4 h-4" />}
+        isActive={showOsmBuildings}
+        onClick={toggleOsmBuildings}
+      />
 
       <SectionLabel>Basemap Opacity</SectionLabel>
       <div className="flex items-center gap-2 px-1">
@@ -604,29 +617,6 @@ const MetarduWatermark = memo(function MetarduWatermark() {
 })
 
 // ---------------------------------------------------------------------------
-// Workflow badge — top-center of map
-// ---------------------------------------------------------------------------
-
-const SurveyWorkflowBadge = memo(function SurveyWorkflowBadge({ openPanels }: { openPanels: Set<DockCategory> }) {
-  if (openPanels.size === 0) return null
-  const cats = CATEGORIES.filter(c => openPanels.has(c.id))
-  return (
-    <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 pointer-events-none flex items-center gap-2">
-      {cats.map(c => (
-        <div
-          key={c.id}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full backdrop-blur-xl border border-white/[0.08] bg-[color-mix(in_srgb,var(--bg-secondary)_70%,transparent)]"
-          style={{ boxShadow: `0 0 12px ${c.accent}20` }}
-        >
-          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: c.accent }} />
-          <span className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[var(--text-secondary)]">{c.label}</span>
-        </div>
-      ))}
-    </div>
-  )
-})
-
-// ---------------------------------------------------------------------------
 // Main: MapToolDock
 // ---------------------------------------------------------------------------
 
@@ -698,7 +688,7 @@ export const MapToolDock = memo(function MapToolDock() {
   if (isMobile) {
     return (
       <>
-        <SurveyWorkflowBadge openPanels={openPanels} />
+        <SurveyWorkflowBadge activeItems={CATEGORIES.filter(c => openPanels.has(c.id))} />
         <MetarduWatermark />
 
         {/* Active panel — bottom sheet, only one at a time on mobile */}
@@ -759,7 +749,7 @@ export const MapToolDock = memo(function MapToolDock() {
   // ── Desktop ──
   return (
     <>
-      <SurveyWorkflowBadge openPanels={openPanels} />
+      <SurveyWorkflowBadge activeItems={CATEGORIES.filter(c => openPanels.has(c.id))} />
       <MetarduWatermark />
 
       {/* Toggle hamburger */}

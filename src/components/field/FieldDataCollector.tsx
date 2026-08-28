@@ -350,36 +350,129 @@ function StakeoutPanel({
   sessionState: FieldSessionState
   onClose: () => void
 }) {
+  const [currentE, setCurrentE] = useState<string>('')
+  const [currentN, setCurrentN] = useState<string>('')
+  const [voiceEnabled, setVoiceEnabled] = useState<boolean>(true)
+  const [lastSpoken, setLastSpoken] = useState<string>('')
+
+  // Compute live distance and bearing to target
+  const curE = parseFloat(currentE) || 0
+  const curN = parseFloat(currentN) || 0
+  const hasCurrent = !isNaN(curE) && !isNaN(curN) && curE !== 0 && curN !== 0
+
+  const deltaE = target.e - curE
+  const deltaN = target.n - curN
+  const distToTarget = Math.hypot(deltaE, deltaN)
+  let bearingToTarget = (Math.atan2(deltaE, deltaN) * 180) / Math.PI
+  if (bearingToTarget < 0) bearingToTarget += 360
+
+  const speakGuidance = useCallback((msg: string) => {
+    if (!voiceEnabled || typeof window === 'undefined' || !('speechSynthesis' in window)) return
+    window.speechSynthesis.cancel() // Stop previous speech
+    const utterance = new SpeechSynthesisUtterance(msg)
+    utterance.rate = 1.05
+    utterance.pitch = 1.0
+    window.speechSynthesis.speak(utterance)
+    setLastSpoken(msg)
+  }, [voiceEnabled])
+
+  const triggerVoiceGuidance = () => {
+    if (!hasCurrent) {
+      speakGuidance('Enter current rover coordinates or connect GNSS receiver.')
+      return
+    }
+    if (distToTarget <= 0.02) {
+      speakGuidance('On target. Within 2 centimeters. Plumb and mark beacon.')
+    } else if (distToTarget < 1.0) {
+      speakGuidance(`Fine stakeout. Move ${(distToTarget * 100).toFixed(0)} centimeters at bearing ${bearingToTarget.toFixed(0)} degrees.`)
+    } else {
+      speakGuidance(`Move ${distToTarget.toFixed(1)} meters, bearing ${bearingToTarget.toFixed(0)} degrees.`)
+    }
+  }
+
   return (
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-[var(--text-primary)] flex items-center gap-2">
-          <Target className="w-5 h-5 text-[var(--accent)]" /> Stakeout Mode
+          <Target className="w-5 h-5 text-[var(--accent)]" /> Voice-Guided Stakeout
         </h3>
-        <button onClick={onClose} className="p-1 text-[var(--text-muted)] hover:text-[var(--error)]">
+        <button onClick={onClose} className="p-1 text-[var(--text-muted)] hover:text-[var(--error)]" aria-label="Close stakeout">
           <X className="w-5 h-5" />
         </button>
       </div>
 
       <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-4 space-y-2">
-        <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider">Target Point</div>
-        <div className="font-mono text-sm text-[var(--text-primary)]">
-          E: {target.e.toFixed(3)}
-        </div>
-        <div className="font-mono text-sm text-[var(--text-primary)]">
-          N: {target.n.toFixed(3)}
-        </div>
-        <div className="font-mono text-sm text-[var(--text-primary)]">
-          Z: {target.z.toFixed(3)}
+        <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider">Target Beacon Coordinates</div>
+        <div className="grid grid-cols-3 gap-2 font-mono text-sm">
+          <div><span className="text-[var(--text-muted)] text-xs">E:</span> {target.e.toFixed(3)}</div>
+          <div><span className="text-[var(--text-muted)] text-xs">N:</span> {target.n.toFixed(3)}</div>
+          <div><span className="text-[var(--text-muted)] text-xs">Z:</span> {target.z.toFixed(3)}</div>
         </div>
       </div>
 
-      <p className="text-xs text-[var(--text-muted)]">
-        Tip: Stakeout uses the StakeoutRadar component. Connect a GNSS rover and the radar
-        will guide you to the target with audio cues.
-      </p>
+      {/* Rover Position Simulation / Live Readout */}
+      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="text-xs text-[var(--text-muted)] uppercase tracking-wider">Current Rover Position</div>
+          <button
+            onClick={() => setVoiceEnabled(!voiceEnabled)}
+            className={`text-xs px-2 py-1 rounded font-medium border ${
+              voiceEnabled ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)] border-[var(--accent)]' : 'bg-transparent text-[var(--text-muted)] border-[var(--border-color)]'
+            }`}
+          >
+            {voiceEnabled ? '🔊 Voice On' : '🔇 Voice Muted'}
+          </button>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            type="number"
+            className="input font-mono text-xs px-2 py-1.5"
+            placeholder="Rover Easting (m)"
+            value={currentE}
+            onChange={(e) => setCurrentE(e.target.value)}
+          />
+          <input
+            type="number"
+            className="input font-mono text-xs px-2 py-1.5"
+            placeholder="Rover Northing (m)"
+            value={currentN}
+            onChange={(e) => setCurrentN(e.target.value)}
+          />
+        </div>
 
-      {/* TODO: Embed <StakeoutRadar> here once we have the latest GNSS position */}
+        {hasCurrent && (
+          <div className="p-3 bg-[var(--bg-secondary)] rounded-md border border-[var(--border-color)] space-y-1">
+            <div className="flex justify-between items-center text-sm font-semibold">
+              <span>Distance to Target:</span>
+              <span className={`font-mono text-base ${distToTarget <= 0.02 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
+                {distToTarget.toFixed(3)} m
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-xs text-[var(--text-secondary)]">
+              <span>Direction (Azimuth):</span>
+              <span className="font-mono">{bearingToTarget.toFixed(1)}°</span>
+            </div>
+            {distToTarget <= 0.02 && (
+              <div className="mt-2 text-center text-xs font-bold text-[var(--success)] bg-[color-mix(in_srgb,var(--success)_15%,transparent)] py-1 rounded">
+                ✓ ON TARGET (Within 2cm tolerance)
+              </div>
+            )}
+          </div>
+        )}
+
+        <button
+          onClick={triggerVoiceGuidance}
+          className="w-full py-2 bg-[var(--accent)] text-[var(--bg-primary)] font-bold text-xs rounded hover:bg-[var(--accent-dim)] transition-colors flex items-center justify-center gap-2"
+        >
+          <span>🗣️ Speak Navigation Guidance</span>
+        </button>
+
+        {lastSpoken && (
+          <p className="text-[11px] text-[var(--text-muted)] italic text-center">
+            "{lastSpoken}"
+          </p>
+        )}
+      </div>
     </div>
   )
 }

@@ -263,3 +263,177 @@ export function reverseCurveApprox(input: {
 
   return { ...input, commonTangent, totalLength, isApprox }
 }
+
+// ─── CLOTHOID TRANSITION SPIRALS (EULER SPIRALS) ────────────────────────────
+
+export interface ClothoidSpiralElements {
+  radius: number // Circular curve radius R (metres)
+  spiralLength: number // Spiral transition length Ls (metres)
+  spiralParameter: number // Clothoid parameter A = sqrt(R * Ls)
+  spiralAngleRadians: number // θs = Ls / (2R)
+  spiralAngleDegrees: number
+  spiralAngleDMS: string
+  shiftP: number // p ≈ Ls^2 / (24R) - Ls^4 / (2688R^3)
+  tangentShiftK: number // k ≈ Ls / 2 - Ls^3 / (240R^2)
+  tangentX: number // X coordinate along tangent at SC
+  tangentY: number // Y coordinate (offset) at SC
+  longTangent: number // Long tangent Ts1 = X - Y / tan(θs)
+  shortTangent: number // Short tangent Ts2 = Y / sin(θs)
+  totalTangentLength?: number // Ts = (R + p) * tan(Δ / 2) + k
+}
+
+/**
+ * Computes Clothoid Transition Spiral elements per RDM 1.3 / AASHTO standards.
+ * Curvature increases linearly from 0 at TS (Tangent-Spiral) to 1/R at SC (Spiral-Curve).
+ */
+export function computeClothoidSpiral(
+  radius: number,
+  spiralLength: number,
+  totalDeflectionDeg?: number
+): ClothoidSpiralElements {
+  const R = radius
+  const Ls = spiralLength
+
+  // Parameter A = sqrt(R * Ls)
+  const A = Math.sqrt(R * Ls)
+
+  // Total spiral angle θs = Ls / (2R) in radians
+  const thetaS_rad = Ls / (2 * R)
+  const thetaS_deg = (thetaS_rad * 180) / Math.PI
+  const thetaS_DMS = bearingToString(thetaS_deg)
+
+  // Shift of the circular arc (p): p ≈ Ls^2 / (24R) - Ls^4 / (2688R^3)
+  const Ls2 = Ls * Ls
+  const R2 = R * R
+  const shiftP = Ls2 / (24 * R) - (Ls2 * Ls2) / (2688 * R * R2)
+
+  // Tangent shift (k): k ≈ Ls / 2 - Ls^3 / (240R^2)
+  const tangentShiftK = Ls / 2 - (Ls * Ls2) / (240 * R2)
+
+  // Tangent coordinates (X, Y) at SC using Taylor series expansion:
+  // X = Ls * (1 - Ls^2 / (40 R^2) + Ls^4 / (3456 R^4))
+  // Y = (Ls^2 / (6 R)) * (1 - Ls^2 / (56 R^2))
+  const tangentX = Ls * (1 - Ls2 / (40 * R2) + (Ls2 * Ls2) / (3456 * R2 * R2))
+  const tangentY = (Ls2 / (6 * R)) * (1 - Ls2 / (56 * R2))
+
+  // Spiral tangents
+  const tanTheta = Math.tan(thetaS_rad)
+  const sinTheta = Math.sin(thetaS_rad)
+  const longTangent = tangentX - (tanTheta !== 0 ? tangentY / tanTheta : 0)
+  const shortTangent = sinTheta !== 0 ? tangentY / sinTheta : 0
+
+  let totalTangentLength: number | undefined
+  if (totalDeflectionDeg !== undefined) {
+    const deltaRad = (totalDeflectionDeg * Math.PI) / 180
+    totalTangentLength = (R + shiftP) * Math.tan(deltaRad / 2) + tangentShiftK
+  }
+
+  return {
+    radius: R,
+    spiralLength: Ls,
+    spiralParameter: A,
+    spiralAngleRadians: thetaS_rad,
+    spiralAngleDegrees: thetaS_deg,
+    spiralAngleDMS: thetaS_DMS,
+    shiftP,
+    tangentShiftK,
+    tangentX,
+    tangentY,
+    longTangent,
+    shortTangent,
+    totalTangentLength,
+  }
+}
+
+// ─── ADVANCED VERTICAL CURVE WITH TURNING POINTS & DRAINAGE ─────────────────
+
+export interface VerticalCurveAnalysis {
+  curveType: 'crest' | 'sag' | 'flat'
+  g1: number // %
+  g2: number // %
+  gradeDifferenceA: number // |g2 - g1| %
+  length: number // m
+  kValue: number // K = L / A
+  stationVPC: number
+  elevationVPC: number
+  stationVPI: number
+  elevationVPI: number
+  stationVPT: number
+  elevationVPT: number
+  turningStation?: number // High point for crest, low point for sag
+  turningElevation?: number
+  hasDrainageTurningPoint: boolean
+  isKCompliantRDM: boolean // Min K >= 15 for 80 km/h crest per RDM 1.3
+}
+
+/**
+ * Calculates Vertical Parabolic Curve geometry with exact high/low turning points for drainage design.
+ */
+export function computeVerticalCurveAnalysis(input: {
+  g1: number // incoming grade in % (e.g. +3.5)
+  g2: number // outgoing grade in % (e.g. -2.0)
+  length: number // curve length L in metres
+  stationVPI: number
+  elevationVPI: number
+  designSpeedKmh?: number // default 80 km/h
+}): VerticalCurveAnalysis {
+  const { g1, g2, length: L, stationVPI, elevationVPI, designSpeedKmh = 80 } = input
+
+  const A = Math.abs(g2 - g1)
+  const kVal = A > 0 ? L / A : 0
+
+  const halfL = L / 2
+  const stationVPC = stationVPI - halfL
+  const stationVPT = stationVPI + halfL
+
+  // VPC & VPT elevations
+  const elevationVPC = elevationVPI - (g1 / 100) * halfL
+  const elevationVPT = elevationVPI + (g2 / 100) * halfL
+
+  // Determine curve type
+  let curveType: 'crest' | 'sag' | 'flat' = 'flat'
+  if (g1 > g2) curveType = 'crest'
+  else if (g1 < g2) curveType = 'sag'
+
+  // Turning point: x = -g1 * L / (g2 - g1)
+  let turningStation: number | undefined
+  let turningElevation: number | undefined
+  let hasDrainageTurningPoint = false
+
+  if (g1 * g2 < 0 && g2 !== g1) {
+    // Turning point lies inside the curve if grades have opposite signs
+    const xTurning = (-g1 * L) / (g2 - g1)
+    if (xTurning >= 0 && xTurning <= L) {
+      hasDrainageTurningPoint = true
+      turningStation = stationVPC + xTurning
+      // Elevation: y(x) = yVPC + (g1/100)*x + (g2 - g1)/(200*L) * x^2
+      const yOffset = ((g2 - g1) / (200 * L)) * xTurning * xTurning
+      turningElevation = elevationVPC + (g1 / 100) * xTurning + yOffset
+    }
+  }
+
+  // Minimum K standards per Kenya RDM 1.3 Table 5.4:
+  // 80 km/h: Crest K_min = 26, Sag K_min = 20
+  const minK = curveType === 'crest' ? (designSpeedKmh >= 100 ? 52 : 26) : (designSpeedKmh >= 100 ? 30 : 20)
+  const isKCompliantRDM = kVal >= minK
+
+  return {
+    curveType,
+    g1,
+    g2,
+    gradeDifferenceA: A,
+    length: L,
+    kValue: kVal,
+    stationVPC,
+    elevationVPC,
+    stationVPI,
+    elevationVPI,
+    stationVPT,
+    elevationVPT,
+    turningStation,
+    turningElevation,
+    hasDrainageTurningPoint,
+    isKCompliantRDM,
+  }
+}
+

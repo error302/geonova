@@ -16,6 +16,9 @@ import { adaptSDR } from './adapters/sdrAdapter'
 import { adaptSouth } from './adapters/southAdapter'
 import { adaptTopcon } from './adapters/topconAdapter'
 import { adaptJobXML } from './adapters/jobXmlAdapter'
+import { adaptLandXML } from './adapters/landxmlAdapter'
+import { adaptTrimbleDC } from './adapters/trimbleDcAdapter'
+import { adaptCarlsonRW5 } from './adapters/carlsonAdapter'
 import {
   UnifiedImportResult,
   UnifiedRawPoint,
@@ -49,6 +52,15 @@ export function importTotalStation(
 
     case 'jobxml':
       return adaptJobXML(content)
+
+    case 'landxml':
+      return adaptLandXML(content)
+
+    case 'trimble_dc':
+      return adaptTrimbleDC(content)
+
+    case 'carlson_rw5':
+      return adaptCarlsonRW5(content)
 
     default:
       return unknownFormatFallback(content, filename)

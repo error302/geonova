@@ -116,7 +116,7 @@ describe('DeedPlan Computation Engine', () => {
       expect(closure.closingErrorN).toBe(0)
       expect(closure.perimeter).toBe(400)
       expect(closure.passes).toBe(true)
-      expect(closure.precisionRatio).toBe('1 : \u221e')
+      expect(closure.precisionRatio).toBe('1 : \u221e (Geometric — field residuals in Traverse Report)')
     })
 
     it('computes closure for closed square', () => {

@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { ModernPricingPage, PricingCardProps } from '@/components/ui/animated-glassy-pricing'
 import { PLAN_CATALOG, getPlanPrice, type CurrencyCode } from '@/lib/subscription/catalog'
+import { MpesaCheckoutModal } from '@/components/pricing/MpesaCheckoutModal'
+import { Smartphone, CreditCard } from 'lucide-react'
 import { logger } from '@/lib/logger'
 
 // Minimal typed surface for the PayPal v6 SDK global (window.paypal)
@@ -167,8 +169,14 @@ export default function PricingPage() {
     }
   }, [currency]) // Re-bind if currency changes to ensure correct currency in createInstance (though technically sdkInstance might not re-init easily, keeping it simple for now)
 
+  const [mpesaModalOpen, setMpesaModalOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<'mpesa' | 'paypal'>('mpesa')
+
   // Show Free, Pro, and Team plans on pricing page (single source of truth from PLAN_CATALOG)
   const visiblePlans = PLAN_CATALOG.filter(p => ['free', 'pro', 'team'].includes(p.id))
+
+  const selectedPlan = PLAN_CATALOG.find(p => p.id === selectedPlanId) || visiblePlans[1]
+  const amountKes = getPlanPrice(selectedPlan.id as any, 'KES')
 
   const plans: PricingCardProps[] = visiblePlans.map(plan => ({
     planId: plan.id,
@@ -190,46 +198,130 @@ export default function PricingPage() {
   }))
 
   return (
-    <ModernPricingPage
-      title={
-        <>
-          Simple, <span className="text-cyan-400">Transparent</span> Pricing
-        </>
-      }
-      subtitle="Start free, upgrade when you need more. No hidden fees, cancel anytime."
-      plans={plans}
-    >
-      {/* PayPal SDK v6 Web Component section */}
-      <div className="w-full max-w-5xl mx-auto mt-12 mb-8">
-        <div className="text-center mb-6">
-          <h3 className="text-xl font-semibold text-foreground mb-2">Pay with PayPal</h3>
-          <p className="text-foreground/70 text-sm mb-4">Secure checkout for one-time payments</p>
-          
-          <div className="flex justify-center gap-2 mb-6 items-center">
-            <span className="text-sm font-medium">Select Plan:</span>
-            <select 
-              className="bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/20 rounded-md px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              value={selectedPlanId}
-              onChange={(e) => setSelectedPlanId(e.target.value as string)}
-            >
-              {visiblePlans.map(p => (
-                <option key={p.id} value={p.id}>{p.name} — {formatPrice(getPlanPrice(p.id, currency), currency)}</option>
-              ))}
-            </select>
+    <>
+      <ModernPricingPage
+        title={
+          <>
+            Simple, <span className="text-cyan-400">Transparent</span> Pricing
+          </>
+        }
+        subtitle="Start free, upgrade when you need more. Two trusted payment options: M-Pesa Buy Goods Till & PayPal."
+        plans={plans}
+      >
+        {/* Payment Methods Section */}
+        <div className="w-full max-w-4xl mx-auto mt-16 mb-12 p-8 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-2xl">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3 border border-emerald-500/20">
+              ⚡ Instant Activation
+            </div>
+            <h3 className="text-2xl font-bold text-[var(--text-primary)]">Choose Your Payment Method</h3>
+            <p className="text-[var(--text-secondary)] text-sm mt-1">
+              Pay securely via Lipa na M-Pesa Till (Kenya) or PayPal / Card (Global).
+            </p>
+
+            {/* Payment Method Switcher Tabs */}
+            <div className="flex justify-center gap-3 mt-6">
+              <button
+                type="button"
+                onClick={() => setActiveTab('mpesa')}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all ${
+                  activeTab === 'mpesa'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-lg'
+                    : 'bg-black/20 text-[var(--text-muted)] border border-[var(--border-color)] hover:text-white'
+                }`}
+              >
+                <Smartphone className="w-4 h-4 text-emerald-400" />
+                <span>M-Pesa Buy Goods (Till 3370347)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('paypal')}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all ${
+                  activeTab === 'paypal'
+                    ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40 shadow-lg'
+                    : 'bg-black/20 text-[var(--text-muted)] border border-[var(--border-color)] hover:text-white'
+                }`}
+              >
+                <CreditCard className="w-4 h-4 text-blue-400" />
+                <span>PayPal / International Card</span>
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="flex justify-center">
-          <div className="min-h-[200px] flex items-center justify-center w-full max-w-xs">
-            {/* @ts-expect-error custom web component */}
-            <paypal-button 
-              id="paypal-v6-button" 
-              hidden 
-              data-plan={selectedPlanId}
-              data-currency={currency}
-            />
+
+          {/* Plan Selector */}
+          <div className="max-w-md mx-auto mb-8 p-4 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] flex items-center justify-between">
+            <div>
+              <span className="text-xs text-[var(--text-muted)] block">Selected Plan:</span>
+              <span className="text-base font-bold text-white">{selectedPlan.name}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <select
+                className="bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                value={selectedPlanId}
+                onChange={(e) => setSelectedPlanId(e.target.value as string)}
+              >
+                {visiblePlans.filter(p => p.id !== 'free').map(p => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} — {formatPrice(getPlanPrice(p.id, currency), currency)}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
+
+          {/* Tab 1: M-Pesa Buy Goods Till 3370347 */}
+          {activeTab === 'mpesa' && (
+            <div className="max-w-md mx-auto text-center space-y-4">
+              <div className="p-5 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-left space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs font-semibold text-emerald-400">TILL NUMBER:</span>
+                  <span className="text-xs font-bold text-[var(--accent)]">3370347</span>
+                </div>
+                <p className="text-xs text-[var(--text-secondary)]">
+                  Pay directly from your Safaricom M-Pesa line using Buy Goods Till <strong className="text-emerald-400 font-mono">3370347</strong> and get instant access + email receipt.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setMpesaModalOpen(true)}
+                className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-black font-bold text-sm rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
+              >
+                <Smartphone className="w-4 h-4" />
+                <span>Pay KSh {amountKes.toLocaleString()} via M-Pesa Till →</span>
+              </button>
+            </div>
+          )}
+
+          {/* Tab 2: PayPal Checkout */}
+          {activeTab === 'paypal' && (
+            <div className="max-w-md mx-auto text-center space-y-4">
+              <div className="flex justify-center min-h-[160px] items-center">
+                {/* @ts-expect-error custom web component */}
+                <paypal-button
+                  id="paypal-v6-button"
+                  hidden
+                  data-plan={selectedPlanId}
+                  data-currency={currency}
+                />
+              </div>
+              <p className="text-xs text-[var(--text-muted)]">
+                Supports Visa, Mastercard, American Express, and PayPal balances.
+              </p>
+            </div>
+          )}
         </div>
-      </div>
-    </ModernPricingPage>
+      </ModernPricingPage>
+
+      {/* M-Pesa Checkout Modal */}
+      <MpesaCheckoutModal
+        isOpen={mpesaModalOpen}
+        onClose={() => setMpesaModalOpen(false)}
+        planId={selectedPlanId as any}
+        planName={selectedPlan.name}
+        amountKes={amountKes}
+      />
+    </>
   )
 }

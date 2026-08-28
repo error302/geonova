@@ -70,7 +70,7 @@ import MapErrorBoundary from '@/app/map/MapErrorBoundary'
 import MapGlobalStyles from '@/app/map/MapGlobalStyles'
 import type { BasemapMode, DrawMode, MeasureMode } from '@/app/map/mapTypes'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useSubscription } from '@/lib/subscription/subscriptionContext'
 import { createSchemeLayers, zoomToSchemeExtent } from '@/lib/map/schemeLayer'
@@ -95,6 +95,7 @@ import { NorthArrowOverlay } from '@/app/map/components/NorthArrowOverlay'
 import { MapOverlayProvider } from '@/app/map/components/MapOverlayManager'
 import { MapPrintButton } from '@/app/map/components/MapPrintButton'
 import MapRail from '@/app/map/components/MapRail'
+import { SurveyWorkflowBadge } from '@/app/map/components/SurveyWorkflowBadge'
 import { MapCoordSearch } from '@/app/map/components/MapCoordSearch'
 import { KeyboardShortcutsHelp } from '@/app/map/components/KeyboardShortcutsHelp'
 import { MapToolDock, ReconContent, CaptureContent, ComputeContent, SetOutContent, LayersContent, ExportContent } from '@/app/map/components/MapToolDock'
@@ -223,6 +224,7 @@ function renderPopup(popupElement: HTMLDivElement, data: {
  *  MAIN COMPONENT
  * ══════════════════════════════════════════════════════════════════════ */
 export default function MapClient() {
+  const router = useRouter()
   const isMobile = useIsMobile()
   const searchParams = useSearchParams()
   const { hasFeature } = useSubscription()
@@ -1337,6 +1339,8 @@ export default function MapClient() {
     showAnnotations,
     projectSearch,
     isMobile,
+    showOsmBuildings,
+    toggleOsmBuildings: () => setShowOsmBuildings(v => !v),
     schemeLoading,
     schemeError,
     schemeLoaded,
@@ -1417,7 +1421,7 @@ export default function MapClient() {
     measureMode, editMode, mouseCoord, gpsTracking, gpsPos, featureCount, importMsg,
     panelOpen, dragHint, selectedFeature, featureName, measureResult, layerOpacity,
     stakeoutTarget, stakeoutActive, stakeoutState, audioMuted, saveMsg,
-    offlineDialogOpen, showAnnotations, projectSearch, isMobile,
+    offlineDialogOpen, showAnnotations, projectSearch, isMobile, showOsmBuildings,
     schemeLoading, schemeError, schemeLoaded, schemeParcelCount, schemeBlockCount,
     schemeBeaconCount, showSchemeParcels, showSchemeBlocks, showSchemeBeacons,
     hasTraverse, traverseParcelPreviewActive, schemeProjectId,
@@ -1502,6 +1506,16 @@ export default function MapClient() {
                     })
                   }
                 }}
+                onGenerateDeedPlan={(feature) => {
+                  const targetProjectId = schemeProjectId || 'current'
+                  const parcelParam = encodeURIComponent(feature.parcelNumber || feature.lrNumber || feature.id)
+                  router.push(`/project/${targetProjectId}/reports?type=deed_plan&parcel=${parcelParam}`)
+                }}
+                onGenerateForm3={(feature) => {
+                  const targetProjectId = schemeProjectId || 'current'
+                  const parcelParam = encodeURIComponent(feature.parcelNumber || feature.lrNumber || feature.id)
+                  router.push(`/project/${targetProjectId}/reports?type=form3&parcel=${parcelParam}`)
+                }}
               />
 
               {/* Stakeout Radar moved into the right-side control dock */}
@@ -1533,19 +1547,6 @@ export default function MapClient() {
                 {/* Rotation Control (north reset) */}
                 <RotationControl />
 
-                {/* OSM Buildings Toggle */}
-                <button
-                  onClick={() => setShowOsmBuildings(!showOsmBuildings)}
-                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all backdrop-blur-xl border ${
-                    showOsmBuildings
-                      ? 'bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)] text-[var(--accent)]'
-                      : 'bg-[color-mix(in_srgb,var(--bg-secondary)_60%,transparent)] border-[var(--border-color)]/[0.08] text-[var(--text-secondary)] hover:bg-[color-mix(in_srgb,var(--bg-secondary)_80%,transparent)]'
-                  }`}
-                  title="Toggle OpenStreetMap building footprints (requires Python worker + PBF file)"
-                >
-<Building2 className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">OSM Buildings</span>
-                </button>
 
                 {/* Always-on North Arrow (rotates with map) */}
                 <NorthArrowOverlay mapInstance={mapInstance} />
@@ -1584,20 +1585,42 @@ export default function MapClient() {
                    Absorbs the Dock's Recon/Capture/Compute/SetOut/Export panels;
                    the Dock itself is mobile-only (bottom-sheet UX). ── */}
               {!isMobile && (
-                <MapRail
-                  items={[
-                    { id: 'recon', label: 'Recon & Search', icon: Binoculars, panel: <ReconContent /> },
-                    { id: 'capture', label: 'Draw & Capture', icon: Crosshair, panel: <CaptureContent /> },
-                    { id: 'vertex', label: 'Vertex Editing', icon: PenLine, panel: <VertexEditToolbar /> },
-                    { id: 'compute', label: 'Compute (COGO / Traverse)', icon: Calculator, panel: <ComputeContent /> },
-                    { id: 'measure', label: 'Measure', icon: Ruler, panel: <MeasureRailPanel /> },
-                    { id: 'stakeout', label: 'Stakeout & GPS', icon: Target, panel: <SetOutContent /> },
-                    { id: 'layers', label: 'Layers', icon: Layers, panel: <LayersContent /> },
-                    { id: 'export', label: 'Export & Print', icon: Download, panel: <ExportContent /> },
-                  ]}
-                  activeId={activeRailTool}
-                  onActivate={setActiveRailTool}
-                />
+                <>
+                  <MapRail
+                    items={[
+                      { id: 'recon', label: 'Recon & Search', icon: Binoculars, shortcut: '1', accent: '#3B82F6', panel: <ReconContent /> },
+                      { id: 'capture', label: 'Draw & Capture', icon: Crosshair, shortcut: '2', accent: '#D17B47', panel: <CaptureContent /> },
+                      { id: 'vertex', label: 'Vertex Editing', icon: PenLine, shortcut: '3', accent: '#D17B47', dividerAfter: true, panel: <VertexEditToolbar /> },
+                      { id: 'compute', label: 'Compute (COGO / Traverse)', icon: Calculator, shortcut: '4', accent: '#8B5CF6', panel: <ComputeContent /> },
+                      { id: 'measure', label: 'Measure', icon: Ruler, shortcut: '5', accent: '#8B5CF6', dividerAfter: true, panel: <MeasureRailPanel /> },
+                      { id: 'stakeout', label: 'Stakeout & GPS', icon: Target, shortcut: '6', accent: '#10B981', dividerAfter: true, panel: <SetOutContent /> },
+                      { id: 'layers', label: 'Layers', icon: Layers, shortcut: '7', accent: '#6366F1', panel: <LayersContent /> },
+                      { id: 'export', label: 'Export & Print', icon: Download, shortcut: '8', accent: '#F59E0B', panel: <ExportContent /> },
+                    ]}
+                    activeId={activeRailTool}
+                    onActivate={setActiveRailTool}
+                  />
+
+                  {/* Desktop active workflow badge */}
+                  {activeRailTool && (
+                    <SurveyWorkflowBadge
+                      activeItems={(() => {
+                        const defs: Record<string, { id: string; label: string; accent: string }> = {
+                          recon: { id: 'recon', label: 'Recon', accent: '#3B82F6' },
+                          capture: { id: 'capture', label: 'Capture', accent: '#D17B47' },
+                          vertex: { id: 'vertex', label: 'Vertex', accent: '#D17B47' },
+                          compute: { id: 'compute', label: 'Compute', accent: '#8B5CF6' },
+                          measure: { id: 'measure', label: 'Measure', accent: '#8B5CF6' },
+                          stakeout: { id: 'stakeout', label: 'Set Out', accent: '#10B981' },
+                          layers: { id: 'layers', label: 'Layers', accent: '#6366F1' },
+                          export: { id: 'export', label: 'Export', accent: '#F59E0B' },
+                        }
+                        const def = defs[activeRailTool]
+                        return def ? [def] : []
+                      })()}
+                    />
+                  )}
+                </>
               )}
 
               {/* ── Sheet Layout Overlay (print-only — no manual toggle) ── */}

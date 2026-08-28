@@ -18,10 +18,12 @@ interface UseCollaborationProps {
   userName?: string
 }
 
-interface UseCollaborationReturn {
+export interface UseCollaborationReturn {
   collaborators: Collaborator[]
   isConnected: boolean
   conflictWarnings: string[]
+  livePoints: Array<{ id: string; easting: number; northing: number; elevation?: number; code?: string }>
+  broadcastPoint: (point: { id: string; easting: number; northing: number; elevation?: number; code?: string }) => void
   sendCursor: (lat: number, lng: number) => void
   sendFeatureEdit: (feature: { id: string; [key: string]: unknown }) => void
   sendFeatureDelete: (featureId: string) => void
@@ -37,6 +39,7 @@ export function useCollaboration({
   userName,
 }: UseCollaborationProps): UseCollaborationReturn {
   const [collaborators, setCollaborators] = useState<Collaborator[]>([])
+  const [livePoints, setLivePoints] = useState<Array<{ id: string; easting: number; northing: number; elevation?: number; code?: string }>>([])
   const [isConnected, setIsConnected] = useState(false)
   const [conflictWarnings] = useState<string[]>([])
   
@@ -52,7 +55,7 @@ export function useCollaboration({
     // 1. Initialize Zustand-Yjs Data Sync
     initProjectSync(projectId)
 
-    // 2. Initialize Presence via Yjs Awareness
+    // 2. Initialize Presence via Yjs Awareness and Points Sync
     const subscription = subscribeToProjectChanges(
       projectId,
       { id: userId, name: userName },
@@ -64,9 +67,17 @@ export function useCollaboration({
             color: u.color,
             cursor: u.cursor
           })))
+        },
+        onPointsChange: (pts: unknown) => {
+          if (Array.isArray(pts)) {
+            setLivePoints(pts as any)
+          }
         }
       }
     )
+
+    // Initial points load
+    setLivePoints(realtimeService.getLivePoints(projectId))
 
     // Monitor WebRTC connection state
     const provider = realtimeService.getProvider(projectId)
@@ -82,6 +93,11 @@ export function useCollaboration({
       subscription.unsubscribe()
     }
   }, [projectId, userId, userName])
+
+  const broadcastPoint = useCallback((point: { id: string; easting: number; northing: number; elevation?: number; code?: string }) => {
+    if (!projectId) return
+    realtimeService.broadcastPoint(projectId, point)
+  }, [projectId])
 
   // Real-time Chat via Yjs Array
   const sendChat = useCallback((message: string) => {
@@ -140,6 +156,8 @@ export function useCollaboration({
     collaborators,
     isConnected,
     conflictWarnings,
+    livePoints,
+    broadcastPoint,
     sendCursor,
     sendFeatureEdit,
     sendFeatureDelete,

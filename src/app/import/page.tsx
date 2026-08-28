@@ -3,10 +3,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { createClient } from '@/lib/api-client/client'
 import { detectTotalStationFormat, TotalStationFormat } from '@/lib/import/totalStation/detectFormat'
-import { parseGSI } from '@/lib/import/totalStation/parseGSI'
-import { parseJobXML } from '@/lib/import/totalStation/parseJobXML'
-import { parseTopcon } from '@/lib/import/totalStation/parseTopcon'
-import { parseSDR } from '@/lib/import/totalStation/parseSDR'
+import { importTotalStation } from '@/lib/import/totalStation/unifiedImport'
 import { logger } from '@/lib/logger'
 
 interface ParsedPoint {
@@ -14,6 +11,7 @@ interface ParsedPoint {
   easting?: number
   northing?: number
   elevation?: number
+  code?: string
   selected: boolean
 }
 
@@ -68,34 +66,16 @@ export default function ImportPage() {
     const detectedFormat = detectTotalStationFormat(text, selectedFile.name)
     setFormat(detectedFormat)
 
-    interface TotalStationRecord { pointId: string; easting?: number; northing?: number; elevation?: number }
-    let parsed: { records: TotalStationRecord[]; warnings: string[] } = { records: [], warnings: [] }
+    const result = importTotalStation(text, selectedFile.name)
 
-    switch (detectedFormat) {
-      case 'gsi':
-        parsed = parseGSI(text)
-        break
-      case 'jobxml':
-        parsed = parseJobXML(text)
-        break
-      case 'topcon':
-        parsed = parseTopcon(text)
-        break
-      case 'sokkia':
-        parsed = parseSDR(text)
-        break
-      default:
-        setWarnings(['Unknown format. Please try CSV import instead.'])
-        return
-    }
-
-    setWarnings(parsed.warnings || [])
-    setPoints(parsed.records.map((r) => ({
-      pointId: r.pointId,
+    setWarnings(result.warnings || [])
+    setPoints(result.rawPoints.map((r) => ({
+      pointId: r.id,
       easting: r.easting,
       northing: r.northing,
       elevation: r.elevation,
-      selected: true
+      code: r.code,
+      selected: true,
     })))
   }, [])
 
@@ -137,11 +117,14 @@ export default function ImportPage() {
   const formatNames: Record<TotalStationFormat, string> = {
     gsi: 'Leica GSI',
     jobxml: 'Trimble JobXML',
+    landxml: 'LandXML (.xml)',
+    trimble_dc: 'Trimble DC (.dc)',
+    carlson_rw5: 'Carlson SurvCE / FieldGenius (.rw5, .raw)',
     topcon: 'Topcon GTS',
     sokkia: 'Sokkia SDR',
     south: 'South NTS/Galaxy',
     csv: 'CSV',
-    unknown: 'Unknown'
+    unknown: 'Auto / Unknown'
   }
 
   const selectedCount = points.filter((p) => p.selected).length
