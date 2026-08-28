@@ -93,7 +93,7 @@ function computeAzmMisclosure(
 
 // ── Component ──────────────────────────────────────────────────────────────
 
-export default function TraverseCalculator() {
+function TraverseCalculatorInner() {
   const { t } = useLanguage()
   // Traverse legs
   const [legs, setLegs] = useState<Leg[]>([
@@ -727,5 +727,14 @@ function ResultRow({ label, value, highlight }: { label: string; value: string; 
       <span className="text-sm text-[var(--text-secondary)]">{label}</span>
       <span className={`font-mono ${highlight ? 'result-accent font-bold' : ''}`}>{value}</span>
     </div>
+  )
+}
+
+import { Suspense } from 'react'
+export default function TraverseCalculator() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-[var(--text-muted)]">Loading…</div>}>
+      <TraverseCalculatorInner />
+    </Suspense>
   )
 }
