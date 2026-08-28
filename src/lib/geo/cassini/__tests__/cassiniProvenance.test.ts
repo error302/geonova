@@ -60,8 +60,8 @@ describe('synthetic Cassini subsheet data (provenance audit)', () => {
   })
 
   it('every subsheet has exactly 4 corners with finite coordinates', () => {
-    for (const [sheetId, subs] of Object.entries(ALL_SHEETS)) {
-      for (const [subId, corners] of Object.entries(subs)) {
+    for (const [, subs] of Object.entries(ALL_SHEETS)) {
+      for (const [, corners] of Object.entries(subs)) {
         expect(corners.length).toBe(4)
         for (const c of corners) {
           expect(Number.isFinite(c.cassX)).toBe(true)
@@ -74,8 +74,8 @@ describe('synthetic Cassini subsheet data (provenance audit)', () => {
   })
 
   it('every corner UTM falls within Kenya zone 36/37S span', () => {
-    for (const [sheetId, subs] of Object.entries(ALL_SHEETS)) {
-      for (const [subId, corners] of Object.entries(subs)) {
+    for (const [, subs] of Object.entries(ALL_SHEETS)) {
+      for (const [, corners] of Object.entries(subs)) {
         for (const c of corners) {
           expect(c.utmE).toBeGreaterThan(UTM_E_MIN)
           expect(c.utmE).toBeLessThan(UTM_E_MAX)
@@ -105,7 +105,7 @@ describe('synthetic Cassini subsheet data (provenance audit)', () => {
 
     let seamViolations = 0
     let totalCorners = 0
-    for (const [k, entries] of byUTM.entries()) {
+    for (const [, entries] of byUTM.entries()) {
       totalCorners += entries.length
       if (entries.length < 2) continue
       const ref = entries[0]
