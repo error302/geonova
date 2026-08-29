@@ -160,6 +160,7 @@ function renderPopup(popupElement: HTMLDivElement, data: {
   stationName?: string
   geometryType?: string
   projectId?: string
+  onDelete?: () => void
 }, hidePopup: () => void) {
   popupElement.replaceChildren()
   popupElement.className = ''
@@ -215,6 +216,21 @@ function renderPopup(popupElement: HTMLDivElement, data: {
     link.className = 'block mt-2 text-[11px] text-[var(--accent)] hover:underline font-medium'
     link.textContent = 'Go to Project \u2192'
     card.append(link)
+  }
+
+  // FIX (2026-08-30): selection popup previously had no way to remove a wrong
+  // point — Delete existed only via the tool dock / Del key (unavailable on
+  // mobile). Add a delete action directly in the popup.
+  if (data.onDelete) {
+    const deleteBtn = document.createElement('button')
+    deleteBtn.type = 'button'
+    deleteBtn.className = 'mt-3 w-full py-1.5 rounded-lg bg-[color-mix(in_srgb,var(--error)_15%,transparent)] border border-[color-mix(in_srgb,var(--error)_40%,transparent)] text-[11px] font-medium text-[var(--error)] hover:bg-[color-mix(in_srgb,var(--error)_25%,transparent)] transition-colors'
+    deleteBtn.textContent = 'Remove point'
+    deleteBtn.addEventListener('click', () => {
+      data.onDelete?.()
+      hidePopup()
+    })
+    card.append(deleteBtn)
   }
 
   popupElement.append(card)

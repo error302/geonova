@@ -152,6 +152,27 @@ export function useCollaboration({
   const sendFeatureEdit = useCallback(() => {}, [])
   const sendFeatureDelete = useCallback(() => {}, [])
 
+  // FIX (2026-08-30): previously the hook returned `...callbacksRef.current`
+  // spread at render time. Mutating a ref never triggers a re-render, so
+  // onChat / onFeatureEdit / onFeatureDelete registered by the consumer AFTER
+  // the first render were never picked up (the spread captured an empty
+  // object). Stable wrappers now read from the ref at CALL time.
+  const onChat = useCallback(
+    (message: string, userName: string, userId: string) => {
+      callbacksRef.current.onChat?.(message, userName, userId)
+    },
+    []
+  )
+  const onFeatureEdit = useCallback(
+    (feature: { id: string; [key: string]: unknown }, userId: string) => {
+      callbacksRef.current.onFeatureEdit?.(feature, userId)
+    },
+    []
+  )
+  const onFeatureDelete = useCallback((featureId: string, userId: string) => {
+    callbacksRef.current.onFeatureDelete?.(featureId, userId)
+  }, [])
+
   return {
     collaborators,
     isConnected,
@@ -162,6 +183,8 @@ export function useCollaboration({
     sendFeatureEdit,
     sendFeatureDelete,
     sendChat,
-    ...callbacksRef.current,
+    onChat,
+    onFeatureEdit,
+    onFeatureDelete,
   }
 }

@@ -793,7 +793,22 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
   // ── STAKEOUT: Legacy toggle (for backward compat) ──
   const toggleStakeout = useCallback(() => {
     const hasFeature = p.hasFeature
-    if (!hasFeature('gps_stakeout')) return
+    // FIX (2026-08-30): previously returned silently when the plan gate
+    // failed — the button appeared dead. Surface a visible message instead.
+    if (!hasFeature('gps_stakeout')) {
+      const setSaveMsg = p.setSaveMsg
+      if (setSaveMsg) {
+        setSaveMsg('GPS Stakeout requires a Pro plan — upgrade in Pricing to enable it')
+        setTimeout(() => setSaveMsg(''), 4000)
+      }
+      return
+    }
+    // FIX (2026-08-30): starting stakeout now auto-enables GPS tracking so
+    // the HUD/direction line actually receives position updates. Previously
+    // the panel sat on "Waiting for GPS position..." if GPS wasn't on.
+    if (!p.gpsTracking) {
+      p.toggleGPS()
+    }
     if (!p.stakeoutTarget) {
       if (!p.mapInstance.current) return
       const center = p.mapInstance.current.getView().getCenter()
@@ -806,7 +821,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     } else {
       deactivateStakeout()
     }
-  }, [p.hasFeature, p.stakeoutTarget, activateStakeout, deactivateStakeout, p.mapInstance, epsg])
+  }, [p.hasFeature, p.gpsTracking, p.toggleGPS, p.setSaveMsg, p.stakeoutTarget, activateStakeout, deactivateStakeout, p.mapInstance, epsg])
 
   // ── STAKEOUT INFO (uses pre-transformed UTM position — no require()) ──
   const stakeoutInfo = useCallback(() => {

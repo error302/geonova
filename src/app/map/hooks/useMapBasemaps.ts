@@ -62,29 +62,17 @@ export function useMapBasemaps(): UseMapBasemapsReturn {
       }),
       terrain: new TileLayer({
         source: new XYZ({
-          // Primary: OpenTopoMap (topographic contours + hill shading)
-          // Fallback handled by OpenLayers tile error event
-          url: 'https://{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png',
+          // FIX (2026-08-30): OpenTopoMap as primary rate-limits production
+          // traffic (blank tiles) and the previous fallback relied on
+          // img.onerror inside tileLoadFunction, which never fired because
+          // OpenLayers handles tile errors internally. Esri World_Topo_Map
+          // (same CDN as the satellite layer, no rate limiting) is now the
+          // primary; OpenTopoMap is attached as a tile-error fallback.
+          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
           crossOrigin: 'anonymous',
-          maxZoom: 17,
-          attributions: '\u00A9 OpenTopoMap (CC-BY-SA)',
+          maxZoom: 19,
+          attributions: 'Tiles \u00A9 Esri \u2014 Source: USGS, OpenTopoMap (CC-BY-SA)',
           cacheSize: 2048,
-          // Retry failed tiles
-          tileLoadFunction: (imageTile: import('ol/Tile').default, src: string) => {
-            const img = (imageTile as import('ol/ImageTile').default).getImage() as HTMLImageElement
-            img.onerror = () => {
-              // Fallback to Esri terrain if OpenTopoMap is rate-limited
-              const z = imageTile.getTileCoord()[0]
-              const x = imageTile.getTileCoord()[1]
-              const y = imageTile.getTileCoord()[2]
-              img.src = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/${z}/${y}/${x}`
-              img.onerror = () => {
-                // Final fallback: OSM (at least show something)
-                img.src = `https://tile.openstreetmap.org/${z}/${x}/${y}.png`
-              }
-            }
-            img.src = src
-          },
         }),
         visible: false,
         zIndex: 0,

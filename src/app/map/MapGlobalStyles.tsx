@@ -137,6 +137,15 @@ export default function MapGlobalStyles() {
       .ol-viewport canvas {
         touch-action: none;
       }
+      /* FIX (2026-08-30): panning was janky/stuck on mobile because only the
+         canvas had touch-action: none — the viewport itself still allowed the
+         browser to interpret horizontal drags as scroll gestures. Apply it at
+         the viewport level and block overscroll (pull-to-refresh / rubber
+         banding) which was also swallowing drag events. */
+      .ol-viewport {
+        touch-action: none;
+        overscroll-behavior: none;
+      }
 
       /* ── Attribution collapse on mobile ── */
       @media (max-width: 640px) {

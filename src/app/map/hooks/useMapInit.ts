@@ -50,7 +50,7 @@ interface UseMapInitParams {
   cleanupRef: React.MutableRefObject<MapCleanupRefs | null>
   popupRef: React.MutableRefObject<HTMLDivElement | null>
   createBasemaps: (olModules: BasemapModules) => Record<string, import('ol/layer/Tile').default>
-  onPopupRender: (popupElement: HTMLDivElement, data: { coordinate?: import('ol/coordinate').Coordinate; projectName?: string; stationName?: string; geometryType?: string; projectId?: string }, hidePopup: () => void) => void
+  onPopupRender: (popupElement: HTMLDivElement, data: { coordinate?: import('ol/coordinate').Coordinate; projectName?: string; stationName?: string; geometryType?: string; projectId?: string; onDelete?: () => void }, hidePopup: () => void) => void
   /** T1.5 FIX (2026-07-09): UTM EPSG for mouse position coordinate display */
   currentUtmEpsg?: string
 }
@@ -475,6 +475,15 @@ export function useMapInit(params: UseMapInitParams) {
               stationName: stationName || undefined,
               geometryType: geomType,
               projectId: projectId || undefined,
+              // FIX (2026-08-30): give the popup a "Remove point" action so a
+              // mis-placed point can be deleted directly (mirrors deleteSelected).
+              onDelete: () => {
+                try {
+                  drawSource.removeFeature(feature)
+                  select.getFeatures().remove(feature)
+                  setSelectedFeature(null)
+                } catch { /* already removed */ }
+              },
             }, hidePopup)
 
             if (coord) popupOverlay.setPosition(coord)
