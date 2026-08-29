@@ -259,10 +259,26 @@ export function renderTopographicPlan(opts: TopographicPlanOptions): string {
 
   // Expand extent from spot heights if no contours
   if (!opts.contours && opts.spotHeights?.length) {
-    t.x_min = Math.min(...opts.spotHeights.map((p: SpotHeight) => p.x));
-    t.x_max = Math.max(...opts.spotHeights.map((p: SpotHeight) => p.x));
-    t.y_min = Math.min(...opts.spotHeights.map((p: SpotHeight) => p.y));
-    t.y_max = Math.max(...opts.spotHeights.map((p: SpotHeight) => p.y));
+    // ⚡ Bolt: Use a single loop instead of Math.min/max with spread operator
+    // This avoids V8 "Maximum call stack size exceeded" errors on large point clouds
+    // and computes bounds in O(n) instead of O(4n) with multiple array creations
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+
+    for (let i = 0; i < opts.spotHeights.length; i++) {
+      const p = opts.spotHeights[i];
+      if (p.x < minX) minX = p.x;
+      if (p.x > maxX) maxX = p.x;
+      if (p.y < minY) minY = p.y;
+      if (p.y > maxY) maxY = p.y;
+    }
+
+    t.x_min = minX;
+    t.x_max = maxX;
+    t.y_min = minY;
+    t.y_max = maxY;
   }
 
   const parts: string[] = [];
