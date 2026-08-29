@@ -795,3 +795,20 @@ Stage Summary:
 - All 4 CI failures fixed at source; expected green on 091c3846
 - deploy.yml header now documents the true pipeline history
 - VM Diagnostics workflow available for on-demand read-only production inspection
+
+---
+Task ID: ci-recovery-round2
+Agent: Super Z (main)
+Task: Chase remaining CI failures to full green after the first fix batch.
+
+Work Log:
+- Round 2 failures were MASKED pre-existing issues (each earlier failure hid the next): schema-drift gate + axe flake + ENOBUFS build crash.
+- schema-drift gate: false positive `jobs.equipment` — the gate's 500-char .select() lookahead crossed a function boundary (deleteJob's .from('jobs') swallowed getEquipmentByType's .select('equipment')). Became blocking when migration 053 made 'jobs' a known table (the `jobs.*` baseline wildcard only covers UNKNOWN tables). Fixed: window now truncates at the next .from(.
+- axe sweep: phantom meta-viewport on /tools/gnss-baseline — a dev-server connection reset landed the browser on Next.js's dev error page (which has its own zoom-blocking viewport meta; the app never disables zoom — maximumScale 5, userScalable true). Fixed: sweep detects the zoom-blocking viewport meta and retries on a fresh page.
+- Production Build ENOBUFS crash: infinite captureError -> logger.error -> captureError loop (logger forwards metadata.error back into captureError; each pass embeds the previous context -> exponential log growth -> stdout socket ENOBUFS). Triggered by DYNAMIC_SERVER_USAGE from /api/portfolio, /api/osm/features, /api/osm/status (~660 log mentions each). Fixed: NO_FORWARD symbol guard in logger; captureError marks its own log; beforeSend now silences ALL DYNAMIC_SERVER_USAGE.
+- Verified: commit 2567f1fc — CI 15/15 jobs GREEN, Deploy auto-fired and SUCCESS, VM diagnostics confirm production healthy.
+
+Stage Summary:
+- CI fully green for the first time since Aug 23 (last green: 08b82518)
+- Auto-deploy verified end-to-end 4 times (091c3846, 1075fcdb, 876f7445, 2567f1fc — all success)
+- Production healthy: https://metardu.space HTTP 200, all containers healthy, DB ok, 0 restarts, pre-deploy backups flowing
