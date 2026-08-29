@@ -420,6 +420,22 @@ async function scanRoute(context, routeDef) {
       }
 
       console.error('[axe] hydration ready, running axe…')
+      // DEV-ERROR-PAGE GUARD: the app's root layout never disables zoom
+      // (viewport export: maximumScale 5, userScalable true), but Next.js's
+      // dev-mode error page DOES (<meta name="viewport" content="…
+      // maximum-scale=1.0, user-scalable=no">). A mid-sweep dev-server hiccup
+      // (ERR_CONNECTION_RESET on a cold compile, RSC fetch failure) can land
+      // the browser on that error page — it "hydrates" (text + buttons) and
+      // keeps the pathname, so the checks above can't tell it apart from the
+      // real route. Detect it here and retry on a fresh page instead of
+      // reporting a phantom meta-viewport violation for a page we never saw.
+      const onDevErrorPage = await page.evaluate(() => {
+        const m = document.querySelector('meta[name="viewport"]')
+        return !!(m && /user-scalable\s*=\s*no|maximum-scale\s*=\s*1(\.0)?\s*[,;]/i.test(m.getAttribute('content') || ''))
+      }).catch(() => false)
+      if (onDevErrorPage) {
+        throw new Error('browser landed on the Next.js dev error page (zoom-blocking viewport meta) — server hiccup, retrying on a fresh page')
+      }
       await page.addScriptTag({ content: axeSource })
       // Settle pass: wait for fonts + a short idle window so transient states
       // (spinners, mid-hydration DOM) don't produce false violations on cold

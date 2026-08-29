@@ -95,8 +95,17 @@ function collectSelectedColumns() {
     let fm
     while ((fm = fromRe.exec(src)) !== null) {
       const table = fm[1]
-      // look ahead up to 400 chars for .select(
-      const window = src.slice(fm.index, fm.index + 500)
+      // look ahead up to 500 chars for .select( — but NEVER past the next
+      // .from( : a new query starts there, so any .select( after it belongs
+      // to THAT query, not this one. Without this cut, a query with no
+      // .select (e.g. .from('jobs').delete()) can swallow the .select of the
+      // NEXT function in the file and mis-attribute its columns (the
+      // jobs.equipment false positive: deleteJob's .from('jobs') reached
+      // getEquipmentByType's .select('equipment') across the function
+      // boundary once migration 053 made 'jobs' a known table).
+      let window = src.slice(fm.index, fm.index + 500)
+      const nextFrom = window.indexOf('.from(', 6) // 6 = len('.from('), skip own match
+      if (nextFrom !== -1) window = window.slice(0, nextFrom)
       const sm = window.match(/\.select\(\s*["'`]([^"'`]+)["'`]/)
       if (!sm) continue
       const spec = sm[1]
