@@ -14,8 +14,13 @@ WORKDIR /app
 # in canvas/better-sqlite3/puppeteer which would need native build toolchain.
 RUN npm init -y && npm install ws@^8.21.0 --no-audit --no-fund
 
-# Pull the typescript compiler + node types from npm without installing full deps
-RUN npm install typescript@~5.9.0 @types/node@~20.10.0 @types/ws@^8.5.10 --no-audit --no-fund
+# Pull the typescript compiler + node types from npm without installing full deps.
+# NOTE: @types/node is pinned to ~20.19.x to MATCH the workspace's own
+# @types/node — the older ~20.10.x defs type timingSafeEqual() as
+# ArrayBufferView (ArrayBuffer-backed under TS 5.9 generics), which rejects
+# Node Buffer arguments and broke the standalone collaboration build
+# (found during the 2026-08-30 security-remediation deploy).
+RUN npm install typescript@~5.9.0 @types/node@~20.19.0 @types/ws@^8.5.10 --no-audit --no-fund
 
 COPY src/lib/realtime/ ./src/lib/realtime/
 COPY tsconfig.json ./
