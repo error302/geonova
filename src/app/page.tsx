@@ -182,7 +182,11 @@ function HeroSection() {
           fill
           priority
           sizes="(max-width: 768px) 100vw, 1920px"
-          quality={85}
+          /* SVG hero: the optimizer rejects SVG without dangerouslyAllowSVG
+             (returns 400 "image type is not allowed" — hero never loaded since
+             aa87eeb7). It's a 4.4KB vector pattern; optimization gains nothing,
+             so serve it raw instead of globally enabling SVG in the optimizer. */
+          unoptimized
           className="object-cover object-right"
           style={{ filter: 'brightness(0.7) contrast(1.1)' }}
         />
