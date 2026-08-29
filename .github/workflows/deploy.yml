@@ -1,10 +1,14 @@
 name: Deploy to Production
 
 # Production deploys run AUTOMATICALLY on every push to main (owner decision,
-# 2026-08-30). The original auto-deploy trigger had been silently dead for a
-# long time due to a `branches: [main]` typo (valid YAML, matches no branch), so
-# production was actually updated by hand while everyone believed CI/CD was
-# shipping. This restores the intended push-to-main → production behaviour.
+# 2026-08-30). History: push-to-main auto-deploy has been the standing
+# behaviour for weeks (see the workflow's run history); it was switched to
+# manual dispatch-only for a few hours during the 2026-08-29 audit
+# remediation (H-14) and restored to automatic the same day per owner
+# preference. Note: an earlier comment here claimed the push trigger had
+# been "silently dead due to a branches typo" — that was a misdiagnosis of
+# a terminal display artifact ("main" shown as "ain" + "]"); the trigger
+# was never broken.
 #
 # Security posture (audit H-14, rebalanced per owner preference for automatic
 # deploys):

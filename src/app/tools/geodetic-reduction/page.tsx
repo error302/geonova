@@ -195,8 +195,9 @@ export default function GeodeticReductionPage() {
             </h3>
             <div className="space-y-3">
               <div>
-                <label className="block text-xs text-[var(--text-muted)] mb-1">Ellipsoid Model</label>
+                <label htmlFor="gr-ellipsoid" className="block text-xs text-[var(--text-muted)] mb-1">Ellipsoid Model</label>
                 <select
+                  id="gr-ellipsoid"
                   value={ellipsoid}
                   onChange={(e) => setEllipsoid(e.target.value as any)}
                   className="input text-xs w-full py-1.5"
@@ -208,8 +209,9 @@ export default function GeodeticReductionPage() {
               </div>
 
               <div>
-                <label className="block text-xs text-[var(--text-muted)] mb-1">Measured Horizontal Ground Distance (m)</label>
+                <label htmlFor="gr-ground-dist" className="block text-xs text-[var(--text-muted)] mb-1">Measured Horizontal Ground Distance (m)</label>
                 <input
+                  id="gr-ground-dist"
                   type="number"
                   step="0.001"
                   value={groundDist}
@@ -226,8 +228,9 @@ export default function GeodeticReductionPage() {
             <h3 className="text-sm font-semibold text-[var(--text-primary)]">Station 1 (Instrument Station)</h3>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] text-[var(--text-muted)]">Easting (m)</label>
+                <label htmlFor="gr-st1-e" className="text-[11px] text-[var(--text-muted)]">Easting (m)</label>
                 <input
+                  id="gr-st1-e"
                   type="number"
                   step="0.001"
                   value={e1}
@@ -236,8 +239,9 @@ export default function GeodeticReductionPage() {
                 />
               </div>
               <div>
-                <label className="text-[11px] text-[var(--text-muted)]">Northing (m)</label>
+                <label htmlFor="gr-st1-n" className="text-[11px] text-[var(--text-muted)]">Northing (m)</label>
                 <input
+                  id="gr-st1-n"
                   type="number"
                   step="0.001"
                   value={n1}
@@ -246,8 +250,9 @@ export default function GeodeticReductionPage() {
                 />
               </div>
               <div>
-                <label className="text-[11px] text-[var(--text-muted)]">Elevation H (m)</label>
+                <label htmlFor="gr-st1-h" className="text-[11px] text-[var(--text-muted)]">Elevation H (m)</label>
                 <input
+                  id="gr-st1-h"
                   type="number"
                   step="0.01"
                   value={h1}
@@ -256,8 +261,9 @@ export default function GeodeticReductionPage() {
                 />
               </div>
               <div>
-                <label className="text-[11px] text-[var(--text-muted)]">Geoid Undulation N (m)</label>
+                <label htmlFor="gr-st1-und" className="text-[11px] text-[var(--text-muted)]">Geoid Undulation N (m)</label>
                 <input
+                  id="gr-st1-und"
                   type="number"
                   step="0.01"
                   value={nUndulation1}
@@ -272,8 +278,9 @@ export default function GeodeticReductionPage() {
             <h3 className="text-sm font-semibold text-[var(--text-primary)]">Station 2 (Target Station)</h3>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] text-[var(--text-muted)]">Easting (m)</label>
+                <label htmlFor="gr-st2-e" className="text-[11px] text-[var(--text-muted)]">Easting (m)</label>
                 <input
+                  id="gr-st2-e"
                   type="number"
                   step="0.001"
                   value={e2}
@@ -282,8 +289,9 @@ export default function GeodeticReductionPage() {
                 />
               </div>
               <div>
-                <label className="text-[11px] text-[var(--text-muted)]">Northing (m)</label>
+                <label htmlFor="gr-st2-n" className="text-[11px] text-[var(--text-muted)]">Northing (m)</label>
                 <input
+                  id="gr-st2-n"
                   type="number"
                   step="0.001"
                   value={n2}
@@ -292,8 +300,9 @@ export default function GeodeticReductionPage() {
                 />
               </div>
               <div>
-                <label className="text-[11px] text-[var(--text-muted)]">Elevation H (m)</label>
+                <label htmlFor="gr-st2-h" className="text-[11px] text-[var(--text-muted)]">Elevation H (m)</label>
                 <input
+                  id="gr-st2-h"
                   type="number"
                   step="0.01"
                   value={h2}
@@ -302,8 +311,9 @@ export default function GeodeticReductionPage() {
                 />
               </div>
               <div>
-                <label className="text-[11px] text-[var(--text-muted)]">Geoid Undulation N (m)</label>
+                <label htmlFor="gr-st2-und" className="text-[11px] text-[var(--text-muted)]">Geoid Undulation N (m)</label>
                 <input
+                  id="gr-st2-und"
                   type="number"
                   step="0.01"
                   value={nUndulation2}

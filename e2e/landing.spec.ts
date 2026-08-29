@@ -8,13 +8,15 @@ test.describe('Landing Page', () => {
 
   test('renders hero section with key content', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('h1')).toContainText('Surveying software')
-    await expect(page.locator('h1')).toContainText('East Africa')
+    await expect(page.locator('h1')).toContainText('Field notes in')
+    await expect(page.locator('h1')).toContainText('Deed plan out')
   })
 
-  test('shows East African focus in hero copy', async ({ page }) => {
+  test('shows Kenyan survey workflow focus in hero copy', async ({ page }) => {
     await page.goto('/')
-    const heroCopy = page.locator('p').filter({ hasText: 'built for Kenyan surveyors' }).first()
+    // Hero copy (aa87eeb7): "...assembles the NLIMS submission — no Excel,
+    // no CAD, no retyping..." — NLIMS/ArdhiSasa is the Kenya land-system focus.
+    const heroCopy = page.locator('p').filter({ hasText: 'NLIMS submission' }).first()
     await expect(heroCopy).toBeVisible()
   })
 

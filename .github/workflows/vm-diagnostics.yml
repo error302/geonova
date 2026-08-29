@@ -1,0 +1,81 @@
+name: VM Diagnostics
+
+# Read-only production VM inspection over SSH (owner ops tool, 2026-08-30).
+# Runs ONLY on manual workflow_dispatch — no push/PR triggers, so it never
+# interferes with CI or production deploys. All commands are strictly
+# read-only (no restarts, no writes, no container mutations).
+#
+# Useful when you want to answer "what is production actually running?":
+# deployed commit, container health, DB connectivity, disk/memory, recent
+# app logs, and pre-deploy backup inventory.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vm-diagnostics
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    name: Read-only VM state inspection
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VM_SSH_KEY }}
+
+      - name: Pin VM host key (VM_KNOWN_HOSTS secret)
+        run: |
+          if [ -n "${{ secrets.VM_KNOWN_HOSTS }}" ]; then
+            echo "${{ secrets.VM_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+            echo "SSH_STRICT=yes" >> "$GITHUB_ENV"
+          else
+            ssh-keyscan -T 10 -H "${{ secrets.VM_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
+            echo "::warning::VM_KNOWN_HOSTS not set; using best-effort keyscan."
+            echo "SSH_STRICT=no" >> "$GITHUB_ENV"
+          fi
+
+      - name: Run read-only diagnostics on the VM
+        run: |
+          ssh -o StrictHostKeyChecking=$SSH_STRICT -o ConnectTimeout=15 \
+            ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} bash -s << 'DIAG'
+          set -uo pipefail
+          echo "===== 1. HOST ====="
+          whoami && hostname && uptime
+          echo ""
+          echo "===== 2. DEPLOYED COMMIT (~/metardu) ====="
+          cd "$HOME/metardu" && git log --oneline -3 2>&1
+          echo "--- working tree drift ---"
+          git status --short | head -15
+          echo "--- local vs origin/main ---"
+          git fetch origin main --quiet 2>/dev/null
+          git rev-list --left-right --count HEAD...origin/main 2>/dev/null | awk '{print "behind origin/main by "$2" commits; ahead by "$1}'
+          echo ""
+          echo "===== 3. CONTAINERS ====="
+          docker ps --format '{{.Names}}\t{{.Status}}\t{{.RunningFor}}' 2>&1
+          echo "--- metardu-app health ---"
+          docker inspect --format '{{.State.Status}} | restarts: {{.RestartCount}} | started: {{.State.StartedAt}}' metardu-app 2>&1
+          echo ""
+          echo "===== 4. APP HEALTH (localhost:3000) ====="
+          curl -sf --max-time 10 http://localhost:3000/api/public/health | head -c 500 || echo "(health endpoint error)"
+          echo ""
+          echo ""
+          echo "===== 5. DB CONNECTIVITY ====="
+          docker exec metardu-postgres pg_isready -U "${POSTGRES_USER:-metardu}" 2>&1 || \
+            docker exec metardu-postgres sh -c 'pg_isready -U "$POSTGRES_USER"' 2>&1
+          echo ""
+          echo "===== 6. RESOURCES ====="
+          df -h / | tail -1
+          free -h | head -2
+          echo ""
+          echo "===== 7. PRE-DEPLOY BACKUPS (last 5) ====="
+          ls -lht "$HOME/metardu-backups" 2>/dev/null | head -6 || echo "(no backups dir)"
+          echo ""
+          echo "===== 8. RECENT APP LOG (last 15 lines) ====="
+          docker logs --tail 15 metardu-app 2>&1 | tail -15
+          echo ""
+          echo "===== DIAGNOSTICS COMPLETE ====="
+          DIAG

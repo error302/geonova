@@ -19,6 +19,7 @@
  */
 import { MpesaService } from '@/lib/payments/mpesa'
 import { getPlan } from '@/lib/subscription/catalog'
+import { paymentReceiptEmail } from '@/lib/email-templates/paymentReceipt'
 
 import { defined } from '@/test-utils/defined'
 
@@ -199,7 +200,6 @@ describe('P0-4: M-Pesa callback parsing + amount verification', () => {
     })
 
     test('generates branded payment receipt with Till 3370347 details', () => {
-      const { paymentReceiptEmail } = require('@/lib/email-templates/paymentReceipt')
       const receipt = paymentReceiptEmail.render({
         to: 'surveyor@kenya.co.ke',
         name: 'James Mwangi',
