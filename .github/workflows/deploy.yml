@@ -93,15 +93,21 @@ jobs:
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
           BACKUP_DIR="$HOME/metardu-backups"
           mkdir -p "$BACKUP_DIR"
-          PG_USER=$(grep -E '^POSTGRES_USER=' .env | head -1 | cut -d= -f2-)
-          PG_DB=$(grep -E '^POSTGRES_DB=' .env | head -1 | cut -d= -f2-)
-          PG_USER="${PG_USER:-metardu}"; PG_DB="${PG_DB:-metardu}"
-          if docker exec metardu-postgres pg_dump -U "$PG_USER" "$PG_DB" 2>/dev/null | gzip > "$BACKUP_DIR/pre_deploy_${TIMESTAMP}.sql.gz"; then
-            SIZE=$(du -h "$BACKUP_DIR/pre_deploy_${TIMESTAMP}.sql.gz" | cut -f1)
-            echo "Backup saved: $BACKUP_DIR/pre_deploy_${TIMESTAMP}.sql.gz ($SIZE)"
+          BACKUP_FILE="$BACKUP_DIR/pre_deploy_${TIMESTAMP}.sql.gz"
+          # Use the postgres container's OWN env (set by compose at init) —
+          # avoids host-side .env parsing/quote issues entirely.
+          if docker exec metardu-postgres sh -c 'pg_dump -U "${POSTGRES_USER:-postgres}" "${POSTGRES_DB:-$POSTGRES_USER}"' | gzip > "$BACKUP_FILE"; then
+            SIZE=$(stat -c%s "$BACKUP_FILE" 2>/dev/null || echo 0)
+            if [ "$SIZE" -gt 1000 ]; then
+              echo "Backup saved: $BACKUP_FILE ($(du -h "$BACKUP_FILE" | cut -f1), $SIZE bytes)"
+            else
+              echo "FATAL: backup file suspiciously small ($SIZE bytes) — likely a failed dump. Aborting."
+              rm -f "$BACKUP_FILE"
+              exit 1
+            fi
           else
             echo "FATAL: pre-deploy database backup failed — aborting so we never deploy without a rollback point."
-            rm -f "$BACKUP_DIR/pre_deploy_${TIMESTAMP}.sql.gz"
+            rm -f "$BACKUP_FILE"
             exit 1
           fi
           PREFLIGHT
