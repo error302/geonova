@@ -16,6 +16,17 @@
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'audit'
 
+/**
+ * Marker for log calls that must NOT be re-forwarded to Sentry.
+ * Used by captureError's dev-branch log to break the otherwise infinite
+ * captureError → logger.error → captureError loop (each pass embeds the
+ * previous context, growing the log line exponentially — this once flooded
+ * the build worker's stdout socket until ENOBUFS crashed `next build`).
+ * Symbol keys are skipped by JSON.stringify, so the marker never appears
+ * in the emitted log entry.
+ */
+export const NO_FORWARD = Symbol('logger.noForward')
+
 interface LogEntry {
   level: LogLevel
   message: string
@@ -48,8 +59,14 @@ class Logger {
   error(message: string, metadata?: Record<string, unknown> & { error?: Error | unknown }) {
     this.write('error', message, metadata)
 
-    // Forward to Sentry on server-side (if available)
-    if (this.isServer && metadata?.error instanceof Error) {
+    // Forward to Sentry on server-side (if available) — unless the caller
+    // marked the entry NO_FORWARD (see captureError: forwarding a log that
+    // itself came from captureError re-enters captureError forever).
+    if (
+      this.isServer &&
+      metadata?.error instanceof Error &&
+      !(metadata as Record<symbol, unknown>)[NO_FORWARD]
+    ) {
       try {
         import('@/lib/monitoring/sentry').then(({ captureError }) => {
           captureError(metadata.error as Error, { message, ...metadata })

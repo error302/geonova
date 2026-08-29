@@ -11,7 +11,7 @@
  */
 
 import * as Sentry from '@sentry/nextjs'
-import { logger } from '@/lib/logger'
+import { logger, NO_FORWARD } from '@/lib/logger'
 
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN
 const SENTRY_ENVIRONMENT = process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || 'production'
@@ -27,11 +27,15 @@ export function initSentry() {
       replaysSessionSampleRate: 0.1,
       replaysOnErrorSampleRate: 1.0,
       beforeSend(event) {
-        // Silence known non-actionable build noise: /api/portfolio dynamic server usage
+        // Silence known non-actionable build noise: DYNAMIC_SERVER_USAGE is
+        // Next.js's normal control-flow signal for "this route reads
+        // request.headers → render dynamically" — not an error. During
+        // `next build` it fires for every such route (observed: /api/portfolio,
+        // /api/osm/features, /api/osm/status — ~660 mentions each in one log).
         const digest = (event as unknown as { digest?: string })?.digest || (event.exception?.values?.[0] as unknown as { digest?: string })?.digest
         const msg = event.exception?.values?.[0]?.value || ''
-        if (digest === 'DYNAMIC_SERVER_USAGE' && msg.includes('/api/portfolio')) return null
-        if (msg.includes("Route /api/portfolio couldn't be rendered statically")) return null
+        if (digest === 'DYNAMIC_SERVER_USAGE') return null
+        if (msg.includes("couldn't be rendered statically")) return null
         // Scrub any API keys that might leak into error messages
         if (event.request?.headers) {
           delete event.request.headers['Authorization']
@@ -57,7 +61,14 @@ export function captureError(error: Error, context?: Record<string, unknown>) {
   if (isProduction()) {
     Sentry.captureException(error, { extra: context })
   } else {
-    logger.error('[sentry] Error captured:', { error, context })
+    // Dev/CI (no DSN): log it — but mark NO_FORWARD so logger.error doesn't
+    // bounce it straight back into captureError (infinite loop, exponential
+    // log growth; see NO_FORWARD in logger.ts).
+    logger.error('[sentry] Error captured:', {
+      error,
+      context,
+      [NO_FORWARD]: true,
+    } as Record<string, unknown> & Record<symbol, boolean>)
   }
 }
 
