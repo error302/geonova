@@ -14,7 +14,7 @@
  *
  * Environment:
  *   PORT — WebSocket server port (default: 8090)
- *   ALLOWED_HOSTS — Comma-separated NTRIP caster hosts (default: allow all)
+ *   ALLOWED_HOSTS — Comma-separated NTRIP caster hosts (default: deny all — audit H-11)
  *
  * Docker:
  *   Wired into docker-compose.yml as the metardu-ntrip service (P0-6, 2026-07-24).
