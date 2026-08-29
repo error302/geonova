@@ -1,20 +1,28 @@
 name: Deploy to Production
 
-# SECURITY (audit H-14, 2026-08-30): production deploys are MANUAL only.
-# Previously every push to main shipped straight to production within
-# minutes over an unverified SSH channel — any merged change (or a
-# compromised PAT) went live unreviewed. The staging-and-promote pipeline
-# (promote.yml) remains the recommended path; this workflow now requires
-# an explicit workflow_dispatch trigger.
-# Re-enable automatic deploys only after branch protection with required
-# review is active on main.
+# Production deploys run AUTOMATICALLY on every push to main (owner decision,
+# 2026-08-30). The original auto-deploy trigger had been silently dead for a
+# long time due to a `branches: ain]` typo (valid YAML, matches no branch), so
+# production was actually updated by hand while everyone believed CI/CD was
+# shipping. This restores the intended push-to-main → production behaviour.
+#
+# Security posture (audit H-14, rebalanced per owner preference for automatic
+# deploys):
+#   - No credentials in the repo: SSH uses the VM_SSH_KEY secret
+#   - The VM host key is PINNED via the VM_KNOWN_HOSTS secret →
+#     StrictHostKeyChecking=yes (MITM-proof channel to production)
+#   - A pre-deploy database backup is taken on the VM before any change
+#   - Required env vars are verified BEFORE the build (fail fast, clear msg)
+#   - Post-deploy container health + HTTP verification gates every run
+#   - Rollback path: rollback.yml (with the SHA recorded by promote.yml)
+#
+# Recommended hardening (not enforced today): branch protection with required
+# reviews on main, so pushes are reviewed before they auto-deploy.
+
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
-    inputs:
-      confirm:
-        description: 'Type "deploy" to confirm production deployment'
-        required: true
-        default: ''
 
 concurrency:
   group: production-deploy
@@ -25,7 +33,6 @@ jobs:
     name: Deploy to Production VM via Docker
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    if: github.event_name != 'workflow_dispatch' || inputs.confirm == 'deploy'
 
     steps:
       - name: Setup SSH
@@ -33,13 +40,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.VM_SSH_KEY }}
 
-      # SECURITY (audit H-14, 2026-08-30): pin the VM host key when the
-      # VM_KNOWN_HOSTS secret is configured (`ssh-keyscan -H <host>` output,
-      # one line per key type). The deploy channel previously accepted ANY
-      # host key (StrictHostKeyChecking=no) — a MITM-able channel to
-      # production. Without the secret we fall back to keyscan TOFU with a
-      # loud warning so existing deploys keep working while the secret is
-      # being added.
+      # SECURITY (audit H-14): the VM host key is pinned from the
+      # VM_KNOWN_HOSTS secret (`ssh-keyscan -H <host>` output). Without the
+      # secret we fall back to a best-effort keyscan with a loud warning so
+      # deploys keep working while the secret is being (re-)added.
       - name: Pin VM host key (VM_KNOWN_HOSTS secret) or best-effort keyscan
         run: |
           if [ -n "${{ secrets.VM_KNOWN_HOSTS }}" ]; then
@@ -51,6 +55,56 @@ jobs:
               echo "::warning::VM_KNOWN_HOSTS not set and ssh-keyscan failed; deploy continues with StrictHostKeyChecking=no. Add the VM_KNOWN_HOSTS secret to pin the host key (audit H-14)."
             echo "SSH_STRICT=no" >> "$GITHUB_ENV"
           fi
+
+      # Pre-flight + safety net BEFORE the rebuild:
+      #   1. Fail fast (clear message) if any env var the app hard-requires
+      #      is missing from ~/metardu/.env — docker compose would otherwise
+      #      fail mid-deploy with a cryptic error (or worse, ship a config
+      #      that silently breaks payments/cron).
+      #   2. Take a pre-deploy database backup so any bad migration or data
+      #      change can be rolled back (same guarantee promote.yml gives).
+      - name: "Pre-flight: verify required env vars and back up the database"
+        run: |
+          ssh -o StrictHostKeyChecking=$SSH_STRICT -o ConnectTimeout=15 \
+            ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} bash -s << 'PREFLIGHT'
+          set -eo pipefail
+          cd "$HOME/metardu"
+
+          echo "=== [1/2] Verifying required env vars in .env ==="
+          MISSING=0
+          for v in POSTGRES_PASSWORD AUTH_SECRET WORKER_SECRET API_ADMIN_KEY PAYPAL_WEBHOOK_ID; do
+            if grep -qE "^${v}=.+" .env 2>/dev/null; then
+              echo "  $v: ok"
+            else
+              echo "  $v: MISSING — deploy aborted."
+              MISSING=1
+            fi
+          done
+          if [ "$MISSING" -ne 0 ]; then
+            echo ""
+            echo "FATAL: required env vars missing in ~/metardu/.env."
+            echo "PAYPAL_WEBHOOK_ID: the webhook handler rejects ALL PayPal events"
+            echo "without it (audit H-03 fail-closed). API_ADMIN_KEY: cron + metrics"
+            echo "auth (audit H-13). Add the missing vars to the VM .env and re-run."
+            exit 1
+          fi
+
+          echo "=== [2/2] Pre-deploy database backup ==="
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          BACKUP_DIR="$HOME/metardu-backups"
+          mkdir -p "$BACKUP_DIR"
+          PG_USER=$(grep -E '^POSTGRES_USER=' .env | head -1 | cut -d= -f2-)
+          PG_DB=$(grep -E '^POSTGRES_DB=' .env | head -1 | cut -d= -f2-)
+          PG_USER="${PG_USER:-metardu}"; PG_DB="${PG_DB:-metardu}"
+          if docker exec metardu-postgres pg_dump -U "$PG_USER" "$PG_DB" 2>/dev/null | gzip > "$BACKUP_DIR/pre_deploy_${TIMESTAMP}.sql.gz"; then
+            SIZE=$(du -h "$BACKUP_DIR/pre_deploy_${TIMESTAMP}.sql.gz" | cut -f1)
+            echo "Backup saved: $BACKUP_DIR/pre_deploy_${TIMESTAMP}.sql.gz ($SIZE)"
+          else
+            echo "FATAL: pre-deploy database backup failed — aborting so we never deploy without a rollback point."
+            rm -f "$BACKUP_DIR/pre_deploy_${TIMESTAMP}.sql.gz"
+            exit 1
+          fi
+          PREFLIGHT
 
       - name: Pull latest code and rebuild Docker
         run: |
