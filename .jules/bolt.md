@@ -1,0 +1,3 @@
+## 2024-05-18 - Replacing Math.max/min spread on large point cloud arrays
+**Learning:** Using `Math.min(...array)` or `Math.max(...array)` on large arrays (like surveyor point clouds or spot heights) can throw V8 "Maximum call stack size exceeded" errors because the spread operator passes each element as a separate argument to the function. Additionally, using `.map()` on these arrays prior to the spread creates unnecessary intermediate arrays, adding $O(n)$ memory and processing overhead.
+**Action:** When calculating bounds (minX, maxX, minY, maxY) on datasets that could potentially contain thousands of points (e.g. `spotHeights`, `pointClouds`, `coordinates`), always use a single `for` or `reduce` loop instead of spreading into `Math.min` or `Math.max`.
