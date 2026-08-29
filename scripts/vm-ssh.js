@@ -10,11 +10,18 @@ const path = require('path');
 const cmd = process.argv.slice(2).join(' ') || 'echo hello';
 const conn = new Client();
 
-// Try key-based auth first, fall back to password
-const VM_HOST = '84.8.133.9';
-const VM_USER = 'opc';
+// SECURITY (audit C-01, 2026-08-30): host/user/password come from the
+// environment — no credentials in source. Key-based auth is preferred.
+const VM_HOST = process.env.VM_HOST;
+const VM_USER = process.env.VM_USER || 'opc';
+const VM_PASSWORD = process.env.VM_PASSWORD; // optional fallback
 const keyPath = path.join(require('os').homedir(), '.ssh', 'oracle-metardu.key');
 const hasKey = fs.existsSync(keyPath);
+
+if (!VM_HOST) {
+  console.error('ERROR: VM_HOST environment variable is required');
+  process.exit(1);
+}
 
 const config = {
   host: VM_HOST,
@@ -25,8 +32,11 @@ const config = {
 
 if (hasKey) {
   config.privateKey = fs.readFileSync(keyPath);
+} else if (VM_PASSWORD) {
+  config.password = VM_PASSWORD;
 } else {
-  config.password = 'dosho2020';
+  console.error('ERROR: no SSH key at ' + keyPath + ' and no VM_PASSWORD set');
+  process.exit(1);
 }
 
 conn.on('ready', () => {

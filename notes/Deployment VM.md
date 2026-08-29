@@ -8,7 +8,7 @@ tags: [deployment, vm, docker, production]
 Production deployment procedures for METARDU.
 
 ## Infrastructure
-- **VM**: `84.8.133.9`, user `opc`
+- **VM**: address managed via environment/password manager (audit C-01), user `opc`
 - **SSH key**: `~/.ssh/oracle-metardu.key`
 - **Project dir**: `/home/opc/metardu`
 - **Containers**: `metardu-postgres`, `metardu-worker`, `metardu-app`, `metardu-redis`
@@ -23,7 +23,7 @@ docker compose build metardu-app
 git push
 
 # 3. On VM
-ssh -i ~/.ssh/oracle-metardu.key opc@84.8.133.9
+ssh -i ~/.ssh/oracle-metardu.key opc@$VM_HOST
 cd /home/opc/metardu
 git pull
 docker compose up -d --no-deps metardu-app

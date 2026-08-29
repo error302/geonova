@@ -41,6 +41,82 @@ export interface ApiHandlerContext {
   params: Record<string, string>
 }
 
+// ── SECURITY (audit H-07, 2026-08-30): fresh role & suspension state ──
+//
+// The JWT session strategy caches `role` for up to 7 days — a demoted or
+// suspended admin kept full API access until token expiry, and nothing
+// propagated the change. Privileged (role-gated) routes now re-validate the
+// caller's role and suspension from the database through a 60-second cache,
+// replicating exactly the role computation used at sign-in (DB role, then
+// verified email-match grants, then surveyor_profiles fallback).
+const ROLE_CACHE_TTL_MS = 60_000
+interface FreshRoleEntry {
+  role: string
+  suspended: boolean
+  expires: number
+}
+const freshRoleCache = new Map<string, FreshRoleEntry>()
+
+async function getFreshRoleAndSuspension(
+  userId: string
+): Promise<{ role: string; suspended: boolean } | null> {
+  const cached = freshRoleCache.get(userId)
+  if (cached && cached.expires > Date.now()) {
+    return { role: cached.role, suspended: cached.suspended }
+  }
+
+  try {
+    const { rows } = await db.query<{
+      role: string | null
+      profile_role: string | null
+      email: string
+      email_verified: boolean | null
+      is_suspended: boolean | null
+    }>(
+      `SELECT u.role, sp.role AS profile_role, u.email, u.email_verified,
+              COALESCE(sp.is_suspended, FALSE) AS is_suspended
+         FROM users u
+         LEFT JOIN surveyor_profiles sp ON sp.user_id = u.id
+        WHERE u.id = $1
+        LIMIT 1`,
+      [userId]
+    )
+    if (rows.length === 0) return null
+
+    const row = rows[0]
+    let role = row.role || 'surveyor'
+
+    // Mirror the sign-in role computation (src/lib/auth.ts) — verified
+    // email-matched grants only (audit C-06).
+    const accountEmailVerified = row.email_verified === true
+    const platformOwnerEmail = process.env.PLATFORM_OWNER_EMAIL?.toLowerCase()
+    if (platformOwnerEmail && row.email.toLowerCase() === platformOwnerEmail && accountEmailVerified) {
+      role = 'super_admin'
+    }
+    const adminEmails = (process.env.ADMIN_EMAILS || '')
+      .split(',')
+      .map((e: string) => e.trim().toLowerCase())
+      .filter(Boolean)
+    if (adminEmails.includes(row.email.toLowerCase()) && accountEmailVerified) {
+      role = 'super_admin'
+    } else if ((!row.role || row.role === 'user') && row.profile_role) {
+      role = row.profile_role
+    }
+
+    const entry: FreshRoleEntry = {
+      role,
+      suspended: row.is_suspended === true,
+      expires: Date.now() + ROLE_CACHE_TTL_MS,
+    }
+    freshRoleCache.set(userId, entry)
+    return { role: entry.role, suspended: entry.suspended }
+  } catch {
+    // Fail closed for privileged routes — a broken DB lookup must not
+    // silently fall back to trusting a possibly-stale token claim.
+    return null
+  }
+}
+
 /**
  * Tamper-evident audit chain configuration for a route.
  *
@@ -216,13 +292,42 @@ export function apiHandler(
         }
 
         if (roles && roles.length > 0) {
-          const userRole = (session.user as { role?: string }).role ?? 'surveyor'
-          if (!roles.includes(userRole)) {
+          // SECURITY (audit H-07, 2026-08-30): privileged routes re-validate
+          // role + suspension from the database (60s cache). A demoted or
+          // suspended admin loses access within a minute instead of keeping
+          // it until their JWT expires (up to 7 days).
+          const gateUid = (session.user as { id?: string }).id
+          if (!gateUid) {
             return NextResponse.json(
               { error: 'Insufficient permissions', code: 'FORBIDDEN' },
               { status: 403 }
             )
           }
+          const fresh = await getFreshRoleAndSuspension(String(gateUid))
+          if (!fresh) {
+            logger.warn('[apiHandler] Role gate could not verify account state — failing closed', {
+              userId: gateUid,
+              path: normalizePath(req.nextUrl.pathname),
+            })
+            return NextResponse.json(
+              { error: 'Unable to verify account permissions. Please try again.', code: 'FORBIDDEN' },
+              { status: 403 }
+            )
+          }
+          if (fresh.suspended) {
+            return NextResponse.json(
+              { error: 'This account is suspended', code: 'ACCOUNT_SUSPENDED' },
+              { status: 403 }
+            )
+          }
+          if (!roles.includes(fresh.role)) {
+            return NextResponse.json(
+              { error: 'Insufficient permissions', code: 'FORBIDDEN' },
+              { status: 403 }
+            )
+          }
+          // Propagate the fresh role so handlers see current state
+          ;(session.user as { role?: string }).role = fresh.role
         }
       }
 

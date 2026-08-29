@@ -128,7 +128,10 @@ export const LevellingObservationSchema = z.object({
 
 export const RegisterSchema = z.object({
   email: z.string().email().max(200).trim().toLowerCase(),
-  password: z.string().min(6, 'Password must be at least 6 characters').max(128),
+  // AUDIT FIX (M-04, 2026-08-30): unified to the 8-character minimum enforced
+  // by the register and reset-password routes — this shared schema previously
+  // accepted 6.
+  password: z.string().min(8, 'Password must be at least 8 characters').max(128),
   full_name: z.string().min(2).max(200).trim(),
   isk_number: z.string().max(50).trim().optional(),
 })

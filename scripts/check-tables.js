@@ -1,11 +1,15 @@
+// SECURITY (audit C-01, 2026-08-30): connection details come from the
+// environment (DATABASE_URL or discrete PG* variables) — no credentials
+// in source. The old hardcoded host/password were removed.
 const pg = require('pg')
-const c = new pg.Client({
-  host: '34.170.248.156',
-  port: 5432,
-  user: 'metardu',
-  password: 'Z7m7066C6UJBUK',
-  database: 'metardu'
-})
+
+const connectionString = process.env.DATABASE_URL
+if (!connectionString) {
+  console.error('ERROR: DATABASE_URL environment variable is required')
+  process.exit(1)
+}
+
+const c = new pg.Client({ connectionString })
 
 c.connect()
   .then(() => c.query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name"))

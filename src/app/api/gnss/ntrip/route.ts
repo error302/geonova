@@ -93,6 +93,24 @@ export async function GET(request: NextRequest) {
   const username = searchParams.get('user') || undefined
   const password = searchParams.get('pass') || undefined
 
+  // SECURITY (audit H-11, 2026-08-30): the mountpoint is interpolated into
+  // the NTRIP request line — reject CR/LF/NUL outright (CRLF injection).
+  if (/[\r\n\x00-\x1f]/.test(mountpoint)) {
+    return new Response(JSON.stringify({ error: 'Invalid mountpoint' }), {
+      status: 400, headers: { 'Content-Type': 'application/json' },
+    })
+  }
+  if (username && /[\r\n\x00-\x1f]/.test(username)) {
+    return new Response(JSON.stringify({ error: 'Invalid username' }), {
+      status: 400, headers: { 'Content-Type': 'application/json' },
+    })
+  }
+  if (password && /[\r\n\x00-\x1f]/.test(password)) {
+    return new Response(JSON.stringify({ error: 'Invalid password' }), {
+      status: 400, headers: { 'Content-Type': 'application/json' },
+    })
+  }
+
   if (!host || !mountpoint) {
     return new Response(JSON.stringify({ error: 'host and mountpoint are required' }), {
       status: 400,
@@ -142,7 +160,11 @@ export async function GET(request: NextRequest) {
         // Dynamic import net (Node.js only)
         const { createConnection } = await import('net')
 
-        const socket = createConnection({ host, port }, () => {
+        // SECURITY (audit H-11, 2026-08-30): connect to the RESOLVED IP
+        // literal, not the hostname — closes the DNS-rebinding TOCTOU where
+        // validation resolves the name and createConnection resolves it
+        // again, potentially to a different (internal) address.
+        const socket = createConnection({ host: resolvedIP, port }, () => {
           // Send NTRIP HTTP request
           const auth = username
             ? `Authorization: Basic ${Buffer.from(`${username}:${password || ''}`).toString('base64')}\r\n`

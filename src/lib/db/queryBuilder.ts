@@ -53,6 +53,12 @@ export class QueryBuilder<T = Record<string, unknown>> {
   private insertPayload: Record<string, unknown> | Record<string, unknown>[] | null = null
   private updatePayload: Record<string, unknown> | null = null
   private upsertConflict: string = 'id'
+  // SECURITY (audit C-02, 2026-08-30): optional tenant guard on upsert. When
+  // set, the DO UPDATE branch carries `WHERE "<table>"."<col>" = $n`, so a
+  // crafted ON CONFLICT (id) payload can only update rows that already belong
+  // to the caller's tenant scope. Cross-tenant row theft is suppressed: the
+  // conflicting row fails the guard and is left untouched.
+  private conflictGuard: { column: string; value: unknown } | null = null
   // SECURITY (2026-08-03): never set from any caller — always '*'. It is
   // re-validated at execution time by buildReturningColumns() so a future
   // setter can't introduce an interpolation hole.
@@ -131,6 +137,15 @@ export class QueryBuilder<T = Record<string, unknown>> {
 
   delete(): this {
     this.operation = 'delete'
+    return this
+  }
+
+  /**
+   * Attach a tenant guard to a subsequent upsert() (audit C-02).
+   * See the conflictGuard field docs above. Call BEFORE the builder executes.
+   */
+  withConflictGuard(column: string, value: unknown): this {
+    this.conflictGuard = { column: this.validateIdentifier(column, 'column'), value }
     return this
   }
 
@@ -544,6 +559,18 @@ export class QueryBuilder<T = Record<string, unknown>> {
   }
 
   private async executeUpdate(): Promise<QueryResult<T>> {
+    // SECURITY (audit C-02, 2026-08-30): refuse to execute an UPDATE without
+    // a WHERE clause — a bare update rewrites every row in the table.
+    if (this.filters.length === 0 && this.orFilters.length === 0) {
+      return {
+        data: null,
+        error: {
+          message: 'Refusing to UPDATE without a WHERE clause',
+          code: 'NO_WHERE_CLAUSE',
+          details: 'Add at least one filter to scope the update',
+        },
+      }
+    }
     if (!this.updatePayload) return { data: null, error: { message: 'No data to update', code: 'NO_DATA' } }
 
     const params: unknown[] = []
@@ -568,6 +595,19 @@ export class QueryBuilder<T = Record<string, unknown>> {
   }
 
   private async executeDelete(): Promise<QueryResult<T>> {
+    // SECURITY (audit C-02, 2026-08-30): refuse to execute a DELETE without a
+    // WHERE clause. A bare `DELETE FROM table` destroys every row in the
+    // table; the /api/db proxy previously allowed exactly that.
+    if (this.filters.length === 0 && this.orFilters.length === 0) {
+      return {
+        data: null,
+        error: {
+          message: 'Refusing to DELETE without a WHERE clause',
+          code: 'NO_WHERE_CLAUSE',
+          details: 'Add at least one filter to scope the deletion',
+        },
+      }
+    }
     const params: unknown[] = []
     let sql = `DELETE FROM "${this.table}"`
     sql += this.buildWhereClause(params)
@@ -611,7 +651,17 @@ export class QueryBuilder<T = Record<string, unknown>> {
     const updateSet = updateCols.map((c) => `"${c}" = EXCLUDED."${c}"`).join(', ')
     // Degenerate case: every payload column is a conflict column — DO NOTHING
     // is valid SQL where `DO UPDATE SET ` (empty) would not be.
-    const conflictAction = updateSet ? `DO UPDATE SET ${updateSet}` : 'DO NOTHING'
+    let conflictAction: string
+    if (!updateSet) {
+      conflictAction = 'DO NOTHING'
+    } else if (this.conflictGuard) {
+      // Tenant guard: the DO UPDATE branch only fires when the conflicting
+      // row already belongs to the caller's verified scope.
+      params.push(this.conflictGuard.value)
+      conflictAction = `DO UPDATE SET ${updateSet} WHERE "${this.table}"."${this.conflictGuard.column}" = $${params.length}`
+    } else {
+      conflictAction = `DO UPDATE SET ${updateSet}`
+    }
 
     const sql = `INSERT INTO "${this.table}" (${quotedColumns}) VALUES ${valuesList.join(', ')} ON CONFLICT (${quotedConflict}) ${conflictAction} RETURNING ${this.buildReturningColumns()}`
 

@@ -19,10 +19,13 @@ export interface PayPalOrder {
 export interface PayPalCaptureResult {
   id: string
   status: string
+  // NOTE (audit H-02, 2026-08-30): `payments` is an OBJECT in the real PayPal
+  // v2 capture response, not an array — the previous (array) typing matched no
+  // actual API payload, and code indexing payments[0] always got undefined.
   purchase_units: {
     payments: {
       captures: { id: string; status: string; amount: { value: string; currency_code: string } }[]
-    }[]
+    }
   }[]
 }
 

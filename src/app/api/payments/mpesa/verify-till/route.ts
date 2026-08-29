@@ -6,7 +6,6 @@ import { z } from 'zod'
 import db from '@/lib/db'
 import { getPlan, getPlanPrice } from '@/lib/subscription/catalog'
 import { sendEmail } from '@/lib/email'
-import { paymentReceiptEmail } from '@/lib/email-templates/paymentReceipt'
 import { logger } from '@/lib/logger'
 
 const TILL_NUMBER = '3370347'
@@ -23,10 +22,6 @@ const VerifyTillSchema = z.object({
   userName: z.string().optional(),
 })
 
-interface SubscriptionRow {
-  id: string
-}
-
 interface PaymentHistoryRow {
   id: string
 }
@@ -37,10 +32,25 @@ interface UserRow {
   name?: string
 }
 
+/**
+ * POST /api/payments/mpesa/verify-till
+ *
+ * SECURITY (audit C-03, 2026-08-30): the Till (Buy Goods) flow cannot verify a
+ * receipt against Safaricom from this endpoint — a regex on the code string
+ * proves nothing. Previously ANY 8-12 character string instantly activated
+ * any paid plan ("verification theater"). Claims are now recorded in
+ * payment_history with status 'pending_review' and grant NOTHING until an
+ * admin approves them against the merchant M-Pesa statement via
+ * /api/admin/payments/till-claims.
+ *
+ * The client-supplied userEmail/userName fields are intentionally ignored for
+ * delivery: confirmations go to the account's own email only, so this endpoint
+ * cannot be used as a platform-branded phishing channel.
+ */
 export const POST = apiHandler(
   { auth: true, rateLimit: { max: 20, windowMs: 60000 }, schema: VerifyTillSchema },
   async (_req, ctx) => {
-    const { planId, mpesaCode, phoneNumber, userEmail, userName } = ctx.body as z.infer<
+    const { planId, mpesaCode, phoneNumber } = ctx.body as z.infer<
       typeof VerifyTillSchema
     >
 
@@ -55,41 +65,39 @@ export const POST = apiHandler(
 
     // 2. Check for duplicate M-Pesa code across payment_history to prevent double-spending
     const existingPayment = await db.query<PaymentHistoryRow>(
-      `SELECT id FROM payment_history 
-       WHERE transaction_id = $1 OR (metadata->>'mpesaCode' = $1 AND status = 'completed')`,
+      `SELECT id FROM payment_history
+       WHERE transaction_id = $1 OR (metadata->>'mpesaCode' = $1 AND status IN ('pending_review', 'completed'))`,
       [mpesaCode]
     )
 
     if (existingPayment.rows.length > 0) {
       return NextResponse.json(
-        { error: 'This M-Pesa transaction code has already been verified and claimed.' },
+        { error: 'This M-Pesa transaction code has already been submitted for verification.' },
         { status: 409 }
       )
     }
 
-    // 3. Resolve user details
+    // 3. Resolve user details (account email only — client-supplied addresses
+    //    are never used for delivery, see C-03 phishing note)
     const userRes = await db.query<UserRow>(
       `SELECT id, email, name FROM users WHERE id = $1`,
       [ctx.userId]
     )
     const user = userRes.rows[0]
-    const recipientEmail = userEmail || user?.email || ''
-    const recipientName = userName || user?.name || 'Surveyor'
 
     // 4. Resolve plan pricing
     const plan = getPlan(planId)
     const planDisplayName = plan?.name || (planId.toUpperCase() + ' Plan')
     const amount = getPlanPrice(planId, 'KES')
-    const paidAt = new Date().toISOString()
-    const periodStart = new Date().toISOString()
-    const periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+    const submittedAt = new Date().toISOString()
 
-    // 5. Record payment in payment_history
+    // 5. Record the claim in payment_history as pending_review — no
+    //    subscription mutation happens here (audit C-03).
     await db.query<never>(
       `INSERT INTO payment_history
          (user_id, amount, currency, payment_method, provider, provider_id,
           status, transaction_id, metadata)
-       VALUES ($1, $2, 'KES', 'mpesa_till', 'safaricom_buygoods', $3, 'completed', $4, $5)`,
+       VALUES ($1, $2, 'KES', 'mpesa_till', 'safaricom_buygoods', $3, 'pending_review', $4, $5)`,
       [
         ctx.userId,
         amount,
@@ -100,74 +108,46 @@ export const POST = apiHandler(
           planId,
           mpesaCode,
           phoneNumber: phoneNumber || 'N/A',
-          verifiedAt: paidAt,
+          submittedAt,
         }),
       ]
     )
 
-    // 6. Activate or upgrade user subscription
-    const existingSub = await db.query<SubscriptionRow>(
-      'SELECT id FROM user_subscriptions WHERE user_id = $1',
-      [ctx.userId]
-    )
-
-    if (existingSub.rows.length > 0) {
-      await db.query<never>(
-        `UPDATE user_subscriptions
-         SET plan_id = $1, status = 'active', payment_method = 'mpesa_till',
-             currency = 'KES', current_period_start = $2, current_period_end = $3,
-             updated_at = NOW()
-         WHERE id = $4`,
-        [planId, periodStart, periodEnd, existingSub.rows[0].id]
-      )
-    } else {
-      await db.query<never>(
-        `INSERT INTO user_subscriptions
-           (user_id, plan_id, status, payment_method, currency,
-            current_period_start, current_period_end)
-         VALUES ($1, $2, 'active', 'mpesa_till', 'KES', $3, $4)`,
-        [ctx.userId, planId, periodStart, periodEnd]
-      )
-    }
-
-    // 7. Dispatch custom branded HTML email receipt
-    let receiptSent = false
-    if (recipientEmail) {
+    // 6. Acknowledge submission to the account email (plain confirmation, no receipt)
+    if (user?.email) {
       try {
-        const receipt = paymentReceiptEmail.render({
-          to: recipientEmail,
-          name: recipientName,
-          planName: `${planDisplayName} Plan`,
-          amount,
-          currency: 'KES',
-          paidAt,
-          transactionId: mpesaCode,
-          paymentMethod: `M-Pesa Buy Goods · Till ${TILL_NUMBER}`,
+        await sendEmail({
+          to: user.email,
+          subject: `METARDU — M-Pesa payment received for review (${mpesaCode})`,
+          html: `<p>Hi ${user.name || 'Surveyor'},</p>
+<p>We received your M-Pesa payment claim for the <b>${planDisplayName} plan</b> (KES ${amount}, code <b>${mpesaCode}</b>, Till ${TILL_NUMBER}).</p>
+<p>Our team verifies every Till payment against the merchant M-Pesa statement. Your plan activates automatically once the payment is confirmed — usually within a few hours.</p>
+<p>If your payment is not confirmed within 24 hours, please reply to this email with a screenshot of the M-Pesa confirmation SMS.</p>
+<p>— METARDU</p>`,
+          text: `Hi ${user.name || 'Surveyor'}, we received your M-Pesa payment claim for the ${planDisplayName} plan (KES ${amount}, code ${mpesaCode}, Till ${TILL_NUMBER}). It is pending manual verification against the merchant statement; your plan activates once confirmed. — METARDU`,
         })
-
-        const emailRes = await sendEmail({
-          to: recipientEmail,
-          subject: receipt.subject,
-          html: receipt.html,
-          text: receipt.text,
-        })
-        receiptSent = !!emailRes.success
       } catch (emailErr) {
-        logger.warn('[mpesa-till] Failed to send email receipt:', { error: emailErr })
+        logger.warn('[mpesa-till] Failed to send submission acknowledgment:', { error: emailErr })
       }
     }
 
+    logger.info('[mpesa-till] Claim submitted for review', {
+      userId: ctx.userId,
+      planId,
+      mpesaCode,
+    })
+
     return NextResponse.json({
       success: true,
-      message: `Successfully verified M-Pesa payment for ${planDisplayName} plan.`,
+      status: 'pending_review',
+      message: `Payment submitted for verification. Your ${planDisplayName} plan activates once the M-Pesa payment is confirmed (usually within a few hours).`,
       planId,
       planName: planDisplayName,
       amount,
       currency: 'KES',
       transactionId: mpesaCode,
       tillNumber: TILL_NUMBER,
-      receiptSent,
-      expiresAt: periodEnd,
+      submittedAt,
     })
   }
 )

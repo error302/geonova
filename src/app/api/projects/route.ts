@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { apiHandler, AppError } from '@/lib/api/handler'
 import { db } from '@/lib/db'
+import { checkProjectLimit } from '@/lib/subscription/subscriptionEngine'
 import { z } from 'zod'
 import { logger } from '@/lib/logger'
 
@@ -45,6 +46,18 @@ export const POST = apiHandler({
   schema: createProjectSchema,
   handler: async (ctx) => {
     const validated = ctx.input
+
+    // SECURITY (audit H-04, 2026-08-30): server-side entitlement check.
+    // Free-tier project limits were previously enforced only in the UI —
+    // the entitlement engine existed but was never called anywhere.
+    const limitCheck = await checkProjectLimit(ctx.userId, ctx.userEmail)
+    if (!limitCheck.allowed) {
+      throw new AppError(
+        limitCheck.reason || 'Plan limit reached',
+        402,
+        'PLAN_LIMIT_REACHED'
+      )
+    }
 
     const projectResult = await db.query<ProjectRow>(
       `INSERT INTO projects (user_id, name, survey_type, location, utm_zone, hemisphere,

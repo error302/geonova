@@ -39,22 +39,28 @@ class YjsMeshNetwork {
       }
     }
 
-    // WebRTC Provider for P2P Local LAN sync (using public & local signaling)
+    // SECURITY (audit H-10, 2026-08-30): the WebRTC mesh is OPT-IN. The
+    // previous defaults routed survey-point CRDT payloads through the public
+    // signaling.yjs.dev service with a password baked into every browser
+    // bundle (i.e. not a secret at all), and room names derived from
+    // projectIds that leak through URLs — anyone who learned a projectId
+    // could join the room. Now the provider is only created when a
+    // self-hosted signaling URL is explicitly configured via
+    // NEXT_PUBLIC_COLLAB_SIGNALING_URL; local IndexedDB persistence and the
+    // authenticated collaboration WebSocket (/api/realtime/ticket) are
+    // unaffected.
     if (typeof window !== 'undefined') {
-      try {
-        const signalingServers = ['wss://signaling.yjs.dev', 'ws://localhost:4444']
-        const customSignaling = process.env.NEXT_PUBLIC_COLLAB_SIGNALING_URL
-        if (customSignaling) {
-          signalingServers.unshift(customSignaling)
+      const customSignaling = process.env.NEXT_PUBLIC_COLLAB_SIGNALING_URL
+      if (customSignaling) {
+        try {
+          const provider = new WebrtcProvider(`metardu-mesh-${projectId}`, doc, {
+            signaling: [customSignaling],
+            password: `metardu-${projectId}`, // per-room, not a real secret — see audit H-10
+          })
+          this.providers.set(projectId, provider)
+        } catch {
+          // Fallback gracefully if WebRTC is blocked
         }
-
-        const provider = new WebrtcProvider(`metardu-mesh-${projectId}`, doc, {
-          signaling: signalingServers,
-          password: 'metardu-secure-field',
-        })
-        this.providers.set(projectId, provider)
-      } catch {
-        // Fallback gracefully if WebRTC is blocked
       }
     }
 
@@ -85,10 +91,18 @@ class YjsMeshNetwork {
   public getLivePoints(projectId: string): Array<{ id: string; easting: number; northing: number; elevation?: number; code?: string }> {
     const doc = this.getDoc(projectId)
     const yPoints = doc.getMap<unknown>('live_points')
-    const results: Array<{ id: string; easting: number; northing: number; elevation?: number; code?: string }> = []
+    type LivePoint = { id: string; easting: number; northing: number; elevation?: number; code?: string }
+    const results: LivePoint[] = []
     yPoints.forEach((val) => {
       if (val && typeof val === 'object') {
-        results.push(val as any)
+        const candidate = val as Record<string, unknown>
+        if (
+          typeof candidate.id === 'string' &&
+          typeof candidate.easting === 'number' &&
+          typeof candidate.northing === 'number'
+        ) {
+          results.push(candidate as unknown as LivePoint)
+        }
       }
     })
     return results

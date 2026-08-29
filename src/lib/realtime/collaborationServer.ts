@@ -26,7 +26,7 @@
 import { WebSocketServer, WebSocket } from 'ws'
 import { createServer, IncomingMessage } from 'http'
 import { parse } from 'url'
-import { createHmac, createVerify } from 'crypto'
+import { createHmac, timingSafeEqual } from 'crypto'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -61,45 +61,79 @@ interface CollaborationMessage {
 }
 
 // ---------------------------------------------------------------------------
-// JWT Authentication
+// Room Ticket Authentication (audit H-09, 2026-08-30)
 // ---------------------------------------------------------------------------
 
 /**
- * Verify a JWT token (NextAuth-compatible).
+ * Signed room ticket — proves BOTH identity and project membership.
  *
- * NextAuth uses HS256 by default with AUTH_SECRET as the key.
- * This verifies the token signature without importing NextAuth
- * (keeps the WebSocket server lightweight).
+ * The collaboration WebSocket server has no database access, so project
+ * membership cannot be checked at connection time directly. Instead, the
+ * authenticated HTTP route POST /api/realtime/ticket verifies ownership
+ * (checkProjectAccess) and issues this short-lived HMAC ticket binding
+ * (userId, projectId). The WS server only needs the shared AUTH_SECRET to
+ * validate it — constant-time, expiry-checked, room-scoped.
+ *
+ * This replaces the previous scheme where the NextAuth session JWT traveled
+ * as a URL query parameter (leaking into proxy/access logs) and any
+ * authenticated user could join ANY project room by bare projectId. When
+ * AUTH_SECRET was unset the server even accepted a self-declared `?userId=`
+ * — full impersonation. Both paths are gone.
  */
-function verifyToken(token: string, secret: string): { userId?: string; email?: string; name?: string } | null {
+const ROOM_TICKET_TTL_MS = 5 * 60 * 1000
+
+export function signRoomTicket(
+  secret: string,
+  userId: string,
+  projectId: string,
+  userName?: string
+): string {
+  const payload = Buffer.from(
+    JSON.stringify({ userId, projectId, userName, exp: Date.now() + ROOM_TICKET_TTL_MS }),
+    'utf8'
+  ).toString('base64url')
+  const sig = createHmac('sha256', secret).update(payload).digest('base64url')
+  return `${payload}.${sig}`
+}
+
+export function verifyRoomTicket(
+  secret: string,
+  ticket: string,
+  projectId: string
+): { userId: string; userName?: string } | null {
   try {
-    const parts = token.split('.')
-    if (parts.length !== 3) return null
+    const dot = ticket.indexOf('.')
+    if (dot <= 0 || dot === ticket.length - 1) return null
+    const payload = ticket.slice(0, dot)
+    const sig = ticket.slice(dot + 1)
 
-    const [headerB64, payloadB64, signatureB64] = parts
-    const signedContent = `${headerB64}.${payloadB64}`
-
-    // Verify signature
-    const verify = createVerify('RSA-SHA256')
-    verify.update(signedContent)
-    verify.end()
-
-    // NextAuth uses HS256 (HMAC), not RSA
-    // For HMAC verification, we need crypto.createHmac
-    const expectedSig = createHmac('sha256', secret)
-      .update(signedContent)
-      .digest('base64url')
-
-    if (expectedSig !== signatureB64) {
+    // Constant-time signature comparison
+    const expected = createHmac('sha256', secret).update(payload).digest()
+    let given: Buffer
+    try {
+      given = Buffer.from(sig, 'base64url')
+    } catch {
+      return null
+    }
+    if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
       return null
     }
 
-    // Decode payload
-    const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString()) as { sub?: string; userId?: string; email?: string; name?: string; fullName?: string }
+    const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) as {
+      userId?: unknown
+      projectId?: unknown
+      userName?: unknown
+      exp?: unknown
+    }
+
+    // Binding + expiry checks — all fail closed
+    if (typeof data.userId !== 'string' || data.userId.length === 0) return null
+    if (data.projectId !== projectId) return null
+    if (typeof data.exp !== 'number' || Date.now() > data.exp) return null
+
     return {
-      userId: payload.sub || payload.userId,
-      email: payload.email,
-      name: payload.name || payload.fullName,
+      userId: data.userId,
+      userName: typeof data.userName === 'string' && data.userName.length > 0 ? data.userName : undefined,
     }
   } catch {
     return null
@@ -107,30 +141,35 @@ function verifyToken(token: string, secret: string): { userId?: string; email?: 
 }
 
 /**
- * Authenticate a WebSocket connection request.
- * Returns the user info if valid, null otherwise.
+ * Authenticate a WebSocket connection request via its room ticket.
+ * Returns the verified user + the room they are authorized to join, or null.
+ *
+ * SECURITY (audit H-09, 2026-08-30): there is NO unauthenticated fallback
+ * any more. Previously, when AUTH_SECRET was unset, the server accepted a
+ * self-declared ?userId= (full impersonation); the JWT path never checked
+ * token expiry and used non-constant-time comparison.
  */
-function authenticateRequest(req: IncomingMessage): { userId: string; userName: string } | null {
+function authenticateRequest(req: IncomingMessage): { userId: string; userName: string; projectId: string } | null {
   const url = parse(req.url || '', true)
-  const token = url.query.token as string
-  const userId = url.query.userId as string
-  const userName = url.query.userName as string
+  const ticket = url.query.ticket as string | undefined
+  const projectId = url.query.projectId as string | undefined
 
-  // If AUTH_SECRET is set, require valid token
   const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET
-  if (secret) {
-    if (!token) return null
-    const decoded = verifyToken(token, secret)
-    if (!decoded || !decoded.userId) return null
-    return {
-      userId: decoded.userId,
-      userName: decoded.name || userName || `User ${decoded.userId.substring(0, 6)}`,
-    }
+  if (!secret) {
+    console.error('[CollaborationServer] AUTH_SECRET not set — refusing all connections (fail closed)')
+    return null
   }
 
-  // Fallback: no secret set, allow unauthenticated (development only)
-  if (!userId) return null
-  return { userId, userName: userName || `User ${userId.substring(0, 6)}` }
+  if (!ticket || !projectId) return null
+
+  const verified = verifyRoomTicket(secret, ticket, projectId)
+  if (!verified) return null
+
+  return {
+    userId: verified.userId,
+    userName: verified.userName || `User ${verified.userId.substring(0, 6)}`,
+    projectId,
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -218,16 +257,16 @@ export class CollaborationServer {
     this.wss = new WebSocketServer({ server, path: '/ws/collaboration' })
 
     this.wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
-      // Authenticate the connection
+      // Authenticate the connection — ticket binds userId AND the room
       const auth = authenticateRequest(req)
       if (!auth) {
         ws.close(1008, 'Authentication failed')
         return
       }
 
-      const url = parse(req.url || '', true)
-      const projectId = url.query.projectId as string
-
+      // SECURITY (audit H-09, 2026-08-30): the room is the one the ticket
+      // authorizes — never a client-supplied projectId.
+      const projectId = auth.projectId
       if (!projectId) {
         ws.close(1008, 'Missing projectId')
         return

@@ -1,0 +1,25 @@
+# CODEOWNERS (audit L-10, 2026-08-30)
+# Every change to these security-critical paths requires review by the
+# platform owner. Replace @error302 with a GitHub team once more maintainers
+# exist. Branch protection (Settings → Branches → main) should require
+# "Require review from Code Owners".
+
+# Security-critical: authentication, authorization, payments, secrets
+/src/lib/auth.ts                    @error302
+/src/lib/apiHandler.ts              @error302
+/src/lib/security/                  @error302
+/src/app/api/auth/                  @error302
+/src/app/api/payments/              @error302
+/src/app/api/webhooks/              @error302
+/src/app/api/admin/                 @error302
+/src/app/api/db/                    @error302
+/src/lib/db/                        @error302
+
+# Infrastructure & deployment
+/.github/workflows/                 @error302
+/docker-compose.yml                 @error302
+/Dockerfile*                        @error302
+/scripts/                           @error302
+
+# Default: everything else
+*                                   @error302

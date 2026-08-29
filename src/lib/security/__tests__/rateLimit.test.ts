@@ -107,11 +107,22 @@ describe('rateLimit (in-memory implementation)', () => {
 })
 
 describe('getClientIdentifier', () => {
-  it('extracts the first IP from X-Forwarded-For', () => {
+  // SECURITY (audit H-08, 2026-08-30): the identifier now comes from the
+  // RIGHTMOST X-Forwarded-For hop (the one appended by our own reverse
+  // proxy) — the first entry is client-controlled behind an appending proxy
+  // and let attackers rotate fake IPs to defeat rate limits.
+  it('extracts the LAST (proxy-appended) IP from X-Forwarded-For', () => {
     const req = new Request('https://example.com', {
       headers: { 'x-forwarded-for': '1.2.3.4, 5.6.7.8' },
     })
-    expect(getClientIdentifier(req)).toBe('1.2.3.4')
+    expect(getClientIdentifier(req)).toBe('5.6.7.8')
+  })
+
+  it('prefers CF-Connecting-IP when present', () => {
+    const req = new Request('https://example.com', {
+      headers: { 'x-forwarded-for': '1.2.3.4, 5.6.7.8', 'cf-connecting-ip': '9.9.9.9' },
+    })
+    expect(getClientIdentifier(req)).toBe('9.9.9.9')
   })
 
   it('handles a single IP in X-Forwarded-For', () => {
@@ -123,9 +134,16 @@ describe('getClientIdentifier', () => {
 
   it('trims whitespace around IPs', () => {
     const req = new Request('https://example.com', {
-      headers: { 'x-forwarded-for': '  1.2.3.4  , 5.6.7.8' },
+      headers: { 'x-forwarded-for': '  1.2.3.4  , 5.6.7.8  ' },
     })
-    expect(getClientIdentifier(req)).toBe('1.2.3.4')
+    expect(getClientIdentifier(req)).toBe('5.6.7.8')
+  })
+
+  it('falls back to x-real-ip when X-Forwarded-For is missing', () => {
+    const req = new Request('https://example.com', {
+      headers: { 'x-real-ip': '4.3.2.1' },
+    })
+    expect(getClientIdentifier(req)).toBe('4.3.2.1')
   })
 
   it('returns "unknown" when X-Forwarded-For is missing', () => {

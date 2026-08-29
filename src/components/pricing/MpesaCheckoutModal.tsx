@@ -60,15 +60,15 @@ export function MpesaCheckoutModal({
         }),
       })
 
-      const data = await res.json()
+      const data = (await res.json()) as { error?: string; success?: boolean; status?: string }
 
       if (!res.ok) {
         throw new Error(data.error || 'Verification failed. Please check your transaction code.')
       }
 
       setSuccess(true)
-    } catch (err: any) {
-      setError(err.message || 'Failed to verify M-Pesa code. Please try again.')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to verify M-Pesa code. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -85,7 +85,7 @@ export function MpesaCheckoutModal({
             </div>
             <div>
               <h3 className="text-base font-bold text-[var(--text-primary)]">Lipa na M-Pesa Buy Goods</h3>
-              <p className="text-xs text-[var(--text-muted)]">Instant activation via Till Number</p>
+              <p className="text-xs text-[var(--text-muted)]">Manual verification against the merchant statement</p>
             </div>
           </div>
           <button
@@ -104,9 +104,10 @@ export function MpesaCheckoutModal({
                 <CheckCircle2 className="w-8 h-8" />
               </div>
               <div className="space-y-1">
-                <h4 className="text-xl font-bold text-[var(--text-primary)]">Payment Verified!</h4>
+                <h4 className="text-xl font-bold text-[var(--text-primary)]">Payment Submitted</h4>
                 <p className="text-sm text-[var(--text-secondary)]">
-                  Your <strong className="text-white">{planName}</strong> subscription is now active for 30 days.
+                  We received your <strong className="text-white">{planName}</strong> payment claim. Your plan activates
+                  as soon as the M-Pesa transaction is confirmed — usually within a few hours.
                 </p>
               </div>
 
@@ -124,13 +125,14 @@ export function MpesaCheckoutModal({
                   <span className="text-emerald-400 font-bold">KSh {amountKes.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Email Receipt:</span>
-                  <span className="text-white">{email || 'Sent to registered email'}</span>
+                  <span>Status:</span>
+                  <span className="text-amber-300 font-bold">Pending verification</span>
                 </div>
               </div>
 
               <p className="text-xs text-[var(--text-muted)]">
-                A branded VAT/payment receipt has been delivered to your inbox.
+                A confirmation email has been sent to your registered address. We verify every Till
+                payment against the merchant M-Pesa statement to keep the platform fraud-free.
               </p>
 
               <button
@@ -250,12 +252,12 @@ export function MpesaCheckoutModal({
                   {loading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Verifying with Safaricom…</span>
+                      <span>Submitting payment for review…</span>
                     </>
                   ) : (
                     <>
                       <ShieldCheck className="w-4 h-4" />
-                      <span>Verify Payment & Activate Instant Access</span>
+                      <span>Submit Payment for Verification</span>
                     </>
                   )}
                 </button>

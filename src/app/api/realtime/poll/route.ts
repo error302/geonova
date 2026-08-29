@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
+import { checkProjectAccess } from '@/lib/security/projectAccess'
 // Only allow specific tables to be queried, and require auth
 const ALLOWED_TABLES = [
   'projects',
@@ -20,6 +21,17 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   if (!ALLOWED_TABLES.includes(table)) {
     return NextResponse.json({ error: 'Invalid table' }, { status: 400 })
+  }
+
+  // SECURITY (audit H-05, 2026-08-30): verify project ownership/membership.
+  // Previously any project_id was accepted — any authenticated user could
+  // poll any project's live fieldbook and survey-point data.
+  const access = await checkProjectAccess(_ctx.userId, projectId)
+  if (!access.allowed) {
+    return NextResponse.json(
+      { error: 'You do not have access to this project', code: 'FORBIDDEN' },
+      { status: 403 }
+    )
   }
 
   const { rows } = await db.query<never>(

@@ -3,9 +3,8 @@
 // ──────────────────────────────────────────────────────────────────────────
 // GET /api/public/metrics → Prometheus text format
 //
-// No authentication required (Prometheus needs open access).
-// Security: This endpoint should be restricted at the reverse proxy level
-// to only allow connections from your Prometheus scraper IP.
+// No authentication required (Prometheus needs open access) — SUPERSEDED,
+// see isAuthorized below (audit H-13).
 //
 // Caddy example:
 //   handle /api/public/metrics {
@@ -15,7 +14,7 @@
 //   }
 // ──────────────────────────────────────────────────────────────────────────
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import {
   getMetrics,
   getContentType,
@@ -68,7 +67,32 @@ async function initializeMetrics() {
   }
 }
 
-export async function GET() {
+// SECURITY (audit H-13, 2026-08-30): requires the API_ADMIN_KEY bearer token.
+// The old comment said "restrict at the reverse proxy" — no such rule ever
+// existed, and the audit confirmed the full Prometheus dump was reachable
+// anonymously in production.
+
+export const dynamic = 'force-dynamic'
+
+function isAuthorized(request: NextRequest): boolean {
+  const adminKey = process.env.API_ADMIN_KEY
+  if (!adminKey) {
+    // Fail closed: no key configured → nobody may scrape
+    return false
+  }
+  const authHeader = request.headers.get('authorization') || ''
+  const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : ''
+  return bearer === adminKey
+}
+
+export async function GET(request: NextRequest) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json(
+      { error: 'Metrics require the API admin bearer token' },
+      { status: 401 },
+    )
+  }
+
   try {
     await initializeMetrics();
 

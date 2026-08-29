@@ -129,14 +129,30 @@ export const DELETE = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6
   const fullPath = safeResolvePath(filePath)
   if (!fullPath) return NextResponse.json({ error: 'Invalid path' }, { status: 400 })
 
+  // SECURITY (audit H-05, 2026-08-30): ownership is verified BEFORE any
+  // filesystem mutation. Previously fs.unlink ran unconditionally — any
+  // authenticated user could delete any file under the storage root by
+  // knowing its path. Now a file may be deleted only when the caller owns
+  // the file_uploads row, or (for untracked paths) when the path sits under
+  // the caller's own /<userId>/ directory.
   const { rows } = await db.query<FileUploadRow>(
-    'SELECT id FROM file_uploads WHERE file_path = $1 AND user_id = $2',
-    [filePath, ctx.userId]
+    'SELECT id, user_id FROM file_uploads WHERE file_path = $1',
+    [filePath]
   ).catch(() => ({ rows: [] as FileUploadRow[] }))
+
+  const trackedOwner = rows.find(row => row.user_id === ctx.userId)
+  const pathOwnedByUser = filePath.includes(`/${ctx.userId}/`)
+
+  if (rows.length > 0 && !trackedOwner) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+  if (rows.length === 0 && !pathOwnedByUser) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
 
   await fs.unlink(fullPath).catch(() => {})
 
-  if (rows.length > 0) {
+  if (rows.length > 0 && trackedOwner) {
     await db.query<never>(
       'DELETE FROM file_uploads WHERE file_path = $1 AND user_id = $2',
       [filePath, ctx.userId]

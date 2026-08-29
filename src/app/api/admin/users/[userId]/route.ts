@@ -26,13 +26,17 @@ export const dynamic = 'force-dynamic'
  * If the DB row's `updated_at` differs (another admin edited it), returns 409.
  *
  * Body fields are split across two tables:
- *   users table:             full_name, email
+ *   users table:             full_name (email is intentionally immutable here)
  *   surveyor_profiles table: firm_name, license_number, phone
  */
 const patchUserProfileSchema = z.object({
   // users table fields
   full_name: z.string().min(1).optional(),
-  email: z.string().email().optional(),
+  // SECURITY (audit C-06/M-05, 2026-08-30): `email` is deliberately NOT
+  // patchable through this route. An org_admin could previously set any
+  // user's email to the platform owner's address, then re-login as
+  // super_admin through the email-matched role grant. Email changes require
+  // a verified re-ownership flow and are not part of admin profile editing.
   // surveyor_profiles table fields
   firm_name: z.string().nullable().optional(),
   license_number: z.string().nullable().optional(),
@@ -69,7 +73,7 @@ export const PATCH = apiHandler(
 
     const userAllowedFields: Record<string, string> = {
       full_name: 'full_name',
-      email: 'email',
+      // email intentionally excluded — see schema note (audit C-06/M-05)
     }
 
     for (const [bodyKey, colName] of Object.entries(userAllowedFields)) {

@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { apiHandler } from '@/lib/apiHandler'
 import { db } from '@/lib/db'
+import { checkVersionedEntityAccess } from '@/lib/security/projectAccess'
 import { z } from 'zod'
 
 /** Entity types that support versioning — moved to shared module to avoid Next.js route type inference */
@@ -53,6 +54,17 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   const { entity_type, entity_id, limit, offset } = parsed.data
 
+  // SECURITY (audit H-05, 2026-08-30): verify the caller owns / is a member
+  // of the project the versioned entity belongs to. Previously version
+  // history was readable for ANY entity UUID with no ownership check.
+  const access = await checkVersionedEntityAccess(_ctx.userId, entity_type, entity_id)
+  if (!access.allowed) {
+    return NextResponse.json(
+      { error: 'You do not have access to this entity', code: 'FORBIDDEN' },
+      { status: 403 }
+    )
+  }
+
   const { rows } = await db.query<EntityVersionRow>(
     `SELECT id, entity_type, entity_id, version, snapshot, delta, change_summary, created_by, created_at
      FROM entity_versions
@@ -83,6 +95,15 @@ const CreateSnapshotSchema = z.object({
 
 export const POST = apiHandler({ auth: true, schema: CreateSnapshotSchema }, async (req, ctx) => {
   const { entity_type, entity_id, change_summary } = ctx.body as z.infer<typeof CreateSnapshotSchema>
+
+  // SECURITY (audit H-05, 2026-08-30): ownership check before snapshotting
+  const access = await checkVersionedEntityAccess(ctx.userId, entity_type, entity_id)
+  if (!access.allowed) {
+    return NextResponse.json(
+      { error: 'You do not have access to this entity', code: 'FORBIDDEN' },
+      { status: 403 }
+    )
+  }
 
   // Get current state from the source table
   const { rows: entityRows } = await db.query<Record<string, unknown>>(

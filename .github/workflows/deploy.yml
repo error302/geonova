@@ -1,9 +1,20 @@
 name: Deploy to Production
 
+# SECURITY (audit H-14, 2026-08-30): production deploys are MANUAL only.
+# Previously every push to main shipped straight to production within
+# minutes over an unverified SSH channel — any merged change (or a
+# compromised PAT) went live unreviewed. The staging-and-promote pipeline
+# (promote.yml) remains the recommended path; this workflow now requires
+# an explicit workflow_dispatch trigger.
+# Re-enable automatic deploys only after branch protection with required
+# review is active on main.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "deploy" to confirm production deployment'
+        required: true
+        default: ''
 
 concurrency:
   group: production-deploy
@@ -11,11 +22,10 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deploy to GCP VM via Docker
+    name: Deploy to Production VM via Docker
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    # Only deploy after CI passes (typecheck + lint)
-    # CI is separate workflow — this runs on push to main only
+    if: github.event_name != 'workflow_dispatch' || inputs.confirm == 'deploy'
 
     steps:
       - name: Setup SSH
@@ -23,19 +33,28 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.VM_SSH_KEY }}
 
-      # AUDIT FIX (2026-08-03): ssh-keyscan was a hard blocker — if the VM's
-      # SSH port is temporarily unreachable from GitHub runners, the whole
-      # deploy failed at this step even though the deploy command below uses
-      # `-o StrictHostKeyChecking=no` (which does not need known_hosts).
-      # Now best-effort with a timeout: warn but never block the deploy.
-      - name: Add VM to known hosts (best-effort)
+      # SECURITY (audit H-14, 2026-08-30): pin the VM host key when the
+      # VM_KNOWN_HOSTS secret is configured (`ssh-keyscan -H <host>` output,
+      # one line per key type). The deploy channel previously accepted ANY
+      # host key (StrictHostKeyChecking=no) — a MITM-able channel to
+      # production. Without the secret we fall back to keyscan TOFU with a
+      # loud warning so existing deploys keep working while the secret is
+      # being added.
+      - name: Pin VM host key (VM_KNOWN_HOSTS secret) or best-effort keyscan
         run: |
-          ssh-keyscan -T 10 -H "${{ secrets.VM_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || \
-            echo "::warning::ssh-keyscan could not reach VM_HOST; deploy continues (StrictHostKeyChecking=no)"
+          if [ -n "${{ secrets.VM_KNOWN_HOSTS }}" ]; then
+            echo "${{ secrets.VM_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+            echo "Host key pinned from VM_KNOWN_HOSTS secret — StrictHostKeyChecking enabled."
+            echo "SSH_STRICT=yes" >> "$GITHUB_ENV"
+          else
+            ssh-keyscan -T 10 -H "${{ secrets.VM_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || \
+              echo "::warning::VM_KNOWN_HOSTS not set and ssh-keyscan failed; deploy continues with StrictHostKeyChecking=no. Add the VM_KNOWN_HOSTS secret to pin the host key (audit H-14)."
+            echo "SSH_STRICT=no" >> "$GITHUB_ENV"
+          fi
 
       - name: Pull latest code and rebuild Docker
         run: |
-          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=15 \
+          ssh -o StrictHostKeyChecking=$SSH_STRICT -o ConnectTimeout=15 \
             ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} bash -s << 'DEPLOY'
           set -eo pipefail
 

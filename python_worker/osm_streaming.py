@@ -41,6 +41,7 @@ POST /osm/stream-extract
 
 import os
 import json
+import re
 import logging
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Body
@@ -295,6 +296,29 @@ class StreamExtractRequest(BaseModel):
 
 stream_router = APIRouter(prefix="/osm", tags=["osm-stream"])
 
+# SECURITY (audit H-16, 2026-08-30): all stream-extract output is written
+# into this fixed server-side directory. The caller previously supplied an
+# arbitrary `output_path` and the worker happily created/wrote ANY path in
+# the container (arbitrary file write — a dropped .pth in site-packages is
+# remote code execution). Now only the FILENAME is accepted, stripped to its
+# basename, and validated; the directory is fixed and absolute paths or
+# traversal fragments are rejected.
+STREAM_OUTPUT_DIR = os.environ.get("OSM_STREAM_OUTPUT_DIR", "data/extracts")
+
+def safe_output_path(client_path: str) -> str:
+    if not client_path or not isinstance(client_path, str):
+        raise HTTPException(status_code=400, detail="output_path is required")
+    # Reject absolute paths and any traversal fragment outright
+    if os.path.isabs(client_path) or ".." in client_path.replace("\\", "/").split("/"):
+        raise HTTPException(status_code=400, detail="output_path must be a bare filename")
+    basename = os.path.basename(client_path.replace("\\", "/"))
+    if not basename or basename in (".", ".."):
+        raise HTTPException(status_code=400, detail="output_path must be a bare filename")
+    if not re.match(r"^[\w.\-]+$", basename):
+        raise HTTPException(status_code=400, detail="output_path contains invalid characters")
+    os.makedirs(STREAM_OUTPUT_DIR, exist_ok=True)
+    return os.path.join(STREAM_OUTPUT_DIR, basename)
+
 @stream_router.post("/stream-extract")
 async def api_stream_extract(request: StreamExtractRequest):
     """
@@ -316,7 +340,7 @@ async def api_stream_extract(request: StreamExtractRequest):
 
     result = stream_extract(
         pbf_path=pbf_path,
-        output_path=request.output_path,
+        output_path=safe_output_path(request.output_path),
         bbox=request.bbox,
         filters=request.filters,
     )

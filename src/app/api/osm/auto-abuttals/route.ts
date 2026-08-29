@@ -9,51 +9,61 @@
  *
  * Response:
  *   { "north": "Mombasa Road (120m E)", "south": "...", "east": "...", "west": "..." }
+ *
+ * SECURITY (audit H-12, 2026-08-30): requires an authenticated session, is
+ * rate-limited, and the radius is capped (2000m).
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { apiHandler } from '@/lib/apiHandler'
 
 const PYTHON_WORKER_URL = process.env.PYTHON_WORKER_URL || 'http://localhost:8001'
 const WORKER_SECRET = process.env.WORKER_SECRET || ''  // P0-5: fail-closed, no dev fallback
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = (await request.json().catch(() => ({}))) as { lat?: number; lon?: number; radius?: number }
-    const { lat, lon, radius = 200 } = body
+const MAX_RADIUS_METERS = 2000
 
-    if (typeof lat !== 'number' || typeof lon !== 'number') {
+export const POST = apiHandler(
+  { auth: true, rateLimit: { max: 20, windowMs: 60000 } },
+  async (request: NextRequest) => {
+    try {
+      const body = (await request.json().catch(() => ({}))) as { lat?: number; lon?: number; radius?: number }
+      const { lat, lon } = body
+      const radius = Math.min(Math.max(Number(body.radius ?? 200), 50), MAX_RADIUS_METERS)
+
+      if (typeof lat !== 'number' || typeof lon !== 'number') {
+        return NextResponse.json(
+          { error: 'lat and lon must be numbers' },
+          { status: 400 },
+        )
+      }
+
+      const res = await fetch(`${PYTHON_WORKER_URL}/osm/auto-abuttals`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Worker-Secret': WORKER_SECRET,
+        },
+        body: JSON.stringify({ lat, lon, radius }),
+      })
+
+      if (!res.ok) {
+        return NextResponse.json(
+          { error: `Worker returned ${res.status}`, fallback: true },
+          { status: res.status },
+        )
+      }
+
+      const data: unknown = await res.json()
+      return NextResponse.json(data)
+    } catch (err) {
       return NextResponse.json(
-        { error: 'lat and lon must be numbers' },
-        { status: 400 },
+        {
+          error: 'Python worker unavailable',
+          message: err instanceof Error ? err.message : 'Unknown error',
+          fallback: true,
+        },
+        { status: 503 },
       )
     }
-
-    const res = await fetch(`${PYTHON_WORKER_URL}/osm/auto-abuttals`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Worker-Secret': WORKER_SECRET,
-      },
-      body: JSON.stringify({ lat, lon, radius }),
-    })
-
-    if (!res.ok) {
-      return NextResponse.json(
-        { error: `Worker returned ${res.status}`, fallback: true },
-        { status: res.status },
-      )
-    }
-
-    const data = (await res.json()) as unknown
-    return NextResponse.json(data)
-  } catch (err) {
-    return NextResponse.json(
-      {
-        error: 'Python worker unavailable',
-        message: err instanceof Error ? err.message : 'Unknown error',
-        fallback: true,
-      },
-      { status: 503 },
-    )
   }
-}
+)

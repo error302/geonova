@@ -248,7 +248,13 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
+  // SECURITY (audit M-01, 2026-08-30): only webhooks (external provider
+  // callbacks with their own signature verification) and the container
+  // health probe are exempt from middleware. api/public/* as a whole was
+  // previously carved out, which meant the most exposed endpoints (e.g.
+  // /api/public/metrics — the H-13 metrics leak) received the LEAST header
+  // protection. They now run through the normal middleware pipeline.
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|manifest.json|manifest.webmanifest|sw.js|robots.txt|sitemap.xml|api/public/.*|api/webhooks/.*|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2|ttf|eot)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|manifest.json|manifest.webmanifest|sw.js|robots.txt|sitemap.xml|api/webhooks/.*|api/public/health.*|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2|ttf|eot)$).*)',
   ],
 }

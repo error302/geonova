@@ -58,10 +58,10 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 600
     : 5
 
   const { rows } = await db.query<BackgroundJobRow>(
-    `INSERT INTO background_jobs (job_type, payload, priority)
-     VALUES ($1, $2, $3)
+    `INSERT INTO background_jobs (job_type, payload, priority, created_by)
+     VALUES ($1, $2, $3, $4)
      RETURNING id, job_type, status, priority, created_at`,
-    [body.jobType, JSON.stringify(payload), priority]
+    [body.jobType, JSON.stringify(payload), priority, ctx.userId]
   )
 
   return NextResponse.json({ success: true, job: rows[0], jobId: rows[0].id })

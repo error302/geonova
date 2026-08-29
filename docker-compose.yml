@@ -113,8 +113,18 @@ services:
         NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://metardu.space}
         NEXT_PUBLIC_PAYPAL_CLIENT_ID: ${NEXT_PUBLIC_PAYPAL_CLIENT_ID:-}
     container_name: metardu-app
+    # SECURITY (audit C-05, 2026-08-30): bound to loopback only. Publishing
+    # 3000 on 0.0.0.0 let anyone reach the app origin directly, bypassing the
+    # reverse proxy (and its X-Forwarded-For handling) entirely. The proxy
+    # reaches the app either over the Docker network or via 127.0.0.1:3000.
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
+    # AUDIT FIX (H-15, 2026-08-30): uploaded files (STORAGE_ROOT, default
+    # /app/upload) previously lived on the container filesystem and were
+    # DESTROYED on every rebuild (`docker compose up -d --build`). They now
+    # live on a named volume that the backup sidecar also mounts.
+    volumes:
+      - uploads_data:/app/upload
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-metardu}:${POSTGRES_PASSWORD}@metardu-postgres:5432/${POSTGRES_DB:-metardu}
       - AUTH_SECRET=${AUTH_SECRET:?AUTH_SECRET must be set in .env}
@@ -222,7 +232,13 @@ services:
       - BACKUP_LOG_FILE=/var/log/backup.log
     volumes:
       - backups:/backups
-      - ./backups:/host-backups:ro  # optional: copy to host ./backups
+      # AUDIT FIX (H-15, 2026-08-30): the "offsite" host mount was READ-ONLY,
+      # so the offsite copy path could never write to it. It is now writable.
+      # Mount a real offsite destination (or use rclone in backup.sh).
+      - ./backups:/host-backups
+      # AUDIT FIX (H-15, 2026-08-30): uploads were never backed up — mount
+      # the shared uploads volume so backup.sh can archive it.
+      - uploads_data:/uploads:ro
     depends_on:
       metardu-postgres:
         condition: service_healthy
@@ -244,8 +260,11 @@ services:
       context: .
       dockerfile: Dockerfile.ntrip
     container_name: metardu-ntrip
+    # SECURITY (audit H-11, 2026-08-30): bound to loopback — the NTRIP proxy
+    # must not be an open relay reachable from the internet. Browsers reach
+    # it through the reverse proxy's /ntrip/* path, never the raw port.
     ports:
-      - "${NTRIP_PORT:-8090}:8090"
+      - "127.0.0.1:${NTRIP_PORT:-8090}:8090"
     environment:
       - PORT=8090
       - ALLOWED_HOSTS=${NTRIP_ALLOWED_HOSTS:-}
@@ -255,3 +274,4 @@ volumes:
   postgres_data:
   redis_data:
   backups:
+  uploads_data:

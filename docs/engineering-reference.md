@@ -13,7 +13,7 @@
 | Name | METARDU -- Professional Survey Computation Platform |
 | URL | https://metardu.space |
 | GitHub | git@github.com:error302/metardu.git |
-| VM Host | 34.170.248.156 (user: mohameddosho20@metardu) |
+| VM Host | (managed via environment/password manager — removed from docs per audit C-01) |
 | Version | 1.0.1 |
 
 ### Tech Stack
@@ -416,14 +416,14 @@ const result = formula
 ### Prerequisites
 
 - SSH key configured: `~/.ssh/id_ed25519`
-- Access to VM: `34.170.248.156` as `mohameddosho20@metardu`
+- Access to VM: `<VM_HOST>` as `<VM_USER>` (see password manager)
 - `.env.local` exists on VM with PostgreSQL connection string
 
 ### Step-by-Step Procedure
 
 ```bash
 # 1. SSH to VM
-ssh -i ~/.ssh/id_ed25519 mohameddosho20@34.170.248.156
+ssh -i ~/.ssh/id_ed25519 <VM_USER>@<VM_HOST>
 
 # 2. Navigate to project and pull latest code
 cd ~/metardu
@@ -607,7 +607,7 @@ docker compose up -d
 | Developer | mohameddosho20@metardu via SSH |
 | Repository | git@github.com:error302/metardu.git |
 | Live Site | https://metardu.space |
-| VM IP | 34.170.248.156 |
+| VM IP | (removed from docs — audit C-01) |
 
 ---
 

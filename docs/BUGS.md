@@ -130,7 +130,7 @@
 | Bug | Fix | Verified |
 |---|---|---|
 | Worker Dockerfile missing `gnss_processor.py` | Updated Dockerfile to copy all Python modules | ✅ |
-| Login fails first time | Created admin `mohameddosho20@gmail.com / Z7m7066C6UJBUK` directly via `node -e` inside container | ✅ |
+| Login fails first time | Created admin account directly via `node -e` inside container (credentials supplied at runtime, removed from docs per audit C-01) | ✅ |
 | `--accent` HSL conflict (H-001) | globals.css lines 103-127 converted to hex equivalents | ✅ Verified `/tools/curves` |
 | Quick Compute FAB overlap (M-001) | Bumped tools page bottom padding | ✅ Verified |
 | Fieldbook infinite loop (H-003) | `useMemo(() => createClient(), [])` | ✅ Verified 0 errors |

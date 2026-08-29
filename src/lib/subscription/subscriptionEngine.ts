@@ -71,11 +71,38 @@ export async function getSubscription(userId: string, email?: string): Promise<S
 
   const sub = rows[0]
   const planId = (sub.plan_id || 'free') as PlanId
-  const tier = TIERS[planId]
+
+  // SECURITY (audit H-04, 2026-08-30): enforce the period. Previously a
+  // cancelled or long-expired subscription kept granting its full plan
+  // features forever — nothing ever downgraded it. An inactive (cancelled /
+  // suspended / expired) subscription or one whose current_period_end has
+  // passed now reports as the free tier. Trials downgrade when the trial
+  // window ends.
+  const now = Date.now()
+  const periodEndMs = sub.current_period_end ? Date.parse(sub.current_period_end) : null
+  const trialEndMs = sub.trial_ends_at ? Date.parse(sub.trial_ends_at) : null
+
+  let effectivePlan: PlanId = planId
+  let effectiveStatus = sub.status as SubscriptionInfo['status']
+
+  if (sub.status === 'trial') {
+    if (trialEndMs !== null && trialEndMs < now) {
+      effectivePlan = 'free'
+      effectiveStatus = 'expired'
+    }
+  } else if (sub.status !== 'active') {
+    // cancelled / suspended / expired → free tier
+    effectivePlan = 'free'
+  } else if (periodEndMs !== null && periodEndMs < now) {
+    effectivePlan = 'free'
+    effectiveStatus = 'expired'
+  }
+
+  const tier = TIERS[effectivePlan]
 
   return {
-    plan: planId,
-    status: sub.status as SubscriptionInfo['status'],
+    plan: effectivePlan,
+    status: effectiveStatus,
     trialEndsAt: sub.trial_ends_at || null,
     periodStart: sub.current_period_start || new Date().toISOString(),
     periodEnd: sub.current_period_end || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),

@@ -30,7 +30,7 @@ User finds /fieldbook confusing for field data collection. Plan:
    - **Offline-first confirmation**: every save shows local-stored badge + sync state
    - **Quick-repeat**: "Next shot" pre-fills last station chain (A→B→C…)
    - Match dark theme tokens (--bg-secondary cards, --accent CTAs)
-3. Verify against live site with test account `qa.surveyor.agent@gmail.com` / `Qa-Survey-2026!x`
+3. Verify against the live site with the QA test account (credentials are managed in the password manager / VM `.env` — removed from this doc per audit C-01)
 
 ## Known open items
 | Item | Status |
@@ -43,7 +43,7 @@ User finds /fieldbook confusing for field data collection. Plan:
 | Traverse engine consolidation (4+ parallel engines in lib/engine, lib/survey, lib/computations) | Architecture cleanup |
 
 ## Environment notes for next session
-- Test account exists on prod: qa.surveyor.agent@gmail.com / Qa-Survey-2026!x (project "QA Riverside Plot 2026", id `84f4f841-df4c-499f-a2dd-982972352458`)
+- Test account exists on prod (email/credentials managed in password manager — removed from this doc per audit C-01; project "QA Riverside Plot 2026", id `84f4f841-df4c-499f-a2dd-982972352458`)
 - Local node_modules is stale (installed on wrong branch); run `npm ci --legacy-peer-deps --ignore-scripts` after checkout
 - Local dev server: `npx next dev -p 3200` works WITHOUT DB (auth redirects); use `src/app/navtest`-style stub pages for UI debugging
 - agent-browser CLI is authenticated and has prod cookies sometimes stale — re-login as needed

@@ -32,7 +32,9 @@ export const PUT = apiHandler(
 
     // Check caller has permission to manage users
     const permCheck = await requirePermissionAsync(callerId, 'users.invite');
-    if (permCheck) return permCheck.response as NextResponse;
+    // SECURITY (audit H-06, 2026-08-30): test the `denied` flag, not the
+    // always-truthy wrapper object (see admin/audit/route.ts note).
+    if (permCheck.denied) return permCheck.response as NextResponse;
 
     // Caller can only assign roles at or below their own level
     // Resolve caller role from DB

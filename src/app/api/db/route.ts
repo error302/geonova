@@ -21,6 +21,7 @@ import { apiHandler } from '@/lib/apiHandler'
 import { setCurrentUserId } from '@/lib/db'
 import { getPool } from '@/lib/db'
 import { QueryBuilder } from '@/lib/db/queryBuilder'
+import { checkProjectAccess } from '@/lib/security/projectAccess'
 import { env } from '@/lib/env'
 
 // ponytail: Phase 6 Batch 7 — typed request body for /api/db proxy.
@@ -80,12 +81,17 @@ const USER_SCOPED_TABLES = new Set([
 ])
 
 // Tables scoped to project_id (not user_id).
+// SECURITY (audit C-02, 2026-08-30): every access to these tables through
+// this proxy now REQUIRES a project_id scope (eq filter on read/update/delete,
+// payload field on insert/upsert) that is verified against project
+// ownership/membership before the query is built.
 const PROJECT_SCOPED_TABLES = new Set([
   'survey_points', 'parcels', 'alignments', 'cross_sections',
   'project_fieldbook_entries', 'survey_epochs', 'leveling_runs',
   'parcel_traverses', 'network_adjustments',
   'mining_surveys', 'hydro_surveys', 'gnss_sessions',
   'peer_review_requests', 'supporting_documents',
+  'project_sheets', 'survey_photos',
 ])
 
 // Tables that are read-only for all authenticated users
@@ -115,7 +121,6 @@ const ALLOWED_TABLES = new Set([
   ...Array.from(READ_ONLY_SHARED_TABLES),
   ...Array.from(ADMIN_ONLY_TABLES),
   ...Array.from(PUBLIC_BROWSE_TABLES),
-  'project_sheets', 'survey_photos',
 ])
 
 // NEVER allow these tables through the proxy
@@ -191,6 +196,77 @@ export const POST = apiHandler({ auth: false, rateLimit: { max: 120, windowMs: 6
     )
   }
 
+  // ─── Public browse tables are read-only (audit C-02) ─────────
+  // Previously any authenticated caller could insert/update/delete
+  // newsletter_subscribers (email harvesting), feedback and community rows.
+  if (PUBLIC_BROWSE_TABLES.has(table as string) && operation !== 'select') {
+    return NextResponse.json(
+      { data: null, error: { message: 'This table is read-only', code: 'FORBIDDEN' } },
+      { status: 403 }
+    )
+  }
+
+  // ─── Update payload sanitization (audit C-02) ────────────────
+  // Ownership/identity columns can never be rewritten through an UPDATE:
+  // stripping them prevents transferring a row to another user or project.
+  if (operation === 'update' && payload && !Array.isArray(payload)) {
+    const sanitized = payload as Record<string, unknown>
+    delete sanitized.id
+    delete sanitized.user_id
+    delete sanitized.project_id
+  }
+
+  // ─── Project-scoped tenancy check (audit C-02) ───────────────
+  // Every read/write of a project-scoped table must name exactly one
+  // project, and the caller must own or be a member of that project.
+  let projectScopeId: string | null = null
+  if (PROJECT_SCOPED_TABLES.has(table as string)) {
+    const isWritePayloadOp = operation === 'insert' || operation === 'upsert'
+    let targetProjectId: string | null = null
+
+    if (isWritePayloadOp) {
+      const rows = Array.isArray(payload) ? payload : (payload ? [payload] : [])
+      const first = rows[0] as Record<string, unknown> | undefined
+      const firstPid = first && typeof first.project_id === 'string' ? first.project_id : null
+      // Every row must target the SAME project — mixed-project writes are
+      // rejected outright so one verified project can't shield another.
+      const allSame = rows.every(
+        (r) => (r as Record<string, unknown>).project_id === firstPid,
+      )
+      targetProjectId = firstPid && allSame ? firstPid : null
+    } else {
+      const filterList = Array.isArray(filters) ? (filters as DbFilter[]) : []
+      for (const f of filterList) {
+        if (f.op === 'eq' && f.column === 'project_id' && typeof f.value === 'string') {
+          targetProjectId = f.value
+          break
+        }
+      }
+    }
+
+    if (!targetProjectId || !userId) {
+      return NextResponse.json(
+        {
+          data: null,
+          error: {
+            message: 'A project_id filter (or payload field) naming a project you have access to is required for this table',
+            code: 'PROJECT_SCOPE_REQUIRED',
+          },
+        },
+        { status: 403 }
+      )
+    }
+
+    const access = await checkProjectAccess(userId, targetProjectId)
+    if (!access.allowed) {
+      return NextResponse.json(
+        { data: null, error: { message: 'You do not have access to this project', code: 'FORBIDDEN' } },
+        { status: 403 }
+      )
+    }
+    projectScopeId = targetProjectId
+  }
+
   let qb = new QueryBuilder(getPool(), table as string)
 
   // Apply operation
@@ -224,11 +300,28 @@ export const POST = apiHandler({ auth: false, rateLimit: { max: 120, windowMs: 6
     // inside upsert() via validateIdentifier — each comma-separated column
     // must match the strict identifier allowlist, so it cannot inject SQL.
     qb = qb.upsert(upsertPayload, onConflict ? { onConflict } : undefined)
+    // Tenant guards (audit C-02): a crafted ON CONFLICT (id) payload must not
+    // be able to flip a victim row's user_id/project_id through the
+    // DO UPDATE branch. The guard restricts updates to rows already inside
+    // the caller's verified scope.
+    if (USER_SCOPED_TABLES.has(table as string) && userId) {
+      qb = qb.withConflictGuard('user_id', userId)
+    }
+    if (PROJECT_SCOPED_TABLES.has(table as string) && projectScopeId) {
+      qb = qb.withConflictGuard('project_id', projectScopeId)
+    }
   }
 
   // ─── User-scoped row-level security ──────────────────────────
   if (USER_SCOPED_TABLES.has(table as string) && userId) {
     qb = qb.eq('user_id', userId)
+  }
+
+  // ─── Project-scoped row-level security (audit C-02) ──────────
+  // Hard-scope the query to the verified project, regardless of any
+  // client-supplied filters (belt and braces with the access check above).
+  if (PROJECT_SCOPED_TABLES.has(table as string) && projectScopeId) {
+    qb = qb.eq('project_id', projectScopeId)
   }
 
   // Apply filters
@@ -238,6 +331,8 @@ export const POST = apiHandler({ auth: false, rateLimit: { max: 120, windowMs: 6
       const method = f.op
       // Prevent client from overriding user_id filter on scoped tables
       if (USER_SCOPED_TABLES.has(table as string) && f.column === 'user_id') continue
+      // Prevent client from overriding the verified project scope
+      if (PROJECT_SCOPED_TABLES.has(table as string) && f.column === 'project_id') continue
 
       if (method === 'eq') qb = qb.eq(f.column, f.value)
       else if (method === 'neq') qb = qb.neq(f.column, f.value)

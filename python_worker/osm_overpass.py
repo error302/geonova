@@ -364,6 +364,9 @@ def auto_populate_abuttals(lat, lon, radius=200):
 
 # ─── API Models ─────────────────────────────────────────────────────────────
 
+# SECURITY (audit H-12, 2026-08-30): radius is capped at 2000m server-side.
+# Previously it was unbounded above, letting callers drive arbitrarily
+# large Overpass queries through the worker.
 class NearbyFeaturesRequest(BaseModel):
     lat: float
     lon: float
@@ -380,6 +383,15 @@ class ContextGeoJSONRequest(BaseModel):
     lon: float
     radius: int = 500  # meters
 
+MAX_RADIUS_METERS = 2000
+
+def clamp_radius(value: int) -> int:
+    """Clamp a caller-supplied radius into [50, 2000] meters."""
+    try:
+        return max(50, min(int(value), MAX_RADIUS_METERS))
+    except (TypeError, ValueError):
+        return 500
+
 # ─── API Router ─────────────────────────────────────────────────────────────
 
 overpass_router = APIRouter(prefix="/osm", tags=["osm-overpass"])
@@ -392,23 +404,25 @@ async def api_nearby_features(request: NearbyFeaturesRequest):
     Returns roads, schools, health facilities, water bodies, and
     administrative boundaries within the specified radius.
     """
+    # SECURITY (audit H-12): clamp the caller-supplied radius.
+    radius = clamp_radius(request.radius)
     result = {
         "lat": request.lat,
         "lon": request.lon,
-        "radius": request.radius,
+        "radius": radius,
         "osm_tools_available": get_osm_tools() is not None,
     }
 
     if "roads" in request.feature_types:
-        result["roads"] = query_roads(request.lat, request.lon, request.radius)
+        result["roads"] = query_roads(request.lat, request.lon, radius)
     if "schools" in request.feature_types:
-        result["schools"] = query_amenities(request.lat, request.lon, request.radius, ["school", "kindergarten", "college", "university"])
+        result["schools"] = query_amenities(request.lat, request.lon, radius, ["school", "kindergarten", "college", "university"])
     if "health" in request.feature_types:
-        result["health"] = query_amenities(request.lat, request.lon, request.radius, ["hospital", "clinic", "doctors", "pharmacy"])
+        result["health"] = query_amenities(request.lat, request.lon, radius, ["hospital", "clinic", "doctors", "pharmacy"])
     if "water" in request.feature_types:
-        result["water"] = query_natural(request.lat, request.lon, request.radius)
+        result["water"] = query_natural(request.lat, request.lon, radius)
     if "boundaries" in request.feature_types:
-        result["boundaries"] = query_boundaries(request.lat, request.lon, request.radius)
+        result["boundaries"] = query_boundaries(request.lat, request.lon, radius)
 
     return result
 
@@ -425,7 +439,7 @@ async def api_auto_abuttals(request: AbuttalsRequest):
             status_code=503,
             detail="OSMPythonTools not installed. Run: pip install OSMPythonTools",
         )
-    return auto_populate_abuttals(request.lat, request.lon, request.radius)
+    return auto_populate_abuttals(request.lat, request.lon, clamp_radius(request.radius))
 
 @overpass_router.post("/context-geojson")
 async def api_context_geojson(request: ContextGeoJSONRequest):
@@ -459,7 +473,8 @@ async def api_context_geojson(request: ContextGeoJSONRequest):
         return cached_geojson
 
     # 2. Cache Miss: Fetch a larger area (2000m radius) to optimize future pans
-    fetch_radius = max(2000, request.radius)
+    # SECURITY (audit H-12): fetch radius clamped — never above the cap.
+    fetch_radius = clamp_radius(max(2000, request.radius))
     f_delta_lat = fetch_radius / 111000.0
     f_delta_lon = fetch_radius / (111000.0 * math.cos(math.radians(request.lat)))
     

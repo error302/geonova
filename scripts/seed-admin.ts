@@ -20,9 +20,22 @@ async function main() {
 
   const pool = new Pool({ connectionString: databaseUrl })
 
-  const email = 'mohameddosho20@gmail.com'
-  const password = 'Z7m7066C6UJBUK'
-  const fullName = 'Mohamed Dosho'
+  // SECURITY (audit C-01, 2026-08-30): credentials come from the environment —
+  // nothing hardcoded. The previously committed password is considered
+  // compromised by git history and must never be reused.
+  const email = process.env.SEED_ADMIN_EMAIL
+  const password = process.env.SEED_ADMIN_PASSWORD
+  const fullName = process.env.SEED_ADMIN_NAME || 'Administrator'
+
+  if (!email || !password) {
+    console.error('ERROR: SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD environment variables are required')
+    process.exit(1)
+  }
+
+  if (password.length < 8) {
+    console.error('ERROR: SEED_ADMIN_PASSWORD must be at least 8 characters')
+    process.exit(1)
+  }
 
   console.log(`Seeding admin user: ${email}`)
 

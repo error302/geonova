@@ -3,7 +3,7 @@
 > **PERSISTENT CONTEXT DOCUMENT** — Re-send this file when AI context resets to resume work from exactly where you left off.
 >
 > **Repo**: `git@github.com:error302/metardu.git` | **Branch**: `main` | **Last commit**: `d0cb39a3`
-> **Deploy VM**: `34.170.248.156` (GCP) | **Domain**: `metardu.space`
+> **Deploy VM**: (address managed via environment — audit C-01) | **Domain**: `metardu.space`
 > **Local path**: `/home/z/my-project/metardu-repo/`
 > **Output path**: `/home/z/my-project/download/`
 
@@ -638,7 +638,7 @@ Client → Next.js Middleware (auth + rate limit + CSP)
 ### 12.1 Current Infrastructure
 
 ```
-GCP VM (34.170.248.156)
+the deploy VM (address managed via environment)
 ├── Docker container (Next.js standalone)
 │   ├── Node 20 Alpine
 │   ├── Canvas dependencies (native)

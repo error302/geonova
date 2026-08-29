@@ -145,6 +145,19 @@ export async function rateLimit(
 }
 
 export function getClientIdentifier(request: Request): string {
+  // SECURITY (audit H-08, 2026-08-30): derive identity from the RIGHTMOST
+  // X-Forwarded-For hop (the one our own reverse proxy appended) or
+  // CF-Connecting-IP. The FIRST XFF entry is client-controlled behind an
+  // appending proxy — trusting it let attackers rotate a fake IP per request
+  // to defeat every rate limit keyed on this value.
+  const cfIp = request.headers.get('cf-connecting-ip')
+  if (cfIp) return cfIp.trim()
+
   const forwarded = request.headers.get('x-forwarded-for')
-  return forwarded ? forwarded.split(',')[0].trim() : 'unknown'
+  if (forwarded) {
+    const hops = forwarded.split(',').map((h) => h.trim()).filter(Boolean)
+    if (hops.length > 0) return hops[hops.length - 1]
+  }
+
+  return request.headers.get('x-real-ip')?.trim() || 'unknown'
 }

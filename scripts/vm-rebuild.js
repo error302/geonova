@@ -38,9 +38,10 @@ conn.on('ready', () => {
   console.error('SSH connection error:', err.message);
   process.exit(1);
 }).connect({
-  host: '84.8.133.9',
+  // SECURITY (audit C-01): connection details from env — no hosts/creds in source
+  host: process.env.VM_HOST,
   port: 22,
-  username: 'opc',
+  username: process.env.VM_USER || 'opc',
   privateKey: fs.readFileSync(path.join(require('os').homedir(), '.ssh', 'oracle-metardu.key')),
   readyTimeout: 600000,
   keepaliveInterval: 10000,

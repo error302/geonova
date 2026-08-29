@@ -21,6 +21,7 @@ interface AuthUserRow {
   role: string | null
   provider: string | null
   oauth_avatar_url: string | null
+  email_verified: boolean | null
 }
 
 interface NewUserRow {
@@ -38,6 +39,15 @@ interface NewUserRow {
  *   by updating the provider info (but keep their existing role/password).
  * - If no user exists, create a new record with role='user' and the
  *   OAUTH_NO_PASSWORD sentinel so that password login is impossible.
+ *
+ * SECURITY (audit C-06, 2026-08-30): OAuth identity linking no longer trusts a
+ * bare email match. Linking into a pre-existing PASSWORD account additionally
+ * requires (a) the OAuth provider to have verified the email AND (b) the
+ * pre-existing account to be already email-verified (or itself OAuth-created).
+ * This kills the classic pre-hijacking chain: attacker registers a victim's
+ * email with a password, victim later signs in with Google, and their OAuth
+ * identity is silently welded onto the attacker's account. New OAuth accounts
+ * are marked email_verified only when the provider actually verified it.
  */
 async function findOrCreateOAuthUser(params: {
   email: string
@@ -45,6 +55,7 @@ async function findOrCreateOAuthUser(params: {
   image?: string | null
   provider: string
   providerAccountId: string
+  emailVerified: boolean
 }): Promise<{
   id: string
   email: string
@@ -55,18 +66,32 @@ async function findOrCreateOAuthUser(params: {
   provider: string
   image?: string | null
 }> {
-  const { email, name, image, provider, providerAccountId } = params
+  const { email, name, image, provider, providerAccountId, emailVerified } = params
   const normalisedEmail = email.toLowerCase().trim()
 
   // Try to find existing user by email
   const { rows } = await db.query<AuthUserRow>(
-    'SELECT id, email, password_hash, full_name, isk_number, verified_isk, role, provider, oauth_avatar_url FROM users WHERE email = $1 LIMIT 1',
+    'SELECT id, email, password_hash, full_name, isk_number, verified_isk, role, provider, oauth_avatar_url, email_verified FROM users WHERE email = $1 LIMIT 1',
     [normalisedEmail]
   )
 
   if (rows.length > 0) {
     // ── Existing user — link OAuth account ──
     const user = rows[0]
+
+    // SECURITY (audit C-06): refuse to weld an OAuth identity onto a password
+    // account that has not proven ownership of the address. Existing accounts
+    // created before migration 056 are grandfathered as email_verified.
+    const isOAuthOnlyAccount = user.password_hash === OAUTH_NO_PASSWORD
+    const accountEmailVerified = user.email_verified === true
+    if (!isOAuthOnlyAccount && !accountEmailVerified) {
+      logger.warn(
+        `[auth] Refusing OAuth link onto unverified password account: ${normalisedEmail} via ${provider}`
+      )
+      throw new Error(
+        'This email address belongs to an existing password account whose ownership has not been verified. Sign in with your password first, or contact support to link this identity.'
+      )
+    }
 
     // Determine role (reuse the same hierarchy logic as credentials)
     let role = user.role || 'user'
@@ -75,12 +100,20 @@ async function findOrCreateOAuthUser(params: {
     // anyone controlling that Google account would get permanent
     // super_admin. Now: if env var is unset, no one gets super_admin
     // via this path (must be granted manually in DB).
+    // SECURITY (audit C-06): email-matched admin grants additionally require
+    // a verified email address — new self-service registrations default to
+    // email_verified=false (migration 056), so registering the owner's email
+    // first no longer yields super_admin.
     const platformOwnerEmail = process.env.PLATFORM_OWNER_EMAIL?.toLowerCase()
-    if (platformOwnerEmail && user.email.toLowerCase() === platformOwnerEmail) {
+    if (
+      platformOwnerEmail &&
+      user.email.toLowerCase() === platformOwnerEmail &&
+      accountEmailVerified
+    ) {
       role = 'super_admin'
     }
     const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map((e: string) => e.trim().toLowerCase()).filter(Boolean)
-    if (adminEmails.includes(user.email.toLowerCase())) {
+    if (adminEmails.includes(user.email.toLowerCase()) && accountEmailVerified) {
       role = 'super_admin'
     }
 
@@ -122,10 +155,10 @@ async function findOrCreateOAuthUser(params: {
   // ── New user — create record ──
   const displayName = name || normalisedEmail.split('@')[0]
   const insertResult = await db.query<NewUserRow>(
-    `INSERT INTO users (email, password_hash, full_name, role, provider, oauth_provider_id, oauth_avatar_url)
-     VALUES ($1, $2, $3, 'user', $4, $5, $6)
+    `INSERT INTO users (email, password_hash, full_name, role, provider, oauth_provider_id, oauth_avatar_url, email_verified)
+     VALUES ($1, $2, $3, 'user', $4, $5, $6, $7)
      RETURNING id, email, full_name, role, provider`,
-    [normalisedEmail, OAUTH_NO_PASSWORD, displayName, provider, providerAccountId, image || null]
+    [normalisedEmail, OAUTH_NO_PASSWORD, displayName, provider, providerAccountId, image || null, emailVerified]
   )
 
   const newUser = insertResult.rows[0]
@@ -192,7 +225,11 @@ export const authOptions: AuthOptions = {
         } catch {
           forwarded = ''
         }
-        const clientIp = forwarded.split(',')[0]?.trim() || 'unknown'
+        // SECURITY (audit H-08, 2026-08-30): use the RIGHTMOST X-Forwarded-For
+        // hop — the one appended by our own reverse proxy. The first entry is
+        // client-controlled behind an appending proxy and let attackers rotate
+        // a fake IP per request to dodge the login lockout.
+        const clientIp = forwarded.split(',').map((h: string) => h.trim()).filter(Boolean).pop() || 'unknown'
 
         // Check brute-force lockout BEFORE checking credentials
         const loginCheck = await checkLoginAllowed(credentials.email, clientIp)
@@ -203,7 +240,7 @@ export const authOptions: AuthOptions = {
 
         try {
           const { rows } = await db.query<Omit<AuthUserRow, 'oauth_avatar_url'>>(
-            'SELECT id, email, password_hash, full_name, isk_number, verified_isk, role, provider FROM users WHERE email = $1 LIMIT 1',
+            'SELECT id, email, password_hash, full_name, isk_number, verified_isk, role, provider, email_verified FROM users WHERE email = $1 LIMIT 1',
             [credentials.email.toLowerCase().trim()]
           )
 
@@ -241,8 +278,16 @@ export const authOptions: AuthOptions = {
               logger.warn(`[auth] Suspended account login attempt: ${user.email}`)
               return null
             }
-          } catch {
-            // surveyor_profiles may not exist yet — allow login anyway
+          } catch (profileErr) {
+            // SECURITY (audit H-07, 2026-08-30): only tolerate a MISSING
+            // table (pre-migration environments). Any other database error
+            // fails CLOSED — previously a transient DB error let suspended
+            // accounts sign in.
+            const pgCode = (profileErr as { code?: string })?.code
+            if (pgCode !== '42P01' && pgCode !== '42703') {
+              logger.error('[auth] Suspension check DB error — failing closed:', { error: profileErr })
+              return null
+            }
           }
 
           // Successful login — clear failure count
@@ -253,13 +298,20 @@ export const authOptions: AuthOptions = {
 
           // Platform owner always gets super_admin regardless of env var or DB state
           // SECURITY: env var required — see comment above
+          // SECURITY (audit C-06, 2026-08-30): email-matched super_admin grants
+          // additionally require a verified email address. Self-service
+          // registrations default to email_verified=false (migration 056), so
+          // registering the owner's email address first no longer produces a
+          // super_admin account. All pre-existing accounts are grandfathered
+          // as verified by the same migration.
+          const accountEmailVerified = (user as AuthUserRow).email_verified === true
           const platformOwnerEmail = process.env.PLATFORM_OWNER_EMAIL?.toLowerCase()
-          if (platformOwnerEmail && user.email.toLowerCase() === platformOwnerEmail) {
+          if (platformOwnerEmail && user.email.toLowerCase() === platformOwnerEmail && accountEmailVerified) {
             role = 'super_admin'
           }
 
           const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map((e: string) => e.trim().toLowerCase()).filter(Boolean)
-          if (adminEmails.includes(user.email.toLowerCase())) {
+          if (adminEmails.includes(user.email.toLowerCase()) && accountEmailVerified) {
             role = 'super_admin'
           } else if (!role || role === 'user') {
             // Fallback: check surveyor_profiles table
@@ -343,16 +395,21 @@ export const authOptions: AuthOptions = {
         }
 
         // Google specifically provides email_verified in the profile
-        const googleProfile = profile as Record<string, unknown> | undefined
-        if (account.provider === 'google' && googleProfile?.email_verified === false) {
+        const oauthProfile = profile as Record<string, unknown> | undefined
+        if (account.provider === 'google' && oauthProfile?.email_verified === false) {
           logger.warn(`[auth] Google OAuth sign-in rejected: email not verified for ${user.email}`)
           return false
         }
 
-        // Azure AD: for work/school accounts email is always verified.
-        // For personal Microsoft accounts (tenantId === '9188040d-6c67-4c5b-b112-36a304b66dad'),
-        // email may not be verified — but we accept them since they've authenticated.
-        // If you want stricter verification, check profile?.email_verified here too.
+        // SECURITY (audit C-06, 2026-08-30): resolve whether the PROVIDER
+        // actually verified the email, and fail closed when it didn't say.
+        // Google exposes email_verified on the profile; Azure AD work/school
+        // identities are tenant-verified but personal accounts (tenant
+        // 'common') are not guaranteed — without an explicit verified claim
+        // we treat the address as unverified for linking/grant purposes.
+        // Sign-in itself still succeeds; only privileged grants and identity
+        // linking are gated.
+        const providerEmailVerified = oauthProfile?.email_verified === true
 
         try {
           const oauthUser = await findOrCreateOAuthUser({
@@ -361,6 +418,7 @@ export const authOptions: AuthOptions = {
             image: user.image,
             provider: account.provider,
             providerAccountId: account.providerAccountId,
+            emailVerified: providerEmailVerified,
           })
 
           // Attach DB fields to the user object so jwt callback can access them

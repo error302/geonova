@@ -443,7 +443,12 @@ export const POST = apiHandler({ auth: true, rateLimit: { max: 10, windowMs: 600
   }
 })
 
-export const GET = apiHandler({ auth: false }, async () => {
+export const GET = apiHandler({ auth: false, rateLimit: { max: 30, windowMs: 60000 } }, async () => {
+  // AUDIT FIX (M-08, 2026-08-30): this endpoint discloses which payment
+  // providers are live. The information is inherently public (the pricing
+  // page shows the same buttons), but the endpoint was an unlimited free
+  // configuration probe — it is now rate-limited so it cannot be used for
+  // cheap recon sweeps.
   const isReal = (key: string | undefined) => !!key && !key.includes('mockup') && !key.includes('Mock')
   const stripe = isReal(process.env.STRIPE_SECRET_KEY)
   const paypal = isReal(process.env.PAYPAL_CLIENT_ID)

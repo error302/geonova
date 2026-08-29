@@ -198,6 +198,18 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'surveyId required' }, { status: 400 })
     }
 
+    // SECURITY (audit H-05, 2026-08-30): surveyId is a project id — verify
+    // the caller owns or is a member of that project. Previously observations
+    // were returned for any surveyId with no ownership check.
+    const { checkProjectAccess } = await import('@/lib/security/projectAccess')
+    const access = await checkProjectAccess(session.user.id, surveyId)
+    if (!access.allowed) {
+      return NextResponse.json(
+        { error: 'You do not have access to this project', code: 'FORBIDDEN' },
+        { status: 403 }
+      )
+    }
+
     const observations = await getObservations(surveyId)
 
     return NextResponse.json({ observations, count: observations.length })

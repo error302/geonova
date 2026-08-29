@@ -35,9 +35,10 @@ conn.on('ready', () => {
   console.error('SSH connection error:', err.message);
   process.exit(1);
 }).connect({
-  host: '34.170.248.156',
+  // SECURITY (audit C-01): connection details from env — no hosts/creds in source
+  host: process.env.VM_HOST,
   port: 22,
-  username: 'mohameddosho20',
+  username: process.env.VM_USER || 'opc',
   privateKey: fs.readFileSync(keyPath),
   readyTimeout: 30000,
   keepaliveInterval: 10000,

@@ -25,6 +25,7 @@ interface JobDetailRow {
   error_message: string | null
   priority: number
   retry_count: number
+  created_by: string | null
   created_at: Date
   started_at: Date | null
   completed_at: Date | null
@@ -40,10 +41,15 @@ export const GET = apiHandler(
       return NextResponse.json({ error: 'Missing jobId' }, { status: 400 })
     }
 
-    // Use parameterized query — jobId is a UUID, never interpolated
+    // Use parameterized query — jobId is a UUID, never interpolated.
+    // SECURITY (audit H-05, 2026-08-30): jobs are attributed to their creator
+    // (migration 057). A caller may read a job only if they created it or are
+    // an admin; legacy rows with NULL created_by are admin-only. Previously
+    // any authenticated user could read any job's payload and result by bare
+    // UUID — payloads can contain full job inputs.
     const { rows } = await db.query<JobDetailRow>(
       `SELECT id, job_type, status, payload, result, error_message,
-              priority, retry_count, created_at, started_at, completed_at, duration_ms
+              priority, retry_count, created_by, created_at, started_at, completed_at, duration_ms
          FROM background_jobs
         WHERE id = $1
         LIMIT 1`,
@@ -55,6 +61,14 @@ export const GET = apiHandler(
     }
 
     const job = rows[0]
+    const callerRole = (ctx.session?.user as { role?: string } | undefined)?.role
+    const isAdmin = callerRole === 'admin' || callerRole === 'super_admin'
+    if (!isAdmin && job.created_by !== ctx.userId) {
+      return NextResponse.json(
+        { error: 'You do not have access to this job', code: 'FORBIDDEN' },
+        { status: 403 }
+      )
+    }
 
     return apiSuccess({
       id: job.id,

@@ -19,7 +19,7 @@ This guide covers everything needed to switch from development/sandbox to produc
 
 2. **Update `.env.local` on the VM**
    ```bash
-   ssh mohameddosho20@34.170.248.156
+   ssh <VM_USER>@<VM_HOST>   # host/user from your environment — not stored in git
    cd /home/mohameddosho20/metardu
    nano .env.local
    ```

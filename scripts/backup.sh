@@ -29,6 +29,10 @@ BACKUP_OFFSITE_DIR="${BACKUP_OFFSITE_DIR:-}"
 BACKUP_RETENTION="${BACKUP_RETENTION:-30}"
 GPG_RECIPI="${GPG_RECIPI:-}"
 BACKUP_LOG_FILE="${BACKUP_LOG_FILE:-}"
+# AUDIT FIX (H-15, 2026-08-30): uploads directory (mounted read-only at
+# /uploads in the backup container). Included in every backup so a single
+# VM failure is no longer total data loss for user files.
+UPLOADS_DIR="${UPLOADS_DIR:-/uploads}"
 
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 mkdir -p "$BACKUP_DIR"
@@ -58,6 +62,23 @@ fi
 
 DB_SIZE=$(stat -c%s "$DB_FILE" 2>/dev/null || stat -f%z "$DB_FILE" 2>/dev/null || echo 0)
 log "Database backup: $DB_FILE ($(numfmt --to=iec $DB_SIZE 2>/dev/null || echo ${DB_SIZE}B))"
+
+# ─── 1b. Uploads backup (audit H-15, 2026-08-30) ──────────────────────
+UPLOADS_FILE=""
+if [ -d "$UPLOADS_DIR" ]; then
+  log "Archiving uploads from $UPLOADS_DIR..."
+  UPLOADS_FILE="$BACKUP_DIR/uploads_${TIMESTAMP}.tar.gz"
+  if tar -czf "$UPLOADS_FILE" -C "$UPLOADS_DIR" . 2>>"${BACKUP_LOG_FILE:-/dev/null}"; then
+    UPLOADS_SIZE=$(stat -c%s "$UPLOADS_FILE" 2>/dev/null || stat -f%z "$UPLOADS_FILE" 2>/dev/null || echo 0)
+    log "Uploads backup: $UPLOADS_FILE ($(numfmt --to=iec $UPLOADS_SIZE 2>/dev/null || echo ${UPLOADS_SIZE}B))"
+  else
+    log "WARN: uploads archive failed — DB backup continues"
+    rm -f "$UPLOADS_FILE"
+    UPLOADS_FILE=""
+  fi
+else
+  log "No uploads directory at $UPLOADS_DIR — skipping uploads backup"
+fi
 
 # ─── 2. Verification (pg_restore --list) ─────────────────────────────────
 log "Verifying backup integrity..."
@@ -99,13 +120,21 @@ if [ -n "$BACKUP_OFFSITE_DIR" ]; then
   fi
   log "Offsite copy complete."
 
+  # AUDIT FIX (H-15, 2026-08-30): uploads archive goes offsite too
+  if [ -n "$UPLOADS_FILE" ]; then
+    cp "$UPLOADS_FILE" "$BACKUP_OFFSITE_DIR/" || log "WARN: uploads offsite copy failed"
+  fi
+
   # Prune offsite backups too
   find "$BACKUP_OFFSITE_DIR" -name "db_*.sql.gz*" -mtime +"$BACKUP_RETENTION" -delete 2>/dev/null || true
+  find "$BACKUP_OFFSITE_DIR" -name "uploads_*.tar.gz" -mtime +"$BACKUP_RETENTION" -delete 2>/dev/null || true
 fi
 
 # ─── 5. Retention (delete backups older than BACKUP_RETENTION days) ───────
 log "Pruning backups older than $BACKUP_RETENTION days..."
 find "$BACKUP_DIR" -name "db_*.sql.gz*" -mtime +"$BACKUP_RETENTION" -delete 2>/dev/null || true
+find "$BACKUP_DIR" -name "uploads_*.tar.gz" -mtime +"$BACKUP_RETENTION" -delete 2>/dev/null || true
 
 REMAINING=$(find "$BACKUP_DIR" -name "db_*.sql.gz*" | wc -l)
-log "Backup complete. $REMAINING backups retained in $BACKUP_DIR."
+UPLOADS_REMAINING=$(find "$BACKUP_DIR" -name "uploads_*.tar.gz" | wc -l)
+log "Backup complete. $REMAINING db backups (+$UPLOADS_REMAINING uploads archives) retained in $BACKUP_DIR."

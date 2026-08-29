@@ -11,7 +11,11 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: [
           '/api/',
-          '/admin/',
+          // AUDIT FIX (L-01, 2026-08-30): /admin removed — a robots.txt
+          // Disallow entry advertises the admin path namespace to every
+          // crawler and attacker who reads the file. The admin surface is
+          // protected by authentication, not by obscurity, and gets no free
+          // map entry.
           '/dashboard',
           '/settings',
           '/account',

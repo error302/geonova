@@ -21,7 +21,9 @@ export const GET = apiHandler({ auth: true, rateLimit: { max: 60, windowMs: 6000
 
   // Check permission
   const permCheck = await requirePermissionAsync(callerId, 'org.audit_log');
-  if (permCheck) return permCheck.response as NextResponse;
+  // SECURITY (audit H-06, 2026-08-30): test the `denied` flag, not the
+  // always-truthy wrapper object (see admin/audit/route.ts note).
+  if (permCheck.denied) return permCheck.response as NextResponse;
 
   const { searchParams } = new URL(req.url);
 
