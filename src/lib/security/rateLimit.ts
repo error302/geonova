@@ -52,8 +52,29 @@ async function upstashRateLimit(
   return { allowed: count <= maxRequests, remaining }
 }
 
-// ─── In-memory fallback (development only) ───────────────────────────────────
-// WARNING: Resets on every cold start. Do NOT rely on this in production.
+// ─── In-memory fallback ──────────────────────────────────────────────────────
+// NOTE (2026-08-30): METARDU's production topology is a SINGLE app container
+// (docker-compose, no replicas), so the in-process counter IS authoritative.
+// The previous behavior failed OPEN in production whenever Upstash env vars
+// were absent — which left every rate limit in the security remediation
+// (H-12 OSM auth throttling, M-01 middleware quotas, M-08 payments limiting,
+// H-08-adjacent login throttling) completely inert while logging an error
+// per request. In-memory is now used with a one-time warning. Multi-instance
+// deployments MUST set UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN
+// (each instance keeps its own counter, multiplying the effective limit).
+
+let _warnedInMemoryFallback = false
+
+function warnOnceInMemoryFallback(): void {
+  if (_warnedInMemoryFallback) return
+  _warnedInMemoryFallback = true
+  logger.warn(
+    '[rate-limit] UPSTASH_REDIS_REST_URL/TOKEN not set — using the in-process ' +
+    'limiter. This is correct for the current single-container production ' +
+    'deployment; set the Upstash env vars before scaling to multiple app ' +
+    'replicas or serverless functions.'
+  )
+}
 
 const _devStore = new Map<string, { count: number; resetTime: number }>()
 
@@ -129,16 +150,11 @@ export async function rateLimit(
   }
 
   if (process.env.NODE_ENV === 'production') {
-    // ByteByteGo audit fix: in-memory rate limiting is NOT acceptable in production.
-    // It silently fails in multi-instance deployments (each instance gets its own
-    // counter, so attackers get N×the limit). Fail loudly instead.
-    logger.error(
-      '[rate-limit] PRODUCTION ERROR: UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN ' +
-      'must be set in production. In-memory rate limiting is disabled. ' +
-      'Set these env vars or set NODE_ENV=development for local dev.'
-    )
-    // Fail OPEN (allow the request) but log the error — failing closed would lock everyone out
-    return Promise.resolve({ allowed: true, remaining: 0 })
+    // SECURITY (2026-08-30): previously this branch FAILED OPEN (allowed the
+    // request) — see the fallback note above for why in-memory is correct
+    // for the current single-container deployment.
+    warnOnceInMemoryFallback()
+    return Promise.resolve(inMemoryRateLimit(identifier, maxRequests, windowMs))
   }
 
   return Promise.resolve(inMemoryRateLimit(identifier, maxRequests, windowMs))
