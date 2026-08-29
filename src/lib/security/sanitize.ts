@@ -6,12 +6,16 @@ export function sanitizeHtml(dirty: string): string {
   // DOMPurify requires `window` — use synchronous client-side loading
   if (typeof window !== 'undefined') {
     // DOMPurify requires window; guarded client-side load.
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const createDOMPurify = require('dompurify') as unknown as typeof import('dompurify') & { default?: typeof import('dompurify') };
-    const DOMPurify = createDOMPurify.default || createDOMPurify;
-    return DOMPurify.sanitize(dirty, {
-      USE_PROFILES: { html: true, svg: true },
-    });
+    const createDOMPurify = typeof require !== 'undefined'
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      ? (require('dompurify') as unknown as typeof import('dompurify') & { default?: typeof import('dompurify') })
+      : null;
+    if (createDOMPurify) {
+      const DOMPurify = createDOMPurify.default || createDOMPurify;
+      return DOMPurify.sanitize(dirty, {
+        USE_PROFILES: { html: true, svg: true },
+      });
+    }
   }
   // Server-side fallback: strip all tags
   return dirty.replace(/<[^>]*>/g, '');
