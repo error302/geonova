@@ -792,11 +792,13 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
 
   // ── STAKEOUT: Legacy toggle (for backward compat) ──
   const toggleStakeout = useCallback(() => {
-    const hasFeature = p.hasFeature
+    // LINT FIX (2026-08-30): destructure once so exhaustive-deps can track
+    // individual fields (listing `p.x` in deps while also reading `p.y`
+    // chains like p.mapInstance.current made the rule demand the whole `p`).
+    const { hasFeature, setSaveMsg } = p
     // FIX (2026-08-30): previously returned silently when the plan gate
     // failed — the button appeared dead. Surface a visible message instead.
     if (!hasFeature('gps_stakeout')) {
-      const setSaveMsg = p.setSaveMsg
       if (setSaveMsg) {
         setSaveMsg('GPS Stakeout requires a Pro plan — upgrade in Pricing to enable it')
         setTimeout(() => setSaveMsg(''), 4000)
@@ -821,7 +823,7 @@ export function useMapInteractions(p: UseMapInteractionsParams) {
     } else {
       deactivateStakeout()
     }
-  }, [p.hasFeature, p.gpsTracking, p.toggleGPS, p.setSaveMsg, p.stakeoutTarget, activateStakeout, deactivateStakeout, p.mapInstance, epsg])
+  }, [p, activateStakeout, deactivateStakeout, epsg])
 
   // ── STAKEOUT INFO (uses pre-transformed UTM position — no require()) ──
   const stakeoutInfo = useCallback(() => {

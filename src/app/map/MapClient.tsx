@@ -119,8 +119,9 @@ import { useVertexEditing } from '@/hooks/useVertexEditing'
 import { usePrint, type PrintOptions } from '@/hooks/usePrint'
 import type { MapExtent } from './MapReactContext'
 import { MapProvider, useMapContext, type MapContextValue } from '@/app/map/MapReactContext'
-import { StakeoutPanel } from '@/components/map/StakeoutPanel'
-import { Target, Building2, PenLine, Layers, Ruler, Binoculars, Crosshair, Calculator, Download } from 'lucide-react'
+// LINT FIX (2026-08-30): StakeoutPanel is rendered by MapToolDock (and
+// FieldDataCollector) — the local import was dead. Building2 unused.
+import { Target, PenLine, Layers, Ruler, Binoculars, Crosshair, Calculator, Download } from 'lucide-react'
 
 // ── Dynamic imports for heavy components ──
 const OfflineTileDownloader = dynamic(

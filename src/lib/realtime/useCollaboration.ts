@@ -68,10 +68,12 @@ export function useCollaboration({
             cursor: u.cursor
           })))
         },
-        onPointsChange: (pts: unknown) => {
-          if (Array.isArray(pts)) {
-            setLivePoints(pts as any)
-          }
+        onPointsChange: () => {
+          // LINT FIX (2026-08-30): the emitter (realtimeService index.ts)
+          // already validates each point's shape before invoking callbacks,
+          // so re-read the typed snapshot instead of casting `unknown`
+          // through `any` (no-unsafe-argument / no-explicit-any).
+          setLivePoints(realtimeService.getLivePoints(projectId))
         }
       }
     )
