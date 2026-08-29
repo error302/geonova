@@ -2,7 +2,7 @@ name: Deploy to Production
 
 # Production deploys run AUTOMATICALLY on every push to main (owner decision,
 # 2026-08-30). The original auto-deploy trigger had been silently dead for a
-# long time due to a `branches: ain]` typo (valid YAML, matches no branch), so
+# long time due to a `branches: [main]` typo (valid YAML, matches no branch), so
 # production was actually updated by hand while everyone believed CI/CD was
 # shipping. This restores the intended push-to-main → production behaviour.
 #
