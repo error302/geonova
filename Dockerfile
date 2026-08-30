@@ -69,6 +69,8 @@ COPY --from=builder /app/.next/static ./.next/static
 # Copy migration files and unified runner for startup migration
 COPY --from=builder /app/src/lib/db/migrations ./migrations
 COPY --from=builder /app/scripts/migrate-unified.mjs ./migrate-unified.mjs
+# Post-deploy schema verification gate (deploy.yml runs this in-container)
+COPY --from=builder /app/scripts/verify-migrations.mjs ./verify-migrations.mjs
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 
 # Worker output directory

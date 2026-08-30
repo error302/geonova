@@ -125,11 +125,11 @@ jobs:
           APP_DIR="$HOME/metardu"
           cd "$APP_DIR"
 
-          echo "=== [1/5] Pulling latest code ==="
+          echo "=== [1/6] Pulling latest code ==="
           git fetch origin main
           git reset --hard origin/main
 
-          echo "=== [2/5] Ensuring .env.local is correct for Docker ==="
+          echo "=== [2/6] Ensuring .env.local is correct for Docker ==="
           if grep -q 'host.docker.internal' .env.local 2>/dev/null; then
             echo "DATABASE_URL already set for Docker (host.docker.internal) - OK"
           else
@@ -137,7 +137,7 @@ jobs:
             sed -i 's|@localhost:5432|@host.docker.internal:5432|g' .env.local 2>/dev/null || true
           fi
 
-          echo "=== [3/5] Rebuilding Docker containers (incremental) ==="
+          echo "=== [3/6] Rebuilding Docker containers (incremental) ==="
           # Use --build instead of --no-cache to leverage Docker layer cache
           # Only changed layers are rebuilt — typically just the COPY + npm run build
           docker compose up -d --build 2>&1
@@ -152,7 +152,7 @@ jobs:
           # of letting curl be the only gate.
           CONTAINER_NAME="metardu-app"
 
-          echo "=== [4/5] Waiting for container '$CONTAINER_NAME' to be healthy ==="
+          echo "=== [4/6] Waiting for container '$CONTAINER_NAME' to be healthy ==="
           HEALTHY=false
           for i in $(seq 1 36); do
             sleep 5
@@ -174,7 +174,24 @@ jobs:
             exit 1
           fi
 
-          echo "=== [5/5] Verifying deployment via HTTP ==="
+          echo "=== [5/6] Verifying database schema state (migrations gate) ==="
+          # SCHEMA-DRIFT GATE: docker-entrypoint.sh runs migrations at startup
+          # but only WARNS on failure — a silently broken migration (the 054
+          # case, which blocked 055-057 for weeks) previously left prod
+          # running with a drifted schema and zero signal. verify-migrations
+          # compares the migrations directory (source of truth) against the
+          # schema_migrations table: every file applied, checksums matching,
+          # no ghost rows. Fails the deploy on any drift (fail closed).
+          if docker exec metardu-app node /app/verify-migrations.mjs; then
+            echo "Schema verified: all migrations applied, checksums match."
+          else
+            echo "FATAL: database schema does not match the migrations directory."
+            echo "--- Container startup log (migrate-unified output) ---"
+            docker logs --tail 80 metardu-app 2>&1 || echo "(could not fetch logs)"
+            exit 1
+          fi
+
+          echo "=== [6/6] Verifying deployment via HTTP ==="
           HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" --max-time 15 http://localhost:3000/api/public/health || echo "000")
           echo "HTTP status: $HTTP_CODE (expecting 200 from /api/public/health)"
           if [ "$HTTP_CODE" = "200" ]; then
