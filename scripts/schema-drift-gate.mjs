@@ -113,7 +113,14 @@ function collectSelectedColumns() {
       for (let part of spec.split(',')) {
         part = part.trim()
         if (!part || part === '*') continue
-        part = part.split(':')[0].trim()          // alias
+        // PostgREST alias syntax is `alias:column` (and `alias:column::cast`).
+        // The name to validate against migrations is the segment AFTER the
+        // first colon — the alias itself is arbitrary. Gate bug (caught by
+        // tests/schema-drift-gate.test.ts, 2026-08-30): split(':')[0] grabbed
+        // the ALIAS, so aliased selects checked the wrong token (false drift
+        // for real columns, free pass for the actual column).
+        const segments = part.split(':')
+        if (segments.length > 1 && segments[1].trim()) part = segments[1].trim()
         part = part.split('->')[0].split('->>')[0].trim() // jsonb arrows
         part = part.replace(/^["']|["']$/g, '')
         if (!part || /\W/.test(part) || /^(count|sum|avg|min|max)\s*\(/i.test(part)) continue

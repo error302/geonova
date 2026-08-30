@@ -62,6 +62,21 @@ const axeSource = readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8')
 const BASE = process.env.AXE_SCAN_PORT ? `http://localhost:${process.env.AXE_SCAN_PORT}` : 'http://localhost:3100'
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']
 const RANK = { minor: 1, moderate: 2, serious: 3, critical: 4 }
+
+// DEV-ERROR-PAGE GUARD (fix for the phantom meta-viewport violation, 876f7445):
+// the app's root layout never disables zoom (viewport export: maximumScale 5,
+// userScalable true), but Next.js's dev-mode error page DOES. A mid-sweep
+// dev-server hiccup (ERR_CONNECTION_RESET on a cold compile, RSC fetch
+// failure) can land the browser on that error page — it "hydrates" and keeps
+// the pathname, so hydration checks can't tell it apart from the real route.
+// The guard detects the zoom-blocking viewport meta and retries on a fresh
+// page. Exported for unit tests (tests/axe-sweep-routing.test.ts).
+//
+// The terminator is a lookahead for [,;] OR end-of-string: a zoom-blocking
+// `maximum-scale=1` as the LAST attribute (no trailing comma) is still a dev
+// error page — the pre-2026-08-30 form required a trailing [,;] and would
+// miss that shape.
+const DEV_ERROR_VIEWPORT_RE = /user-scalable\s*=\s*no|maximum-scale\s*=\s*1(\.0)?\s*(?=[,;]|$)/i
 const IMPACTS = ['minor', 'moderate', 'serious', 'critical']
 
 // ---------------------------------------------------------------------------
@@ -420,19 +435,18 @@ async function scanRoute(context, routeDef) {
       }
 
       console.error('[axe] hydration ready, running axe…')
-      // DEV-ERROR-PAGE GUARD: the app's root layout never disables zoom
-      // (viewport export: maximumScale 5, userScalable true), but Next.js's
-      // dev-mode error page DOES (<meta name="viewport" content="…
-      // maximum-scale=1.0, user-scalable=no">). A mid-sweep dev-server hiccup
-      // (ERR_CONNECTION_RESET on a cold compile, RSC fetch failure) can land
-      // the browser on that error page — it "hydrates" (text + buttons) and
-      // keeps the pathname, so the checks above can't tell it apart from the
-      // real route. Detect it here and retry on a fresh page instead of
-      // reporting a phantom meta-viewport violation for a page we never saw.
-      const onDevErrorPage = await page.evaluate(() => {
-        const m = document.querySelector('meta[name="viewport"]')
-        return !!(m && /user-scalable\s*=\s*no|maximum-scale\s*=\s*1(\.0)?\s*[,;]/i.test(m.getAttribute('content') || ''))
-      }).catch(() => false)
+      // DEV-ERROR-PAGE GUARD (see DEV_ERROR_VIEWPORT_RE at module level for the
+      // full rationale). The regex is passed into the page via evaluate args —
+      // page.evaluate serializes the closure, so free variables from this
+      // scope are NOT visible inside it.
+      const onDevErrorPage = await page.evaluate(
+        (reSource, reFlags) => {
+          const m = document.querySelector('meta[name="viewport"]')
+          return !!(m && new RegExp(reSource, reFlags).test(m.getAttribute('content') || ''))
+        },
+        DEV_ERROR_VIEWPORT_RE.source,
+        DEV_ERROR_VIEWPORT_RE.flags
+      ).catch(() => false)
       if (onDevErrorPage) {
         throw new Error('browser landed on the Next.js dev error page (zoom-blocking viewport meta) — server hiccup, retrying on a fresh page')
       }
@@ -834,4 +848,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   })
 }
 
-export { changedRoutes, routeFromAppFile, isGlobal, walkPages }
+export { changedRoutes, routeFromAppFile, isGlobal, walkPages, DEV_ERROR_VIEWPORT_RE }
