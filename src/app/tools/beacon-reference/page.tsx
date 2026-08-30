@@ -1,6 +1,7 @@
 'use client';
 
 import type { BeaconType, BeaconStatus } from '@/types/deedPlan'
+import { sanitizeHtml } from '@/lib/security/sanitize'
 import { BEACON_DEFINITIONS, getBeaconSymbolSVG, BEACON_CATEGORIES, BEACON_IMAGES } from '@/lib/compute/beaconSymbols'
 import Image from 'next/image'
 import { PageHeader } from '@/components/shared/PageHeader'
@@ -92,7 +93,7 @@ export default function BeaconReferencePage() {
                             <div 
                               className="w-10 h-10"
                               dangerouslySetInnerHTML={{ 
-                                __html: getBeaconSymbolSVG(type, status, 16) 
+                                __html: sanitizeHtml(getBeaconSymbolSVG(type, status, 16))
                               }} 
                             />
                             <span className="text-[9px] text-[var(--text-muted)] mt-1">{status}</span>
