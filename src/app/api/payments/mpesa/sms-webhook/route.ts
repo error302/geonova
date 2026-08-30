@@ -45,7 +45,11 @@ export async function POST(req: NextRequest) {
     const expectedSecret = process.env.MPESA_SMS_WEBHOOK_SECRET || process.env.API_ADMIN_KEY || process.env.WORKER_SECRET
 
     const providedSecret = querySecret || bearerSecret
-    if (!providedSecret || (expectedSecret && providedSecret !== expectedSecret)) {
+    // PAYMENTS CONTRACT FIX (2026-08-30): FAIL CLOSED. The old check
+    // `(expectedSecret && providedSecret !== expectedSecret)` short-circuited
+    // to ALLOW when NO secret was configured — any non-empty bearer token
+    // could submit forged payment SMS on an unconfigured deployment.
+    if (!expectedSecret || !providedSecret || providedSecret !== expectedSecret) {
       return NextResponse.json({ error: 'Unauthorized webhook access' }, { status: 401 })
     }
 
@@ -84,36 +88,112 @@ export async function POST(req: NextRequest) {
       const plan = getPlan(planId)
       const planDisplayName = plan?.name || (planId.toUpperCase() + ' Plan')
 
-      // Mark payment as completed
-      await db.query(
-        `UPDATE payment_history
-         SET status = 'completed',
-             updated_at = NOW(),
-             metadata = metadata || $2::jsonb
-         WHERE id = $1`,
-        [
-          claim.id,
-          JSON.stringify({
-            autoVerifiedViaSms: true,
-            verifiedAt: new Date().toISOString(),
-            smsAmount: parsed.amount,
-            smsSenderPhone: parsed.senderPhone,
-            smsSenderName: parsed.senderName,
-          }),
-        ]
-      )
+      // PAYMENTS CONTRACT FIX (2026-08-30): verify the SMS amount against
+      // the claimed plan's price before auto-activating — the old path
+      // granted whatever plan the CLAIM asked for, regardless of how much
+      // money actually arrived. Fail-closed: mismatch routes to manual
+      // review instead of activation.
+      const { getPlanPrice } = await import('@/lib/subscription/catalog')
+      const expectedAmount = getPlanPrice(planId, 'KES')
+      const smsAmount = parsed.amount ?? Number(claim.amount)
+      if (
+        !Number.isFinite(smsAmount) ||
+        smsAmount <= 0 ||
+        !Number.isFinite(expectedAmount) ||
+        expectedAmount <= 0 ||
+        Math.round(smsAmount) !== Math.round(expectedAmount)
+      ) {
+        await db.query<never>(
+          `UPDATE payment_history
+             SET status = 'pending_review',
+                 updated_at = NOW(),
+                 metadata = metadata || $2::jsonb
+           WHERE id = $1`,
+          [
+            claim.id,
+            JSON.stringify({
+              fraudFlag: 'amount_mismatch',
+              smsAmount,
+              expectedAmount,
+              verifiedAt: new Date().toISOString(),
+              smsSenderPhone: parsed.senderPhone,
+              smsSenderName: parsed.senderName,
+            }),
+          ]
+        )
+        logger.warn('[mpesa-sms-webhook] SMS/claim amount mismatch — routed to manual review', {
+          mpesaCode,
+          planId,
+          smsAmount,
+          expectedAmount,
+        })
+        return NextResponse.json({
+          success: true,
+          action: 'routed_to_manual_review',
+          reason: 'amount_mismatch',
+          mpesaCode,
+          smsAmount,
+          expectedAmount,
+        })
+      }
 
-      // Grant/extend 30 days of subscription
+      const periodStart = new Date()
       const periodEnd = new Date()
       periodEnd.setDate(periodEnd.getDate() + 30)
 
-      await db.query(
-        `INSERT INTO subscriptions (user_id, plan, status, current_period_end)
-         VALUES ($1, $2, 'active', $3)
-         ON CONFLICT (user_id)
-         DO UPDATE SET plan = $2, status = 'active', current_period_end = $3, updated_at = NOW()`,
-        [claim.user_id, planId, periodEnd.toISOString()]
-      )
+      // PAYMENTS CONTRACT FIX (2026-08-30): claim completion + subscription
+      // grant in ONE transaction, with a conditional claim UPDATE so a
+      // retried/duplicate SMS cannot double-claim. The old code wrote to a
+      // nonexistent `subscriptions` table (42P01 on every auto-activation)
+      // non-transactionally.
+      const client = await db.getClient()
+      try {
+        await client.query('BEGIN')
+        const claimUpd = await client.query(
+          `UPDATE payment_history
+             SET status = 'completed',
+                 updated_at = NOW(),
+                 metadata = metadata || $2::jsonb
+           WHERE id = $1 AND status = 'pending_review'`,
+          [
+            claim.id,
+            JSON.stringify({
+              autoVerifiedViaSms: true,
+              verifiedAt: new Date().toISOString(),
+              smsAmount: parsed.amount,
+              smsSenderPhone: parsed.senderPhone,
+              smsSenderName: parsed.senderName,
+            }),
+          ]
+        )
+        if ((claimUpd.rowCount ?? 0) === 0) {
+          await client.query('ROLLBACK')
+          return NextResponse.json({
+            success: true,
+            action: 'already_processed',
+            mpesaCode,
+          })
+        }
+
+        await client.query(
+          `INSERT INTO user_subscriptions
+               (user_id, plan_id, status, payment_method, currency,
+                current_period_start, current_period_end)
+           VALUES ($1, $2, 'active', 'mpesa_till', 'KES', $3, $4)
+           ON CONFLICT (user_id)
+           DO UPDATE SET plan_id = $2, status = 'active',
+                         current_period_start = $3, current_period_end = $4,
+                         payment_method = 'mpesa_till', updated_at = NOW()`,
+          [claim.user_id, planId, periodStart.toISOString(), periodEnd.toISOString()]
+        )
+
+        await client.query('COMMIT')
+      } catch (txErr) {
+        await client.query('ROLLBACK').catch(() => {})
+        throw txErr
+      } finally {
+        client.release()
+      }
 
       // Send branded receipt
       const userRes = await db.query<UserRow>('SELECT id, email, name FROM users WHERE id = $1', [claim.user_id])
@@ -174,7 +254,10 @@ export async function POST(req: NextRequest) {
         [
           null,
           parsed.amount || 500,
-          `TILL_${tillNumber}`,
+          // PAYMENTS CONTRACT FIX (2026-08-30): unique per transaction — the
+          // sentinel `TILL_${tillNumber}` would collide on the second SMS
+          // (migration 055's unique partial index on provider_id).
+          `TILL_${tillNumber}_${mpesaCode}`,
           mpesaCode,
           JSON.stringify({
             tillNumber,

@@ -230,7 +230,10 @@ export default function AdminPaymentsPage() {
       const res = await fetch('/api/admin/payments/till-claims', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ claimId, action: 'approve' }),
+        // CONTRACT FIX (2026-08-30): the API schema (till-claims ActionSchema)
+        // expects `paymentId` — the old `claimId` body failed Zod validation
+        // with a generic 400 on EVERY approve/reject click.
+        body: JSON.stringify({ paymentId: claimId, action: 'approve' }),
       })
 
       if (!res.ok) {
@@ -258,7 +261,7 @@ export default function AdminPaymentsPage() {
       const res = await fetch('/api/admin/payments/till-claims', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ claimId, action: 'reject', reason }),
+        body: JSON.stringify({ paymentId: claimId, action: 'reject', reason }),
       })
 
       if (!res.ok) {

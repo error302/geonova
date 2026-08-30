@@ -85,38 +85,130 @@ export const POST = apiHandler(
     const amount = getPlanPrice(planId, 'KES')
     const submittedAt = new Date().toISOString()
 
-    // 2A. INSTANT ACTIVATION: If SMS was already received on Till, activate immediately!
+    // 2A. INSTANT ACTIVATION: If SMS was already received on Till, activate
+    //    immediately — but only when the SMS amount matches the plan price
+    //    (fail-closed, same rule as the M-Pesa callback's amount gate: a
+    //    mismatch routes to manual review instead of auto-activation).
     if (unclaimedRes.rows.length > 0) {
       const unclaimed = unclaimedRes.rows[0]
+      const smsAmount = Number(unclaimed.amount)
+
+      if (
+        !Number.isFinite(smsAmount) ||
+        smsAmount <= 0 ||
+        !Number.isFinite(amount) ||
+        amount <= 0 ||
+        Math.round(smsAmount) !== Math.round(amount)
+      ) {
+        // PAYMENTS CONTRACT FIX (2026-08-30): amounts disagree — do NOT
+        // auto-activate. Flip the unclaimed row to pending_review with a
+        // fraud flag so an admin can adjudicate with both numbers visible.
+        await db.query<never>(
+          `UPDATE payment_history
+             SET status = 'pending_review',
+                 user_id = COALESCE(user_id, $1),
+                 updated_at = NOW(),
+                 metadata = metadata || $2::jsonb
+           WHERE id = $3`,
+          [
+            ctx.userId,
+            JSON.stringify({
+              fraudFlag: 'amount_mismatch',
+              claimedByUserId: ctx.userId,
+              claimedAt: submittedAt,
+              smsAmount,
+              expectedAmount: amount,
+              planId,
+            }),
+            unclaimed.id,
+          ]
+        )
+        logger.warn('[mpesa-till] SMS amount mismatch on instant-activation path', {
+          userId: ctx.userId,
+          planId,
+          mpesaCode,
+          smsAmount,
+          expectedAmount: amount,
+        })
+        return NextResponse.json(
+          {
+            success: true,
+            status: 'pending_review',
+            message: `The received payment amount does not match the ${planDisplayName} plan price (KES ${amount}). Your claim has been queued for manual review.`,
+            planId,
+            planName: planDisplayName,
+            amount,
+            currency: 'KES',
+            transactionId: mpesaCode,
+            tillNumber: TILL_NUMBER,
+            submittedAt,
+          },
+          { status: 202 }
+        )
+      }
+
+      const periodStart = new Date()
       const periodEnd = new Date()
       periodEnd.setDate(periodEnd.getDate() + 30)
 
-      await db.query(
-        `UPDATE payment_history
-         SET user_id = $1,
-             status = 'completed',
-             updated_at = NOW(),
-             metadata = metadata || $2::jsonb
-         WHERE id = $3`,
-        [
-          ctx.userId,
-          JSON.stringify({
-            planId,
-            claimedByUserId: ctx.userId,
-            claimedAt: submittedAt,
-            phoneNumber: phoneNumber || 'N/A',
-          }),
-          unclaimed.id,
-        ]
-      )
+      // PAYMENTS CONTRACT FIX (2026-08-30): the claim completion and the
+      // subscription grant must be ONE transaction — a crash between them
+      // used to strand a completed payment with no subscription (and the
+      // non-transactional version wrote to a nonexistent `subscriptions`
+      // table, 42P01 at runtime, so this path never actually worked).
+      const client = await db.getClient()
+      try {
+        await client.query('BEGIN')
 
-      await db.query(
-        `INSERT INTO subscriptions (user_id, plan, status, current_period_end)
-         VALUES ($1, $2, 'active', $3)
-         ON CONFLICT (user_id)
-         DO UPDATE SET plan = $2, status = 'active', current_period_end = $3, updated_at = NOW()`,
-        [ctx.userId, planId, periodEnd.toISOString()]
-      )
+        // Conditional claim: rowCount 0 means another request already
+        // claimed this payment — idempotent under double-submit.
+        const claimRes = await client.query(
+          `UPDATE payment_history
+             SET user_id = $1,
+                 status = 'completed',
+                 updated_at = NOW(),
+                 metadata = metadata || $2::jsonb
+           WHERE id = $3 AND status = 'unclaimed_payment'`,
+          [
+            ctx.userId,
+            JSON.stringify({
+              planId,
+              claimedByUserId: ctx.userId,
+              claimedAt: submittedAt,
+              phoneNumber: phoneNumber || 'N/A',
+            }),
+            unclaimed.id,
+          ]
+        )
+        if ((claimRes.rowCount ?? 0) === 0) {
+          await client.query('ROLLBACK')
+          return NextResponse.json(
+            { error: 'This M-Pesa transaction code has already been claimed.' },
+            { status: 409 }
+          )
+        }
+
+        // user_subscriptions (NOT `subscriptions` — that table has never
+        // existed; the old INSERT raised 42P01 on every instant activation).
+        await client.query(
+          `INSERT INTO user_subscriptions
+               (user_id, plan_id, status, payment_method, currency,
+                current_period_start, current_period_end)
+           VALUES ($1, $2, 'active', 'mpesa_till', 'KES', $3, $4)
+           ON CONFLICT (user_id)
+           DO UPDATE SET plan_id = $2, status = 'active',
+                         current_period_start = $3, current_period_end = $4,
+                         payment_method = 'mpesa_till', updated_at = NOW()`,
+          [ctx.userId, planId, periodStart.toISOString(), periodEnd.toISOString()]
+        )
+
+        await client.query('COMMIT')
+      } catch (txErr) {
+        await client.query('ROLLBACK').catch(() => {})
+        throw txErr
+      } finally {
+        client.release()
+      }
 
       // Send branded receipt
       if (user?.email) {
@@ -177,7 +269,11 @@ export const POST = apiHandler(
       )
     }
 
-    // 5. Record the claim in payment_history as pending_review
+    // 5. Record the claim in payment_history as pending_review.
+    //    PAYMENTS CONTRACT FIX (2026-08-30): provider_id must be UNIQUE per
+    //    claim — every claim used the sentinel 'TILL_3370347', so the SECOND
+    //    claim ever would violate migration 055's unique partial index
+    //    (23505 → generic 409). Key it by the transaction code instead.
     await db.query<never>(
       `INSERT INTO payment_history
          (user_id, amount, currency, payment_method, provider, provider_id,
@@ -186,7 +282,7 @@ export const POST = apiHandler(
       [
         ctx.userId,
         amount,
-        `TILL_${TILL_NUMBER}`,
+        `TILL_${TILL_NUMBER}_${mpesaCode}`,
         mpesaCode,
         JSON.stringify({
           tillNumber: TILL_NUMBER,

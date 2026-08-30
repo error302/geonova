@@ -35,6 +35,9 @@ interface UserRow {
 const ActionSchema = z.object({
   paymentId: z.string().uuid(),
   action: z.enum(['approve', 'reject']),
+  // Optional rejection reason — shown to the admin in the claims history
+  // and useful when the customer asks why their claim failed.
+  reason: z.string().min(3).max(500).optional(),
 })
 
 /**
@@ -89,7 +92,7 @@ export const GET = apiHandler(
 export const POST = apiHandler(
   { auth: true, roles: ['super_admin', 'admin'], rateLimit: { max: 60, windowMs: 60000 }, schema: ActionSchema },
   async (_req, ctx) => {
-    const { paymentId, action } = ctx.body as z.infer<typeof ActionSchema>
+    const { paymentId, action, reason } = ctx.body as z.infer<typeof ActionSchema>
 
     const claimRes = await db.query<ClaimRow>(
       `SELECT ph.id, ph.user_id, u.email AS user_email,
@@ -117,12 +120,14 @@ export const POST = apiHandler(
       await db.query<never>(
         `UPDATE payment_history
             SET status = 'rejected',
+                updated_at = NOW(),
                 metadata = metadata || jsonb_build_object(
                   'reviewedBy', $2::text,
-                  'reviewedAt', NOW()::text
+                  'reviewedAt', NOW()::text,
+                  'rejectionReason', $3::text
                 )
           WHERE id = $1`,
-        [paymentId, ctx.userId],
+        [paymentId, ctx.userId, reason || 'Not specified'],
       )
       logger.info('[mpesa-till] Claim rejected', { paymentId, adminId: ctx.userId })
       return apiSuccess({ paymentId, action: 'rejected' })

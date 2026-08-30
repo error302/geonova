@@ -70,7 +70,7 @@ describe('computeDrift: the 054 failure class (missing)', () => {
       { version: '054_ghost_row_purge', checksum: 'd'.repeat(64) },
       { version: '055_payment_history_provider_id_unique', checksum: 'e'.repeat(64) },
     ]
-    const applied = [] // nothing ever applied — e.g. entrypoint failed silently
+    const applied: Array<{ version: string; checksum: string }> = [] // nothing ever applied — e.g. entrypoint failed silently
     const d = drift(files, applied)
     expect(d.ok).toBe(false)
     expect(d.missing).toEqual(['054_ghost_row_purge', '055_payment_history_provider_id_unique'])
