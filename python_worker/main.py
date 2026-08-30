@@ -515,28 +515,58 @@ def _parse_rtklib_output(output: str) -> dict:
 
 
 # ─── GNSS RINEX Processing (Task 2: country-boundary-grade trust) ───────────
-# Registered as: gnss_process_rinex
-# Provides: RINEX parsing → SPP/PPP position with full covariance matrix
-# See gnss_processor.py for the full implementation.
+# Registered as: gnss_process_rinex / gnss_process_rinex_multi
+# Provides: RINEX parsing → SPP position with full covariance matrix.
+# See gnss_processor.py for the full implementation (audit C9 follow-up:
+# the SPP engine is real — IS-GPS-200 satellite positions, WLS solver,
+# SP3 precise ephemeris support, honest SPP/SPP-IF/SPP-SP3 labelling).
 
-from gnss_processor import process_rinex as _process_rinex
+import asyncio
+
+from gnss_processor import (
+    process_rinex as _process_rinex,
+    process_rinex_multi as _process_rinex_multi,
+)
+
 
 @register_task("gnss_process_rinex")
 async def gnss_process_rinex(params: dict[str, Any]) -> Any:
     """
-    Process a RINEX observation file and compute a position via SPP or PPP.
+    Process a RINEX observation file and compute a position via SPP.
 
     Params:
       - rinex_obs: base64-encoded RINEX observation file
       - rinex_nav: (optional) base64-encoded RINEX navigation file
-      - use_precise_ephemeris: bool (default: false) — download IGS SP3
+      - use_precise_ephemeris: bool (default: false) — fetch IGS SP3
       - station_name: optional station identifier
 
     Returns:
       { latitude, longitude, height, ecef, covariance, rms, n_satellites,
-        method, n_epochs, station_name }
+        method, n_epochs, station_name, sigma_m, dop, satellites,
+        ephemeris, accuracy_note, warnings, ... }
+
+    CPU/network-bound (ephemeris auto-download + per-epoch least squares),
+    so it runs in a worker thread to keep the event loop responsive.
     """
-    return await _process_rinex(params)
+    return await asyncio.to_thread(_process_rinex, params)
+
+
+@register_task("gnss_process_rinex_multi")
+async def gnss_process_rinex_multi(params: dict[str, Any]) -> Any:
+    """
+    Multi-station SPP: solve every uploaded observation file, then report
+    pairwise station baselines (differential SPP — metre-level, honestly
+    labelled, with a pointer to the RTKLIB processor for survey grade).
+
+    Params:
+      - files: list of { filename, stationId, fileType: 'OBS'|'NAV',
+                         content: base64 }
+      - use_precise_ephemeris: bool (optional)
+
+    Returns:
+      { stations: [...], baselines: [...], notes: [...] }
+    """
+    return await asyncio.to_thread(_process_rinex_multi, params)
 
 
 if __name__ == "__main__":

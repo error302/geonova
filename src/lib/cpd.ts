@@ -396,6 +396,13 @@ function rowToCPDRecord(row: Record<string, unknown>): CPDRecord {
     description: String(row.description ?? ''),
     earnedAt: String(row.earned_at ?? ''),
     referenceId: row.reference_id ? String(row.reference_id) : undefined,
-    verifiable: Boolean(row.verifiable)
+    verifiable: Boolean(row.verifiable),
+    // approval state (audit H9 follow-up): pending manual entries must be
+    // visible as pending — the old shape hid `approved` and the page
+    // rendered every row as "Verified".
+    approved: row.approved === undefined ? undefined : Boolean(row.approved),
+    rejectionReason: row.rejection_reason
+      ? String(row.rejection_reason)
+      : undefined,
   }
 }

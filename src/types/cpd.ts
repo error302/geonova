@@ -20,6 +20,13 @@ export interface CPDRecord {
   description: string
   verifiable: boolean
   supportingDoc?: string
+  /** Approval state (audit H9 follow-up, 2026-08-31): manual entries are
+   *  created pending admin approval; until approved they do NOT count
+   *  toward the annual total. Exposed so the UI can say so instead of
+   *  rendering every record as "Verified". */
+  approved?: boolean
+  /** Rejection reason, present when an admin rejected a pending entry. */
+  rejectionReason?: string
 }
 
 export interface CPDCertificate {

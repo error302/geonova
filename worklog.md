@@ -812,3 +812,26 @@ Stage Summary:
 - CI fully green for the first time since Aug 23 (last green: 08b82518)
 - Auto-deploy verified end-to-end 4 times (091c3846, 1075fcdb, 876f7445, 2567f1fc — all success)
 - Production healthy: https://metardu.space HTTP 200, all containers healthy, DB ok, 0 restarts, pre-deploy backups flowing
+
+---
+Task ID: make-it-work-gnss-cpd
+Agent: Super Z (main)
+Task: "Make it work" — replace the honesty-quarantine stubs with real implementations for GNSS RINEX processing, the Python satellite worker, and the CPD page (audit C9/H9 follow-ups).
+
+Work Log:
+- Diagnosed the "unavailable" state: callPythonCompute was a hard 503 stub ("decommissioned in favor of Edge WASM") while the FastAPI worker kept running in docker-compose (PYTHON_COMPUTE_URL + WORKER_SECRET wired); gnss_processor.py's nav/SP3 parsers were empty stubs; compute_sat_position mixed seconds-of-day with seconds-of-week; compute_ppp still contained the fabricated satellite ring; the multi-file GNSS flow uploaded file METADATA only.
+- Rewrote python_worker/gnss_processor.py (~2,300 lines) as a real SPP engine: RINEX 2/3 obs parsing (16-char slot grid + token fallback; handles teqc concatenated satellite lists, sbf2rin >250-char lines, gzip, Hatanaka via crx2rnx), RINEX nav parsing (GPS+Galileo Keplerian; GLONASS 4-line records walked correctly and skipped with disclosure; dual column-scheme for glued F19.12 fields), IS-GPS-200 satellite positions/clocks (relativistic + TGD/BGD), SP3 parser with 9-point Lagrange interpolation and a 10 s edge-extrapolation margin, multi-epoch WLS with per-system clocks, IF dual-frequency combination, Klobuchar ionosphere, Saastamoinen troposphere (clamped exponent — a diverged iteration previously produced complex numbers via negative_base**fraction), Bancroft closed-form cold start, damped iterations, Earth-radius plausibility check, two-stage outlier rejection (20σ a-priori then 3.5× variance factor), ephemeris auto-download (BKG BRDC + NOAA SP3 mirrors, 6 h in-process cache), honest SPP/SPP-IF/SPP-SP3 method labels with accuracy notes. compute_spp legacy stub still refuses to fabricate.
+- Validation against independent truth: RINEX 2 parser matched georinex on 1,182 code-range values from real 1LSU CORS data (0 mismatches); broadcast satellite positions agree with IGS final SP3 orbits at 1.7 m median; closed-loop synthetic recovery < 1 mm through the full pipeline (RINEX 2 and 3); real-data SPP 2.6 m from the 1LSU header coordinate; ABPO 7.5 m (auto-downloaded BRDC) and 12.4 m (SP3, GPS-only) vs the IGS reference coordinate. 29 pytest tests (27 offline + 2 network) with committed real-data fixtures; CI python-worker job added.
+- Revived callPythonCompute: real HTTP bridge (PYTHON_COMPUTE_URL + X-Worker-Secret, AbortController timeouts, task-name and path call conventions, honest error mapping; never fabricates, never "simulates"). Note: res.ok is unreliable in jest's jsdom Response polyfill — explicit status ranges used. 8 jest tests.
+- /api/gnss/process-rinex: 5-minute timeout, honest error propagation, enriched result passthrough.
+- /api/gnss/process + GNSSProcessor: files now uploaded as base64 CONTENT (was metadata-only), dispatched to new gnss_process_rinex_multi task (asyncio.to_thread in the worker), per-station positions + pairwise differential-SPP baselines honestly labelled metre-level with an RTKLIB pointer; honest station table + baseline table (ΔE/ΔN/ΔU, σ) replace the fake FIXED/RATIO/CLASS columns.
+- /tools/gnss-rinex: honesty banner removed, form re-enabled with processing state; result card shows method badge, formal σ E/N/U, epoch scatter, DOPs, session span, ephemeris source, accuracy statement, processing notes, and a per-satellite elevation/azimuth table.
+- CPD end-to-end: `approved`/`rejectionReason` now flow through rowToCPDRecord → API → page (pending entries show "Pending approval", rejected show the reason — previously every row rendered "Verified"); the promised manual-entry form implemented (posts to /api/cpd → pending admin approval, audit-chained); year selector; summary cards switched to the server's ?action=summary. 10 API-boundary jest tests pin the flow.
+- Docs: AUDIT.md C9 → ✅ RESOLVED (real SPP engine), H9 → ✅ RESOLVED (end-to-end); python_worker/README.md documents the engine, its honest method labels, and the validation strategy; .env.example documents PYTHON_COMPUTE_URL/WORKER_SECRET.
+- Verification: 27+2 pytest green, 182 jest suites / 2,640 tests green, tsc --noEmit clean, eslint clean on all changed files.
+
+Stage Summary:
+- GNSS RINEX processing WORKS end-to-end for the first time: upload → real SPP position with honest accuracy labelling, with automatic ephemeris acquisition from public mirrors.
+- The Python worker computes real satellite positions from broadcast ephemerides and SP3; nothing is fabricated anywhere in the chain.
+- CPD page is fully functional: records, approval states, manual submissions, year navigation, server-computed summary.
+- Honest scope statements everywhere: PPP/RTK not implemented (never claimed); survey-grade baselines route to RTKLIB; GLONASS/BeiDou skipped with warnings.

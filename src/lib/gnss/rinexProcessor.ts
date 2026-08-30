@@ -38,20 +38,47 @@ export interface GNSSPositionResult {
   height: number
   /** ECEF [X, Y, Z] in meters */
   ecef: [number, number, number]
-  /** 3×3 or 4×4 covariance matrix */
+  /** 3×3 covariance matrix (local ENU, m²) */
   covariance: number[][] | null
-  /** RMS of residuals (meters) */
+  /** RMS of post-fit residuals (meters) */
   rms: number
   /** Number of satellites used */
   n_satellites: number
-  /** Method: 'SPP' or 'PPP' */
+  /** Method: 'SPP' | 'SPP-IF' | 'SPP-SP3' — honestly never 'PPP' */
   method: string
-  /** Processing timestamp (ISO) */
+  /** Processing timestamp (ISO, first observation epoch) */
   epoch: string
   /** Number of epochs in the RINEX file */
   n_epochs: number
   /** Station name */
   station_name: string
+  // ─── enriched fields (audit C9 "make it work", 2026-08-31) ───
+  /** Formal 1-sigma per component (m) */
+  sigma_m?: { east: number; north: number; up: number }
+  /** Empirical scatter across epochs (m) */
+  scatter_m?: { east: number; north: number; up: number }
+  /** DOP values */
+  dop?: { gdop: number; pdop: number; hdop: number; vdop: number }
+  /** Honest accuracy statement for the method used */
+  accuracy_note?: string
+  /** Which ephemeris backed the solution */
+  ephemeris?: { source: string; notes: string; sp3_label?: string | null }
+  /** Per-satellite elevation/azimuth/mode at the last epoch */
+  satellites?: Array<{
+    sat: string
+    elevation_deg: number
+    azimuth_deg: number
+    mode: string
+    epochs_observed: number
+  }>
+  /** Non-fatal processing notes (skipped systems, missing iono, …) */
+  warnings?: string[]
+  /** Epochs actually solved */
+  n_epochs_used?: number
+  /** Session time span */
+  time_span?: { start: string; end: string; interval_s?: number | null }
+  /** Marker name from the RINEX header */
+  marker_name?: string
 }
 
 /**

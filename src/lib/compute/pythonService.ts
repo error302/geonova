@@ -1,8 +1,28 @@
 // src/lib/compute/pythonService.ts
-// AUDIT FIX (2026-07-31): Ripped out the cloud python dependencies.
-// This file now acts as an Edge Spatial Engine, routing all computations
-// locally via WASM/TypeScript in the browser (proj4, delaunator, turf)
-// ensuring 100% offline capability for surveyors in remote locations.
+//
+// Two roles live in this file:
+//
+// 1. Edge Spatial Engine — local (browser/WASM) implementations of the
+//    lightweight spatial ops (datum transform, contours, volumes) that
+//    surveyors need offline (audit fix 2026-07-31: cloud-python versions
+//    were ripped out for these).
+//
+// 2. callPythonCompute — the HTTP bridge to the FastAPI compute worker
+//    (docker-compose service `metardu-worker`, PYTHON_COMPUTE_URL +
+//    WORKER_SECRET). REVIVED 2026-08-31 after the audit-C9 "make it work"
+//    pass: the worker now runs a real GNSS SPP engine (RINEX parsing,
+//    IS-GPS-200 satellite positions, SP3 precise ephemeris, WLS solver —
+//    see python_worker/gnss_processor.py), and this bridge actually
+//    reaches it again.
+//
+//    Honesty rules for the bridge (audit C9 residue):
+//      - When the worker is not configured or unreachable, callers get an
+//        explicit error. Nothing is ever simulated or fabricated here.
+//      - Worker-side task failures propagate verbatim.
+//
+// Call conventions supported (both used by existing routes):
+//      callPythonCompute('task_name', params)        → POST {url}/compute {task, params}
+//      callPythonCompute('/path', envelope)          → POST {url}{path} with the body as-is
 
 import { transformCoordinates, type CoordSystem } from '@/lib/geo/transform'
 import { generateContours as localGenerateContours, type SpotHeight } from '@/lib/engine/contours'
@@ -153,12 +173,135 @@ export async function computeVolumes(
   }
 }
 
+// ─── Python compute worker bridge ──────────────────────────────────────────
+
+export type PythonComputeResult<T> =
+  | { ok: true; value: T }
+  | { ok: false; status: number; error: string; fallback?: boolean; details?: unknown }
+
+const DEFAULT_TIMEOUT_MS = 120_000
+
+interface WorkerEnvelope {
+  success: boolean
+  data?: unknown
+  error?: string
+  detail?: string
+}
+
+/**
+ * Call the Python compute worker (FastAPI, docker service `metardu-worker`).
+ *
+ * Two calling conventions:
+ *  - `callPythonCompute('task_name', params)` → POST {PYTHON_COMPUTE_URL}/compute
+ *    with `{ task, params }` (the worker's task registry dispatch)
+ *  - `callPythonCompute('/path', envelope)` → POST {PYTHON_COMPUTE_URL}{path}
+ *    with the body passed through unchanged (legacy envelope callers)
+ *
+ * Errors are ALWAYS explicit — this bridge never fabricates results and
+ * never flags a failure as a "simulation" (audit C9).
+ */
 export async function callPythonCompute<T>(
-  _path: string,
-  _body: unknown,
-  _opts?: { timeoutMs?: number }
-): Promise<{ ok: true; value: T } | { ok: false; status: number; error: string; fallback?: boolean; details?: unknown }> {
-  // If anything still calls this generic python compute bridge, it will fail gracefully.
-  // We have stripped the python requirement from the architecture.
-  return { ok: false, status: 503, error: 'Python compute service has been decommissioned in favor of Edge WASM.', fallback: true }
+  taskOrPath: string,
+  body: unknown,
+  opts?: { timeoutMs?: number }
+): Promise<PythonComputeResult<T>> {
+  const baseUrl = (process.env.PYTHON_COMPUTE_URL || '').replace(/\/+$/, '')
+  const secret = process.env.WORKER_SECRET || ''
+
+  if (!baseUrl) {
+    return {
+      ok: false,
+      status: 503,
+      error:
+        'Python compute worker is not configured (PYTHON_COMPUTE_URL is not set). ' +
+        'Server-side GNSS/RINEX processing is unavailable in this deployment.',
+    }
+  }
+
+  const isPath = taskOrPath.startsWith('/')
+  const url = isPath ? `${baseUrl}${taskOrPath}` : `${baseUrl}/compute`
+  const payload: unknown = isPath ? body : { task: taskOrPath, params: body }
+  const timeoutMs = opts?.timeoutMs ?? DEFAULT_TIMEOUT_MS
+
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Worker-Secret': secret,
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+      // egress to the internal worker network only — never cached
+      cache: 'no-store',
+    })
+
+    if (res.status === 403) {
+      return {
+        ok: false,
+        status: 502,
+        error: 'Compute worker rejected the request (authentication failed — check WORKER_SECRET).',
+      }
+    }
+    if (res.status === 503) {
+      return {
+        ok: false,
+        status: 502,
+        error: 'Compute worker is running but not accepting requests (WORKER_SECRET not configured on the worker).',
+      }
+    }
+
+    // NOTE: res.ok is not reliable across fetch implementations (jest's
+    // jsdom polyfill omits it) — use the explicit status range.
+    const statusOk = res.status >= 200 && res.status < 300
+
+    let envelope: WorkerEnvelope | null = null
+    try {
+      envelope = (await res.json()) as WorkerEnvelope
+    } catch {
+      return {
+        ok: false,
+        status: 502,
+        error: `Compute worker returned a non-JSON response (HTTP ${res.status}).`,
+      }
+    }
+
+    if (!statusOk) {
+      return {
+        ok: false,
+        status: res.status,
+        error: envelope?.detail || envelope?.error || `Compute worker HTTP ${res.status}.`,
+      }
+    }
+    if (envelope && envelope.success === false) {
+      // The worker executed but the task itself failed — propagate verbatim.
+      return {
+        ok: false,
+        status: 422,
+        error: envelope.error || 'Compute worker task failed.',
+      }
+    }
+    return { ok: true, value: (envelope?.data ?? null) as T }
+  } catch (err) {
+    if (err instanceof Error && err.name === 'AbortError') {
+      return {
+        ok: false,
+        status: 504,
+        error: `Compute worker timed out after ${Math.round(timeoutMs / 1000)} s.`,
+      }
+    }
+    return {
+      ok: false,
+      status: 502,
+      error:
+        'Could not reach the Python compute worker. It may be down or ' +
+        'starting up — retry shortly. (' +
+        (err instanceof Error ? err.message : 'network error') +
+        ')',
+    }
+  } finally {
+    clearTimeout(timer)
+  }
 }

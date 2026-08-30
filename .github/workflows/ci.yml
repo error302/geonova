@@ -33,6 +33,28 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - run: npx tsc --noEmit
 
+  # GNSS compute worker tests (audit C9 "make it work", 2026-08-31): the
+  # SPP engine is real mathematics — parsers validated against georinex
+  # golden values on committed real data, satellite positions
+  # cross-validated against IGS final SP3 orbits, and the solver proven by
+  # noise-free closed-loop recovery (<1 mm). Network-dependent ephemeris
+  # download tests are opt-in (--run-network) and skipped here so the gate
+  # never depends on public mirrors being up.
+  python-worker:
+    name: Python Worker (GNSS SPP engine)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install worker test deps
+        run: pip install pytest numpy requests
+      - name: Run GNSS processor test suite
+        working-directory: python_worker
+        run: python -m pytest tests/ -v
+
   lint:
     name: ESLint
     runs-on: ubuntu-latest
