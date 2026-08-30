@@ -8,7 +8,7 @@
  *   OSNet/OSTN15 (OSGB36 transformation)
  */
 
-import { utmToGeographic, geographicToUTM } from './coordinates'
+import { geographicToUTM } from './coordinates'
 
 export interface DatumParameters {
   name: string
@@ -348,6 +348,85 @@ export function getDatumByName(name: string): DatumParameters | undefined {
 }
 
 /**
+ * UTM → geodetic inverse (Redfearn 1948 / Snyder series) on an ARBITRARY
+ * ellipsoid. The public utmToGeographic() (coordinates.ts) is WGS84-only;
+ * the datum transform needs the inverse on the SOURCE datum's ellipsoid.
+ *
+ * @param a   semi-major axis (metres)
+ * @param f   flattening (1/invF)
+ * @returns   { lat, lon } in RADIANS (matching utmToGeographic's contract)
+ */
+function utmToGeodeticOnEllipsoid(
+  easting: number,
+  northing: number,
+  zone: number,
+  hemisphere: 'N' | 'S',
+  a: number,
+  f: number
+): { lat: number; lon: number } {
+  const e2 = 2 * f - f * f
+  const ep2 = e2 / (1 - e2)
+
+  const k0 = 0.9996
+  const FE = 500000
+  const FN = hemisphere === 'S' ? 10000000 : 0
+  const lon0 = ((zone - 1) * 6 - 180 + 3) * (Math.PI / 180)
+
+  // Footpoint latitude from meridional arc.
+  // Snyder 8-20: the meridional arc is the grid northing (minus false
+  // northing) DIVIDED BY k0 — grid northing = k0·M + corrections + FN.
+  // Omitting the /k0 mis-scales the arc by 0.04% ≈ 57 m at Kenya latitudes
+  // (caught by goldenRegression.test.ts vs proj4 on first run).
+  const M = (northing - FN) / k0
+  const mu = M / (a * (1 - e2 / 4 - (3 * e2 * e2) / 64 - (5 * e2 ** 3) / 256))
+  const e1 = (1 - Math.sqrt(1 - e2)) / (1 + Math.sqrt(1 - e2))
+  const sin2mu = Math.sin(2 * mu)
+  const sin4mu = Math.sin(4 * mu)
+  const phi1 =
+    mu +
+    ((3 * e1) / 2 - (27 * e1 ** 3) / 32) * sin2mu +
+    ((21 * e1 * e1) / 16 - (55 * e1 ** 4) / 32) * sin4mu +
+    ((151 * e1 ** 3) / 96) * Math.sin(6 * mu) +
+    ((1097 * e1 ** 4) / 512) * Math.sin(8 * mu)
+
+  const sinPhi1 = Math.sin(phi1)
+  const cosPhi1 = Math.cos(phi1)
+  const tanPhi1 = Math.tan(phi1)
+  const C1 = ep2 * cosPhi1 * cosPhi1
+  const T1 = tanPhi1 * tanPhi1
+  const N1 = a / Math.sqrt(1 - e2 * sinPhi1 * sinPhi1)
+  const R1 = (a * (1 - e2)) / Math.pow(1 - e2 * sinPhi1 * sinPhi1, 1.5)
+  const D = (easting - FE) / (N1 * k0)
+  const D2 = D * D
+
+  const lat =
+    phi1 -
+    ((N1 * tanPhi1) / R1) *
+      (D2 / 2 -
+        ((5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * ep2) * D2 * D2) / 24 +
+        ((61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * ep2 - 3 * C1 * C1) *
+          D2 ** 3) /
+          720)
+
+  const lon =
+    lon0 +
+    (D -
+      ((1 + 2 * T1 + C1) * D2 * D) / 6 +
+      ((5 -
+        2 * C1 +
+        28 * T1 -
+        3 * C1 * C1 +
+        8 * ep2 +
+        24 * T1 * T1) *
+        D2 ** 2 *
+        D) /
+        120) /
+      cosPhi1
+
+  return { lat, lon }
+}
+
+/**
  * Transform UTM grid coordinates from a source datum to WGS84.
  *
  * AUDIT FIX (C1, 2026-07-02):
@@ -401,12 +480,23 @@ export function transformToWGS84(
     return { easting, northing, note: `${sourceDatum.name} is already WGS84-compatible.` }
   }
 
-  // 1. Source UTM → source geodetic (lat, lon) on source ellipsoid
-  //    (utmToGeographic uses the source ellipsoid implicitly via the
-  //    standard Redfearn series; for datums that share WGS84's ellipsoid
-  //    parameters but differ only in their to-WGS84 params — like most
-  //    realisations of Arc 1960 vs WGS84 — this is correct.)
-  const sourceGeodetic = utmToGeographic(easting, northing, zone, hemisphere)
+  // 1. Source UTM → source geodetic (lat, lon) on the SOURCE ellipsoid.
+  //    MATH-REGRESSION FIX (2026-08-30): utmToGeographic() (coordinates.ts)
+  //    is hardcoded to the WGS84 ellipsoid. Using it here recovered lat/lon
+  //    on the WRONG ellipsoid (WGS84 instead of e.g. Clarke 1880,
+  //    a differs by ~112 m), then compounded the error by re-projecting
+  //    that onto the source ellipsoid for the XYZ step — a residual of
+  //    metres to tens of metres vs proj4 with identical parameters.
+  //    Pinned by src/lib/geo/__tests__/goldenRegression.test.ts against
+  //    proj4 (3-parameter towgs84, sub-metre tolerance).
+  const sourceGeodetic = utmToGeodeticOnEllipsoid(
+    easting,
+    northing,
+    zone,
+    hemisphere,
+    sourceDatum.semiMajorAxis,
+    1 / sourceDatum.inverseFlattening
+  )
 
   // 2. Source geodetic → source geocentric XYZ on source ellipsoid
   const a = sourceDatum.semiMajorAxis
@@ -459,7 +549,17 @@ export function transformToWGS84(
     )
 
   // 5. Target geodetic → target UTM (same zone + hemisphere)
-  const targetUtm = geographicToUTM(targetLat, targetLon, zone)
+  //    MATH-REGRESSION FIX (2026-08-30): targetLat/targetLon are RADIANS
+  //    (from atan2) but geographicToUTM() takes DEGREES — the previous code
+  //    passed radians straight through, producing garbage eastings (~-4.1M).
+  //    Likewise step 2 previously fed utmToGeographic()'s DEGREE output into
+  //    Math.sin() as if radians. Both unit mismatches are pinned by
+  //    goldenRegression.test.ts against proj4.
+  const targetUtm = geographicToUTM(
+    (targetLat * 180) / Math.PI,
+    (targetLon * 180) / Math.PI,
+    zone
+  )
 
   return {
     easting: targetUtm.easting,

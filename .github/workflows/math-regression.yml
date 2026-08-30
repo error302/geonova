@@ -1,0 +1,47 @@
+# Nightly geodetic math regression — the property-test equivalent of a
+# calibration check.
+#
+# Why nightly: the goldenRegression suite runs in normal CI with 200 random
+# iterations per property (keeps the suite fast). Rare-input failures — the
+# kind that only 1-in-5000 inputs expose — would take weeks to surface at CI
+# sampling rates. The nightly run re-executes the SAME suite with 5000
+# iterations via MATH_PROPERTY_ITERATIONS, so any rare-input regression is
+# caught within a day.
+#
+# Why this matters here: this is a surveying product. transformToWGS84 shipped
+# mathematically wrong for weeks (audit C1) and the 2026-08-30 pass found it
+# STILL broken (unit-contract mismatches + an ellipsoid bug) despite a rewrite
+# — because nothing compared the math against an independent oracle.
+
+name: Math Regression
+
+on:
+  schedule:
+    - cron: '30 2 * * *' # 02:30 UTC daily
+  workflow_dispatch: {} # manual trigger for on-demand deep checks
+
+permissions:
+  contents: read
+
+jobs:
+  math-regression:
+    name: Geodetic golden + property tests (deep sampling)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci --legacy-peer-deps
+
+      - name: Run math regression suite with 5000 property iterations
+        env:
+          MATH_PROPERTY_ITERATIONS: '5000'
+        run: npx jest src/lib/geo/__tests__/goldenRegression.test.ts --verbose
+
+      - name: Also run the full geodesy suites (fast, catches interaction bugs)
+        run: npx jest src/lib/geo src/lib/geodesy src/lib/gnss --silent
