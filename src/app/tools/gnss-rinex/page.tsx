@@ -11,7 +11,6 @@ export default function GNSSRinexPage() {
   const [usePrecise, setUsePrecise] = useState(false)
   const [stationName, setStationName] = useState('')
   const [result, setResult] = useState<GNSSPositionResult | null>(null)
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   const handleObsFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +23,7 @@ export default function GNSSRinexPage() {
 
   const handleProcess = async () => {
     if (!obsFile) { setError('RINEX observation file is required'); return }
-    setLoading(true); setError(''); setResult(null)
+    setError(''); setResult(null)
     try {
       // Read files as base64
       const obsB64 = await fileToBase64(obsFile)
@@ -44,7 +43,7 @@ export default function GNSSRinexPage() {
       const data = await res.json() as { data: GNSSPositionResult }
       setResult(data.data)
     } catch (e) { setError(e instanceof Error ? e.message : 'Processing failed') }
-    finally { setLoading(false) }
+    finally { /* processing disabled — see honesty banner */ }
   }
 
   const inputCls = "w-full h-9 px-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-xs text-[var(--text-primary)] focus:border-[color-mix(in_srgb,var(--accent)_30%,transparent)] focus:outline-none"
@@ -55,6 +54,25 @@ export default function GNSSRinexPage() {
     <div className="min-h-screen p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">GNSS RINEX Processing</h1>
       <p className="text-sm text-[var(--text-muted)] mb-6">Upload RINEX observation files for PPP (Precise Point Positioning) processing. Works without RTK — just a RINEX file + IGS precise ephemeris.</p>
+
+      {/* HONESTY BANNER (audit C9 follow-up, 2026-08-30): the processing
+          backend behind this tool was decommissioned (the Python compute
+          service was replaced by Edge WASM, but PPP was never reimplemented).
+          Every submission currently fails with a 502. Until real processing
+          returns, say so UP FRONT instead of letting surveyors upload files
+          into a guaranteed failure — and never show fabricated positions. */}
+      <div className="mb-6 flex items-start gap-3 px-4 py-3 rounded-lg border border-yellow-500/20 bg-yellow-500/5 text-sm">
+        <AlertCircle className="w-4 h-4 mt-0.5 text-yellow-400 shrink-0" />
+        <div>
+          <p className="text-yellow-400 font-medium">Processing unavailable — read this first</p>
+          <p className="text-xs mt-1 text-[var(--text-secondary)]">
+            The PPP processing backend is not currently deployed. Submissions cannot be processed
+            right now, and the form below is disabled so you do not lose time uploading files.
+            Geodesic baselines and network adjustment remain fully available at{' '}
+            <a href="/tools/gnss" className="underline text-[var(--accent)]">GNSS Baseline &amp; Adjustment</a>.
+          </p>
+        </div>
+      </div>
 
       <div className="bg-[color-mix(in_srgb,var(--bg-secondary)_50%,transparent)] border border-[var(--border-color)] rounded-xl p-4 mb-4">
         <div className="grid grid-cols-2 gap-4">
@@ -78,8 +96,8 @@ export default function GNSSRinexPage() {
             </label>
           </div>
         </div>
-        <button onClick={handleProcess} disabled={loading || !obsFile} className="mt-3 flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--accent-dim)] disabled:opacity-50">
-          <Satellite className="w-4 h-4" /> {loading ? 'Processing...' : 'Process RINEX'}
+        <button onClick={handleProcess} disabled={true} className="mt-3 flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-black text-xs font-semibold rounded-lg hover:bg-[var(--accent-dim)] disabled:opacity-50" title="Processing backend unavailable">
+          <Satellite className="w-4 h-4" /> Processing unavailable
         </button>
       </div>
 

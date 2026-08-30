@@ -266,5 +266,4 @@ export function getSpecialties() {
 
 // peerReview: use @/lib/marketplace/peerReview directly
 export * from './aiPlanChecker'
-export * from './cpdCertificates'
 // jobMarketplace: use @/lib/marketplace/jobMarketplace directly

@@ -378,18 +378,24 @@ def compute_spp(epochs: list[dict], nav_data: Optional[dict] = None) -> GNSSPosi
             l = []  # observations minus computed
 
             for sat, pr in sat_list:
-                # Get satellite position (simplified: use a pseudo-position
-                # based on satellite ID if no ephemeris)
+                # Get satellite position from broadcast ephemeris.
+                #
+                # HONESTY QUARANTINE (audit C9, 2026-08-30): the previous
+                # fallback FABRICATED satellite geometry — satellites placed
+                # on an evenly-spaced ring at GPS altitude whenever no
+                # ephemeris was available — and still returned a polished
+                # position with an RMS and covariance. A professional-looking
+                # fabricated coordinate is worse than no coordinate: surveyors
+                # stake out boundaries from these numbers. Refuse instead.
                 if nav_data and sat in nav_data:
                     sx, sy, sz = compute_sat_position(nav_data[sat], epoch["time"])
                 else:
-                    # Simplified: distribute satellites on a sphere at GPS altitude
-                    sat_num = int(sat[1:]) if sat[1:].isdigit() else 1
-                    angle = 2 * math.pi * sat_num / len(sat_list)
-                    gps_alt = 26560000  # ~GPS orbital radius
-                    sx = gps_alt * math.cos(angle)
-                    sy = gps_alt * math.sin(angle)
-                    sz = 0
+                    raise ValueError(
+                        "No ephemeris available for satellite %s: SPP/PPP requires a "
+                        "navigation file or precise ephemeris. Fabricated-satellite "
+                        "fallbacks were removed (audit C9) — refusing to invent a position."
+                        % sat
+                    )
 
                 # Geometric range
                 rho = math.sqrt((sx - x[0]) ** 2 + (sy - x[1]) ** 2 + (sz - x[2]) ** 2)

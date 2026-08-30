@@ -100,84 +100,18 @@ const cpdRequirements: CPDRequirement[] = [
   },
 ]
 
-// CPD activities will be loaded from the database when the integration is complete.
-// Pending: backend storage for user CPD activity records.
+// HONESTY CLEANUP (audit H9 follow-up, 2026-08-30): the dead stub functions
+// (getUserActivities -> [], calculateCPDSummary from that [], fake
+// issueCPDCertificate with a metardu.app verification URL — wrong domain —
+// and verifyCertificate -> null) were REMOVED. They had zero callers and
+// existed only to produce fake-looking data. The real CPD backend lives in
+// src/lib/cpd.ts (cpd_records / cpd_certificates tables) behind /api/cpd.
+// This module keeps only the genuine static reference data (country
+// requirements + activity types).
 
 export function getCPDRequirements(country?: string): CPDRequirement[] {
   if (!country) return cpdRequirements
   return cpdRequirements.filter((r) => r.country.toLowerCase() === country.toLowerCase())
-}
-
-export function getUserActivities(_userId: string): CPDActivity[] {
-  // Pending: fetch from database once CPD backend is integrated.
-  return []
-}
-
-export function calculateCPDSummary(userId: string, country: string): CPDSummary {
-  const activities = getUserActivities(userId)
-  const requirement = cpdRequirements.find((r) => r.country.toLowerCase() === country.toLowerCase())
-  const yearlyHours = requirement?.yearlyHours || 40
-
-  const totalHours = activities.reduce((sum, a) => sum + a.hours, 0)
-  
-  const categoryBreakdown = {
-    technical: 0,
-    ethics: 0,
-    safety: 0,
-    management: 0,
-  }
-
-  activities.forEach((a) => {
-    if (a.title.toLowerCase().includes('ethics') || a.title.toLowerCase().includes('law')) {
-      categoryBreakdown.ethics += a.hours
-    } else if (a.title.toLowerCase().includes('safety')) {
-      categoryBreakdown.safety += a.hours
-    } else if (a.title.toLowerCase().includes('management') || a.title.toLowerCase().includes('project')) {
-      categoryBreakdown.management += a.hours
-    } else {
-      categoryBreakdown.technical += a.hours
-    }
-  })
-
-  const compliancePercentage = Math.min(100, (totalHours / yearlyHours) * 100)
-  
-  let status: CPDSummary['status'] = 'compliant'
-  if (compliancePercentage < 50) status = 'non_compliant'
-  else if (compliancePercentage < 100) status = 'at_risk'
-
-  return {
-    userId,
-    totalHours,
-    yearlyHours,
-    requirementHours: yearlyHours,
-    compliancePercentage,
-    categoryBreakdown,
-    upcomingRenewal: Date.now() + 180 * 24 * 60 * 60 * 1000,
-    status,
-  }
-}
-
-export function issueCPDCertificate(
-  userId: string,
-  userName: string,
-  userLicense: string,
-  activity: CPDActivity
-): CPDCertificate {
-  const certNumber = `CPD-${activity.country.toUpperCase()}-${Date.now()}`
-  
-  return {
-    id: `cert-${Date.now()}`,
-    userId,
-    userName,
-    userLicense,
-    activityId: activity.id,
-    activityTitle: activity.title,
-    activityDate: activity.date,
-    hours: activity.hours,
-    issuedAt: Date.now(),
-    certificateNumber: certNumber,
-    verificationUrl: `https://metardu.app/verify/cpd/${certNumber}`,
-  }
 }
 
 export function getActivityTypes() {
@@ -193,7 +127,3 @@ export function getActivityTypes() {
   ]
 }
 
-export function verifyCertificate(_certificateNumber: string): CPDCertificate | null {
-  // Pending: integrate with certificate verification backend.
-  return null
-}

@@ -11,14 +11,16 @@ import { TOOL_GATES, PLAN_RANK, getToolGate } from '@/lib/subscription/toolGates
 import { defined } from '@/test-utils/defined'
 
 describe('P0-2: toolGates registry', () => {
-  test('all 9 gated tools are in the registry', () => {
+  test('all 8 gated tools are in the registry', () => {
+    // HONESTY (2026-08-30): /tools/gnss-baseline removed from the registry —
+    // it is a redirect stub to /tools/gnss (gating a redirect is nonsense),
+    // part of the audit-C9 feature-honesty pass.
     const expected = [
       '/tools/civil-export',
       '/tools/gis-export',
       '/tools/machine-control',
       '/tools/topo-drawing',
       '/tools/survey-plan-demo',
-      '/tools/gnss-baseline',
       '/tools/drone',
       '/tools/slope-analysis',
       '/tools/progress-monitor',
@@ -66,6 +68,6 @@ describe('P0-2: toolGates registry', () => {
 
   test('all other gates are Pro-tier', () => {
     const proGates = Object.entries(TOOL_GATES).filter(([, g]) => g.minPlan === 'pro')
-    expect(proGates.length).toBe(8)
+    expect(proGates.length).toBe(7) // 8 gates - 1 team-tier (progress-monitor)
   })
 })

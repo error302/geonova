@@ -79,7 +79,10 @@ export default function GNSSProcessor({ projectId = '' }: { projectId?: string }
       setResults(data.results || [])
       
       if (data.status === 'simulated') {
-        setError('Simulation mode — upload valid RINEX files for real processing')
+        // HONESTY (2026-08-30): the old message said 'upload valid RINEX for real
+        // processing' — but no processing backend exists at all, so uploading
+        // could never help. Say what is actually true.
+        setError('Processing backend unavailable — GNSS baseline file processing is not currently deployed. Geodesic baselines remain available at Tools → GNSS.')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Processing failed')

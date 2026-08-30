@@ -41,7 +41,6 @@ export const TOOL_GATES: Record<string, GateInfo> = {
   '/tools/machine-control':  { minPlan: 'pro',  feature: 'dxf_export',      label: 'DXF Export' },
   '/tools/topo-drawing':     { minPlan: 'pro',  feature: 'dxf_export',      label: 'DXF Export' },
   '/tools/survey-plan-demo': { minPlan: 'pro',  feature: 'full_pdf',        label: 'Full PDF' },
-  '/tools/gnss-baseline':    { minPlan: 'pro',  feature: 'process_notes',   label: 'Process Notes' },
   '/tools/drone':            { minPlan: 'pro',  feature: 'process_notes',   label: 'Process Notes' },
   '/tools/slope-analysis':   { minPlan: 'pro',  feature: 'full_pdf',        label: 'Full PDF' },
   '/tools/progress-monitor': { minPlan: 'team', feature: 'realtime_collab', label: 'Collaboration' },

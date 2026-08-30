@@ -69,7 +69,9 @@ export const POST = apiHandler({ auth: true, schema: ProcessGNSSSchema, rateLimi
     sessionId: gnssSessionId,
     results,
     status,
-    message: status === 'simulated' ? 'Simulation mode — upload valid RINEX for real processing' : undefined
+    // HONESTY (2026-08-30): 'Simulation mode' implied uploading would enable
+    // real processing — it cannot; the compute backend is decommissioned.
+    message: status === 'simulated' ? 'Processing backend unavailable — no baseline results were produced (nothing fabricated)' : undefined
   })
 })
 

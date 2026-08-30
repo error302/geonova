@@ -23,7 +23,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/orthometric-height',
     '/tools/volume-comparison',
     '/tools/lsa',
-    '/tools/gnss-baseline',
     '/tools/road-design',
     '/tools/cut-fill',
     '/tools/pile-grid',

@@ -117,7 +117,6 @@ const TOOL_ICONS: Record<string, ComponentType<{ className?: string }>> = {
   '/tools/gcp-export': Download,
   '/tools/survey-plan-demo': MapPinned,
   '/tools/mutation-plan': MapPinned,
-  '/tools/gnss-baseline': Satellite,
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -238,7 +237,11 @@ const TOOL_DEFS: ToolDef[] = [
   { href: '/tools/volume-comparison', title: 'Volume Comparison', description: 'Compare two surveys — cut/fill volumes between existing and as-built surfaces using TIN or IDW grid methods', badge: 'NEW', section: 'Drone-to-Cadastral Bridge', keywords: 'volume comparison cut fill survey as-built tin idw earthworks' },
   { href: '/tools/topo-drawing', title: 'Topo Drawing Composer', description: 'Feature codes & DXF topographic drawings', badge: 'NEW', section: 'Specialized Surveys', keywords: 'topo drawing composer feature codes dxf topographic' },
   { href: '/tools/slope-analysis', title: 'Slope & Area Analysis', description: 'DTM slope classification, cut/fill, area', badge: 'NEW', section: 'Specialized Surveys', keywords: 'slope area analysis dtm classification cut fill' },
-  { href: '/tools/gnss-baseline', title: 'GNSS Baseline', description: 'GNSS baseline file processing | RINEX, Topcon, Trimble', section: 'Specialized Surveys', keywords: 'gnss baseline rinex topcon trimble processing' },
+  // HONESTY (2026-08-30): /tools/gnss-baseline is a redirect stub to /tools/gnss
+  // (the compute backend for baseline file processing was decommissioned).
+  // Listed entry now points at the real geodesic baseline tool instead of
+  // advertising file processing that cannot run.
+  { href: '/tools/gnss', title: 'GNSS Baseline', description: 'Geodesic baseline + network adjustment (live)', section: 'Specialized Surveys', keywords: 'gnss baseline geodesic adjustment' },
   { href: '/tools/survey-plan-demo', title: 'Survey Plan Viewer', description: 'CAD-style boundary identification plan renderer', section: 'Specialized Surveys', keywords: 'survey plan viewer cad boundary identification renderer' },
   { href: '/tools/mutation-plan', title: 'Mutation Survey Plan (Form No. 3)', description: 'Generate Form No. 3 mutation scheme plans for subdivision submissions to Director of Surveys', badge: 'NEW', section: 'Documents & Certificates', keywords: 'mutation form 3 survey plan subdivision scheme' },
 

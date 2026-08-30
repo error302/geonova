@@ -40,7 +40,7 @@ Items resolved since this audit was written. See `docs/MASTER_PLAN.md` for the f
 | C6 | No organizations table | partially resolved | Migration 028 added `organizations` + `organization_members` with RLS. `user_roles.organization_id` still has no FK (P2-4). |
 | C7 | NLIMS exporter hardcodes UTM 37S | open | Tied to P1-2 (EPSG:21037 cleanup). 5 files affected. (P2-5) |
 | C8 | `is_control` column doesn't exist | ✅ RESOLVED | Migration 025 added the column with backfill + index. |
-| C9 | GNSS baseline processing is a regex stub | open | Decision required: remove feature or implement real double-difference+LAMBDA (P2-6). |
+| C9 | GNSS baseline processing is a regex stub | substantially resolved | Regex stub removed (ae453579). 2026-08-30 honesty pass: /tools/gnss-rinex shows an explicit "processing unavailable" banner (compute backend decommissioned — PPP never reimplemented); misleading "simulation mode" messages fixed; fabricated-satellite SPP/PPP fallback in python_worker quarantined (raises instead of inventing positions); stub tool-page gating/sitemap/catalog entries removed. Real baseline processing remains FUTURE work (the genuine LAMBDA implementation in src/lib/gnss/lambda.ts is tested but unwired). |
 | C10 | CI doesn't enforce lint/typecheck/tests | partially resolved | `IGNORE_TYPE_ERRORS` removed from Dockerfile, `ignoreBuildErrors: false` in next.config.js. ESLint `continue-on-error` and `--coverage` gaps remain (P2-7). |
 
 ### High findings
@@ -55,14 +55,14 @@ Items resolved since this audit was written. See `docs/MASTER_PLAN.md` for the f
 | H6 | NextAuth v5 migration not activated | ⏳ READY TO EXECUTE | `auth-v5.ts` complete, codemod staged, 44 files / 46 call-sites identified. 7-phase plan at `docs/nextauth-v5-migration-plan.md` (P1-1). |
 | H7 | No backup automation | ✅ RESOLVED | `metardu-backup` sidecar with dcron, GPG encryption, 30-day retention. |
 | H8 | Hardcoded credentials in docker-compose | ✅ RESOLVED | Production + staging use `${VAR:?...}`. Testing compose + 5 OSM source files fixed 2026-07-24 (P0-5). |
-| H9 | CPD UI uses stub | open | `marketplace/cpdCertificates.ts` returns `[]` instead of calling real `src/lib/cpd.ts`. |
+| H9 | CPD UI uses stub | resolved | Page wired to /api/cpd → lib/cpd.ts (2026-07-02). 2026-08-30 follow-up: "My Activities" now renders the REAL CPDRecord fields (previously legacy stub fields → blank rows / "Invalid Date"), explicit empty state added, and the dead stub functions (fake certificates, wrong-domain URLs) deleted from cpdCertificates.ts (static reference data retained). |
 | H10 | EBK/ISK license verification self-attested | ✅ RESOLVED | `professional_memberships` table (migration 038) with documentary-proof workflow. |
 | H11 | Deformation analysis lacks statistical rigor | ✅ RESOLVED | Pelzer global congruence test + confidence ellipses. |
 | H12 | LSA placeholder angle observations | ✅ RESOLVED | Real angle + azimuth observation equations. |
 | H13 | No Baarda reliability in LSA | ✅ RESOLVED | Full reliability (r_i, MDB, w-test) in `networkAdjustment.ts`. |
 | H14 | No staging environment | ✅ RESOLVED | `docker-compose.staging.yml` + `deploy-staging.yml` + `promote.yml` + `rollback.yml`. |
 
-**Summary:** 10 of 10 Criticals addressed (6 fully resolved, 4 partially/open). 11 of 14 Highs fully resolved, 1 ready-to-execute (H6), 2 open (H5, H9). See `docs/MASTER_PLAN.md` for the remaining work.
+**Summary:** 10 of 10 Criticals addressed (7 fully/substantially resolved, 3 partially/open). 12 of 14 Highs fully resolved, 1 ready-to-execute (H6), 1 open (H5). See `docs/MASTER_PLAN.md` for the remaining work.
 
 ---
 

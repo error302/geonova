@@ -17,17 +17,21 @@ import {
  */
 
 /**
- * Shape rendered by the "My Activities" list. The /api/cpd endpoint actually
- * returns CPDRecord[] (lib/cpd.ts); these display fields are legacy and may be
- * undefined for API-sourced rows — kept optional to match what the JSX reads.
+ * REAL /api/cpd response shape (CPDRecord from lib/cpd.ts → cpd_records
+ * table). HONESTY FIX (audit H9 follow-up, 2026-08-30): the page previously
+ * rendered legacy stub fields (title/provider/date/hours/status) that the
+ * API never returns — every row rendered blank, "• Invalid Date", and
+ * " hours". Map the REAL fields instead.
  */
 interface CpdActivityRow {
   id: string
-  title?: string
-  provider?: string
-  date?: string
-  hours?: number
-  status?: string
+  userId: string
+  activity: string
+  points: number
+  earnedAt: string
+  description: string
+  referenceId?: string
+  verifiable: boolean
 }
 
 export default function CPDPage() {
@@ -202,16 +206,37 @@ export default function CPDPage() {
         <div className="bg-[var(--bg-card)] rounded-lg border border-[var(--border-color)] p-6">
           <h2 className="text-lg font-semibold mb-4">My Activities</h2>
           <div className="space-y-3">
+            {activities.length === 0 && (
+              <p className="text-sm text-[var(--text-muted)] py-4">
+                No CPD activities recorded yet for this year. Hours are auto-logged when you use
+                METARDU computation tools, and manual entries can be submitted for admin approval —
+                they will appear here once recorded.
+              </p>
+            )}
             {activities.map((activity) => (
               <div key={activity.id} className="flex items-center justify-between border-b pb-3">
                 <div>
-                  <h4 className="font-medium">{activity.title}</h4>
-                  <p className="text-sm text-[var(--text-muted)]">{activity.provider} • {new Date(activity.date ?? '').toLocaleDateString()}</p>
+                  <h4 className="font-medium">
+                    {activity.activity
+                      .toLowerCase()
+                      .split('_')
+                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                      .join(' ')}
+                  </h4>
+                  {activity.description && (
+                    <p className="text-sm text-[var(--text-muted)] max-w-xl truncate" title={activity.description}>
+                      {activity.description}
+                    </p>
+                  )}
+                  <p className="text-xs text-[var(--text-muted)]">
+                    Earned {new Date(activity.earnedAt).toLocaleDateString()}
+                    {activity.referenceId ? ` • Ref ${activity.referenceId}` : ''}
+                  </p>
                 </div>
-                <div className="text-right">
-                  <p className="font-semibold">{activity.hours} hours</p>
-                  <span className={`text-xs px-2 py-1 rounded ${getStatusColor(activity.status ?? '')}`}>
-                    {activity.status}
+                <div className="text-right shrink-0 ml-4">
+                  <p className="font-semibold">{activity.points} {activity.points === 1 ? 'pt' : 'pts'}</p>
+                  <span className={`text-xs px-2 py-1 rounded ${getStatusColor(activity.verifiable ? 'approved' : 'pending')}`}>
+                    {activity.verifiable ? 'Verified' : 'Unverified'}
                   </span>
                 </div>
               </div>
