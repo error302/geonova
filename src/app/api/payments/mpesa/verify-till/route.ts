@@ -6,6 +6,7 @@ import { z } from 'zod'
 import db from '@/lib/db'
 import { getPlan, getPlanPrice } from '@/lib/subscription/catalog'
 import { sendEmail } from '@/lib/email'
+import { paymentReceiptEmail } from '@/lib/email-templates/paymentReceipt'
 import { logger } from '@/lib/logger'
 import { getMpesaTillNumber } from '@/lib/payments/mpesaConfig'
 
@@ -64,7 +65,105 @@ export const POST = apiHandler(
       )
     }
 
-    // 2. Check for duplicate M-Pesa code across payment_history to prevent double-spending
+    // 2. Check if a pre-verified SMS payment already exists on this Till
+    const unclaimedRes = await db.query<{ id: string; amount: string; currency: string }>(
+      `SELECT id, amount, currency FROM payment_history
+       WHERE transaction_id = $1 AND status = 'unclaimed_payment'`,
+      [mpesaCode]
+    )
+
+    // 3. Resolve user details
+    const userRes = await db.query<UserRow>(
+      `SELECT id, email, name FROM users WHERE id = $1`,
+      [ctx.userId]
+    )
+    const user = userRes.rows[0]
+
+    // 4. Resolve plan pricing
+    const plan = getPlan(planId)
+    const planDisplayName = plan?.name || (planId.toUpperCase() + ' Plan')
+    const amount = getPlanPrice(planId, 'KES')
+    const submittedAt = new Date().toISOString()
+
+    // 2A. INSTANT ACTIVATION: If SMS was already received on Till, activate immediately!
+    if (unclaimedRes.rows.length > 0) {
+      const unclaimed = unclaimedRes.rows[0]
+      const periodEnd = new Date()
+      periodEnd.setDate(periodEnd.getDate() + 30)
+
+      await db.query(
+        `UPDATE payment_history
+         SET user_id = $1,
+             status = 'completed',
+             updated_at = NOW(),
+             metadata = metadata || $2::jsonb
+         WHERE id = $3`,
+        [
+          ctx.userId,
+          JSON.stringify({
+            planId,
+            claimedByUserId: ctx.userId,
+            claimedAt: submittedAt,
+            phoneNumber: phoneNumber || 'N/A',
+          }),
+          unclaimed.id,
+        ]
+      )
+
+      await db.query(
+        `INSERT INTO subscriptions (user_id, plan, status, current_period_end)
+         VALUES ($1, $2, 'active', $3)
+         ON CONFLICT (user_id)
+         DO UPDATE SET plan = $2, status = 'active', current_period_end = $3, updated_at = NOW()`,
+        [ctx.userId, planId, periodEnd.toISOString()]
+      )
+
+      // Send branded receipt
+      if (user?.email) {
+        try {
+          const receipt = paymentReceiptEmail.render({
+            to: user.email,
+            name: user.name || 'Surveyor',
+            planName: `${planDisplayName} Plan`,
+            amount: parseFloat(unclaimed.amount || String(amount)),
+            currency: unclaimed.currency || 'KES',
+            paidAt: submittedAt,
+            transactionId: mpesaCode,
+            paymentMethod: `M-Pesa Buy Goods · Till ${TILL_NUMBER}`,
+          })
+          await sendEmail({
+            to: user.email,
+            subject: receipt.subject,
+            html: receipt.html,
+            text: receipt.text,
+          })
+        } catch (emailErr) {
+          logger.warn('[mpesa-till] Failed to send instant receipt email:', { error: emailErr })
+        }
+      }
+
+      logger.info('[mpesa-till] Instant plan activation from pre-verified SMS', {
+        userId: ctx.userId,
+        planId,
+        mpesaCode,
+      })
+
+      return NextResponse.json({
+        success: true,
+        status: 'completed',
+        activatedImmediately: true,
+        message: `Payment verified instantly! Your ${planDisplayName} plan is now active.`,
+        planId,
+        planName: planDisplayName,
+        amount,
+        currency: 'KES',
+        transactionId: mpesaCode,
+        tillNumber: TILL_NUMBER,
+        submittedAt,
+      })
+    }
+
+    // 2B. Check for duplicate M-Pesa code across completed/pending claims
     const existingPayment = await db.query<PaymentHistoryRow>(
       `SELECT id FROM payment_history
        WHERE transaction_id = $1 OR (metadata->>'mpesaCode' = $1 AND status IN ('pending_review', 'completed'))`,
@@ -78,22 +177,7 @@ export const POST = apiHandler(
       )
     }
 
-    // 3. Resolve user details (account email only — client-supplied addresses
-    //    are never used for delivery, see C-03 phishing note)
-    const userRes = await db.query<UserRow>(
-      `SELECT id, email, name FROM users WHERE id = $1`,
-      [ctx.userId]
-    )
-    const user = userRes.rows[0]
-
-    // 4. Resolve plan pricing
-    const plan = getPlan(planId)
-    const planDisplayName = plan?.name || (planId.toUpperCase() + ' Plan')
-    const amount = getPlanPrice(planId, 'KES')
-    const submittedAt = new Date().toISOString()
-
-    // 5. Record the claim in payment_history as pending_review — no
-    //    subscription mutation happens here (audit C-03).
+    // 5. Record the claim in payment_history as pending_review
     await db.query<never>(
       `INSERT INTO payment_history
          (user_id, amount, currency, payment_method, provider, provider_id,

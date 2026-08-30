@@ -406,7 +406,7 @@ function ShowcaseSection() {
             <div className="absolute -inset-3 bg-gradient-to-r from-[color-mix(in_srgb,var(--accent)_10%,transparent)] via-transparent to-transparent rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-opacity" aria-hidden />
             <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl">
               <Image
-                src="/landing/captures/cadastral-workspace.png"
+                src="/landing/showcase-cadastral-workspace.jpg"
                 alt="METARDU cadastral map workspace showing parcel boundaries, RIM overlays, and survey layers"
                 width={1920}
                 height={1080}
@@ -425,7 +425,7 @@ function ShowcaseSection() {
             <figure className="group relative md:col-span-3">
               <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl h-full">
                 <Image
-                  src="/landing/captures/traverse-workflow.png"
+                  src="/landing/showcase-traverse-workflow.jpg"
                   alt="METARDU survey workflow and traverse computation workspace"
                   width={1920}
                   height={1080}
@@ -441,7 +441,7 @@ function ShowcaseSection() {
             <figure className="group relative md:col-span-2">
               <div className="relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-tertiary)] p-2 shadow-2xl h-full">
                 <Image
-                  src="/landing/captures/map-inspector.png"
+                  src="/landing/showcase-map-inspector.jpg"
                   alt="METARDU interactive map tools and layer inspector panel"
                   width={900}
                   height={1200}

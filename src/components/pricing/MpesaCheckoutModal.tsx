@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { X, CheckCircle2, AlertCircle, Loader2, Smartphone, ShieldCheck, Copy, Check } from 'lucide-react'
+import { X, CheckCircle2, AlertCircle, Loader2, Smartphone, ShieldCheck, Copy, Check, Sparkles } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { getMpesaTillNumber } from '@/lib/payments/mpesaConfig'
+import { parseMpesaSms } from '@/lib/payments/smsParser'
 
 export interface MpesaCheckoutModalProps {
   isOpen: boolean
@@ -32,6 +33,8 @@ export function MpesaCheckoutModal({
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [copiedTill, setCopiedTill] = useState(false)
+  const [showSmsPaste, setShowSmsPaste] = useState(false)
+  const [parsedMsg, setParsedMsg] = useState('')
 
   const TILL_NUMBER = getMpesaTillNumber()
 
@@ -41,6 +44,21 @@ export function MpesaCheckoutModal({
     navigator.clipboard.writeText(TILL_NUMBER)
     setCopiedTill(true)
     setTimeout(() => setCopiedTill(false), 2500)
+  }
+
+  const handleSmsPaste = (text: string) => {
+    if (!text.trim()) return
+    const parsed = parseMpesaSms(text)
+    if (parsed.success && parsed.mpesaCode) {
+      setMpesaCode(parsed.mpesaCode)
+      if (parsed.senderPhone && !phoneNumber) {
+        setPhoneNumber(parsed.senderPhone)
+      }
+      setParsedMsg(`✓ Safaricom code ${parsed.mpesaCode} detected${parsed.amount ? ` (KSh ${parsed.amount.toLocaleString()})` : ''}`)
+      setTimeout(() => setParsedMsg(''), 5000)
+    } else {
+      setParsedMsg('Could not detect a 10-char M-Pesa code from pasted text. Please enter it manually.')
+    }
   }
 
   const handleVerifyPayment = async (e: React.FormEvent) => {
@@ -194,9 +212,40 @@ export function MpesaCheckoutModal({
               {/* Verification Form */}
               <form onSubmit={handleVerifyPayment} className="space-y-4 pt-2">
                 <div>
-                  <label className="block text-xs font-semibold text-[var(--text-primary)] mb-1">
-                    M-Pesa Transaction Code *
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-semibold text-[var(--text-primary)]">
+                      M-Pesa Transaction Code *
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowSmsPaste(!showSmsPaste)}
+                      className="text-[11px] text-[var(--accent)] hover:underline flex items-center gap-1 font-medium"
+                    >
+                      <Sparkles className="w-3 h-3" />
+                      <span>{showSmsPaste ? 'Hide SMS paste' : 'Paste full SMS'}</span>
+                    </button>
+                  </div>
+
+                  {showSmsPaste && (
+                    <div className="mb-2 p-2.5 bg-black/30 border border-white/10 rounded-lg space-y-1.5 animate-in fade-in duration-200">
+                      <div className="text-[10px] text-[var(--text-muted)]">
+                        Paste the full confirmation SMS you received from Safaricom:
+                      </div>
+                      <textarea
+                        rows={2}
+                        placeholder="e.g. SHK489XZY1 Confirmed. Ksh500.00 paid to METARDU on 30/8/26 at 3:30 PM..."
+                        onChange={(e) => handleSmsPaste(e.target.value)}
+                        className="w-full bg-black/50 border border-white/10 rounded p-2 text-xs text-white placeholder-[var(--text-muted)] font-mono outline-none focus:border-[var(--accent)] resize-none"
+                      />
+                    </div>
+                  )}
+
+                  {parsedMsg && (
+                    <div className="mb-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
+                      {parsedMsg}
+                    </div>
+                  )}
+
                   <input
                     type="text"
                     required
