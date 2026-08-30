@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# METARDU pre-push hook — cheap gates BEFORE GitHub sees the code.
+# Install: cp into .gite/hooks/pre-push && chmod +x, then
+#   npm pkg set scripts.prepare="git config core.hooksPath .gite/hooks"
+#   && npm run prepare
+# (If husky is already configured, drop this file into .husky/ instead.)
+#
+# Escape hatches:
+#   SKIP_PRE_PUSH=1 git push ...   # skip entirely (emergencies only)
+#   SKIP_PRE_PUSH_TESTS=1 git push # keep lint+types+secrets, skip tests
+#
+# Design notes:
+# - Runs only on the commits actually being pushed (origin/main..HEAD),
+#   so it stays fast on feature branches.
+# - Time-boxes itself (default 300s) — a hook that hangs is a hook that
+#   gets deleted out of spite.
+# - Fails CLOSED on gitleaks only when gitleaks is installed; prints the
+#   install command otherwise. (Local absence of a tool must not become a
+#   reason to disable the hook file.)
+
+set -uo pipefail
+
+TIMEBOX="${PRE_PUSH_TIMEOUT:-300}"
+REASON=""
+
+if [[ "${SKIP_PRE_PUSH:-}" == "1" ]]; then
+  echo "pre-push: SKIPPED via SKIP_PRE_PUSH=1 — remember CI still runs everything."
+  exit 0
+fi
+if [[ "${CI:-}" == "true" ]]; then
+  exit 0  # CI runs its own full gates; never nest hooks inside them
+fi
+
+# Remote ref to diff against: the default branch tracking ref if it exists,
+# otherwise HEAD~ so a single-commit branch still checks something.
+BASE_REF="origin/main"
+if ! git rev-parse --verify --quiet "$BASE_REF" >/dev/null 2>&1; then
+  BASE_REF="HEAD~1"
+fi
+
+CHANGED_FILES=$(git diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD -- '*.ts' '*.tsx' 2>/dev/null || true)
+if [[ -z "$CHANGED_FILES" ]]; then
+  echo "pre-push: no TS/TSX changes in push range ($BASE_REF..HEAD) — done."
+  exit 0
+fi
+
+fail() { REASON="$1"; }
+trap 'if [[ -n "$REASON" ]]; then echo "pre-push: BLOCKED — $REASON" >&2; echo "(fix and re-push, or SKIP_PRE_PUSH=1 in a genuine emergency)" >&2; exit 1; fi' EXIT
+
+# --- 1. Types ----------------------------------------------------------------
+if [[ -f tsconfig.json ]]; then
+  echo "pre-push: tsc --noEmit ..."
+  if ! timeout "$TIMEBOX" npx tsc --noEmit; then
+    fail "typecheck failed (an interim commit shipped 5 of these to main once — never again)"
+  fi
+fi
+
+# --- 2. Lint (changed files only — fast enough to always run) ----------------
+echo "pre-push: eslint on changed files ..."
+if ! timeout "$TIMEBOX" npx eslint $CHANGED_FILES; then
+  fail "eslint failed on changed files"
+fi
+
+# --- 3. Secrets ---------------------------------------------------------------
+if command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-push: gitleaks on pushed commits ..."
+  # Exit codes: 0 clean, 1 leaks found, anything else = tool error.
+  timeout "$TIMEBOX" gitleaks git --config .gitleaks.toml \
+    --log-opts="$BASE_REF..HEAD" --redact -v >/dev/null 2>&1
+  status=$?
+  if [[ "$status" == "1" ]]; then
+    fail "gitleaks found a secret in $BASE_REF..HEAD (C-01 shipped twice — rotate, then re-push)"
+  elif [[ "$status" != "0" ]]; then
+    echo "pre-push: gitleaks exited $status (tool error) — not blocking on this."
+  fi
+else
+  echo "pre-push: gitleaks not installed — skipping local secret scan."
+  echo "          install: brew install gitleaks  (or: go install github.com/gitleaks/gitleaks/v8@latest)"
+fi
+
+# --- 4. Tests (changed-file scoped where the runner supports it) -------------
+if [[ "${SKIP_PRE_PUSH_TESTS:-}" != "1" ]]; then
+  if grep -q '"vitest"' package.json 2>/dev/null; then
+    echo "pre-push: vitest related tests ..."
+    if ! timeout "$TIMEBOX" npx vitest related $CHANGED_FILES --run 2>/dev/null; then
+      # `vitest related` needs a graph it sometimes lacks on cold caches —
+      # fall back to a changed-directory scoped run.
+      echo "pre-push: 'vitest related' unavailable; running affected __tests__ ..."
+      TEST_DIRS=$(echo "$CHANGED_FILES" | xargs -n1 dirname | sort -u | sed 's|$|/__tests__/|')
+      if ! timeout "$TIMEBOX" npx vitest run $TEST_DIRS; then
+        fail "vitest failed"
+      fi
+    fi
+  elif grep -q '"jest"' package.json 2>/dev/null; then
+    echo "pre-push: jest changed-files tests ..."
+    if ! timeout "$TIMEBOX" npx jest --findRelatedTests --passWithNoTests $CHANGED_FILES; then
+      fail "jest failed"
+    fi
+  else
+    echo "pre-push: no test runner detected — skipping tests (CI will run the full suite)."
+  fi
+fi
+
+echo "pre-push: all local gates passed ✓"

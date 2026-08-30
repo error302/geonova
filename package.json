@@ -45,7 +45,10 @@
     "analyze": "ANALYZE=true next build",
     "bundle-report": "node scripts/bundle-analysis-report.mjs",
     "analyze:report": "ANALYZE=true next build && node scripts/bundle-analysis-report.mjs",
-    "test:emails": "npx tsx scripts/test-email-templates.ts"
+    "test:emails": "npx tsx scripts/test-email-templates.ts",
+    "prepare": "git config core.hooksPath .gite/hooks || true",
+    "security:gitleaks": "gitleaks git --config .gitleaks.toml --baseline-path .gitleaks-baseline.json --redact",
+    "security:gitleaks-local": "gitleaks dir --config .gitleaks.toml --redact src/ scripts/"
   },
   "dependencies": {
     "@capacitor-community/bluetooth-le": "^8.1.3",

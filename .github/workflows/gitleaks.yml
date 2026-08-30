@@ -1,0 +1,51 @@
+# Secret scanning — blocks any push or PR that introduces a NEW credential.
+# Part of the security-routine kit (see docs/SECURITY_ROUTINE.md).
+#
+# How this works:
+#   - .gitleaks.toml = gitleaks v8.24.3 default ruleset (208 rules) + project
+#     allowlists. Regenerate via scripts/merge-gitleaks.py when upgrading.
+#     (A custom config with no [[rules]] silently scans with ZERO rules —
+#     the exact failure mode caught while setting this up.)
+#   - .gitleaks-baseline.json = the 4 findings present in git history BEFORE
+#     this gate existed (2 false positives + 1 REAL rotated-pending password
+#     in notes/Admin Users.md at an old commit + 1 fp dup). All values are
+#     redacted in the baseline. Only NEW leaks fail the build.
+#   - gitleaks is pinned to v8.24.3 to match the embedded default ruleset.
+#
+# ⚠ ROTATION DEBT: the baseline includes one real POSTGRES_PASSWORD committed
+# to history at 8c433880 (notes/Admin Users.md). The file was scrubbed from
+# HEAD long ago, but the value remains in git history. ROTATE the VM's
+# postgres password, then this entry is moot. Do NOT delete the baseline
+# entry instead of rotating.
+
+name: gitleaks
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  gitleaks:
+    name: Detect leaked secrets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history: the scanner must see every commit in the push.
+          fetch-depth: 0
+
+      - name: Install gitleaks (pinned v8.24.3)
+        run: |
+          curl -sfL -o gitleaks.tgz \
+            https://github.com/gitleaks/gitleaks/releases/download/v8.24.3/gitleaks_8.24.3_linux_x64.tar.gz
+          echo "9991e0b2903da4c8f6122b5c3186448b927a5da4deef1fe45271c3793f4ee29c  gitleaks.tgz" | sha256sum -c -
+          tar xzf gitleaks.tgz gitleaks
+          ./gitleaks version
+
+      - name: Scan git history for new secrets
+        run: ./gitleaks git --config .gitleaks.toml --baseline-path .gitleaks-baseline.json --redact
