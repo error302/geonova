@@ -30,13 +30,31 @@
  * DATABASE_URL) — wired into .github/workflows/deploy.yml.
  */
 import { createHash } from 'node:crypto'
-import { readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import pg from 'pg'
 
-const MIGRATIONS_DIR =
-  process.env.MIGRATIONS_DIR || join(process.cwd(), 'src', 'lib', 'db', 'migrations')
+const MIGRATIONS_DIR = resolveMigrationsDir()
+
+/**
+ * Mirror migrate-unified.mjs's search order: env override, then the repo
+ * checkout layout (src/lib/db/migrations), then the container layout where
+ * the Dockerfile copies migrations to /app/migrations (the first deploy run
+ * failed looking for /app/src/lib/db/migrations inside the image).
+ */
+function resolveMigrationsDir() {
+  if (process.env.MIGRATIONS_DIR) return process.env.MIGRATIONS_DIR
+  const candidates = [
+    join(process.cwd(), 'src', 'lib', 'db', 'migrations'),
+    join(process.cwd(), 'migrations'),
+    '/app/migrations',
+  ]
+  for (const c of candidates) {
+    if (existsSync(c)) return c
+  }
+  return candidates[0]
+}
 
 /** Migration file → { version, checksum } the same way migrate-unified.mjs does. */
 export function collectFileMigrations(dir = MIGRATIONS_DIR) {
