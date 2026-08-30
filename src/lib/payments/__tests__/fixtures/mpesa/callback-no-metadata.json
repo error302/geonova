@@ -1,0 +1,11 @@
+{
+  "_comment": "Daraja STK Push callback with NO CallbackMetadata at all (missing Amount). Pre-C-05 this skipped the amount check entirely; now paidAmount=0 must fail closed with fraudFlag missing_callback_metadata.",
+  "Body": {
+    "stkCallback": {
+      "MerchantRequestID": "29115-34620561-3",
+      "CheckoutRequestID": "ws_CO_191220191020363925",
+      "ResultCode": 0,
+      "ResultDesc": "The service request is processed successfully."
+    }
+  }
+}

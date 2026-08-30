@@ -1,0 +1,19 @@
+{
+  "_comment": "Daraja STK Push callback where the user paid the WRONG amount (or an attacker forged a success callback): ResultCode 0 but Amount 100 does not match the intent's plan price. The route must fail closed — intent marked failed with fraudFlag amount_mismatch, NOTHING credited.",
+  "Body": {
+    "stkCallback": {
+      "MerchantRequestID": "29115-34620561-2",
+      "CheckoutRequestID": "ws_CO_191220191020363925",
+      "ResultCode": 0,
+      "ResultDesc": "The service request is processed successfully.",
+      "CallbackMetadata": {
+        "Item": [
+          { "Name": "Amount", "Value": 100 },
+          { "Name": "MpesaReceiptNumber", "Value": "FORGED123XY" },
+          { "Name": "TransactionDate", "Value": 20191219102115 },
+          { "Name": "PhoneNumber", "Value": 254708374149 }
+        ]
+      }
+    }
+  }
+}

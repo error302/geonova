@@ -1,0 +1,11 @@
+{
+  "_comment": "Daraja STK Push FAILURE callback: user cancelled / insufficient funds (ResultCode 1032 = cancelled by user). Intent must be marked failed, nothing credited, 200 OK returned (Daraja requires 200 even for business failures).",
+  "Body": {
+    "stkCallback": {
+      "MerchantRequestID": "29115-34620561-4",
+      "CheckoutRequestID": "ws_CO_191220191020363925",
+      "ResultCode": 1032,
+      "ResultDesc": "Request cancelled by user"
+    }
+  }
+}
