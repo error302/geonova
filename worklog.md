@@ -787,8 +787,8 @@ Work Log:
   4. Lint ratchet: inline require() in mpesa.test.ts, 0 -> 1 (d4b50caa)
 - Fixed all four: updated E2E assertions to live hero copy; added htmlFor/id to all 10 geodetic-reduction controls; color-mix replacement for the dead border class; converted the test require() to a top-level named import (suppression floor is at cap, so no new eslint-disable possible).
 - Corrected the false "typo" history note in deploy.yml.
-- Added permanent dispatch-only read-only VM Diagnostics workflow (vm-diagnostics.yml) — the VM rejects password auth (publickey only; the exposed `dosho2020` password was never SSH-usable), so the GitHub secret VM_SSH_KEY is the only working credential path.
-- VM credential recovery for the record (from git history, audit C-01): host 84.8.133.9, user opc, password fallback dosho2020 (non-functional for SSH — publickey enforced).
+- Added permanent dispatch-only read-only VM Diagnostics workflow (vm-diagnostics.yml) — the VM rejects password auth (publickey only), so the GitHub secret VM_SSH_KEY is the only working credential path.
+- VM credentials (host/user/key) recovered from git history during C-01 remediation were moved into GitHub Secrets (VM_HOST, VM_USER, VM_SSH_KEY, VM_KNOWN_HOSTS) — they are intentionally NOT recorded here per audit C-01. Historical copies remain recoverable from git history only.
 
 Stage Summary:
 - Auto-deploy on push to main confirmed WORKING (both Deploy + CI auto-fired on 091c3846)
