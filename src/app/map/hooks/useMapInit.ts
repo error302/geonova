@@ -482,6 +482,7 @@ export function useMapInit(params: UseMapInitParams) {
                   drawSource.removeFeature(feature)
                   select.getFeatures().remove(feature)
                   setSelectedFeature(null)
+                  pushHistory()
                 } catch { /* already removed */ }
               },
             }, hidePopup)

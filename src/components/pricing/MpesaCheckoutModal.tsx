@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { X, CheckCircle2, AlertCircle, Loader2, Smartphone, ShieldCheck, Copy, Check } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { getMpesaTillNumber } from '@/lib/payments/mpesaConfig'
 
 export interface MpesaCheckoutModalProps {
   isOpen: boolean
@@ -32,7 +33,7 @@ export function MpesaCheckoutModal({
   const [success, setSuccess] = useState(false)
   const [copiedTill, setCopiedTill] = useState(false)
 
-  const TILL_NUMBER = '3370347'
+  const TILL_NUMBER = getMpesaTillNumber()
 
   if (!isOpen) return null
 

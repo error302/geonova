@@ -7,11 +7,27 @@
  * Responsive: hides E/N on mobile, adjusts font sizes.
  */
 
-import React, { memo } from 'react'
+import React, { memo, useState, useEffect } from 'react'
+import { WifiOff } from 'lucide-react'
 import { useMapContext } from '@/app/map/MapReactContext'
 
 export const MapStatusBar = memo(function MapStatusBar() {
   const { mouseCoord, dragHint, isMobile, projectCount } = useMapContext()
+  const [isOnline, setIsOnline] = useState(true)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    setIsOnline(navigator.onLine)
+    const handleOnline = () => setIsOnline(true)
+    const handleOffline = () => setIsOnline(false)
+
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
 
   return (
     <div className="absolute bottom-0 left-0 right-0 z-10" style={{ bottom: isMobile ? '64px' : '0px' }}>
@@ -35,13 +51,23 @@ export const MapStatusBar = memo(function MapStatusBar() {
             <span className="text-[10px] md:text-[11px] text-[var(--text-muted)]">Move cursor for coordinates</span>
           )}
         </div>
-        {/* Project count badge */}
-        {projectCount > 0 && (
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)]">
-            <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
-            <span className="text-[10px] text-[var(--accent)] font-semibold whitespace-nowrap">{projectCount} project{projectCount > 1 ? 's' : ''}</span>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {/* Offline status indicator */}
+          {!isOnline && (
+            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400">
+              <WifiOff className="w-3 h-3" />
+              <span className="text-[10px] font-semibold whitespace-nowrap">Offline</span>
+            </div>
+          )}
+
+          {/* Project count badge */}
+          {projectCount > 0 && (
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)]">
+              <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
+              <span className="text-[10px] text-[var(--accent)] font-semibold whitespace-nowrap">{projectCount} project{projectCount > 1 ? 's' : ''}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Drag-drop hint */}

@@ -7,10 +7,11 @@
  */
 
 import type { CurrencyCode, PlanId } from '@/lib/subscription/catalog'
+import { getMpesaTillNumber } from '@/lib/payments/mpesaConfig'
 
 export interface PaymentMethod {
   id: string
-  type: 'card' | 'mpesa' | 'paypal'
+  type: PaymentProvider | 'card'
   name: string
   enabled: boolean
   countries: string[]
@@ -23,13 +24,12 @@ export type StartSubscriptionResult =
   | { kind: 'redirect'; provider: 'stripe' | 'paypal'; url: string; paymentId: string }
   | { kind: 'mpesa'; provider: 'mpesa'; paymentId: string; checkoutRequestId: string }
 
-const paymentMethods: PaymentMethod[] = [
-  { id: 'mpesa', type: 'mpesa', name: 'M-Pesa (Buy Goods Till 3370347 / STK Push)', enabled: true, countries: ['Kenya'] },
-  { id: 'paypal', type: 'paypal', name: 'PayPal / International Cards', enabled: true, countries: ['*'] },
-  { id: 'card', type: 'card', name: 'Direct Card Checkout', enabled: true, countries: ['*'] },
-]
-
 export function getPaymentMethods(country?: string): PaymentMethod[] {
+  const paymentMethods: PaymentMethod[] = [
+    { id: 'mpesa', type: 'mpesa', name: `M-Pesa (Buy Goods Till ${getMpesaTillNumber()} / STK Push)`, enabled: true, countries: ['Kenya'] },
+    { id: 'paypal', type: 'paypal', name: 'PayPal / International Cards', enabled: true, countries: ['*'] },
+    { id: 'card', type: 'card', name: 'Direct Card Checkout', enabled: true, countries: ['*'] },
+  ]
   if (!country) return paymentMethods.filter((p) => p.enabled)
   return paymentMethods.filter(
     (p) => p.enabled && (p.countries.includes('*') || p.countries.includes(country))

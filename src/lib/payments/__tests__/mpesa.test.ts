@@ -20,6 +20,7 @@
 import { MpesaService } from '@/lib/payments/mpesa'
 import { getPlan } from '@/lib/subscription/catalog'
 import { paymentReceiptEmail } from '@/lib/email-templates/paymentReceipt'
+import { getMpesaTillNumber, DEFAULT_MPESA_TILL } from '@/lib/payments/mpesaConfig'
 
 import { defined } from '@/test-utils/defined'
 
@@ -218,6 +219,12 @@ describe('P0-4: M-Pesa callback parsing + amount verification', () => {
       expect(receipt.html.toLowerCase()).toContain('ksh')
       expect(receipt.html).toContain('500')
     })
+
+    test('reads till number from configuration with fallback', () => {
+      expect(DEFAULT_MPESA_TILL).toBe('3370347')
+      expect(getMpesaTillNumber()).toBe('3370347')
+    })
   })
 })
+
 

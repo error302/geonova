@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { ModernPricingPage, PricingCardProps } from '@/components/ui/animated-glassy-pricing'
 import { PLAN_CATALOG, getPlanPrice, type CurrencyCode } from '@/lib/subscription/catalog'
 import { MpesaCheckoutModal } from '@/components/pricing/MpesaCheckoutModal'
+import { getMpesaTillNumber } from '@/lib/payments/mpesaConfig'
 import { Smartphone, CreditCard } from 'lucide-react'
 import { logger } from '@/lib/logger'
 
@@ -231,7 +232,7 @@ export default function PricingPage() {
                 }`}
               >
                 <Smartphone className="w-4 h-4 text-emerald-400" />
-                <span>M-Pesa Buy Goods (Till 3370347)</span>
+                <span>M-Pesa Buy Goods (Till {getMpesaTillNumber()})</span>
               </button>
 
               <button
@@ -270,16 +271,16 @@ export default function PricingPage() {
             </div>
           </div>
 
-          {/* Tab 1: M-Pesa Buy Goods Till 3370347 */}
+          {/* Tab 1: M-Pesa Buy Goods Till */}
           {activeTab === 'mpesa' && (
             <div className="max-w-md mx-auto text-center space-y-4">
               <div className="p-5 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-left space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-xs font-semibold text-emerald-400">TILL NUMBER:</span>
-                  <span className="text-xs font-bold text-[var(--accent)]">3370347</span>
+                  <span className="text-xs font-bold text-[var(--accent)]">{getMpesaTillNumber()}</span>
                 </div>
                 <p className="text-xs text-[var(--text-secondary)]">
-                  Pay directly from your Safaricom M-Pesa line using Buy Goods Till <strong className="text-emerald-400 font-mono">3370347</strong> and get instant access + email receipt.
+                  Pay directly from your Safaricom M-Pesa line using Buy Goods Till <strong className="text-emerald-400 font-mono">{getMpesaTillNumber()}</strong> and get instant access + email receipt.
                 </p>
               </div>
 

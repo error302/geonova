@@ -6,6 +6,7 @@ import { sendEmail } from '@/lib/email'
 import { paymentReceiptEmail } from '@/lib/email-templates/paymentReceipt'
 import { getPlan } from '@/lib/subscription/catalog'
 import { logger } from '@/lib/logger'
+import { getMpesaTillNumber } from '@/lib/payments/mpesaConfig'
 
 export const dynamic = 'force-dynamic'
 
@@ -68,7 +69,7 @@ export const GET = apiHandler(
       mpesaCode: row.transaction_id,
       planId: row.metadata?.planId || 'pro',
       phoneNumber: row.metadata?.phoneNumber || 'N/A',
-      tillNumber: row.metadata?.tillNumber || '3370347',
+      tillNumber: row.metadata?.tillNumber || getMpesaTillNumber(),
       submittedAt: row.created_at,
     }))
 
@@ -183,7 +184,7 @@ export const POST = apiHandler(
           currency: claim.currency || 'KES',
           paidAt: new Date().toISOString(),
           transactionId: claim.transaction_id || '',
-          paymentMethod: `M-Pesa Buy Goods · Till ${claim.metadata?.tillNumber || '3370347'}`,
+          paymentMethod: `M-Pesa Buy Goods · Till ${claim.metadata?.tillNumber || getMpesaTillNumber()}`,
         })
         await sendEmail({
           to: user.email,
