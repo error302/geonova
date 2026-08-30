@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import {
   CreditCard, DollarSign, Loader2, AlertCircle,
-  ChevronLeft, ChevronRight, Download, Smartphone,
+  ChevronLeft, ChevronRight, Smartphone,
   CheckCircle, XCircle, RefreshCw, ShieldCheck, Check, Copy
 } from 'lucide-react'
 import { MobilePaymentCard } from '@/components/admin/MobileCards'
@@ -203,7 +203,8 @@ export default function AdminPaymentsPage() {
       setClaimsLoading(true)
       const res = await fetch('/api/admin/payments/till-claims')
       if (res.ok) {
-        const data = await res.json()
+        // LINT FIX (2026-08-30): type the API response instead of `any`
+        const data = (await res.json()) as { claims?: TillClaim[] }
         setTillClaims(data.claims || [])
       }
     } catch {
@@ -237,7 +238,7 @@ export default function AdminPaymentsPage() {
       })
 
       if (!res.ok) {
-        const data = await res.json()
+        const data = (await res.json()) as { error?: string }
         throw new Error(data.error || 'Failed to approve claim')
       }
 
@@ -265,7 +266,7 @@ export default function AdminPaymentsPage() {
       })
 
       if (!res.ok) {
-        const data = await res.json()
+        const data = (await res.json()) as { error?: string }
         throw new Error(data.error || 'Failed to reject claim')
       }
 

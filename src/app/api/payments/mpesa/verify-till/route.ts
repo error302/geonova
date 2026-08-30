@@ -158,11 +158,11 @@ export const POST = apiHandler(
       // table, 42P01 at runtime, so this path never actually worked).
       const client = await db.getClient()
       try {
-        await client.query('BEGIN')
+        await client.query<never>('BEGIN')
 
         // Conditional claim: rowCount 0 means another request already
         // claimed this payment — idempotent under double-submit.
-        const claimRes = await client.query(
+        const claimRes = await client.query<never>(
           `UPDATE payment_history
              SET user_id = $1,
                  status = 'completed',
@@ -181,7 +181,7 @@ export const POST = apiHandler(
           ]
         )
         if ((claimRes.rowCount ?? 0) === 0) {
-          await client.query('ROLLBACK')
+          await client.query<never>('ROLLBACK')
           return NextResponse.json(
             { error: 'This M-Pesa transaction code has already been claimed.' },
             { status: 409 }
@@ -190,7 +190,7 @@ export const POST = apiHandler(
 
         // user_subscriptions (NOT `subscriptions` — that table has never
         // existed; the old INSERT raised 42P01 on every instant activation).
-        await client.query(
+        await client.query<never>(
           `INSERT INTO user_subscriptions
                (user_id, plan_id, status, payment_method, currency,
                 current_period_start, current_period_end)
@@ -202,9 +202,9 @@ export const POST = apiHandler(
           [ctx.userId, planId, periodStart.toISOString(), periodEnd.toISOString()]
         )
 
-        await client.query('COMMIT')
+        await client.query<never>('COMMIT')
       } catch (txErr) {
-        await client.query('ROLLBACK').catch(() => {})
+        await client.query<never>('ROLLBACK').catch(() => {})
         throw txErr
       } finally {
         client.release()

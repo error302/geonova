@@ -53,8 +53,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized webhook access' }, { status: 401 })
     }
 
-    const body = await req.json().catch(() => ({}))
-    const smsText = (typeof body === 'string' ? body : (body.sms || body.message || body.text || body.content || '')) as string
+    // LINT FIX (2026-08-30): type the parsed body — `any` made every field
+    // access an unsafe-member-access error under the repo's type-aware rules.
+    const body: unknown = await req.json().catch(() => ({}))
+    const smsText = (
+      typeof body === 'string'
+        ? body
+        : (body as { sms?: string; message?: string; text?: string; content?: string }).sms ||
+          (body as { message?: string }).message ||
+          (body as { text?: string }).text ||
+          (body as { content?: string }).content ||
+          ''
+    ) as string
 
     if (!smsText) {
       return NextResponse.json({ error: 'No SMS message text provided' }, { status: 400 })
@@ -148,8 +158,8 @@ export async function POST(req: NextRequest) {
       // non-transactionally.
       const client = await db.getClient()
       try {
-        await client.query('BEGIN')
-        const claimUpd = await client.query(
+        await client.query<never>('BEGIN')
+        const claimUpd = await client.query<never>(
           `UPDATE payment_history
              SET status = 'completed',
                  updated_at = NOW(),
@@ -167,7 +177,7 @@ export async function POST(req: NextRequest) {
           ]
         )
         if ((claimUpd.rowCount ?? 0) === 0) {
-          await client.query('ROLLBACK')
+          await client.query<never>('ROLLBACK')
           return NextResponse.json({
             success: true,
             action: 'already_processed',
@@ -175,7 +185,7 @@ export async function POST(req: NextRequest) {
           })
         }
 
-        await client.query(
+        await client.query<never>(
           `INSERT INTO user_subscriptions
                (user_id, plan_id, status, payment_method, currency,
                 current_period_start, current_period_end)
@@ -187,9 +197,9 @@ export async function POST(req: NextRequest) {
           [claim.user_id, planId, periodStart.toISOString(), periodEnd.toISOString()]
         )
 
-        await client.query('COMMIT')
+        await client.query<never>('COMMIT')
       } catch (txErr) {
-        await client.query('ROLLBACK').catch(() => {})
+        await client.query<never>('ROLLBACK').catch(() => {})
         throw txErr
       } finally {
         client.release()
@@ -246,7 +256,7 @@ export async function POST(req: NextRequest) {
     )
 
     if (existingPayment.rows.length === 0) {
-      await db.query(
+      await db.query<never>(
         `INSERT INTO payment_history
            (user_id, amount, currency, payment_method, provider, provider_id,
             status, transaction_id, metadata)
