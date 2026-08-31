@@ -49,7 +49,7 @@ const PLAN_DATA = {
     { name: 'P1', easting: 250000, northing: 9945000, elevation: 1800, monumentType: 'found' },
   ],
   fenceOffsets: [],
-} as any
+} as unknown as import("@/lib/reports/surveyPlan/renderer").SurveyPlanData
 
 describe('sanitizeHtml — SVG drawing vocabulary', () => {
   it('keeps the survey plan renderer output intact (not a blank shell)', () => {
