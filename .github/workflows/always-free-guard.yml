@@ -1,0 +1,84 @@
+name: Always Free Guard
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # daily 06:00 UTC
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/always-free-guard.yml'
+      - 'docker-compose.yml'
+  workflow_dispatch:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: VM — check Always Free shape + storage via metadata service
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER || 'opc' }}
+          key: ${{ secrets.SSH_PRIVATE_KEY || secrets.SSH_KEY || secrets.VM_SSH_KEY }}
+          script: |
+            set -e
+            echo "== VM shape (billing source) =="
+            curl -s --connect-timeout 5 http://169.254.169.254/opc/v1/instance/ | jq -r '"shape=\(.shape) ocpus=\(.shapeConfig.ocpus) memory=\(.shapeConfig.memoryInGBs)GB"' || echo "metadata unavailable (try oci compute instance get)"
+            echo ""
+            echo "== Block volumes (must total ≤200GB for Always Free) =="
+            lsblk -d -n -o NAME,SIZE | head -20
+            df -h | head -20
+            echo ""
+            echo "== Docker containers =="
+            docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Size}}' | head -20
+            echo ""
+            # Fail if shape is not Always Free
+            SHAPE=$(curl -s http://169.254.169.254/opc/v1/instance/ | jq -r .shape)
+            if echo "$SHAPE" | grep -qvE 'VM.Standard.E2.1.Micro|VM.Standard.A1.Flex'; then
+              echo "::warning::VM shape $SHAPE is NOT Always Free — will be billed. Expected E2.1.Micro or A1.Flex"
+            else
+              echo "Shape OK: $SHAPE"
+            fi
+            TOTAL_GB=$(lsblk -d -n -o SIZE | grep -v "SIZE" | numfmt --from=iec 2>/dev/null | awk '{s+=$1} END {print int(s/1024/1024/1024)}' || echo "unknown")
+            echo "Approx total block GB: $TOTAL_GB (Always Free limit 200)"
+
+      - name: OCI — Cost + Budget check (requires OCI_* secrets)
+        if: ${{ secrets.OCI_PRIVATE_KEY != '' }}
+        env:
+          OCI_TENANCY: ${{ secrets.OCI_TENANCY }}
+          OCI_USER: ${{ secrets.OCI_USER }}
+          OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+          OCI_REGION: ${{ secrets.OCI_REGION }}
+          OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
+        run: |
+          set -e
+          mkdir -p ~/.oci
+          printf "%s" "$OCI_PRIVATE_KEY" > ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/oci_api_key.pem
+          cat > ~/.oci/config <<EOF
+          [DEFAULT]
+          user=$OCI_USER
+          fingerprint=$OCI_FINGERPRINT
+          tenancy=$OCI_TENANCY
+          region=$OCI_REGION
+          key_file=~/.oci/oci_api_key.pem
+          EOF
+          pip install -q oci-cli 2>&1 | tail -1
+          echo "== OCI Budget (0.01€ alert should exist) =="
+          oci budgets budget list --compartment-id "$OCI_TENANCY" --query 'data[0].{displayName:display-name,amount:amount}' 2>&1 | head -20 || echo "No budget or insufficient policy — create one at Billing > Budgets > 0.01€"
+          echo ""
+          echo "== Cost Aug 27-31 (where your 0.17 came from) =="
+          oci cost-analysis usage --compartment-id "$OCI_TENANCY" --time-usage-started "2026-08-27T00:00:00Z" --time-usage-ended "2026-08-31T23:59:59Z" --granularity DAILY --query 'data.items[0:5].{service:service, cost:computedAmount}' 2>&1 | head -30 || echo "Cost query needs 'cost-analysis' policy for your user — check IAM"
+
+      - name: OCI — missing secrets hint
+        if: ${{ secrets.OCI_PRIVATE_KEY == '' }}
+        run: |
+          echo "::notice::OCI_PRIVATE_KEY not set — VM shape check ran, but cost/budget check skipped. Set the 5 OCI_* secrets to enable it (see previous chat)."
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "Guard finished. If shape is not E2.1.Micro/A1.Flex or total >200GB, resize before next billing day. Check Billing > Cost Analysis > Aug 2026 for the 0.17 service."
