@@ -22,7 +22,7 @@ jobs:
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER || 'opc' }}
-          key: ${{ secrets.SSH_PRIVATE_KEY || secrets.SSH_KEY || secrets.VM_SSH_KEY }}
+          key: ${{ secrets.VM_SSH_KEY }}
           script: |
             set -e
             echo "== VM shape (billing source) =="

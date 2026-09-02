@@ -1,0 +1,92 @@
+name: Switch to A1 Flex (Always Free)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ocpus:
+        description: 'OCPUs (1-4 for Always Free)'
+        required: false
+        default: '4'
+      memory_gbs:
+        description: 'Memory GB (6-24, ratio 6GB per OCPU)'
+        required: false
+        default: '24'
+
+jobs:
+  switch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check OCI secrets present
+        run: |
+          if [ -z "${{ secrets.OCI_PRIVATE_KEY }}" ]; then
+            echo "::error::OCI_PRIVATE_KEY not set — run the 5 gh secret set OCI_* commands from previous chat first."
+            exit 1
+          fi
+
+      - name: Setup OCI CLI
+        env:
+          OCI_TENANCY: ${{ secrets.OCI_TENANCY }}
+          OCI_USER: ${{ secrets.OCI_USER }}
+          OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+          OCI_REGION: ${{ secrets.OCI_REGION }}
+          OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.oci
+          printf "%s" "$OCI_PRIVATE_KEY" > ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/oci_api_key.pem
+          cat > ~/.oci/config <<EOF
+          [DEFAULT]
+          user=$OCI_USER
+          fingerprint=$OCI_FINGERPRINT
+          tenancy=$OCI_TENANCY
+          region=$OCI_REGION
+          key_file=~/.oci/oci_api_key.pem
+          EOF
+          pip install -q oci-cli
+          oci iam region list --query 'data[?name==`af-johannesburg-1`]' 2>&1 | head -5
+          echo "OCI ready"
+
+      - name: Find VM OCID and current shape
+        env:
+          OCI_TENANCY: ${{ secrets.OCI_TENANCY }}
+        run: |
+          echo "== Availability: A1 Flex in af-johannesburg-1 =="
+          oci limits resource-availability get --service-name compute --limit-name vm-standard-a1-flex-count --compartment-id "$OCI_TENANCY" 2>&1 | head -20 || echo "limits check needs 'limits' policy — assuming available (Always Free includes it)"
+          echo ""
+          echo "== Current instances =="
+          oci compute instance list --compartment-id "$OCI_TENANCY" --query 'data[].{name:"display-name",shape:shape,state:"lifecycle-state",ocid:id}' 2>&1 | head -40
+
+      - name: Stop, reshape to A1.Flex, start (via OCI)
+        env:
+          OCI_TENANCY: ${{ secrets.OCI_TENANCY }}
+        run: |
+          set -e
+          # Find the running metardu VM — adjust name filter if yours differs
+          OCID=$(oci compute instance list --compartment-id "$OCI_TENANCY" --query 'data[?contains("display-name",`metardu`)].id | [0]' --raw-output 2>&1 | tr -d '"')
+          if [ -z "$OCID" ] || [ "$OCID" = "null" ]; then
+            # Fallback: first running VM
+            OCID=$(oci compute instance list --compartment-id "$OCI_TENANCY" --lifecycle-state RUNNING --query 'data[0].id' --raw-output 2>&1 | tr -d '"')
+          fi
+          echo "Target OCID: $OCID"
+          if [ -z "$OCID" ] || [ "$OCID" = "null" ]; then echo "::error::No VM OCID found — check compartment"; exit 1; fi
+          CUR_SHAPE=$(oci compute instance get --instance-id "$OCID" --query 'data.shape' --raw-output 2>&1 | tr -d '"')
+          echo "Current shape: $CUR_SHAPE"
+          if [ "$CUR_SHAPE" = "VM.Standard.A1.Flex" ]; then
+            echo "Already A1.Flex — checking OCPUs"
+            CUR_OCPUS=$(oci compute instance get --instance-id "$OCID" --query 'data."shape-config".ocpus' --raw-output 2>&1 | tr -d '"')
+            echo "Current OCPUs: $CUR_OCPUS — desired: ${{ inputs.ocpus }}"
+            if [ "$CUR_OCPUS" = "${{ inputs.ocpus }}" ]; then echo "Already desired shape — nothing to do"; exit 0; fi
+          fi
+          echo "Stopping $OCID..."
+          oci compute instance action --instance-id "$OCID" --action STOP --wait-for-state STOPPED 2>&1 | tail -5
+          echo "Reshaping to VM.Standard.A1.Flex (${{ inputs.ocpus }} OCPU, ${{ inputs.memory_gbs }}GB)..."
+          oci compute instance update --instance-id "$OCID" --shape VM.Standard.A1.Flex --shape-config "{\"ocpus\":${{ inputs.ocpus }},\"memoryInGBs\":${{ inputs.memory_gbs }}}" --wait-for-state STOPPED 2>&1 | tail -5
+          echo "Starting..."
+          oci compute instance action --instance-id "$OCID" --action START --wait-for-state RUNNING 2>&1 | tail -5
+          echo "Done. New shape:"
+          oci compute instance get --instance-id "$OCID" --query 'data.{shape:shape, ocpus:"shape-config".ocpus, memory:"shape-config"."memoryInGBs"}' 2>&1
+          echo ""
+          echo "Next: the Always Free Guard will verify shape=VM.Standard.A1.Flex within 1 min."
