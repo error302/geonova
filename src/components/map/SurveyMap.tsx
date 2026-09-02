@@ -278,9 +278,21 @@ export default function SurveyMap({
     const coords = adjustedStations.map(s =>
       transform([s.adjustedEasting, s.adjustedNorthing], epsg, SRID_3857)
     );
-    const xs = coords.map(c => c[0]);
-    const ys = coords.map(c => c[1]);
-    const extent = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)] as [number, number, number, number];
+
+    // Performance: Avoid Math.min/max spread (...) which throws on very large station arrays
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+
+    for (const [x, y] of coords) {
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+
+    const extent = [minX, minY, maxX, maxY] as [number, number, number, number];
     mapInstanceRef.current.getView().fit(extent, { padding: [60, 60, 60, 60], duration: 400 });
   }, [adjustedStations, epsg]);
 
