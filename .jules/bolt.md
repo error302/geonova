@@ -1,0 +1,3 @@
+## 2024-05-24 - V8 Call Stack Limits with Spread Operator
+**Learning:** Using the spread operator (`...`) with `Math.max()` or `Math.min()` on large arrays (like point cloud data `xs` or `ys`) can cause V8 "Maximum call stack size exceeded" errors and excessive memory allocation, as the engine attempts to push every element of the array onto the call stack as individual arguments.
+**Action:** When finding the min/max values in a large dataset, use a `for` loop or `reduce` instead of the spread operator with `Math.min`/`Math.max`. This avoids stack overflows and reduces memory allocations by avoiding intermediate array creations (like `.map`).
