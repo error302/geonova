@@ -12,6 +12,7 @@ import { generateMutationPlanDXF } from '@/lib/generators/mutationPlanDXF';
 // XSS guard (2026-08-03): projectInfo.name is user-entered and lands in the
 // print document's <title> (RCDATA breakout) — escape before interpolation.
 import { escapeXml } from '@/lib/xml/escape';
+import { sanitizeHtml } from '@/lib/security/sanitize';
 import type {
   MutationPlanData, MutationPlot, RoadCorridor,
   SurveyMonument, BearingScheduleEntry,
@@ -1586,7 +1587,7 @@ export default function MutationPlanGenerator({
           <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg overflow-auto">
             <div className="p-2">
               {svgOutput ? (
-                <div dangerouslySetInnerHTML={{ __html: svgOutput }} />
+                <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(svgOutput) }} />
               ) : (
                 <div className="text-center py-12 text-zinc-500">
                   <Eye className="h-10 w-10 mx-auto mb-3 opacity-30" />
@@ -1631,7 +1632,7 @@ export default function MutationPlanGenerator({
               Download PDF (Print)
             </button>
             <button
-              onClick={() => { const w = window.open('', '_blank'); if (w) { w.document.write(svgOutput); w.document.close(); } }}
+              onClick={() => { const w = window.open('', '_blank'); if (w) { w.document.write(sanitizeHtml(svgOutput)); w.document.close(); } }}
               disabled={!svgOutput}
               className="flex items-center justify-center gap-2 px-6 py-4 border border-[var(--border-color)] rounded-lg text-zinc-300 hover:border-[color-mix(in_srgb,var(--accent)_50%,transparent)] disabled:opacity-40"
             >
