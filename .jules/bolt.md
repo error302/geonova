@@ -1,0 +1,3 @@
+## 2024-05-24 - V8 Maximum call stack size exceeded on point clouds
+**Learning:** Using `Math.max(...array)` or `Math.min(...array)` where `array` is a large dataset (like mapped point cloud elevations or coordinates) can cause V8 "Maximum call stack size exceeded" errors and excessive memory allocation, crashing the process or severely degrading performance.
+**Action:** Always use explicit `for` loops or `reduce` instead of the spread operator (`...`) with `Math.min()` or `Math.max()` when calculating bounds or extremes on large datasets in this codebase.
