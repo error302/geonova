@@ -18,35 +18,6 @@
  *   (external references). DOMPurify additionally strips all on* event
  *   handlers regardless of this list.
  */
-const ALLOWED_HTML_TAGS = [
-  'div', 'span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-  'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td',
-  'ul', 'ol', 'li', 'a', 'strong', 'em', 'b', 'i', 'u',
-  'br', 'hr', 'img', 'style', 'blockquote', 'pre', 'code',
-  'sub', 'sup', 'section', 'article', 'header', 'footer', 'nav',
-  // ─── Inert SVG drawing vocabulary (see note above) ───
-  'svg', 'g', 'defs', 'title', 'desc',
-  'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon',
-  'text', 'tspan',
-]
-
-const ALLOWED_ATTRS = [
-  'class', 'id', 'style', 'href', 'src', 'alt', 'title',
-  'border', 'cellpadding', 'cellspacing', 'colspan', 'rowspan',
-  'text-align', 'font-size', 'font-weight', 'font-style',
-  'background', 'color', 'padding', 'margin', 'vertical-align',
-  // ─── SVG geometry & presentation (no href/xlink:href, no on*) ───
-  'viewBox', 'xmlns', 'preserveAspectRatio',
-  'd', 'fill', 'fill-opacity', 'fill-rule', 'stroke', 'stroke-width',
-  'stroke-opacity', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin',
-  'transform', 'x', 'y', 'x1', 'y1', 'x2', 'y2', 'dx', 'dy',
-  'cx', 'cy', 'r', 'rx', 'ry', 'width', 'height', 'points',
-  'opacity', 'font-family', 'text-anchor', 'dominant-baseline',
-  'gradientUnits', 'offset', 'stop-color', 'stop-opacity',
-  'patternUnits', 'marker-start', 'marker-mid', 'marker-end',
-  'role', 'aria-label', 'aria-hidden', 'focusable',
-]
-
 export function sanitizeHtml(dirty: string): string {
   // DOMPurify requires `window` — use synchronous client-side loading
   if (typeof window !== 'undefined') {
@@ -54,10 +25,25 @@ export function sanitizeHtml(dirty: string): string {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const createDOMPurify = require('dompurify') as unknown as typeof import('dompurify') & { default?: typeof import('dompurify') };
     const DOMPurify = createDOMPurify.default || createDOMPurify;
-    return DOMPurify.sanitize(dirty, {
-      ALLOWED_TAGS: ALLOWED_HTML_TAGS,
-      ALLOWED_ATTR: ALLOWED_ATTRS,
+    // Use a hook to remove href and xlink:href from SVG elements to prevent SSRF/XSS
+    // while preserving href on standard HTML anchor tags.
+    DOMPurify.addHook('uponSanitizeAttribute', (node, data) => {
+      if (
+        (data.attrName === 'href' || data.attrName === 'xlink:href') &&
+        node.namespaceURI === 'http://www.w3.org/2000/svg'
+      ) {
+        data.keepAttr = false;
+      }
     });
+
+    const result = DOMPurify.sanitize(dirty, {
+      USE_PROFILES: { html: true, svg: true },
+      FORBID_TAGS: ['image', 'foreignObject', 'use', 'animate', 'set'],
+      FORBID_ATTR: ['xlink:href'], // Forbid xlink:href globally, handle SVG href via hook
+    });
+
+    DOMPurify.removeAllHooks();
+    return result;
   }
   // Server-side fallback: strip all tags
   return dirty.replace(/<[^>]*>/g, '');
