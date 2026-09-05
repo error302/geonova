@@ -64,10 +64,21 @@ export function gridMethodVolume(
 
   // Compute the bounding box of both surfaces combined
   const allPoints = [...surface1, ...surface2]
-  const minE = Math.min(...allPoints.map(p => p.easting))
-  const maxE = Math.max(...allPoints.map(p => p.easting))
-  const minN = Math.min(...allPoints.map(p => p.northing))
-  const maxN = Math.max(...allPoints.map(p => p.northing))
+
+  // ⚡ Bolt: Optimize point cloud bounds calculation
+  // Avoid Math.max/min with spread operator and .map() to prevent call stack size exceeded errors
+  // on large point clouds. Reduces passes from 4 to 1 and prevents intermediate array allocations.
+  let minE = Infinity;
+  let maxE = -Infinity;
+  let minN = Infinity;
+  let maxN = -Infinity;
+  for (let i = 0; i < allPoints.length; i++) {
+    const p = allPoints[i];
+    if (p.easting < minE) minE = p.easting;
+    if (p.easting > maxE) maxE = p.easting;
+    if (p.northing < minN) minN = p.northing;
+    if (p.northing > maxN) maxN = p.northing;
+  }
 
   const width = maxE - minE
   const height = maxN - minN
@@ -276,11 +287,26 @@ export function tinToTinVolume(
 }
 
 function getBounds(points: Point3D[]) {
+  // ⚡ Bolt: Optimize point cloud bounds calculation
+  // Avoid Math.max/min with spread operator and .map() to prevent call stack size exceeded errors
+  // on large point clouds. Reduces passes from 4 to 1 and prevents intermediate array allocations.
+  let minE = Infinity;
+  let maxE = -Infinity;
+  let minN = Infinity;
+  let maxN = -Infinity;
+  for (let i = 0; i < points.length; i++) {
+    const p = points[i];
+    if (p.easting < minE) minE = p.easting;
+    if (p.easting > maxE) maxE = p.easting;
+    if (p.northing < minN) minN = p.northing;
+    if (p.northing > maxN) maxN = p.northing;
+  }
+
   return {
-    minE: Math.min(...points.map(p => p.easting)),
-    maxE: Math.max(...points.map(p => p.easting)),
-    minN: Math.min(...points.map(p => p.northing)),
-    maxN: Math.max(...points.map(p => p.northing)),
+    minE,
+    maxE,
+    minN,
+    maxN,
   }
 }
 
