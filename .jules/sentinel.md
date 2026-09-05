@@ -1,0 +1,4 @@
+## 2024-05-24 - [Stored XSS via unsanitized SVG]
+**Vulnerability:** Found multiple instances where SVGs generated or handled dynamically were rendered using `dangerouslySetInnerHTML` without passing the SVG strings through a sanitizer first, notably in `DeedPlanGenerator` and `MutationPlanGenerator`.
+**Learning:** `dangerouslySetInnerHTML` combined with unescaped/unsanitized dynamic output that allows SVG opens the door for a stored XSS if not explicitly mitigated. Custom SVG generators in this codebase emit inert vocabulary but still require defense-in-depth sanitization on rendering.
+**Prevention:** Always wrap dynamically generated or user-handled SVG strings with the project's `sanitizeHtml` wrapper from `@/lib/security/sanitize` when using `dangerouslySetInnerHTML`. Ensure new UI components don't omit this step when presenting charts or plans.
