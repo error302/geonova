@@ -1,5 +1,6 @@
 'use client';
 
+import { sanitizeHtml } from '@/lib/security/sanitize';
 import { useState, useMemo } from 'react';
 import {
   FileUp, Plus, Trash2, Eye, Download, Printer,
@@ -1586,7 +1587,7 @@ export default function MutationPlanGenerator({
           <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg overflow-auto">
             <div className="p-2">
               {svgOutput ? (
-                <div dangerouslySetInnerHTML={{ __html: svgOutput }} />
+                <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(svgOutput) }} />
               ) : (
                 <div className="text-center py-12 text-zinc-500">
                   <Eye className="h-10 w-10 mx-auto mb-3 opacity-30" />

@@ -1,0 +1,4 @@
+## 2024-05-27 - [HIGH] Fix XSS in dynamically generated SVG plans
+**Vulnerability:** XSS vulnerability through SVG tags inside `dangerouslySetInnerHTML`. The SVG renderer allowed rendering DOM elements leading to stored and reflected XSS. The previous sanitize policy dropped all SVG contents.
+**Learning:** DOMPurify natively supports SVG rendering when using `USE_PROFILES: { html: true, svg: true }` properly while continuing to stop script executions.
+**Prevention:** Always use `USE_PROFILES` with DOMPurify when sanitizing elements combining HTML and SVG. Additionally, set `FORBID_TAGS: ['image', 'foreignObject']` and `FORBID_ATTR: ['href', 'xlink:href']` as further mitigation. Ensure that elements returning HTML directly such as SVGs that are shown with `dangerouslySetInnerHTML` are wrapped in `sanitizeHtml`.
