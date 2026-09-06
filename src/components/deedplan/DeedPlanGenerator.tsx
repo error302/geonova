@@ -1,5 +1,6 @@
 'use client';
 
+import { sanitizeHtml } from '@/lib/security/sanitize';
 import { useState, useMemo } from 'react'
 import { FileText, Download, Save, CheckCircle, AlertCircle, Plus, Trash2, Printer, Ruler } from 'lucide-react'
 import { DeedPlanInput, DeedPlanOutput, BoundaryPoint, BeaconType } from '@/types/deedPlan'
@@ -786,7 +787,7 @@ export default function DeedPlanGenerator({ projectId, initialPoints = [] }: Dee
           <div className="bg-white rounded-lg p-4 border overflow-auto">
             <div
               className="mx-auto"
-              dangerouslySetInnerHTML={{ __html: output.svg }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(output.svg) }}
             />
           </div>
 
