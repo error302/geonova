@@ -172,7 +172,7 @@
     "autoprefixer": "^10.4.27",
     "axe-core": "^4.12.1",
     "better-sqlite3": "^12.9.0",
-    "eslint": "^8.56.0",
+    "eslint": "^10.9.1",
     "eslint-config-next": "^14.2.0",
     "eslint-plugin-metardu": "file:./eslint-plugin-metardu",
     "jest": "^30.3.0",
