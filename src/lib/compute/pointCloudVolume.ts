@@ -63,11 +63,14 @@ export function gridMethodVolume(
   }
 
   // Compute the bounding box of both surfaces combined
+  // Note: We use getBounds with a for-loop inside instead of Math.min(...map())
+  // to avoid V8 "Maximum call stack size exceeded" errors on large point clouds.
   const allPoints = [...surface1, ...surface2]
-  const minE = Math.min(...allPoints.map(p => p.easting))
-  const maxE = Math.max(...allPoints.map(p => p.easting))
-  const minN = Math.min(...allPoints.map(p => p.northing))
-  const maxN = Math.max(...allPoints.map(p => p.northing))
+  const bounds = getBounds(allPoints)
+  const minE = bounds.minE
+  const maxE = bounds.maxE
+  const minN = bounds.minN
+  const maxN = bounds.maxN
 
   const width = maxE - minE
   const height = maxN - minN
@@ -276,12 +279,22 @@ export function tinToTinVolume(
 }
 
 function getBounds(points: Point3D[]) {
-  return {
-    minE: Math.min(...points.map(p => p.easting)),
-    maxE: Math.max(...points.map(p => p.easting)),
-    minN: Math.min(...points.map(p => p.northing)),
-    maxN: Math.max(...points.map(p => p.northing)),
+  // Using explicit loop instead of Math.min(...points.map()) to prevent call stack overflow
+  // and reduce memory allocations when handling large point cloud arrays (100k+ points).
+  let minE = Infinity
+  let maxE = -Infinity
+  let minN = Infinity
+  let maxN = -Infinity
+
+  for (let i = 0; i < points.length; i++) {
+    const p = points[i]
+    if (p.easting < minE) minE = p.easting
+    if (p.easting > maxE) maxE = p.easting
+    if (p.northing < minN) minN = p.northing
+    if (p.northing > maxN) maxN = p.northing
   }
+
+  return { minE, maxE, minN, maxN }
 }
 
 // ─── Stockpile Volume (single surface + base plane) ─────────────────────────
