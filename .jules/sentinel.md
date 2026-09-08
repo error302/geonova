@@ -1,0 +1,4 @@
+## 2024-05-01 - Missing Sanitization for SVG using dangerouslySetInnerHTML
+**Vulnerability:** Found `dangerouslySetInnerHTML` being used with SVG outputs (`output.svg` in `DeedPlanGenerator.tsx`, `svgOutput` in `MutationPlanGenerator.tsx`, and `getBeaconSymbolSVG(type, status, 16)` in `beacon-reference/page.tsx`) without utilizing the required `sanitizeHtml` wrapper from `@/lib/security/sanitize`. This allows for a potential stored Cross-Site Scripting (XSS) vulnerability.
+**Learning:** Even generated or internally constructed SVGs can be vectors for XSS if user inputs or imported data are embedded without sanitization prior to rendering via `dangerouslySetInnerHTML`.
+**Prevention:** Always wrap SVG strings with the custom `sanitizeHtml` function when passing them to `dangerouslySetInnerHTML`, as mandated by the security instructions.
