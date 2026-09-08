@@ -3,6 +3,7 @@
 import type { BeaconType, BeaconStatus } from '@/types/deedPlan'
 import { BEACON_DEFINITIONS, getBeaconSymbolSVG, BEACON_CATEGORIES, BEACON_IMAGES } from '@/lib/compute/beaconSymbols'
 import Image from 'next/image'
+import { sanitizeHtml } from '@/lib/security/sanitize'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
@@ -91,8 +92,9 @@ export default function BeaconReferencePage() {
                           <div key={status} className="flex flex-col items-center">
                             <div 
                               className="w-10 h-10"
+                              // XSS guard: sanitize dynamically generated SVG before rendering it natively
                               dangerouslySetInnerHTML={{ 
-                                __html: getBeaconSymbolSVG(type, status, 16) 
+                                __html: sanitizeHtml(getBeaconSymbolSVG(type, status, 16))
                               }} 
                             />
                             <span className="text-[9px] text-[var(--text-muted)] mt-1">{status}</span>
